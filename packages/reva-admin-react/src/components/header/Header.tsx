@@ -13,14 +13,14 @@ export const Header = () => {
     isOrganism,
     isGestionnaireMaisonMereAAP,
     isCertificationAuthority,
+    isAdminCertificationAuthority,
   } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
   const { authenticated, logout } = useKeycloakContext();
 
   const navigation = authenticated
     ? [
-        ...(!isCertificationAuthority &&
-        isFeatureActive("ADMIN_CERTIFICATION_AUTHORITY")
+        ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
           ? [
               {
                 text: "Candidatures",
@@ -81,7 +81,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isAdmin || isCertificationAuthority
+        ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
               {
                 text: "Dossiers de faisabilité",
@@ -92,7 +92,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isCertificationAuthority &&
+        ...(isAdminCertificationAuthority &&
         isFeatureActive("ADMIN_CERTIFICATION_AUTHORITY")
           ? [
               {

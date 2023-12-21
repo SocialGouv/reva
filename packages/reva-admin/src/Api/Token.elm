@@ -1,4 +1,4 @@
-module Api.Token exposing (Token, anonymous, getEmail, init, isAdmin, isCertificationAuthority, isGestionnaireMaisonMereAAP, isOrganism, toString)
+module Api.Token exposing (Token, anonymous, getEmail, init, isAdmin, isAdminCertificationAuthority, isCertificationAuthority, isGestionnaireMaisonMereAAP, isOrganism, toString)
 
 
 type Token
@@ -31,6 +31,11 @@ isAdmin (Token token) =
 isCertificationAuthority : Token -> Bool
 isCertificationAuthority (Token token) =
     token.isCertificationAuthority
+
+
+isAdminCertificationAuthority : Token -> Bool
+isAdminCertificationAuthority (Token token) =
+    token.isAdminCertificationAuthority
 
 
 isOrganism : Token -> Bool

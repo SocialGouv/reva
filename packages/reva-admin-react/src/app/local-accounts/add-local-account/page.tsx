@@ -12,8 +12,6 @@ const AddLocalAccountPage = () => {
   return (
     <FormLocalAccount
       onSubmitFormMutation={async (data) => {
-        console.log(data);
-
         await createCertificationAuthorityMutation(data);
       }}
       buttonValidateText="Valider"

@@ -1,6 +1,9 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { CreateCertificationAuthorityLocalAccountInput } from "@/graphql/generated/graphql";
+import {
+  CreateCertificationAuthorityLocalAccountInput,
+  UpdateCertificationAuthorityLocalAccountInput,
+} from "@/graphql/generated/graphql";
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 
@@ -77,6 +80,18 @@ const createCertificationAuthorityMutation = graphql(`
   }
 `);
 
+const updateCertificationAuthorityMutation = graphql(`
+  mutation updateCertificationAuthorityMutation(
+    $data: UpdateCertificationAuthorityLocalAccountInput!
+  ) {
+    certification_authority_updateCertificationAuthorityLocalAccount(
+      input: $data
+    ) {
+      id
+    }
+  }
+`);
+
 export const useCertificationAuthorityQueries = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -96,10 +111,18 @@ export const useCertificationAuthorityQueries = () => {
       }),
   });
 
+  const useUpdateCertificationAuthorityMutation = useMutation({
+    mutationFn: (data: UpdateCertificationAuthorityLocalAccountInput) =>
+      graphqlClient.request(updateCertificationAuthorityMutation, {
+        data,
+      }),
+  });
+
   return {
     certifictionAuthority,
     certifictionAuthorityStatus: queryCertifictionAuthority.status,
     refetchCertifictionAuthority: queryCertifictionAuthority.refetch,
     useCreateCertificationAuthorityMutation,
+    useUpdateCertificationAuthorityMutation,
   };
 };

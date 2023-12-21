@@ -10,7 +10,11 @@ import {
 const EditLocalAccountPage = () => {
   const { local_account_id } = useParams();
 
-  const { certifictionAuthority } = useCertificationAuthorityQueries();
+  const { certifictionAuthority, useUpdateCertificationAuthorityMutation } =
+    useCertificationAuthorityQueries();
+
+  const { mutateAsync: updateCertificationAuthorityMutation } =
+    useUpdateCertificationAuthorityMutation;
 
   const remoteLocalAccount =
     certifictionAuthority?.certificationAuthorityLocalAccounts.find(
@@ -36,7 +40,13 @@ const EditLocalAccountPage = () => {
     <FormLocalAccount
       localAccount={localAccount}
       onSubmitFormMutation={async (data) => {
-        console.log("Do something with data", data);
+        if (data.id) {
+          await updateCertificationAuthorityMutation({
+            certificationAuthorityLocalAccountId: data.id,
+            departmentIds: data.departmentIds,
+            certificationIds: data.certificationIds,
+          });
+        }
       }}
       buttonValidateText="Valider"
       toastSuccessText="Le compte local a bien été mis à jour"

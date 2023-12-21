@@ -42,6 +42,8 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
     toastSuccessText,
   } = props;
 
+  const isEditing = !!localAccount;
+
   const { certifictionAuthority, refetchCertifictionAuthority } =
     useCertificationAuthorityQueries();
 
@@ -93,6 +95,7 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
 
     try {
       await onSubmitFormMutation({
+        id: localAccount?.id,
         accountFirstname: data.firstname,
         accountLastname: data.lastname,
         accountEmail: data.email,
@@ -140,11 +143,11 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
     setCertificationItems(selectedCertificationItems);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [certifictionAuthority, localAccount, reset]);
+  }, [certifictionAuthority, reset]);
 
   useEffect(() => {
     handleReset();
-  }, [certifictionAuthority, localAccount, reset, handleReset]);
+  }, [certifictionAuthority, reset, handleReset]);
 
   const [departmentItems, setDepartmentItems] = useState<TreeSelectItem[]>([]);
   const [certificationItems, setCertificationItems] = useState<
@@ -187,8 +190,6 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
     setCertificationItems(mappedCertificationItems);
   };
 
-  const isEditable = !localAccount;
-
   return (
     <div className="w-full">
       <FormProvider {...methods}>
@@ -198,10 +199,6 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
             e.preventDefault();
 
             handleReset();
-
-            // if (!isEditable) {
-            router.push("/local-accounts");
-            // }
           }}
         >
           <fieldset className="flex flex-col gap-4 w-full">
@@ -213,6 +210,7 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
                 label="Nom (de la personne ou du compte)"
                 state={errors.lastname ? "error" : "default"}
                 stateRelatedMessage={errors.lastname?.message}
+                disabled={isEditing}
                 nativeInputProps={{
                   ...register("lastname"),
                   autoComplete: "family-name",
@@ -222,6 +220,7 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
                 label="Prénom (optionnel)"
                 state={errors.firstname ? "error" : "default"}
                 stateRelatedMessage={errors.firstname?.message}
+                disabled={isEditing}
                 nativeInputProps={{
                   ...register("firstname"),
                   autoComplete: "given-name",
@@ -231,6 +230,7 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
                 label="Email"
                 state={errors.email ? "error" : "default"}
                 stateRelatedMessage={errors.email?.message}
+                disabled={isEditing}
                 nativeInputProps={{
                   ...register("email"),
                   autoComplete: "email",
@@ -277,9 +277,7 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
               <Button priority="secondary" type="reset">
                 Annuler les modifications
               </Button>
-              <Button disabled={!isEditable || isSubmitting}>
-                {buttonValidateText}
-              </Button>
+              <Button disabled={isSubmitting}>{buttonValidateText}</Button>
             </div>
           </div>
         </form>
