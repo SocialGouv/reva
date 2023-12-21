@@ -12,6 +12,7 @@ import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from 
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
+import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 
 export const resolvers = {
   CertificationAuthority: {
@@ -80,6 +81,20 @@ export const resolvers = {
         certificationAuthorityKeycloakId: context.auth.userInfo?.sub || "",
         keycloakAdmin,
       });
+    },
+
+    certification_authority_updateCertificationAuthorityLocalAccount: async (
+      _parent: unknown,
+      params: {
+        input: {
+          certificationAuthorityLocalAccountId: string;
+          departmentIds: string[];
+          certificationIds: string[];
+        };
+      },
+      context: GraphqlContext
+    ) => {
+      return updateCertificationAuthorityLocalAccount(params.input);
     },
   },
   Query: {

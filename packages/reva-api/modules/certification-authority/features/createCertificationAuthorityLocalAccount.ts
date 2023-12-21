@@ -3,7 +3,6 @@ import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
-import { logger } from "../../shared/logger";
 
 export const createCertificationAuthorityLocalAccount = async ({
   accountFirstname,

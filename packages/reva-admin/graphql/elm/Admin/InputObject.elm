@@ -1219,6 +1219,37 @@ encodeUpdateCertificationAuthorityInput input____ =
         [ ( "label", Encode.string input____.label |> Just ), ( "contactFullName", Encode.string |> Encode.optional input____.contactFullName ), ( "contactEmail", Encode.string |> Encode.optional input____.contactEmail ) ]
 
 
+buildUpdateCertificationAuthorityLocalAccountInput :
+    UpdateCertificationAuthorityLocalAccountInputRequiredFields
+    -> UpdateCertificationAuthorityLocalAccountInput
+buildUpdateCertificationAuthorityLocalAccountInput required____ =
+    { certificationAuthorityLocalAccountId = required____.certificationAuthorityLocalAccountId, departmentIds = required____.departmentIds, certificationIds = required____.certificationIds }
+
+
+type alias UpdateCertificationAuthorityLocalAccountInputRequiredFields =
+    { certificationAuthorityLocalAccountId : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Type for the UpdateCertificationAuthorityLocalAccountInput input object.
+-}
+type alias UpdateCertificationAuthorityLocalAccountInput =
+    { certificationAuthorityLocalAccountId : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Encode a UpdateCertificationAuthorityLocalAccountInput into a value that can be used as an argument.
+-}
+encodeUpdateCertificationAuthorityLocalAccountInput : UpdateCertificationAuthorityLocalAccountInput -> Value
+encodeUpdateCertificationAuthorityLocalAccountInput input____ =
+    Encode.maybeObject
+        [ ( "certificationAuthorityLocalAccountId", Encode.string input____.certificationAuthorityLocalAccountId |> Just ), ( "departmentIds", (Encode.string |> Encode.list) input____.departmentIds |> Just ), ( "certificationIds", (Encode.string |> Encode.list) input____.certificationIds |> Just ) ]
+
+
 buildUpdateOrganismInput :
     UpdateOrganismInputRequiredFields
     -> (UpdateOrganismInputOptionalFields -> UpdateOrganismInputOptionalFields)
