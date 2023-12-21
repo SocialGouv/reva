@@ -10,7 +10,7 @@
     "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
     "build:ts": "rimraf -f ./dist && tsc -p tsconfig.json",
     "build:graphql": "npm run graphql:generate && rsync -R ./modules/*.graphql ./dist && rsync -R ./modules/**/*.graphql ./dist && rsync -R ./modules/**/**/*.graphql ./dist/modules ",
-    "start": "npm run prisma:migrate:deploy && npm run prisma:seed && node dist/index.js",
+    "start": "npm run prisma:migrate:deploy && node dist/index.js",
     "start:server:only": "node dist/index.js",
     "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test -- jest --runInBand --testRegex='.*.test.ts$'",
     "graphql:generate": "tsx ./modules/generate-graphql-schema.ts",
