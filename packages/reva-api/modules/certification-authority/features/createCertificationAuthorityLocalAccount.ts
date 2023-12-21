@@ -31,9 +31,6 @@ export const createCertificationAuthorityLocalAccount = async ({
     );
   }
 
-  const certificationAuthorityId =
-    certificationAuthorityAccount?.certificationAuthorityId || "";
-
   const certificationAuthority =
     await prismaClient.certificationAuthority.findFirst({
       where: {
