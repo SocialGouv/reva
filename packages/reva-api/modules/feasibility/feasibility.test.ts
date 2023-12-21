@@ -198,7 +198,7 @@ test("should count all (2) feasibilities for admin user", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "whatever",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
     }),
     payload: {
       requestType: "query",
@@ -224,7 +224,7 @@ test("should count all (1) available feasibility for certificator user even if o
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
@@ -246,7 +246,7 @@ test("should count no available feasibility for certificator user since he doesn
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
     }),
     payload: {
@@ -272,7 +272,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
@@ -301,7 +301,7 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
     payload: {
@@ -325,7 +325,7 @@ test("should return all (1) available feasibility for certificateur user", async
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
@@ -351,7 +351,7 @@ test("should count 1 pending feasibility for admin user", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "whatever",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
     }),
     payload: {
       requestType: "query",
@@ -401,7 +401,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
     feasibilityId: feasiblity.id,
     decision: "Admissible",
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
   });
@@ -426,7 +426,7 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
     feasibilityId: feasiblity.id,
     decision: "Admissible",
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
     }),
   });
@@ -444,7 +444,7 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
     feasibilityId: feasiblity.id,
     decision: "Admissible",
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
   });
@@ -462,7 +462,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
     feasibilityId: feasiblity.id,
     decision: "Rejected",
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
   });
@@ -491,7 +491,7 @@ test("should not reject a feasibility since certificator 3 doesn't handle it", a
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "manage_feasibility",
+      role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
     payload: {
