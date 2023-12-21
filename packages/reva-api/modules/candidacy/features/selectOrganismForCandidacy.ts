@@ -23,6 +23,7 @@ export const selectOrganismForCandidacy = async ({
       firstAppointmentOccuredAt: true,
       certificationsAndRegions: true,
       candidate: true,
+      candidacyStatuses: true,
     },
   });
 
@@ -63,12 +64,20 @@ export const selectOrganismForCandidacy = async ({
       where: { id: activeCertificationsAndRegions?.certificationId },
     });
 
+    const currentCandidacyStatus = candidacy.candidacyStatuses.find(
+      (status) => status.isActive == true
+    );
+    const isValidStatus =
+      currentCandidacyStatus &&
+      (currentCandidacyStatus?.status == "PRISE_EN_CHARGE" ||
+        currentCandidacyStatus?.status == "VALIDATION");
+
     if (
       candidate &&
       organism &&
       organism?.id != organismId &&
       certification &&
-      firstAppointmentOccuredAt
+      isValidStatus
     ) {
       sendPreventOrganismCandidateChangeOrganismEmail({
         email: organism.contactAdministrativeEmail,

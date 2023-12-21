@@ -84,15 +84,19 @@ export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
   email: string;
   candidateFullName: string;
   certificationName: string;
-  date: Date;
+  date: Date | null;
 }) => {
   const htmlContent = mjml2html(
     template({
       content: `<p>Bonjour,</p><p>France VAE vous informe que <strong>${candidateFullName}</strong> a choisi un autre Architecte Accompagnateur de Parcours pour l’accompagner dans son projet de <i>"${certificationName}"</i>.</p>
           <p>Ce candidat n’est désormais plus dans votre portefeuille.</p>
-          <p>De fait, le rendez-vous planifié le <strong>${date.toLocaleDateString(
-            "fr-FR"
-          )}</strong> est donc annulé. </p>
+          ${
+            date
+              ? `<p>De fait, le rendez-vous planifié le <strong>${date.toLocaleDateString(
+                  "fr-FR"
+                )}</strong> est donc annulé. </p>`
+              : ""
+          }
 
           <p>L’équipe France VAE.</p>
         `,
