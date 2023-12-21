@@ -7,7 +7,8 @@ export const useAuth = () => {
   let isAdmin,
     isCertificationAuthority,
     isOrganism,
-    isGestionnaireMaisonMereAAP = false;
+    isGestionnaireMaisonMereAAP,
+    isAdminCertificationAuthority = false;
 
   if (accessToken) {
     const decodedToken = jwtDecode<{
@@ -19,11 +20,15 @@ export const useAuth = () => {
     isCertificationAuthority = roles.includes("manage_feasibility");
     isOrganism = roles.includes("manage_candidacy");
     isGestionnaireMaisonMereAAP = roles.includes("gestion_maison_mere_aap");
+    isAdminCertificationAuthority = roles.includes(
+      "manage_certification_authority_local_account",
+    );
   }
   return {
     isAdmin,
     isCertificationAuthority,
     isOrganism,
     isGestionnaireMaisonMereAAP,
+    isAdminCertificationAuthority,
   };
 };
