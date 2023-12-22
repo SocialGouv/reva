@@ -55,25 +55,6 @@ beforeAll(async () => {
     });
 });
 
-afterAll(async () => {
-  await prismaClient.account.delete({
-    where: {
-      id: certificationAccountAutorityAccount.id,
-    },
-  });
-  await prismaClient.certificationAuthorityLocalAccount.delete({
-    where: { id: certificationAuthorityLocalAccount1.id },
-  });
-  await prismaClient.certificationAuthority.delete({
-    where: { id: certificationAuthority.id },
-  });
-  await prismaClient.account.delete({
-    where: {
-      id: certificationAccountAutorityLocalAccount1Account.id,
-    },
-  });
-});
-
 test("should return an exisiting certification local account list of 1 item for the certification authority", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
