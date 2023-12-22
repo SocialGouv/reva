@@ -59,6 +59,19 @@ export const updateOrganismWithMaisonMereAAPById = async (
     },
   });
 
+  const informationsCommerciales = {
+    nom: organismData.nom,
+    adresseNumeroEtNomDeRue: organismData.address,
+    adresseInformationsComplementaires:
+      organismData.adresseInformationsComplementaires,
+    adresseCodePostal: organismData.zip,
+    adresseVille: organismData.city,
+    conformeNormesAccessbilite: organismData.conformeNormesAccessbilite,
+    siteInternet: organismData.website,
+    emailContact: organismData.contactAdministrativeEmail,
+    telephone: organismData.contactAdministrativePhone,
+  };
+
   const [, , organismUpdate] = await prismaClient.$transaction([
     prismaClient.organismsOnDepartments.deleteMany({
       where: { organismId: organism.id },
@@ -78,17 +91,9 @@ export const updateOrganismWithMaisonMereAAPById = async (
         contactAdministrativePhone: organismData.contactAdministrativePhone,
         website: organismData.website,
         organismInformationsCommerciales: {
-          update: {
-            nom: organismData.nom,
-            adresseNumeroEtNomDeRue: organismData.address,
-            adresseInformationsComplementaires:
-              organismData.adresseInformationsComplementaires,
-            adresseCodePostal: organismData.zip,
-            adresseVille: organismData.city,
-            conformeNormesAccessbilite: organismData.conformeNormesAccessbilite,
-            siteInternet: organismData.website,
-            emailContact: organismData.contactAdministrativeEmail,
-            telephone: organismData.contactAdministrativePhone,
+          upsert: {
+            create: informationsCommerciales,
+            update: informationsCommerciales,
           },
         },
       },
