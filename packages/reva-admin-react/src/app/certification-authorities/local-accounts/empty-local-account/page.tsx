@@ -33,7 +33,9 @@ const EmptyLocalAccountPage = (): JSX.Element => {
       <div className="flex flex-col md:flex-row gap-4 self-center mt-8 md:mt-0">
         <Button
           onClick={() => {
-            router.push("/local-accounts/add-local-account");
+            router.push(
+              "/certification-authorities/local-accounts/add-local-account",
+            );
           }}
         >
           Ajouter des nouveaux comptes

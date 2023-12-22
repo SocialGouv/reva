@@ -23,7 +23,7 @@ export default function Page() {
     certifictionAuthority?.certificationAuthorityLocalAccounts || [];
 
   if (status == "success" && localAccounts.length == 0) {
-    redirect("/local-accounts/empty-local-account");
+    redirect("/certification-authorities/local-accounts/empty-local-account");
   }
 
   return (
@@ -46,7 +46,7 @@ export default function Page() {
               ...localAccounts.map((item) => ({
                 isActive: false,
                 linkProps: {
-                  href: `/local-accounts/${item.id}`,
+                  href: `/certification-authorities/local-accounts/${item.id}`,
                   target: "_self",
                 },
                 text: item.account.lastname,
@@ -54,7 +54,7 @@ export default function Page() {
               {
                 isActive: false,
                 linkProps: {
-                  href: "/local-accounts/add-local-account/",
+                  href: "/certification-authorities/local-accounts/add-local-account/",
                   target: "_self",
                 },
                 text: (

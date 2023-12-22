@@ -1,8 +1,10 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import { Account } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+import { FunctionalError } from "../../shared/error/functionalError";
 
 export const createCertificationAuthorityLocalAccount = async ({
   accountFirstname,
@@ -44,14 +46,23 @@ export const createCertificationAuthorityLocalAccount = async ({
     );
   }
 
-  const account = await createAccount({
-    firstname: accountFirstname,
-    lastname: accountLastname,
-    email: accountEmail,
-    username: accountEmail,
-    keycloakAdmin,
-    group: "certification_authority_local_account",
-  });
+  let account: Account | undefined;
+
+  try {
+    account = await createAccount({
+      firstname: accountFirstname,
+      lastname: accountLastname,
+      email: accountEmail,
+      username: accountEmail,
+      keycloakAdmin,
+      group: "certification_authority_local_account",
+    });
+  } catch (error) {
+    const errorMessage = (error as FunctionalError).message;
+    if (errorMessage) {
+      throw new Error(errorMessage);
+    }
+  }
 
   if (!account) {
     throw new Error("Erreur pendant la création du compte certificateur local");

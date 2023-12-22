@@ -1,9 +1,8 @@
-import { errorToast, successToast } from "@/components/toast/toast";
+import { errorToast } from "@/components/toast/toast";
 import { Certification, Department } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCertificationAuthorityQueries } from "../../certificationAuthorityQueries";
@@ -29,25 +28,16 @@ export type LocalAccount = {
 
 interface Props {
   localAccount?: LocalAccount;
-  onSubmitFormMutation: (data: LocalAccount) => Promise<void>;
+  onSubmit: (data: LocalAccount) => Promise<void>;
   buttonValidateText: string;
-  toastSuccessText: string;
 }
 
 export const FormLocalAccount = (props: Props): JSX.Element => {
-  const {
-    localAccount,
-    onSubmitFormMutation,
-    buttonValidateText,
-    toastSuccessText,
-  } = props;
+  const { localAccount, onSubmit, buttonValidateText } = props;
 
   const isEditing = !!localAccount;
 
-  const { certifictionAuthority, refetchCertifictionAuthority } =
-    useCertificationAuthorityQueries();
-
-  const router = useRouter();
+  const { certifictionAuthority } = useCertificationAuthorityQueries();
 
   const methods = useForm<LocalAccountFormData>({
     resolver: zodResolver(LocalAccountFormSchema),
@@ -93,22 +83,14 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
       return;
     }
 
-    try {
-      await onSubmitFormMutation({
-        id: localAccount?.id,
-        accountFirstname: data.firstname,
-        accountLastname: data.lastname,
-        accountEmail: data.email,
-        departmentIds: selectedDepartmentIds,
-        certificationIds: selectedCertificationIds,
-      });
-
-      await refetchCertifictionAuthority();
-      successToast(toastSuccessText);
-      router.push("/local-accounts");
-    } catch (error) {
-      errorToast("Une erreur est survenue");
-    }
+    await onSubmit({
+      id: localAccount?.id,
+      accountFirstname: data.firstname,
+      accountLastname: data.lastname,
+      accountEmail: data.email,
+      departmentIds: selectedDepartmentIds,
+      certificationIds: selectedCertificationIds,
+    });
   });
 
   const handleReset = useCallback(() => {

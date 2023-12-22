@@ -98,10 +98,12 @@ export const Header = () => {
               {
                 text: "Gestion des comptes locaux",
                 linkProps: {
-                  href: "/local-accounts/",
+                  href: "/certification-authorities/local-accounts/",
                   target: "_self",
                 },
-                isActive: currentPathname.startsWith("/local-accounts"),
+                isActive: currentPathname.startsWith(
+                  "/certification-authorities",
+                ),
               },
             ]
           : []),

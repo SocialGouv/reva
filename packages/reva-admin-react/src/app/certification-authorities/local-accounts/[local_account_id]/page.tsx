@@ -1,5 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
+import { errorToast, successToast } from "@/components/toast/toast";
+
 import { useParams } from "next/navigation";
 import { useCertificationAuthorityQueries } from "../certificationAuthorityQueries";
 import {
@@ -8,10 +12,15 @@ import {
 } from "../components/form-local-account";
 
 const EditLocalAccountPage = () => {
+  const router = useRouter();
+
   const { local_account_id } = useParams();
 
-  const { certifictionAuthority, useUpdateCertificationAuthorityMutation } =
-    useCertificationAuthorityQueries();
+  const {
+    certifictionAuthority,
+    useUpdateCertificationAuthorityMutation,
+    refetchCertifictionAuthority,
+  } = useCertificationAuthorityQueries();
 
   const { mutateAsync: updateCertificationAuthorityMutation } =
     useUpdateCertificationAuthorityMutation;
@@ -39,17 +48,29 @@ const EditLocalAccountPage = () => {
   return (
     <FormLocalAccount
       localAccount={localAccount}
-      onSubmitFormMutation={async (data) => {
+      onSubmit={async (data) => {
         if (data.id) {
-          await updateCertificationAuthorityMutation({
-            certificationAuthorityLocalAccountId: data.id,
-            departmentIds: data.departmentIds,
-            certificationIds: data.certificationIds,
-          });
+          try {
+            await updateCertificationAuthorityMutation({
+              certificationAuthorityLocalAccountId: data.id,
+              departmentIds: data.departmentIds,
+              certificationIds: data.certificationIds,
+            });
+            await refetchCertifictionAuthority();
+
+            successToast("Le compte local a bien été mis à jour");
+
+            router.push("/certification-authorities/local-accounts");
+          } catch (error) {
+            const errorMessage =
+              (error as any)?.response?.errors?.[0]?.message ||
+              '"Une erreur est survenue"';
+
+            errorToast(errorMessage);
+          }
         }
       }}
       buttonValidateText="Valider"
-      toastSuccessText="Le compte local a bien été mis à jour"
     />
   );
 };
