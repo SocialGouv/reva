@@ -2,10 +2,13 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  globals: {
-    "ts-jest": {
-      fastify: true,
-    },
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        fastify: true,
+      },
+    ],
   },
   globalSetup: "./test/jestGlobalSetup.ts",
   setupFilesAfterEnv: ["./test/jestClearDatabaseBeforeEachTestFile.ts"],
