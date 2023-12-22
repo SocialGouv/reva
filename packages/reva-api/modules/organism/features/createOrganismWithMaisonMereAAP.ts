@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
+import { prismaClient } from "../../../prisma/client";
 import { createAccountProfile } from "../../account/database/accounts";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 import * as IAM from "../../account/features/keycloak";
@@ -16,6 +17,8 @@ import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getInformationsCommercialesByEmailContact } from "./getInformationsCommercialesByEmailContact";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
+import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
+import { getMaisonMereOnDomaineByMaisonMereId } from "./getMaisonMereOnDomaineByMaisonMereId";
 
 interface CreateOrganismWithMaisonMereAAPRequestParams {
   organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
@@ -143,6 +146,40 @@ export const createOrganismWithMaisonMereAAP = async ({
         id: randomUUID(),
       },
     });
+
+    if (
+      typologie === "expertBrancheEtFiliere" ||
+      typologie === "expertFiliere"
+    ) {
+      const maisonMereOnDomaine = await getMaisonMereOnDomaineByMaisonMereId({
+        maisonMereAAPId: maisonMereAAP.id,
+      });
+
+      if (maisonMereOnDomaine.length) {
+        await prismaClient.organismOnDomaine.createMany({
+          data: maisonMereOnDomaine.map((maisonMere) => ({
+            domaineId: maisonMere.domaineId,
+            organismId: newOrganism.id,
+          })),
+        });
+      }
+    }
+
+    if (
+      typologie === "expertBrancheEtFiliere" ||
+      typologie === "expertBranche"
+    ) {
+      const maisonMereOnConventionCollective =
+        await getMaisonMereOnCCNByMaisonMereId({
+          maisonMereAAPId: maisonMereAAP.id,
+        });
+      await prismaClient.organismOnConventionCollective.createMany({
+        data: maisonMereOnConventionCollective.map((maisonMere) => ({
+          ccnId: maisonMere.ccnId,
+          organismId: newOrganism.id,
+        })),
+      });
+    }
 
     //iam account creation
     const newKeycloakId = (
