@@ -7,4 +7,5 @@ module.exports = {
       fastify: true,
     },
   },
+  globalSetup: "./test/jestGlobalSetup.ts",
 };
