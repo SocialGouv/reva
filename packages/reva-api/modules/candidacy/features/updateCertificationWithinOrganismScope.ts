@@ -72,6 +72,7 @@ export const updateCertificationWithinOrganismScope = async ({
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
+    "DOSSIER_FAISABILITE_INCOMPLET",
   ];
 
   const lastStatusWithDetails = await prismaClient.candidaciesStatus.findFirst({
