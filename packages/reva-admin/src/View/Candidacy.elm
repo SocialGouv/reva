@@ -64,7 +64,7 @@ view context config =
                         Api.Token.isAdmin context.token
                             && List.member
                                 (Candidacy.lastStatus config.candidacy.statuses)
-                                [ PriseEnCharge, ParcoursEnvoye, ParcoursConfirme ]
+                                [ PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteIncomplet ]
                             && config.candidacy.dropOutDate
                             == Nothing
                       then
