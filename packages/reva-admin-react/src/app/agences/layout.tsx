@@ -3,7 +3,7 @@ import { useAgencesQueries } from "@/app/agences/agencesQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 const menuItem = ({
   id,
@@ -37,7 +37,6 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
   const regex = new RegExp(/\/add-agence$/);
   const isAddAgence = regex.test(path);
-  useEffect(() => {}, [organismsStatus]);
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 md:gap-0">

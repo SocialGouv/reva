@@ -9,6 +9,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -35,6 +36,7 @@ function AgenceFormContainer({
 }: AgenceFormContainerProps) {
   const { agence_id } = useParams();
   const { organismsRefetch, organisms } = useAgencesQueries();
+  const queryClient = useQueryClient();
 
   const router = useRouter();
 
@@ -161,6 +163,7 @@ function AgenceFormContainer({
 
     try {
       await onSubmitFormMutation(organismData);
+      await queryClient.refetchQueries({ queryKey: ["account", "organism"] });
       await organismsRefetch();
       successToast(toastSuccessText);
       router.push("/agences");
