@@ -3,7 +3,7 @@ import { useAgencesQueries } from "@/app/agences/agencesQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 const menuItem = ({
   id,
@@ -33,11 +33,12 @@ const Skeleton = () => (
   <div className="ml-5 mt-6 h-8 animate-pulse bg-gray-100 w-64" />
 );
 const AgencesLayout = ({ children }: { children: ReactNode }) => {
-  const { organisms, organismsStatus } = useAgencesQueries();
+  const { organisms, organismsStatus, organismsIsRefetching } =
+    useAgencesQueries();
   const path = usePathname();
   const regex = new RegExp(/\/add-agence$/);
   const isAddAgence = regex.test(path);
-
+  useEffect(() => {}, [organisms, organismsStatus, organismsIsRefetching]);
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 md:gap-0">
       {organismsStatus == "pending" && (

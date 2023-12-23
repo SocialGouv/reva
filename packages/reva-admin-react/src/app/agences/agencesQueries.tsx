@@ -87,6 +87,7 @@ export const useAgencesQueries = () => {
     data: organismsResponse,
     status: organismsStatus,
     refetch: organismsRefetch,
+    isRefetching: organismsIsRefetching,
   } = useQuery({
     queryKey: ["account"],
     queryFn: () => graphqlClient.request(getAccountForConnectionUser),
@@ -131,6 +132,7 @@ export const useAgencesQueries = () => {
     useUpdateOrganismByMaisonMereAAP,
     organisms,
     organismsRefetch,
+    organismsIsRefetching,
     maisonMereAAP,
     maisonMereAAPOnDepartements,
     organismsStatus,
