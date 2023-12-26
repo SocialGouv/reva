@@ -955,7 +955,7 @@ model CertificationAuthorityLocalAccount {
   account                                           Account                                             @relation(fields: [accountId], references: [id])
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
-  certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id])
+  certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
 
   @@map("certification_authority_local_account")
@@ -966,7 +966,7 @@ model CertificationAuthorityLocalAccountOnCertification {
   certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: Cascade)
   certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
   certificationId                      String                             @map("certification_id") @db.Uuid
-  certification                        Certification                      @relation(map: "calaoc_certification", fields: [certificationId], references: [id], onDelete: Cascade)
+  certification                        Certification                      @relation(map: "calaoc_certification", fields: [certificationId], references: [id], onDelete: NoAction)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
@@ -980,7 +980,7 @@ model CertificationAuthorityLocalAccountOnDepartment {
   certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: Cascade)
   certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
   departmentId                         String                             @map("department_id") @db.Uuid
-  department                           Department                         @relation(map: "calaoc_department", fields: [departmentId], references: [id], onDelete: Cascade)
+  department                           Department                         @relation(map: "calaoc_department", fields: [departmentId], references: [id], onDelete: NoAction)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
