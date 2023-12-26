@@ -1,11 +1,13 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { FormOptionalFieldsDisclaimer } from "components/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -34,9 +36,16 @@ interface ContactFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
+const modalDistanceInfo = createModal({
+  id: "update-email-confirmation",
+  isOpenedByDefault: false,
+});
+
 export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const [state, send] = useActor(mainService);
-
+  const [elementsSubmitting, setElementsSubmitting] =
+    useState<FormElements | null>(null);
+  const isModalEmailOpen = useIsModalOpen(modalDistanceInfo);
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
       .map((r) => ({
@@ -57,169 +66,231 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       email: elements.email.value || null,
       departmentId: elements.department?.value || null,
     };
-    send({
-      type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
-      contact,
-    });
+
+    const showModalUpdateEmail = hasCandidacy && initialEmail !== contact.email;
+
+    if (!showModalUpdateEmail) {
+      return send({
+        type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
+        contact,
+      });
+    }
+    modalDistanceInfo.open();
+    setElementsSubmitting(elements);
   };
   const editedContact = state.context.contact;
+  const initialEmail = useMemo(
+    () => editedContact?.email || "",
+    [editedContact]
+  );
   const firstnameRef = useRef<HTMLInputElement>(null);
   const lastnameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const departementRef = useRef<HTMLSelectElement>(null);
 
+  useEffect(() => {
+    if (elementsSubmitting && !isModalEmailOpen) {
+      const contact: Contact = {
+        candidateId: state.context.contact?.candidateId || "unknown candidate",
+        firstname: elementsSubmitting?.firstname.value || null,
+        lastname: elementsSubmitting?.lastname.value || null,
+        phone: elementsSubmitting?.phone.value || null,
+        email: elementsSubmitting?.email.value || null,
+        departmentId: elementsSubmitting?.department?.value || null,
+      };
+      send({
+        type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
+        contact,
+      });
+    }
+  }, [
+    elementsSubmitting,
+    isModalEmailOpen,
+    send,
+    hasCandidacy,
+    state.context.contact?.candidateId,
+  ]);
   return (
-    <Page title="Création de compte">
-      <BackToHomeButton />
-      {hasCandidacy ? (
-        <></>
-      ) : state.context.error ? (
-        <RegistrationErrorMessage error={state.context.error} />
-      ) : (
-        <>
-          <Alert
-            className="mb-6"
-            severity="warning"
-            title={
-              <div className="flex flex-col items-start gap-2 font-normal">
-                <h2 className="font-bold ">Attention</h2>
-                <p>Seuls quelques diplômes sont actuellement éligibles : </p>
-                <a
-                  className="fr-link"
-                  href="https://airtable.com/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
-                >
-                  Voir tous les diplômes actuellement disponibles via France VAE
-                </a>
-                <p>
-                  Les salariés ayant un contrat de travail de droit public, les
-                  retraités et les étudiants{" "}
-                  <strong>
-                    ne peuvent pas bénéficier du financement d’un parcours
-                    France VAE à date.
-                  </strong>
-                </p>
-                <a
-                  className="fr-link"
-                  href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="En cas de question, contactez un Point Relais Conseil - nouvelle fenêtre"
-                >
-                  En cas de question, contactez un Point Relais Conseil
-                </a>
-              </div>
-            }
-          />
-          <h1 className="text-3xl font-bold text-dsfrBlue-500">
-            Bienvenue <span aria-hidden="true">🤝</span>,
-          </h1>
-        </>
-      )}
-      <form onSubmit={onSubmit} className="mb-6">
-        <fieldset>
-          <legend>
-            <h2 className="mt-6">
-              {hasCandidacy ? "Modifier votre compte" : "Créer votre compte"}
-            </h2>
-          </legend>
+    <>
+      <Page title="Création de compte">
+        <BackToHomeButton />
+        {hasCandidacy ? (
+          <></>
+        ) : state.context.error ? (
+          <RegistrationErrorMessage error={state.context.error} />
+        ) : (
+          <>
+            <Alert
+              className="mb-6"
+              severity="warning"
+              title={
+                <div className="flex flex-col items-start gap-2 font-normal">
+                  <h2 className="font-bold ">Attention</h2>
+                  <p>Seuls quelques diplômes sont actuellement éligibles : </p>
+                  <a
+                    className="fr-link"
+                    href="https://airtable.com/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
+                  >
+                    Voir tous les diplômes actuellement disponibles via France
+                    VAE
+                  </a>
+                  <p>
+                    Les salariés ayant un contrat de travail de droit public,
+                    les retraités et les étudiants{" "}
+                    <strong>
+                      ne peuvent pas bénéficier du financement d’un parcours
+                      France VAE à date.
+                    </strong>
+                  </p>
+                  <a
+                    className="fr-link"
+                    href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                    target="_blank"
+                    rel="noreferrer"
+                    title="En cas de question, contactez un Point Relais Conseil - nouvelle fenêtre"
+                  >
+                    En cas de question, contactez un Point Relais Conseil
+                  </a>
+                </div>
+              }
+            />
+            <h1 className="text-3xl font-bold text-dsfrBlue-500">
+              Bienvenue <span aria-hidden="true">🤝</span>,
+            </h1>
+          </>
+        )}
+        <form onSubmit={onSubmit} className="flex flex-col">
+          <fieldset>
+            <legend>
+              <h2 className="mt-6 text-3xl mb-2 text-dsfrBlue-500">
+                {hasCandidacy
+                  ? "Modifier vos informations"
+                  : "Créer votre compte"}
+              </h2>
+            </legend>
 
-          {state.context.error &&
-            state.context.error !== INVALID_REGISTRATION_TOKEN_ERROR && (
-              <ErrorAlertFromState />
-            )}
-          <FormOptionalFieldsDisclaimer className="mb-4" />
-          <Input
-            label="Prénom"
-            nativeInputProps={{
-              name: "firstname",
-              ref: firstnameRef,
-              required: true,
-              autoComplete: "given-name",
-              defaultValue: editedContact?.firstname || "",
-            }}
-          />
-          <Input
-            label="Nom"
-            nativeInputProps={{
-              name: "lastname",
-              ref: lastnameRef,
-              required: true,
-              autoComplete: "family-name",
-              defaultValue: editedContact?.lastname || "",
-            }}
-          />
-          <Input
-            label="Téléphone"
-            nativeInputProps={{
-              name: "phone",
-              ref: phoneRef,
-              minLength: 10,
-              required: true,
-              type: "tel",
-              autoComplete: "tel",
-              defaultValue: editedContact?.phone || "",
-            }}
-          />
-          <Input
-            label="Email"
-            hintText="Format attendu : nom@domaine.fr"
-            nativeInputProps={{
-              name: "email",
-              ref: emailRef,
-              required: true,
-              type: "email",
-              autoComplete: "email",
-              spellCheck: "false",
-              defaultValue: editedContact?.email || "",
-            }}
-          />
-          {!hasCandidacy && (
-            <Select
-              className="my-4"
-              data-test="certificates-select-department"
-              label="Département"
-              hint="Sélectionnez votre département de résidence"
-              nativeSelectProps={{
-                name: "department",
-                defaultValue: "",
-                required: true,
-                ref: departementRef,
-              }}
-            >
-              <option value="" disabled={true} hidden={true}>
-                Votre département
-              </option>
-              {selectsOptionsDepartments.map((d) => (
-                <option key={d.value} value={d.value}>
-                  {d.label}
+            {state.context.error &&
+              state.context.error !== INVALID_REGISTRATION_TOKEN_ERROR && (
+                <ErrorAlertFromState />
+              )}
+            <FormOptionalFieldsDisclaimer
+              className="mb-4"
+              label="Tous les champs sont obligatoires."
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <Input
+                label="Prénom"
+                nativeInputProps={{
+                  name: "firstname",
+                  ref: firstnameRef,
+                  required: true,
+                  autoComplete: "given-name",
+                  defaultValue: editedContact?.firstname || "",
+                }}
+              />
+              <Input
+                label="Nom"
+                nativeInputProps={{
+                  name: "lastname",
+                  ref: lastnameRef,
+                  required: true,
+                  autoComplete: "family-name",
+                  defaultValue: editedContact?.lastname || "",
+                }}
+              />
+              <Input
+                className="sm:pt-6"
+                label="Téléphone"
+                nativeInputProps={{
+                  name: "phone",
+                  ref: phoneRef,
+                  minLength: 10,
+                  required: true,
+                  type: "tel",
+                  autoComplete: "tel",
+                  defaultValue: editedContact?.phone || "",
+                }}
+              />
+              <Input
+                label="Email"
+                hintText="Format attendu : nom@domaine.fr"
+                nativeInputProps={{
+                  name: "email",
+                  ref: emailRef,
+                  required: true,
+                  type: "email",
+                  autoComplete: "email",
+                  spellCheck: "false",
+                  defaultValue: editedContact?.email || "",
+                }}
+              />
+            </div>
+            {!hasCandidacy && (
+              <Select
+                className="my-4"
+                data-test="certificates-select-department"
+                label="Département"
+                hint="Sélectionnez votre département de résidence"
+                nativeSelectProps={{
+                  name: "department",
+                  defaultValue: "",
+                  required: true,
+                  ref: departementRef,
+                }}
+              >
+                <option value="" disabled={true} hidden={true}>
+                  Votre département
                 </option>
-              ))}
-            </Select>
-          )}
-        </fieldset>
-        <Button
-          data-test={`project-contact-${editedContact ? "save" : "add"}`}
-          className="mt-6"
-        >
-          {hasCandidacy ? "Modifier les informations" : "Créer votre compte"}
-        </Button>
-      </form>
-      {!hasCandidacy && (
-        <div className="border-t border-gray-200 pt-6">
-          <button
-            data-test="project-contact-login"
-            onClick={() => send("LOGIN")}
-            className="text-gray-500 underline"
+                {selectsOptionsDepartments.map((d) => (
+                  <option key={d.value} value={d.value}>
+                    {d.label}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </fieldset>
+          <Button
+            data-test={`project-contact-${editedContact ? "save" : "add"}`}
+            className="mt-6 self-end w-full sm:w-auto flex justify-center"
           >
-            J'ai déjà un compte
-          </button>
-        </div>
-      )}
-    </Page>
+            {hasCandidacy ? "Modifier les informations" : "Créer votre compte"}
+          </Button>
+        </form>
+        {!hasCandidacy && (
+          <div className="border-t border-gray-200 pt-6">
+            <button
+              data-test="project-contact-login"
+              onClick={() => send("LOGIN")}
+              className="text-gray-500 underline"
+            >
+              J'ai déjà un compte
+            </button>
+          </div>
+        )}
+      </Page>
+      <modalDistanceInfo.Component
+        title={
+          <div className="flex gap-2">
+            <div className="text-sm pt-1">✔️</div>
+            <span>
+              Votre demande de changement d'e-mail de connexion a bien été prise
+              en compte
+            </span>
+          </div>
+        }
+        size="large"
+      >
+        <p className="my-4">
+          Afin de valider ce changement, un e-mail d'activation a été envoyé sur
+          votre nouvelle adresse. Si vous ne trouvez pas notre e-mail , pensez à
+          vérifiez votre dossier de courriers indésirables (spams).
+        </p>
+      </modalDistanceInfo.Component>
+    </>
   );
 };
 
