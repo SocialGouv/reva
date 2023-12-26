@@ -23,6 +23,8 @@ import {
   KEYCLOAK_URL,
 } from "@/config/config";
 import { useCrisp } from "@/components/crisp/useCrisp";
+import { fr } from "date-fns/locale";
+import { setDefaultOptions } from "date-fns";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -34,6 +36,8 @@ const keycloakInstance =
     : undefined;
 
 const queryClient = new QueryClient();
+
+setDefaultOptions({ locale: fr });
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
