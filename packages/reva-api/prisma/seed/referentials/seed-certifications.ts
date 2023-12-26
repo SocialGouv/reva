@@ -33,6 +33,9 @@ export async function seedCertifications(prisma: PrismaClient) {
     await tx.$executeRawUnsafe(
       `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" DEFERRED;`
     );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "calaoc_certification" DEFERRED;`
+    );
 
     // On supprime toutes les certifications, sauf celles de l'XP
     const { count } = await tx.certification.deleteMany({
@@ -167,6 +170,9 @@ export async function seedCertifications(prisma: PrismaClient) {
     );
     await tx.$executeRawUnsafe(
       `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" IMMEDIATE;`
+    );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "calaoc_certification" IMMEDIATE;`
     );
   });
 }
