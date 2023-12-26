@@ -8,11 +8,14 @@ const getAccountForConnectionUser = graphql(`
   query getMaisonMereAAP {
     account_getAccountForConnectedUser {
       organism {
+        id
         maisonMereAAP {
           id
           organisms {
             id
             label
+            fermePourAbsenceOuConges
+            isActive
             organismOnDepartments {
               id
               departmentId
@@ -127,6 +130,9 @@ export const useAgencesQueries = () => {
     organismsResponse?.account_getAccountForConnectedUser?.organism
       ?.maisonMereAAP;
 
+  const organismMaisonMereAAPId =
+    organismsResponse?.account_getAccountForConnectedUser?.organism?.id;
+
   return {
     useCreateOrganismByMaisonMereAAP,
     useUpdateOrganismByMaisonMereAAP,
@@ -136,5 +142,6 @@ export const useAgencesQueries = () => {
     maisonMereAAP,
     maisonMereAAPOnDepartements,
     organismsStatus,
+    organismMaisonMereAAPId,
   };
 };

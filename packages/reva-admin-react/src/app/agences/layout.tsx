@@ -9,16 +9,24 @@ const menuItem = ({
   id,
   label,
   informationsCommerciales,
+  isOrganismMaisonMere,
+  isActive,
+  fermePourAbsenceOuConges,
 }: {
   id: string;
   label: string;
   informationsCommerciales?: {
     nom?: string | null;
   } | null;
+  fermePourAbsenceOuConges: boolean;
+  isActive: boolean;
+  isOrganismMaisonMere?: boolean;
 }) => {
-  const text = informationsCommerciales?.nom
-    ? informationsCommerciales.nom
-    : label;
+  const text = `${
+    informationsCommerciales?.nom ? informationsCommerciales.nom : label
+  }${isOrganismMaisonMere ? " (Agence administratrice)" : ""}${
+    !isActive || fermePourAbsenceOuConges ? " 🚫" : ""
+  }`;
   return {
     isActive: false,
     linkProps: {
@@ -33,7 +41,8 @@ const Skeleton = () => (
   <div className="ml-5 mt-6 h-8 animate-pulse bg-gray-100 w-64" />
 );
 const AgencesLayout = ({ children }: { children: ReactNode }) => {
-  const { organisms, organismsStatus } = useAgencesQueries();
+  const { organisms, organismsStatus, organismMaisonMereAAPId } =
+    useAgencesQueries();
   const path = usePathname();
   const regex = new RegExp(/\/add-agence$/);
   const isAddAgence = regex.test(path);
@@ -55,7 +64,23 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
           title="Agences"
           items={
             [
-              ...organisms.map(menuItem),
+              ...organisms.map(
+                ({
+                  id,
+                  informationsCommerciales,
+                  label,
+                  fermePourAbsenceOuConges,
+                  isActive,
+                }) =>
+                  menuItem({
+                    id,
+                    informationsCommerciales,
+                    label,
+                    fermePourAbsenceOuConges,
+                    isActive,
+                    isOrganismMaisonMere: id === organismMaisonMereAAPId,
+                  }),
+              ),
               !isAddAgence
                 ? {
                     isActive: false,
