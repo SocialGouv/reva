@@ -33,9 +33,9 @@ const keycloakInstance =
       })
     : undefined;
 
-export default function RootLayout({ children }: { children: JSX.Element }) {
-  const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
+export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
     <html {...getHtmlAttributes({ defaultColorScheme })}>
       <head>
