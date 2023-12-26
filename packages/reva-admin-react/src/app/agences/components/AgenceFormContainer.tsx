@@ -163,10 +163,6 @@ function AgenceFormContainer({
 
     try {
       await onSubmitFormMutation(organismData);
-      await queryClient.invalidateQueries({
-        queryKey: ["account"],
-      });
-      await queryClient.refetchQueries({ queryKey: ["account"] });
       await organismsRefetch();
       successToast(toastSuccessText);
       router.push("/agences");
