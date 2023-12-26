@@ -37,7 +37,7 @@ interface ContactFormElement extends HTMLFormElement {
 }
 
 const modalDistanceInfo = createModal({
-  id: "update-email-confirmation",
+  id: "project-home-modal-email",
   isOpenedByDefault: false,
 });
 

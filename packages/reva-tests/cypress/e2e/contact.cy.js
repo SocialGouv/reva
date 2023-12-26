@@ -37,6 +37,9 @@ context("Candidate account", () => {
     cy.get("[name=email]").type(`{selectAll}${email2}`);
 
     cy.get('[data-test="project-contact-save"]').click();
+    cy.get(
+      '[title="Fermer"][aria-controls="project-home-modal-email"]'
+    ).click();
     cy.wait("@update_contact");
 
     cy.get('[data-test="project-home-fullname"]').contains(
