@@ -58,13 +58,22 @@ export const Header = () => {
           : []),
         ...(isAdmin
           ? [
-              {
-                text: "Inscriptions",
-                linkProps: {
-                  href: ADMIN_ELM_URL + "/subscritpions",
-                  target: "_self",
-                },
-              },
+              isFeatureActive("ORGANISM_LIST_IN_SUBSCRIPTION")
+                ? {
+                    text: "Inscriptions",
+                    linkProps: {
+                      href: "/subscriptions/pending",
+                      target: "_self",
+                    },
+                    isActive: currentPathname.startsWith("/subscriptions"),
+                  }
+                : {
+                    text: "Inscriptions",
+                    linkProps: {
+                      href: ADMIN_ELM_URL + "/subscriptions",
+                      target: "_self",
+                    },
+                  },
               {
                 text: "Comptes",
                 linkProps: {
