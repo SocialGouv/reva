@@ -13,12 +13,13 @@
     "graphql:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "^0.78.2",
+    "@codegouvfr/react-dsfr": "^1.0.4",
     "@hookform/resolvers": "^3.3.2",
     "@tanstack/react-query": "^5.4.3",
     "@types/crypto-js": "^4.2.1",
     "crisp-sdk-web": "^1.0.21",
     "crypto-js": "^4.2.0",
+    "date-fns": "^3.0.6",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "jwt-decode": "^4.0.0",
