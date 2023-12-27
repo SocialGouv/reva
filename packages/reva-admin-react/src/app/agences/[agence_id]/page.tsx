@@ -19,7 +19,6 @@ const AgencePage = () => {
         });
       }}
       buttonValidateText="Valider les modifications"
-      toastSuccessText="Les modifications ont bien été enregistrées"
     />
   );
 };
