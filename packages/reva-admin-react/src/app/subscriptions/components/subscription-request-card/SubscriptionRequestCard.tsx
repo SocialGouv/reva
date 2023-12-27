@@ -1,11 +1,14 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
 export const SubscriptionRequestCard = ({
   companyName,
   createdAt,
+  onClick,
 }: {
   companyName: string;
   createdAt: Date;
+  onClick?: () => void;
 }) => (
   <li className="bg-neutral-100 hover:bg-gray-50 p-6 flex flex-col">
     <strong>Raison sociale de la structure</strong>
@@ -13,5 +16,10 @@ export const SubscriptionRequestCard = ({
     <br />
     <strong>Date d'envoi de l'inscription</strong>
     <p>{format(createdAt, "d MMM yyyy")}</p>
+    {onClick && (
+      <Button className="ml-auto" onClick={onClick}>
+        Voir plus
+      </Button>
+    )}
   </li>
 );

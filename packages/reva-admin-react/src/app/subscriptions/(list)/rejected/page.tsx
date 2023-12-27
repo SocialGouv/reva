@@ -6,6 +6,7 @@ import Pagination from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const getRejectedSubscriptionRequests = graphql(`
@@ -35,6 +36,7 @@ const RejectedSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const [searchFilter, setSearchFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
 
   const {
     data: getRejectedSubscriptionRequestsResponse,
@@ -79,6 +81,7 @@ const RejectedSubscriptionRequestsPage = () => {
                   key={r.id}
                   companyName={r.companyName}
                   createdAt={r.createdAt}
+                  onClick={() => router.push(`/subscriptions/${r.id}`)}
                 />
               ))}
             </ul>
