@@ -1,4 +1,5 @@
 "use client";
+import { SubscriptionRequestForm } from "@/app/subscriptions/[subscriptionRequestId]/SubscriptionRequestForm";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { SubscriptionOrganismTypology } from "@/graphql/generated/graphql";
@@ -129,7 +130,6 @@ const SubscriptionRequestPage = () => {
           </div>
           <br />
           <h2 className="text-xl font-bold my-4">
-            {" "}
             Typologie et zone d'intervention
           </h2>
           <Info title="Typologie">
@@ -159,11 +159,21 @@ const SubscriptionRequestPage = () => {
               </ul>
             </Info>
           </div>
-          <hr className="mt-8" />
-          <h2 className="text-xl font-bold my-4">Motif du refus</h2>
-          <pre className="whitespace-normal">
-            {subscriptionRequest.rejectionReason}
-          </pre>
+          <hr className="mt-8 mb-4" />
+          {subscriptionRequest.status === "REJECTED" && (
+            <>
+              <h2 className="text-xl font-bold mb-4">Motif du refus</h2>
+              <pre className="whitespace-normal">
+                {subscriptionRequest.rejectionReason}
+              </pre>
+            </>
+          )}
+
+          {subscriptionRequest.status === "PENDING" && (
+            <SubscriptionRequestForm
+              subscriptionRequestId={subscriptionRequestId}
+            />
+          )}
         </div>
       </div>
     )
