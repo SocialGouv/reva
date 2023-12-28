@@ -126,10 +126,16 @@ function CheckboxListDepartementsRegions({
       </div>
       <div className="max-h-[500px] overflow-y-scroll overflow-x-hidden">
         {zoneIntervention.map((region) => {
+          const isPartiallySelected = region.departements.some(
+            (departement) => departement.isSelected,
+          );
+
           return (
             <div key={region.regionId} className="relative">
               <Checkbox
-                className="absolute z-10 top-0.5 bg-white pt-4 sm:pt-2.5 w-10/12 "
+                className={`absolute z-10 top-0.5 bg-white pt-4 sm:pt-2.5 w-10/12 ${
+                  isPartiallySelected ? "checkbox-partial" : ""
+                }`}
                 key={region.regionLabel}
                 options={[
                   {
