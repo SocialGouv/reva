@@ -12,7 +12,7 @@ export const OrganismTimelineElement = () => {
 
   const organismDisplayInfo = organism
     ? {
-        label: organism?.label,
+        label: informationsCommerciales?.nom || organism?.label,
         email:
           informationsCommerciales?.emailContact ||
           organism?.contactAdministrativeEmail,
