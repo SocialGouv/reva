@@ -86,7 +86,7 @@ const SubscriptionRequestPage = () => {
             {subscriptionRequest.companyName}
           </h1>
           <h2 className="text-xl font-bold my-4">Informations générales</h2>
-          <div className="grid grid-cols-2">
+          <div className="grid md:grid-cols-2">
             <Info title="Nom de l'architecte de parcours">
               {subscriptionRequest.accountFirstname}{" "}
               {subscriptionRequest.accountLastname}
@@ -111,7 +111,7 @@ const SubscriptionRequestPage = () => {
           <h2 className="text-xl font-bold my-4">
             Informations juridiques de la structure
           </h2>
-          <div className="grid grid-cols-2">
+          <div className="grid md:grid-cols-2">
             <Info title="SIRET de la structure">
               {subscriptionRequest.companySiret}
             </Info>
@@ -137,7 +137,7 @@ const SubscriptionRequestPage = () => {
           <Info title="Typologie">
             {getTypologyLabel(subscriptionRequest.typology)}
           </Info>
-          <div className="grid grid-cols-2">
+          <div className="grid md:grid-cols-2">
             <Info title="Zone d'intervention en présentiel">
               <ul className="ml-4">
                 {subscriptionRequest.departmentsWithOrganismMethods
