@@ -3,6 +3,7 @@ import { SubscriptionRequestForm } from "@/app/subscriptions/[subscriptionReques
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { SubscriptionOrganismTypology } from "@/graphql/generated/graphql";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -30,6 +31,7 @@ const getSubscriptionRequest = graphql(`
       companyCity
       typology
       rejectionReason
+      isCompanyNameUnique
       departmentsWithOrganismMethods {
         department {
           id
@@ -160,6 +162,14 @@ const SubscriptionRequestPage = () => {
             </Info>
           </div>
           <hr className="mt-8 mb-4" />
+          {!subscriptionRequest.isCompanyNameUnique && (
+            <Alert
+              className="mb-6"
+              title=""
+              severity="warning"
+              description="Une structure portant la même raison sociale existe déjà."
+            />
+          )}
           {subscriptionRequest.status === "REJECTED" && (
             <>
               <h2 className="text-xl font-bold mb-4">Motif du refus</h2>
@@ -168,7 +178,6 @@ const SubscriptionRequestPage = () => {
               </pre>
             </>
           )}
-
           {subscriptionRequest.status === "PENDING" && (
             <SubscriptionRequestForm
               subscriptionRequestId={subscriptionRequestId}
