@@ -1,6 +1,7 @@
 import { Organism, OrganismInformationsCommerciales } from "@prisma/client";
 import mercurius from "mercurius";
 
+import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getDegreeById } from "../referential/features/getDegreeByid";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
@@ -18,6 +19,7 @@ import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestio
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
+import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
@@ -59,6 +61,11 @@ export const resolvers = {
       getMaisonMereAAPOnDepartments({ maisonMereAAPId: id }),
     organisms: ({ id: maisonMereAAPId }: { id: string }) =>
       getOrganismsByMaisonAAPId({ maisonMereAAPId }),
+    gestionnaire: ({
+      gestionnaireAccountId,
+    }: {
+      gestionnaireAccountId: string;
+    }) => getAccountById({ id: gestionnaireAccountId }),
   },
   MaisonMereAAPOnDepartment: {
     departement: ({ departementId }: { departementId: string }) =>
@@ -229,6 +236,58 @@ export const resolvers = {
         }
 
         return getOrganismById({ organismId: params.id });
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    organism_getMaisonMereAAPs: async (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+        searchFilter?: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return getMaisonMereAAPs(params);
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    organism_getMaisonMereAAPById: async (
+      _parent: unknown,
+      params: {
+        maisonMereAAPId: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return getMaisonMereAAPById({ id: params.maisonMereAAPId });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

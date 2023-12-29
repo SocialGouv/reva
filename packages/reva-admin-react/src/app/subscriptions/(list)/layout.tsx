@@ -26,6 +26,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
         items={[
           menuItem("Inscriptions en attente", "/subscriptions/pending"),
           menuItem("Inscriptions refusées", "/subscriptions/rejected"),
+          menuItem("Inscriptions validées", "/subscriptions/validated"),
         ]}
       />
       <div className="mt-3">{children}</div>

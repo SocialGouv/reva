@@ -148,12 +148,11 @@ export const resolvers = {
           );
         }
 
-        return getAccountById(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params
-        );
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return getAccountById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

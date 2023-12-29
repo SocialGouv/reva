@@ -1,3 +1,16 @@
+enum LegalStatus {
+  EI
+  EURL
+  SARL
+  SAS
+  SASU
+  SA
+  EIRL
+  ASSOCIATION_LOI_1901
+  ETABLISSEMENT_PUBLIC
+  NC
+}
+
 type Organism {
   id: UUID!
   label: String!
@@ -25,22 +38,30 @@ type OrganismOnDegree {
 
 type MaisonMereAAP {
   id: UUID!
-  label: String!
-  address: String!
-  zip: String!
-  city: String!
-  contactAdministrativeEmail: String!
-  contactAdministrativePhone: String
-  website: String
-  typology: OrganismTypology!
-  isActive: Boolean!
+  raisonSociale: String!
+  statutJuridique: LegalStatus!
+  siret: String!
+  adresse: String!
+  codePostal: String!
+  ville: String!
+  typologie: OrganismTypology!
+  siteWeb: String
+  dateExpirationCertificationQualiopi: Timestamp
+  gestionnaire: Account!
   organisms: [Organism!]!
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
+  createdAt: Timestamp!
 }
 
 type Account {
   agences: [Organism!]!
   maisonMereAAP: MaisonMereAAP
+}
+
+type MaisonMereAAPOnDepartment {
+  estSurPlace: Boolean!
+  estADistance: Boolean!
+  departement: Department!
 }
 
 type MaisonMereAAPOnDepartment {
@@ -79,6 +100,12 @@ type OrganismInformationsCommerciales {
 
 type Query {
   organism_getOrganism(id: ID!): Organism
+  organism_getMaisonMereAAPs(
+    offset: Int
+    limit: Int
+    searchFilter: String
+  ): maisonMereAAPsPaginated!
+  organism_getMaisonMereAAPById(maisonMereAAPId: ID!): MaisonMereAAP!
 }
 
 input UpdateOrganismInput {
@@ -128,6 +155,11 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
 input CreateOrUpdateOrganismOnDegreesInput {
   organismId: ID!
   degreeIds: [ID!]!
+}
+
+type maisonMereAAPsPaginated {
+  rows: [MaisonMereAAP!]!
+  info: PaginationInfo!
 }
 
 type Mutation {
