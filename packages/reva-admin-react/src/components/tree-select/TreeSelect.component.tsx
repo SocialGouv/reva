@@ -1,14 +1,14 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useState } from "react";
 
-import { TreeSelectItem } from "./TreeSelect.types";
 import {
   checkIfAllItemsSelected,
   getFilteredItems,
 } from "./TreeSelect.helpers";
+import { TreeSelectItem } from "./TreeSelect.types";
 
 interface Props {
   title: string;
@@ -32,6 +32,9 @@ export const TreeSelect = (props: Props): JSX.Element => {
       <>
         {items.map((item) => {
           const availableChildren = item.children && item.children.length > 0;
+          const isPartiallySelected = item?.children?.some(
+            (child) => child.selected,
+          );
 
           return (
             <div
@@ -43,7 +46,9 @@ export const TreeSelect = (props: Props): JSX.Element => {
               <Checkbox
                 className={
                   availableChildren
-                    ? "absolute z-10 top-0.5 pt-2.5 bg-white w-[calc(100%-36px)] mb-0"
+                    ? `absolute z-10 top-0.5 pt-2.5 bg-white w-[calc(100%-36px)] mb-0 ${
+                        isPartiallySelected ? "checkbox-partial" : ""
+                      }`
                     : "top-0.5 pt-2.5 bg-white w-full mb-0"
                 }
                 key={item.id}
