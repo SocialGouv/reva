@@ -1,4 +1,3 @@
-import { fr } from "@codegouvfr/react-dsfr";
 import Link from "next/link";
 
 export default function Pagination({
@@ -12,27 +11,60 @@ export default function Pagination({
   onPageClick: (pageNumber: number) => void;
   className?: string;
 }) {
-  const getPagination = (count: number, page: number) => {
-    const maxVisiblePages = 10;
-    // first n pages
-    if (count <= maxVisiblePages) {
-      return Array.from({ length: count }, (_, v) => ({
-        number: v + 1,
-        active: page === v + 1,
-      }));
+  const getPages = ({
+    from,
+    to,
+    activePage,
+  }: {
+    from: number;
+    to: number;
+    activePage: number;
+  }) =>
+    Array.from({ length: to - from + 1 }, (_, v) => ({
+      number: v + from,
+      active: v + from === activePage,
+    }));
+
+  const getPagination = (totalPages: number, currentPage: number) => {
+    const MAX_VISIBLE_PAGES = 7;
+    const ELLIPSIS = {};
+    let pages: { number?: number; active?: boolean }[] = [];
+    if (totalPages > MAX_VISIBLE_PAGES) {
+      if (currentPage < 5) {
+        pages = [
+          ...getPages({ from: 1, to: 5, activePage: currentPage }),
+          ELLIPSIS,
+          { number: totalPages },
+        ];
+      } else if (currentPage > totalPages - 4) {
+        pages = [
+          { number: 1 },
+          ELLIPSIS,
+          ...getPages({
+            from: totalPages - 4,
+            to: totalPages,
+            activePage: currentPage,
+          }),
+        ];
+      } else {
+        pages = [
+          { number: 1 },
+          ELLIPSIS,
+          ...getPages({
+            from: currentPage - 1,
+            to: currentPage + 1,
+            activePage: currentPage,
+          }),
+          ELLIPSIS,
+          { number: totalPages },
+        ];
+      }
+    } else {
+      pages = getPages({ from: 1, to: totalPages, activePage: currentPage });
     }
-    // last n pages
-    if (page > count - maxVisiblePages) {
-      return Array.from({ length: maxVisiblePages }, (_, v) => {
-        const pageNumber = count - (maxVisiblePages - v) + 1;
-        return {
-          number: pageNumber,
-          active: page === pageNumber,
-        };
-      });
-    }
-    return [];
+    return pages;
   };
+
   const pages = getPagination(totalPages, currentPage);
 
   return (
@@ -40,29 +72,35 @@ export default function Pagination({
       <div>
         <nav
           role="navigation"
-          className={fr.cx("fr-pagination")}
+          className="fr-pagination"
           aria-label="Pagination"
         >
-          <ul className={fr.cx("fr-pagination__list")}>
-            {pages.map((p) => (
-              <li key={p.number}>
+          <ul className="fr-pagination__list">
+            {pages.map((p, i) => (
+              <li key={i}>
                 {p.active && (
                   <p
-                    className={fr.cx("fr-pagination__link")}
+                    className="fr-pagination__link fr-pagination__link--lg-label"
                     aria-current={"page"}
                   >
                     {p.number}
                   </p>
                 )}
-                {!p.active && (
-                  <Link
-                    className={fr.cx("fr-pagination__link")}
-                    href="#"
-                    onClick={() => onPageClick(p.number)}
-                  >
-                    {p.number}
-                  </Link>
-                )}
+                {!p.active &&
+                  (p?.number ? (
+                    <Link
+                      className="fr-pagination__link fr-pagination__link--lg-label"
+                      href="#"
+                      onClick={() => onPageClick(p?.number || 0)}
+                    >
+                      {p.number}
+                    </Link>
+                  ) : (
+                    <span
+                      className="fr-icon-more-line fr-icon fr-pagination__link fr-pagination__link--lg-label"
+                      aria-hidden="true"
+                    />
+                  ))}
               </li>
             ))}
           </ul>
