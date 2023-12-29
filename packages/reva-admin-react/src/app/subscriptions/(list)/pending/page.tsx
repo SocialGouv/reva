@@ -6,7 +6,7 @@ import Pagination from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const getPendingSubscriptionRequests = graphql(`
@@ -36,8 +36,10 @@ const RECORDS_PER_PAGE = 10;
 const PendingSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const [searchFilter, setSearchFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
+  const params = useSearchParams();
+  const page = params.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
 
   const {
     data: getPendingSubscriptionRequestsResponse,
@@ -91,7 +93,7 @@ const PendingSubscriptionRequestsPage = () => {
         <Pagination
           totalPages={subscriptionRequestPage.info.totalPages}
           currentPage={currentPage}
-          onPageClick={setCurrentPage}
+          baseHref="/subscriptions/pending"
           className="mx-auto"
         />
       </div>

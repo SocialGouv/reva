@@ -3,12 +3,12 @@ import Link from "next/link";
 export default function Pagination({
   totalPages,
   currentPage,
-  onPageClick,
   className,
+  baseHref,
 }: {
   totalPages: number;
   currentPage: number;
-  onPageClick: (pageNumber: number) => void;
+  baseHref: string;
   className?: string;
 }) {
   const getPages = ({
@@ -90,8 +90,10 @@ export default function Pagination({
                   (p?.number ? (
                     <Link
                       className="fr-pagination__link fr-pagination__link--lg-label"
-                      href="#"
-                      onClick={() => onPageClick(p?.number || 0)}
+                      href={{
+                        pathname: baseHref,
+                        query: { page: p?.number },
+                      }}
                     >
                       {p.number}
                     </Link>
