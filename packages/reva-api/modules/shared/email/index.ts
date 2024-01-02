@@ -195,7 +195,7 @@ export const sendEmailWithLink = async ({
 };
 
 interface GenericEmailArgs {
-  to: EmailAccount;
+  to: EmailAccount | EmailAccount[];
   subject: string;
   htmlContent: string;
   sender?: EmailAccount;
@@ -209,11 +209,15 @@ export const sendGenericEmail = async ({
   subject,
   attachment,
 }: GenericEmailArgs): Promise<Either<string, string>> => {
+  const emailAddresses = Array.isArray(to)
+    ? to.map((t) => t.email).join(", ")
+    : to.email;
+
   if (process.env.NODE_ENV !== "production") {
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent);
     logger.info("=========================");
-    return Right(`email sent to ${to.email}`);
+    return Right(`email sent to ${emailAddresses}`);
   }
 
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
@@ -224,15 +228,15 @@ export const sendGenericEmail = async ({
     await apiInstance.sendTransacEmail(
       Object.assign(sendSmtpEmail, {
         sender: sender ?? { name: "France VAE", email: "contact@vae.gouv.fr" },
-        to: [to],
+        to: Array.isArray(to) ? to : [to],
         subject,
         htmlContent,
         attachment,
         tags: [process.env.APP_ENV ?? "development"],
       })
     );
-    logger.info(`email sent to ${to.email}`);
-    return Right(`email sent to ${to.email}`);
+    logger.info(`email sent to ${emailAddresses}`);
+    return Right(`email sent to ${emailAddresses}`);
   } catch (e) {
     logger.error("error", e);
     return Left("error");

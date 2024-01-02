@@ -9,6 +9,7 @@ import {
 
 import { prismaClient } from "../../prisma/client";
 import { Account } from "../account/account.types";
+import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import {
   getCandidaciesFromIds,
@@ -16,6 +17,7 @@ import {
 } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import {
@@ -176,21 +178,40 @@ export const createFeasibility = async ({
     },
   });
 
-  if (
-    candidacy?.certificationsAndRegions?.[0]?.certificationId &&
-    candidacy?.departmentId
-  ) {
+  const candidacyCertificationId =
+    candidacy?.certificationsAndRegions?.[0]?.certificationId;
+  const candidacyDepartmentId = candidacy?.departmentId;
+
+  if (candidacyCertificationId && candidacyDepartmentId) {
     const certificationAuthority = await getCertificationAuthorityById(
       certificationAuthorityId
     );
     if (!certificationAuthority) {
       logger.error(
-        `Aucun certificateur trouvé pour la certification ${candidacy?.certificationsAndRegions?.[0]?.certificationId} et le departement : ${candidacy?.departmentId}`
+        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le departement : ${candidacyDepartmentId}`
       );
     }
+    //sending a mail notification to candidacy certification authority and related certification authority local accounts
+
+    const certificationAuthorityLocalAccounts =
+      await getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment(
+        {
+          certificationAuthorityId,
+          certificationId: candidacyCertificationId,
+          departmentId: candidacyDepartmentId,
+        }
+      );
+    const emails = [];
     if (certificationAuthority?.contactEmail) {
+      emails.push(certificationAuthority?.contactEmail);
+    }
+    for (const cala of certificationAuthorityLocalAccounts) {
+      const account = await getAccountById({ id: cala.accountId });
+      emails.push(account.email);
+    }
+    if (emails.length) {
       sendNewFeasibilitySubmittedEmail({
-        email: certificationAuthority?.contactEmail,
+        emails,
         feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibility.id}`,
       });
     }

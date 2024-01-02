@@ -62,10 +62,10 @@ const template = ({
   `;
 
 export const sendNewFeasibilitySubmittedEmail = async ({
-  email,
+  emails,
   feasibilityUrl,
 }: {
-  email: string;
+  emails: string[];
   feasibilityUrl: string;
 }) => {
   const htmlContent = mjml2html(
@@ -88,12 +88,14 @@ export const sendNewFeasibilitySubmittedEmail = async ({
   }
 
   if (process.env.NODE_ENV !== "production") {
+    logger.info("======= RECIPIENTS =======");
+    logger.info(emails.join(", "));
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent.html);
     logger.info("=========================");
   }
   return sendGenericEmail({
-    to: { email },
+    to: emails.map((email) => ({ email })),
     htmlContent: htmlContent.html,
     subject: "Un nouveau dossier de faisabilité est en attente",
   });
