@@ -35,12 +35,6 @@ view context route =
                 Route.Certifications _ ->
                     Just Certifications
 
-                Route.Subscriptions _ ->
-                    Just Subscriptions
-
-                Route.Subscription _ ->
-                    Just Subscriptions
-
                 Route.Accounts _ ->
                     Just Accounts
 
@@ -167,7 +161,7 @@ headerMenuModal context activeHeaderLink =
         navLinks =
             if Api.Token.isAdmin context.token then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
-                , navItemLink "Inscriptions" "/admin/subscriptions" Subscriptions
+                , itemLink "Inscriptions" (adminReactUrl "/subscriptions/pending") True False
                 , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
                 , navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities

@@ -21,10 +21,8 @@ import Page.Search.Accounts as Accounts
 import Page.Search.Candidacies as Candidacies exposing (Model)
 import Page.Search.Certifications as Certifications
 import Page.Search.Feasibilities as Feasibilities
-import Page.Search.Subscriptions as Subscriptions
 import Page.Search.Typology as Typology
 import Page.SiteMap as SiteMap
-import Page.Subscription as Subscription
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task
@@ -65,8 +63,6 @@ type Page
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
-    | Subscription Subscription.Model
-    | Subscriptions Subscriptions.Model
     | Account Account.Model
     | Accounts Accounts.Model
     | SiteMap
@@ -79,8 +75,6 @@ type Msg
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
     | GotCertificationsMsg Certifications.Msg
-    | GotSubscriptionsMsg Subscriptions.Msg
-    | GotSubscriptionMsg Subscription.Msg
     | GotAccountsMsg Accounts.Msg
     | GotAccountMsg Account.Msg
     | GotCandidacyMsg Candidacy.Msg
@@ -144,17 +138,9 @@ viewPage model =
             Candidacies.view model.context candidaciesModel
                 |> Html.map GotCandidaciesMsg
 
-        Subscriptions subscriptionsModel ->
-            Subscriptions.view model.context subscriptionsModel
-                |> Html.map GotSubscriptionsMsg
-
         Certifications certificationsModel ->
             Certifications.view model.context certificationsModel
                 |> Html.map GotCertificationsMsg
-
-        Subscription subscriptionModel ->
-            Subscription.view model.context subscriptionModel
-                |> Html.map GotSubscriptionMsg
 
         Accounts accountsModel ->
             Accounts.view model.context accountsModel
@@ -243,10 +229,6 @@ changeRouteTo context route model =
             Feasibility.init model.context feasibilityId
                 |> updateWith Feasibility GotFeasibilityMsg model
 
-        ( Route.Subscriptions filters, _ ) ->
-            Subscriptions.init model.context filters.status filters.page
-                |> updateWith Subscriptions GotSubscriptionsMsg model
-
         ( Route.Certifications filters, Certifications certificationsModel ) ->
             certificationsModel
                 |> Certifications.withFilters context
@@ -280,10 +262,6 @@ changeRouteTo context route model =
                 , page = filters.page
                 }
                 |> updateWith Certifications GotCertificationsMsg model
-
-        ( Route.Subscription subscriptionId, _ ) ->
-            Subscription.init model.context subscriptionId
-                |> updateWith Subscription GotSubscriptionMsg model
 
         ( Route.Accounts filters, Accounts accountsModel ) ->
             accountsModel
@@ -384,26 +362,6 @@ update msg model =
             in
             ( { model | page = Certifications newCertificationsModel }
             , Cmd.map GotCertificationsMsg certificationsCmd
-            )
-
-        -- Subscriptions
-        ( GotSubscriptionsMsg subscriptionsMsg, Subscriptions subscriptionsModel ) ->
-            let
-                ( newSubscriptionsModel, subscriptionsCmd ) =
-                    Subscriptions.update model.context subscriptionsMsg subscriptionsModel
-            in
-            ( { model | page = Subscriptions newSubscriptionsModel }
-            , Cmd.map GotSubscriptionsMsg subscriptionsCmd
-            )
-
-        -- Subscription
-        ( GotSubscriptionMsg subscriptionMsg, Subscription subscriptionModel ) ->
-            let
-                ( newSubscriptionModel, subscriptionCmd ) =
-                    Subscription.update model.context subscriptionMsg subscriptionModel
-            in
-            ( { model | page = Subscription newSubscriptionModel }
-            , Cmd.map GotSubscriptionMsg subscriptionCmd
             )
 
         -- Accounts

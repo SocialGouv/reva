@@ -7,7 +7,7 @@ import Data.Context exposing (Context)
 import Html exposing (Html, a, div, h1, li, node, text, ul)
 import Html.Attributes exposing (class, href, id, target)
 import Html.Attributes.Extra exposing (role)
-import Route exposing (emptyCandidacyFilters, emptySubscriptionFilters)
+import Route exposing (emptyCandidacyFilters)
 
 
 view :
@@ -40,7 +40,11 @@ view context =
 
         subscriptionsLink =
             if Api.Token.isAdmin context.token then
-                viewLink (Route.Subscriptions emptySubscriptionFilters) "Inscriptions"
+                a
+                    [ target "_parent"
+                    , href "/admin2/subscriptions/pending"
+                    ]
+                    [ text "Inscriptions" ]
 
             else
                 Html.text ""

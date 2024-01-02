@@ -4,13 +4,11 @@ module Route exposing
     , CertificationsFilters
     , FeasibilityFilters
     , Route(..)
-    , SubscriptionFilters
     , TypologyFilters
     , emptyAccountFilters
     , emptyCandidacyFilters
     , emptyCertificationsFilters
     , emptyFeasibilityFilters
-    , emptySubscriptionFilters
     , emptyTypologyFilters
     , fromUrl
     , href
@@ -20,7 +18,6 @@ module Route exposing
 import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
-import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html
 import Html.Attributes
@@ -45,10 +42,6 @@ type alias CertificationsFilters =
     }
 
 
-type alias SubscriptionFilters =
-    { status : SubscriptionRequestStatus, page : Int }
-
-
 type alias AccountFilters =
     { group : AccountGroup, page : Int }
 
@@ -70,8 +63,6 @@ type Route
     | Login
     | Logout
     | NotFound
-    | Subscription String -- Subscription Id
-    | Subscriptions SubscriptionFilters
     | Account String -- Account Id
     | Accounts AccountFilters
     | Reorientation CandidacyId CertificationsFilters
@@ -91,11 +82,6 @@ emptyCertificationsFilters =
 emptyTypologyFilters : TypologyFilters
 emptyTypologyFilters =
     { page = 1 }
-
-
-emptySubscriptionFilters : SubscriptionFilters
-emptySubscriptionFilters =
-    { status = SubscriptionRequestStatus.Pending, page = 1 }
 
 
 emptyAccountFilters : AccountFilters
@@ -135,12 +121,6 @@ parser baseUrl =
         toReorientationRoute candidacyId organismId p =
             Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
-        subscriptionStatusStringToStatusFilter s =
-            Maybe.withDefault SubscriptionRequestStatus.Pending (SubscriptionRequestStatus.fromString (Maybe.withDefault "" s))
-
-        toSubscriptionsRoute s p =
-            Subscriptions (SubscriptionFilters (subscriptionStatusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
-
         feasibilityCategoryStringToCategoryFilter c =
             Maybe.withDefault FeasibilityCategoryFilter.All (FeasibilityCategoryFilter.fromString (Maybe.withDefault "" c))
 
@@ -162,8 +142,6 @@ parser baseUrl =
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , s "certifications" <?> Query.string "organism" <?> Query.string "page" |> map toCertificationsRoute
                 , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
-                , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
-                , s "subscriptions" </> string |> map Subscription
                 , s "accounts" <?> Query.string "group" <?> Query.string "page" |> map toAccountsRoute
                 , s "accounts" </> string |> map Account
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
@@ -248,12 +226,6 @@ toString baseUrl route =
 
         Feasibility feasibilityId ->
             topLevel [ "feasibilities", feasibilityId ] []
-
-        Subscriptions filters ->
-            topLevel [ "subscriptions" ] [ Url.Builder.string "status" (SubscriptionRequestStatus.toString filters.status), Url.Builder.int "page" filters.page ]
-
-        Subscription subscriptionId ->
-            topLevel [ "subscriptions", subscriptionId ] []
 
         Accounts filters ->
             topLevel [ "accounts" ] [ Url.Builder.string "group" (AccountGroup.toString filters.group), Url.Builder.int "page" filters.page ]
