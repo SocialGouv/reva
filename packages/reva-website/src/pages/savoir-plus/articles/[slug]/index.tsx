@@ -78,7 +78,7 @@ const ArticleAidePage = () => {
                 className="ck-content"
                 dangerouslySetInnerHTML={{
                   __html:
-                    article.attributes?.contenu?.replace(
+                    article.attributes?.contenu?.replaceAll(
                       "<a",
                       "<a target='_'"
                     ) || "",
