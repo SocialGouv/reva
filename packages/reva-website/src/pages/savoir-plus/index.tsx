@@ -26,6 +26,7 @@ const sectionsQuery = graphql(`
             data {
               id
               attributes {
+                slug
                 titre
                 vignette {
                   data {
@@ -71,7 +72,7 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
           thumbnailAlt={
             attributes?.vignette?.data?.attributes?.alternativeText || ""
           }
-          url={`/savoir-plus/articles/${id}`}
+          url={`/savoir-plus/articles/${attributes?.slug}`}
         />
       ))}
       {displayMoreButton && (
