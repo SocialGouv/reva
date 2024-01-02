@@ -706,6 +706,7 @@ export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
         }
       >;
     ordre: Attribute.Integer;
+    slug: Attribute.String & Attribute.Required & Attribute.Unique;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

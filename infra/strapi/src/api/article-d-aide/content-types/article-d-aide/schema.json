@@ -44,6 +44,11 @@
     "ordre": {
       "type": "integer",
       "required": false
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": true
     }
   }
 }
