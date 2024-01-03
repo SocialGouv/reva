@@ -1,3 +1,4 @@
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
@@ -10,7 +11,7 @@ export const SubscriptionRequestCard = ({
   createdAt: Date;
   onClick?: () => void;
 }) => (
-  <li className="bg-neutral-100 hover:bg-gray-50 p-6 flex flex-col">
+  <GrayCard>
     <strong>Raison sociale de la structure</strong>
     <p>{companyName}</p>
     <br />
@@ -21,5 +22,5 @@ export const SubscriptionRequestCard = ({
         Voir plus
       </Button>
     )}
-  </li>
+  </GrayCard>
 );

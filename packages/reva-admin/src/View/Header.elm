@@ -164,6 +164,7 @@ headerMenuModal context activeHeaderLink =
                 , itemLink "Inscriptions" (adminReactUrl "/subscriptions/pending") True False
                 , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
+                , itemLink "Autorités responsables de la recevabilité" (adminReactUrl "/certification-authorities") True False
                 , navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
                 ]
 

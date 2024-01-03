@@ -81,6 +81,16 @@ export const Header = () => {
                   target: "_self",
                 },
               },
+              {
+                text: "Autorités responsables de la recevabilité",
+                linkProps: {
+                  href: "/certification-authorities",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith(
+                  "/certification-authorities",
+                ),
+              },
             ]
           : []),
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
