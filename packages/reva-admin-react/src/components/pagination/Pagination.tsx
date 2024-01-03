@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Pagination({
+export const Pagination = ({
   totalPages,
   currentPage,
   className,
@@ -10,7 +10,7 @@ export default function Pagination({
   currentPage: number;
   baseHref: string;
   className?: string;
-}) {
+}) => {
   const getPages = ({
     from,
     to,
@@ -110,4 +110,4 @@ export default function Pagination({
       </div>
     </div>
   );
-}
+};

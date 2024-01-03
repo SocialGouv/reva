@@ -2,7 +2,7 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
-import Pagination from "@/components/pagination/Pagination";
+import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
