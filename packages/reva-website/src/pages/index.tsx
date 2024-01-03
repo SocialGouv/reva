@@ -1,3 +1,4 @@
+import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
@@ -85,18 +86,20 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
             votre parcours dès maintenant.
           </p>
           <CertificateAutocomplete
-            onSubmit={(searchText) =>
+            onSubmit={(searchText) => {
+              push(["trackEvent", "website-diplome", "recherche", searchText]);
               router.push({
                 pathname: "inscription-candidat",
                 query: { searchText },
-              })
-            }
-            onOptionSelection={(o) =>
+              });
+            }}
+            onOptionSelection={(o) => {
+              push(["trackEvent", "website-diplome", "recherche", o.value]);
               router.push({
                 pathname: "inscription-candidat",
                 query: { certificationId: o.value },
-              })
-            }
+              });
+            }}
           />
           <br />
           <h2 className="text-2xl lg:text-3xl mb-6 mt-10">
