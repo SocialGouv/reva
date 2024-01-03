@@ -93,13 +93,12 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
                 query: { searchText },
               });
             }}
-            onOptionSelection={(o) => {
-              push(["trackEvent", "website-diplome", "recherche", o.label]);
+            onOptionSelection={(o) =>
               router.push({
                 pathname: "inscription-candidat",
                 query: { certificationId: o.value },
-              });
-            }}
+              })
+            }
           />
           <br />
           <h2 className="text-2xl lg:text-3xl mb-6 mt-10">

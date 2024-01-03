@@ -1,3 +1,4 @@
+import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import {
   CandidateRegistrationForm,
   CandidateRegistrationFormSchema,
@@ -102,12 +103,18 @@ const OrientationCandidatPage = () => {
               </legend>
               <CertificateAutocomplete
                 defaultLabel={searchText as string | undefined}
-                onSubmit={(searchText) =>
+                onSubmit={(searchText) => {
+                  push([
+                    "trackEvent",
+                    "website-diplome",
+                    "recherche",
+                    searchText,
+                  ]);
                   router.push({
                     pathname: "/inscription-candidat",
                     query: { searchText },
-                  })
-                }
+                  });
+                }}
                 onOptionSelection={(o) =>
                   router.push({
                     pathname: "/inscription-candidat",
