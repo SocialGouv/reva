@@ -250,23 +250,11 @@ export const resolvers = {
       },
       context: GraphqlContext
     ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
-          );
-        }
-
-        if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return getMaisonMereAAPs(params);
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      if (!context.auth.hasRole("admin")) {
+        throw new Error("Utilisateur non autorisé");
       }
+
+      return getMaisonMereAAPs(params);
     },
     organism_getMaisonMereAAPById: async (
       _parent: unknown,
@@ -275,23 +263,11 @@ export const resolvers = {
       },
       context: GraphqlContext
     ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
-          );
-        }
-
-        if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return getMaisonMereAAPById({ id: params.maisonMereAAPId });
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      if (!context.auth.hasRole("admin")) {
+        throw new Error("Utilisateur non autorisé");
       }
+
+      return getMaisonMereAAPById({ id: params.maisonMereAAPId });
     },
   },
 };
