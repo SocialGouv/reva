@@ -94,7 +94,7 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
               });
             }}
             onOptionSelection={(o) => {
-              push(["trackEvent", "website-diplome", "recherche", o.value]);
+              push(["trackEvent", "website-diplome", "recherche", o.label]);
               router.push({
                 pathname: "inscription-candidat",
                 query: { certificationId: o.value },
