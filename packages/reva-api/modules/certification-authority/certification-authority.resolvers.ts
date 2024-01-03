@@ -8,6 +8,7 @@ import { logger } from "../shared/logger";
 import { CertificationAuthority } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
+import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
@@ -135,6 +136,21 @@ export const resolvers = {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
+    },
+    certification_authority_getCertificationAuthorities: async (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+        searchFilter?: string;
+      },
+      context: GraphqlContext
+    ) => {
+      if (!context.auth.hasRole("admin")) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      return getCertificationAuthorities(params);
     },
   },
 };

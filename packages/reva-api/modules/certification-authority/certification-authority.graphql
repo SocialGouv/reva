@@ -15,10 +15,20 @@ type CertificationAuthorityLocalAccount {
   certifications: [Certification!]!
 }
 
+type CertificationAuhtorityPaginated {
+  rows: [CertificationAuthority!]!
+  info: PaginationInfo!
+}
+
 type Query {
   certification_authority_getCertificationAuthority(
     id: ID!
   ): CertificationAuthority
+  certification_authority_getCertificationAuthorities(
+    offset: Int
+    limit: Int
+    searchFilter: String
+  ): CertificationAuhtorityPaginated!
 }
 
 input UpdateCertificationAuthorityInput {
