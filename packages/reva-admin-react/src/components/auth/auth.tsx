@@ -1,5 +1,8 @@
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { jwtDecode } from "jwt-decode";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+
+import { UserRole } from "./types";
 
 export const useAuth = () => {
   const { accessToken } = useKeycloakContext();
@@ -10,12 +13,14 @@ export const useAuth = () => {
     isGestionnaireMaisonMereAAP,
     isAdminCertificationAuthority = false;
 
+  let roles: UserRole[] = [];
+
   if (accessToken) {
     const decodedToken = jwtDecode<{
       resource_access: { "reva-admin": { roles: string[] } };
     }>(accessToken);
 
-    const roles = decodedToken.resource_access["reva-admin"].roles;
+    roles = decodedToken.resource_access["reva-admin"].roles as UserRole[];
     isAdmin = roles.includes("admin");
     isCertificationAuthority = roles.includes("manage_feasibility");
     isOrganism = roles.includes("manage_candidacy");
@@ -25,6 +30,7 @@ export const useAuth = () => {
     );
   }
   return {
+    roles,
     isAdmin,
     isCertificationAuthority,
     isOrganism,

@@ -7,14 +7,6 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 
 import { useCertificationAuthorityQueries } from "./certificationAuthorityQueries";
 
-type MenuItemProps = {
-  id: string;
-  label: string;
-  informationsCommerciales?: {
-    nom?: string | null;
-  } | null;
-};
-
 export default function Page() {
   const { certifictionAuthority, certifictionAuthorityStatus: status } =
     useCertificationAuthorityQueries();

@@ -1,5 +1,6 @@
 "use client";
 import { useAgencesQueries } from "@/app/agences/agencesQueries";
+import { withRolesGuard } from "@/components/guards/withRolesGuard.component";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
@@ -116,4 +117,4 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AgencesLayout;
+export default withRolesGuard(["gestion_maison_mere_aap"])(AgencesLayout);
