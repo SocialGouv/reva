@@ -104,7 +104,7 @@ type Query {
     offset: Int
     limit: Int
     searchFilter: String
-  ): maisonMereAAPsPaginated!
+  ): MaisonMereAAPsPaginated!
   organism_getMaisonMereAAPById(maisonMereAAPId: ID!): MaisonMereAAP!
 }
 
@@ -157,7 +157,7 @@ input CreateOrUpdateOrganismOnDegreesInput {
   degreeIds: [ID!]!
 }
 
-type maisonMereAAPsPaginated {
+type MaisonMereAAPsPaginated {
   rows: [MaisonMereAAP!]!
   info: PaginationInfo!
 }
