@@ -41,13 +41,13 @@ export const getMaisonMereAAPs = async ({
     };
   }
 
-  const subscriptionRequest = await prismaClient.maisonMereAAP.findMany(
+  const maisonMereAAPs = await prismaClient.maisonMereAAP.findMany(
     queryMaisonMereAAPs
   );
   const count = await prismaClient.maisonMereAAP.count(queryCount);
 
   return {
-    rows: subscriptionRequest,
+    rows: maisonMereAAPs,
     info: processPaginationInfo({
       totalRows: count,
       limit: limit,
