@@ -254,7 +254,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
 
     let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}') and ao.department_id = od.department_id`;
     if (searchText) {
-      whereClause += ` and unaccent(o.label) ilike unaccent('%${searchText}%')`;
+      whereClause += ` and unaccent(o.label) ilike unaccent($$%${searchText}%$$)`;
     }
 
     if (searchFilter.distanceStatus === "REMOTE") {
