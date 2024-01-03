@@ -254,7 +254,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
 
     let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}') and ao.department_id = od.department_id`;
     if (searchText) {
-      whereClause += ` and unaccent(o.label) ilike unaccent($$%${searchText}%$$)`;
+      whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
     }
 
     if (searchFilter.distanceStatus === "REMOTE") {
@@ -265,8 +265,8 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
 
     const queryResults = `
     select o.id,o.label,o.legal_status,o.address,o.zip,o.city,o.contact_administrative_email,o.contact_administrative_phone,o.website, o.siret, ao.organism_id from organism o
-    inner join organism_department as od
-    on od.organism_id = o.id,
+    left join organism_informations_commerciales as oic on oic.organism_id = o.id
+    inner join organism_department as od on od.organism_id = o.id,
     active_organism_by_available_certification_and_department ao
     ${whereClause} 
     order by Random() limit ${limit}`;
@@ -279,8 +279,8 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
 
     const queryCount = `
     select count(distinct(o.id)) from organism o
-    inner join organism_department as od
-    on od.organism_id = o.id,
+    left join organism_informations_commerciales as oic on oic.organism_id = o.id
+    inner join organism_department as od on od.organism_id = o.id,
     active_organism_by_available_certification_and_department ao
     ${whereClause}`;
 
