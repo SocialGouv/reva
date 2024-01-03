@@ -21,7 +21,9 @@ export const FeasibilityAppointmentTimelineElement = () => {
             <p className="text-sm text-dsfrGray-500">
               RDV effectué le{" "}
               {format(state.context.firstAppointmentOccuredAt, "dd/MM/yyyy")}{" "}
-              avec {state.context.organism?.informationsCommerciales?.nom}
+              avec{" "}
+              {state.context.organism?.informationsCommerciales?.nom ??
+                state.context.organism?.label}
             </p>
           ) : (
             <div className="flex text-[#0063CB] italic">
@@ -35,7 +37,9 @@ export const FeasibilityAppointmentTimelineElement = () => {
                       state.context.firstAppointmentOccuredAt,
                       "dd/MM/yyyy"
                     )}{" "}
-                    avec {state.context.organism?.informationsCommerciales?.nom}
+                    avec{" "}
+                    {state.context.organism?.informationsCommerciales?.nom ??
+                      state.context.organism?.label}
                     .
                   </strong>
                 </p>
