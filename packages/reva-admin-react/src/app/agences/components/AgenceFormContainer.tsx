@@ -460,19 +460,20 @@ function AgenceFormContainer({
           <div className="self-center text-2xl">✔️</div>
           <p>Votre demande de création d'agence a bien été validée.</p>
           <p>
-            Un mail va être adressé à l'adresse mail renseignée dans le champ
-            adresse mail du responsable d'agence. Il contient un lien
-            d'activation qui sera valable 4 jours.
+            Un mail va être adressé au responsable d'agence, à l'adresse saisie
+            en fin de formulaire. Il contient un lien d'activation qui sera
+            valable 4 jours.
           </p>
           <p>
-            Après avoir défini votre mot de passe, vous pourrez accéder à
-            l'espace professionnel de votre agence. Notez bien qu'il n'y aura
-            pas de reprise concernant les candidatures déjà en cours, seules les
-            nouvelles candidatures qui auront sélectionnées votre agence
-            arriveront dans son espace.
+            Après avoir défini un mot de passe, l'agence pourra accéder à son
+            propre espace professionnel. Seules les nouvelles candidatures qui
+            auront sélectionné votre agence arriveront dans son espace. Les
+            candidatures déjà reçues et en cours de traitement ne pourront lui
+            être transférées.
           </p>
           <p>
-            En cas de question, vous pouvez contacter :{" "}
+            En cas de question, vous pouvez nous contacter à l'adresse mail
+            suivante:{" "}
             <Link href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</Link>
           </p>
           <Alert
