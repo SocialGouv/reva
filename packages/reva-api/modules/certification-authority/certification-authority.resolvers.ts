@@ -14,6 +14,7 @@ import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from 
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
+import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 
 export const resolvers = {
@@ -109,6 +110,26 @@ export const resolvers = {
       }
       return updateCertificationAuthorityLocalAccount(params.input);
     },
+    certification_authority_updateCertificationAuthorityDepartmentsAndCertifications:
+      async (
+        _parent: unknown,
+        params: {
+          input: {
+            certificationAuthorityId: string;
+            departmentIds: string[];
+            certificationIds: string[];
+          };
+        },
+        context: GraphqlContext
+      ) => {
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return updateCertificationAuthorityDepartmentsAndCertifications(
+          params.input
+        );
+      },
   },
   Query: {
     certification_authority_getCertificationAuthority: async (

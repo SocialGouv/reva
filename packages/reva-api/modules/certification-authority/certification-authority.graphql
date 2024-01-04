@@ -51,11 +51,22 @@ input UpdateCertificationAuthorityLocalAccountInput {
   certificationIds: [String!]!
 }
 
+input UpdateCertificationAuthorityDepartmentsAndCertificationsInput {
+  certificationAuthorityId: String!
+  departmentIds: [String!]!
+  certificationIds: [String!]!
+}
+
 type Mutation {
   certification_authority_updateCertificationAuthority(
     certificationAuthorityId: ID!
     certificationAuthorityData: UpdateCertificationAuthorityInput!
   ): CertificationAuthority!
+
+  certification_authority_updateCertificationAuthorityDepartmentsAndCertifications(
+    input: UpdateCertificationAuthorityDepartmentsAndCertificationsInput!
+  ): CertificationAuthority!
+
   certification_authority_createCertificationAuthorityLocalAccount(
     input: CreateCertificationAuthorityLocalAccountInput!
   ): CertificationAuthorityLocalAccount!
