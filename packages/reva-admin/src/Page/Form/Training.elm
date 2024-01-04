@@ -41,8 +41,8 @@ form context _ ( candidacy, referential ) =
           , Form.CheckboxList "Savoirs de base" <|
                 Data.Form.Helper.toIdList referential.basicSkills
           )
-        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") )
-        , ( keys.otherTraining, Form.Textarea "Autres actions de formation" Nothing )
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") False)
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formation" Nothing False)
         , ( keys.certificationScope
           , Form.RadioList "Le candidat / la candidate vise :" certificationScopes
           )

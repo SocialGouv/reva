@@ -220,7 +220,7 @@ viewOrganism organism =
 
 
 form : FormData -> Feasibility -> Form
-form _ _ =
+form formData _ =
     let
         keys =
             Data.Form.Feasibility.keys
@@ -231,10 +231,12 @@ form _ _ =
             , ( "incomplete", Data.Form.Feasibility.Incomplete )
             ]
                 |> List.map (\( id, decision ) -> ( id, decisionToString decision ))
+        decisionSelected = Data.Form.Feasibility.decisionFromString (Data.Form.get keys.decision formData |> Maybe.withDefault "")
+        inNotCompletedSelected =  decisionSelected == Data.Form.Feasibility.Incomplete
     in
     { elements =
         [ ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
-        , ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
+        , ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing inNotCompletedSelected)
         , ( keys.infoFile, Form.File "Joindre le courrier de recevabilité" "Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas" )
         , ( "info"
           , Form.StaticHtml

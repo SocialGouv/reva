@@ -73,7 +73,7 @@ type Element
     | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
-    | Textarea String (Maybe String)
+    | Textarea String (Maybe String) Bool
     | RadioList String (List ( String, String ))
     | Text String (Maybe String)
     | StaticHtml (Html Never)
@@ -307,12 +307,12 @@ viewEditableElement formData ( elementId, element ) =
                 |> Input.withHint [ text hint ]
                 |> Input.view
 
-        textareaView : String -> Maybe String -> Html (Msg referential)
-        textareaView label placeholderValue =
+        textareaView : String -> Maybe String -> Bool -> Html (Msg referential)
+        textareaView label placeholderValue isRequired =
             viewInput elementId (label |> optional) dataOrDefault
                 |> Input.textArea (Just 6)
                 |> Input.withHint [ text "Texte de description libre" ]
-                |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
+                |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class ""), required isRequired]
                 |> Input.view
     in
     case element of
@@ -418,8 +418,8 @@ viewEditableElement formData ( elementId, element ) =
             viewFieldsetElement
                 [ inputView label "Exemple : saisir 2,5 pour 2h30" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
 
-        Textarea label placeholder ->
-            View.Form.column50percent [ class "mb-6" ] [ textareaView label placeholder ]
+        Textarea label placeholder isRequired ->
+            View.Form.column50percent [ class "mb-6" ] [ textareaView label placeholder isRequired ]
 
         Info label value ->
             viewInfo elementId label value
@@ -455,7 +455,7 @@ viewEditableElement formData ( elementId, element ) =
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        viewFieldsetElement [ textareaView label Nothing ]
+                        viewFieldsetElement [ textareaView label Nothing False]
 
                     else
                         text ""
@@ -608,7 +608,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         HourCount label ->
             defaultView label dataOrDefault
 
-        Textarea label _ ->
+        Textarea label _ _ ->
             div
                 [ class "w-full mb-6" ]
                 [ if String.isEmpty label then
