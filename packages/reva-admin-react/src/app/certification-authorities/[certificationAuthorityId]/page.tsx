@@ -8,12 +8,12 @@ const CertificationAuthorityPage = () => {
   const {
     certificationAuthority,
     certificationsController,
-    departmentsController,
+    regionsAndDeparmController,
     handleFormSubmit,
     toggleCertification,
     toggleAllCertifications,
-    toggleDepartment,
-    toggleAllDepartments,
+    toggleRegionOrDepartment,
+    toggleAllRegionsAndDepartments,
     isSubmitting,
   } = useCertificationAuthorityPageLogic();
 
@@ -41,11 +41,11 @@ const CertificationAuthorityPage = () => {
                 <TreeSelect
                   title="Cochez les régions ou départements gérés"
                   label="Toute la France"
-                  items={departmentsController.field.value || []}
+                  items={regionsAndDeparmController.field.value || []}
                   onClickSelectAll={(selected) =>
-                    toggleAllDepartments(selected)
+                    toggleAllRegionsAndDepartments(selected)
                   }
-                  onClickItem={(i) => toggleDepartment(i.id)}
+                  onClickItem={(i) => toggleRegionOrDepartment(i.id)}
                 />
               </div>
 

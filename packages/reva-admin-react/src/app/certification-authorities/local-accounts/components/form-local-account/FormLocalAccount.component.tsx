@@ -1,5 +1,4 @@
 import { errorToast } from "@/components/toast/toast";
-import { Certification, Department } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -269,7 +268,11 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
 };
 
 function getDefaultItemsFromDepartments(
-  departments: Department[],
+  departments: {
+    id: string;
+    label: string;
+    region: { id: string; label: string };
+  }[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = departments.reduce((acc, department) => {
     const { region } = department;
@@ -302,7 +305,10 @@ function getDefaultItemsFromDepartments(
 }
 
 function getDefaultItemsCertifications(
-  certifications: Certification[],
+  certifications: {
+    id: string;
+    label: string;
+  }[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = certifications.map((certification) => ({
     id: certification.id,

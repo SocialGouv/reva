@@ -1,5 +1,5 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { successToast } from "@/components/toast/toast";
+import { errorToast, successToast } from "@/components/toast/toast";
 import { TreeSelectItem } from "@/components/tree-select";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,15 +10,25 @@ import { useForm, useController } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
-  departments: z
+  regions: z
     .array(
       z.object({
         id: z.string(),
         label: z.string(),
         selected: z.boolean(),
+        children: z
+          .array(
+            z.object({
+              id: z.string(),
+              label: z.string(),
+              selected: z.boolean(),
+            }),
+          )
+          .default([]),
       }),
     )
     .default([]),
+
   certifications: z
     .array(
       z.object({
@@ -57,13 +67,16 @@ const getCertificationAuthorityQuery = graphql(`
 
 const getReferentialQuery = graphql(`
   query getReferential {
-    getDepartments {
-      id
-      code
-      label
-    }
     getCertifications(limit: 500) {
       rows {
+        id
+        label
+      }
+    }
+    getRegions {
+      id
+      label
+      departments {
         id
         label
       }
@@ -116,8 +129,8 @@ export const useCertificationAuthorityPageLogic = () => {
   const certificationAuthority =
     getCertificationAuthorityResponse?.certification_authority_getCertificationAuthority;
 
-  const departments = useMemo(
-    () => getReferentialResponse?.getDepartments || [],
+  const regions = useMemo(
+    () => getReferentialResponse?.getRegions || [],
     [getReferentialResponse],
   );
   const certifications = useMemo(
@@ -137,14 +150,22 @@ export const useCertificationAuthorityPageLogic = () => {
 
   //reset form when ref data is loaded
   useEffect(() => {
-    if (certificationAuthority && certifications.length && departments.length) {
-      const departmentItems: TreeSelectItem[] = departments.map((d) => ({
-        id: d.id,
-        label: d.label,
-        selected: !!(certificationAuthority?.departments).find?.(
-          (cad) => cad.id === d.id,
-        ),
-      }));
+    if (certificationAuthority && certifications.length && regions.length) {
+      const regionItems: TreeSelectItem[] = regions.map((r) => {
+        const departmentItems = r.departments.map((d) => ({
+          id: d.id,
+          label: d.label,
+          selected: !!(certificationAuthority?.departments).find?.(
+            (cad) => cad.id === d.id,
+          ),
+        }));
+        return {
+          id: r.id,
+          label: r.label,
+          selected: departmentItems.every((d) => d.selected),
+          children: departmentItems,
+        };
+      });
 
       const certificationItems: TreeSelectItem[] = certifications.map((c) => ({
         id: c.id,
@@ -155,38 +176,62 @@ export const useCertificationAuthorityPageLogic = () => {
       }));
       reset({
         certifications: certificationItems,
-        departments: departmentItems,
+        regions: regionItems,
       });
     }
-  }, [certifications, departments, certificationAuthority, reset]);
+  }, [certifications, regions, certificationAuthority, reset]);
 
   const certificationsController = useController({
     name: "certifications",
     control,
   });
 
-  const departmentsController = useController({
-    name: "departments",
+  const regionsAndDeparmController = useController({
+    name: "regions",
     control,
   });
 
-  const toggleDepartment = (departmentId: string) => {
-    const newValues = [...departmentsController.field.value];
-    const departmentIndex = newValues.findIndex((d) => d.id === departmentId);
-    const oldDepartment = newValues[departmentIndex];
-    newValues.splice(departmentIndex, 1, {
-      ...oldDepartment,
-      selected: !oldDepartment.selected,
-    });
-    departmentsController.field.onChange({ target: { value: newValues } });
+  const toggleRegionOrDepartment = (regionOrdepartmentId: string) => {
+    const newValues = [...regionsAndDeparmController.field.value];
+    const type = regions.find((r) => r.id === regionOrdepartmentId)
+      ? "region"
+      : "department";
+
+    if (type === "region") {
+      const regionIndex = newValues.findIndex(
+        (r) => r.id === regionOrdepartmentId,
+      );
+      const region = newValues[regionIndex];
+      region.selected = !region.selected;
+      for (const dep of region.children) {
+        dep.selected = region.selected;
+      }
+    } else {
+      const regionIndex = newValues.findIndex(
+        (r) => !!r.children.find((d) => d.id === regionOrdepartmentId),
+      );
+      const department = newValues[regionIndex].children.find(
+        (d) => d.id === regionOrdepartmentId,
+      );
+
+      if (department) {
+        department.selected = !department.selected;
+      }
+      const region = newValues[regionIndex];
+      region.selected = region.children.every((d) => d.selected);
+    }
+    regionsAndDeparmController.field.onChange({ target: { value: newValues } });
   };
 
-  const toggleAllDepartments = (selected: boolean) => {
-    const newValues = [...departmentsController.field.value];
+  const toggleAllRegionsAndDepartments = (selected: boolean) => {
+    const newValues = [...regionsAndDeparmController.field.value];
     for (const v of newValues) {
       v.selected = selected;
+      for (const dv of v.children) {
+        dv.selected = selected;
+      }
     }
-    departmentsController.field.onChange({ target: { value: newValues } });
+    regionsAndDeparmController.field.onChange({ target: { value: newValues } });
   };
 
   const toggleCertification = (certificationId: string) => {
@@ -211,25 +256,31 @@ export const useCertificationAuthorityPageLogic = () => {
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    await updateCertificationAuthority.mutateAsync({
-      certificationAuthorityId,
-      departmentIds: data.departments
-        .filter((d) => d.selected)
-        .map((d) => d.id),
-      certificationIds: data.certifications
-        .filter((c) => c.selected)
-        .map((c) => c.id),
-    });
-    successToast("modifications enregistrées");
+    try {
+      await updateCertificationAuthority.mutateAsync({
+        certificationAuthorityId,
+        departmentIds: data.regions
+          .flatMap((r) => r.children)
+          .filter((d) => d.selected)
+          .map((d) => d.id),
+        certificationIds: data.certifications
+          .filter((c) => c.selected)
+          .map((c) => c.id),
+      });
+      successToast("modifications enregistrées");
+    } catch (e) {
+      console.error(e);
+      errorToast("Une erreur est survenue");
+    }
   });
 
   return {
     certificationAuthority,
-    departmentsController,
+    regionsAndDeparmController,
     certificationsController,
     handleFormSubmit,
-    toggleDepartment,
-    toggleAllDepartments,
+    toggleRegionOrDepartment,
+    toggleAllRegionsAndDepartments,
     toggleCertification,
     toggleAllCertifications,
     isSubmitting,

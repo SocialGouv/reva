@@ -26,6 +26,7 @@ import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resol
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import { resolvers as organismResolvers } from "./organism/organism.resolvers";
+import { referentialLoaders } from "./referential/referential.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
@@ -72,6 +73,7 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...feasibilityLoaders,
     ...organismLoaders,
     ...certificationAuthorityLoaders,
+    ...referentialLoaders,
   },
   errorFormatter: (error, ...args) => {
     error.errors
