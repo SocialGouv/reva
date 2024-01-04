@@ -62,8 +62,7 @@ const CertificationAuthoritiesListPage = () => {
         {getCertificationAuthoritiesStatus === "success" && (
           <>
             <h4 className="text-2xl font-bold mb-6">
-              Autorités responsable de la recevabilité (
-              {certificationAuthorityPage.info.totalRows})
+              Certificateurs ({certificationAuthorityPage.info.totalRows})
             </h4>
 
             <SearchFilterBar
@@ -75,7 +74,7 @@ const CertificationAuthoritiesListPage = () => {
             <ul className="flex flex-col gap-5">
               {certificationAuthorityPage?.rows.map((c) => (
                 <GrayCard key={c.id}>
-                  <strong>Nom de l'autorité de certification</strong>
+                  <strong>Nom</strong>
                   <p>{c.label}</p>
                   <Button
                     className="ml-auto"

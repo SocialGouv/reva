@@ -82,7 +82,7 @@ export const Header = () => {
                 },
               },
               {
-                text: "Autorités responsables de la recevabilité",
+                text: "Certificateurs",
                 linkProps: {
                   href: "/certification-authorities",
                   target: "_self",

@@ -23,7 +23,7 @@ const CertificationAuthorityPage = () => {
         href="/certification-authorities"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
       >
-        Toutes les autorités de certification
+        Tous les certificateurs
       </Link>
       {certificationAuthority && (
         <div className="flex flex-col">
