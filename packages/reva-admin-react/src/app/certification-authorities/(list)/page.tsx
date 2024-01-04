@@ -5,8 +5,9 @@ import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const getCertificationAuthorities = graphql(`
@@ -37,6 +38,7 @@ const CertificationAuthoritiesListPage = () => {
   const params = useSearchParams();
   const page = params.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
+  const router = useRouter();
 
   const {
     data: getCertificationAuthoritiesResponse,
@@ -75,7 +77,14 @@ const CertificationAuthoritiesListPage = () => {
                 <GrayCard key={c.id}>
                   <strong>Nom de l'autorité de certification</strong>
                   <p>{c.label}</p>
-                  <br />
+                  <Button
+                    className="ml-auto"
+                    onClick={() =>
+                      router.push(`/certification-authorities/${c.id}`)
+                    }
+                  >
+                    Voir plus
+                  </Button>
                 </GrayCard>
               ))}
             </ul>
