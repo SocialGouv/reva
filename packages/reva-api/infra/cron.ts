@@ -3,6 +3,7 @@ import path from "path";
 import cron from "cron";
 import dotenv from "dotenv";
 
+import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentgRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
@@ -51,6 +52,17 @@ const paymentRequestUnifvae = new cron.CronJob({
     runBatchIfActive({
       batchKey: "batch.demande-paiement-unifvae",
       batchCallback: batchPaymentgRequestUnifvae,
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+const aapListUnifvae = new cron.CronJob({
+  cronTime: process.env.BATCH_AAP_LIST_UNIFVAE_CRONTIME || "*/5 * * * *",
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.aap-list-unifvae",
+      batchCallback: batchAapListUnifvae,
     }),
   start: true,
   timeZone: "Europe/Paris",
