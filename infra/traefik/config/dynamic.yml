@@ -15,42 +15,42 @@ http:
       service: metabase-reva-incubateur-net
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     site-web-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/`)"
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     site-web-staging-subscription:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
       service: site-web-staging-subscription
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     espace-pro-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
       service: espace-pro-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     espace-pro-react-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
       service: app-candidat-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
@@ -64,7 +64,7 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     # Should be removed after the creation of the /api path
     ping-staging:
@@ -96,14 +96,14 @@ http:
       service: noop@internal
       middlewares:
         - redirect-www
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     vae-gouv-main-page:
       rule: "Host(`vae.gouv.fr`)"
       service: site-web-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     auth-vae-gouv-fr:
       rule: "Host(`auth.vae.gouv.fr`)"
@@ -116,28 +116,28 @@ http:
       service: metabase-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     espace-pro-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin`)"
       service: espace-pro-production-2
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     espace-pro-react-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     app-candidat-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
       service: app-candidat-production-2
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-response-headers
 
     api-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/api`)"
@@ -159,10 +159,10 @@ http:
         customResponseHeaders:
           x-request-id: "" # remove
           strict-transport-security: ""
-    add-anti-clickjacking-headers:
+    add-security-response-headers:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self';"
+          Content-Security-Policy: "default-src 'self' vae.gouv.fr *.vae.gouv.fr healing-nature-bb0384846f.media.strapiapp.com;frame-ancestors 'self';"
           X-Frame-Options: SAMEORIGIN
 
     removePath:
