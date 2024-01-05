@@ -309,7 +309,7 @@ viewEditableElement formData ( elementId, element ) =
 
         textareaView : String -> Maybe String -> Bool -> Html (Msg referential)
         textareaView label placeholderValue isRequired =
-            viewInput elementId (label |> optional) dataOrDefault
+            viewInput elementId (if isRequired then label else (label |> optional)) dataOrDefault
                 |> Input.textArea (Just 6)
                 |> Input.withHint [ text "Texte de description libre" ]
                 |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class ""), required isRequired]
