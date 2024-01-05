@@ -47,6 +47,7 @@ model Certification {
   certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
   searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
   certificationAuthorityLocalAccountOnCertification      CertificationAuthorityLocalAccountOnCertification[]
+  certificationAuthorityTag                              String?                                                  @map("certification_authority_tag") @db.VarChar(255)
 
   @@map("certification")
 }

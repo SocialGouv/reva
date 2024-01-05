@@ -67,10 +67,7 @@ export async function seedCertifications(prisma: PrismaClient) {
         undefined,
         undefined,
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        "certificationAuthorityTag",
       ],
       transform: ({
         id,
@@ -80,6 +77,7 @@ export async function seedCertifications(prisma: PrismaClient) {
         level,
         typeDiplome,
         isActive,
+        certificationAuthorityTag,
       }) => {
         return {
           where: { id },
@@ -91,6 +89,7 @@ export async function seedCertifications(prisma: PrismaClient) {
             summary,
             typeDiplomeId: typeDiplome as string,
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+            certificationAuthorityTag,
           },
           update: {
             rncpId,
@@ -99,6 +98,7 @@ export async function seedCertifications(prisma: PrismaClient) {
             summary,
             typeDiplomeId: typeDiplome as string,
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+            certificationAuthorityTag,
           },
         };
       },
@@ -125,10 +125,7 @@ export async function seedCertifications(prisma: PrismaClient) {
         "conventionCollective", // ccn
         undefined, // filière
         "domaine", // filière
-        undefined, // date
-        undefined, // last modif
-        undefined, // created by
-        undefined, // last updated by
+        undefined,
       ],
     });
     for (const {
