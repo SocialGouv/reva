@@ -6,7 +6,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { logger } from "../../../shared/logger";
 import { sendStreamToFtp } from "../../shared/ftp";
 
-export const batchPaymentgRequestUnifvae = async (batchKey: string) => {
+export const batchPaymentRequestUnifvae = async (batchKey: string) => {
   try {
     // Start the execution
     const batchExecution = await prismaClient.batchExecution.create({

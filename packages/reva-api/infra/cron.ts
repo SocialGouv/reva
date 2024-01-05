@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
-import { batchPaymentgRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
+import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { logger } from "../modules/shared/logger";
@@ -51,7 +51,7 @@ const paymentRequestUnifvae = new cron.CronJob({
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.demande-paiement-unifvae",
-      batchCallback: batchPaymentgRequestUnifvae,
+      batchCallback: batchPaymentRequestUnifvae,
     }),
   start: true,
   timeZone: "Europe/Paris",
