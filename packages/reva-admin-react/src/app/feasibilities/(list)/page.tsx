@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
@@ -61,6 +62,7 @@ const RejectedSubscriptionRequestsPage = () => {
   const page = params.get("page");
   const category = params.get("CATEGORY");
   const currentPage = page ? Number.parseInt(page) : 1;
+  const { isAdmin } = useAuth();
 
   const { data: getFeasibilitiesResponse, status: getFeasibilitiesStatus } =
     useQuery({
@@ -95,7 +97,7 @@ const RejectedSubscriptionRequestsPage = () => {
   return (
     feasibilityPage && (
       <div className="flex flex-col">
-        <PageTitle>Espace certificateur</PageTitle>
+        {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
         {getFeasibilitiesStatus === "success" && (
           <>
             <h4 className="text-3xl font-bold mb-6">{categoryLabel}</h4>
