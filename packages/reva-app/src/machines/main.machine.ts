@@ -275,6 +275,9 @@ export const mainMachine =
           LOGOUT: {
             target: "logoutConfirmation",
           },
+          UPDATE_CONTACT: {
+            target: "projectContact",
+          },
         },
         states: {
           loadDepartments: {
@@ -959,9 +962,6 @@ export const mainMachine =
               error: {},
             },
             on: {
-              UPDATE_CONTACT: {
-                target: "projectContact",
-              },
               EDIT_GOALS: {
                 target: "projectGoals",
               },
