@@ -45,7 +45,7 @@
       </#if>
 
     <#--  user_profile_type = organism  -->
-    <#if (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "organism">
+    <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "organism">
       <#if section="intro">
         <p>Votre établissement mère vous invite à rejoindre l'espace professionnel France VAE en tant que responsable d'agence. </p>
         
