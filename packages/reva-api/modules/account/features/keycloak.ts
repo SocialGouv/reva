@@ -34,7 +34,11 @@ export const getAccount =
     }
   };
 
-type UserProfileType = "admin" | "organism" | "certification_authority";
+type UserProfileType =
+  | "admin"
+  | "gestionnaire_maison_mere_aap"
+  | "organism"
+  | "certification_authority";
 
 export const createAccount =
   (keycloakAdmin: KeycloakAdminClient) =>
@@ -68,9 +72,6 @@ export const createAccount =
       let userProfileType: UserProfileType = {} as UserProfileType;
 
       switch (account.group) {
-        case "gestionnaire_maison_mere_aap":
-          userProfileType = "organism";
-          break;
         case "certification_authority_local_account":
           userProfileType = "certification_authority";
           break;
