@@ -6,9 +6,10 @@ import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
 import { FeasibilityDecisionFilter } from "@/graphql/generated/graphql";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns/format";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 const RECORDS_PER_PAGE = 10;
@@ -56,6 +57,7 @@ const RejectedSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const [searchFilter, setSearchFilter] = useState("");
   const params = useSearchParams();
+  const router = useRouter();
   const page = params.get("page");
   const category = params.get("CATEGORY");
   const currentPage = page ? Number.parseInt(page) : 1;
@@ -120,10 +122,16 @@ const RejectedSubscriptionRequestsPage = () => {
                     {f.candidacy.department?.label} (
                     {f.candidacy.department?.code})
                   </p>
-                  <p className="text-lg">
+                  <p className="text-lg col-span-2">
                     Dossier envoyé le{" "}
                     {format(f.feasibilityFileSentAt, "d MMM yyyy")}
                   </p>
+                  <Button
+                    className="ml-auto col-start-2"
+                    onClick={() => router.push(`/feasibilities/${f.id}`)}
+                  >
+                    Accéder au dossier
+                  </Button>
                 </WhiteCard>
               ))}
             </ul>
