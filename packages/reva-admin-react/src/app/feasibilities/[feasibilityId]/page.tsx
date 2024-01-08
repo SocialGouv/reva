@@ -1,6 +1,7 @@
 "use client";
 import { useFeasibilityPageLogic } from "@/app/feasibilities/[feasibilityId]/feasibilityPageLogic";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns/format";
 import Link from "next/link";
 import { ReactNode, useMemo } from "react";
@@ -48,22 +49,42 @@ const FeasibilityPage = () => {
             {feasibility.candidacy.certification?.label}
           </p>
           {feasibility.feasibilityFile && (
-            <FileLink
-              text={feasibility.feasibilityFile.name}
-              url={feasibility.feasibilityFile.url}
-            />
+            <GrayBlock>
+              <FileLink
+                text={feasibility.feasibilityFile.name}
+                url={feasibility.feasibilityFile.url}
+              />
+            </GrayBlock>
+          )}
+          {feasibility.IDFile && (
+            <GrayBlock>
+              <FileLink
+                text={feasibility.IDFile.name}
+                url={feasibility.IDFile.url}
+              />
+              <Alert
+                className="mt-4"
+                title="Attention"
+                description="La pièce d’identité du candidat sera effacée de nos serveurs lorsque la recevabilité sera prononcée (recevable, non recevable ou incomplet)."
+                severity="warning"
+              />
+            </GrayBlock>
           )}
           {feasibility.documentaryProofFile && (
-            <FileLink
-              text={feasibility.documentaryProofFile.name}
-              url={feasibility.documentaryProofFile.url}
-            />
+            <GrayBlock>
+              <FileLink
+                text={feasibility.documentaryProofFile.name}
+                url={feasibility.documentaryProofFile.url}
+              />
+            </GrayBlock>
           )}
           {feasibility.certificateOfAttendanceFile && (
-            <FileLink
-              text={feasibility.certificateOfAttendanceFile.name}
-              url={feasibility.certificateOfAttendanceFile.url}
-            />
+            <GrayBlock>
+              <FileLink
+                text={feasibility.certificateOfAttendanceFile.name}
+                url={feasibility.certificateOfAttendanceFile.url}
+              />
+            </GrayBlock>
           )}
           <GrayBlock>
             <h5 className="text-2xl font-bold mb-4">
@@ -115,12 +136,10 @@ const GrayBlock = ({ children }: { children: ReactNode }) => (
 );
 
 const FileLink = ({ url, text }: { url: string; text: string }) => (
-  <GrayBlock>
-    <AuthenticatedLink
-      text={text}
-      title={text}
-      url={url}
-      className="fr-link text-2xl font-semibold"
-    />
-  </GrayBlock>
+  <AuthenticatedLink
+    text={text}
+    title={text}
+    url={url}
+    className="fr-link text-2xl font-semibold"
+  />
 );

@@ -10,6 +10,10 @@ const getFeasibilityQuery = graphql(`
       decision
       decisionComment
       decisionSentAt
+      IDFile {
+        url
+        name
+      }
       feasibilityFile {
         url
         name
