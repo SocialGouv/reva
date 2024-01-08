@@ -7,6 +7,9 @@ const getFeasibilityQuery = graphql(`
   query getFeasibility($feasibilityId: ID!) {
     feasibility(feasibilityId: $feasibilityId) {
       id
+      decision
+      decisionComment
+      decisionSentAt
       feasibilityFile {
         url
         name
