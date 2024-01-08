@@ -5,10 +5,12 @@ export const Pagination = ({
   currentPage,
   className,
   baseHref,
+  baseParams,
 }: {
   totalPages: number;
   currentPage: number;
   baseHref: string;
+  baseParams?: Record<string, string>;
   className?: string;
 }) => {
   const getPages = ({
@@ -92,7 +94,7 @@ export const Pagination = ({
                       className="fr-pagination__link fr-pagination__link--lg-label"
                       href={{
                         pathname: baseHref,
-                        query: { page: p?.number },
+                        query: { ...baseParams, page: p?.number },
                       }}
                     >
                       {p.number}
