@@ -15,6 +15,7 @@ customElements.define(
 // Init Crisp
 CrispElm.getInstance();
 
+// Init Elm app
 const app = Elm.Main.init({
   flags: {
     endpoint:
@@ -37,3 +38,10 @@ window.dsfr = {
   verbose: false,
   mode: "loaded",
 };
+
+// Init Help bubble
+if (import.meta.env.VITE_HELP_BUBBLE_URL) {
+  const helpBubble = document.createElement("script");
+  helpBubble.setAttribute("src", import.meta.env.VITE_HELP_BUBBLE_URL);
+  document.head.appendChild(helpBubble);
+}

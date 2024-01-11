@@ -18,6 +18,7 @@ import {
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
 import {
+  HELP_BUBBLE_URL,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
   KEYCLOAK_URL,
@@ -25,6 +26,7 @@ import {
 import { useCrisp } from "@/components/crisp/useCrisp";
 import { fr } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
+import Script from "next/script";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -45,6 +47,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       <head>
         <StartDsfr />
         <DsfrHead Link={Link} />
+        {HELP_BUBBLE_URL && <Script src={HELP_BUBBLE_URL} />}
       </head>
       <body>
         <DsfrProvider>

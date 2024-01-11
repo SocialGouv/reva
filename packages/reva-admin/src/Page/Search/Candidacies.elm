@@ -152,47 +152,15 @@ view context model =
             viewWithFilters []
 
         ( _, Failure errors ) ->
-            viewWithFilters <| [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ] ++ [ organismHelp ]
+            viewWithFilters <| [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
 
         ( _, Success candidacyCountByStatus ) ->
-            viewWithFilters <| View.Candidacy.Filters.view candidacyCountByStatus model.filters context ++ [ organismHelp ]
+            viewWithFilters <| View.Candidacy.Filters.view candidacyCountByStatus model.filters context
 
 
 filterByStatusTitle : String
 filterByStatusTitle =
     "Filtrer les candidatures par statut"
-
-
-organismHelp : Html msg
-organismHelp =
-    let
-        item s link =
-            li
-                [ class "my-4" ]
-                [ a
-                    [ class "hover:text-blue-900"
-                    , href link
-                    , target "_blank"
-                    ]
-                    [ text s ]
-                ]
-    in
-    div
-        [ class "hidden sm:block"
-        , class "mt-2 mr-8 pl-3 pt-6 border-t"
-        ]
-        [ h3
-            [ class "text-lg mt-1 mb-0" ]
-            [ text "Notre aide en ligne" ]
-        , ul
-            []
-            [ item "Espace documentaire" "https://france-vae.info/"
-            , item "Cahier des charges AAP" "https://france-vae.info/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67"
-            , item "Centre d’aide" "https://reva.crisp.help/fr/"
-            , item "FAQ AAP" "https://reva.crisp.help/fr/category/architectes-accompagnateurs-de-parcours-1oikyam/"
-            , item "Calendrier des webinaires" "https://france-vae.info/82b7cdf15d7b45d1830c8b1024ddfa8c?v=3a2fe0a672f34db9900d7f0bb3ab598f"
-            ]
-        ]
 
 
 viewDirectoryHeader : Context -> Html Msg

@@ -12,3 +12,4 @@ export const ADMIN_ELM_URL =
 export const KEYCLOAK_CLIENT_ID = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID;
 export const KEYCLOAK_REALM = process.env.NEXT_PUBLIC_KEYCLOAK_REALM;
 export const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL;
+export const HELP_BUBBLE_URL = process.env.NEXT_PUBLIC_HELP_BUBBLE_URL;
