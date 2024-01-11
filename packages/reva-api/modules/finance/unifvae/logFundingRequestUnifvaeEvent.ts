@@ -1,6 +1,6 @@
 import { Left, Right } from "purify-ts";
 
-import { logGraphqlEvent } from "../../logGraphqlEvent";
+import { logGraphqlEventUsingPurify } from "../../logGraphqlEventUsingPurify";
 import { FunctionalError } from "../../shared/error/functionalError";
 import { BusinessEventType } from "../../shared/logger/businessLogger";
 
@@ -17,7 +17,7 @@ export const logFundingRequestUnifvaeEvent = ({
   eventType: BusinessEventType;
   extraInfo?: Record<string, unknown>;
 }) => {
-  logGraphqlEvent({
+  logGraphqlEventUsingPurify({
     context,
     result: result instanceof FunctionalError ? Left(result) : Right(result),
     eventType,

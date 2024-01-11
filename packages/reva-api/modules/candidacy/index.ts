@@ -9,7 +9,6 @@ import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import { sendTrainingEmail } from "../shared/email";
-import { sendNewCandidacyEmail } from "../shared/email/sendNewCandidacyEmail";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -63,6 +62,7 @@ import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandid
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "./features/validateTrainingFormByCandidate";
 import { logCandidacyEvent } from "./logCandidacyEvent";
+import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { resolversSecurityMap } from "./security";
 
 const withBasicSkills = (c: Candidacy) => ({
@@ -315,24 +315,16 @@ const unsafeResolvers = {
       context: GraphqlContext
     ) => {
       const result = await submitCandidacy({
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        existsCandidacyWithActiveStatus:
-          candidacyDb.existsCandidacyWithActiveStatus,
-        getOrganismFromCandidacyId:
-          organismDb.getReferentOrganismFromCandidacyId,
-        sendNewCandidacyEmail,
-      })({ candidacyId: payload.candidacyId });
+        candidacyId: payload.candidacyId,
+      });
 
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.SUBMITTED_CANDIDACY,
         context,
-        result,
+        result: result as Record<string, any>,
       });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
     candidacy_updateCertification: async (_: unknown, payload: any) =>
       updateCertificationOfCandidacy({
@@ -362,7 +354,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         experience: payload.experience,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.ADDED_EXPERIENCE,
         extraInfo: result.isRight()
@@ -391,7 +383,7 @@ const unsafeResolvers = {
         experienceId: payload.experienceId,
         experience: payload.experience,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_EXPERIENCE,
         context,
@@ -418,7 +410,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         goals: payload.goals,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_GOALS,
         context,
@@ -473,7 +465,7 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         context,
         result: result.map((s) => ({ s })), // typing hack for nothing
@@ -498,7 +490,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         reorientationReasonId: payload.reorientationReasonId,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         context,
         result,
@@ -523,7 +515,7 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         context,
         result,
         eventType: CandidacyBusinessEvent.UNARCHIVED_CANDIDACY,
@@ -544,7 +536,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         appointmentInformations: payload.appointmentInformations,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_APPOINTMENT_INFO,
         extraInfo: { ...payload.appointmentInformations },
@@ -568,7 +560,7 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.TOOK_OVER_CANDIDACY,
         context,
@@ -634,7 +626,7 @@ const unsafeResolvers = {
         sendTrainingEmail(candidacy.email, token);
       }
 
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.SUBMITTED_TRAINING_FORM,
         extraInfo: {
@@ -660,7 +652,7 @@ const unsafeResolvers = {
       })({
         candidacyId: candidacyId,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId,
         eventType: CandidacyBusinessEvent.CONFIRMED_TRAINING_FORM,
         context,
@@ -702,7 +694,7 @@ const unsafeResolvers = {
         sendCandidacyDropOutEmail(candidacy.email);
       }
 
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.DROPPED_OUT_CANDIDACY,
         extraInfo: { ...payload.dropOut },
@@ -738,7 +730,7 @@ const unsafeResolvers = {
         await cancelDropOutCandidacyEvent(accountId, candidacyDropOut);
       }
 
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.CANCELED_DROPPED_OUT_CANDIDACY,
         extraInfo: { candidacyDropOut },
@@ -766,7 +758,7 @@ const unsafeResolvers = {
         candidacyId,
         admissibility,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_ADMISSIBILITY,
         extraInfo: { admissibility },
@@ -789,7 +781,7 @@ const unsafeResolvers = {
         candidacyId,
         examInfo,
       });
-      logCandidacyEvent({
+      logCandidacyEventUsingPurify({
         candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_EXAM_INFO,
         extraInfo: { examInfo },

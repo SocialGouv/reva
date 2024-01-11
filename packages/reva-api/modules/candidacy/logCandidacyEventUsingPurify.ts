@@ -1,7 +1,10 @@
-import { logGraphqlEvent } from "../logGraphqlEvent";
+import { Either } from "purify-ts";
+
+import { logGraphqlEventUsingPurify } from "../logGraphqlEventUsingPurify";
+import { FunctionalError } from "../shared/error/functionalError";
 import { BusinessEventType } from "../shared/logger/businessLogger";
 
-export const logCandidacyEvent = ({
+export const logCandidacyEventUsingPurify = ({
   context,
   result,
   eventType,
@@ -10,11 +13,11 @@ export const logCandidacyEvent = ({
 }: {
   candidacyId?: string;
   context: GraphqlContext;
-  result: Record<string, any>;
+  result: Either<FunctionalError, Record<string, any>>;
   eventType: BusinessEventType;
   extraInfo?: Record<string, unknown>;
 }) => {
-  logGraphqlEvent({
+  logGraphqlEventUsingPurify({
     context,
     result,
     eventType,

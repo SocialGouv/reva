@@ -169,16 +169,20 @@ export const sendEmailWithLink = async ({
   email,
   token,
   action,
+  app = "app",
   htmlContent,
   subject,
 }: {
   email: string;
-  token: string;
-  action: "registration" | "login" | "confirmEmail";
+  token?: string;
+  action: "registration" | "login" | "confirmEmail" | "admin" | "";
+  app?: "app" | "admin";
   htmlContent: (url: string) => { html: string };
   subject?: string;
 }) => {
-  const url = `${process.env.BASE_URL}/app/${action}?token=${token}`;
+  const url = `${process.env.BASE_URL}/${app}/${action}${
+    token ? `?token=${token}` : ""
+  }`;
   const emailContent = htmlContent(url);
 
   if (process.env.NODE_ENV !== "production") {

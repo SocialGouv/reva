@@ -215,16 +215,6 @@ export const existsCandidacyWithActiveStatuses = async (params: {
   }
 };
 
-// export const getCompanions = async () => {
-//     try {x
-//         const companions = await prismaClient.companion.findMany();
-
-//         return Right(companions);
-//     } catch (e) {
-//         return Left(`error while retrieving companions`);
-//     };
-// };
-
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;
