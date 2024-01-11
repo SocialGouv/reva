@@ -1,38 +1,36 @@
 "use client";
+import {
+  FeasibilityForm,
+  FeasibilityFormData,
+} from "@/app/feasibilities/[feasibilityId]/FeasibilityForm";
 import { useFeasibilityPageLogic } from "@/app/feasibilities/[feasibilityId]/feasibilityPageLogic";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
+import { errorToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns/format";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 
 const FeasibilityPage = () => {
-  const { feasibility } = useFeasibilityPageLogic();
+  const { feasibility, submitFeasibilityDecision } = useFeasibilityPageLogic();
+  const router = useRouter();
 
-  const feasibilityDecisionLabel = useMemo(() => {
-    switch (feasibility?.decision) {
-      case "ADMISSIBLE":
-        return "Recevable";
-      case "REJECTED":
-        return "Non recevable";
-      case "INCOMPLETE":
-        return "Dossier incomplet";
+  const handleFormSubmit = async (data: FeasibilityFormData) => {
+    const result = await submitFeasibilityDecision({
+      decision: data.decision,
+      comment: data.comment,
+      infoFile: data?.infoFile?.[0],
+    });
+    if (result.ok) {
+      router.push("/feasibilities?CATEGORY=ALL");
+    } else {
+      errorToast(result.statusText);
     }
-  }, [feasibility]);
-
-  const feasibilityDecisionDateLabel = useMemo(() => {
-    switch (feasibility?.decision) {
-      case "ADMISSIBLE":
-        return "Dossier validé";
-      case "REJECTED":
-        return "Dossier rejeté";
-      case "INCOMPLETE":
-        return "Dossier marqué incomplet";
-    }
-  }, [feasibility]);
+  };
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 mb-2">
       <Link
         href="/feasibilities?CATEGORY=ALL"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
@@ -97,31 +95,14 @@ const FeasibilityPage = () => {
               {feasibility.candidacy.organism?.contactAdministrativeEmail}
             </p>
           </GrayBlock>
-          {feasibility.decision === "PENDING" ? null : (
-            <>
-              <GrayBlock>
-                <h5 className="text-2xl font-bold mb-4">
-                  Décision prise concernant ce dossier
-                </h5>
-                <h6 className="text-xl font-bold mb-4">
-                  {feasibilityDecisionLabel}
-                </h6>
-                <p className="text-lg mb-0">
-                  {feasibilityDecisionDateLabel} le{" "}
-                  {format(feasibility.decisionSentAt, "d/MM/yyyy")}
-                </p>
-              </GrayBlock>
-              <GrayBlock>
-                <h5 className="text-2xl font-bold mb-4">
-                  Motifs de la décision
-                </h5>
-                {feasibility.decisionComment ? (
-                  <p>{feasibility.decisionComment}</p>
-                ) : (
-                  <p className="italic">Motifs non précisés</p>
-                )}
-              </GrayBlock>
-            </>
+          {feasibility.decision === "PENDING" ? (
+            <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
+          ) : (
+            <FeasibilityDecisionInfo
+              decision={feasibility.decision}
+              decisionSentAt={feasibility.decisionSentAt}
+              decisionComment={feasibility.decisionComment}
+            />
           )}
         </div>
       )}
@@ -134,6 +115,60 @@ export default FeasibilityPage;
 const GrayBlock = ({ children }: { children: ReactNode }) => (
   <div className="bg-neutral-100 px-8 pt-6 pb-8 w-full">{children}</div>
 );
+
+const FeasibilityDecisionInfo = ({
+  decision,
+  decisionSentAt,
+  decisionComment,
+}: {
+  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE";
+  decisionSentAt: Date;
+  decisionComment?: string | null;
+}) => {
+  const decisionLabel = useMemo(() => {
+    switch (decision) {
+      case "ADMISSIBLE":
+        return "Recevable";
+      case "REJECTED":
+        return "Non recevable";
+      case "INCOMPLETE":
+        return "Dossier incomplet";
+    }
+  }, [decision]);
+
+  const decisionDateLabel = useMemo(() => {
+    switch (decision) {
+      case "ADMISSIBLE":
+        return "Dossier validé";
+      case "REJECTED":
+        return "Dossier rejeté";
+      case "INCOMPLETE":
+        return "Dossier marqué incomplet";
+    }
+  }, [decision]);
+
+  return (
+    <>
+      <GrayBlock>
+        <h5 className="text-2xl font-bold mb-4">
+          Décision prise concernant ce dossier
+        </h5>
+        <h6 className="text-xl font-bold mb-4">{decisionLabel}</h6>
+        <p className="text-lg mb-0">
+          {decisionDateLabel} le {format(decisionSentAt, "d/MM/yyyy")}
+        </p>
+      </GrayBlock>
+      <GrayBlock>
+        <h5 className="text-2xl font-bold mb-4">Motifs de la décision</h5>
+        {decisionComment ? (
+          <p>{decisionComment}</p>
+        ) : (
+          <p className="italic">Motifs non précisés</p>
+        )}
+      </GrayBlock>
+    </>
+  );
+};
 
 const FileLink = ({ url, text }: { url: string; text: string }) => (
   <AuthenticatedLink
