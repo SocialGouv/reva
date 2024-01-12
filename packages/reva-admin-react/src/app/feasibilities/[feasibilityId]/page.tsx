@@ -23,7 +23,7 @@ const FeasibilityPage = () => {
       infoFile: data?.infoFile?.[0],
     });
     if (result.ok) {
-      router.push("/feasibilities?CATEGORY=ALL");
+      router.push("/feasibilities");
     } else {
       errorToast(result.statusText);
     }
@@ -32,7 +32,7 @@ const FeasibilityPage = () => {
   return (
     <div className="flex flex-col flex-1 mb-2">
       <Link
-        href="/feasibilities?CATEGORY=ALL"
+        href="/feasibilities"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
       >
         Tous les dossiers

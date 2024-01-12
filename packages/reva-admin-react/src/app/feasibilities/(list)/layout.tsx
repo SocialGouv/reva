@@ -31,10 +31,16 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
     queryFn: () => graphqlClient.request(getFeasibilityCountByCategoryQuery),
   });
 
-  const menuItem = (text: string, path: string, category: string) => ({
+  const menuItem = (
+    text: string,
+    path: string,
+    category: string,
+    defaultMenuItem?: boolean,
+  ) => ({
     isActive:
-      currentPathname.startsWith(path) &&
-      searchParams.get("CATEGORY") === category,
+      (currentPathname.startsWith(path) &&
+        searchParams.get("CATEGORY") === category) ||
+      (!searchParams.get("CATEGORY") && defaultMenuItem),
     linkProps: {
       href: `${path}?CATEGORY=${category}`,
       target: "_self",
@@ -59,6 +65,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
               `Tous les dossiers de faisabilité (${feasibilityCountByCategory?.ALL})`,
               "/feasibilities",
               "ALL",
+              true,
             ),
             menuItem(
               `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,

@@ -98,7 +98,7 @@ export const Header = () => {
               {
                 text: "Dossiers de faisabilité",
                 linkProps: {
-                  href: "/feasibilities?CATEGORY=ALL",
+                  href: "/feasibilities",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/feasibilities"),
