@@ -50,7 +50,17 @@ type MaisonMereAAP {
   gestionnaire: Account!
   organisms: [Organism!]!
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
+  maisonMereAAPOnDomaines: [MaisonMereAAPOnDomaine!]!
+  maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
   createdAt: Timestamp!
+}
+
+type MaisonMereAAPOnDomaine {
+  domaine: Domaine!
+}
+
+type MaisonMereAAPOnConventionCollective {
+  ccn: ConventionCollective!
 }
 
 type Account {
