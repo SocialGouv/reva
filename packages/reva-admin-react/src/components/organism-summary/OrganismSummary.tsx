@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { ReactNode } from "react";
 
-type Typology =
+export type Typology =
   | "generaliste"
   | "expertBranche"
   | "expertFiliere"

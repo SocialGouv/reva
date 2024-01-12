@@ -1,7 +1,11 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
+import {
+  OrganismSummary,
+  Typology,
+} from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
+import { OrganismTypology } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -17,6 +21,7 @@ const getMaisonMereAAP = graphql(`
       adresse
       ville
       codePostal
+      typologie
       maisonMereAAPOnDepartements {
         estSurPlace
         estADistance
@@ -72,7 +77,7 @@ const MaisonMereAAPPage = () => {
           companyAddress={maisonMereAAP.adresse}
           companyZipCode={maisonMereAAP.codePostal}
           companyCity={maisonMereAAP.ville}
-          companyTypology={"generaliste"}
+          companyTypology={maisonMereAAP.typologie as Typology}
           onSiteDepartments={maisonMereAAP.maisonMereAAPOnDepartements
             .filter((d) => d.estSurPlace)
             .map((d) => ({
