@@ -3,8 +3,10 @@ import mercurius from "mercurius";
 
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
+import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
+import { getDomaineById } from "../referential/features/getDomaineById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -19,6 +21,8 @@ import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestio
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
+import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMereAAPOnConventionCollectives";
+import { getMaisonMereAAPOnDomaines } from "./features/getMaisonMereAAPOnDomaines";
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
@@ -59,6 +63,10 @@ export const resolvers = {
   MaisonMereAAP: {
     maisonMereAAPOnDepartements: ({ id }: { id: string }) =>
       getMaisonMereAAPOnDepartments({ maisonMereAAPId: id }),
+    maisonMereAAPOnDomaines: ({ id }: { id: string }) =>
+      getMaisonMereAAPOnDomaines({ maisonMereAAPId: id }),
+    maisonMereAAPOnConventionCollectives: ({ id }: { id: string }) =>
+      getMaisonMereAAPOnConventionCollectives({ maisonMereAAPId: id }),
     organisms: ({ id: maisonMereAAPId }: { id: string }) =>
       getOrganismsByMaisonAAPId({ maisonMereAAPId }),
     gestionnaire: ({
@@ -66,6 +74,14 @@ export const resolvers = {
     }: {
       gestionnaireAccountId: string;
     }) => getAccountById({ id: gestionnaireAccountId }),
+  },
+  MaisonMereAAPOnDomaine: {
+    domaine: ({ domaineId }: { domaineId: string }) =>
+      getDomaineById({ domaineId }),
+  },
+  MaisonMereAAPOnConventionCollective: {
+    ccn: ({ ccnId }: { ccnId: string }) =>
+      getConventionCollectiveById({ ccnId }),
   },
   MaisonMereAAPOnDepartment: {
     departement: ({ departementId }: { departementId: string }) =>

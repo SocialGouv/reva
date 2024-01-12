@@ -29,6 +29,16 @@ const getMaisonMereAAP = graphql(`
           label
         }
       }
+      maisonMereAAPOnDomaines {
+        domaine {
+          label
+        }
+      }
+      maisonMereAAPOnConventionCollectives {
+        ccn {
+          label
+        }
+      }
       gestionnaire {
         firstname
         lastname
@@ -89,6 +99,12 @@ const MaisonMereAAPPage = () => {
               label: d.departement.label,
               code: d.departement.code,
             }))}
+          domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
+            (d) => d.domaine.label,
+          )}
+          ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
+            (c) => c.ccn.label,
+          )}
         />
       </div>
     )
