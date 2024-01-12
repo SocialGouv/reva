@@ -15,7 +15,7 @@ const schema = z
       },
     }),
     comment: z.string(),
-    infoFile: z.instanceof(FileList),
+    infoFile: z.object({ 0: z.instanceof(File) }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
     if (decision === "Incomplete" && !comment) {
