@@ -28,17 +28,29 @@ export const Header = (props: { className?: string }) => {
       },
       text: "Je suis professionnel de la VAE",
     },
+    {
+      isActive:
+        !!asPath.match(/\/savoir-plus/)?.length ||
+        !!asPath.match(/\/nous-contacter/)?.length,
+      text: "Besoin d'aide ?",
+      menuLinks: [
+        {
+          linkProps: {
+            href: "/savoir-plus",
+          },
+          isActive: !!asPath.match(/\/savoir-plus/)?.length,
+          text: "En savoir plus sur la VAE",
+        },
+        {
+          linkProps: {
+            href: "/nous-contacter",
+          },
+          isActive: !!asPath.match(/\/nous-contacter/)?.length,
+          text: "Nous contacter",
+        },
+      ],
+    },
   ];
-
-  if (isFeatureActive("CENTRE_AIDE")) {
-    navigation.push({
-      isActive: !!asPath.match(/\/savoir-plus/)?.length,
-      linkProps: {
-        href: "/savoir-plus",
-      },
-      text: "En savoir plus sur la VAE",
-    });
-  }
 
   return (
     <DsfrHeader
