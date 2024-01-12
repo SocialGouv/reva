@@ -6,7 +6,7 @@ import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const getPendingSubscriptionRequests = graphql(`
@@ -38,8 +38,14 @@ const PendingSubscriptionRequestsPage = () => {
   const [searchFilter, setSearchFilter] = useState("");
   const router = useRouter();
   const params = useSearchParams();
+  const pathname = usePathname();
   const page = params.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
+
+  const updateSearchFilter = (newSearchFilter: string) => {
+    setSearchFilter(newSearchFilter);
+    router.push(pathname);
+  };
 
   const {
     data: getPendingSubscriptionRequestsResponse,
@@ -75,7 +81,7 @@ const PendingSubscriptionRequestsPage = () => {
               className="mb-6"
               searchFilter={searchFilter}
               resultCount={subscriptionRequestPage.info.totalRows}
-              onSearchFilterChange={setSearchFilter}
+              onSearchFilterChange={updateSearchFilter}
             />
             <ul className="flex flex-col gap-5">
               {subscriptionRequestPage?.rows.map((r) => (

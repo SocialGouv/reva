@@ -7,7 +7,7 @@ import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar"
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const getCertificationAuthorities = graphql(`
@@ -35,10 +35,16 @@ const RECORDS_PER_PAGE = 10;
 const CertificationAuthoritiesListPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const [searchFilter, setSearchFilter] = useState("");
+  const pathname = usePathname();
   const params = useSearchParams();
   const page = params.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
   const router = useRouter();
+
+  const updateSearchFilter = (newSearchFilter: string) => {
+    setSearchFilter(newSearchFilter);
+    router.push(pathname);
+  };
 
   const {
     data: getCertificationAuthoritiesResponse,
@@ -69,7 +75,7 @@ const CertificationAuthoritiesListPage = () => {
               className="mb-6"
               searchFilter={searchFilter}
               resultCount={certificationAuthorityPage.info.totalRows}
-              onSearchFilterChange={setSearchFilter}
+              onSearchFilterChange={updateSearchFilter}
             />
             <ul className="flex flex-col gap-5">
               {certificationAuthorityPage?.rows.map((c) => (

@@ -10,7 +10,7 @@ import { FeasibilityDecisionFilter } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns/format";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 const RECORDS_PER_PAGE = 10;
@@ -58,11 +58,17 @@ const RejectedSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const [searchFilter, setSearchFilter] = useState("");
   const params = useSearchParams();
+  const pathname = usePathname();
   const router = useRouter();
   const page = params.get("page");
   const category = params.get("CATEGORY");
   const currentPage = page ? Number.parseInt(page) : 1;
   const { isAdmin } = useAuth();
+
+  const updateSearchFilter = (newSearchFilter: string) => {
+    setSearchFilter(newSearchFilter);
+    router.push(pathname);
+  };
 
   const { data: getFeasibilitiesResponse, status: getFeasibilitiesStatus } =
     useQuery({
@@ -106,7 +112,7 @@ const RejectedSubscriptionRequestsPage = () => {
               className="mb-6"
               searchFilter={searchFilter}
               resultCount={feasibilityPage.info.totalRows}
-              onSearchFilterChange={setSearchFilter}
+              onSearchFilterChange={updateSearchFilter}
             />
 
             <ul className="flex flex-col gap-5">
