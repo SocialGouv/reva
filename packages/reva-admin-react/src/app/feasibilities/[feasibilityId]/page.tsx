@@ -95,14 +95,40 @@ const FeasibilityPage = () => {
               {feasibility.candidacy.organism?.contactAdministrativeEmail}
             </p>
           </GrayBlock>
-          {feasibility.decision === "PENDING" ? (
+          {feasibility.decision !== "PENDING" && (
+            <div>
+              <h5 className="text-2xl font-bold mb-2">
+                Décision prise concernant ce dossier
+              </h5>
+              <FeasibilityDecisionInfo
+                decision={feasibility.decision}
+                decisionSentAt={feasibility.decisionSentAt}
+                decisionComment={feasibility.decisionComment}
+              />
+            </div>
+          )}
+          {feasibility.history.length > 0 && (
+            <div>
+              <h5 className="text-2xl font-bold mb-2">
+                {feasibility.history.length === 1
+                  ? "Décision précédente"
+                  : "Décisions précédentes"}
+              </h5>
+              <ul>
+                {feasibility.history.map((previousFeasibility) => (
+                  <li className="mb-2" key={previousFeasibility.decisionSentAt}>
+                    <FeasibilityDecisionInfo
+                      decision={previousFeasibility.decision}
+                      decisionSentAt={previousFeasibility.decisionSentAt}
+                      decisionComment={previousFeasibility.decisionComment}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {feasibility.decision === "PENDING" && (
             <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
-          ) : (
-            <FeasibilityDecisionInfo
-              decision={feasibility.decision}
-              decisionSentAt={feasibility.decisionSentAt}
-              decisionComment={feasibility.decisionComment}
-            />
           )}
         </div>
       )}
@@ -121,8 +147,8 @@ const FeasibilityDecisionInfo = ({
   decisionSentAt,
   decisionComment,
 }: {
-  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE";
-  decisionSentAt: Date;
+  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE" | "PENDING";
+  decisionSentAt?: Date;
   decisionComment?: string | null;
 }) => {
   const decisionLabel = useMemo(() => {
@@ -150,16 +176,15 @@ const FeasibilityDecisionInfo = ({
   return (
     <>
       <GrayBlock>
-        <h5 className="text-2xl font-bold mb-4">
-          Décision prise concernant ce dossier
-        </h5>
-        <h6 className="text-xl font-bold mb-4">{decisionLabel}</h6>
-        <p className="text-lg mb-0">
-          {decisionDateLabel} le {format(decisionSentAt, "d/MM/yyyy")}
-        </p>
-      </GrayBlock>
-      <GrayBlock>
-        <h5 className="text-2xl font-bold mb-4">Motifs de la décision</h5>
+        {decisionSentAt && (
+          <>
+            <h6 className="text-xl font-bold mb-4">{decisionLabel}</h6>
+            <p className="text-lg mb-8">
+              {decisionDateLabel} le {format(decisionSentAt, "d/MM/yyyy")}
+            </p>
+          </>
+        )}
+        <h6 className="text-xl font-bold mb-4">Motifs de la décision</h6>
         {decisionComment ? (
           <p>{decisionComment}</p>
         ) : (

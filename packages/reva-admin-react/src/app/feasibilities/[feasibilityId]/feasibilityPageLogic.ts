@@ -12,6 +12,11 @@ const getFeasibilityQuery = graphql(`
       decision
       decisionComment
       decisionSentAt
+      history {
+        decision
+        decisionComment
+        decisionSentAt
+      }
       IDFile {
         url
         name
