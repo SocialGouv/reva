@@ -39,6 +39,16 @@ const getSubscriptionRequest = graphql(`
         isOnSite
         isRemote
       }
+      subscriptionRequestOnConventionCollective {
+        ccn {
+          label
+        }
+      }
+      subscriptionRequestOnDomaine {
+        domaine {
+          label
+        }
+      }
     }
   }
 `);
@@ -96,6 +106,12 @@ const SubscriptionRequestPage = () => {
               label: d.department.label,
               code: d.department.code,
             }))}
+          ccns={subscriptionRequest?.subscriptionRequestOnConventionCollective?.map(
+            (s) => s.ccn.label,
+          )}
+          domaines={subscriptionRequest?.subscriptionRequestOnDomaine?.map(
+            (s) => s.domaine.label,
+          )}
         />
 
         <hr className="mt-8 mb-4" />

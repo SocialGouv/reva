@@ -36,6 +36,8 @@ export const OrganismSummary = ({
   companyTypology,
   onSiteDepartments,
   remoteDemartments,
+  ccns,
+  domaines,
 }: {
   companyName: string;
   accountFirstname: string;
@@ -52,6 +54,8 @@ export const OrganismSummary = ({
   companyTypology: Typology;
   onSiteDepartments: { label: string; code: string }[];
   remoteDemartments: { label: string; code: string }[];
+  ccns?: string[];
+  domaines?: string[];
 }) => (
   <div className="flex flex-col mt-10">
     <h1 className="text-4xl font-bold">{companyName}</h1>
@@ -94,7 +98,31 @@ export const OrganismSummary = ({
     </div>
     <br />
     <h2 className="text-xl font-bold my-4">Typologie et zone d'intervention</h2>
-    <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
+    <div className="grid md:grid-cols-2">
+      <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
+      {!!domaines?.length && (
+        <Info title="Filière(s)">
+          <ul className="ml-4">
+            {domaines?.map((d) => (
+              <li className="list-disc" key={d}>
+                {d}
+              </li>
+            ))}
+          </ul>
+        </Info>
+      )}
+      {!!ccns?.length && (
+        <Info title="Conventions collectives">
+          <ul className="ml-4">
+            {ccns?.map((c) => (
+              <li className="list-disc" key={c}>
+                {c}
+              </li>
+            ))}
+          </ul>
+        </Info>
+      )}
+    </div>
     <div className="grid md:grid-cols-2">
       <Info title="Zone d'intervention en présentiel">
         <ul className="ml-4">
