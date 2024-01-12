@@ -165,20 +165,20 @@ headerMenuModal context activeHeaderLink =
                 , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
                 , itemLink "Certificateurs" (adminReactUrl "/certification-authorities") True False
-                , navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
+                , itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities?CATEGORY=ALL") True False
                 ]
 
             else if Api.Token.isAdminCertificationAuthority context.token then
                 if isLocalAccountsActive then
-                    [ navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
+                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities?CATEGORY=ALL") True False
                     , itemLink "Gestion des comptes locaux" (adminReactUrl "/certification-authorities/local-accounts") True False
                     ]
 
                 else
-                    [ navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities ]
+                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities?CATEGORY=ALL") True False ]
 
             else if Api.Token.isCertificationAuthority context.token then
-                [ navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities ]
+                [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities?CATEGORY=ALL") True False ]
 
             else if
                 (isAccountSettingsActive || isAgenciesActive)

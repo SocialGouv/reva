@@ -28,7 +28,7 @@ export const RolesGuard = (props: Props): JSX.Element => {
     if (isAdmin || isOrganism || isGestionnaireMaisonMereAAP) {
       redirect(ADMIN_ELM_URL + "/candidacies");
     } else if (isAdminCertificationAuthority || isCertificationAuthority) {
-      redirect(ADMIN_ELM_URL + "/feasibilities");
+      redirect("/feasibilities?CATEGORY=ALL");
     }
 
     return <div>Vous n'avez pas accès à cette fonctionnalité</div>;

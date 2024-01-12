@@ -95,22 +95,14 @@ export const Header = () => {
           : []),
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
-              isFeatureActive("FEASIBILITIES_ADMIN_REACT")
-                ? {
-                    text: "Dossiers de faisabilité",
-                    linkProps: {
-                      href: "/feasibilities?CATEGORY=ALL",
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith("/feasibilities"),
-                  }
-                : {
-                    text: "Dossiers de faisabilité",
-                    linkProps: {
-                      href: ADMIN_ELM_URL + "/feasibilities",
-                      target: "_self",
-                    },
-                  },
+              {
+                text: "Dossiers de faisabilité",
+                linkProps: {
+                  href: "/feasibilities?CATEGORY=ALL",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith("/feasibilities"),
+              },
             ]
           : []),
         ...(isAdminCertificationAuthority &&
