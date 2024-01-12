@@ -15,12 +15,10 @@ import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Account as Account
 import Page.Candidacy as Candidacy
-import Page.Feasibility as Feasibility
 import Page.Loading
 import Page.Search.Accounts as Accounts
 import Page.Search.Candidacies as Candidacies exposing (Model)
 import Page.Search.Certifications as Certifications
-import Page.Search.Feasibilities as Feasibilities
 import Page.Search.Typology as Typology
 import Page.SiteMap as SiteMap
 import RemoteData exposing (RemoteData(..))
@@ -58,8 +56,6 @@ type Page
     | Certifications Certifications.Model
     | Candidacy Candidacy.Model
     | Typology Typology.Model
-    | Feasibilities Feasibilities.Model
-    | Feasibility Feasibility.Model
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
@@ -85,8 +81,6 @@ type Msg
     | GotViewport Dom.Viewport
     | GotBrowserWidth Float
     | ScrolledToTop
-    | GotFeasibilitiesMsg Feasibilities.Msg
-    | GotFeasibilityMsg Feasibility.Msg
     | GotActiveFeatures (RemoteData (List String) (List String))
 
 
@@ -158,14 +152,6 @@ viewPage model =
             Typology.view model.context typologyModel
                 |> Html.map GotTypologyMsg
 
-        Feasibilities feasibilitiesModel ->
-            Feasibilities.view model.context feasibilitiesModel
-                |> Html.map GotFeasibilitiesMsg
-
-        Feasibility feasibilityModel ->
-            Feasibility.view model.context feasibilityModel
-                |> Html.map GotFeasibilityMsg
-
         NotFound ->
             h1 [] [ text "Page introuvable" ]
 
@@ -189,17 +175,17 @@ changeRouteTo context route model =
     case ( route, model.page ) of
         ( Route.Home, _ ) ->
             let
-                redirectRoute =
+                redirectUrl =
                     if Api.Token.isAdmin context.token || Api.Token.isOrganism context.token then
-                        Route.Candidacies Route.emptyCandidacyFilters
+                        Route.toString model.context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
 
                     else if Api.Token.isCertificationAuthority context.token then
-                        Route.Feasibilities Route.emptyFeasibilityFilters
+                        context.adminReactUrl ++ "/feasibilities?CATEGORY=ALL"
 
                     else
-                        Route.NotFound
+                        Route.toString model.context.baseUrl Route.NotFound
             in
-            ( model, Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute) )
+            ( model, Nav.load redirectUrl )
 
         ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
@@ -215,19 +201,6 @@ changeRouteTo context route model =
                 |> Candidacy.resetSelected
                 |> Candidacy.updateTab context tab
                 |> updateWith Candidacy GotCandidacyMsg model
-
-        ( Route.Feasibilities filters, Feasibilities feasibilitiesModel ) ->
-            feasibilitiesModel
-                |> Feasibilities.withFilters context filters.page filters.category
-                |> updateWith Feasibilities GotFeasibilitiesMsg model
-
-        ( Route.Feasibilities filters, _ ) ->
-            Feasibilities.init model.context filters.category filters.page
-                |> updateWith Feasibilities GotFeasibilitiesMsg model
-
-        ( Route.Feasibility feasibilityId, _ ) ->
-            Feasibility.init model.context feasibilityId
-                |> updateWith Feasibility GotFeasibilityMsg model
 
         ( Route.Certifications filters, Certifications certificationsModel ) ->
             certificationsModel
@@ -404,25 +377,6 @@ update msg model =
             , Cmd.map GotTypologyMsg typologyCmd
             )
 
-        -- Feasibilities
-        ( GotFeasibilitiesMsg feasibilitiessMsg, Feasibilities feasibilitiesModel ) ->
-            let
-                ( newFeasibilitiesModel, feasibilitiesCmd ) =
-                    Feasibilities.update model.context feasibilitiessMsg feasibilitiesModel
-            in
-            ( { model | page = Feasibilities newFeasibilitiesModel }
-            , Cmd.map GotFeasibilitiesMsg feasibilitiesCmd
-            )
-
-        ( GotFeasibilityMsg feasibilityMsg, Feasibility feasibilityModel ) ->
-            let
-                ( newFeasibilityModel, feasibilityCmd ) =
-                    Feasibility.update model.context feasibilityMsg feasibilityModel
-            in
-            ( { model | page = Feasibility newFeasibilityModel }
-            , Cmd.map GotFeasibilityMsg feasibilityCmd
-            )
-
         -- Auth
         ( GotLoggedIn token, NotLoggedIn route ) ->
             let
@@ -452,19 +406,8 @@ update msg model =
                 )
 
             else if Api.Token.isCertificationAuthority token then
-                let
-                    redirectRoute =
-                        case route of
-                            -- When the user is not logged in, we redirect him to the login page
-                            -- Then, by default, we redirect him to the feasibilities page
-                            Login ->
-                                Route.Feasibilities emptyFeasibilityFilters
-
-                            _ ->
-                                route
-                in
                 ( { model | context = newContext }
-                , Cmd.batch [ Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute), getFeaturesCommand ]
+                , Cmd.batch [ Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl route), getFeaturesCommand ]
                 )
 
             else

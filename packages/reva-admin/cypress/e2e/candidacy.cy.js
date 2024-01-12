@@ -27,7 +27,7 @@ context("Candidacy", () => {
       );
     });
 
-    cy.aap();
+    cy.aap("/candidacies");
   });
 
   it("display all candidacies", function () {

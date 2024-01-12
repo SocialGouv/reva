@@ -14,7 +14,6 @@ type HeaderLink
     = Candidacies
     | Subscriptions
     | Accounts
-    | Feasibilities
     | Certifications
 
 
@@ -40,9 +39,6 @@ view context route =
 
                 Route.Account _ ->
                     Just Accounts
-
-                Route.Feasibilities _ ->
-                    Just Feasibilities
 
                 _ ->
                     Nothing

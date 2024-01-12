@@ -57,8 +57,6 @@ type Route
     | Typology CandidacyId TypologyFilters
     | Candidacies CandidacyFilters
     | Certifications CertificationsFilters
-    | Feasibility String -- Candidacy Id
-    | Feasibilities FeasibilityFilters
     | Home
     | Login
     | Logout
@@ -121,12 +119,6 @@ parser baseUrl =
         toReorientationRoute candidacyId organismId p =
             Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
-        feasibilityCategoryStringToCategoryFilter c =
-            Maybe.withDefault FeasibilityCategoryFilter.All (FeasibilityCategoryFilter.fromString (Maybe.withDefault "" c))
-
-        toFeasibilitiesRoute c p =
-            Feasibilities (FeasibilityFilters (feasibilityCategoryStringToCategoryFilter c) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
-
         accountGroupStringToGroupFilter g =
             Maybe.withDefault AccountGroup.Organism (AccountGroup.fromString (Maybe.withDefault "" g))
 
@@ -141,11 +133,9 @@ parser baseUrl =
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , s "certifications" <?> Query.string "organism" <?> Query.string "page" |> map toCertificationsRoute
-                , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
                 , s "accounts" <?> Query.string "group" <?> Query.string "page" |> map toAccountsRoute
                 , s "accounts" </> string |> map Account
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
-                , topLevel "feasibilities" string |> map Feasibility
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
@@ -220,12 +210,6 @@ toString baseUrl route =
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
-
-        Feasibilities filters ->
-            topLevel [ "feasibilities" ] [ Url.Builder.string "category" (FeasibilityCategoryFilter.toString filters.category), Url.Builder.int "page" filters.page ]
-
-        Feasibility feasibilityId ->
-            topLevel [ "feasibilities", feasibilityId ] []
 
         Accounts filters ->
             topLevel [ "accounts" ] [ Url.Builder.string "group" (AccountGroup.toString filters.group), Url.Builder.int "page" filters.page ]
