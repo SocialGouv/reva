@@ -23,18 +23,33 @@ const menuItem = ({
   isActive: boolean;
   isOrganismMaisonMere?: boolean;
 }) => {
-  const text = `${
+  const displayedName = `${
     informationsCommerciales?.nom ? informationsCommerciales.nom : label
-  }${isOrganismMaisonMere ? " (Agence administratrice)" : ""}${
-    !isActive || fermePourAbsenceOuConges ? " 🚫" : ""
-  }`;
+  }${isOrganismMaisonMere ? " (Agence administratrice)" : ""}`;
+  const altText =
+    "Agence masquée dans les résultats de recherches des candidats";
+  const content = (
+    <>
+      {displayedName}
+      {!isActive || fermePourAbsenceOuConges ? (
+        <span
+          className="ml-2 fr-icon-eye-off-fill fr-icon--sm text-gray-400"
+          aria-hidden="true"
+          aria-label={altText}
+          title={altText}
+        ></span>
+      ) : (
+        <></>
+      )}
+    </>
+  );
   return {
     isActive: false,
     linkProps: {
       href: `/agences/${id}`,
       target: "_self",
     },
-    text,
+    text: content,
   };
 };
 
