@@ -5,7 +5,6 @@ import {
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
-import { OrganismTypology } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
