@@ -6,7 +6,7 @@ import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
-import { FeasibilityDecisionFilter } from "@/graphql/generated/graphql";
+import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns/format";
@@ -20,10 +20,10 @@ const getFeasibilitiesQuery = graphql(`
     $offset: Int
     $limit: Int
     $searchFilter: String
-    $decision: FeasibilityDecisionFilter
+    $categoryFilter: FeasibilityCategoryFilter
   ) {
     feasibilities(
-      decision: $decision
+      categoryFilter: $categoryFilter
       limit: $limit
       offset: $offset
       searchFilter: $searchFilter
@@ -78,9 +78,9 @@ const RejectedSubscriptionRequestsPage = () => {
           offset: (currentPage - 1) * RECORDS_PER_PAGE,
           limit: RECORDS_PER_PAGE,
           searchFilter,
-          decision: (category === null || category === "ALL"
+          categoryFilter: (category === null || category === "ALL"
             ? undefined
-            : category) as FeasibilityDecisionFilter,
+            : category) as FeasibilityCategoryFilter,
         }),
     });
 

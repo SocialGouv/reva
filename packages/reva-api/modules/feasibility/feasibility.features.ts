@@ -8,6 +8,7 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
+import { candidacyId } from "../../test/fixtures/funding-request";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
@@ -32,6 +33,7 @@ import {
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./feasibility.mails";
+import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
   getWhereClauseFromSearchFilter,
@@ -407,19 +409,28 @@ export const getActiveFeasibilities = async ({
   hasRole,
   limit = 10,
   offset = 0,
-  decision,
+  categoryFilter,
   searchFilter,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   limit?: number;
   offset?: number;
-  decision?: FeasibilityStatus;
+  categoryFilter?: FeasibilityCategoryFilter;
   searchFilter?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
-  let queryWhereClause: Prisma.FeasibilityFindManyArgs["where"] = decision
-    ? { decision, isActive: decision !== "INCOMPLETE" }
-    : {
+  let queryWhereClause: Prisma.FeasibilityWhereInput = {};
+
+  const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput = {
+    candidacy: {
+      candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
+      candidacyDropOut: { is: null },
+    },
+  };
+  switch (categoryFilter) {
+    case undefined:
+    case "ALL":
+      queryWhereClause = {
         OR: [
           {
             isActive: true,
@@ -429,7 +440,58 @@ export const getActiveFeasibilities = async ({
             decision: "INCOMPLETE",
           },
         ],
+        ...excludeArchivedAndDroppedOutCandidacy,
       };
+      break;
+    case "INCOMPLETE":
+      queryWhereClause = {
+        isActive: false,
+        decision: "INCOMPLETE",
+        ...excludeArchivedAndDroppedOutCandidacy,
+      };
+      break;
+    case "ARCHIVED":
+      queryWhereClause = {
+        OR: [
+          {
+            isActive: true,
+          },
+          {
+            isActive: false,
+            decision: "INCOMPLETE",
+          },
+        ],
+        candidacy: {
+          candidacyStatuses: { some: { isActive: true, status: "ARCHIVE" } },
+        },
+      };
+      break;
+    case "DROPPED_OUT":
+      queryWhereClause = {
+        OR: [
+          {
+            isActive: true,
+          },
+          {
+            isActive: false,
+            decision: "INCOMPLETE",
+          },
+        ],
+        candidacy: { candidacyDropOut: { isNot: null } },
+      };
+      break;
+    default:
+      queryWhereClause = {
+        OR: [
+          {
+            isActive: true,
+            decision: categoryFilter as FeasibilityStatus,
+          },
+        ],
+        ...excludeArchivedAndDroppedOutCandidacy,
+      };
+      break;
+  }
 
   //only list feasibilties linked to the account certification authority
   if (hasRole("manage_feasibility")) {

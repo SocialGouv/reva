@@ -57,13 +57,8 @@ enum FeasibilityCategoryFilter {
   REJECTED
   ADMISSIBLE
   INCOMPLETE
-}
-
-enum FeasibilityDecisionFilter {
-  PENDING
-  REJECTED
-  ADMISSIBLE
-  INCOMPLETE
+  ARCHIVED
+  DROPPED_OUT
 }
 
 type Query {
@@ -71,7 +66,7 @@ type Query {
   feasibilities(
     offset: Int
     limit: Int
-    decision: FeasibilityDecisionFilter
+    categoryFilter: FeasibilityCategoryFilter
     searchFilter: String
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility

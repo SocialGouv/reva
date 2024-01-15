@@ -8,6 +8,7 @@ import {
   getFeasibilityById,
   getFileNameAndUrl,
 } from "./feasibility.features";
+import { FeasibilityCategoryFilter } from "./feasibility.types";
 
 export const feasibilityResolvers = {
   Candidacy: {
@@ -67,7 +68,7 @@ export const feasibilityResolvers = {
       args: {
         offset?: number;
         limit?: number;
-        status?: FeasibilityStatus;
+        category?: FeasibilityCategoryFilter;
         searchFilter?: string;
       },
       context: any
