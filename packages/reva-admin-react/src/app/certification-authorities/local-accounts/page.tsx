@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 
+import Link from "next/link";
 import { useCertificationAuthorityQueries } from "./certificationAuthorityQueries";
 
 export default function Page() {
@@ -27,39 +28,49 @@ export default function Page() {
         </div>
       )}
       {status == "success" && (
-        <SideMenu
-          className="flex-shrink-0 md:w-[330px] side-bar-menu-add-button"
-          align="left"
-          classes={{ inner: "h-full" }}
-          burgerMenuButtonText="Comptes locaux"
-          title="Comptes locaux"
-          items={
-            [
-              ...localAccounts.map((item) => ({
-                isActive: false,
-                linkProps: {
-                  href: `/certification-authorities/local-accounts/${item.id}`,
-                  target: "_self",
+        <div className="flex">
+          <SideMenu
+            className="flex-shrink-0 md:w-[330px] side-bar-menu-add-button"
+            align="left"
+            classes={{ inner: "h-full" }}
+            burgerMenuButtonText="Comptes locaux"
+            title="Comptes locaux"
+            items={
+              [
+                ...localAccounts.map((item) => ({
+                  isActive: false,
+                  linkProps: {
+                    href: `/certification-authorities/local-accounts/${item.id}`,
+                    target: "_self",
+                  },
+                  text: `${item.account.firstname} ${item.account.lastname}`,
+                })),
+                {
+                  isActive: false,
+                  linkProps: {
+                    href: "/certification-authorities/local-accounts/add-local-account/",
+                    target: "_self",
+                  },
+                  text: (
+                    <div className="w-full h-full bg-white">
+                      <Button size="small" priority="secondary">
+                        Ajouter un compte local
+                      </Button>
+                    </div>
+                  ),
                 },
-                text: item.account.lastname,
-              })),
-              {
-                isActive: false,
-                linkProps: {
-                  href: "/certification-authorities/local-accounts/add-local-account/",
-                  target: "_self",
-                },
-                text: (
-                  <div className="w-full h-full bg-white">
-                    <Button size="small" priority="secondary">
-                      Ajouter un compte local
-                    </Button>
-                  </div>
-                ),
-              },
-            ] || []
-          }
-        />
+              ] || []
+            }
+          />
+          <div className="w-full flex flex-col items-center justify-center px-4 sm:px-10 text-gray-500">
+            <span>
+              <Link href="/certification-authorities/local-accounts/add-local-account/">
+                Ajoutez un compte local
+              </Link>{" "}
+              ou sélectionnez un compte existant.
+            </span>
+          </div>
+        </div>
       )}
       {status == "error" && (
         <div className="md:w-[330px] text-red-500">
