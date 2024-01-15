@@ -42,3 +42,13 @@ admissible =
 incomplete : SelectionSet Int Admin.Object.FeasibilityCountByCategory
 incomplete =
     Object.selectionForField "Int" "INCOMPLETE" [] Decode.int
+
+
+archived : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+archived =
+    Object.selectionForField "Int" "ARCHIVED" [] Decode.int
+
+
+droppedOut : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+droppedOut =
+    Object.selectionForField "Int" "DROPPED_OUT" [] Decode.int

@@ -409,20 +409,20 @@ encodeCreateOrUpdateOrganismOnDegreesInput input____ =
         [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.organismId |> Just ), ( "degreeIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.degreeIds |> Just ) ]
 
 
-buildCreateOrganismInput :
-    CreateOrganismInputRequiredFields
-    -> (CreateOrganismInputOptionalFields -> CreateOrganismInputOptionalFields)
-    -> CreateOrganismInput
-buildCreateOrganismInput required____ fillOptionals____ =
+buildCreateOrUpdateOrganismWithMaisonMereAAPInput :
+    CreateOrUpdateOrganismWithMaisonMereAAPInputRequiredFields
+    -> (CreateOrUpdateOrganismWithMaisonMereAAPInputOptionalFields -> CreateOrUpdateOrganismWithMaisonMereAAPInputOptionalFields)
+    -> CreateOrUpdateOrganismWithMaisonMereAAPInput
+buildCreateOrUpdateOrganismWithMaisonMereAAPInput required____ fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
-                { adresseInformationsComplementaires = Absent, website = Absent }
+                { adresseInformationsComplementaires = Absent, website = Absent, accountId = Absent }
     in
-    { nom = required____.nom, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, departmentsWithOrganismMethods = required____.departmentsWithOrganismMethods, firstname = required____.firstname, lastname = required____.lastname, email = required____.email }
+    { nom = required____.nom, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, departmentsWithOrganismMethods = required____.departmentsWithOrganismMethods, firstname = required____.firstname, lastname = required____.lastname, email = required____.email, accountId = optionals____.accountId }
 
 
-type alias CreateOrganismInputRequiredFields =
+type alias CreateOrUpdateOrganismWithMaisonMereAAPInputRequiredFields =
     { nom : String
     , address : String
     , zip : String
@@ -437,15 +437,16 @@ type alias CreateOrganismInputRequiredFields =
     }
 
 
-type alias CreateOrganismInputOptionalFields =
+type alias CreateOrUpdateOrganismWithMaisonMereAAPInputOptionalFields =
     { adresseInformationsComplementaires : OptionalArgument String
     , website : OptionalArgument String
+    , accountId : OptionalArgument Data.Scalar.Uuid
     }
 
 
-{-| Type for the CreateOrganismInput input object.
+{-| Type for the CreateOrUpdateOrganismWithMaisonMereAAPInput input object.
 -}
-type alias CreateOrganismInput =
+type alias CreateOrUpdateOrganismWithMaisonMereAAPInput =
     { nom : String
     , address : String
     , adresseInformationsComplementaires : OptionalArgument String
@@ -459,15 +460,16 @@ type alias CreateOrganismInput =
     , firstname : String
     , lastname : String
     , email : String
+    , accountId : OptionalArgument Data.Scalar.Uuid
     }
 
 
-{-| Encode a CreateOrganismInput into a value that can be used as an argument.
+{-| Encode a CreateOrUpdateOrganismWithMaisonMereAAPInput into a value that can be used as an argument.
 -}
-encodeCreateOrganismInput : CreateOrganismInput -> Value
-encodeCreateOrganismInput input____ =
+encodeCreateOrUpdateOrganismWithMaisonMereAAPInput : CreateOrUpdateOrganismWithMaisonMereAAPInput -> Value
+encodeCreateOrUpdateOrganismWithMaisonMereAAPInput input____ =
     Encode.maybeObject
-        [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ) ]
+        [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ), ( "accountId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.accountId ) ]
 
 
 buildDepartmentWithOrganismMethodsInput :
@@ -1177,6 +1179,37 @@ encodeUpdateCandidateInput : UpdateCandidateInput -> Value
 encodeUpdateCandidateInput input____ =
     Encode.maybeObject
         [ ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "phone", Encode.string |> Encode.optional input____.phone ), ( "email", Encode.string |> Encode.optional input____.email ) ]
+
+
+buildUpdateCertificationAuthorityDepartmentsAndCertificationsInput :
+    UpdateCertificationAuthorityDepartmentsAndCertificationsInputRequiredFields
+    -> UpdateCertificationAuthorityDepartmentsAndCertificationsInput
+buildUpdateCertificationAuthorityDepartmentsAndCertificationsInput required____ =
+    { certificationAuthorityId = required____.certificationAuthorityId, departmentIds = required____.departmentIds, certificationIds = required____.certificationIds }
+
+
+type alias UpdateCertificationAuthorityDepartmentsAndCertificationsInputRequiredFields =
+    { certificationAuthorityId : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Type for the UpdateCertificationAuthorityDepartmentsAndCertificationsInput input object.
+-}
+type alias UpdateCertificationAuthorityDepartmentsAndCertificationsInput =
+    { certificationAuthorityId : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Encode a UpdateCertificationAuthorityDepartmentsAndCertificationsInput into a value that can be used as an argument.
+-}
+encodeUpdateCertificationAuthorityDepartmentsAndCertificationsInput : UpdateCertificationAuthorityDepartmentsAndCertificationsInput -> Value
+encodeUpdateCertificationAuthorityDepartmentsAndCertificationsInput input____ =
+    Encode.maybeObject
+        [ ( "certificationAuthorityId", Encode.string input____.certificationAuthorityId |> Just ), ( "departmentIds", (Encode.string |> Encode.list) input____.departmentIds |> Just ), ( "certificationIds", (Encode.string |> Encode.list) input____.certificationIds |> Just ) ]
 
 
 buildUpdateCertificationAuthorityInput :

@@ -114,3 +114,10 @@ managedDegrees :
     -> SelectionSet (List decodesTo) Admin.Object.Organism
 managedDegrees object____ =
     Object.selectionForCompositeField "managedDegrees" [] object____ (Basics.identity >> Decode.list)
+
+
+organismOnAccount :
+    SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
+organismOnAccount object____ =
+    Object.selectionForCompositeField "organismOnAccount" [] object____ (Basics.identity >> Decode.nullable)

@@ -13,11 +13,13 @@ type FeasibilityCategoryFilter
     | Rejected
     | Admissible
     | Incomplete
+    | Archived
+    | DroppedOut
 
 
 list : List FeasibilityCategoryFilter
 list =
-    [ All, Pending, Rejected, Admissible, Incomplete ]
+    [ All, Pending, Rejected, Admissible, Incomplete, Archived, DroppedOut ]
 
 
 decoder : Decoder FeasibilityCategoryFilter
@@ -40,6 +42,12 @@ decoder =
 
                     "INCOMPLETE" ->
                         Decode.succeed Incomplete
+
+                    "ARCHIVED" ->
+                        Decode.succeed Archived
+
+                    "DROPPED_OUT" ->
+                        Decode.succeed DroppedOut
 
                     _ ->
                         Decode.fail ("Invalid FeasibilityCategoryFilter type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -65,6 +73,12 @@ toString enum____ =
 
         Incomplete ->
             "INCOMPLETE"
+
+        Archived ->
+            "ARCHIVED"
+
+        DroppedOut ->
+            "DROPPED_OUT"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -95,6 +109,12 @@ fromString enumString____ =
 
         "INCOMPLETE" ->
             Just Incomplete
+
+        "ARCHIVED" ->
+            Just Archived
+
+        "DROPPED_OUT" ->
+            Just DroppedOut
 
         _ ->
             Nothing

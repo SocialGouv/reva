@@ -4,6 +4,7 @@
 
 module Admin.Object.MaisonMereAAP exposing (..)
 
+import Admin.Enum.LegalStatus
 import Admin.Enum.OrganismTypology
 import Admin.InputObject
 import Admin.Interface
@@ -25,56 +26,63 @@ id =
     Object.selectionForField "Data.Scalar.Uuid" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
 
 
-label : SelectionSet String Admin.Object.MaisonMereAAP
-label =
-    Object.selectionForField "String" "label" [] Decode.string
+raisonSociale : SelectionSet String Admin.Object.MaisonMereAAP
+raisonSociale =
+    Object.selectionForField "String" "raisonSociale" [] Decode.string
 
 
-address : SelectionSet String Admin.Object.MaisonMereAAP
-address =
-    Object.selectionForField "String" "address" [] Decode.string
+statutJuridique : SelectionSet Admin.Enum.LegalStatus.LegalStatus Admin.Object.MaisonMereAAP
+statutJuridique =
+    Object.selectionForField "Enum.LegalStatus.LegalStatus" "statutJuridique" [] Admin.Enum.LegalStatus.decoder
 
 
-zip : SelectionSet String Admin.Object.MaisonMereAAP
-zip =
-    Object.selectionForField "String" "zip" [] Decode.string
+siret : SelectionSet String Admin.Object.MaisonMereAAP
+siret =
+    Object.selectionForField "String" "siret" [] Decode.string
 
 
-city : SelectionSet String Admin.Object.MaisonMereAAP
-city =
-    Object.selectionForField "String" "city" [] Decode.string
+adresse : SelectionSet String Admin.Object.MaisonMereAAP
+adresse =
+    Object.selectionForField "String" "adresse" [] Decode.string
 
 
-contactAdministrativeEmail : SelectionSet String Admin.Object.MaisonMereAAP
-contactAdministrativeEmail =
-    Object.selectionForField "String" "contactAdministrativeEmail" [] Decode.string
+codePostal : SelectionSet String Admin.Object.MaisonMereAAP
+codePostal =
+    Object.selectionForField "String" "codePostal" [] Decode.string
 
 
-contactAdministrativePhone : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
-contactAdministrativePhone =
-    Object.selectionForField "(Maybe String)" "contactAdministrativePhone" [] (Decode.string |> Decode.nullable)
+ville : SelectionSet String Admin.Object.MaisonMereAAP
+ville =
+    Object.selectionForField "String" "ville" [] Decode.string
 
 
-website : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
-website =
-    Object.selectionForField "(Maybe String)" "website" [] (Decode.string |> Decode.nullable)
+typologie : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.MaisonMereAAP
+typologie =
+    Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typologie" [] Admin.Enum.OrganismTypology.decoder
 
 
-typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.MaisonMereAAP
-typology =
-    Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder
+siteWeb : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
+siteWeb =
+    Object.selectionForField "(Maybe String)" "siteWeb" [] (Decode.string |> Decode.nullable)
 
 
-isActive : SelectionSet Bool Admin.Object.MaisonMereAAP
-isActive =
-    Object.selectionForField "Bool" "isActive" [] Decode.bool
+dateExpirationCertificationQualiopi : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.MaisonMereAAP
+dateExpirationCertificationQualiopi =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "dateExpirationCertificationQualiopi" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
-agences :
+gestionnaire :
+    SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAP
+gestionnaire object____ =
+    Object.selectionForCompositeField "gestionnaire" [] object____ Basics.identity
+
+
+organisms :
     SelectionSet decodesTo Admin.Object.Organism
     -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
-agences object____ =
-    Object.selectionForCompositeField "agences" [] object____ (Basics.identity >> Decode.list)
+organisms object____ =
+    Object.selectionForCompositeField "organisms" [] object____ (Basics.identity >> Decode.list)
 
 
 maisonMereAAPOnDepartements :
@@ -82,3 +90,22 @@ maisonMereAAPOnDepartements :
     -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
 maisonMereAAPOnDepartements object____ =
     Object.selectionForCompositeField "maisonMereAAPOnDepartements" [] object____ (Basics.identity >> Decode.list)
+
+
+maisonMereAAPOnDomaines :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAPOnDomaine
+    -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
+maisonMereAAPOnDomaines object____ =
+    Object.selectionForCompositeField "maisonMereAAPOnDomaines" [] object____ (Basics.identity >> Decode.list)
+
+
+maisonMereAAPOnConventionCollectives :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAPOnConventionCollective
+    -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
+maisonMereAAPOnConventionCollectives object____ =
+    Object.selectionForCompositeField "maisonMereAAPOnConventionCollectives" [] object____ (Basics.identity >> Decode.list)
+
+
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.MaisonMereAAP
+createdAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

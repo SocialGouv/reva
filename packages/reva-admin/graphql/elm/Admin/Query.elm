@@ -6,7 +6,7 @@ module Admin.Query exposing (..)
 
 import Admin.Enum.AccountGroup
 import Admin.Enum.CandidacyStatusFilter
-import Admin.Enum.FeasibilityDecisionFilter
+import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -134,8 +134,8 @@ type alias GetRandomOrganismsForCandidacyRequiredArguments =
 getRandomOrganismsForCandidacy :
     (GetRandomOrganismsForCandidacyOptionalArguments -> GetRandomOrganismsForCandidacyOptionalArguments)
     -> GetRandomOrganismsForCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Organism
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet decodesTo Admin.Object.RamdomOrganisms
+    -> SelectionSet decodesTo RootQuery
 getRandomOrganismsForCandidacy fillInOptionals____ requiredArgs____ object____ =
     let
         filledInOptionals____ =
@@ -145,7 +145,7 @@ getRandomOrganismsForCandidacy fillInOptionals____ requiredArgs____ object____ =
             [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string, Argument.optional "searchFilter" filledInOptionals____.searchFilter Admin.InputObject.encodeSearchOrganismFilter ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForCompositeField "getRandomOrganismsForCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ (Basics.identity >> Decode.list)
+    Object.selectionForCompositeField "getRandomOrganismsForCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ Basics.identity
 
 
 type alias GetCompanionsForCandidacyRequiredArguments =
@@ -241,6 +241,29 @@ certification_authority_getCertificationAuthority requiredArgs____ object____ =
     Object.selectionForCompositeField "certification_authority_getCertificationAuthority" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CertificationAuthorityGetCertificationAuthoritiesOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchFilter : OptionalArgument String
+    }
+
+
+certification_authority_getCertificationAuthorities :
+    (CertificationAuthorityGetCertificationAuthoritiesOptionalArguments -> CertificationAuthorityGetCertificationAuthoritiesOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CertificationAuhtorityPaginated
+    -> SelectionSet decodesTo RootQuery
+certification_authority_getCertificationAuthorities fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "certification_authority_getCertificationAuthorities" optionalArgs____ object____ Basics.identity
+
+
 type alias FeasibilityCountByCategoryOptionalArguments =
     { searchFilter : OptionalArgument String }
 
@@ -264,7 +287,7 @@ feasibilityCountByCategory fillInOptionals____ object____ =
 type alias FeasibilitiesOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
-    , decision : OptionalArgument Admin.Enum.FeasibilityDecisionFilter.FeasibilityDecisionFilter
+    , categoryFilter : OptionalArgument Admin.Enum.FeasibilityCategoryFilter.FeasibilityCategoryFilter
     , searchFilter : OptionalArgument String
     }
 
@@ -276,10 +299,10 @@ feasibilities :
 feasibilities fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, decision = Absent, searchFilter = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, categoryFilter = Absent, searchFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "decision" filledInOptionals____.decision (Encode.enum Admin.Enum.FeasibilityDecisionFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "categoryFilter" filledInOptionals____.categoryFilter (Encode.enum Admin.Enum.FeasibilityCategoryFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "feasibilities" optionalArgs____ object____ Basics.identity
@@ -336,6 +359,41 @@ organism_getOrganism :
     -> SelectionSet (Maybe decodesTo) RootQuery
 organism_getOrganism requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_getOrganism" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias OrganismGetMaisonMereAAPsOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchFilter : OptionalArgument String
+    }
+
+
+organism_getMaisonMereAAPs :
+    (OrganismGetMaisonMereAAPsOptionalArguments -> OrganismGetMaisonMereAAPsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAPsPaginated
+    -> SelectionSet decodesTo RootQuery
+organism_getMaisonMereAAPs fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "organism_getMaisonMereAAPs" optionalArgs____ object____ Basics.identity
+
+
+type alias OrganismGetMaisonMereAAPByIdRequiredArguments =
+    { maisonMereAAPId : Data.Scalar.Id }
+
+
+organism_getMaisonMereAAPById :
+    OrganismGetMaisonMereAAPByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAP
+    -> SelectionSet decodesTo RootQuery
+organism_getMaisonMereAAPById requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_getMaisonMereAAPById" [ Argument.required "maisonMereAAPId" requiredArgs____.maisonMereAAPId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
 
 
 getReferential :

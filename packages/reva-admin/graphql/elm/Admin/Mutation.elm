@@ -440,6 +440,18 @@ certification_authority_updateCertificationAuthority requiredArgs____ object____
     Object.selectionForCompositeField "certification_authority_updateCertificationAuthority" [ Argument.required "certificationAuthorityId" requiredArgs____.certificationAuthorityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationAuthorityData" requiredArgs____.certificationAuthorityData Admin.InputObject.encodeUpdateCertificationAuthorityInput ] object____ Basics.identity
 
 
+type alias CertificationAuthorityUpdateCertificationAuthorityDepartmentsAndCertificationsRequiredArguments =
+    { input : Admin.InputObject.UpdateCertificationAuthorityDepartmentsAndCertificationsInput }
+
+
+certification_authority_updateCertificationAuthorityDepartmentsAndCertifications :
+    CertificationAuthorityUpdateCertificationAuthorityDepartmentsAndCertificationsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet decodesTo RootMutation
+certification_authority_updateCertificationAuthorityDepartmentsAndCertifications requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_updateCertificationAuthorityDepartmentsAndCertifications" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationAuthorityDepartmentsAndCertificationsInput ] object____ Basics.identity
+
+
 type alias CertificationAuthorityCreateCertificationAuthorityLocalAccountRequiredArguments =
     { input : Admin.InputObject.CreateCertificationAuthorityLocalAccountInput }
 
@@ -532,6 +544,20 @@ organism_updateOrganism requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_updateOrganism" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeUpdateOrganismInput ] object____ Basics.identity
 
 
+type alias OrganismUpdateOrganismWithMaisonMereAAPRequiredArguments =
+    { organismId : Data.Scalar.Id
+    , organismData : Admin.InputObject.CreateOrUpdateOrganismWithMaisonMereAAPInput
+    }
+
+
+organism_updateOrganismWithMaisonMereAAP :
+    OrganismUpdateOrganismWithMaisonMereAAPRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo RootMutation
+organism_updateOrganismWithMaisonMereAAP requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_updateOrganismWithMaisonMereAAP" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrUpdateOrganismWithMaisonMereAAPInput ] object____ Basics.identity
+
+
 type alias OrganismCreateOrUpdateInformationsCommercialesRequiredArguments =
     { informationsCommerciales : Admin.InputObject.CreateOrUpdateInformationsCommercialesInput }
 
@@ -559,14 +585,14 @@ organism_updateFermePourAbsenceOuConges requiredArgs____ object____ =
 
 
 type alias OrganismCreateOrganismWithMaisonMereAAPRequiredArguments =
-    { organismData : Admin.InputObject.CreateOrganismInput }
+    { organismData : Admin.InputObject.CreateOrUpdateOrganismWithMaisonMereAAPInput }
 
 
 organism_createOrganismWithMaisonMereAAP :
     OrganismCreateOrganismWithMaisonMereAAPRequiredArguments
     -> SelectionSet String RootMutation
 organism_createOrganismWithMaisonMereAAP requiredArgs____ =
-    Object.selectionForField "String" "organism_createOrganismWithMaisonMereAAP" [ Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrganismInput ] Decode.string
+    Object.selectionForField "String" "organism_createOrganismWithMaisonMereAAP" [ Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrUpdateOrganismWithMaisonMereAAPInput ] Decode.string
 
 
 type alias OrganismCreateOrUpdateOrganismOnDegreesRequiredArguments =

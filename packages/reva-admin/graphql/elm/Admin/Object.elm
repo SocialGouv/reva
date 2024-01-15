@@ -73,6 +73,10 @@ type Certification
     = Certification
 
 
+type CertificationAuhtorityPaginated
+    = CertificationAuhtorityPaginated
+
+
 type CertificationAuthority
     = CertificationAuthority
 
@@ -129,6 +133,10 @@ type FeasibilityCountByCategory
     = FeasibilityCountByCategory
 
 
+type FeasibilityHistory
+    = FeasibilityHistory
+
+
 type FeasibilityPage
     = FeasibilityPage
 
@@ -157,8 +165,20 @@ type MaisonMereAAP
     = MaisonMereAAP
 
 
+type MaisonMereAAPOnConventionCollective
+    = MaisonMereAAPOnConventionCollective
+
+
 type MaisonMereAAPOnDepartment
     = MaisonMereAAPOnDepartment
+
+
+type MaisonMereAAPOnDomaine
+    = MaisonMereAAPOnDomaine
+
+
+type MaisonMereAAPsPaginated
+    = MaisonMereAAPsPaginated
 
 
 type Organism
@@ -187,6 +207,10 @@ type PaymentRequest
 
 type PaymentRequestUnifvae
     = PaymentRequestUnifvae
+
+
+type RamdomOrganisms
+    = RamdomOrganisms
 
 
 type Referential

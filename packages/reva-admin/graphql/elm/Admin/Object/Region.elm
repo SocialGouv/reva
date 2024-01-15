@@ -32,3 +32,10 @@ code =
 label : SelectionSet String Admin.Object.Region
 label =
     Object.selectionForField "String" "label" [] Decode.string
+
+
+departments :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (List decodesTo) Admin.Object.Region
+departments object____ =
+    Object.selectionForCompositeField "departments" [] object____ (Basics.identity >> Decode.list)
