@@ -45,6 +45,13 @@ const getFeasibilityQuery = graphql(`
           label
           contactAdministrativeEmail
         }
+        candidacyDropOut {
+          status
+        }
+        candidacyStatuses {
+          status
+          isActive
+        }
       }
     }
   }

@@ -29,6 +29,17 @@ const FeasibilityPage = () => {
     }
   };
 
+  const isCandidacyArchived = !!feasibility?.candidacy.candidacyStatuses.some(
+    (c) => c.isActive && c.status === "ARCHIVE",
+  );
+
+  const isCandidacyDroppedOut = !!feasibility?.candidacy.candidacyDropOut;
+
+  const isFeasibilityEditable =
+    feasibility?.decision === "PENDING" &&
+    !isCandidacyArchived &&
+    !isCandidacyDroppedOut;
+
   return (
     <div className="flex flex-col flex-1 mb-2">
       <Link
@@ -95,7 +106,7 @@ const FeasibilityPage = () => {
               {feasibility.candidacy.organism?.contactAdministrativeEmail}
             </p>
           </GrayBlock>
-          {feasibility.decision !== "PENDING" && (
+          {!isFeasibilityEditable && (
             <div>
               <h5 className="text-2xl font-bold mb-2">
                 Décision prise concernant ce dossier
@@ -127,7 +138,7 @@ const FeasibilityPage = () => {
               </ul>
             </div>
           )}
-          {feasibility.decision === "PENDING" && (
+          {isFeasibilityEditable && (
             <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
           )}
         </div>
