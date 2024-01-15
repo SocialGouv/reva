@@ -1,5 +1,3 @@
-import { FeasibilityStatus } from "@prisma/client";
-
 import {
   getActiveFeasibilities,
   getActiveFeasibilityByCandidacyid,

@@ -6,6 +6,7 @@ import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Data.Context exposing (Context)
+import Data.Feasibility
 import Html exposing (Html, div, h2, h3, span, text)
 import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
@@ -117,8 +118,13 @@ activeView baseUrl candidacy =
         feasibilityMenuEntryStatus =
             if List.member (candidacyStatus candidacy) [ ParcoursConfirme, DossierFaisabiliteIncomplet ] then
                 case candidacy.feasibility of
-                    Just _ ->
-                        WITH_READ_ONLY_BUTTON
+                    Just f ->
+                        case f.decision of
+                            Data.Feasibility.Incomplete _ ->
+                                WITH_EDIT_BUTTON
+
+                            _ ->
+                                WITHOUT_BUTTON
 
                     Nothing ->
                         WITH_EDIT_BUTTON

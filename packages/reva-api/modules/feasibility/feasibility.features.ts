@@ -8,7 +8,6 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import { candidacyId } from "../../test/fixtures/funding-request";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
@@ -79,7 +78,7 @@ export const createFeasibility = async ({
     where: { candidacyId, isActive: true },
   });
 
-  if (existingFeasibility) {
+  if (existingFeasibility && existingFeasibility.decision !== "INCOMPLETE") {
     throw new Error(
       "Un dossier de faisabilité actif éxiste déjà pour cette candidature"
     );
@@ -122,6 +121,13 @@ export const createFeasibility = async ({
     throw new Error(
       `Les fichiers du dossiers de faisabilités n'ont pas pu être enregistrés. Veuillez réessayer.`
     );
+  }
+
+  if (existingFeasibility) {
+    await prismaClient.feasibility.update({
+      where: { id: existingFeasibility.id },
+      data: { isActive: false },
+    });
   }
 
   const feasibility = await prismaClient.feasibility.create({
@@ -419,7 +425,7 @@ export const getActiveFeasibilities = async ({
   categoryFilter?: FeasibilityCategoryFilter;
   searchFilter?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
-  let queryWhereClause: Prisma.FeasibilityWhereInput = {};
+  let queryWhereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
   const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput = {
     candidacy: {
@@ -431,36 +437,13 @@ export const getActiveFeasibilities = async ({
     case undefined:
     case "ALL":
       queryWhereClause = {
-        OR: [
-          {
-            isActive: true,
-          },
-          {
-            isActive: false,
-            decision: "INCOMPLETE",
-          },
-        ],
-        ...excludeArchivedAndDroppedOutCandidacy,
-      };
-      break;
-    case "INCOMPLETE":
-      queryWhereClause = {
-        isActive: false,
-        decision: "INCOMPLETE",
+        ...queryWhereClause,
         ...excludeArchivedAndDroppedOutCandidacy,
       };
       break;
     case "ARCHIVED":
       queryWhereClause = {
-        OR: [
-          {
-            isActive: true,
-          },
-          {
-            isActive: false,
-            decision: "INCOMPLETE",
-          },
-        ],
+        ...queryWhereClause,
         candidacy: {
           candidacyStatuses: { some: { isActive: true, status: "ARCHIVE" } },
         },
@@ -468,27 +451,15 @@ export const getActiveFeasibilities = async ({
       break;
     case "DROPPED_OUT":
       queryWhereClause = {
-        OR: [
-          {
-            isActive: true,
-          },
-          {
-            isActive: false,
-            decision: "INCOMPLETE",
-          },
-        ],
+        ...queryWhereClause,
         candidacy: { candidacyDropOut: { isNot: null } },
       };
       break;
     default:
       queryWhereClause = {
-        OR: [
-          {
-            isActive: true,
-            decision: categoryFilter as FeasibilityStatus,
-          },
-        ],
+        ...queryWhereClause,
         ...excludeArchivedAndDroppedOutCandidacy,
+        decision: categoryFilter as FeasibilityStatus,
       };
       break;
   }
@@ -822,7 +793,7 @@ export const markFeasibilityAsIncomplete = async ({
         decision: "INCOMPLETE",
         decisionComment: comment,
         decisionSentAt: new Date(),
-        isActive: false,
+        isActive: true,
       },
       include: {
         candidacy: {

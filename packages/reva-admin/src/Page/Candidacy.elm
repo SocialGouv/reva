@@ -230,8 +230,13 @@ view context model =
                         Success candidacy ->
                             case candidacy.feasibility of
                                 Just feasibility ->
-                                    viewMain context "feasibility-sent" <|
-                                        viewFeasibilitySent context candidacy feasibility
+                                    case feasibility.decision of
+                                        Data.Feasibility.Incomplete _ ->
+                                            viewForm "feasibility"
+
+                                        _ ->
+                                            viewMain context "feasibility-sent" <|
+                                                viewFeasibilitySent context candidacy feasibility
 
                                 Nothing ->
                                     viewForm "feasibility"
@@ -680,7 +685,7 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = pushUrl <| candidacyTab Feasibility
                         , onValidate = Data.Form.Feasibility.validateSubmittedFiles
                         , status =
-                            if candidacy.feasibility /= Nothing || List.isEmpty candidacy.certificationAuthorities then
+                            if (candidacy.feasibility /= Nothing && not (Candidacy.isStatusEqual candidacy Step.DossierFaisabiliteIncomplet)) || List.isEmpty candidacy.certificationAuthorities then
                                 Form.ReadOnly
 
                             else

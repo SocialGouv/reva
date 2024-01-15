@@ -9,7 +9,7 @@ export type FeasibilityStatusFilter =
 export const getWhereClauseFromStatusFilter = (
   statusFilter?: FeasibilityStatusFilter
 ) => {
-  let whereClause: Prisma.FeasibilityWhereInput = {};
+  let whereClause: Prisma.FeasibilityWhereInput = { isActive: true };
   const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput = {
     candidacy: {
       candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
@@ -19,40 +19,24 @@ export const getWhereClauseFromStatusFilter = (
   switch (statusFilter) {
     case "ALL":
       whereClause = {
-        AND: [
-          {
-            ...whereClause,
-            OR: [
-              { isActive: true },
-              { isActive: false, decision: "INCOMPLETE" },
-            ],
-          },
-          excludeArchivedAndDroppedOutCandidacy,
-        ],
+        ...whereClause,
+        ...excludeArchivedAndDroppedOutCandidacy,
       };
       break;
     case "PENDING":
     case "REJECTED":
     case "ADMISSIBLE":
+    case "INCOMPLETE":
       whereClause = {
         ...whereClause,
-        isActive: true,
         decision: statusFilter,
         ...excludeArchivedAndDroppedOutCandidacy,
       };
       break;
-    case "INCOMPLETE":
-      whereClause = {
-        ...whereClause,
-        isActive: false,
-        decision: "INCOMPLETE",
-        ...excludeArchivedAndDroppedOutCandidacy,
-      };
-      break;
+
     case "ARCHIVED":
       whereClause = {
         ...whereClause,
-        OR: [{ isActive: true }, { isActive: false, decision: "INCOMPLETE" }],
         candidacy: {
           candidacyStatuses: { some: { isActive: true, status: "ARCHIVE" } },
         },
@@ -61,7 +45,6 @@ export const getWhereClauseFromStatusFilter = (
     case "DROPPED_OUT":
       whereClause = {
         ...whereClause,
-        OR: [{ isActive: true }, { isActive: false, decision: "INCOMPLETE" }],
         candidacy: {
           candidacyDropOut: { isNot: null },
         },
