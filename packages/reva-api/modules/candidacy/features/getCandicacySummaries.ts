@@ -10,10 +10,11 @@ import {
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
+import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
 import * as domain from "../candidacy.types";
 import { CandidacyStatusFilter } from "../candidacy.types";
 import {
-  getWhereClauseFromSearchFilter,
+  candidacySearchWord,
   getWhereClauseFromStatusFilter,
 } from "../utils/candidacy.helper";
 
@@ -112,7 +113,7 @@ export const getCandidaciesFromDb = async ({
   whereClause = {
     ...whereClause,
     ...getWhereClauseFromStatusFilter(statusFilter),
-    ...getWhereClauseFromSearchFilter(searchFilter),
+    ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
   };
 
   const candidaciesCount = await prismaClient.candidacy.count({

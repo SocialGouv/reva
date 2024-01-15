@@ -20,6 +20,7 @@ import { getCertificationAuthorityLocalAccountByAccountId } from "../certificati
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
+import { getWhereClauseFromSearchFilter } from "../shared/search/search";
 import {
   FeasibilityFile,
   UploadedFile,
@@ -35,7 +36,7 @@ import {
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
-  getWhereClauseFromSearchFilter,
+  feasibilitySearchWord,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 
@@ -330,7 +331,10 @@ export const getActiveFeasibilityCountByCategory = async ({
                 ...whereClause,
                 candidacy: {
                   ...candidacyClause,
-                  ...getWhereClauseFromSearchFilter(searchFilter),
+                  ...getWhereClauseFromSearchFilter(
+                    feasibilitySearchWord,
+                    searchFilter
+                  ),
                 },
               };
 
@@ -501,7 +505,7 @@ export const getActiveFeasibilities = async ({
       ...queryWhereClause,
       candidacy: {
         ...candidacyClause,
-        ...getWhereClauseFromSearchFilter(searchFilter),
+        ...getWhereClauseFromSearchFilter(feasibilitySearchWord, searchFilter),
       },
     };
   }

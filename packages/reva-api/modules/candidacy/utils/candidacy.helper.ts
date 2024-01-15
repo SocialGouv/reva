@@ -1,5 +1,7 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
+import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
+import { buildContainsFilterClause } from "../../shared/search/search";
 import { CandidacyStatusFilter } from "../candidacy.types";
 
 const getStatusFromStatusFilter = (statusFilter: string) => {
@@ -113,56 +115,36 @@ export const getWhereClauseFromStatusFilter = (
   return whereClause;
 };
 
-const buildContainsFilterClause =
-  (searchFilter: string) => (field: string) => ({
-    [field]: { contains: searchFilter, mode: "insensitive" },
-  });
-
-export const getWhereClauseFromSearchFilter = (searchFilter?: string) => {
-  let whereClause: Prisma.CandidacyWhereInput = {};
-  if (searchFilter) {
-    const containsFilter = buildContainsFilterClause(searchFilter);
-    whereClause = {
-      OR: [
-        {
-          candidate: {
-            OR: [
-              containsFilter("lastname"),
-              containsFilter("firstname"),
-              containsFilter("firstname2"),
-              containsFilter("firstname3"),
-              containsFilter("email"),
-              containsFilter("phone"),
+export const candidacySearchWord = (word: string) => {
+  const containsFilter = buildContainsFilterClause(word);
+  return {
+    OR: [
+      { candidate: candidateSearchWord(word) },
+      { organism: containsFilter("label") },
+      { department: containsFilter("label") },
+      {
+        certificationsAndRegions: {
+          some: {
+            AND: [
+              { isActive: true },
+              {
+                certification: {
+                  OR: [
+                    containsFilter("label"),
+                    {
+                      typeDiplome: {
+                        Certification: {
+                          some: containsFilter("label"),
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
             ],
           },
         },
-        { organism: containsFilter("label") },
-        { department: containsFilter("label") },
-        {
-          certificationsAndRegions: {
-            some: {
-              AND: [
-                { isActive: true },
-                {
-                  certification: {
-                    OR: [
-                      containsFilter("label"),
-                      {
-                        typeDiplome: {
-                          Certification: {
-                            some: containsFilter("label"),
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        },
-      ],
-    };
-  }
-  return whereClause;
+      },
+    ],
+  };
 };

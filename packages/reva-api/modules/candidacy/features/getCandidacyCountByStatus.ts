@@ -1,9 +1,10 @@
 import { Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
 import { CandidacyStatusFilter } from "../candidacy.types";
 import {
-  getWhereClauseFromSearchFilter,
+  candidacySearchWord,
   getWhereClauseFromStatusFilter,
 } from "../utils/candidacy.helper";
 
@@ -71,7 +72,10 @@ export const getCandidacyCountByStatus = async ({
               whereClause = {
                 ...whereClause,
                 ...getWhereClauseFromStatusFilter(statusFilter),
-                ...getWhereClauseFromSearchFilter(searchFilter),
+                ...getWhereClauseFromSearchFilter(
+                  candidacySearchWord,
+                  searchFilter
+                ),
               };
 
               prismaClient.candidacy

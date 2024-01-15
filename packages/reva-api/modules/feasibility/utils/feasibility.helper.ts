@@ -1,4 +1,6 @@
 import { FeasibilityStatus, Prisma } from "@prisma/client";
+import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
+import { buildContainsFilterClause } from "../../shared/search/search";
 
 export type FeasibilityStatusFilter =
   | FeasibilityStatus
@@ -54,40 +56,20 @@ export const getWhereClauseFromStatusFilter = (
   return whereClause;
 };
 
-const buildContainsFilterClause =
-  (searchFilter: string) => (field: string) => ({
-    [field]: { contains: searchFilter, mode: "insensitive" },
-  });
-
-export const getWhereClauseFromSearchFilter = (searchFilter?: string) => {
-  let whereClause: Prisma.CandidacyWhereInput = {};
-  if (searchFilter) {
-    const containsFilter = buildContainsFilterClause(searchFilter);
-    whereClause = {
-      OR: [
-        {
-          candidate: {
-            OR: [
-              containsFilter("lastname"),
-              containsFilter("firstname"),
-              containsFilter("firstname2"),
-              containsFilter("firstname3"),
-              containsFilter("email"),
-              containsFilter("phone"),
-            ],
+export const feasibilitySearchWord = (word: string) => {
+  const containsFilter = buildContainsFilterClause(word);
+  return {
+    OR: [
+      { candidate: candidateSearchWord(word) },
+      { organism: containsFilter("label") },
+      { department: containsFilter("label") },
+      {
+        certificationsAndRegions: {
+          some: {
+            certification: containsFilter("label"),
           },
         },
-        { organism: containsFilter("label") },
-        { department: containsFilter("label") },
-        {
-          certificationsAndRegions: {
-            some: {
-              certification: containsFilter("label"),
-            },
-          },
-        },
-      ],
-    };
-  }
-  return whereClause;
+      },
+    ],
+  };
 };
