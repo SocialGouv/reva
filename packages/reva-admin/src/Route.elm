@@ -2,13 +2,11 @@ module Route exposing
     ( AccountFilters
     , CandidacyFilters
     , CertificationsFilters
-    , FeasibilityFilters
     , Route(..)
     , TypologyFilters
     , emptyAccountFilters
     , emptyCandidacyFilters
     , emptyCertificationsFilters
-    , emptyFeasibilityFilters
     , emptyTypologyFilters
     , fromUrl
     , href
@@ -17,7 +15,6 @@ module Route exposing
 
 import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
-import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html
 import Html.Attributes
@@ -44,12 +41,6 @@ type alias CertificationsFilters =
 
 type alias AccountFilters =
     { group : AccountGroup, page : Int }
-
-
-type alias FeasibilityFilters =
-    { category : FeasibilityCategoryFilter
-    , page : Int
-    }
 
 
 type Route
@@ -85,11 +76,6 @@ emptyTypologyFilters =
 emptyAccountFilters : AccountFilters
 emptyAccountFilters =
     { group = AccountGroup.Organism, page = 1 }
-
-
-emptyFeasibilityFilters : FeasibilityFilters
-emptyFeasibilityFilters =
-    { category = FeasibilityCategoryFilter.All, page = 1 }
 
 
 parser : String -> Parser (Route -> a) a

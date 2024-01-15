@@ -22,7 +22,7 @@ import Page.Search.Certifications as Certifications
 import Page.Search.Typology as Typology
 import Page.SiteMap as SiteMap
 import RemoteData exposing (RemoteData(..))
-import Route exposing (Route(..), emptyFeasibilityFilters)
+import Route exposing (Route(..))
 import Task
 import Url exposing (Url)
 import View.Footer
