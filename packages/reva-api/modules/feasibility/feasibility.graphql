@@ -42,6 +42,8 @@ type FeasibilityCountByCategory {
   REJECTED: Int!
   ADMISSIBLE: Int!
   INCOMPLETE: Int!
+  ARCHIVED: Int!
+  DROPPED_OUT: Int!
 }
 
 type FeasibilityPage {

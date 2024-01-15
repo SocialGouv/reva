@@ -14,6 +14,8 @@ const getFeasibilityCountByCategoryQuery = graphql(`
       REJECTED
       ADMISSIBLE
       INCOMPLETE
+      ARCHIVED
+      DROPPED_OUT
     }
   }
 `);
@@ -62,7 +64,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
           fullHeight
           items={[
             menuItem(
-              `Tous les dossiers de faisabilité (${feasibilityCountByCategory?.ALL})`,
+              `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
               "/feasibilities",
               "ALL",
               true,
@@ -86,6 +88,16 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
               `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
               "/feasibilities",
               "INCOMPLETE",
+            ),
+            menuItem(
+              `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
+              "/feasibilities",
+              "ARCHIVED",
+            ),
+            menuItem(
+              `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
+              "/feasibilities",
+              "DROPPED_OUT",
             ),
           ]}
         />

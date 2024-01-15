@@ -268,6 +268,8 @@ export const getActiveFeasibilityCountByCategory = async ({
     ADMISSIBLE: 0,
     REJECTED: 0,
     INCOMPLETE: 0,
+    ARCHIVED: 0,
+    DROPPED_OUT: 0,
   };
 
   if (!hasRole("admin") && !hasRole("manage_feasibility")) {
@@ -308,12 +310,16 @@ export const getActiveFeasibilityCountByCategory = async ({
                 };
               }
 
+              whereClause = {
+                ...whereClause,
+                ...getWhereClauseFromStatusFilter(statusFilter),
+              };
+
               const candidacyClause: Prisma.CandidacyWhereInput =
                 whereClause?.candidacy || {};
 
               whereClause = {
                 ...whereClause,
-                ...getWhereClauseFromStatusFilter(statusFilter),
                 candidacy: {
                   ...candidacyClause,
                   ...getWhereClauseFromSearchFilter(searchFilter),
