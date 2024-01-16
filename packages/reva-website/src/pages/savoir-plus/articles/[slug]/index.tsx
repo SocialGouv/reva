@@ -1,8 +1,8 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
+import { GetArticleDAideQuery } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
 import { useSearchParams } from "next/navigation";
 
@@ -28,19 +28,9 @@ const articleQuery = graphql(`
   }
 `);
 
-const ArticleAidePage = () => {
+const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
   const search = useSearchParams();
-  const articleSlug = search.get("slug") as string;
-  const articles = useQuery({
-    queryKey: ["article", articleSlug],
-    queryFn: async () =>
-      request(STRAPI_GRAPHQL_API_URL, articleQuery, {
-        filters: { slug: { eq: articleSlug } },
-      }),
-    enabled: !!articleSlug,
-  });
-
-  const article = articles.data?.articleDAides?.data[0];
+  const article = articles?.articleDAides?.data[0];
 
   if (!article) return null;
 
@@ -78,5 +68,16 @@ const ArticleAidePage = () => {
     </MainLayout>
   );
 };
+
+export async function getServerSideProps({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
+  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
+    filters: { slug: { eq: slug } },
+  });
+  return { props: { articles } };
+}
 
 export default ArticleAidePage;
