@@ -3,19 +3,12 @@ import { stubMutation, stubQuery } from "../support/graphql";
 describe("candidate registration", () => {
   it("should show the certificate selected in the previous screen", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     });
 
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -35,19 +28,12 @@ describe("candidate registration", () => {
 
   it("should have an empty candidate typology at page load", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     });
 
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -58,19 +44,12 @@ describe("candidate registration", () => {
 
   it("should show an error panel when i select a candidate typology of 'SALARIE_PUBLIC' or 'AUTRE'", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     });
 
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -95,19 +74,12 @@ describe("candidate registration", () => {
 
   it("should show 'would you like to know more ?' panel when i select a candidate typology of 'SALARIE_PUBLIC' or 'AUTRE'", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     });
 
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -130,11 +102,6 @@ describe("candidate registration", () => {
 
   it("should show a candidate registration form when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE_OU_AIDANT_FAMILIAL'  ", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
       stubQuery(
         req,
@@ -146,8 +113,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -174,11 +139,6 @@ describe("candidate registration", () => {
 
   it("should let me send a valid candidate registration form  ", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
-      );
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
       stubQuery(
         req,
@@ -195,8 +155,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait("@getCertification");
 
@@ -239,11 +197,6 @@ describe("candidate registration", () => {
 
 it("should show another certificate when i search for another one within the page", () => {
   cy.intercept("POST", "/api/graphql", (req) => {
-    stubQuery(
-      req,
-      "activeFeaturesForConnectedUser",
-      "active_features_empty.json"
-    );
     stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     stubQuery(
       req,
@@ -255,8 +208,6 @@ it("should show another certificate when i search for another one within the pag
   cy.visit(
     "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
   );
-
-  cy.wait("@activeFeaturesForConnectedUser");
 
   cy.wait("@getCertification");
 

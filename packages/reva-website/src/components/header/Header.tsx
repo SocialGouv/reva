@@ -1,12 +1,10 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
-  const { isFeatureActive } = useFeatureflipping();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
