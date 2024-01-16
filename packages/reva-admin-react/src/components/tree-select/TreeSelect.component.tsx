@@ -16,10 +16,20 @@ interface Props {
   items: TreeSelectItem[];
   onClickSelectAll: (checked: boolean) => void;
   onClickItem: (item: TreeSelectItem) => void;
+  readonly?: boolean;
+  toggleButtonIsSelected?: boolean;
 }
 
 export const TreeSelect = (props: Props): JSX.Element => {
-  const { title, label, items, onClickSelectAll, onClickItem } = props;
+  const {
+    title,
+    label,
+    items,
+    onClickSelectAll,
+    onClickItem,
+    readonly,
+    toggleButtonIsSelected,
+  } = props;
 
   const isAllSelected = checkIfAllItemsSelected(items);
 
@@ -44,6 +54,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
               }
             >
               <Checkbox
+                disabled={readonly}
                 className={
                   availableChildren
                     ? `absolute z-10 top-0.5 pt-2.5 bg-white w-[calc(100%-36px)] mb-0 ${
@@ -93,11 +104,12 @@ export const TreeSelect = (props: Props): JSX.Element => {
       />
       <div>
         <ToggleSwitch
+          disabled={readonly}
           inputTitle={label}
           label={label}
           labelPosition="left"
           showCheckedHint={false}
-          checked={isAllSelected}
+          checked={toggleButtonIsSelected || isAllSelected}
           onChange={onClickSelectAll}
         />
       </div>

@@ -4,6 +4,8 @@ import {
   CreateOrUpdateOrganismWithMaisonMereAapInput,
   Organism,
 } from "@/graphql/generated/graphql";
+import { useDepartementsOnRegions } from "@/hooks";
+import { ZoneInterventionList } from "@/types";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -18,10 +20,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useAgencesQueries } from "../agencesQueries";
 import { AgenceFormData, agenceFormSchema } from "./agenceFormSchema";
 import ZoneIntervention from "./zone-intervention/ZoneIntervention";
-import {
-  ZoneInterventionList,
-  useDepartementsOnRegions,
-} from "./zone-intervention/useDepartementsOnRegions";
 
 const modalCreateAgence = createModal({
   id: "modal-create-agence",
@@ -72,7 +70,7 @@ function AgenceFormContainer({
       "zoneInterventionPresentiel",
     ) as ZoneInterventionList,
     setValue,
-    agenceSelected: agenceSelected as Partial<Organism>,
+    organism: agenceSelected as Partial<Organism>,
   });
 
   const handleFormSubmit = handleSubmit(async (data) => {
@@ -86,23 +84,16 @@ function AgenceFormContainer({
 
     if (zoneInterventionPresentiel) {
       zoneInterventionPresentiel.forEach((region) => {
-        region.departements.forEach((departement) => {
-          if (departement.isSelected) {
-            if (
-              !departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ]
-            ) {
-              departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ] = {
+        region.children.forEach((departement) => {
+          if (departement.selected) {
+            if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
+              departmentsWithOrganismMethodUnfiltered[departement.id] = {
                 isOnSite: true,
                 isRemote: false,
               };
             } else {
-              departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ].isOnSite = true;
+              departmentsWithOrganismMethodUnfiltered[departement.id].isOnSite =
+                true;
             }
           }
         });
@@ -111,23 +102,16 @@ function AgenceFormContainer({
 
     if (zoneInterventionDistanciel) {
       zoneInterventionDistanciel.forEach((region) => {
-        region.departements.forEach((departement) => {
-          if (departement.isSelected) {
-            if (
-              !departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ]
-            ) {
-              departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ] = {
+        region.children.forEach((departement) => {
+          if (departement.selected) {
+            if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
+              departmentsWithOrganismMethodUnfiltered[departement.id] = {
                 isOnSite: false,
                 isRemote: true,
               };
             } else {
-              departmentsWithOrganismMethodUnfiltered[
-                departement.departementId
-              ].isRemote = true;
+              departmentsWithOrganismMethodUnfiltered[departement.id].isRemote =
+                true;
             }
           }
         });

@@ -48,24 +48,24 @@ export const agenceFormSchema = z.object({
     .array(
       z
         .object({
-          regionId: z.string(),
-          regionLabel: z.string(),
-          isSelected: z.boolean(),
-          departements: z
+          id: z.string(),
+          label: z.string(),
+          selected: z.boolean(),
+          children: z
             .array(
               z.object({
-                departementId: z.string(),
-                departementLabel: z.string(),
-                isSelected: z.boolean(),
+                id: z.string(),
+                label: z.string(),
+                selected: z.boolean(),
               }),
             )
             .default([]),
         })
         .default({
-          regionId: "",
-          regionLabel: "",
-          isSelected: false,
-          departements: [],
+          id: "",
+          label: "",
+          selected: false,
+          children: [],
         }),
     )
     .default([]),
@@ -73,24 +73,24 @@ export const agenceFormSchema = z.object({
     .array(
       z
         .object({
-          regionId: z.string(),
-          regionLabel: z.string(),
-          isSelected: z.boolean(),
-          departements: z
+          id: z.string(),
+          label: z.string(),
+          selected: z.boolean(),
+          children: z
             .array(
               z.object({
-                departementId: z.string(),
-                departementLabel: z.string(),
-                isSelected: z.boolean(),
+                id: z.string(),
+                label: z.string(),
+                selected: z.boolean(),
               }),
             )
             .default([]),
         })
         .default({
-          regionId: "",
-          regionLabel: "",
-          isSelected: false,
-          departements: [],
+          id: "",
+          label: "",
+          selected: false,
+          children: [],
         }),
     )
     .default([]),
