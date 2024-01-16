@@ -1,15 +1,19 @@
+"use client";
+
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { ArticleDAideEntity } from "@/graphql/generated/graphql";
+import {
+  ArticleDAideEntity,
+  GetSectionDAidesQuery,
+} from "@/graphql/generated/graphql";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
 import { truncate } from "lodash";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line" aria-hidden="true" />
@@ -47,7 +51,15 @@ const sectionsQuery = graphql(`
 `);
 
 const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
-  const numberOfArticlesToDisplayInitially = window.innerWidth < 1200 ? 2 : 4;
+  const [
+    numberOfArticlesToDisplayInitially,
+    setNumberOfArticlesToDisplayInitially,
+  ] = useState(4);
+
+  useEffect(() => {
+    setNumberOfArticlesToDisplayInitially(window.innerWidth < 1200 ? 2 : 4);
+  }, []);
+
   const [showMore, setShowMore] = useState(false);
   const articlesToDisplay = useMemo(
     () =>
@@ -124,12 +136,7 @@ const HelpArticle = ({
   </Link>
 );
 
-const SavoirPlusPage = () => {
-  const sections = useQuery({
-    queryKey: ["sections"],
-    queryFn: async () => request(STRAPI_GRAPHQL_API_URL, sectionsQuery),
-  });
-
+const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
   return (
     <MainLayout>
       <div className="flex flex-col">
@@ -150,7 +157,7 @@ const SavoirPlusPage = () => {
           </div>
         </div>
         <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
-          {sections.data?.sectionDAides?.data?.map((sa, index) => {
+          {sections?.sectionDAides?.data.map((sa, index) => {
             const articles = sa.attributes?.article_d_aides?.data;
             if (!articles?.length) return null;
 
@@ -173,5 +180,10 @@ const SavoirPlusPage = () => {
     </MainLayout>
   );
 };
+
+export async function getServerSideProps() {
+  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionsQuery);
+  return { props: { sections } };
+}
 
 export default SavoirPlusPage;
