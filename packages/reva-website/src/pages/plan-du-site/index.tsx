@@ -48,6 +48,9 @@ const SiteMapPage = () => {
             Déclaration d'accessibilité
           </Link>
         </li>
+        <li>
+          <Link href="/savoir-plus">En savoir plus sur la VAE</Link>
+        </li>
       </ul>
     </MainLayout>
   );
