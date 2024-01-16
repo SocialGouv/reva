@@ -131,13 +131,7 @@ export const candidacySearchWord = (word: string) => {
                 certification: {
                   OR: [
                     containsFilter("label"),
-                    {
-                      typeDiplome: {
-                        Certification: {
-                          some: containsFilter("label"),
-                        },
-                      },
-                    },
+                    { typeDiplome: containsFilter("label") },
                   ],
                 },
               },
