@@ -1,6 +1,4 @@
 import { FeasibilityStatus, Prisma } from "@prisma/client";
-import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
-import { buildContainsFilterClause } from "../../shared/search/search";
 
 export type FeasibilityStatusFilter =
   | FeasibilityStatus
@@ -54,22 +52,4 @@ export const getWhereClauseFromStatusFilter = (
       break;
   }
   return whereClause;
-};
-
-export const feasibilitySearchWord = (word: string) => {
-  const containsFilter = buildContainsFilterClause(word);
-  return {
-    OR: [
-      { candidate: candidateSearchWord(word) },
-      { organism: containsFilter("label") },
-      { department: containsFilter("label") },
-      {
-        certificationsAndRegions: {
-          some: {
-            certification: containsFilter("label"),
-          },
-        },
-      },
-    ],
-  };
 };

@@ -16,6 +16,7 @@ import {
   updateCandidacyStatus,
 } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
+import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { processPaginationInfo } from "../shared/list/pagination";
@@ -36,7 +37,6 @@ import {
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
-  feasibilitySearchWord,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 
@@ -332,7 +332,7 @@ export const getActiveFeasibilityCountByCategory = async ({
                 candidacy: {
                   ...candidacyClause,
                   ...getWhereClauseFromSearchFilter(
-                    feasibilitySearchWord,
+                    candidacySearchWord,
                     searchFilter
                   ),
                 },
@@ -505,7 +505,7 @@ export const getActiveFeasibilities = async ({
       ...queryWhereClause,
       candidacy: {
         ...candidacyClause,
-        ...getWhereClauseFromSearchFilter(feasibilitySearchWord, searchFilter),
+        ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
       },
     };
   }
