@@ -67,7 +67,7 @@ const RejectedSubscriptionRequestsPage = () => {
 
   const updateSearchFilter = (newSearchFilter: string) => {
     setSearchFilter(newSearchFilter);
-    router.push(pathname);
+    router.push(`${pathname}?CATEGORY=${category || "ALL"}`);
   };
 
   const { data: getFeasibilitiesResponse, status: getFeasibilitiesStatus } =
