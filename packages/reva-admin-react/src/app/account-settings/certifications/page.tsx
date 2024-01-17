@@ -53,7 +53,7 @@ const CertificationsPage = () => {
           .filter((d) => d.level > 2)
           .map((d) => ({
             id: d.id,
-            label: d.label,
+            label: d.longLabel,
             checked: !!managedDegrees.find((md) => md.id === d.id),
           })),
       }),

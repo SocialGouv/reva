@@ -24,7 +24,7 @@ const degreesQuery = graphql(`
   query getNiveauxDiplomes {
     getDegrees {
       id
-      label
+      longLabel
       level
     }
   }
