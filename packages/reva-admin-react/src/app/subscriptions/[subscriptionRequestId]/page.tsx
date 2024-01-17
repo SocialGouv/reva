@@ -102,7 +102,7 @@ const SubscriptionRequestPage = () => {
               code: d.department.code,
             }))}
           remoteDemartments={subscriptionRequest.departmentsWithOrganismMethods
-            .filter((d) => d.isOnSite)
+            .filter((d) => d.isRemote)
             .map((d) => ({
               label: d.department.label,
               code: d.department.code,
