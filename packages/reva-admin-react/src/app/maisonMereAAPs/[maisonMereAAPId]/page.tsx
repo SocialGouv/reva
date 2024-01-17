@@ -21,6 +21,7 @@ const getMaisonMereAAP = graphql(`
       ville
       codePostal
       typologie
+      siteWeb
       maisonMereAAPOnDepartements {
         estSurPlace
         estADistance
@@ -86,6 +87,7 @@ const MaisonMereAAPPage = () => {
           companyAddress={maisonMereAAP.adresse}
           companyZipCode={maisonMereAAP.codePostal}
           companyCity={maisonMereAAP.ville}
+          companyWebsite={maisonMereAAP.siteWeb}
           companyTypology={maisonMereAAP.typologie as Typology}
           onSiteDepartments={maisonMereAAP.maisonMereAAPOnDepartements
             .filter((d) => d.estSurPlace)

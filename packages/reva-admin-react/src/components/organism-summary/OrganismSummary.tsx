@@ -44,7 +44,7 @@ export const OrganismSummary = ({
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
-  companyWebsite?: string;
+  companyWebsite?: string | null;
   companyQualiopiCertificateExpiresAt: Date;
   companySiret: string;
   companyLegalStatus: string;

@@ -93,6 +93,7 @@ const SubscriptionRequestPage = () => {
           companyAddress={subscriptionRequest.companyAddress}
           companyZipCode={subscriptionRequest.companyZipCode}
           companyCity={subscriptionRequest.companyCity}
+          companyWebsite={subscriptionRequest.companyWebsite}
           companyTypology={subscriptionRequest.typology}
           onSiteDepartments={subscriptionRequest.departmentsWithOrganismMethods
             .filter((d) => d.isOnSite)
