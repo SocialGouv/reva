@@ -926,7 +926,7 @@ model CertificationAuthorityOnDepartment {
   id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
   certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
-  department               Department             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  department               Department             @relation(fields: [departmentId], references: [id], onDelete: NoAction)
   departmentId             String                 @map("department_id") @db.Uuid
   createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
@@ -939,7 +939,7 @@ model CertificationAuthorityOnCertification {
   id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
   certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
-  certification            Certification          @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  certification            Certification          @relation(fields: [certificationId], references: [id], onDelete: NoAction)
   certificationId          String                 @map("certification_id") @db.Uuid
   createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
