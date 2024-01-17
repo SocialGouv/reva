@@ -65,7 +65,7 @@ const AbsencePage = () => {
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pensant la récupération de l'agence."
+          title="Une erreur est survenue pendant la récupération de l'agence."
         />
       )}
 
@@ -73,7 +73,7 @@ const AbsencePage = () => {
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pensant l'enregistrement de la visibilité de l'agence."
+          title="Une erreur est survenue pendant l'enregistrement de la visibilité de l'agence."
         />
       )}
 

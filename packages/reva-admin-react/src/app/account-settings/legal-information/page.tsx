@@ -21,7 +21,7 @@ const LegalInformationPage = () => {
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pensant la récupération des informations juridiques."
+          title="Une erreur est survenue pendant la récupération des informations juridiques."
         />
       )}
       {legalInformationsIsSuccess && (

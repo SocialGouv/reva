@@ -77,14 +77,14 @@ const CommercialInformationPage = () => {
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pensant la récupération des informations commerciales."
+          title="Une erreur est survenue pendant la récupération des informations commerciales."
         />
       )}
       {createOrUpdateInformationsCommerciales.status === "error" && (
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pensant l'enregistrement des informations commerciales."
+          title="Une erreur est survenue pendant l'enregistrement des informations commerciales."
         />
       )}
       {informationsCommercialesStatus === "success" && (

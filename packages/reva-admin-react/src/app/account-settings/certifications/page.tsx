@@ -110,7 +110,7 @@ const CertificationsPage = () => {
           <Alert
             className="my-6"
             severity="error"
-            title="Une erreur est survenue pensant la récupération des niveaux de diplôme."
+            title="Une erreur est survenue pendant la récupération des niveaux de diplôme."
           />
         ))}
 
@@ -118,7 +118,7 @@ const CertificationsPage = () => {
         <Alert
           className="my-6"
           severity="error"
-          title="Une erreur est survenue pensant l'enregistrement des niveaux de diplôme."
+          title="Une erreur est survenue pendant l'enregistrement des niveaux de diplôme."
         />
       )}
 
