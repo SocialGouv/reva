@@ -80,11 +80,11 @@ export const Header = (props: { className?: string }) => {
               push([
                 "trackEvent",
                 "En-tête",
-                "Click sur 'Espace professionnel'",
-                "Click sur 'Espace professionnel'",
+                "Click sur 'Connexion professionnel'",
+                "Click sur 'Connexion professionnel'",
               ]),
           },
-          text: "Espace professionnel",
+          text: "Connexion professionnel",
         },
         {
           iconId: "fr-icon-account-circle-fill",
@@ -95,11 +95,11 @@ export const Header = (props: { className?: string }) => {
               push([
                 "trackEvent",
                 "En-tête",
-                "Click sur 'Espace candidat'",
-                "Click sur 'Espace candidat'",
+                "Click sur 'Connexion candidat'",
+                "Click sur 'Connexion candidat'",
               ]),
           },
-          text: "Espace candidat",
+          text: "Connexion candidat",
         },
       ]}
       navigation={isClient ? navigation : []}
