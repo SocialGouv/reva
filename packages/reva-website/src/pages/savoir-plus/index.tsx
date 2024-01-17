@@ -56,8 +56,18 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
     setNumberOfArticlesToDisplayInitially,
   ] = useState(4);
 
+  const [textArticleToTruncate, setTextArticleToTruncate] = useState({
+    forLongTitle: 90,
+    forShortTitle: 120,
+  });
+
   useEffect(() => {
-    setNumberOfArticlesToDisplayInitially(window.innerWidth < 1200 ? 2 : 4);
+    const screenWidth = window.innerWidth;
+    setNumberOfArticlesToDisplayInitially(screenWidth < 1200 ? 2 : 4);
+    setTextArticleToTruncate({
+      forLongTitle: screenWidth < 1024 ? 90 : 200,
+      forShortTitle: screenWidth < 1024 ? 120 : 250,
+    });
   }, []);
 
   const [showMore, setShowMore] = useState(false);
@@ -72,21 +82,27 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
     articles.length > numberOfArticlesToDisplayInitially && !showMore;
 
   return (
-    <div className="flex flex-col lg:flex-row flex-wrap gap-8 items-center lg:items-start">
-      {articlesToDisplay.map(({ id, attributes }) => (
-        <HelpArticle
-          key={id}
-          title={attributes?.titre || ""}
-          description={truncate(attributes?.description || "", {
-            length: 120,
-          })}
-          thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
-          thumbnailAlt={
-            attributes?.vignette?.data?.attributes?.alternativeText || ""
-          }
-          url={`/savoir-plus/articles/${attributes?.slug}`}
-        />
-      ))}
+    <div className="flex flex-col md:flex-row flex-wrap gap-8 items-center lg:items-start">
+      {articlesToDisplay.map(({ id, attributes }) => {
+        const isLongTitle = (attributes?.titre?.length ?? 0) > 40;
+
+        return (
+          <HelpArticle
+            key={id}
+            title={attributes?.titre || ""}
+            description={truncate(attributes?.description || "", {
+              length: isLongTitle
+                ? textArticleToTruncate.forLongTitle
+                : textArticleToTruncate.forShortTitle,
+            })}
+            thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
+            thumbnailAlt={
+              attributes?.vignette?.data?.attributes?.alternativeText || ""
+            }
+            url={`/savoir-plus/articles/${attributes?.slug}`}
+          />
+        );
+      })}
       {displayMoreButton && (
         <div className="flex w-full justify-center lg:justify-end lg:pr-16">
           <Button
@@ -118,19 +134,21 @@ const HelpArticle = ({
   url: string;
 }) => (
   <Link href={url} className="!bg-none">
-    <div className="grid grid-rows-2 w-[340px]  h-[200px] lg:h-[400px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)] hover:scale-105">
-      <div className="flex">
+    <div className="grid w-[340px] h-[150px] lg:h-[400px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)] hover:scale-105">
+      <div className="hidden lg:flex">
         <Image
           src={thumbnailUrl}
           alt={thumbnailAlt}
           width={340}
-          height={200}
-          className="object-cover w-full rounded-t-[32px] max-w-[340px] max-h-[200px]"
+          height={150}
+          className="object-cover w-full rounded-t-[32px] max-w-[340px] max-h-[150px]"
         />
       </div>
-      <div className="flex flex-col p-6">
-        <h4 className="text-2xl font-bold">{title}</h4>
-        <div className="hidden lg:block overflow-hidden">{description}</div>
+      <div className="flex flex-col p-4 sm:p-6 h-auto justify-center lg:justify-start">
+        <h4 className="text-md sm:text-xl font-bold mb-2 lg:mb-6">{title}</h4>
+        <span className="text-sm sm:text-md sm:overflow-hidden">
+          {description}
+        </span>
       </div>
     </div>
   </Link>
