@@ -392,6 +392,20 @@ candidacy_updateExamInfo requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateExamInfo" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "examInfo" requiredArgs____.examInfo Admin.InputObject.encodeExamInfoInput ] object____ Basics.identity
 
 
+type alias CandidacySetReadyForJuryEstimatedAtRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , readyForJuryEstimatedAt : Data.Scalar.Timestamp
+    }
+
+
+candidacy_setReadyForJuryEstimatedAt :
+    CandidacySetReadyForJuryEstimatedAtRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_setReadyForJuryEstimatedAt requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_setReadyForJuryEstimatedAt" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "readyForJuryEstimatedAt" requiredArgs____.readyForJuryEstimatedAt (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) ] object____ Basics.identity
+
+
 type alias CandidateAskForRegistrationRequiredArguments =
     { candidate : Admin.InputObject.CandidateInput }
 

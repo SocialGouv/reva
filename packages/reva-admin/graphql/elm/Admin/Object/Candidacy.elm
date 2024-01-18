@@ -142,6 +142,11 @@ firstAppointmentOccuredAt =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "firstAppointmentOccuredAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
+readyForJuryEstimatedAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Candidacy
+readyForJuryEstimatedAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "readyForJuryEstimatedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
 appointmentCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
 appointmentCount =
     Object.selectionForField "(Maybe Int)" "appointmentCount" [] (Decode.int |> Decode.nullable)
