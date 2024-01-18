@@ -47,6 +47,7 @@ import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getO
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "./features/getTrainings";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
+import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
 import { submitTraining } from "./features/submitTrainingForm";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
@@ -791,6 +792,15 @@ const unsafeResolvers = {
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
+    },
+    candidacy_setReadyForJuryEstimatedAt: async (
+      _parent: unknown,
+      params: {
+        candidacyId: string;
+        readyForJuryEstimatedAt: Date;
+      }
+    ) => {
+      return setReadyForJuryEstimatedAt(params);
     },
   },
 };

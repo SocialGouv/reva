@@ -71,6 +71,7 @@ type Candidacy {
   ccnId: String
   conventionCollective: CandidacyConventionCollective
   firstAppointmentOccuredAt: Timestamp
+  readyForJuryEstimatedAt: Timestamp
   appointmentCount: Int
   candidacyStatuses: [CandidacyStatus!]!
   certificateSkills: String
@@ -428,4 +429,8 @@ type Mutation {
     candidacyId: UUID!
     examInfo: ExamInfoInput!
   ): ExamInfo!
+  candidacy_setReadyForJuryEstimatedAt(
+    candidacyId: UUID!
+    readyForJuryEstimatedAt: Timestamp!
+  ): Candidacy!
 }

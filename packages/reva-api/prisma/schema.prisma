@@ -97,6 +97,7 @@ model Candidacy {
   isCertificationPartial    Boolean?                                @map("is_certification_partial")
   admissibility             Admissibility?
   examInfo                  ExamInfo?
+  readyForJuryEstimatedAt   DateTime?                               @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
   Feasibility               Feasibility[]
   paymentRequestUnifvae     PaymentRequestUnifvae?
 
