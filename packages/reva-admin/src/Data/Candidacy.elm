@@ -105,6 +105,7 @@ type alias Candidacy =
     , typologyAdditional : Maybe String
     , ccnId : Maybe String
     , conventionCollective : Maybe CandidacyConventionCollective
+    , readyForJuryEstimatedAt : Maybe Time.Posix
     }
 
 

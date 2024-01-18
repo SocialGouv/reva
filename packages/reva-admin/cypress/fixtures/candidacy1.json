@@ -13,6 +13,7 @@
       }
     ],
     "getCandidacyById1645362253": {
+      "readyForJuryEstimatedAt2471995693": null,
       "firstAppointmentOccuredAt2471995693": 1698883200000,
       "financeModule20786944": "unifvae",
       "feasibility": null,

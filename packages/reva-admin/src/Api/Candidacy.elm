@@ -249,6 +249,7 @@ selection id =
                 |> with Admin.Object.Candidacy.typologyAdditional
                 |> with Admin.Object.Candidacy.ccnId
                 |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
+                |> with Admin.Object.Candidacy.readyForJuryEstimatedAt
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->

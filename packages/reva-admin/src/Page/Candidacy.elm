@@ -502,7 +502,7 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.ReadyForJuryEstimatedDate, Success _ ) ->
+        ( View.Candidacy.Tab.ReadyForJuryEstimatedDate, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -512,7 +512,12 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.ReadyForJuryEstimatedDate.set tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.ReadyForJuryEstimatedDate.validate
-                        , status = Form.Editable
+                        , status =
+                            if candidacy.readyForJuryEstimatedAt == Nothing then
+                                Form.Editable
+
+                            else
+                                Form.ReadOnly
                         }
                         model.form
             in
