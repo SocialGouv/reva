@@ -34,16 +34,19 @@ view context remoteCandidacy =
                             archiveView context.baseUrl candidacy
 
                     else
-                        activeView context.baseUrl candidacy
+                        activeView context candidacy
             ]
 
         _ ->
             []
 
 
-activeView : String -> Candidacy -> Html msg
-activeView baseUrl candidacy =
+activeView : Context -> Candidacy -> Html msg
+activeView context candidacy =
     let
+        baseUrl =
+            context.baseUrl
+
         tab =
             View.Candidacy.Tab.Tab candidacy.id
 
@@ -79,6 +82,15 @@ activeView baseUrl candidacy =
                 Just <|
                     Route.href baseUrl <|
                         Route.Candidacy (tab View.Candidacy.Tab.Feasibility)
+
+            else
+                Nothing
+
+        dossierDeValidationLink =
+            if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+                Just <|
+                    Route.href baseUrl <|
+                        Route.Candidacy (tab View.Candidacy.Tab.ReadyForJuryEstimatedDate)
 
             else
                 Nothing
@@ -148,6 +160,22 @@ activeView baseUrl candidacy =
 
             else
                 []
+
+        dossierDeValidationMenuEntry =
+            if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
+                [ { content =
+                        expandedView
+                            (getDefaultExpandedViewStatusFromCandidacyStatus
+                                candidacy
+                                [ DossierFaisabiliteRecevable ]
+                            )
+                            "Dossier de validation"
+                  , navigation = dossierDeValidationLink
+                  }
+                ]
+
+            else
+                []
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
@@ -173,6 +201,7 @@ activeView baseUrl candidacy =
               ]
             , admissibilityMenuEntry
             , feasibilityMenuEntry
+            , dossierDeValidationMenuEntry
             , [ { content =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
