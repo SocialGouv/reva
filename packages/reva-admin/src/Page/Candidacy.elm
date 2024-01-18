@@ -25,6 +25,7 @@ import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
 import Api.Form.PaymentUploadsUniReva
+import Api.Form.ReadyForJuryEstimatedDate
 import Api.Form.Training
 import Api.Form.Unarchive
 import Api.Referential
@@ -44,6 +45,7 @@ import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
+import Data.Form.ReadyForJuryEstimatedDate
 import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
@@ -64,6 +66,7 @@ import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
+import Page.Form.ReadyForJuryEstimatedDate
 import Page.Form.Training
 import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
@@ -221,6 +224,9 @@ view context model =
 
                 Admissibility ->
                     viewForm "admissibility"
+
+                ReadyForJuryEstimatedDate ->
+                    viewForm "readyForJuryEstimatedDate"
 
                 ExamInfo ->
                     viewForm "examInfo"
@@ -490,6 +496,22 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.Appointment.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.Appointment.validate
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.ReadyForJuryEstimatedDate, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.ReadyForJuryEstimatedDate.form
+                        , onLoad = Just <| Api.Form.ReadyForJuryEstimatedDate.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.ReadyForJuryEstimatedDate.set tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.ReadyForJuryEstimatedDate.validate
                         , status = Form.Editable
                         }
                         model.form

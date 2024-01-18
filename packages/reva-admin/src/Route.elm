@@ -123,6 +123,7 @@ parser baseUrl =
                 , s "accounts" </> string |> map Account
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
+                , subLevel "candidacies" "ready-for-jury-estimated-date" |> candidacyTab Tab.ReadyForJuryEstimatedDate
                 , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
                 , subLevel "candidacies" "drop-out" |> candidacyTab Tab.DropOut
@@ -265,3 +266,6 @@ tabToString topLevel subLevel tab =
 
         Tab.Feasibility ->
             default [ "feasibility" ]
+
+        Tab.ReadyForJuryEstimatedDate ->
+            default [ "ready-for-jury-estimated-date" ]
