@@ -319,23 +319,22 @@ export const getActiveFeasibilityCountByCategory = async ({
                 };
               }
 
+              let candidacyClause: Prisma.CandidacyWhereInput =
+                whereClause?.candidacy || {};
+
+              candidacyClause = {
+                ...candidacyClause,
+                ...getWhereClauseFromStatusFilter(statusFilter).candidacy,
+                ...getWhereClauseFromSearchFilter(
+                  candidacySearchWord,
+                  searchFilter
+                ),
+              };
+
               whereClause = {
                 ...whereClause,
                 ...getWhereClauseFromStatusFilter(statusFilter),
-              };
-
-              const candidacyClause: Prisma.CandidacyWhereInput =
-                whereClause?.candidacy || {};
-
-              whereClause = {
-                ...whereClause,
-                candidacy: {
-                  ...candidacyClause,
-                  ...getWhereClauseFromSearchFilter(
-                    candidacySearchWord,
-                    searchFilter
-                  ),
-                },
+                candidacy: candidacyClause,
               };
 
               prismaClient.feasibility
@@ -375,7 +374,7 @@ const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole = ({
         certificationAuthorityLocalAccountOnCertification: CertificationAuthorityLocalAccountOnCertification[];
       })
     | null;
-}) => {
+}): Prisma.FeasibilityWhereInput => {
   let queryWhereClause = {};
   // For certification authority local accounts we restric matches to the local account own departments and certifications
   if (isCertificationAuthorityLocalAccount) {
@@ -485,6 +484,15 @@ export const getActiveFeasibilities = async ({
           })
         : null;
 
+    const candidacyWhereClause = {
+      ...queryWhereClause?.candidacy,
+      ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
+        account,
+        isCertificationAuthorityLocalAccount,
+        certificationAuthorityLocalAccount,
+      }).candidacy,
+    };
+
     queryWhereClause = {
       ...queryWhereClause,
       ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
@@ -492,6 +500,7 @@ export const getActiveFeasibilities = async ({
         isCertificationAuthorityLocalAccount,
         certificationAuthorityLocalAccount,
       }),
+      candidacy: candidacyWhereClause,
     };
   } else if (!hasRole("admin")) {
     //admin has access to everything
