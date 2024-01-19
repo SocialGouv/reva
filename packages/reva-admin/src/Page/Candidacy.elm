@@ -16,6 +16,7 @@ import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Archive
 import Api.Form.CancelDropOut
+import Api.Form.DossierDeValidation
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
@@ -38,6 +39,7 @@ import Data.Feasibility
 import Data.Form.Appointment
 import Data.Form.Archive
 import Data.Form.CancelDropOut
+import Data.Form.DossierDeValidation
 import Data.Form.DropOut
 import Data.Form.Feasibility
 import Data.Form.FundingRequestUniFvae
@@ -57,6 +59,7 @@ import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
 import Page.Form.CancelDropOut
+import Page.Form.DossierDeValidation
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
@@ -227,6 +230,9 @@ view context model =
 
                 ReadyForJuryEstimatedDate ->
                     viewForm "readyForJuryEstimatedDate"
+
+                DossierDeValidation ->
+                    viewForm "dossierDeValidation"
 
                 ExamInfo ->
                     viewForm "examInfo"
@@ -518,6 +524,22 @@ updateTab context tab ( model, cmd ) =
 
                             else
                                 Form.ReadOnly
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.DossierDeValidation, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.DossierDeValidation.form
+                        , onLoad = Nothing
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.DossierDeValidation.set tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.DossierDeValidation.validate
+                        , status = Form.Editable
                         }
                         model.form
             in

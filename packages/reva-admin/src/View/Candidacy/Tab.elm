@@ -17,6 +17,7 @@ type Value
     | CancelDropOut
     | Meetings
     | ReadyForJuryEstimatedDate
+    | DossierDeValidation
     | PaymentRequest
     | PaymentRequestConfirmation
     | PaymentUploads

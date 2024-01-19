@@ -124,6 +124,7 @@ parser baseUrl =
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "candidacies" "ready-for-jury-estimated-date" |> candidacyTab Tab.ReadyForJuryEstimatedDate
+                , subLevel "candidacies" "dossier-de-validation" |> candidacyTab Tab.DossierDeValidation
                 , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
                 , subLevel "candidacies" "drop-out" |> candidacyTab Tab.DropOut
@@ -269,3 +270,6 @@ tabToString topLevel subLevel tab =
 
         Tab.ReadyForJuryEstimatedDate ->
             default [ "ready-for-jury-estimated-date" ]
+
+        Tab.DossierDeValidation ->
+            default [ "dossier-de-validation" ]
