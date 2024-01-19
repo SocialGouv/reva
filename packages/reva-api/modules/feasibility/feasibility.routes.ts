@@ -1,6 +1,7 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
+import { UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import {
   canDownloadFeasibilityFiles,
@@ -9,7 +10,7 @@ import {
   getActiveFeasibilityByCandidacyid,
   handleFeasibilityDecision,
 } from "./feasibility.features";
-import { FeasibilityFile, UploadedFile } from "./feasibility.file";
+import { FeasibilityFile } from "./feasibility.file";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;

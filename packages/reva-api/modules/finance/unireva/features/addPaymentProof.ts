@@ -13,7 +13,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../shared/error/functionalError";
-import { UploadedFile } from "../finance.routes";
+import { UploadedFile } from "../../../shared/file";
 import {
   FileUploadSpoolerEntry,
   FundingRequest,

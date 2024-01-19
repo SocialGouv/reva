@@ -19,14 +19,11 @@ import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
+import { UploadedFile } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
-import {
-  FeasibilityFile,
-  UploadedFile,
-  uploadFeasibilityFiles,
-} from "./feasibility.file";
+import { FeasibilityFile, uploadFeasibilityFiles } from "./feasibility.file";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,

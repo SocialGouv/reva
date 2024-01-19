@@ -2,10 +2,8 @@ import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
-import {
-  UploadedFile,
-  addUploadedFileAndConfirmPayment,
-} from "./features/finance.unifvae.features";
+import { UploadedFile } from "../../shared/file";
+import { addUploadedFileAndConfirmPayment } from "./features/finance.unifvae.features";
 
 interface PaymentRequestProofBody {
   candidacyId: string;

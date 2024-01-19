@@ -1,12 +1,6 @@
 import { v4 } from "uuid";
 
-import { FileInterface, FileService } from "../shared/file";
-
-export interface UploadedFile {
-  data: Buffer;
-  filename: string;
-  mimetype: string;
-}
+import { FileInterface, FileService, UploadedFile } from "../shared/file";
 
 interface FeasibilityFileData {
   candidacyId: string;

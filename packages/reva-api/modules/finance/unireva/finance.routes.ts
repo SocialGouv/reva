@@ -2,17 +2,11 @@ import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
+import { UploadedFile } from "../../shared/file";
 import { addFileToUploadSpooler } from "./database/fileUploadSpooler";
 import { getFundingRequest } from "./database/fundingRequests";
 import { getPaymentRequestByCandidacyId } from "./database/paymentRequest";
 import { addPaymentProof } from "./features/addPaymentProof";
-
-export interface UploadedFile {
-  data: Buffer;
-  filename: string;
-  mimetype: string;
-  limit: number;
-}
 
 interface PaymentRequestProofBody {
   candidacyId: string;
