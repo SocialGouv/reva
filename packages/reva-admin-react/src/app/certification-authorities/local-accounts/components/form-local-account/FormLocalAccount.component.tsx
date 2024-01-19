@@ -295,7 +295,8 @@ function getDefaultItemsFromDepartments(
     });
 
     if (regionItemIndex != -1) {
-      return acc.splice(regionItemIndex, 1, regionItem);
+      acc.splice(regionItemIndex, 1, regionItem);
+      return acc;
     }
 
     return [...acc, regionItem];
