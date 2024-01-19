@@ -1,0 +1,24 @@
+enum DossierDeValidationDecision {
+  PENDING
+  INCOMPLETE
+}
+
+type DossierDeValidation {
+  id: ID!
+  candidacy: Candidacy!
+  dossierDeValidationFile: File!
+  dossierDeValidationOtherFiles: [File!]!
+  dossierDeValidationSentAt: Timestamp!
+  decision: DossierDeValidationDecision!
+  decisionComment: String
+  decisionSentAt: Timestamp
+  isActive: Boolean!
+  createdAt: Timestamp!
+  updatedAt: Timestamp
+}
+
+type Query {
+  dossierDeValidation_getDossierDeValidationById(
+    dossierDeValidationId: ID!
+  ): DossierDeValidation
+}

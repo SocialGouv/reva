@@ -99,6 +99,7 @@ model Candidacy {
   examInfo                  ExamInfo?
   readyForJuryEstimatedAt   DateTime?                               @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
   Feasibility               Feasibility[]
+  dossierDeValidation       DossierDeValidation[]
   paymentRequestUnifvae     PaymentRequestUnifvae?
 
   @@map("candidacy")
@@ -1023,15 +1024,50 @@ model Feasibility {
   @@map("feasibility")
 }
 
+enum DossierDeValidationStatus {
+  PENDING
+  INCOMPLETE
+}
+
+model DossierDeValidation {
+  id                            String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                     Candidacy                             @relation(fields: [candidacyId], references: [id])
+  candidacyId                   String                                @map("candidacy_id") @db.Uuid
+  dossierDeValidationFile       File                                  @relation("dossier_de_validation_file", fields: [dossierDeValidationFileId], references: [id])
+  dossierDeValidationFileId     String                                @unique @map("dossier_de_validation_file_id") @db.Uuid
+  dossierDeValidationOtherFiles DossierDeValidationOtherFilesOnFile[]
+  dossierDeValidationSentAt     DateTime?                             @map("dossier_de_validation_file_sent_at") @db.Timestamptz(6)
+  decision                      DossierDeValidationStatus             @default(PENDING)
+  decisionComment               String?                               @map("decision_comment")
+  decisionSentAt                DateTime?                             @map("decision_sent_at") @db.Timestamptz(6)
+  isActive                      Boolean                               @default(true) @map("is_active")
+  createdAt                     DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime?                             @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("dossier_de_validation")
+}
+
+model DossierDeValidationOtherFilesOnFile {
+  id                    String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  dossierDeValidation   DossierDeValidation @relation(fields: [dossierDeValidationId], references: [id], onDelete: Cascade)
+  dossierDeValidationId String              @map("dossier_de_validation_id") @db.Uuid
+  file                  File                @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId                String              @map("file_id") @db.Uuid
+
+  @@map("dossier_de_validation_other_files_on_file")
+}
+
 model File {
-  id                                    String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                                  String        @map("name") @db.VarChar(255)
-  mimeType                              String        @map("mime_type") @db.VarChar(255)
-  createdAt                             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  linkedAsFeasibilityFileBy             Feasibility[] @relation("feasibility_file")
-  linkedAsIDFileBy                      Feasibility[] @relation("ID_file")
-  linkedAsDocumentaryProofFileBy        Feasibility[] @relation("documentary_proof_file")
-  linkedAsCertificateOfAttendanceFileBy Feasibility[] @relation("certificate_of_attendance_file")
+  id                                    String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                                  String                                @map("name") @db.VarChar(255)
+  mimeType                              String                                @map("mime_type") @db.VarChar(255)
+  createdAt                             DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  linkedAsFeasibilityFileBy             Feasibility[]                         @relation("feasibility_file")
+  linkedAsIDFileBy                      Feasibility[]                         @relation("ID_file")
+  linkedAsDocumentaryProofFileBy        Feasibility[]                         @relation("documentary_proof_file")
+  linkedAsCertificateOfAttendanceFileBy Feasibility[]                         @relation("certificate_of_attendance_file")
+  DossierDeValidationFile               DossierDeValidation?                  @relation("dossier_de_validation_file")
+  DossierDeValidationOtherFiles         DossierDeValidationOtherFilesOnFile[]
 
   @@map("file")
 }
