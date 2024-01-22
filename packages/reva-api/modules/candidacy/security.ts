@@ -45,6 +45,6 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_createOrUpdatePaymentRequest":
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_updateExamInfo": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isAdminOrCandidacyCompanion,
+  "Mutation.jury_updateExamInfo": isAdminOrCandidacyCompanion,
 };

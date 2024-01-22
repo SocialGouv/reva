@@ -234,13 +234,6 @@ reorientationReason object____ =
     Object.selectionForCompositeField "reorientationReason" [] object____ (Basics.identity >> Decode.nullable)
 
 
-examInfo :
-    SelectionSet decodesTo Admin.Object.ExamInfo
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-examInfo object____ =
-    Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
-
-
 financeModule : SelectionSet Admin.Enum.FinanceModule.FinanceModule Admin.Object.Candidacy
 financeModule =
     Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder
@@ -286,3 +279,10 @@ paymentRequest :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
 paymentRequest object____ =
     Object.selectionForCompositeField "paymentRequest" [] object____ (Basics.identity >> Decode.nullable)
+
+
+examInfo :
+    SelectionSet decodesTo Admin.Object.ExamInfo
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+examInfo object____ =
+    Object.selectionForCompositeField "examInfo" [] object____ Basics.identity

@@ -378,20 +378,6 @@ candidacy_updateAdmissibility requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAdmissibility" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "admissibility" requiredArgs____.admissibility Admin.InputObject.encodeAdmissibilityInput ] object____ Basics.identity
 
 
-type alias CandidacyUpdateExamInfoRequiredArguments =
-    { candidacyId : Data.Scalar.Uuid
-    , examInfo : Admin.InputObject.ExamInfoInput
-    }
-
-
-candidacy_updateExamInfo :
-    CandidacyUpdateExamInfoRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.ExamInfo
-    -> SelectionSet decodesTo RootMutation
-candidacy_updateExamInfo requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateExamInfo" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "examInfo" requiredArgs____.examInfo Admin.InputObject.encodeExamInfoInput ] object____ Basics.identity
-
-
 type alias CandidacySetReadyForJuryEstimatedAtRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , readyForJuryEstimatedAt : Data.Scalar.Timestamp
@@ -542,6 +528,20 @@ candidacy_confirmPaymentRequest :
     -> SelectionSet decodesTo RootMutation
 candidacy_confirmPaymentRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_confirmPaymentRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
+type alias JuryUpdateExamInfoRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , examInfo : Admin.InputObject.ExamInfoInput
+    }
+
+
+jury_updateExamInfo :
+    JuryUpdateExamInfoRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.ExamInfo
+    -> SelectionSet decodesTo RootMutation
+jury_updateExamInfo requiredArgs____ object____ =
+    Object.selectionForCompositeField "jury_updateExamInfo" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "examInfo" requiredArgs____.examInfo Admin.InputObject.encodeExamInfoInput ] object____ Basics.identity
 
 
 type alias OrganismUpdateOrganismRequiredArguments =

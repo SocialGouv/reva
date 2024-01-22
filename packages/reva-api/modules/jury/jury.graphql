@@ -1,0 +1,29 @@
+type ExamInfo {
+  examResult: ExamResult
+  estimatedExamDate: Timestamp
+  actualExamDate: Timestamp
+}
+
+type Candidacy {
+  examInfo: ExamInfo!
+}
+
+enum ExamResult {
+  SUCCESS
+  PARTIAL_SUCCESS
+  PARTIAL_CERTIFICATION_SUCCESS
+  FAILURE
+}
+
+input ExamInfoInput {
+  examResult: ExamResult
+  estimatedExamDate: Timestamp
+  actualExamDate: Timestamp
+}
+
+type Mutation {
+  jury_updateExamInfo(
+    candidacyId: UUID!
+    examInfo: ExamInfoInput!
+  ): ExamInfo!
+}

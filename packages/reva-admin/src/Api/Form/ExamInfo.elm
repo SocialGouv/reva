@@ -64,11 +64,11 @@ update candidacyId endpointGraphql token toMsg _ formData =
                 )
 
         examInfoRequiredArgs =
-            Mutation.CandidacyUpdateExamInfoRequiredArguments
+            Mutation.JuryUpdateExamInfoRequiredArguments
                 (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
                 examInfoInformation
     in
-    Mutation.candidacy_updateExamInfo examInfoRequiredArgs SelectionSet.empty
+    Mutation.jury_updateExamInfo examInfoRequiredArgs SelectionSet.empty
         |> Auth.makeMutation "updateCandidacyExamDetails" endpointGraphql token toMsg
 
 

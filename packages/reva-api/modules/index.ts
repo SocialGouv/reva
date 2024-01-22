@@ -25,6 +25,7 @@ import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
+import { juryResolvers } from "./jury/jury.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import { resolvers as organismResolvers } from "./organism/organism.resolvers";
 import { referentialLoaders } from "./referential/referential.loaders";
@@ -53,6 +54,7 @@ const resolvers = mergeResolvers([
   feasibilityResolvers,
   featureFlippingResolvers,
   dossierDeValidationResolvers,
+  juryResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

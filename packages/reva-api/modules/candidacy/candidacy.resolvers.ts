@@ -20,13 +20,11 @@ import {
   Candidacy,
   CandidacyBusinessEvent,
   CandidacyStatusFilter,
-  ExamInfo,
   SearchOrganismFilter,
 } from "./candidacy.types";
 import * as admissibilityDb from "./database/admissibility";
 import * as basicSkillDb from "./database/basicSkills";
 import * as candidacyDb from "./database/candidacies";
-import * as examInfoDb from "./database/examInfo";
 import * as experienceDb from "./database/experiences";
 import * as trainingDb from "./database/trainings";
 import { cancelDropOutCandidacyEvent } from "./events";
@@ -42,7 +40,6 @@ import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
-import { getExamInfo } from "./features/getExamInfo";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getOrganismsForCandidacy";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "./features/getTrainings";
@@ -58,7 +55,6 @@ import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypolog
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
 import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
-import { updateExamInfo } from "./features/updateExamInfo";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "./features/validateTrainingFormByCandidate";
@@ -101,20 +97,6 @@ const unsafeResolvers = {
         hasRole: context.auth.hasRole,
         getAdmissibilityFromCandidacyId:
           admissibilityDb.getAdmissibilityFromCandidacyId,
-      })({ candidacyId: parent.id });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .map((v) => v.extractNullable())
-        .extract();
-    },
-    examInfo: async (
-      parent: Candidacy,
-      _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } }
-    ) => {
-      const result = await getExamInfo({
-        hasRole: context.auth.hasRole,
-        getExamInfoFromCandidacyId: examInfoDb.getExamInfoFromCandidacyId,
       })({ candidacyId: parent.id });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -763,29 +745,6 @@ const unsafeResolvers = {
         candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_ADMISSIBILITY,
         extraInfo: { admissibility },
-        context,
-        result,
-      });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
-    candidacy_updateExamInfo: async (
-      _: unknown,
-      { candidacyId, examInfo }: { candidacyId: string; examInfo: ExamInfo },
-      context: GraphqlContext
-    ) => {
-      const result = await updateExamInfo({
-        getExamInfoFromCandidacyId: examInfoDb.getExamInfoFromCandidacyId,
-        updateExamInfo: examInfoDb.updateExamInfo,
-      })({
-        candidacyId,
-        examInfo,
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_EXAM_INFO,
-        extraInfo: { examInfo },
         context,
         result,
       });

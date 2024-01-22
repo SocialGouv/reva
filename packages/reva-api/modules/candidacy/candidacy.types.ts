@@ -166,19 +166,6 @@ export enum CandidacyBusinessEvent {
   CREATED_FUNDING_REQUEST_UNIFVAE = "Created a funding request (unifvae)",
 }
 
-export interface ExamInfo {
-  id: string;
-  examResult: ExamResult | null;
-  estimatedExamDate: Date | null;
-  actualExamDate: Date | null;
-}
-
-export type ExamResult =
-  | "SUCCESS"
-  | "PARTIAL_SUCCESS"
-  | "PARTIAL_CERTIFICATION_SUCCESS"
-  | "FAILURE";
-
 export type CandidacyStatusFilter =
   | "ACTIVE_HORS_ABANDON"
   | "ABANDON"
