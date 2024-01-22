@@ -31,24 +31,6 @@ export const createAccountProfile = async (params: {
   }
 };
 
-export const getAccountFromKeycloakId = async (keycloakId: string) => {
-  try {
-    const account = await prismaClient.account.findUnique({
-      where: {
-        keycloakId,
-      },
-    });
-    // return Right(Maybe.fromNullable(account));
-    if (!account) {
-      return Left(`Account with keycloakId ${keycloakId} not found.`);
-    }
-    return Right(account);
-  } catch (e) {
-    logger.error(e);
-    return Left(`Error while looking up account with keycloakId ${keycloakId}`);
-  }
-};
-
 export const getAccountFromEmail = async (email: string) => {
   try {
     const account = await prismaClient.account.findUnique({
