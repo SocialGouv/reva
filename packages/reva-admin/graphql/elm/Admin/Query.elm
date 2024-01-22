@@ -264,6 +264,18 @@ certification_authority_getCertificationAuthorities fillInOptionals____ object__
     Object.selectionForCompositeField "certification_authority_getCertificationAuthorities" optionalArgs____ object____ Basics.identity
 
 
+type alias DossierDeValidationGetDossierDeValidationByIdRequiredArguments =
+    { dossierDeValidationId : Data.Scalar.Id }
+
+
+dossierDeValidation_getDossierDeValidationById :
+    DossierDeValidationGetDossierDeValidationByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DossierDeValidation
+    -> SelectionSet (Maybe decodesTo) RootQuery
+dossierDeValidation_getDossierDeValidationById requiredArgs____ object____ =
+    Object.selectionForCompositeField "dossierDeValidation_getDossierDeValidationById" [ Argument.required "dossierDeValidationId" requiredArgs____.dossierDeValidationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias FeasibilityCountByCategoryOptionalArguments =
     { searchFilter : OptionalArgument String }
 

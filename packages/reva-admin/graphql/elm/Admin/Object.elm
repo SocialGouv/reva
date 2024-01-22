@@ -113,6 +113,10 @@ type Domaine
     = Domaine
 
 
+type DossierDeValidation
+    = DossierDeValidation
+
+
 type DropOutReason
     = DropOutReason
 

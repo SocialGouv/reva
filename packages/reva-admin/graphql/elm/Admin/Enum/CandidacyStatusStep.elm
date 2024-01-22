@@ -18,6 +18,7 @@ type CandidacyStatusStep
     | DossierFaisabiliteRecevable
     | DossierFaisabiliteIncomplet
     | DossierFaisabiliteNonRecevable
+    | DossierDeValidationEnvoye
     | DemandeFinancementEnvoye
     | DemandePaiementEnvoyee
     | DossierPro
@@ -26,7 +27,7 @@ type CandidacyStatusStep
 
 list : List CandidacyStatusStep
 list =
-    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DossierFaisabiliteRecevable, DossierFaisabiliteIncomplet, DossierFaisabiliteNonRecevable, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
+    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DossierFaisabiliteRecevable, DossierFaisabiliteIncomplet, DossierFaisabiliteNonRecevable, DossierDeValidationEnvoye, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
 
 
 decoder : Decoder CandidacyStatusStep
@@ -64,6 +65,9 @@ decoder =
 
                     "DOSSIER_FAISABILITE_NON_RECEVABLE" ->
                         Decode.succeed DossierFaisabiliteNonRecevable
+
+                    "DOSSIER_DE_VALIDATION_ENVOYE" ->
+                        Decode.succeed DossierDeValidationEnvoye
 
                     "DEMANDE_FINANCEMENT_ENVOYE" ->
                         Decode.succeed DemandeFinancementEnvoye
@@ -116,6 +120,9 @@ toString enum____ =
 
         DossierFaisabiliteNonRecevable ->
             "DOSSIER_FAISABILITE_NON_RECEVABLE"
+
+        DossierDeValidationEnvoye ->
+            "DOSSIER_DE_VALIDATION_ENVOYE"
 
         DemandeFinancementEnvoye ->
             "DEMANDE_FINANCEMENT_ENVOYE"
@@ -173,6 +180,9 @@ fromString enumString____ =
 
         "DOSSIER_FAISABILITE_NON_RECEVABLE" ->
             Just DossierFaisabiliteNonRecevable
+
+        "DOSSIER_DE_VALIDATION_ENVOYE" ->
+            Just DossierDeValidationEnvoye
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             Just DemandeFinancementEnvoye
