@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "CandidacyStatusStep" ADD VALUE 'DOSSIER_DE_VALIDATION_ENVOYE';

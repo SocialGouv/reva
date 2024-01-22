@@ -10,6 +10,7 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
+import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import paymentRequestFvaeFileUploadAndConfirmationRoute from "../../modules/finance/unifvae/finance.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
@@ -120,6 +121,7 @@ export const buildApp = async (
   });
 
   app.register(feasibilityFileUploadRoute, { prefix: "/api" });
+  app.register(dossierDeValidationRoute, { prefix: "/api" });
 
   logger.info("started");
   return app;
