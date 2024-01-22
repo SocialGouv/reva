@@ -2,8 +2,10 @@ import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
 import { canUserManageCandidacy } from "../feasibility/feasibility.features";
-import { UploadedFile } from "../shared/file";
+import { FileService, UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
+import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
+import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 
 interface UploadDossierDeValidationBody {
@@ -19,6 +21,67 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
   server.register(fastifyMultipart, {
     addToBody: true,
   });
+
+  server.get<{ Params: { candidacyId: string; fileId: string } }>(
+    "/candidacy/:candidacyId/dossier-de-validation/file/:fileId",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            dossierDeValidationId: { type: "string" },
+            fileId: { type: "string" },
+          },
+          required: ["candidacyId", "fileId"],
+        },
+      },
+      handler: async (request, reply) => {
+        const { candidacyId, fileId } = request.params;
+
+        const dossierDeValidation =
+          await getActiveDossierDeValidationByCandidacyId({
+            candidacyId,
+          });
+
+        const authorized =
+          canUserManageCandidacy ||
+          canManageDossierDeValidation({
+            keycloakId: request.auth?.userInfo?.sub,
+            dossierDeValidationId: dossierDeValidation?.id || "",
+            roles: request.auth.userInfo?.realm_access?.roles || [],
+          });
+
+        if (!authorized) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
+          });
+        }
+
+        if (
+          ![dossierDeValidation?.dossierDeValidationFileId].includes(fileId)
+        ) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
+          });
+        }
+
+        const fileLink = await FileService.getInstance().getDownloadLink({
+          fileKeyPath: `${candidacyId}/${fileId}`,
+        });
+
+        if (fileLink) {
+          reply
+            .code(200)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .send({ url: fileLink });
+
+          return;
+        }
+
+        reply.status(400).send("Fichier non trouvé.");
+      },
+    }
+  );
 
   server.post<{
     Body: UploadDossierDeValidationBody;
