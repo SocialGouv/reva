@@ -1,7 +1,7 @@
-import { getFileNameAndUrl } from "../feasibility/feasibility.features";
 import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
+import { getFileNameAndUrl } from "./features/getfileNameAndUrl";
 
 export const dossierDeValidationResolvers = {
   DossierDeValidation: {
