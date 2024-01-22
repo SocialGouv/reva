@@ -20,6 +20,7 @@ import Api.Auth as Auth
 import Api.CandidacyConventionCollective
 import Api.Certification as Certification
 import Api.CertificationAuthority as CertificationAuthority
+import Api.DossierDeValidation
 import Api.Feasibility
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
@@ -243,6 +244,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
                 |> with (Admin.Object.Candidacy.certificationAuthorities CertificationAuthority.selection)
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
+                |> with (Admin.Object.Candidacy.activeDossierDeValidation Api.DossierDeValidation.selection)
                 |> with Admin.Object.Candidacy.financeModule
                 |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
                 |> with Admin.Object.Candidacy.typology

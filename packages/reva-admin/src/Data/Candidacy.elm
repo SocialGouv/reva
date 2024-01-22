@@ -38,11 +38,13 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.CandidateTypology exposing (CandidateTypology)
 import Admin.Enum.Duration exposing (Duration)
 import Admin.Enum.FinanceModule exposing (FinanceModule)
-import Admin.Object.Candidacy exposing (conventionCollective, typology, typologyAdditional)
+import Admin.Object.Candidacy exposing (activeDossierDeValidation, conventionCollective, typology, typologyAdditional)
+import Admin.Object.DossierDeValidation exposing (dossierDeValidationFile)
 import Data.CandidacyConventionCollective exposing (CandidacyConventionCollective)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
+import Data.DossierDeValidation exposing (DossierDeValidation)
 import Data.Feasibility exposing (Feasibility)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
@@ -99,6 +101,7 @@ type alias Candidacy =
     , reorientationReason : Maybe ReorientationReason
     , certificationAuthorities : List CertificationAuthority
     , feasibility : Maybe Feasibility
+    , activeDossierDeValidation : Maybe DossierDeValidation
     , financeModule : FinanceModule
     , firstAppointmentOccuredAt : Maybe Time.Posix
     , typology : CandidateTypology
@@ -333,11 +336,14 @@ statusToProgressPosition status =
         DossierFaisabiliteNonRecevable ->
             7
 
-        DemandeFinancementEnvoye ->
+        DossierDeValidationEnvoye ->
             8
 
-        DemandePaiementEnvoyee ->
+        DemandeFinancementEnvoye ->
             9
+
+        DemandePaiementEnvoyee ->
+            10
 
         _ ->
             -1

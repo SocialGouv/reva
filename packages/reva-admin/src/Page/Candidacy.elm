@@ -35,6 +35,7 @@ import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
 import Data.Context exposing (Context)
+import Data.DossierDeValidation
 import Data.Feasibility
 import Data.Form.Appointment
 import Data.Form.Archive
@@ -232,7 +233,18 @@ view context model =
                     viewForm "readyForJuryEstimatedDate"
 
                 DossierDeValidation ->
-                    viewForm "dossierDeValidation"
+                    case model.selected of
+                        Success candidacy ->
+                            case candidacy.activeDossierDeValidation of
+                                Just dossierDeValidation ->
+                                    viewMain context "dossier-de-validation-sent" <|
+                                        viewDossierDeValidationSent context candidacy dossierDeValidation
+
+                                Nothing ->
+                                    viewForm "dossierDeValidation"
+
+                        _ ->
+                            viewForm "dossierDeValidation"
 
                 ExamInfo ->
                     viewForm "examInfo"
@@ -323,6 +335,23 @@ viewFeasibilitySent context candidacy feasibility =
             |> Maybe.map View.Candidate.viewCertificationAuthority
             |> Maybe.withDefault (text "")
         , View.Feasibility.Decision.view feasibility
+        ]
+    ]
+
+
+viewDossierDeValidationSent : Context -> Candidacy -> Data.DossierDeValidation.DossierDeValidation -> List (Html msg)
+viewDossierDeValidationSent context candidacy dossierDeValidation =
+    let
+        dossierDeValidationFileNameAndUrl =
+            ( dossierDeValidation.dossierDeValidationFile.name, dossierDeValidation.dossierDeValidationFile.url )
+    in
+    [ h1 [] [ text "Dossier de validation" ]
+    , div
+        [ class "flex flex-col gap-y-8 mb-6" ]
+        [ View.Candidate.viewWithCertification
+            (candidacy.certification |> Maybe.map .label)
+            candidacy.candidate
+        , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
         ]
     ]
 
@@ -529,7 +558,7 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.DossierDeValidation, Success _ ) ->
+        ( View.Candidacy.Tab.DossierDeValidation, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -539,7 +568,12 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.DossierDeValidation.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.DossierDeValidation.validate
-                        , status = Form.Editable
+                        , status =
+                            if candidacy.activeDossierDeValidation == Nothing then
+                                Form.Editable
+
+                            else
+                                Form.ReadOnly
                         }
                         model.form
             in
