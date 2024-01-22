@@ -178,8 +178,8 @@ activeView context candidacy =
                                 candidacy
                                 [ DossierFaisabiliteRecevable ]
                             )
-                            "Date prévisionnelle de jury"
-                  , navigation = readyForJuryEstimatedDateLink
+                            "Dossier de validation"
+                  , navigation = dossierDeValidationLink
                   }
                 , { content =
                         expandedView
@@ -187,8 +187,8 @@ activeView context candidacy =
                                 candidacy
                                 [ DossierFaisabiliteRecevable ]
                             )
-                            "Dossier de validation"
-                  , navigation = dossierDeValidationLink
+                            "Date de disponibilité estimée"
+                  , navigation = readyForJuryEstimatedDateLink
                   }
                 ]
 

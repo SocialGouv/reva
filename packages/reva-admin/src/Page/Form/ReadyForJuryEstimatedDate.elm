@@ -29,5 +29,5 @@ form _ ( candidacy, _ ) =
             ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"
-    , title = "Dossier de validation"
+    , title = "Date de disponibilité estimée"
     }
