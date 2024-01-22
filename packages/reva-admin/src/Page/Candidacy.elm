@@ -529,14 +529,14 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.DossierDeValidation, Success candidacy ) ->
+        ( View.Candidacy.Tab.DossierDeValidation, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.DossierDeValidation.form
                         , onLoad = Nothing
                         , onSave = Nothing
-                        , onSubmit = Api.Form.DossierDeValidation.set tab.candidacyId
+                        , onSubmit = Api.Form.DossierDeValidation.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.DossierDeValidation.validate
                         , status = Form.Editable
