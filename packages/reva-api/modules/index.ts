@@ -19,6 +19,7 @@ import * as candidacy from "./candidacy/candidacy.resolvers";
 import * as candidate from "./candidate";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
+import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
@@ -51,6 +52,7 @@ const resolvers = mergeResolvers([
   certificationAuthorityResolvers,
   feasibilityResolvers,
   featureFlippingResolvers,
+  dossierDeValidationResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
