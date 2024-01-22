@@ -86,11 +86,20 @@ activeView context candidacy =
             else
                 Nothing
 
-        dossierDeValidationLink =
+        readyForJuryEstimatedDateLink =
             if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
                 Just <|
                     Route.href baseUrl <|
                         Route.Candidacy (tab View.Candidacy.Tab.ReadyForJuryEstimatedDate)
+
+            else
+                Nothing
+
+        dossierDeValidationLink =
+            if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+                Just <|
+                    Route.href baseUrl <|
+                        Route.Candidacy (tab View.Candidacy.Tab.DossierDeValidation)
 
             else
                 Nothing
@@ -164,6 +173,15 @@ activeView context candidacy =
         dossierDeValidationMenuEntry =
             if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
                 [ { content =
+                        expandedView
+                            (getDefaultExpandedViewStatusFromCandidacyStatus
+                                candidacy
+                                [ DossierFaisabiliteRecevable ]
+                            )
+                            "Date prévisionnelle de jury"
+                  , navigation = readyForJuryEstimatedDateLink
+                  }
+                , { content =
                         expandedView
                             (getDefaultExpandedViewStatusFromCandidacyStatus
                                 candidacy
