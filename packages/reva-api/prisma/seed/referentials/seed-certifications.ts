@@ -82,6 +82,9 @@ export async function seedCertifications(prisma: PrismaClient) {
         isActive,
         certificationAuthorityTag,
       }) => {
+        const unquotedCertificationAuthorityTag =
+          certificationAuthorityTag?.replace(/^"(.+)"$/, "$1");
+
         return {
           where: { id },
           create: {
@@ -92,7 +95,7 @@ export async function seedCertifications(prisma: PrismaClient) {
             summary,
             typeDiplomeId: typeDiplome as string,
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
-            certificationAuthorityTag,
+            certificationAuthorityTag: unquotedCertificationAuthorityTag,
           },
           update: {
             rncpId,
@@ -101,7 +104,7 @@ export async function seedCertifications(prisma: PrismaClient) {
             summary,
             typeDiplomeId: typeDiplome as string,
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
-            certificationAuthorityTag,
+            certificationAuthorityTag: unquotedCertificationAuthorityTag,
           },
         };
       },
