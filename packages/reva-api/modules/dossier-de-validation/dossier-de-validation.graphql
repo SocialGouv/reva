@@ -17,6 +17,10 @@ type DossierDeValidation {
   updatedAt: Timestamp
 }
 
+type Candidacy {
+  activeDossierDeValidation: DossierDeValidation
+}
+
 type Query {
   dossierDeValidation_getDossierDeValidationById(
     dossierDeValidationId: ID!

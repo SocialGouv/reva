@@ -1,5 +1,6 @@
 import { getFileNameAndUrl } from "../feasibility/feasibility.features";
 import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
+import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
 
 export const dossierDeValidationResolvers = {
@@ -11,6 +12,10 @@ export const dossierDeValidationResolvers = {
       candidacyId: string;
       dossierDeValidationFileId: string;
     }) => getFileNameAndUrl({ candidacyId, fileId: dossierDeValidationFileId }),
+  },
+  Candidacy: {
+    activeDossierDeValidation: ({ candidacyId }: { candidacyId: string }) =>
+      getActiveDossierDeValidationByCandidacyId({ candidacyId }),
   },
   Query: {
     dossierDeValidation_getDossierDeValidationById: (

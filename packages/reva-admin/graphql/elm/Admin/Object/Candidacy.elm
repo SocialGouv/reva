@@ -246,6 +246,13 @@ financeModule =
     Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder
 
 
+activeDossierDeValidation :
+    SelectionSet decodesTo Admin.Object.DossierDeValidation
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+activeDossierDeValidation object____ =
+    Object.selectionForCompositeField "activeDossierDeValidation" [] object____ (Basics.identity >> Decode.nullable)
+
+
 certificationAuthorities :
     SelectionSet decodesTo Admin.Object.CertificationAuthority
     -> SelectionSet (List decodesTo) Admin.Object.Candidacy
