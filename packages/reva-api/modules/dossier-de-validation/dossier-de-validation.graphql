@@ -1,8 +1,3 @@
-enum DossierDeValidationDecision {
-  PENDING
-  INCOMPLETE
-}
-
 type DossierDeValidation {
   id: ID!
   candidacy: Candidacy!
@@ -17,12 +12,43 @@ type DossierDeValidation {
   updatedAt: Timestamp
 }
 
+enum DossierDeValidationDecision {
+  PENDING
+  INCOMPLETE
+}
+
+enum DossierDeValidationCategoryFilter {
+  ALL
+  PENDING
+  INCOMPLETE
+}
+
 type Candidacy {
   activeDossierDeValidation: DossierDeValidation
+}
+
+type DossierDeValidationPage {
+  rows: [DossierDeValidation!]!
+  info: PaginationInfo!
+}
+
+type DossierDeValidationCountByCategory {
+  ALL: Int!
+  PENDING: Int!
+  INCOMPLETE: Int!
 }
 
 type Query {
   dossierDeValidation_getDossierDeValidationById(
     dossierDeValidationId: ID!
   ): DossierDeValidation
+  dossierDeValidation_getDossiersDeValidation(
+    offset: Int
+    limit: Int
+    categoryFilter: DossierDeValidationCategoryFilter
+    searchFilter: String
+  ): DossierDeValidationPage!
+  dossierDeValidation_dossierDeValidationCountByCategory(
+    searchFilter: String
+  ): DossierDeValidationCountByCategory!
 }
