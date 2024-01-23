@@ -45,3 +45,16 @@ if (import.meta.env.VITE_HELP_BUBBLE_URL) {
   helpBubble.setAttribute("src", import.meta.env.VITE_HELP_BUBBLE_URL);
   document.head.appendChild(helpBubble);
 }
+
+if (import.meta.env.VITE_PRODUKTLY_CLIENT_TOKEN) {
+  const produktlyScript = document.createElement("script");
+  produktlyScript.setAttribute(
+    "src",
+    "https://public.produktly.com/js/main.js",
+  );
+  produktlyScript.setAttribute("id", "produktlyScript");
+  produktlyScript.dataset.clientToken =
+    import.meta.env.VITE_PRODUKTLY_CLIENT_TOKEN;
+
+  window.setTimeout(() => document.head.appendChild(produktlyScript), 5000);
+}
