@@ -19,6 +19,7 @@ type CandidacyStatusFilter
     | DossierFaisabiliteRecevableHorsAbandon
     | DossierFaisabiliteIncompletHorsAbandon
     | DossierFaisabiliteNonRecevableHorsAbandon
+    | DossierDeValidationEnvoyeHorsAbandon
     | DemandeFinancementEnvoyeHorsAbandon
     | DemandePaiementEnvoyeeHorsAbandon
     | ValidationHorsAbandon
@@ -27,7 +28,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DossierDeValidationEnvoyeHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -68,6 +69,9 @@ decoder =
 
                     "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" ->
                         Decode.succeed DossierFaisabiliteNonRecevableHorsAbandon
+
+                    "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON" ->
+                        Decode.succeed DossierDeValidationEnvoyeHorsAbandon
 
                     "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
                         Decode.succeed DemandeFinancementEnvoyeHorsAbandon
@@ -123,6 +127,9 @@ toString enum____ =
 
         DossierFaisabiliteNonRecevableHorsAbandon ->
             "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON"
+
+        DossierDeValidationEnvoyeHorsAbandon ->
+            "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON"
 
         DemandeFinancementEnvoyeHorsAbandon ->
             "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"
@@ -183,6 +190,9 @@ fromString enumString____ =
 
         "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" ->
             Just DossierFaisabiliteNonRecevableHorsAbandon
+
+        "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON" ->
+            Just DossierDeValidationEnvoyeHorsAbandon
 
         "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
             Just DemandeFinancementEnvoyeHorsAbandon

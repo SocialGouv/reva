@@ -74,6 +74,11 @@ dossierFaisabiliteNonRecevableHorsAbandon =
     Object.selectionForField "Int" "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" [] Decode.int
 
 
+dossierDeValidationEnvoyeHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
+dossierDeValidationEnvoyeHorsAbandon =
+    Object.selectionForField "Int" "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON" [] Decode.int
+
+
 demandeFinancementEnvoyeHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
 demandeFinancementEnvoyeHorsAbandon =
     Object.selectionForField "Int" "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" [] Decode.int

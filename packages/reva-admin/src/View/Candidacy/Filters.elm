@@ -58,6 +58,9 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon ->
                     candidacyCountByStatus.dossierFaisabiliteNonRecevableHorsAbandon
 
+                CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon ->
+                    candidacyCountByStatus.dossierDeValidationEnvoyeHorsAbandon
+
                 CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
                     candidacyCountByStatus.parcoursEnvoyeHorsAbandon
 
@@ -82,9 +85,16 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon
-            , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
-            , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
+                ++ (if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
+                        [ CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon ]
+
+                    else
+                        []
+                   )
+                ++ [ CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
+                   , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
+                   ]
 
         viewFilter : CandidacyStatusFilter -> Html msg
         viewFilter status =
