@@ -14,8 +14,8 @@ export const dossierDeValidationResolvers = {
     }) => getFileNameAndUrl({ candidacyId, fileId: dossierDeValidationFileId }),
   },
   Candidacy: {
-    activeDossierDeValidation: ({ candidacyId }: { candidacyId: string }) =>
-      getActiveDossierDeValidationByCandidacyId({ candidacyId }),
+    activeDossierDeValidation: ({ id }: { id: string }) =>
+      getActiveDossierDeValidationByCandidacyId({ candidacyId: id }),
   },
   Query: {
     dossierDeValidation_getDossierDeValidationById: (
