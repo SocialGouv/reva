@@ -89,7 +89,7 @@ const RejectedSubscriptionRequestsPage = () => {
                   key={r.id}
                   companyName={r.companyName}
                   createdAt={r.createdAt}
-                  onClick={() => router.push(`/subscriptions/${r.id}`)}
+                  href={`/subscriptions/${r.id}`}
                 />
               ))}
             </ul>

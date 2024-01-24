@@ -5,11 +5,11 @@ import { format } from "date-fns";
 export const SubscriptionRequestCard = ({
   companyName,
   createdAt,
-  onClick,
+  href,
 }: {
   companyName: string;
   createdAt: Date;
-  onClick?: () => void;
+  href?: string;
 }) => (
   <GrayCard>
     <strong>Raison sociale de la structure</strong>
@@ -17,8 +17,8 @@ export const SubscriptionRequestCard = ({
     <br />
     <strong>Date d'envoi de l'inscription</strong>
     <p>{format(createdAt, "d MMM yyyy")}</p>
-    {onClick && (
-      <Button className="ml-auto" onClick={onClick}>
+    {href && (
+      <Button className="ml-auto" linkProps={{ href }}>
         Voir plus
       </Button>
     )}

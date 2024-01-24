@@ -88,7 +88,7 @@ const ValidatedSubscriptionRequestsPage = () => {
                   key={r.id}
                   companyName={r.raisonSociale}
                   createdAt={r.createdAt}
-                  onClick={() => router.push(`/maisonMereAAPs/${r.id}`)}
+                  href={`/maisonMereAAPs/${r.id}`}
                 />
               ))}
             </ul>
