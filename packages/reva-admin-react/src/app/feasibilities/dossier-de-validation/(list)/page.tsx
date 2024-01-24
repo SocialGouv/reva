@@ -149,7 +149,9 @@ const DossiersDeValidationPage = () => {
                   </p>
                   <Button
                     className="ml-auto col-start-2"
-                    onClick={() => router.push(`/feasibilities/${f.id}`)}
+                    linkProps={{
+                      href: `/feasibilities/dossier-de-validation/${f.id}`,
+                    }}
                   >
                     Accéder au dossier
                   </Button>

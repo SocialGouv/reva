@@ -84,9 +84,7 @@ const CertificationAuthoritiesListPage = () => {
                   <p>{c.label}</p>
                   <Button
                     className="ml-auto"
-                    onClick={() =>
-                      router.push(`/certification-authorities/${c.id}`)
-                    }
+                    linkProps={{ href: `/certification-authorities/${c.id}` }}
                   >
                     Voir plus
                   </Button>

@@ -136,7 +136,7 @@ const RejectedSubscriptionRequestsPage = () => {
                   </p>
                   <Button
                     className="ml-auto col-start-2"
-                    onClick={() => router.push(`/feasibilities/${f.id}`)}
+                    linkProps={{ href: `/feasibilities/${f.id}` }}
                   >
                     Accéder au dossier
                   </Button>
