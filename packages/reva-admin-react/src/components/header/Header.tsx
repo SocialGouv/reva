@@ -95,23 +95,14 @@ export const Header = () => {
           : []),
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
-              isFeatureActive("DOSSIER_DE_VALIDATION")
-                ? {
-                    text: "Candidatures",
-                    linkProps: {
-                      href: "/feasibilities",
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith("/feasibilities"),
-                  }
-                : {
-                    text: "Dossiers de faisabilité",
-                    linkProps: {
-                      href: "/feasibilities",
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith("/feasibilities"),
-                  },
+              {
+                text: "Dossiers de faisabilité",
+                linkProps: {
+                  href: "/feasibilities",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith("/feasibilities"),
+              },
             ]
           : []),
         ...(isAdminCertificationAuthority &&
