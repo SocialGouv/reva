@@ -144,6 +144,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }),
   ];
 
+  const juryItems = [
+    menuItem({
+      text: "Jury",
+      path: "/feasibilities/jury",
+      category: "ALL",
+    }),
+  ];
+
   const menuItems = isFeatureActive("DOSSIER_DE_VALIDATION")
     ? [
         {
@@ -158,6 +166,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
             "/feasibilities/dossier-de-validation",
           ),
         },
+        ...(isFeatureActive("JURY") ? juryItems : []),
       ]
     : feasibilityItems;
 
