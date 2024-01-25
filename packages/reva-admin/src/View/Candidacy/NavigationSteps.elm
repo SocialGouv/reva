@@ -179,16 +179,12 @@ activeView context candidacy =
                                 [ DossierFaisabiliteRecevable ]
                             )
                             "Dossier de validation"
-                  , navigation = dossierDeValidationLink
-                  }
-                , { content =
-                        expandedView
-                            (getDefaultExpandedViewStatusFromCandidacyStatus
-                                candidacy
-                                [ DossierFaisabiliteRecevable ]
-                            )
-                            "Date de disponibilité estimée"
-                  , navigation = readyForJuryEstimatedDateLink
+                  , navigation =
+                        if candidacy.readyForJuryEstimatedAt == Nothing then
+                            readyForJuryEstimatedDateLink
+
+                        else
+                            dossierDeValidationLink
                   }
                 ]
 
