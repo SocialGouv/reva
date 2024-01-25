@@ -11,7 +11,8 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns/format";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchFilterFeasibilitiesStore } from "./useSearchFilterFeasibilitiesStore";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -56,7 +57,7 @@ const getFeasibilitiesQuery = graphql(`
 
 const RejectedSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const [searchFilter, setSearchFilter] = useState("");
+  const { searchFilter, setSearchFilter } = useSearchFilterFeasibilitiesStore();
   const params = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

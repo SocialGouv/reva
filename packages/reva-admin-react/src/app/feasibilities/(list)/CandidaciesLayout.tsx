@@ -6,10 +6,10 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
-
+import { useSearchFilterFeasibilitiesStore } from "./useSearchFilterFeasibilitiesStore";
 export const getFeasibilityCountByCategoryQuery = graphql(`
-  query getFeasibilityCountByCategory {
-    feasibilityCountByCategory {
+  query getFeasibilityCountByCategory($searchFilter: String) {
+    feasibilityCountByCategory(searchFilter: $searchFilter) {
       ALL
       PENDING
       REJECTED
@@ -32,6 +32,7 @@ export const getDossierDeValidationCountByCategoryQuery = graphql(`
 `);
 
 const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
+  const { searchFilter } = useSearchFilterFeasibilitiesStore();
   const currentPathname = usePathname();
   const searchParams = useSearchParams();
   const { graphqlClient } = useGraphQlClient();
@@ -41,8 +42,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     data: getFeasibilityCountByCategoryResponse,
     status: getFeasibilityCountByCategoryStatus,
   } = useQuery({
-    queryKey: ["getFeasibilityCountByCategory"],
-    queryFn: () => graphqlClient.request(getFeasibilityCountByCategoryQuery),
+    queryKey: ["getFeasibilityCountByCategory", searchFilter],
+    queryFn: () =>
+      graphqlClient.request(getFeasibilityCountByCategoryQuery, {
+        searchFilter,
+      }),
   });
 
   const {
