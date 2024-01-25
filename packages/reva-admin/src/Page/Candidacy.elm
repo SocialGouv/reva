@@ -163,8 +163,8 @@ view context model =
         viewArticle name c =
             View.article
                 name
-                (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
-                "Revenir à la candidature"
+                (Route.toString context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
+                "Aperçu de la candidature"
                 c
 
         viewFormWithTabs name title tabs =
@@ -421,7 +421,7 @@ viewMain : Context -> String -> List (Html msg) -> Html msg
 viewMain context dataTest content =
     View.article
         dataTest
-        (Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters))
+        (Route.toString context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters))
         "Toutes les candidatures"
         content
 

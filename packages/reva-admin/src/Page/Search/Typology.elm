@@ -144,8 +144,8 @@ view context model =
                 (NavigationSteps.view context model.candidacy)
                 [ View.article
                     "Définition du parcours"
-                    (Route.href context.baseUrl backRoute)
-                    "Revenir à la candidature"
+                    (Route.toString context.baseUrl backRoute)
+                    "Aperçu de la candidature"
                     content
                 ]
     in

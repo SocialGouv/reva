@@ -2,6 +2,8 @@ module View exposing (AlertType(..), alert, article, backLink, errors, image, in
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p, span)
 import Accessibility.Aria as Aria
+import BetaGouv.DSFR.Button as Button
+import BetaGouv.DSFR.Icons.System as Icons
 import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -137,13 +139,13 @@ noNavLayout content =
         ]
 
 
-article : String -> Html.Attribute Never -> String -> List (Accessibility.Html msg) -> Html msg
-article dataTestValue backLinkRoute backLinkLabel content =
+article : String -> String -> String -> List (Accessibility.Html msg) -> Html msg
+article dataTestValue url backLinkLabel content =
     div
         [ class "bg-white pt-0 sm:pl-4 lg:px-8 sm:pt-6"
         , dataTest dataTestValue
         ]
-        [ backLink backLinkRoute backLinkLabel
+        [ backLink url backLinkLabel
         , Accessibility.article [ class "mt-6" ] content
         ]
 
@@ -177,14 +179,13 @@ popupErrors messages =
                 ]
 
 
-backLink : Html.Attribute Never -> String -> Accessibility.Html msg
-backLink linkAttribute label =
-    a
-        [ linkAttribute
-        , class "fr-link fr-fi-arrow-left-line fr-link--icon-left"
-        , class "my-4 text-lg"
-        ]
-        [ text label ]
+backLink : String -> String -> Accessibility.Html msg
+backLink url label =
+    Button.new { onClick = Nothing, label = label }
+        |> Button.linkButton url
+        |> Button.leftIcon Icons.arrowGoBackFill
+        |> Button.tertiary
+        |> Button.view
 
 
 infoBlock : String -> List (Html msg) -> Html msg

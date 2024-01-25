@@ -14,11 +14,12 @@ type alias Tab =
 
 
 view tabs content =
-    div [ class "fr-tabs" ]
+    div [ class "fr-tabs mb-8" ]
         [ viewTabs tabs
         , div
             [ class "fr-tabs__panel fr-tabs__panel--selected"
-            , class "mt-[-1px] border border-[#d5d5d5]"
+            , class "mt-[-1px] pb-0"
+            , class "border border-[#d5d5d5]"
             ]
             content
         ]

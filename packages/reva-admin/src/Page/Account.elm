@@ -164,8 +164,8 @@ viewContent : Context -> Model -> Html Msg
 viewContent context model =
     View.article
         "account"
-        (Route.href context.baseUrl (Route.Accounts Route.emptyAccountFilters))
-        "Toutes les comptes"
+        (Route.toString context.baseUrl (Route.Accounts Route.emptyAccountFilters))
+        "Tous les comptes"
         [ div
             [ dataTest "directory-item"
             , class "flex flex-wrap"
