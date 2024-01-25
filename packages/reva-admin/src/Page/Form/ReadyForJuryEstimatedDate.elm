@@ -5,6 +5,7 @@ import Data.Form exposing (FormData)
 import Data.Form.ReadyForJuryEstimatedDate
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
+import View.Date
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
@@ -14,19 +15,20 @@ form _ ( candidacy, _ ) =
             Data.Form.ReadyForJuryEstimatedDate.keys
     in
     { elements =
-        if candidacy.readyForJuryEstimatedAt /= Nothing then
-            [ ( ""
-              , Form.Text "Date prévisionnelle à laquelle le candidat sera potentiellement prêt pour son passage devant le jury." Nothing
-              )
-            , ( keys.estimatedDate, Form.ReadOnlyElement <| Form.Date "Date prévisionnelle" )
-            ]
+        case candidacy.readyForJuryEstimatedAt of
+            Just date ->
+                [ ( ""
+                  , Form.Text "Date prévisionnelle à laquelle le candidat sera potentiellement prêt pour son passage devant le jury." Nothing
+                  )
+                , ( keys.estimatedDate, Form.Info "Date prévisionnelle" (View.Date.toFullFormat date) )
+                ]
 
-        else
-            [ ( ""
-              , Form.Text "Afin de faciliter la tenue du jury pour le candidat, merci de renseigner la date prévisionnelle à laquelle le candidat sera potentiellement prêt pour son passage devant le jury." Nothing
-              )
-            , ( keys.estimatedDate, Form.Date "Date prévisionnelle" )
-            ]
+            Nothing ->
+                [ ( ""
+                  , Form.Text "Afin de faciliter la tenue du jury pour le candidat, merci de renseigner la date prévisionnelle à laquelle le candidat sera potentiellement prêt pour son passage devant le jury." Nothing
+                  )
+                , ( keys.estimatedDate, Form.Date "Date prévisionnelle" )
+                ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"
     , title = "Date de disponibilité estimée"
