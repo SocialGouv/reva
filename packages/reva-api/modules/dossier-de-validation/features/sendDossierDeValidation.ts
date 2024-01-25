@@ -7,9 +7,11 @@ import { FileService, UploadedFile } from "../../shared/file";
 export const sendDossierDeValidation = async ({
   candidacyId,
   dossierDeValidationFile,
+  dossierDeValidationOtherFiles,
 }: {
   candidacyId: string;
   dossierDeValidationFile: UploadedFile;
+  dossierDeValidationOtherFiles: UploadedFile[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -29,14 +31,33 @@ export const sendDossierDeValidation = async ({
     throw new Error("La candidature a été supprimée");
   }
 
-  const fileUuid = uuidV4();
-  await FileService.getInstance().uploadFile(
-    {
-      fileKeyPath: `${candidacyId}/${fileUuid}`,
-      fileType: dossierDeValidationFile.mimetype,
-    },
-    dossierDeValidationFile.data
-  );
+  const dossierDeValidationFileId = uuidV4();
+  await uploadFile({
+    candidacyId,
+    fileUuid: dossierDeValidationFileId,
+    file: dossierDeValidationFile,
+  });
+
+  const dossierDeValidationOtherFilesWithIds: {
+    file: UploadedFile;
+    id: string;
+  }[] = dossierDeValidationOtherFiles.map((f) => ({ id: uuidV4(), file: f }));
+
+  for (const d of dossierDeValidationOtherFilesWithIds) {
+    await uploadFile({
+      candidacyId,
+      fileUuid: d.id,
+      file: d.file,
+    });
+  }
+
+  await prismaClient.file.createMany({
+    data: dossierDeValidationOtherFilesWithIds.map((d) => ({
+      id: d.id,
+      mimeType: d.file.mimetype,
+      name: d.file.filename,
+    })),
+  });
 
   const dossierDeValidation = await prismaClient.dossierDeValidation.create({
     data: {
@@ -46,7 +67,14 @@ export const sendDossierDeValidation = async ({
         create: {
           name: dossierDeValidationFile.filename,
           mimeType: dossierDeValidationFile.mimetype,
-          id: fileUuid,
+          id: dossierDeValidationFileId,
+        },
+      },
+      dossierDeValidationOtherFiles: {
+        createMany: {
+          data: dossierDeValidationOtherFilesWithIds.map((fileWithId) => ({
+            fileId: fileWithId.id,
+          })),
         },
       },
     },
@@ -59,3 +87,20 @@ export const sendDossierDeValidation = async ({
 
   return dossierDeValidation;
 };
+
+const uploadFile = ({
+  candidacyId,
+  fileUuid,
+  file,
+}: {
+  candidacyId: string;
+  fileUuid: string;
+  file: UploadedFile;
+}) =>
+  FileService.getInstance().uploadFile(
+    {
+      fileKeyPath: `${candidacyId}/${fileUuid}`,
+      fileType: file.mimetype,
+    },
+    file.data
+  );

@@ -11,6 +11,7 @@ import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 interface UploadDossierDeValidationBody {
   candidacyId: string;
   dossierDeValidationFile: UploadedFile[];
+  dossierDeValidationOtherFiles: UploadedFile[];
 }
 
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
@@ -92,6 +93,10 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         properties: {
           candidacyId: { type: "string" },
           dossierDeValidationFile: { type: "array", items: { type: "object" } },
+          dossierDeValidationOtherFiles: {
+            type: "array",
+            items: { type: "object" },
+          },
         },
         required: ["candidacyId"],
       },
@@ -111,27 +116,39 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
       const dossierDeValidationFile = request.body.dossierDeValidationFile[0];
 
-      if (!hasValidMimeType(dossierDeValidationFile, ["application/pdf"])) {
-        return reply
-          .status(400)
-          .send(
-            `Le type de fichier du "dossier de validation" n'est pas pris en charge. Veuillez soumettre un document PDF.`
-          );
+      const dossierDeValidationOtherFiles =
+        request.body.dossierDeValidationOtherFiles || [];
+
+      for (const otherFile of [
+        dossierDeValidationFile,
+        ...dossierDeValidationOtherFiles,
+      ]) {
+        if (!hasValidMimeType(otherFile, ["application/pdf"])) {
+          return reply
+            .status(400)
+            .send(
+              `Le type de fichier du fichier "${otherFile.filename}" n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            );
+        }
+
+        if (otherFile.data?.byteLength > maxUploadFileSizeInBytes) {
+          return reply
+            .status(400)
+            .send(
+              `La taille du fichier "${
+                otherFile.filename
+              }" dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
+                maxUploadFileSizeInBytes / 1024 / 1024
+              )} Mo.`
+            );
+        }
       }
 
-      if (dossierDeValidationFile.data?.byteLength > maxUploadFileSizeInBytes) {
-        return reply
-          .status(400)
-          .send(
-            `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-              maxUploadFileSizeInBytes / 1024 / 1024
-            )} Mo.`
-          );
-      }
       try {
         await sendDossierDeValidation({
           candidacyId: request.body.candidacyId,
           dossierDeValidationFile,
+          dossierDeValidationOtherFiles,
         });
       } catch (e) {
         logger.error(e);
