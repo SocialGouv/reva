@@ -23,7 +23,7 @@
     "test:ci": "start-server-and-test start-server http://localhost:3002 cypress:ci"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "^0.66.6",
+    "@codegouvfr/react-dsfr": "^1.9.6",
     "@headlessui/react": "^1.7.14",
     "@hookform/resolvers": "^2.9.11",
     "@next/font": "13.2.4",
@@ -61,6 +61,6 @@
     "postcss": "^8.4.21",
     "rimraf": "^4.1.2",
     "start-server-and-test": "^2.0.1",
-    "tailwindcss": "^3.2.6"
+    "tailwindcss": "^3.4.3"
   }
 }

@@ -93,7 +93,7 @@ export const Header = (props: { className?: string }) => {
         imgUrl: "/fvae_logo.svg",
         orientation: "horizontal",
       }}
-      serviceTitle="Le service public de la Validation des Acquis de l'Expérience"
+      serviceTitle="Le service public de la VAE"
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={[
         {

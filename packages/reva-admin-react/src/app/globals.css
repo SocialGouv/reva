@@ -69,4 +69,13 @@
             }
         }
     }
+
+    dl, dt, dd {
+        --xl-block: 0;
+        --ul-start: 0;
+        --li-bottom: 0;
+    }
+
 }
+
+
