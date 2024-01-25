@@ -251,20 +251,27 @@ viewForm referential status errors formData form saveButton submitButton =
 
         formFieldset content =
             Html.form
-                [ class "w-full my-4"
+                [ class "w-full mb-4"
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [] content ]
 
         containsInfoElement =
             List.length currentForm.elements == 1 && List.Extra.find (\( value, _ ) -> value == "info") currentForm.elements /= Nothing
+
+        formTitle =
+            if currentForm.title == "" then
+                text ""
+
+            else
+                h1 [ class "text-dsfrBlack-500 text-4xl mb-1" ] [ text currentForm.title ]
     in
     case status of
         Editable ->
             formFieldset <|
                 legend
                     [ class "mb-4" ]
-                    [ h1 [ class "text-dsfrBlack-500 text-4xl mb-1" ] [ text currentForm.title ]
+                    [ formTitle
                     , if List.isEmpty currentForm.elements || containsInfoElement then
                         text ""
 
@@ -285,7 +292,7 @@ viewForm referential status errors formData form saveButton submitButton =
             div
                 [ class "mb-24" ]
             <|
-                h1 [] [ text currentForm.title ]
+                formTitle
                     :: viewFieldsets viewReadOnlyElement formData currentForm.elements
 
 
@@ -309,10 +316,17 @@ viewEditableElement formData ( elementId, element ) =
 
         textareaView : String -> Maybe String -> Bool -> Html (Msg referential)
         textareaView label placeholderValue isRequired =
-            viewInput elementId (if isRequired then label else (label |> optional)) dataOrDefault
+            viewInput elementId
+                (if isRequired then
+                    label
+
+                 else
+                    label |> optional
+                )
+                dataOrDefault
                 |> Input.textArea (Just 6)
                 |> Input.withHint [ text "Texte de description libre" ]
-                |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class ""), required isRequired]
+                |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class ""), required isRequired ]
                 |> Input.view
     in
     case element of
@@ -455,7 +469,7 @@ viewEditableElement formData ( elementId, element ) =
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        viewFieldsetElement [ textareaView label Nothing False]
+                        viewFieldsetElement [ textareaView label Nothing False ]
 
                     else
                         text ""

@@ -83,6 +83,7 @@ import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Candidate
 import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
+import View.Tabs
 
 
 type Msg
@@ -166,12 +167,33 @@ view context model =
                 "Revenir à la candidature"
                 c
 
+        viewFormWithTabs name title tabs =
+            viewArticle name
+                [ h1 [ class "text-dsfrBlack-500 text-4xl mb-8" ] [ text title ]
+                , View.Tabs.view tabs
+                    [ Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
+                        |> Html.map GotFormMsg
+                    ]
+                ]
+
         viewForm name =
             viewArticle
                 name
                 [ Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
+
+        readyForJuryEstimatedDate candidacyId isActive =
+            { label = "Date prévisionnelle"
+            , href = Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId ReadyForJuryEstimatedDate)
+            , isActive = isActive
+            }
+
+        dossierValidationTab candidacyId isActive =
+            { label = "Dépôt du dossier"
+            , href = Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId DossierDeValidation)
+            , isActive = isActive
+            }
 
         content =
             case model.tab.value of
@@ -230,7 +252,16 @@ view context model =
                     viewForm "admissibility"
 
                 ReadyForJuryEstimatedDate ->
-                    viewForm "readyForJuryEstimatedDate"
+                    case model.selected of
+                        Success candidacy ->
+                            viewFormWithTabs "readyForJuryEstimatedDate"
+                                "Dossier de validation"
+                                [ readyForJuryEstimatedDate candidacy.id True
+                                , dossierValidationTab candidacy.id False
+                                ]
+
+                        _ ->
+                            div [ class "h-[800px]" ] []
 
                 DossierDeValidation ->
                     case model.selected of
@@ -241,10 +272,14 @@ view context model =
                                         viewDossierDeValidationSent context candidacy dossierDeValidation
 
                                 Nothing ->
-                                    viewForm "dossierDeValidation"
+                                    viewFormWithTabs "readyForJuryEstimatedDate"
+                                        "Dossier de validation"
+                                        [ readyForJuryEstimatedDate candidacy.id False
+                                        , dossierValidationTab candidacy.id True
+                                        ]
 
                         _ ->
-                            viewForm "dossierDeValidation"
+                            div [ class "h-[800px]" ] []
 
                 ExamInfo ->
                     viewForm "examInfo"

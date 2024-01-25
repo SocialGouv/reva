@@ -31,5 +31,5 @@ form _ ( candidacy, _ ) =
                 ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"
-    , title = "Date de disponibilité estimée"
+    , title = ""
     }
