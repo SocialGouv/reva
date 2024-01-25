@@ -8,4 +8,5 @@ type alias DossierDeValidation =
     { id : Data.Scalar.Id
     , dossierDeValidationSentAt : Data.Scalar.Timestamp
     , dossierDeValidationFile : File
+    , dossierDeValidationOtherFiles : List File
     }

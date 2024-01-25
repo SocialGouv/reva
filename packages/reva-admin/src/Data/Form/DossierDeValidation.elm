@@ -7,7 +7,16 @@ import Data.Referential exposing (Referential)
 
 
 keys =
-    { dossierDeValidationFile = "dossierDeValidationFile", dossierDeValidationFileCheck = "dossierDeValidationFile", otherFilesCheck = "otherFilesCheck" }
+    { dossierDeValidationFile = "dossierDeValidationFile"
+    , dossierDeValidationFileCheck = "dossierDeValidationFile"
+    , otherFilesCheck = "otherFilesCheck"
+    , dossierDeValidationOtherFiles = "dossierDeValidationOtherFiles"
+    , dossierDeValidationOtherFiles1 = "dossierDeValidationOtherFiles1"
+    , dossierDeValidationOtherFiles2 = "dossierDeValidationOtherFiles2"
+    , dossierDeValidationOtherFiles3 = "dossierDeValidationOtherFiles3"
+    , dossierDeValidationOtherFiles4 = "dossierDeValidationOtherFiles4"
+    , dossierDeValidationOtherFiles5 = "dossierDeValidationOtherFiles5"
+    }
 
 
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()

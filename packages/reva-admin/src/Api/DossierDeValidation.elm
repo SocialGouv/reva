@@ -6,7 +6,7 @@ import Admin.Scalar exposing (Uuid(..))
 import Api.File as File
 import Data.DossierDeValidation
 import File
-import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, hardcoded, with)
 
 
 selection : SelectionSet Data.DossierDeValidation.DossierDeValidation Admin.Object.DossierDeValidation
@@ -15,3 +15,4 @@ selection =
         |> with Admin.Object.DossierDeValidation.id
         |> with Admin.Object.DossierDeValidation.dossierDeValidationSentAt
         |> with (Admin.Object.DossierDeValidation.dossierDeValidationFile File.selection)
+        |> hardcoded []

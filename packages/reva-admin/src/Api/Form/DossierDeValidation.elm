@@ -28,6 +28,15 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Data.Form.getFiles keys.dossierDeValidationFile formData
                 |> List.map (\( _, file ) -> ( keys.dossierDeValidationFile, file ))
 
+        dossierDeValidationOtherFiles =
+            List.range 1 5
+                |> List.concatMap
+                    (\n ->
+                        Data.Form.getFiles (keys.dossierDeValidationOtherFiles ++ String.fromInt n) formData
+                            |> List.map (\( _, file ) -> ( keys.dossierDeValidationOtherFiles, file ))
+                    )
+                |> List.filter (\_ -> True)
+
         withFiles files body =
             files
                 |> List.map (\( name, file ) -> Http.filePart name file)
@@ -47,12 +56,8 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
                 , timeout = Nothing
                 , tracker = Nothing
                 }
-
-        error msg =
-            Task.succeed (RemoteData.Failure [ msg ])
-                |> Task.perform toMsg
     in
-    post (List.concat [ dossierDeValidationFiles ])
+    post (List.concat [ dossierDeValidationFiles, dossierDeValidationOtherFiles ])
 
 
 mayExpectError : (Result (List String) () -> msg) -> Http.Expect msg
