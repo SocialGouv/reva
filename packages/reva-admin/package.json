@@ -21,7 +21,7 @@
   "devDependencies": {
     "@dillonkearns/elm-graphql": "^4.3.1",
     "concurrently": "^7.4.0",
-    "cypress": "^13.3.0",
+    "cypress": "^13.6.3",
     "elm": "^0.19.1-6",
     "node-elm-compiler": "^5.0.6",
     "prettier": "^3.0.3",
@@ -35,6 +35,6 @@
     "crisp-sdk-web": "^1.0.5",
     "crypto-js": "^4.2.0",
     "keycloak-js": "^18.0.1",
-    "start-server-and-test": "^2.0.1"
+    "start-server-and-test": "^2.0.3"
   }
 }
