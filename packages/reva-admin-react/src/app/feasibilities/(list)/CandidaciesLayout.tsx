@@ -86,113 +86,80 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const dossierDeValidationCountByCategory =
     getDossierDeValidationCountByCategoryResponse?.dossierDeValidation_dossierDeValidationCountByCategory;
 
+  const feasibilityItems = [
+    menuItem({
+      text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
+      path: "/feasibilities",
+      category: "ALL",
+      defaultMenuItem: true,
+    }),
+    menuItem({
+      text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,
+      path: "/feasibilities",
+      category: "PENDING",
+    }),
+    menuItem({
+      text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE})`,
+      path: "/feasibilities",
+      category: "ADMISSIBLE",
+    }),
+    menuItem({
+      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED})`,
+      path: "/feasibilities",
+      category: "REJECTED",
+    }),
+    menuItem({
+      text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
+      path: "/feasibilities",
+      category: "INCOMPLETE",
+    }),
+    menuItem({
+      text: `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
+      path: "/feasibilities",
+      category: "ARCHIVED",
+    }),
+    menuItem({
+      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
+      path: "/feasibilities",
+      category: "DROPPED_OUT",
+    }),
+  ];
+
+  const dossierDeValidationItems = [
+    menuItem({
+      text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL})`,
+      path: "/feasibilities/dossier-de-validation",
+      category: "ALL",
+      defaultMenuItem: true,
+    }),
+    menuItem({
+      text: `Dossiers en attente de validation (${dossierDeValidationCountByCategory?.PENDING})`,
+      path: "/feasibilities/dossier-de-validation",
+      category: "PENDING",
+    }),
+    menuItem({
+      text: `Dossiers incomplets (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
+      path: "/feasibilities/dossier-de-validation",
+      category: "INCOMPLETE",
+    }),
+  ];
+
   const menuItems = isFeatureActive("DOSSIER_DE_VALIDATION")
     ? [
         {
-          items: [
-            menuItem({
-              text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
-              path: "/feasibilities",
-              category: "ALL",
-              defaultMenuItem: true,
-            }),
-            menuItem({
-              text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,
-              path: "/feasibilities",
-              category: "PENDING",
-            }),
-            menuItem({
-              text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE})`,
-              path: "/feasibilities",
-              category: "ADMISSIBLE",
-            }),
-            menuItem({
-              text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED})`,
-              path: "/feasibilities",
-              category: "REJECTED",
-            }),
-            menuItem({
-              text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
-              path: "/feasibilities",
-              category: "INCOMPLETE",
-            }),
-            menuItem({
-              text: `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
-              path: "/feasibilities",
-              category: "ARCHIVED",
-            }),
-            menuItem({
-              text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
-              path: "/feasibilities",
-              category: "DROPPED_OUT",
-            }),
-          ],
+          items: feasibilityItems,
           text: "Dossiers de faisabilité",
           expandedByDefault: !!currentPathname.match(/feasibilities$/),
         },
         {
-          items: [
-            menuItem({
-              text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL})`,
-              path: "/feasibilities/dossier-de-validation",
-              category: "ALL",
-              defaultMenuItem: true,
-            }),
-            menuItem({
-              text: `Dossiers en attente de validation (${dossierDeValidationCountByCategory?.PENDING})`,
-              path: "/feasibilities/dossier-de-validation",
-              category: "PENDING",
-            }),
-            menuItem({
-              text: `Dossiers incomplets (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
-              path: "/feasibilities/dossier-de-validation",
-              category: "INCOMPLETE",
-            }),
-          ],
+          items: dossierDeValidationItems,
           text: "Dossiers de validation",
           expandedByDefault: currentPathname.startsWith(
             "/feasibilities/dossier-de-validation",
           ),
         },
       ]
-    : [
-        menuItem({
-          text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
-          path: "/feasibilities",
-          category: "ALL",
-          defaultMenuItem: true,
-        }),
-        menuItem({
-          text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,
-          path: "/feasibilities",
-          category: "PENDING",
-        }),
-        menuItem({
-          text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE})`,
-          path: "/feasibilities",
-          category: "ADMISSIBLE",
-        }),
-        menuItem({
-          text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED})`,
-          path: "/feasibilities",
-          category: "REJECTED",
-        }),
-        menuItem({
-          text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
-          path: "/feasibilities",
-          category: "INCOMPLETE",
-        }),
-        menuItem({
-          text: `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
-          path: "/feasibilities",
-          category: "ARCHIVED",
-        }),
-        menuItem({
-          text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
-          path: "/feasibilities",
-          category: "DROPPED_OUT",
-        }),
-      ];
+    : feasibilityItems;
 
   return (
     getFeasibilityCountByCategoryStatus === "success" && (
