@@ -71,6 +71,8 @@ const getReferentialQuery = graphql(`
       rows {
         id
         label
+        status
+        codeRncp
       }
     }
     getRegions {
@@ -167,13 +169,17 @@ export const useCertificationAuthorityPageLogic = () => {
         };
       });
 
-      const certificationItems: TreeSelectItem[] = certifications.map((c) => ({
-        id: c.id,
-        label: c.label,
-        selected: !!(certificationAuthority?.certifications).find?.(
-          (cac) => cac.id === c.id,
-        ),
-      }));
+      const certificationItems: TreeSelectItem[] = certifications
+        .filter((c) => c.status === "AVAILABLE" || c.status === "INACTIVE")
+        .map((c) => ({
+          id: c.id,
+          label: `${c.codeRncp} - ${c.label}${
+            c.status === "INACTIVE" ? " (certification inactive)" : ""
+          }`,
+          selected: !!(certificationAuthority?.certifications).find?.(
+            (cac) => cac.id === c.id,
+          ),
+        }));
       reset({
         certifications: certificationItems,
         regions: regionItems,
