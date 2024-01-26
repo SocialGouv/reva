@@ -9,8 +9,8 @@ import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveD
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 
 interface UploadDossierDeValidationBody {
-  candidacyId: string;
-  dossierDeValidationFile: UploadedFile[];
+  candidacyId: { value: string };
+  dossierDeValidationFile: UploadedFile;
 }
 
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
@@ -19,7 +19,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
   const maxUploadFileSizeInBytes = 15728640;
 
   server.register(fastifyMultipart, {
-    addToBody: true,
+    attachFieldsToBody: true,
   });
 
   server.get<{ Params: { candidacyId: string; fileId: string } }>(
@@ -80,7 +80,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
         reply.status(400).send("Fichier non trouvé.");
       },
-    }
+    },
   );
 
   server.post<{
@@ -90,8 +90,15 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
       body: {
         type: "object",
         properties: {
-          candidacyId: { type: "string" },
-          dossierDeValidationFile: { type: "array", items: { type: "object" } },
+          candidacyId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          dossierDeValidationFile: { type: "object" },
         },
         required: ["candidacyId"],
       },
@@ -99,7 +106,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
     handler: async (request, reply) => {
       const authorized = await canUserManageCandidacy({
         hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId,
+        candidacyId: request.body.candidacyId.value,
         keycloakId: request.auth?.userInfo?.sub,
       });
 
@@ -109,28 +116,28 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         });
       }
 
-      const dossierDeValidationFile = request.body.dossierDeValidationFile[0];
+      const dossierDeValidationFile = request.body.dossierDeValidationFile;
 
       if (!hasValidMimeType(dossierDeValidationFile, ["application/pdf"])) {
         return reply
           .status(400)
           .send(
-            `Le type de fichier du "dossier de validation" n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            `Le type de fichier du "dossier de validation" n'est pas pris en charge. Veuillez soumettre un document PDF.`,
           );
       }
 
-      if (dossierDeValidationFile.data?.byteLength > maxUploadFileSizeInBytes) {
+      if (dossierDeValidationFile._buf?.byteLength > maxUploadFileSizeInBytes) {
         return reply
           .status(400)
           .send(
             `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-              maxUploadFileSizeInBytes / 1024 / 1024
-            )} Mo.`
+              maxUploadFileSizeInBytes / 1024 / 1024,
+            )} Mo.`,
           );
       }
       try {
         await sendDossierDeValidation({
-          candidacyId: request.body.candidacyId,
+          candidacyId: request.body.candidacyId.value,
           dossierDeValidationFile,
         });
       } catch (e) {
@@ -144,7 +151,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
   const hasValidMimeType = (
     file: UploadedFile,
-    validMimeTypes: MimeType[]
+    validMimeTypes: MimeType[],
   ): boolean => {
     return validMimeTypes.includes(file.mimetype as MimeType);
   };

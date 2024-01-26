@@ -44,7 +44,7 @@ export class FeasibilityFile {
 
     await FileService.getInstance().uploadFile(
       { ...this.file, fileType: this.fileToUpload.mimetype },
-      this.fileToUpload.data
+      this.fileToUpload._buf,
     );
 
     const exists = await FileService.getInstance().exists(this.file);
@@ -74,7 +74,7 @@ export class FeasibilityFile {
 }
 
 export async function uploadFeasibilityFiles(
-  files: FeasibilityFile[]
+  files: FeasibilityFile[],
 ): Promise<boolean> {
   try {
     for (const file of files) {

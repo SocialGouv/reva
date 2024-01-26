@@ -76,7 +76,7 @@ export const sendNewFeasibilitySubmittedEmail = async ({
         `,
       labelCTA: "Accéder au dossier",
       url: feasibilityUrl,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -130,7 +130,7 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
       ${commentInfo}
     `,
       hideFranceVaeLogo: true,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -148,7 +148,7 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
   }
 
   const attachment = infoFile
-    ? [{ name: infoFile.filename, content: infoFile.data.toString("base64") }]
+    ? [{ name: infoFile.filename, content: infoFile._buf.toString("base64") }]
     : undefined;
 
   return sendGenericEmail({
@@ -187,7 +187,7 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
         ${commentInfo}
       `,
       hideFranceVaeLogo: true,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -204,7 +204,7 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     logger.info("=========================");
   }
   const attachment = infoFile
-    ? [{ name: infoFile.filename, content: infoFile.data.toString("base64") }]
+    ? [{ name: infoFile.filename, content: infoFile._buf.toString("base64") }]
     : undefined;
 
   return sendGenericEmail({
@@ -229,7 +229,7 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
         `,
       labelCTA: "Accéder à la notification de recevabilité",
       url: feasibilityUrl,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -276,7 +276,7 @@ export const sendFeasibilityIncompleteMailToAAP = async ({
         `,
       labelCTA: "Accéder au dossier",
       url: feasibilityUrl,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {

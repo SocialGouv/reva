@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import path from "path";
 
-import cron from "cron";
+import { CronJob } from "cron";
 import dotenv from "dotenv";
 
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
@@ -13,7 +15,7 @@ import { prismaClient } from "../prisma/client";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
-const fundingRequestUnifvae = new cron.CronJob({
+const fundingRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
   onTick: () =>
     runBatchIfActive({
@@ -24,7 +26,7 @@ const fundingRequestUnifvae = new cron.CronJob({
   timeZone: "Europe/Paris",
 });
 
-const paymentRequestProofUpload = new cron.CronJob({
+const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
   onTick: () =>
     runBatchIfActive({
@@ -35,7 +37,7 @@ const paymentRequestProofUpload = new cron.CronJob({
   timeZone: "Europe/Paris",
 });
 
-const paymentRequest = new cron.CronJob({
+const paymentRequest = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_CRONTIME || "*/5 * * * *",
   onTick: () =>
     runBatchIfActive({
@@ -46,7 +48,7 @@ const paymentRequest = new cron.CronJob({
   timeZone: "Europe/Paris",
 });
 
-const paymentRequestUnifvae = new cron.CronJob({
+const paymentRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
   onTick: () =>
     runBatchIfActive({
@@ -57,7 +59,7 @@ const paymentRequestUnifvae = new cron.CronJob({
   timeZone: "Europe/Paris",
 });
 
-const aapListUnifvae = new cron.CronJob({
+const aapListUnifvae = CronJob.from({
   cronTime: process.env.BATCH_AAP_LIST_UNIFVAE_CRONTIME || "*/5 * * * *",
   onTick: () =>
     runBatchIfActive({

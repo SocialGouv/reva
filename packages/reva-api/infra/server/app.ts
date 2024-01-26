@@ -3,6 +3,7 @@ import path from "path";
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
+
 import fastify, {
   FastifyInstance,
   FastifyPluginAsync,
@@ -27,7 +28,7 @@ type BuilAppOptions = FastifyServerOptions & {
 };
 
 export const buildApp = async (
-  opts: BuilAppOptions = {}
+  opts: BuilAppOptions = {},
 ): Promise<FastifyInstance> => {
   const app = await fastify(opts);
 
@@ -39,7 +40,7 @@ export const buildApp = async (
     app.register(fastifyStatic, {
       root: APP_FOLDER,
       prefix: APP_ROUTE_PATH,
-      decorateReply: process.env.FRAMER_WEBSITE_URL,
+      // decorateReply: false,
     });
 
     app.register(fastifyStatic, {
@@ -51,12 +52,8 @@ export const buildApp = async (
     // Deal with not found
     app.setNotFoundHandler((req, res) => {
       if (req.url.startsWith(APP_ROUTE_PATH)) {
-        // eslint-disable-next-line
-        //@ts-ignore
         res.sendFile("index.html", APP_FOLDER);
       } else if (req.url.startsWith(ADMIN_ROUTE_PATH)) {
-        // eslint-disable-next-line
-        //@ts-ignore
         res.sendFile("index.html", ADMIN_FOLDER);
       }
     });
@@ -86,24 +83,24 @@ export const buildApp = async (
     app.register(keycloakPlugin, {
       config: {
         clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-admin",
-        bearerOnly: true,
-        serverUrl:
+        "bearer-only": true,
+        "auth-server-url":
           process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
-        realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
-      },
+        // realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
+      } as any,
     });
   }
 
   app.register(keycloakPlugin, {
     config: {
       clientId: process.env.KEYCLOAK_APP_REVA_APP || "reva-app",
-      bearerOnly: true,
-      serverUrl:
+      "bearer-only": true,
+      "auth-server-url":
         process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
       realm: process.env.KEYCLOAK_APP_REALM || "reva-app",
-      realmPublicKey: process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || "",
-    },
+      // realmPublicKey: process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || "",
+    } as any,
   });
 
   app.register(keycloakAdminPlugin);

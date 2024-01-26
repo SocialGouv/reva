@@ -28,14 +28,14 @@ interface AddPaymentProofDeps {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;
   addFileToUploadSpooler: (
-    data: Omit<FileUploadSpooler, "id" | "createdAt">
+    data: Omit<FileUploadSpooler, "id" | "createdAt">,
   ) => Promise<Either<string, string>>;
 }
 
 interface AddPaymentProofParams {
   candidacyId: string;
-  invoice?: UploadedFile[];
-  appointment?: UploadedFile[];
+  invoice?: UploadedFile;
+  appointment?: UploadedFile;
 }
 
 export const addPaymentProof =
@@ -46,16 +46,16 @@ export const addPaymentProof =
       getFundingRequestFromCandidacyId,
       addFileToUploadSpooler,
     }: AddPaymentProofDeps,
-    { candidacyId, appointment, invoice }: AddPaymentProofParams
+    { candidacyId, appointment, invoice }: AddPaymentProofParams,
   ): Promise<Either<FunctionalError, any>> => {
     if (!invoice && !appointment) {
       return Promise.resolve(
         Left(
           new FunctionalError(
             FunctionalCodeError.UPLOAD_PAYMENT_PROOF_NO_ATTACHEMENT,
-            "No document to upload"
-          )
-        )
+            "No document to upload",
+          ),
+        ),
       );
     }
 
@@ -90,13 +90,13 @@ export const addPaymentProof =
     });
 
     const addFileToSpoolerEitherAsync = (
-      data: FileUploadSpoolerEntry
+      data: FileUploadSpoolerEntry,
     ): EitherAsync<string, Maybe<string>> => {
       return EitherAsync.fromPromise(async () => {
         if (data.fileContent) {
           if (data.fileContent.byteLength > fileMaxSize) {
             return Left(
-              "Le fichier envoyé dépasse la taille maximale acceptée"
+              "Le fichier envoyé dépasse la taille maximale acceptée",
             );
           }
           const spoolerIdEither = await addFileToUploadSpooler({
@@ -114,42 +114,44 @@ export const addPaymentProof =
       });
     };
 
-    const addInvoiceToSpooler = (fileContent?: UploadedFile[]) => {
-      const { filename, mimetype } = fileContent?.[0] as UploadedFile;
+    const addInvoiceToSpooler = (fileContent: UploadedFile) => {
+      const { filename, mimetype } = fileContent;
       return addFileToSpoolerEitherAsync({
         destinationFileName: `facture_${fundingRequestNumAction}.${getFilenameExtension(
-          filename
+          filename,
         )}`,
         destinationPath: "import",
         description: `Facture pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
-        fileContent: fileContent?.[0].data,
+        fileContent: fileContent._buf,
       });
     };
 
-    const addAppointmentToSpooler = (fileContent?: UploadedFile[]) => {
-      const { filename, mimetype } = fileContent?.[0] as UploadedFile;
+    const addAppointmentToSpooler = (fileContent: UploadedFile) => {
+      const { filename, mimetype } = fileContent;
       return addFileToSpoolerEitherAsync({
         destinationFileName: `presence_${fundingRequestNumAction}.${getFilenameExtension(
-          filename
+          filename,
         )}`,
         destinationPath: "import",
         description: `Feuille de présence pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
-        fileContent: fileContent?.[0].data,
+        fileContent: fileContent._buf,
       });
     };
 
     return getPaymentRequestIdEitherAsync
       .chain(() => getNumActionEitherAsync)
       .chain(() =>
-        invoice ? addInvoiceToSpooler(invoice) : Promise.resolve(Right(Nothing))
+        invoice
+          ? addInvoiceToSpooler(invoice)
+          : Promise.resolve(Right(Nothing)),
       )
       .chain(() =>
         appointment
           ? addAppointmentToSpooler(appointment)
-          : Promise.resolve(Right(Nothing))
+          : Promise.resolve(Right(Nothing)),
       )
       .mapLeft(
-        (msg) => new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, msg)
+        (msg) => new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, msg),
       )
       .run();
   };

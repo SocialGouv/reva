@@ -1,9 +1,9 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { prismaClient } from "../../../../prisma/client";
 
 export const createBatchFromFundingRequestUnifvae = async (
-  fundingRequestId: string
+  fundingRequestId: string,
 ) => {
   const fundingRequest =
     await prismaClient.fundingRequestUnifvae.findUniqueOrThrow({
@@ -28,10 +28,10 @@ export const createBatchFromFundingRequestUnifvae = async (
     });
 
   const formationObligatoire = fundingRequest.mandatoryTrainings.map(
-    (t) => t.training.label
+    (t) => t.training.label,
   );
   const savoirsDeBase = fundingRequest.basicSkills.map(
-    (bs) => bs.basicSkill.label
+    (bs) => bs.basicSkill.label,
   );
 
   const formationComplementaire = [
@@ -55,7 +55,7 @@ export const createBatchFromFundingRequestUnifvae = async (
 
   const formationComplementaireHeures = formationComplementaire.reduce(
     (heures, fc) => heures.plus(fc.count),
-    new Decimal(0)
+    new Decimal(0),
   );
   const formationComplementaireCoutHoraireMoyen =
     formationComplementaireHeures.isZero()
@@ -63,7 +63,7 @@ export const createBatchFromFundingRequestUnifvae = async (
       : formationComplementaire
           .reduce(
             (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
-            new Decimal(0)
+            new Decimal(0),
           )
           .dividedBy(formationComplementaireHeures);
 
@@ -105,7 +105,7 @@ export const createBatchFromFundingRequestUnifvae = async (
 };
 
 const getActeFormatifComplémentaire_FormationObligatoireId = (
-  mandatoryTrainingLabel: string
+  mandatoryTrainingLabel: string,
 ) => {
   switch (mandatoryTrainingLabel) {
     case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)":
@@ -124,13 +124,13 @@ const getActeFormatifComplémentaire_FormationObligatoireId = (
       return "6";
     default:
       throw new Error(
-        `Unknown mandatory training label: ${mandatoryTrainingLabel}`
+        `Unknown mandatory training label: ${mandatoryTrainingLabel}`,
       );
   }
 };
 
 const getActeFormatifComplémentaire_SavoirsDeBaseId = (
-  basicSkillLabel: string
+  basicSkillLabel: string,
 ) => {
   switch (basicSkillLabel) {
     case "Usage et communication numérique":

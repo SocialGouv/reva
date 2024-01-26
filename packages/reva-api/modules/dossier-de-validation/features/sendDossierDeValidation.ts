@@ -35,7 +35,7 @@ export const sendDossierDeValidation = async ({
       fileKeyPath: `${candidacyId}/${fileUuid}`,
       fileType: dossierDeValidationFile.mimetype,
     },
-    dossierDeValidationFile.data
+    dossierDeValidationFile._buf,
   );
 
   const dossierDeValidation = await prismaClient.dossierDeValidation.create({

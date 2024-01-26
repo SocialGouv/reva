@@ -18,7 +18,7 @@
 // le champ Accompagnement Collectif est limité à 10 heures maximum
 // le champ Complément formatif est limité à 35 heures maximum
 
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export const valideForfaitHeures = ({
   individualHourCount,
@@ -44,7 +44,7 @@ export const valideForfaitHeures = ({
   const maxIndividualHours = new Decimal(isCertificationPartial ? 15 : 30);
   const maxCollectiveHours = new Decimal(isCertificationPartial ? 10 : 20);
   const maxComplementaryTrainingHours = new Decimal(
-    isCertificationPartial ? 35 : 70
+    isCertificationPartial ? 35 : 70,
   );
 
   individualHourCount = individualHourCount ?? new Decimal(0);

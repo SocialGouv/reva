@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { fundingRequestFullCertOkHours } from "../../../../test/fixtures/funding-request";
 import { validateAccompagnement } from "./accompagnement";

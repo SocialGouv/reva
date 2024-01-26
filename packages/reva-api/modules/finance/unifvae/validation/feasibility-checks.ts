@@ -5,7 +5,7 @@
 // - Si la recevabilité n'est pas prononcée, impossible de créer une demande de prise en charge.
 // - Si la recevabilité est négative, seul le forfait peut être pris en charge.
 
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { prismaClient } from "../../../../prisma/client";
 
@@ -18,12 +18,12 @@ const hourFields = [
   "otherTrainingHourCount",
 ] as const;
 
-type HourFields = { [Key in typeof hourFields[number]]: Decimal };
+type HourFields = { [Key in (typeof hourFields)[number]]: Decimal };
 
 export const validateFeasibilityChecks = async (
   input: {
     candidacyId: string;
-  } & HourFields
+  } & HourFields,
 ): Promise<BusinessRulesValidationError[]> => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: input.candidacyId },
@@ -66,7 +66,7 @@ export const validateFeasibilityChecks = async (
         .map((fieldName) => ({
           fieldName,
           message: `Impossible de prendre en charge "${fieldName}" sur un dossier non recevable.`,
-        }))
+        })),
     );
   }
 

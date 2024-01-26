@@ -4,7 +4,7 @@ export interface FileInterface {
 }
 
 export interface UploadedFile {
-  data: Buffer;
+  _buf: Buffer;
   filename: string;
   mimetype: string;
 }

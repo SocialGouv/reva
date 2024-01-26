@@ -9,9 +9,9 @@ import { getPaymentRequestByCandidacyId } from "./database/paymentRequest";
 import { addPaymentProof } from "./features/addPaymentProof";
 
 interface PaymentRequestProofBody {
-  candidacyId: string;
-  invoice?: UploadedFile[];
-  appointment?: UploadedFile[];
+  candidacyId: { value: string };
+  invoice?: UploadedFile;
+  appointment?: UploadedFile;
 }
 
 const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
@@ -23,7 +23,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
   const validMimeTypeList: string[] = validMimeTypes.split(",");
 
   server.register(fastifyMultipart, {
-    addToBody: true,
+    attachFieldsToBody: true,
   });
 
   server.post<{
@@ -33,9 +33,16 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
       body: {
         type: "object",
         properties: {
-          candidacyId: { type: "string" },
-          invoice: { type: "array", items: { type: "object" } },
-          appointment: { type: "array", items: { type: "object" } },
+          candidacyId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          invoice: { type: "object" },
+          appointment: { type: "object" },
         },
         required: ["candidacyId"],
       },
@@ -43,7 +50,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
     handler: async (request, reply) => {
       const auhtorization = await canManageCandidacy({
         hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId,
+        candidacyId: request.body.candidacyId.value,
         keycloakId: request.auth?.userInfo?.sub,
       });
       if (!auhtorization) {
@@ -59,7 +66,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
         return reply
           .status(400)
           .send(
-            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
           );
       }
 
@@ -70,10 +77,10 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
           getFundingRequestFromCandidacyId: getFundingRequest,
         },
         {
-          candidacyId: request.body.candidacyId,
+          candidacyId: request.body.candidacyId.value,
           appointment: request.body.appointment,
           invoice: request.body.invoice,
-        }
+        },
       );
 
       if (result.isLeft()) {
@@ -86,11 +93,11 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
     },
   });
 
-  const hasValidMimeType = (file?: UploadedFile[]): boolean => {
+  const hasValidMimeType = (file?: UploadedFile): boolean => {
     if (!file) {
       return true;
     }
-    return validMimeTypeList.includes(file[0].mimetype);
+    return validMimeTypeList.includes(file.mimetype);
   };
 };
 
