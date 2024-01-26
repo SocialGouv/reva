@@ -311,13 +311,16 @@ function getDefaultItemsCertifications(
     id: string;
     label: string;
     status: CertificationStatus;
+    codeRncp: string;
   }[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = certifications
-    .filter((c) => c.status === "AVAILABLE")
+    .filter((c) => c.status === "AVAILABLE" || c.status === "INACTIVE")
     .map((certification) => ({
       id: certification.id,
-      label: certification.label,
+      label: `${certification.codeRncp} - ${certification.label}${
+        certification.status === "INACTIVE" ? " (certification inactive)" : ""
+      }`,
       selected: false,
     }));
 

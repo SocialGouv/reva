@@ -28,6 +28,7 @@ const getAccountForConnectionUser = graphql(`
         certifications {
           id
           label
+          codeRncp
           status
         }
         certificationAuthorityLocalAccounts {
