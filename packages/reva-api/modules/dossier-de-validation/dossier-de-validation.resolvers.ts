@@ -1,7 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { dossierDeValidationResolversSecurityMap } from "./dossier-de-validation.security";
-import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
 import { getFileNameAndUrl } from "./features/getfileNameAndUrl";
