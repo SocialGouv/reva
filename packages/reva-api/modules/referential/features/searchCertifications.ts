@@ -2,7 +2,7 @@ import { deburr } from "lodash";
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
-import { Certification } from "../referential.types";
+import { Certification, CertificationStatus } from "../referential.types";
 
 export const searchCertifications = async ({
   offset,
@@ -10,12 +10,14 @@ export const searchCertifications = async ({
   departmentId,
   organismId,
   searchText,
+  status,
 }: {
   offset?: number;
   limit?: number;
   departmentId?: string;
   organismId?: string;
   searchText?: string;
+  status?: CertificationStatus;
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
   const realOffset = offset || 0;
@@ -34,6 +36,7 @@ export const searchCertifications = async ({
   const departmentOrOrganismQuery = `
       from certification c, ${certificationView} available_certification
       where c.id=available_certification.certification_id
+      ${status ? " and c.status='" + status + "'" : ""}
       ${
         departmentId
           ? `and available_certification.department_id=uuid('${departmentId}')`
@@ -41,21 +44,22 @@ export const searchCertifications = async ({
       }
       ${
         organismId
-          ? `and available_certification.organism_id=uuid('${organismId}')`
+          ? ` and available_certification.organism_id=uuid('${organismId}')`
           : ""
       }
       ${
         searchTextInTsQueryFormat
-          ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
+          ? ` and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
           : ""
       }`;
 
   const allCertificationsQuery = `
       from certification c
-      where c.status='AVAILABLE'
+      where 1=1 
+      ${status ? " and c.status='" + status + "'" : ""}
       ${
         searchTextInTsQueryFormat
-          ? `and searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
+          ? ` and searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
           : ""
       }`;
 
