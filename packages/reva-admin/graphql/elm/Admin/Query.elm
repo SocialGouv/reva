@@ -6,6 +6,7 @@ module Admin.Query exposing (..)
 
 import Admin.Enum.AccountGroup
 import Admin.Enum.CandidacyStatusFilter
+import Admin.Enum.CertificationStatus
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
@@ -409,6 +410,7 @@ type alias GetCertificationsOptionalArguments =
     , departmentId : OptionalArgument Data.Scalar.Uuid
     , organismId : OptionalArgument Data.Scalar.Uuid
     , searchText : OptionalArgument String
+    , status : OptionalArgument Admin.Enum.CertificationStatus.CertificationStatus
     }
 
 
@@ -419,10 +421,10 @@ getCertifications :
 getCertifications fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, departmentId = Absent, organismId = Absent, searchText = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, departmentId = Absent, organismId = Absent, searchText = Absent, status = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "departmentId" filledInOptionals____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.optional "organismId" filledInOptionals____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "departmentId" filledInOptionals____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.optional "organismId" filledInOptionals____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.optional "searchText" filledInOptionals____.searchText Encode.string, Argument.optional "status" filledInOptionals____.status (Encode.enum Admin.Enum.CertificationStatus.toString) ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "getCertifications" optionalArgs____ object____ Basics.identity

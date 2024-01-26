@@ -39,6 +39,7 @@ export const referentialResolvers = {
         departmentId: payload.departmentId,
         organismId: payload.organismId,
         searchText: payload.searchText,
+        status: payload.status,
       }),
     getCertification: (
       _: unknown,

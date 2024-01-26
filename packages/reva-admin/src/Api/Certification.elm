@@ -1,5 +1,6 @@
 module Api.Certification exposing (getCertifications, selection, summarySelection)
 
+import Admin.Enum.CertificationStatus
 import Admin.Object
 import Admin.Object.Certification
 import Admin.Object.CertificationPage
@@ -31,6 +32,7 @@ getCertifications endpointGraphql token page organismId toMsg searchText =
                 , offset = Present ((page - 1) * 10)
                 , searchText = OptionalArgument.fromMaybe searchText
                 , organismId = OptionalArgument.fromMaybe (Maybe.map Uuid organismId)
+                , status = Present Admin.Enum.CertificationStatus.Available
             }
         )
         pageSelection

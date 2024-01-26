@@ -99,6 +99,7 @@ type Query {
     departmentId: UUID
     organismId: UUID
     searchText: String
+    status: CertificationStatus
   ): CertificationPage!
   getCertification(certificationId: ID!): Certification!
   getRegions: [Region!]!

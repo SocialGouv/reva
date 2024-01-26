@@ -12,6 +12,7 @@ const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
       limit: $limit
       departmentId: $departementId
       searchText: $searchText
+      status: AVAILABLE
     ) {
       rows {
         id
