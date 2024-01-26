@@ -117,6 +117,14 @@ type DossierDeValidation
     = DossierDeValidation
 
 
+type DossierDeValidationCountByCategory
+    = DossierDeValidationCountByCategory
+
+
+type DossierDeValidationPage
+    = DossierDeValidationPage
+
+
 type DropOutReason
     = DropOutReason
 

@@ -6,6 +6,7 @@ module Admin.Query exposing (..)
 
 import Admin.Enum.AccountGroup
 import Admin.Enum.CandidacyStatusFilter
+import Admin.Enum.DossierDeValidationCategoryFilter
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
@@ -274,6 +275,50 @@ dossierDeValidation_getDossierDeValidationById :
     -> SelectionSet (Maybe decodesTo) RootQuery
 dossierDeValidation_getDossierDeValidationById requiredArgs____ object____ =
     Object.selectionForCompositeField "dossierDeValidation_getDossierDeValidationById" [ Argument.required "dossierDeValidationId" requiredArgs____.dossierDeValidationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias DossierDeValidationGetDossiersDeValidationOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , categoryFilter : OptionalArgument Admin.Enum.DossierDeValidationCategoryFilter.DossierDeValidationCategoryFilter
+    , searchFilter : OptionalArgument String
+    }
+
+
+dossierDeValidation_getDossiersDeValidation :
+    (DossierDeValidationGetDossiersDeValidationOptionalArguments -> DossierDeValidationGetDossiersDeValidationOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.DossierDeValidationPage
+    -> SelectionSet decodesTo RootQuery
+dossierDeValidation_getDossiersDeValidation fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, categoryFilter = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "categoryFilter" filledInOptionals____.categoryFilter (Encode.enum Admin.Enum.DossierDeValidationCategoryFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "dossierDeValidation_getDossiersDeValidation" optionalArgs____ object____ Basics.identity
+
+
+type alias DossierDeValidationDossierDeValidationCountByCategoryOptionalArguments =
+    { searchFilter : OptionalArgument String }
+
+
+dossierDeValidation_dossierDeValidationCountByCategory :
+    (DossierDeValidationDossierDeValidationCountByCategoryOptionalArguments -> DossierDeValidationDossierDeValidationCountByCategoryOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.DossierDeValidationCountByCategory
+    -> SelectionSet decodesTo RootQuery
+dossierDeValidation_dossierDeValidationCountByCategory fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "dossierDeValidation_dossierDeValidationCountByCategory" optionalArgs____ object____ Basics.identity
 
 
 type alias FeasibilityCountByCategoryOptionalArguments =
