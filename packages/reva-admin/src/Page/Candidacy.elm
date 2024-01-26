@@ -383,11 +383,13 @@ viewDossierDeValidationSent context candidacy dossierDeValidation =
     [ h1 [] [ text "Dossier de validation" ]
     , div
         [ class "flex flex-col gap-y-8 mb-6" ]
-        [ View.Candidate.viewWithCertification
+        ([ View.Candidate.viewWithCertification
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
-        , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
-        ]
+         , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
+         ]
+            ++ List.map (\d -> viewFileLink context d.name d.url) dossierDeValidation.dossierDeValidationOtherFiles
+        )
     ]
 
 
