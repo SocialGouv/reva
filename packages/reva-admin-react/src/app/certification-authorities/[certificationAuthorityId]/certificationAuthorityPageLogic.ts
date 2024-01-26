@@ -174,7 +174,7 @@ export const useCertificationAuthorityPageLogic = () => {
         .map((c) => ({
           id: c.id,
           label: `${c.codeRncp} - ${c.label}${
-            c.status === "INACTIVE" ? " (certification inactive)" : ""
+            c.status === "INACTIVE" ? " (ancienne version)" : ""
           }`,
           selected: !!(certificationAuthority?.certifications).find?.(
             (cac) => cac.id === c.id,

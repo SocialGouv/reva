@@ -319,7 +319,7 @@ function getDefaultItemsCertifications(
     .map((certification) => ({
       id: certification.id,
       label: `${certification.codeRncp} - ${certification.label}${
-        certification.status === "INACTIVE" ? " (certification inactive)" : ""
+        certification.status === "INACTIVE" ? " (ancienne version)" : ""
       }`,
       selected: false,
     }));
