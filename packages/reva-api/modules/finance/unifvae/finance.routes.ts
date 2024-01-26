@@ -6,14 +6,14 @@ import { UploadedFile } from "../../shared/file";
 import { addUploadedFileAndConfirmPayment } from "./features/finance.unifvae.features";
 
 interface PaymentRequestProofBody {
-  candidacyId: string;
-  invoice: UploadedFile[];
-  certificateOfAttendance: UploadedFile[];
+  candidacyId: { value: string };
+  invoice: UploadedFile;
+  certificateOfAttendance: UploadedFile;
 }
 
 const uploadRoute: FastifyPluginAsync = async (server) => {
   const maxUploadFileSizeInBytes: number = parseInt(
-    process.env.UPLOAD_MAX_FILE_SIZE ?? "4194304"
+    process.env.UPLOAD_MAX_FILE_SIZE ?? "4194304",
   );
   const validMimeTypes: string =
     process.env.UPLOAD_VALID_MIME_TYPES ??
@@ -21,7 +21,7 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
   const validMimeTypeList: string[] = validMimeTypes.split(",");
 
   server.register(fastifyMultipart, {
-    addToBody: true,
+    attachFieldsToBody: true,
   });
 
   server.post<{
@@ -31,18 +31,24 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
       body: {
         type: "object",
         properties: {
-          candidacyId: { type: "string" },
-          invoice: { type: "array", items: { type: "object" } },
-          appointment: { type: "array", items: { type: "object" } },
+          candidacyId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          invoice: { type: "object" },
+          appointment: { type: "object" },
         },
         required: ["candidacyId"],
       },
     },
     handler: async (request, reply) => {
-      const candidacyId = request.body.candidacyId;
-      const certificateOfAttendanceFile =
-        request.body.certificateOfAttendance?.[0];
-      const invoiceFile = request.body.invoice?.[0];
+      const candidacyId = request.body.candidacyId.value;
+      const certificateOfAttendanceFile = request.body.certificateOfAttendance;
+      const invoiceFile = request.body.invoice;
 
       const auhtorization = await canManageCandidacy({
         hasRole: request.auth.hasRole,
@@ -63,21 +69,21 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
         return reply
           .status(400)
           .send(
-            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
           );
       }
 
       if (
-        certificateOfAttendanceFile.data?.byteLength >
+        certificateOfAttendanceFile._buf?.byteLength >
           maxUploadFileSizeInBytes ||
-        invoiceFile.data?.byteLength > maxUploadFileSizeInBytes
+        invoiceFile._buf?.byteLength > maxUploadFileSizeInBytes
       ) {
         return reply
           .status(400)
           .send(
             `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-              maxUploadFileSizeInBytes / 1024 / 1024
-            )} Mo.`
+              maxUploadFileSizeInBytes / 1024 / 1024,
+            )} Mo.`,
           );
       }
 

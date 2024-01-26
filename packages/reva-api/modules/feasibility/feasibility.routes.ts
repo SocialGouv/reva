@@ -13,23 +13,23 @@ import {
 import { FeasibilityFile } from "./feasibility.file";
 
 interface UploadFeasibilityFileRequestBody {
-  candidacyId: string;
-  certificationAuthorityId: string;
-  feasibilityFile: UploadedFile[];
-  IDFile: UploadedFile[];
-  documentaryProofFile?: UploadedFile[];
-  certificateOfAttendanceFile?: UploadedFile[];
+  candidacyId: { value: string };
+  certificationAuthorityId: { value: string };
+  feasibilityFile: UploadedFile;
+  IDFile: UploadedFile;
+  documentaryProofFile?: UploadedFile;
+  certificateOfAttendanceFile?: UploadedFile;
 }
 
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
 
 export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
-  server
+  server,
 ) => {
   const maxUploadFileSizeInBytes = 15728640;
 
   server.register(fastifyMultipart, {
-    addToBody: true,
+    attachFieldsToBody: true,
   });
 
   server.get<{ Params: { candidacyId: string; fileId: string } }>(
@@ -91,7 +91,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
         reply.status(400).send("Fichier non trouvé.");
       },
-    }
+    },
   );
 
   server.post<{
@@ -101,22 +101,34 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       body: {
         type: "object",
         properties: {
-          candidacyId: { type: "string" },
-          feasibilityFile: { type: "array", items: { type: "object" } },
-          IDFile: { type: "array", items: { type: "object" } },
-          documentaryProofFile: { type: "array", items: { type: "object" } },
-          certificateOfAttendanceFile: {
-            type: "array",
-            items: { type: "object" },
+          candidacyId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
           },
+          certificationAuthorityId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          feasibilityFile: { type: "object" },
+          IDFile: { type: "object" },
+          documentaryProofFile: { type: "object" },
+          certificateOfAttendanceFile: { type: "object" },
         },
-        required: ["candidacyId"],
+        required: ["candidacyId", "certificationAuthorityId"],
       },
     },
     handler: async (request, reply) => {
       const authorized = await canUserManageCandidacy({
         hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId,
+        candidacyId: request.body.candidacyId.value,
         keycloakId: request.auth?.userInfo?.sub,
       });
 
@@ -126,17 +138,17 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         });
       }
 
-      const feasibilityFile = request.body.feasibilityFile[0];
-      const IDFile = request.body.IDFile[0];
-      const documentaryProofFile = request.body.documentaryProofFile?.[0];
+      const feasibilityFile = request.body.feasibilityFile;
+      const IDFile = request.body.IDFile;
+      const documentaryProofFile = request.body.documentaryProofFile;
       const certificateOfAttendanceFile =
-        request.body.certificateOfAttendanceFile?.[0];
+        request.body.certificateOfAttendanceFile;
 
       if (!hasValidMimeType(feasibilityFile, ["application/pdf"])) {
         return reply
           .status(400)
           .send(
-            `Le type de fichier du "dossier de faisabilité" n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            `Le type de fichier du "dossier de faisabilité" n'est pas pris en charge. Veuillez soumettre un document PDF.`,
           );
       }
 
@@ -151,7 +163,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         return reply
           .status(400)
           .send(
-            `Le type de fichier de la "pièce d’identité" n'est pas pris en charge. Veuillez soumettre un document PDF, JPG, JPEG, PNG.`
+            `Le type de fichier de la "pièce d’identité" n'est pas pris en charge. Veuillez soumettre un document PDF, JPG, JPEG, PNG.`,
           );
       }
 
@@ -164,30 +176,31 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         return reply
           .status(400)
           .send(
-            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
           );
       }
 
       if (
-        feasibilityFile.data?.byteLength > maxUploadFileSizeInBytes ||
-        IDFile.data?.byteLength > maxUploadFileSizeInBytes ||
-        (documentaryProofFile?.data?.byteLength ?? 0) >
+        feasibilityFile._buf?.byteLength > maxUploadFileSizeInBytes ||
+        IDFile._buf?.byteLength > maxUploadFileSizeInBytes ||
+        (documentaryProofFile?._buf?.byteLength ?? 0) >
           maxUploadFileSizeInBytes ||
-        (certificateOfAttendanceFile?.data?.byteLength ?? 0) >
+        (certificateOfAttendanceFile?._buf?.byteLength ?? 0) >
           maxUploadFileSizeInBytes
       ) {
         return reply
           .status(400)
           .send(
             `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-              maxUploadFileSizeInBytes / 1024 / 1024
-            )} Mo.`
+              maxUploadFileSizeInBytes / 1024 / 1024,
+            )} Mo.`,
           );
       }
+
       try {
         await createFeasibility({
-          candidacyId: request.body.candidacyId,
-          certificationAuthorityId: request.body.certificationAuthorityId,
+          candidacyId: request.body.candidacyId.value,
+          certificationAuthorityId: request.body.certificationAuthorityId.value,
           feasibilityFile,
           IDFile,
           documentaryProofFile,
@@ -205,9 +218,9 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
   server.post<{
     Params: { feasibilityId: string };
     Body: {
-      comment: string;
-      decision: string;
-      infoFile?: UploadedFile[];
+      comment: { value: string };
+      decision: { value: string };
+      infoFile?: UploadedFile;
     };
   }>("/feasibility/:feasibilityId/decision", {
     schema: {
@@ -221,41 +234,56 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       body: {
         type: "object",
         properties: {
-          decision: { type: "string" },
-          comment: { type: "string" },
-          infoFile: { type: "array", items: { type: "object" } },
+          decision: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          comment: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          infoFile: { type: "object" },
         },
+        required: ["decision"],
       },
     },
     handler: async (request, reply) => {
       const { feasibilityId } = request.params;
-      const infoFile = request?.body?.infoFile?.[0];
+      const infoFile = request?.body?.infoFile;
       if (infoFile) {
         if (!hasValidMimeType(infoFile, ["application/pdf"])) {
           return reply
             .status(400)
             .send(
-              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
             );
         }
 
-        if (infoFile.data?.byteLength > maxUploadFileSizeInBytes) {
+        if (infoFile._buf?.byteLength > maxUploadFileSizeInBytes) {
           return reply
             .status(400)
             .send(
               `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-                maxUploadFileSizeInBytes / 1024 / 1024
-              )} Mo.`
+                maxUploadFileSizeInBytes / 1024 / 1024,
+              )} Mo.`,
             );
         }
       }
 
       return handleFeasibilityDecision({
         feasibilityId,
-        decision: request.body.decision,
+        decision: request.body.decision.value,
         hasRole: request.auth.hasRole as (role: string) => boolean,
         keycloakId: request.auth?.userInfo?.sub,
-        comment: request.body.comment,
+        comment: request.body.comment?.value,
         infoFile,
       });
     },
@@ -263,7 +291,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
   const hasValidMimeType = (
     file: UploadedFile,
-    validMimeTypes: MimeType[]
+    validMimeTypes: MimeType[],
   ): boolean => {
     return validMimeTypes.includes(file.mimetype as MimeType);
   };

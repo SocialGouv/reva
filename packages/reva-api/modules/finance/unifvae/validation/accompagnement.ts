@@ -9,7 +9,7 @@
 //
 // Sachant que 0 n’est pas une valeur valable.
 
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export const validateAccompagnement = ({
   individualHourCount,

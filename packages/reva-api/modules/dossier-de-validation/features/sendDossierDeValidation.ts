@@ -36,7 +36,7 @@ export const sendDossierDeValidation = async ({
     candidacy.Feasibility[0]?.decision !== FeasibilityStatus.ADMISSIBLE
   ) {
     throw new Error(
-      "Le dossier de faisabilité n'est pas actif ou n'est pas recevable"
+      "Le dossier de faisabilité n'est pas actif ou n'est pas recevable",
     );
   }
 
@@ -114,5 +114,5 @@ const uploadFile = ({
       fileKeyPath: `${candidacyId}/${fileUuid}`,
       fileType: file.mimetype,
     },
-    file.data
+    file._buf,
   );

@@ -1,5 +1,5 @@
 import { Candidate } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 import { format } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
@@ -322,7 +322,7 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
         }.${getFilenameExtension(invoiceFile.filename)}`,
         destinationPath: "import",
         description: `Facture pour paymentRequestId ${paymentRequest.id} (${invoiceFile.filename} - ${invoiceFile.mimetype})`,
-        fileContent: invoiceFile.data,
+        fileContent: invoiceFile._buf,
       },
       {
         destinationFileName: `presence_${
@@ -330,7 +330,7 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
         }.${getFilenameExtension(certificateOfAttendanceFile.filename)}`,
         destinationPath: "import",
         description: `Feuille de présence pour paymentRequestId ${paymentRequest.id} (${certificateOfAttendanceFile.filename} - ${certificateOfAttendanceFile.mimetype})`,
-        fileContent: certificateOfAttendanceFile.data,
+        fileContent: certificateOfAttendanceFile._buf,
       },
     ],
   });

@@ -26,15 +26,6 @@ form formData ( candidacy, _ ) =
                     [ h2 [ class "text-xl" ] [ text "Avant de finaliser l' envoi :" ] ]
             )
 
-        filesChecklist =
-            [ ( keys.dossierDeValidationFileCheck
-              , "J’ai bien vérifié que le dossier de validation était complet et lisible."
-              )
-            , ( keys.otherFilesCheck
-              , "J’ai bien vérifié que tous les autres documents étaient lisibles."
-              )
-            ]
-
         isFileEmpty formFileIndex =
             List.isEmpty (Data.Form.getFiles (keys.dossierDeValidationOtherFiles ++ String.fromInt formFileIndex) formData)
 
@@ -54,6 +45,22 @@ form formData ( candidacy, _ ) =
 
         otherFilePickerElements =
             List.range 0 otherFilePickersCount |> List.map (\i -> ( keys.dossierDeValidationOtherFiles ++ String.fromInt (i + 1), Form.File "" "Format supporté : PDF uniquement avec un poids maximum de 10 Mo" ))
+
+        filesChecklist =
+            if otherFilePickersCount == 0 then
+                [ ( keys.dossierDeValidationFileCheck
+                  , "J’ai bien vérifié que le dossier de validation était complet et lisible."
+                  )
+                ]
+
+            else
+                [ ( keys.dossierDeValidationFileCheck
+                  , "J’ai bien vérifié que le dossier de validation était complet et lisible."
+                  )
+                , ( keys.otherFilesCheck
+                  , "J’ai bien vérifié que tous les autres documents étaient lisibles."
+                  )
+                ]
     in
     { elements =
         [ ( ""

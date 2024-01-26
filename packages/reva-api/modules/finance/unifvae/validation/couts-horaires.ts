@@ -8,7 +8,7 @@
 // Accompagnement collectif à maximum 35€ l’heure
 // Complément formatif à maximum 25€ l’heure
 
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export const validateCoutsHoraires = ({
   individualCost,

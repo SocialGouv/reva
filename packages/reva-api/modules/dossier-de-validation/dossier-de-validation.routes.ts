@@ -10,9 +10,9 @@ import { getDossierDeValidationOtherFiles } from "./features/getDossierDeValidat
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 
 interface UploadDossierDeValidationBody {
-  candidacyId: string;
-  dossierDeValidationFile: UploadedFile[];
-  dossierDeValidationOtherFiles: UploadedFile[];
+  candidacyId: { value: string };
+  dossierDeValidationFile: UploadedFile;
+  dossierDeValidationOtherFiles?: UploadedFile | UploadedFile[];
 }
 
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
@@ -21,7 +21,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
   const maxUploadFileSizeInBytes = 15728640;
 
   server.register(fastifyMultipart, {
-    addToBody: true,
+    attachFieldsToBody: true,
   });
 
   server.get<{ Params: { candidacyId: string; fileId: string } }>(
@@ -91,7 +91,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
         reply.status(400).send("Fichier non trouvé.");
       },
-    }
+    },
   );
 
   server.post<{
@@ -101,20 +101,32 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
       body: {
         type: "object",
         properties: {
-          candidacyId: { type: "string" },
-          dossierDeValidationFile: { type: "array", items: { type: "object" } },
+          candidacyId: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          dossierDeValidationFile: { type: "object" },
           dossierDeValidationOtherFiles: {
-            type: "array",
-            items: { type: "object" },
+            oneOf: [
+              { type: "object" },
+              {
+                type: "array",
+                items: { type: "object" },
+              },
+            ],
           },
         },
-        required: ["candidacyId"],
+        required: ["candidacyId", "dossierDeValidationFile"],
       },
     },
     handler: async (request, reply) => {
       const authorized = await canUserManageCandidacy({
         hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId,
+        candidacyId: request.body.candidacyId.value,
         keycloakId: request.auth?.userInfo?.sub,
       });
 
@@ -124,10 +136,18 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         });
       }
 
-      const dossierDeValidationFile = request.body.dossierDeValidationFile[0];
+      const dossierDeValidationFile = request.body.dossierDeValidationFile;
 
-      const dossierDeValidationOtherFiles =
-        request.body.dossierDeValidationOtherFiles || [];
+      let dossierDeValidationOtherFiles: UploadedFile[] = [];
+      if (Array.isArray(request.body.dossierDeValidationOtherFiles)) {
+        dossierDeValidationOtherFiles = [
+          ...request.body.dossierDeValidationOtherFiles,
+        ];
+      } else if (request.body.dossierDeValidationOtherFiles) {
+        dossierDeValidationOtherFiles = [
+          request.body.dossierDeValidationOtherFiles,
+        ];
+      }
 
       for (const otherFile of [
         dossierDeValidationFile,
@@ -137,26 +157,26 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           return reply
             .status(400)
             .send(
-              `Le type de fichier du fichier "${otherFile.filename}" n'est pas pris en charge. Veuillez soumettre un document PDF.`
+              `Le type de fichier du fichier "${otherFile.filename}" n'est pas pris en charge. Veuillez soumettre un document PDF.`,
             );
         }
 
-        if (otherFile.data?.byteLength > maxUploadFileSizeInBytes) {
+        if (otherFile._buf?.byteLength > maxUploadFileSizeInBytes) {
           return reply
             .status(400)
             .send(
               `La taille du fichier "${
                 otherFile.filename
               }" dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-                maxUploadFileSizeInBytes / 1024 / 1024
-              )} Mo.`
+                maxUploadFileSizeInBytes / 1024 / 1024,
+              )} Mo.`,
             );
         }
       }
 
       try {
         await sendDossierDeValidation({
-          candidacyId: request.body.candidacyId,
+          candidacyId: request.body.candidacyId.value,
           dossierDeValidationFile,
           dossierDeValidationOtherFiles,
         });
@@ -171,7 +191,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
   const hasValidMimeType = (
     file: UploadedFile,
-    validMimeTypes: MimeType[]
+    validMimeTypes: MimeType[],
   ): boolean => {
     return validMimeTypes.includes(file.mimetype as MimeType);
   };

@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { Candidacy } from "../../../candidacy/candidacy.types";
 import { FundingRequest, PaymentRequest } from "../finance.types";

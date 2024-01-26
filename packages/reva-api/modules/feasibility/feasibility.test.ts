@@ -218,7 +218,7 @@ test("should count all (1) available feasibility for certificator user even if o
   await createFeasibility(account75A_secondChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await injectGraphql({
@@ -266,7 +266,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   const feasibility = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await injectGraphql({
@@ -295,7 +295,7 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
   const feasiblity = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await injectGraphql({
@@ -319,7 +319,7 @@ test("should return all (1) available feasibility for certificateur user", async
   const feasibility = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await injectGraphql({
@@ -380,10 +380,11 @@ const postFeasibilityDecision = ({
   authorization: ReturnType<typeof authorizationHeaderForUser>;
 }) => {
   const fastify = (global as any).fastify as FastifyInstance;
+
   return fastify.inject({
     method: "POST",
     url: `/api/feasibility/${feasibilityId}/decision`,
-    payload: { decision },
+    payload: { decision: { value: decision } },
     headers: {
       authorization,
     },
@@ -394,7 +395,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
   const feasiblity = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await postFeasibilityDecision({
@@ -419,7 +420,7 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
   const feasiblity = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await postFeasibilityDecision({
@@ -437,7 +438,7 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
   const feasiblity = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await postFeasibilityDecision({
@@ -455,7 +456,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
   const feasiblity = await createFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await postFeasibilityDecision({
@@ -485,7 +486,7 @@ test("should not reject a feasibility since certificator 3 doesn't handle it", a
   const feasiblity = await createFeasibility(account75B);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
-    ileDeFranceCandidacyData
+    ileDeFranceCandidacyData,
   );
 
   const resp = await injectGraphql({

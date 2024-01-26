@@ -1,6 +1,6 @@
 // Make sure the numbers are realistic (positive, half-hours)
 
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const hourFields = [
   "basicSkillsHourCount",
@@ -20,8 +20,8 @@ const costFields = [
   "otherTrainingCost",
 ] as const;
 
-type HourFields = { [Key in typeof hourFields[number]]: Decimal };
-type CostFields = { [Key in typeof costFields[number]]: Decimal };
+type HourFields = { [Key in (typeof hourFields)[number]]: Decimal };
+type CostFields = { [Key in (typeof costFields)[number]]: Decimal };
 
 export const validHoursCountAndCosts = (input: CostFields & HourFields) =>
   ([] as BusinessRulesValidationError[])

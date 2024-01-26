@@ -26,9 +26,15 @@ validate ( _, _ ) formData =
             Helper.decode keys formData
 
         error =
-            Err [ "Veuillez vérifier les pièces jointes et cocher toutes les cases" ]
+            Err [ "Veuillez cocher toutes les cases" ]
+
+        isFileEmpty =
+            List.isEmpty (Data.Form.getFiles keys.dossierDeValidationOtherFiles1 formData)
     in
-    if decode.bool .dossierDeValidationFileCheck False && decode.bool .otherFilesCheck False then
+    if decode.bool .dossierDeValidationFileCheck False && isFileEmpty == True then
+        Ok ()
+
+    else if decode.bool .dossierDeValidationFileCheck False && decode.bool .otherFilesCheck False then
         Ok ()
 
     else

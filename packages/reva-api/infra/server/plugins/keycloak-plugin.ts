@@ -29,7 +29,7 @@ type KeycloakPluginOptions = {
 
 const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
   app,
-  opts
+  opts,
 ): Promise<void> => {
   const { config, ...prototypes } = opts;
 
@@ -61,11 +61,12 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
               string,
               KeycloakConnectUserInfo
             >(token);
+
             req.auth = {
               hasRole: (role: KeyCloakUserRole) => {
                 return (
                   userInfo?.realm_access?.roles as KeyCloakUserRole[]
-                ).includes(role);
+                )?.includes(role);
               },
               token,
               userInfo,

@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { validateComplementFormatif } from "./complement-formatif";
 
@@ -12,7 +12,7 @@ test("Should yield an error when sum > 70", () => {
   expect(errors.length).toBe(1);
   expect(errors[0].fieldName).toBe("GLOBAL");
   expect(errors[0].message).toContain(
-    "Les compléments formatifs ne peuvent excéder 70 heures"
+    "Les compléments formatifs ne peuvent excéder 70 heures",
   );
 });
 
