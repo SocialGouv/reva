@@ -6,6 +6,7 @@ import { FileService, UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
+import { getDossierDeValidationOtherFiles } from "./features/getDossierDeValidationOtherFiles";
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 
 interface UploadDossierDeValidationBody {
@@ -30,7 +31,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         params: {
           type: "object",
           properties: {
-            dossierDeValidationId: { type: "string" },
+            candidacyId: { type: "string" },
             fileId: { type: "string" },
           },
           required: ["candidacyId", "fileId"],
@@ -43,6 +44,12 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           await getActiveDossierDeValidationByCandidacyId({
             candidacyId,
           });
+
+        const dossierDeValidationOtherFiles = dossierDeValidation
+          ? await getDossierDeValidationOtherFiles({
+              dossierDeValidationId: dossierDeValidation.id,
+            })
+          : [];
 
         const authorized =
           canUserManageCandidacy ||
@@ -59,7 +66,10 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         }
 
         if (
-          ![dossierDeValidation?.dossierDeValidationFileId].includes(fileId)
+          ![
+            dossierDeValidation?.dossierDeValidationFileId,
+            ...dossierDeValidationOtherFiles.map((f) => f.id),
+          ].includes(fileId)
         ) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
