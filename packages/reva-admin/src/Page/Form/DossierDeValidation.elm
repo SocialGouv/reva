@@ -39,7 +39,7 @@ form formData ( candidacy, _ ) =
             List.isEmpty (Data.Form.getFiles (keys.dossierDeValidationOtherFiles ++ String.fromInt formFileIndex) formData)
 
         otherFilePickersCount =
-            List.range 1 5
+            List.range 1 4
                 |> List.foldl
                     (\formFileIndex acc ->
                         acc
