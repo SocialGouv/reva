@@ -8,7 +8,7 @@ module Page.Candidacy exposing
     , view
     )
 
-import Accessibility exposing (h1)
+import Accessibility exposing (h1, h4)
 import Admin.Enum.CandidacyStatusStep as Step
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
@@ -52,7 +52,7 @@ import Data.Form.ReadyForJuryEstimatedDate
 import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, p, text)
+import Html exposing (Html, div, h2, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form
@@ -81,6 +81,7 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Candidate
+import View.Date as Date
 import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
 import View.Tabs
@@ -383,9 +384,13 @@ viewDossierDeValidationSent context candidacy dossierDeValidation =
     [ h1 [] [ text "Dossier de validation" ]
     , div
         [ class "flex flex-col gap-y-8 mb-6" ]
-        ([ View.Candidate.viewWithCertification
-            (candidacy.certification |> Maybe.map .label)
-            candidacy.candidate
+        ([ View.alert View.Success
+            [ class "my-8" ]
+            "Dossier de validation envoyé"
+            [ p [] [ text "Le dossier de validation a été envoyé. Retrouvez ci-dessous les documents qui le composent." ]
+            ]
+         , p [] [ text ("dossier envoyé le : " ++ Date.toSmallFormat dossierDeValidation.dossierDeValidationSentAt) ]
+         , h4 [ class "text-[18px] mb-0" ] [ text "Contenu du dossier" ]
          , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
          ]
             ++ List.map (\d -> viewFileLink context d.name d.url) dossierDeValidation.dossierDeValidationOtherFiles
