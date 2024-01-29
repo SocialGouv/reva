@@ -170,8 +170,11 @@ activeView context candidacy =
             else
                 []
 
+        dossierDeValidationFeatureActive =
+            List.member "DOSSIER_DE_VALIDATION" context.activeFeatures
+
         dossierDeValidationMenuEntry =
-            if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
+            if dossierDeValidationFeatureActive then
                 [ { content =
                         expandedView
                             (getDefaultExpandedViewStatusFromCandidacyStatus
@@ -230,7 +233,12 @@ activeView context candidacy =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
                             candidacy
-                            [ DemandeFinancementEnvoye ]
+                            [ if dossierDeValidationFeatureActive then
+                                DossierDeValidationEnvoye
+
+                              else
+                                DemandeFinancementEnvoye
+                            ]
                         )
                         "Demande de paiement"
                 , navigation = paymentRequestLink baseUrl candidacy
