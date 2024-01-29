@@ -921,6 +921,7 @@ model CertificationAuthority {
   Account                               Account[]
   Feasibility                           Feasibility[]
   certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
+  DossierDeValidation                   DossierDeValidation[]
 
   @@map("certification_authority")
 }
@@ -1034,6 +1035,8 @@ model DossierDeValidation {
   id                            String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                     Candidacy                             @relation(fields: [candidacyId], references: [id])
   candidacyId                   String                                @map("candidacy_id") @db.Uuid
+  certificationAuthority        CertificationAuthority                @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId      String                                @map("certification_authority_id") @db.Uuid
   dossierDeValidationFile       File                                  @relation("dossier_de_validation_file", fields: [dossierDeValidationFileId], references: [id])
   dossierDeValidationFileId     String                                @unique @map("dossier_de_validation_file_id") @db.Uuid
   dossierDeValidationOtherFiles DossierDeValidationOtherFilesOnFile[]
