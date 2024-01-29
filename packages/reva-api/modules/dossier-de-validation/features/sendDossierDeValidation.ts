@@ -1,3 +1,4 @@
+import { FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
@@ -18,6 +19,7 @@ export const sendDossierDeValidation = async ({
     include: {
       candidacyDropOut: true,
       candidacyStatuses: { where: { isActive: true } },
+      Feasibility: { where: { isActive: true } },
     },
   });
   if (!candidacy) {
@@ -26,9 +28,16 @@ export const sendDossierDeValidation = async ({
   if (candidacy.candidacyDropOut) {
     throw new Error("La candidature a été abandonnée");
   }
-
   if (candidacy.candidacyStatuses?.[0]?.status === "ARCHIVE") {
     throw new Error("La candidature a été supprimée");
+  }
+  if (
+    !candidacy.Feasibility[0]?.isActive &&
+    candidacy.Feasibility[0]?.decision !== FeasibilityStatus.ADMISSIBLE
+  ) {
+    throw new Error(
+      "Le dossier de faisabilité n'est pas actif ou n'est pas recevable"
+    );
   }
 
   const dossierDeValidationFileId = uuidV4();
@@ -76,6 +85,9 @@ export const sendDossierDeValidation = async ({
             fileId: fileWithId.id,
           })),
         },
+      },
+      certificationAuthority: {
+        connect: { id: candidacy.Feasibility[0].certificationAuthorityId },
       },
     },
   });
