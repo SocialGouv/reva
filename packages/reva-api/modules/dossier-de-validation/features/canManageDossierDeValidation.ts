@@ -78,6 +78,8 @@ export const canManageDossierDeValidation = async ({
       return !!(await prismaClient.dossierDeValidation.findFirst({
         where: {
           id: dossierDeValidationId,
+          certificationAuthorityId:
+            certificationAuthorityLocalAccount.certificationAuthorityId,
           candidacy: {
             departmentId: { in: departmentIds },
             certificationsAndRegions: {
@@ -86,7 +88,6 @@ export const canManageDossierDeValidation = async ({
                 certificationId: { in: certificationIds },
               },
             },
-            Feasibility: { some: { isActive: true, certificationAuthorityId } },
           },
         },
       }));
