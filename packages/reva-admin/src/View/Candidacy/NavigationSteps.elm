@@ -215,17 +215,7 @@ activeView context candidacy =
               ]
             , admissibilityMenuEntry
             , feasibilityMenuEntry
-            , dossierDeValidationMenuEntry
             , [ { content =
-                    expandedView
-                        (getDefaultExpandedViewStatusFromCandidacyStatus
-                            candidacy
-                            [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
-                        )
-                        "Jury"
-                , navigation = examInfoLink
-                }
-              , { content =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
                             candidacy
@@ -234,7 +224,9 @@ activeView context candidacy =
                         "Demande de prise en charge"
                 , navigation = fundingRequestLink baseUrl candidacy
                 }
-              , { content =
+              ]
+            , dossierDeValidationMenuEntry
+            , [ { content =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
                             candidacy
@@ -242,6 +234,15 @@ activeView context candidacy =
                         )
                         "Demande de paiement"
                 , navigation = paymentRequestLink baseUrl candidacy
+                }
+              , { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
+                        )
+                        "Jury"
+                , navigation = examInfoLink
                 }
               ]
             ]

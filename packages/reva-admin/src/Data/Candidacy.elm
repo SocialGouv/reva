@@ -340,10 +340,10 @@ statusToProgressPosition status =
         DossierFaisabiliteNonRecevable ->
             7
 
-        DossierDeValidationEnvoye ->
+        DemandeFinancementEnvoye ->
             8
 
-        DemandeFinancementEnvoye ->
+        DossierDeValidationEnvoye ->
             9
 
         DemandePaiementEnvoyee ->
