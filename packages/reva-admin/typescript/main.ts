@@ -31,6 +31,7 @@ const app = Elm.Main.init({
     adminReactUrl:
       import.meta.env.VITE_ADMIN_REACT_URL || "http://localhost:3003/admin2",
   },
+  node: document.getElementById("myapp"),
 });
 
 // @ts-ignore
@@ -44,17 +45,4 @@ if (import.meta.env.VITE_HELP_BUBBLE_URL) {
   const helpBubble = document.createElement("script");
   helpBubble.setAttribute("src", import.meta.env.VITE_HELP_BUBBLE_URL);
   document.head.appendChild(helpBubble);
-}
-
-if (import.meta.env.VITE_PRODUKTLY_CLIENT_TOKEN) {
-  const produktlyScript = document.createElement("script");
-  produktlyScript.setAttribute(
-    "src",
-    "https://public.produktly.com/js/main.js",
-  );
-  produktlyScript.setAttribute("id", "produktlyScript");
-  produktlyScript.dataset.clientToken =
-    import.meta.env.VITE_PRODUKTLY_CLIENT_TOKEN;
-
-  window.setTimeout(() => document.head.appendChild(produktlyScript), 5000);
 }
