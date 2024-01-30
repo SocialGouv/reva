@@ -1,16 +1,16 @@
 "use client";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
-import { format } from "date-fns";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import Link from "next/link";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+import { format } from "date-fns";
+import Link from "next/link";
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 
 const DossierDeValidationPage = () => {
   return (
     <div className="flex flex-col">
       <Link
-        href="/candidacies/dossier-de-validation"
+        href="/candidacies/dossiers-de-validation"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
       >
         Tous les dossiers

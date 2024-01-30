@@ -85,7 +85,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const isChildComponent = !!currentPathname.match(
-    /\/(feasibilities|dossier-de-validation|jury)\/[A-Za-z0-9_-]+$/,
+    /\/(feasibilities|dossiers-de-validation|juries)\/[A-Za-z0-9_-]+$/,
   );
 
   if (isChildComponent) {
@@ -140,18 +140,18 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const dossierDeValidationItems = [
     menuItem({
       text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL})`,
-      path: "/candidacies/dossier-de-validation",
+      path: "/candidacies/dossiers-de-validation",
       category: "ALL",
       defaultMenuItem: true,
     }),
     menuItem({
       text: `Dossiers en attente de validation (${dossierDeValidationCountByCategory?.PENDING})`,
-      path: "/candidacies/dossier-de-validation",
+      path: "/candidacies/dossiers-de-validation",
       category: "PENDING",
     }),
     menuItem({
       text: `Dossiers incomplets (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
-      path: "/candidacies/dossier-de-validation",
+      path: "/candidacies/dossiers-de-validation",
       category: "INCOMPLETE",
     }),
   ];
@@ -159,7 +159,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const juryItems = [
     menuItem({
       text: "Jury",
-      path: "/candidacies/jury",
+      path: "/candidacies/juries",
       category: "ALL",
     }),
   ];
@@ -175,7 +175,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
           items: dossierDeValidationItems,
           text: "Dossiers de validation",
           expandedByDefault: currentPathname.startsWith(
-            "/candidacies/dossier-de-validation",
+            "/candidacies/dossiers-de-validation",
           ),
         },
         ...(isFeatureActive("JURY") ? juryItems : []),
