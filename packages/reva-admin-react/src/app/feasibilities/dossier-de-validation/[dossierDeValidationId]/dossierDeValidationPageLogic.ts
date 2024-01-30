@@ -18,6 +18,11 @@ const getDossierDeValidationQuery = graphql(`
         url
         name
       }
+      candidacy {
+        examInfo {
+          estimatedExamDate
+        }
+      }
     }
   }
 `);
@@ -39,7 +44,13 @@ export const useDossierDeValidationPageLogic = () => {
   const dossierDeValidation =
     getDossierDeValidationResponse?.dossierDeValidation_getDossierDeValidationById;
 
+  const estimatedExamDate =
+    getDossierDeValidationResponse
+      ?.dossierDeValidation_getDossierDeValidationById?.candidacy.examInfo
+      .estimatedExamDate;
+
   return {
     dossierDeValidation,
+    estimatedExamDate,
   };
 };
