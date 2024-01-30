@@ -180,7 +180,7 @@ changeRouteTo context route model =
                         Route.toString model.context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
 
                     else if Api.Token.isCertificationAuthority context.token then
-                        context.adminReactUrl ++ "/feasibilities"
+                        context.adminReactUrl ++ "/candidacies/feasibilities"
 
                     else
                         Route.toString model.context.baseUrl Route.NotFound

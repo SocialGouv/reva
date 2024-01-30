@@ -8,7 +8,7 @@ const PostLoginPage = () => {
   const router = useRouter();
 
   if (isCertificationAuthority) {
-    router.replace("/feasibilities");
+    router.replace("/candidacies/feasibilities");
   } else {
     router.replace(ADMIN_ELM_URL + "/candidacies");
   }

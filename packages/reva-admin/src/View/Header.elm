@@ -161,20 +161,20 @@ headerMenuModal context activeHeaderLink =
                 , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
                 , itemLink "Certificateurs" (adminReactUrl "/certification-authorities") True False
-                , itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities") True False
+                , itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False
                 ]
 
             else if Api.Token.isAdminCertificationAuthority context.token then
                 if isLocalAccountsActive then
-                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities") True False
+                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False
                     , itemLink "Gestion des comptes locaux" (adminReactUrl "/certification-authorities/local-accounts") True False
                     ]
 
                 else
-                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities") True False ]
+                    [ itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False ]
 
             else if Api.Token.isCertificationAuthority context.token then
-                [ itemLink "Dossiers de faisabilité" (adminReactUrl "/feasibilities") True False ]
+                [ itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False ]
 
             else if
                 (isAccountSettingsActive || isAgenciesActive)

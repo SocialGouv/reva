@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 
 import { ADMIN_ELM_URL } from "@/config/config";
 
-import { UserRole } from "../auth/types";
 import { useAuth } from "../auth/auth";
 import { useHasRoles } from "../auth/role";
+import { UserRole } from "../auth/types";
 
 interface Props {
   roles: UserRole[];
@@ -28,7 +28,7 @@ export const RolesGuard = (props: Props): JSX.Element => {
     if (isAdmin || isOrganism || isGestionnaireMaisonMereAAP) {
       redirect(ADMIN_ELM_URL + "/candidacies");
     } else if (isAdminCertificationAuthority || isCertificationAuthority) {
-      redirect("/feasibilities");
+      redirect("/candidacies/feasibilities");
     }
 
     return <div>Vous n'avez pas accès à cette fonctionnalité</div>;

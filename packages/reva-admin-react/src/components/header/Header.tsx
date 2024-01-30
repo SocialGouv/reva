@@ -18,6 +18,12 @@ export const Header = () => {
   const { isFeatureActive } = useFeatureflipping();
   const { authenticated, logout } = useKeycloakContext();
 
+  const candidaciesLabel = isFeatureActive("DOSSIER_DE_VALIDATION")
+    ? isAdmin
+      ? "Certificateurs/Candidatures"
+      : "Candidatures"
+    : "Dossiers de faisabilité";
+
   const navigation = authenticated
     ? [
         ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
@@ -96,7 +102,7 @@ export const Header = () => {
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
               {
-                text: isAdmin ? "Certificateur/Candidatures" : "Candidatures",
+                text: candidaciesLabel,
                 linkProps: {
                   href: "/candidacies/feasibilities",
                   target: "_self",
