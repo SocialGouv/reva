@@ -96,12 +96,12 @@ export const Header = () => {
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
               {
-                text: "Dossiers de faisabilité",
+                text: isAdmin ? "Certificateur/Candidatures" : "Candidatures",
                 linkProps: {
-                  href: "/feasibilities",
+                  href: "/candidacies/feasibilities",
                   target: "_self",
                 },
-                isActive: currentPathname.startsWith("/feasibilities"),
+                isActive: currentPathname.startsWith("/candidacies"),
               },
             ]
           : []),

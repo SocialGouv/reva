@@ -1,9 +1,5 @@
 "use client";
-import {
-  FeasibilityForm,
-  FeasibilityFormData,
-} from "@/app/feasibilities/[feasibilityId]/FeasibilityForm";
-import { useFeasibilityPageLogic } from "@/app/feasibilities/[feasibilityId]/feasibilityPageLogic";
+
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 import { errorToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
@@ -11,6 +7,8 @@ import { format } from "date-fns/format";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
+import { FeasibilityForm, FeasibilityFormData } from "./FeasibilityForm";
+import { useFeasibilityPageLogic } from "./feasibilityPageLogic";
 
 const FeasibilityPage = () => {
   const { feasibility, submitFeasibilityDecision } = useFeasibilityPageLogic();
@@ -23,7 +21,7 @@ const FeasibilityPage = () => {
       infoFile: data?.infoFile?.[0],
     });
     if (result.ok) {
-      router.push("/feasibilities");
+      router.push("/candidacies/feasibilities");
     } else {
       errorToast(result.statusText);
     }
@@ -43,7 +41,7 @@ const FeasibilityPage = () => {
   return (
     <div className="flex flex-col flex-1 mb-2">
       <Link
-        href="/feasibilities"
+        href="/candidacies/feasibilities"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
       >
         Tous les dossiers

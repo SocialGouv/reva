@@ -1,16 +1,16 @@
 "use client";
-import { useDossierDeValidationPageLogic } from "@/app/feasibilities/dossier-de-validation/[dossierDeValidationId]/dossierDeValidationPageLogic";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 import { format } from "date-fns";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import Link from "next/link";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 
 const DossierDeValidationPage = () => {
   return (
     <div className="flex flex-col">
       <Link
-        href="/feasibilities"
+        href="/candidacies/dossier-de-validation"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
       >
         Tous les dossiers

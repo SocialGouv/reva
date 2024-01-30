@@ -4,25 +4,25 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphql } from "@/graphql/generated";
 import {
-  FeasibilityCategoryFilter,
-  FeasibilityPage,
+  DossierDeValidationCategoryFilter,
+  DossierDeValidationPage,
 } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import SearchList from "./SearchList";
-import { useSearchFilterFeasibilitiesStore } from "./useSearchFilterFeasibilitiesStore";
+import SearchList from "../(components)/SearchList";
+import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
 
 const RECORDS_PER_PAGE = 10;
 
-const getFeasibilitiesQuery = graphql(`
-  query getFeasibilities(
+const getDossiersDeValidationQuery = graphql(`
+  query getDossiersDeValidation(
     $offset: Int
     $limit: Int
     $searchFilter: String
-    $categoryFilter: FeasibilityCategoryFilter
+    $categoryFilter: DossierDeValidationCategoryFilter
   ) {
-    feasibilities(
+    dossierDeValidation_getDossiersDeValidation(
       categoryFilter: $categoryFilter
       limit: $limit
       offset: $offset
@@ -30,12 +30,8 @@ const getFeasibilitiesQuery = graphql(`
     ) {
       rows {
         id
-        feasibilityFileSentAt
         candidacy {
-          department {
-            code
-            label
-          }
+          id
           certification {
             label
           }
@@ -43,7 +39,25 @@ const getFeasibilitiesQuery = graphql(`
             firstname
             lastname
           }
+          department {
+            label
+            code
+          }
         }
+        dossierDeValidationFile {
+          url
+          name
+        }
+        dossierDeValidationOtherFiles {
+          url
+          name
+        }
+        dossierDeValidationSentAt
+        decisionComment
+        decisionSentAt
+        isActive
+        createdAt
+        updatedAt
       }
       info {
         totalRows
@@ -54,7 +68,7 @@ const getFeasibilitiesQuery = graphql(`
   }
 `);
 
-const RejectedSubscriptionRequestsPage = () => {
+const DossiersDeValidationPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { searchFilter, setSearchFilter } = useSearchFilterFeasibilitiesStore();
   const params = useSearchParams();
@@ -70,47 +84,45 @@ const RejectedSubscriptionRequestsPage = () => {
     router.push(`${pathname}?CATEGORY=${category || "ALL"}`);
   };
 
-  const { data: getFeasibilitiesResponse, status: getFeasibilitiesStatus } =
-    useQuery({
-      queryKey: ["getFeasibilities", searchFilter, currentPage, category],
-      queryFn: () =>
-        graphqlClient.request(getFeasibilitiesQuery, {
-          offset: (currentPage - 1) * RECORDS_PER_PAGE,
-          limit: RECORDS_PER_PAGE,
-          searchFilter,
-          categoryFilter: (category === null || category === "ALL"
-            ? undefined
-            : category) as FeasibilityCategoryFilter,
-        }),
-    });
+  const {
+    data: getDossiersDeValidationResponse,
+    status: getDossierDeValidationsStatus,
+  } = useQuery({
+    queryKey: ["getDossiersDeValidation", searchFilter, currentPage, category],
+    queryFn: () =>
+      graphqlClient.request(getDossiersDeValidationQuery, {
+        offset: (currentPage - 1) * RECORDS_PER_PAGE,
+        limit: RECORDS_PER_PAGE,
+        searchFilter,
+        categoryFilter: (category === null || category === "ALL"
+          ? undefined
+          : category) as DossierDeValidationCategoryFilter,
+      }),
+  });
 
-  const feasibilityPage = getFeasibilitiesResponse?.feasibilities;
+  const dossierDeValidationPage =
+    getDossiersDeValidationResponse?.dossierDeValidation_getDossiersDeValidation;
 
   const categoryLabel = useMemo(() => {
     switch (category) {
       case "PENDING":
-        return "Dossiers en attente de recevabilité";
-      case "ADMISSIBLE":
-        return "Dossiers recevables";
-      case "REJECTED":
-        return "Dossiers non recevables";
+        return "Dossiers en attente de validation";
       case "INCOMPLETE":
         return "Dossiers incomplets";
       default:
-        return "Tous les dossiers de faisabilité";
+        return "Tous les dossiers de validation";
     }
   }, [category]);
   return (
-    feasibilityPage && (
+    dossierDeValidationPage && (
       <div className="flex flex-col">
         {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
         <SearchList
-          baseHref="/feasibilities"
           categoryLabel={categoryLabel}
           category={category as string}
           searchFilter={searchFilter}
           updateSearchFilter={updateSearchFilter}
-          searchResults={feasibilityPage as FeasibilityPage}
+          searchResults={dossierDeValidationPage as DossierDeValidationPage}
           currentPage={currentPage}
         />
       </div>
@@ -118,4 +130,4 @@ const RejectedSubscriptionRequestsPage = () => {
   );
 };
 
-export default RejectedSubscriptionRequestsPage;
+export default DossiersDeValidationPage;

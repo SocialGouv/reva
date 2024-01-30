@@ -6,7 +6,7 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
-import { useSearchFilterFeasibilitiesStore } from "./useSearchFilterFeasibilitiesStore";
+import { useSearchFilterFeasibilitiesStore } from "./(components)/useSearchFilterFeasibilitiesStore";
 export const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory($searchFilter: String) {
     feasibilityCountByCategory(searchFilter: $searchFilter) {
@@ -84,6 +84,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     text,
   });
 
+  const isChildComponent = !!currentPathname.match(
+    /\/(feasibilities|dossier-de-validation|jury)\/[A-Za-z0-9_-]+$/,
+  );
+
+  if (isChildComponent) {
+    return <>{children}</>;
+  }
+
   const feasibilityCountByCategory =
     getFeasibilityCountByCategoryResponse?.feasibilityCountByCategory;
 
@@ -93,38 +101,38 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const feasibilityItems = [
     menuItem({
       text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "ALL",
       defaultMenuItem: true,
     }),
     menuItem({
       text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "PENDING",
     }),
     menuItem({
       text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "ADMISSIBLE",
     }),
     menuItem({
       text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "REJECTED",
     }),
     menuItem({
       text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "INCOMPLETE",
     }),
     menuItem({
       text: `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "ARCHIVED",
     }),
     menuItem({
       text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
-      path: "/feasibilities",
+      path: "/candidacies/feasibilities",
       category: "DROPPED_OUT",
     }),
   ];
@@ -132,18 +140,18 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const dossierDeValidationItems = [
     menuItem({
       text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL})`,
-      path: "/feasibilities/dossier-de-validation",
+      path: "/candidacies/dossier-de-validation",
       category: "ALL",
       defaultMenuItem: true,
     }),
     menuItem({
       text: `Dossiers en attente de validation (${dossierDeValidationCountByCategory?.PENDING})`,
-      path: "/feasibilities/dossier-de-validation",
+      path: "/candidacies/dossier-de-validation",
       category: "PENDING",
     }),
     menuItem({
       text: `Dossiers incomplets (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
-      path: "/feasibilities/dossier-de-validation",
+      path: "/candidacies/dossier-de-validation",
       category: "INCOMPLETE",
     }),
   ];
@@ -151,7 +159,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const juryItems = [
     menuItem({
       text: "Jury",
-      path: "/feasibilities/jury",
+      path: "/candidacies/jury",
       category: "ALL",
     }),
   ];
@@ -167,7 +175,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
           items: dossierDeValidationItems,
           text: "Dossiers de validation",
           expandedByDefault: currentPathname.startsWith(
-            "/feasibilities/dossier-de-validation",
+            "/candidacies/dossier-de-validation",
           ),
         },
         ...(isFeatureActive("JURY") ? juryItems : []),

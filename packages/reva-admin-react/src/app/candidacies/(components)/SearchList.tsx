@@ -9,6 +9,7 @@ import {
 } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns/format";
+import { usePathname } from "next/navigation";
 
 interface SearchListProps {
   categoryLabel: string;
@@ -17,7 +18,6 @@ interface SearchListProps {
   updateSearchFilter: (searchFilter: string) => void;
   searchResults: DossierDeValidationPage | FeasibilityPage;
   currentPage: number;
-  baseHref: string;
 }
 
 const SearchList = ({
@@ -27,8 +27,8 @@ const SearchList = ({
   updateSearchFilter,
   searchResults,
   currentPage,
-  baseHref,
 }: SearchListProps) => {
+  const currentPathname = usePathname();
   if (!searchResults) return null;
   return (
     <>
@@ -65,7 +65,7 @@ const SearchList = ({
             </p>
             <Button
               className="ml-auto col-start-2"
-              linkProps={{ href: `${baseHref}/${r.id}` }}
+              linkProps={{ href: `${currentPathname}/${r.id}` }}
             >
               Accéder au dossier
             </Button>
@@ -77,7 +77,7 @@ const SearchList = ({
       <Pagination
         totalPages={searchResults.info.totalPages}
         currentPage={currentPage}
-        baseHref={baseHref}
+        baseHref={currentPathname}
         baseParams={{ CATEGORY: category || "ALL" }}
         className="mx-auto"
       />
