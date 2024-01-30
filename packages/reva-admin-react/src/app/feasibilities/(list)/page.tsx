@@ -1,17 +1,16 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
-import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
-import { Pagination } from "@/components/pagination/Pagination";
-import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { graphql } from "@/graphql/generated";
-import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
+import {
+  FeasibilityCategoryFilter,
+  FeasibilityPage,
+} from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns/format";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import SearchList from "./SearchList";
 import { useSearchFilterFeasibilitiesStore } from "./useSearchFilterFeasibilitiesStore";
 
 const RECORDS_PER_PAGE = 10;
@@ -105,54 +104,14 @@ const RejectedSubscriptionRequestsPage = () => {
     feasibilityPage && (
       <div className="flex flex-col">
         {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
-        {getFeasibilitiesStatus === "success" && (
-          <>
-            <h4 className="text-3xl font-bold mb-6">{categoryLabel}</h4>
-
-            <SearchFilterBar
-              className="mb-6"
-              searchFilter={searchFilter}
-              resultCount={feasibilityPage.info.totalRows}
-              onSearchFilterChange={updateSearchFilter}
-            />
-
-            <ul className="flex flex-col gap-5">
-              {feasibilityPage.rows.map((f) => (
-                <WhiteCard key={f.id} className="grid grid-cols-2 gap-2">
-                  <h3 className="text-xl font-semibold col-span-2">
-                    {f.candidacy.certification?.label}
-                  </h3>
-
-                  <p className="text-lg uppercase">
-                    {f.candidacy.candidate?.firstname}{" "}
-                    {f.candidacy.candidate?.lastname}
-                  </p>
-                  <p className="text-lg">
-                    {f.candidacy.department?.label} (
-                    {f.candidacy.department?.code})
-                  </p>
-                  <p className="text-lg col-span-2">
-                    Dossier envoyé le{" "}
-                    {format(f.feasibilityFileSentAt, "d MMM yyyy")}
-                  </p>
-                  <Button
-                    className="ml-auto col-start-2"
-                    linkProps={{ href: `/feasibilities/${f.id}` }}
-                  >
-                    Accéder au dossier
-                  </Button>
-                </WhiteCard>
-              ))}
-            </ul>
-          </>
-        )}
-        <br />
-        <Pagination
-          totalPages={feasibilityPage.info.totalPages}
+        <SearchList
+          baseHref="/feasibilities"
+          categoryLabel={categoryLabel}
+          category={category as string}
+          searchFilter={searchFilter}
+          updateSearchFilter={updateSearchFilter}
+          searchResults={feasibilityPage as FeasibilityPage}
           currentPage={currentPage}
-          baseHref={`/feasibilities`}
-          baseParams={{ CATEGORY: category || "ALL" }}
-          className="mx-auto"
         />
       </div>
     )

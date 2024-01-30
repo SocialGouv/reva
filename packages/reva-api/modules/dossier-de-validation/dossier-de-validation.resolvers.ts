@@ -2,9 +2,12 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { dossierDeValidationResolversSecurityMap } from "./dossier-de-validation.security";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
+import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
+import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
+import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 
 const unsafeResolvers = {
   DossierDeValidation: {
@@ -44,6 +47,33 @@ const unsafeResolvers = {
     ) =>
       getDossierDeValidationById({
         dossierDeValidationId: dossierDeValidationId,
+      }),
+    dossierDeValidation_getDossiersDeValidation: (
+      _: unknown,
+      args: {
+        offset?: number;
+        limit?: number;
+        category?: DossierDeValidationStatusFilter;
+        searchFilter?: string;
+      },
+      context: any
+    ) =>
+      getActiveDossiersDeValidation({
+        keycloakId: context.auth.userInfo?.sub,
+        hasRole: context.auth.hasRole,
+        ...args,
+      }),
+    dossierDeValidation_dossierDeValidationCountByCategory: (
+      _: unknown,
+      _params: {
+        searchFilter?: string;
+      },
+      context: any
+    ) =>
+      getActiveDossierDeValidationCountByCategory({
+        keycloakId: context.auth.userInfo?.sub,
+        hasRole: context.auth.hasRole,
+        searchFilter: _params.searchFilter,
       }),
   },
 };

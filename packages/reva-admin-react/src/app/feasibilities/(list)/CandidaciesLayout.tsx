@@ -22,8 +22,10 @@ export const getFeasibilityCountByCategoryQuery = graphql(`
 `);
 
 export const getDossierDeValidationCountByCategoryQuery = graphql(`
-  query getDossierDeValidationCountByCategory {
-    dossierDeValidation_dossierDeValidationCountByCategory {
+  query getDossierDeValidationCountByCategory($searchFilter: String) {
+    dossierDeValidation_dossierDeValidationCountByCategory(
+      searchFilter: $searchFilter
+    ) {
       ALL
       PENDING
       INCOMPLETE
@@ -53,9 +55,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     data: getDossierDeValidationCountByCategoryResponse,
     status: getDossierDeValidationCountByCategoryStatus,
   } = useQuery({
-    queryKey: ["getDossierDeValidationCountByCategory"],
+    queryKey: ["getDossierDeValidationCountByCategory", searchFilter],
     queryFn: () =>
-      graphqlClient.request(getDossierDeValidationCountByCategoryQuery),
+      graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
+        searchFilter,
+      }),
   });
 
   const menuItem = ({
@@ -170,8 +174,13 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       ]
     : feasibilityItems;
 
+  const canDisplaySideMenu =
+    getFeasibilityCountByCategoryStatus === "success" &&
+    (!isFeatureActive("DOSSIER_DE_VALIDATION") ||
+      getDossierDeValidationCountByCategoryStatus === "success");
+
   return (
-    getFeasibilityCountByCategoryStatus === "success" && (
+    canDisplaySideMenu && (
       <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
