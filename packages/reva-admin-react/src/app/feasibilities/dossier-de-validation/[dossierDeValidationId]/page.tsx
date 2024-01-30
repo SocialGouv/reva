@@ -4,6 +4,7 @@ import { AuthenticatedLink } from "@/components/authenticated-link/Authenticated
 import { format } from "date-fns";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import Link from "next/link";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 const DossierDeValidationPage = () => {
   return (
@@ -37,22 +38,27 @@ const EstimatedExamDateTab = () => {
 
   return (
     <div className="flex flex-col">
-      {estimatedExamDate &&
-        (
-          <>
-            <p className="text-gray-600 mb-12">
-              Afin de faciliter la tenue du jury pour le candidat, l’AAP a
-              renseigné la date prévisionnelle à laquelle son candidat sera
-              potentiellement prêt pour son passage devant le jury.
-            </p>
-            <span className="uppercase font-bold text-sm">
-              date prévisionnelle
-            </span>
-            <span className="text-base">
-              {format(estimatedExamDate, "dd/MM/yyyy")}
-            </span>
-          </>
-        )<p>}
+      {estimatedExamDate ? (
+        <>
+          <p className="text-gray-600 mb-12">
+            Afin de faciliter la tenue du jury pour le candidat, l’AAP a
+            renseigné la date prévisionnelle à laquelle son candidat sera
+            potentiellement prêt pour son passage devant le jury.
+          </p>
+          <span className="uppercase font-bold text-sm">
+            date prévisionnelle
+          </span>
+          <span className="text-base">
+            {format(estimatedExamDate, "dd/MM/yyyy")}
+          </span>
+        </>
+      ) : (
+        <Alert
+          severity="info"
+          title="Attente de la date prévisionnelle"
+          description="Afin de faciliter la tenue du jury pour le candidat, l’AAP renseignera la date prévisionnelle à laquelle son candidat sera potentiellement prêt pour son passage devant le jury."
+        />
+      )}
     </div>
   );
 };
@@ -62,7 +68,7 @@ const DossierDeValidationTab = () => {
 
   return (
     <div className="flex flex-col flex-1 mb-2">
-      {dossierDeValidation && (
+      {dossierDeValidation ? (
         <div className="flex flex-col">
           <p className="text-gray-600 mb-12">
             Voici les documents du dossier de validation du candidat.
@@ -97,6 +103,24 @@ const DossierDeValidationTab = () => {
             ))}
           </ul>
         </div>
+      ) : (
+        <Alert
+          severity="info"
+          title="Attente du dossier de validation"
+          description={
+            <>
+              <p>
+                Le candidat (ou son AAP) vous transmettra son dossier de
+                validation dès qu'il sera finalisé.
+              </p>
+              <p className="mt-4">
+                Une date de passage devant le jury devra alors lui être
+                communiquée dans les 3 mois maximum suivant la réception du
+                dossier.
+              </p>
+            </>
+          }
+        />
       )}
     </div>
   );
