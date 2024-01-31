@@ -7,6 +7,7 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { selectedDepartmentsToTreeSelectItems } from "@/utils";
 
 const getSubscriptionRequest = graphql(`
   query getSubscriptionRequest($subscriptionRequestId: ID!) {
@@ -53,6 +54,20 @@ const getSubscriptionRequest = graphql(`
   }
 `);
 
+const getRegions = graphql(`
+  query getRegions {
+    getRegions {
+      id
+      label
+      departments {
+        id
+        label
+        code
+      }
+    }
+  }
+`);
+
 const SubscriptionRequestPage = () => {
   const { subscriptionRequestId }: { subscriptionRequestId: string } =
     useParams();
@@ -67,12 +82,33 @@ const SubscriptionRequestPage = () => {
       }),
   });
 
+  const { data: getRegionsResponse } = useQuery({
+    queryKey: ["getRegionsResponse"],
+    queryFn: () => graphqlClient.request(getRegions),
+  });
+
   const subscriptionRequest =
     getSubscriptionRequestResponse?.subscription_getSubscriptionRequest;
 
+  const regions = getRegionsResponse?.getRegions || [];
+
+  if (!subscriptionRequest) {
+    return <></>;
+  }
+
+  const selectedOnSiteDepartments =
+    subscriptionRequest.departmentsWithOrganismMethods
+      .filter((d) => d.isOnSite)
+      .map((d) => d.department);
+
+  const selectedRemoteDepartments =
+    subscriptionRequest.departmentsWithOrganismMethods
+      .filter((d) => d.isRemote)
+      .map((d) => d.department);
+
   return (
     subscriptionRequest && (
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 px-8 py-4">
         <Link
           href="/subscriptions/pending"
           className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
@@ -80,6 +116,7 @@ const SubscriptionRequestPage = () => {
           Toutes les inscriptions
         </Link>
         <OrganismSummary
+          readonly
           companyName={subscriptionRequest.companyName}
           accountFirstname={subscriptionRequest.accountFirstname}
           accountLastname={subscriptionRequest.accountLastname}
@@ -95,18 +132,12 @@ const SubscriptionRequestPage = () => {
           companyCity={subscriptionRequest.companyCity}
           companyWebsite={subscriptionRequest.companyWebsite}
           companyTypology={subscriptionRequest.typology}
-          onSiteDepartments={subscriptionRequest.departmentsWithOrganismMethods
-            .filter((d) => d.isOnSite)
-            .map((d) => ({
-              label: d.department.label,
-              code: d.department.code,
-            }))}
-          remoteDemartments={subscriptionRequest.departmentsWithOrganismMethods
-            .filter((d) => d.isRemote)
-            .map((d) => ({
-              label: d.department.label,
-              code: d.department.code,
-            }))}
+          onSiteDepartmentsOnRegions={regions.map(
+            selectedDepartmentsToTreeSelectItems(selectedOnSiteDepartments),
+          )}
+          remoteDepartmentsOnRegions={regions.map(
+            selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
+          )}
           ccns={subscriptionRequest?.subscriptionRequestOnConventionCollective?.map(
             (s) => s.ccn.label,
           )}
