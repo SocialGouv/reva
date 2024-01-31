@@ -18,6 +18,7 @@ interface Props {
   onClickItem: (item: TreeSelectItem) => void;
   readonly?: boolean;
   toggleButtonIsSelected?: boolean;
+  fullHeight?: boolean;
 }
 
 export const TreeSelect = (props: Props): JSX.Element => {
@@ -29,6 +30,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
     onClickItem,
     readonly,
     toggleButtonIsSelected,
+    fullHeight,
   } = props;
 
   const isAllSelected = checkIfAllItemsSelected(items);
@@ -88,7 +90,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-2">
+    <div className="flex-1 flex flex-col gap-2 max-w-[450px]">
       <h4>{title}</h4>
       <SearchBar
         renderInput={({ className, id, placeholder, type }) => (
@@ -113,7 +115,11 @@ export const TreeSelect = (props: Props): JSX.Element => {
           onChange={onClickSelectAll}
         />
       </div>
-      <div className="max-h-[500px] overflow-y-scroll overflow-x-hidden">
+      <div
+        className={`${
+          fullHeight ? "" : "max-h-[500px]"
+        } overflow-y-scroll overflow-x-hidden`}
+      >
         {renderItems(filteredItems)}
       </div>
     </div>

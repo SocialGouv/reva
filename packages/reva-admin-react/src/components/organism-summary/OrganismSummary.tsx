@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import { ReactNode } from "react";
+import { TreeSelect, TreeSelectItem } from "@/components/tree-select";
+import { isInterventionZoneIsFullySelectedWithoutDOM } from "@/utils";
 
 export type Typology =
   | "generaliste"
@@ -34,10 +36,11 @@ export const OrganismSummary = ({
   companyZipCode,
   companyCity,
   companyTypology,
-  onSiteDepartments,
-  remoteDemartments,
+  onSiteDepartmentsOnRegions,
+  remoteDepartmentsOnRegions,
   ccns,
   domaines,
+  readonly,
 }: {
   companyName: string;
   accountFirstname: string;
@@ -52,10 +55,11 @@ export const OrganismSummary = ({
   companyZipCode: string;
   companyCity: string;
   companyTypology: Typology;
-  onSiteDepartments: { label: string; code: string }[];
-  remoteDemartments: { label: string; code: string }[];
+  onSiteDepartmentsOnRegions: TreeSelectItem[];
+  remoteDepartmentsOnRegions: TreeSelectItem[];
   ccns?: string[];
   domaines?: string[];
+  readonly?: boolean;
 }) => (
   <div className="flex flex-col mt-10">
     <h1 className="text-4xl font-bold">{companyName}</h1>
@@ -97,7 +101,7 @@ export const OrganismSummary = ({
       </Info>
     </div>
     <br />
-    <h2 className="text-xl font-bold my-4">Typologie et zone d'intervention</h2>
+    <h2 className="text-xl font-bold my-4">Typologie</h2>
     <div className="grid md:grid-cols-2">
       <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
       {!!domaines?.length && (
@@ -123,26 +127,54 @@ export const OrganismSummary = ({
         </Info>
       )}
     </div>
-    <div className="grid md:grid-cols-2">
-      <Info title="Zone d'intervention en présentiel">
-        <ul className="ml-4">
-          {onSiteDepartments.map((d) => (
-            <li key={d.code} className="list-disc">
-              {d.label} ({d.code})
-            </li>
-          ))}
-        </ul>
-      </Info>
-      <Info title="Zone d'intervention en distanciel">
-        <ul className="ml-4">
-          {remoteDemartments.map((d) => (
-            <li key={d.code} className="list-disc">
-              {d.label} ({d.code})
-            </li>
-          ))}
-        </ul>
-      </Info>
-    </div>
+
+    <fieldset className="mt-12 flex flex-col sm:flex-row gap-y-8 justify-between">
+      <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
+        <legend className="text-xl text-gray-900 font-bold">
+          Zone d'intervention en présentiel
+        </legend>
+        {!readonly && (
+          <span className="text-sm ">
+            Cochez les régions ou départements couverts en présentiel
+          </span>
+        )}
+        <TreeSelect
+          readonly={readonly}
+          fullHeight
+          title=""
+          label="Toute la France Métropolitaine"
+          items={onSiteDepartmentsOnRegions}
+          onClickSelectAll={() => {}}
+          onClickItem={() => {}}
+          toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
+            onSiteDepartmentsOnRegions,
+          )}
+        />
+      </div>
+
+      <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
+        <legend className="text-xl text-gray-900 font-bold">
+          Zone d'intervention en distanciel
+        </legend>
+        {!readonly && (
+          <span className="text-sm">
+            Cochez les régions ou départements couverts en distanciel
+          </span>
+        )}
+        <TreeSelect
+          readonly={readonly}
+          fullHeight
+          title=""
+          label="Toute la France Métropolitaine"
+          items={remoteDepartmentsOnRegions}
+          onClickSelectAll={() => {}}
+          onClickItem={() => {}}
+          toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
+            remoteDepartmentsOnRegions,
+          )}
+        />
+      </div>
+    </fieldset>
   </div>
 );
 
