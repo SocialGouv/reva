@@ -145,7 +145,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       defaultMenuItem: true,
     }),
     menuItem({
-      text: `Dossiers en attente de validation (${dossierDeValidationCountByCategory?.PENDING})`,
+      text: `Dossiers de validation en attente (${dossierDeValidationCountByCategory?.PENDING})`,
       path: "/candidacies/dossiers-de-validation",
       category: "PENDING",
     }),

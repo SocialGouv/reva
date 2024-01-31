@@ -27,6 +27,7 @@ form _ ( candidacy, _ ) =
                 [ ( ""
                   , Form.Text "Afin de faciliter la tenue du jury pour le candidat, merci de renseigner la date prévisionnelle à laquelle le candidat sera potentiellement prêt pour son passage devant le jury." Nothing
                   )
+                  , ("", Form.Text "Pour toute précision, merci de vous rapprocher du certificateur." Nothing)
                 , ( keys.estimatedDate, Form.Date "Date prévisionnelle" )
                 ]
     , saveLabel = Nothing

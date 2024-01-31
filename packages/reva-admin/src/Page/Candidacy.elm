@@ -389,7 +389,7 @@ viewDossierDeValidationSent context candidacy dossierDeValidation =
             "Dossier de validation envoyé"
             [ p [] [ text "Le dossier de validation a été envoyé. Retrouvez ci-dessous les documents qui le composent." ]
             ]
-         , p [] [ text ("dossier envoyé le : " ++ Date.toSmallFormat dossierDeValidation.dossierDeValidationSentAt) ]
+         , p [] [ text ("Dossier envoyé le : " ++ Date.toSmallFormat dossierDeValidation.dossierDeValidationSentAt) ]
          , h4 [ class "text-[18px] mb-0" ] [ text "Contenu du dossier" ]
          , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
          ]

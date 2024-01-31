@@ -106,9 +106,9 @@ const DossiersDeValidationPage = () => {
   const categoryLabel = useMemo(() => {
     switch (category) {
       case "PENDING":
-        return "Dossiers en attente de validation";
+        return "Dossiers de validation en attente";
       case "INCOMPLETE":
-        return "Dossiers incomplets";
+        return "Dossiers de validation incomplets";
       default:
         return "Tous les dossiers de validation";
     }
