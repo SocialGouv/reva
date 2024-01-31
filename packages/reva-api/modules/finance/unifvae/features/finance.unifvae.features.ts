@@ -10,6 +10,7 @@ import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
+  isCertificationPartial,
   fundingRequest,
 }: FundingRequestUnifvaeInputCompleted) => {
   const candidacy = await prismaClient.candidacy.findUnique({
@@ -33,6 +34,7 @@ export const createFundingRequestUnifvae = async ({
       otherTraining: candidacy.otherTraining ?? "",
       certificateSkills: candidacy.certificateSkills ?? "",
       ...fundingRequest,
+      isPartialCertification: isCertificationPartial,
       candidateFirstname: candidacy.candidate?.firstname,
       candidateLastname: candidacy.candidate?.lastname,
     },
@@ -87,7 +89,7 @@ export const createFundingRequestUnifvae = async ({
 };
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (
-  candidacyId: string
+  candidacyId: string,
 ) =>
   prismaClient.fundingRequestUnifvae.findFirst({
     where: { candidacyId },
@@ -124,7 +126,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   });
   if (!candidacy) {
     throw new Error(
-      "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée"
+      "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée",
     );
   }
 
@@ -156,7 +158,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
 
   if (validationErrors.length) {
     const businessErrors = validationErrors.map(({ fieldName, message }) =>
-      fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`
+      fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`,
     );
     throw new Error(businessErrors[0]);
   }
@@ -207,7 +209,7 @@ const confirmPaymentRequestUnifvae = async ({
 
   if (!candidacy) {
     throw new Error(
-      "Impossible de confirmer la demande de paiement. La candidature n'a pas été trouvée"
+      "Impossible de confirmer la demande de paiement. La candidature n'a pas été trouvée",
     );
   }
 
@@ -215,7 +217,7 @@ const confirmPaymentRequestUnifvae = async ({
 
   if (!fundingRequest) {
     throw new Error(
-      "Impossible de confirmer la demande de paiement. La demande de financement n'a pas été trouvée"
+      "Impossible de confirmer la demande de paiement. La demande de financement n'a pas été trouvée",
     );
   }
 
@@ -223,7 +225,7 @@ const confirmPaymentRequestUnifvae = async ({
 
   if (!paymentRequest) {
     throw new Error(
-      "Impossible de confirmer la demande de paiement. La demande de paiment n'a pas été trouvée"
+      "Impossible de confirmer la demande de paiement. La demande de paiment n'a pas été trouvée",
     );
   }
 
@@ -238,25 +240,25 @@ const confirmPaymentRequestUnifvae = async ({
       .mul(paymentRequest.basicSkillsEffectiveCost)
       .plus(
         paymentRequest.mandatoryTrainingsEffectiveHourCount.mul(
-          paymentRequest.mandatoryTrainingsEffectiveCost
-        )
+          paymentRequest.mandatoryTrainingsEffectiveCost,
+        ),
       )
       .plus(
         paymentRequest.certificateSkillsEffectiveHourCount.mul(
-          paymentRequest.certificateSkillsEffectiveCost
-        )
+          paymentRequest.certificateSkillsEffectiveCost,
+        ),
       )
       .plus(
         paymentRequest.otherTrainingEffectiveHourCount.mul(
-          paymentRequest.otherTrainingEffectiveCost
-        )
+          paymentRequest.otherTrainingEffectiveCost,
+        ),
       );
 
   const formationComplementaireCoutHoraireMoyen =
     formationComplementaireHeures.isZero()
       ? new Decimal(0)
       : formationComplementaireCoutTotal.dividedBy(
-          formationComplementaireHeures
+          formationComplementaireHeures,
         );
 
   await prismaClient.paymentRequestBatchUnifvae.create({

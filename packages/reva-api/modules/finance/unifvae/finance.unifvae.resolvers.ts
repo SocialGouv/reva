@@ -40,7 +40,7 @@ const unsafeResolvers = {
   Candidacy: {
     fundingRequestUnifvae: async ({ id: candidacyId }: { id: string }) =>
       withSkillsAndTrainings(
-        await getFundingRequestUnifvaeFromCandidacyId(candidacyId)
+        await getFundingRequestUnifvaeFromCandidacyId(candidacyId),
       ),
     paymentRequestUnifvae: async ({ id: candidacyId }: { id: string }) =>
       getPaymentRequestUnifvaeFromCandidacyId(candidacyId),
@@ -49,10 +49,10 @@ const unsafeResolvers = {
   Query: {
     candidacy_getFundingRequestUnifvae: async (
       _: unknown,
-      payload: { candidacyId: string }
+      payload: { candidacyId: string },
     ) => {
       const fundreq = await getFundingRequestUnifvaeFromCandidacyId(
-        payload.candidacyId
+        payload.candidacyId,
       );
       return withSkillsAndTrainings(fundreq);
     },
@@ -61,32 +61,29 @@ const unsafeResolvers = {
     candidacy_createFundingRequestUnifvae: async (
       _: unknown,
       payload: FundingRequestUnifvaeInput,
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: payload.candidacyId },
       });
       if (!candidacy) {
         return new mercurius.ErrorWithProps(
-          `Candidacy not found: ${payload.candidacyId}`
+          `Candidacy not found: ${payload.candidacyId}`,
         );
       }
       if (candidacy.financeModule !== "unifvae") {
         return new mercurius.ErrorWithProps(
-          `Cannot create FundingRequestUnifvae: candidacy.financeModule is "${candidacy.financeModule}"`
+          `Cannot create FundingRequestUnifvae: candidacy.financeModule is "${candidacy.financeModule}"`,
         );
       }
-      const fundingRequestCompleted: FundingRequestUnifvaeInputCompleted =
-        Object.assign(
-          {},
-          {
-            candidacyId: payload.candidacyId,
-            isCertificationPartial: Boolean(candidacy?.isCertificationPartial),
-            fundingRequest: {
-              ...payload.fundingRequest,
-            },
-          }
-        );
+      const fundingRequestCompleted: FundingRequestUnifvaeInputCompleted = {
+        candidacyId: payload.candidacyId,
+        isCertificationPartial: !!candidacy?.isCertificationPartial,
+        fundingRequest: {
+          ...payload.fundingRequest,
+        },
+      };
+
       const validationErrors = await applyBusinessValidationRules({
         candidacyId: fundingRequestCompleted.candidacyId,
         isCertificationPartial: fundingRequestCompleted.isCertificationPartial,
@@ -94,7 +91,7 @@ const unsafeResolvers = {
       });
       if (validationErrors.length) {
         const businessErrors = validationErrors.map(({ fieldName, message }) =>
-          fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`
+          fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`,
         );
         return new mercurius.ErrorWithProps(businessErrors[0], {
           businessErrors,
@@ -102,7 +99,7 @@ const unsafeResolvers = {
       }
       try {
         const fundreq = await createFundingRequestUnifvae(
-          fundingRequestCompleted
+          fundingRequestCompleted,
         );
         logFundingRequestUnifvaeEvent({
           context,
@@ -118,7 +115,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           result: new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            error.message
+            error.message,
           ),
         });
         return new mercurius.ErrorWithProps(error.message, error);
@@ -129,7 +126,7 @@ const unsafeResolvers = {
       params: {
         candidacyId: string;
         paymentRequest: PaymentRequestUnifvaeInput;
-      }
+      },
     ) => createOrUpdatePaymentRequestUnifvae(params),
   },
 };
