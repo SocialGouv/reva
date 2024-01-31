@@ -39,7 +39,7 @@ const FeasibilityPage = () => {
     !isCandidacyDroppedOut;
 
   return (
-    <div className="flex flex-col flex-1 mb-2">
+    <div className="flex flex-col flex-1 mb-2 w-full">
       <Link
         href="/candidacies/feasibilities"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
@@ -209,6 +209,6 @@ const FileLink = ({ url, text }: { url: string; text: string }) => (
     text={text}
     title={text}
     url={url}
-    className="fr-link text-2xl font-semibold"
+    className="fr-link text-2xl font-semibold break-words"
   />
 );
