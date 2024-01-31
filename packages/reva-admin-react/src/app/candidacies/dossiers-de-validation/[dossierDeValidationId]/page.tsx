@@ -8,7 +8,7 @@ import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic"
 
 const DossierDeValidationPage = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Link
         href="/candidacies/dossiers-de-validation"
         className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
@@ -37,7 +37,7 @@ const EstimatedExamDateTab = () => {
   const { estimatedExamDate } = useDossierDeValidationPageLogic();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-auto">
       {estimatedExamDate ? (
         <>
           <p className="text-gray-600 mb-12">
@@ -67,7 +67,7 @@ const DossierDeValidationTab = () => {
   const { dossierDeValidation } = useDossierDeValidationPageLogic();
 
   return (
-    <div className="flex flex-col flex-1 mb-2">
+    <div className="flex flex-col flex-1 mb-2 overflow-auto">
       {dossierDeValidation ? (
         <div className="flex flex-col">
           <p className="text-gray-600 mb-12">
@@ -133,6 +133,6 @@ const FileLink = ({ url, text }: { url: string; text: string }) => (
     text={text}
     title={text}
     url={url}
-    className="fr-link fr-icon-download-line fr-link--icon-right text-blue-900 text-lg ml-auto"
+    className="fr-link fr-icon-download-line fr-link--icon-right text-blue-900 text-lg ml-auto break-words"
   />
 );
