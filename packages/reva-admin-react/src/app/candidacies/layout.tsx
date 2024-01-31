@@ -84,11 +84,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     text,
   });
 
-  const isChildComponent = !!currentPathname.match(
-    /\/(feasibilities|dossiers-de-validation|juries)\/[A-Za-z0-9_-]+$/,
+  //Only apply layout if children are direct descendants (ie: /candidacies/feasibilities but not /candidacies/feasibilities/feasibilityId)
+  const isPagePathAfterFirstlevel = !!currentPathname.match(
+    /\/candidacies(\/.+){2,}/,
   );
-
-  if (isChildComponent) {
+  if (isPagePathAfterFirstlevel) {
     return <>{children}</>;
   }
 
