@@ -193,7 +193,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
           align="left"
-          burgerMenuButtonText="Inscriptions"
+          burgerMenuButtonText="Candidatures"
           sticky
           fullHeight
           items={menuItems}
