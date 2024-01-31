@@ -8,6 +8,7 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { toSelectedRegionAndDepartmentsItem } from "@/utils";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -26,8 +27,9 @@ const getMaisonMereAAP = graphql(`
         estSurPlace
         estADistance
         departement {
-          code
+          id
           label
+          code
         }
       }
       maisonMereAAPOnDomaines {
@@ -49,6 +51,20 @@ const getMaisonMereAAP = graphql(`
   }
 `);
 
+const getRegions = graphql(`
+  query getRegions {
+    getRegions {
+      id
+      label
+      departments {
+        id
+        label
+        code
+      }
+    }
+  }
+`);
+
 const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
@@ -62,11 +78,29 @@ const MaisonMereAAPPage = () => {
       }),
   });
 
+  const { data: getRegionsResponse } = useQuery({
+    queryKey: ["getRegionsResponse"],
+    queryFn: () => graphqlClient.request(getRegions),
+  });
+
   const maisonMereAAP = getMaisonMereAAPResponse?.organism_getMaisonMereAAPById;
+  const regions = getRegionsResponse?.getRegions || [];
+
+  if (!maisonMereAAP) {
+    return <></>;
+  }
+
+  const selectedOnSiteDepartments = maisonMereAAP.maisonMereAAPOnDepartements
+    .filter((d) => d.estSurPlace)
+    .map((d) => d.departement);
+
+  const selectedRemoteDepartments = maisonMereAAP.maisonMereAAPOnDepartements
+    .filter((d) => d.estADistance)
+    .map((d) => d.departement);
 
   return (
     maisonMereAAP && (
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 px-8 py-4">
         <Link
           href="/subscriptions/pending"
           className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
@@ -89,24 +123,19 @@ const MaisonMereAAPPage = () => {
           companyCity={maisonMereAAP.ville}
           companyWebsite={maisonMereAAP.siteWeb}
           companyTypology={maisonMereAAP.typologie as Typology}
-          onSiteDepartments={maisonMereAAP.maisonMereAAPOnDepartements
-            .filter((d) => d.estSurPlace)
-            .map((d) => ({
-              label: d.departement.label,
-              code: d.departement.code,
-            }))}
-          remoteDemartments={maisonMereAAP.maisonMereAAPOnDepartements
-            .filter((d) => d.estADistance)
-            .map((d) => ({
-              label: d.departement.label,
-              code: d.departement.code,
-            }))}
+          onSiteDepartmentsOnRegions={regions.map(
+            toSelectedRegionAndDepartmentsItem(selectedOnSiteDepartments),
+          )}
+          remoteDepartmentsOnRegions={regions.map(
+            toSelectedRegionAndDepartmentsItem(selectedRemoteDepartments),
+          )}
           domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
             (d) => d.domaine.label,
           )}
           ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
             (c) => c.ccn.label,
           )}
+          readonly
         />
       </div>
     )
