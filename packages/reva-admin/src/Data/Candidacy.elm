@@ -206,7 +206,7 @@ statusToCategoryString status =
             "Parcours confirmés par le candidat"
 
         DemandeFinancementEnvoye ->
-            "Demandes de financement envoyées"
+            "Demandes de prise en charge envoyées"
 
         DemandePaiementEnvoyee ->
             "Demandes de paiement envoyées"
@@ -255,7 +255,7 @@ candidacyStatusFilterToReadableString status =
             "Parcours envoyés"
 
         CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon ->
-            "Demandes de financement envoyées"
+            "Demandes de prise en charge envoyées"
 
         CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon ->
             "Demandes de paiement envoyées"
