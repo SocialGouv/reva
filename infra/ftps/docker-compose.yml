@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   ftpspreva:
-    image: bfren/ftps
+    image: bfren/ftps:3.2.22
     container_name: ftps_reva
     restart: always
     environment:
