@@ -154,6 +154,18 @@ headerMenuModal context activeHeaderLink =
         isLocalAccountsActive =
             List.member "ADMIN_CERTIFICATION_AUTHORITY" context.activeFeatures
 
+        isDossierDeValidationActive = 
+            List.member "DOSSIER_DE_VALIDATION" context.activeFeatures
+
+        certificateursCandidaciesLabel =
+            if isDossierDeValidationActive then
+                if Api.Token.isAdmin context.token then
+                    "Certificateurs/Candidatures"
+                else 
+                    "Candidatures"
+            else
+                "Dossiers de faisabilité"
+
         navLinks =
             if Api.Token.isAdmin context.token then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
@@ -161,7 +173,7 @@ headerMenuModal context activeHeaderLink =
                 , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
                 , itemLink "Certificateurs" (adminReactUrl "/certification-authorities") True False
-                , itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False
+                , itemLink certificateursCandidaciesLabel (adminReactUrl "/candidacies/feasibilities") True False
                 ]
 
             else if Api.Token.isAdminCertificationAuthority context.token then
