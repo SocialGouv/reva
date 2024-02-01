@@ -12,6 +12,7 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { adminUpdateMaisonMereAAP } from "./features/adminUpdateMaisonMereAAP";
 import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrganismOnDegrees";
@@ -120,6 +121,29 @@ export const resolvers = {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
+    },
+    organism_adminUpdateMaisonMereAAP: async (
+      _parent: unknown,
+      params: {
+        maisonMereAAPId: string;
+        maisonMereAAPData: {
+          zoneIntervention: {
+            departmentId: string;
+            isOnSite: boolean;
+            isRemote: boolean;
+          }[];
+        };
+      },
+      context: GraphqlContext
+    ) => {
+      if (
+        context.auth.userInfo?.sub == undefined ||
+        !context.auth.hasRole("admin")
+      ) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      return adminUpdateMaisonMereAAP(params);
     },
     organism_createOrUpdateInformationsCommerciales: (
       _parent: unknown,
