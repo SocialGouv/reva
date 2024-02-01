@@ -6,12 +6,12 @@ import { validateFeasibilityChecks } from "./feasibility-checks";
 import { valideForfaitHeures } from "./forfait-heures";
 import { validHoursCountAndCosts } from "./valid-numbers";
 
-const applyBusinessValidationRules = async (
+export const applyBusinessValidationRules = async (
   input: {
     candidacyId: string;
     isCertificationPartial: boolean;
   } & FundingRequestUnifvaeHourFields &
-    FundingRequestUnifvaeCostFields
+    FundingRequestUnifvaeCostFields,
 ): Promise<BusinessRulesValidationError[]> => {
   // Feasibility checks are blocking
   const feasibilityErrors = await validateFeasibilityChecks({
@@ -20,11 +20,13 @@ const applyBusinessValidationRules = async (
   if (feasibilityErrors.length) {
     return feasibilityErrors;
   }
+
   // The following tests are only relevent when Feasibility.decision="ADMISSIBLE"
   let errors: Array<BusinessRulesValidationError> = [];
   const feasibility = await prismaClient.feasibility.findFirst({
-    where: { candidacyId: input.candidacyId },
+    where: { candidacyId: input.candidacyId, isActive: true },
   });
+
   if (feasibility?.decision === "ADMISSIBLE") {
     errors = errors
       .concat(validHoursCountAndCosts({ ...input }))
@@ -35,5 +37,3 @@ const applyBusinessValidationRules = async (
   }
   return errors;
 };
-
-export default applyBusinessValidationRules;
