@@ -28,13 +28,17 @@ export const validateFeasibilityChecks = async (
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: input.candidacyId },
     include: {
-      Feasibility: true,
+      Feasibility: {
+        where: { isActive: true },
+      },
       candidacyStatuses: true,
     },
   });
 
+  const feasibility = candidacy?.Feasibility[0];
+
   // Vérirife qu'on a envoyé un dossier de faisabilité
-  if (!candidacy?.Feasibility?.length) {
+  if (!feasibility) {
     return [
       {
         fieldName: "GLOBAL",
@@ -45,7 +49,7 @@ export const validateFeasibilityChecks = async (
   }
 
   // Vérirife que la recevabilité a été prononcée
-  if (candidacy?.Feasibility?.[0]?.decision === "PENDING") {
+  if (feasibility.decision === "PENDING") {
     return [
       {
         fieldName: "GLOBAL",
@@ -58,7 +62,7 @@ export const validateFeasibilityChecks = async (
   let errors: BusinessRulesValidationError[] = [];
 
   // Vérifie qu'on n'a aucun coût hors-forfait si dossier non validé
-  if (candidacy.Feasibility?.[0]?.decision === "REJECTED") {
+  if (feasibility.decision === "REJECTED") {
     const zero = new Decimal(0);
     errors = errors.concat(
       hourFields

@@ -78,7 +78,7 @@ export const createFeasibility = async ({
 
   if (existingFeasibility && existingFeasibility.decision !== "INCOMPLETE") {
     throw new Error(
-      "Un dossier de faisabilité actif éxiste déjà pour cette candidature"
+      "Un dossier de faisabilité actif éxiste déjà pour cette candidature",
     );
   }
 
@@ -117,7 +117,7 @@ export const createFeasibility = async ({
   const success = await uploadFeasibilityFiles(files);
   if (!success) {
     throw new Error(
-      `Les fichiers du dossiers de faisabilités n'ont pas pu être enregistrés. Veuillez réessayer.`
+      `Les fichiers du dossiers de faisabilités n'ont pas pu être enregistrés. Veuillez réessayer.`,
     );
   }
 
@@ -190,11 +190,11 @@ export const createFeasibility = async ({
 
   if (candidacyCertificationId && candidacyDepartmentId) {
     const certificationAuthority = await getCertificationAuthorityById(
-      certificationAuthorityId
+      certificationAuthorityId,
     );
     if (!certificationAuthority) {
       logger.error(
-        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le departement : ${candidacyDepartmentId}`
+        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le département : ${candidacyDepartmentId}`,
       );
     }
     //sending a mail notification to candidacy certification authority and related certification authority local accounts
@@ -205,7 +205,7 @@ export const createFeasibility = async ({
           certificationAuthorityId,
           certificationId: candidacyCertificationId,
           departmentId: candidacyDepartmentId,
-        }
+        },
       );
     const emails = [];
     if (certificationAuthority?.contactEmail) {
@@ -311,7 +311,7 @@ export const getActiveFeasibilityCountByCategory = async ({
                       account,
                       isCertificationAuthorityLocalAccount,
                       certificationAuthorityLocalAccount,
-                    }
+                    },
                   ),
                 };
               }
@@ -324,7 +324,7 @@ export const getActiveFeasibilityCountByCategory = async ({
                 ...getWhereClauseFromStatusFilter(statusFilter).candidacy,
                 ...getWhereClauseFromSearchFilter(
                   candidacySearchWord,
-                  searchFilter
+                  searchFilter,
                 ),
               };
 
@@ -351,8 +351,8 @@ export const getActiveFeasibilityCountByCategory = async ({
         } catch (error) {
           console.error(error);
         }
-      }
-    )
+      },
+    ),
   );
 
   return feasibilityCountByCategory;
@@ -377,17 +377,17 @@ const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole = ({
   if (isCertificationAuthorityLocalAccount) {
     if (!certificationAuthorityLocalAccount) {
       throw new Error(
-        "Compte local de l'autorité de certification non trouvée"
+        "Compte local de l'autorité de certification non trouvée",
       );
     }
 
     const departmentIds =
       certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-        (calad) => calad.departmentId
+        (calad) => calad.departmentId,
       );
     const certificationIds =
       certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-        (calac) => calac.certificationId
+        (calac) => calac.certificationId,
       );
 
     queryWhereClause = {
@@ -471,7 +471,7 @@ export const getActiveFeasibilities = async ({
     });
 
     const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account"
+      "manage_certification_authority_local_account",
     );
 
     const certificationAuthorityLocalAccount =
@@ -803,7 +803,6 @@ export const markFeasibilityAsIncomplete = async ({
         decision: "INCOMPLETE",
         decisionComment: comment,
         decisionSentAt: new Date(),
-        isActive: true,
       },
       include: {
         candidacy: {
@@ -900,7 +899,7 @@ export const canManageFeasibility = async ({
 
       if (!certificationAuthorityLocalAccount) {
         throw new Error(
-          "Compte local de l'autorité de certification non trouvé"
+          "Compte local de l'autorité de certification non trouvé",
         );
       }
 
@@ -913,12 +912,12 @@ export const canManageFeasibility = async ({
 
       const departmentIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId
+          (calad) => calad.departmentId,
         );
 
       const certificationIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId
+          (calac) => calac.certificationId,
         );
 
       return !!(await prismaClient.feasibility.findFirst({
@@ -985,7 +984,7 @@ export const handleFeasibilityDecision = async (args: {
 
     default:
       throw new Error(
-        `La décision ${decision} est invalide pour le dossier de faisabilité`
+        `La décision ${decision} est invalide pour le dossier de faisabilité`,
       );
   }
 };

@@ -15,7 +15,7 @@ import {
   getPaymentRequestUnifvaeFromCandidacyId,
 } from "./features/finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
-import applyBusinessValidationRules from "./validation";
+import { applyBusinessValidationRules } from "./validation";
 
 const withSkillsAndTrainings = (f: any) =>
   f

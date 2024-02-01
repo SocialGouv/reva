@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { UploadedFile } from "../../../shared/file";
-import applyBusinessValidationRules from "../validation";
+import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 export const createFundingRequestUnifvae = async ({
