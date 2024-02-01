@@ -5,6 +5,7 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 
 const DossierDeValidationPage = () => {
   return (
@@ -102,6 +103,18 @@ const DossierDeValidationTab = () => {
               </li>
             ))}
           </ul>
+
+          {dossierDeValidation.decision === "PENDING" && (
+            <Button
+              priority="secondary"
+              className="mt-10 ml-auto"
+              linkProps={{
+                href: `/candidacies/dossiers-de-validation/${dossierDeValidation.id}/problem`,
+              }}
+            >
+              Signaler un problème
+            </Button>
+          )}
         </div>
       ) : (
         <Alert

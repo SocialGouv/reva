@@ -9,6 +9,7 @@ const getDossierDeValidationQuery = graphql(`
       dossierDeValidationId: $dossierDeValidationId
     ) {
       id
+      decision
       dossierDeValidationSentAt
       dossierDeValidationFile {
         url
@@ -46,7 +47,7 @@ export const useDossierDeValidationPageLogic = () => {
 
   const estimatedExamDate =
     getDossierDeValidationResponse
-      ?.dossierDeValidation_getDossierDeValidationById?.candidacy.examInfo
+      ?.dossierDeValidation_getDossierDeValidationById?.candidacy?.examInfo
       .estimatedExamDate;
 
   return {
