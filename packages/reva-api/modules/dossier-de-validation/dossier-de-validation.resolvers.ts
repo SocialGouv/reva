@@ -8,6 +8,7 @@ import { getDossierDeValidationById } from "./features/getDossierDeValidationByI
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
+import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
 
 const unsafeResolvers = {
   DossierDeValidation: {
@@ -43,7 +44,7 @@ const unsafeResolvers = {
   Query: {
     dossierDeValidation_getDossierDeValidationById: (
       _: unknown,
-      { dossierDeValidationId }: { dossierDeValidationId: string }
+      { dossierDeValidationId }: { dossierDeValidationId: string },
     ) =>
       getDossierDeValidationById({
         dossierDeValidationId: dossierDeValidationId,
@@ -56,10 +57,10 @@ const unsafeResolvers = {
         category?: DossierDeValidationStatusFilter;
         searchFilter?: string;
       },
-      context: any
+      context: GraphqlContext,
     ) =>
       getActiveDossiersDeValidation({
-        keycloakId: context.auth.userInfo?.sub,
+        keycloakId: context.auth.userInfo?.sub || "",
         hasRole: context.auth.hasRole,
         ...args,
       }),
@@ -68,17 +69,33 @@ const unsafeResolvers = {
       _params: {
         searchFilter?: string;
       },
-      context: any
+      context: GraphqlContext,
     ) =>
       getActiveDossierDeValidationCountByCategory({
-        keycloakId: context.auth.userInfo?.sub,
+        keycloakId: context.auth.userInfo?.sub || "",
         hasRole: context.auth.hasRole,
         searchFilter: _params.searchFilter,
+      }),
+  },
+  Mutation: {
+    dossierDeValidation_signalProblem: (
+      _: unknown,
+      {
+        dossierDeValidationId,
+        decisionComment,
+      }: {
+        dossierDeValidationId: string;
+        decisionComment: string;
+      },
+    ) =>
+      signalDossierDeValidationProblem({
+        dossierDeValidationId,
+        decisionComment,
       }),
   },
 };
 
 export const dossierDeValidationResolvers = composeResolvers(
   unsafeResolvers,
-  dossierDeValidationResolversSecurityMap
+  dossierDeValidationResolversSecurityMap,
 );

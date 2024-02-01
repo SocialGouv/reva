@@ -52,3 +52,10 @@ type Query {
     searchFilter: String
   ): DossierDeValidationCountByCategory!
 }
+
+type Mutation {
+  dossierDeValidation_signalProblem(
+    dossierDeValidationId: ID!
+    decisionComment: String!
+  ): DossierDeValidation!
+}

@@ -476,6 +476,20 @@ certification_authority_updateCertificationAuthorityLocalAccount requiredArgs___
     Object.selectionForCompositeField "certification_authority_updateCertificationAuthorityLocalAccount" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationAuthorityLocalAccountInput ] object____ Basics.identity
 
 
+type alias DossierDeValidationSignalProblemRequiredArguments =
+    { dossierDeValidationId : Data.Scalar.Id
+    , decisionComment : String
+    }
+
+
+dossierDeValidation_signalProblem :
+    DossierDeValidationSignalProblemRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DossierDeValidation
+    -> SelectionSet decodesTo RootMutation
+dossierDeValidation_signalProblem requiredArgs____ object____ =
+    Object.selectionForCompositeField "dossierDeValidation_signalProblem" [ Argument.required "dossierDeValidationId" requiredArgs____.dossierDeValidationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "decisionComment" requiredArgs____.decisionComment Encode.string ] object____ Basics.identity
+
+
 type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , fundingRequest : Admin.InputObject.FundingRequestUnifvaeInput
