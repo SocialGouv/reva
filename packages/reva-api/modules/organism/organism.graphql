@@ -126,6 +126,16 @@ input UpdateOrganismInput {
   isActive: Boolean!
 }
 
+input MaisonMereAAPOnDepartmentInput {
+  departmentId: UUID!
+  isOnSite: Boolean!
+  isRemote: Boolean!
+}
+
+input UpdateMaisonMereAAPInput {
+  zoneIntervention: [MaisonMereAAPOnDepartmentInput!]!
+}
+
 input CreateOrUpdateInformationsCommercialesInput {
   organismId: UUID!
   nom: String
@@ -180,6 +190,10 @@ type Mutation {
   organism_updateOrganismWithMaisonMereAAP(
     organismId: ID!
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
+  ): Organism!
+  organism_adminUpdateMaisonMereAAP(
+    maisonMereAAPId: ID!
+    maisonMereAAPData: UpdateMaisonMereAAPInput!
   ): Organism!
   organism_createOrUpdateInformationsCommerciales(
     informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!

@@ -65,6 +65,20 @@ const getRegions = graphql(`
   }
 `);
 
+const adminUpdateMaisonMereAAP = graphql(`
+  mutation adminUpdateMaisonMereAAP(
+    $maisonMereAAPId: ID!
+    $data: UpdateMaisonMereAAPInput!
+  ) {
+    organism_adminUpdateMaisonMereAAP(
+      maisonMereAAPId: $maisonMereAAPId
+      maisonMereAAPData: $data
+    ) {
+      id
+    }
+  }
+`);
+
 const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
@@ -102,7 +116,7 @@ const MaisonMereAAPPage = () => {
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
         <Link
-          href="/subscriptions/pending"
+          href="/subscriptions/validated"
           className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
         >
           Toutes les inscriptions
