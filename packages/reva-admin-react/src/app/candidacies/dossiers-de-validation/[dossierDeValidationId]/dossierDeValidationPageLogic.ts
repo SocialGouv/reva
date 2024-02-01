@@ -34,7 +34,10 @@ export const useDossierDeValidationPageLogic = () => {
     dossierDeValidationId: string;
   }>();
 
-  const { data: getDossierDeValidationResponse } = useQuery({
+  const {
+    data: getDossierDeValidationResponse,
+    status: getDossierDeValidationStatus,
+  } = useQuery({
     queryKey: ["getDossierDeValidation", dossierDeValidationId],
     queryFn: () =>
       graphqlClient.request(getDossierDeValidationQuery, {
@@ -51,6 +54,7 @@ export const useDossierDeValidationPageLogic = () => {
       .estimatedExamDate;
 
   return {
+    getDossierDeValidationStatus,
     dossierDeValidation,
     estimatedExamDate,
   };
