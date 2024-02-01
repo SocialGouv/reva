@@ -62,8 +62,7 @@ export const SubscriptionRequestForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    control,
+    formState: { isSubmitting },
     watch,
   } = methods;
 
