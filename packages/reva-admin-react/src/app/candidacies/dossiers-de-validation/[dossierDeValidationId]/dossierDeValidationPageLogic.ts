@@ -10,6 +10,7 @@ const getDossierDeValidationQuery = graphql(`
     ) {
       id
       decision
+      isActive
       dossierDeValidationSentAt
       dossierDeValidationFile {
         url
@@ -20,6 +21,10 @@ const getDossierDeValidationQuery = graphql(`
         name
       }
       candidacy {
+        candidacyStatuses {
+          status
+          isActive
+        }
         examInfo {
           estimatedExamDate
         }
@@ -53,9 +58,17 @@ export const useDossierDeValidationPageLogic = () => {
       ?.dossierDeValidation_getDossierDeValidationById?.candidacy?.examInfo
       .estimatedExamDate;
 
+  const canSignalProblem =
+    dossierDeValidation?.candidacy.candidacyStatuses.filter(
+      (c) => c.isActive,
+    )[0].status === "DOSSIER_DE_VALIDATION_ENVOYE" &&
+    dossierDeValidation.decision === "PENDING" &&
+    dossierDeValidation.isActive;
+
   return {
     getDossierDeValidationStatus,
     dossierDeValidation,
     estimatedExamDate,
+    canSignalProblem,
   };
 };

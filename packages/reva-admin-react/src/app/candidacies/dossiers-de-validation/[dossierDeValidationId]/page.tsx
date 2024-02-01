@@ -70,8 +70,11 @@ const EstimatedExamDateTab = () => {
 };
 
 const DossierDeValidationTab = () => {
-  const { dossierDeValidation, getDossierDeValidationStatus } =
-    useDossierDeValidationPageLogic();
+  const {
+    dossierDeValidation,
+    getDossierDeValidationStatus,
+    canSignalProblem,
+  } = useDossierDeValidationPageLogic();
 
   const showContent = getDossierDeValidationStatus === "success";
 
@@ -113,7 +116,7 @@ const DossierDeValidationTab = () => {
               ))}
             </ul>
 
-            {dossierDeValidation.decision === "PENDING" && (
+            {canSignalProblem && (
               <Button
                 priority="secondary"
                 className="mt-10 ml-auto"
