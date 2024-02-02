@@ -8,7 +8,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 const schema = z.object({
   decisionComment: z.string().min(1, "Ce champ est obligatoire"),
@@ -30,14 +30,18 @@ const DossierDeValidationProblemPage = () => {
   });
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    await signalDossierDeValidationProblem.mutateAsync({
-      dossierDeValidationId: dossierDeValidation?.id || "",
-      decisionComment: data.decisionComment,
-    });
-    successToast("Problème signalé avec succès");
-    router.push(
-      `http://localhost:3003/admin2/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`,
-    );
+    try {
+      await signalDossierDeValidationProblem.mutateAsync({
+        dossierDeValidationId: dossierDeValidation?.id || "",
+        decisionComment: data.decisionComment,
+      });
+      successToast("Problème signalé avec succès");
+      router.push(
+        `http://localhost:3003/admin2/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`,
+      );
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   });
   return (
     dossierDeValidation && (
