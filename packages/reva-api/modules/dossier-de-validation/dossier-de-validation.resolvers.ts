@@ -9,6 +9,7 @@ import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDoss
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
+import { getDossierDeValidationHistory } from "./features/getDossierDeValidationHistory";
 
 const unsafeResolvers = {
   DossierDeValidation: {
@@ -33,6 +34,11 @@ const unsafeResolvers = {
       candidacyId: string;
     }) =>
       getDossierDeValidationOtherFilesNamesAndUrls({
+        candidacyId,
+        dossierDeValidationId: id,
+      }),
+    history: ({ id, candidacyId }: { id: string; candidacyId: string }) =>
+      getDossierDeValidationHistory({
         candidacyId,
         dossierDeValidationId: id,
       }),

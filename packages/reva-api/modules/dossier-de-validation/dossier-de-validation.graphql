@@ -10,6 +10,7 @@ type DossierDeValidation {
   isActive: Boolean!
   createdAt: Timestamp!
   updatedAt: Timestamp
+  history: [DossierDeValidation!]!
 }
 
 enum DossierDeValidationDecision {
