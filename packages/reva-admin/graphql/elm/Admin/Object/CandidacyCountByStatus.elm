@@ -79,6 +79,11 @@ dossierDeValidationEnvoyeHorsAbandon =
     Object.selectionForField "Int" "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON" [] Decode.int
 
 
+dossierDeValidationSignaleHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
+dossierDeValidationSignaleHorsAbandon =
+    Object.selectionForField "Int" "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" [] Decode.int
+
+
 demandeFinancementEnvoyeHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
 demandeFinancementEnvoyeHorsAbandon =
     Object.selectionForField "Int" "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" [] Decode.int
