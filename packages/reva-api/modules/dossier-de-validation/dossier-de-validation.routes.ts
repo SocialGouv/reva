@@ -22,6 +22,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
+    limits: { fileSize: maxUploadFileSizeInBytes },
   });
 
   server.get<{ Params: { candidacyId: string; fileId: string } }>(

@@ -22,6 +22,7 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
+    limits: { fileSize: maxUploadFileSizeInBytes },
   });
 
   server.post<{

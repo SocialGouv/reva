@@ -30,6 +30,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
+    limits: { fileSize: maxUploadFileSizeInBytes },
   });
 
   server.get<{ Params: { candidacyId: string; fileId: string } }>(

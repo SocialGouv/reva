@@ -15,8 +15,9 @@ interface PaymentRequestProofBody {
 }
 
 const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
-  const maxUploadFileSize: string =
-    process.env.UPLOAD_MAX_FILE_SIZE ?? "4194304";
+  const maxUploadFileSize: number = parseInt(
+    process.env.UPLOAD_MAX_FILE_SIZE ?? "4194304",
+  );
   const validMimeTypes: string =
     process.env.UPLOAD_VALID_MIME_TYPES ??
     "application/pdf,image/png,image/jpeg";
@@ -24,6 +25,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
+    limits: { fileSize: maxUploadFileSize },
   });
 
   server.post<{
@@ -70,7 +72,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
           );
       }
 
-      const result = await addPaymentProof(parseInt(maxUploadFileSize))(
+      const result = await addPaymentProof(maxUploadFileSize)(
         {
           addFileToUploadSpooler,
           getPaymentRequestByCandidacyId,
