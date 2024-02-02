@@ -143,6 +143,11 @@ const DossierDeValidationTab = () => {
                   communiquée dans les 3 mois maximum suivant la réception du
                   dossier.
                 </p>
+                <p className="mt-4">
+                  Si vous n'exigez pas de remise d'un dossier de validation, le
+                  document transmis sera alors un courrier vous informant que le
+                  candidat sera prêt dans les 3 mois au passage devant le jury.
+                </p>
               </>
             }
           />
