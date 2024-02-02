@@ -241,7 +241,20 @@ activeView context candidacy =
                             ]
                         )
                         "Demande de paiement"
-                , navigation = paymentRequestLink baseUrl candidacy
+                , navigation =
+                    let
+                        displayLink =
+                            if dossierDeValidationFeatureActive then
+                                Candidacy.isStatusEqualOrAbove candidacy DossierDeValidationEnvoye
+
+                            else
+                                Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye
+                    in
+                    if displayLink then
+                        paymentRequestLink baseUrl candidacy
+
+                    else
+                        Nothing
                 }
               , { content =
                     expandedView
@@ -302,7 +315,12 @@ dropOutView baseUrl candidacy dropOutDate =
                         [ DemandeFinancementEnvoye ]
                     )
                     "Demande de paiement"
-          , navigation = paymentRequestLink baseUrl candidacy
+          , navigation =
+                if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
+                    paymentRequestLink baseUrl candidacy
+
+                else
+                    Nothing
           }
         ]
 
@@ -423,11 +441,7 @@ paymentRequestLink baseUrl candidacy =
         tab =
             View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.PaymentRequest
     in
-    if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-        Just <| Route.href baseUrl <| Route.Candidacy tab
-
-    else
-        Nothing
+    Just <| Route.href baseUrl <| Route.Candidacy tab
 
 
 candidacyStatus : Candidacy -> Candidacy.Step
