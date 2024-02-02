@@ -30,6 +30,7 @@ export const getCandidacyCountByStatus = async ({
     DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON: 0,
     DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON: 0,
     DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 0,
+    DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON: 0,
     DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON: 0,
     DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: 0,
     VALIDATION_HORS_ABANDON: 0,
@@ -75,7 +76,7 @@ export const getCandidacyCountByStatus = async ({
                 ...getWhereClauseFromStatusFilter(statusFilter),
                 ...getWhereClauseFromSearchFilter(
                   candidacySearchWord,
-                  searchFilter
+                  searchFilter,
                 ),
               };
 
@@ -96,8 +97,8 @@ export const getCandidacyCountByStatus = async ({
         } catch (error) {
           console.error(error);
         }
-      }
-    )
+      },
+    ),
   );
 
   return candidacyCountByStatus;
