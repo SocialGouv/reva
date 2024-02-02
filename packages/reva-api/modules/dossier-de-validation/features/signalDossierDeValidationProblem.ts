@@ -1,5 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
+import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({
@@ -13,7 +14,11 @@ export const signalDossierDeValidationProblem = async ({
     dossierDeValidationId,
   });
 
-  if (!dossierDeValidation?.isActive) {
+  if (!dossierDeValidation) {
+    throw new Error("Le dossier de validation n'a pas été trouvé");
+  }
+
+  if (!dossierDeValidation.isActive) {
     throw new Error(
       "Impossible de signaler un problème sur ce dossier. Il est inactif",
     );
@@ -26,7 +31,7 @@ export const signalDossierDeValidationProblem = async ({
   }
 
   const candidacyStatus = await getCandidacyActiveStatus({
-    candidacyId: dossierDeValidation?.candidacyId,
+    candidacyId: dossierDeValidation.candidacyId,
   });
 
   if (candidacyStatus.status !== "DOSSIER_DE_VALIDATION_ENVOYE") {
@@ -40,6 +45,11 @@ export const signalDossierDeValidationProblem = async ({
       where: { id: dossierDeValidationId, isActive: true },
       data: { decisionComment, decision: "INCOMPLETE" },
     });
+
+  await updateCandidacyStatus({
+    candidacyId: dossierDeValidation.candidacyId,
+    status: "DOSSIER_DE_VALIDATION_SIGNALE",
+  });
 
   return updatedDossierDeValidation;
 };
