@@ -20,3 +20,10 @@ export const warningToast = (message: string) =>
   toast.custom(() => (
     <Alert severity="warning" title={message} className="bg-white" />
   ));
+
+export const graphqlErrorToast = (error: any) => {
+  const message = error?.response?.errors
+    ?.map((e: { message?: string }) => e?.message)
+    ?.join(", ");
+  errorToast(message ?? error?.message ?? JSON.stringify(error));
+};
