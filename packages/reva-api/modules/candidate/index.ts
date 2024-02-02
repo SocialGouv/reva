@@ -3,11 +3,6 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
-import {
-  sendLoginEmail,
-  sendRegistrationEmail,
-  sendUnknownUserEmail,
-} from "../shared/email";
 import { generateJwt } from "./auth.helper";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
@@ -18,13 +13,18 @@ import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "./features/getCandidateByEmail";
+import {
+  sendLoginEmail,
+  sendRegistrationEmail,
+  sendUnknownUserEmail,
+} from "./mails";
 
 export const resolvers = {
   Query: {
     candidate_getCandidateWithCandidacy: async (
       _: any,
       params: any,
-      context: { auth: any }
+      context: { auth: any },
     ) => {
       const result = await getCandidateWithCandidacy({
         getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
@@ -37,7 +37,7 @@ export const resolvers = {
     candidate_getCandidateByEmail: async (
       _: any,
       { email }: { email: string },
-      context: { auth: any }
+      context: { auth: any },
     ) => {
       const result = await getCandidateByEmail({
         hasRole: context.auth.hasRole,
@@ -60,7 +60,7 @@ export const resolvers = {
           lastname: string;
           departmentId: string;
         };
-      }
+      },
     ) => {
       const result = await askForRegistration({
         generateJWTForRegistration: async (data: unknown) =>
@@ -85,7 +85,7 @@ export const resolvers = {
           keycloak: Keycloak.Keycloak;
           getKeycloakAdmin: () => KeycloakAdminClient;
         };
-      }
+      },
     ) => {
       const keycloakAdmin = await app.getKeycloakAdmin();
 
@@ -103,7 +103,7 @@ export const resolvers = {
         app: {
           getKeycloakAdmin: () => KeycloakAdminClient;
         };
-      }
+      },
     ) => {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
 

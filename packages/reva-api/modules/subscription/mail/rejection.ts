@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
 import { Left, Right } from "purify-ts";
 
-import { sendGenericEmail } from "../../shared/email";
+import { sendGenericEmailPurifyJS } from "../../shared/email";
 import { logger } from "../../shared/logger";
 import { template } from "./template";
 
@@ -29,7 +29,7 @@ export const sendRejectionEmail = async ({
         <p>Très cordialement</p>
         <p>L’équipe France VAE.</p>
       `,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -46,7 +46,7 @@ export const sendRejectionEmail = async ({
     logger.info("=========================");
     return Right("ok");
   }
-  return sendGenericEmail({
+  return sendGenericEmailPurifyJS({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Votre inscription France VAE a été invalidée",

@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
 import { Left, Right } from "purify-ts";
 
-import { sendGenericEmail } from "../../shared/email";
+import { sendGenericEmailPurifyJS } from "../../shared/email";
 import { logger } from "../../shared/logger";
 import { template } from "./template";
 
@@ -20,7 +20,7 @@ export const sendSubscriptionValidationInProgressEmail = async ({
         <p>Si des questions subsistent, n'hésitez pas à nous contacter via la messagerie instantanée ou par e-mail à <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.</p>
         <p>L’équipe France VAE.</p>
       `,
-    })
+    }),
   );
 
   if (htmlContent.errors.length > 0) {
@@ -37,7 +37,7 @@ export const sendSubscriptionValidationInProgressEmail = async ({
     logger.info("=========================");
     return Right("ok");
   }
-  return sendGenericEmail({
+  return sendGenericEmailPurifyJS({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Votre compte professionnel France VAE est en cours de validation",

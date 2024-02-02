@@ -3,7 +3,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 import {
   sendConfirmationCandidacySubmissionEmail,
   sendNewCandidacyEmail,
-} from "../candidacy.mails";
+} from "../mails";
 import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
 import { getCandidacyById } from "./getCandidacyById";
 import { getCandidateById } from "./getCandidateById";
@@ -38,7 +38,7 @@ export const submitCandidacy = async ({
 
   if (!candidate) {
     throw new Error(
-      `Impossible de trouver le candidat ${candidacy.candidateId}`
+      `Impossible de trouver le candidat ${candidacy.candidateId}`,
     );
   }
 
@@ -51,7 +51,7 @@ export const submitCandidacy = async ({
 
   if (!organism) {
     throw new Error(
-      `Impossible de trouver l'organisme pour la candidature ${candidacy.id}`
+      `Impossible de trouver l'organisme pour la candidature ${candidacy.id}`,
     );
   }
   await sendNewCandidacyEmail({ email: organism.contactAdministrativeEmail });

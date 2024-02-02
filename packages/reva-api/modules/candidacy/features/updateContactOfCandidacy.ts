@@ -4,8 +4,7 @@ import { Candidate } from "../../candidate/candidate.types";
 import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
-} from "../candidacy.mails";
-
+} from "../mails";
 export const updateContactOfCandidacy = async (
   context: {
     hasRole: (role: string) => boolean;
@@ -19,7 +18,7 @@ export const updateContactOfCandidacy = async (
       phone: string;
       email: string;
     };
-  }
+  },
 ): Promise<Candidate> => {
   const { candidateId, candidateData } = params;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
@@ -40,7 +39,7 @@ export const updateContactOfCandidacy = async (
 
   if (candidateWithEmail && candidateWithEmail.id != candidateToUpdate.id) {
     throw new Error(
-      `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse email`
+      `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse email`,
     );
   }
 
@@ -54,7 +53,7 @@ export const updateContactOfCandidacy = async (
         newEmail,
         action: "confirmEmail",
       },
-      1 * 60 * 60 * 24 * 4
+      1 * 60 * 60 * 24 * 4,
     );
 
     await sendPreviousEmailCandidateEmail({ email: previousEmail });

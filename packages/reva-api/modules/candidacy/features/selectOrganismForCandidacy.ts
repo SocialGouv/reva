@@ -4,8 +4,8 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
-import { sendPreventOrganismCandidateChangeOrganismEmail } from "../candidacy.mails";
 import { updateOrganism } from "../database/candidacies";
+import { sendPreventOrganismCandidateChangeOrganismEmail } from "../mails";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 export const selectOrganismForCandidacy = async ({
@@ -30,13 +30,13 @@ export const selectOrganismForCandidacy = async ({
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-      `Aucune candidature n'a été trouvée`
+      `Aucune candidature n'a été trouvée`,
     );
   }
 
   if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
+      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
     );
   }
 
@@ -57,7 +57,7 @@ export const selectOrganismForCandidacy = async ({
       certificationsAndRegions,
     } = candidacy;
     const activeCertificationsAndRegions = certificationsAndRegions.find(
-      (c) => c.isActive
+      (c) => c.isActive,
     );
 
     const certification = await prismaClient.certification.findUnique({
@@ -65,7 +65,7 @@ export const selectOrganismForCandidacy = async ({
     });
 
     const currentCandidacyStatus = candidacy.candidacyStatuses.find(
-      (status) => status.isActive == true
+      (status) => status.isActive == true,
     );
     const isValidStatus =
       currentCandidacyStatus &&
@@ -92,7 +92,7 @@ export const selectOrganismForCandidacy = async ({
     logger.error(e);
     throw new FunctionalError(
       FunctionalCodeError.ORGANISM_NOT_UPDATED,
-      `Erreur lors de la mise à jour de l'organisme`
+      `Erreur lors de la mise à jour de l'organisme`,
     );
   }
 };
