@@ -40,6 +40,15 @@ export const sendDossierDeValidation = async ({
     );
   }
 
+  if (
+    !["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].includes(
+      candidacy.candidacyStatuses?.[0]?.status,
+    )
+  ) {
+    throw new Error(
+      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_FAISABILITE_INCOMPLET ",
+    );
+  }
   const dossierDeValidationFileId = uuidV4();
   await uploadFile({
     candidacyId,
@@ -66,6 +75,11 @@ export const sendDossierDeValidation = async ({
       mimeType: d.file.mimetype,
       name: d.file.filename,
     })),
+  });
+
+  await prismaClient.dossierDeValidation.updateMany({
+    where: { candidacyId },
+    data: { isActive: false },
   });
 
   const dossierDeValidation = await prismaClient.dossierDeValidation.create({
