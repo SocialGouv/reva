@@ -4,9 +4,12 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.DossierDeValidation
 import Data.Referential exposing (Referential)
-import Html exposing (div, h2, text)
+import Html exposing (div, h2, p, text)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
+import Time
+import View
+import View.Date as Date
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
@@ -14,6 +17,36 @@ form formData ( candidacy, _ ) =
     let
         keys =
             Data.Form.DossierDeValidation.keys
+
+        problemSignaledSection =
+            case candidacy.activeDossierDeValidation of
+                Just dossierDeValidation ->
+                    [ ( "problemSignaledWarning"
+                      , Form.StaticHtml <|
+                            View.alert View.Warning
+                                [ class "my-10" ]
+                                "Dossier de validation signalé par le certificateur"
+                                [ p [] [ text "Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous.Merci de retourner rapidement un dossier valide." ]
+                                ]
+                      )
+                    , ( "dossierDeValidationSentAt"
+                      , Form.StaticHtml <|
+                            p
+                                [ class "font-bold" ]
+                                [ text <|
+                                    "Dossier envoyé le "
+                                        ++ Date.toSmallFormat
+                                            dossierDeValidation.dossierDeValidationSentAt
+                                ]
+                      )
+                    , toHistoryEntry dossierDeValidation
+                    ]
+                        ++ List.map
+                            toHistoryEntry
+                            dossierDeValidation.history
+
+                _ ->
+                    [ ( "problemSignaledWarning", Form.StaticHtml <| text "" ) ]
 
         filesChecklistTitle =
             ( ""
@@ -63,13 +96,14 @@ form formData ( candidacy, _ ) =
                 ]
     in
     { elements =
-        [ ( ""
-          , Form.Text "Le dossier de validation doit être rédigé par le candidat. Des pièces supplémentaires peuvent être ajoutées selon les attendus du certificateur (ex : attestation de premiers secours). " Nothing
-          )
-        , ( "", Form.Title1 "Joindre le dossier de validation" )
-        , ( keys.dossierDeValidationFile, Form.FileRequired "" "Format supporté : PDF uniquement avec un poids maximum de 2Mo" )
-        , ( "", Form.Title1 "Joindre des pièces supplémentaires (optionnel)" )
-        ]
+        ( ""
+        , Form.Text "Le dossier de validation doit être rédigé par le candidat. Des pièces supplémentaires peuvent être ajoutées selon les attendus du certificateur (ex : attestation de premiers secours). " Nothing
+        )
+            :: problemSignaledSection
+            ++ [ ( "", Form.Title1 "Joindre le dossier de validation" )
+               , ( keys.dossierDeValidationFile, Form.FileRequired "" "Format supporté : PDF uniquement avec un poids maximum de 2Mo" )
+               , ( "", Form.Title1 "Joindre des pièces supplémentaires (optionnel)" )
+               ]
             ++ otherFilePickerElements
             ++ [ filesChecklistTitle
                , ( "filesChecklist", Form.CheckboxList "" filesChecklist )
@@ -78,3 +112,39 @@ form formData ( candidacy, _ ) =
     , submitLabel = "Envoyer les documents"
     , title = ""
     }
+
+
+toHistoryEntry : { a | decisionSentAt : Maybe Time.Posix, decisionComment : Maybe String } -> ( String, Form.Element )
+toHistoryEntry h =
+    ( "dossierDeValidationHistoryEntry"
+    , Form.StaticHtml <|
+        div [ class "flex flex-col bg-neutral-100 p-8 mb-6" ]
+            [ p
+                [ class "font-bold mb-2 text-xl" ]
+                [ text
+                    "Dossier signalé : "
+                ]
+            , p
+                []
+                [ text <|
+                    "Dossier signalé le "
+                        ++ (case h.decisionSentAt of
+                                Just date ->
+                                    Date.toSmallFormat date
+
+                                Nothing ->
+                                    "date inconnue"
+                           )
+                ]
+            , p
+                [ class "font-bold mb-2 text-xl" ]
+                [ text
+                    "Motif du signalement : "
+                ]
+            , p
+                [ class "mb-0" ]
+                [ text <|
+                    Maybe.withDefault "" h.decisionComment
+                ]
+            ]
+    )

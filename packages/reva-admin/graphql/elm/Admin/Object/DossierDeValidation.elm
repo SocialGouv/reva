@@ -79,3 +79,10 @@ createdAt =
 updatedAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DossierDeValidation
 updatedAt =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "updatedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+history :
+    SelectionSet decodesTo Admin.Object.DossierDeValidation
+    -> SelectionSet (List decodesTo) Admin.Object.DossierDeValidation
+history object____ =
+    Object.selectionForCompositeField "history" [] object____ (Basics.identity >> Decode.list)
