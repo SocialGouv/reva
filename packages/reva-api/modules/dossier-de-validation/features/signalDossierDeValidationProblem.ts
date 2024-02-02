@@ -43,7 +43,11 @@ export const signalDossierDeValidationProblem = async ({
   const updatedDossierDeValidation =
     await prismaClient.dossierDeValidation.update({
       where: { id: dossierDeValidationId, isActive: true },
-      data: { decisionComment, decision: "INCOMPLETE" },
+      data: {
+        decisionComment,
+        decision: "INCOMPLETE",
+        decisionSentAt: new Date(),
+      },
     });
 
   await updateCandidacyStatus({
