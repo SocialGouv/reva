@@ -343,11 +343,14 @@ statusToProgressPosition status =
         DemandeFinancementEnvoye ->
             8
 
-        DossierDeValidationEnvoye ->
+        DossierDeValidationSignale ->
             9
 
-        DemandePaiementEnvoyee ->
+        DossierDeValidationEnvoye ->
             10
+
+        DemandePaiementEnvoyee ->
+            11
 
         _ ->
             -1

@@ -179,7 +179,7 @@ activeView context candidacy =
                         expandedView
                             (getDefaultExpandedViewStatusFromCandidacyStatus
                                 candidacy
-                                [ DemandeFinancementEnvoye ]
+                                [ DemandeFinancementEnvoye, DossierDeValidationSignale ]
                             )
                             "Dossier de validation"
                   , navigation =

@@ -10,6 +10,7 @@ module Page.Candidacy exposing
 
 import Accessibility exposing (h1, h4)
 import Admin.Enum.CandidacyStatusStep as Step
+import Admin.Enum.DossierDeValidationDecision as DossierDeValidationDecision exposing (DossierDeValidationDecision)
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
@@ -267,17 +268,26 @@ view context model =
                 DossierDeValidation ->
                     case model.selected of
                         Success candidacy ->
-                            case candidacy.activeDossierDeValidation of
-                                Just dossierDeValidation ->
-                                    viewMain context "dossier-de-validation-sent" <|
-                                        viewDossierDeValidationSent context candidacy dossierDeValidation
-
-                                Nothing ->
+                            let
+                                viewDossierDeValidationForm =
                                     viewFormWithTabs "readyForJuryEstimatedDate"
                                         "Dossier de validation"
                                         [ readyForJuryEstimatedDate candidacy.id False
                                         , dossierValidationTab candidacy.id True
                                         ]
+                            in
+                            case candidacy.activeDossierDeValidation of
+                                Just dossierDeValidation ->
+                                    case dossierDeValidation.decision of
+                                        DossierDeValidationDecision.Pending ->
+                                            viewMain context "dossier-de-validation-sent" <|
+                                                viewDossierDeValidationSent context candidacy dossierDeValidation
+
+                                        _ ->
+                                            viewDossierDeValidationForm
+
+                                Nothing ->
+                                    viewDossierDeValidationForm
 
                         _ ->
                             div [ class "h-[800px]" ] []
@@ -611,11 +621,7 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.DossierDeValidation.validate
                         , status =
-                            if candidacy.activeDossierDeValidation == Nothing then
-                                Form.Editable
-
-                            else
-                                Form.ReadOnly
+                            Form.Editable
                         }
                         model.form
             in

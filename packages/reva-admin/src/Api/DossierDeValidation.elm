@@ -14,5 +14,6 @@ selection =
     SelectionSet.succeed Data.DossierDeValidation.DossierDeValidation
         |> with Admin.Object.DossierDeValidation.id
         |> with Admin.Object.DossierDeValidation.dossierDeValidationSentAt
+        |> with Admin.Object.DossierDeValidation.decision
         |> with (Admin.Object.DossierDeValidation.dossierDeValidationFile File.selection)
         |> with (Admin.Object.DossierDeValidation.dossierDeValidationOtherFiles File.selection)
