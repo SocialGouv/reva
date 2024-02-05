@@ -2,7 +2,7 @@ import { prismaClient } from "../../../prisma/client";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
 import { getOrganismByCandidacyId } from "../../candidacy/features/getOrganismByCandidacyId";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { sendDVSignalToOrganismEmail } from "../mails";
+import { sendDVSignalToOrganismEmail } from "../emails";
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({

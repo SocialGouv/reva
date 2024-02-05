@@ -3,10 +3,10 @@ import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendNewDVToCertificationAuthoritiesEmail = ({
   emails,
-  dvId,
+  candidacyId,
 }: {
   emails: string[];
-  dvId: string;
+  candidacyId: string;
 }) => {
   const htmlContent = (url: string) =>
     mjml2html(
@@ -27,7 +27,7 @@ export const sendNewDVToCertificationAuthoritiesEmail = ({
     to: emails.map((email) => ({ email })),
     app: "admin2",
     htmlContent,
-    customUrl: `/dossier-de-validation/${dvId}`,
+    customUrl: `/candidacies/${candidacyId}/dossier-de-validation`,
     subject: "Un nouveau dossier de validation est en attente",
   });
 };
