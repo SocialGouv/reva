@@ -22,7 +22,7 @@ const CandidacyPageLaout = ({ children }: { children: ReactNode }) => {
   });
 
   return isFeatureActive("DOSSIER_DE_VALIDATION") ? (
-    <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
+    <div className="flex flex-col flex-1 w-full md:flex-row gap-10 md:gap-0">
       <SideMenu
         className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
         align="left"
