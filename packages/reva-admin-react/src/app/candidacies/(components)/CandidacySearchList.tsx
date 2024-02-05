@@ -14,10 +14,7 @@ interface SearchListProps {
   updateSearchFilter: (searchFilter: string) => void;
   searchResults: DossierDeValidationPage | FeasibilityPage;
   currentPage: number;
-  searchResultLink: (searchResult: {
-    id: string;
-    candidacyId: string;
-  }) => string;
+  searchResultLink: (searchResultCandidacyId: string) => string;
 }
 
 export const CandidacySearchList = ({
@@ -61,7 +58,7 @@ export const CandidacySearchList = ({
           <Button
             className="ml-auto col-start-2"
             linkProps={{
-              href: searchResultLink({ id: r.id, candidacyId: r.candidacy.id }),
+              href: searchResultLink(r.candidacy.id),
             }}
           >
             Accéder au dossier

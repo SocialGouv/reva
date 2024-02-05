@@ -111,8 +111,8 @@ const RejectedSubscriptionRequestsPage = () => {
           updateSearchFilter={updateSearchFilter}
           searchResults={feasibilityPage as FeasibilityPage}
           currentPage={currentPage}
-          searchResultLink={(searchResult) =>
-            `/candidacies/${searchResult.candidacyId}/feasibility`
+          searchResultLink={(searchResultCandidacyId) =>
+            `/candidacies/${searchResultCandidacyId}/feasibility`
           }
         />
       </div>

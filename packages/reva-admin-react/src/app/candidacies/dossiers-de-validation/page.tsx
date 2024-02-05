@@ -120,8 +120,8 @@ const DossiersDeValidationPage = () => {
           updateSearchFilter={updateSearchFilter}
           searchResults={dossierDeValidationPage as DossierDeValidationPage}
           currentPage={currentPage}
-          searchResultLink={(searchResult) =>
-            `/candidacies/${searchResult.candidacyId}/dossier-de-validation`
+          searchResultLink={(searchResultCandidacyId) =>
+            `/candidacies/${searchResultCandidacyId}/dossier-de-validation`
           }
         />
       </div>
