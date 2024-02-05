@@ -37,7 +37,7 @@ const DossierDeValidationProblemPage = () => {
       });
       successToast("Problème signalé avec succès");
       router.push(
-        `http://localhost:3003/admin2/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`,
+        `/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`,
       );
     } catch (e) {
       graphqlErrorToast(e);
@@ -47,7 +47,7 @@ const DossierDeValidationProblemPage = () => {
     dossierDeValidation && (
       <div className="flex flex-col w-full">
         <Link
-          href={`http://localhost:3003/admin2/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`}
+          href={`/candidacies/dossiers-de-validation/${dossierDeValidation?.id}`}
           className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
         >
           Retour au dossier
