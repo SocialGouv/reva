@@ -60,6 +60,7 @@ export const useDossierDeValidationPageLogic = () => {
   return {
     getDossierDeValidationStatus,
     dossierDeValidation,
+    candidacy,
     readyForJuryEstimatedAt,
     canSignalProblem,
   };

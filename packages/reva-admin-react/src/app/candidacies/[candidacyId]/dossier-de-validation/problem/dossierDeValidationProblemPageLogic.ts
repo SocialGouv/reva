@@ -59,11 +59,12 @@ export const useDossierDeValidationProblemPageLogic = () => {
       }),
   });
 
-  const dossierDeValidation =
-    getDossierDeValidationResponse?.getCandidacyById?.activeDossierDeValidation;
+  const candidacy = getDossierDeValidationResponse?.getCandidacyById;
+  const dossierDeValidation = candidacy?.activeDossierDeValidation;
 
   return {
     dossierDeValidation,
+    candidacy,
     signalDossierDeValidationProblem,
   };
 };

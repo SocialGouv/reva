@@ -72,6 +72,7 @@ const ReadyForJuryEstimatedDateTab = () => {
 const DossierDeValidationTab = () => {
   const {
     dossierDeValidation,
+    candidacy,
     getDossierDeValidationStatus,
     canSignalProblem,
   } = useDossierDeValidationPageLogic();
@@ -121,7 +122,7 @@ const DossierDeValidationTab = () => {
                 priority="secondary"
                 className="mt-10 ml-auto"
                 linkProps={{
-                  href: `/candidacies/dossiers-de-validation/${dossierDeValidation.id}/problem`,
+                  href: `/candidacies/${candidacy?.id}/dossier-de-validation/problem`,
                 }}
               >
                 Signaler un problème
