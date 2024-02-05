@@ -31,7 +31,7 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
     );
 
   return sendEmailWithLink({
-    email,
+    email: { email },
     htmlContent,
     subject: "Votre candidature a été transmise",
     action: "",

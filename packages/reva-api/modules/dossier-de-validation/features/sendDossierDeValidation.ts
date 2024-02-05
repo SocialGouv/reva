@@ -2,8 +2,11 @@ import { FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
+import { getAccountById } from "../../account/features/getAccount";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { FileService, UploadedFile } from "../../shared/file";
+import { sendNewDVToCertificationAuthoritiesEmail } from "../mails";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "./getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 
 export const sendDossierDeValidation = async ({
   candidacyId,
@@ -20,6 +23,11 @@ export const sendDossierDeValidation = async ({
       candidacyDropOut: true,
       candidacyStatuses: { where: { isActive: true } },
       Feasibility: { where: { isActive: true } },
+      department: true,
+      certificationsAndRegions: {
+        where: { isActive: true },
+        include: { certification: true },
+      },
     },
   });
   if (!candidacy) {
@@ -104,12 +112,46 @@ export const sendDossierDeValidation = async ({
         connect: { id: candidacy.Feasibility[0].certificationAuthorityId },
       },
     },
+    include: {
+      certificationAuthority: true,
+    },
   });
 
   await updateCandidacyStatus({
     candidacyId,
     status: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
+
+  const candidacyCertificationId =
+    candidacy?.certificationsAndRegions?.[0]?.certificationId;
+  const candidacyDepartmentId = candidacy.departmentId;
+
+  if (candidacyCertificationId && candidacyDepartmentId) {
+    const certificationAuthorityLocalAccounts =
+      await getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment(
+        {
+          certificationAuthorityId:
+            dossierDeValidation.certificationAuthorityId,
+          certificationId: candidacyCertificationId,
+          departmentId: candidacyDepartmentId,
+        },
+      );
+    const certificationAuthority = dossierDeValidation.certificationAuthority;
+    const emails = [];
+    if (certificationAuthority?.contactEmail) {
+      emails.push(certificationAuthority?.contactEmail);
+    }
+    for (const cala of certificationAuthorityLocalAccounts) {
+      const account = await getAccountById({ id: cala.accountId });
+      emails.push(account.email);
+    }
+    if (emails.length) {
+      sendNewDVToCertificationAuthoritiesEmail({
+        emails,
+        dvId: dossierDeValidation.id,
+      });
+    }
+  }
 
   return dossierDeValidation;
 };

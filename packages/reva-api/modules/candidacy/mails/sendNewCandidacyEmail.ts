@@ -19,7 +19,7 @@ export const sendNewCandidacyEmail = ({ email }: { email: string }) => {
     );
 
   return sendEmailWithLink({
-    email,
+    email: { email },
     htmlContent,
     subject: "Une nouvelle candidature est arrivée",
     action: "",

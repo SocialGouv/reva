@@ -36,7 +36,7 @@ export const sendTrainingEmail = async (email: string, token: string) => {
     );
 
   return sendEmailWithLink({
-    email,
+    email: { email },
     token,
     action: "login",
     htmlContent,

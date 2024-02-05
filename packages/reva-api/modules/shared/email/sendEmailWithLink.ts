@@ -8,17 +8,20 @@ export const sendEmailWithLink = async ({
   app = "app",
   htmlContent,
   subject,
+  customUrl,
 }: {
-  email: string;
+  email: { email: string } | { email: string }[];
   token?: string;
-  action: "registration" | "login" | "confirmEmail" | "admin" | "";
-  app?: "app" | "admin";
+  action?: "registration" | "login" | "confirmEmail" | "admin" | "";
+  customUrl?: string;
+  app?: "app" | "admin" | "admin2";
   htmlContent: (url: string) => { html: string };
   subject?: string;
 }) => {
-  const url = `${process.env.BASE_URL}/${app}/${action}${
-    token ? `?token=${token}` : ""
-  }`;
+  const baseUrl = `${process.env.BASE_URL}/${app}`;
+  const url = customUrl
+    ? `${baseUrl}${customUrl}`
+    : `${baseUrl}/${action}${token ? `?token=${token}` : ""}`;
   const emailContent = htmlContent(url);
 
   if (process.env.NODE_ENV !== "production") {
@@ -29,7 +32,7 @@ export const sendEmailWithLink = async ({
   }
   return sendGenericEmail({
     htmlContent: emailContent.html,
-    to: { email },
-    subject: subject || "Votre accès à votre parcours France VAE",
+    to: email,
+    subject: subject || "France VAE",
   });
 };
