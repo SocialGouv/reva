@@ -4,10 +4,10 @@ import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../prisma/client";
 import { getAccountById } from "../../account/features/getAccount";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { FileService, UploadedFile } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../mails";
 import { sendDVSentToCandidateEmail } from "../mails/sendDVSentToCandidateEmail";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "./getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 
 export const sendDossierDeValidation = async ({
   candidacyId,

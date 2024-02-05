@@ -1,6 +1,8 @@
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
+import { getOrganismByCandidacyId } from "../../candidacy/features/getOrganismByCandidacyId";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
+import { sendDVSignalToOrganismEmail } from "../mails";
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({
@@ -40,6 +42,11 @@ export const signalDossierDeValidationProblem = async ({
     );
   }
 
+  const candidacy = await getOrganismByCandidacyId({
+    candidacyId: dossierDeValidation.candidacyId,
+  });
+
+  const organism = candidacy?.organism;
   const updatedDossierDeValidation =
     await prismaClient.dossierDeValidation.update({
       where: { id: dossierDeValidationId, isActive: true },
@@ -54,6 +61,14 @@ export const signalDossierDeValidationProblem = async ({
     candidacyId: dossierDeValidation.candidacyId,
     status: "DOSSIER_DE_VALIDATION_SIGNALE",
   });
+
+  if (organism?.contactAdministrativeEmail) {
+    sendDVSignalToOrganismEmail({
+      email: organism?.contactAdministrativeEmail,
+      candadicyId: updatedDossierDeValidation.candidacyId,
+      decisionComment,
+    });
+  }
 
   return updatedDossierDeValidation;
 };
