@@ -6,6 +6,7 @@ import { getAccountById } from "../../account/features/getAccount";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { FileService, UploadedFile } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../mails";
+import { sendDVSentToCandidateEmail } from "../mails/sendDVSentToCandidateEmail";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "./getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 
 export const sendDossierDeValidation = async ({
@@ -151,6 +152,10 @@ export const sendDossierDeValidation = async ({
         dvId: dossierDeValidation.id,
       });
     }
+  }
+
+  if (candidacy?.email) {
+    sendDVSentToCandidateEmail({ email: candidacy.email });
   }
 
   return dossierDeValidation;

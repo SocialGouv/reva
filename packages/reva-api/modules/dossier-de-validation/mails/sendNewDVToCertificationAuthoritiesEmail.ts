@@ -24,7 +24,7 @@ export const sendNewDVToCertificationAuthoritiesEmail = ({
     );
 
   return sendEmailWithLink({
-    email: emails.map((email) => ({ email })),
+    to: emails.map((email) => ({ email })),
     app: "admin2",
     htmlContent,
     customUrl: `/dossier-de-validation/${dvId}`,

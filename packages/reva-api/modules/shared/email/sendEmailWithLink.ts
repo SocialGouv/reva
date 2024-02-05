@@ -2,7 +2,7 @@ import { sendGenericEmail } from ".";
 import { logger } from "../logger";
 
 export const sendEmailWithLink = async ({
-  email,
+  to,
   token,
   action,
   app = "app",
@@ -10,7 +10,7 @@ export const sendEmailWithLink = async ({
   subject,
   customUrl,
 }: {
-  email: { email: string } | { email: string }[];
+  to: { email: string } | { email: string }[];
   token?: string;
   action?: "registration" | "login" | "confirmEmail" | "admin" | "";
   customUrl?: string;
@@ -32,7 +32,7 @@ export const sendEmailWithLink = async ({
   }
   return sendGenericEmail({
     htmlContent: emailContent.html,
-    to: email,
+    to,
     subject: subject || "France VAE",
   });
 };

@@ -25,7 +25,7 @@ export const sendNewEmailCandidateEmail = ({
     );
 
   return sendEmailWithLink({
-    email: { email },
+    to: { email },
     subject: "Votre e-mail sur France VAE a été changé",
     htmlContent,
     token,
