@@ -18,6 +18,7 @@ interface SearchListProps {
   updateSearchFilter: (searchFilter: string) => void;
   searchResults: DossierDeValidationPage | FeasibilityPage;
   currentPage: number;
+  searchResultLink: (searchResultId: string) => string;
 }
 
 const SearchList = ({
@@ -27,6 +28,7 @@ const SearchList = ({
   updateSearchFilter,
   searchResults,
   currentPage,
+  searchResultLink,
 }: SearchListProps) => {
   const currentPathname = usePathname();
   if (!searchResults) return null;
@@ -65,7 +67,7 @@ const SearchList = ({
             </p>
             <Button
               className="ml-auto col-start-2"
-              linkProps={{ href: `${currentPathname}/${r.id}` }}
+              linkProps={{ href: searchResultLink(r.id) }}
             >
               Accéder au dossier
             </Button>

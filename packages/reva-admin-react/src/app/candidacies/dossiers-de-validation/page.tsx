@@ -124,6 +124,7 @@ const DossiersDeValidationPage = () => {
           updateSearchFilter={updateSearchFilter}
           searchResults={dossierDeValidationPage as DossierDeValidationPage}
           currentPage={currentPage}
+          searchResultLink={(searchResultId) => `${pathname}/${searchResultId}`}
         />
       </div>
     )
