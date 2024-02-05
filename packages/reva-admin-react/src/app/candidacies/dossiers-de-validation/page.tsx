@@ -10,7 +10,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import SearchList from "../(components)/SearchList";
+import { CandidacySearchList } from "../(components)/CandidacySearchList";
 import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
 
 const RECORDS_PER_PAGE = 10;
@@ -117,9 +117,8 @@ const DossiersDeValidationPage = () => {
     dossierDeValidationPage && (
       <div className="flex flex-col">
         {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
-        <SearchList
+        <CandidacySearchList
           categoryLabel={categoryLabel}
-          category={category as string}
           searchFilter={searchFilter}
           updateSearchFilter={updateSearchFilter}
           searchResults={dossierDeValidationPage as DossierDeValidationPage}

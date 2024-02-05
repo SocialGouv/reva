@@ -2,8 +2,7 @@
 import { SubscriptionRequestCard } from "@/app/subscriptions/components/subscription-request-card/SubscriptionRequestCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
-import { Pagination } from "@/components/pagination/Pagination";
-import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
+import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -71,37 +70,24 @@ const RejectedSubscriptionRequestsPage = () => {
         </p>
         <br />
         {getRejectedSubscriptionRequestsStatus === "success" && (
-          <>
-            <h4 className="text-2xl font-bold mb-6">
-              Inscriptions refusées ({subscriptionRequestPage.info.totalRows})
-            </h4>
-
-            <SearchFilterBar
-              className="mb-6"
-              searchFilter={searchFilter}
-              resultCount={subscriptionRequestPage.info.totalRows}
-              onSearchFilterChange={updateSearchFilter}
-            />
-
-            <ul className="flex flex-col gap-5">
-              {subscriptionRequestPage.rows.map((r) => (
-                <SubscriptionRequestCard
-                  key={r.id}
-                  companyName={r.companyName}
-                  createdAt={r.createdAt}
-                  href={`/subscriptions/${r.id}`}
-                />
-              ))}
-            </ul>
-          </>
+          <SearchList
+            title="Inscriptions refusées"
+            currentPage={currentPage}
+            totalPages={subscriptionRequestPage.info.totalPages}
+            searchFilter={searchFilter}
+            searchResultsTotal={subscriptionRequestPage.info.totalRows}
+            updateSearchFilter={updateSearchFilter}
+          >
+            {subscriptionRequestPage.rows.map((r) => (
+              <SubscriptionRequestCard
+                key={r.id}
+                companyName={r.companyName}
+                createdAt={r.createdAt}
+                href={`/subscriptions/${r.id}`}
+              />
+            ))}
+          </SearchList>
         )}
-        <br />
-        <Pagination
-          totalPages={subscriptionRequestPage.info.totalPages}
-          currentPage={currentPage}
-          baseHref="/subscriptions/rejected"
-          className="mx-auto"
-        />
       </div>
     )
   );
