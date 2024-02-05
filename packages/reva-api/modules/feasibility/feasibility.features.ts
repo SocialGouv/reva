@@ -567,20 +567,6 @@ export const getFeasibilityById = async ({
     throw new Error("Ce dossier est introuvable");
   }
 
-  const relatedFeasibilities = await prismaClient.feasibility.findMany({
-    where: {
-      candidacyId: feasibility.candidacyId,
-      decision: "INCOMPLETE",
-      NOT: { id: feasibilityId },
-    },
-  });
-
-  const history = relatedFeasibilities.map((f) => ({
-    decision: f.decision,
-    decisionComment: f.decisionComment,
-    decisionSentAt: f.decisionSentAt,
-  }));
-
   const authorized = await canManageFeasibility({
     hasRole,
     feasibility,
@@ -588,7 +574,7 @@ export const getFeasibilityById = async ({
   });
 
   if (hasRole("admin") || authorized) {
-    return { ...feasibility, history };
+    return { ...feasibility };
   } else {
     throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
   }

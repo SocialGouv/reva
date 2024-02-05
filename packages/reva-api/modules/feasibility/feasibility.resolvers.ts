@@ -7,6 +7,7 @@ import {
   getFileNameAndUrl,
 } from "./feasibility.features";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
+import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 
 export const feasibilityResolvers = {
   Candidacy: {
@@ -47,6 +48,8 @@ export const feasibilityResolvers = {
       certificateOfAttendanceFileId: string;
     }) =>
       getFileNameAndUrl({ candidacyId, fileId: certificateOfAttendanceFileId }),
+    history: ({ candidacyId, id }: { candidacyId: string; id: string }) =>
+      getFeasibilityHistory({ candidacyId, feasibilityId: id }),
   },
   Query: {
     feasibilityCountByCategory: (
@@ -54,7 +57,7 @@ export const feasibilityResolvers = {
       _params: {
         searchFilter?: string;
       },
-      context: any
+      context: any,
     ) =>
       getActiveFeasibilityCountByCategory({
         keycloakId: context.auth.userInfo?.sub,
@@ -69,7 +72,7 @@ export const feasibilityResolvers = {
         category?: FeasibilityCategoryFilter;
         searchFilter?: string;
       },
-      context: any
+      context: any,
     ) =>
       getActiveFeasibilities({
         keycloakId: context.auth.userInfo?.sub,
