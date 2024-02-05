@@ -84,10 +84,7 @@ const DossiersDeValidationPage = () => {
     router.push(`${pathname}?CATEGORY=${category || "ALL"}`);
   };
 
-  const {
-    data: getDossiersDeValidationResponse,
-    status: getDossierDeValidationsStatus,
-  } = useQuery({
+  const { data: getDossiersDeValidationResponse } = useQuery({
     queryKey: ["getDossiersDeValidation", searchFilter, currentPage, category],
     queryFn: () =>
       graphqlClient.request(getDossiersDeValidationQuery, {
@@ -123,7 +120,9 @@ const DossiersDeValidationPage = () => {
           updateSearchFilter={updateSearchFilter}
           searchResults={dossierDeValidationPage as DossierDeValidationPage}
           currentPage={currentPage}
-          searchResultLink={(searchResultId) => `${pathname}/${searchResultId}`}
+          searchResultLink={(searchResult) =>
+            `/candidacies/${searchResult.candidacyId}/dossier-de-validation`
+          }
         />
       </div>
     )

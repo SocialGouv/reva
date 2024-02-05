@@ -1,5 +1,4 @@
 "use client";
-import { useDossierDeValidationProblemPageLogic } from "@/app/candidacies/dossiers-de-validation/[dossierDeValidationId]/problem/dossierDeValidationProblemPageLogic";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -10,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
+import { useDossierDeValidationProblemPageLogic } from "@/app/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
 const schema = z.object({
   decisionComment: z.string().min(1, "Ce champ est obligatoire"),
 });

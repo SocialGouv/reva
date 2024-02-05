@@ -3,13 +3,16 @@ import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const getDossierDeValidationQuery = graphql(`
-  query getDossierDeValidationForProblemPage($dossierDeValidationId: ID!) {
-    dossierDeValidation_getDossierDeValidationById(
-      dossierDeValidationId: $dossierDeValidationId
-    ) {
+const getCandidacyWithDossierDeValidationQuery = graphql(`
+  query getCandidacyWithDossierDeValidationQueryForProblemPage(
+    $candidacyId: ID!
+  ) {
+    getCandidacyById(id: $candidacyId) {
       id
-      dossierDeValidationSentAt
+      activeDossierDeValidation {
+        id
+        dossierDeValidationSentAt
+      }
     }
   }
 `);
@@ -30,15 +33,15 @@ const signalDossierDeValidationProblemMutation = graphql(`
 
 export const useDossierDeValidationProblemPageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { dossierDeValidationId } = useParams<{
-    dossierDeValidationId: string;
+  const { candidacyId } = useParams<{
+    candidacyId: string;
   }>();
 
   const { data: getDossierDeValidationResponse } = useQuery({
-    queryKey: ["getDossierDeValidationForProblemPage", dossierDeValidationId],
+    queryKey: ["getCandidacyWithDossierDeValidationQuery", candidacyId],
     queryFn: () =>
-      graphqlClient.request(getDossierDeValidationQuery, {
-        dossierDeValidationId,
+      graphqlClient.request(getCandidacyWithDossierDeValidationQuery, {
+        candidacyId,
       }),
   });
 
@@ -57,7 +60,7 @@ export const useDossierDeValidationProblemPageLogic = () => {
   });
 
   const dossierDeValidation =
-    getDossierDeValidationResponse?.dossierDeValidation_getDossierDeValidationById;
+    getDossierDeValidationResponse?.getCandidacyById?.activeDossierDeValidation;
 
   return {
     dossierDeValidation,
