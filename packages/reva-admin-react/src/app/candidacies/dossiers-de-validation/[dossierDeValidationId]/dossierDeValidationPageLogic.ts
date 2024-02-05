@@ -21,12 +21,10 @@ const getDossierDeValidationQuery = graphql(`
         name
       }
       candidacy {
+        readyForJuryEstimatedAt
         candidacyStatuses {
           status
           isActive
-        }
-        examInfo {
-          estimatedExamDate
         }
       }
     }
@@ -53,10 +51,10 @@ export const useDossierDeValidationPageLogic = () => {
   const dossierDeValidation =
     getDossierDeValidationResponse?.dossierDeValidation_getDossierDeValidationById;
 
-  const estimatedExamDate =
+  const readyForJuryEstimatedAt =
     getDossierDeValidationResponse
-      ?.dossierDeValidation_getDossierDeValidationById?.candidacy?.examInfo
-      .estimatedExamDate;
+      ?.dossierDeValidation_getDossierDeValidationById?.candidacy
+      ?.readyForJuryEstimatedAt;
 
   const canSignalProblem =
     dossierDeValidation?.candidacy.candidacyStatuses.filter(
@@ -68,7 +66,7 @@ export const useDossierDeValidationPageLogic = () => {
   return {
     getDossierDeValidationStatus,
     dossierDeValidation,
-    estimatedExamDate,
+    readyForJuryEstimatedAt,
     canSignalProblem,
   };
 };

@@ -21,7 +21,7 @@ const DossierDeValidationPage = () => {
         tabs={[
           {
             label: "Date prévisionnelle",
-            content: <EstimatedExamDateTab />,
+            content: <ReadyForJuryEstimatedDateTab />,
           },
           {
             label: "Dossier",
@@ -34,8 +34,8 @@ const DossierDeValidationPage = () => {
   );
 };
 
-const EstimatedExamDateTab = () => {
-  const { estimatedExamDate, getDossierDeValidationStatus } =
+const ReadyForJuryEstimatedDateTab = () => {
+  const { readyForJuryEstimatedAt, getDossierDeValidationStatus } =
     useDossierDeValidationPageLogic();
 
   const showContent = getDossierDeValidationStatus === "success";
@@ -43,7 +43,7 @@ const EstimatedExamDateTab = () => {
   return (
     showContent && (
       <div className="flex flex-col overflow-auto">
-        {estimatedExamDate ? (
+        {readyForJuryEstimatedAt ? (
           <>
             <p className="text-gray-600 mb-12">
               Afin de faciliter la tenue du jury pour le candidat, l’AAP a
@@ -54,7 +54,7 @@ const EstimatedExamDateTab = () => {
               date prévisionnelle
             </span>
             <span className="text-base">
-              {format(estimatedExamDate, "dd/MM/yyyy")}
+              {format(readyForJuryEstimatedAt, "dd/MM/yyyy")}
             </span>
           </>
         ) : (
