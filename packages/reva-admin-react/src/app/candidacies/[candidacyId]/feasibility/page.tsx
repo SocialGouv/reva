@@ -11,7 +11,8 @@ import { FeasibilityForm, FeasibilityFormData } from "./FeasibilityForm";
 import { useFeasibilityPageLogic } from "./feasibilityPageLogic";
 
 const FeasibilityPage = () => {
-  const { feasibility, submitFeasibilityDecision } = useFeasibilityPageLogic();
+  const { feasibility, candidacy, submitFeasibilityDecision } =
+    useFeasibilityPageLogic();
   const router = useRouter();
 
   const handleFormSubmit = async (data: FeasibilityFormData) => {
@@ -27,11 +28,11 @@ const FeasibilityPage = () => {
     }
   };
 
-  const isCandidacyArchived = !!feasibility?.candidacy.candidacyStatuses.some(
+  const isCandidacyArchived = !!candidacy?.candidacyStatuses.some(
     (c) => c.isActive && c.status === "ARCHIVE",
   );
 
-  const isCandidacyDroppedOut = !!feasibility?.candidacy.candidacyDropOut;
+  const isCandidacyDroppedOut = !!candidacy?.candidacyDropOut;
 
   const isFeasibilityEditable =
     feasibility?.decision === "PENDING" &&
@@ -46,15 +47,12 @@ const FeasibilityPage = () => {
       >
         Tous les dossiers
       </Link>
-      {feasibility && (
+      {feasibility && candidacy && (
         <div className="flex flex-col gap-8">
           <h1 className="text-3xl font-bold mt-8">
-            {feasibility.candidacy.candidate?.firstname}{" "}
-            {feasibility.candidacy.candidate?.lastname}
+            {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
           </h1>
-          <p className="text-2xl font-bold">
-            {feasibility.candidacy.certification?.label}
-          </p>
+          <p className="text-2xl font-bold">{candidacy.certification?.label}</p>
           {feasibility.feasibilityFile && (
             <GrayBlock>
               <FileLink
@@ -98,10 +96,10 @@ const FeasibilityPage = () => {
               Architecte accompagnateur de parcours
             </h5>
             <h6 className="text-xl font-bold mb-4">
-              {feasibility.candidacy.organism?.label}
+              {candidacy.organism?.label}
             </h6>
             <p className="text-lg mb-0">
-              {feasibility.candidacy.organism?.contactAdministrativeEmail}
+              {candidacy.organism?.contactAdministrativeEmail}
             </p>
           </GrayBlock>
           {!isFeasibilityEditable && (

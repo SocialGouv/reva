@@ -5,52 +5,52 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const getFeasibilityQuery = graphql(`
-  query getFeasibility($feasibilityId: ID!) {
-    feasibility(feasibilityId: $feasibilityId) {
-      id
-      decision
-      decisionComment
-      decisionSentAt
-      history {
+const getCandidacyWithFeasibilityQuery = graphql(`
+  query getCandidacyWithFeasibilityQuery($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      certification {
+        label
+      }
+      candidate {
+        firstname
+        lastname
+      }
+      organism {
+        label
+        contactAdministrativeEmail
+      }
+      candidacyDropOut {
+        status
+      }
+      candidacyStatuses {
+        status
+        isActive
+      }
+      feasibility {
+        id
         decision
         decisionComment
         decisionSentAt
-      }
-      IDFile {
-        url
-        name
-      }
-      feasibilityFile {
-        url
-        name
-      }
-      documentaryProofFile {
-        url
-        name
-      }
-      certificateOfAttendanceFile {
-        url
-        name
-      }
-      candidacy {
-        certification {
-          label
+        history {
+          decision
+          decisionComment
+          decisionSentAt
         }
-        candidate {
-          firstname
-          lastname
+        IDFile {
+          url
+          name
         }
-        organism {
-          label
-          contactAdministrativeEmail
+        feasibilityFile {
+          url
+          name
         }
-        candidacyDropOut {
-          status
+        documentaryProofFile {
+          url
+          name
         }
-        candidacyStatuses {
-          status
-          isActive
+        certificateOfAttendanceFile {
+          url
+          name
         }
       }
     }
@@ -59,20 +59,21 @@ const getFeasibilityQuery = graphql(`
 
 export const useFeasibilityPageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { feasibilityId } = useParams<{
-    feasibilityId: string;
+  const { candidacyId } = useParams<{
+    candidacyId: string;
   }>();
   const { accessToken } = useKeycloakContext();
 
   const { data: getFeasibilityResponse } = useQuery({
-    queryKey: ["getFeasibility", feasibilityId],
+    queryKey: ["getCandidacyWithFeasibilityQuery", candidacyId],
     queryFn: () =>
-      graphqlClient.request(getFeasibilityQuery, {
-        feasibilityId,
+      graphqlClient.request(getCandidacyWithFeasibilityQuery, {
+        candidacyId,
       }),
   });
 
-  const feasibility = getFeasibilityResponse?.feasibility;
+  const candidacy = getFeasibilityResponse?.getCandidacyById;
+  const feasibility = candidacy?.feasibility;
 
   const submitFeasibilityDecision = async (data: {
     decision: "Admissible" | "Rejected" | "Incomplete";
@@ -86,7 +87,7 @@ export const useFeasibilityPageLogic = () => {
       formData.append("infoFile", data.infoFile);
     }
     const result = await fetch(
-      `${REST_API_URL}/feasibility/${feasibilityId}/decision`,
+      `${REST_API_URL}/feasibility/${feasibility?.id}/decision`,
       {
         method: "post",
         headers: {
@@ -100,6 +101,7 @@ export const useFeasibilityPageLogic = () => {
 
   return {
     feasibility,
+    candidacy,
     submitFeasibilityDecision,
   };
 };

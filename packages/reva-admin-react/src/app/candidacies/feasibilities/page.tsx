@@ -32,6 +32,7 @@ const getFeasibilitiesQuery = graphql(`
         id
         feasibilityFileSentAt
         candidacy {
+          id
           department {
             code
             label
@@ -110,7 +111,9 @@ const RejectedSubscriptionRequestsPage = () => {
           updateSearchFilter={updateSearchFilter}
           searchResults={feasibilityPage as FeasibilityPage}
           currentPage={currentPage}
-          searchResultLink={(searchResult) => `${pathname}/${searchResult.id}`}
+          searchResultLink={(searchResult) =>
+            `/candidacies/${searchResult.candidacyId}/feasibility`
+          }
         />
       </div>
     )
