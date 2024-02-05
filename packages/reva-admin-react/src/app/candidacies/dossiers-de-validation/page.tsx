@@ -105,7 +105,7 @@ const DossiersDeValidationPage = () => {
       case "PENDING":
         return "Dossiers de validation en attente";
       case "INCOMPLETE":
-        return "Dossiers de validation incomplets";
+        return "Dossiers de validation signalés";
       default:
         return "Tous les dossiers de validation";
     }

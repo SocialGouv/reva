@@ -150,7 +150,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       category: "PENDING",
     }),
     menuItem({
-      text: `Dossiers incomplets (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
+      text: `Dossiers signalés (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
       path: "/candidacies/dossiers-de-validation",
       category: "INCOMPLETE",
     }),
