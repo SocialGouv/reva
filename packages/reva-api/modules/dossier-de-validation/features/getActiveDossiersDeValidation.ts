@@ -26,6 +26,7 @@ export const getActiveDossiersDeValidation = async ({
 }): Promise<PaginatedListResult<DossierDeValidation>> => {
   let queryWhereClause: Prisma.DossierDeValidationWhereInput = {
     isActive: true,
+    ...getWhereClauseFromDossierDeValidationStatusFilter(categoryFilter),
   };
 
   //only list feasibilties linked to the account certification authority
@@ -35,7 +36,7 @@ export const getActiveDossiersDeValidation = async ({
     });
 
     const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account"
+      "manage_certification_authority_local_account",
     );
 
     const certificationAuthorityLocalAccount =
@@ -47,8 +48,6 @@ export const getActiveDossiersDeValidation = async ({
 
     const candidacyWhereClause = {
       ...queryWhereClause?.candidacy,
-      ...getWhereClauseFromDossierDeValidationStatusFilter(categoryFilter)
-        .candidacy,
       ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
         account,
         isCertificationAuthorityLocalAccount,
@@ -58,7 +57,6 @@ export const getActiveDossiersDeValidation = async ({
 
     queryWhereClause = {
       ...queryWhereClause,
-      ...getWhereClauseFromDossierDeValidationStatusFilter(categoryFilter),
       ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
         account,
         isCertificationAuthorityLocalAccount,
