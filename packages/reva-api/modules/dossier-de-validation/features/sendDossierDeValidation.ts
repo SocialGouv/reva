@@ -23,6 +23,7 @@ export const sendDossierDeValidation = async ({
     include: {
       candidacyDropOut: true,
       candidacyStatuses: { where: { isActive: true } },
+      candidate: true,
       Feasibility: { where: { isActive: true } },
       department: true,
       certificationsAndRegions: {
@@ -154,8 +155,8 @@ export const sendDossierDeValidation = async ({
     }
   }
 
-  if (candidacy?.email) {
-    sendDVSentToCandidateEmail({ email: candidacy.email });
+  if (candidacy?.candidate?.email) {
+    sendDVSentToCandidateEmail({ email: candidacy?.candidate?.email });
   }
 
   return dossierDeValidation;
