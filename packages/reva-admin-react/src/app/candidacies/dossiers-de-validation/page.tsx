@@ -12,6 +12,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
 import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
+import { format } from "date-fns";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -115,15 +116,21 @@ const DossiersDeValidationPage = () => {
       <div className="flex flex-col">
         {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
         <CandidacySearchList
-          categoryLabel={categoryLabel}
+          title={categoryLabel}
           searchFilter={searchFilter}
           updateSearchFilter={updateSearchFilter}
-          searchResults={dossierDeValidationPage as DossierDeValidationPage}
-          currentPage={currentPage}
-          searchResultLink={(searchResultCandidacyId) =>
-            `/candidacies/${searchResultCandidacyId}/dossier-de-validation`
+          searchResultsPage={dossierDeValidationPage}
+          searchResultLink={(candidacyId) =>
+            `/candidacies/${candidacyId}/dossier-de-validation`
           }
-        />
+        >
+          {(r) => (
+            <p className="text-lg col-span-2">
+              Dossier envoyé le{" "}
+              {format(r?.dossierDeValidationSentAt, "d MMM yyyy")}
+            </p>
+          )}
+        </CandidacySearchList>
       </div>
     )
   );

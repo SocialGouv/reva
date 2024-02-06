@@ -3,23 +3,26 @@ import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar"
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 
-export const SearchList = ({
+type SearchResultsPage<T> = {
+  info: { totalRows: number; totalPages: number; currentPage: number };
+  rows: T[];
+};
+
+export interface SearchListProps<T> {
+  title: string;
+  searchFilter: string;
+  searchResultsPage: SearchResultsPage<T>;
+  updateSearchFilter: (searchFilter: string) => void;
+  children?: (searchResult: T) => ReactNode;
+}
+
+export const SearchList = <T,>({
   title,
-  searchResultsTotal,
   searchFilter,
   children,
-  currentPage,
-  totalPages,
+  searchResultsPage,
   updateSearchFilter,
-}: {
-  title: string;
-  searchResultsTotal: number;
-  searchFilter: string;
-  currentPage: number;
-  totalPages: number;
-  updateSearchFilter: (searchFilter: string) => void;
-  children?: ReactNode;
-}) => {
+}: SearchListProps<T>) => {
   const pathname = usePathname();
 
   const searchParams = useSearchParams();
@@ -37,21 +40,23 @@ export const SearchList = ({
   return (
     <div className="flex flex-col">
       <h4 className="text-2xl font-bold mb-6">
-        {`${title} (${searchResultsTotal})`}
+        {`${title} (${searchResultsPage.info.totalRows})`}
       </h4>
 
       <SearchFilterBar
         className="mb-6"
         searchFilter={searchFilter}
-        resultCount={searchResultsTotal}
+        resultCount={searchResultsPage.info.totalRows}
         onSearchFilterChange={updateSearchFilter}
       />
-      <ul className="flex flex-col gap-5">{children}</ul>
+      <ul className="flex flex-col gap-5">
+        {searchResultsPage.rows.map((r) => children?.(r))}
+      </ul>
 
       <br />
       <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
+        totalPages={searchResultsPage.info.totalPages}
+        currentPage={searchResultsPage.info.currentPage}
         baseHref={pathname}
         className="mx-auto"
         baseParams={searchParamsWithoutPage}

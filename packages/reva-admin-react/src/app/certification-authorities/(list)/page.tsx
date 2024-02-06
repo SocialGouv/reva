@@ -67,13 +67,11 @@ const CertificationAuthoritiesListPage = () => {
         {getCertificationAuthoritiesStatus === "success" && (
           <SearchList
             title="Certificateurs"
-            currentPage={currentPage}
-            totalPages={certificationAuthorityPage.info.totalPages}
             searchFilter={searchFilter}
-            searchResultsTotal={certificationAuthorityPage.info.totalRows}
+            searchResultsPage={certificationAuthorityPage}
             updateSearchFilter={updateSearchFilter}
           >
-            {certificationAuthorityPage?.rows.map((c) => (
+            {(c) => (
               <GrayCard key={c.id}>
                 <strong>Nom</strong>
                 <p>{c.label}</p>
@@ -84,7 +82,7 @@ const CertificationAuthoritiesListPage = () => {
                   Voir plus
                 </Button>
               </GrayCard>
-            ))}
+            )}
           </SearchList>
         )}
       </div>

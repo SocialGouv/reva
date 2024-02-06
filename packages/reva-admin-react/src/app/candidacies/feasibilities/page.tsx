@@ -3,15 +3,13 @@ import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphql } from "@/graphql/generated";
-import {
-  FeasibilityCategoryFilter,
-  FeasibilityPage,
-} from "@/graphql/generated/graphql";
+import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
 import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
+import { format } from "date-fns";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -106,15 +104,20 @@ const RejectedSubscriptionRequestsPage = () => {
       <div className="flex flex-col">
         {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
         <CandidacySearchList
-          categoryLabel={categoryLabel}
+          title={categoryLabel}
           searchFilter={searchFilter}
           updateSearchFilter={updateSearchFilter}
-          searchResults={feasibilityPage as FeasibilityPage}
-          currentPage={currentPage}
-          searchResultLink={(searchResultCandidacyId) =>
-            `/candidacies/${searchResultCandidacyId}/feasibility`
+          searchResultsPage={feasibilityPage}
+          searchResultLink={(candidacyId) =>
+            `/candidacies/${candidacyId}/feasibility`
           }
-        />
+        >
+          {(r) => (
+            <p className="text-lg col-span-2">
+              Dossier envoyé le {format(r?.feasibilityFileSentAt, "d MMM yyyy")}
+            </p>
+          )}
+        </CandidacySearchList>
       </div>
     )
   );

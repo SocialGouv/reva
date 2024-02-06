@@ -71,20 +71,18 @@ const ValidatedSubscriptionRequestsPage = () => {
         {getValidatedSubscriptionRequestsStatus === "success" && (
           <SearchList
             title="Inscriptions validées"
-            currentPage={currentPage}
-            totalPages={subscriptionRequestPage.info.totalPages}
             searchFilter={searchFilter}
-            searchResultsTotal={subscriptionRequestPage.info.totalRows}
+            searchResultsPage={subscriptionRequestPage}
             updateSearchFilter={updateSearchFilter}
           >
-            {subscriptionRequestPage.rows.map((r) => (
+            {(r) => (
               <SubscriptionRequestCard
                 key={r.id}
                 companyName={r.raisonSociale}
                 createdAt={r.createdAt}
                 href={`/maisonMereAAPs/${r.id}`}
               />
-            ))}
+            )}
           </SearchList>
         )}
       </div>

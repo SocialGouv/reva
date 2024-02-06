@@ -1,41 +1,39 @@
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
-import {
-  DossierDeValidation,
-  DossierDeValidationPage,
-  Feasibility,
-  FeasibilityPage,
-} from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns/format";
-import { SearchList } from "@/components/search/search-list/SearchList";
-interface SearchListProps {
-  categoryLabel: string;
-  searchFilter: string;
-  updateSearchFilter: (searchFilter: string) => void;
-  searchResults: DossierDeValidationPage | FeasibilityPage;
-  currentPage: number;
-  searchResultLink: (searchResultCandidacyId: string) => string;
-}
+import {
+  SearchList,
+  SearchListProps,
+} from "@/components/search/search-list/SearchList";
 
-export const CandidacySearchList = ({
-  categoryLabel,
+type CandidacySearchResult<T> = T & {
+  id: string;
+  candidacy: {
+    id: string;
+    certification?: { label: string } | null;
+    candidate?: { firstname: string; lastname: string } | null;
+    department?: { code: string; label: string } | null;
+  };
+};
+
+export const CandidacySearchList = <T,>({
+  title,
   searchFilter,
   updateSearchFilter,
-  searchResults,
-  currentPage,
+  searchResultsPage,
   searchResultLink,
-}: SearchListProps) => {
-  if (!searchResults) return null;
+  children,
+}: SearchListProps<CandidacySearchResult<T>> & {
+  searchResultLink: (candidacyId: string) => string;
+}) => {
+  if (!searchResultsPage) return null;
   return (
-    <SearchList
-      title={categoryLabel}
-      currentPage={currentPage}
-      totalPages={searchResults.info.totalPages}
+    <SearchList<CandidacySearchResult<T>>
+      title={title}
       searchFilter={searchFilter}
-      searchResultsTotal={searchResults.info.totalRows}
+      searchResultsPage={searchResultsPage}
       updateSearchFilter={updateSearchFilter}
     >
-      {searchResults.rows.map((r) => (
+      {(r) => (
         <WhiteCard key={r.id} className="grid grid-cols-2 gap-2">
           <h3 className="text-xl font-semibold col-span-2">
             {r.candidacy.certification?.label}
@@ -47,24 +45,17 @@ export const CandidacySearchList = ({
           <p className="text-lg">
             {r.candidacy.department?.label} ({r.candidacy.department?.code})
           </p>
-          <p className="text-lg col-span-2">
-            Dossier envoyé le{" "}
-            {format(
-              (r as Feasibility)?.feasibilityFileSentAt ||
-                (r as DossierDeValidation)?.dossierDeValidationSentAt,
-              "d MMM yyyy",
-            )}
-          </p>
+          {children?.(r)}
           <Button
             className="ml-auto col-start-2"
             linkProps={{
               href: searchResultLink(r.candidacy.id),
             }}
           >
-            Accéder au dossier
+            Accéder à la candidature
           </Button>
         </WhiteCard>
-      ))}
+      )}
     </SearchList>
   );
 };

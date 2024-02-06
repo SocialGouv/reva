@@ -73,20 +73,18 @@ const PendingSubscriptionRequestsPage = () => {
         {getPendingSubscriptionRequestsStatus === "success" && (
           <SearchList
             title="Inscriptions en attente"
-            currentPage={currentPage}
-            totalPages={subscriptionRequestPage.info.totalPages}
             searchFilter={searchFilter}
-            searchResultsTotal={subscriptionRequestPage.info.totalRows}
+            searchResultsPage={subscriptionRequestPage}
             updateSearchFilter={updateSearchFilter}
           >
-            {subscriptionRequestPage?.rows.map((r) => (
+            {(r) => (
               <SubscriptionRequestCard
                 key={r.id}
                 companyName={r.companyName}
                 createdAt={r.createdAt}
                 href={`/subscriptions/${r.id}`}
               />
-            ))}
+            )}
           </SearchList>
         )}
       </div>
