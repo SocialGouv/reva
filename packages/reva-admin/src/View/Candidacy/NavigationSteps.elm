@@ -87,7 +87,7 @@ activeView context candidacy =
                 Nothing
 
         readyForJuryEstimatedDateLink =
-            if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+            if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
                 Just <|
                     Route.href baseUrl <|
                         Route.Candidacy (tab View.Candidacy.Tab.ReadyForJuryEstimatedDate)
@@ -96,7 +96,7 @@ activeView context candidacy =
                 Nothing
 
         dossierDeValidationLink =
-            if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+            if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
                 Just <|
                     Route.href baseUrl <|
                         Route.Candidacy (tab View.Candidacy.Tab.DossierDeValidation)
