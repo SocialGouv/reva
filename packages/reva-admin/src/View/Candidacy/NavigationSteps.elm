@@ -281,7 +281,10 @@ dropOutView baseUrl candidacy dropOutDate =
                 expandedView
                     (getDefaultExpandedViewStatusFromCandidacyStatus
                         candidacy
-                        [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ]
+                        [ DossierFaisabiliteRecevable
+                        , DossierFaisabiliteNonRecevable
+                        , DossierFaisabiliteIncomplet
+                        ]
                     )
                     "Demande de prise en charge"
           , navigation = fundingRequestLink baseUrl candidacy
@@ -390,13 +393,17 @@ expandedView status stepTitle =
 fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 fundingRequestLink baseUrl candidacy =
     let
+        hasDropOut =
+            candidacy.dropOutDate /= Nothing
+
         canAccessFundingRequest =
             case candidacy.financeModule of
                 Unireva ->
-                    candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme
+                    hasDropOut || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme
 
                 Unifvae ->
                     Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable
+                        || (hasDropOut && Candidacy.lastStatus candidacy.statuses == DossierFaisabiliteIncomplet)
     in
     if canAccessFundingRequest then
         Just <|
