@@ -26,7 +26,7 @@ form formData ( candidacy, _ ) =
                             View.alert View.Warning
                                 [ class "my-10" ]
                                 "Dossier de validation signalé par le certificateur"
-                                [ p [] [ text "Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous.Merci de retourner rapidement un dossier valide." ]
+                                [ p [] [ text "Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous. Merci de retourner rapidement un dossier valide." ]
                                 ]
                       )
                     , ( "dossierDeValidationSentAt"
