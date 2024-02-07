@@ -19,7 +19,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useAgencesQueries } from "../agencesQueries";
 import { AgenceFormData, agenceFormSchema } from "./agenceFormSchema";
-import ZoneIntervention from "./zone-intervention/ZoneIntervention";
+import ZoneIntervention from "@/components/zone-intervention/ZoneIntervention";
 
 const modalCreateAgence = createModal({
   id: "modal-create-agence",
