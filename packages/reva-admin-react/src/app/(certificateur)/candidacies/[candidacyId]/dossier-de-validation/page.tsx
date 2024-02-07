@@ -1,11 +1,11 @@
 "use client";
-import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { FileLink } from "../../(components)/FileLink";
 
 const DossierDeValidationPage = () => {
   return (
@@ -159,12 +159,3 @@ const DossierDeValidationTab = () => {
 };
 
 export default DossierDeValidationPage;
-
-const FileLink = ({ url, text }: { url: string; text: string }) => (
-  <AuthenticatedLink
-    text={text}
-    title={text}
-    url={url}
-    className="fr-link fr-icon-download-line fr-link--icon-right text-blue-900 text-lg ml-auto break-words"
-  />
-);

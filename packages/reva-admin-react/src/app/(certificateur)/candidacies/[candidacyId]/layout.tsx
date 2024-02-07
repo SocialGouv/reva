@@ -46,7 +46,24 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     text,
   });
 
-  return isFeatureActive("DOSSIER_DE_VALIDATION") ? (
+  const items = [
+    menuItem("Étude de faisabilité", `/candidacies/${candidacyId}/feasibility`),
+  ];
+
+  if (isFeatureActive("DOSSIER_DE_VALIDATION")) {
+    items.push(
+      menuItem(
+        "Dossier de validation",
+        `/candidacies/${candidacyId}/dossier-de-validation`,
+      ),
+    );
+  }
+
+  if (isFeatureActive("JURY")) {
+    items.push(menuItem("Jury", `/candidacies/${candidacyId}/jury`));
+  }
+
+  return (
     <div className="flex flex-col flex-1 w-full md:flex-row gap-10 md:gap-0 ">
       <SideMenu
         title={
@@ -64,21 +81,10 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
         burgerMenuButtonText="Candidatures"
         sticky
         fullHeight
-        items={[
-          menuItem(
-            "Étude de faisabilité",
-            `/candidacies/${candidacyId}/feasibility`,
-          ),
-          menuItem(
-            "Dossier de validation",
-            `/candidacies/${candidacyId}/dossier-de-validation`,
-          ),
-        ]}
+        items={items}
       />
       <div className="mt-3 flex-1">{children}</div>
     </div>
-  ) : (
-    children
   );
 };
 

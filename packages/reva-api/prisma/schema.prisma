@@ -101,6 +101,7 @@ model Candidacy {
   Feasibility               Feasibility[]
   dossierDeValidation       DossierDeValidation[]
   paymentRequestUnifvae     PaymentRequestUnifvae?
+  Jury                      Jury[]
 
   @@map("candidacy")
 }
@@ -923,6 +924,7 @@ model CertificationAuthority {
   Feasibility                           Feasibility[]
   certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
   DossierDeValidation                   DossierDeValidation[]
+  Jury                                  Jury[]
 
   @@map("certification_authority")
 }
@@ -1062,6 +1064,25 @@ model DossierDeValidationOtherFilesOnFile {
   @@map("dossier_de_validation_other_files_on_file")
 }
 
+model Jury {
+  id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                Candidacy              @relation(fields: [candidacyId], references: [id])
+  candidacyId              String                 @map("candidacy_id") @db.Uuid
+  certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
+  convocationFile          File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
+  convocationFileId        String?                @unique @map("convocation_file_id") @db.Uuid
+  dateOfSession            DateTime               @map("date_of_session") @db.Timestamptz(6)
+  timeOfSession            String?                @map("time_of_session")
+  addressOfSession         String?                @map("address_of_session")
+  informationOfSession     String?                @map("information_of_session")
+  isActive                 Boolean                @default(true) @map("is_active")
+  createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("jury")
+}
+
 model File {
   id                                    String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name                                  String                                @map("name") @db.VarChar(255)
@@ -1073,6 +1094,7 @@ model File {
   linkedAsCertificateOfAttendanceFileBy Feasibility[]                         @relation("certificate_of_attendance_file")
   DossierDeValidationFile               DossierDeValidation?                  @relation("dossier_de_validation_file")
   DossierDeValidationOtherFiles         DossierDeValidationOtherFilesOnFile[]
+  Jury                                  Jury?                                 @relation("convocation_file")
 
   @@map("file")
 }

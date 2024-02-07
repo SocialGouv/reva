@@ -11,8 +11,9 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
-import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
+import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
+import { juryRoute } from "../../modules/jury/jury.routes";
 import paymentRequestFvaeFileUploadAndConfirmationRoute from "../../modules/finance/unifvae/finance.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
 import { logger } from "../../modules/shared/logger";
@@ -119,6 +120,7 @@ export const buildApp = async (
 
   app.register(feasibilityFileUploadRoute, { prefix: "/api" });
   app.register(dossierDeValidationRoute, { prefix: "/api" });
+  app.register(juryRoute, { prefix: "/api" });
 
   logger.info("started");
   return app;

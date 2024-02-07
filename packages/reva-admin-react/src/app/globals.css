@@ -27,4 +27,19 @@
     background-color: var(--background-active-blue-france);
     --data-uri-svg: url('data:image/svg+xml,%3Csvg height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 203.372 203.372" xml:space="preserve" fill="%23000000"%3E%3Cg id="SVGRepo_bgCarrier" stroke-width="0"%3E%3C/g%3E%3Cg id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"%3E%3C/g%3E%3Cg id="SVGRepo_iconCarrier"%3E%3Cg%3E%3Cpath style="fill:%23ffffff;" d="M191.229,89.548H12.147C5.433,89.548,0,94.981,0,101.688c0,6.703,5.433,12.136,12.147,12.136 h179.082c6.71,0,12.143-5.433,12.143-12.136C203.368,94.977,197.939,89.548,191.229,89.548z"%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
   }
+
+  .upload-file {
+    border: 1px solid var(--light-border-default-grey, #ddd);
+    background: var(--light-neutral-grey-1000-grey-1000-hover, #f6f6f6);
+    padding: 32px;
+
+    label {
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    span {
+      font-weight: normal;
+    }
+  }
 }
