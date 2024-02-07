@@ -8,7 +8,7 @@ import { CertificationStatus } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 const getCertificationsQuery = graphql(`
   query getCertificationsForListPage(
     $offset: Int
@@ -25,6 +25,8 @@ const getCertificationsQuery = graphql(`
         id
         label
         codeRncp
+        status
+        certificationAuthorityTag
       }
       info {
         totalRows
@@ -86,8 +88,19 @@ const CertificationListPage = () => {
           >
             {(r) => (
               <WhiteCard key={r.id}>
-                <span className="text-gray-500 text-sm">{r.codeRncp}</span>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-gray-500 text-sm">{r.codeRncp}</span>
+                  <Tag
+                    small
+                    className={`${
+                      r.status === "AVAILABLE" ? "bg-green-300" : "bg-red-400"
+                    } ml-auto text-black`}
+                  >
+                    {r.status === "AVAILABLE" ? "Disponible" : "Inactive"}
+                  </Tag>
+                </div>
                 <span className="text-lg font-bold">{r.label}</span>
+                <span className="mt-2">{r.certificationAuthorityTag}</span>
               </WhiteCard>
             )}
           </SearchList>
