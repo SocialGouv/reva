@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 const getCertificationsQuery = graphql(`
   query getCertificationsForListPage(
     $offset: Int
@@ -86,21 +87,27 @@ const CertificationListPage = () => {
             searchResultsPage={certificationPage}
             updateSearchFilter={updateSearchFilter}
           >
-            {(r) => (
-              <WhiteCard key={r.id}>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-gray-500 text-sm">{r.codeRncp}</span>
-                  <Tag
-                    small
-                    className={`${
-                      r.status === "AVAILABLE" ? "bg-green-300" : "bg-red-400"
-                    } ml-auto text-black`}
-                  >
-                    {r.status === "AVAILABLE" ? "Disponible" : "Inactive"}
-                  </Tag>
-                </div>
-                <span className="text-lg font-bold">{r.label}</span>
-                <span className="mt-2">{r.certificationAuthorityTag}</span>
+            {(c) => (
+              <WhiteCard key={c.id} className="gap-2">
+                <span className="text-gray-500 text-sm">{c.codeRncp}</span>
+                <span className="text-lg font-bold">{c.label}</span>
+                <span>{c.certificationAuthorityTag}</span>
+                <Tag
+                  small
+                  className={`mt-2 text-black ${
+                    c.status === "AVAILABLE" ? "bg-green-300" : "bg-red-400"
+                  } `}
+                >
+                  {c.status === "AVAILABLE" ? "Disponible" : "Inactive"}
+                </Tag>
+                <Button
+                  className="mt-2 ml-auto"
+                  linkProps={{
+                    href: `/certifications/${c.id}`,
+                  }}
+                >
+                  Accéder à la certification
+                </Button>
               </WhiteCard>
             )}
           </SearchList>
