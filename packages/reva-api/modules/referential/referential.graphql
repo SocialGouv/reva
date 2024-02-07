@@ -84,6 +84,7 @@ type Certification {
   codeRncp: String!
   status: CertificationStatus!
   typeDiplome: TypeDiplome!
+  certificationAuthorityTag: String
 }
 
 type CertificationPage {

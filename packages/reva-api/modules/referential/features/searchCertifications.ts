@@ -69,7 +69,7 @@ export const searchCertifications = async ({
       : allCertificationsQuery;
 
   const certifications =
-    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp"
+    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status,c.certification_authority_tag as "certificationAuthorityTag", c.rncp_id as "codeRncp"
       ${commonQuery}
       order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
@@ -78,7 +78,7 @@ export const searchCertifications = async ({
       (await prismaClient.$queryRawUnsafe(`select count(distinct(c.id))
       ${commonQuery}
       `)) as { count: BigInt }[]
-    )[0].count
+    )[0].count,
   );
 
   const page = {
