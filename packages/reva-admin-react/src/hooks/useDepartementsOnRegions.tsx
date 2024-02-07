@@ -1,4 +1,4 @@
-import { useAgencesQueries } from "@/app/agences/agencesQueries";
+import { useAgencesQueries } from "@/app/(aap)/agences/agencesQueries";
 import { Organism } from "@/graphql/generated/graphql";
 import { TreeSelectRegion, ZoneInterventionList } from "@/types";
 import { sortDepartmentsByAlphabeticalOrderAndDOM } from "@/utils";
