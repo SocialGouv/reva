@@ -17,25 +17,23 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useAgencesQueries } from "../agencesQueries";
+
 import {
   MaisonMereAAPFormData,
   maisonMereAAPFormSchema,
 } from "./maisonMereFormSchema";
-import ZoneIntervention from "./zone-intervention/ZoneIntervention";
+import ZoneIntervention from "@/components/zone-intervention/ZoneIntervention";
 import { graphql } from "@/graphql/generated";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useMutation } from "@tanstack/react-query";
+import { TreeSelectItem } from "@/components/tree-select";
 
 const modalCreateAgence = createModal({
   id: "modal-create-agence",
   isOpenedByDefault: false,
 });
 
-interface MaisonMereAAPContainerProps {
-  onSubmitFormMutation: (data: UpdateMaisonMereAapInput) => Promise<void>;
-  buttonValidateText: string;
-}
-
-const adminUpdateMaisonMereAAP = graphql(`
+const adminUpdateMaisonMereAAPMutation = graphql(`
   mutation adminUpdateMaisonMereAAP(
     $maisonMereAAPId: ID!
     $data: UpdateMaisonMereAAPInput!
@@ -50,39 +48,38 @@ const adminUpdateMaisonMereAAP = graphql(`
 `);
 
 function MaisonMereAAPForm({
-  onSubmitFormMutation,
-  buttonValidateText,
-}: MaisonMereAAPContainerProps) {
-  const { maisonMereAAP_id } = useParams();
-
-  const [isSubmittingModal, setIsSubmittingModal] = useState(false);
-  const modalCreateAgenceIsOpen = useIsModalOpen(modalCreateAgence);
+  maisonMereAAPId,
+  onSiteDepartmentsOnRegions,
+  remoteDepartmentsOnRegions,
+}: {
+  maisonMereAAPId: string;
+  onSiteDepartmentsOnRegions: TreeSelectItem[];
+  remoteDepartmentsOnRegions: TreeSelectItem[];
+}) {
   const router = useRouter();
+
+  const { graphqlClient } = useGraphQlClient();
+
+  const adminUpdateMaisonMereAAP = useMutation({
+    mutationFn: (params: {
+      maisonMereAAPId: string;
+      data: UpdateMaisonMereAapInput;
+    }) => graphqlClient.request(adminUpdateMaisonMereAAPMutation, params),
+  });
 
   const methods = useForm<MaisonMereAAPFormData>({
     resolver: zodResolver(maisonMereAAPFormSchema),
   });
+
   const {
-    register,
     handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-    watch,
+    formState: { isSubmitting },
     setValue,
   } = methods;
 
-  const {
-    organismOndepartementsOnRegionsRemote,
-    organismOndepartementsOnRegionsOnSite,
-  } = useDepartementsOnRegions({
-    zoneInterventionDistanciel: watch(
-      "zoneInterventionDistanciel",
-    ) as ZoneInterventionList,
-    zoneInterventionPresentiel: watch(
-      "zoneInterventionPresentiel",
-    ) as ZoneInterventionList,
-    setValue,
-    organism: agenceSelected as Partial<Organism>,
+  useEffect(() => {
+    setValue("zoneInterventionPresentiel", onSiteDepartmentsOnRegions);
+    setValue("zoneInterventionDistanciel", remoteDepartmentsOnRegions);
   });
 
   const handleFormSubmit = handleSubmit(async (data) => {
@@ -96,7 +93,7 @@ function MaisonMereAAPForm({
 
     if (zoneInterventionPresentiel) {
       zoneInterventionPresentiel.forEach((region) => {
-        region.children.forEach((departement) => {
+        region.children?.forEach((departement) => {
           if (departement.selected) {
             if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
               departmentsWithOrganismMethodUnfiltered[departement.id] = {
@@ -114,7 +111,7 @@ function MaisonMereAAPForm({
 
     if (zoneInterventionDistanciel) {
       zoneInterventionDistanciel.forEach((region) => {
-        region.children.forEach((departement) => {
+        region.children?.forEach((departement) => {
           if (departement.selected) {
             if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
               departmentsWithOrganismMethodUnfiltered[departement.id] = {
@@ -151,7 +148,7 @@ function MaisonMereAAPForm({
     try {
       await adminUpdateMaisonMereAAP.mutateAsync({
         maisonMereAAPId,
-        data: formData.zoneIntervention,
+        data: { zoneIntervention: departmentsWithOrganismMethod },
       });
 
       router.push("/subscriptions/validated");
@@ -175,7 +172,7 @@ function MaisonMereAAPForm({
             <div className="flex flex-col md:flex-row items-center md:items-end justify-between">
               <div></div>
               <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
-                <Button disabled={isSubmitting}>{buttonValidateText}</Button>
+                <Button disabled={isSubmitting}>Enregistrer</Button>
               </div>
             </div>
           </form>

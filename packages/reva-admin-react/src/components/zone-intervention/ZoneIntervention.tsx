@@ -10,6 +10,7 @@ import {
 } from "@/types";
 import { isInterventionZoneIsFullySelectedWithoutDOM } from "@/utils";
 import { useFormContext } from "react-hook-form";
+
 const updateSelectedValueForAllRegions = (
   zoneInterventionInitial: ZoneInterventionList,
   value: boolean,
@@ -55,6 +56,8 @@ function ZoneIntervention() {
       zoneInterventionPresentiel,
       item,
     );
+
+    console.log(item);
 
     setValue("zoneInterventionPresentiel", mappedDepartmentItems);
   };

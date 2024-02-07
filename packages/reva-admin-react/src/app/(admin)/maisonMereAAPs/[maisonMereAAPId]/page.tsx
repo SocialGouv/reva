@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toSelectedRegionAndDepartmentsItem } from "@/utils";
+import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/MaisonMereAAPForm";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -136,6 +137,15 @@ const MaisonMereAAPPage = () => {
             (c) => c.ccn.label,
           )}
           readonly
+        />
+        <MaisonMereAAPForm
+          maisonMereAAPId={maisonMereAAP.id}
+          onSiteDepartmentsOnRegions={regions.map(
+            toSelectedRegionAndDepartmentsItem(selectedOnSiteDepartments),
+          )}
+          remoteDepartmentsOnRegions={regions.map(
+            toSelectedRegionAndDepartmentsItem(selectedRemoteDepartments),
+          )}
         />
       </div>
     )
