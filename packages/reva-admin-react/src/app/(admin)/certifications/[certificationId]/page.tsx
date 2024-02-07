@@ -17,6 +17,9 @@ const getCertificationQuery = graphql(`
         label
       }
       certificationAuthorityTag
+      degree {
+        longLabel
+      }
     }
   }
 `);
@@ -66,6 +69,7 @@ const CertificationPage = () => {
           <h2 className="text-2xl font-bold mt-12 mb-2">
             Informations générales
           </h2>
+          <p>Niveau de la certification: {certification.degree.longLabel}</p>
           <p>Type de certification: {certification.typeDiplome.label}</p>
           <br />
           <h2 className="text-2xl font-bold mb-2">

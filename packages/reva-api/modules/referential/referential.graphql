@@ -85,6 +85,7 @@ type Certification {
   status: CertificationStatus!
   typeDiplome: TypeDiplome!
   certificationAuthorityTag: String
+  degree: Degree!
 }
 
 type CertificationPage {

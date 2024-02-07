@@ -1,5 +1,6 @@
 import { prismaClient } from "../../prisma/client";
 import { getCertificationById } from "./features/getCertificationById";
+import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
 import { getDropOutReasons } from "./features/getDropOutReasons";
@@ -17,6 +18,7 @@ export const referentialResolvers = {
       codeRncp || rncpId,
     typeDiplome: ({ typeDiplomeId }: { typeDiplomeId: string }) =>
       getTypeDiplomeById({ typeDiplomeId }),
+    degree: ({ level }: { level: number }) => getDegreeByLevel({ level }),
   },
   Department: {
     region: ({ regionId }: { regionId: string }) =>
@@ -43,7 +45,7 @@ export const referentialResolvers = {
       }),
     getCertification: (
       _: unknown,
-      { certificationId }: { certificationId: string }
+      { certificationId }: { certificationId: string },
     ) => getCertificationById({ certificationId }),
     getRegions: (_: any, _payload: any) => getRegions(),
     getDepartments: (_: any, _payload: any) => getDepartments(),
