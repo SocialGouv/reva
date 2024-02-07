@@ -23,14 +23,14 @@ import { UploadedFile } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
-import { FeasibilityFile, uploadFeasibilityFiles } from "./feasibility.file";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityRejectedCandidateEmail,
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
-} from "./feasibility.mails";
+} from "./emails";
+import { FeasibilityFile, uploadFeasibilityFiles } from "./feasibility.file";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
