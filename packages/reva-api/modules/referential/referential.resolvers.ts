@@ -1,8 +1,10 @@
 import { prismaClient } from "../../prisma/client";
 import { getCertificationById } from "./features/getCertificationById";
+import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
+import { getDomainesByCertificationId } from "./features/getDomainesByCertificationId";
 import { getDropOutReasons } from "./features/getDropOutReasons";
 import { getGoals } from "./features/getGoals";
 import { getRegionById } from "./features/getRegionById";
@@ -19,6 +21,10 @@ export const referentialResolvers = {
     typeDiplome: ({ typeDiplomeId }: { typeDiplomeId: string }) =>
       getTypeDiplomeById({ typeDiplomeId }),
     degree: ({ level }: { level: number }) => getDegreeByLevel({ level }),
+    domaines: ({ id: certificationId }: { id: string }) =>
+      getDomainesByCertificationId({ certificationId }),
+    conventionsCollectives: ({ id: certificationId }: { id: string }) =>
+      getConventionsCollectivesByCertificationId({ certificationId }),
   },
   Department: {
     region: ({ regionId }: { regionId: string }) =>

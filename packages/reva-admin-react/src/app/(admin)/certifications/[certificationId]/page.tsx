@@ -20,6 +20,14 @@ const getCertificationQuery = graphql(`
       degree {
         longLabel
       }
+      conventionsCollectives {
+        id
+        label
+      }
+      domaines {
+        id
+        label
+      }
     }
   }
 `);
@@ -79,6 +87,30 @@ const CertificationPage = () => {
             Administrateur de la certification:{" "}
             {certification.certificationAuthorityTag}
           </p>
+          {!!certification.domaines.length && (
+            <>
+              <p>Filières:</p>
+              <ul className="list-disc">
+                {certification.domaines.map((d) => (
+                  <li key={d.id} className="ml-4">
+                    {d.label}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {!!certification.conventionsCollectives.length && (
+            <>
+              <p>Conventions collectives:</p>
+              <ul className="list-disc">
+                {certification.conventionsCollectives.map((c) => (
+                  <li key={c.id} className="ml-4">
+                    {c.label}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </>
       )}
     </div>

@@ -86,6 +86,8 @@ type Certification {
   typeDiplome: TypeDiplome!
   certificationAuthorityTag: String
   degree: Degree!
+  domaines: [Domaine!]!
+  conventionsCollectives: [ConventionCollective!]!
 }
 
 type CertificationPage {
