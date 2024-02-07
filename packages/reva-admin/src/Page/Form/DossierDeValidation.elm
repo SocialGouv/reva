@@ -101,7 +101,7 @@ form formData ( candidacy, _ ) =
         )
             :: problemSignaledSection
             ++ [ ( "", Form.Title1 "Joindre le dossier de validation" )
-               , ( keys.dossierDeValidationFile, Form.FileRequired "" "Format supporté : PDF uniquement avec un poids maximum de 2Mo" )
+               , ( keys.dossierDeValidationFile, Form.FileRequired "" "Format supporté : PDF uniquement avec un poids maximum de 10Mo" )
                , ( "", Form.Title1 "Joindre des pièces supplémentaires (optionnel)" )
                ]
             ++ otherFilePickerElements
