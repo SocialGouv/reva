@@ -65,20 +65,6 @@ const getRegions = graphql(`
   }
 `);
 
-const adminUpdateMaisonMereAAP = graphql(`
-  mutation adminUpdateMaisonMereAAP(
-    $maisonMereAAPId: ID!
-    $data: UpdateMaisonMereAAPInput!
-  ) {
-    organism_adminUpdateMaisonMereAAP(
-      maisonMereAAPId: $maisonMereAAPId
-      maisonMereAAPData: $data
-    ) {
-      id
-    }
-  }
-`);
-
 const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
