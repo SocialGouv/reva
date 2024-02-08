@@ -192,7 +192,7 @@ activeView context candidacy =
             List.member "JURY" context.activeFeatures
 
         juryMenuEntry =
-            if juryFeatureActive then
+            if juryFeatureActive && candidacy.financeModule == Unifvae then
                 [ { content =
                         expandedView WITHOUT_BUTTON "Jury"
                   , navigation =
@@ -270,16 +270,21 @@ activeView context candidacy =
                     else
                         Nothing
                 }
-              , { content =
-                    expandedView
-                        (getDefaultExpandedViewStatusFromCandidacyStatus
-                            candidacy
-                            [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
-                        )
-                        "Jury"
-                , navigation = examInfoLink
-                }
               ]
+            , if not juryFeatureActive || candidacy.financeModule == Unireva then
+                [ { content =
+                        expandedView
+                            (getDefaultExpandedViewStatusFromCandidacyStatus
+                                candidacy
+                                [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
+                            )
+                            "Jury"
+                  , navigation = examInfoLink
+                  }
+                ]
+
+              else
+                []
             ]
         )
 
