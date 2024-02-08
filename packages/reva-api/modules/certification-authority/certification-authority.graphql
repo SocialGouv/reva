@@ -20,6 +20,10 @@ type CertificationAuhtorityPaginated {
   info: PaginationInfo!
 }
 
+type Certification {
+  certificationAuthorities: [CertificationAuthority!]!
+}
+
 type Query {
   certification_authority_getCertificationAuthority(
     id: ID!

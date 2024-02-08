@@ -16,6 +16,7 @@ import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartme
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
+import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
 
 export const resolvers = {
   CertificationAuthority: {
@@ -32,6 +33,14 @@ export const resolvers = {
         certificationAuthorityId: parent.id,
       }),
   },
+  Certification: {
+    certificationAuthorities: ({
+      id: certificationId,
+    }: CertificationAuthority) =>
+      getCertificationAuthoritiesByCertificationId({
+        certificationId,
+      }),
+  },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
       _parent: unknown,
@@ -43,13 +52,13 @@ export const resolvers = {
           contactEmail: string | null;
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -57,7 +66,7 @@ export const resolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -75,7 +84,7 @@ export const resolvers = {
           certificationIds: string[];
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
 
@@ -95,7 +104,7 @@ export const resolvers = {
           certificationIds: string[];
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       const canManage = await canUserManageCertificationAuthorityLocalAccount({
         certificationAuthorityLocalAccountId:
@@ -105,7 +114,7 @@ export const resolvers = {
       });
       if (!canManage) {
         throw new Error(
-          "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification"
+          "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification",
         );
       }
       return updateCertificationAuthorityLocalAccount(params.input);
@@ -120,14 +129,14 @@ export const resolvers = {
             certificationIds: string[];
           };
         },
-        context: GraphqlContext
+        context: GraphqlContext,
       ) => {
         if (!context.auth.hasRole("admin")) {
           throw new Error("Utilisateur non autorisé");
         }
 
         return updateCertificationAuthorityDepartmentsAndCertifications(
-          params.input
+          params.input,
         );
       },
   },
@@ -137,13 +146,13 @@ export const resolvers = {
       params: {
         id: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -151,7 +160,7 @@ export const resolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -165,7 +174,7 @@ export const resolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (!context.auth.hasRole("admin")) {
         throw new Error("Utilisateur non autorisé");
