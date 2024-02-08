@@ -286,3 +286,10 @@ examInfo :
     -> SelectionSet decodesTo Admin.Object.Candidacy
 examInfo object____ =
     Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
+
+
+jury :
+    SelectionSet decodesTo Admin.Object.Jury
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+jury object____ =
+    Object.selectionForCompositeField "jury" [] object____ (Basics.identity >> Decode.nullable)

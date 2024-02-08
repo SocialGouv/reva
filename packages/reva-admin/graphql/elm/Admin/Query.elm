@@ -9,6 +9,7 @@ import Admin.Enum.CandidacyStatusFilter
 import Admin.Enum.CertificationStatus
 import Admin.Enum.DossierDeValidationCategoryFilter
 import Admin.Enum.FeasibilityCategoryFilter
+import Admin.Enum.JuryCategoryFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -405,6 +406,50 @@ candidate_getFundingRequest :
     -> SelectionSet decodesTo RootQuery
 candidate_getFundingRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
+type alias JuryGetJuriesOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , categoryFilter : OptionalArgument Admin.Enum.JuryCategoryFilter.JuryCategoryFilter
+    , searchFilter : OptionalArgument String
+    }
+
+
+jury_getJuries :
+    (JuryGetJuriesOptionalArguments -> JuryGetJuriesOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.JuryPage
+    -> SelectionSet decodesTo RootQuery
+jury_getJuries fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, categoryFilter = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "categoryFilter" filledInOptionals____.categoryFilter (Encode.enum Admin.Enum.JuryCategoryFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "jury_getJuries" optionalArgs____ object____ Basics.identity
+
+
+type alias JuryJuryCountByCategoryOptionalArguments =
+    { searchFilter : OptionalArgument String }
+
+
+jury_juryCountByCategory :
+    (JuryJuryCountByCategoryOptionalArguments -> JuryJuryCountByCategoryOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.JuryCountByCategory
+    -> SelectionSet decodesTo RootQuery
+jury_juryCountByCategory fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "jury_juryCountByCategory" optionalArgs____ object____ Basics.identity
 
 
 type alias OrganismGetOrganismRequiredArguments =

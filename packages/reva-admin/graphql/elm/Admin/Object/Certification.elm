@@ -75,3 +75,39 @@ typeDiplome :
     -> SelectionSet decodesTo Admin.Object.Certification
 typeDiplome object____ =
     Object.selectionForCompositeField "typeDiplome" [] object____ Basics.identity
+
+
+certificationAuthorityTag : SelectionSet (Maybe String) Admin.Object.Certification
+certificationAuthorityTag =
+    Object.selectionForField "(Maybe String)" "certificationAuthorityTag" [] (Decode.string |> Decode.nullable)
+
+
+degree :
+    SelectionSet decodesTo Admin.Object.Degree
+    -> SelectionSet decodesTo Admin.Object.Certification
+degree object____ =
+    Object.selectionForCompositeField "degree" [] object____ Basics.identity
+
+
+domaines :
+    SelectionSet decodesTo Admin.Object.Domaine
+    -> SelectionSet (List decodesTo) Admin.Object.Certification
+domaines object____ =
+    Object.selectionForCompositeField "domaines" [] object____ (Basics.identity >> Decode.list)
+
+
+conventionsCollectives :
+    SelectionSet decodesTo Admin.Object.ConventionCollective
+    -> SelectionSet (List decodesTo) Admin.Object.Certification
+conventionsCollectives object____ =
+    Object.selectionForCompositeField "conventionsCollectives" [] object____ (Basics.identity >> Decode.list)
+
+
+availableAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Certification
+availableAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "availableAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+expiresAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Certification
+expiresAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "expiresAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

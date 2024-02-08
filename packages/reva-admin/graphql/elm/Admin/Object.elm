@@ -173,6 +173,18 @@ type Goal
     = Goal
 
 
+type Jury
+    = Jury
+
+
+type JuryCountByCategory
+    = JuryCountByCategory
+
+
+type JuryPage
+    = JuryPage
+
+
 type MaisonMereAAP
     = MaisonMereAAP
 
