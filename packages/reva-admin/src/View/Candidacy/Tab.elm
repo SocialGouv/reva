@@ -27,3 +27,4 @@ type Value
     | FundingRequest
     | ExamInfo
     | Feasibility
+    | Jury

@@ -193,6 +193,27 @@ activeView context candidacy =
 
             else
                 []
+
+        juryFeatureActive =
+            List.member "JURY" context.activeFeatures
+
+        juryMenuEntry =
+            if juryFeatureActive then
+                [ { content =
+                        expandedView WITHOUT_BUTTON "Jury"
+                  , navigation =
+                        if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
+                            Just <|
+                                Route.href baseUrl <|
+                                    Route.Candidacy (tab View.Candidacy.Tab.Jury)
+
+                        else
+                            Nothing
+                  }
+                ]
+
+            else
+                []
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
@@ -229,6 +250,7 @@ activeView context candidacy =
                 }
               ]
             , dossierDeValidationMenuEntry
+            , juryMenuEntry
             , [ { content =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus

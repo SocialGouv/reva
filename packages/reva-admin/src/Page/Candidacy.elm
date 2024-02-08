@@ -295,6 +295,11 @@ view context model =
                 ExamInfo ->
                     viewForm "examInfo"
 
+                Jury ->
+                    div
+                        [ class "text-center mt-24 text-gray-500" ]
+                        [ text "Vous retrouverez bientôt les informations du jury ici" ]
+
                 Feasibility ->
                     case model.selected of
                         Success candidacy ->
