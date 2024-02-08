@@ -88,6 +88,8 @@ type Certification {
   degree: Degree!
   domaines: [Domaine!]!
   conventionsCollectives: [ConventionCollective!]!
+  availableAt: Timestamp!
+  expiresAt: Timestamp!
 }
 
 type CertificationPage {

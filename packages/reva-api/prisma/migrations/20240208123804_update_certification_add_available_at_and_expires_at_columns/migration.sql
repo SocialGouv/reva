@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "certification" ADD COLUMN     "available_at" TIMESTAMPTZ(6) NOT NULL DEFAULT '2023-06-30 22:00:00 +02:00',
+ADD COLUMN     "expires_at" TIMESTAMPTZ(6) NOT NULL DEFAULT '2024-06-30 22:00:00 +02:00';
+
+ALTER TABLE "certification"
+ALTER COLUMN "available_at" DROP DEFAULT,
+ALTER COLUMN "expires_at" DROP DEFAULT;

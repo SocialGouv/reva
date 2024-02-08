@@ -28,16 +28,16 @@ export async function seedCertifications(prisma: PrismaClient) {
   await prisma.$transaction(async (tx) => {
     //defer constraints validation till end of transaction
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" DEFERRED;`
+      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" DEFERRED;`,
     );
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" DEFERRED;`
+      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" DEFERRED;`,
     );
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "calaoc_certification" DEFERRED;`
+      `SET CONSTRAINTS "calaoc_certification" DEFERRED;`,
     );
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" DEFERRED;`
+      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" DEFERRED;`,
     );
 
     // On supprime toutes les certifications, sauf celles de l'XP
@@ -96,6 +96,8 @@ export async function seedCertifications(prisma: PrismaClient) {
             typeDiplomeId: typeDiplome as string,
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
             certificationAuthorityTag: unquotedCertificationAuthorityTag,
+            availableAt: new Date(),
+            expiresAt: new Date(),
           },
           update: {
             rncpId,
@@ -169,17 +171,17 @@ export async function seedCertifications(prisma: PrismaClient) {
 
     //defer constraints validation till end of transaction
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" IMMEDIATE;`
+      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" IMMEDIATE;`,
     );
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" IMMEDIATE;`
+      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" IMMEDIATE;`,
     );
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "calaoc_certification" IMMEDIATE;`
+      `SET CONSTRAINTS "calaoc_certification" IMMEDIATE;`,
     );
 
     await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" IMMEDIATE;`
+      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" IMMEDIATE;`,
     );
   });
 }

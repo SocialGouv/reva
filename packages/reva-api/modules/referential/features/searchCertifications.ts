@@ -69,7 +69,7 @@ export const searchCertifications = async ({
       : allCertificationsQuery;
 
   const certifications =
-    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status,c.certification_authority_tag as "certificationAuthorityTag", c.rncp_id as "codeRncp"
+    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status,c.certification_authority_tag as "certificationAuthorityTag", c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt"
       ${commonQuery}
       order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
