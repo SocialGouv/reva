@@ -196,6 +196,14 @@ view context model =
         candidacyLink candidacyId tab =
             Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId tab)
 
+        displayWithCandidacy f =
+            case model.selected of
+                Success candidacy ->
+                    f candidacy
+
+                _ ->
+                    div [ class "h-[800px]" ] []
+
         readyForJuryEstimatedDate candidacyId isActive =
             { label = "Date prévisionnelle"
             , href = candidacyLink candidacyId ReadyForJuryEstimatedDate
@@ -210,13 +218,13 @@ view context model =
 
         juryDateTab candidacyId isActive =
             { label = "Date de jury"
-            , href = candidacyLink candidacyId Jury
+            , href = candidacyLink candidacyId JuryDate
             , isActive = isActive
             }
 
         juryResultTab candidacyId isActive =
             { label = "Résultat"
-            , href = candidacyLink candidacyId Jury
+            , href = candidacyLink candidacyId JuryResult
             , isActive = isActive
             }
 
@@ -277,20 +285,17 @@ view context model =
                     viewForm "admissibility"
 
                 ReadyForJuryEstimatedDate ->
-                    case model.selected of
-                        Success candidacy ->
+                    displayWithCandidacy <|
+                        \candidacy ->
                             viewFormWithTabs "readyForJuryEstimatedDate"
                                 "Dossier de validation"
                                 [ readyForJuryEstimatedDate candidacy.id True
                                 , dossierValidationTab candidacy.id False
                                 ]
 
-                        _ ->
-                            div [ class "h-[800px]" ] []
-
                 DossierDeValidation ->
-                    case model.selected of
-                        Success candidacy ->
+                    displayWithCandidacy <|
+                        \candidacy ->
                             let
                                 viewDossierDeValidationForm =
                                     viewFormWithTabs "readyForJuryEstimatedDate"
@@ -312,15 +317,12 @@ view context model =
                                 Nothing ->
                                     viewDossierDeValidationForm
 
-                        _ ->
-                            div [ class "h-[800px]" ] []
-
                 ExamInfo ->
                     viewForm "examInfo"
 
-                Jury ->
-                    case model.selected of
-                        Success candidacy ->
+                JuryDate ->
+                    displayWithCandidacy <|
+                        \candidacy ->
                             viewWithTabs "jury"
                                 "Jury"
                                 [ juryDateTab candidacy.id True
@@ -328,8 +330,18 @@ view context model =
                                 ]
                                 [ View.Jury.viewDate candidacy.jury ]
 
-                        _ ->
-                            div [ class "h-[800px]" ] []
+                JuryResult ->
+                    displayWithCandidacy <|
+                        \candidacy ->
+                            viewWithTabs "jury"
+                                "Jury"
+                                [ juryDateTab candidacy.id False
+                                , juryResultTab candidacy.id True
+                                ]
+                                [ div
+                                    [ class "mb-8 text-gray-500" ]
+                                    [ text "Bientôt vous retrouverez les résultats ici" ]
+                                ]
 
                 Feasibility ->
                     case model.selected of

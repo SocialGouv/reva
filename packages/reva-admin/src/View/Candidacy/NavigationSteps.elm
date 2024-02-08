@@ -197,7 +197,7 @@ activeView context candidacy =
                         expandedView WITHOUT_BUTTON "Jury"
                   , navigation =
                         if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                            candidacyLink Tab.Jury
+                            candidacyLink Tab.JuryDate
 
                         else
                             Nothing

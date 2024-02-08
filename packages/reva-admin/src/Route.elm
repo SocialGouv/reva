@@ -138,7 +138,9 @@ parser baseUrl =
                 , subLevel "candidacies" "training" |> candidacyTab Tab.Training
                 , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
-                , subLevel "candidacies" "jury" |> candidacyTab Tab.Jury
+                , subLevel "candidacies" "jury" |> candidacyTab Tab.JuryDate
+                , subLevel "candidacies" "jury" </> s "date" |> candidacyTab Tab.JuryDate
+                , subLevel "candidacies" "jury" </> s "result" |> candidacyTab Tab.JuryResult
                 , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
                 , subLevel "candidacies" "reorientation" <?> Query.string "organism" <?> Query.string "page" |> map toReorientationRoute
                 ]
@@ -266,8 +268,11 @@ tabToString topLevel subLevel tab =
         Tab.ExamInfo ->
             default [ "examInfo" ]
 
-        Tab.Jury ->
-            default [ "jury" ]
+        Tab.JuryDate ->
+            default [ "jury", "date" ]
+
+        Tab.JuryResult ->
+            default [ "jury", "result" ]
 
         Tab.Feasibility ->
             default [ "feasibility" ]
