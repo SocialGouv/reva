@@ -10,6 +10,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { format } from "date-fns";
 const getCertificationsQuery = graphql(`
   query getCertificationsForListPage(
     $offset: Int
@@ -28,6 +29,7 @@ const getCertificationsQuery = graphql(`
         codeRncp
         status
         certificationAuthorityTag
+        expiresAt
       }
       info {
         totalRows
@@ -92,6 +94,7 @@ const CertificationListPage = () => {
                 <span className="text-gray-500 text-sm">{c.codeRncp}</span>
                 <span className="text-lg font-bold">{c.label}</span>
                 <span>{c.certificationAuthorityTag}</span>
+                <span>Expire le: {format(c.expiresAt, "dd/Mm/yyyy")}</span>
                 <Tag
                   small
                   className={`mt-2 text-black ${
