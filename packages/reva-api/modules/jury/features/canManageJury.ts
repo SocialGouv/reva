@@ -16,7 +16,7 @@ export const canManageJury = async ({
   });
 
   if (jury == null) {
-    throw new Error("Ce dossier est introuvable");
+    throw new Error("Ce jury est introuvable");
   }
 
   const certificationAuthorityId = jury.certificationAuthorityId;
@@ -58,7 +58,7 @@ export const canManageJury = async ({
         certificationAuthorityLocalAccount.certificationAuthorityId !==
         certificationAuthorityId
       ) {
-        throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
+        throw new Error("Vous n'êtes pas autorisé à consulter ce jury");
       }
 
       const departmentIds =

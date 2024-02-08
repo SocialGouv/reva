@@ -7,7 +7,6 @@ import { logger } from "../shared/logger";
 import { canManageJury } from "./features/canManageJury";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { scheduleSessionOfJury } from "./features/scheduleSessionOfJury";
-// import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
 
 interface ScheduleSessionOfJuryBody {
   candidacyId: { value: string };
@@ -48,14 +47,19 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           candidacyId,
         });
 
-        const authorized =
-          canUserManageCandidacy ||
-          canManageJury({
-            keycloakId: request.auth?.userInfo?.sub,
-            juryId: jury?.id || "",
-            roles: request.auth.userInfo?.realm_access?.roles || [],
-          });
+        const isUserCanManageCandidacy = await canUserManageCandidacy({
+          hasRole: request.auth.hasRole,
+          candidacyId,
+          keycloakId: request.auth?.userInfo?.sub || "",
+        });
 
+        const isUserCanManageJury = await canManageJury({
+          keycloakId: request.auth?.userInfo?.sub,
+          juryId: jury?.id || "",
+          roles: request.auth.userInfo?.realm_access?.roles || [],
+        });
+
+        const authorized = isUserCanManageCandidacy || isUserCanManageJury;
         if (!authorized) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
@@ -176,8 +180,6 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
             );
         }
       }
-
-      console.log(request.body);
 
       try {
         await scheduleSessionOfJury({

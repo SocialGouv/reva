@@ -10,3 +10,18 @@ export type ExamResult =
   | "PARTIAL_SUCCESS"
   | "PARTIAL_CERTIFICATION_SUCCESS"
   | "FAILURE";
+
+export type JuryResult =
+  | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
+  | "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION"
+  | "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+  | "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+  | "FAILURE"
+  | "CANDIDATE_EXCUSED"
+  | "CANDIDATE_ABSENT";
+
+export interface JuryInfo {
+  result: JuryResult;
+  isResultProvisional: boolean;
+  informationOfResult?: string;
+}

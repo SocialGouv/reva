@@ -5,6 +5,7 @@ import {
   isAdminOrManager,
   isCandidacyCompanion,
   isCandidate,
+  isAnyone,
 } from "../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -47,4 +48,5 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isAdminOrCandidacyCompanion,
   "Mutation.jury_updateExamInfo": isAdminOrCandidacyCompanion,
+  "Mutation.jury_updateResult": isAnyone,
 };

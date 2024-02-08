@@ -4,12 +4,14 @@ import { Candidacy } from "../candidacy/candidacy.types";
 import { resolversSecurityMap } from "../candidacy/security";
 import { getExamInfo } from "./features/getExamInfo";
 import { updateExamInfo } from "./features/updateExamInfo";
-import { ExamInfo } from "./jury.types";
+import { ExamInfo, JuryInfo } from "./jury.types";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { JuryStatusFilter } from "./types/juryStatusFilter.type";
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
+import { updateResultOfJury } from "./features/updateResultOfJury";
+import { canManageJury } from "./features/canManageJury";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -75,6 +77,29 @@ const unsafeResolvers = {
       },
     ) => {
       return updateExamInfo(params);
+    },
+    jury_updateResult: async (
+      _parent: unknown,
+      params: {
+        juryId: string;
+        input: JuryInfo;
+      },
+      context: GraphqlContext,
+    ) => {
+      const authorized = await canManageJury({
+        keycloakId: context.auth?.userInfo?.sub || "",
+        juryId: params.juryId,
+        roles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+
+      if (!authorized) {
+        throw new Error("Vous n'êtes pas autorisé à consulter ce jury");
+      }
+
+      return updateResultOfJury({
+        juryId: params.juryId,
+        juryInfo: params.input,
+      });
     },
   },
 };

@@ -6,6 +6,7 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useJuryPageLogic } from "./juryPageLogic";
 
 import { DateDeJury } from "./DateDeJury";
+import { Resultat } from "./Resultat";
 
 interface Props {
   params: {
@@ -44,7 +45,3 @@ const JuryPage = (_props: Props) => {
 };
 
 export default JuryPage;
-
-const Resultat = (): JSX.Element => {
-  return <></>;
-};

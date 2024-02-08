@@ -4,6 +4,22 @@ type ExamInfo {
   actualExamDate: Timestamp
 }
 
+enum JuryResult {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION
+  FAILURE
+  CANDIDATE_EXCUSED
+  CANDIDATE_ABSENT
+}
+
+input JuryInfoInput {
+  result: JuryResult!
+  isResultProvisional: Boolean!
+  informationOfResult: String
+}
+
 type Jury {
   id: ID!
   candidacy: Candidacy!
@@ -12,6 +28,9 @@ type Jury {
   addressOfSession: String
   informationOfSession: String
   convocationFile: File
+  result: JuryResult
+  isResultProvisional: Boolean
+  informationOfResult: String
 }
 
 type Candidacy {
@@ -59,4 +78,5 @@ type Query {
 
 type Mutation {
   jury_updateExamInfo(candidacyId: UUID!, examInfo: ExamInfoInput!): ExamInfo!
+  jury_updateResult(juryId: ID!, input: JuryInfoInput!): Jury!
 }

@@ -32,7 +32,7 @@ export const DateDeJury = (): JSX.Element => {
 
   const handleFormSubmit = handleSubmit((data) => {
     if (candidacy?.id) {
-      scheduleJury({
+      scheduleJury.mutateAsync({
         ...data,
         candidacyId: candidacy.id,
         convocationFile: data.convocationFile?.[0],

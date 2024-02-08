@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 
 import { REST_API_URL } from "@/config/config";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { JuryInfoInput } from "@/graphql/generated/graphql";
 
 const getJuryByCandidacyIdQuery = graphql(`
   query getJuryByCandidacyId($candidacyId: ID!) {
@@ -25,10 +26,32 @@ const getJuryByCandidacyIdQuery = graphql(`
         timeOfSession
         addressOfSession
         informationOfSession
+        result
+        isResultProvisional
+        informationOfResult
         convocationFile {
           name
           url
         }
+      }
+    }
+  }
+`);
+
+const updateJuryResultMutation = graphql(`
+  mutation jury_updateResult($juryId: ID!, $input: JuryInfoInput!) {
+    jury_updateResult(juryId: $juryId, input: $input) {
+      id
+      dateOfSession
+      timeOfSession
+      addressOfSession
+      informationOfSession
+      result
+      isResultProvisional
+      informationOfResult
+      convocationFile {
+        name
+        url
       }
     }
   }
@@ -61,7 +84,7 @@ export const useJuryPageLogic = () => {
       }),
   });
 
-  const { data: scheduleJuryData, mutateAsync } = useMutation({
+  const scheduleJury = useMutation({
     mutationKey: ["scheduleJuryByCandidacyId", candidacyId],
     mutationFn: (data: ScheduleJuryInputType) => {
       const formData = new FormData();
@@ -94,8 +117,21 @@ export const useJuryPageLogic = () => {
     },
   });
 
+  const updateJuryResult = useMutation({
+    mutationFn: ({ juryId, input }: { juryId: string; input: JuryInfoInput }) =>
+      graphqlClient.request(updateJuryResultMutation, {
+        juryId,
+        input,
+      }),
+    onSuccess: () => {
+      refetchCandidacy();
+    },
+  });
+  updateJuryResult;
+
   return {
     candidacy: candidacyData?.getCandidacyById,
-    scheduleJury: mutateAsync,
+    scheduleJury,
+    updateJuryResult,
   };
 };
