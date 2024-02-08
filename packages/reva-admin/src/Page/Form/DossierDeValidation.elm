@@ -4,7 +4,7 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.DossierDeValidation
 import Data.Referential exposing (Referential)
-import Html exposing (div, h2, p, text)
+import Html exposing (div, h2, li, p, text, ul)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import Time
@@ -96,10 +96,18 @@ form formData ( candidacy, _ ) =
                 ]
     in
     { elements =
-        ( ""
-        , Form.Text "Le dossier de validation doit être rédigé par le candidat. Des pièces supplémentaires peuvent être ajoutées selon les attendus du certificateur (ex : attestation de premiers secours). " Nothing
-        )
-            :: problemSignaledSection
+        [ ( ""
+          , Form.Text "La date prévisionnelle correspond :" Nothing
+          )
+        , ( ""
+          , Form.StaticHtml <|
+                ul []
+                    [ li [] [ text "à la date à laquelle le candidat aura finalisé son dossier de validation pour les certifications du Ministère du Travail et des Branches Professionnelles" ]
+                    , li [] [ text "à la date de dépôt du dossier de validation pour les autres certifications" ]
+                    ]
+          )
+        ]
+            ++ problemSignaledSection
             ++ [ ( "", Form.Title1 "Joindre le dossier de validation" )
                , ( keys.dossierDeValidationFile, Form.FileRequired "" "Format supporté : PDF uniquement avec un poids maximum de 10Mo" )
                , ( "", Form.Title1 "Joindre des pièces supplémentaires (optionnel)" )
