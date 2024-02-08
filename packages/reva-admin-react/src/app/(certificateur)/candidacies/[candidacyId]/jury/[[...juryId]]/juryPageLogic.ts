@@ -52,7 +52,7 @@ export const useJuryPageLogic = () => {
 
   const { accessToken } = useKeycloakContext();
 
-  const { data: candidacyData } = useQuery({
+  const { data: candidacyData, refetch: refetchCandidacy } = useQuery({
     queryKey: ["getJuryByCandidacyId", candidacyId],
     queryFn: () =>
       graphqlClient.request(getJuryByCandidacyIdQuery, {
@@ -89,20 +89,10 @@ export const useJuryPageLogic = () => {
         body: formData,
       });
     },
+    onSuccess: () => {
+      refetchCandidacy();
+    },
   });
-
-  // const dossierDeValidation =
-  //   getDossierDeValidationResponse?.dossierDeValidation_getDossierDeValidationById;
-
-  // const estimatedExamDate =
-  //   getDossierDeValidationResponse
-  //     ?.dossierDeValidation_getDossierDeValidationById?.candidacy.examInfo
-  //     .estimatedExamDate;
-
-  // return {
-  //   dossierDeValidation,
-  //   estimatedExamDate,
-  // };
 
   return {
     candidacy: candidacyData?.getCandidacyById,

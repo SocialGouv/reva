@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useSearchFilterFeasibilitiesStore } from "./(components)/useSearchFilterFeasibilitiesStore";
+
 export const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory($searchFilter: String) {
     feasibilityCountByCategory(searchFilter: $searchFilter) {
@@ -29,6 +30,15 @@ export const getDossierDeValidationCountByCategoryQuery = graphql(`
       ALL
       PENDING
       INCOMPLETE
+    }
+  }
+`);
+
+export const getJuryCountByCategoryQuery = graphql(`
+  query getJuryCountByCategory($searchFilter: String) {
+    jury_juryCountByCategory(searchFilter: $searchFilter) {
+      SCHEDULED
+      PASSED
     }
   }
 `);
@@ -58,6 +68,17 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     queryKey: ["getDossierDeValidationCountByCategory", searchFilter],
     queryFn: () =>
       graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
+        searchFilter,
+      }),
+  });
+
+  const {
+    data: getJuryCountByCategoryResponse,
+    status: getJuryCountByCategoryStatus,
+  } = useQuery({
+    queryKey: ["getJuryCountByCategory", searchFilter],
+    queryFn: () =>
+      graphqlClient.request(getJuryCountByCategoryQuery, {
         searchFilter,
       }),
   });
@@ -97,6 +118,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const dossierDeValidationCountByCategory =
     getDossierDeValidationCountByCategoryResponse?.dossierDeValidation_dossierDeValidationCountByCategory;
+
+  const juryCountByCategory =
+    getJuryCountByCategoryResponse?.jury_juryCountByCategory;
 
   const feasibilityItems = [
     menuItem({
@@ -158,9 +182,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const juryItems = [
     menuItem({
-      text: "Jury",
+      text: `Programmés (${juryCountByCategory?.SCHEDULED})`,
       path: "/candidacies/juries",
-      category: "ALL",
+      category: "SCHEDULED",
+    }),
+    menuItem({
+      text: `Passés (${juryCountByCategory?.PASSED})`,
+      path: "/candidacies/juries",
+      category: "PASSED",
     }),
   ];
 
@@ -178,7 +207,17 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
             "/candidacies/dossiers-de-validation",
           ),
         },
-        ...(isFeatureActive("JURY") ? juryItems : []),
+        ...(isFeatureActive("JURY")
+          ? [
+              {
+                items: juryItems,
+                text: "Jury",
+                expandedByDefault: currentPathname.startsWith(
+                  "/candidacies/juries",
+                ),
+              },
+            ]
+          : []),
       ]
     : feasibilityItems;
 

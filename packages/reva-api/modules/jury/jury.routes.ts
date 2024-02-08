@@ -177,6 +177,8 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
         }
       }
 
+      console.log(request.body);
+
       try {
         await scheduleSessionOfJury({
           candidacyId: request.body.candidacyId.value,

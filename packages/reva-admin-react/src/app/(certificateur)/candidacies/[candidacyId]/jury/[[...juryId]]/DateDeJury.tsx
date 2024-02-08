@@ -14,7 +14,7 @@ import { FileLink } from "../../../(components)/FileLink";
 const schema = z.object({
   date: z.string().min(1),
   time: z.string().optional(),
-  lieu: z.string().optional(),
+  address: z.string().optional(),
   information: z.string().optional(),
   convocationFile: z.object({ 0: z.instanceof(File).optional() }),
 });
@@ -128,7 +128,7 @@ export const DateDeJury = (): JSX.Element => {
               className="flex-1"
               label="Lieu (Optionnel)"
               nativeInputProps={{
-                ...register("lieu"),
+                ...register("address"),
               }}
             />
           </div>

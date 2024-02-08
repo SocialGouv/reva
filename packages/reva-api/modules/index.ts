@@ -26,6 +26,7 @@ import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
+import { juryLoaders } from "./jury/jury.loaders";
 import { juryResolvers } from "./jury/jury.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import { resolvers as organismResolvers } from "./organism/organism.resolvers";
@@ -38,7 +39,7 @@ import { subscriptionRequestResolvers } from "./subscription/subscription.resolv
 // Resolvers
 
 const typeDefs = loadFilesSync(
-  path.join(__dirname, "./**/!(generated-graphql-schema).graphql")
+  path.join(__dirname, "./**/!(generated-graphql-schema).graphql"),
 );
 
 const resolvers = mergeResolvers([
@@ -80,6 +81,7 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...certificationAuthorityLoaders,
     ...referentialLoaders,
     ...dossierDeValidationLoaders,
+    ...juryLoaders,
   },
   errorFormatter: (error, ...args) => {
     error.errors

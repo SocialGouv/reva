@@ -6,6 +6,7 @@ type ExamInfo {
 
 type Jury {
   id: ID!
+  candidacy: Candidacy!
   dateOfSession: Timestamp!
   timeOfSession: String
   addressOfSession: String
@@ -29,6 +30,31 @@ input ExamInfoInput {
   examResult: ExamResult
   estimatedExamDate: Timestamp
   actualExamDate: Timestamp
+}
+
+enum JuryCategoryFilter {
+  SCHEDULED
+  PASSED
+}
+
+type JuryPage {
+  rows: [Jury!]!
+  info: PaginationInfo!
+}
+
+type JuryCountByCategory {
+  SCHEDULED: Int!
+  PASSED: Int!
+}
+
+type Query {
+  jury_getJuries(
+    offset: Int
+    limit: Int
+    categoryFilter: JuryCategoryFilter
+    searchFilter: String
+  ): JuryPage!
+  jury_juryCountByCategory(searchFilter: String): JuryCountByCategory!
 }
 
 type Mutation {
