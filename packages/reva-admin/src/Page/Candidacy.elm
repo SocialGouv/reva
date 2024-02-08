@@ -169,14 +169,21 @@ view context model =
                 "Aperçu de la candidature"
                 c
 
-        viewFormWithTabs name title tabs =
+        viewWithTabs name title tabs activeTabContent =
             viewArticle name
                 [ h1 [ class "text-dsfrBlack-500 text-4xl mb-8" ] [ text title ]
-                , View.Tabs.view tabs
-                    [ Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
-                        |> Html.map GotFormMsg
-                    ]
+                , View.Tabs.view tabs activeTabContent
                 ]
+
+        viewFormWithTabs name title tabs =
+            let
+                remoteReferential =
+                    RemoteData.map2 Tuple.pair model.selected model.state.referential
+            in
+            viewWithTabs name
+                title
+                tabs
+                [ Form.view remoteReferential model.form |> Html.map GotFormMsg ]
 
         viewForm name =
             viewArticle
@@ -185,15 +192,30 @@ view context model =
                     |> Html.map GotFormMsg
                 ]
 
+        candidacyLink candidacyId tab =
+            Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId tab)
+
         readyForJuryEstimatedDate candidacyId isActive =
             { label = "Date prévisionnelle"
-            , href = Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId ReadyForJuryEstimatedDate)
+            , href = candidacyLink candidacyId ReadyForJuryEstimatedDate
             , isActive = isActive
             }
 
         dossierValidationTab candidacyId isActive =
             { label = "Dépôt du dossier"
-            , href = Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId DossierDeValidation)
+            , href = candidacyLink candidacyId DossierDeValidation
+            , isActive = isActive
+            }
+
+        juryDateTab candidacyId isActive =
+            { label = "Date de jury"
+            , href = candidacyLink candidacyId Jury
+            , isActive = isActive
+            }
+
+        juryResultTab candidacyId isActive =
+            { label = "Résultat"
+            , href = candidacyLink candidacyId Jury
             , isActive = isActive
             }
 
@@ -296,9 +318,20 @@ view context model =
                     viewForm "examInfo"
 
                 Jury ->
-                    div
-                        [ class "text-center mt-24 text-gray-500" ]
-                        [ text "Vous retrouverez bientôt les informations du jury ici" ]
+                    case model.selected of
+                        Success candidacy ->
+                            viewWithTabs "jury"
+                                "Jury"
+                                [ juryDateTab candidacy.id True
+                                , juryResultTab candidacy.id False
+                                ]
+                                [ div
+                                    [ class "text-center text-gray-500 pt-20 pb-24" ]
+                                    [ text "Vous retrouverez bientôt les informations du jury ici" ]
+                                ]
+
+                        _ ->
+                            div [ class "h-[800px]" ] []
 
                 Feasibility ->
                     case model.selected of
