@@ -3,8 +3,11 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { CertificationStatus } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { ReactNode } from "react";
 
 const getCertificationQuery = graphql(`
   query getCertification($certificationId: ID!) {
@@ -13,6 +16,8 @@ const getCertificationQuery = graphql(`
       label
       codeRncp
       status
+      expiresAt
+      availableAt
       typeDiplome {
         label
       }
@@ -36,10 +41,7 @@ const CertificationPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { certificationId } = useParams<{ certificationId: string }>();
 
-  const {
-    data: getCertificationResponse,
-    status: getCertificationQueryStatus,
-  } = useQuery({
+  const { data: getCertificationResponse } = useQuery({
     queryKey: ["getCertification", certificationId],
     queryFn: () =>
       graphqlClient.request(getCertificationQuery, {
@@ -77,39 +79,42 @@ const CertificationPage = () => {
           <h2 className="text-2xl font-bold mt-12 mb-2">
             Informations générales
           </h2>
-          <p>Niveau de la certification: {certification.degree.longLabel}</p>
-          <p>Type de certification: {certification.typeDiplome.label}</p>
+          <Info title="Disponible à partir du">
+            {format(certification.availableAt, "dd/MM/yyyy")}
+          </Info>
+          <Info title="Expire le">
+            {format(certification.expiresAt, "dd/MM/yyyy", { locale: fr })}
+          </Info>
+          <Info title="Niveau de la certification">
+            {certification.degree.longLabel}
+          </Info>
+          <Info title="Type de la certification">
+            {certification.typeDiplome.label}
+          </Info>
           <br />
           <h2 className="text-2xl font-bold mb-2">
             Gestion de la certification
           </h2>
-          <p>
-            Administrateur de la certification:{" "}
-            {certification.certificationAuthorityTag}
-          </p>
+          <Info title="Administrateur de la certification">
+            {certification.certificationAuthorityTag || "Inconnu"}
+          </Info>
           {!!certification.domaines.length && (
-            <>
-              <p>Filières:</p>
-              <ul className="list-disc">
+            <Info title="Filières">
+              <ul className="list-disc list-inside">
                 {certification.domaines.map((d) => (
-                  <li key={d.id} className="ml-4">
-                    {d.label}
-                  </li>
+                  <li key={d.id}>{d.label}</li>
                 ))}
               </ul>
-            </>
+            </Info>
           )}
           {!!certification.conventionsCollectives.length && (
-            <>
-              <p>Conventions collectives:</p>
-              <ul className="list-disc">
+            <Info title="Conventions collectives">
+              <ul className="list-disc list-inside">
                 {certification.conventionsCollectives.map((c) => (
-                  <li key={c.id} className="ml-4">
-                    {c.label}
-                  </li>
+                  <li key={c.id}>{c.label}</li>
                 ))}
               </ul>
-            </>
+            </Info>
           )}
         </>
       )}
@@ -118,3 +123,10 @@ const CertificationPage = () => {
 };
 
 export default CertificationPage;
+
+const Info = ({ title, children }: { title: string; children: ReactNode }) => (
+  <dl className="m-2">
+    <dt className="font-normal text-sm text-gray-600 mb-1">{title}</dt>
+    <dd>{children}</dd>
+  </dl>
+);
