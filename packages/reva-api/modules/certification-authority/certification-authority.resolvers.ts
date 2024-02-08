@@ -10,7 +10,6 @@ import { canUserManageCertificationAuthorityLocalAccount } from "./features/canU
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
@@ -26,10 +25,6 @@ export const resolvers = {
       }),
     certifications: (parent: CertificationAuthority) =>
       getCertificationsByCertificationAuthorityId({
-        certificationAuthorityId: parent.id,
-      }),
-    certificationAuthorityLocalAccounts: (parent: CertificationAuthority) =>
-      getCertificationAuthorityLocalAccountByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
   },
