@@ -558,6 +558,20 @@ jury_updateExamInfo requiredArgs____ object____ =
     Object.selectionForCompositeField "jury_updateExamInfo" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "examInfo" requiredArgs____.examInfo Admin.InputObject.encodeExamInfoInput ] object____ Basics.identity
 
 
+type alias JuryUpdateResultRequiredArguments =
+    { juryId : Data.Scalar.Id
+    , input : Admin.InputObject.JuryInfoInput
+    }
+
+
+jury_updateResult :
+    JuryUpdateResultRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Jury
+    -> SelectionSet decodesTo RootMutation
+jury_updateResult requiredArgs____ object____ =
+    Object.selectionForCompositeField "jury_updateResult" [ Argument.required "juryId" requiredArgs____.juryId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "input" requiredArgs____.input Admin.InputObject.encodeJuryInfoInput ] object____ Basics.identity
+
+
 type alias OrganismUpdateOrganismRequiredArguments =
     { organismId : Data.Scalar.Id
     , organismData : Admin.InputObject.UpdateOrganismInput

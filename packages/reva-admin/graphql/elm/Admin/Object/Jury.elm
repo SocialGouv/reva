@@ -4,6 +4,7 @@
 
 module Admin.Object.Jury exposing (..)
 
+import Admin.Enum.JuryResult
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -56,3 +57,18 @@ convocationFile :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Jury
 convocationFile object____ =
     Object.selectionForCompositeField "convocationFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+result : SelectionSet (Maybe Admin.Enum.JuryResult.JuryResult) Admin.Object.Jury
+result =
+    Object.selectionForField "(Maybe Enum.JuryResult.JuryResult)" "result" [] (Admin.Enum.JuryResult.decoder |> Decode.nullable)
+
+
+isResultProvisional : SelectionSet (Maybe Bool) Admin.Object.Jury
+isResultProvisional =
+    Object.selectionForField "(Maybe Bool)" "isResultProvisional" [] (Decode.bool |> Decode.nullable)
+
+
+informationOfResult : SelectionSet (Maybe String) Admin.Object.Jury
+informationOfResult =
+    Object.selectionForField "(Maybe String)" "informationOfResult" [] (Decode.string |> Decode.nullable)

@@ -11,6 +11,7 @@ import Admin.Enum.DistanceStatus
 import Admin.Enum.Duration
 import Admin.Enum.ExamResult
 import Admin.Enum.Gender
+import Admin.Enum.JuryResult
 import Admin.Enum.LegalStatus
 import Admin.Enum.Sort
 import Admin.Enum.SubscriptionOrganismTypology
@@ -811,6 +812,46 @@ encodeFundingRequestUnifvaeInput : FundingRequestUnifvaeInput -> Value
 encodeFundingRequestUnifvaeInput input____ =
     Encode.maybeObject
         [ ( "candidateSecondname", Encode.string |> Encode.optional input____.candidateSecondname ), ( "candidateThirdname", Encode.string |> Encode.optional input____.candidateThirdname ), ( "candidateGender", Encode.enum Admin.Enum.Gender.toString input____.candidateGender |> Just ), ( "individualHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualHourCount |> Just ), ( "individualCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualCost |> Just ), ( "collectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveHourCount |> Just ), ( "collectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveCost |> Just ), ( "basicSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsCost |> Just ), ( "certificateSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsCost |> Just ), ( "otherTrainingHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingHourCount |> Just ), ( "otherTrainingCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingCost |> Just ), ( "fundingContactFirstname", Encode.string |> Encode.optional input____.fundingContactFirstname ), ( "fundingContactLastname", Encode.string |> Encode.optional input____.fundingContactLastname ), ( "fundingContactEmail", Encode.string |> Encode.optional input____.fundingContactEmail ), ( "fundingContactPhone", Encode.string |> Encode.optional input____.fundingContactPhone ) ]
+
+
+buildJuryInfoInput :
+    JuryInfoInputRequiredFields
+    -> (JuryInfoInputOptionalFields -> JuryInfoInputOptionalFields)
+    -> JuryInfoInput
+buildJuryInfoInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { informationOfResult = Absent }
+    in
+    { result = required____.result, isResultProvisional = required____.isResultProvisional, informationOfResult = optionals____.informationOfResult }
+
+
+type alias JuryInfoInputRequiredFields =
+    { result : Admin.Enum.JuryResult.JuryResult
+    , isResultProvisional : Bool
+    }
+
+
+type alias JuryInfoInputOptionalFields =
+    { informationOfResult : OptionalArgument String }
+
+
+{-| Type for the JuryInfoInput input object.
+-}
+type alias JuryInfoInput =
+    { result : Admin.Enum.JuryResult.JuryResult
+    , isResultProvisional : Bool
+    , informationOfResult : OptionalArgument String
+    }
+
+
+{-| Encode a JuryInfoInput into a value that can be used as an argument.
+-}
+encodeJuryInfoInput : JuryInfoInput -> Value
+encodeJuryInfoInput input____ =
+    Encode.maybeObject
+        [ ( "result", Encode.enum Admin.Enum.JuryResult.toString input____.result |> Just ), ( "isResultProvisional", Encode.bool input____.isResultProvisional |> Just ), ( "informationOfResult", Encode.string |> Encode.optional input____.informationOfResult ) ]
 
 
 buildPaymentRequestInput :

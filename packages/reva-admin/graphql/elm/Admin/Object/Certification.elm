@@ -20,6 +20,13 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
+certificationAuthorities :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (List decodesTo) Admin.Object.Certification
+certificationAuthorities object____ =
+    Object.selectionForCompositeField "certificationAuthorities" [] object____ (Basics.identity >> Decode.list)
+
+
 id : SelectionSet Data.Scalar.Id Admin.Object.Certification
 id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
