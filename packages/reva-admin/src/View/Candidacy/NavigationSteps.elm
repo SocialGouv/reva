@@ -12,7 +12,7 @@ import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
 import Route
 import Time
-import View.Candidacy.Tab
+import View.Candidacy.Tab as Tab
 import View.Date
 import View.Steps
 
@@ -47,15 +47,15 @@ activeView context candidacy =
         baseUrl =
             context.baseUrl
 
-        tab =
-            View.Candidacy.Tab.Tab candidacy.id
+        candidacyLink tab =
+            Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
 
         appointmentLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Meetings)
+            candidacyLink Tab.Meetings
 
         trainingLink =
             if candidacy.conventionCollective /= Nothing then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
+                candidacyLink Tab.Training
 
             else if candidacy.firstAppointmentOccuredAt /= Nothing then
                 Just <| Route.href baseUrl <| Route.Typology candidacy.id (Route.TypologyFilters (String.toInt "1" |> Maybe.withDefault 1))
@@ -65,41 +65,35 @@ activeView context candidacy =
 
         admissibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Admissibility)
+                candidacyLink Tab.Admissibility
 
             else
                 Nothing
 
         examInfoLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.ExamInfo)
+                candidacyLink Tab.ExamInfo
 
             else
                 Nothing
 
         feasibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                Just <|
-                    Route.href baseUrl <|
-                        Route.Candidacy (tab View.Candidacy.Tab.Feasibility)
+                candidacyLink Tab.Feasibility
 
             else
                 Nothing
 
         readyForJuryEstimatedDateLink =
             if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                Just <|
-                    Route.href baseUrl <|
-                        Route.Candidacy (tab View.Candidacy.Tab.ReadyForJuryEstimatedDate)
+                candidacyLink Tab.ReadyForJuryEstimatedDate
 
             else
                 Nothing
 
         dossierDeValidationLink =
             if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                Just <|
-                    Route.href baseUrl <|
-                        Route.Candidacy (tab View.Candidacy.Tab.DossierDeValidation)
+                candidacyLink Tab.DossierDeValidation
 
             else
                 Nothing
@@ -203,9 +197,7 @@ activeView context candidacy =
                         expandedView WITHOUT_BUTTON "Jury"
                   , navigation =
                         if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                            Just <|
-                                Route.href baseUrl <|
-                                    Route.Candidacy (tab View.Candidacy.Tab.Jury)
+                            candidacyLink Tab.Jury
 
                         else
                             Nothing
@@ -273,7 +265,7 @@ activeView context candidacy =
                                 Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye
                     in
                     if displayLink then
-                        paymentRequestLink baseUrl candidacy
+                        candidacyLink Tab.PaymentRequest
 
                     else
                         Nothing
@@ -295,8 +287,8 @@ activeView context candidacy =
 dropOutView : String -> Candidacy -> Time.Posix -> Html msg
 dropOutView baseUrl candidacy dropOutDate =
     let
-        tab =
-            View.Candidacy.Tab.Tab candidacy.id
+        candidacyLink tab =
+            Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
 
         dropOutInfo =
             [ h3 [ class "text-sm mt-1" ] [ text "Abandon du candidat confirmé" ]
@@ -304,7 +296,7 @@ dropOutView baseUrl candidacy dropOutDate =
             ]
 
         dropOutLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.DropOut)
+            candidacyLink Tab.DropOut
 
         progressPosition =
             if Candidacy.isPaymentRequestSent candidacy then
@@ -342,7 +334,7 @@ dropOutView baseUrl candidacy dropOutDate =
                     "Demande de paiement"
           , navigation =
                 if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                    paymentRequestLink baseUrl candidacy
+                    candidacyLink Tab.PaymentRequest
 
                 else
                     Nothing
@@ -357,7 +349,7 @@ archiveView baseUrl candidacy =
             Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
-            Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
+            Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id Tab.Archive)
     in
     View.Steps.view (title "Candidature supprimée")
         2
@@ -374,7 +366,7 @@ reorientationView baseUrl candidacy =
             Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
-            Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
+            Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id Tab.Archive)
     in
     View.Steps.view (title "Candidature réorientée")
         2
@@ -458,19 +450,10 @@ fundingRequestLink baseUrl candidacy =
         Just <|
             Route.href baseUrl <|
                 Route.Candidacy <|
-                    View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.FundingRequest
+                    Tab.Tab candidacy.id Tab.FundingRequest
 
     else
         Nothing
-
-
-paymentRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
-paymentRequestLink baseUrl candidacy =
-    let
-        tab =
-            View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.PaymentRequest
-    in
-    Just <| Route.href baseUrl <| Route.Candidacy tab
 
 
 candidacyStatus : Candidacy -> Candidacy.Step
