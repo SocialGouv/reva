@@ -16,6 +16,9 @@ module.exports = {
           "light-text-default-info": "#0063CB",
         },
       },
+      listStyleType: {
+        square: "square",
+      },
     },
   },
   plugins: [],
