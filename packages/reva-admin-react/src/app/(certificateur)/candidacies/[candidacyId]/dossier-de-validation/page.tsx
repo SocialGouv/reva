@@ -61,7 +61,26 @@ const ReadyForJuryEstimatedDateTab = () => {
           <Alert
             severity="info"
             title="Attente de la date prévisionnelle"
-            description="Afin de faciliter la tenue du jury pour le candidat, l’AAP renseignera la date prévisionnelle à laquelle son candidat sera potentiellement prêt pour son passage devant le jury."
+            description={
+              <>
+                <p className="mt-4">
+                  Afin de faciliter la tenue du jury, l’AAP renseignera la date
+                  prévisionnelle qui correspond :
+                </p>
+                <br />
+                <ul className="list-disc list-inside">
+                  <li>
+                    à la date à laquelle le candidat aura finalisé son dossier
+                    de validation pour les certifications du Ministère du
+                    Travail et des Branches Professionnelles
+                  </li>
+                  <li>
+                    à la date de dépôt du dossier de validation pour les autres
+                    certifications
+                  </li>
+                </ul>
+              </>
+            }
           />
         )}
       </div>
