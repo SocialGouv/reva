@@ -22,6 +22,7 @@ import Api.Certification as Certification
 import Api.CertificationAuthority as CertificationAuthority
 import Api.DossierDeValidation
 import Api.Feasibility
+import Api.Jury
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential exposing (departmentSelection, reorientationReasonSelection)
@@ -252,6 +253,7 @@ selection id =
                 |> with Admin.Object.Candidacy.ccnId
                 |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
                 |> with Admin.Object.Candidacy.readyForJuryEstimatedAt
+                |> with (Admin.Object.Candidacy.jury Api.Jury.selection)
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->

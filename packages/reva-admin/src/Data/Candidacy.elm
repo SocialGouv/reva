@@ -46,6 +46,7 @@ import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.DossierDeValidation exposing (DossierDeValidation)
 import Data.Feasibility exposing (Feasibility)
+import Data.Jury exposing (Jury)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Department, ReorientationReason)
@@ -108,7 +109,8 @@ type alias Candidacy =
     , typologyAdditional : Maybe String
     , ccnId : Maybe String
     , conventionCollective : Maybe CandidacyConventionCollective
-    , readyForJuryEstimatedAt : Maybe Time.Posix
+    , readyForJuryEstimatedAt : Maybe Time.Posix -- legacy jury date for Reva XP
+    , jury : Maybe Jury
     }
 
 

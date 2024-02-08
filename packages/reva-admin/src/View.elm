@@ -276,10 +276,14 @@ alert alertType attributes alertTitle content =
             ++ attributes
         )
     <|
-        h6
-            []
-            [ text alertTitle ]
-            :: content
+        if alertTitle /= "" then
+            h6
+                []
+                [ text alertTitle ]
+                :: content
+
+        else
+            content
 
 
 stepper :

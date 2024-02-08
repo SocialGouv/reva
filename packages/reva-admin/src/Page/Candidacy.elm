@@ -85,6 +85,7 @@ import View.Candidate
 import View.Date as Date
 import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
+import View.Jury
 import View.Tabs
 
 
@@ -325,10 +326,7 @@ view context model =
                                 [ juryDateTab candidacy.id True
                                 , juryResultTab candidacy.id False
                                 ]
-                                [ div
-                                    [ class "text-center text-gray-500 pt-20 pb-24" ]
-                                    [ text "Vous retrouverez bientôt les informations du jury ici" ]
-                                ]
+                                [ View.Jury.viewDate candidacy.jury ]
 
                         _ ->
                             div [ class "h-[800px]" ] []
