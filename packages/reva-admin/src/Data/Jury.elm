@@ -1,5 +1,6 @@
 module Data.Jury exposing (Jury)
 
+import Admin.Enum.JuryResult exposing (JuryResult)
 import Time exposing (Posix)
 
 
@@ -8,4 +9,7 @@ type alias Jury =
     , timeOfSession : Maybe String
     , addressOfSession : Maybe String
     , informationOfSession : Maybe String
+    , informationOfResult : Maybe String
+    , isResultProvisional : Maybe Bool
+    , result : Maybe JuryResult
     }

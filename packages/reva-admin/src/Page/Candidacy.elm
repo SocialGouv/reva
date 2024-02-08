@@ -338,10 +338,7 @@ view context model =
                                 [ juryDateTab candidacy.id False
                                 , juryResultTab candidacy.id True
                                 ]
-                                [ div
-                                    [ class "mb-8 text-gray-500" ]
-                                    [ text "Bientôt vous retrouverez les résultats ici" ]
-                                ]
+                                [ View.Jury.viewResult candidacy.jury ]
 
                 Feasibility ->
                     case model.selected of
