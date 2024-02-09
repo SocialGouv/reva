@@ -114,7 +114,7 @@ type Query {
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
   getDropOutReasons: [DropOutReason!]!
   getReorientationReasons: [ReorientationReason!]!
-  getDomaines: [Domaine]!
-  getConventionCollectives: [ConventionCollective]!
+  getDomaines: [Domaine!]!
+  getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
 }
