@@ -24,7 +24,7 @@ const FeasibilityPage = () => {
     if (result.ok) {
       router.push("/candidacies/feasibilities");
     } else {
-      errorToast(result.statusText);
+      errorToast(await result.text());
     }
   };
 
