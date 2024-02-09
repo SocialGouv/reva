@@ -1,68 +1,16 @@
 "use client";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
+import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 import { CertificationStatus } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 
-const getCertificationQuery = graphql(`
-  query getCertification($certificationId: ID!) {
-    getCertification(certificationId: $certificationId) {
-      id
-      label
-      codeRncp
-      status
-      expiresAt
-      availableAt
-      certificationAuthorities {
-        id
-        label
-        certificationAuthorityLocalAccounts {
-          id
-          account {
-            id
-            email
-            firstname
-            lastname
-          }
-        }
-      }
-      typeDiplome {
-        label
-      }
-      certificationAuthorityTag
-      degree {
-        longLabel
-      }
-      conventionsCollectives {
-        id
-        label
-      }
-      domaines {
-        id
-        label
-      }
-    }
-  }
-`);
-
 const CertificationPage = () => {
-  const { graphqlClient } = useGraphQlClient();
   const { certificationId } = useParams<{ certificationId: string }>();
-
-  const { data: getCertificationResponse } = useQuery({
-    queryKey: ["getCertification", certificationId],
-    queryFn: () =>
-      graphqlClient.request(getCertificationQuery, {
-        certificationId,
-      }),
-  });
-
-  const certification = getCertificationResponse?.getCertification;
+  const { certification } = useCertificationQueries({ certificationId });
 
   const certificationStatusToString = (s: CertificationStatus) => {
     switch (s) {
@@ -155,6 +103,12 @@ const CertificationPage = () => {
           </div>
         </>
       )}
+      <Button
+        className="mt-8 ml-auto"
+        linkProps={{ href: `/certifications/${certificationId}/update` }}
+      >
+        Modifier
+      </Button>
     </div>
   );
 };
