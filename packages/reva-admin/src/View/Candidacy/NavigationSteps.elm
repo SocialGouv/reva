@@ -247,7 +247,7 @@ activeView context candidacy =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
                             candidacy
-                            [ if dossierDeValidationFeatureActive then
+                            [ if dossierDeValidationFeatureActive && candidacy.financeModule /= Unireva then
                                 DossierDeValidationEnvoye
 
                               else
