@@ -80,7 +80,7 @@ const MaisonMereAAPPage = () => {
           accountEmail={maisonMereAAP.gestionnaire.email}
           accountPhoneNumber=""
           companyQualiopiCertificateExpiresAt={
-            maisonMereAAP.dateExpirationCertificationQualiopi
+            new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
           }
           companySiret={maisonMereAAP.siret}
           companyLegalStatus={maisonMereAAP.statutJuridique}

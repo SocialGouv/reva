@@ -84,7 +84,7 @@ export const Resultat = (): JSX.Element => {
       {result ? (
         <>
           <h5 className="text-base font-bold mb-4">
-            {`${format(candidacy.jury?.dateOfSession, "yyyy-MM-dd")} - ${
+            {`${format(candidacy.jury?.dateOfSession || "", "yyyy-MM-dd")} - ${
               candidacy.jury?.isResultProvisional
                 ? "Résultat provisoire"
                 : "Résultat définitif"

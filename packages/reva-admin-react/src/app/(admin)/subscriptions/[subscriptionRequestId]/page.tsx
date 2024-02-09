@@ -86,7 +86,7 @@ const SubscriptionRequestPage = () => {
           accountEmail={subscriptionRequest.accountEmail}
           accountPhoneNumber={subscriptionRequest.accountPhoneNumber}
           companyQualiopiCertificateExpiresAt={
-            subscriptionRequest.qualiopiCertificateExpiresAt
+            new Date(subscriptionRequest.qualiopiCertificateExpiresAt || "")
           }
           companySiret={subscriptionRequest.companySiret}
           companyLegalStatus={subscriptionRequest.companyLegalStatus}

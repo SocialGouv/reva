@@ -80,7 +80,7 @@ const RejectedSubscriptionRequestsPage = () => {
               <SubscriptionRequestCard
                 key={r.id}
                 companyName={r.companyName}
-                createdAt={r.createdAt}
+                createdAt={new Date(r.createdAt)}
                 href={`/subscriptions/${r.id}`}
               />
             )}

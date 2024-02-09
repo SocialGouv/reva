@@ -109,7 +109,7 @@ const FeasibilityPage = () => {
               </h5>
               <FeasibilityDecisionInfo
                 decision={feasibility.decision}
-                decisionSentAt={feasibility.decisionSentAt}
+                decisionSentAt={new Date(feasibility.decisionSentAt || "")}
                 decisionComment={feasibility.decisionComment}
               />
             </div>
@@ -126,7 +126,9 @@ const FeasibilityPage = () => {
                   <li className="mb-2" key={previousFeasibility.decisionSentAt}>
                     <FeasibilityDecisionInfo
                       decision={previousFeasibility.decision}
-                      decisionSentAt={previousFeasibility.decisionSentAt}
+                      decisionSentAt={
+                        new Date(previousFeasibility.decisionSentAt || "")
+                      }
                       decisionComment={previousFeasibility.decisionComment}
                     />
                   </li>

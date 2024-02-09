@@ -13,6 +13,7 @@ const config: CodegenConfig = {
       },
     },
   },
+  config: { scalars: { Timestamp: "number" } },
 };
 
 export default config;
