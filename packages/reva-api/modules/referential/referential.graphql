@@ -116,4 +116,5 @@ type Query {
   getReorientationReasons: [ReorientationReason!]!
   getDomaines: [Domaine]!
   getConventionCollectives: [ConventionCollective]!
+  getTypeDiplomes: [TypeDiplome!]!
 }

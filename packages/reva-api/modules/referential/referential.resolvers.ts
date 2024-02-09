@@ -11,6 +11,7 @@ import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
+import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 import { searchCertifications } from "./features/searchCertifications";
 
@@ -53,17 +54,15 @@ export const referentialResolvers = {
       _: unknown,
       { certificationId }: { certificationId: string },
     ) => getCertificationById({ certificationId }),
-    getRegions: (_: any, _payload: any) => getRegions(),
-    getDepartments: (_: any, _payload: any) => getDepartments(),
-    getDegrees: (_: any, _payload: any) => getDegrees(),
-    getVulnerabilityIndicators: (_: any, _payload: any) =>
-      getVulnerabilityIndicators(),
-    getDropOutReasons: (_: any, _payload: any) => getDropOutReasons(),
-    getReorientationReasons: (_: any, _payload: any) =>
-      getReorientationReasons(),
-
+    getRegions,
+    getDepartments,
+    getDegrees,
+    getVulnerabilityIndicators,
+    getDropOutReasons,
+    getReorientationReasons,
     getDomaines: () => prismaClient.domaine.findMany(),
     getConventionCollectives: () =>
       prismaClient.conventionCollective.findMany(),
+    getTypeDiplomes,
   },
 };
