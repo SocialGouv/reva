@@ -1,6 +1,17 @@
 import { stubQuery } from "../support/graphql";
 
 describe("candidate certificate search", () => {
+beforeEach(() => {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "active_features_website_v2.json"
+    );
+  });
+  });
+
+
   it("should show the relevant certificates when typing text in the search bar", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
@@ -12,7 +23,7 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(500);
+    cy.wait(1000);
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
@@ -36,7 +47,7 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(500);
+    cy.wait(1000);
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
@@ -62,7 +73,7 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(500);
+    cy.wait(1000);
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
