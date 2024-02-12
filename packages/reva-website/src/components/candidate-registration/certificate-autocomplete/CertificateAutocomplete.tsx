@@ -22,7 +22,7 @@ export const CertificateAutocomplete = ({
   onSubmit,
   defaultLabel,
 }: {
-  onOptionSelection?: (selectedOption: AutocompleteOption) => void;
+  onOptionSelection: (selectedOption: AutocompleteOption) => void;
   onSubmit?: (searchText: string) => void;
   defaultLabel?: string;
 }) => {
