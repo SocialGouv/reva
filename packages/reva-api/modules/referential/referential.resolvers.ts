@@ -18,6 +18,7 @@ import { searchCertifications } from "./features/searchCertifications";
 import { referentialResolversSecurityMap } from "./referential.security";
 import { UpdateCertificationInput } from "./referential.types";
 import { updateCertification } from "./features/updateCertification";
+import { replaceCertification } from "./features/replaceCertification";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -74,6 +75,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCertificationInput },
     ) => updateCertification({ updateCertificationInput: input }),
+    referential_replaceCertification: (
+      _parent: unknown,
+      { input }: { input: UpdateCertificationInput },
+    ) => replaceCertification({ replaceCertificationInput: input }),
   },
 };
 

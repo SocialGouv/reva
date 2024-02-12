@@ -136,4 +136,7 @@ type Mutation {
   referential_updateCertification(
     input: UpdateCertificationInput!
   ): Certification!
+  referential_replaceCertification(
+    input: UpdateCertificationInput!
+  ): Certification!
 }
