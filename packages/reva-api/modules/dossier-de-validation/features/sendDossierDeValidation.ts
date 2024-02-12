@@ -41,13 +41,8 @@ export const sendDossierDeValidation = async ({
   if (candidacy.candidacyStatuses?.[0]?.status === "ARCHIVE") {
     throw new Error("La candidature a été supprimée");
   }
-  if (
-    !candidacy.Feasibility[0]?.isActive &&
-    candidacy.Feasibility[0]?.decision !== FeasibilityStatus.ADMISSIBLE
-  ) {
-    throw new Error(
-      "Le dossier de faisabilité n'est pas actif ou n'est pas recevable",
-    );
+  if (candidacy.Feasibility?.[0]?.decision !== FeasibilityStatus.ADMISSIBLE) {
+    throw new Error("Le dossier de faisabilité n'est pas recevable");
   }
 
   if (
