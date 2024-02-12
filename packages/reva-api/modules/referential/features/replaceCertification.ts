@@ -1,12 +1,13 @@
 import { prismaClient } from "../../../prisma/client";
+import { addCertificationReplacementToCertificationAuthoritiesAndLocalAccounts } from "../../certification-authority/features/addCertificationReplacementToCertificationAuthoritiesAndLocalAccounts";
 import { UpdateCertificationInput } from "../referential.types";
 
 export const replaceCertification = async ({
   replaceCertificationInput,
 }: {
   replaceCertificationInput: UpdateCertificationInput;
-}) =>
-  prismaClient.certification.create({
+}) => {
+  const newCertification = await prismaClient.certification.create({
     data: {
       label: replaceCertificationInput.label,
       rncpId: replaceCertificationInput.codeRncp,
@@ -36,3 +37,10 @@ export const replaceCertification = async ({
       },
     },
   });
+
+  await addCertificationReplacementToCertificationAuthoritiesAndLocalAccounts({
+    oldCertificationId: replaceCertificationInput.certificationId,
+    newCertificationId: newCertification.id,
+  });
+  return newCertification;
+};
