@@ -1,14 +1,14 @@
 "use client";
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, add } from "date-fns";
+import { format } from "date-fns";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
-import { JuryResult } from "@/graphql/generated/graphql";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { JuryResult } from "@/graphql/generated/graphql";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 import { useJuryPageLogic } from "./juryPageLogic";
 
@@ -24,6 +24,18 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   FAILURE: "Non validation",
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
+};
+
+const juryResultNotice: {
+  [key in JuryResult]: "info" | "warning" | "success" | "error";
+} = {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION: "success",
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
+  FAILURE: "error",
+  CANDIDATE_EXCUSED: "warning",
+  CANDIDATE_ABSENT: "warning",
 };
 
 const schema = z.object({
@@ -84,16 +96,16 @@ export const Resultat = (): JSX.Element => {
       {result ? (
         <>
           <h5 className="text-base font-bold mb-4">
-            {`${format(candidacy.jury?.dateOfSession || "", "yyyy-MM-dd")} - ${
+            {`${format(candidacy.jury?.dateOfResult || "", "yyyy-MM-dd")} - ${
               candidacy.jury?.isResultProvisional
                 ? "Résultat provisoire"
                 : "Résultat définitif"
             } :`}
           </h5>
 
-          <label className="text-base bg-[#B8FEC9] mb-4">
+          <SmallNotice status={juryResultNotice[result]} filled>
             {juryResultLabels[result]}
-          </label>
+          </SmallNotice>
 
           {candidacy.jury?.informationOfResult && (
             <label className="text-base">

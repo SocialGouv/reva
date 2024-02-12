@@ -29,6 +29,7 @@ type Jury {
   informationOfSession: String
   convocationFile: File
   result: JuryResult
+  dateOfResult: Timestamp
   isResultProvisional: Boolean
   informationOfResult: String
 }

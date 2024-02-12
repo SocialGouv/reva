@@ -23,6 +23,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     },
     data: {
       result: juryInfo.result,
+      dateOfResult: new Date(),
       isResultProvisional: juryInfo.isResultProvisional,
       informationOfResult: juryInfo.informationOfResult,
     },
