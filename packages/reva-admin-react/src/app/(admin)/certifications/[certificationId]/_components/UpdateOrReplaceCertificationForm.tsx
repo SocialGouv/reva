@@ -8,11 +8,10 @@ import { format } from "date-fns";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useEffect } from "react";
-import { errorToast } from "@/components/toast/toast";
 
 const schema = z.object({
-  codeRncp: z.string(),
-  label: z.string(),
+  codeRncp: z.string().min(1, "Ce champ est obligatoire"),
+  label: z.string().min(1, "Ce champ est obligatoire"),
   expiresAt: z.date(),
   availableAt: z.date(),
   typeDiplomeId: z.string(),
@@ -77,10 +76,7 @@ const UpdateOrReplaceCertificationForm = ({
     certification && reset(certificationToFormData(certification));
   }, [certification, reset]);
 
-  const handleFormSubmit = handleSubmit(
-    (data) => onSubmit(data),
-    (e) => errorToast(JSON.stringify(e)),
-  );
+  const handleFormSubmit = handleSubmit((data) => onSubmit(data));
 
   const typeDiplomeController = useController({
     control,
