@@ -103,12 +103,18 @@ const CertificationPage = () => {
           </div>
         </>
       )}
-      <Button
-        className="mt-8 ml-auto"
-        linkProps={{ href: `/certifications/${certificationId}/update` }}
-      >
-        Modifier
-      </Button>
+      <div className="flex flex-col md:flex-row gap-4 mt-8 ml-auto">
+        <Button
+          linkProps={{ href: `/certifications/${certificationId}/update` }}
+        >
+          Modifier
+        </Button>
+        <Button
+          linkProps={{ href: `/certifications/${certificationId}/replace` }}
+        >
+          Remplacer
+        </Button>
+      </div>
     </div>
   );
 };

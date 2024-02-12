@@ -9,17 +9,16 @@ import UpdateOrReplaceCertificationForm, {
 } from "@/app/(admin)/certifications/[certificationId]/_components/UpdateOrReplaceCertificationForm";
 import { Certification } from "@/graphql/generated/graphql";
 
-const UpdateCertificationPage = () => {
+const ReplaceCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
   const router = useRouter();
-
   const {
     certification,
     typeDiplomes,
     degrees,
     domaines,
     conventionCollectives,
-    updateCertification,
+    replaceCertification,
   } = useCertificationQueries({
     certificationId,
   });
@@ -28,7 +27,9 @@ const UpdateCertificationPage = () => {
     data: UpdateOrReplaceCertificationFormData,
   ) => {
     try {
-      await updateCertification.mutateAsync({
+      const {
+        referential_replaceCertification: { id: newCertificationId },
+      } = await replaceCertification.mutateAsync({
         label: data.label,
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
@@ -42,8 +43,8 @@ const UpdateCertificationPage = () => {
         expiresAt: data.expiresAt.getTime(),
       });
 
-      successToast("Certification enregistrée");
-      router.push(`/certifications/${certificationId}`);
+      successToast("Certification remplacée");
+      router.push(`/certifications/${newCertificationId}`);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -63,14 +64,16 @@ const UpdateCertificationPage = () => {
             >
               Retour
             </Link>
-            <PageTitle> Modifier une certification</PageTitle>
+            <PageTitle> Remplacer une certification</PageTitle>
             <p>
               Sauf mention contraire “(optionnel)” dans le label, tous les
               champs sont obligatoires.
             </p>
             <br />
             <UpdateOrReplaceCertificationForm
-              certification={certification as Certification}
+              certification={
+                { ...certification, codeRncp: "" } as Certification
+              }
               typeDiplomes={typeDiplomes}
               domaines={domaines}
               conventionCollectives={conventionCollectives}
@@ -83,4 +86,4 @@ const UpdateCertificationPage = () => {
   );
 };
 
-export default UpdateCertificationPage;
+export default ReplaceCertificationPage;

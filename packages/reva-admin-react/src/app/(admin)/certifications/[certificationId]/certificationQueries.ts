@@ -76,6 +76,14 @@ const updateCertificatioMutation = graphql(`
   }
 `);
 
+const replaceCertificationMutation = graphql(`
+  mutation replaceCertificatioMutation($input: UpdateCertificationInput!) {
+    referential_replaceCertification(input: $input) {
+      id
+    }
+  }
+`);
+
 export const useCertificationQueries = ({
   certificationId,
 }: {
@@ -112,6 +120,24 @@ export const useCertificationQueries = ({
         input: { ...input, certificationId },
       }),
   });
+
+  const replaceCertification = useMutation({
+    mutationFn: (input: {
+      label: string;
+      level: number;
+      codeRncp: string;
+      typeDiplomeId: string;
+      certificationAuthorityTag: string;
+      domaineIds: string[];
+      conventionCollectiveIds: string[];
+      availableAt: number;
+      expiresAt: number;
+    }) =>
+      graphqlClient.request(replaceCertificationMutation, {
+        input: { ...input, certificationId },
+      }),
+  });
+
   return {
     certification: getCertificationResponse?.getCertification,
     degrees: getReferentialResponse?.getDegrees,
@@ -119,5 +145,6 @@ export const useCertificationQueries = ({
     domaines: getReferentialResponse?.getDomaines,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
     updateCertification,
+    replaceCertification,
   };
 };
