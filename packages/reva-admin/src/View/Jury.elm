@@ -116,7 +116,7 @@ viewResultProvisional isResultProvisional =
 viewResultCategory : JuryResult -> Html msg
 viewResultCategory result =
     p
-        [ class "fr-badge fr-badge--sm my-4", class (resultToClass result) ]
+        [ class "fr-badge my-4", class (resultToClass result) ]
         [ text (resultToString result) ]
 
 
@@ -150,19 +150,19 @@ resultToClass result =
             "fr-badge--success"
 
         PartialSuccessOfFullCertification ->
-            ""
+            "fr-badge--info"
 
         FullSuccessOfPartialCertification ->
             "fr-badge--success"
 
         PartialSuccessOfPartialCertification ->
-            ""
+            "fr-badge--info"
 
         Failure ->
-            "fr-badge--error"
+            "fr-badge--purple-glycine"
 
         CandidateExcused ->
-            ""
+            "fr-badge--new"
 
         CandidateAbsent ->
-            "fr-badge--error"
+            "fr-badge--new"

@@ -33,8 +33,12 @@
     mask-image: url("../icons/system/fr--warning-fill.svg");
 }
 
-.fr-alert--info:before {
+.fr-alert--info:before, .fr-badge.fr-badge--info:before {
     mask-image: url("../icons/system/fr--info-fill.svg");
+}
+
+.fr-alert--new:before, .fr-badge.fr-badge--new:before {
+    mask-image: url("../icons/weather/flashlight-fill.svg");
 }
 
 .fr-alert--success:before, .fr-badge.fr-badge--success:before {
