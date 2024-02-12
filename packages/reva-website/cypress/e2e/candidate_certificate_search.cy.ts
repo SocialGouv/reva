@@ -12,6 +12,8 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
+    cy.wait(500);
+
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
     });
@@ -33,6 +35,8 @@ describe("candidate certificate search", () => {
     });
 
     cy.visit("http://localhost:3002");
+
+    cy.wait(500);
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
@@ -58,12 +62,17 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
+    cy.wait(500);
+
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
     });
+
     cy.wait("@searchCertificationsQuery");
 
-    cy.get('[data-testid="autocomplete"]').children("button").eq(0).click();
+    cy.get('[data-testid="autocomplete-input"]').type("{enter}", {
+      delay: 0,
+    });
 
     cy.url().should(
       "eq",

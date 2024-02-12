@@ -32,7 +32,8 @@ const useFeatureFlippingStore = create<{
 }));
 
 export const useFeatureflipping = () => {
-  const { activeFeatures, isFeatureActive, init } = useFeatureFlippingStore();
+  const { activeFeatures, isFeatureActive, init, status } =
+    useFeatureFlippingStore();
   init();
-  return { activeFeatures, isFeatureActive };
+  return { activeFeatures, isFeatureActive, status };
 };

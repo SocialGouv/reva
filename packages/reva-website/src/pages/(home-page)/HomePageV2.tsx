@@ -208,7 +208,7 @@ const AccompagnementDemarche = () => (
       depuis le diagnostic de vos compétences en début de parcours jusqu'au
       bilan après le passage devant le jury.
     </p>
-    <div className="flex flex-col sm:flex-row gap-6">
+    <div className="flex flex-col lg:flex-row gap-6">
       <AapStepBlock
         title="Diagnostic de compétences"
         description="Identification des compétences issues de vos expériences en fonction de votre projet."
