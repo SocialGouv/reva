@@ -56,7 +56,7 @@ export const sendDossierDeValidation = async ({
     )
   ) {
     throw new Error(
-      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_FAISABILITE_INCOMPLET ",
+      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_DE_VALIDATION_SIGNALE ",
     );
   }
   const dossierDeValidationFileId = uuidV4();
