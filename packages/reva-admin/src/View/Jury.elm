@@ -16,18 +16,20 @@ viewDate maybeJury =
             viewDateHelper jury
 
         Nothing ->
-            View.noticeInfo
+            View.alert View.Info
                 [ class "mb-8" ]
-                [ text "Date de jury en attente de saisie par le certificateur" ]
+                "En attente de la date de jury "
+                [ text "Le certificateur vous communiquera la date du jury de votre candidat." ]
 
 
 viewResult : Maybe Jury -> Html msg
 viewResult maybeJury =
     let
         waitingForResult =
-            View.noticeInfo
+            View.alert View.Info
                 [ class "mb-8" ]
-                [ text "Résultat du jury en attente" ]
+                "En attente du résultat"
+                [ text "Le certificateur vous communiquera le résultat de votre candidat." ]
     in
     case maybeJury of
         Just jury ->
