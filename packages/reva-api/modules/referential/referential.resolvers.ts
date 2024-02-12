@@ -1,3 +1,4 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { getCertificationById } from "./features/getCertificationById";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
@@ -14,8 +15,11 @@ import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
 import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 import { searchCertifications } from "./features/searchCertifications";
+import { referentialResolversSecurityMap } from "./referential.security";
+import { UpdateCertificationInput } from "./referential.types";
+import { updateCertification } from "./features/updateCertification";
 
-export const referentialResolvers = {
+const unsafeReferentialResolvers = {
   Certification: {
     codeRncp: ({ rncpId, codeRncp }: { rncpId: string; codeRncp: string }) =>
       codeRncp || rncpId,
@@ -65,4 +69,15 @@ export const referentialResolvers = {
       prismaClient.conventionCollective.findMany(),
     getTypeDiplomes,
   },
+  Mutation: {
+    referential_updateCertification: (
+      _parent: unknown,
+      { input }: { input: UpdateCertificationInput },
+    ) => updateCertification({ updateCertificationInput: input }),
+  },
 };
+
+export const referentialResolvers = composeResolvers(
+  unsafeReferentialResolvers,
+  referentialResolversSecurityMap,
+);

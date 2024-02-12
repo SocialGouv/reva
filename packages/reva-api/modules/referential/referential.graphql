@@ -118,3 +118,22 @@ type Query {
   getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
 }
+
+input UpdateCertificationInput {
+  certificationId: ID!
+  label: String!
+  level: Int!
+  codeRncp: String!
+  typeDiplomeId: String!
+  certificationAuthorityTag: String!
+  domaineIds: [String!]!
+  conventionCollectiveIds: [String!]!
+  availableAt: Timestamp!
+  expiresAt: Timestamp!
+}
+
+type Mutation {
+  referential_updateCertification(
+    input: UpdateCertificationInput!
+  ): Certification!
+}

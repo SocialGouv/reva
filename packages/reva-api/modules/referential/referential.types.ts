@@ -17,7 +17,7 @@ export const CertificationStatus = {
 };
 
 export type CertificationStatus =
-  typeof CertificationStatus[keyof typeof CertificationStatus];
+  (typeof CertificationStatus)[keyof typeof CertificationStatus];
 
 export interface Certification {
   id: string;
@@ -55,4 +55,17 @@ export interface ReorientationReason {
   createdAt: Date;
   updatedAt: Date | null;
   disabled: boolean;
+}
+
+export interface UpdateCertificationInput {
+  certificationId: string;
+  label: string;
+  level: number;
+  codeRncp: string;
+  typeDiplomeId: string;
+  certificationAuthorityTag: string;
+  domaineIds: string[];
+  conventionCollectiveIds: string[];
+  availableAt: Date;
+  expiresAt: Date;
 }
