@@ -6,11 +6,17 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 
 import { JuryResult } from "@/graphql/generated/graphql";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 import { useJuryPageLogic } from "./juryPageLogic";
+
+const modal = createModal({
+  id: "confirm-result",
+  isOpenedByDefault: false,
+});
 
 const juryResultLabels: { [key in JuryResult]: string } = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION:
@@ -27,15 +33,15 @@ const juryResultLabels: { [key in JuryResult]: string } = {
 };
 
 const juryResultNotice: {
-  [key in JuryResult]: "info" | "warning" | "success" | "error";
+  [key in JuryResult]: "info" | "new" | "success" | "error";
 } = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION: "success",
   PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
   FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
   FAILURE: "error",
-  CANDIDATE_EXCUSED: "warning",
-  CANDIDATE_ABSENT: "warning",
+  CANDIDATE_EXCUSED: "new",
+  CANDIDATE_ABSENT: "new",
 };
 
 const schema = z.object({
@@ -60,32 +66,41 @@ export const Resultat = (): JSX.Element => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResultatFormData>({ resolver: zodResolver(schema) });
 
-  const handleFormSubmit = handleSubmit((data) => {
+  const handleFormSubmit = handleSubmit(() => {
+    modal.open();
+  });
+
+  const formData = getValues();
+
+  const submitData = () => {
+    modal.close();
+
     if (candidacy?.jury?.id) {
       updateJuryResult.mutateAsync({
         juryId: candidacy.jury.id,
         input: {
-          result: data.result,
-          isResultProvisional: data.isResultProvisional == "true",
-          informationOfResult: data.informationOfResult,
+          result: formData.result,
+          isResultProvisional: formData.isResultProvisional == "true",
+          informationOfResult: formData.informationOfResult,
         },
       });
     }
-  });
+  };
 
   const result = candidacy?.jury?.result;
 
   return (
     <div className="flex flex-col">
       <>
-        <h5 className="text-xl font-bold mb-4">
+        <h5 className="text-xl font-bold">
           Résultat à l'issue de l'entretien avec le jury
         </h5>
         {!result && (
-          <p className="text-gray-600 mb-12">
+          <p className="text-gray-600 mt-4 mb-12">
             Sélectionner l'option de résultat qui convient. Le résultat est
             envoyé par e-mail à l’AAP et au candidat. Un document officiel devra
             être envoyé au candidat.
@@ -94,8 +109,8 @@ export const Resultat = (): JSX.Element => {
       </>
 
       {result ? (
-        <>
-          <h5 className="text-base font-bold mb-4">
+        <div className="flex flex-col gap-4 mt-12">
+          <h5 className="text-base font-bold">
             {`${format(candidacy.jury?.dateOfResult || "", "yyyy-MM-dd")} - ${
               candidacy.jury?.isResultProvisional
                 ? "Résultat provisoire"
@@ -103,16 +118,16 @@ export const Resultat = (): JSX.Element => {
             } :`}
           </h5>
 
-          <SmallNotice status={juryResultNotice[result]} filled>
+          <Badge severity={juryResultNotice[result]}>
             {juryResultLabels[result]}
-          </SmallNotice>
+          </Badge>
 
           {candidacy.jury?.informationOfResult && (
             <label className="text-base">
-              {`“${candidacy.jury?.informationOfResult}”`}
+              {`“${candidacy.jury.informationOfResult}”`}
             </label>
           )}
-        </>
+        </div>
       ) : (
         <form onSubmit={handleFormSubmit}>
           <RadioButtons
@@ -180,6 +195,44 @@ export const Resultat = (): JSX.Element => {
           </div>
         </form>
       )}
+
+      <>
+        <modal.Component
+          title="Confirmer le choix du résultat"
+          className="modal-confirm-jury-result"
+          buttons={[
+            {
+              priority: "secondary",
+              children: "Modifier",
+            },
+            {
+              priority: "primary",
+              onClick: submitData,
+              children: "Confirmer",
+            },
+          ]}
+        >
+          <div className="flex flex-col gap-4">
+            <h5 className="text-base font-bold mt-4">
+              {`${format(new Date(), "yyyy-MM-dd")} - ${
+                formData.isResultProvisional == "true"
+                  ? "Résultat provisoire"
+                  : "Résultat définitif"
+              } :`}
+            </h5>
+
+            <Badge severity={juryResultNotice[formData.result]}>
+              {juryResultLabels[formData.result]}
+            </Badge>
+
+            {formData?.informationOfResult && (
+              <label className="text-base">
+                {`“${formData.informationOfResult}”`}
+              </label>
+            )}
+          </div>
+        </modal.Component>
+      </>
     </div>
   );
 };

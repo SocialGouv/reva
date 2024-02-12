@@ -42,4 +42,12 @@
       font-weight: normal;
     }
   }
+
+  .modal-confirm-jury-result {
+    .fr-modal__header {
+      button {
+        display: none;
+      }
+    }
+  }
 }
