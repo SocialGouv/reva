@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
   query getCertification($certificationId: ID!) {
@@ -32,6 +32,7 @@ const getCertificationQuery = graphql(`
       degree {
         id
         longLabel
+        level
       }
       conventionsCollectives {
         id
@@ -50,6 +51,7 @@ const getReferentialForCertificationQuery = graphql(`
     getDegrees {
       id
       longLabel
+      level
     }
     getTypeDiplomes {
       id
@@ -62,6 +64,14 @@ const getReferentialForCertificationQuery = graphql(`
     getConventionCollectives {
       id
       label
+    }
+  }
+`);
+
+const updateCertificatioMutation = graphql(`
+  mutation updateCertificatioMutation($input: UpdateCertificationInput!) {
+    referential_updateCertification(input: $input) {
+      id
     }
   }
 `);
@@ -86,11 +96,28 @@ export const useCertificationQueries = ({
     queryFn: () => graphqlClient.request(getReferentialForCertificationQuery),
   });
 
+  const updateCertification = useMutation({
+    mutationFn: (input: {
+      label: string;
+      level: number;
+      codeRncp: string;
+      typeDiplomeId: string;
+      certificationAuthorityTag: string;
+      domaineIds: string[];
+      conventionCollectiveIds: string[];
+      availableAt: number;
+      expiresAt: number;
+    }) =>
+      graphqlClient.request(updateCertificatioMutation, {
+        input: { ...input, certificationId },
+      }),
+  });
   return {
     certification: getCertificationResponse?.getCertification,
     degrees: getReferentialResponse?.getDegrees,
     typeDiplomes: getReferentialResponse?.getTypeDiplomes,
     domaines: getReferentialResponse?.getDomaines,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
+    updateCertification,
   };
 };

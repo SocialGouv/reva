@@ -5,21 +5,26 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { useParams } from "next/navigation";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import Link from "next/link";
 import { useEffect } from "react";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 
 const schema = z.object({
   codeRncp: z.string(),
   label: z.string(),
-  expiresAt: z.string(),
-  availableAt: z.string(),
+  expiresAt: z.date(),
+  availableAt: z.date(),
   typeDiplomeId: z.string(),
-  degreeId: z.string(),
+  degreeLevel: z.number(),
   conventionCollectiveId: z.string(),
   domaineId: z.string(),
   certificationAuthorityTag: z.string(),
@@ -34,11 +39,17 @@ const certificationToFormData = (
     ? {
         codeRncp: c.codeRncp || "",
         label: c.label || "",
-        expiresAt: format(new Date(c.expiresAt || ""), "yyyy-MM-dd"),
-        availableAt: format(new Date(c.availableAt || ""), "yyyy-MM-dd"),
+        expiresAt: format(
+          new Date(c.expiresAt || ""),
+          "yyyy-MM-dd",
+        ) as unknown as Date,
+        availableAt: format(
+          new Date(c.availableAt || ""),
+          "yyyy-MM-dd",
+        ) as unknown as Date,
         typeDiplomeId: c.typeDiplome?.id || "",
         certificationAuthorityTag: c.certificationAuthorityTag || "",
-        degreeId: c.degree?.id || "",
+        degreeLevel: c.degree?.level || -1,
         conventionCollectiveId: c.conventionsCollectives?.[0]?.id || "",
         domaineId: c.domaines?.[0]?.id || "",
       }
@@ -52,6 +63,7 @@ const UpdateCertificationPage = () => {
     degrees,
     domaines,
     conventionCollectives,
+    updateCertification,
   } = useCertificationQueries({
     certificationId,
   });
@@ -72,9 +84,30 @@ const UpdateCertificationPage = () => {
       reset(certificationToFormData(certification as Certification));
   }, [certification, reset]);
 
-  const handleFormSubmit = handleSubmit((data) => {
-    console.log({ data });
-  });
+  const handleFormSubmit = handleSubmit(
+    async (data) => {
+      try {
+        await updateCertification.mutateAsync({
+          label: data.label,
+          level: data.degreeLevel,
+          codeRncp: data.codeRncp,
+          typeDiplomeId: data.typeDiplomeId,
+          certificationAuthorityTag: data.certificationAuthorityTag,
+          domaineIds: data.domaineId ? [data.domaineId] : [],
+          conventionCollectiveIds: data.conventionCollectiveId
+            ? [data.conventionCollectiveId]
+            : [],
+          availableAt: data.availableAt.getTime(),
+          expiresAt: data.expiresAt.getTime(),
+        });
+
+        successToast("Certification enregistrée");
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    },
+    (e) => errorToast(JSON.stringify(e)),
+  );
 
   const typeDiplomeController = useController({
     control,
@@ -83,7 +116,7 @@ const UpdateCertificationPage = () => {
 
   const degreeController = useController({
     control,
-    name: "degreeId",
+    name: "degreeLevel",
   });
 
   const domaineController = useController({
@@ -145,7 +178,7 @@ const UpdateCertificationPage = () => {
               className="col-start-1"
               label="Disponible à partir du"
               nativeInputProps={{
-                ...register("availableAt"),
+                ...register("availableAt", { valueAsDate: true }),
                 type: "date",
               }}
               state={errors.availableAt ? "error" : "default"}
@@ -154,7 +187,7 @@ const UpdateCertificationPage = () => {
             <Input
               label="Expire à partir du"
               nativeInputProps={{
-                ...register("expiresAt"),
+                ...register("expiresAt", { valueAsDate: true }),
                 type: "date",
               }}
               state={errors.expiresAt ? "error" : "default"}
@@ -164,12 +197,14 @@ const UpdateCertificationPage = () => {
               label="Niveau de la certification"
               nativeSelectProps={{
                 onChange: (event) =>
-                  degreeController.field.onChange(event.target.value),
+                  degreeController.field.onChange(
+                    Number.parseInt(event.target.value),
+                  ),
                 value: degreeController.field.value,
               }}
             >
               {degrees?.map((d) => (
-                <option key={d.id} value={d.id}>
+                <option key={d.id} value={d.level}>
                   {d.longLabel}
                 </option>
               ))}
