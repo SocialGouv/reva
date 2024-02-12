@@ -218,7 +218,7 @@ export const createFeasibility = async ({
     if (emails.length) {
       sendNewFeasibilitySubmittedEmail({
         emails,
-        feasibilityUrl: `${baseUrl}/admin2/candidacies/feasibilities/${feasibility.id}`,
+        feasibilityUrl: `${baseUrl}/admin2/candidacies/${candidacy.id}/feasibility`,
       });
     }
   }
