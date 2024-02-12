@@ -19,6 +19,9 @@ export const replaceCertification = async ({
       typeDiplome: {
         connect: { id: replaceCertificationInput.typeDiplomeId },
       },
+      previousVersion: {
+        connect: { id: replaceCertificationInput.certificationId },
+      },
       certificationOnDomaine: {
         createMany: {
           data: replaceCertificationInput.domaineIds.map((domaineId) => ({

@@ -50,6 +50,9 @@ model Certification {
   certificationAuthorityTag                              String?                                                  @map("certification_authority_tag") @db.VarChar(255)
   availableAt                                            DateTime                                                 @map("available_at") @db.Timestamptz(6)
   expiresAt                                              DateTime                                                 @map("expires_at") @db.Timestamptz(6)
+  previousVersionCertificationId                         String?                                                  @unique @map("previous_version_certification_id") @db.Uuid
+  previousVersion                                        Certification?                                           @relation("replacement", fields: [previousVersionCertificationId], references: [id])
+  nextVersion                                            Certification?                                           @relation("replacement")
 
   @@map("certification")
 }
