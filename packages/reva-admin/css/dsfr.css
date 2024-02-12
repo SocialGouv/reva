@@ -6,41 +6,41 @@
    Putting them here solves the issue
 */
 .fr-search-bar .fr-btn::before {
-  mask-image: url("../icons/system/search-line.svg");
+    mask-image: url("../icons/system/search-line.svg");
 }
 
 [target=_blank]:after {
-  mask-image: url("../icons/system/external-link-line.svg");
+    mask-image: url("../icons/system/external-link-line.svg");
 }
 
 .fr-header__navbar .fr-btn--menu:before {
-  mask-image: url("../icons/system/menu-fill.svg");
+    mask-image: url("../icons/system/menu-fill.svg");
 }
 
 .fr-sidemenu__inner > .fr-sidemenu__btn:before {
-  mask-image: url("../icons/system/menu-2-fill.svg");
+    mask-image: url("../icons/system/menu-2-fill.svg");
 }
 
 .fr-sidemenu__btn[aria-expanded]:after {
-  mask-image: url("../icons/system/arrow-down-s-line.svg");
+    mask-image: url("../icons/system/arrow-down-s-line.svg");
 }
 
-.fr-alert--error:before, .fr-error-text:before  {
-  mask-image: url("../icons/system/fr--error-fill.svg");
+.fr-alert--error:before, .fr-error-text:before, .fr-badge.fr-badge--error:before {
+    mask-image: url("../icons/system/fr--error-fill.svg");
 }
 
 .fr-alert--warning:before {
-  mask-image: url("../icons/system/fr--warning-fill.svg");
+    mask-image: url("../icons/system/fr--warning-fill.svg");
 }
 
 .fr-alert--info:before {
-  mask-image: url("../icons/system/fr--info-fill.svg");
+    mask-image: url("../icons/system/fr--info-fill.svg");
 }
 
-.fr-alert--success:before {
-  mask-image: url("../icons/system/fr--success-fill.svg");
+.fr-alert--success:before, .fr-badge.fr-badge--success:before {
+    mask-image: url("../icons/system/fr--success-fill.svg");
 }
 
 .fr-notice .fr-notice__body:before {
-  mask-image: url("../icons/system/fr--info-fill.svg");
+    mask-image: url("../icons/system/fr--info-fill.svg");
 }

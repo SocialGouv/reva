@@ -97,7 +97,7 @@ viewResultHelper jury result =
             , viewOptional viewResultProvisional jury.isResultProvisional
             , text " :"
             ]
-        , div [ class "my-2" ] [ text <| viewResultCategory result ]
+        , viewResultCategory result
         , div [ class "mb-8" ] [ text "“", viewOptional text jury.informationOfResult, text "“" ]
         ]
 
@@ -111,8 +111,14 @@ viewResultProvisional isResultProvisional =
         text "Résultat définitif"
 
 
-viewResultCategory : JuryResult -> String
+viewResultCategory : JuryResult -> Html msg
 viewResultCategory result =
+    p
+        [ class "fr-badge fr-badge--sm my-4", class (resultToClass result) ]
+        [ text (resultToString result) ]
+
+
+resultToString result =
     case result of
         FullSuccessOfFullCertification ->
             "Réussite totale à une certification visée en totalité"
@@ -134,3 +140,27 @@ viewResultCategory result =
 
         CandidateAbsent ->
             "Candidat non présent"
+
+
+resultToClass result =
+    case result of
+        FullSuccessOfFullCertification ->
+            "fr-badge--success"
+
+        PartialSuccessOfFullCertification ->
+            ""
+
+        FullSuccessOfPartialCertification ->
+            "fr-badge--success"
+
+        PartialSuccessOfPartialCertification ->
+            ""
+
+        Failure ->
+            "fr-badge--error"
+
+        CandidateExcused ->
+            ""
+
+        CandidateAbsent ->
+            "fr-badge--error"
