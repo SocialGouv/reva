@@ -117,6 +117,7 @@ type Query {
   getDomaines: [Domaine!]!
   getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
+  getCertificationAuthorityTags: [String!]!
 }
 
 input UpdateCertificationInput {

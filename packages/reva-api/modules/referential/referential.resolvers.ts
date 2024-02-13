@@ -19,6 +19,7 @@ import { referentialResolversSecurityMap } from "./referential.security";
 import { UpdateCertificationInput } from "./referential.types";
 import { updateCertification } from "./features/updateCertification";
 import { replaceCertification } from "./features/replaceCertification";
+import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -69,6 +70,7 @@ const unsafeReferentialResolvers = {
     getConventionCollectives: () =>
       prismaClient.conventionCollective.findMany(),
     getTypeDiplomes,
+    getCertificationAuthorityTags,
   },
   Mutation: {
     referential_updateCertification: (
