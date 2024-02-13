@@ -12,6 +12,8 @@ import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentR
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
+import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
+import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/referential/features/deactivateCertificationsIfExpiresAtDateIsPast";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
@@ -70,7 +72,7 @@ const aapListUnifvae = CronJob.from({
   timeZone: "Europe/Paris",
 });
 
-async function runBatchIfActive({
+export async function runBatchIfActive({
   batchKey,
   batchCallback,
 }: {
@@ -93,5 +95,22 @@ async function isFeatureActive(featureKey: string): Promise<boolean> {
   });
   return Boolean(feat && feat.isActive);
 }
+
+CronJob.from({
+  cronTime:
+    process.env.BATCH_ACTIVATE_OR_DEACTIVATE_CERTIFICATIONS_CRONTIME ||
+    "*/5 * * * *",
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.activate-or-deactivate-certifications",
+      batchCallback: async () => {
+        logger.info("Running activate-or-deactivate-certifications batch");
+        await makeCertificationsAvailableIfAvailableAtDateIsPast();
+        await deactivateCertificationsIfExpiresAtDateIsPast();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
 
 logger.info(`Started cron jobs with APP_ENV = "${process.env.APP_ENV}"`);
