@@ -167,17 +167,40 @@ activeView context candidacy =
         dossierDeValidationFeatureActive =
             List.member "DOSSIER_DE_VALIDATION" context.activeFeatures
 
+        feasibilityAdmissible =
+            case candidacy.feasibility of
+                Just f ->
+                    case f.decision of
+                        Data.Feasibility.Admissible _ ->
+                            True
+
+                        _ ->
+                            False
+
+                Nothing ->
+                    False
+
+        canEditDossierDeValidation =
+            List.member (candidacyStatus candidacy) [ DemandeFinancementEnvoye, DossierDeValidationSignale ] && feasibilityAdmissible
+
+        dossierDeValidationLinkStatus =
+            if canEditDossierDeValidation then
+                WITH_EDIT_BUTTON
+
+            else
+                WITHOUT_BUTTON
+
         dossierDeValidationMenuEntry =
             if dossierDeValidationFeatureActive then
                 [ { content =
                         expandedView
-                            (getDefaultExpandedViewStatusFromCandidacyStatus
-                                candidacy
-                                [ DemandeFinancementEnvoye, DossierDeValidationSignale ]
-                            )
+                            dossierDeValidationLinkStatus
                             "Dossier de validation"
                   , navigation =
-                        if candidacy.readyForJuryEstimatedAt == Nothing then
+                        if not feasibilityAdmissible then
+                            Nothing
+
+                        else if candidacy.readyForJuryEstimatedAt == Nothing then
                             readyForJuryEstimatedDateLink
 
                         else
