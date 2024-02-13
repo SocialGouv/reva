@@ -16,10 +16,19 @@ export const AccompanimentTimelineElement = () => {
     return waitingStatus.includes(state.context.candidacyStatus);
   }, [state.context.candidacyStatus]);
 
+  const isDossierDeValidationEnvoye = (state.context.candidacyStatus =
+    "DOSSIER_DE_VALIDATION_ENVOYE");
+
   return (
     <TimelineElement
       title="Accompagnement"
-      status={isAccompanimentInWaiting ? "disabled" : "active"}
+      status={
+        isAccompanimentInWaiting
+          ? "disabled"
+          : isDossierDeValidationEnvoye
+          ? "readonly"
+          : "active"
+      }
     >
       {({ status }) => (
         <p>Statut: {status === "active" ? "en cours" : "en attente"}</p>

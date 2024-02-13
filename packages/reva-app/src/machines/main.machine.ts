@@ -56,6 +56,7 @@ export const INVALID_REGISTRATION_TOKEN_ERROR =
   "INVALID_REGISTRATION_TOKEN_ERROR";
 export const INVALID_LOGIN_TOKEN_ERROR = "INVALID_LOGIN_TOKEN_ERROR";
 export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
+
 export interface MainContext {
   error: string;
   activeFeatures: string[];
@@ -82,6 +83,7 @@ export interface MainContext {
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
   firstAppointmentOccuredAt?: Date;
+  jury?: string;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };

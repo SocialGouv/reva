@@ -331,6 +331,16 @@ const CANDIDACY_SELECTION = `
       }
       mandatoryTrainings {
         label
+      }
+      jury {
+        id
+        dateOfSession
+        timeOfSession
+        addressOfSession
+        informationOfSession
+        result
+        isResultProvisional
+        informationOfResult
       }`;
 
 const CONFIRM_REGISTRATION = gql`

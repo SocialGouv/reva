@@ -11,6 +11,7 @@ import { CertificationTimelineElement } from "./TimelineElements/CertificationTi
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
 import { ExperiencesTimelineElement } from "./TimelineElements/ExperiencesTimelineElement/ExperiencesTimelineElement";
 import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/GoalsTimelineElement";
+import { JuryAppointmentTimelineElement } from "./TimelineElements/JuryAppointmentTimelineElement/JuryAppointmentTimelineElement";
 import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
 
 export const ProjectTimeline = ({
@@ -31,6 +32,7 @@ export const ProjectTimeline = ({
       <FeasibilityAppointmentTimelineElement />
       <TrainingProgramTimelineElement />
       <AccompanimentTimelineElement />
+      <JuryAppointmentTimelineElement />
       <ProjectEndedTimelineElement />
     </Timeline>
   );
