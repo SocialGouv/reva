@@ -19,6 +19,7 @@ const UpdateCertificationPage = () => {
     degrees,
     domaines,
     conventionCollectives,
+    certificationAuthorityTags,
     updateCertification,
   } = useCertificationQueries({
     certificationId,
@@ -55,7 +56,8 @@ const UpdateCertificationPage = () => {
         typeDiplomes &&
         domaines &&
         conventionCollectives &&
-        degrees && (
+        degrees &&
+        certificationAuthorityTags && (
           <>
             <Link
               href={`/certifications/${certificationId}`}
@@ -75,6 +77,7 @@ const UpdateCertificationPage = () => {
               domaines={domaines}
               conventionCollectives={conventionCollectives}
               degrees={degrees}
+              certificationAuthorityTags={certificationAuthorityTags}
               onSubmit={handleFormSubmit}
             />
           </>

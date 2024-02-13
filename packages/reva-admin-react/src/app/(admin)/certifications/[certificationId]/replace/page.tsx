@@ -18,6 +18,7 @@ const ReplaceCertificationPage = () => {
     degrees,
     domaines,
     conventionCollectives,
+    certificationAuthorityTags,
     replaceCertification,
   } = useCertificationQueries({
     certificationId,
@@ -56,7 +57,8 @@ const ReplaceCertificationPage = () => {
         typeDiplomes &&
         domaines &&
         conventionCollectives &&
-        degrees && (
+        degrees &&
+        certificationAuthorityTags && (
           <>
             <Link
               href={`/certifications/${certificationId}`}
@@ -78,6 +80,7 @@ const ReplaceCertificationPage = () => {
               domaines={domaines}
               conventionCollectives={conventionCollectives}
               degrees={degrees}
+              certificationAuthorityTags={certificationAuthorityTags}
               onSubmit={handleFormSubmit}
             />
           </>

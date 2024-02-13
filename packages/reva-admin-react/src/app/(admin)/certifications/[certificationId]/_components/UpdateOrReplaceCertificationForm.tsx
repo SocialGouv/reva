@@ -52,6 +52,7 @@ const UpdateOrReplaceCertificationForm = ({
   domaines,
   conventionCollectives,
   degrees,
+  certificationAuthorityTags,
   onSubmit,
 }: {
   certification: Certification;
@@ -59,6 +60,7 @@ const UpdateOrReplaceCertificationForm = ({
   domaines: { id: string; label: string }[];
   conventionCollectives: { id: string; label: string }[];
   degrees: { id: string; level: number; longLabel: string }[];
+  certificationAuthorityTags: string[];
   onSubmit: (data: UpdateOrReplaceCertificationFormData) => void;
 }) => {
   const {
@@ -98,6 +100,11 @@ const UpdateOrReplaceCertificationForm = ({
     name: "conventionCollectiveId",
   });
 
+  const certificationAuthorityTagController = useController({
+    control,
+    name: "certificationAuthorityTag",
+  });
+
   return (
     <form
       className="grid grid-cols-1  md:grid-cols-2 gap-8"
@@ -120,14 +127,23 @@ const UpdateOrReplaceCertificationForm = ({
         state={errors.codeRncp ? "error" : "default"}
         stateRelatedMessage={errors.codeRncp?.message}
       />
-      <Input
+      <Select
         label="Tag certificateur"
-        nativeInputProps={{
-          ...register("certificationAuthorityTag"),
+        nativeSelectProps={{
+          onChange: (event) =>
+            certificationAuthorityTagController.field.onChange(
+              event.target.value,
+            ),
+          value: certificationAuthorityTagController.field.value,
         }}
-        state={errors.certificationAuthorityTag ? "error" : "default"}
-        stateRelatedMessage={errors.certificationAuthorityTag?.message}
-      />
+      >
+        <option />
+        {certificationAuthorityTags?.map((t) => (
+          <option key={t} value={t}>
+            {t}
+          </option>
+        ))}
+      </Select>
       <Input
         className="col-start-1"
         label="Disponible à partir du"

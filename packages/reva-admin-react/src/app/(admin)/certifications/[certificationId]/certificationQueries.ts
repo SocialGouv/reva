@@ -65,6 +65,7 @@ const getReferentialForCertificationQuery = graphql(`
       id
       label
     }
+    getCertificationAuthorityTags
   }
 `);
 
@@ -144,6 +145,8 @@ export const useCertificationQueries = ({
     typeDiplomes: getReferentialResponse?.getTypeDiplomes,
     domaines: getReferentialResponse?.getDomaines,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
+    certificationAuthorityTags:
+      getReferentialResponse?.getCertificationAuthorityTags,
     updateCertification,
     replaceCertification,
   };
