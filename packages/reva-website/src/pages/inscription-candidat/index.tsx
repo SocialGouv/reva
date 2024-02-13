@@ -15,6 +15,7 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
+import { isUUID } from "@/utils";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
 import Head from "next/head";
@@ -53,6 +54,10 @@ const OrientationCandidatPage = () => {
     Certification,
     "id" | "label" | "codeRncp" | "typeDiplome"
   > | null>(null);
+
+  const defaultAutocompleteLabel = certification
+    ? undefined
+    : (searchText as string | undefined);
 
   const handleFormSubmit = async (form: CandidateRegistrationFormSchema) => {
     await request(GRAPHQL_API_URL, askForRegistrationMutation, {
@@ -99,17 +104,13 @@ const OrientationCandidatPage = () => {
           <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
             <fieldset className="mb-4">
               <CertificateAutocomplete
-                defaultLabel={searchText as string | undefined}
-                onSubmit={(searchText) => {
-                  push([
-                    "trackEvent",
-                    "website-diplome",
-                    "recherche",
-                    searchText,
-                  ]);
+                defaultLabel={defaultAutocompleteLabel}
+                onSubmit={({ label, value }) => {
+                  const certificationId = isUUID(value) ? value : null;
+                  push(["trackEvent", "website-diplome", "recherche", label]);
                   router.push({
                     pathname: "/inscription-candidat",
-                    query: { searchText },
+                    query: { certificationId, searchText: label },
                   });
                 }}
                 onOptionSelection={(o) =>

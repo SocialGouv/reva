@@ -1,6 +1,7 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { isUUID } from "@/utils";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
@@ -70,11 +71,16 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
           Recherchez le diplôme qui vous correspond
         </p>
         <CertificateAutocomplete
-          onSubmit={(searchText) => {
-            push(["trackEvent", "website-diplome", "recherche", searchText]);
+          onSubmit={({ label, value }) => {
+            const certificationId = isUUID(value) ? value : null;
+
+            push(["trackEvent", "website-diplome", "recherche", label]);
             router.push({
               pathname: "inscription-candidat",
-              query: { searchText },
+              query: {
+                certificationId,
+                searchText: label,
+              },
             });
           }}
           onOptionSelection={(o) =>
@@ -339,10 +345,7 @@ const HomePageV2 = () => {
         />
       </Head>
       <BackGroundUnions />
-      <Notice
-        isClosable
-        title="Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
-      />
+      <Notice title="Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement." />
       <HomeContainer>
         <FaitesValiderVosCompetencesParUnDiplome />
         <QuiPeutFaireUneVAE />

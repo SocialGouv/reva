@@ -7,6 +7,7 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
+import { isUUID } from "@/utils";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
@@ -86,11 +87,12 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
             votre parcours dès maintenant.
           </p>
           <CertificateAutocomplete
-            onSubmit={(searchText) => {
-              push(["trackEvent", "website-diplome", "recherche", searchText]);
+            onSubmit={({ label, value }) => {
+              const certificationId = isUUID(value) ? value : null;
+              push(["trackEvent", "website-diplome", "recherche", label]);
               router.push({
                 pathname: "inscription-candidat",
-                query: { searchText },
+                query: { certificationId, searchText: label },
               });
             }}
             onOptionSelection={(o) =>

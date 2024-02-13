@@ -1,16 +1,15 @@
 import { stubQuery } from "../support/graphql";
 
 describe("candidate certificate search", () => {
-beforeEach(() => {
-  cy.intercept("POST", "/api/graphql", (req) => {
-    stubQuery(
-      req,
-      "activeFeaturesForConnectedUser",
-      "active_features_website_v2.json"
-    );
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "activeFeaturesForConnectedUser",
+        "active_features_website_v2.json"
+      );
+    });
   });
-  });
-
 
   it("should show the relevant certificates when typing text in the search bar", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
@@ -87,7 +86,7 @@ beforeEach(() => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/?searchText=chaudronnier"
+      "http://localhost:3002/inscription-candidat/?certificationId=&searchText=chaudronnier"
     );
   });
 });

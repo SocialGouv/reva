@@ -16,7 +16,7 @@ export const Autocomplete = ({
   searchFunction: (searchText: string) => Promise<AutocompleteOption[]>;
   onOptionSelection: (selectedOption: AutocompleteOption) => void;
   placeholder?: string;
-  onSubmit?: (searchText: string) => void;
+  onSubmit?: (selectedOption: AutocompleteOption) => void;
   defaultLabel?: string;
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
@@ -35,6 +35,42 @@ export const Autocomplete = ({
     setSearchText(newSearchText);
   };
 
+  const handleKeyDownOnOptions = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case "Enter":
+        if (!searchText) return;
+        e.preventDefault();
+        handleSubmit(searchText);
+        break;
+      case "Escape":
+        setDisplayOptions(false);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        if (options.length) {
+          const index = options.findIndex(
+            (option) => option.value === selectedOption?.value
+          );
+          const nextOption = options[index + 1] || options[0];
+          setSelectedOption(nextOption);
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (options.length) {
+          const index = options.findIndex(
+            (option) => option.value === selectedOption?.value
+          );
+          const nextOption = options[index - 1] || options[options.length - 1];
+          setSelectedOption(nextOption);
+        }
+        break;
+      case "Tab":
+        setDisplayOptions(false);
+        break;
+    }
+  };
+
   const handleOptionSelection = (newSelectedOption: AutocompleteOption) => {
     setSelectedOption(newSelectedOption);
     onOptionSelection?.(newSelectedOption);
@@ -48,6 +84,7 @@ export const Autocomplete = ({
       if (debouncedSearchText) {
         const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
+        setSelectedOption(newOptions[0] || null);
         setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
       } else {
         setOptions([]);
@@ -58,46 +95,61 @@ export const Autocomplete = ({
   }, [debouncedSearchText, searchFunction]);
 
   const handleSubmit = (searchText: string) => {
+    const selectedCertification = selectedOption ?? {
+      label: searchText,
+      value: searchText,
+    };
     setOptions([]);
     setSelectedOption(null);
-    onSubmit?.(searchText);
+    onSubmit?.(selectedCertification);
   };
 
   return (
-    <div data-testid="autocomplete" className="relative">
-      <Input
-        nativeInputProps={{
-          onKeyDown: (e) => e.key === "Enter" && handleSubmit(searchText),
-          onChange: (event) => updateSearchText(event.target.value),
-          placeholder,
-          value: searchText,
-          onBlur: () => {
-            setTimeout(() => setDisplayOptions(false), 50);  
-          },
-          onFocus: () => setDisplayOptions(true),
-        }}
-        label={defaultLabel}
-        data-testid="autocomplete-input"
-        iconId="fr-icon-award-fill"
-      />
-      {status === "GOT_RESULTS" && displayOptions? (
-        <div
-          data-testid="autocomplete-options"
-          className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
-        >
-          {options.map((option) => (
-            <li key={option.value}>
-              <option
-                value={option.value}
-                onClick={() => handleOptionSelection(option)}
-                className="whitespace-normal py-2 hover:bg-dsfrGray-contrast"
-              >
-                {option.label}
-              </option>
-            </li>
-          ))}
-        </div>
-      ) : null}
-    </div>
+    <>
+      <span>{defaultLabel ?? ""}</span>
+      <div data-testid="autocomplete" className="relative">
+        <Input
+          nativeInputProps={{
+            onKeyDown: handleKeyDownOnOptions,
+            onChange: (event) => updateSearchText(event.target.value),
+            placeholder,
+            value: searchText,
+            onBlur: () => {
+              setTimeout(() => setDisplayOptions(false), 200);
+            },
+            onFocus: () => setDisplayOptions(true),
+            onClick: () => setDisplayOptions(true),
+          }}
+          label=""
+          hideLabel
+          data-testid="autocomplete-input"
+          iconId="fr-icon-award-fill"
+        />
+        {status === "GOT_RESULTS" && displayOptions ? (
+          <div
+            data-testid="autocomplete-options"
+            className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+          >
+            {options.map((option) => {
+              const isSelected = selectedOption?.value === option.value;
+              return (
+                <li key={option.value}>
+                  <option
+                    value={option.value}
+                    onClick={() => handleOptionSelection(option)}
+                    className={`whitespace-normal py-2 ${
+                      isSelected ? "bg-dsfrGray-contrast" : ""
+                    }`}
+                    onMouseOver={() => setSelectedOption(option)}
+                  >
+                    {option.label}
+                  </option>
+                </li>
+              );
+            })}
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 };
