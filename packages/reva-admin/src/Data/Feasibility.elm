@@ -1,4 +1,4 @@
-module Data.Feasibility exposing (Candidate, Decision(..), Feasibility)
+module Data.Feasibility exposing (Candidate, Decision(..), Feasibility, FeasibilityHistory)
 
 import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.File exposing (File)
@@ -30,5 +30,12 @@ type alias Feasibility =
     , organism : Maybe Organism
     , certificationLabel : Maybe String
     , decision : Decision
+    , decisionSentAt : Maybe Data.Scalar.Timestamp
+    , history : List FeasibilityHistory
+    }
+
+
+type alias FeasibilityHistory =
+    { decision : Decision
     , decisionSentAt : Maybe Data.Scalar.Timestamp
     }
