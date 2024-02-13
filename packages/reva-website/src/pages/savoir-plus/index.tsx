@@ -134,7 +134,7 @@ const HelpArticle = ({
   url: string;
 }) => (
   <Link href={url} className="!bg-none">
-    <div className="grid w-[340px] h-[150px] lg:h-[400px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)] hover:scale-105">
+    <div className="grid w-[340px] h-[150px] lg:h-[400px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)] hover:scale-105 transition-all">
       <div className="hidden lg:flex">
         <Image
           src={thumbnailUrl}

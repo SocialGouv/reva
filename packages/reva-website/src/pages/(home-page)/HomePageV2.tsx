@@ -18,14 +18,14 @@ const ArrowRight = ({ className }: { className?: string }) => (
 );
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
-  <div className="w-full mx-auto relative flex flex-col items-center py-12 pt-14 lg:pb-32">
+  <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
     {children}
   </div>
 );
 
 const BackGroundUnions = () => (
   <>
-    <div className="absolute -z-10 w-full -top-56 lg:-top-20">
+    <div className="absolute -z-10 w-full -top-56 lg:-top-16">
       <Image
         src="/home-page/unions-background/union-background1.svg"
         width={1440}
@@ -34,7 +34,7 @@ const BackGroundUnions = () => (
         alt=""
       />
     </div>
-    <div className="absolute -z-10 w-full top-[1125px] hidden lg:block">
+    <div className="absolute -z-10 w-full top-[1115px] hidden lg:block">
       <Image
         src="/home-page/unions-background/union-background2.svg"
         width={2158}
@@ -51,29 +51,28 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
   return (
     <section
       id="faites-valider-vos-competences-par-un-diplome"
-      className="w-full mb-36 mx-auto flex flex-col fr-container"
+      className="w-full mb-36 mx-auto flex flex-col fr-container pt-16"
     >
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl lg:text-[40px] lg:leading-[48px] font-bold mb-0 max-w-screen-md">
+        <h1 className="text-2xl lg:text-[40px] lg:leading-[48px] font-bold mb-0 max-w-screen-md">
           Avec la VAE, faites valider vos compétences par un diplôme
-        </h2>
+        </h1>
         <Image
           className="hidden lg:block"
-          src="/home-page/image-home-character-blue-hoodie.png"
+          src="/home-page/image-home-character-blue-hoodie.svg"
           width={200}
           height={200}
           alt="un personnage masculin avec un sweet bleu"
         />
       </div>
 
-      <div className="bg-white z-10 px-10 pt-8 pb-12 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-        <p className="text-2xl font-bold mb-6">
+      <div className="bg-white z-10 px-10 pt-10 pb-12 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+        <h2 className="text-xl lg:text-[32px] font-bold mb-6">
           Recherchez le diplôme qui vous correspond
-        </p>
+        </h2>
         <CertificateAutocomplete
           onSubmit={({ label, value }) => {
             const certificationId = isUUID(value) ? value : null;
-
             push(["trackEvent", "website-diplome", "recherche", label]);
             router.push({
               pathname: "inscription-candidat",
@@ -100,32 +99,32 @@ const QuiPeutFaireUneVAE = () => (
     id="qui-peut-faire-une-vae"
     className="w-full pb-40 lg:mb-0 mx-auto flex flex-col items-center text-center fr-container"
   >
-    <h2 className="text-2xl lg:text-3xl mb-8">
+    <h2 className="text-xl lg:text-[32px] mb-8 mt-0">
       Qui peut faire une VAE sur France VAE ?
     </h2>
     <span>
       Le parcours France VAE est accessible à toute personne ayant des
       compétences liées au diplôme visé :
     </span>
-    <div className="py-12 flex flex-col sm:flex-row justify-between">
+    <div className="py-12 flex flex-col sm:flex-row gap-[88px]">
       <BlockCompetence
         label="Salariés du secteur privé"
-        imageUrl="/home-page/blocks-competences/image-block-competence-salaries-du-secteur-prive.png"
+        imageUrl="/home-page/blocks-competences/image-block-competence-salaries-du-secteur-prive.svg"
         imageAlt="Document avec un stylo plume"
       />
       <BlockCompetence
         label="demandeurs d'emplois"
-        imageUrl="/home-page/blocks-competences/image-block-competence-demandeurs-demplois.png"
+        imageUrl="/home-page/blocks-competences/image-block-competence-demandeurs-demplois.svg"
         imageAlt="logiciel de recherche d'emploi avec une loupe"
       />
       <BlockCompetence
         label="Volontaires et bénévoles"
-        imageUrl="/home-page/blocks-competences/image-block-competence-volontaires-et-benevoles.png"
+        imageUrl="/home-page/blocks-competences/image-block-competence-volontaires-et-benevoles.svg"
         imageAlt="Mains réunies en signe de solidarité"
       />
       <BlockCompetence
         label="proches aidants"
-        imageUrl="/home-page/blocks-competences/image-block-competence-proches-aidants.png"
+        imageUrl="/home-page/blocks-competences/image-block-competence-proches-aidants.svg"
         imageAlt="Une main soutenant un coeur en signe de solidarité"
       />
     </div>
@@ -161,27 +160,27 @@ const VousAvezBesoinDePlusDaide = () => (
     className="w-full pb-36 lg:mb-0 mx-auto flex flex-col sm:flex-row gap-10 fr-container"
   >
     <div className="flex flex-col">
-      <h2 className="text-[28px] leading-9 text-justify">
+      <h3 className="text-[28px] leading-9 text-justify my-0">
         Vous avez besoin de plus d'aide pour vous orienter ?
-      </h2>
+      </h3>
       <ArrowRight className="text-right self-end" />
     </div>
     <div className="flex flex-col sm:flex-row justify-end gap-6">
       <PolygonService
         imageAlt="Bâtiment public"
-        imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.png"
+        imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.svg"
         label="Point-relais conseil"
         urlLink="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
       />
       <PolygonService
         imageAlt="Mon conseil en évolution professionnelle"
-        imageUrl="/home-page/polygons-services/polygon-service-conseil-evolution-professionnelle.png"
+        imageUrl="/home-page/polygons-services/polygon-service-conseil-evolution-professionnelle.svg"
         label="Conseiller en évolution professionnelle"
         urlLink="https://mon-cep.org/"
       />
       <PolygonService
         imageAlt="Logo transition professionnelle"
-        imageUrl="/home-page/polygons-services/polygon-service-association-de-transition-professionnelle.png"
+        imageUrl="/home-page/polygons-services/polygon-service-association-de-transition-professionnelle.svg"
         label="Association de transition professionnelle"
         urlLink="https://www.transitionspro.fr/"
       />
@@ -201,9 +200,9 @@ const PolygonService = ({
   urlLink: string;
 }) => (
   <Link href={urlLink} target="_" style={{ backgroundImage: "none" }}>
-    <div className="hover:scale-105 transition-all flex flex-col justify-center items-center w-[200px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] bg-cover bg-center">
+    <div className="hover:scale-105 transition-all flex flex-col justify-center items-center w-[222px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-cover bg-center ">
       <Image src={imageUrl} width={147} height={48} alt={imageAlt} />
-      <span className="text-base font-bold px-1 mt-2 text-center">{label}</span>
+      <span className="text-base font-bold px-4 mt-2 text-center">{label}</span>
     </div>
   </Link>
 );
@@ -213,10 +212,10 @@ const AccompagnementDemarche = () => (
     id="accompagnement-demarche"
     className="w-full fr-container pb-20 lg:mb-0 mx-auto text-center flex flex-col items-center justify-center gap-16"
   >
-    <h2 className="text-[28px] leading-9">
+    <h2 className="text-xl lg:text-[32px] leading-9 my-0">
       Un accompagnement dès le début de votre démarche
     </h2>
-    <p>
+    <p className="my-0">
       Avec France VAE, un architecte-accompagnateur de parcours (professionnel
       spécialisé dans l'accompagnement VAE) vous aide tout au long de votre VAE,
       depuis le diagnostic de vos compétences en début de parcours jusqu'au
@@ -226,36 +225,38 @@ const AccompagnementDemarche = () => (
       <AapStepBlock
         title="Diagnostic de compétences"
         description="Identification des compétences issues de vos expériences en fonction de votre projet."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-diagnostic.png"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-diagnostic.svg"
         imageAlt="Une femme avec une malette validée"
       />
       <AapStepBlock
         title="Conception du parcours"
         description="Définition des besoins en accompagnement individuel ou collectif, module de formation et périodes d'immersion éventuelles."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-conception.png"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-conception.svg"
         imageAlt="Deux personnes qui discutent"
       />
       <AapStepBlock
         title="Accompagnement"
         description="Suivi régulier pour vous aider à rédiger votre dossier de validation, puis vous préparer à le présenter devant le jury."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-accompagnement.png"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-accompagnement.svg"
         imageAlt="Deux personnes qui discutent"
       />
     </div>
-    <div className="flex relative">
+    <div className="flex relative w-full">
       <Image
-        src="/home-page/image-home-character-young-man-glasses.png"
-        width={230}
-        height={230}
+        src="/home-page/image-home-character-young-man-glasses.svg"
+        width={181}
+        height={211}
         alt="Homme portant des lunettes"
-        className="absolute -left-32 xl:-left-36 -top-12 z-10"
+        className="absolute -top-10 z-10 "
       />
-      <div className="flex flex-col text-start border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 pr-10 pl-32">
-        <h4>Gestion de l'administratif</h4>
-        <p>
-          Prise en charge administrative de votre dossier, de son financement et
-          de la programmation du jury.
-        </p>
+      <div className="ml-10 text-start border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full">
+        <div className="flex flex-col justify-center pl-48 text-justify">
+          <h6 className="mb-4 text-xl">Gestion de l'administratif</h6>
+          <p className="my-0">
+            Prise en charge administrative de votre dossier, de son financement
+            et de la programmation du jury.
+          </p>
+        </div>
       </div>
     </div>
     <Button priority="secondary">Qui accompagne à la VAE ?</Button>
@@ -283,12 +284,12 @@ const AapStepBlock = ({
 const CommentFinancerVotreParcours = () => (
   <section
     id="comment-financer-votre-parcours"
-    className="w-full bg-[#1B1B35] text-white px-8 lg:px-[120px] py-14 lg:py-[88px]"
+    className="w-full bg-[#1B1B35] text-white py-14 lg:py-[88px]"
   >
     <div className="flex justify-center items-center w-full gap-20 fr-container">
       <div className="py-6 flex flex-col gap-14">
-        <h4 className="text-white my-0">Comment financer votre parcours ?</h4>
-        <p className="my-0 text-justify">
+        <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
+        <p className="my-0 text-justify text-lg">
           France VAE prend en charge l'<b>ensemble des frais de parcours</b>*
           pour les candidats passant par la plateforme{" "}
           <Link href="https://vae.gouv.fr/" target="_blank">
@@ -299,7 +300,7 @@ const CommentFinancerVotreParcours = () => (
         </p>
       </div>
       <div className="hidden lg:flex flex-col items-center relative">
-        <div className="relative top-10">
+        <div className="relative top-12">
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-orange.svg')]"
             label="*Les frais d'accompagnement"
@@ -328,7 +329,7 @@ const PolygonFinancer = ({
   label: string;
 }) => (
   <div
-    className={`${bgUrl} bg-contain bg-no-repeat bg-center p-6 min-h-[200px] flex items-center justify-center w-44 text-center`}
+    className={`text-lg font-medium ${bgUrl} bg-contain bg-no-repeat bg-center p-6 min-h-[248px] min-w-[222px] flex items-center justify-center w-44 text-center`}
   >
     {label}
   </div>

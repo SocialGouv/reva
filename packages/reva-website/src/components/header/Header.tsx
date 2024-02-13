@@ -17,14 +17,14 @@ export const Header = (props: { className?: string }) => {
       linkProps: {
         href: "/espace-candidat",
       },
-      text: "Je suis candidat",
+      text: "Candidats",
     },
     {
       isActive: !!asPath.match(/\/espace-professionnel/)?.length,
       linkProps: {
         href: "/espace-professionnel",
       },
-      text: "Je suis professionnel de la VAE",
+      text: "Professionnels",
     },
     {
       isActive:
@@ -69,7 +69,8 @@ export const Header = (props: { className?: string }) => {
         imgUrl: "/fvae_logo.svg",
         orientation: "horizontal",
       }}
-      classes={{ operator: "min-w-[9.0625rem]" }}
+      serviceTitle="Le service public de la Validation des Acquis de l'Expérience"
+      classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={[
         {
           iconId: "fr-icon-briefcase-fill",

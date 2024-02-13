@@ -106,7 +106,10 @@ export const Autocomplete = ({
 
   return (
     <>
-      <span>{defaultLabel ?? ""}</span>
+      <span>
+        {defaultLabel ??
+          "Indiquez ci-dessous la certification ou le diplôme souhaité :"}
+      </span>
       <div data-testid="autocomplete" className="relative">
         <Input
           nativeInputProps={{
