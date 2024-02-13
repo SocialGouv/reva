@@ -56,6 +56,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         const authorized = await canDownloadFeasibilityFiles({
           hasRole: request.auth.hasRole,
           feasibility: feasibility,
+          candidacyId,
           keycloakId: request.auth?.userInfo?.sub,
         });
 

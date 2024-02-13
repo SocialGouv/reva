@@ -831,15 +831,20 @@ export const markFeasibilityAsIncomplete = async ({
 export const canDownloadFeasibilityFiles = async ({
   hasRole,
   feasibility,
+  candidacyId,
   keycloakId,
 }: {
   hasRole(role: string): boolean;
   feasibility: Feasibility | null;
+  candidacyId: string;
   keycloakId: string;
 }) => {
   return (
-    canUserManageCandidacy ||
-    canManageFeasibility({ hasRole, feasibility, keycloakId })
+    (await canUserManageCandidacy({
+      hasRole,
+      candidacyId,
+      keycloakId,
+    })) || (await canManageFeasibility({ hasRole, feasibility, keycloakId }))
   );
 };
 

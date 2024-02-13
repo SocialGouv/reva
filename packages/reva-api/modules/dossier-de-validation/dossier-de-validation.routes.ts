@@ -53,12 +53,16 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           : [];
 
         const authorized =
-          canUserManageCandidacy ||
-          canManageDossierDeValidation({
+          (await canUserManageCandidacy({
+            candidacyId,
+            hasRole: request.auth.hasRole,
+            keycloakId: request.auth?.userInfo?.sub,
+          })) ||
+          (await canManageDossierDeValidation({
             keycloakId: request.auth?.userInfo?.sub,
             dossierDeValidationId: dossierDeValidation?.id || "",
             roles: request.auth.userInfo?.realm_access?.roles || [],
-          });
+          }));
 
         if (!authorized) {
           return reply.status(403).send({
