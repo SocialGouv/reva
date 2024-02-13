@@ -1,4 +1,3 @@
-import { FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
@@ -20,44 +19,12 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
     include: {
-      candidacyDropOut: true,
-      candidacyStatuses: { where: { isActive: true } },
-      candidate: true,
       Feasibility: { where: { isActive: true } },
-      Jury: { where: { isActive: true } },
-      department: true,
-      certificationsAndRegions: {
-        where: { isActive: true },
-        include: { certification: true },
-      },
     },
   });
   if (!candidacy) {
     throw new Error("La candidature n'a pas été trouvée");
   }
-  if (candidacy.candidacyDropOut) {
-    throw new Error("La candidature a été abandonnée");
-  }
-  if (candidacy.candidacyStatuses?.[0]?.status === "ARCHIVE") {
-    throw new Error("La candidature a été supprimée");
-  }
-
-  const feasibility = candidacy.Feasibility[0];
-  if (feasibility?.decision !== FeasibilityStatus.ADMISSIBLE) {
-    throw new Error(
-      "Le dossier de faisabilité n'est pas actif ou n'est pas recevable",
-    );
-  }
-
-  // if (
-  //   !["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].includes(
-  //     candidacy.candidacyStatuses?.[0]?.status,
-  //   )
-  // ) {
-  //   throw new Error(
-  //     "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_FAISABILITE_INCOMPLET",
-  //   );
-  // }
 
   const convocationFileId = uuidV4();
   if (convocationFile) {

@@ -11,7 +11,10 @@ import { JuryStatusFilter } from "./types/juryStatusFilter.type";
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
 import { updateResultOfJury } from "./features/updateResultOfJury";
-import { canManageJury } from "./features/canManageJury";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../shared/error/functionalError";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -49,24 +52,40 @@ const unsafeResolvers = {
         searchFilter?: string;
       },
       context: GraphqlContext,
-    ) =>
-      getActiveJuries({
-        keycloakId: context.auth.userInfo?.sub || "",
+    ) => {
+      if (!context.auth.userInfo?.sub) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
+      }
+
+      return getActiveJuries({
+        keycloakId: context.auth.userInfo.sub,
         hasRole: context.auth.hasRole,
         ...args,
-      }),
+      });
+    },
     jury_juryCountByCategory: (
       _: unknown,
       _params: {
         searchFilter?: string;
       },
       context: GraphqlContext,
-    ) =>
-      getActiveJuryCountByCategory({
-        keycloakId: context.auth.userInfo?.sub || "",
+    ) => {
+      if (!context.auth.userInfo?.sub) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
+      }
+
+      return getActiveJuryCountByCategory({
+        keycloakId: context.auth.userInfo.sub,
         hasRole: context.auth.hasRole,
         searchFilter: _params.searchFilter,
-      }),
+      });
+    },
   },
   Mutation: {
     jury_updateExamInfo: async (
@@ -86,19 +105,18 @@ const unsafeResolvers = {
       },
       context: GraphqlContext,
     ) => {
-      const authorized = await canManageJury({
-        keycloakId: context.auth?.userInfo?.sub || "",
-        juryId: params.juryId,
-        roles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-
-      if (!authorized) {
-        throw new Error("Vous n'êtes pas autorisé à consulter ce jury");
+      if (!context.auth.userInfo?.sub) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
       }
 
       return updateResultOfJury({
         juryId: params.juryId,
         juryInfo: params.input,
+        roles: context.auth.userInfo.realm_access?.roles || [],
+        keycloakId: context.auth.userInfo?.sub,
       });
     },
   },

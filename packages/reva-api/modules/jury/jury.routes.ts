@@ -1,7 +1,6 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { canUserManageCandidacy } from "../feasibility/feasibility.features";
 import { FileService, UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import { canManageJury } from "./features/canManageJury";
@@ -20,7 +19,7 @@ interface ScheduleSessionOfJuryBody {
 type MimeType = "application/pdf"; // | "image/png" | "image/jpg" | "image/jpeg";
 
 export const juryRoute: FastifyPluginAsync = async (server) => {
-  const maxUploadFileSizeInBytes = 15728640;
+  const maxUploadFileSizeInBytes = 10000000;
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
@@ -47,19 +46,11 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           candidacyId,
         });
 
-        const isUserCanManageCandidacy = await canUserManageCandidacy({
-          hasRole: request.auth.hasRole,
-          candidacyId,
-          keycloakId: request.auth?.userInfo?.sub || "",
-        });
-
-        const isUserCanManageJury = await canManageJury({
+        const authorized = await canManageJury({
           keycloakId: request.auth?.userInfo?.sub,
-          juryId: jury?.id || "",
+          candidacyId,
           roles: request.auth.userInfo?.realm_access?.roles || [],
         });
-
-        const authorized = isUserCanManageCandidacy || isUserCanManageJury;
         if (!authorized) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
@@ -143,10 +134,10 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
       },
     },
     handler: async (request, reply) => {
-      const authorized = await canUserManageCandidacy({
-        hasRole: request.auth.hasRole,
+      const authorized = await canManageJury({
         candidacyId: request.body.candidacyId.value,
-        keycloakId: request.auth?.userInfo?.sub,
+        roles: request.auth.userInfo.realm_access?.roles || [],
+        keycloakId: request.auth.userInfo.sub,
       });
 
       if (!authorized) {
