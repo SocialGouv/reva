@@ -5,6 +5,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
@@ -164,16 +165,19 @@ const VousAvezBesoinDePlusDaide = () => (
         imageAlt="Bâtiment public"
         imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.png"
         label="Point-relais conseil"
+        urlLink="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
       />
       <PolygonService
         imageAlt="Mon conseil en évolution professionnelle"
         imageUrl="/home-page/polygons-services/polygon-service-conseil-evolution-professionnelle.png"
         label="Conseiller en évolution professionnelle"
+        urlLink="https://mon-cep.org/"
       />
       <PolygonService
         imageAlt="Logo transition professionnelle"
         imageUrl="/home-page/polygons-services/polygon-service-association-de-transition-professionnelle.png"
         label="Association de transition professionnelle"
+        urlLink="https://www.transitionspro.fr/"
       />
     </div>
   </section>
@@ -183,15 +187,19 @@ const PolygonService = ({
   imageUrl,
   imageAlt,
   label,
+  urlLink,
 }: {
   imageUrl: string;
   imageAlt: string;
   label: string;
+  urlLink: string;
 }) => (
-  <div className="flex flex-col justify-center items-center w-[200px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] bg-cover bg-center">
-    <Image src={imageUrl} width={147} height={48} alt={imageAlt} />
-    <span className="text-base font-bold px-1 mt-2 text-center">{label}</span>
-  </div>
+  <Link href={urlLink} target="_" style={{ backgroundImage: "none" }}>
+    <div className="hover:scale-105 transition-all flex flex-col justify-center items-center w-[200px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] bg-cover bg-center">
+      <Image src={imageUrl} width={147} height={48} alt={imageAlt} />
+      <span className="text-base font-bold px-1 mt-2 text-center">{label}</span>
+    </div>
+  </Link>
 );
 
 const AccompagnementDemarche = () => (
@@ -276,9 +284,12 @@ const CommentFinancerVotreParcours = () => (
         <h4 className="text-white my-0">Comment financer votre parcours ?</h4>
         <p className="my-0 text-justify">
           France VAE prend en charge l'<b>ensemble des frais de parcours</b>*
-          pour les candidats passant par la plateforme vae.gouv.fr. Aucune
-          démarche administrative ne sera demandée au candidat pour obtenir ce
-          financement.
+          pour les candidats passant par la plateforme{" "}
+          <Link href="https://vae.gouv.fr/" target="_blank">
+            vae.gouv.fr
+          </Link>
+          . Aucune démarche administrative ne sera demandée au candidat pour
+          obtenir ce financement.
         </p>
       </div>
       <div className="hidden lg:flex flex-col items-center relative">
