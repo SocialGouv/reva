@@ -27,9 +27,8 @@ export const Autocomplete = ({
   const [status, setStatus] = useState<
     "IDLE" | "SEARCHING" | "GOT_RESULTS" | "GOT_NO_RESULT"
   >("IDLE");
-
+  const [displayOptions, setDisplayOptions] = useState(true);
   const [searchText, setSearchText] = useState("");
-
   const [debouncedSearchText] = useDebounce(searchText, 500);
 
   const updateSearchText = async (newSearchText: string) => {
@@ -72,11 +71,16 @@ export const Autocomplete = ({
           onChange: (event) => updateSearchText(event.target.value),
           placeholder,
           value: searchText,
+          onBlur: () => {
+            setTimeout(() => setDisplayOptions(false), 50);  
+          },
+          onFocus: () => setDisplayOptions(true),
         }}
         label={defaultLabel}
         data-testid="autocomplete-input"
+        iconId="fr-icon-award-fill"
       />
-      {status === "GOT_RESULTS" ? (
+      {status === "GOT_RESULTS" && displayOptions? (
         <div
           data-testid="autocomplete-options"
           className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
