@@ -176,9 +176,9 @@ describe("candidate registration", () => {
       "+33 1 01 01 01 01"
     );
 
-    cy.get('[data-testid="candidate-registration-form-email-input"]').type(
-      "edgar.podovsky@flatmail.com"
-    );
+    cy.get('[data-testid="candidate-registration-form-email-input"]')
+      .children("input")
+      .type("edgar.podovsky@flatmail.com");
 
     cy.get('[data-testid="candidate-registration-form-department-select"]')
       .children("select")
