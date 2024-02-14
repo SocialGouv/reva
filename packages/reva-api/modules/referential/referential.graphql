@@ -75,7 +75,7 @@ enum CertificationStatus {
 type Certification {
   id: ID!
   label: String!
-  summary: String!
+  summary: String
   level: Int!
   activities: String
   activityArea: String
