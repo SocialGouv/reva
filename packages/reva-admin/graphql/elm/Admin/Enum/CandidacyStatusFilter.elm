@@ -21,6 +21,8 @@ type CandidacyStatusFilter
     | DossierFaisabiliteNonRecevableHorsAbandon
     | DossierDeValidationEnvoyeHorsAbandon
     | DossierDeValidationSignaleHorsAbandon
+    | JuryProgrammeHorsAbandon
+    | JuryPasseHorsAbandon
     | DemandeFinancementEnvoyeHorsAbandon
     | DemandePaiementEnvoyeeHorsAbandon
     | ValidationHorsAbandon
@@ -29,7 +31,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DossierDeValidationEnvoyeHorsAbandon, DossierDeValidationSignaleHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DossierDeValidationEnvoyeHorsAbandon, DossierDeValidationSignaleHorsAbandon, JuryProgrammeHorsAbandon, JuryPasseHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -76,6 +78,12 @@ decoder =
 
                     "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" ->
                         Decode.succeed DossierDeValidationSignaleHorsAbandon
+
+                    "JURY_PROGRAMME_HORS_ABANDON" ->
+                        Decode.succeed JuryProgrammeHorsAbandon
+
+                    "JURY_PASSE_HORS_ABANDON" ->
+                        Decode.succeed JuryPasseHorsAbandon
 
                     "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
                         Decode.succeed DemandeFinancementEnvoyeHorsAbandon
@@ -137,6 +145,12 @@ toString enum____ =
 
         DossierDeValidationSignaleHorsAbandon ->
             "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON"
+
+        JuryProgrammeHorsAbandon ->
+            "JURY_PROGRAMME_HORS_ABANDON"
+
+        JuryPasseHorsAbandon ->
+            "JURY_PASSE_HORS_ABANDON"
 
         DemandeFinancementEnvoyeHorsAbandon ->
             "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"
@@ -203,6 +217,12 @@ fromString enumString____ =
 
         "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" ->
             Just DossierDeValidationSignaleHorsAbandon
+
+        "JURY_PROGRAMME_HORS_ABANDON" ->
+            Just JuryProgrammeHorsAbandon
+
+        "JURY_PASSE_HORS_ABANDON" ->
+            Just JuryPasseHorsAbandon
 
         "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
             Just DemandeFinancementEnvoyeHorsAbandon

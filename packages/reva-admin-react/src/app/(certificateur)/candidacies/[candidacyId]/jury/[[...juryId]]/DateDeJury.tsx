@@ -1,16 +1,18 @@
 "use client";
+import { useState } from "react";
+
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, add } from "date-fns";
+import { format, add, startOfDay, isBefore } from "date-fns";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { errorToast } from "@/components/toast/toast";
 
 import { useJuryPageLogic } from "./juryPageLogic";
 import { FileLink } from "../../../(components)/FileLink";
-import { useState } from "react";
 
 const schema = z.object({
   date: z.string().min(1),
@@ -33,13 +35,26 @@ export const DateDeJury = (): JSX.Element => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<DateDeJuryFormData>({ resolver: zodResolver(schema) });
 
-  const handleFormSubmit = handleSubmit((data) => {
+  const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
-      scheduleJury.mutateAsync({
-        ...data,
-        candidacyId: candidacy.id,
-        convocationFile: data.convocationFile?.[0],
-      });
+      try {
+        const response = await scheduleJury.mutateAsync({
+          ...data,
+          candidacyId: candidacy.id,
+          convocationFile: data.convocationFile?.[0],
+        });
+
+        const textError = await response.text();
+        if (textError) {
+          errorToast(textError);
+
+          console.error(textError);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      setEditing(false);
     }
   });
 
@@ -47,23 +62,30 @@ export const DateDeJury = (): JSX.Element => {
 
   const jury = candidacy?.jury;
 
+  const editable = candidacy?.jury
+    ? isBefore(new Date(), startOfDay(candidacy?.jury.dateOfSession)) &&
+      !jury?.result
+    : false;
+
   return (
     <div className="flex flex-col">
       <>
-        <h5 className="text-xl font-bold mb-4">
+        <h5 className="text-xl font-bold">
           Attribution d’une date de passage en jury au candidat
         </h5>
-        <p className="text-gray-600 mb-12">
-          Merci de renseigner a minima la date de l'entretien du candidat avec
-          le jury. Une convocation officielle devra être émise à destination du
-          candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
-          candidat l’aura dans son e-mail récapitulatif) ou transmise par
-          courrier papier par vos soins.
-        </p>
+        {!jury && (
+          <p className="text-gray-600 mt-4">
+            Merci de renseigner a minima la date de l'entretien du candidat avec
+            le jury. Une convocation officielle devra être émise à destination
+            du candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
+            candidat l’aura dans son e-mail récapitulatif) ou transmise par
+            courrier papier par vos soins.
+          </p>
+        )}
       </>
 
       <>
-        <label className="text-xs font-bold py-2">
+        <label className="text-xs font-bold py-2 mt-12">
           Certification concernée
         </label>
 
@@ -107,15 +129,17 @@ export const DateDeJury = (): JSX.Element => {
             />
           )}
 
-          <div className="flex flex-row items-end justify-between gap-4">
-            <Button
-              priority="secondary"
-              className="ml-auto mt-8 text-right"
-              onClick={() => setEditing(true)}
-            >
-              Modifer
-            </Button>
-          </div>
+          {editable && (
+            <div className="flex flex-row items-end justify-between gap-4">
+              <Button
+                priority="secondary"
+                className="ml-auto mt-8 text-right"
+                onClick={() => setEditing(true)}
+              >
+                Modifer
+              </Button>
+            </div>
+          )}
         </>
       )}
 
@@ -139,7 +163,7 @@ export const DateDeJury = (): JSX.Element => {
               stateRelatedMessage={errors.date?.message}
             />
             <Input
-              label="Heure de convocation"
+              label="Heure de convocation (Optionnel)"
               nativeInputProps={{
                 type: "time",
                 ...register("time"),
@@ -178,12 +202,7 @@ export const DateDeJury = (): JSX.Element => {
               </Button>
             )}
 
-            <Button
-              disabled={isSubmitting || !isValid}
-              onClick={() => setEditing(false)}
-            >
-              Envoyer
-            </Button>
+            <Button disabled={isSubmitting || !isValid}>Envoyer</Button>
           </div>
         </form>
       )}

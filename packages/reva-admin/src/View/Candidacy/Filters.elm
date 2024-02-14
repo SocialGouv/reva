@@ -64,6 +64,12 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon ->
                     candidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
 
+                CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
+                    candidacyCountByStatus.juryProgrammeHorsAbandon
+
+                CandidacyStatusFilter.JuryPasseHorsAbandon ->
+                    candidacyCountByStatus.juryPasseHorsAbandon
+
                 CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
                     candidacyCountByStatus.parcoursEnvoyeHorsAbandon
 
@@ -93,6 +99,14 @@ view candidacyCountByStatus filters context =
                 ++ (if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
                         [ CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon
                         , CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon
+                        ]
+
+                    else
+                        []
+                   )
+                ++ (if List.member "JURY" context.activeFeatures then
+                        [ CandidacyStatusFilter.JuryProgrammeHorsAbandon
+                        , CandidacyStatusFilter.JuryPasseHorsAbandon
                         ]
 
                     else

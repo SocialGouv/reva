@@ -329,6 +329,8 @@ candidacyCountByStatusSelection =
         |> with Admin.Object.CandidacyCountByStatus.dossierFaisabiliteNonRecevableHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.dossierDeValidationEnvoyeHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
+        |> with Admin.Object.CandidacyCountByStatus.juryProgrammeHorsAbandon
+        |> with Admin.Object.CandidacyCountByStatus.juryPasseHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.demandePaiementEnvoyeeHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.validationHorsAbandon

@@ -119,6 +119,28 @@ export const getWhereClauseFromStatusFilter = (
         },
       };
       break;
+    case "JURY_PROGRAMME_HORS_ABANDON": {
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        Jury: {
+          some: { AND: { isActive: true, dateOfResult: null } },
+        },
+      };
+
+      break;
+    }
+    case "JURY_PASSE_HORS_ABANDON": {
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        Jury: {
+          some: { AND: { isActive: true, dateOfResult: { not: null } } },
+        },
+      };
+
+      break;
+    }
   }
   return whereClause;
 };

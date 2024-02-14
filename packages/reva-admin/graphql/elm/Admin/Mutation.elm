@@ -649,6 +649,30 @@ organism_createOrUpdateOrganismOnDegrees requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_createOrUpdateOrganismOnDegrees" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateOrUpdateOrganismOnDegreesInput ] object____ (Basics.identity >> Decode.list)
 
 
+type alias ReferentialUpdateCertificationRequiredArguments =
+    { input : Admin.InputObject.UpdateCertificationInput }
+
+
+referential_updateCertification :
+    ReferentialUpdateCertificationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet decodesTo RootMutation
+referential_updateCertification requiredArgs____ object____ =
+    Object.selectionForCompositeField "referential_updateCertification" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationInput ] object____ Basics.identity
+
+
+type alias ReferentialReplaceCertificationRequiredArguments =
+    { input : Admin.InputObject.UpdateCertificationInput }
+
+
+referential_replaceCertification :
+    ReferentialReplaceCertificationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet decodesTo RootMutation
+referential_replaceCertification requiredArgs____ object____ =
+    Object.selectionForCompositeField "referential_replaceCertification" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationInput ] object____ Basics.identity
+
+
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
     { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
 

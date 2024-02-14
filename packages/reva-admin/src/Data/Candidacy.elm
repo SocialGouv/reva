@@ -151,6 +151,8 @@ type alias CandidacyCountByStatus =
     , dossierFaisabiliteNonRecevableHorsAbandon : Int
     , dossierDeValidationEnvoyeHorsAbandon : Int
     , dossierDeValidationSignaleHorsAbandon : Int
+    , juryProgrammeHorsAbandon : Int
+    , juryPasseHorsAbandon : Int
     , demandeFinancementEnvoyeHorsAbandon : Int
     , demandePaiementEnvoyeHorsAbandon : Int
     , validationHorsAbandon : Int
@@ -253,6 +255,12 @@ candidacyStatusFilterToReadableString status =
 
         CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon ->
             "Dossier de validation signalé"
+
+        CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
+            "Jury programmé"
+
+        CandidacyStatusFilter.JuryPasseHorsAbandon ->
+            "Jury passé"
 
         CandidacyStatusFilter.PriseEnChargeHorsAbandon ->
             "Candidatures prises en charge"

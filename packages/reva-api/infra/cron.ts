@@ -14,6 +14,7 @@ import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
 import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
 import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/referential/features/deactivateCertificationsIfExpiresAtDateIsPast";
+import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
@@ -107,6 +108,25 @@ CronJob.from({
         logger.info("Running activate-or-deactivate-certifications batch");
         await makeCertificationsAvailableIfAvailableAtDateIsPast();
         await deactivateCertificationsIfExpiresAtDateIsPast();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send reminder to candidate with scheduled jury
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_REMINDER_TO_CANDIDATE_WITH_SCHEDULED_JURY ||
+    "* 8 * * *",
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-reminder-to-candidate-with-scheduled-jury",
+      batchCallback: async () => {
+        logger.info(
+          "Running send-reminder-to-candidate-with-scheduled-jury batch",
+        );
+        await sendReminderToCandidateWithScheduledJury();
       },
     }),
   start: true,

@@ -588,16 +588,28 @@ getReorientationReasons object____ =
 
 getDomaines :
     SelectionSet decodesTo Admin.Object.Domaine
-    -> SelectionSet (List (Maybe decodesTo)) RootQuery
+    -> SelectionSet (List decodesTo) RootQuery
 getDomaines object____ =
-    Object.selectionForCompositeField "getDomaines" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+    Object.selectionForCompositeField "getDomaines" [] object____ (Basics.identity >> Decode.list)
 
 
 getConventionCollectives :
     SelectionSet decodesTo Admin.Object.ConventionCollective
-    -> SelectionSet (List (Maybe decodesTo)) RootQuery
+    -> SelectionSet (List decodesTo) RootQuery
 getConventionCollectives object____ =
-    Object.selectionForCompositeField "getConventionCollectives" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+    Object.selectionForCompositeField "getConventionCollectives" [] object____ (Basics.identity >> Decode.list)
+
+
+getTypeDiplomes :
+    SelectionSet decodesTo Admin.Object.TypeDiplome
+    -> SelectionSet (List decodesTo) RootQuery
+getTypeDiplomes object____ =
+    Object.selectionForCompositeField "getTypeDiplomes" [] object____ (Basics.identity >> Decode.list)
+
+
+getCertificationAuthorityTags : SelectionSet (List String) RootQuery
+getCertificationAuthorityTags =
+    Object.selectionForField "(List String)" "getCertificationAuthorityTags" [] (Decode.string |> Decode.list)
 
 
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =

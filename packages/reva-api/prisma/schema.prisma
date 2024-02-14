@@ -1085,6 +1085,7 @@ model Jury {
   dateOfResult             DateTime?              @map("date_of_result") @db.Timestamptz(6)
   isResultProvisional      Boolean?               @map("is_result_provisional")
   informationOfResult      String?                @map("information_of_result")
+  reminderSendAt           DateTime?              @map("reminder_send_at") @db.Timestamptz(6)
   isActive                 Boolean                @default(true) @map("is_active")
   createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)

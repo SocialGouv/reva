@@ -64,6 +64,11 @@ result =
     Object.selectionForField "(Maybe Enum.JuryResult.JuryResult)" "result" [] (Admin.Enum.JuryResult.decoder |> Decode.nullable)
 
 
+dateOfResult : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Jury
+dateOfResult =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "dateOfResult" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
 isResultProvisional : SelectionSet (Maybe Bool) Admin.Object.Jury
 isResultProvisional =
     Object.selectionForField "(Maybe Bool)" "isResultProvisional" [] (Decode.bool |> Decode.nullable)

@@ -37,6 +37,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const candidate = getCandidacyResponse?.getCandidacyById?.candidate;
+
   const menuItem = (text: string, path: string) => ({
     isActive: currentPathname.startsWith(path),
     linkProps: {

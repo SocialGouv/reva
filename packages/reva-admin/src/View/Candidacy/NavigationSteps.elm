@@ -266,6 +266,20 @@ activeView context candidacy =
               ]
             , dossierDeValidationMenuEntry
             , juryMenuEntry
+            , if not juryFeatureActive || candidacy.financeModule == Unireva then
+                [ { content =
+                        expandedView
+                            (getDefaultExpandedViewStatusFromCandidacyStatus
+                                candidacy
+                                [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
+                            )
+                            "Jury"
+                  , navigation = examInfoLink
+                  }
+                ]
+
+              else
+                []
             , [ { content =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
@@ -294,20 +308,6 @@ activeView context candidacy =
                         Nothing
                 }
               ]
-            , if not juryFeatureActive || candidacy.financeModule == Unireva then
-                [ { content =
-                        expandedView
-                            (getDefaultExpandedViewStatusFromCandidacyStatus
-                                candidacy
-                                [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
-                            )
-                            "Jury"
-                  , navigation = examInfoLink
-                  }
-                ]
-
-              else
-                []
             ]
         )
 

@@ -11,6 +11,10 @@ const getJuryByCandidacyIdQuery = graphql(`
   query getJuryByCandidacyId($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      candidacyStatuses {
+        id
+        status
+      }
       certification {
         id
         label

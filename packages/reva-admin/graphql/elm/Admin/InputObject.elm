@@ -1324,6 +1324,51 @@ encodeUpdateCertificationAuthorityLocalAccountInput input____ =
         [ ( "certificationAuthorityLocalAccountId", Encode.string input____.certificationAuthorityLocalAccountId |> Just ), ( "departmentIds", (Encode.string |> Encode.list) input____.departmentIds |> Just ), ( "certificationIds", (Encode.string |> Encode.list) input____.certificationIds |> Just ) ]
 
 
+buildUpdateCertificationInput :
+    UpdateCertificationInputRequiredFields
+    -> UpdateCertificationInput
+buildUpdateCertificationInput required____ =
+    { certificationId = required____.certificationId, label = required____.label, level = required____.level, codeRncp = required____.codeRncp, typeDiplomeId = required____.typeDiplomeId, certificationAuthorityTag = required____.certificationAuthorityTag, domaineIds = required____.domaineIds, conventionCollectiveIds = required____.conventionCollectiveIds, availableAt = required____.availableAt, expiresAt = required____.expiresAt }
+
+
+type alias UpdateCertificationInputRequiredFields =
+    { certificationId : Data.Scalar.Id
+    , label : String
+    , level : Int
+    , codeRncp : String
+    , typeDiplomeId : String
+    , certificationAuthorityTag : String
+    , domaineIds : List String
+    , conventionCollectiveIds : List String
+    , availableAt : Data.Scalar.Timestamp
+    , expiresAt : Data.Scalar.Timestamp
+    }
+
+
+{-| Type for the UpdateCertificationInput input object.
+-}
+type alias UpdateCertificationInput =
+    { certificationId : Data.Scalar.Id
+    , label : String
+    , level : Int
+    , codeRncp : String
+    , typeDiplomeId : String
+    , certificationAuthorityTag : String
+    , domaineIds : List String
+    , conventionCollectiveIds : List String
+    , availableAt : Data.Scalar.Timestamp
+    , expiresAt : Data.Scalar.Timestamp
+    }
+
+
+{-| Encode a UpdateCertificationInput into a value that can be used as an argument.
+-}
+encodeUpdateCertificationInput : UpdateCertificationInput -> Value
+encodeUpdateCertificationInput input____ =
+    Encode.maybeObject
+        [ ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "label", Encode.string input____.label |> Just ), ( "level", Encode.int input____.level |> Just ), ( "codeRncp", Encode.string input____.codeRncp |> Just ), ( "typeDiplomeId", Encode.string input____.typeDiplomeId |> Just ), ( "certificationAuthorityTag", Encode.string input____.certificationAuthorityTag |> Just ), ( "domaineIds", (Encode.string |> Encode.list) input____.domaineIds |> Just ), ( "conventionCollectiveIds", (Encode.string |> Encode.list) input____.conventionCollectiveIds |> Just ), ( "availableAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.availableAt |> Just ), ( "expiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.expiresAt |> Just ) ]
+
+
 buildUpdateOrganismInput :
     UpdateOrganismInputRequiredFields
     -> (UpdateOrganismInputOptionalFields -> UpdateOrganismInputOptionalFields)

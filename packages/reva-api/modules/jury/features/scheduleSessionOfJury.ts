@@ -1,5 +1,7 @@
 import { v4 as uuidV4 } from "uuid";
 
+import { isBefore, startOfDay } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 import { FileService, UploadedFile } from "../../shared/file";
 import { sendJuryScheduledCandidateEmail } from "../emails/sendJuryScheduledCandidateEmail";
@@ -24,10 +26,36 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       Feasibility: { where: { isActive: true } },
       candidate: true,
       organism: true,
+      Jury: { where: { isActive: true } },
+      candidacyStatuses: true,
     },
   });
   if (!candidacy) {
     throw new Error("La candidature n'a pas été trouvée");
+  }
+
+  const isDossierDeValidationSent =
+    candidacy.candidacyStatuses?.findIndex(
+      ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
+    ) != -1;
+
+  if (!isDossierDeValidationSent) {
+    throw new Error("Le dossier de validation n'a pas été envoyé");
+  }
+
+  const activeJury = candidacy.Jury[0];
+  if (activeJury) {
+    const dateOfJuryHasNotPassed = activeJury
+      ? isBefore(new Date(), startOfDay(activeJury.dateOfSession))
+      : false;
+
+    if (!dateOfJuryHasNotPassed) {
+      throw new Error("La date du jury est passée");
+    }
+
+    if (activeJury.result) {
+      throw new Error("Le résultat du jury a déjà été renseigné");
+    }
   }
 
   const convocationFileId = uuidV4();
