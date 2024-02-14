@@ -188,7 +188,7 @@ const UpdateOrReplaceCertificationForm = ({
         ))}
       </Select>
       <Select
-        label="Domaine de la certification"
+        label="Filière de la certification"
         nativeSelectProps={{
           onChange: (event) =>
             domaineController.field.onChange(event.target.value),
