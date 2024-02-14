@@ -76,13 +76,6 @@ const UpdateCertificationPage = () => {
               champs sont obligatoires.
             </p>
             <br />
-            <Alert
-              severity="warning"
-              title="Attention"
-              description="La modification des dates de disponibilité et d'expiration de la
-              certification ne seront prises en compte qu'à partir de demain."
-            />
-            <br />
             <UpdateOrReplaceCertificationForm
               certification={certification as Certification}
               typeDiplomes={typeDiplomes}

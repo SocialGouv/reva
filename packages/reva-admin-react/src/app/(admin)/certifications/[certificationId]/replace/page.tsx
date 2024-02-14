@@ -77,13 +77,6 @@ const ReplaceCertificationPage = () => {
               champs sont obligatoires.
             </p>
             <br />
-            <Alert
-              severity="warning"
-              title="Attention"
-              description="La nouvelle certification sera inactive par défaut. Les dates de disponibilité et d'expiration de la
-              certification ne seront prises en compte qu'à partir de demain."
-            />
-            <br />
             <UpdateOrReplaceCertificationForm
               certification={
                 { ...certification, codeRncp: "" } as Certification
