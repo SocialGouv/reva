@@ -12,8 +12,8 @@ import { useEffect } from "react";
 const schema = z.object({
   codeRncp: z.string().min(1, "Ce champ est obligatoire"),
   label: z.string().min(1, "Ce champ est obligatoire"),
-  expiresAt: z.date(),
-  availableAt: z.date(),
+  expiresAt: z.string(),
+  availableAt: z.string(),
   typeDiplomeId: z.string(),
   degreeLevel: z.number(),
   conventionCollectiveId: z.string(),
@@ -30,14 +30,8 @@ const certificationToFormData = (
     ? {
         codeRncp: c.codeRncp || "",
         label: c.label || "",
-        expiresAt: format(
-          new Date(c.expiresAt || ""),
-          "yyyy-MM-dd",
-        ) as unknown as Date,
-        availableAt: format(
-          new Date(c.availableAt || ""),
-          "yyyy-MM-dd",
-        ) as unknown as Date,
+        expiresAt: format(new Date(c.expiresAt || ""), "yyyy-MM-dd"),
+        availableAt: format(new Date(c.availableAt || ""), "yyyy-MM-dd"),
         typeDiplomeId: c.typeDiplome?.id || "",
         certificationAuthorityTag: c.certificationAuthorityTag || "",
         degreeLevel: c.degree?.level || -1,
@@ -148,7 +142,7 @@ const UpdateOrReplaceCertificationForm = ({
         className="col-start-1"
         label="Disponible à partir du"
         nativeInputProps={{
-          ...register("availableAt", { valueAsDate: true }),
+          ...register("availableAt"),
           type: "date",
         }}
         state={errors.availableAt ? "error" : "default"}
@@ -157,7 +151,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Input
         label="Expire à partir du"
         nativeInputProps={{
-          ...register("expiresAt", { valueAsDate: true }),
+          ...register("expiresAt"),
           type: "date",
         }}
         state={errors.expiresAt ? "error" : "default"}

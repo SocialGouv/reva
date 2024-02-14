@@ -8,7 +8,7 @@ import UpdateOrReplaceCertificationForm, {
   UpdateOrReplaceCertificationFormData,
 } from "@/app/(admin)/certifications/[certificationId]/_components/UpdateOrReplaceCertificationForm";
 import { Certification } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { parse } from "date-fns";
 
 const ReplaceCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -41,8 +41,12 @@ const ReplaceCertificationPage = () => {
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
           : [],
-        availableAt: data.availableAt.getTime(),
-        expiresAt: data.expiresAt.getTime(),
+        availableAt: parse(
+          data.availableAt,
+          "yyyy-MM-dd",
+          new Date(),
+        ).getTime(),
+        expiresAt: parse(data.expiresAt, "yyyy-MM-dd", new Date()).getTime(),
       });
 
       successToast("Certification remplacée");
