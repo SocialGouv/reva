@@ -3,8 +3,6 @@ import Link from "next/link";
 
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
-import { useJuryPageLogic } from "./juryPageLogic";
-
 import { DateDeJury } from "./DateDeJury";
 import { Resultat } from "./Resultat";
 
@@ -16,8 +14,6 @@ interface Props {
 }
 
 const JuryPage = (_props: Props) => {
-  const { candidacy } = useJuryPageLogic();
-
   return (
     <div className="flex flex-col w-full">
       <Link
