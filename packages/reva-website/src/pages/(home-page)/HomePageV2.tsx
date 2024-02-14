@@ -1,15 +1,42 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
+import { useGraphQlStrapiClient } from "@/components/graphql/graphql-client/GraphqlStrapiClient";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { graphql } from "@/graphql/generated";
+import { ArticleDAideEntity } from "@/graphql/generated/graphql";
 import { isUUID } from "@/utils";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Card from "@codegouvfr/react-dsfr/Card";
 import Notice from "@codegouvfr/react-dsfr/Notice";
+import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
+const articlesQuery = graphql(`
+  query getArticlesDAide($filters: ArticleDAideFiltersInput!) {
+    articleDAides(filters: $filters) {
+      data {
+        id
+        attributes {
+          titre
+          vignette {
+            data {
+              attributes {
+                url
+                alternativeText
+              }
+            }
+          }
+          description
+          slug
+        }
+      }
+    }
+  }
+`);
 const ArrowRight = ({ className }: { className?: string }) => (
   <span
     className={`fr-icon-arrow-right-line fr-icon--lg ${className || ""}`}
@@ -335,6 +362,85 @@ const PolygonFinancer = ({
   </div>
 );
 
+const Articles = () => {
+  const { graphqlStrapiClient } = useGraphQlStrapiClient();
+
+  const laVaeCestQuoiId = "6";
+  const etapesParcoursFranceVaeId = "4";
+  const pourquoiFaireUneVaeId = "14";
+  const articleIds = [
+    laVaeCestQuoiId,
+    pourquoiFaireUneVaeId,
+    etapesParcoursFranceVaeId,
+  ];
+
+  const { data: articles } = useQuery({
+    queryKey: ["getArticles", articleIds],
+    queryFn: () =>
+      graphqlStrapiClient.request(articlesQuery, {
+        filters: {
+          id: {
+            in: articleIds,
+          },
+        },
+      }),
+  });
+
+  if (!articles?.articleDAides?.data.length) return null;
+
+  return (
+    <div className="flex flex-col fr-container py-20">
+      <h2 className="text-center">
+        Toutes les informations sur la Validation des Acquis de l’Expérience.
+      </h2>
+      <div className="flex gap-8 my-8">
+        {articles.articleDAides.data.map((article) => (
+          <ArticleCard
+            article={article as ArticleDAideEntity}
+            key={article.id}
+          />
+        ))}
+      </div>
+      <div className="text-center">
+        Retrouvez tous nos articles sur{" "}
+        <Link href="/savoir-plus" className="text-dsfrBlue-franceSun">
+          l'espace d'informations
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+const ArticleCard = ({ article }: { article: ArticleDAideEntity }) => {
+  if (!article.attributes) return null;
+  const { vignette, titre, description, slug } = article.attributes;
+  return (
+    <div
+      className="container"
+      style={{
+        width: 378,
+      }}
+    >
+      <Card
+        background
+        border
+        enlargeLink
+        desc={description}
+        imageAlt={vignette?.data?.attributes?.alternativeText as string}
+        imageUrl={vignette?.data?.attributes?.url as string}
+        linkProps={{
+          href: `/savoir-plus/articles/${slug}`,
+        }}
+        size="large"
+        title={titre}
+        classes={{
+          title: "!text-dsfrBlue-franceSun",
+        }}
+      />
+    </div>
+  );
+};
+
 const HomePageV2 = () => {
   return (
     <MainLayout className="relative">
@@ -353,6 +459,7 @@ const HomePageV2 = () => {
         <VousAvezBesoinDePlusDaide />
         <AccompagnementDemarche />
         <CommentFinancerVotreParcours />
+        <Articles />
       </HomeContainer>
     </MainLayout>
   );
