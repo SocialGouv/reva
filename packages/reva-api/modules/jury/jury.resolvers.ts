@@ -1,7 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { Candidacy } from "../candidacy/candidacy.types";
-import { resolversSecurityMap } from "../candidacy/security";
 import { getExamInfo } from "./features/getExamInfo";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { ExamInfo, JuryInfo } from "./jury.types";
@@ -15,6 +14,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
+import { resolversSecurityMap } from "../subscription/security";
 
 const unsafeResolvers = {
   Candidacy: {

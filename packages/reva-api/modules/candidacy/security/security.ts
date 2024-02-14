@@ -6,13 +6,16 @@ import {
   isCandidacyCompanion,
   isCandidate,
   isAnyone,
-} from "../shared/security/presets";
+} from "../../shared/security/presets";
+import { canAccessCandidacy } from "./canAccessCandidacy.security";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
 
   "Query.getCandidacies": isAdminOrManager,
+
+  "Query.getCandidacyById": [canAccessCandidacy],
 
   "Mutation.*": defaultSecurity, // forbidden
 

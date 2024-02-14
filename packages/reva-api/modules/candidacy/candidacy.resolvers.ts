@@ -59,7 +59,7 @@ import { confirmTrainingFormByCandidate } from "./features/validateTrainingFormB
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
-import { resolversSecurityMap } from "./security";
+import { resolversSecurityMap } from "./security/security";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
