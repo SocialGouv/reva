@@ -2,6 +2,8 @@ import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
 import { FileService, UploadedFile } from "../../shared/file";
+import { sendJuryScheduledCandidateEmail } from "../emails/sendJuryScheduledCandidateEmail";
+import { sendJuryScheduledAAPEmail } from "../emails/sendJuryScheduledAAPEmail";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;
@@ -20,6 +22,8 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     where: { id: candidacyId },
     include: {
       Feasibility: { where: { isActive: true } },
+      candidate: true,
+      organism: true,
     },
   });
   if (!candidacy) {
@@ -64,6 +68,26 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       certificationAuthority: true,
     },
   });
+
+  if (candidacy.candidate) {
+    sendJuryScheduledCandidateEmail({
+      email: candidacy.candidate.email,
+      dateOfSession: new Date(date),
+      timeOfSession: time,
+      addressOfSession: address,
+      convocationFile,
+    });
+
+    if (candidacy.organism?.contactAdministrativeEmail) {
+      sendJuryScheduledAAPEmail({
+        candidacyId,
+        email: candidacy.organism?.contactAdministrativeEmail,
+        candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
+        dateOfSession: new Date(date),
+        timeOfSession: time,
+      });
+    }
+  }
 
   // await updateCandidacyStatus({
   //   candidacyId,

@@ -1,4 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
+import { sendJuryResultAAPEmail } from "../emails/sendJuryResultAAPEmail";
+import { sendJuryResultCandidateEmail } from "../emails/sendJuryResultCandidateEmail";
 import { JuryInfo } from "../jury.types";
 import { canManageJury } from "./canManageJury";
 
@@ -14,6 +16,14 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
 
   const jury = await prismaClient.jury.findUnique({
     where: { id: juryId, isActive: true },
+    include: {
+      candidacy: {
+        include: {
+          organism: true,
+          candidate: true,
+        },
+      },
+    },
   });
 
   if (!jury) {
@@ -37,9 +47,28 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       result: juryInfo.result,
       dateOfResult: new Date(),
       isResultProvisional: juryInfo.isResultProvisional,
-      informationOfResult: juryInfo.informationOfResult,
+      informationOfResult:
+        juryInfo.informationOfResult == ""
+          ? undefined
+          : juryInfo.informationOfResult,
     },
   });
+
+  const { candidacy } = jury;
+
+  if (candidacy.candidate) {
+    sendJuryResultCandidateEmail({
+      email: candidacy.candidate.email,
+    });
+
+    if (candidacy.organism?.contactAdministrativeEmail) {
+      sendJuryResultAAPEmail({
+        candidacyId: candidacy.id,
+        email: candidacy.organism?.contactAdministrativeEmail,
+        candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
+      });
+    }
+  }
 
   return updatedJury;
 };

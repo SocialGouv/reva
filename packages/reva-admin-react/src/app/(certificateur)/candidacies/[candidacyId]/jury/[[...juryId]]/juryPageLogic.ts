@@ -77,7 +77,7 @@ export const useJuryPageLogic = () => {
 
   const { accessToken } = useKeycloakContext();
 
-  const { data: candidacyData, refetch: refetchCandidacy } = useQuery({
+  const getCandidacy = useQuery({
     queryKey: ["getJuryByCandidacyId", candidacyId],
     queryFn: () =>
       graphqlClient.request(getJuryByCandidacyIdQuery, {
@@ -115,7 +115,7 @@ export const useJuryPageLogic = () => {
       });
     },
     onSuccess: () => {
-      refetchCandidacy();
+      getCandidacy.refetch();
     },
   });
 
@@ -126,13 +126,13 @@ export const useJuryPageLogic = () => {
         input,
       }),
     onSuccess: () => {
-      refetchCandidacy();
+      getCandidacy.refetch();
     },
   });
   updateJuryResult;
 
   return {
-    candidacy: candidacyData?.getCandidacyById,
+    getCandidacy,
     scheduleJury,
     updateJuryResult,
   };

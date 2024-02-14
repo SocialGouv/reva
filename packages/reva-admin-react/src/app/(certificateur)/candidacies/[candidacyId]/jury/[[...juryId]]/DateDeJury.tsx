@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useJuryPageLogic } from "./juryPageLogic";
 import { FileLink } from "../../../(components)/FileLink";
+import { useState } from "react";
 
 const schema = z.object({
   date: z.string().min(1),
@@ -22,7 +23,9 @@ const schema = z.object({
 type DateDeJuryFormData = z.infer<typeof schema>;
 
 export const DateDeJury = (): JSX.Element => {
-  const { candidacy, scheduleJury } = useJuryPageLogic();
+  const { getCandidacy, scheduleJury } = useJuryPageLogic();
+
+  const candidacy = getCandidacy.data?.getCandidacyById;
 
   const {
     register,
@@ -40,6 +43,8 @@ export const DateDeJury = (): JSX.Element => {
     }
   });
 
+  const [editing, setEditing] = useState<boolean>(false);
+
   const jury = candidacy?.jury;
 
   return (
@@ -49,7 +54,7 @@ export const DateDeJury = (): JSX.Element => {
           Attribution d’une date de passage en jury au candidat
         </h5>
         <p className="text-gray-600 mb-12">
-          Merci de renseigner la date et l'heure de l'entretien du candidat avec
+          Merci de renseigner a minima la date de l'entretien du candidat avec
           le jury. Une convocation officielle devra être émise à destination du
           candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
           candidat l’aura dans son e-mail récapitulatif) ou transmise par
@@ -77,7 +82,7 @@ export const DateDeJury = (): JSX.Element => {
         </div>
       </>
 
-      {jury ? (
+      {!getCandidacy.isLoading && jury && !editing && (
         <>
           <div className="flex flex-row items-start justify-between gap-4">
             <Card
@@ -101,18 +106,34 @@ export const DateDeJury = (): JSX.Element => {
               url={jury.convocationFile.url}
             />
           )}
+
+          <div className="flex flex-row items-end justify-between gap-4">
+            <Button
+              priority="secondary"
+              className="ml-auto mt-8 text-right"
+              onClick={() => setEditing(true)}
+            >
+              Modifer
+            </Button>
+          </div>
         </>
-      ) : (
+      )}
+
+      {!getCandidacy.isLoading && (!jury || editing) && (
         <form onSubmit={handleFormSubmit}>
           <h5 className="text-xl font-bold mb-4">Date de jury</h5>
           <div className="flex flex-row items-start gap-4">
             <Input
+              key={Date.now()}
               label="Date"
               nativeInputProps={{
                 type: "date",
                 ...register("date"),
                 min: format(add(new Date(), { days: 1 }), "yyyy-MM-dd"),
                 max: format(add(new Date(), { years: 2 }), "yyyy-MM-dd"),
+                defaultValue: jury?.dateOfSession
+                  ? format(jury.dateOfSession, "yyyy-MM-dd")
+                  : "",
               }}
               state={errors.date ? "error" : "default"}
               stateRelatedMessage={errors.date?.message}
@@ -122,6 +143,7 @@ export const DateDeJury = (): JSX.Element => {
               nativeInputProps={{
                 type: "time",
                 ...register("time"),
+                defaultValue: jury?.timeOfSession || "",
               }}
             />
             <Input
@@ -129,6 +151,7 @@ export const DateDeJury = (): JSX.Element => {
               label="Lieu (Optionnel)"
               nativeInputProps={{
                 ...register("address"),
+                defaultValue: jury?.addressOfSession || "",
               }}
             />
           </div>
@@ -136,6 +159,7 @@ export const DateDeJury = (): JSX.Element => {
             label="Information complémentaire liée à la session (Optionnel)"
             nativeInputProps={{
               ...register("information"),
+              defaultValue: jury?.informationOfSession || "",
             }}
           />
           <Upload
@@ -147,10 +171,16 @@ export const DateDeJury = (): JSX.Element => {
             }}
           />
 
-          <div className="flex flex-row items-end">
+          <div className="flex flex-row items-end justify-end mt-8 gap-4">
+            {editing && (
+              <Button priority="secondary" onClick={() => setEditing(false)}>
+                Annuler
+              </Button>
+            )}
+
             <Button
-              className="ml-auto mt-8 text-right"
               disabled={isSubmitting || !isValid}
+              onClick={() => setEditing(false)}
             >
               Envoyer
             </Button>
