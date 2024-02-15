@@ -18,11 +18,9 @@ export const Header = () => {
   const { isFeatureActive } = useFeatureflipping();
   const { authenticated, logout } = useKeycloakContext();
 
-  const candidaciesLabel = isFeatureActive("DOSSIER_DE_VALIDATION")
-    ? isAdmin
-      ? "Certificateurs/Candidatures"
-      : "Candidatures"
-    : "Dossiers de faisabilité";
+  const candidaciesLabel = isAdmin
+    ? "Certificateurs/Candidatures"
+    : "Candidatures";
 
   const navigation = authenticated
     ? [

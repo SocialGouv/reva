@@ -164,9 +164,6 @@ activeView context candidacy =
             else
                 []
 
-        dossierDeValidationFeatureActive =
-            List.member "DOSSIER_DE_VALIDATION" context.activeFeatures
-
         feasibilityAdmissible =
             case candidacy.feasibility of
                 Just f ->
@@ -191,25 +188,21 @@ activeView context candidacy =
                 WITHOUT_BUTTON
 
         dossierDeValidationMenuEntry =
-            if dossierDeValidationFeatureActive then
-                [ { content =
-                        expandedView
-                            dossierDeValidationLinkStatus
-                            "Dossier de validation"
-                  , navigation =
-                        if not feasibilityAdmissible then
-                            Nothing
+            [ { content =
+                    expandedView
+                        dossierDeValidationLinkStatus
+                        "Dossier de validation"
+              , navigation =
+                    if not feasibilityAdmissible then
+                        Nothing
 
-                        else if candidacy.readyForJuryEstimatedAt == Nothing then
-                            readyForJuryEstimatedDateLink
+                    else if candidacy.readyForJuryEstimatedAt == Nothing then
+                        readyForJuryEstimatedDateLink
 
-                        else
-                            dossierDeValidationLink
-                  }
-                ]
-
-            else
-                []
+                    else
+                        dossierDeValidationLink
+              }
+            ]
 
         juryFeatureActive =
             List.member "JURY" context.activeFeatures
@@ -284,7 +277,7 @@ activeView context candidacy =
                     expandedView
                         (getDefaultExpandedViewStatusFromCandidacyStatus
                             candidacy
-                            [ if dossierDeValidationFeatureActive && candidacy.financeModule /= Unireva then
+                            [ if candidacy.financeModule /= Unireva then
                                 DossierDeValidationEnvoye
 
                               else
@@ -293,15 +286,7 @@ activeView context candidacy =
                         )
                         "Demande de paiement"
                 , navigation =
-                    let
-                        displayLink =
-                            if dossierDeValidationFeatureActive then
-                                Candidacy.isStatusEqualOrAbove candidacy DossierDeValidationEnvoye
-
-                            else
-                                Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye
-                    in
-                    if displayLink then
+                    if Candidacy.isStatusEqualOrAbove candidacy DossierDeValidationEnvoye then
                         candidacyLink Tab.PaymentRequest
 
                     else

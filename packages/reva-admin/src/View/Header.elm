@@ -151,19 +151,12 @@ headerMenuModal context activeHeaderLink =
         isLocalAccountsActive =
             List.member "ADMIN_CERTIFICATION_AUTHORITY" context.activeFeatures
 
-        isDossierDeValidationActive =
-            List.member "DOSSIER_DE_VALIDATION" context.activeFeatures
-
         certificateursCandidaciesLabel =
-            if isDossierDeValidationActive then
-                if Api.Token.isAdmin context.token then
-                    "Certificateurs/Candidatures"
-
-                else
-                    "Candidatures"
+            if Api.Token.isAdmin context.token then
+                "Certificateurs/Candidatures"
 
             else
-                "Dossiers de faisabilité"
+                "Candidatures"
 
         navLinks =
             if Api.Token.isAdmin context.token then

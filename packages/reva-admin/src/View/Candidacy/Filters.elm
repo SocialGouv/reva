@@ -95,15 +95,9 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon
             , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon
             ]
-                ++ (if List.member "DOSSIER_DE_VALIDATION" context.activeFeatures then
-                        [ CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon
-                        , CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon
-                        ]
-
-                    else
-                        []
-                   )
                 ++ (if List.member "JURY" context.activeFeatures then
                         [ CandidacyStatusFilter.JuryProgrammeHorsAbandon
                         , CandidacyStatusFilter.JuryPasseHorsAbandon

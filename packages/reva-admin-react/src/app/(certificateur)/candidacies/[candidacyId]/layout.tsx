@@ -49,16 +49,11 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
 
   const items = [
     menuItem("Étude de faisabilité", `/candidacies/${candidacyId}/feasibility`),
+    menuItem(
+      "Dossier de validation",
+      `/candidacies/${candidacyId}/dossier-de-validation`,
+    ),
   ];
-
-  if (isFeatureActive("DOSSIER_DE_VALIDATION")) {
-    items.push(
-      menuItem(
-        "Dossier de validation",
-        `/candidacies/${candidacyId}/dossier-de-validation`,
-      ),
-    );
-  }
 
   if (isFeatureActive("JURY")) {
     items.push(menuItem("Jury", `/candidacies/${candidacyId}/jury`));

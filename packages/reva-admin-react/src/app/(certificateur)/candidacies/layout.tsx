@@ -193,53 +193,44 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }),
   ];
 
-  const menuItems = isFeatureActive("DOSSIER_DE_VALIDATION")
-    ? [
-        {
-          items: feasibilityItems,
-          text: "Dossiers de faisabilité",
-          expandedByDefault: !!currentPathname.match(/feasibilities$/),
-        },
-        {
-          items: dossierDeValidationItems,
-          text: "Dossiers de validation",
-          expandedByDefault: currentPathname.startsWith(
-            "/candidacies/dossiers-de-validation",
-          ),
-        },
-        ...(isFeatureActive("JURY")
-          ? [
-              {
-                items: juryItems,
-                text: "Jury",
-                expandedByDefault: currentPathname.startsWith(
-                  "/candidacies/juries",
-                ),
-              },
-            ]
-          : []),
-      ]
-    : feasibilityItems;
-
-  const canDisplaySideMenu =
-    getFeasibilityCountByCategoryStatus === "success" &&
-    (!isFeatureActive("DOSSIER_DE_VALIDATION") ||
-      getDossierDeValidationCountByCategoryStatus === "success");
+  const menuItems = [
+    {
+      items: feasibilityItems,
+      text: "Dossiers de faisabilité",
+      expandedByDefault: !!currentPathname.match(/feasibilities$/),
+    },
+    {
+      items: dossierDeValidationItems,
+      text: "Dossiers de validation",
+      expandedByDefault: currentPathname.startsWith(
+        "/candidacies/dossiers-de-validation",
+      ),
+    },
+    ...(isFeatureActive("JURY")
+      ? [
+          {
+            items: juryItems,
+            text: "Jury",
+            expandedByDefault: currentPathname.startsWith(
+              "/candidacies/juries",
+            ),
+          },
+        ]
+      : []),
+  ];
 
   return (
-    canDisplaySideMenu && (
-      <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
-        <SideMenu
-          className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
-          align="left"
-          burgerMenuButtonText="Candidatures"
-          sticky
-          fullHeight
-          items={menuItems}
-        />
-        <div className="mt-3 flex-1">{children}</div>
-      </div>
-    )
+    <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
+      <SideMenu
+        className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
+        align="left"
+        burgerMenuButtonText="Candidatures"
+        sticky
+        fullHeight
+        items={menuItems}
+      />
+      <div className="mt-3 flex-1">{children}</div>
+    </div>
   );
 };
 
