@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 
-import { isBefore, startOfDay } from "date-fns";
+import { isBefore, isAfter, startOfDay, endOfDay, add } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { FileService, UploadedFile } from "../../shared/file";
@@ -58,6 +58,18 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     }
   }
 
+  const dateOfSession = new Date(date);
+
+  const tommorow = startOfDay(new Date());
+  const nextTwoYears = endOfDay(add(tommorow, { years: 2 }));
+  if (
+    !(isAfter(dateOfSession, tommorow) && isBefore(dateOfSession, nextTwoYears))
+  ) {
+    throw new Error(
+      "La date du jury doit être supérieur à aujourd'hui et au maximum dans les 2 prochaiens années",
+    );
+  }
+
   const convocationFileId = uuidV4();
   if (convocationFile) {
     await uploadFile({
@@ -75,7 +87,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const jury = await prismaClient.jury.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
-      dateOfSession: new Date(date),
+      dateOfSession: dateOfSession,
       timeOfSession: time,
       addressOfSession: address,
       informationOfSession: information,

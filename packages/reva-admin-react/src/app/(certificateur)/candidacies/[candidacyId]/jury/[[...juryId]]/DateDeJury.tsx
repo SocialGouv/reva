@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, add, startOfDay, isBefore } from "date-fns";
+import { format, add, startOfDay, endOfDay, isBefore } from "date-fns";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -49,12 +49,12 @@ export const DateDeJury = (): JSX.Element => {
           errorToast(textError);
 
           console.error(textError);
+        } else {
+          setEditing(false);
         }
       } catch (error) {
         console.error(error);
       }
-
-      setEditing(false);
     }
   });
 
@@ -153,8 +153,14 @@ export const DateDeJury = (): JSX.Element => {
               nativeInputProps={{
                 type: "date",
                 ...register("date"),
-                min: format(add(new Date(), { days: 1 }), "yyyy-MM-dd"),
-                max: format(add(new Date(), { years: 2 }), "yyyy-MM-dd"),
+                min: format(
+                  startOfDay(add(new Date(), { days: 1 })),
+                  "yyyy-MM-dd",
+                ),
+                max: format(
+                  endOfDay(add(new Date(), { years: 2 })),
+                  "yyyy-MM-dd",
+                ),
                 defaultValue: jury?.dateOfSession
                   ? format(jury.dateOfSession, "yyyy-MM-dd")
                   : "",
