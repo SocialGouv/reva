@@ -37,9 +37,9 @@ label =
     Object.selectionForField "String" "label" [] Decode.string
 
 
-summary : SelectionSet String Admin.Object.Certification
+summary : SelectionSet (Maybe String) Admin.Object.Certification
 summary =
-    Object.selectionForField "String" "summary" [] Decode.string
+    Object.selectionForField "(Maybe String)" "summary" [] (Decode.string |> Decode.nullable)
 
 
 level : SelectionSet Int Admin.Object.Certification
