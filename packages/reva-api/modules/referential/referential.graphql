@@ -107,6 +107,12 @@ type Query {
     searchText: String
     status: CertificationStatus
   ): CertificationPage!
+  searchCertificationsForAdmin(
+    offset: Int
+    limit: Int
+    searchText: String
+    status: CertificationStatus
+  ): CertificationPage!
   getCertification(certificationId: ID!): Certification!
   getRegions: [Region!]!
   getDepartments: [Department!]!

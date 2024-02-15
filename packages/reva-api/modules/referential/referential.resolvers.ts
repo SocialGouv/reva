@@ -20,6 +20,7 @@ import { UpdateCertificationInput } from "./referential.types";
 import { updateCertification } from "./features/updateCertification";
 import { replaceCertification } from "./features/replaceCertification";
 import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
+import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -53,6 +54,13 @@ const unsafeReferentialResolvers = {
         limit: payload.limit,
         departmentId: payload.departmentId,
         organismId: payload.organismId,
+        searchText: payload.searchText,
+        status: payload.status,
+      }),
+    searchCertificationsForAdmin: (_: any, payload: any) =>
+      searchCertificationsForAdmin({
+        offset: payload.offset,
+        limit: payload.limit,
         searchText: payload.searchText,
         status: payload.status,
       }),

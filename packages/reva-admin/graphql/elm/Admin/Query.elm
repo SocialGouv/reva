@@ -532,6 +532,30 @@ searchCertificationsForCandidate fillInOptionals____ object____ =
     Object.selectionForCompositeField "searchCertificationsForCandidate" optionalArgs____ object____ Basics.identity
 
 
+type alias SearchCertificationsForAdminOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchText : OptionalArgument String
+    , status : OptionalArgument Admin.Enum.CertificationStatus.CertificationStatus
+    }
+
+
+searchCertificationsForAdmin :
+    (SearchCertificationsForAdminOptionalArguments -> SearchCertificationsForAdminOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CertificationPage
+    -> SelectionSet decodesTo RootQuery
+searchCertificationsForAdmin fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchText = Absent, status = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchText" filledInOptionals____.searchText Encode.string, Argument.optional "status" filledInOptionals____.status (Encode.enum Admin.Enum.CertificationStatus.toString) ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "searchCertificationsForAdmin" optionalArgs____ object____ Basics.identity
+
+
 type alias GetCertificationRequiredArguments =
     { certificationId : Data.Scalar.Id }
 
