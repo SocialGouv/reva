@@ -14,7 +14,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
-import { resolversSecurityMap } from "../subscription/security";
+import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
   Candidacy: {
