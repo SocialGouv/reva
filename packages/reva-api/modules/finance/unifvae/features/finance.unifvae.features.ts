@@ -150,14 +150,13 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   if (!isCandidacyDroppedOut) {
     const feasibilityRejected =
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
-    // Either the feadibility has been rejected and thus the active candidacy status must be "DEMANDE_FINANCEMENT_ENVOYE" ...
-    if (
-      feasibilityRejected &&
-      activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE"
-    ) {
-      throw new Error(
-        "Impossible de créer la demande de paiement. Le dossier de validation n'a pas été envoyé",
-      );
+    // Either the feasibility has been rejected and thus the active candidacy status must be "DEMANDE_FINANCEMENT_ENVOYE" ...
+    if (feasibilityRejected) {
+      if (activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE") {
+        throw new Error(
+          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée ",
+        );
+      }
     }
     // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE"
     else if (activeCandidacyStatus !== "DOSSIER_DE_VALIDATION_ENVOYE") {
