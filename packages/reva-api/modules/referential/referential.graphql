@@ -99,7 +99,7 @@ type CertificationPage {
 
 type Query {
   getReferential: Referential!
-  getCertifications(
+  searchCertificationsForCandidate(
     offset: Int
     limit: Int
     departmentId: UUID

@@ -15,7 +15,7 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 
 async function attachOrganismToDepartment(
   organism: Organism | null,
-  department: Department | null
+  department: Department | null,
 ) {
   await prismaClient.organismsOnDepartments.create({
     data: {
@@ -39,7 +39,7 @@ async function attachOrganismToAllDegrees(organism: Organism | null) {
   }
 }
 
-async function getCertifications({
+async function searchCertificationsForCandidate({
   department,
   searchText,
   organism,
@@ -56,7 +56,7 @@ async function getCertifications({
     }),
     payload: {
       requestType: "query",
-      endpoint: "getCertifications",
+      endpoint: "searchCertificationsForCandidate",
       arguments: {
         departmentId: department?.id,
         offset: 0,
@@ -147,31 +147,31 @@ afterAll(async () => {
  */
 
 test("should find certifications with keyword électricien available in Paris", async () => {
-  const resp = await getCertifications({
+  const resp = await searchCertificationsForCandidate({
     department: paris,
     searchText: "électricien",
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.data.getCertifications.rows).toEqual([
+  expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
     { label: "BP Electricien" },
     { label: "CAP Electricien" },
   ]);
 });
 
 test("should have no certifications available in Ain", async () => {
-  const resp = await getCertifications({ department: ain });
+  const resp = await searchCertificationsForCandidate({ department: ain });
   const obj = resp.json();
-  expect(obj.data.getCertifications.rows).toEqual([]);
-  expect(obj.data.getCertifications.info.totalRows).toEqual(0);
+  expect(obj.data.searchCertificationsForCandidate.rows).toEqual([]);
+  expect(obj.data.searchCertificationsForCandidate.info.totalRows).toEqual(0);
 });
 
 test("should have only certifications of one branche in Loire", async () => {
-  const resp = await getCertifications({ department: loire });
+  const resp = await searchCertificationsForCandidate({ department: loire });
   const obj = resp.json();
   // In Loire we have only one organism, an expert on "particulier employeur" branche
-  expect(obj.data.getCertifications.rows).toEqual(
-    particulierEmployeurCertifications
+  expect(obj.data.searchCertificationsForCandidate.rows).toEqual(
+    particulierEmployeurCertifications,
   );
 });
 
@@ -180,36 +180,36 @@ test("should have only certifications of one branche in Loire", async () => {
  */
 
 test("should have several BTS certifications handle by generaliste in Paris", async () => {
-  const resp = await getCertifications({
+  const resp = await searchCertificationsForCandidate({
     organism: generaliste,
     department: paris,
     searchText: "BTS",
   });
   const obj = resp.json();
-  expect(obj.data.getCertifications.info.totalRows).toEqual(17);
+  expect(obj.data.searchCertificationsForCandidate.info.totalRows).toEqual(17);
 });
 
 test("should have only BTS certifications handle by expertFiliere in Paris", async () => {
-  const resp = await getCertifications({
+  const resp = await searchCertificationsForCandidate({
     organism: expertFiliere,
     department: paris,
     searchText: "BTS",
   });
   const obj = resp.json();
   // expertFiliere handle only "social" domaine, and only one BTS is in this domaine
-  expect(obj.data.getCertifications.rows).toEqual([
+  expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
     { label: "BTS Economie sociale et familiale - ESF" },
   ]);
 });
 
 test("should have only certifications handle by expertBranche in Paris", async () => {
-  const resp = await getCertifications({
+  const resp = await searchCertificationsForCandidate({
     organism: expertBranche,
     department: paris,
   });
   const obj = resp.json();
   // expertBranche handle only "particulier employeur" branche
-  expect(obj.data.getCertifications.rows).toEqual(
-    particulierEmployeurCertifications
+  expect(obj.data.searchCertificationsForCandidate.rows).toEqual(
+    particulierEmployeurCertifications,
   );
 });

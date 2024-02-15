@@ -364,7 +364,7 @@ export const mainMachine =
                 {
                   actions: assign({
                     certificationPage: (_, event) =>
-                      event.data.data.getCertifications,
+                      event.data.data.searchCertificationsForCandidate,
                   }),
                   target: "searchResults",
                 },

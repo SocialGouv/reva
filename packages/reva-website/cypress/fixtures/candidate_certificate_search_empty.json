@@ -1,6 +1,6 @@
 {
   "data": {
-    "getCertifications": {
+    "searchCertificationsForCandidate": {
       "rows": []
     }
   }

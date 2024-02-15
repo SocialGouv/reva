@@ -133,7 +133,7 @@ getCertifications :
     -> Maybe String
     -> Cmd msg
 getCertifications page organismId context =
-    Api.Certification.getCertifications context.endpoint
+    Api.Certification.searchCertificationsForCandidate context.endpoint
         context.token
         page
         organismId

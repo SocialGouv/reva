@@ -8,7 +8,10 @@ import request from "graphql-request";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQuery($searchText: String!) {
-    getCertifications(searchText: $searchText, status: AVAILABLE) {
+    searchCertificationsForCandidate(
+      searchText: $searchText
+      status: AVAILABLE
+    ) {
       rows {
         id
         label
@@ -34,7 +37,7 @@ export const CertificateAutocomplete = ({
           await request(GRAPHQL_API_URL, searchCertificationsQuery, {
             searchText,
           })
-        ).getCertifications.rows.map((r) => ({
+        ).searchCertificationsForCandidate.rows.map((r) => ({
           value: r.id,
           label: r.label,
         }))

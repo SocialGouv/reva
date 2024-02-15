@@ -67,7 +67,7 @@ const getCertificationAuthorityQuery = graphql(`
 
 const getReferentialQuery = graphql(`
   query getReferential {
-    getCertifications(limit: 500) {
+    searchCertificationsForCandidate(limit: 500) {
       rows {
         id
         label
@@ -136,7 +136,7 @@ export const useCertificationAuthorityPageLogic = () => {
     [getReferentialResponse],
   );
   const certifications = useMemo(
-    () => getReferentialResponse?.getCertifications.rows || [],
+    () => getReferentialResponse?.searchCertificationsForCandidate.rows || [],
     [getReferentialResponse],
   );
 

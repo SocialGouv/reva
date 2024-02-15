@@ -1,6 +1,6 @@
 {
   "data": {
-    "getCertifications": {
+    "searchCertificationsForCandidate": {
       "rows": [
         {
           "id": "7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",

@@ -7,7 +7,7 @@ const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
     $departementId: UUID!
     $searchText: String
   ) {
-    getCertifications(
+    searchCertificationsForCandidate(
       offset: $offset
       limit: $limit
       departmentId: $departementId

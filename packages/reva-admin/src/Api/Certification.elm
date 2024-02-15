@@ -1,4 +1,4 @@
-module Api.Certification exposing (getCertifications, selection, summarySelection)
+module Api.Certification exposing (searchCertificationsForCandidate, selection, summarySelection)
 
 import Admin.Enum.CertificationStatus
 import Admin.Object
@@ -16,7 +16,7 @@ import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
 
-getCertifications :
+searchCertificationsForCandidate :
     String
     -> Token
     -> Int
@@ -24,8 +24,8 @@ getCertifications :
     -> (RemoteData (List String) Data.Certification.CertificationPage -> msg)
     -> Maybe String
     -> Cmd msg
-getCertifications endpointGraphql token page organismId toMsg searchText =
-    Query.getCertifications
+searchCertificationsForCandidate endpointGraphql token page organismId toMsg searchText =
+    Query.searchCertificationsForCandidate
         (\optionals ->
             { optionals
                 | limit = Present 10
@@ -36,7 +36,7 @@ getCertifications endpointGraphql token page organismId toMsg searchText =
             }
         )
         pageSelection
-        |> Auth.makeQuery "getCertifications" endpointGraphql token toMsg
+        |> Auth.makeQuery "searchCertificationsForCandidate" endpointGraphql token toMsg
 
 
 pageSelection : SelectionSet Data.Certification.CertificationPage Admin.Object.CertificationPage

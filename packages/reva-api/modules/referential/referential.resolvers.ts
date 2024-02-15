@@ -14,7 +14,7 @@ import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
 import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
-import { searchCertifications } from "./features/searchCertifications";
+import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { referentialResolversSecurityMap } from "./referential.security";
 import { UpdateCertificationInput } from "./referential.types";
 import { updateCertification } from "./features/updateCertification";
@@ -47,8 +47,8 @@ const unsafeReferentialResolvers = {
         goals: goals,
       };
     },
-    getCertifications: (_: any, payload: any) =>
-      searchCertifications({
+    searchCertificationsForCandidate: (_: any, payload: any) =>
+      searchCertificationsForCandidate({
         offset: payload.offset,
         limit: payload.limit,
         departmentId: payload.departmentId,
