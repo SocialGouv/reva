@@ -17,7 +17,7 @@ const getCertificationsQuery = graphql(`
     $searchFilter: String
     $status: CertificationStatus
   ) {
-    searchCertificationsForCandidate(
+    searchCertificationsForAdmin(
       limit: 10
       offset: $offset
       searchText: $searchFilter
@@ -71,7 +71,7 @@ const CertificationListPage = () => {
   });
 
   const certificationPage =
-    getCertificationsResponse?.searchCertificationsForCandidate;
+    getCertificationsResponse?.searchCertificationsForAdmin;
   return (
     certificationPage && (
       <div className="flex flex-col">
