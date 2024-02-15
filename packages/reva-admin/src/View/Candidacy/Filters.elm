@@ -97,6 +97,7 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
             , CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon
             , CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon
+            , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
                 ++ (if List.member "JURY" context.activeFeatures then
                         [ CandidacyStatusFilter.JuryProgrammeHorsAbandon
@@ -106,8 +107,6 @@ view candidacyCountByStatus filters context =
                     else
                         []
                    )
-                ++ [ CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
-                   ]
 
         viewFilter : CandidacyStatusFilter -> Html msg
         viewFilter status =

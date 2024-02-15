@@ -1,10 +1,6 @@
 import {
   defaultSecurity,
-  isAdmin,
   isAdminOrCandidacyCompanion,
-  isAdminOrManager,
-  isCandidacyCompanion,
-  isCandidate,
   isAnyone,
 } from "../shared/security/presets";
 
