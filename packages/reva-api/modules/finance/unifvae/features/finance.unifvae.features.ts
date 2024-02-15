@@ -123,6 +123,11 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
 }) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
+    include: {
+      candidacyStatuses: true,
+      candidacyDropOut: true,
+      Feasibility: true,
+    },
   });
   if (!candidacy) {
     throw new Error(
@@ -135,6 +140,43 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     candidacy.isCertificationPartial == null
   ) {
     throw new Error('"isCertificationPartial" has not been set');
+  }
+  const activeCandidacyStatus = candidacy.candidacyStatuses?.filter(
+    (s) => s.isActive,
+  )?.[0].status;
+  const isCandidacyDroppedOut = !!candidacy.candidacyDropOut;
+
+  // If the candidate has not dropped out ...
+  if (!isCandidacyDroppedOut) {
+    const feasibilityRejected =
+      candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
+    // Either the feadibility has been rejected and thus the active candidacy status must be "DEMANDE_FINANCEMENT_ENVOYE" ...
+    if (
+      feasibilityRejected &&
+      activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE"
+    ) {
+      throw new Error(
+        "Impossible de créer la demande de paiement. Le dossier de validation n'a pas été envoyé",
+      );
+    }
+    // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE"
+    else if (activeCandidacyStatus !== "DOSSIER_DE_VALIDATION_ENVOYE") {
+      throw new Error(
+        "Impossible de créer la demande de paiement. Le dossier de validation n'a pas été envoyé",
+      );
+    }
+  }
+  // If the candidate has dropped out we ensure that the funding request has been sent
+  else {
+    if (
+      !candidacy.candidacyStatuses?.some(
+        (s) => s.status === "DEMANDE_FINANCEMENT_ENVOYE",
+      )
+    ) {
+      throw new Error(
+        "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+      );
+    }
   }
 
   const validationErrors = await applyBusinessValidationRules({
