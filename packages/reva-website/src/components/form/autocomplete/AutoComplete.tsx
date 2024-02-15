@@ -140,7 +140,7 @@ export const Autocomplete = ({
                   <option
                     value={option.value}
                     onClick={() => handleOptionSelection(option)}
-                    className={`whitespace-normal py-2 ${
+                    className={`whitespace-normal cursor-pointer select-none py-2 ${
                       isSelected ? "bg-dsfrGray-contrast" : ""
                     }`}
                     onMouseOver={() => setSelectedOption(option)}
