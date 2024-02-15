@@ -227,7 +227,7 @@ const PolygonService = ({
   urlLink: string;
 }) => (
   <Link href={urlLink} target="_" style={{ backgroundImage: "none" }}>
-    <div className="hover:scale-105 transition-all flex flex-col justify-center items-center w-[222px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-cover bg-center ">
+    <div className="transition-all flex flex-col justify-center items-center w-[222px] h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-cover bg-center ">
       <Image src={imageUrl} width={147} height={48} alt={imageAlt} />
       <span className="text-base font-bold px-4 mt-2 text-center">{label}</span>
     </div>
