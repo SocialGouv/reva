@@ -67,7 +67,7 @@ const CertificationPage = () => {
               </Info>
             )}
             {!!certification.conventionsCollectives.length && (
-              <Info title="Conventions collectives">
+              <Info title="Branches">
                 <ul className="list-disc list-inside">
                   {certification.conventionsCollectives.map((c) => (
                     <li key={c.id}>{c.label}</li>

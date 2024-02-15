@@ -203,7 +203,7 @@ const UpdateOrReplaceCertificationForm = ({
         ))}
       </Select>
       <Select
-        label="Convention collective de la certification"
+        label="Branche de la certification"
         nativeSelectProps={{
           onChange: (event) =>
             conventionCollectiveController.field.onChange(event.target.value),
@@ -219,7 +219,7 @@ const UpdateOrReplaceCertificationForm = ({
       </Select>
       <div className="flex flex-col md:flex-row gap-4 items-center md:col-start-2 md:ml-auto md:mt-8">
         <Button priority="secondary" type="reset">
-          Annuler
+          Annuler les modifications
         </Button>
         <Button disabled={isSubmitting}>Valider</Button>
       </div>
