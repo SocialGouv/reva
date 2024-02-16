@@ -1,4 +1,3 @@
-import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
@@ -7,7 +6,6 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import { isUUID } from "@/utils";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
@@ -87,14 +85,12 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
             votre parcours dès maintenant.
           </p>
           <CertificateAutocomplete
-            onSubmit={({ label, value }) => {
-              const certificationId = isUUID(value) ? value : null;
-              push(["trackEvent", "website-diplome", "recherche", label]);
+            onSubmit={(searchText) =>
               router.push({
                 pathname: "inscription-candidat",
-                query: { certificationId, searchText: label },
-              });
-            }}
+                query: { searchText },
+              })
+            }
             onOptionSelection={(o) =>
               router.push({
                 pathname: "inscription-candidat",
@@ -317,7 +313,7 @@ const Professionnels = () => (
   >
     <HomeContainer>
       <HomeHeader
-        title="Participez à l'essor de la VAE !"
+        title="Participez à l’essor de la VAE !"
         subTitle="Professionnels"
         className="text-center"
       />
@@ -432,7 +428,7 @@ const Roadmap = () => (
   </section>
 );
 
-const HomePageV1 = () => {
+const IndexPage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
@@ -451,4 +447,4 @@ const HomePageV1 = () => {
   );
 };
 
-export default HomePageV1;
+export default IndexPage;

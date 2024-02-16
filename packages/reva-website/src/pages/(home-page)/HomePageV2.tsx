@@ -1,5 +1,5 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
-import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
+import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { useGraphQlStrapiClient } from "@/components/graphql/graphql-client/GraphqlStrapiClient";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { graphql } from "@/graphql/generated";
@@ -98,7 +98,7 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
         <h2 className="text-[28px] leading-9 lg:text-[32px] font-bold mb-6">
           Recherchez le diplôme qui vous correspond
         </h2>
-        <CertificateAutocomplete
+        <CertificateAutocompleteDsfr
           onSubmit={({ label, value }) => {
             const certificationId = isUUID(value) ? value : null;
             push(["trackEvent", "website-diplome", "recherche", label]);

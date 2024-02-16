@@ -1,7 +1,7 @@
 import {
-  Autocomplete,
+  AutocompleteDsfr,
   AutocompleteOption,
-} from "@/components/form/autocomplete/AutoComplete";
+} from "@/components/form/autocomplete-dsfr/AutoCompleteDsfr";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import request from "graphql-request";
@@ -20,17 +20,17 @@ const searchCertificationsQuery = graphql(`
   }
 `);
 
-export const CertificateAutocomplete = ({
+export const CertificateAutocompleteDsfr = ({
   onOptionSelection,
   onSubmit,
   defaultLabel,
 }: {
-  onOptionSelection?: (selectedOption: AutocompleteOption) => void;
-  onSubmit?: (searchText: string) => void;
+  onOptionSelection: (selectedOption: AutocompleteOption) => void;
+  onSubmit?: (selectedOption: AutocompleteOption) => void;
   defaultLabel?: string;
 }) => {
   return (
-    <Autocomplete
+    <AutocompleteDsfr
       defaultLabel={defaultLabel}
       searchFunction={async (searchText) =>
         (
@@ -44,7 +44,7 @@ export const CertificateAutocomplete = ({
       }
       onOptionSelection={onOptionSelection}
       onSubmit={onSubmit}
-      placeholder="Recherchez un diplôme ..."
+      placeholder="Ex : bac, cap, master, titre professionnel..."
     />
   );
 };
