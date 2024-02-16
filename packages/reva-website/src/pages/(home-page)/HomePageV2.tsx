@@ -52,13 +52,14 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 
 const BackGroundUnions = () => (
   <>
-    <div className="absolute -z-10 w-full -top-56 lg:-top-[60px]">
+    <div className="absolute -z-10 w-full top-32 lg:-top-[60px]">
       <Image
-        src="/home-page/unions-background/union-background4.svg"
+        src="/home-page/unions-background/union-background1.svg"
         width={3000}
         height={1074}
         style={{ width: "100%" }}
         alt="rayon rose en fond d'écran"
+        className="hidden lg:block"
       />
     </div>
     <div className="absolute -z-10 w-full top-[1150px] hidden lg:block">
@@ -195,7 +196,7 @@ const VousAvezBesoinDePlusDaide = () => (
     id="vous-avez-besoin-de-plus-daide"
     className="w-full pb-14 lg:pb-36 lg:mb-0 flex flex-col sm:flex-row justify-between gap-10 fr-container"
   >
-    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 w-[368px]">
+    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 w-[400px]">
       <h3 className="text-2xl lg:text-[28px] leading-9 text-center lg:text-justify my-0">
         Vous avez besoin de plus d'aide pour vous orienter ?
       </h3>
@@ -237,13 +238,13 @@ const PolygonService = ({
 }) => (
   <Link href={urlLink} target="_" style={{ backgroundImage: "none" }}>
     <div className="flex flex-col items-center lg:flex-row">
-      <div className="w-[168px] h-[136px] lg:max-w-none lg:max-h-none transition-all flex lg:flex-col justify-center items-center lg:w-[222px] lg:h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
+      <div className="w-full h-[136px] lg:max-w-none lg:max-h-none transition-all flex lg:flex-col justify-center items-center lg:w-[240px] lg:h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
         <Image
           src={imageUrl}
           width={147}
           height={48}
           alt={imageAlt}
-          className="max-w-[72px] max-h-6 lg:max-w-none lg:max-h-none"
+          className="min-h-6  max-w-[72px] max-h-6 lg:max-w-none lg:max-h-12 lg:h-12"
         />
         <span className="hidden lg:block text-base font-bold px-4 mt-2 text-center">
           {label}
@@ -290,7 +291,7 @@ const AccompagnementDemarche = () => (
         imageAlt="Deux personnes qui discutent"
       />
     </div>
-    <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-0 lg:h-[132px]">
+    <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-14 lg:mt-0 lg:h-[132px]">
       <Image
         src="/home-page/image-home-character-young-man-glasses.svg"
         width={181}

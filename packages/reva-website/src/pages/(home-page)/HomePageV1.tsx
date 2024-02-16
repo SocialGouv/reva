@@ -317,7 +317,7 @@ const Professionnels = () => (
   >
     <HomeContainer>
       <HomeHeader
-        title="Participez à l’essor de la VAE !"
+        title="Participez à l'essor de la VAE !"
         subTitle="Professionnels"
         className="text-center"
       />
