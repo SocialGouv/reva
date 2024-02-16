@@ -1,6 +1,16 @@
 import { stubMutation, stubQuery } from "../support/graphql";
 
 describe("candidate registration", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "activeFeaturesForConnectedUser",
+        "active_features_website_v2.json"
+      );
+    });
+  });
+
   it("should show the certificate selected in the previous screen", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");

@@ -47,8 +47,14 @@ const askForRegistrationMutation = graphql(`
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId, searchText } = router.query;
-  const { isFeatureActive } = useFeatureflipping();
-  const isHomePageV2Active = isFeatureActive("SITE_INSTIT_HOME_PAGE_V2");
+  const [isHomePageV2Active, setIsHomePageV2Active] = useState(false);
+  const { isFeatureActive, status } = useFeatureflipping();
+
+  useEffect(() => {
+    if (isFeatureActive("SITE_INSTIT_HOME_PAGE_V2")) {
+      setIsHomePageV2Active(true);
+    }
+  }, [status, isFeatureActive]);
 
   const [candidateTypology, setCandidateTypology] = useState<
     CandidateTypology | undefined
