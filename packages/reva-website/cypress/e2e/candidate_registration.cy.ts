@@ -6,11 +6,10 @@ describe("candidate registration", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
+        "active_features_website_v2.json"
       );
     });
   });
-
   it("should show the certificate selected in the previous screen", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
@@ -19,10 +18,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait(1000);
-
-    cy.wait("@getCertification");
 
     cy.get('[data-testid="selected-certificate-label"]').should(
       "have.text",
@@ -63,8 +58,6 @@ describe("candidate registration", () => {
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
 
-    cy.wait(1000);
-
     cy.wait("@getCertification");
 
     cy.get('[data-testid="candidate-typology-select"]')
@@ -94,8 +87,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait(1000);
 
     cy.wait("@getCertification");
 
@@ -129,8 +120,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait(1000);
 
     cy.wait("@getCertification");
 
@@ -173,8 +162,6 @@ describe("candidate registration", () => {
     cy.visit(
       "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
     );
-
-    cy.wait(1000);
 
     cy.wait("@getCertification");
 
@@ -225,12 +212,21 @@ it("should show another certificate when i search for another one within the pag
     );
   });
 
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "active_features_website_v2.json"
+    );
+  });
+
   cy.visit(
     "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
   );
 
   cy.wait(1000);
 
+  cy.wait("@activeFeaturesForConnectedUser");
   cy.wait("@getCertification");
 
   cy.get('[data-testid="autocomplete-input"]').type("ebeniste", {

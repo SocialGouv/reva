@@ -22,7 +22,7 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(1000);
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
