@@ -725,6 +725,51 @@ export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
   };
 }
 
+export interface ApiArticleFaqArticleFaq extends Schema.CollectionType {
+  collectionName: "article_faqs";
+  info: {
+    singularName: "article-faq";
+    pluralName: "article-faqs";
+    displayName: "Article FAQ";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    question: Attribute.String & Attribute.Required;
+    sous_section_faq: Attribute.Relation<
+      "api::article-faq.article-faq",
+      "manyToOne",
+      "api::sous-section-faq.sous-section-faq"
+    >;
+    reponse: Attribute.RichText &
+      Attribute.CustomField<
+        "plugin::ckeditor.CKEditor",
+        {
+          output: "HTML";
+          preset: "rich";
+        }
+      >;
+    ordre: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::article-faq.article-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::article-faq.article-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiSectionDAideSectionDAide extends Schema.CollectionType {
   collectionName: "section_d_aides";
   info: {
@@ -762,6 +807,85 @@ export interface ApiSectionDAideSectionDAide extends Schema.CollectionType {
   };
 }
 
+export interface ApiSectionFaqSectionFaq extends Schema.CollectionType {
+  collectionName: "section_faqs";
+  info: {
+    singularName: "section-faq";
+    pluralName: "section-faqs";
+    displayName: "Section FAQ";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Attribute.String & Attribute.Required;
+    sous_section_faqs: Attribute.Relation<
+      "api::section-faq.section-faq",
+      "oneToMany",
+      "api::sous-section-faq.sous-section-faq"
+    >;
+    ordre: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::section-faq.section-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::section-faq.section-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSousSectionFaqSousSectionFaq extends Schema.CollectionType {
+  collectionName: "sous_section_faqs";
+  info: {
+    singularName: "sous-section-faq";
+    pluralName: "sous-section-faqs";
+    displayName: "Sous-section FAQ";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Attribute.String & Attribute.Required;
+    section_faq: Attribute.Relation<
+      "api::sous-section-faq.sous-section-faq",
+      "manyToOne",
+      "api::section-faq.section-faq"
+    >;
+    article_faqs: Attribute.Relation<
+      "api::sous-section-faq.sous-section-faq",
+      "oneToMany",
+      "api::article-faq.article-faq"
+    >;
+    ordre: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::sous-section-faq.sous-section-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::sous-section-faq.sous-section-faq",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module "@strapi/types" {
   export module Shared {
     export interface ContentTypes {
@@ -779,7 +903,10 @@ declare module "@strapi/types" {
       "plugin::users-permissions.role": PluginUsersPermissionsRole;
       "plugin::users-permissions.user": PluginUsersPermissionsUser;
       "api::article-d-aide.article-d-aide": ApiArticleDAideArticleDAide;
+      "api::article-faq.article-faq": ApiArticleFaqArticleFaq;
       "api::section-d-aide.section-d-aide": ApiSectionDAideSectionDAide;
+      "api::section-faq.section-faq": ApiSectionFaqSectionFaq;
+      "api::sous-section-faq.sous-section-faq": ApiSousSectionFaqSousSectionFaq;
     }
   }
 }

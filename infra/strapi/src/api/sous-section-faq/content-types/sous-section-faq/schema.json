@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sous_section_faqs",
+  "info": {
+    "singularName": "sous-section-faq",
+    "pluralName": "sous-section-faqs",
+    "displayName": "Sous-section FAQ",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "section_faq": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::section-faq.section-faq",
+      "inversedBy": "sous_section_faqs"
+    },
+    "article_faqs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article-faq.article-faq",
+      "mappedBy": "sous_section_faq"
+    },
+    "ordre": {
+      "type": "integer"
+    }
+  }
+}

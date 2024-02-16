@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_faqs",
+  "info": {
+    "singularName": "article-faq",
+    "pluralName": "article-faqs",
+    "displayName": "Article FAQ",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "question": {
+      "type": "string",
+      "required": true
+    },
+    "sous_section_faq": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sous-section-faq.sous-section-faq",
+      "inversedBy": "article_faqs"
+    },
+    "reponse": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "rich"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
+    },
+    "ordre": {
+      "type": "integer"
+    }
+  }
+}
