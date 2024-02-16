@@ -4,7 +4,6 @@ import { graphql } from "@/graphql/generated";
 import { GetArticleDAideQuery } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import request from "graphql-request";
-import { useSearchParams } from "next/navigation";
 
 const articleQuery = graphql(`
   query getArticleDAide($filters: ArticleDAideFiltersInput!) {
@@ -29,7 +28,6 @@ const articleQuery = graphql(`
 `);
 
 const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
-  const search = useSearchParams();
   const article = articles?.articleDAides?.data[0];
 
   if (!article) return null;
