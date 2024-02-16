@@ -229,6 +229,48 @@ activeView context candidacy =
 
             else
                 []
+
+        feasibilityRejected =
+            case candidacy.feasibility of
+                Just f ->
+                    case f.decision of
+                        Data.Feasibility.Rejected _ ->
+                            True
+
+                        _ ->
+                            False
+
+                Nothing ->
+                    False
+
+        minimumStatusForPaymentRequest =
+            if candidacy.financeModule /= Unireva then
+                if feasibilityRejected then
+                    DemandeFinancementEnvoye
+
+                else
+                    DossierDeValidationEnvoye
+
+            else
+                DemandeFinancementEnvoye
+
+        paymentRequestMenyEntry =
+            [ { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ minimumStatusForPaymentRequest
+                            ]
+                        )
+                        "Demande de paiement"
+              , navigation =
+                    if Candidacy.isStatusEqualOrAbove candidacy minimumStatusForPaymentRequest then
+                        candidacyLink Tab.PaymentRequest
+
+                    else
+                        Nothing
+              }
+            ]
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
@@ -265,35 +307,8 @@ activeView context candidacy =
                 }
               ]
             , dossierDeValidationMenuEntry
+            , paymentRequestMenyEntry
             , juryMenuEntry
-            , [ { content =
-                    expandedView
-                        (getDefaultExpandedViewStatusFromCandidacyStatus
-                            candidacy
-                            [ if dossierDeValidationFeatureActive && candidacy.financeModule /= Unireva then
-                                DossierDeValidationEnvoye
-
-                              else
-                                DemandeFinancementEnvoye
-                            ]
-                        )
-                        "Demande de paiement"
-                , navigation =
-                    let
-                        displayLink =
-                            if dossierDeValidationFeatureActive then
-                                Candidacy.isStatusEqualOrAbove candidacy DossierDeValidationEnvoye
-
-                            else
-                                Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye
-                    in
-                    if displayLink then
-                        candidacyLink Tab.PaymentRequest
-
-                    else
-                        Nothing
-                }
-              ]
             , if not juryFeatureActive || candidacy.financeModule == Unireva then
                 [ { content =
                         expandedView
