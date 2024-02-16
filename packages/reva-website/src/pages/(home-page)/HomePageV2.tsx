@@ -52,12 +52,12 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 
 const BackGroundUnions = () => (
   <>
-    <div className="absolute -z-10 w-full -top-56 lg:-top-16">
+    <div className="absolute -z-10 w-full -top-56 lg:-top-[60px]">
       <Image
-        src="/home-page/unions-background/union-background1.svg"
-        width={1440}
-        height={921}
-        style={{ width: "100%", height: "921px" }}
+        src="/home-page/unions-background/union-background4.svg"
+        width={3000}
+        height={1074}
+        style={{ width: "100%" }}
         alt="rayon rose en fond d'écran"
       />
     </div>
@@ -140,7 +140,7 @@ const QuiPeutFaireUneVAE = () => (
         imageAlt="Document avec un stylo plume"
       />
       <BlockCompetence
-        label="demandeurs d'emplois"
+        label="Demandeurs d'emploi"
         imageUrl="/home-page/blocks-competences/image-block-competence-demandeurs-demplois.svg"
         imageAlt="logiciel de recherche d'emploi avec une loupe"
       />
@@ -150,7 +150,7 @@ const QuiPeutFaireUneVAE = () => (
         imageAlt="Mains réunies en signe de solidarité"
       />
       <BlockCompetence
-        label="proches aidants"
+        label="Proches aidants"
         imageUrl="/home-page/blocks-competences/image-block-competence-proches-aidants.svg"
         imageAlt="Une main soutenant un coeur en signe de solidarité"
       />
@@ -176,7 +176,7 @@ const BlockCompetence = ({
   imageAlt: string;
   label: string;
 }) => (
-  <div className="flex lg:flex-col items-center gap-4 lg:gap-0">
+  <div className="flex lg:flex-col items-center gap-4 lg:gap-0 w-full">
     <Image
       src={imageUrl}
       width={88}
@@ -193,15 +193,15 @@ const BlockCompetence = ({
 const VousAvezBesoinDePlusDaide = () => (
   <section
     id="vous-avez-besoin-de-plus-daide"
-    className="w-full pb-14 lg:pb-36 lg:mb-0 mx-auto flex flex-col sm:flex-row gap-10 fr-container"
+    className="w-full pb-14 lg:pb-36 lg:mb-0 flex flex-col sm:flex-row justify-between gap-10 fr-container"
   >
-    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0">
+    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 w-[368px]">
       <h3 className="text-2xl lg:text-[28px] leading-9 text-center lg:text-justify my-0">
         Vous avez besoin de plus d'aide pour vous orienter ?
       </h3>
       <ArrowRight className="text-right self-center rotate-90 lg:rotate-0 lg:self-end" />
     </div>
-    <div className="grid grid-cols-2 lg:flex flex-col lg:items-center lg:flex-row lg:justify-end gap-y-6 lg:gap-6">
+    <div className="grid grid-cols-2 lg:flex flex-col lg:items-center lg:flex-row lg:justify-end gap-y-6 lg:gap-6 w-full">
       <PolygonService
         imageAlt="Bâtiment public"
         imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.svg"
@@ -270,7 +270,7 @@ const AccompagnementDemarche = () => (
       depuis le diagnostic de vos compétences en début de parcours jusqu'au
       bilan après le passage devant le jury.
     </p>
-    <div className="flex flex-col lg:flex-row gap-6 pt-8">
+    <div className="flex flex-col lg:flex-row gap-6 pt-8 w-full items-center lg:items-start">
       <AapStepBlock
         title="Diagnostic de compétences"
         description="Identification des compétences issues de vos expériences en fonction de votre projet."
@@ -285,12 +285,12 @@ const AccompagnementDemarche = () => (
       />
       <AapStepBlock
         title="Accompagnement"
-        description="Suivi régulier pour vous aider à rédiger votre dossier de validation, puis vous préparer à le présenter devant le jury."
+        description="Suivi régulier pour vous aider à rédiger votre dossier de validation, puis pour vous préparer à le présenter devant le jury."
         imageUrl="/home-page/aap-step-characters/aap-step-character-accompagnement.svg"
         imageAlt="Deux personnes qui discutent"
       />
     </div>
-    <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-14 lg:h-[132px]">
+    <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-0 lg:h-[132px]">
       <Image
         src="/home-page/image-home-character-young-man-glasses.svg"
         width={181}
@@ -428,7 +428,7 @@ const Articles = () => {
           />
         ))}
       </div>
-      <div className="text-center">
+      <div className="text-center text-xl">
         Retrouvez tous nos articles sur{" "}
         <Link href="/savoir-plus" className="text-dsfrBlue-franceSun">
           l'espace d'informations

@@ -44,7 +44,7 @@ export const CertificateAutocomplete = ({
       }
       onOptionSelection={onOptionSelection}
       onSubmit={onSubmit}
-      placeholder="Recherchez un diplôme ..."
+      placeholder="Ex : bac, cap, master, titre professionnel..."
     />
   );
 };
