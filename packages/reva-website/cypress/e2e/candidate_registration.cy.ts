@@ -6,7 +6,7 @@ describe("candidate registration", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_website_v2.json"
+        "active_features_empty.json"
       );
     });
   });
