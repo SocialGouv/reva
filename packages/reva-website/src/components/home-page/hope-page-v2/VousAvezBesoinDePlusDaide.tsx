@@ -50,14 +50,14 @@ const VousAvezBesoinDePlusDaide = () => (
     id="vous-avez-besoin-de-plus-daide"
     className="w-full pb-14 lg:pb-36 lg:mb-0 flex flex-col sm:flex-row justify-between gap-10 fr-container"
   >
-    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 lg:w-[400px]">
-      <h3 className="text-2xl lg:text-[28px] leading-9 text-center lg:text-justify my-0">
+    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 lg:w-[368px]">
+      <h3 className="text-2xl lg:text-[28px] leading-9 text-center lg:text-start my-0">
         Vous avez besoin de plus d'aide pour vous orienter ?
       </h3>
       <ArrowRight className="text-right self-center rotate-90 lg:rotate-0 lg:self-end" />
     </div>
     <div className="flex flex-col lg:flex-row gap-y-6 lg:gap-6 w-full lg:w-auto">
-      <div className="flex w-full">
+      <div className="flex w-full lg:gap-6">
         <PolygonService
           imageAlt="Bâtiment public"
           imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.svg"
