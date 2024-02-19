@@ -49,7 +49,7 @@ const HomeContainer = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const FaitesValiderVosCompetencesParUnDiplome = () => {
+const FaitesValiderVosCompetencesParUnDiplome = () => {
   const router = useRouter();
   return (
     <section
