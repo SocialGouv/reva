@@ -65,15 +65,16 @@ const schema = z
       "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
       "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
       "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+      "FAILURE",
+      "CANDIDATE_EXCUSED",
+      "CANDIDATE_ABSENT",
     ]),
-    isResultProvisional: z.enum(["true", "false"]),
+    isResultProvisional: z.enum(["true", "false"]).nullable(),
     informationOfResult: z.string().optional(),
   })
-  .or(
-    z.object({
-      result: z.enum(["FAILURE", "CANDIDATE_EXCUSED", "CANDIDATE_ABSENT"]),
-      informationOfResult: z.string().optional(),
-    }),
+  .refine(
+    ({ result, isResultProvisional }) =>
+      !(isResultProvisionalEnabled(result) && isResultProvisional == null),
   );
 
 type ResultatFormData = z.infer<typeof schema>;
