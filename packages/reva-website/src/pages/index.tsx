@@ -1,8 +1,8 @@
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useEffect, useState } from "react";
 
-import HomePageV1 from "./(home-page)/HomePageV1";
-import HomePageV2 from "./(home-page)/HomePageV2";
+import HomePageV1 from "./(home-page)/(home-page-v1)/HomePageV1";
+import HomePageV2 from "./(home-page)/(hope-page-v2)/HomePageV2";
 
 const HomePage = () => {
   const [isHomePageV2Active, setIsHomePageV2Active] = useState(false);
