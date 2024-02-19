@@ -19,10 +19,10 @@ const CommentFinancerVotreParcours = () => (
     id="comment-financer-votre-parcours"
     className="w-full bg-[#1B1B35] text-white py-14 lg:py-[88px]"
   >
-    <div className="flex justify-center items-center w-full gap-20 fr-container">
+    <div className="flex flex-col lg:flex-row justify-center items-center w-full lg:gap-20 fr-container">
       <div className="py-6 flex flex-col gap-14">
         <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
-        <p className="my-0 text-justify text-lg">
+        <p className="my-0 text-lg">
           France VAE prend en charge l'<b>ensemble des frais de parcours</b>*
           pour les candidats passant par la plateforme{" "}
           <Link href="https://vae.gouv.fr/" target="_blank">
@@ -50,6 +50,10 @@ const CommentFinancerVotreParcours = () => (
           />
         </div>
       </div>
+      <p className="block lg:hidden my-0 text-lg">
+        *Les frais d'accompagnement, administratifs, de jury et les actions de
+        formations complémentaires de courte durée
+      </p>
     </div>
   </section>
 );
