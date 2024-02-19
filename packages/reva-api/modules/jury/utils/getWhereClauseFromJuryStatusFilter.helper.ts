@@ -14,6 +14,9 @@ export const getWhereClauseFromJuryStatusFilter = (
     },
   };
   switch (statusFilter) {
+    case "ALL":
+      // Default
+      break;
     case "SCHEDULED":
       whereClause = {
         ...whereClause,

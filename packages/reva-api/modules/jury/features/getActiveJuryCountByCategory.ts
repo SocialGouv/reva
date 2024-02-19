@@ -19,7 +19,7 @@ export const getActiveJuryCountByCategory = async ({
   searchFilter?: string;
 }) => {
   const JuryCountByCategory: Record<JuryStatusFilter, number> = {
-    // ALL: 0,
+    ALL: 0,
     SCHEDULED: 0,
     PASSED: 0,
   };

@@ -21,6 +21,7 @@ type CandidacyStatusFilter
     | DossierFaisabiliteNonRecevableHorsAbandon
     | DossierDeValidationEnvoyeHorsAbandon
     | DossierDeValidationSignaleHorsAbandon
+    | JuryHorsAbandon
     | JuryProgrammeHorsAbandon
     | JuryPasseHorsAbandon
     | DemandeFinancementEnvoyeHorsAbandon
@@ -31,7 +32,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DossierDeValidationEnvoyeHorsAbandon, DossierDeValidationSignaleHorsAbandon, JuryProgrammeHorsAbandon, JuryPasseHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DossierDeValidationEnvoyeHorsAbandon, DossierDeValidationSignaleHorsAbandon, JuryHorsAbandon, JuryProgrammeHorsAbandon, JuryPasseHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -78,6 +79,9 @@ decoder =
 
                     "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" ->
                         Decode.succeed DossierDeValidationSignaleHorsAbandon
+
+                    "JURY_HORS_ABANDON" ->
+                        Decode.succeed JuryHorsAbandon
 
                     "JURY_PROGRAMME_HORS_ABANDON" ->
                         Decode.succeed JuryProgrammeHorsAbandon
@@ -145,6 +149,9 @@ toString enum____ =
 
         DossierDeValidationSignaleHorsAbandon ->
             "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON"
+
+        JuryHorsAbandon ->
+            "JURY_HORS_ABANDON"
 
         JuryProgrammeHorsAbandon ->
             "JURY_PROGRAMME_HORS_ABANDON"
@@ -217,6 +224,9 @@ fromString enumString____ =
 
         "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" ->
             Just DossierDeValidationSignaleHorsAbandon
+
+        "JURY_HORS_ABANDON" ->
+            Just JuryHorsAbandon
 
         "JURY_PROGRAMME_HORS_ABANDON" ->
             Just JuryProgrammeHorsAbandon

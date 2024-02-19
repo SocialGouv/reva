@@ -8,13 +8,14 @@ import Json.Decode as Decode exposing (Decoder)
 
 
 type JuryCategoryFilter
-    = Scheduled
+    = All
+    | Scheduled
     | Passed
 
 
 list : List JuryCategoryFilter
 list =
-    [ Scheduled, Passed ]
+    [ All, Scheduled, Passed ]
 
 
 decoder : Decoder JuryCategoryFilter
@@ -23,6 +24,9 @@ decoder =
         |> Decode.andThen
             (\string ->
                 case string of
+                    "ALL" ->
+                        Decode.succeed All
+
                     "SCHEDULED" ->
                         Decode.succeed Scheduled
 
@@ -39,6 +43,9 @@ decoder =
 toString : JuryCategoryFilter -> String
 toString enum____ =
     case enum____ of
+        All ->
+            "ALL"
+
         Scheduled ->
             "SCHEDULED"
 
@@ -60,6 +67,9 @@ This can be useful for generating Strings to use for <select> menus to check whi
 fromString : String -> Maybe JuryCategoryFilter
 fromString enumString____ =
     case enumString____ of
+        "ALL" ->
+            Just All
+
         "SCHEDULED" ->
             Just Scheduled
 

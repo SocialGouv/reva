@@ -64,6 +64,9 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon ->
                     candidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
 
+                CandidacyStatusFilter.JuryHorsAbandon ->
+                    candidacyCountByStatus.juryProgrammeHorsAbandon
+
                 CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
                     candidacyCountByStatus.juryProgrammeHorsAbandon
 
@@ -99,41 +102,56 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon
             , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
-                ++ (if List.member "JURY" context.activeFeatures then
-                        [ CandidacyStatusFilter.JuryProgrammeHorsAbandon
-                        , CandidacyStatusFilter.JuryPasseHorsAbandon
-                        ]
-
-                    else
-                        []
-                   )
 
         viewFilter : CandidacyStatusFilter -> Html msg
         viewFilter status =
             link status (candidacyStatusFilterToReadableString status)
+
+        menuContent : List (Html msg)
+        menuContent =
+            List.concat
+                [ [ viewFilter CandidacyStatusFilter.ActiveHorsAbandon
+                  , li
+                        []
+                        [ ul
+                            [ class "ml-3 font-normal" ]
+                          <|
+                            List.map viewFilter statuses
+                        ]
+                  ]
+                , if List.member "JURY" context.activeFeatures then
+                    [ viewFilter CandidacyStatusFilter.JuryHorsAbandon
+                    , li
+                        []
+                        [ ul
+                            [ class "ml-3 font-normal" ]
+                          <|
+                            List.map viewFilter
+                                [ CandidacyStatusFilter.JuryProgrammeHorsAbandon
+                                , CandidacyStatusFilter.JuryPasseHorsAbandon
+                                ]
+                        ]
+                    ]
+
+                  else
+                    []
+                , [ viewFilter CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon
+                  , viewFilter CandidacyStatusFilter.Abandon
+                  , viewFilter CandidacyStatusFilter.Reorientee
+                  , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
+                  , if Api.Token.isAdmin context.token then
+                        viewFilter CandidacyStatusFilter.ProjetHorsAbandon
+
+                    else
+                        text ""
+                  ]
+                ]
     in
     [ ul
         [ class "font-semibold text-gray-900 pb-2"
         , class "fr-sidemenu__list"
         ]
-        [ viewFilter CandidacyStatusFilter.ActiveHorsAbandon
-        , li
-            []
-            [ ul
-                [ class "ml-3 font-normal" ]
-              <|
-                List.map viewFilter statuses
-            ]
-        , viewFilter CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon
-        , viewFilter CandidacyStatusFilter.Abandon
-        , viewFilter CandidacyStatusFilter.Reorientee
-        , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
-        , if Api.Token.isAdmin context.token then
-            viewFilter CandidacyStatusFilter.ProjetHorsAbandon
-
-          else
-            text ""
-        ]
+        menuContent
     ]
 
 

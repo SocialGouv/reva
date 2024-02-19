@@ -1,1 +1,1 @@
-export type JuryStatusFilter = "SCHEDULED" | "PASSED";
+export type JuryStatusFilter = "ALL" | "SCHEDULED" | "PASSED";

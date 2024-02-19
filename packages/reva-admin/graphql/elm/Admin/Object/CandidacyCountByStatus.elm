@@ -84,6 +84,11 @@ dossierDeValidationSignaleHorsAbandon =
     Object.selectionForField "Int" "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON" [] Decode.int
 
 
+juryHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
+juryHorsAbandon =
+    Object.selectionForField "Int" "JURY_HORS_ABANDON" [] Decode.int
+
+
 juryProgrammeHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
 juryProgrammeHorsAbandon =
     Object.selectionForField "Int" "JURY_PROGRAMME_HORS_ABANDON" [] Decode.int
