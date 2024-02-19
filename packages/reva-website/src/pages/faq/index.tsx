@@ -1,4 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { PICTOGRAMS } from "@/components/pictograms";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { GetSectionFaqsQuery } from "@/graphql/generated/graphql";
@@ -12,6 +13,7 @@ const sectionFaqs = graphql(`
         id
         attributes {
           titre
+          pictogramme
           sous_section_faqs(sort: "ordre") {
             data {
               id
@@ -37,23 +39,32 @@ const sectionFaqs = graphql(`
 
 const FaqPage = ({ sections }: { sections: GetSectionFaqsQuery }) => (
   <MainLayout>
-    <div className="flex flex-col w-full gap-8 fr-container p-32 pt-16">
-      <h1 className="text-4xl font-bold  bg-white mt-12 mb-6 self-center">
+    <div className="flex flex-col w-full gap-8 fr-container p-32 pt-0 md:pt-16">
+      <h1 className="text-4xl font-bold  bg-white mt-12 mb-0 md:mb-6 self-center">
         Questions fréquentes
       </h1>
-      <div className="flex flex-wrap justify-start md:justify-center gap-16">
+      <div className="flex flex-wrap justify-start md:justify-center gap-6 md:gap-16">
         {sections.sectionFaqs?.data?.map((s) => (
           <Tile
             key={s.id}
             enlargeLink
+            horizontal
             linkProps={{
               href: `#section-${s.id}`,
             }}
-            title={s.attributes?.titre}
+            className="max-h-[100px]"
+            title={
+              <span className="flex items-center gap-8 mt-3.5">
+                {s.attributes?.pictogramme && (
+                  <span>{PICTOGRAMS[s.attributes?.pictogramme]}</span>
+                )}
+                <span>{s.attributes?.titre}</span>
+              </span>
+            }
           />
         ))}
       </div>
-      <div className="flex flex-col py-4 mt-12">
+      <div className="flex flex-col py-4 mt-0 md:mt-12">
         {sections.sectionFaqs?.data?.map((s) => (
           <div
             key={s.id}
