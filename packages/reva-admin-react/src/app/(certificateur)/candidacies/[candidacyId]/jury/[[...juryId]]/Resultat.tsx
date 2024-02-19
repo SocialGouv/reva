@@ -58,19 +58,23 @@ const juryResultNotice: {
   CANDIDATE_ABSENT: "new",
 };
 
-const schema = z.object({
-  result: z.enum([
-    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "FAILURE",
-    "CANDIDATE_EXCUSED",
-    "CANDIDATE_ABSENT",
-  ]),
-  isResultProvisional: z.enum(["true", "false"]),
-  informationOfResult: z.string().optional(),
-});
+const schema = z
+  .object({
+    result: z.enum([
+      "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+      "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+      "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+      "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    ]),
+    isResultProvisional: z.enum(["true", "false"]),
+    informationOfResult: z.string().optional(),
+  })
+  .or(
+    z.object({
+      result: z.enum(["FAILURE", "CANDIDATE_EXCUSED", "CANDIDATE_ABSENT"]),
+      informationOfResult: z.string().optional(),
+    }),
+  );
 
 type ResultatFormData = z.infer<typeof schema>;
 
