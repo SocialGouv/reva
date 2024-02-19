@@ -6,7 +6,7 @@ describe("candidate registration", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_website_v2.json"
+        "active_features_empty.json"
       );
     });
   });
@@ -216,7 +216,7 @@ it("should show another certificate when i search for another one within the pag
     stubQuery(
       req,
       "activeFeaturesForConnectedUser",
-      "active_features_website_v2.json"
+      "active_features_empty.json"
     );
   });
 

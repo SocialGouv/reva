@@ -6,7 +6,7 @@ describe("candidate certificate search", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_website_v2.json"
+        "active_features_empty.json"
       );
     });
   });
@@ -86,7 +86,7 @@ describe("candidate certificate search", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/?certificationId=&searchText=chaudronnier"
+      "http://localhost:3002/inscription-candidat/?searchText=chaudronnier"
     );
   });
 });

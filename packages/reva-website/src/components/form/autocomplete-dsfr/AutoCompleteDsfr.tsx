@@ -136,18 +136,16 @@ export const AutocompleteDsfr = ({
             {options.map((option) => {
               const isSelected = selectedOption?.value === option.value;
               return (
-                <li key={option.value}>
-                  <option
-                    value={option.value}
-                    onClick={() => handleOptionSelection(option)}
-                    className={`whitespace-normal cursor-pointer select-none py-2 ${
-                      isSelected ? "bg-dsfrGray-contrast" : ""
-                    }`}
-                    onMouseOver={() => setSelectedOption(option)}
-                  >
-                    {option.label}
-                  </option>
-                </li>
+                <div
+                  key={option.value}
+                  onClick={() => handleOptionSelection(option)}
+                  className={`whitespace-normal cursor-pointer select-none py-2 ${
+                    isSelected ? "bg-dsfrGray-contrast" : ""
+                  }`}
+                  onMouseOver={() => setSelectedOption(option)}
+                >
+                  {option.label}
+                </div>
               );
             })}
           </div>
