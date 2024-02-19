@@ -57,7 +57,7 @@ export const Header = (props: { className?: string }) => {
                 linkProps: {
                   href: "https://reva.crisp.help/fr/category/candidat-rhr5rx/",
                 },
-                isActive: !!asPath.match(/\/savoir-plus/)?.length,
+                isActive: false,
                 text: "Questions fréquentes",
               },
             ]),
