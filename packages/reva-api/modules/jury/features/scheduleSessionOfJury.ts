@@ -60,10 +60,10 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   const dateOfSession = new Date(date);
 
-  const tommorow = startOfDay(new Date());
-  const nextTwoYears = endOfDay(add(tommorow, { years: 2 }));
+  const today = startOfDay(new Date());
+  const nextTwoYears = endOfDay(add(today, { years: 2 }));
   if (
-    !(isAfter(dateOfSession, tommorow) && isBefore(dateOfSession, nextTwoYears))
+    !(isAfter(dateOfSession, today) && isBefore(dateOfSession, nextTwoYears))
   ) {
     throw new Error(
       "La date du jury doit être supérieur à aujourd'hui et au maximum dans les 2 prochaiens années",

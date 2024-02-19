@@ -153,10 +153,7 @@ export const DateDeJury = (): JSX.Element => {
               nativeInputProps={{
                 type: "date",
                 ...register("date"),
-                min: format(
-                  startOfDay(add(new Date(), { days: 1 })),
-                  "yyyy-MM-dd",
-                ),
+                min: format(startOfDay(new Date()), "yyyy-MM-dd"),
                 max: format(
                   endOfDay(add(new Date(), { years: 2 })),
                   "yyyy-MM-dd",
