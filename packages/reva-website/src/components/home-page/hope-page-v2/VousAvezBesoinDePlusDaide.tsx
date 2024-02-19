@@ -50,7 +50,7 @@ const VousAvezBesoinDePlusDaide = () => (
     id="vous-avez-besoin-de-plus-daide"
     className="w-full pb-14 lg:pb-36 lg:mb-0 flex flex-col sm:flex-row justify-between gap-10 fr-container"
   >
-    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 w-[400px]">
+    <div className="flex flex-col py-4 gap-6 lg:gap:0 mb-6 lg:mb-0 lg:w-[400px]">
       <h3 className="text-2xl lg:text-[28px] leading-9 text-center lg:text-justify my-0">
         Vous avez besoin de plus d'aide pour vous orienter ?
       </h3>

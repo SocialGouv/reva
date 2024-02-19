@@ -3,13 +3,13 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import { ReactNode } from "react";
 
-import AccompagnementDemarche from "./_components/AccompagnementDemarche";
-import Articles from "./_components/Articles";
-import BackGroundUnions from "./_components/BackGroundUnions";
-import CommentFinancerVotreParcours from "./_components/CommentFinancerVotreParcours";
-import FaitesValiderVosCompetencesParUnDiplome from "./_components/FaitesValiderVosCompetencesParUnDiplome";
-import QuiPeutFaireUneVAE from "./_components/QuiPeutFaireUneVAE";
-import VousAvezBesoinDePlusDaide from "./_components/VousAvezBesoinDePlusDaide";
+import AccompagnementDemarche from "./AccompagnementDemarche";
+import Articles from "./Articles";
+import BackGroundUnions from "./BackGroundUnions";
+import CommentFinancerVotreParcours from "./CommentFinancerVotreParcours";
+import FaitesValiderVosCompetencesParUnDiplome from "./FaitesValiderVosCompetencesParUnDiplome";
+import QuiPeutFaireUneVAE from "./QuiPeutFaireUneVAE";
+import VousAvezBesoinDePlusDaide from "./VousAvezBesoinDePlusDaide";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
   <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">

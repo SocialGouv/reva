@@ -29,21 +29,19 @@ export const Header = (props: { className?: string }) => {
       text: "Professionnels",
     },
     {
+      isActive: !!asPath.match(/\/savoir-plus/)?.length,
+      linkProps: {
+        href: "/savoir-plus",
+      },
+      text: "Espace d'informations",
+    },
+
+    {
       isActive:
-        !!asPath.match(/\/savoir-plus/)?.length ||
         !!asPath.match(/\/nous-contacter/)?.length ||
         !!asPath.match(/\/faq/)?.length,
       text: "Besoin d'aide ?",
       menuLinks: [
-        ...[
-          {
-            linkProps: {
-              href: "/savoir-plus",
-            },
-            isActive: !!asPath.match(/\/savoir-plus/)?.length,
-            text: "En savoir plus sur la VAE",
-          },
-        ],
         ...(isFeatureActive("FAQ_SITE_INSTITUTIONNEL")
           ? [
               {
@@ -54,7 +52,15 @@ export const Header = (props: { className?: string }) => {
                 text: "Questions fréquentes",
               },
             ]
-          : []),
+          : [
+              {
+                linkProps: {
+                  href: "https://reva.crisp.help/fr/category/candidat-rhr5rx/",
+                },
+                isActive: !!asPath.match(/\/savoir-plus/)?.length,
+                text: "Questions fréquentes",
+              },
+            ]),
         ...[
           {
             linkProps: {
