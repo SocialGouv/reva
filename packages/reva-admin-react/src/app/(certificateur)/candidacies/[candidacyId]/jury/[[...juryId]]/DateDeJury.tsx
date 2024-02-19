@@ -148,7 +148,6 @@ export const DateDeJury = (): JSX.Element => {
           <h5 className="text-xl font-bold mb-4">Date de jury</h5>
           <div className="flex flex-row items-start gap-4">
             <Input
-              key={Date.now()}
               label="Date"
               nativeInputProps={{
                 type: "date",
