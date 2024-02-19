@@ -2,6 +2,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import {
   OrganismSummary,
+  Info,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
@@ -44,6 +45,22 @@ const getMaisonMereAAP = graphql(`
         firstname
         lastname
         email
+      }
+      organisms {
+        id
+        label
+        informationsCommerciales {
+          nom
+        }
+        isActive
+        fermePourAbsenceOuConges
+        managedDegrees {
+          id
+          degree {
+            id
+            longLabel
+          }
+        }
       }
     }
   }
@@ -108,6 +125,30 @@ const MaisonMereAAPPage = () => {
             (c) => c.ccn.label,
           )}
         />
+        <div>
+          <h2 className="text-xl font-bold my-4">Agences</h2>
+          <ul>
+            {maisonMereAAP.organisms.map((o) => (
+              <li key={o.id} className="ml-4">
+                <h3 className="text-lg font-bold">
+                  {o.informationsCommerciales?.nom || o.label}
+                </h3>
+                <Info title="Fermée pour absence ou congées:">
+                  <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
+                </Info>
+                <Info title="Niveaux de diplômes couverts:">
+                  <ul>
+                    {o.managedDegrees.map((d) => (
+                      <li key={d.id} className="list-disc list-inside">
+                        {d.degree.longLabel}
+                      </li>
+                    ))}
+                  </ul>
+                </Info>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     )
   );

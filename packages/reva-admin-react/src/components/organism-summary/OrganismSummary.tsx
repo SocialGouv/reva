@@ -146,7 +146,13 @@ export const OrganismSummary = ({
   </div>
 );
 
-const Info = ({ title, children }: { title: string; children: ReactNode }) => (
+export const Info = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) => (
   <dl className="m-2">
     <dt className="font-normal text-sm text-gray-600 mb-1">{title}</dt>
     <dd>{children}</dd>
