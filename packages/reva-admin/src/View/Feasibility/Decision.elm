@@ -1,7 +1,7 @@
 module View.Feasibility.Decision exposing (view)
 
-import Accessibility exposing (div, p, text)
-import Data.Feasibility exposing (Decision(..))
+import Accessibility exposing (div, h3, p, text)
+import Data.Feasibility exposing (Decision(..), Feasibility)
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Time exposing (Posix)
@@ -36,32 +36,33 @@ view feasibility =
 
 viewDecision : String -> String -> Maybe Posix -> String -> Html msg
 viewDecision decision datePrefix maybeDate reason =
+    let
+        subTitle s =
+            h3
+                [ class "font-bold text-xl text-gray-900 mt-4 mb-1" ]
+                [ text s ]
+    in
     div
-        [ class "flex flex-col mb-2 gap-y-8" ]
-        [ View.summaryBlock "Décision prise concernant ce dossier"
-            [ p
-                [ class "font-semibold text-lg text-gray-900 mb-4" ]
-                [ text decision ]
-            , case maybeDate of
-                Just date ->
-                    p
-                        [ class "mb-0" ]
-                        [ text <|
-                            String.concat
-                                [ datePrefix
-                                , " "
-                                , View.Date.toSmallFormat date
-                                ]
-                        ]
+        [ class "bg-neutral-100 text-lg px-8 pt-2 pb-8 w-full" ]
+        [ subTitle decision
+        , case maybeDate of
+            Just date ->
+                p
+                    [ class "mb-0" ]
+                    [ text <|
+                        String.concat
+                            [ datePrefix
+                            , " "
+                            , View.Date.toSmallFormat date
+                            ]
+                    ]
 
-                Nothing ->
-                    text ""
-            ]
-        , View.summaryBlock "Motifs de la décision"
-            [ if reason == "" then
-                p [ class "mb-0 italic" ] [ text "Motifs non précisés" ]
+            Nothing ->
+                text ""
+        , subTitle "Motifs de la décision"
+        , if reason == "" then
+            p [ class "mb-0 italic" ] [ text "Motifs non précisés" ]
 
-              else
-                p [ class "mb-0" ] [ text reason ]
-            ]
+          else
+            p [ class "mb-0" ] [ text reason ]
         ]

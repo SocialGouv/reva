@@ -411,10 +411,15 @@ viewFeasibilitySent context candidacy feasibility =
 
                 Nothing ->
                     ( "", "" )
+
+        subTitle s =
+            h2
+                [ class "text-2xl mb-3" ]
+                [ text s ]
     in
     [ h1 [] [ text "Dossier de faisabilité" ]
     , div
-        [ class "flex flex-col gap-y-8 mb-6" ]
+        [ class "flex flex-col gap-y-8 mb-10" ]
         [ View.Candidate.viewWithCertification
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
@@ -425,7 +430,20 @@ viewFeasibilitySent context candidacy feasibility =
         , feasibility.certificationAuthority
             |> Maybe.map View.Candidate.viewCertificationAuthority
             |> Maybe.withDefault (text "")
-        , View.Feasibility.Decision.view feasibility
+        , div []
+            [ subTitle "Décision prise concernant ce dossier"
+            , View.Feasibility.Decision.view feasibility
+            ]
+        , div []
+            [ if List.length feasibility.history == 1 then
+                subTitle "Décision précédente"
+
+              else
+                subTitle "Décisions précédentes"
+            , div
+                [ class "flex flex-col gap-y-3" ]
+                (List.map View.Feasibility.Decision.view feasibility.history)
+            ]
         ]
     ]
 
