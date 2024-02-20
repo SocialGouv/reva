@@ -1,0 +1,3 @@
+export type CandidacyEventType =
+  | "DOSSIER_DE_VALIDATION_SENT"
+  | "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED";

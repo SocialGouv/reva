@@ -93,10 +93,12 @@ const unsafeResolvers = {
         dossierDeValidationId: string;
         decisionComment: string;
       },
+      context: GraphqlContext,
     ) =>
       signalDossierDeValidationProblem({
         dossierDeValidationId,
         decisionComment,
+        userKeycloakId: context.auth.userInfo?.sub,
       }),
   },
 };

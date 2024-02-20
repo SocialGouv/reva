@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
 import { getOrganismByCandidacyId } from "../../candidacy/features/getOrganismByCandidacyId";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
@@ -8,9 +9,11 @@ import { getDossierDeValidationById } from "./getDossierDeValidationById";
 export const signalDossierDeValidationProblem = async ({
   dossierDeValidationId,
   decisionComment,
+  userKeycloakId,
 }: {
   dossierDeValidationId: string;
   decisionComment: string;
+  userKeycloakId?: string;
 }) => {
   const dossierDeValidation = await getDossierDeValidationById({
     dossierDeValidationId,
@@ -69,6 +72,12 @@ export const signalDossierDeValidationProblem = async ({
       decisionComment,
     });
   }
+
+  await logCandidacyAuditEvent({
+    candidacyId: dossierDeValidation.candidacyId,
+    userKeycloakId,
+    eventType: "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED",
+  });
 
   return updatedDossierDeValidation;
 };

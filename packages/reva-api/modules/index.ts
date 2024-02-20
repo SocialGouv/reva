@@ -35,6 +35,7 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
+import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
 
 // Resolvers
 
@@ -57,6 +58,7 @@ const resolvers = mergeResolvers([
   featureFlippingResolvers,
   dossierDeValidationResolvers,
   juryResolvers,
+  candidacyLogResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

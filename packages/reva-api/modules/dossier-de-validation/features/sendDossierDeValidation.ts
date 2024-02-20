@@ -8,15 +8,18 @@ import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertific
 import { FileService, UploadedFile } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const sendDossierDeValidation = async ({
   candidacyId,
   dossierDeValidationFile,
   dossierDeValidationOtherFiles,
+  userKeycloakId,
 }: {
   candidacyId: string;
   dossierDeValidationFile: UploadedFile;
   dossierDeValidationOtherFiles: UploadedFile[];
+  userKeycloakId?: string;
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -153,6 +156,12 @@ export const sendDossierDeValidation = async ({
   if (candidacy?.candidate?.email) {
     sendDVSentToCandidateEmail({ email: candidacy?.candidate?.email });
   }
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    userKeycloakId,
+    eventType: "DOSSIER_DE_VALIDATION_SENT",
+  });
 
   return dossierDeValidation;
 };

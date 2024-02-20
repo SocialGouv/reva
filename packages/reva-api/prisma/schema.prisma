@@ -107,6 +107,7 @@ model Candidacy {
   dossierDeValidation       DossierDeValidation[]
   paymentRequestUnifvae     PaymentRequestUnifvae?
   Jury                      Jury[]
+  CandidacyLog              CandidacyLog[]
 
   @@map("candidacy")
 }
@@ -295,6 +296,7 @@ model Account {
   maisonMereAAP                      MaisonMereAAP[]
   featureBetaTest                    FeatureBetaTest[]
   certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
+  CandidacyLog                       CandidacyLog[]
 
   @@map("account")
 }
@@ -1271,4 +1273,17 @@ model FeatureBetaTest {
   featureKey   String  @map("feature_key")
 
   @@map("feature_beta_test")
+}
+
+model CandidacyLog {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userKeycloakId String    @map("user_keycloak_id") @db.Uuid
+  candidacyId    String    @map("candidacy_id") @db.Uuid
+  eventType      String    @map("event_type")
+  userAccount    Account   @relation(fields: [userKeycloakId], references: [keycloakId])
+  candidacy      Candidacy @relation(fields: [candidacyId], references: [id])
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("candidacy_log")
 }

@@ -184,6 +184,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           candidacyId: request.body.candidacyId.value,
           dossierDeValidationFile,
           dossierDeValidationOtherFiles,
+          userKeycloakId: request.auth?.userInfo?.sub,
         });
       } catch (e) {
         logger.error(e);

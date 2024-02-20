@@ -41,6 +41,10 @@ type CandidacyDropOut
     = CandidacyDropOut
 
 
+type CandidacyLog
+    = CandidacyLog
+
+
 type CandidacyStatus
     = CandidacyStatus
 

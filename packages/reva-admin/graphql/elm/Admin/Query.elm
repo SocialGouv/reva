@@ -213,6 +213,18 @@ candidacy_getCandidacyCcns fillInOptionals____ object____ =
     Object.selectionForCompositeField "candidacy_getCandidacyCcns" optionalArgs____ object____ Basics.identity
 
 
+type alias CandidacyLogGetCandidacyLogsRequiredArguments =
+    { candidacyId : Data.Scalar.Id }
+
+
+candidacyLog_getCandidacyLogs :
+    CandidacyLogGetCandidacyLogsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CandidacyLog
+    -> SelectionSet (List decodesTo) RootQuery
+candidacyLog_getCandidacyLogs requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacyLog_getCandidacyLogs" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.list)
+
+
 candidate_getCandidateWithCandidacy :
     SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet decodesTo RootQuery

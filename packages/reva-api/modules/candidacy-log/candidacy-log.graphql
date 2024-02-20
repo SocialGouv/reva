@@ -1,0 +1,10 @@
+type CandidacyLog {
+  id: ID!
+  userAccount: Account!
+  message: String!
+  createdAt: Timestamp!
+}
+
+type Query {
+  candidacyLog_getCandidacyLogs(candidacyId: ID!): [CandidacyLog!]!
+}
