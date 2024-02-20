@@ -22,15 +22,13 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait("@activeFeaturesForConnectedUser");
-
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
     });
     cy.wait("@searchCertificationsQuery");
 
     cy.get('[data-testid="autocomplete-options"]')
-      .children("li")
+      .children("div")
       .eq(0)
       .should("have.text", "BTS Chaudronnier");
   });
@@ -46,14 +44,15 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(1000);
-
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
     });
     cy.wait("@searchCertificationsQuery");
 
-    cy.get('[data-testid="autocomplete-options"]').children("li").eq(0).click();
+    cy.get('[data-testid="autocomplete-options"]')
+      .children("div")
+      .eq(0)
+      .click();
 
     cy.url().should(
       "eq",
@@ -72,8 +71,6 @@ describe("candidate certificate search", () => {
 
     cy.visit("http://localhost:3002");
 
-    cy.wait(1000);
-
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
     });
@@ -86,7 +83,7 @@ describe("candidate certificate search", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/?searchText=chaudronnier"
+      "http://localhost:3002/inscription-candidat/?certificationId=&searchText=chaudronnier"
     );
   });
 });

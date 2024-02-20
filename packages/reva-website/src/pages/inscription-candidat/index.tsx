@@ -8,10 +8,8 @@ import {
   CandidateTypologySelect,
 } from "@/components/candidate-registration/candidate-typology-select/CandidateTypologySelect";
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
-import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FullHeightBlueLayout } from "@/components/layout/full-height-blue-layout/FullHeightBlueLayout";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
@@ -47,14 +45,6 @@ const askForRegistrationMutation = graphql(`
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId, searchText } = router.query;
-  const [isHomePageV2Active, setIsHomePageV2Active] = useState(false);
-  const { isFeatureActive, status } = useFeatureflipping();
-
-  useEffect(() => {
-    if (isFeatureActive("SITE_INSTIT_HOME_PAGE_V2")) {
-      setIsHomePageV2Active(true);
-    }
-  }, [status, isFeatureActive]);
 
   const [candidateTypology, setCandidateTypology] = useState<
     CandidateTypology | undefined
@@ -113,33 +103,24 @@ const OrientationCandidatPage = () => {
           </p>
           <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
             <fieldset className="mb-4">
-              {isHomePageV2Active ? (
-                <CertificateAutocompleteDsfr
-                  defaultLabel={defaultAutocompleteLabel}
-                  onSubmit={({ label, value }) => {
-                    const certificationId = isUUID(value) ? value : null;
-                    push(["trackEvent", "website-diplome", "recherche", label]);
-                    router.push({
-                      pathname: "/inscription-candidat",
-                      query: { certificationId, searchText: label },
-                    });
-                  }}
-                  onOptionSelection={(o) =>
-                    router.push({
-                      pathname: "/inscription-candidat",
-                      query: { certificationId: o.value },
-                    })
-                  }
-                />
-              ) : (
-                <CertificateAutocomplete
-                  onOptionSelection={(o) =>
-                    router.push(
-                      `/inscription-candidat?certificationId=${o.value}`
-                    )
-                  }
-                />
-              )}
+              <CertificateAutocompleteDsfr
+                defaultLabel={defaultAutocompleteLabel}
+                onSubmit={({ label, value }) => {
+                  const certificationId = isUUID(value) ? value : null;
+                  push(["trackEvent", "website-diplome", "recherche", label]);
+                  router.push({
+                    pathname: "/inscription-candidat",
+                    query: { certificationId, searchText: label },
+                  });
+                }}
+                onOptionSelection={(o) =>
+                  router.push({
+                    pathname: "/inscription-candidat",
+                    query: { certificationId: o.value },
+                  })
+                }
+              />
+              )
             </fieldset>
             {certification && (
               <>

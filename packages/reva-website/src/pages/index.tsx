@@ -1,19 +1,43 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import HomePageV1 from "@/components/home-page/home-page-v1/HomePageV1";
-import HomePageV2 from "@/components/home-page/hope-page-v2/HomePageV2";
-import { useEffect, useState } from "react";
+import AccompagnementDemarche from "@/components/home-page/AccompagnementDemarche";
+import Articles from "@/components/home-page/Articles";
+import BackGroundUnions from "@/components/home-page/BackGroundUnions";
+import CommentFinancerVotreParcours from "@/components/home-page/CommentFinancerVotreParcours";
+import FaitesValiderVosCompetencesParUnDiplome from "@/components/home-page/FaitesValiderVosCompetencesParUnDiplome";
+import QuiPeutFaireUneVAE from "@/components/home-page/QuiPeutFaireUneVAE";
+import VousAvezBesoinDePlusDaide from "@/components/home-page/VousAvezBesoinDePlusDaide";
+import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import Head from "next/head";
+import { ReactNode } from "react";
+
+const HomeContainer = ({ children }: { children: ReactNode }) => (
+  <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
+    {children}
+  </div>
+);
 
 const HomePage = () => {
-  const [isHomePageV2Active, setIsHomePageV2Active] = useState(false);
-  const { isFeatureActive, status } = useFeatureflipping();
-
-  useEffect(() => {
-    if (isFeatureActive("SITE_INSTIT_HOME_PAGE_V2")) {
-      setIsHomePageV2Active(true);
-    }
-  }, [status, isFeatureActive]);
-
-  return isHomePageV2Active ? <HomePageV2 /> : <HomePageV1 />;
+  return (
+    <MainLayout className="relative">
+      <Head>
+        <title>France VAE | Bienvenue sur le portail de la VAE</title>
+        <meta
+          name="description"
+          content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L'Expérience."
+        />
+      </Head>
+      <BackGroundUnions />
+      <Notice title="Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement." />
+      <HomeContainer>
+        <FaitesValiderVosCompetencesParUnDiplome />
+        <QuiPeutFaireUneVAE />
+        <VousAvezBesoinDePlusDaide />
+        <AccompagnementDemarche />
+        <CommentFinancerVotreParcours />
+        <Articles />
+      </HomeContainer>
+    </MainLayout>
+  );
 };
 
 export default HomePage;
