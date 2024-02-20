@@ -1,6 +1,13 @@
 import { v4 as uuidV4 } from "uuid";
 
-import { isBefore, isAfter, startOfDay, endOfDay, add } from "date-fns";
+import {
+  isBefore,
+  isAfter,
+  isEqual,
+  startOfDay,
+  endOfDay,
+  add,
+} from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { FileService, UploadedFile } from "../../shared/file";
@@ -59,14 +66,15 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   }
 
   const dateOfSession = new Date(date);
-
   const today = startOfDay(new Date());
   const nextTwoYears = endOfDay(add(today, { years: 2 }));
+
   if (
+    !isEqual(dateOfSession, today) &&
     !(isAfter(dateOfSession, today) && isBefore(dateOfSession, nextTwoYears))
   ) {
     throw new Error(
-      "La date du jury doit être supérieur à aujourd'hui et au maximum dans les 2 prochaiens années",
+      "La date du jury doit être supérieure à aujourd'hui et au maximum dans les 2 prochaines années",
     );
   }
 
