@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect } from "react";
 
 const schema = z.object({
   codeRncp: z.string().min(1, "Ce champ est obligatoire"),
@@ -67,10 +66,6 @@ const UpdateOrReplaceCertificationForm = ({
     resolver: zodResolver(schema),
     defaultValues: certificationToFormData(certification),
   });
-
-  useEffect(() => {
-    certification && reset(certificationToFormData(certification));
-  }, [certification, reset]);
 
   const handleFormSubmit = handleSubmit((data) => onSubmit(data));
 
