@@ -21,6 +21,7 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
           width={200}
           height={200}
           alt="un personnage masculin avec un sweet bleu"
+          priority
         />
       </div>
 
