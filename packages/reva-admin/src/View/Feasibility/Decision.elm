@@ -13,7 +13,10 @@ view : { a | decision : Decision, decisionSentAt : Maybe Posix } -> Html msg
 view feasibility =
     case feasibility.decision of
         Pending ->
-            text ""
+            viewGrayBlock
+                [ p [ class "mt-5 mb-0 italic" ]
+                    [ text "En attente de recevabilité" ]
+                ]
 
         Rejected reason ->
             viewDecision "Non recevable"
@@ -42,8 +45,7 @@ viewDecision decision datePrefix maybeDate reason =
                 [ class "font-bold text-xl text-gray-900 mt-4 mb-1" ]
                 [ text s ]
     in
-    div
-        [ class "bg-neutral-100 text-lg px-8 pt-2 pb-8 w-full" ]
+    viewGrayBlock
         [ subTitle decision
         , case maybeDate of
             Just date ->
@@ -66,3 +68,9 @@ viewDecision decision datePrefix maybeDate reason =
           else
             p [ class "mb-0" ] [ text reason ]
         ]
+
+
+viewGrayBlock : List (Html msg) -> Html msg
+viewGrayBlock =
+    div
+        [ class "bg-neutral-100 text-lg px-8 pt-2 pb-8 w-full" ]
