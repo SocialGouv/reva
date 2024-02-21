@@ -13,8 +13,8 @@ view : { a | decision : Decision, decisionSentAt : Maybe Posix } -> Html msg
 view feasibility =
     case feasibility.decision of
         Pending ->
-            viewGrayBlock
-                [ p [ class "mt-5 mb-0 italic" ]
+            div []
+                [ p [ class "mb-0 italic" ]
                     [ text "En attente de recevabilité" ]
                 ]
 
@@ -42,15 +42,15 @@ viewDecision decision datePrefix maybeDate reason =
     let
         subTitle s =
             h3
-                [ class "font-bold text-xl text-gray-900 mt-4 mb-1" ]
+                [ class "font-bold text-xl text-gray-900 mb-1" ]
                 [ text s ]
     in
-    viewGrayBlock
+    div []
         [ subTitle decision
         , case maybeDate of
             Just date ->
                 p
-                    [ class "mb-0" ]
+                    [ class "mb-4" ]
                     [ text <|
                         String.concat
                             [ datePrefix

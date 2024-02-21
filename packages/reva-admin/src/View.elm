@@ -1,6 +1,6 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, title, warningHint)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, summaryBlockWithItems, title, warningHint)
 
-import Accessibility exposing (a, br, button, h3, h5, nav, p, span)
+import Accessibility exposing (a, br, button, h3, h5, hr, nav, p, span)
 import Accessibility.Aria as Aria
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons
@@ -229,6 +229,13 @@ summaryBlock titleValue content =
                 [ class "text-2xl mb-4" ]
                 [ text titleValue ]
                 :: content
+
+
+summaryBlockWithItems : List (Html msg) -> Html msg
+summaryBlockWithItems items =
+    div
+        [ class "bg-neutral-100 text-lg px-8 pt-6 pb-8 w-full" ]
+        (items |> List.intersperse (hr [ class "h-px p-0 mt-4 mb-6 bg-gray-200 border-0" ] []))
 
 
 noticeInfo : List (Html.Attribute msg) -> List (Html msg) -> Html msg

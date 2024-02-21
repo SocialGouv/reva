@@ -57,9 +57,7 @@ form formData ( candidacy, _ ) =
 
                           else
                             subTitle "mt-2" "Décisions précédentes"
-                        , div
-                            [ class "flex flex-col gap-y-3" ]
-                            (List.map View.Feasibility.Decision.view decisionWithHistory)
+                        , View.summaryBlockWithItems (List.map View.Feasibility.Decision.view decisionWithHistory)
                         ]
 
                 Nothing ->

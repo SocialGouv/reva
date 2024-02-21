@@ -432,7 +432,7 @@ viewFeasibilitySent context candidacy feasibility =
             |> Maybe.withDefault (text "")
         , div []
             [ subTitle "Décision prise concernant ce dossier"
-            , View.Feasibility.Decision.view feasibility
+            , div [ class "bg-neutral-100 text-lg px-8 pt-6 pb-8 w-full" ] [ View.Feasibility.Decision.view feasibility ]
             ]
         , if List.length feasibility.history == 0 then
             text ""
@@ -444,9 +444,7 @@ viewFeasibilitySent context candidacy feasibility =
 
                   else
                     subTitle "Décisions précédentes"
-                , div
-                    [ class "flex flex-col gap-y-3" ]
-                    (List.map View.Feasibility.Decision.view feasibility.history)
+                , View.summaryBlockWithItems (List.map View.Feasibility.Decision.view feasibility.history)
                 ]
         ]
     ]
