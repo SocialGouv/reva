@@ -83,7 +83,7 @@ export const canAccessCandidacy = async ({
   //user is certification authority admin
   if (roles.includes("manage_certification_authority_local_account")) {
     const candidacyFeasibility = await prismaClient.feasibility.findFirst({
-      where: { candidacyId: candidacy.id },
+      where: { candidacyId: candidacy.id, isActive: true },
     });
 
     if (!candidacyFeasibility) {
@@ -99,7 +99,7 @@ export const canAccessCandidacy = async ({
   //user is certification authority local account owner
   if (roles.includes("manage_feasibility")) {
     const candidacyFeasibility = await prismaClient.feasibility.findFirst({
-      where: { candidacyId: candidacy.id },
+      where: { candidacyId: candidacy.id, isActive: true },
     });
 
     if (!candidacyFeasibility) {
