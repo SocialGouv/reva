@@ -79,7 +79,7 @@ const FaqPage = ({ sections }: { sections: GetSectionFaqsQuery }) => (
                     ss.attributes?.titre}
                   <div className="fr-accordions-group mt-4">
                     {ss.attributes?.article_faqs?.data?.map((a) => (
-                      <span key={a.id} id={`article-${s.id}`}>
+                      <span key={a.id} id={`article-${a.id}`}>
                         <Accordion
                           label={
                             <p className="text-blue-900">
