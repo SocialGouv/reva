@@ -13,6 +13,9 @@ export const getFeasibilityHistory = async ({
       decision: "INCOMPLETE",
       NOT: { id: feasibilityId },
     },
+    orderBy: {
+      decisionSentAt: "desc",
+    },
   });
 
   const history = relatedFeasibilities.map((f) => ({
