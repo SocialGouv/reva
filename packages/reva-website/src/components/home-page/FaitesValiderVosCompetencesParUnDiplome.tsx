@@ -17,7 +17,7 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
         </h1>
         <Image
           className="hidden lg:block"
-          src="/home-page/image-home-character-blue-hoodie.svg"
+          src="/home-page/image-home-character-blue-hoodie.png"
           width={200}
           height={200}
           alt="un personnage masculin avec un sweet bleu"

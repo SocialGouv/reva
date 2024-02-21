@@ -40,25 +40,25 @@ const AccompagnementDemarche = () => (
       <AapStepBlock
         title="Diagnostic de compétences"
         description="Identification des compétences issues de vos expériences en fonction de votre projet."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-diagnostic.svg"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-diagnostic.png"
         imageAlt="Une femme avec une malette validée"
       />
       <AapStepBlock
         title="Conception du parcours"
         description="Définition des besoins en accompagnement individuel ou collectif, module de formation et périodes d'immersion éventuelles."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-conception.svg"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-conception.png"
         imageAlt="Deux personnes qui discutent"
       />
       <AapStepBlock
         title="Accompagnement"
         description="Suivi régulier pour vous aider à rédiger votre dossier de validation, puis pour vous préparer à le présenter devant le jury."
-        imageUrl="/home-page/aap-step-characters/aap-step-character-accompagnement.svg"
+        imageUrl="/home-page/aap-step-characters/aap-step-character-accompagnement.png"
         imageAlt="Deux personnes qui discutent"
       />
     </div>
     <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-14 lg:mt-0 lg:h-[132px]">
       <Image
-        src="/home-page/image-home-character-young-man-glasses.svg"
+        src="/home-page/image-home-character-young-man-glasses.png"
         width={181}
         height={211}
         alt="Homme portant des lunettes"
