@@ -44,15 +44,22 @@ form formData ( candidacy, _ ) =
         decisionHistoryView =
             case candidacy.feasibility of
                 Just feasibility ->
+                    let
+                        decisionWithHistory =
+                            { decision = feasibility.decision
+                            , decisionSentAt = feasibility.decisionSentAt
+                            }
+                                :: feasibility.history
+                    in
                     div [ class "w-full mt-6" ]
-                        [ if List.length feasibility.history == 1 then
+                        [ if List.length decisionWithHistory == 1 then
                             subTitle "mt-2" "Décision précédente"
 
                           else
                             subTitle "mt-2" "Décisions précédentes"
                         , div
                             [ class "flex flex-col gap-y-3" ]
-                            (List.map View.Feasibility.Decision.view feasibility.history)
+                            (List.map View.Feasibility.Decision.view decisionWithHistory)
                         ]
 
                 Nothing ->

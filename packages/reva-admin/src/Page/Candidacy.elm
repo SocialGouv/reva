@@ -434,16 +434,20 @@ viewFeasibilitySent context candidacy feasibility =
             [ subTitle "Décision prise concernant ce dossier"
             , View.Feasibility.Decision.view feasibility
             ]
-        , div []
-            [ if List.length feasibility.history == 1 then
-                subTitle "Décision précédente"
+        , if List.length feasibility.history == 0 then
+            text ""
 
-              else
-                subTitle "Décisions précédentes"
-            , div
-                [ class "flex flex-col gap-y-3" ]
-                (List.map View.Feasibility.Decision.view feasibility.history)
-            ]
+          else
+            div []
+                [ if List.length feasibility.history == 1 then
+                    subTitle "Décision précédente"
+
+                  else
+                    subTitle "Décisions précédentes"
+                , div
+                    [ class "flex flex-col gap-y-3" ]
+                    (List.map View.Feasibility.Decision.view feasibility.history)
+                ]
         ]
     ]
 
