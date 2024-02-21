@@ -9,6 +9,7 @@ import Html.Attributes exposing (class, href, target, title)
 import Page.Form as Form exposing (Form)
 import View exposing (AlertType(..))
 import View.Candidate
+import View.Feasibility.Decision
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
@@ -28,6 +29,34 @@ form formData ( candidacy, _ ) =
         certificationAuthorityIds =
             candidacy.certificationAuthorities
                 |> List.map (\c -> ( c.id, c.label ))
+
+        subTitle extraClass s =
+            h2
+                [ class "text-2xl mb-3", class extraClass ]
+                [ text s ]
+
+        certificationAuthorityView certificationAuthority =
+            div []
+                [ subTitle "-mt-4" "Autorité de certification"
+                , View.Candidate.viewCertificationAuthority certificationAuthority
+                ]
+
+        decisionHistoryView =
+            case candidacy.feasibility of
+                Just feasibility ->
+                    div [ class "w-full mt-6" ]
+                        [ if List.length feasibility.history == 1 then
+                            subTitle "mt-2" "Décision précédente"
+
+                          else
+                            subTitle "mt-2" "Décisions précédentes"
+                        , div
+                            [ class "flex flex-col gap-y-3" ]
+                            (List.map View.Feasibility.Decision.view feasibility.history)
+                        ]
+
+                Nothing ->
+                    text ""
 
         helpPanelHeader =
             ( "help panel header"
@@ -87,15 +116,15 @@ form formData ( candidacy, _ ) =
                     ]
             )
 
-        filesChecklistTitle =
+        filesChecklistBlockEffect =
             ( ""
             , Form.StaticHtml <|
                 div
-                    [ class "mt-6 -mb-8"
-                    , class "pt-6 px-8 bg-neutral-100 w-full"
+                    [ class "-mb-2"
+                    , class "pt-4 px-8 bg-neutral-100 w-full"
                     , class "[&+div]:!w-full [&+div]:!mr-0 [&+div]:bg-neutral-100 [&+div]:px-8"
                     ]
-                    [ h2 [ class "text-xl" ] [ text "Avant de finaliser votre envoi :" ] ]
+                    []
             )
 
         filesChecklist =
@@ -131,15 +160,15 @@ form formData ( candidacy, _ ) =
                 , ( "", Form.Title1 "" )
                 , case candidacy.certificationAuthorities of
                     [ certificationAuthority ] ->
-                        ( "certificationAuthority"
-                        , Form.StaticHtml <| View.Candidate.viewCertificationAuthority certificationAuthority
-                        )
+                        ( "certificationAuthority", Form.StaticHtml (certificationAuthorityView certificationAuthority) )
 
                     _ ->
                         ( keys.certificationAuthorityId
                         , Form.Select "Sélectionnez l'autorité de certification" certificationAuthorityIds
                         )
-                , filesChecklistTitle
+                , ( "", Form.StaticHtml decisionHistoryView )
+                , ( "", Form.StaticHtml (subTitle "mt-8" "Avant de finaliser votre envoi") )
+                , filesChecklistBlockEffect
                 , ( "filesChecklist", Form.CheckboxList "" filesChecklist )
                 , helpPanelFooter
                 ]
