@@ -26,7 +26,7 @@ const PolygonService = ({
     className="w-full"
   >
     <div className="flex flex-col items-center lg:flex-row ">
-      <div className="w-full h-[136px] lg:max-w-none lg:max-h-none transition-all flex lg:flex-col justify-center items-center lg:w-[240px] lg:h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
+      <div className="w-full h-[136px] lg:max-w-none lg:max-h-none flex lg:flex-col justify-center items-center lg:w-[240px] lg:h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
         <Image
           src={imageUrl}
           width={147}
