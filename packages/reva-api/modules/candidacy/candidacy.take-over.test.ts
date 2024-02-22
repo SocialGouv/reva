@@ -108,6 +108,11 @@ afterAll(async () => {
       candidacyId: { in: [candidacyProject.id, candidacyValidated.id] },
     },
   });
+  await prismaClient.candidacyLog.deleteMany({
+    where: {
+      candidacyId: { in: [candidacyProject.id, candidacyValidated.id] },
+    },
+  });
   await prismaClient.candidacy.deleteMany({
     where: { id: { in: [candidacyProject.id, candidacyValidated.id] } },
   });

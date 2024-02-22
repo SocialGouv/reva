@@ -60,6 +60,7 @@ import { logCandidacyEvent } from "./logCandidacyEvent";
 import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -306,24 +307,49 @@ const unsafeResolvers = {
         context,
         result: result as Record<string, any>,
       });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_SUBMITTED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result;
     },
-    candidacy_updateCertification: async (_: unknown, payload: any) =>
-      updateCertificationOfCandidacy({
+    candidacy_updateCertification: async (
+      _: unknown,
+      payload: any,
+      context: GraphqlContext,
+    ) => {
+      const result = await updateCertificationOfCandidacy({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
-      }),
+      });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CERTIFICATION_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+
+      return result;
+    },
     candidacy_updateCertificationWithinOrganismScope: async (
       _: unknown,
       payload: any,
-      context: { auth: { hasRole: (role: Role) => boolean } },
-    ) =>
-      updateCertificationWithinOrganismScope({
+      context: GraphqlContext,
+    ) => {
+      const result = await updateCertificationWithinOrganismScope({
         hasRole: context.auth.hasRole,
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
-      }),
+      });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CERTIFICATION_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+      return result;
+    },
     candidacy_addExperience: async (
       _: unknown,
       payload: any,
@@ -347,6 +373,13 @@ const unsafeResolvers = {
         context,
         result,
       });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "EXPERIENCE_ADDED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -370,6 +403,12 @@ const unsafeResolvers = {
         eventType: CandidacyBusinessEvent.UPDATED_EXPERIENCE,
         context,
         result,
+      });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "EXPERIENCE_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
       });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -399,6 +438,12 @@ const unsafeResolvers = {
         context,
         result: result.map((n) => ({ n })), // typing hack for nothing
       });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "GOALS_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -425,13 +470,30 @@ const unsafeResolvers = {
           );
         }
 
-        return updateContactOfCandidacy(
+        const result = await updateContactOfCandidacy(
           {
             hasRole: context.auth.hasRole,
             keycloakId: context.auth.userInfo?.sub,
           },
           params,
         );
+
+        const candidacies = await prismaClient.candidacy.findMany({
+          where: { candidateId: params.candidateId },
+          select: { id: true },
+        });
+
+        Promise.all(
+          candidacies.map(async (c) => {
+            logCandidacyAuditEvent({
+              candidacyId: c.id,
+              eventType: "CONTACT_INFO_UPDATED",
+              userKeycloakId: context.auth.userInfo?.sub,
+            });
+          }),
+        );
+
+        return result;
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
@@ -453,6 +515,11 @@ const unsafeResolvers = {
         context,
         result: result.map((s) => ({ s })), // typing hack for nothing
         eventType: CandidacyBusinessEvent.DELETED_CANDIDACY,
+      });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DELETED",
+        userKeycloakId: context.auth.userInfo?.sub,
       });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -482,6 +549,11 @@ const unsafeResolvers = {
           reorientationReasonId: payload.reorientationReasonId,
         },
       });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_ARCHIVED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -502,6 +574,12 @@ const unsafeResolvers = {
         context,
         result,
         eventType: CandidacyBusinessEvent.UNARCHIVED_CANDIDACY,
+      });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_UNARCHIVED",
+        userKeycloakId: context.auth.userInfo?.sub,
       });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -526,6 +604,11 @@ const unsafeResolvers = {
         context,
         result,
       });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "APPOINTMENT_INFO_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -549,16 +632,32 @@ const unsafeResolvers = {
         context,
         result,
       });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_TAKEN_OVER",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
 
-    candidacy_selectOrganism: async (_: unknown, payload: any) =>
-      selectOrganismForCandidacy({
+    candidacy_selectOrganism: async (
+      _: unknown,
+      payload: any,
+      context: GraphqlContext,
+    ) => {
+      const result = await selectOrganismForCandidacy({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId,
-      }),
+      });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "ORGANISM_SELECTED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+      return result;
+    },
     candidacy_submitTypologyForm: async (
       _: unknown,
       payload: {
@@ -578,7 +677,11 @@ const unsafeResolvers = {
         }
 
         await updateCandidacyTypologyAndCcn(context.auth, payload);
-
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
         return candidacyDb.getCandidacyFromId(payload.candidacyId);
       } catch (e) {
         logger.error(e);
@@ -618,6 +721,12 @@ const unsafeResolvers = {
         context,
         result,
       });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "TRAINING_FORM_SUBMITTED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -640,6 +749,11 @@ const unsafeResolvers = {
         eventType: CandidacyBusinessEvent.CONFIRMED_TRAINING_FORM,
         context,
         result,
+      });
+      await logCandidacyAuditEvent({
+        candidacyId,
+        eventType: "TRAINING_FORM_CONFIRMED",
+        userKeycloakId: context.auth.userInfo?.sub,
       });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -684,6 +798,11 @@ const unsafeResolvers = {
         context,
         result,
       });
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROPPED_OUT",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -721,6 +840,12 @@ const unsafeResolvers = {
         result,
       });
 
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROP_OUT_CANCELED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -748,6 +873,13 @@ const unsafeResolvers = {
         context,
         result,
       });
+
+      await logCandidacyAuditEvent({
+        candidacyId,
+        eventType: "ADMISSIBILITY_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -758,8 +890,15 @@ const unsafeResolvers = {
         candidacyId: string;
         readyForJuryEstimatedAt: Date;
       },
+      context: GraphqlContext,
     ) => {
-      return setReadyForJuryEstimatedAt(params);
+      const result = await setReadyForJuryEstimatedAt(params);
+      await logCandidacyAuditEvent({
+        candidacyId: params.candidacyId,
+        eventType: "READY_FOR_JURY_ESTIMATED_DATE_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
+      return result;
     },
   },
 };
