@@ -1,5 +1,4 @@
 import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
 import { CandidacyEventType } from "../candidacy-log.types";
 
 export const logCandidacyAuditEvent = ({
@@ -11,7 +10,6 @@ export const logCandidacyAuditEvent = ({
   userKeycloakId?: string;
   eventType: CandidacyEventType;
 }) => {
-  logger.info({ userKeycloakId });
   if (!userKeycloakId) {
     throw new Error("utilisateur inconnu");
   }
