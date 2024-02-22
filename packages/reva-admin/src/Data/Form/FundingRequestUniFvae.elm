@@ -13,7 +13,8 @@ import Dict exposing (Dict)
 
 
 keys =
-    { candidateSecondname = "candidateSecondname"
+    { numAction = "numAction"
+    , candidateSecondname = "candidateSecondname"
     , candidateThirdname = "candidateThirdname"
     , candidateGender = "candidateGender"
     , individualHourCount = "individualHourCount"
@@ -47,6 +48,7 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
             Helper.decode keys formData
     in
     FundingRequest
+        (decode.string .numAction "")
         (decode.maybe.string .candidateSecondname)
         (decode.maybe.string .candidateThirdname)
         (decode.generic .candidateGender genderFromString Undisclosed)
@@ -73,7 +75,8 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
 
 
 type alias FundingRequest =
-    { candidateSecondname : Maybe String
+    { numAction : String
+    , candidateSecondname : Maybe String
     , candidateThirdname : Maybe String
     , candidateGender : Gender
     , individualHourCount : Decimal
@@ -131,7 +134,8 @@ toDict funding =
             Helper.toCheckedList funding.basicSkillsIds
 
         fundingList =
-            [ ( .candidateSecondname, string (.candidateSecondname >> Maybe.withDefault "") )
+            [ ( .numAction, string .numAction )
+            , ( .candidateSecondname, string (.candidateSecondname >> Maybe.withDefault "") )
             , ( .candidateGender, Just (genderToString funding.candidateGender) )
             , ( .candidateThirdname, string (.candidateThirdname >> Maybe.withDefault "") )
             , ( .individualHourCount, decimal .individualHourCount )

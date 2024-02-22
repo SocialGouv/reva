@@ -105,6 +105,7 @@ get candidacyId endpointGraphql token toMsg =
 fundingRequestSelection : SelectionSet Data.Form.FundingRequestUniFvae.FundingRequest Admin.Object.FundingRequestUnifvae
 fundingRequestSelection =
     SelectionSet.succeed Data.Form.FundingRequestUniFvae.FundingRequest
+        |> with Admin.Object.FundingRequestUnifvae.numAction
         |> with Admin.Object.FundingRequestUnifvae.candidateSecondname
         |> with Admin.Object.FundingRequestUnifvae.candidateThirdname
         |> with Admin.Object.FundingRequestUnifvae.candidateGender

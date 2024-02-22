@@ -1,6 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (Html, div, h2, h3, h4, span, text)
+import Accessibility exposing (Html, div, h2, h3, h4, p, span, text)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -62,9 +62,22 @@ form formStatus maybeCertification formData ( candidacy, referential ) =
               , "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi."
               )
             ]
+
+        numActionView =
+            case Data.Form.get keys.numAction formData of
+                Just numAction ->
+                    p
+                        [ class "mb-6  text-xl" ]
+                        [ span [ class "font-semibold text-gray-900" ] [ text "Numéro : " ]
+                        , text numAction
+                        ]
+
+                Nothing ->
+                    text ""
     in
     { elements =
-        [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
+        [ ( "numAction", Form.StaticHtml numActionView )
+        , ( "candidate-info", Form.Title1 "1. Informations du candidat" )
         , ( "nom"
           , candidacy.candidate
                 |> Maybe.map (.lastname >> Form.Info "Nom")
