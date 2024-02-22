@@ -65,7 +65,7 @@ view candidacyCountByStatus filters context =
                     candidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
 
                 CandidacyStatusFilter.JuryHorsAbandon ->
-                    candidacyCountByStatus.juryProgrammeHorsAbandon
+                    candidacyCountByStatus.juryHorsAbandon
 
                 CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
                     candidacyCountByStatus.juryProgrammeHorsAbandon
