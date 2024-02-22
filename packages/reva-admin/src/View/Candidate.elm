@@ -12,7 +12,7 @@ viewWithCertification maybeCertificationLabel maybeCandidate =
     div
         []
         [ h2
-            [ class "text-3xl mb-6" ]
+            [ class "text-3xl mb-2" ]
             [ text
                 (case maybeCandidate of
                     Just candidate ->
@@ -23,7 +23,7 @@ viewWithCertification maybeCertificationLabel maybeCandidate =
                 )
             ]
         , h3
-            [ class "text-2xl mb-0" ]
+            [ class "text-xl mb-0 font-normal" ]
             [ text <| Maybe.withDefault "Certification inconnue" maybeCertificationLabel ]
         ]
 

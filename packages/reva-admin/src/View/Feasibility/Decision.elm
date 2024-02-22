@@ -15,7 +15,7 @@ view feasibility =
         Pending ->
             div []
                 [ p [ class "mb-0 italic" ]
-                    [ text "En attente de recevabilité" ]
+                    [ text "En attente" ]
                 ]
 
         Rejected reason ->

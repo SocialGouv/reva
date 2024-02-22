@@ -423,6 +423,10 @@ viewFeasibilitySent context candidacy feasibility =
         [ View.Candidate.viewWithCertification
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
+        , div []
+            [ subTitle "Décision prise concernant ce dossier"
+            , div [ class "bg-neutral-100 text-lg px-8 pt-6 pb-8 w-full" ] [ View.Feasibility.Decision.view feasibility ]
+            ]
         , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
         , viewFileLink context (Tuple.first iDFileNameAndUrl) (Tuple.second iDFileNameAndUrl)
         , viewFileLink context (Tuple.first documentaryProofFileNameAndUrl) (Tuple.second documentaryProofFileNameAndUrl)
@@ -430,10 +434,6 @@ viewFeasibilitySent context candidacy feasibility =
         , feasibility.certificationAuthority
             |> Maybe.map View.Candidate.viewCertificationAuthority
             |> Maybe.withDefault (text "")
-        , div []
-            [ subTitle "Décision prise concernant ce dossier"
-            , div [ class "bg-neutral-100 text-lg px-8 pt-6 pb-8 w-full" ] [ View.Feasibility.Decision.view feasibility ]
-            ]
         , if List.length feasibility.history == 0 then
             text ""
 
