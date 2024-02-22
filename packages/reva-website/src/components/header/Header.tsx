@@ -15,9 +15,9 @@ export const Header = (props: { className?: string }) => {
 
   const navigation = [
     {
-      isActive: !!asPath.match(/\/espace-candidat/)?.length,
+      isActive: !!asPath.match(/^\/$/)?.length,
       linkProps: {
-        href: "/espace-candidat",
+        href: "/",
       },
       text: "Candidats",
     },
