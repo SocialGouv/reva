@@ -36,6 +36,7 @@ import {
   FeasibilityStatusFilter,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
+import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -64,6 +65,7 @@ export const createFeasibility = async ({
   IDFile,
   documentaryProofFile,
   certificateOfAttendanceFile,
+  userKeycloakId,
 }: {
   candidacyId: string;
   certificationAuthorityId: string;
@@ -71,6 +73,7 @@ export const createFeasibility = async ({
   IDFile: UploadedFile;
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
+  userKeycloakId?: string;
 }) => {
   const existingFeasibility = await prismaClient.feasibility.findFirst({
     where: { candidacyId, isActive: true },
@@ -222,6 +225,12 @@ export const createFeasibility = async ({
       });
     }
   }
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    userKeycloakId,
+    eventType: "FEASIBILITY_SENT",
+  });
 
   return feasibility;
 };
@@ -618,6 +627,10 @@ export const validateFeasibility = async ({
     where: { id: feasibilityId },
   });
 
+  if (!feasibility) {
+    throw new Error("Dossier de faisabilité introuvable");
+  }
+
   const authorized = await canManageFeasibility({
     hasRole,
     feasibility,
@@ -678,8 +691,13 @@ export const validateFeasibility = async ({
     }
 
     // Delete ID File from feasibility
-    deleteFeasibilityIDFile(feasibilityId);
+    await deleteFeasibilityIDFile(feasibilityId);
 
+    await logCandidacyAuditEvent({
+      candidacyId: feasibility.candidacyId,
+      userKeycloakId: keycloakId,
+      eventType: "FEASIBILITY_VALIDATED",
+    });
     return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -702,6 +720,10 @@ export const rejectFeasibility = async ({
   const feasibility = await prismaClient.feasibility.findUnique({
     where: { id: feasibilityId },
   });
+
+  if (!feasibility) {
+    throw new Error("Dossier de faisabilité introuvable");
+  }
 
   const authorized = await canManageFeasibility({
     hasRole,
@@ -731,7 +753,7 @@ export const rejectFeasibility = async ({
     });
 
     await updateCandidacyStatus({
-      candidacyId: feasibility?.candidacyId || "",
+      candidacyId: feasibility.candidacyId,
       status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
     });
 
@@ -753,7 +775,12 @@ export const rejectFeasibility = async ({
     }
 
     // Delete ID File from feasibility
-    deleteFeasibilityIDFile(feasibilityId);
+    await deleteFeasibilityIDFile(feasibilityId);
+    await logCandidacyAuditEvent({
+      candidacyId: feasibility.candidacyId,
+      userKeycloakId: keycloakId,
+      eventType: "FEASIBILITY_REJECTED",
+    });
 
     return updatedFeasibility;
   } else {
@@ -820,7 +847,13 @@ export const markFeasibilityAsIncomplete = async ({
     }
 
     // Delete ID File from feasibility
-    deleteFeasibilityIDFile(feasibilityId);
+    await deleteFeasibilityIDFile(feasibilityId);
+
+    await logCandidacyAuditEvent({
+      candidacyId: feasibility?.candidacyId,
+      userKeycloakId: keycloakId,
+      eventType: "FEASIBILITY_MARKED_AS_INCOMPLETE",
+    });
 
     return updatedFeasibility;
   } else {

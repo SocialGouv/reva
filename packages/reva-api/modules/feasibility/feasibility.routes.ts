@@ -207,6 +207,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           IDFile,
           documentaryProofFile,
           certificateOfAttendanceFile,
+          userKeycloakId: request.auth?.userInfo?.sub,
         });
       } catch (e) {
         logger.error(e);

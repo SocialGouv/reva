@@ -169,6 +169,9 @@ async function createFeasibility(account: Account) {
 
 afterAll(async () => {
   await prismaClient.file.delete({ where: { id: feasibilityFile.id } });
+  await prismaClient.candidacyLog.deleteMany({
+    where: { candidacyId: candidacy.id },
+  });
   await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
