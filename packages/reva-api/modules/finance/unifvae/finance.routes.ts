@@ -92,6 +92,7 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
         candidacyId,
         invoiceFile,
         certificateOfAttendanceFile,
+        userKeycloakId: request.auth?.userInfo?.sub,
       });
 
       reply.send("OK");

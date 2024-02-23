@@ -98,9 +98,10 @@ const unsafeResolvers = {
         });
       }
       try {
-        const fundreq = await createFundingRequestUnifvae(
-          fundingRequestCompleted,
-        );
+        const fundreq = await createFundingRequestUnifvae({
+          ...fundingRequestCompleted,
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
         logFundingRequestUnifvaeEvent({
           context,
           eventType: CandidacyBusinessEvent.CREATED_FUNDING_REQUEST_UNIFVAE,
@@ -127,7 +128,12 @@ const unsafeResolvers = {
         candidacyId: string;
         paymentRequest: PaymentRequestUnifvaeInput;
       },
-    ) => createOrUpdatePaymentRequestUnifvae(params),
+      context: GraphqlContext,
+    ) =>
+      createOrUpdatePaymentRequestUnifvae({
+        ...params,
+        userKeycloakId: context.auth.userInfo?.sub,
+      }),
   },
 };
 

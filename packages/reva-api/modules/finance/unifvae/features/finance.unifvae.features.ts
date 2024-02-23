@@ -7,12 +7,14 @@ import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
   isCertificationPartial,
   fundingRequest,
-}: FundingRequestUnifvaeInputCompleted) => {
+  userKeycloakId,
+}: FundingRequestUnifvaeInputCompleted & { userKeycloakId?: string }) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     select: {
@@ -69,7 +71,7 @@ export const createFundingRequestUnifvae = async ({
 
   await createBatchFromFundingRequestUnifvae(fundreq.id);
 
-  return prismaClient.fundingRequestUnifvae.findUnique({
+  const result = await prismaClient.fundingRequestUnifvae.findUnique({
     where: {
       id: fundreq.id,
     },
@@ -86,6 +88,13 @@ export const createFundingRequestUnifvae = async ({
       },
     },
   });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    userKeycloakId,
+    eventType: "FUNDING_REQUEST_CREATED",
+  });
+  return result;
 };
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (
@@ -117,9 +126,11 @@ export const getPaymentRequestUnifvaeFromCandidacyId = (candidacyId: string) =>
 export const createOrUpdatePaymentRequestUnifvae = async ({
   candidacyId,
   paymentRequest,
+  userKeycloakId,
 }: {
   candidacyId: string;
   paymentRequest: PaymentRequestUnifvaeInput;
+  userKeycloakId?: string;
 }) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
@@ -204,7 +215,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     throw new Error(businessErrors[0]);
   }
 
-  return prismaClient.paymentRequestUnifvae.upsert({
+  const result = await prismaClient.paymentRequestUnifvae.upsert({
     where: { candidacyId },
     create: {
       candidacyId,
@@ -215,29 +226,41 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       ...paymentRequest,
     },
   });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    userKeycloakId,
+    eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
+  });
+
+  return result;
 };
 
 export const addUploadedFileAndConfirmPayment = async ({
   candidacyId,
   invoiceFile,
   certificateOfAttendanceFile,
+  userKeycloakId,
 }: {
   candidacyId: string;
   invoiceFile: UploadedFile;
   certificateOfAttendanceFile: UploadedFile;
+  userKeycloakId?: string;
 }) => {
   await addUploadedFileToPaymentRequestUnifvae({
     candidacyId,
     invoiceFile,
     certificateOfAttendanceFile,
   });
-  await confirmPaymentRequestUnifvae({ candidacyId });
+  await confirmPaymentRequestUnifvae({ candidacyId, userKeycloakId });
 };
 
 const confirmPaymentRequestUnifvae = async ({
   candidacyId,
+  userKeycloakId,
 }: {
   candidacyId: string;
+  userKeycloakId?: string;
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -328,6 +351,12 @@ const confirmPaymentRequestUnifvae = async ({
   await updateCandidacyStatus({
     candidacyId,
     status: "DEMANDE_PAIEMENT_ENVOYEE",
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    userKeycloakId,
+    eventType: "PAYMENT_REQUEST_CONFIRMED",
   });
   return paymentRequest;
 };

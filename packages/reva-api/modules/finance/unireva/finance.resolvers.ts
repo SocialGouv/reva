@@ -19,13 +19,14 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpd
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Candidacy: {
     paymentRequest: async (
       parent: Candidacy,
       _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } }
+      context: { auth: { hasRole: (role: Role) => boolean } },
     ) => {
       const result = await getPaymentRequestByCandidacyId({
         hasRole: context.auth.hasRole,
@@ -42,7 +43,7 @@ const unsafeResolvers = {
     candidate_getFundingRequest: async (
       _: unknown,
       params: { candidacyId: string },
-      context: { auth: any }
+      context: { auth: any },
     ) => {
       const result = await getFundingRequest({
         hasRole: context.auth.hasRole,
@@ -71,7 +72,8 @@ const unsafeResolvers = {
       {
         candidacyId,
         paymentRequest,
-      }: { candidacyId: string; paymentRequest: PaymentRequest }
+      }: { candidacyId: string; paymentRequest: PaymentRequest },
+      context: GraphqlContext,
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
         getCandidateByCandidacyId,
@@ -85,6 +87,13 @@ const unsafeResolvers = {
         candidacyId,
         paymentRequest,
       });
+      if (result.isRight()) {
+        logCandidacyAuditEvent({
+          candidacyId,
+          userKeycloakId: context.auth.userInfo?.sub,
+          eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
+        });
+      }
 
       return result
         .mapLeft((error) =>
@@ -92,14 +101,14 @@ const unsafeResolvers = {
             ? new mercurius.ErrorWithProps(error.errors[0], {
                 businessErrors: error.errors,
               })
-            : new mercurius.ErrorWithProps(error.message, error)
+            : new mercurius.ErrorWithProps(error.message, error),
         )
         .extract();
     },
     candidacy_confirmPaymentRequest: async (
       _: unknown,
       { candidacyId }: { candidacyId: string },
-      context: { auth: { hasRole: (role: Role) => boolean } }
+      context: GraphqlContext,
     ) => {
       const result = await confirmPaymentRequest({
         hasRole: context.auth.hasRole,
@@ -115,13 +124,21 @@ const unsafeResolvers = {
         candidacyId: candidacyId,
       });
 
+      if (result.isRight()) {
+        logCandidacyAuditEvent({
+          candidacyId,
+          userKeycloakId: context.auth.userInfo?.sub,
+          eventType: "PAYMENT_REQUEST_CONFIRMED",
+        });
+      }
+
       return result
         .mapLeft((error) =>
           error.errors?.length
             ? new mercurius.ErrorWithProps(error.errors[0], {
                 businessErrors: error.errors,
               })
-            : new mercurius.ErrorWithProps(error.message, error)
+            : new mercurius.ErrorWithProps(error.message, error),
         )
         .extract();
     },
@@ -130,5 +147,5 @@ const unsafeResolvers = {
 
 export const financeResolvers = composeResolvers(
   unsafeResolvers,
-  resolversSecurityMap
+  resolversSecurityMap,
 );

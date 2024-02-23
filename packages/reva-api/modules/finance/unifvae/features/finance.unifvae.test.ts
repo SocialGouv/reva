@@ -215,6 +215,7 @@ afterAll(async () => {
   await prismaClient.fundingRequestUnifvae.deleteMany();
   await prismaClient.candidaciesStatus.deleteMany();
   await prismaClient.basicSkillOnCandidacies.deleteMany();
+  await prismaClient.candidacyLog.deleteMany();
   await prismaClient.candidacy.deleteMany();
   await prismaClient.account.updateMany({ data: { organismId: null } });
   await prismaClient.organism.deleteMany();
@@ -331,7 +332,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
   const obj = resp.json();
   expect(obj).toHaveProperty("errors");
   expect(obj.errors[0].message).toBe(
-    'Cannot create FundingRequestUnifvae: candidacy.financeModule is "unireva"'
+    'Cannot create FundingRequestUnifvae: candidacy.financeModule is "unireva"',
   );
 });
 

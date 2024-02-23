@@ -56,6 +56,12 @@ export const getCandidacyLogMessage = ({
       return "Dossier de faisabilité rejeté";
     case "FEASIBILITY_VALIDATED":
       return "Dossier de faisabilité validé";
+    case "FUNDING_REQUEST_CREATED":
+      return "Demande de financement envoyée";
+    case "PAYMENT_REQUEST_CREATED_OR_UPDATED":
+      return "Demande de paiement créée ou modifiée";
+    case "PAYMENT_REQUEST_CONFIRMED":
+      return "Demande de paiement confirmée";
 
     default:
       return eventType;
