@@ -374,12 +374,13 @@ const unsafeResolvers = {
         result,
       });
 
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "EXPERIENCE_ADDED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
-
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "EXPERIENCE_ADDED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -405,11 +406,13 @@ const unsafeResolvers = {
         result,
       });
 
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "EXPERIENCE_UPDATED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "EXPERIENCE_UPDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -439,11 +442,13 @@ const unsafeResolvers = {
         result: result.map((n) => ({ n })), // typing hack for nothing
       });
 
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "GOALS_UPDATED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "GOALS_UPDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -516,11 +521,13 @@ const unsafeResolvers = {
         result: result.map((s) => ({ s })), // typing hack for nothing
         eventType: CandidacyBusinessEvent.DELETED_CANDIDACY,
       });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_DELETED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_DELETED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -549,11 +556,13 @@ const unsafeResolvers = {
           reorientationReasonId: payload.reorientationReasonId,
         },
       });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_ARCHIVED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_ARCHIVED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -575,12 +584,13 @@ const unsafeResolvers = {
         result,
         eventType: CandidacyBusinessEvent.UNARCHIVED_CANDIDACY,
       });
-
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_UNARCHIVED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_UNARCHIVED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -604,11 +614,13 @@ const unsafeResolvers = {
         context,
         result,
       });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "APPOINTMENT_INFO_UPDATED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "APPOINTMENT_INFO_UPDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -632,11 +644,13 @@ const unsafeResolvers = {
         context,
         result,
       });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_TAKEN_OVER",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_TAKEN_OVER",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -656,6 +670,7 @@ const unsafeResolvers = {
         eventType: "ORGANISM_SELECTED",
         userKeycloakId: context.auth.userInfo?.sub,
       });
+
       return result;
     },
     candidacy_submitTypologyForm: async (
@@ -721,12 +736,13 @@ const unsafeResolvers = {
         context,
         result,
       });
-
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "TRAINING_FORM_SUBMITTED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "TRAINING_FORM_SUBMITTED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -750,11 +766,13 @@ const unsafeResolvers = {
         context,
         result,
       });
-      await logCandidacyAuditEvent({
-        candidacyId,
-        eventType: "TRAINING_FORM_CONFIRMED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId,
+          eventType: "TRAINING_FORM_CONFIRMED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -798,11 +816,13 @@ const unsafeResolvers = {
         context,
         result,
       });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_DROPPED_OUT",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_DROPPED_OUT",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -840,11 +860,13 @@ const unsafeResolvers = {
         result,
       });
 
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CANDIDACY_DROP_OUT_CANCELED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_DROP_OUT_CANCELED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -874,11 +896,13 @@ const unsafeResolvers = {
         result,
       });
 
-      await logCandidacyAuditEvent({
-        candidacyId,
-        eventType: "ADMISSIBILITY_UPDATED",
-        userKeycloakId: context.auth.userInfo?.sub,
-      });
+      if (result.isRight()) {
+        await logCandidacyAuditEvent({
+          candidacyId,
+          eventType: "ADMISSIBILITY_UPDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+        });
+      }
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
