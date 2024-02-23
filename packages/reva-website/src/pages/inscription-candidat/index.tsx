@@ -120,7 +120,6 @@ const OrientationCandidatPage = () => {
                   })
                 }
               />
-              )
             </fieldset>
             {certification && (
               <>

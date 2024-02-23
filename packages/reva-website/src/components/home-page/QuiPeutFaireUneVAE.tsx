@@ -47,7 +47,7 @@ const QuiPeutFaireUneVAE = () => (
         imageAlt="logiciel de recherche d'emploi avec une loupe"
       />
       <BlockCompetence
-        label="Volontaires et bénévoles"
+        label="Bénévoles"
         imageUrl="/home-page/blocks-competences/image-block-competence-volontaires-et-benevoles.svg"
         imageAlt="Mains réunies en signe de solidarité"
       />
