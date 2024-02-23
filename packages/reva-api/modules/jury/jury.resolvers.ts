@@ -94,8 +94,12 @@ const unsafeResolvers = {
         candidacyId: string;
         examInfo: ExamInfo;
       },
+      context: GraphqlContext,
     ) => {
-      return updateExamInfo(params);
+      return updateExamInfo({
+        ...params,
+        userKeycloakId: context.auth.userInfo?.sub,
+      });
     },
     jury_updateResult: async (
       _parent: unknown,

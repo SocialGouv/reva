@@ -62,7 +62,10 @@ export const getCandidacyLogMessage = ({
       return "Demande de paiement créée ou modifiée";
     case "PAYMENT_REQUEST_CONFIRMED":
       return "Demande de paiement confirmée";
-
+    case "JURY_EXAM_INFO_UPDATED":
+      return "Informations jury modifiées";
+    case "JURY_RESULT_UPDATED":
+      return "Résultats jury modifiés";
     default:
       return eventType;
   }

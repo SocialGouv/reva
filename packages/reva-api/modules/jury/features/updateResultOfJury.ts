@@ -5,6 +5,7 @@ import { sendJuryResultAAPEmail } from "../emails/sendJuryResultAAPEmail";
 import { sendJuryResultCandidateEmail } from "../emails/sendJuryResultCandidateEmail";
 import { JuryInfo, JuryResult } from "../jury.types";
 import { canManageJury } from "./canManageJury";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 interface UpdateResultOfJury {
   juryId: string;
@@ -107,6 +108,11 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       });
     }
   }
+  logCandidacyAuditEvent({
+    candidacyId: candidacy.id,
+    userKeycloakId: keycloakId,
+    eventType: "JURY_RESULT_UPDATED",
+  });
 
   return updatedJury;
 };
