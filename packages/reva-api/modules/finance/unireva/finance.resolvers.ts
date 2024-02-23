@@ -88,7 +88,7 @@ const unsafeResolvers = {
         paymentRequest,
       });
       if (result.isRight()) {
-        logCandidacyAuditEvent({
+        await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
           eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
@@ -125,7 +125,7 @@ const unsafeResolvers = {
       });
 
       if (result.isRight()) {
-        logCandidacyAuditEvent({
+        await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
           eventType: "PAYMENT_REQUEST_CONFIRMED",

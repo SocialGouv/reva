@@ -108,7 +108,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       });
     }
   }
-  logCandidacyAuditEvent({
+  await logCandidacyAuditEvent({
     candidacyId: candidacy.id,
     userKeycloakId: keycloakId,
     eventType: "JURY_RESULT_UPDATED",
