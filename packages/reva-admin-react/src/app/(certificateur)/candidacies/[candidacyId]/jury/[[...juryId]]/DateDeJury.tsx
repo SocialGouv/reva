@@ -75,9 +75,8 @@ export const DateDeJury = (): JSX.Element => {
         </h5>
         {!jury && (
           <p className="text-gray-600 mt-4">
-            Merci de renseigner a minima la date de l'entretien du candidat avec
-            le jury. Une convocation officielle devra être émise à destination
-            du candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
+            Une convocation officielle devra être émise à destination du
+            candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
             candidat l’aura dans son e-mail récapitulatif) ou transmise par
             courrier papier par vos soins.
           </p>

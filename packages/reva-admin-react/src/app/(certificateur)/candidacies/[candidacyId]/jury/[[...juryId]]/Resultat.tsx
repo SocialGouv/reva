@@ -228,7 +228,7 @@ export const Resultat = (): JSX.Element => {
           )}
 
           <Input
-            label="Annotations (optionnel) :"
+            label="Commentaires (optionnel) :"
             nativeTextAreaProps={register("informationOfResult")}
             textArea
             hintText="Indiquer ici toutes les réserves, consignes ou attendus éventuels."
