@@ -10,20 +10,12 @@ const GET_DEPARTMENTS = gql`
   }
 `;
 
-export const getDepartments =
-  (client: ApolloClient<object>) => async (params: { token?: string }) => {
-    const { data } = await client.query({
-      context: params.token
-        ? {
-            headers: {
-              authorization: `Bearer ${params.token}`,
-            },
-          }
-        : undefined,
-      query: GET_DEPARTMENTS,
-    });
+export const getDepartments = async (client: ApolloClient<object>) => {
+  const { data } = await client.query({
+    query: GET_DEPARTMENTS,
+  });
 
-    return {
-      departments: data.getDepartments,
-    };
+  return {
+    departments: data.getDepartments,
   };
+};

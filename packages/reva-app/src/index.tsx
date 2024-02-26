@@ -1,6 +1,13 @@
 import "./index.css";
 
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+  from,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import * as Sentry from "@sentry/react";
 // import { inspect } from "@xstate/inspect";
@@ -8,7 +15,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
-import { Keycloak } from "./contexts/keycloakContext";
+import { Keycloak, getTokens } from "./contexts/keycloakContext";
 import { KeycloakProvider } from "./contexts/keycloakContext";
 import { MainMachineContextProvider } from "./contexts/MainMachineContext/MainMachineContext";
 import reportWebVitals from "./reportWebVitals";
@@ -16,9 +23,23 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 startReactDsfr({ defaultColorScheme: "light" });
 
-const client = new ApolloClient({
+const authLink = setContext(async (_, { headers }) => {
+  const accessToken = getTokens()?.accessToken;
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : "",
+    },
+  };
+});
+
+const httpLink = new HttpLink({
   uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/api/graphql",
+});
+
+const client = new ApolloClient({
   cache: new InMemoryCache(),
+  link: from([authLink, httpLink]),
 });
 
 //// Uncomment to debug XState

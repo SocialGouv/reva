@@ -417,27 +417,21 @@ const GET_CANDIDATE_WITH_CANDIDACY = gql`
   }
 `;
 
-export const getCandidateWithCandidacy =
-  (client: ApolloClient<object>) => async (params: { token?: string }) => {
-    const { data } = await client.query({
-      context: params.token
-        ? {
-            headers: {
-              authorization: `Bearer ${params.token}`,
-            },
-          }
-        : undefined,
-      query: GET_CANDIDATE_WITH_CANDIDACY,
-    });
+export const getCandidateWithCandidacy = async (
+  client: ApolloClient<object>
+) => {
+  const { data } = await client.query({
+    query: GET_CANDIDATE_WITH_CANDIDACY,
+  });
 
-    return {
-      candidacy: formatCandidacy(data.candidate, data.getReferential),
-      referentials: {
-        goals: data.getReferential.goals,
-      },
-      departments: data.getDepartments,
-    };
+  return {
+    candidacy: formatCandidacy(data.candidate, data.getReferential),
+    referentials: {
+      goals: data.getReferential.goals,
+    },
+    departments: data.getDepartments,
   };
+};
 
 function initializeApp({ candidateLogged, getReferential }: any) {
   return {

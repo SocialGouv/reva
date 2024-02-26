@@ -35,7 +35,7 @@ export const useConfiguredMainMachine = () => {
   );
 
   //@ts-ignore
-  const { authenticated, token, setTokens } = useKeycloakContext();
+  const { authenticated, setTokens } = useKeycloakContext();
 
   const machine = useMemo(
     () =>
@@ -48,20 +48,15 @@ export const useConfiguredMainMachine = () => {
               searchText: context.certificationSearchText,
             });
           },
-          loadDepartments: () =>
-            getDepartments(client as ApolloClient<object>)({
-              token,
-            }),
+          loadDepartments: () => getDepartments(client as ApolloClient<object>),
           initializeApp: async (_context, _event, { data }) => {
             if (authenticated && !data.isConfirmEmail) {
               const data = await getCandidateWithCandidacy(
                 client as ApolloClient<object>
-              )({ token });
+              );
               const activeFeatures = await getActiveFeaturesForConnectedUser(
                 client as ApolloClient<object>
-              )({
-                token,
-              });
+              );
 
               return { ...data, activeFeatures };
             } else {
@@ -73,9 +68,7 @@ export const useConfiguredMainMachine = () => {
               setTokens(tokens);
               const activeFeatures = await getActiveFeaturesForConnectedUser(
                 client as ApolloClient<object>
-              )({
-                token: data.loginToken,
-              });
+              );
               return { ...rest, activeFeatures };
             }
           },

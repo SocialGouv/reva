@@ -6,18 +6,12 @@ const GET_ACTIVE_FEATURES_FOR_CONNECTED_USER = gql`
   }
 `;
 
-export const getActiveFeaturesForConnectedUser =
-  (client: ApolloClient<object>) => async (params: { token?: string }) => {
-    const { data } = await client.query({
-      context: params.token
-        ? {
-            headers: {
-              authorization: `Bearer ${params.token}`,
-            },
-          }
-        : undefined,
-      query: GET_ACTIVE_FEATURES_FOR_CONNECTED_USER,
-    });
+export const getActiveFeaturesForConnectedUser = async (
+  client: ApolloClient<object>
+) => {
+  const { data } = await client.query({
+    query: GET_ACTIVE_FEATURES_FOR_CONNECTED_USER,
+  });
 
-    return data.activeFeaturesForConnectedUser;
-  };
+  return data.activeFeaturesForConnectedUser;
+};
