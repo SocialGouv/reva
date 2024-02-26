@@ -468,20 +468,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        const result = await updateContactOfCandidacy(
-          {
-            hasRole: context.auth.hasRole,
-            keycloakId: context.auth.userInfo?.sub,
-          },
-          params,
-        );
+        const result = await updateContactOfCandidacy(params);
 
         const candidacies = await prismaClient.candidacy.findMany({
           where: { candidateId: params.candidateId },

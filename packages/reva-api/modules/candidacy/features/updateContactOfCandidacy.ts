@@ -5,29 +5,19 @@ import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
 } from "../mails";
-export const updateContactOfCandidacy = async (
-  context: {
-    hasRole: (role: string) => boolean;
-    keycloakId: string;
-  },
-  params: {
-    candidateId: string;
-    candidateData: {
-      firstname: string;
-      lastname: string;
-      phone: string;
-      email: string;
-    };
-  },
-): Promise<Candidate> => {
+export const updateContactOfCandidacy = async (params: {
+  candidateId: string;
+  candidateData: {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
+  };
+}): Promise<Candidate> => {
   const { candidateId, candidateData } = params;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
     where: { id: candidateId },
   });
-
-  if (context.keycloakId != candidateToUpdate?.keycloakId) {
-    throw new Error("Utilisateur non autorisé");
-  }
 
   if (!candidateToUpdate) {
     throw new Error(`Ce candidat n'existe pas`);

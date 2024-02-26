@@ -99,7 +99,9 @@ test("a user can't modify the account information of another candidate", async (
     },
   });
   expect(resp.statusCode).toEqual(200);
-  expect(resp.json().errors?.[0].message).toEqual("Utilisateur non autorisé");
+  expect(resp.json().errors?.[0].message).toEqual(
+    "Vous n'êtes pas autorisé à accéder à cette candidature",
+  );
 });
 
 test("a candidate can modify his account information but not directly his email, it needs to be confirm via an email link", async () => {

@@ -4,9 +4,9 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrManager,
   isCandidacyCompanion,
-  isCandidate,
 } from "../../shared/security/presets";
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
+import { isCandidateOwnerOfCandidacy } from "./isCandidateOwnerOfCandidacy.security";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut
@@ -19,17 +19,17 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
-  "Mutation.candidacy_updateContact": isCandidate,
-  "Mutation.candidacy_updateCertification": isCandidate,
+  "Mutation.candidacy_updateContact": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_updateCertification": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_updateCertificationWithinOrganismScope":
     isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_updateGoals": isCandidate,
-  "Mutation.candidacy_updateExperience": isCandidate,
-  "Mutation.candidacy_removeExperience": isCandidate,
-  "Mutation.candidacy_addExperience": isCandidate,
-  "Mutation.candidacy_selectOrganism": isCandidate,
-  "Mutation.candidacy_submitCandidacy": isCandidate,
-  "Mutation.candidacy_confirmTrainingForm": isCandidate,
+  "Mutation.candidacy_updateGoals": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_updateExperience": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_removeExperience": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_addExperience": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_selectOrganism": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_submitCandidacy": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_confirmTrainingForm": [isCandidateOwnerOfCandidacy],
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
