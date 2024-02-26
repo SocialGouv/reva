@@ -41,6 +41,7 @@ type MaisonMereAAP {
   raisonSociale: String!
   statutJuridique: LegalStatus!
   siret: String!
+  phone: String
   adresse: String!
   codePostal: String!
   ville: String!

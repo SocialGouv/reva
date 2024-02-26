@@ -14,6 +14,7 @@ const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
+      phone
       siret
       raisonSociale
       dateExpirationCertificationQualiopi
@@ -95,7 +96,7 @@ const MaisonMereAAPPage = () => {
           accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
           accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
           accountEmail={maisonMereAAP.gestionnaire.email}
-          accountPhoneNumber=""
+          accountPhoneNumber={maisonMereAAP.phone || ""}
           companyQualiopiCertificateExpiresAt={
             new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
           }

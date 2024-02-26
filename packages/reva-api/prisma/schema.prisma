@@ -1198,6 +1198,7 @@ model MaisonMereAAP {
   raisonSociale                       String                                @map("raison_sociale") @db.VarChar(255)
   statutJuridique                     LegalStatus                           @map("statut_juridique")
   siret                               String                                @map("siret") @db.VarChar(255)
+  phone                               String?                               @map("phone") @db.VarChar(50)
   adresse                             String                                @default("") @map("adresse") @db.VarChar(255)
   codePostal                          String                                @default("") @map("code_postal") @db.VarChar(5)
   ville                               String                                @default("") @map("ville") @db.VarChar(100)
