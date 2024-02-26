@@ -16,6 +16,7 @@ import {
   updateSelectedValueForAllItemsBasedOnValue,
 } from "@/components/tree-select";
 import { CertificationStatus } from "@/graphql/generated/graphql";
+import { treeSelectItemsToSelectedDepartmentIds } from "@/utils";
 
 export type LocalAccount = {
   id?: string;
@@ -50,17 +51,8 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
   } = methods;
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    const selectedDepartmentIds = departmentItems.reduce((acc, region) => {
-      const ids = (region.children || []).reduce((acc, department) => {
-        if (department.selected) {
-          return [...acc, department.id];
-        }
-
-        return acc;
-      }, [] as string[]);
-
-      return [...acc, ...ids];
-    }, [] as string[]);
+    const selectedDepartmentIds =
+      treeSelectItemsToSelectedDepartmentIds(departmentItems);
 
     if (!selectedDepartmentIds.length) {
       errorToast("Veuillez sélectionner au moins un département");

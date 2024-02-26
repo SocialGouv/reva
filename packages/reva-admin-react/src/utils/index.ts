@@ -1,3 +1,4 @@
 export * from "./isInterventionZoneIsFullySelectedWithoutDOM.util";
 export * from "./sortDepartmentsByAlphabeticalOrderAndDOM.util";
-export * from "./toSelectedRegionAndDepartmentsItem.util";
+export * from "./selectedDepartmentsToTreeSelectItems.util";
+export * from "./treeSelectItemsToSelectedDepartmentIds.util";
