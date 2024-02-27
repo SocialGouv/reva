@@ -32,6 +32,7 @@ export const Header = () => {
                   href: ADMIN_ELM_URL + "/candidacies",
                   target: "_self",
                 },
+                isActive: !!currentPathname.match(/\/candidacies\/.*\/logs/),
               },
             ]
           : []),
@@ -105,7 +106,14 @@ export const Header = () => {
                   href: "/candidacies/feasibilities",
                   target: "_self",
                 },
-                isActive: currentPathname.startsWith("/candidacies"),
+                isActive: !!(
+                  currentPathname.match(
+                    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)/,
+                  ) ||
+                  currentPathname.match(
+                    /\/candidacies\/.*\/(feasibility)|(dossier-de-validation)|(jury)/,
+                  )
+                ),
               },
             ]
           : []),
