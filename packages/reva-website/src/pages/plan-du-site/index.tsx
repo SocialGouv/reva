@@ -14,7 +14,7 @@ const SiteMapPage = () => {
           <Link href="/">Accueil</Link>
         </li>
         <li>
-          <Link href="/espace-candidat">Espace candidat</Link>
+          <Link href="/">Espace candidat</Link>
           <ul>
             <li>
               <Link href="/app/login">Connexion candidat</Link>
