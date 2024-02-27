@@ -3,11 +3,12 @@ module View.Candidacy.NavigationSteps exposing (view)
 import Admin.Enum.CandidacyStatusStep as Step exposing (CandidacyStatusStep(..))
 import Admin.Enum.FinanceModule exposing (FinanceModule(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
+import Api.Token exposing (isAdmin)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Data.Context exposing (Context)
 import Data.Feasibility
-import Html exposing (Html, div, h2, h3, span, text)
+import Html exposing (Html, a, div, h2, h3, span, text)
 import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -23,7 +24,7 @@ view context remoteCandidacy =
         Success candidacy ->
             [ case candidacy.dropOutDate of
                 Just droppedOutDate ->
-                    dropOutView context.baseUrl candidacy droppedOutDate
+                    dropOutView context context.baseUrl candidacy droppedOutDate
 
                 Nothing ->
                     if Candidacy.lastStatus candidacy.statuses == Step.Archive then
@@ -46,6 +47,9 @@ activeView context candidacy =
     let
         baseUrl =
             context.baseUrl
+
+        isAdmin =
+            Api.Token.isAdmin context.token
 
         candidacyLink tab =
             Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
@@ -316,13 +320,33 @@ activeView context candidacy =
 
               else
                 []
+            , if isAdmin then
+                [ { content =
+                        expandedView
+                            WITHOUT_BUTTON
+                            "Journal des actions"
+                  , navigation =
+                        Just <|
+                            Html.Attributes.href <|
+                                context.adminReactUrl
+                                    ++ "/candidacies/"
+                                    ++ Candidacy.candidacyIdToString candidacy.id
+                                    ++ "/logs"
+                  }
+                ]
+
+              else
+                []
             ]
         )
 
 
-dropOutView : String -> Candidacy -> Time.Posix -> Html msg
-dropOutView baseUrl candidacy dropOutDate =
+dropOutView : Context -> String -> Candidacy -> Time.Posix -> Html msg
+dropOutView context baseUrl candidacy dropOutDate =
     let
+        isAdmin =
+            Api.Token.isAdmin context.token
+
         candidacyLink tab =
             Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
 
@@ -346,10 +370,10 @@ dropOutView baseUrl candidacy dropOutDate =
     in
     View.Steps.view (title "Abandon du candidat")
         progressPosition
-        [ { content = dropOutInfo
-          , navigation = dropOutLink
-          }
-        , { content =
+        ([ { content = dropOutInfo
+           , navigation = dropOutLink
+           }
+         , { content =
                 expandedView
                     (getDefaultExpandedViewStatusFromCandidacyStatus
                         candidacy
@@ -359,23 +383,42 @@ dropOutView baseUrl candidacy dropOutDate =
                         ]
                     )
                     "Demande de prise en charge"
-          , navigation = fundingRequestLink baseUrl candidacy
-          }
-        , { content =
+           , navigation = fundingRequestLink baseUrl candidacy
+           }
+         , { content =
                 expandedView
                     (getDefaultExpandedViewStatusFromCandidacyStatus
                         candidacy
                         [ DemandeFinancementEnvoye ]
                     )
                     "Demande de paiement"
-          , navigation =
+           , navigation =
                 if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
                     candidacyLink Tab.PaymentRequest
 
                 else
                     Nothing
-          }
-        ]
+           }
+         ]
+            ++ (if isAdmin then
+                    [ { content =
+                            expandedView
+                                WITHOUT_BUTTON
+                                "Journal des actions"
+                      , navigation =
+                            Just <|
+                                Html.Attributes.href <|
+                                    context.adminReactUrl
+                                        ++ "/candidacies/"
+                                        ++ Candidacy.candidacyIdToString candidacy.id
+                                        ++ "/logs"
+                      }
+                    ]
+
+                else
+                    []
+               )
+        )
 
 
 archiveView : String -> Candidacy -> Html msg
