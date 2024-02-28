@@ -52,7 +52,7 @@ activeView context candidacy =
             Api.Token.isAdmin context.token
 
         candidacyLink tab =
-            Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
+            Just <| ( Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab), False )
 
         appointmentLink =
             candidacyLink Tab.Meetings
@@ -62,7 +62,7 @@ activeView context candidacy =
                 candidacyLink Tab.Training
 
             else if candidacy.firstAppointmentOccuredAt /= Nothing then
-                Just <| Route.href baseUrl <| Route.Typology candidacy.id (Route.TypologyFilters (String.toInt "1" |> Maybe.withDefault 1))
+                Just <| ( Route.href baseUrl <| Route.Typology candidacy.id (Route.TypologyFilters (String.toInt "1" |> Maybe.withDefault 1)), False )
 
             else
                 Nothing
@@ -327,11 +327,13 @@ activeView context candidacy =
                             "Journal des actions"
                   , navigation =
                         Just <|
-                            Html.Attributes.href <|
+                            ( Html.Attributes.href <|
                                 context.adminReactUrl
                                     ++ "/candidacies/"
                                     ++ Candidacy.candidacyIdToString candidacy.id
                                     ++ "/logs"
+                            , True
+                            )
                   }
                 ]
 
@@ -348,7 +350,7 @@ dropOutView context baseUrl candidacy dropOutDate =
             Api.Token.isAdmin context.token
 
         candidacyLink tab =
-            Just <| Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab)
+            Just <| ( Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab), False )
 
         dropOutInfo =
             [ h3 [ class "text-sm mt-1" ] [ text "Abandon du candidat confirmé" ]
@@ -407,11 +409,13 @@ dropOutView context baseUrl candidacy dropOutDate =
                                 "Journal des actions"
                       , navigation =
                             Just <|
-                                Html.Attributes.href <|
+                                ( Html.Attributes.href <|
                                     context.adminReactUrl
                                         ++ "/candidacies/"
                                         ++ Candidacy.candidacyIdToString candidacy.id
                                         ++ "/logs"
+                                , True
+                                )
                       }
                     ]
 
@@ -433,7 +437,7 @@ archiveView baseUrl candidacy =
     View.Steps.view (title "Candidature supprimée")
         2
         [ { content = [ text "Supprimée le ", text archiveDate.fullFormat ]
-          , navigation = Just archiveLink
+          , navigation = Just ( archiveLink, False )
           }
         ]
 
@@ -450,7 +454,7 @@ reorientationView baseUrl candidacy =
     View.Steps.view (title "Candidature réorientée")
         2
         [ { content = [ text "Réorientée le ", text archiveDate.fullFormat ]
-          , navigation = Just archiveLink
+          , navigation = Just ( archiveLink, False )
           }
         ]
 
@@ -510,7 +514,7 @@ expandedView status stepTitle =
         [ View.Steps.link stepTitle ]
 
 
-fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
+fundingRequestLink : String -> Candidacy -> Maybe ( Html.Attribute msg, Bool )
 fundingRequestLink baseUrl candidacy =
     let
         hasDropOut =
@@ -527,9 +531,11 @@ fundingRequestLink baseUrl candidacy =
     in
     if canAccessFundingRequest then
         Just <|
-            Route.href baseUrl <|
+            ( Route.href baseUrl <|
                 Route.Candidacy <|
                     Tab.Tab candidacy.id Tab.FundingRequest
+            , False
+            )
 
     else
         Nothing

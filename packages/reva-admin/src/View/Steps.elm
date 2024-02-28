@@ -1,7 +1,7 @@
 module View.Steps exposing (info, link, view)
 
 import Html exposing (Html, a, div, label, li, ol, span, text)
-import Html.Attributes exposing (class, classList)
+import Html.Attributes exposing (class, classList, target)
 
 
 view :
@@ -9,7 +9,7 @@ view :
     -> Int
     ->
         List
-            { navigation : Maybe (Html.Attribute msg)
+            { navigation : Maybe ( Html.Attribute msg, Bool )
             , content : List (Html msg)
             }
     -> Html msg
@@ -20,11 +20,17 @@ view header currentStepIndex timelineElements =
                 Nothing ->
                     div [ class "relative flex items-start font-medium group" ]
 
-                Just navigation ->
-                    a
-                        [ navigation
+                Just ( href, external ) ->
+                    a <|
+                        [ href
                         , class "cursor-pointer relative flex items-start group"
                         ]
+                            ++ (if external then
+                                    [ target "_self" ]
+
+                                else
+                                    []
+                               )
 
         viewNavigationTimelineStep index element =
             li
