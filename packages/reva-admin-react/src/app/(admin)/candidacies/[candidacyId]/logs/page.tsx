@@ -3,6 +3,10 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
+import {
+  CandidacyLog,
+  CandidacyLogUserProfile,
+} from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -23,6 +27,7 @@ const getCandidacyLogsQuery = graphql(`
         id
         createdAt
         message
+        userProfile
       }
     }
   }
@@ -44,6 +49,23 @@ const CandidacyLogsPage = () => {
   const candidacy = getCandidacyLogsResponse?.getCandidacyById;
   const candidate = candidacy?.candidate;
   const candidacyLogs = candidacy?.candidacyLogs;
+
+  const getUserProfileText = (
+    candidacyLogUserProfile: CandidacyLogUserProfile,
+  ) => {
+    switch (candidacyLogUserProfile) {
+      case "ADMIN":
+        return "Administrateur";
+      case "AAP":
+        return "AAP";
+      case "CERTIFICATEUR":
+        return "Certificateur";
+      case "CANDIDAT":
+        return "Candidat";
+    }
+    return "Inconnu";
+  };
+
   return (
     candidacy && (
       <div className="flex flex-col">
@@ -65,7 +87,10 @@ const CandidacyLogsPage = () => {
               <span className="text-sm font-bold">
                 {format(l.createdAt, "dd/MM/yyyy - HH:mm")}
               </span>
-              <span> {l.message}</span>
+              <span>
+                <strong>{getUserProfileText(l.userProfile)} : </strong>
+                {l.message}
+              </span>
             </li>
           ))}
         </ul>
