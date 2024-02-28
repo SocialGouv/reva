@@ -22,6 +22,7 @@ import {
   createCandidateWithCandidacy,
   getCandidateWithCandidacyFromKeycloakId,
 } from "../database/candidates";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const candidateAuthentication = async ({
   token,
@@ -39,13 +40,13 @@ export const candidateAuthentication = async ({
   if (candidateAuthenticationInput.action === "registration") {
     const account = (
       await getCandidateAccountInIAM(keycloakAdmin)(
-        candidateAuthenticationInput.email
+        candidateAuthenticationInput.email,
       )
     )
       .ifLeft((e) => {
         throw new FunctionalError(
           FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-          e
+          e,
         );
       })
       .unsafeCoerce()
@@ -78,7 +79,7 @@ export const candidateAuthentication = async ({
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
-      `Action non reconnue`
+      `Action non reconnue`,
     );
   }
 };
@@ -101,7 +102,7 @@ const confirmRegistration = async ({
     .ifLeft(() => {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_IN_IAM_NOT_CREATED,
-        `Erreur lors de la création du compte sur l'IAM`
+        `Erreur lors de la création du compte sur l'IAM`,
       );
     })
     .unsafeCoerce();
@@ -115,7 +116,7 @@ const confirmRegistration = async ({
     .ifLeft(() => {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_WITH_PROFILE_NOT_CREATED,
-        `Erreur lors de la création du compte avec le profil`
+        `Erreur lors de la création du compte avec le profil`,
       );
     })
     .unsafeCoerce();
@@ -152,10 +153,17 @@ const confirmRegistration = async ({
     .ifLeft(() => {
       throw new FunctionalError(
         FunctionalCodeError.IAM_TOKEN_NOT_GENERATED,
-        `Erreur lors de la génération de l'access token`
+        `Erreur lors de la génération de l'access token`,
       );
     })
     .unsafeCoerce();
+
+  await logCandidacyAuditEvent({
+    candidacyId: candidateWithCandidacy.candidacies[0].id,
+    eventType: "CANDIDATE_REGISTRATION_CONFIRMED",
+    userRoles: [],
+    userKeycloakId: candidateKeycloakId,
+  });
 
   return iamToken;
 };
@@ -171,7 +179,7 @@ const loginCandidate = async ({
     .ifLeft((e) => {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-        e
+        e,
       );
     })
     .unsafeCoerce()
@@ -180,7 +188,7 @@ const loginCandidate = async ({
   if (!account) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-      `Candidat non trouvé`
+      `Candidat non trouvé`,
     );
   }
   const candidateWithCandidacy = (
@@ -189,7 +197,7 @@ const loginCandidate = async ({
     .ifLeft(() => {
       throw new FunctionalError(
         FunctionalCodeError.CANDIDATE_NOT_FOUND,
-        `Candidat avec candidature non trouvé`
+        `Candidat avec candidature non trouvé`,
       );
     })
     .unsafeCoerce() as Candidate & {
@@ -211,12 +219,12 @@ const loginCandidate = async ({
           ...candidateWithCandidacy,
           candidacy: candidateWithCandidacy.candidacies[0],
         },
-      })
+      }),
     )
     .ifLeft(() => {
       throw new FunctionalError(
         FunctionalCodeError.IAM_TOKEN_NOT_GENERATED,
-        `Erreur lors de la génération de l'access token`
+        `Erreur lors de la génération de l'access token`,
       );
     })
     .unsafeCoerce();

@@ -6,6 +6,8 @@ export const getCandidacyLogMessage = ({
   eventType: CandidacyEventType;
 }) => {
   switch (eventType) {
+    case "CANDIDATE_REGISTRATION_CONFIRMED":
+      return "Création du compte candidat";
     case "DOSSIER_DE_VALIDATION_SENT":
       return "Dossier de validation envoyé";
     case "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED":

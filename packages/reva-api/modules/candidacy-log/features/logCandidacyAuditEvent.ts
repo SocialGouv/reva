@@ -11,7 +11,6 @@ export const logCandidacyAuditEvent = ({
   candidacyId: string;
   userKeycloakId?: string;
   userRoles: KeyCloakUserRole[];
-
   eventType: CandidacyEventType;
 }) => {
   if (!userKeycloakId) {
