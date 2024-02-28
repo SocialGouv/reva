@@ -35,7 +35,7 @@ export const getCandidacyLogMessage = ({
     case "ORGANISM_SELECTED":
       return "Organisme de formation modifié";
     case "TYPOLOGY_AND_CCN_INFO_UPDATED":
-      return "Information de typologie et de convention collective candidat modifiées";
+      return "Informations de typologie et de convention collective candidat modifiées";
     case "TRAINING_FORM_SUBMITTED":
       return "Parcours candidat envoyé";
     case "TRAINING_FORM_CONFIRMED":
