@@ -1,8 +1,15 @@
+enum CandidacyLogUserProfile {
+  ADMIN
+  CANDIDAT
+  CERTIFICATEUR
+  AAP
+}
+
 type CandidacyLog {
   id: ID!
-  userAccount: Account!
   message: String!
   createdAt: Timestamp!
+  userProfile: CandidacyLogUserProfile!
 }
 
 type Candidacy {

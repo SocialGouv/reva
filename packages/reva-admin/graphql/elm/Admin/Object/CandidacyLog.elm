@@ -4,6 +4,7 @@
 
 module Admin.Object.CandidacyLog exposing (..)
 
+import Admin.Enum.CandidacyLogUserProfile
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -24,13 +25,6 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-userAccount :
-    SelectionSet decodesTo Admin.Object.Account
-    -> SelectionSet decodesTo Admin.Object.CandidacyLog
-userAccount object____ =
-    Object.selectionForCompositeField "userAccount" [] object____ Basics.identity
-
-
 message : SelectionSet String Admin.Object.CandidacyLog
 message =
     Object.selectionForField "String" "message" [] Decode.string
@@ -39,3 +33,8 @@ message =
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.CandidacyLog
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+userProfile : SelectionSet Admin.Enum.CandidacyLogUserProfile.CandidacyLogUserProfile Admin.Object.CandidacyLog
+userProfile =
+    Object.selectionForField "Enum.CandidacyLogUserProfile.CandidacyLogUserProfile" "userProfile" [] Admin.Enum.CandidacyLogUserProfile.decoder
