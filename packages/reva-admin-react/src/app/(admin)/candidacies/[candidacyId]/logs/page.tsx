@@ -15,6 +15,10 @@ const getCandidacyLogsQuery = graphql(`
       certification {
         label
       }
+      candidate {
+        firstname
+        lastname
+      }
       candidacyLogs {
         id
         createdAt
@@ -37,24 +41,36 @@ const CandidacyLogsPage = () => {
         candidacyId,
       }),
   });
-
-  const candidacyLogs =
-    getCandidacyLogsResponse?.getCandidacyById?.candidacyLogs;
+  const candidacy = getCandidacyLogsResponse?.getCandidacyById;
+  const candidate = candidacy?.candidate;
+  const candidacyLogs = candidacy?.candidacyLogs;
   return (
-    <div className="flex flex-col">
-      <Link
-        href={`${ADMIN_ELM_URL}/candidacies/${candidacyId}`}
-        className="fr-icon-arrow-go-back-line fr-link--icon-left text-blue-900 text-lg mr-auto mb-8"
-      >
-        Résumé de la candidature
-      </Link>
-      <PageTitle>Journal des actions</PageTitle>
-      {candidacyLogs?.map((l) => (
-        <div key={l.id}>
-          {format(l.createdAt, "dd/MM/yyyy HH:mm")} - {l.message}
-        </div>
-      ))}
-    </div>
+    candidacy && (
+      <div className="flex flex-col">
+        <Link
+          href={`${ADMIN_ELM_URL}/candidacies/${candidacyId}`}
+          className="fr-icon-arrow-go-back-line fr-link--icon-left text-blue-900 text-lg mr-auto mb-8"
+        >
+          Résumé de la candidature
+        </Link>
+        <PageTitle className="!mb-4">
+          {candidate?.firstname} {candidate?.lastname} - Suivi de la candidature
+        </PageTitle>
+        <p className="text-xl text-gray-700 font-bold mb-11">
+          {candidacy.certification?.label}
+        </p>
+        <ul>
+          {candidacyLogs?.map((l) => (
+            <li key={l.id} className="flex flex-col my-2">
+              <span className="text-sm font-bold">
+                {format(l.createdAt, "dd/MM/yyyy - HH:mm")}
+              </span>
+              <span> {l.message}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
   );
 };
 
