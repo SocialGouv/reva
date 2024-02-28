@@ -1,11 +1,13 @@
 import { isBefore, startOfDay } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
-import { sendJuryResultAAPEmail } from "../emails/sendJuryResultAAPEmail";
-import { sendJuryResultCandidateEmail } from "../emails/sendJuryResultCandidateEmail";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import {
+  sendJuryResultAAPEmail,
+  sendJuryResultCandidateEmail,
+} from "../emails";
 import { JuryInfo, JuryResult } from "../jury.types";
 import { canManageJury } from "./canManageJury";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 interface UpdateResultOfJury {
   juryId: string;

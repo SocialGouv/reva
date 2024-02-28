@@ -1,18 +1,20 @@
 import { v4 as uuidV4 } from "uuid";
 
 import {
-  isBefore,
+  add,
+  endOfDay,
   isAfter,
+  isBefore,
   isEqual,
   startOfDay,
-  endOfDay,
-  add,
 } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { FileService, UploadedFile } from "../../shared/file";
-import { sendJuryScheduledCandidateEmail } from "../emails/sendJuryScheduledCandidateEmail";
-import { sendJuryScheduledAAPEmail } from "../emails/sendJuryScheduledAAPEmail";
+import {
+  sendJuryScheduledAAPEmail,
+  sendJuryScheduledCandidateEmail,
+} from "../emails";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;

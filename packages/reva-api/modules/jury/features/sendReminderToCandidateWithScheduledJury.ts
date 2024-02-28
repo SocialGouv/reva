@@ -1,7 +1,7 @@
+import { add, endOfDay, startOfDay } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
-import { startOfDay, endOfDay, add } from "date-fns";
-import { sendJuryScheduledReminderCandidateEmail } from "../emails/sendJuryScheduledReminderCandidateEmail";
 import { logger } from "../../shared/logger";
+import { sendJuryScheduledReminderCandidateEmail } from "../emails";
 
 export const sendReminderToCandidateWithScheduledJury = async () => {
   const today = startOfDay(new Date());
@@ -10,7 +10,7 @@ export const sendReminderToCandidateWithScheduledJury = async () => {
   const juries = await prismaClient.jury.findMany({
     where: {
       isActive: true,
-      reminderSendAt: null,
+      reminderToCandidateWithScheduledJurySendAt: null,
       result: null,
       dateOfSession: { gte: today, lte: nextTwoWeeks },
     },
@@ -36,7 +36,7 @@ export const sendReminderToCandidateWithScheduledJury = async () => {
         await prismaClient.jury.update({
           where: { id: jury.id },
           data: {
-            reminderSendAt: new Date(),
+            reminderToCandidateWithScheduledJurySendAt: new Date(),
           },
         });
       }

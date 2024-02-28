@@ -5,18 +5,22 @@ import path from "path";
 import { CronJob } from "cron";
 import dotenv from "dotenv";
 
+import { sendReminderToOrganismForCandidateValidationDeadline } from "../modules/dossier-de-validation/features/sendReminderToOrganismForCandidateValidationDeadline";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
+import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
+import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/referential/features/deactivateCertificationsIfExpiresAtDateIsPast";
+import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
-import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
-import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/referential/features/deactivateCertificationsIfExpiresAtDateIsPast";
-import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
+
+const EVERY_DAY_AT_1_AM = "0 1 * * *";
+const EVERY_DAY_AT_2_AM = "0 2 * * *";
 
 const fundingRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
@@ -118,7 +122,7 @@ CronJob.from({
 CronJob.from({
   cronTime:
     process.env.BATCH_SEND_REMINDER_TO_CANDIDATE_WITH_SCHEDULED_JURY ||
-    "* 8 * * *",
+    EVERY_DAY_AT_1_AM,
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.send-reminder-to-candidate-with-scheduled-jury",
@@ -127,6 +131,25 @@ CronJob.from({
           "Running send-reminder-to-candidate-with-scheduled-jury batch",
         );
         await sendReminderToCandidateWithScheduledJury();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send a reminder to the organism  that the deadline for providing the "date prévionnelle à laquelle le candidat aura finalisé son dossier de validation" has passed
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_REMINDER_TO_ORGANISM_FOR_CANDIDATE_DV_DEADLINE ||
+    EVERY_DAY_AT_2_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-reminder-to-organism-for-candidate-dv-deadline",
+      batchCallback: async () => {
+        logger.info(
+          "Running send-reminder-to-organism-for-candidate-dv-deadline batch",
+        );
+        await sendReminderToOrganismForCandidateValidationDeadline();
       },
     }),
   start: true,

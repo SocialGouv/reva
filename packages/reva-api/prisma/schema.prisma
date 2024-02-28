@@ -64,50 +64,51 @@ enum FinanceModule {
 }
 
 model Candidacy {
-  id                        String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  deviceId                  String                                  @db.VarChar(255)
-  organism                  Organism?                               @relation(fields: [organismId], references: [id])
-  organismId                String?                                 @map("organism_id") @db.Uuid
-  candidacyStatuses         CandidaciesStatus[]
-  goals                     CandicadiesOnGoals[]
-  experiences               Experience[]
-  certificationsAndRegions  CandidaciesOnRegionsAndCertifications[]
-  typology                  CandidateTypology                       @default(NON_SPECIFIE)
-  typologyAdditional        String?                                 @map("typology_additional")
-  ccn                       CandidacyConventionCollective?          @relation(fields: [ccnId], references: [id], onDelete: NoAction)
-  ccnId                     String?                                 @map("ccn_id") @db.Uuid
-  firstAppointmentOccuredAt DateTime?                               @map("first_appointment_occured_at") @db.Timestamptz(6)
-  appointmentCount          Int                                     @default(0) @map("appointment_count")
-  email                     String?                                 @db.VarChar(255)
-  trainings                 TrainingOnCandidacies[]
-  basicSkills               BasicSkillOnCandidacies[]
-  certificateSkills         String?                                 @map("certificate_skills")
-  otherTraining             String?                                 @map("other_training")
-  individualHourCount       Int?                                    @map("individual_hour_count")
-  collectiveHourCount       Int?                                    @map("collective_hour_count")
-  additionalHourCount       Int?                                    @map("additional_hour_count")
-  candidate                 Candidate?                              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  candidateId               String?                                 @map("candidate_id") @db.Uuid
-  department                Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  departmentId              String?                                 @map("department_id") @db.Uuid
-  candidacyDropOut          CandidacyDropOut?                       @relation()
-  reorientationReason       ReorientationReason?                    @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
-  reorientationReasonId     String?                                 @map("reorientation_reason_id") @db.Uuid
-  createdAt                 DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                 DateTime?                               @map("updated_at") @db.Timestamptz(6)
-  financeModule             FinanceModule                           @default(unifvae) @map("finance_module")
-  FundingRequest            FundingRequest[]
-  paymentRequest            PaymentRequest?
-  fundingRequestUnifvae     FundingRequestUnifvae[]
-  isCertificationPartial    Boolean?                                @map("is_certification_partial")
-  admissibility             Admissibility?
-  examInfo                  ExamInfo?
-  readyForJuryEstimatedAt   DateTime?                               @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
-  Feasibility               Feasibility[]
-  dossierDeValidation       DossierDeValidation[]
-  paymentRequestUnifvae     PaymentRequestUnifvae?
-  Jury                      Jury[]
-  CandidacyLog              CandidacyLog[]
+  id                                         String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  deviceId                                   String                                  @db.VarChar(255)
+  organism                                   Organism?                               @relation(fields: [organismId], references: [id])
+  organismId                                 String?                                 @map("organism_id") @db.Uuid
+  candidacyStatuses                          CandidaciesStatus[]
+  goals                                      CandicadiesOnGoals[]
+  experiences                                Experience[]
+  certificationsAndRegions                   CandidaciesOnRegionsAndCertifications[]
+  typology                                   CandidateTypology                       @default(NON_SPECIFIE)
+  typologyAdditional                         String?                                 @map("typology_additional")
+  ccn                                        CandidacyConventionCollective?          @relation(fields: [ccnId], references: [id], onDelete: NoAction)
+  ccnId                                      String?                                 @map("ccn_id") @db.Uuid
+  firstAppointmentOccuredAt                  DateTime?                               @map("first_appointment_occured_at") @db.Timestamptz(6)
+  appointmentCount                           Int                                     @default(0) @map("appointment_count")
+  email                                      String?                                 @db.VarChar(255)
+  trainings                                  TrainingOnCandidacies[]
+  basicSkills                                BasicSkillOnCandidacies[]
+  certificateSkills                          String?                                 @map("certificate_skills")
+  otherTraining                              String?                                 @map("other_training")
+  individualHourCount                        Int?                                    @map("individual_hour_count")
+  collectiveHourCount                        Int?                                    @map("collective_hour_count")
+  additionalHourCount                        Int?                                    @map("additional_hour_count")
+  candidate                                  Candidate?                              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  candidateId                                String?                                 @map("candidate_id") @db.Uuid
+  department                                 Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId                               String?                                 @map("department_id") @db.Uuid
+  candidacyDropOut                           CandidacyDropOut?                       @relation()
+  reorientationReason                        ReorientationReason?                    @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
+  reorientationReasonId                      String?                                 @map("reorientation_reason_id") @db.Uuid
+  createdAt                                  DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                  DateTime?                               @map("updated_at") @db.Timestamptz(6)
+  financeModule                              FinanceModule                           @default(unifvae) @map("finance_module")
+  FundingRequest                             FundingRequest[]
+  paymentRequest                             PaymentRequest?
+  fundingRequestUnifvae                      FundingRequestUnifvae[]
+  isCertificationPartial                     Boolean?                                @map("is_certification_partial")
+  admissibility                              Admissibility?
+  examInfo                                   ExamInfo?
+  readyForJuryEstimatedAt                    DateTime?                               @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
+  Feasibility                                Feasibility[]
+  dossierDeValidation                        DossierDeValidation[]
+  paymentRequestUnifvae                      PaymentRequestUnifvae?
+  Jury                                       Jury[]
+  CandidacyLog                               CandidacyLog[]
+  reminderToOrganismDVDeadlineExceededSentAt DateTime?                               @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
 
   @@map("candidacy")
 }
@@ -1071,25 +1072,25 @@ model DossierDeValidationOtherFilesOnFile {
 }
 
 model Jury {
-  id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                Candidacy              @relation(fields: [candidacyId], references: [id])
-  candidacyId              String                 @map("candidacy_id") @db.Uuid
-  certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
-  convocationFile          File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
-  convocationFileId        String?                @unique @map("convocation_file_id") @db.Uuid
-  dateOfSession            DateTime               @map("date_of_session") @db.Timestamptz(6)
-  timeOfSession            String?                @map("time_of_session")
-  addressOfSession         String?                @map("address_of_session")
-  informationOfSession     String?                @map("information_of_session")
-  result                   String?                @map("result")
-  dateOfResult             DateTime?              @map("date_of_result") @db.Timestamptz(6)
-  isResultProvisional      Boolean?               @map("is_result_provisional")
-  informationOfResult      String?                @map("information_of_result")
-  reminderSendAt           DateTime?              @map("reminder_send_at") @db.Timestamptz(6)
-  isActive                 Boolean                @default(true) @map("is_active")
-  createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id                                         String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                                  Candidacy              @relation(fields: [candidacyId], references: [id])
+  candidacyId                                String                 @map("candidacy_id") @db.Uuid
+  certificationAuthority                     CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId                   String                 @map("certification_authority_id") @db.Uuid
+  convocationFile                            File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
+  convocationFileId                          String?                @unique @map("convocation_file_id") @db.Uuid
+  dateOfSession                              DateTime               @map("date_of_session") @db.Timestamptz(6)
+  timeOfSession                              String?                @map("time_of_session")
+  addressOfSession                           String?                @map("address_of_session")
+  informationOfSession                       String?                @map("information_of_session")
+  result                                     String?                @map("result")
+  dateOfResult                               DateTime?              @map("date_of_result") @db.Timestamptz(6)
+  isResultProvisional                        Boolean?               @map("is_result_provisional")
+  informationOfResult                        String?                @map("information_of_result")
+  isActive                                   Boolean                @default(true) @map("is_active")
+  createdAt                                  DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                  DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
+  reminderToCandidateWithScheduledJurySendAt DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
 
   @@map("jury")
 }
