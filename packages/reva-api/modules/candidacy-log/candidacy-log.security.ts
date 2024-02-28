@@ -1,4 +1,4 @@
-import { defaultSecurity, isAdmin } from "../shared/security/presets";
+import { defaultSecurity } from "../shared/security/presets";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut
@@ -6,6 +6,4 @@ export const resolversSecurityMap = {
 
   "Query.*": defaultSecurity, // forbidden
   "Mutation.*": defaultSecurity, // forbidden
-
-  "Query.candidacyLog_getCandidacyLogs": isAdmin,
 };

@@ -5,15 +5,13 @@ import { getCandidacyLogMessage } from "./features/getCandidacyLogMessage";
 import { CandidacyEventType } from "./candidacy-log.types";
 
 const unsafeResolvers = {
+  Candidacy: {
+    candidacyLogs: async ({ id: candidacyId }: { id: string }) =>
+      getCandidacyLogs({ candidacyId }),
+  },
   CandidacyLog: {
     message: ({ eventType }: { eventType: CandidacyEventType }) =>
       getCandidacyLogMessage({ eventType }),
-  },
-  Query: {
-    candidacyLog_getCandidacyLogs: async (
-      _: unknown,
-      { candidacyId }: { candidacyId: string },
-    ) => getCandidacyLogs({ candidacyId }),
   },
 };
 

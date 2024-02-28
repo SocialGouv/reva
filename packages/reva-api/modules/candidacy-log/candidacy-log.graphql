@@ -5,6 +5,6 @@ type CandidacyLog {
   createdAt: Timestamp!
 }
 
-type Query {
-  candidacyLog_getCandidacyLogs(candidacyId: ID!): [CandidacyLog!]!
+type Candidacy {
+  candidacyLogs: [CandidacyLog!]!
 }

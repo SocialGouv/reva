@@ -10,10 +10,16 @@ import { useParams } from "next/navigation";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {
-    candidacyLog_getCandidacyLogs(candidacyId: $candidacyId) {
+    getCandidacyById(id: $candidacyId) {
       id
-      createdAt
-      message
+      certification {
+        label
+      }
+      candidacyLogs {
+        id
+        createdAt
+        message
+      }
     }
   }
 `);
@@ -31,6 +37,9 @@ const CandidacyLogsPage = () => {
         candidacyId,
       }),
   });
+
+  const candidacyLogs =
+    getCandidacyLogsResponse?.getCandidacyById?.candidacyLogs;
   return (
     <div className="flex flex-col">
       <Link
@@ -40,7 +49,7 @@ const CandidacyLogsPage = () => {
         Résumé de la candidature
       </Link>
       <PageTitle>Journal des actions</PageTitle>
-      {getCandidacyLogsResponse?.candidacyLog_getCandidacyLogs?.map((l) => (
+      {candidacyLogs?.map((l) => (
         <div key={l.id}>
           {format(l.createdAt, "dd/MM/yyyy HH:mm")} - {l.message}
         </div>
