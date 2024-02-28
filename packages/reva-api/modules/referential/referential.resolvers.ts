@@ -21,6 +21,7 @@ import { updateCertification } from "./features/updateCertification";
 import { replaceCertification } from "./features/replaceCertification";
 import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
+import { RNCPReferential } from "./rncp";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -79,6 +80,8 @@ const unsafeReferentialResolvers = {
       prismaClient.conventionCollective.findMany(),
     getTypeDiplomes,
     getCertificationAuthorityTags,
+    getFCCertification: (_: unknown, { rncp }: { rncp: string }) =>
+      RNCPReferential.getInstance().findOneByRncp(rncp),
   },
   Mutation: {
     referential_updateCertification: (

@@ -97,6 +97,20 @@ type CertificationPage {
   info: PaginationInfo!
 }
 
+type BlocCompetence {
+  CODE: String!
+  LIBELLE: String!
+  LISTE_COMPETENCES: String!
+  PARSED_COMPETENCES: [String!]!
+  MODALITES_EVALUATION: String
+}
+
+type FCCertification {
+  ID_FICHE: ID!
+  NUMERO_FICHE: String!
+  BLOCS_COMPETENCES: [BlocCompetence!]!
+}
+
 type Query {
   getReferential: Referential!
   searchCertificationsForCandidate(
@@ -124,6 +138,7 @@ type Query {
   getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
   getCertificationAuthorityTags: [String!]!
+  getFCCertification(rncp: ID!): FCCertification
 }
 
 input UpdateCertificationInput {
