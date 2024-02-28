@@ -15,11 +15,13 @@ export const sendDossierDeValidation = async ({
   dossierDeValidationFile,
   dossierDeValidationOtherFiles,
   userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   dossierDeValidationFile: UploadedFile;
   dossierDeValidationOtherFiles: UploadedFile[];
   userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -160,6 +162,7 @@ export const sendDossierDeValidation = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userRoles,
     eventType: "DOSSIER_DE_VALIDATION_SENT",
   });
 

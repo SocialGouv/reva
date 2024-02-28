@@ -208,6 +208,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           documentaryProofFile,
           certificateOfAttendanceFile,
           userKeycloakId: request.auth?.userInfo?.sub,
+          userRoles: request.auth.userInfo?.realm_access?.roles || [],
         });
       } catch (e) {
         logger.error(e);
@@ -286,6 +287,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         decision: request.body.decision.value,
         hasRole: request.auth.hasRole as (role: string) => boolean,
         keycloakId: request.auth?.userInfo?.sub,
+        userRoles: request.auth.userInfo?.realm_access?.roles || [],
         comment: request.body.comment?.value,
         infoFile,
       });

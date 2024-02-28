@@ -91,6 +91,7 @@ const unsafeResolvers = {
         await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
           eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
         });
       }
@@ -128,6 +129,7 @@ const unsafeResolvers = {
         await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
           eventType: "PAYMENT_REQUEST_CONFIRMED",
         });
       }

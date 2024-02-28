@@ -99,6 +99,7 @@ const unsafeResolvers = {
       return updateExamInfo({
         ...params,
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
     },
     jury_updateResult: async (
@@ -121,6 +122,7 @@ const unsafeResolvers = {
         juryInfo: params.input,
         roles: context.auth.userInfo.realm_access?.roles || [],
         keycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
     },
   },

@@ -14,7 +14,11 @@ export const createFundingRequestUnifvae = async ({
   isCertificationPartial,
   fundingRequest,
   userKeycloakId,
-}: FundingRequestUnifvaeInputCompleted & { userKeycloakId?: string }) => {
+  userRoles,
+}: FundingRequestUnifvaeInputCompleted & {
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
+}) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     select: {
@@ -92,6 +96,7 @@ export const createFundingRequestUnifvae = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userRoles,
     eventType: "FUNDING_REQUEST_CREATED",
   });
   return result;
@@ -127,10 +132,12 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   candidacyId,
   paymentRequest,
   userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   paymentRequest: PaymentRequestUnifvaeInput;
   userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
@@ -230,6 +237,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userRoles,
     eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
   });
 
@@ -241,26 +249,34 @@ export const addUploadedFileAndConfirmPayment = async ({
   invoiceFile,
   certificateOfAttendanceFile,
   userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   invoiceFile: UploadedFile;
   certificateOfAttendanceFile: UploadedFile;
   userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   await addUploadedFileToPaymentRequestUnifvae({
     candidacyId,
     invoiceFile,
     certificateOfAttendanceFile,
   });
-  await confirmPaymentRequestUnifvae({ candidacyId, userKeycloakId });
+  await confirmPaymentRequestUnifvae({
+    candidacyId,
+    userKeycloakId,
+    userRoles,
+  });
 };
 
 const confirmPaymentRequestUnifvae = async ({
   candidacyId,
   userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -356,6 +372,7 @@ const confirmPaymentRequestUnifvae = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userRoles,
     eventType: "PAYMENT_REQUEST_CONFIRMED",
   });
   return paymentRequest;

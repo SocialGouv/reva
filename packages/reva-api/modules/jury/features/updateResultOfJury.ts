@@ -12,6 +12,7 @@ interface UpdateResultOfJury {
   juryInfo: JuryInfo;
   roles: KeyCloakUserRole[];
   keycloakId: string;
+  userRoles: KeyCloakUserRole[];
 }
 
 const isResultProvisionalEnabled = (result: JuryResult): boolean => {
@@ -28,7 +29,7 @@ const isResultProvisionalEnabled = (result: JuryResult): boolean => {
 };
 
 export const updateResultOfJury = async (params: UpdateResultOfJury) => {
-  const { juryId, juryInfo, roles, keycloakId } = params;
+  const { juryId, juryInfo, roles, keycloakId, userRoles } = params;
 
   const jury = await prismaClient.jury.findUnique({
     where: { id: juryId, isActive: true },
@@ -111,6 +112,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   await logCandidacyAuditEvent({
     candidacyId: candidacy.id,
     userKeycloakId: keycloakId,
+    userRoles,
     eventType: "JURY_RESULT_UPDATED",
   });
 

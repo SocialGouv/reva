@@ -101,6 +101,7 @@ const unsafeResolvers = {
         const fundreq = await createFundingRequestUnifvae({
           ...fundingRequestCompleted,
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
         logFundingRequestUnifvaeEvent({
           context,
@@ -133,6 +134,7 @@ const unsafeResolvers = {
       createOrUpdatePaymentRequestUnifvae({
         ...params,
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },
 };

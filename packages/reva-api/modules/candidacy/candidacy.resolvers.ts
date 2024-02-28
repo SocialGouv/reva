@@ -311,6 +311,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         eventType: "CANDIDACY_SUBMITTED",
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       return result;
     },
@@ -328,6 +329,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         eventType: "CERTIFICATION_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
 
       return result;
@@ -347,6 +349,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         eventType: "CERTIFICATION_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       return result;
     },
@@ -379,6 +382,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "EXPERIENCE_ADDED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -411,6 +415,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "EXPERIENCE_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -447,6 +452,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "GOALS_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -481,6 +487,7 @@ const unsafeResolvers = {
               candidacyId: c.id,
               eventType: "CONTACT_INFO_UPDATED",
               userKeycloakId: context.auth.userInfo?.sub,
+              userRoles: context.auth.userInfo?.realm_access?.roles || [],
             });
           }),
         );
@@ -513,6 +520,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_DELETED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -548,6 +556,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_ARCHIVED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -576,6 +585,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_UNARCHIVED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -606,6 +616,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "APPOINTMENT_INFO_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -636,6 +647,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_TAKEN_OVER",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -656,6 +668,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         eventType: "ORGANISM_SELECTED",
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
 
       return result;
@@ -683,6 +696,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
         return candidacyDb.getCandidacyFromId(payload.candidacyId);
       } catch (e) {
@@ -728,6 +742,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "TRAINING_FORM_SUBMITTED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -758,6 +773,7 @@ const unsafeResolvers = {
           candidacyId,
           eventType: "TRAINING_FORM_CONFIRMED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -808,6 +824,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_DROPPED_OUT",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
       return result
@@ -852,6 +869,7 @@ const unsafeResolvers = {
           candidacyId: payload.candidacyId,
           eventType: "CANDIDACY_DROP_OUT_CANCELED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
 
@@ -888,6 +906,7 @@ const unsafeResolvers = {
           candidacyId,
           eventType: "ADMISSIBILITY_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
         });
       }
 
@@ -908,6 +927,7 @@ const unsafeResolvers = {
         candidacyId: params.candidacyId,
         eventType: "READY_FOR_JURY_ESTIMATED_DATE_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       return result;
     },
