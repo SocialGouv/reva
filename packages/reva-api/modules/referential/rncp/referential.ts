@@ -150,7 +150,7 @@ function splitString(value: string): string[] {
   }
 
   // UpperFirst + number.number. etc and -
-  const regEx2 = new RegExp(/(?=(?:[A-Z]{1}\.? ?)(?:[^ –]*)(?: –))/g);
+  const regEx2 = new RegExp(/(?=(?:\b[A-Z]{1,2}\.? ?)(?:[^ –]*)(?: –))/g);
   if (cleanedValue.match(regEx2)) {
     let list: string[] = [];
     list = cleanedValue.split(regEx2);
@@ -192,7 +192,7 @@ function splitString(value: string): string[] {
     list = cleanedValue
       .replace(
         new RegExp(
-          /^Compétences de niveau [0-9] du référentiel de compétences attendues/,
+          /^Compétences de niveau [0-9] du référentiel de compétences attendues ?/,
         ),
         "",
       )
