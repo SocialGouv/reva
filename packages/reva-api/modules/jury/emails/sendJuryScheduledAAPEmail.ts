@@ -24,7 +24,7 @@ export const sendJuryScheduledAAPEmail = async ({
       content: `
       <p>Bonjour,</p>
       <p>La convocation pour votre candidat ${candidateFullName} a été émise.</p>
-      <p>Voici sa date de votre passage devant un jury VAE :</p>
+      <p>Voici la date de son passage devant un jury VAE :</p>
       <p>${format(dateOfSession, "dd/MM/yyyy")} ${timeOfSession ? `à ${timeOfSession} ` : ``}</p>
     `,
       labelCTA: "Accéder aux informations jury",
