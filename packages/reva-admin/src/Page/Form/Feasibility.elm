@@ -36,7 +36,7 @@ form formData ( candidacy, _ ) =
                 [ text s ]
 
         certificationAuthorityView certificationAuthority =
-            div []
+            div [ class "w-full" ]
                 [ subTitle "-mt-4" "Autorité de certification"
                 , View.Candidate.viewCertificationAuthority certificationAuthority
                 ]
