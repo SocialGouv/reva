@@ -23,6 +23,7 @@ export const sendReminderToOrganismForCandidateValidationDeadline =
         candidacy: {
           reminderToOrganismDVDeadlineExceededSentAt: null,
           readyForJuryEstimatedAt: null,
+          candidacyDropOut: null,
         },
       },
       include: {
