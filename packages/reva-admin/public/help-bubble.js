@@ -19,7 +19,7 @@
     },
     {
       label: "FAQ AAP",
-      url: "https://reva.crisp.help/fr/category/architectes-accompagnateurs-de-parcours-1oikyam/",
+      url: "https://vae.gouv.fr/faq/",
     },
     {
       label: "Calendrier des webinaires",
