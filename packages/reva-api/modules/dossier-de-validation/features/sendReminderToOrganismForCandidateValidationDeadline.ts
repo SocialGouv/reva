@@ -7,9 +7,10 @@ export const sendReminderToOrganismForCandidateValidationDeadline =
   async () => {
     const today = startOfDay(new Date());
     const twoMonthsAgo = endOfDay(sub(today, { months: 2 })).toISOString();
-    const dateFeatureHasBeenReleasedInProduction =
-      process.env.FEATURE_RELEASED_DATE_DV ??
-      new Date("2024-02-13T00:00:00.000Z").toISOString();
+    const dateFeatureHasBeenReleasedInProduction = process.env
+      .FEATURE_RELEASED_DATE_DV
+      ? new Date(process.env.FEATURE_RELEASED_DATE_DV).toISOString()
+      : new Date("2024-02-13T00:00:00.000Z").toISOString();
 
     const candidaciesStatus = await prismaClient.candidaciesStatus.findMany({
       where: {
