@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { selectedDepartmentsToTreeSelectItems } from "@/utils";
+import { ZoneInterventionReadOnly } from "@/app/(admin)/subscriptions/[subscriptionRequestId]/ZoneInterventionReadOnly";
 
 const getSubscriptionRequest = graphql(`
   query getSubscriptionRequest($subscriptionRequestId: ID!) {
@@ -116,7 +117,6 @@ const SubscriptionRequestPage = () => {
           Toutes les inscriptions
         </Link>
         <OrganismSummary
-          readonly
           companyName={subscriptionRequest.companyName}
           accountFirstname={subscriptionRequest.accountFirstname}
           accountLastname={subscriptionRequest.accountLastname}
@@ -132,17 +132,20 @@ const SubscriptionRequestPage = () => {
           companyCity={subscriptionRequest.companyCity}
           companyWebsite={subscriptionRequest.companyWebsite}
           companyTypology={subscriptionRequest.typology}
-          onSiteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedOnSiteDepartments),
-          )}
-          remoteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
-          )}
           ccns={subscriptionRequest?.subscriptionRequestOnConventionCollective?.map(
             (s) => s.ccn.label,
           )}
           domaines={subscriptionRequest?.subscriptionRequestOnDomaine?.map(
             (s) => s.domaine.label,
+          )}
+        />
+
+        <ZoneInterventionReadOnly
+          onSiteDepartmentsOnRegions={regions.map(
+            selectedDepartmentsToTreeSelectItems(selectedOnSiteDepartments),
+          )}
+          remoteDepartmentsOnRegions={regions.map(
+            selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
           )}
         />
 

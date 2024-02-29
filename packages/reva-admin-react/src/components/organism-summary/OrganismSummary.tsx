@@ -36,11 +36,8 @@ export const OrganismSummary = ({
   companyZipCode,
   companyCity,
   companyTypology,
-  onSiteDepartmentsOnRegions,
-  remoteDepartmentsOnRegions,
   ccns,
   domaines,
-  readonly,
 }: {
   companyName: string;
   accountFirstname: string;
@@ -55,11 +52,8 @@ export const OrganismSummary = ({
   companyZipCode: string;
   companyCity: string;
   companyTypology: Typology;
-  onSiteDepartmentsOnRegions: TreeSelectItem[];
-  remoteDepartmentsOnRegions: TreeSelectItem[];
   ccns?: string[];
   domaines?: string[];
-  readonly?: boolean;
 }) => (
   <div className="flex flex-col mt-10">
     <h1 className="text-4xl font-bold">{companyName}</h1>
@@ -127,54 +121,6 @@ export const OrganismSummary = ({
         </Info>
       )}
     </div>
-
-    <fieldset className="mt-12 flex flex-col sm:flex-row gap-y-8 justify-between">
-      <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-        <legend className="text-xl text-gray-900 font-bold">
-          Zone d'intervention en présentiel
-        </legend>
-        {!readonly && (
-          <span className="text-sm ">
-            Cochez les régions ou départements couverts en présentiel
-          </span>
-        )}
-        <TreeSelect
-          readonly={readonly}
-          fullHeight
-          title=""
-          label="Toute la France Métropolitaine"
-          items={onSiteDepartmentsOnRegions}
-          onClickSelectAll={() => {}}
-          onClickItem={() => {}}
-          toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
-            onSiteDepartmentsOnRegions,
-          )}
-        />
-      </div>
-
-      <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-        <legend className="text-xl text-gray-900 font-bold">
-          Zone d'intervention en distanciel
-        </legend>
-        {!readonly && (
-          <span className="text-sm">
-            Cochez les régions ou départements couverts en distanciel
-          </span>
-        )}
-        <TreeSelect
-          readonly={readonly}
-          fullHeight
-          title=""
-          label="Toute la France Métropolitaine"
-          items={remoteDepartmentsOnRegions}
-          onClickSelectAll={() => {}}
-          onClickItem={() => {}}
-          toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
-            remoteDepartmentsOnRegions,
-          )}
-        />
-      </div>
-    </fieldset>
   </div>
 );
 
