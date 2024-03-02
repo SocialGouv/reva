@@ -28,7 +28,16 @@ export const getMaisonMereAAPs = async ({
   if (searchFilter) {
     const containsFilter = buildContainsFilterClause(searchFilter);
 
-    const filters = [containsFilter("raisonSociale")];
+    const filtersAccount = {
+      gestionnaire: {
+        OR: [
+          containsFilter("firstname"),
+          containsFilter("lastname"),
+          containsFilter("email"),
+        ],
+      },
+    };
+    const filters = [containsFilter("raisonSociale"), filtersAccount];
 
     queryMaisonMereAAPs.where = {
       ...queryMaisonMereAAPs.where,
@@ -41,11 +50,9 @@ export const getMaisonMereAAPs = async ({
     };
   }
 
-  const maisonMereAAPs = await prismaClient.maisonMereAAP.findMany(
-    queryMaisonMereAAPs
-  );
+  const maisonMereAAPs =
+    await prismaClient.maisonMereAAP.findMany(queryMaisonMereAAPs);
   const count = await prismaClient.maisonMereAAP.count(queryCount);
-
   return {
     rows: maisonMereAAPs,
     info: processPaginationInfo({
