@@ -17,8 +17,12 @@ const start = async () => {
       host: "0.0.0.0",
     });
     server.log.info(
-      `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`
+      `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`,
     );
+
+    //TODO remove here and implement in the right place
+    // await getAAPsWithZipCodeAndDistance({ distance: 15, zip: "93100" });
+    // await generateLLToEarthFromZipCodeToAAP();
   } catch (err) {
     server.log.error(err);
     process.exit(1);
