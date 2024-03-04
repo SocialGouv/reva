@@ -17,7 +17,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_SUBMITTED":
       return "Candidature envoyée.";
     case "CERTIFICATION_UPDATED":
-      return "Certification modifiée.";
+      return `Certification modifiée. ${details ? `Nouvelle certification: ${details.certification.label} (${details.certification.codeRncp})` : ""}`;
     case "EXPERIENCE_ADDED":
       return "Expérience ajoutée.";
     case "EXPERIENCE_UPDATED":

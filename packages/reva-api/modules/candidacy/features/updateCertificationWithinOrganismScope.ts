@@ -10,15 +10,21 @@ import {
   updateCandidacyStatus,
   updateCertification,
 } from "../database/candidacies";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const updateCertificationWithinOrganismScope = async ({
   hasRole,
   candidacyId,
   certificationId,
+  userKeycloakId,
+  userRoles,
 }: {
   hasRole: (role: Role) => boolean;
   candidacyId: string;
   certificationId: string;
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -30,22 +36,24 @@ export const updateCertificationWithinOrganismScope = async ({
     },
   });
 
+  const newCertification = await getCertificationById({ certificationId });
+
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-      `Aucune candidature n'a été trouvée`
+      `Aucune candidature n'a été trouvée`,
     );
   }
 
   if (!candidacy.departmentId || !candidacy.organismId) {
     throw new Error(
-      "Impossible de modifier la certification d'une candidature sans département ou sans organisme"
+      "Impossible de modifier la certification d'une candidature sans département ou sans organisme",
     );
   }
 
   if (candidacy.candidacyDropOut) {
     throw new Error(
-      "Impossible de modifier la certification d'une candidature abandonnée"
+      "Impossible de modifier la certification d'une candidature abandonnée",
     );
   }
 
@@ -58,12 +66,12 @@ export const updateCertificationWithinOrganismScope = async ({
           departmentId: candidacy.departmentId,
           organismId: candidacy.organismId,
         },
-      }
+      },
     );
 
   if (!activeOrganism) {
     throw new Error(
-      "Cette certification n'est pas disponible pour cet organisme"
+      "Cette certification n'est pas disponible pour cet organisme",
     );
   }
 
@@ -94,7 +102,7 @@ export const updateCertificationWithinOrganismScope = async ({
 
   if (!allowedStatues.includes(lastStatus)) {
     throw new Error(
-      "La certification ne peut être mise à jour qu'en début de candidature"
+      "La certification ne peut être mise à jour qu'en début de candidature",
     );
   }
 
@@ -112,6 +120,20 @@ export const updateCertificationWithinOrganismScope = async ({
     certificationId,
     departmentId: candidacy.departmentId || "",
     author: hasRole("admin") ? "admin" : "organism",
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId: candidacyId,
+    eventType: "CERTIFICATION_UPDATED",
+    userKeycloakId,
+    userRoles,
+    details: {
+      certification: {
+        id: certificationId,
+        label: newCertification.label,
+        codeRncp: newCertification.rncpId,
+      },
+    },
   });
 
   return updatedCandidacy.unsafeCoerce();

@@ -13,15 +13,21 @@ import {
   updateOrganism,
 } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,
   certificationId,
   departmentId,
+  userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   certificationId: string;
   departmentId: string;
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -33,17 +39,19 @@ export const updateCertificationOfCandidacy = async ({
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-      `Aucune candidature n'a été trouvée`
+      `Aucune candidature n'a été trouvée`,
     );
   }
 
   if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
+      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
     );
   }
 
   try {
+    const newCertification = await getCertificationById({ certificationId });
+
     (
       await updateCertification({
         candidacyId,
@@ -79,12 +87,26 @@ export const updateCertificationOfCandidacy = async ({
       },
     });
 
+    await logCandidacyAuditEvent({
+      candidacyId: candidacyId,
+      eventType: "CERTIFICATION_UPDATED",
+      userKeycloakId,
+      userRoles,
+      details: {
+        certification: {
+          id: certificationId,
+          label: newCertification.label,
+          codeRncp: newCertification.rncpId,
+        },
+      },
+    });
+
     return updatedCandidacy;
   } catch (e) {
     logger.error(e);
     throw new FunctionalError(
       FunctionalCodeError.CERTIFICATION_NOT_UPDATED,
-      `Erreur lors de la mise à jour de la certification`
+      `Erreur lors de la mise à jour de la certification`,
     );
   }
 };

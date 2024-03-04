@@ -324,10 +324,6 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
-      });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CERTIFICATION_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
@@ -343,14 +339,10 @@ const unsafeResolvers = {
         hasRole: context.auth.hasRole,
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
-      });
-
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "CERTIFICATION_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
+
       return result;
     },
     candidacy_addExperience: async (
