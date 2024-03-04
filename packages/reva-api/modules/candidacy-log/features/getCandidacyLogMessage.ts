@@ -71,6 +71,8 @@ export const getCandidacyLogMessage = ({
       return `Informations jury modifiées. Résultat: ${details.examResult}. ${details.estimatedExamDate ? `Date d'examen prévue:  ${format(details.estimatedExamDate, "dd/MM/yyyy")}.` : ""} ${details.actualExamDate ? `Date d'examen:  ${format(details.actualExamDate, "dd/MM/yyyy")}.` : ""}`;
     case "JURY_RESULT_UPDATED":
       return `Résultats jury modifiés. Résultat: ${details.result}. Résultat provisoire: ${details.isResultProvisional ? "Oui" : "Non"}`;
+    case "JURY_SESSION_SCHEDULED":
+      return `Attribution d’une date de passage en jury au candidat. Date de passage: ${format(details.dateOfSession, "dd/MM/yyyy")}. ${details.timeOfSession ? `Heure de passage: ${details.timeOfSession}` : ""}`;
     default:
       return "Évenement inconnu";
   }

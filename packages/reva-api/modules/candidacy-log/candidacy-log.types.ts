@@ -74,6 +74,10 @@ export type CandidacyLogEventTypeAndDetails =
         result: string;
         isResultProvisional: boolean;
       };
+    }
+  | {
+      eventType: "JURY_SESSION_SCHEDULED";
+      details: { dateOfSession: Date; timeOfSession?: string };
     };
 
 export type CandidacyLog = {

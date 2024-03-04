@@ -15,6 +15,7 @@ import {
   sendJuryScheduledAAPEmail,
   sendJuryScheduledCandidateEmail,
 } from "../emails";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;
@@ -23,11 +24,21 @@ interface ScheduleSessionOfJury {
   address?: string;
   information?: string;
   convocationFile?: UploadedFile;
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }
 
 export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
-  const { candidacyId, date, time, address, information, convocationFile } =
-    params;
+  const {
+    candidacyId,
+    date,
+    time,
+    address,
+    information,
+    convocationFile,
+    userKeycloakId,
+    userRoles,
+  } = params;
 
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -143,6 +154,14 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   //   candidacyId,
   //   status: "DOSSIER_DE_VALIDATION_ENVOYE",
   // });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "JURY_SESSION_SCHEDULED",
+    userRoles,
+    userKeycloakId,
+    details: { dateOfSession, timeOfSession: time },
+  });
 
   return jury;
 };

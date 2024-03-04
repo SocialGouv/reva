@@ -180,6 +180,8 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           address: request.body.address?.value,
           information: request.body.information?.value,
           convocationFile,
+          userKeycloakId: request.auth.userInfo.sub,
+          userRoles: request.auth.userInfo.realm_access?.roles || [],
         });
       } catch (e) {
         logger.error(e);
