@@ -5,11 +5,17 @@ enum CandidacyLogUserProfile {
   AAP
 }
 
+type CandidacyLogUser {
+  firstname: String!
+  lastname: String!
+}
+
 type CandidacyLog {
   id: ID!
   message: String!
   createdAt: Timestamp!
   userProfile: CandidacyLogUserProfile!
+  user: CandidacyLogUser!
 }
 
 type Candidacy {

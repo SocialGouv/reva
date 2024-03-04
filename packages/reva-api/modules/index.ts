@@ -36,6 +36,7 @@ import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
+import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
 
 // Resolvers
 
@@ -84,6 +85,7 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...referentialLoaders,
     ...dossierDeValidationLoaders,
     ...juryLoaders,
+    ...candidacyLogLoaders,
   },
   errorFormatter: (error, ...args) => {
     error.errors

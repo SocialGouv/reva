@@ -38,3 +38,10 @@ createdAt =
 userProfile : SelectionSet Admin.Enum.CandidacyLogUserProfile.CandidacyLogUserProfile Admin.Object.CandidacyLog
 userProfile =
     Object.selectionForField "Enum.CandidacyLogUserProfile.CandidacyLogUserProfile" "userProfile" [] Admin.Enum.CandidacyLogUserProfile.decoder
+
+
+user :
+    SelectionSet decodesTo Admin.Object.CandidacyLogUser
+    -> SelectionSet decodesTo Admin.Object.CandidacyLog
+user object____ =
+    Object.selectionForCompositeField "user" [] object____ Basics.identity
