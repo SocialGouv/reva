@@ -30,9 +30,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "FEASIBILITY_MARKED_AS_INCOMPLETE"
         | "FUNDING_REQUEST_CREATED"
         | "PAYMENT_REQUEST_CREATED_OR_UPDATED"
-        | "PAYMENT_REQUEST_CONFIRMED"
-        | "JURY_EXAM_INFO_UPDATED"
-        | "JURY_RESULT_UPDATED";
+        | "PAYMENT_REQUEST_CONFIRMED";
       details?: undefined;
     }
   | {
@@ -60,6 +58,21 @@ export type CandidacyLogEventTypeAndDetails =
       eventType: "READY_FOR_JURY_ESTIMATED_DATE_UPDATED";
       details: {
         readyForJuryEstimatedAt: Date;
+      };
+    }
+  | {
+      eventType: "JURY_EXAM_INFO_UPDATED";
+      details: {
+        examResult: string | null;
+        estimatedExamDate: Date | null;
+        actualExamDate: Date | null;
+      };
+    }
+  | {
+      eventType: "JURY_RESULT_UPDATED";
+      details: {
+        result: string;
+        isResultProvisional: boolean;
       };
     };
 

@@ -18,6 +18,11 @@ export const updateExamInfo = async ({
     userKeycloakId,
     userRoles,
     eventType: "JURY_EXAM_INFO_UPDATED",
+    details: {
+      actualExamDate: examInfo.actualExamDate,
+      estimatedExamDate: examInfo.estimatedExamDate,
+      examResult: examInfo.examResult,
+    },
   });
   return prismaClient.examInfo.update({
     where: { candidacyId },

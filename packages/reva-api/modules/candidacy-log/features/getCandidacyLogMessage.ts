@@ -68,9 +68,9 @@ export const getCandidacyLogMessage = ({
     case "PAYMENT_REQUEST_CONFIRMED":
       return "Demande de paiement confirmée.";
     case "JURY_EXAM_INFO_UPDATED":
-      return "Informations jury modifiées.";
+      return `Informations jury modifiées. Résultat: ${details.examResult}. ${details.estimatedExamDate ? `Date d'examen prévue:  ${format(details.estimatedExamDate, "dd/MM/yyyy")}.` : ""} ${details.actualExamDate ? `Date d'examen:  ${format(details.actualExamDate, "dd/MM/yyyy")}.` : ""}`;
     case "JURY_RESULT_UPDATED":
-      return "Résultats jury modifiés.";
+      return `Résultats jury modifiés. Résultat: ${details.result}. Résultat provisoire: ${details.isResultProvisional ? "Oui" : "Non"}`;
     default:
       return "Évenement inconnu";
   }
