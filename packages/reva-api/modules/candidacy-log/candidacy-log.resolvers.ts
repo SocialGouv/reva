@@ -2,7 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./candidacy-log.security";
 import { getCandidacyLogs } from "./features/getCandidacyLogs";
 import { getCandidacyLogMessage } from "./features/getCandidacyLogMessage";
-import { CandidacyEventType } from "./candidacy-log.types";
+import { CandidacyLog } from "./candidacy-log.types";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -10,13 +10,8 @@ const unsafeResolvers = {
       getCandidacyLogs({ candidacyId }),
   },
   CandidacyLog: {
-    message: ({
-      eventType,
-      details,
-    }: {
-      eventType: CandidacyEventType;
-      details: any;
-    }) => getCandidacyLogMessage({ eventType, details }),
+    message: (candidacyLog: CandidacyLog) =>
+      getCandidacyLogMessage({ candidacyLog }),
   },
 };
 

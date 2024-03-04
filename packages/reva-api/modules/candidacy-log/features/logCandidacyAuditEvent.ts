@@ -1,6 +1,12 @@
 import { CandidacyLogUserProfile } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
-import { CandidacyEventType } from "../candidacy-log.types";
+import { CandidacyLogEventTypeAndDetails } from "../candidacy-log.types";
+
+type LogCandidacyAuditEventParams = {
+  candidacyId: string;
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
+} & CandidacyLogEventTypeAndDetails;
 
 export const logCandidacyAuditEvent = ({
   candidacyId,
@@ -8,13 +14,7 @@ export const logCandidacyAuditEvent = ({
   userRoles,
   eventType,
   details,
-}: {
-  candidacyId: string;
-  userKeycloakId?: string;
-  userRoles: KeyCloakUserRole[];
-  eventType: CandidacyEventType;
-  details?: object;
-}) => {
+}: LogCandidacyAuditEventParams) => {
   if (!userKeycloakId) {
     throw new Error(
       `No userKeycloakId when logging candidacy event ${eventType}`,

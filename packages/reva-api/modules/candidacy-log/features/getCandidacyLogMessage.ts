@@ -1,12 +1,12 @@
-import { CandidacyEventType } from "../candidacy-log.types";
+import { CandidacyLog } from "../candidacy-log.types";
 
 export const getCandidacyLogMessage = ({
-  eventType,
-  details,
+  candidacyLog,
 }: {
-  eventType: CandidacyEventType;
-  details?: any;
+  candidacyLog: CandidacyLog;
 }) => {
+  const { eventType, details } = candidacyLog;
+
   switch (eventType) {
     case "CANDIDATE_REGISTRATION_CONFIRMED":
       return "Création du compte candidat.";
@@ -71,6 +71,6 @@ export const getCandidacyLogMessage = ({
     case "JURY_RESULT_UPDATED":
       return "Résultats jury modifiés.";
     default:
-      return eventType;
+      return "Évenement inconnu";
   }
 };
