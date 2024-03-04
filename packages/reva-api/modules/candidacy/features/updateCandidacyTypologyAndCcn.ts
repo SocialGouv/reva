@@ -1,18 +1,16 @@
 import { CandidateTypology } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
-import { Role } from "../../account/account.types";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const updateCandidacyTypologyAndCcn = async (
-  context: {
-    hasRole: (role: Role) => boolean;
-  },
+  context: ContextAuth,
   params: {
     candidacyId: string;
     typology: CandidateTypology;
     additionalInformation?: string;
     ccnId?: string;
-  }
+  },
 ): Promise<void> => {
   const { hasRole } = context;
   if (!(hasRole("admin") || hasRole("manage_candidacy"))) {
@@ -28,8 +26,9 @@ export const updateCandidacyTypologyAndCcn = async (
     throw new Error(`La candidature n'existe pas`);
   }
 
+  let ccn = null;
   if (ccnId) {
-    const ccn = await prismaClient.candidacyConventionCollective.findUnique({
+    ccn = await prismaClient.candidacyConventionCollective.findUnique({
       where: { id: ccnId },
     });
     if (!ccn) {
@@ -43,7 +42,7 @@ export const updateCandidacyTypologyAndCcn = async (
 
   if (ccnRequired && !ccnId) {
     throw new Error(
-      'Les typologies "SALARIE_PRIVE" et "DEMANDEUR_EMPLOI" doivent être associées à une convention collective.'
+      'Les typologies "SALARIE_PRIVE" et "DEMANDEUR_EMPLOI" doivent être associées à une convention collective.',
     );
   }
 
@@ -53,6 +52,17 @@ export const updateCandidacyTypologyAndCcn = async (
       typology,
       typologyAdditional: additionalInformation,
       ccnId: ccnRequired ? ccnId : null,
+    },
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId: candidacyId,
+    eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED",
+    userKeycloakId: context.userInfo?.sub,
+    userRoles: context.userInfo?.realm_access?.roles || [],
+    details: {
+      ccn: ccn ? { id: ccn.id, label: ccn.label, idcc: ccn.idcc } : undefined,
+      typology,
     },
   });
 };

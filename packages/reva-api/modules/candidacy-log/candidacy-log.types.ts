@@ -19,7 +19,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_ARCHIVED"
         | "CANDIDACY_UNARCHIVED"
         | "CANDIDACY_TAKEN_OVER"
-        | "TYPOLOGY_AND_CCN_INFO_UPDATED"
         | "TRAINING_FORM_SUBMITTED"
         | "TRAINING_FORM_CONFIRMED"
         | "CANDIDACY_DROPPED_OUT"
@@ -50,6 +49,13 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "APPOINTMENT_INFO_UPDATED";
       details: { firstAppointmentOccuredAt: Date };
+    }
+  | {
+      eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED";
+      details: {
+        ccn?: { id: string; idcc: string; label: string };
+        typology: string;
+      };
     };
 
 export type CandidacyLog = {

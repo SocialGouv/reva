@@ -684,12 +684,6 @@ const unsafeResolvers = {
         }
 
         await updateCandidacyTypologyAndCcn(context.auth, payload);
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
         return candidacyDb.getCandidacyFromId(payload.candidacyId);
       } catch (e) {
         logger.error(e);
