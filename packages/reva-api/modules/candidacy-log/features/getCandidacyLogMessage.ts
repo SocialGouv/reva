@@ -2,6 +2,7 @@ import { CandidacyEventType } from "../candidacy-log.types";
 
 export const getCandidacyLogMessage = ({
   eventType,
+  details,
 }: {
   eventType: CandidacyEventType;
   details?: any;
@@ -36,7 +37,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_TAKEN_OVER":
       return "Candidature prise en charge.";
     case "ORGANISM_SELECTED":
-      return `Organisme de formation modifié.`;
+      return `Organisme de formation modifié. ${details ? `Nouvel organisme: ${details.organism.label}` : ""}`;
     case "TYPOLOGY_AND_CCN_INFO_UPDATED":
       return "Informations de typologie et de convention collective candidat modifiées.";
     case "TRAINING_FORM_SUBMITTED":

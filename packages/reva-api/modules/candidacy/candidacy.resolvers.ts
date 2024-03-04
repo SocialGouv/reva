@@ -663,10 +663,6 @@ const unsafeResolvers = {
       const result = await selectOrganismForCandidacy({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId,
-      });
-      await logCandidacyAuditEvent({
-        candidacyId: payload.candidacyId,
-        eventType: "ORGANISM_SELECTED",
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });

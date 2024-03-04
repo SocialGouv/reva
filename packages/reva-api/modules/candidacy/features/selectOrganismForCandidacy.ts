@@ -1,4 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getOrganismById } from "../../organism/features/getOrganism";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -11,9 +13,13 @@ import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 export const selectOrganismForCandidacy = async ({
   candidacyId,
   organismId,
+  userKeycloakId,
+  userRoles,
 }: {
   candidacyId: string;
   organismId: string;
+  userKeycloakId?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -86,6 +92,16 @@ export const selectOrganismForCandidacy = async ({
         date: firstAppointmentOccuredAt,
       });
     }
+
+    const newOrganism = await getOrganismById({ organismId });
+
+    await logCandidacyAuditEvent({
+      candidacyId,
+      eventType: "ORGANISM_SELECTED",
+      userKeycloakId,
+      userRoles,
+      details: { organism: { id: newOrganism.id, label: newOrganism.label } },
+    });
 
     return updatedCandidacy;
   } catch (e) {
