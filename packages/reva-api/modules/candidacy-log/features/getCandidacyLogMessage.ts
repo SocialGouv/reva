@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { CandidacyLog } from "../candidacy-log.types";
 
 export const getCandidacyLogMessage = ({
@@ -33,7 +34,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_UNARCHIVED":
       return "Candidature désarchivée.";
     case "APPOINTMENT_INFO_UPDATED":
-      return "Date du premier rendez-vous pédagogique modifiée.";
+      return `Date du premier rendez-vous pédagogique modifiée. Nouvelle date ${format(details.firstAppointmentOccuredAt, "dd/MM/yyyy")}`;
     case "CANDIDACY_TAKEN_OVER":
       return "Candidature prise en charge.";
     case "ORGANISM_SELECTED":

@@ -609,6 +609,10 @@ const unsafeResolvers = {
           eventType: "APPOINTMENT_INFO_UPDATED",
           userKeycloakId: context.auth.userInfo?.sub,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          details: {
+            firstAppointmentOccuredAt:
+              payload.appointmentInformations.firstAppointmentOccuredAt,
+          },
         });
       }
       return result

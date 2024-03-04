@@ -18,7 +18,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_DELETED"
         | "CANDIDACY_ARCHIVED"
         | "CANDIDACY_UNARCHIVED"
-        | "APPOINTMENT_INFO_UPDATED"
         | "CANDIDACY_TAKEN_OVER"
         | "TYPOLOGY_AND_CCN_INFO_UPDATED"
         | "TRAINING_FORM_SUBMITTED"
@@ -47,6 +46,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "ORGANISM_SELECTED";
       details: { organism: { id: string; label: string } };
+    }
+  | {
+      eventType: "APPOINTMENT_INFO_UPDATED";
+      details: { firstAppointmentOccuredAt: Date };
     };
 
 export type CandidacyLog = {
