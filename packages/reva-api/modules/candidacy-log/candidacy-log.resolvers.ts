@@ -10,8 +10,13 @@ const unsafeResolvers = {
       getCandidacyLogs({ candidacyId }),
   },
   CandidacyLog: {
-    message: ({ eventType }: { eventType: CandidacyEventType }) =>
-      getCandidacyLogMessage({ eventType }),
+    message: ({
+      eventType,
+      details,
+    }: {
+      eventType: CandidacyEventType;
+      details: any;
+    }) => getCandidacyLogMessage({ eventType, details }),
   },
 };
 

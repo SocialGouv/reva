@@ -7,11 +7,13 @@ export const logCandidacyAuditEvent = ({
   userKeycloakId,
   userRoles,
   eventType,
+  details,
 }: {
   candidacyId: string;
   userKeycloakId?: string;
   userRoles: KeyCloakUserRole[];
   eventType: CandidacyEventType;
+  details?: object;
 }) => {
   if (!userKeycloakId) {
     throw new Error(
@@ -25,6 +27,7 @@ export const logCandidacyAuditEvent = ({
       userKeycloakId,
       eventType,
       userProfile: getUserProfile({ userRoles }),
+      details,
     },
   });
 };

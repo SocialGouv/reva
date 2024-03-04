@@ -1290,6 +1290,7 @@ model CandidacyLog {
   candidacyId    String                  @map("candidacy_id") @db.Uuid
   eventType      String                  @map("event_type")
   candidacy      Candidacy               @relation(fields: [candidacyId], references: [id])
+  details        Json?
   createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
 
