@@ -914,6 +914,7 @@ const unsafeResolvers = {
         eventType: "READY_FOR_JURY_ESTIMATED_DATE_UPDATED",
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        details: { readyForJuryEstimatedAt: params.readyForJuryEstimatedAt },
       });
       return result;
     },

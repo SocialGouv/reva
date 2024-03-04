@@ -24,7 +24,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_DROPPED_OUT"
         | "CANDIDACY_DROP_OUT_CANCELED"
         | "ADMISSIBILITY_UPDATED"
-        | "READY_FOR_JURY_ESTIMATED_DATE_UPDATED"
         | "FEASIBILITY_SENT"
         | "FEASIBILITY_VALIDATED"
         | "FEASIBILITY_REJECTED"
@@ -55,6 +54,12 @@ export type CandidacyLogEventTypeAndDetails =
       details: {
         ccn?: { id: string; idcc: string; label: string };
         typology: string;
+      };
+    }
+  | {
+      eventType: "READY_FOR_JURY_ESTIMATED_DATE_UPDATED";
+      details: {
+        readyForJuryEstimatedAt: Date;
       };
     };
 

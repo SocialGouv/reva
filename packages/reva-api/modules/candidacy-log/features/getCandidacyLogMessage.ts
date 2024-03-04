@@ -52,7 +52,7 @@ export const getCandidacyLogMessage = ({
     case "ADMISSIBILITY_UPDATED":
       return "Information de recevabilité modifiées.";
     case "READY_FOR_JURY_ESTIMATED_DATE_UPDATED":
-      return "Date prévisionenelle de finalisation ou de dépôt du dossier de validation modifiée.";
+      return `Date prévisionenelle de finalisation ou de dépôt du dossier de validation modifiée.Nouvelle date ${format(details.readyForJuryEstimatedAt, "dd/MM/yyyy")}`;
     case "FEASIBILITY_SENT":
       return "Dossier de faisabilité envoyé.";
     case "FEASIBILITY_MARKED_AS_INCOMPLETE":
