@@ -1,10 +1,8 @@
 module Route exposing
-    ( AccountFilters
-    , CandidacyFilters
+    ( CandidacyFilters
     , CertificationsFilters
     , Route(..)
     , TypologyFilters
-    , emptyAccountFilters
     , emptyCandidacyFilters
     , emptyCertificationsFilters
     , emptyTypologyFilters
@@ -13,7 +11,6 @@ module Route exposing
     , toString
     )
 
-import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html
@@ -39,10 +36,6 @@ type alias CertificationsFilters =
     }
 
 
-type alias AccountFilters =
-    { group : AccountGroup, page : Int }
-
-
 type Route
     = Candidacy Tab.Tab
     | Typology CandidacyId TypologyFilters
@@ -52,8 +45,6 @@ type Route
     | Login
     | Logout
     | NotFound
-    | Account String -- Account Id
-    | Accounts AccountFilters
     | Reorientation CandidacyId CertificationsFilters
     | SiteMap
 
@@ -71,11 +62,6 @@ emptyCertificationsFilters =
 emptyTypologyFilters : TypologyFilters
 emptyTypologyFilters =
     { page = 1 }
-
-
-emptyAccountFilters : AccountFilters
-emptyAccountFilters =
-    { group = AccountGroup.Organism, page = 1 }
 
 
 parser : String -> Parser (Route -> a) a
@@ -104,12 +90,6 @@ parser baseUrl =
 
         toReorientationRoute candidacyId organismId p =
             Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
-
-        accountGroupStringToGroupFilter g =
-            Maybe.withDefault AccountGroup.Organism (AccountGroup.fromString (Maybe.withDefault "" g))
-
-        toAccountsRoute g p =
-            Accounts (AccountFilters (accountGroupStringToGroupFilter g) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
@@ -119,8 +99,6 @@ parser baseUrl =
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , s "certifications" <?> Query.string "organism" <?> Query.string "page" |> map toCertificationsRoute
-                , s "accounts" <?> Query.string "group" <?> Query.string "page" |> map toAccountsRoute
-                , s "accounts" </> string |> map Account
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "candidacies" "ready-for-jury-estimated-date" |> candidacyTab Tab.ReadyForJuryEstimatedDate
@@ -201,12 +179,6 @@ toString baseUrl route =
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
-
-        Accounts filters ->
-            topLevel [ "accounts" ] [ Url.Builder.string "group" (AccountGroup.toString filters.group), Url.Builder.int "page" filters.page ]
-
-        Account accountId ->
-            topLevel [ "accounts", accountId ] []
 
         Reorientation candidacyId filters ->
             subLevel candidacyId [ "reorientation" ] (certificationsFiltersToParams filters)

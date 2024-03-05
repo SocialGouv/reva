@@ -13,10 +13,8 @@ import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
-import Page.Account as Account
 import Page.Candidacy as Candidacy
 import Page.Loading
-import Page.Search.Accounts as Accounts
 import Page.Search.Candidacies as Candidacies exposing (Model)
 import Page.Search.Certifications as Certifications
 import Page.Search.Typology as Typology
@@ -26,7 +24,7 @@ import Route exposing (Route(..))
 import Task
 import Url exposing (Url)
 import View.Footer
-import View.Header as Header exposing (HeaderLink)
+import View.Header as Header
 import View.Skiplinks
 
 
@@ -59,8 +57,6 @@ type Page
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
-    | Account Account.Model
-    | Accounts Accounts.Model
     | SiteMap
 
 
@@ -71,8 +67,6 @@ type Msg
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
     | GotCertificationsMsg Certifications.Msg
-    | GotAccountsMsg Accounts.Msg
-    | GotAccountMsg Account.Msg
     | GotCandidacyMsg Candidacy.Msg
     | GotTypologyMsg Typology.Msg
     | GotLoggedIn Token
@@ -135,14 +129,6 @@ viewPage model =
         Certifications certificationsModel ->
             Certifications.view model.context certificationsModel
                 |> Html.map GotCertificationsMsg
-
-        Accounts accountsModel ->
-            Accounts.view model.context accountsModel
-                |> Html.map GotAccountsMsg
-
-        Account accountModel ->
-            Account.view model.context accountModel
-                |> Html.map GotAccountMsg
 
         Candidacy candidacyModel ->
             Candidacy.view model.context candidacyModel
@@ -236,19 +222,6 @@ changeRouteTo context route model =
                 }
                 |> updateWith Certifications GotCertificationsMsg model
 
-        ( Route.Accounts filters, Accounts accountsModel ) ->
-            accountsModel
-                |> Accounts.withFilters context filters.page filters.group
-                |> updateWith Accounts GotAccountsMsg model
-
-        ( Route.Accounts filters, _ ) ->
-            Accounts.init model.context filters.group filters.page
-                |> updateWith Accounts GotAccountsMsg model
-
-        ( Route.Account accountId, _ ) ->
-            Account.init model.context accountId
-                |> updateWith Account GotAccountMsg model
-
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
                 |> updateWith Candidacy GotCandidacyMsg model
@@ -335,26 +308,6 @@ update msg model =
             in
             ( { model | page = Certifications newCertificationsModel }
             , Cmd.map GotCertificationsMsg certificationsCmd
-            )
-
-        -- Accounts
-        ( GotAccountsMsg rganismsMsg, Accounts rganismsModel ) ->
-            let
-                ( newAccountsModel, rganismsCmd ) =
-                    Accounts.update model.context rganismsMsg rganismsModel
-            in
-            ( { model | page = Accounts newAccountsModel }
-            , Cmd.map GotAccountsMsg rganismsCmd
-            )
-
-        -- Account
-        ( GotAccountMsg rganismMsg, Account rganismModel ) ->
-            let
-                ( newAccountModel, rganismCmd ) =
-                    Account.update model.context rganismMsg rganismModel
-            in
-            ( { model | page = Account newAccountModel }
-            , Cmd.map GotAccountMsg rganismCmd
             )
 
         -- Candidacy

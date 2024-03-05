@@ -13,7 +13,6 @@ import View
 type HeaderLink
     = Candidacies
     | Subscriptions
-    | Accounts
     | Certifications
 
 
@@ -30,12 +29,6 @@ view context route =
 
                 Route.Candidacy _ ->
                     Just Candidacies
-
-                Route.Accounts _ ->
-                    Just Accounts
-
-                Route.Account _ ->
-                    Just Accounts
 
                 _ ->
                     Nothing
@@ -135,9 +128,6 @@ headerMenuModal context activeHeaderLink =
 
         navItemLink label url targetHeaderLink =
             itemLink label url False (activeHeaderLink == Just targetHeaderLink)
-
-        baseUrl route =
-            Route.toString context.baseUrl route
 
         adminReactUrl url =
             context.adminReactUrl ++ url
