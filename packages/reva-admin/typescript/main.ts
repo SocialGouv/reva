@@ -6,6 +6,7 @@ import keycloakElement from "./custom-elements/keycloak";
 import AuthenticatedLinkElement from "./custom-elements/authenticated-link";
 import { CrispElm } from "./crisp";
 import { initUserguiding } from "./userguiding";
+import { initProduktly } from "./produktly";
 
 customElements.define(keycloakElement.name, keycloakElement.clazz);
 customElements.define(
@@ -46,8 +47,5 @@ if (import.meta.env.VITE_HELP_BUBBLE_URL) {
   helpBubble.setAttribute("src", import.meta.env.VITE_HELP_BUBBLE_URL);
   document.head.appendChild(helpBubble);
 }
-
-// Init product tour with Userguiding
-if (import.meta.env.VITE_USERGUIDING_ID) {
-  initUserguiding(import.meta.env.VITE_USERGUIDING_ID);
-}
+initUserguiding(import.meta.env.VITE_USERGUIDING_ID);
+initProduktly(import.meta.env.VITE_PRODUKTLY_CLIENT_TOKEN);
