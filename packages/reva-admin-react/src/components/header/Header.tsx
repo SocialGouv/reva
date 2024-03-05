@@ -71,13 +71,13 @@ export const Header = () => {
                 },
                 isActive: currentPathname.startsWith("/subscriptions"),
               },
-
               {
                 text: "Comptes",
                 linkProps: {
-                  href: ADMIN_ELM_URL + "/accounts",
+                  href: "/accounts/organisms",
                   target: "_self",
                 },
+                isActive: currentPathname.startsWith("/accounts"),
               },
               {
                 text: "Certifications",
