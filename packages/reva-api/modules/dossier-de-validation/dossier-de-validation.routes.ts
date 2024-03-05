@@ -185,6 +185,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           dossierDeValidationFile,
           dossierDeValidationOtherFiles,
           userKeycloakId: request.auth?.userInfo?.sub,
+          userEmail: request.auth?.userInfo?.email,
           userRoles: request.auth.userInfo?.realm_access?.roles || [],
         });
       } catch (e) {

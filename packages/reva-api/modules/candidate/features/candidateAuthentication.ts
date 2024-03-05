@@ -163,6 +163,7 @@ const confirmRegistration = async ({
     eventType: "CANDIDATE_REGISTRATION_CONFIRMED",
     userRoles: [],
     userKeycloakId: candidateKeycloakId,
+    userEmail: candidate.email,
   });
 
   return iamToken;

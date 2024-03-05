@@ -21,12 +21,14 @@ export const updateCertificationOfCandidacy = async ({
   certificationId,
   departmentId,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   candidacyId: string;
   certificationId: string;
   departmentId: string;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
@@ -91,6 +93,7 @@ export const updateCertificationOfCandidacy = async ({
       candidacyId: candidacyId,
       eventType: "CERTIFICATION_UPDATED",
       userKeycloakId,
+      userEmail,
       userRoles,
       details: {
         certification: {

@@ -10,11 +10,13 @@ export const signalDossierDeValidationProblem = async ({
   dossierDeValidationId,
   decisionComment,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   dossierDeValidationId: string;
   decisionComment: string;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const dossierDeValidation = await getDossierDeValidationById({
@@ -79,6 +81,7 @@ export const signalDossierDeValidationProblem = async ({
     candidacyId: dossierDeValidation.candidacyId,
     userKeycloakId,
     userRoles,
+    userEmail,
     eventType: "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED",
   });
 

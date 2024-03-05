@@ -6,20 +6,23 @@ interface KeycloakConnectUserInfo {
     roles: KeyCloakUserRole[];
   };
   sub: string;
+  email: string;
 }
 
 const keycloakPluginMock: FastifyPluginAsync = async (
   app,
-  _opts
+  _opts,
 ): Promise<void> => {
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const [role, sub] = req.headers.authorization.split("/");
+      const email = "no-reply@vae.gouv.fr";
       let userInfo: KeycloakConnectUserInfo;
       switch (role as KeyCloakUserRole) {
         case "admin":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: ["admin", "manage_candidacy"],
             },
@@ -28,6 +31,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
         case "manage_candidacy":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: ["manage_candidacy"],
             },
@@ -36,6 +40,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
         case "manage_feasibility":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: ["manage_feasibility"],
             },
@@ -44,6 +49,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
         case "candidate":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: [],
             },
@@ -52,6 +58,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
         case "gestion_maison_mere_aap":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: ["manage_candidacy", "gestion_maison_mere_aap"],
             },
@@ -60,6 +67,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
         case "manage_certification_authority_local_account":
           userInfo = {
             sub,
+            email,
             realm_access: {
               roles: [
                 "manage_feasibility",
@@ -72,7 +80,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
       req.auth = {
         hasRole: (role: KeyCloakUserRole) => {
           return (userInfo?.realm_access?.roles as KeyCloakUserRole[]).includes(
-            role
+            role,
           );
         },
         token: req.headers.authorization,

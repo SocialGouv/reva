@@ -18,12 +18,14 @@ export const updateCertificationWithinOrganismScope = async ({
   candidacyId,
   certificationId,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   hasRole: (role: Role) => boolean;
   candidacyId: string;
   certificationId: string;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
@@ -126,6 +128,7 @@ export const updateCertificationWithinOrganismScope = async ({
     candidacyId: candidacyId,
     eventType: "CERTIFICATION_UPDATED",
     userKeycloakId,
+    userEmail,
     userRoles,
     details: {
       certification: {

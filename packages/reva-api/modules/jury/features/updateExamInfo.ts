@@ -6,16 +6,19 @@ export const updateExamInfo = async ({
   candidacyId,
   examInfo,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   candidacyId: string;
   examInfo: ExamInfo;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }): Promise<ExamInfo> => {
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userEmail,
     userRoles,
     eventType: "JURY_EXAM_INFO_UPDATED",
     details: {

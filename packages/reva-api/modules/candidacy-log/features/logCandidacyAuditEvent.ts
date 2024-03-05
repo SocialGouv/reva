@@ -5,12 +5,14 @@ import { CandidacyLogEventTypeAndDetails } from "../candidacy-log.types";
 type LogCandidacyAuditEventParams = {
   candidacyId: string;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 } & CandidacyLogEventTypeAndDetails;
 
 export const logCandidacyAuditEvent = ({
   candidacyId,
   userKeycloakId,
+  userEmail,
   userRoles,
   eventType,
   details,
@@ -21,10 +23,15 @@ export const logCandidacyAuditEvent = ({
     );
   }
 
+  if (!userEmail) {
+    throw new Error(`No userEmail when logging candidacy event ${eventType}`);
+  }
+
   return prismaClient.candidacyLog.create({
     data: {
       candidacyId,
       userKeycloakId,
+      userEmail,
       eventType,
       userProfile: getUserProfile({ userRoles }),
       details,

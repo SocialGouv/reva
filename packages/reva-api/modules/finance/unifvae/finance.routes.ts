@@ -93,6 +93,7 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
         invoiceFile,
         certificateOfAttendanceFile,
         userKeycloakId: request.auth?.userInfo?.sub,
+        userEmail: request.auth?.userInfo?.email,
         userRoles: request.auth.userInfo?.realm_access?.roles || [],
       });
 

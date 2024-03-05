@@ -14,11 +14,13 @@ export const selectOrganismForCandidacy = async ({
   candidacyId,
   organismId,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   candidacyId: string;
   organismId: string;
   userKeycloakId?: string;
+  userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
@@ -99,6 +101,7 @@ export const selectOrganismForCandidacy = async ({
       candidacyId,
       eventType: "ORGANISM_SELECTED",
       userKeycloakId,
+      userEmail,
       userRoles,
       details: { organism: { id: newOrganism.id, label: newOrganism.label } },
     });

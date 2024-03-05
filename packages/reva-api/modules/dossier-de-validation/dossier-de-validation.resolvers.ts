@@ -99,6 +99,7 @@ const unsafeResolvers = {
         dossierDeValidationId,
         decisionComment,
         userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth?.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },

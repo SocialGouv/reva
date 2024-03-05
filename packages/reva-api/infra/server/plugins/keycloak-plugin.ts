@@ -20,6 +20,7 @@ interface KeycloakConnectUserInfo {
     roles: KeyCloakUserRole[];
   };
   sub: string;
+  email: string;
 }
 
 type KeycloakPluginOptions = {

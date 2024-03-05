@@ -1284,15 +1284,17 @@ enum CandidacyLogUserProfile {
 }
 
 model CandidacyLog {
-  id             String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userKeycloakId String                  @map("user_keycloak_id") @db.Uuid
-  userProfile    CandidacyLogUserProfile @map("user_profile")
-  candidacyId    String                  @map("candidacy_id") @db.Uuid
-  eventType      String                  @map("event_type")
-  candidacy      Candidacy               @relation(fields: [candidacyId], references: [id])
-  details        Json?
-  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
+  id             String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userKeycloakId String @map("user_keycloak_id") @db.Uuid
+  userEmail      String @map("user_email") @db.VarChar(255)
+
+  userProfile CandidacyLogUserProfile @map("user_profile")
+  candidacyId String                  @map("candidacy_id") @db.Uuid
+  eventType   String                  @map("event_type")
+  candidacy   Candidacy               @relation(fields: [candidacyId], references: [id])
+  details     Json?
+  createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?               @map("updated_at") @db.Timestamptz(6)
 
   @@map("candidacy_log")
 }

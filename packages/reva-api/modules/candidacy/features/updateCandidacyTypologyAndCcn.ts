@@ -60,6 +60,7 @@ export const updateCandidacyTypologyAndCcn = async (
     eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED",
     userKeycloakId: context.userInfo?.sub,
     userRoles: context.userInfo?.realm_access?.roles || [],
+    userEmail: context.userInfo?.email,
     details: {
       ccn: ccn ? { id: ccn.id, label: ccn.label, idcc: ccn.idcc } : undefined,
       typology,

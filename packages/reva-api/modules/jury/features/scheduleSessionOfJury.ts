@@ -25,6 +25,7 @@ interface ScheduleSessionOfJury {
   information?: string;
   convocationFile?: UploadedFile;
   userKeycloakId?: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
 }
 
@@ -37,6 +38,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     information,
     convocationFile,
     userKeycloakId,
+    userEmail,
     userRoles,
   } = params;
 
@@ -160,6 +162,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     eventType: "JURY_SESSION_SCHEDULED",
     userRoles,
     userKeycloakId,
+    userEmail,
     details: { dateOfSession, timeOfSession: time },
   });
 

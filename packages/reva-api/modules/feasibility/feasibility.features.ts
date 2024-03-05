@@ -66,6 +66,7 @@ export const createFeasibility = async ({
   documentaryProofFile,
   certificateOfAttendanceFile,
   userKeycloakId,
+  userEmail,
   userRoles,
 }: {
   candidacyId: string;
@@ -75,6 +76,7 @@ export const createFeasibility = async ({
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
   userKeycloakId?: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const existingFeasibility = await prismaClient.feasibility.findFirst({
@@ -231,6 +233,7 @@ export const createFeasibility = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     userKeycloakId,
+    userEmail,
     userRoles,
     eventType: "FEASIBILITY_SENT",
   });
@@ -618,6 +621,7 @@ export const validateFeasibility = async ({
   comment,
   hasRole,
   keycloakId,
+  userEmail,
   userRoles,
   infoFile,
 }: {
@@ -625,6 +629,7 @@ export const validateFeasibility = async ({
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
   infoFile?: UploadedFile;
 }) => {
@@ -701,6 +706,7 @@ export const validateFeasibility = async ({
     await logCandidacyAuditEvent({
       candidacyId: feasibility.candidacyId,
       userKeycloakId: keycloakId,
+      userEmail,
       userRoles,
       eventType: "FEASIBILITY_VALIDATED",
     });
@@ -715,6 +721,7 @@ export const rejectFeasibility = async ({
   comment,
   hasRole,
   keycloakId,
+  userEmail,
   userRoles,
   infoFile,
 }: {
@@ -722,6 +729,7 @@ export const rejectFeasibility = async ({
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
   infoFile?: UploadedFile;
 }) => {
@@ -787,6 +795,7 @@ export const rejectFeasibility = async ({
     await logCandidacyAuditEvent({
       candidacyId: feasibility.candidacyId,
       userKeycloakId: keycloakId,
+      userEmail,
       userRoles,
       eventType: "FEASIBILITY_REJECTED",
     });
@@ -802,12 +811,14 @@ export const markFeasibilityAsIncomplete = async ({
   comment,
   hasRole,
   keycloakId,
+  userEmail,
   userRoles,
 }: {
   feasibilityId: string;
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
   const feasibility = await prismaClient.feasibility.findUnique({
@@ -863,6 +874,7 @@ export const markFeasibilityAsIncomplete = async ({
     await logCandidacyAuditEvent({
       candidacyId: feasibility?.candidacyId,
       userKeycloakId: keycloakId,
+      userEmail,
       userRoles,
       eventType: "FEASIBILITY_MARKED_AS_INCOMPLETE",
     });
@@ -1007,6 +1019,7 @@ export const handleFeasibilityDecision = async (args: {
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  userEmail: string;
   userRoles: KeyCloakUserRole[];
   infoFile?: UploadedFile;
 }) => {
