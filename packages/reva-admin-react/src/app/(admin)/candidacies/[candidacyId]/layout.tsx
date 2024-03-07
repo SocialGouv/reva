@@ -32,7 +32,7 @@ const CandidacyLayout = ({ children }: { children: ReactNode }) => {
   const menuEntries = getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu;
 
   return (
-    <div className="flex">
+    <div className="flex flex-col lg:flex-row">
       <CandidacyLayoutSideMenu>
         {menuEntries?.map((e) => (
           <li key={e.label} className="mt-5 mb-7 text-sm">
@@ -67,7 +67,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
   <nav
     role="navigation"
     aria-label="Menu latéral"
-    className="fr-sidemenu bg-white h-full min-w-[300px]"
+    className="fr-sidemenu bg-white h-full min-w-[300px] mb-2"
   >
     <div className="h-full md:border-r mr-1 lg:mr-0">
       <div className="fr-sidemenu__inner shadow-none pr-0 h-full md:pb-24">
