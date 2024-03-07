@@ -7,10 +7,10 @@ import {
   CandidacyLogUser,
   CandidacyLogUserProfile,
 } from "@/graphql/generated/graphql";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const getCandidacyLogsQuery = graphql(`
@@ -80,12 +80,17 @@ const CandidacyLogsPage = () => {
   return (
     candidacy && (
       <div className="flex flex-col">
-        <Link
-          href={`${ADMIN_ELM_URL}/candidacies/${candidacyId}`}
-          className="fr-icon-arrow-go-back-line fr-link--icon-left text-blue-900 text-lg mr-auto mb-8"
+        <Button
+          className="mb-6"
+          priority="tertiary"
+          iconId="fr-icon-arrow-go-back-line"
+          linkProps={{
+            href: `${ADMIN_ELM_URL}/candidacies/${candidacyId}`,
+            target: "_self",
+          }}
         >
-          Résumé de la candidature
-        </Link>
+          Aperçu de la candidature
+        </Button>
         <PageTitle className="!mb-4">
           {candidate?.firstname} {candidate?.lastname} - Suivi de la candidature
         </PageTitle>
