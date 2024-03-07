@@ -3,7 +3,7 @@ import { prismaClient } from "../../../prisma/client";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
-} from "../candidacy.types";
+} from "../candidacy-menu.types";
 
 export const getCandidacyMenu = async ({
   candidacyId,

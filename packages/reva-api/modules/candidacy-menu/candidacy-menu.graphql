@@ -1,0 +1,15 @@
+enum CandidacyMenuEntryStatus {
+  INACTIVE
+  ACTIVE_WITHOUT_HINT
+  ACTIVE_WITH_EDIT_HINT
+}
+
+type CandidacyMenuEntry {
+  label: String!
+  url: String!
+  status: CandidacyMenuEntryStatus!
+}
+
+type Query {
+  candidacyMenu_getCandidacyMenu(candidacyId: ID!): [CandidacyMenuEntry!]!
+}

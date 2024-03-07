@@ -37,6 +37,7 @@ import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
 import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
+import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 
 // Resolvers
 
@@ -60,6 +61,7 @@ const resolvers = mergeResolvers([
   dossierDeValidationResolvers,
   juryResolvers,
   candidacyLogResolvers,
+  candidacyMenuResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
