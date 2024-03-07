@@ -19,6 +19,11 @@ module.exports = {
       listStyleType: {
         square: "square",
       },
+      colors: {
+        dsfr: {
+          "blue-france-sun-113": "#000091",
+        },
+      },
     },
   },
   plugins: [],
