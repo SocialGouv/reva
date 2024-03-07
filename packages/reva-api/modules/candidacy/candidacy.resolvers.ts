@@ -294,7 +294,12 @@ const unsafeResolvers = {
     getCandidacyMenu: async (
       _parent: unknown,
       { candidacyId }: { candidacyId: string },
-    ) => getCandidacyMenu({ candidacyId }),
+      context: GraphqlContext,
+    ) =>
+      getCandidacyMenu({
+        candidacyId,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
   },
   Mutation: {
     candidacy_submitCandidacy: async (

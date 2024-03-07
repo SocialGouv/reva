@@ -7,8 +7,10 @@ import {
 
 export const getCandidacyMenu = async ({
   candidacyId,
+  userRoles,
 }: {
   candidacyId: string;
+  userRoles: KeyCloakUserRole[];
 }): Promise<CandidacyMenuEntry[]> => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
@@ -222,6 +224,15 @@ export const getCandidacyMenu = async ({
       : undefined;
   };
 
+  const getCandidacyLogMenuEntry = (): CandidacyMenuEntry | undefined =>
+    userRoles.includes("admin")
+      ? {
+          label: "Journal des actions",
+          url: buildUrl({ adminType: "React", suffix: "logs" }),
+          status: "ACTIVE_WITHOUT_HINT",
+        }
+      : undefined;
+
   return [
     getMeetingsMenuEntry(),
     getTrainingMenuEntry(),
@@ -232,12 +243,7 @@ export const getCandidacyMenu = async ({
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),
     getJuryMenuEntry(),
-
-    {
-      label: "Journal des actions",
-      url: buildUrl({ adminType: "React", suffix: "logs" }),
-      status: "INACTIVE",
-    },
+    getCandidacyLogMenuEntry(),
   ].filter((e) => e) as CandidacyMenuEntry[];
 };
 
