@@ -61,6 +61,7 @@ import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidacyMenu } from "./features/getCandidacyMenu";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -290,6 +291,10 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+    getCandidacyMenu: async (
+      _parent: unknown,
+      { candidacyId }: { candidacyId: string },
+    ) => getCandidacyMenu({ candidacyId }),
   },
   Mutation: {
     candidacy_submitCandidacy: async (

@@ -263,6 +263,18 @@ type RamdomOrganisms {
   totalRows: Int!
 }
 
+enum CandidacyMenuEntryStatus {
+  INACTIVE
+  ACTIVE_WITHOUT_HINT
+  ACTIVE_WITH_EDIT_HINT
+}
+
+type CandidacyMenuEntry {
+  label: String!
+  url: String!
+  status: CandidacyMenuEntryStatus!
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -288,6 +300,7 @@ type Query {
     limit: Int
     searchFilter: String
   ): CandidacyConventionCollectivePaginated!
+  getCandidacyMenu(candidacyId: ID!): [CandidacyMenuEntry!]!
 }
 
 # MUTATIONS
