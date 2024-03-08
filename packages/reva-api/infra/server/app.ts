@@ -20,6 +20,8 @@ import { logger } from "../../modules/shared/logger";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
+import { setDefaultOptions } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
@@ -32,6 +34,9 @@ type BuilAppOptions = FastifyServerOptions & {
 export const buildApp = async (
   opts: BuilAppOptions = {},
 ): Promise<FastifyInstance> => {
+  //Date-fns default locale
+  setDefaultOptions({ locale: fr });
+
   const app = await fastify(opts);
 
   if (process.env.NODE_ENV === "production") {
