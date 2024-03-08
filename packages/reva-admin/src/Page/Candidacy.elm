@@ -360,7 +360,7 @@ view context model =
                             viewForm "feasibility"
     in
     View.layout "Accéder aux étapes du parcours"
-        (NavigationSteps.view context model.selected)
+        (NavigationSteps.view model.selected)
         [ content ]
 
 

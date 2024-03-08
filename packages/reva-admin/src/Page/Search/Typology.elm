@@ -141,7 +141,7 @@ view context model =
         viewPage content =
             View.layout
                 "Accéder aux étapes du parcours"
-                (NavigationSteps.view context model.candidacy)
+                (NavigationSteps.view model.candidacy)
                 [ View.article
                     "Définition du parcours"
                     (Route.toString context.baseUrl backRoute)
