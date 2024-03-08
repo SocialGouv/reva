@@ -600,6 +600,19 @@ organism_updateOrganismWithMaisonMereAAP requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_updateOrganismWithMaisonMereAAP" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrUpdateOrganismWithMaisonMereAAPInput ] object____ Basics.identity
 
 
+type alias OrganismAdminUpdateMaisonMereAAPRequiredArguments =
+    { maisonMereAAPId : Data.Scalar.Id
+    , maisonMereAAPData : Admin.InputObject.UpdateMaisonMereAAPInput
+    }
+
+
+organism_adminUpdateMaisonMereAAP :
+    OrganismAdminUpdateMaisonMereAAPRequiredArguments
+    -> SelectionSet String RootMutation
+organism_adminUpdateMaisonMereAAP requiredArgs____ =
+    Object.selectionForField "String" "organism_adminUpdateMaisonMereAAP" [ Argument.required "maisonMereAAPId" requiredArgs____.maisonMereAAPId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "maisonMereAAPData" requiredArgs____.maisonMereAAPData Admin.InputObject.encodeUpdateMaisonMereAAPInput ] Decode.string
+
+
 type alias OrganismCreateOrUpdateInformationsCommercialesRequiredArguments =
     { informationsCommerciales : Admin.InputObject.CreateOrUpdateInformationsCommercialesInput }
 

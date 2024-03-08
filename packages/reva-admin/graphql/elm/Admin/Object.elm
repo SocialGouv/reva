@@ -21,6 +21,10 @@ type BasicSkill
     = BasicSkill
 
 
+type BlocCompetence
+    = BlocCompetence
+
+
 type Candidacy
     = Candidacy
 
@@ -43,6 +47,14 @@ type CandidacyDropOut
 
 type CandidacyLog
     = CandidacyLog
+
+
+type CandidacyLogUser
+    = CandidacyLogUser
+
+
+type CandidacyMenuEntry
+    = CandidacyMenuEntry
 
 
 type CandidacyStatus
@@ -139,6 +151,10 @@ type ExamInfo
 
 type Experience
     = Experience
+
+
+type FCCertification
+    = FCCertification
 
 
 type Feasibility

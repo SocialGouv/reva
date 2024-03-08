@@ -213,6 +213,18 @@ candidacy_getCandidacyCcns fillInOptionals____ object____ =
     Object.selectionForCompositeField "candidacy_getCandidacyCcns" optionalArgs____ object____ Basics.identity
 
 
+type alias CandidacyMenuGetCandidacyMenuRequiredArguments =
+    { candidacyId : Data.Scalar.Id }
+
+
+candidacyMenu_getCandidacyMenu :
+    CandidacyMenuGetCandidacyMenuRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CandidacyMenuEntry
+    -> SelectionSet (List decodesTo) RootQuery
+candidacyMenu_getCandidacyMenu requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacyMenu_getCandidacyMenu" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.list)
+
+
 candidate_getCandidateWithCandidacy :
     SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet decodesTo RootQuery
@@ -634,6 +646,18 @@ getTypeDiplomes object____ =
 getCertificationAuthorityTags : SelectionSet (List String) RootQuery
 getCertificationAuthorityTags =
     Object.selectionForField "(List String)" "getCertificationAuthorityTags" [] (Decode.string |> Decode.list)
+
+
+type alias GetFCCertificationRequiredArguments =
+    { rncp : Data.Scalar.Id }
+
+
+getFCCertification :
+    GetFCCertificationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.FCCertification
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getFCCertification requiredArgs____ object____ =
+    Object.selectionForCompositeField "getFCCertification" [ Argument.required "rncp" requiredArgs____.rncp (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =

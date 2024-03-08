@@ -854,6 +854,37 @@ encodeJuryInfoInput input____ =
         [ ( "result", Encode.enum Admin.Enum.JuryResult.toString input____.result |> Just ), ( "isResultProvisional", Encode.bool input____.isResultProvisional |> Just ), ( "informationOfResult", Encode.string |> Encode.optional input____.informationOfResult ) ]
 
 
+buildMaisonMereAAPOnDepartmentInput :
+    MaisonMereAAPOnDepartmentInputRequiredFields
+    -> MaisonMereAAPOnDepartmentInput
+buildMaisonMereAAPOnDepartmentInput required____ =
+    { departmentId = required____.departmentId, isOnSite = required____.isOnSite, isRemote = required____.isRemote }
+
+
+type alias MaisonMereAAPOnDepartmentInputRequiredFields =
+    { departmentId : Data.Scalar.Uuid
+    , isOnSite : Bool
+    , isRemote : Bool
+    }
+
+
+{-| Type for the MaisonMereAAPOnDepartmentInput input object.
+-}
+type alias MaisonMereAAPOnDepartmentInput =
+    { departmentId : Data.Scalar.Uuid
+    , isOnSite : Bool
+    , isRemote : Bool
+    }
+
+
+{-| Encode a MaisonMereAAPOnDepartmentInput into a value that can be used as an argument.
+-}
+encodeMaisonMereAAPOnDepartmentInput : MaisonMereAAPOnDepartmentInput -> Value
+encodeMaisonMereAAPOnDepartmentInput input____ =
+    Encode.maybeObject
+        [ ( "departmentId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.departmentId |> Just ), ( "isOnSite", Encode.bool input____.isOnSite |> Just ), ( "isRemote", Encode.bool input____.isRemote |> Just ) ]
+
+
 buildPaymentRequestInput :
     PaymentRequestInputRequiredFields
     -> PaymentRequestInput
@@ -1367,6 +1398,31 @@ encodeUpdateCertificationInput : UpdateCertificationInput -> Value
 encodeUpdateCertificationInput input____ =
     Encode.maybeObject
         [ ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "label", Encode.string input____.label |> Just ), ( "level", Encode.int input____.level |> Just ), ( "codeRncp", Encode.string input____.codeRncp |> Just ), ( "typeDiplomeId", Encode.string input____.typeDiplomeId |> Just ), ( "certificationAuthorityTag", Encode.string input____.certificationAuthorityTag |> Just ), ( "domaineIds", (Encode.string |> Encode.list) input____.domaineIds |> Just ), ( "conventionCollectiveIds", (Encode.string |> Encode.list) input____.conventionCollectiveIds |> Just ), ( "availableAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.availableAt |> Just ), ( "expiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.expiresAt |> Just ) ]
+
+
+buildUpdateMaisonMereAAPInput :
+    UpdateMaisonMereAAPInputRequiredFields
+    -> UpdateMaisonMereAAPInput
+buildUpdateMaisonMereAAPInput required____ =
+    { zoneIntervention = required____.zoneIntervention }
+
+
+type alias UpdateMaisonMereAAPInputRequiredFields =
+    { zoneIntervention : List MaisonMereAAPOnDepartmentInput }
+
+
+{-| Type for the UpdateMaisonMereAAPInput input object.
+-}
+type alias UpdateMaisonMereAAPInput =
+    { zoneIntervention : List MaisonMereAAPOnDepartmentInput }
+
+
+{-| Encode a UpdateMaisonMereAAPInput into a value that can be used as an argument.
+-}
+encodeUpdateMaisonMereAAPInput : UpdateMaisonMereAAPInput -> Value
+encodeUpdateMaisonMereAAPInput input____ =
+    Encode.maybeObject
+        [ ( "zoneIntervention", (encodeMaisonMereAAPOnDepartmentInput |> Encode.list) input____.zoneIntervention |> Just ) ]
 
 
 buildUpdateOrganismInput :

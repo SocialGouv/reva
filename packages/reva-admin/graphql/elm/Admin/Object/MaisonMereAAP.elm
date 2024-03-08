@@ -41,6 +41,11 @@ siret =
     Object.selectionForField "String" "siret" [] Decode.string
 
 
+phone : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
+phone =
+    Object.selectionForField "(Maybe String)" "phone" [] (Decode.string |> Decode.nullable)
+
+
 adresse : SelectionSet String Admin.Object.MaisonMereAAP
 adresse =
     Object.selectionForField "String" "adresse" [] Decode.string
