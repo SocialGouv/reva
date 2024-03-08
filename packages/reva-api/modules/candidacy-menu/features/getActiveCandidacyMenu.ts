@@ -90,7 +90,6 @@ export const getActiveCandidacyMenu = async ({
       candidacy.organism?.typology !== "experimentation";
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
-
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
       const editableStatus: CandidacyStatusStep[] = [
         "PARCOURS_CONFIRME",
@@ -98,7 +97,7 @@ export const getActiveCandidacyMenu = async ({
       ];
       if (
         (editableStatus.includes(activeCandidacyStatus) &&
-          activeFeasibility === null) ||
+          !activeFeasibility) ||
         activeFeasibility?.decision === "INCOMPLETE"
       ) {
         menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
