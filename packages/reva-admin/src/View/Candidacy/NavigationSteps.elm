@@ -353,8 +353,8 @@ dropOutView context baseUrl candidacy dropOutDate =
             Just <| ( Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id tab), False )
 
         dropOutInfo =
-            [ h3 [ class "text-sm mt-1" ] [ text "Abandon du candidat confirmé" ]
-            , span [ class "text-sm text-gray-700 mb-2" ] [ text <| View.Date.toFullFormat dropOutDate ]
+            [ span [ class "text-sm mt-1" ] [ text "Abandon du candidat confirmé" ]
+            , span [ class "text-sm mb-2" ] [ text <| View.Date.toFullFormat dropOutDate ]
             ]
 
         dropOutLink =
@@ -439,7 +439,7 @@ archiveView context baseUrl candidacy =
     in
     View.Steps.view (title "Candidature supprimée")
         2
-        ({ content = [ text "Supprimée le ", text archiveDate.fullFormat ]
+        ({ content = [ span [ class "text-sm" ] [ text "Supprimée le ", text archiveDate.fullFormat ] ]
          , navigation = Just ( archiveLink, False )
          }
             :: (if isAdmin then
@@ -479,7 +479,7 @@ reorientationView context baseUrl candidacy =
     in
     View.Steps.view (title "Candidature réorientée")
         2
-        ({ content = [ text "Réorientée le ", text archiveDate.fullFormat ]
+        ({ content = [ span [ class "text-sm" ] [ text "Réorientée le ", text archiveDate.fullFormat ] ]
          , navigation = Just ( archiveLink, False )
          }
             :: (if isAdmin then
