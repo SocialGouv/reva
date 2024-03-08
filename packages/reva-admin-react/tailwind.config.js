@@ -15,14 +15,16 @@ module.exports = {
         blue: {
           "light-text-default-info": "#0063CB",
         },
+        "light-text-mention-grey": "#666",
+        dsfr: {
+          "blue-france-sun-113": "#000091",
+        },
       },
       listStyleType: {
         square: "square",
       },
-      colors: {
-        dsfr: {
-          "blue-france-sun-113": "#000091",
-        },
+      backgroundColor: {
+        "light-grey": "#F6F6F6",
       },
     },
   },

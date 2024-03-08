@@ -160,9 +160,18 @@ model Candidate {
   firstname2               String?                 @db.VarChar(255)
   firstname3               String?                 @db.VarChar(255)
   lastname                 String                  @db.VarChar(255)
+  usename                  String?                 @db.VarChar(255)
   phone                    String                  @db.VarChar(255)
   departmentId             String                  @map("department_id") @db.Uuid
   department               Department              @relation(fields: [departmentId], references: [id])
+  birthDepartmentId        String?                 @map("birth_department_id") @db.Uuid
+  birthDepartment          Department?             @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
+  birthdate                DateTime?               @map("birthdate") @db.Timestamptz(6)
+  birthCity                String?                 @map("birth_city") @db.VarChar(255)
+  countryId                String?                 @map("country_id") @db.Uuid
+  country                  Country?                @relation(fields: [countryId], references: [id])
+  nationality              String?                 @db.VarChar(255)
+  securiteSocialeNumber    String?                 @map("securite_sociale_number") @db.VarChar(255)
   highestDegree            Degree?                 @relation(fields: [highestDegreeId], references: [id])
   highestDegreeId          String?                 @map("highest_degree_id") @db.Uuid
   vulnerabilityIndicator   VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
@@ -262,8 +271,19 @@ model Department {
   certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
   maisonMereAAPOnDepartement                             MaisonMereAAPOnDepartement[]
   certificationAuthorityLocalAccountOnDepartment         CertificationAuthorityLocalAccountOnDepartment[]
+  CandidateBirthDerpartment                              Candidate[]                                              @relation("birthDepartmentCandidate")
 
   @@map("department")
+}
+
+model Country {
+  id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label     String      @unique @db.VarChar(255)
+  Candidate Candidate[]
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime?   @map("updated_at") @db.Timestamptz(6)
+
+  @@map("country")
 }
 
 model CandidaciesOnRegionsAndCertifications {
@@ -279,7 +299,6 @@ model CandidaciesOnRegionsAndCertifications {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
-  // @@unique([candidacyId, regionId, certificationId])
   @@map("candidacy_region_certification")
 }
 

@@ -1,5 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
+import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
 import { getCertificationById } from "./features/getCertificationById";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
@@ -14,13 +15,12 @@ import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
 import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
+import { replaceCertification } from "./features/replaceCertification";
+import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
 import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
+import { updateCertification } from "./features/updateCertification";
 import { referentialResolversSecurityMap } from "./referential.security";
 import { UpdateCertificationInput } from "./referential.types";
-import { updateCertification } from "./features/updateCertification";
-import { replaceCertification } from "./features/replaceCertification";
-import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
-import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
 import { RNCPReferential } from "./rncp";
 
 const unsafeReferentialResolvers = {
@@ -40,8 +40,6 @@ const unsafeReferentialResolvers = {
       getRegionById({ id: regionId }),
   },
   Query: {
-    // eslint-disable-next-line
-    // @ts-ignore
     getReferential: async (_: any, _payload: any) => {
       const goals = await getGoals();
 
@@ -82,6 +80,7 @@ const unsafeReferentialResolvers = {
     getCertificationAuthorityTags,
     getFCCertification: (_: unknown, { rncp }: { rncp: string }) =>
       RNCPReferential.getInstance().findOneByRncp(rncp),
+    getCountries: () => prismaClient.country.findMany(),
   },
   Mutation: {
     referential_updateCertification: (

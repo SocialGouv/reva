@@ -3,6 +3,7 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
+import { prismaClient } from "../../prisma/client";
 import { generateJwt } from "./auth.helper";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
@@ -20,6 +21,17 @@ import {
 } from "./mails";
 
 export const resolvers = {
+  Candidate: {
+    department: async (parent: { departmentId: string }) => {
+      const department = await prismaClient.department.findUnique({
+        where: {
+          id: parent.departmentId,
+        },
+      });
+
+      return department;
+    },
+  },
   Query: {
     candidate_getCandidateWithCandidacy: async (
       _: any,

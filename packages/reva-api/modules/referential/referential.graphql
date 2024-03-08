@@ -1,3 +1,5 @@
+scalar Date
+
 type Referential {
   goals: [Goal!]!
 }
@@ -111,6 +113,11 @@ type FCCertification {
   BLOCS_COMPETENCES: [BlocCompetence!]!
 }
 
+type Country {
+  id: UUID!
+  label: String!
+}
+
 type Query {
   getReferential: Referential!
   searchCertificationsForCandidate(
@@ -139,6 +146,7 @@ type Query {
   getTypeDiplomes: [TypeDiplome!]!
   getCertificationAuthorityTags: [String!]!
   getFCCertification(rncp: ID!): FCCertification
+  getCountries: [Country!]!
 }
 
 input UpdateCertificationInput {

@@ -148,21 +148,21 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
                 ...certificationAndRegion?.certification,
                 codeRncp: certificationAndRegion?.certification.rncpId,
               },
-            })
-          )
+            }),
+          ),
         ),
       }))
       .toEither(`Candidate not found`);
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while creating candidate ${candidate.email} with candidacy with keycloakId ${candidate.keycloakId}`
+      `error while creating candidate ${candidate.email} with candidacy with keycloakId ${candidate.keycloakId}`,
     );
   }
 };
 
 export const getCandidateWithCandidacyFromKeycloakId = async (
-  keycloakId: string
+  keycloakId: string,
 ) => {
   try {
     let candidate = await prismaClient.candidate.findFirst({
@@ -239,8 +239,8 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
                 ...certificationAndRegion?.certification,
                 codeRncp: certificationAndRegion?.certification.rncpId,
               },
-            })
-          )
+            }),
+          ),
         ),
       }))
       .toEither(`Candidate not found`);

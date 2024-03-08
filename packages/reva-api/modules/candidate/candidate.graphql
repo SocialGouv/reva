@@ -31,11 +31,19 @@ type Candidate {
   firstname2: String
   firstname3: String
   lastname: String!
+  usename: String
   email: String!
   phone: String!
+  birthCity: String
+  birthDepartment: String
+  birthdate: Date
+  country: Country
+  nationality: String
+  securiteSocialeNumber: String
   candidacy: Candidacy!
   highestDegree: Degree
   vulnerabilityIndicator: VulnerabilityIndicator
+  department: Department!
 }
 
 type Query {
