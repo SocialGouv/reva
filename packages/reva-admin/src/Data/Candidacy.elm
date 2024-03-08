@@ -4,6 +4,7 @@ module Data.Candidacy exposing
     , CandidacyExperience
     , CandidacyGoal
     , CandidacyId
+    , CandidacyMenuEntry
     , CandidacyStatus
     , CandidacySummary
     , CandidacySummaryPage
@@ -33,6 +34,7 @@ module Data.Candidacy exposing
     , toDirectoryPosition
     )
 
+import Admin.Enum.CandidacyMenuEntryStatus
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.CandidateTypology exposing (CandidateTypology)
@@ -111,6 +113,14 @@ type alias Candidacy =
     , conventionCollective : Maybe CandidacyConventionCollective
     , readyForJuryEstimatedAt : Maybe Time.Posix -- legacy jury date for Reva XP
     , jury : Maybe Jury
+    , candidacyMenu : List CandidacyMenuEntry
+    }
+
+
+type alias CandidacyMenuEntry =
+    { label : String
+    , url : String
+    , status : Admin.Enum.CandidacyMenuEntryStatus.CandidacyMenuEntryStatus
     }
 
 

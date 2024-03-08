@@ -7,6 +7,7 @@ import Admin.Object
 import Admin.Object.Candidacy exposing (ccnId)
 import Admin.Object.CandidacyCountByStatus
 import Admin.Object.CandidacyDropOut
+import Admin.Object.CandidacyMenuEntry
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.CandidacySummaryPage
@@ -221,11 +222,14 @@ selection id =
         getCompanionsRequiredArg =
             Query.GetCompanionsForCandidacyRequiredArguments (Uuid id)
 
+        getCandidacyMenuRequiredArg =
+            Query.CandidacyMenuGetCandidacyMenuRequiredArguments (Id id)
+
         droppedOutDateSelection =
             SelectionSet.succeed identity
                 |> with Admin.Object.CandidacyDropOut.droppedOutAt
 
-        candidacySelectionWithoutCompanions =
+        candidacySelectionWithoutCompanionsAndCandidacyMenu =
             SelectionSet.succeed Data.Candidacy.Candidacy
                 |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
                 |> with (SelectionSet.succeed [])
@@ -254,14 +258,16 @@ selection id =
                 |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
                 |> with Admin.Object.Candidacy.readyForJuryEstimatedAt
                 |> with (Admin.Object.Candidacy.jury Api.Jury.selection)
+                |> with (SelectionSet.succeed [])
     in
     SelectionSet.succeed
-        (\maybeCandidacy companions ->
+        (\maybeCandidacy companions candidacyMenu ->
             maybeCandidacy
-                |> Maybe.map (\candidacy -> { candidacy | availableCompanions = companions })
+                |> Maybe.map (\candidacy -> { candidacy | availableCompanions = companions, candidacyMenu = candidacyMenu })
         )
-        |> with (Query.getCandidacyById candidacyRequiredArgs candidacySelectionWithoutCompanions)
+        |> with (Query.getCandidacyById candidacyRequiredArgs candidacySelectionWithoutCompanionsAndCandidacyMenu)
         |> with (Query.getCompanionsForCandidacy getCompanionsRequiredArg Organism.selection)
+        |> with (Query.candidacyMenu_getCandidacyMenu getCandidacyMenuRequiredArg getCandidacyMenuSelection)
 
 
 
@@ -373,3 +379,15 @@ statusSelection =
         |> with (SelectionSet.map toDateWithLabels Admin.Object.CandidacyStatus.createdAt)
         |> with Admin.Object.CandidacyStatus.status
         |> with Admin.Object.CandidacyStatus.isActive
+
+
+
+-- Candidacy Menu
+
+
+getCandidacyMenuSelection : SelectionSet Data.Candidacy.CandidacyMenuEntry Admin.Object.CandidacyMenuEntry
+getCandidacyMenuSelection =
+    SelectionSet.succeed Data.Candidacy.CandidacyMenuEntry
+        |> with Admin.Object.CandidacyMenuEntry.label
+        |> with Admin.Object.CandidacyMenuEntry.url
+        |> with Admin.Object.CandidacyMenuEntry.status
