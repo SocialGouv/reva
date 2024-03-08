@@ -29,10 +29,10 @@ view context remoteCandidacy =
                 Nothing ->
                     if Candidacy.lastStatus candidacy.statuses == Step.Archive then
                         if Candidacy.isCandidacyReoriented candidacy then
-                            reorientationView context.baseUrl candidacy
+                            reorientationView context context.baseUrl candidacy
 
                         else
-                            archiveView context.baseUrl candidacy
+                            archiveView context context.baseUrl candidacy
 
                     else
                         activeView context candidacy
@@ -425,38 +425,84 @@ dropOutView context baseUrl candidacy dropOutDate =
         )
 
 
-archiveView : String -> Candidacy -> Html msg
-archiveView baseUrl candidacy =
+archiveView : Context -> String -> Candidacy -> Html msg
+archiveView context baseUrl candidacy =
     let
         archiveDate =
             Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id Tab.Archive)
+
+        isAdmin =
+            Api.Token.isAdmin context.token
     in
     View.Steps.view (title "Candidature supprimée")
         2
-        [ { content = [ text "Supprimée le ", text archiveDate.fullFormat ]
-          , navigation = Just ( archiveLink, False )
-          }
-        ]
+        ({ content = [ text "Supprimée le ", text archiveDate.fullFormat ]
+         , navigation = Just ( archiveLink, False )
+         }
+            :: (if isAdmin then
+                    [ { content =
+                            expandedView
+                                WITHOUT_BUTTON
+                                "Journal des actions"
+                      , navigation =
+                            Just <|
+                                ( Html.Attributes.href <|
+                                    context.adminReactUrl
+                                        ++ "/candidacies/"
+                                        ++ Candidacy.candidacyIdToString candidacy.id
+                                        ++ "/logs"
+                                , True
+                                )
+                      }
+                    ]
+
+                else
+                    []
+               )
+        )
 
 
-reorientationView : String -> Candidacy -> Html msg
-reorientationView baseUrl candidacy =
+reorientationView : Context -> String -> Candidacy -> Html msg
+reorientationView context baseUrl candidacy =
     let
         archiveDate =
             Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (Tab.Tab candidacy.id Tab.Archive)
+
+        isAdmin =
+            Api.Token.isAdmin context.token
     in
     View.Steps.view (title "Candidature réorientée")
         2
-        [ { content = [ text "Réorientée le ", text archiveDate.fullFormat ]
-          , navigation = Just ( archiveLink, False )
-          }
-        ]
+        ({ content = [ text "Réorientée le ", text archiveDate.fullFormat ]
+         , navigation = Just ( archiveLink, False )
+         }
+            :: (if isAdmin then
+                    [ { content =
+                            expandedView
+                                WITHOUT_BUTTON
+                                "Journal des actions"
+                      , navigation =
+                            Just <|
+                                ( Html.Attributes.href <|
+                                    context.adminReactUrl
+                                        ++ "/candidacies/"
+                                        ++ Candidacy.candidacyIdToString candidacy.id
+                                        ++ "/logs"
+                                , True
+                                )
+                      }
+                    ]
+
+                else
+                    []
+               )
+        )
 
 
 title : String -> Html msg
