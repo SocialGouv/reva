@@ -139,7 +139,7 @@ function MaisonMereAAPForm(params: {
 
                 <TreeSelect
                   title="Cochez les régions ou départements gérés"
-                  label="Toute la France Métropolitaine"
+                  label="Toute la France"
                   items={onSiteDepartmentsOnRegions}
                   onClickSelectAll={onClickSelectAllOnSiteDepartmentItems}
                   onClickItem={onClickOnSiteDepartmentItem}
@@ -152,7 +152,7 @@ function MaisonMereAAPForm(params: {
 
                 <TreeSelect
                   title="Cochez les régions ou départements gérés"
-                  label="Toute la France Métropolitaine"
+                  label="Toute la France"
                   items={remoteDepartmentsOnRegions}
                   onClickSelectAll={onClickSelectAllRemoteDepartmentItems}
                   onClickItem={onClickRemoteDepartmentItem}
