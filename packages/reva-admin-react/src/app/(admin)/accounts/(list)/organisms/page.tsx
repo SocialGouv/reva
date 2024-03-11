@@ -68,7 +68,7 @@ const OrganismsPage = () => {
         <br />
         {status === "success" && (
           <SearchList
-            title="Compte certificateurs"
+            title="Compte AAP"
             searchFilter={searchFilter}
             searchResultsPage={data.account_getAccounts}
             updateSearchFilter={updateSearchFilter}
