@@ -7,7 +7,10 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { selectedDepartmentsToTreeSelectItems } from "@/utils";
+import {
+  selectedDepartmentsToTreeSelectItems,
+  sortRegionsByAlphabeticalOrderAndDOM,
+} from "@/utils";
 import { ZoneInterventionReadOnly } from "@/app/(admin)/subscriptions/[subscriptionRequestId]/ZoneInterventionReadOnly";
 
 const getSubscriptionRequest = graphql(`
@@ -60,6 +63,7 @@ const getRegions = graphql(`
     getRegions {
       id
       label
+      code
       departments {
         id
         label
@@ -91,7 +95,8 @@ const SubscriptionRequestPage = () => {
   const subscriptionRequest =
     getSubscriptionRequestResponse?.subscription_getSubscriptionRequest;
 
-  const regions = getRegionsResponse?.getRegions || [];
+  const unsortedRegions = getRegionsResponse?.getRegions || [];
+  const regions = sortRegionsByAlphabeticalOrderAndDOM(unsortedRegions);
 
   if (!subscriptionRequest) {
     return <></>;

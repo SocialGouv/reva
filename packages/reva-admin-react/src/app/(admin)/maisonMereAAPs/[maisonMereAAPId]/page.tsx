@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { selectedDepartmentsToTreeSelectItems } from "@/utils";
 import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/MaisonMereAAPForm";
+import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -75,6 +76,7 @@ const getRegions = graphql(`
     getRegions {
       id
       label
+      code
       departments {
         id
         label
@@ -104,7 +106,8 @@ const MaisonMereAAPPage = () => {
   });
 
   const maisonMereAAP = getMaisonMereAAPResponse?.organism_getMaisonMereAAPById;
-  const regions = getRegionsResponse?.getRegions || [];
+  const unsortedRegions = getRegionsResponse?.getRegions || [];
+  const regions = sortRegionsByAlphabeticalOrderAndDOM(unsortedRegions);
 
   if (isMaisonMereAAPLoading || isRegionsLoading || !maisonMereAAP) {
     return <></>;
