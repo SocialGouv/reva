@@ -40,19 +40,20 @@ const CguPage = () => (
         « L'Utilisateur » est tout candidat utilisant le dispositif France VAE.
       </p>
       <p>
-        « L'Architecte accompagnateur de parcours », soumis à un cahier des
-        charges d’offres et de services, certifiés Qualiopi-VAE ou désignés par
-        accord des branches professionnelles. Ce sont des organismes privés ou
-        publics qui accompagnent les candidats dans l’obtention de la
-        certification délivrée par les certificateurs. Les « Services » sont les
-        fonctionnalités offertes par France VAE pour répondre à ses finalités.{" "}
+        Les « Architectes accompagnateurs de parcours » sont soumis à un cahier
+        des charges d’offres et de services, et sont certifiés Qualiopi-VAE ou
+        désignés par accord des branches professionnelles. Ce sont des
+        organismes privés ou publics qui accompagnent les candidats dans
+        l’obtention de la certification délivrée par les certificateurs. Les «
+        Services » sont les fonctionnalités offertes par France VAE pour
+        répondre à ses finalités.
       </p>
       <p>
         Les « Certificateurs » : ensemble des structures référencées par FRANCE
         VAE qui détiennent l'autorité sur la certification et traitent la
         recevabilité (sur la base d'un dossier de faisabilité), inscrivent (le
-        cas échéant) le candidat à la certification, recueillent le dossier
-        d'expérience, organisent les jurys et délivrent le résultat à la session
+        cas échéant) le candidat à la certification, recueillent le dossier de
+        validation, organisent les jurys et délivrent le résultat à la session
         de jury.
       </p>
       <h2>Article 3 – Fonctionnalités de la plateforme</h2>
@@ -93,6 +94,13 @@ const CguPage = () => (
           liste proposée par la Plateforme REVA.
         </li>
       </ul>
+
+      <p>
+        Il est à noter que toute candidature démarrée et non transmise à un
+        architecte accompagnateur de parcours sera supprimée au bout de 2 mois.
+        Le candidat pourra néanmoins renouveler sa candidature dès qu'il le
+        souhaite.
+      </p>
 
       <h3>
         3.2 Renseignement d’informations lors de la recherche des certifications
@@ -226,6 +234,10 @@ const CguPage = () => (
           Honorer les rendez-vous avec l’architecte de parcours,
           l’accompagnateur et le ou les organisme(s) de formation prévue.
         </li>
+        <li>
+          Signer les feuilles d'émargement et autres documents attestant des
+          rendez-vous réalisés
+        </li>
       </ul>
 
       <p>
@@ -342,7 +354,7 @@ const CguPage = () => (
       </p>
 
       <p>Vous pouvez avoir accès à un versionnage des CGU ici :</p>
-      <p>Dernière version des CGU : 08/09/2023</p>
+      <p>Dernière version des CGU : 12/03/2024</p>
     </div>
   </MainLayout>
 );
