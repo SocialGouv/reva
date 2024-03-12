@@ -24,7 +24,7 @@ const AccountsLayout = ({ children }: { children: ReactNode }) => {
         sticky
         fullHeight
         items={[
-          menuItem("APP", "/accounts/organisms"),
+          menuItem("AAP", "/accounts/organisms"),
           menuItem("Certificateur", "/accounts/certification-authorities"),
         ]}
       />
