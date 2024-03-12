@@ -80,10 +80,9 @@ const AbsencePage = () => {
       {organismQueryStatus === "success" && (
         <>
           <p className="text-xl">
-            Si vous ne souhaitez plus recevoir de candidatures pendant un temps,
-            ou si vous êtes en congés, vous allez pouvoir gérer vos absences et
-            fermetures ici. En vous rendant non visible, vous n’apparaîtrez plus
-            dans les résultats de recherches des candidats.
+            Pour ne plus recevoir de candidatures durant une période, vous
+            pouvez choisir de rendre votre structure non visible dans la liste
+            des résultats des Architectes Accompagnateurs de VAE.
           </p>
           <form
             className="flex flex-col"
