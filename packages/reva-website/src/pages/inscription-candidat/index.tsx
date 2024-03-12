@@ -144,14 +144,14 @@ const OrientationCandidatPage = () => {
                         <span>
                           Le parcours VAE sur vae.gouv.fr n'est pas encore
                           disponible dans votre situation. Nous vous invitons à
-                          vous rapprocher d'un{" "}
+                          vous rapprocher d’un{" "}
                           <a
                             href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
                             target="_blank"
                           >
                             point relais conseil
                           </a>
-                          , d'un{" "}
+                          , d’un{" "}
                           <a
                             href="https://mon-cep.org/#trouver"
                             target="_blank"
