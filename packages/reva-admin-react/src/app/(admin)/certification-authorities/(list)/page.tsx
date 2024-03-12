@@ -19,6 +19,7 @@ const getCertificationAuthorities = graphql(`
       rows {
         id
         label
+        contactEmail
       }
       info {
         totalRows
@@ -75,6 +76,7 @@ const CertificationAuthoritiesListPage = () => {
               <GrayCard key={c.id}>
                 <strong>Nom</strong>
                 <p>{c.label}</p>
+                <p>{c.contactEmail}</p>
                 <Button
                   className="ml-auto"
                   linkProps={{ href: `/certification-authorities/${c.id}` }}
