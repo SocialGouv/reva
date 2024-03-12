@@ -275,7 +275,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       <modalDistanceInfo.Component
         title={
           <div className="flex gap-2">
-            <div className="text-sm pt-1">✔️</div>
+            <span className="fr-icon-arrow-right-line fr-icon--lg"></span>
             <span>
               Votre demande de changement d'e-mail de connexion a bien été prise
               en compte
@@ -286,8 +286,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       >
         <p className="my-4">
           Afin de valider ce changement, un e-mail d'activation a été envoyé sur
-          votre nouvelle adresse. Si vous ne trouvez pas notre e-mail , pensez à
-          vérifiez votre dossier de courriers indésirables (spams).
+          votre nouvelle adresse. Si vous ne trouvez pas notre e-mail, pensez à
+          vérifier votre dossier de courriers indésirables (spams).
         </p>
       </modalDistanceInfo.Component>
     </>
