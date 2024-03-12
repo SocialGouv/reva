@@ -65,9 +65,9 @@ export default function Page() {
           <div className="w-full flex flex-col items-center justify-center px-4 sm:px-10 text-gray-500">
             <span>
               <Link href="/certification-authorities/local-accounts/add-local-account/">
-                Ajoutez un compte local
+                Ajouter un compte local
               </Link>{" "}
-              ou sélectionnez un compte existant.
+              ou sélectionner un compte existant.
             </span>
           </div>
         </div>
