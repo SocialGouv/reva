@@ -13,7 +13,7 @@ export const sendNewFeasibilitySubmittedEmail = async ({
     templateMail({
       content: `
           <p>Bonjour,</p><p>Un nouveau dossier de faisabilité vous a été transmis. Vous pouvez y accéder dès maintenant en cliquant sur le bouton ci-dessous.</p>
-          <p>Nous vous rappelons que vous disposez d’un délai de 15 jours pour prononcer la recevabilité du dossier.</p>
+          <p>Nous vous rappelons que, dans le cadre d’une bonne administration de service public, vous disposez d’un délai de 15 jours pour prononcer la recevabilité du dossier.</p>
           <p>L'équipe France VAE.</p>
         `,
       labelCTA: "Accéder au dossier",
