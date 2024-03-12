@@ -153,9 +153,7 @@ const OrientationCandidatPage = () => {
               </p>
             )}
 
-            {(invalidTypology || !certification) && (
-              <WouldYouLikeToKnowMorePanel />
-            )}
+            {!certification && <WouldYouLikeToKnowMorePanel />}
             {validTypology && (
               <>
                 <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-8 mb-2">
