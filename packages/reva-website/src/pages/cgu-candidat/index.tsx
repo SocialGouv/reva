@@ -59,9 +59,9 @@ const CguPage = () => (
       <h2>Article 3 – Fonctionnalités de la plateforme</h2>
       <h3>3.1 Candidature à la validation des acquis</h3>
       <p>
-        Sur la page d’accueil du site, l’Utilisateur peut cliquer sur le bouton
-        d’action “Démarrer ma VAE” afin de créer un compte indispensable pour
-        pouvoir utiliser le service.
+        Sur la page d’accueil du site, l’Utilisateur peut chercher le diplôme
+        visé via la barre de recherche afin de créer un compte indispensable
+        pour pouvoir utiliser le service.
       </p>
       <p>
         L’Utilisateur saisit les informations exigées, une fois le compte et le
