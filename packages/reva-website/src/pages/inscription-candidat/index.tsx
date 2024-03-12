@@ -140,7 +140,33 @@ const OrientationCandidatPage = () => {
                     <Notice
                       data-testid="candidate-typology-error-panel"
                       className="basis-1/2"
-                      title={`Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`}
+                      title={
+                        <span>
+                          Le parcours VAE sur vae.gouv.fr n'est pas encore
+                          disponible dans votre situation. Nous vous invitons à
+                          vous rapprocher d'un{" "}
+                          <a
+                            href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                            target="_blank"
+                          >
+                            point relais conseil
+                          </a>
+                          , d'un{" "}
+                          <a
+                            href="https://mon-cep.org/#trouver"
+                            target="_blank"
+                          >
+                            conseiller en évolution professionnelle
+                          </a>
+                          , une{" "}
+                          <a
+                            href="https://www.transitionspro.fr/"
+                            target="_blank"
+                          >
+                            association de transition professionnelle (AT Pro).
+                          </a>
+                        </span>
+                      }
                     />
                   )}
                 </div>
