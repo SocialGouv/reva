@@ -12,7 +12,10 @@
         "informationsCommerciales": null
       }
     ],
-    "candidacyMenu_getCandidacyMenu2837057383": [],
+    "candidacyMenu_getCandidacyMenu2837057383": {
+      "menuHeader": [],
+      "mainMenu": []
+    },
     "getCandidacyById1645362253": {
       "jury": null,
       "readyForJuryEstimatedAt2471995693": null,

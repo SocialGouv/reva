@@ -219,10 +219,10 @@ type alias CandidacyMenuGetCandidacyMenuRequiredArguments =
 
 candidacyMenu_getCandidacyMenu :
     CandidacyMenuGetCandidacyMenuRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.CandidacyMenuEntry
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet decodesTo Admin.Object.CandidacyMenu
+    -> SelectionSet decodesTo RootQuery
 candidacyMenu_getCandidacyMenu requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacyMenu_getCandidacyMenu" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.list)
+    Object.selectionForCompositeField "candidacyMenu_getCandidacyMenu" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
 
 
 candidate_getCandidateWithCandidacy :

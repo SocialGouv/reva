@@ -7,6 +7,7 @@ import Admin.Object
 import Admin.Object.Candidacy exposing (ccnId)
 import Admin.Object.CandidacyCountByStatus
 import Admin.Object.CandidacyDropOut
+import Admin.Object.CandidacyMenu
 import Admin.Object.CandidacyMenuEntry
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
@@ -258,7 +259,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
                 |> with Admin.Object.Candidacy.readyForJuryEstimatedAt
                 |> with (Admin.Object.Candidacy.jury Api.Jury.selection)
-                |> with (SelectionSet.succeed [])
+                |> with (SelectionSet.succeed (Data.Candidacy.CandidacyMenu [] []))
     in
     SelectionSet.succeed
         (\maybeCandidacy companions candidacyMenu ->
@@ -385,8 +386,15 @@ statusSelection =
 -- Candidacy Menu
 
 
-getCandidacyMenuSelection : SelectionSet Data.Candidacy.CandidacyMenuEntry Admin.Object.CandidacyMenuEntry
+getCandidacyMenuSelection : SelectionSet Data.Candidacy.CandidacyMenu Admin.Object.CandidacyMenu
 getCandidacyMenuSelection =
+    SelectionSet.succeed Data.Candidacy.CandidacyMenu
+        |> with (Admin.Object.CandidacyMenu.menuHeader candidacyMenuEntrySelection)
+        |> with (Admin.Object.CandidacyMenu.mainMenu candidacyMenuEntrySelection)
+
+
+candidacyMenuEntrySelection : SelectionSet Data.Candidacy.CandidacyMenuEntry Admin.Object.CandidacyMenuEntry
+candidacyMenuEntrySelection =
     SelectionSet.succeed Data.Candidacy.CandidacyMenuEntry
         |> with Admin.Object.CandidacyMenuEntry.label
         |> with Admin.Object.CandidacyMenuEntry.url

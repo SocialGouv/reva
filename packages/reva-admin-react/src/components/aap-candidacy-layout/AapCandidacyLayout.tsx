@@ -9,9 +9,11 @@ import { ReactNode } from "react";
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenu($candidacyId: ID!) {
     candidacyMenu_getCandidacyMenu(candidacyId: $candidacyId) {
-      label
-      url
-      status
+      mainMenu {
+        label
+        url
+        status
+      }
     }
   }
 `);
@@ -29,7 +31,8 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         candidacyId,
       }),
   });
-  const menuEntries = getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu;
+  const menuEntries =
+    getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.mainMenu;
 
   return (
     <div className="flex flex-col lg:flex-row">

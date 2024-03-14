@@ -17,7 +17,7 @@ view remoteCandidacy =
         Success candidacy ->
             let
                 elist =
-                    List.map candidacyMenuEntryView candidacy.candidacyMenu
+                    List.map candidacyMenuEntryView candidacy.candidacyMenu.mainMenu
             in
             [ View.Steps.view (title "Toutes les étapes") 0 elist ]
 

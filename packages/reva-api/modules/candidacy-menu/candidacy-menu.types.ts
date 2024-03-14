@@ -8,3 +8,8 @@ export interface CandidacyMenuEntry {
   url: string;
   status: CandidacyMenuEntryStatus;
 }
+
+export interface CandidacyMenu {
+  menuHeader: CandidacyMenuEntry[];
+  mainMenu: CandidacyMenuEntry[];
+}

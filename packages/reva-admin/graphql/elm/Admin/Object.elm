@@ -53,6 +53,10 @@ type CandidacyLogUser
     = CandidacyLogUser
 
 
+type CandidacyMenu
+    = CandidacyMenu
+
+
 type CandidacyMenuEntry
     = CandidacyMenuEntry
 

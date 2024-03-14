@@ -4,6 +4,7 @@ module Data.Candidacy exposing
     , CandidacyExperience
     , CandidacyGoal
     , CandidacyId
+    , CandidacyMenu
     , CandidacyMenuEntry
     , CandidacyStatus
     , CandidacySummary
@@ -113,7 +114,13 @@ type alias Candidacy =
     , conventionCollective : Maybe CandidacyConventionCollective
     , readyForJuryEstimatedAt : Maybe Time.Posix -- legacy jury date for Reva XP
     , jury : Maybe Jury
-    , candidacyMenu : List CandidacyMenuEntry
+    , candidacyMenu : CandidacyMenu
+    }
+
+
+type alias CandidacyMenu =
+    { menuHeader : List CandidacyMenuEntry
+    , mainMenu : List CandidacyMenuEntry
     }
 
 
