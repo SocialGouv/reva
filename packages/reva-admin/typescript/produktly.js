@@ -4,7 +4,6 @@ export function initProduktly(produktlyClientToken) {
   const originalPrepend = Element.prototype.prepend;
 
   Element.prototype.prepend = function () {
-    console.log({ arguments });
     if (
       [
         "produktly-sticky-top-of-body-portal-root",
