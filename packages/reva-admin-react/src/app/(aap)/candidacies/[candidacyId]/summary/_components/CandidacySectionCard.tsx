@@ -33,7 +33,7 @@ const CandidacySectionCard = ({
   return (
     <div className="flex w-full flex-col p-6 bg-light-grey">
       <div className="flex justify-between w-full mb-6">
-        <div className="flex gap-4">
+        <div className="flex items-center gap-4">
           <h4 className="text-2xl font-bold">{title}</h4>
           {Badge && <Badge />}
         </div>
