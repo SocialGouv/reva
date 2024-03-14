@@ -8,17 +8,9 @@ const checkObjectFields = (object: any, fields: string[]) => {
   return fields.every((field) => object[field]);
 };
 
-const BadgeCompleted = () => (
-  <Badge severity="success" small>
-    Complété
-  </Badge>
-);
+const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
-const BadgeToComplete = () => (
-  <Badge severity="error" small>
-    À COMPLÉTER
-  </Badge>
-);
+const BadgeToComplete = () => <Badge severity="warning">À compléter</Badge>;
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
