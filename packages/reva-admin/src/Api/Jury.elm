@@ -14,5 +14,4 @@ selection =
         |> with Admin.Object.Jury.addressOfSession
         |> with Admin.Object.Jury.informationOfSession
         |> with Admin.Object.Jury.informationOfResult
-        |> with Admin.Object.Jury.isResultProvisional
         |> with Admin.Object.Jury.result

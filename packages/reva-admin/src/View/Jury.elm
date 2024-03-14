@@ -95,22 +95,11 @@ viewResultHelper jury result =
         , div
             [ class "font-bold" ]
             [ viewOptional text (Just (View.Date.toFullFormat jury.dateOfSession))
-            , text " - "
-            , viewOptional viewResultProvisional jury.isResultProvisional
-            , text " :"
+            , text " - Résultat :"
             ]
         , viewResultCategory result
         , div [ class "mb-8" ] [ text "“", viewOptional text jury.informationOfResult, text "“" ]
         ]
-
-
-viewResultProvisional : Bool -> Html msg
-viewResultProvisional isResultProvisional =
-    if isResultProvisional then
-        text "Résultat provisoire"
-
-    else
-        text "Résultat définitif"
 
 
 viewResultCategory : JuryResult -> Html msg

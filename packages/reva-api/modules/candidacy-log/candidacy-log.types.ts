@@ -72,7 +72,6 @@ export type CandidacyLogEventTypeAndDetails =
       eventType: "JURY_RESULT_UPDATED";
       details: {
         result: string;
-        isResultProvisional: boolean;
       };
     }
   | {

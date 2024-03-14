@@ -6,7 +6,7 @@ import {
   sendJuryResultAAPEmail,
   sendJuryResultCandidateEmail,
 } from "../emails";
-import { JuryInfo, JuryResult } from "../jury.types";
+import { JuryInfo } from "../jury.types";
 import { canManageJury } from "./canManageJury";
 
 interface UpdateResultOfJury {
@@ -16,19 +16,6 @@ interface UpdateResultOfJury {
   keycloakId: string;
   userEmail: string;
 }
-
-const isResultProvisionalEnabled = (result: JuryResult): boolean => {
-  const authorizedValues = [
-    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-  ];
-
-  const enabled = authorizedValues.indexOf(result) != -1;
-
-  return enabled;
-};
 
 export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   const { juryId, juryInfo, roles, keycloakId, userEmail } = params;
@@ -70,15 +57,6 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     throw new Error("Le résultat du jury a déjà été renseigné");
   }
 
-  if (
-    isResultProvisionalEnabled(juryInfo.result) &&
-    juryInfo.isResultProvisional == undefined
-  ) {
-    throw new Error(
-      "Veuillez préciser si le résultat du jury est définif ou provisoir",
-    );
-  }
-
   const updatedJury = await prismaClient.jury.update({
     where: {
       id: jury.id,
@@ -86,9 +64,6 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     data: {
       result: juryInfo.result,
       dateOfResult: new Date(),
-      isResultProvisional: isResultProvisionalEnabled(juryInfo.result)
-        ? juryInfo.isResultProvisional
-        : undefined,
       informationOfResult:
         juryInfo.informationOfResult == ""
           ? undefined
@@ -118,7 +93,6 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     userRoles: roles,
     eventType: "JURY_RESULT_UPDATED",
     details: {
-      isResultProvisional: juryInfo.isResultProvisional,
       result: juryInfo.result,
     },
   });

@@ -1104,7 +1104,6 @@ model Jury {
   informationOfSession                       String?                @map("information_of_session")
   result                                     String?                @map("result")
   dateOfResult                               DateTime?              @map("date_of_result") @db.Timestamptz(6)
-  isResultProvisional                        Boolean?               @map("is_result_provisional")
   informationOfResult                        String?                @map("information_of_result")
   isActive                                   Boolean                @default(true) @map("is_active")
   createdAt                                  DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)

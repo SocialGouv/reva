@@ -22,6 +22,5 @@ export type JuryResult =
 
 export interface JuryInfo {
   result: JuryResult;
-  isResultProvisional: boolean;
   informationOfResult?: string;
 }

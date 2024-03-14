@@ -824,13 +824,11 @@ buildJuryInfoInput required____ fillOptionals____ =
             fillOptionals____
                 { informationOfResult = Absent }
     in
-    { result = required____.result, isResultProvisional = required____.isResultProvisional, informationOfResult = optionals____.informationOfResult }
+    { result = required____.result, informationOfResult = optionals____.informationOfResult }
 
 
 type alias JuryInfoInputRequiredFields =
-    { result : Admin.Enum.JuryResult.JuryResult
-    , isResultProvisional : Bool
-    }
+    { result : Admin.Enum.JuryResult.JuryResult }
 
 
 type alias JuryInfoInputOptionalFields =
@@ -841,7 +839,6 @@ type alias JuryInfoInputOptionalFields =
 -}
 type alias JuryInfoInput =
     { result : Admin.Enum.JuryResult.JuryResult
-    , isResultProvisional : Bool
     , informationOfResult : OptionalArgument String
     }
 
@@ -851,7 +848,7 @@ type alias JuryInfoInput =
 encodeJuryInfoInput : JuryInfoInput -> Value
 encodeJuryInfoInput input____ =
     Encode.maybeObject
-        [ ( "result", Encode.enum Admin.Enum.JuryResult.toString input____.result |> Just ), ( "isResultProvisional", Encode.bool input____.isResultProvisional |> Just ), ( "informationOfResult", Encode.string |> Encode.optional input____.informationOfResult ) ]
+        [ ( "result", Encode.enum Admin.Enum.JuryResult.toString input____.result |> Just ), ( "informationOfResult", Encode.string |> Encode.optional input____.informationOfResult ) ]
 
 
 buildMaisonMereAAPOnDepartmentInput :

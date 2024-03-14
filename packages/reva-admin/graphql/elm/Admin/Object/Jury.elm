@@ -69,11 +69,6 @@ dateOfResult =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "dateOfResult" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
-isResultProvisional : SelectionSet (Maybe Bool) Admin.Object.Jury
-isResultProvisional =
-    Object.selectionForField "(Maybe Bool)" "isResultProvisional" [] (Decode.bool |> Decode.nullable)
-
-
 informationOfResult : SelectionSet (Maybe String) Admin.Object.Jury
 informationOfResult =
     Object.selectionForField "(Maybe String)" "informationOfResult" [] (Decode.string |> Decode.nullable)

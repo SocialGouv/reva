@@ -10,6 +10,5 @@ type alias Jury =
     , addressOfSession : Maybe String
     , informationOfSession : Maybe String
     , informationOfResult : Maybe String
-    , isResultProvisional : Maybe Bool
     , result : Maybe JuryResult
     }

@@ -33,19 +33,6 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   CANDIDATE_ABSENT: "Candidat non présent",
 };
 
-const isResultProvisionalEnabled = (result: JuryResult): boolean => {
-  const authorizedValues = [
-    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-  ];
-
-  const enabled = authorizedValues.indexOf(result) != -1;
-
-  return enabled;
-};
-
 const juryResultNotice: {
   [key in JuryResult]: "info" | "new" | "success" | "error";
 } = {
@@ -58,24 +45,18 @@ const juryResultNotice: {
   CANDIDATE_ABSENT: "new",
 };
 
-const schema = z
-  .object({
-    result: z.enum([
-      "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-      "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-      "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-      "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-      "FAILURE",
-      "CANDIDATE_EXCUSED",
-      "CANDIDATE_ABSENT",
-    ]),
-    isResultProvisional: z.enum(["true", "false"]).nullable(),
-    informationOfResult: z.string().optional(),
-  })
-  .refine(
-    ({ result, isResultProvisional }) =>
-      !(isResultProvisionalEnabled(result) && isResultProvisional == null),
-  );
+const schema = z.object({
+  result: z.enum([
+    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ]),
+  informationOfResult: z.string().optional(),
+});
 
 type ResultatFormData = z.infer<typeof schema>;
 
@@ -88,7 +69,6 @@ export const Resultat = (): JSX.Element => {
     register,
     handleSubmit,
     getValues,
-    watch,
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResultatFormData>({ resolver: zodResolver(schema) });
 
@@ -97,8 +77,6 @@ export const Resultat = (): JSX.Element => {
   });
 
   const formData = getValues();
-
-  const watchResult = watch("result");
 
   const submitData = async () => {
     modal.close();
@@ -109,7 +87,6 @@ export const Resultat = (): JSX.Element => {
           juryId: candidacy.jury.id,
           input: {
             result: formData.result,
-            isResultProvisional: formData.isResultProvisional == "true",
             informationOfResult: formData.informationOfResult,
           },
         });
@@ -149,11 +126,10 @@ export const Resultat = (): JSX.Element => {
       {!getCandidacy.isLoading && result && (
         <div className="flex flex-col gap-4 mt-12">
           <h5 className="text-base font-bold">
-            {`${format(candidacy.jury?.dateOfResult || "", "yyyy-MM-dd")} - ${
-              candidacy.jury?.isResultProvisional
-                ? "Résultat provisoire"
-                : "Résultat définitif"
-            } :`}
+            {`${format(
+              candidacy.jury?.dateOfResult || "",
+              "dd/MM/yyyy",
+            )} - Résultat :`}
           </h5>
 
           {juryResultNotice[result] == "error" ? (
@@ -195,38 +171,6 @@ export const Resultat = (): JSX.Element => {
             }
           />
 
-          {(!watchResult || isResultProvisionalEnabled(watchResult)) && (
-            <RadioButtons
-              legend="Informations complémentaires :"
-              className="m-0 p-0 mb-12"
-              orientation="horizontal"
-              options={[
-                {
-                  label: "Résultat définitif",
-                  nativeInputProps: {
-                    value: "false",
-                    ...register("isResultProvisional"),
-                    disabled: !editable,
-                  },
-                },
-                {
-                  label: "Résultat provisoire",
-                  nativeInputProps: {
-                    value: "true",
-                    ...register("isResultProvisional"),
-                    disabled: !editable,
-                  },
-                },
-              ]}
-              state={errors.isResultProvisional ? "error" : "default"}
-              stateRelatedMessage={
-                errors.isResultProvisional
-                  ? "Veuillez sélectionner une option"
-                  : undefined
-              }
-            />
-          )}
-
           <Input
             label="Commentaires (optionnel) :"
             nativeTextAreaProps={register("informationOfResult")}
@@ -264,11 +208,7 @@ export const Resultat = (): JSX.Element => {
         >
           <div className="flex flex-col gap-4">
             <h5 className="text-base font-bold mt-4">
-              {`${format(new Date(), "yyyy-MM-dd")} - ${
-                formData.isResultProvisional == "true"
-                  ? "Résultat provisoire"
-                  : "Résultat définitif"
-              } :`}
+              {`${format(new Date(), "dd/MM/yyyy")} - Résultat :`}
             </h5>
 
             {juryResultNotice[formData.result] == "error" ? (

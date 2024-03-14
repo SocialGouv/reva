@@ -16,7 +16,6 @@ enum JuryResult {
 
 input JuryInfoInput {
   result: JuryResult!
-  isResultProvisional: Boolean!
   informationOfResult: String
 }
 
@@ -30,7 +29,6 @@ type Jury {
   convocationFile: File
   result: JuryResult
   dateOfResult: Timestamp
-  isResultProvisional: Boolean
   informationOfResult: String
 }
 
