@@ -50,6 +50,11 @@ lastname =
     Object.selectionForField "String" "lastname" [] Decode.string
 
 
+usename : SelectionSet (Maybe String) Admin.Object.Candidate
+usename =
+    Object.selectionForField "(Maybe String)" "usename" [] (Decode.string |> Decode.nullable)
+
+
 email : SelectionSet String Admin.Object.Candidate
 email =
     Object.selectionForField "String" "email" [] Decode.string
@@ -58,6 +63,38 @@ email =
 phone : SelectionSet String Admin.Object.Candidate
 phone =
     Object.selectionForField "String" "phone" [] Decode.string
+
+
+birthCity : SelectionSet (Maybe String) Admin.Object.Candidate
+birthCity =
+    Object.selectionForField "(Maybe String)" "birthCity" [] (Decode.string |> Decode.nullable)
+
+
+birthDepartment : SelectionSet (Maybe String) Admin.Object.Candidate
+birthDepartment =
+    Object.selectionForField "(Maybe String)" "birthDepartment" [] (Decode.string |> Decode.nullable)
+
+
+birthdate : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Candidate
+birthdate =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "birthdate" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+country :
+    SelectionSet decodesTo Admin.Object.Country
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
+country object____ =
+    Object.selectionForCompositeField "country" [] object____ (Basics.identity >> Decode.nullable)
+
+
+nationality : SelectionSet (Maybe String) Admin.Object.Candidate
+nationality =
+    Object.selectionForField "(Maybe String)" "nationality" [] (Decode.string |> Decode.nullable)
+
+
+securiteSocialeNumber : SelectionSet (Maybe String) Admin.Object.Candidate
+securiteSocialeNumber =
+    Object.selectionForField "(Maybe String)" "securiteSocialeNumber" [] (Decode.string |> Decode.nullable)
 
 
 candidacy :
@@ -79,3 +116,10 @@ vulnerabilityIndicator :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
 vulnerabilityIndicator object____ =
     Object.selectionForCompositeField "vulnerabilityIndicator" [] object____ (Basics.identity >> Decode.nullable)
+
+
+department :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet decodesTo Admin.Object.Candidate
+department object____ =
+    Object.selectionForCompositeField "department" [] object____ Basics.identity

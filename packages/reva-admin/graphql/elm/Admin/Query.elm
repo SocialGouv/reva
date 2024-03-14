@@ -660,6 +660,13 @@ getFCCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getFCCertification" [ Argument.required "rncp" requiredArgs____.rncp (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+getCountries :
+    SelectionSet decodesTo Admin.Object.Country
+    -> SelectionSet (List decodesTo) RootQuery
+getCountries object____ =
+    Object.selectionForCompositeField "getCountries" [] object____ (Basics.identity >> Decode.list)
+
+
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int

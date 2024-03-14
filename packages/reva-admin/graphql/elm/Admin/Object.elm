@@ -113,6 +113,10 @@ type ConventionCollective
     = ConventionCollective
 
 
+type Country
+    = Country
+
+
 type Degree
     = Degree
 
