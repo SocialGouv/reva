@@ -62,7 +62,6 @@ const CandidacySummaryPage = () => {
         >
           <div>
             <div className="mb-4">
-              <p className="font-medium">INFORMATIONS CIVILES</p>
               <p>
                 {candidate.firstname} {candidate.lastname}
               </p>
@@ -71,7 +70,6 @@ const CandidacySummaryPage = () => {
               </p>
             </div>
             <div>
-              <p className="font-medium">INFORMATIONS de contact</p>
               <p>{candidate.phone}</p>
               <p>{candidate.email}</p>
             </div>

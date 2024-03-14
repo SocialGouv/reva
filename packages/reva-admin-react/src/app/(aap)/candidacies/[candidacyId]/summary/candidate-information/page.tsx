@@ -1,55 +1,63 @@
 "use client";
-import { Candidate } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import Tabs from "@codegouvfr/react-dsfr/Tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import useCandidateSummary from "../_components/useCandidateSummary";
 import {
-  FormInformationsCivilesData,
+  FormCandidateInformationData,
   GenderEnum,
-  informationsCivilesSchema,
-} from "./_components/informationsCivilesSchema";
-import {
-  FormInformationsContactData,
-  informationsContactSchema,
-} from "./_components/informationsContactSchema";
+  candidateInformationSchema,
+} from "./_components/candidateInformationSchema";
 
-const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
-  const { countries } = useCandidateSummary(candidate.id);
-  const franceId = countries?.find((c) => c.label === "France")?.id;
-
+const InformationsCivilesTab = () => {
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
   const genders = [
     { label: "Madame", value: "woman" },
     { label: "Monsieur", value: "man" },
     { label: "Non précisé", value: "undisclosed" },
   ];
-  const { register, watch, setValue, getValues } =
-    useForm<FormInformationsCivilesData>({
-      resolver: zodResolver(informationsCivilesSchema),
-      defaultValues: {
-        firstName: candidate.firstname,
-        lastName: candidate.lastname,
-        usename: candidate.usename ?? "",
-        firstName2: candidate.firstname2 ?? "",
-        firstName3: candidate.firstname3 ?? "",
-        gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
-        birthCity: candidate.birthCity ?? "",
-        birthdate: candidate.birthdate
-          ? new Date(candidate.birthdate)
-          : new Date(),
-        birthDepartment: candidate.birthDepartment ?? "",
-        country: candidate.country?.id ?? franceId,
-        nationality: candidate.nationality ?? "",
-        securiteSocialeNumber: candidate.securiteSocialeNumber ?? "",
-      },
-    });
+
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+    clearErrors,
+  } = useFormContext<FormCandidateInformationData>();
+  const { countries, candidacy } = useCandidateSummary(candidacyId);
+  const country = watch("country");
+  const [disabledDepartment, setDisabledDepartment] = useState(
+    country !== "France",
+  );
+  const franceId = countries?.find((c) => c.label === "France")?.id;
+
+  useEffect(() => {
+    if (country !== franceId) {
+      setValue("birthDepartment", "");
+      setDisabledDepartment(true);
+      setValue("countryIsFrance", false);
+      clearErrors("birthDepartment");
+    } else {
+      setDisabledDepartment(false);
+      setValue("countryIsFrance", true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country, franceId, setValue, setDisabledDepartment]);
+
+  useEffect(() => {
+    setValue("country", candidacy?.candidate?.country?.id ?? franceId);
+  }, [franceId, countries, candidacy, setValue]);
 
   return (
-    <div>
+    <>
       <h6 className="mb-12 text-xl font-bold">Informations civiles</h6>
       <div className="flex flex-col gap-6">
         <div className="flex gap-6">
@@ -60,9 +68,10 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
               onChange: (e) => {
                 setValue("gender", e.target.value as GenderEnum);
               },
-              defaultValue: getValues("gender"),
               value: watch("gender"),
             }}
+            state={errors.gender ? "error" : "default"}
+            stateRelatedMessage={errors.gender?.message}
           >
             {genders.map(
               ({ value, label }: { value: string; label: string }) => (
@@ -78,8 +87,16 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("lastName"),
             }}
+            state={errors.lastName ? "error" : "default"}
+            stateRelatedMessage={errors.lastName?.message}
           />
-          <Input label="Nom d'usage (optionnel)" className="w-full" />
+          <Input
+            label="Nom d'usage (optionnel)"
+            className="w-full"
+            nativeInputProps={{
+              ...register("givenName"),
+            }}
+          />
         </div>
         <div className="flex gap-6">
           <Input
@@ -88,6 +105,8 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("firstName"),
             }}
+            state={errors.firstName ? "error" : "default"}
+            stateRelatedMessage={errors.firstName?.message}
           />
           <Input
             label="Prénom 2 (optionnel)"
@@ -110,18 +129,19 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
             className="w-full"
             nativeInputProps={{
               ...register("birthdate"),
+              type: "date",
             }}
+            state={errors.birthdate ? "error" : "default"}
+            stateRelatedMessage={errors.birthdate?.message}
           />
           <Select
             className="w-full"
             label="Pays de naissance"
             nativeSelectProps={{
-              onChange: (e) => {
-                setValue("country", e.target.value);
-              },
-              defaultValue: getValues("country"),
-              value: watch("country"),
+              ...register("country"),
             }}
+            state={errors.country ? "error" : "default"}
+            stateRelatedMessage={errors.country?.message}
           >
             {countries?.map((c) => (
               <option key={c.id} value={c.id}>
@@ -134,10 +154,12 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
           <Input
             label="Département de naissance"
             className="w-full"
-            disabled={watch("country") !== "France"}
+            disabled={disabledDepartment}
             nativeInputProps={{
               ...register("birthDepartment"),
             }}
+            state={errors.birthDepartment ? "error" : "default"}
+            stateRelatedMessage={errors.birthDepartment?.message}
           />
           <Input
             label="Ville de naissance"
@@ -145,6 +167,8 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("birthCity"),
             }}
+            state={errors.birthCity ? "error" : "default"}
+            stateRelatedMessage={errors.birthCity?.message}
           />
         </div>
         <div className="flex gap-6">
@@ -154,30 +178,31 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("nationality"),
             }}
+            state={errors.nationality ? "error" : "default"}
+            stateRelatedMessage={errors.nationality?.message}
           />
           <Input
             label="Numéro de sécurité sociale"
             className="w-full"
             nativeInputProps={{
-              ...register("securiteSocialeNumber"),
+              ...register("socialSecurityNumber"),
             }}
+            state={errors.socialSecurityNumber ? "error" : "default"}
+            stateRelatedMessage={errors.socialSecurityNumber?.message}
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
-  const { register } = useForm<FormInformationsContactData>({
-    resolver: zodResolver(informationsContactSchema),
-    defaultValues: {
-      email: candidate.email,
-      phone: candidate.phone,
-    },
-  });
+const InformationsContactTab = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormCandidateInformationData>();
   return (
-    <div>
+    <>
       <h6 className="mb-12 text-xl font-bold">Informations de contact</h6>
       <div className="flex flex-col gap-6">
         <Input
@@ -186,6 +211,8 @@ const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
           nativeInputProps={{
             ...register("street"),
           }}
+          state={errors.street ? "error" : "default"}
+          stateRelatedMessage={errors.street?.message}
         />
         <div className="flex gap-4">
           <Input
@@ -194,6 +221,8 @@ const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("postalCode"),
             }}
+            state={errors.postalCode ? "error" : "default"}
+            stateRelatedMessage={errors.postalCode?.message}
           />
           <Input
             label="Ville"
@@ -201,6 +230,8 @@ const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("city"),
             }}
+            state={errors.city ? "error" : "default"}
+            stateRelatedMessage={errors.city?.message}
           />
         </div>
         <div className="flex gap-4">
@@ -210,6 +241,8 @@ const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("phone"),
             }}
+            state={errors.phone ? "error" : "default"}
+            stateRelatedMessage={errors.phone?.message}
           />
           <Input
             label="Email"
@@ -217,10 +250,12 @@ const InformationsContactTab = ({ candidate }: { candidate: Candidate }) => {
             nativeInputProps={{
               ...register("email"),
             }}
+            state={errors.email ? "error" : "default"}
+            stateRelatedMessage={errors.email?.message}
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -229,10 +264,38 @@ const CandidateInformationPage = () => {
     candidacyId: string;
   }>();
   const router = useRouter();
-  const { candidacy } = useCandidateSummary(candidacyId);
-  if (!candidacy) return null;
+  const { candidacy, countries } = useCandidateSummary(candidacyId);
+  const candidate = candidacy?.candidate;
+  const franceId = countries?.find((c) => c.label === "France")?.id;
 
-  const { candidate } = candidacy;
+  const methods = useForm<FormCandidateInformationData>({
+    resolver: zodResolver(candidateInformationSchema),
+    defaultValues: {
+      firstName: candidate?.firstname,
+      lastName: candidate?.lastname,
+      givenName: candidate?.givenName ?? "",
+      firstName2: candidate?.firstname2 ?? "",
+      firstName3: candidate?.firstname3 ?? "",
+      gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
+      birthCity: candidate?.birthCity ?? "",
+      birthdate: format(
+        candidate?.birthdate ? new Date(candidate?.birthdate) : new Date(),
+        "yyyy-MM-dd",
+      ),
+      birthDepartment: candidate?.birthDepartment?.label ?? "",
+      country: candidate?.country?.id ?? franceId,
+      nationality: candidate?.nationality ?? "",
+      socialSecurityNumber: candidate?.socialSecurityNumber ?? "",
+      countryIsFrance: candidate?.country?.id === franceId,
+    },
+  });
+  const { handleSubmit } = methods;
+
+  const onSubmit = async (data: FormCandidateInformationData) => {
+    console.log(data);
+  };
+
+  if (!candidacy?.candidate) return null;
 
   return (
     <div className="flex flex-col w-full p-8 gap-8">
@@ -246,22 +309,20 @@ const CandidateInformationPage = () => {
         </p>
       </div>
 
-      <Tabs
-        tabs={[
-          {
-            label: "Informations civiles",
-            content: (
-              <InformationsCivilesTab candidate={candidate as Candidate} />
-            ),
-          },
-          {
-            label: "Informations de contact",
-            content: (
-              <InformationsContactTab candidate={candidate as Candidate} />
-            ),
-          },
-        ]}
-      />
+      <FormProvider {...methods}>
+        <Tabs
+          tabs={[
+            {
+              label: "Informations civiles",
+              content: <InformationsCivilesTab />,
+            },
+            {
+              label: "Informations de contact",
+              content: <InformationsContactTab />,
+            },
+          ]}
+        />
+      </FormProvider>
 
       <div className="flex gap-6 justify-end">
         <Button
@@ -270,7 +331,7 @@ const CandidateInformationPage = () => {
         >
           Annuler
         </Button>
-        <Button>Enregistrer</Button>
+        <Button onClick={handleSubmit(onSubmit)}>Enregistrer</Button>
       </div>
     </div>
   );

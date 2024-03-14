@@ -160,7 +160,7 @@ model Candidate {
   firstname2               String?                 @db.VarChar(255)
   firstname3               String?                 @db.VarChar(255)
   lastname                 String                  @db.VarChar(255)
-  usename                  String?                 @db.VarChar(255)
+  givenName                String?                 @db.VarChar(255)
   phone                    String                  @db.VarChar(255)
   departmentId             String                  @map("department_id") @db.Uuid
   department               Department              @relation(fields: [departmentId], references: [id])
@@ -171,7 +171,7 @@ model Candidate {
   countryId                String?                 @map("country_id") @db.Uuid
   country                  Country?                @relation(fields: [countryId], references: [id])
   nationality              String?                 @db.VarChar(255)
-  securiteSocialeNumber    String?                 @map("securite_sociale_number") @db.VarChar(255)
+  socialSecurityNumber     String?                 @map("social_security_number") @db.VarChar(255)
   highestDegree            Degree?                 @relation(fields: [highestDegreeId], references: [id])
   highestDegreeId          String?                 @map("highest_degree_id") @db.Uuid
   vulnerabilityIndicator   VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])

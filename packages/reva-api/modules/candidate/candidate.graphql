@@ -31,15 +31,15 @@ type Candidate {
   firstname2: String
   firstname3: String
   lastname: String!
-  usename: String
+  givenName: String
   email: String!
   phone: String!
   birthCity: String
-  birthDepartment: String
+  birthDepartment: Department
   birthdate: Timestamp
   country: Country
   nationality: String
-  securiteSocialeNumber: String
+  socialSecurityNumber: String
   candidacy: Candidacy!
   highestDegree: Degree
   vulnerabilityIndicator: VulnerabilityIndicator
