@@ -38,7 +38,9 @@ const InformationsCivilesTab = ({ candidate }: { candidate: Candidate }) => {
         firstName3: candidate.firstname3 ?? "",
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
         birthCity: candidate.birthCity ?? "",
-        birthdate: candidate.birthdate ?? new Date().toISOString(),
+        birthdate: candidate.birthdate
+          ? new Date(candidate.birthdate)
+          : new Date(),
         birthDepartment: candidate.birthDepartment ?? "",
         country: candidate.country?.id ?? franceId,
         nationality: candidate.nationality ?? "",

@@ -36,7 +36,7 @@ type Candidate {
   phone: String!
   birthCity: String
   birthDepartment: String
-  birthdate: Date
+  birthdate: Timestamp
   country: Country
   nationality: String
   securiteSocialeNumber: String
