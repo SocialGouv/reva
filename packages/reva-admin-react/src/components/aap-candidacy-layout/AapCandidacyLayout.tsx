@@ -9,6 +9,11 @@ import { ReactNode } from "react";
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenu($candidacyId: ID!) {
     candidacyMenu_getCandidacyMenu(candidacyId: $candidacyId) {
+      menuHeader {
+        label
+        url
+        status
+      }
       mainMenu {
         label
         url
@@ -31,38 +36,64 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         candidacyId,
       }),
   });
-  const menuEntries =
+
+  const menuHeaderEntries =
+    getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.menuHeader;
+
+  const mainMenuEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.mainMenu;
 
   return (
     <div className="flex flex-col lg:flex-row">
       <CandidacyLayoutSideMenu>
-        {menuEntries?.map((e) => (
-          <li key={e.label} className="mt-5 mb-7 text-sm">
-            {e.status === "INACTIVE" && <span>{e.label}</span>}
-            {e.status === "ACTIVE_WITHOUT_HINT" && (
-              <a className="bg-none" href={e.url}>
-                {e.label}
-              </a>
-            )}
-
-            {e.status === "ACTIVE_WITH_EDIT_HINT" && (
-              <a href={e.url}>
-                <div className="flex flex-col gap-2">
-                  <span className="text-dsfr-blue-france-sun-113 font-bold">
-                    {e.label}
-                  </span>
-                  <Button className="mt-1">Compléter</Button>
-                </div>
-              </a>
-            )}
-          </li>
-        ))}
+        <ul>
+          {menuHeaderEntries?.map((e) => (
+            <MenuEntry key={e.label} menuEntry={e} />
+          ))}
+        </ul>
+        <h2 className="mt-0.5 flex items-end text-xl font-semibold">
+          Toutes les étapes
+        </h2>
+        <ul>
+          {mainMenuEntries?.map((e) => (
+            <MenuEntry key={e.label} menuEntry={e} />
+          ))}
+        </ul>
       </CandidacyLayoutSideMenu>
       {children}
     </div>
   );
 };
+
+const MenuEntry = ({
+  menuEntry,
+}: {
+  menuEntry: {
+    label: string;
+    url: string;
+    status: "INACTIVE" | "ACTIVE_WITHOUT_HINT" | "ACTIVE_WITH_EDIT_HINT";
+  };
+}) => (
+  <li key={menuEntry.label} className="mt-5 mb-7 text-sm">
+    {menuEntry.status === "INACTIVE" && <span>{menuEntry.label}</span>}
+    {menuEntry.status === "ACTIVE_WITHOUT_HINT" && (
+      <a className="bg-none" href={menuEntry.url}>
+        {menuEntry.label}
+      </a>
+    )}
+
+    {menuEntry.status === "ACTIVE_WITH_EDIT_HINT" && (
+      <a href={menuEntry.url}>
+        <div className="flex flex-col gap-2">
+          <span className="text-dsfr-blue-france-sun-113 font-bold">
+            {menuEntry.label}
+          </span>
+          <Button className="mt-1">Compléter</Button>
+        </div>
+      </a>
+    )}
+  </li>
+);
 
 const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
   <nav
@@ -85,12 +116,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
           id="fr-sidemenu-wrapper"
           data-fr-js-collapse="true"
         >
-          <div className="lg:ml-1">
-            <h1 className="mt-0.5 flex items-end text-xl font-semibold">
-              Toutes les étapes
-            </h1>
-            <ul>{children}</ul>
-          </div>
+          <div className="lg:ml-1">{children}</div>
         </div>
       </div>
     </div>

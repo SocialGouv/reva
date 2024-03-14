@@ -16,10 +16,13 @@ view remoteCandidacy =
     case remoteCandidacy of
         Success candidacy ->
             let
-                elist =
+                menuHeaderEntries =
+                    List.map candidacyMenuEntryView candidacy.candidacyMenu.menuHeader
+
+                mainMenuEntries =
                     List.map candidacyMenuEntryView candidacy.candidacyMenu.mainMenu
             in
-            [ View.Steps.view (title "Toutes les étapes") 0 elist ]
+            [ View.Steps.view (title "") 0 menuHeaderEntries, View.Steps.view (title "Toutes les étapes") 0 mainMenuEntries ]
 
         _ ->
             []
