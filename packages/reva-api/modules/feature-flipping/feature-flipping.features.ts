@@ -14,7 +14,7 @@ export const activeFeaturesForConnectedUser = async ({
   const betaTestedFeatures = userKeycloakId
     ? (
         await prismaClient.featureBetaTest.findMany({
-          where: { account:{keycloakId:userKeycloakId} },
+          where: { account: { keycloakId: userKeycloakId } },
         })
       ).map((f) => f.featureKey)
     : [];
@@ -30,4 +30,18 @@ export const getFeatureByKey = async (key: string) => {
   });
 
   return feature;
+};
+
+export const isFeatureActiveForUser = async ({
+  userKeycloakId,
+  feature,
+}: {
+  userKeycloakId?: string | null;
+  feature: string;
+}) => {
+  const activeFeatures = await activeFeaturesForConnectedUser({
+    userKeycloakId,
+  });
+
+  return activeFeatures.includes(feature);
 };

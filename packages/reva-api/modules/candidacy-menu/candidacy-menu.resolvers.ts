@@ -12,6 +12,7 @@ const unsafeResolvers = {
       getCandidacyMenu({
         candidacyId,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        userKeycloakId: context.auth.userInfo?.sub,
       }),
   },
 };
