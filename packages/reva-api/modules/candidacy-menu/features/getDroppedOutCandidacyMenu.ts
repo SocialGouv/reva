@@ -9,10 +9,8 @@ import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqu
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
-  userRoles,
 }: {
   candidacy: CandidacyForMenu;
-  userRoles: KeyCloakUserRole[];
 }): Promise<CandidacyMenuEntry[]> => {
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
@@ -60,19 +58,9 @@ export const getDroppedOutCandidacyMenu = async ({
     };
   };
 
-  const getCandidacyLogMenuEntry = (): CandidacyMenuEntry | undefined =>
-    userRoles.includes("admin")
-      ? {
-          label: "Journal des actions",
-          url: buildUrl({ adminType: "React", suffix: "logs" }),
-          status: "ACTIVE_WITHOUT_HINT",
-        }
-      : undefined;
-
   return [
     getDropOutMenuEntry(),
     getFundingRequestMenuEntry(),
     getPaymentRequestMenuEntry(),
-    getCandidacyLogMenuEntry(),
-  ].filter((e) => e) as CandidacyMenuEntry[];
+  ];
 };

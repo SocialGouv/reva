@@ -31,3 +31,10 @@ mainMenu :
     -> SelectionSet (List decodesTo) Admin.Object.CandidacyMenu
 mainMenu object____ =
     Object.selectionForCompositeField "mainMenu" [] object____ (Basics.identity >> Decode.list)
+
+
+menuFooter :
+    SelectionSet decodesTo Admin.Object.CandidacyMenuEntry
+    -> SelectionSet (List decodesTo) Admin.Object.CandidacyMenu
+menuFooter object____ =
+    Object.selectionForCompositeField "menuFooter" [] object____ (Basics.identity >> Decode.list)

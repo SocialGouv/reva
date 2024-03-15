@@ -14,7 +14,8 @@
     ],
     "candidacyMenu_getCandidacyMenu2837057383": {
       "menuHeader": [],
-      "mainMenu": []
+      "mainMenu": [],
+      "menuFooter": []
     },
     "getCandidacyById1645362253": {
       "jury": null,

@@ -5,10 +5,8 @@ import { menuUrlBuilder } from "./getMenuUrlBuilder";
 
 export const getDeletedCandidacyMenu = async ({
   candidacy,
-  userRoles,
 }: {
   candidacy: CandidacyForMenu;
-  userRoles: KeyCloakUserRole[];
 }): Promise<CandidacyMenuEntry[]> => {
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
@@ -18,16 +16,5 @@ export const getDeletedCandidacyMenu = async ({
     status: "ACTIVE_WITHOUT_HINT",
   });
 
-  const getCandidacyLogMenuEntry = (): CandidacyMenuEntry | undefined =>
-    userRoles.includes("admin")
-      ? {
-          label: "Journal des actions",
-          url: buildUrl({ adminType: "React", suffix: "logs" }),
-          status: "ACTIVE_WITHOUT_HINT",
-        }
-      : undefined;
-
-  return [getDeletedCandidacyMenuEntry(), getCandidacyLogMenuEntry()].filter(
-    (e) => e,
-  ) as CandidacyMenuEntry[];
+  return [getDeletedCandidacyMenuEntry()];
 };

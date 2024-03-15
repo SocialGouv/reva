@@ -13,6 +13,7 @@ type CandidacyMenuEntry {
 type CandidacyMenu {
   menuHeader: [CandidacyMenuEntry!]!
   mainMenu: [CandidacyMenuEntry!]!
+  menuFooter: [CandidacyMenuEntry!]!
 }
 
 type Query {

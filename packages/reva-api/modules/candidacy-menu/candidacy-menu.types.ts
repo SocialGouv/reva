@@ -12,4 +12,5 @@ export interface CandidacyMenuEntry {
 export interface CandidacyMenu {
   menuHeader: CandidacyMenuEntry[];
   mainMenu: CandidacyMenuEntry[];
+  menuFooter: CandidacyMenuEntry[];
 }

@@ -34,19 +34,29 @@ export const getCandidacyMenu = async ({
       ]
     : [];
 
+  const menuFooter: CandidacyMenuEntry[] = userRoles.includes("admin")
+    ? [
+        {
+          label: "Journal des actions",
+          url: buildUrl({ adminType: "React", suffix: "logs" }),
+          status: "ACTIVE_WITHOUT_HINT",
+        },
+      ]
+    : [];
+
   let mainMenu: CandidacyMenuEntry[] = [];
 
   if (candidacy.candidacyDropOut) {
-    mainMenu = await getDroppedOutCandidacyMenu({ candidacy, userRoles });
+    mainMenu = await getDroppedOutCandidacyMenu({ candidacy });
   } else if (activeCandidacyStatus === "ARCHIVE") {
     if (candidacy.reorientationReasonId !== null) {
-      mainMenu = await getReorientedCandidacyMenu({ candidacy, userRoles });
+      mainMenu = await getReorientedCandidacyMenu({ candidacy });
     } else {
-      mainMenu = await getDeletedCandidacyMenu({ candidacy, userRoles });
+      mainMenu = await getDeletedCandidacyMenu({ candidacy });
     }
   } else {
-    mainMenu = await getActiveCandidacyMenu({ candidacy, userRoles });
+    mainMenu = await getActiveCandidacyMenu({ candidacy });
   }
 
-  return { menuHeader, mainMenu };
+  return { menuHeader, mainMenu, menuFooter };
 };
