@@ -308,7 +308,7 @@ candidacyAccessButton context candidacy candidatureName =
 
         url =
             if newCandidacySummaryPageActive then
-                "/admin2/candidacies/" ++ Data.Candidacy.candidacyIdToString candidacy.id ++ "/summary"
+                context.adminReactUrl ++ "/candidacies/" ++ Data.Candidacy.candidacyIdToString candidacy.id ++ "/summary"
 
             else
                 Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id })

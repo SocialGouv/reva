@@ -168,7 +168,7 @@ view context model =
 
         urlAndTarget =
             if newCandidacySummaryPageActive then
-                ( "/admin2/candidacies/" ++ candidacyIdToString model.tab.candidacyId ++ "/summary", "_self" )
+                ( context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString model.tab.candidacyId ++ "/summary", "_self" )
 
             else
                 ( Route.toString context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)), "" )

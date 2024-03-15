@@ -140,7 +140,7 @@ view context model =
 
         url =
             if newCandidacySummaryPageActive then
-                "/admin2/candidacies/" ++ Data.Candidacy.candidacyIdToString model.candidacyId ++ "/summary"
+                context.adminReactUrl ++ "/candidacies/" ++ Data.Candidacy.candidacyIdToString model.candidacyId ++ "/summary"
 
             else
                 Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = model.candidacyId })
