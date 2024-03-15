@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 
 const getCandidacyMenuQuery = graphql(`
-  query getCandidacyMenu($candidacyId: ID!) {
+  query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
     candidacyMenu_getCandidacyMenu(candidacyId: $candidacyId) {
       menuHeader {
         label
@@ -18,6 +18,12 @@ const getCandidacyMenuQuery = graphql(`
         label
         url
         status
+      }
+    }
+    getCandidacyById(id: $candidacyId) {
+      candidate {
+        lastname
+        firstname
       }
     }
   }
@@ -43,10 +49,19 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const mainMenuEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.mainMenu;
 
+  const candidate = getCandidacyMenuResponse?.getCandidacyById?.candidate;
+
   return (
     <div className="flex flex-col lg:flex-row">
       <CandidacyLayoutSideMenu>
-        <ul>
+        <div className="flex text-xl font-bold mb-8">
+          <span className="fr-icon--xl fr-icon-user-fill mr-2" />
+          <span className="capitalize">
+            {candidate?.firstname?.toLowerCase()}{" "}
+            {candidate?.lastname?.toLowerCase()}
+          </span>
+        </div>
+        <ul className="mb-6">
           {menuHeaderEntries?.map((e) => (
             <MenuEntry key={e.label} menuEntry={e} />
           ))}
@@ -99,7 +114,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
   <nav
     role="navigation"
     aria-label="Menu latéral"
-    className="fr-sidemenu bg-white h-full min-w-[300px] mb-2"
+    className="fr-sidemenu bg-white h-full w-[300px] mb-2 flex-shrink-0"
   >
     <div className="h-full md:border-r mr-1 lg:mr-0">
       <div className="fr-sidemenu__inner shadow-none pr-0 h-full md:pb-24">
