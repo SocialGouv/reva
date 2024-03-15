@@ -215,8 +215,8 @@ viewDirectoryPanel context model =
     ]
 
 
-viewItem : Maybe CandidacyId -> Certification -> List (Html Msg)
-viewItem candidacyId certification =
+viewItem : Maybe CandidacyId -> Context -> Certification -> List (Html Msg)
+viewItem candidacyId _ certification =
     [ div
         [ class "flex items-end justify-between"
         , class "my-6 border-b pb-6 px-4"

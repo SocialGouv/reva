@@ -87,7 +87,7 @@ init context statusFilter page =
                 { onSearch = getCandidacies page (Just statusFilter)
                 , toMsg = GotSearchMsg
                 , toPageRoute = \p -> Route.Candidacies (Route.CandidacyFilters statusFilter p)
-                , viewItem = viewItem context
+                , viewItem = viewItem
                 }
 
         defaultModel : Model

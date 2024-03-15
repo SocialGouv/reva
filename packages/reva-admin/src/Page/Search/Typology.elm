@@ -272,8 +272,8 @@ viewDirectoryPanel context model candidacy =
                 ]
 
 
-viewItem : CandidacyConventionCollective -> List (Html Msg)
-viewItem ccn =
+viewItem : Context -> CandidacyConventionCollective -> List (Html Msg)
+viewItem _ ccn =
     [ div
         [ class "flex items-end justify-between"
         , class "my-6 border-b pb-6 px-4"

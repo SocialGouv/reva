@@ -36,7 +36,7 @@ type alias Model data userMsg =
     , results : RemoteData (List String) (SearchResults data)
     , toMsg : Msg data userMsg -> userMsg
     , toPageRoute : Int -> Route
-    , viewItem : data -> List (Html userMsg)
+    , viewItem : Context -> data -> List (Html userMsg)
     }
 
 
@@ -78,7 +78,7 @@ init :
         { onSearch : SearchHandler data userMsg
         , toMsg : Msg data userMsg -> userMsg
         , toPageRoute : Int -> Route
-        , viewItem : data -> List (Html userMsg)
+        , viewItem : Context -> data -> List (Html userMsg)
         }
     -> ( Model data userMsg, Cmd userMsg )
 init context config =
@@ -196,13 +196,13 @@ searchResults model totalRows =
 
 
 viewResults : Context -> Model data userMsg -> Html userMsg
-viewResults _ model =
+viewResults context model =
     let
         viewItem data =
             li
                 [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]
             <|
-                model.viewItem data
+                model.viewItem context data
     in
     div
         []
