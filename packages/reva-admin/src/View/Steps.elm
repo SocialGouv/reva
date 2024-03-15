@@ -18,7 +18,7 @@ view header currentStepIndex timelineElements =
         maybeLink index element =
             case element.navigation of
                 Nothing ->
-                    div [ class "relative flex items-start font-medium group" ]
+                    div [ class "relative flex items-start group" ]
 
                 Just ( href, external ) ->
                     a <|
@@ -47,7 +47,7 @@ view header currentStepIndex timelineElements =
     <|
         header
             :: [ ol
-                    [ class "my-5" ]
+                    [ class "my-5 font-bold" ]
                  <|
                     List.indexedMap viewNavigationTimelineStep timelineElements
                ]
@@ -56,7 +56,7 @@ view header currentStepIndex timelineElements =
 linkHelper : String -> Html msg
 linkHelper label =
     div
-        [ class "text-sm mb-3" ]
+        [ class "mb-3" ]
         [ text label ]
 
 

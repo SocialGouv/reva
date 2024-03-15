@@ -107,7 +107,7 @@ const MenuEntry = ({
     status: "INACTIVE" | "ACTIVE_WITHOUT_HINT" | "ACTIVE_WITH_EDIT_HINT";
   };
 }) => (
-  <li key={menuEntry.label} className="mt-5 mb-7 text-sm">
+  <li key={menuEntry.label} className="mt-5 mb-7 font-bold">
     {menuEntry.status === "INACTIVE" && <span>{menuEntry.label}</span>}
     {menuEntry.status === "ACTIVE_WITHOUT_HINT" && (
       <a className="bg-none" href={menuEntry.url}>
