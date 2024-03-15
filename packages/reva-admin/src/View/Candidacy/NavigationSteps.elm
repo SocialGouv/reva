@@ -3,6 +3,7 @@ module View.Candidacy.NavigationSteps exposing (view)
 import Admin.Enum.CandidacyMenuEntryStatus as CandidacyMenuEntryStatus
 import Admin.Enum.FinanceModule exposing (FinanceModule(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
+import Admin.Object.CandidacyMenu exposing (menuFooter)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy exposing (Candidacy, CandidacyMenuEntry)
 import Html exposing (Html, div, h2, span, text)
@@ -21,8 +22,22 @@ view remoteCandidacy =
 
                 mainMenuEntries =
                     List.map candidacyMenuEntryView candidacy.candidacyMenu.mainMenu
+
+                menuFooterEntries =
+                    List.map candidacyMenuEntryView candidacy.candidacyMenu.menuFooter
             in
-            [ candidateView candidacy, View.Steps.view (title "") 0 menuHeaderEntries, View.Steps.view (title "Toutes les étapes") 0 mainMenuEntries ]
+            [ candidateView candidacy
+            , View.Steps.view (title "") 0 menuHeaderEntries
+            , View.Steps.view (title "Toutes les étapes") 0 mainMenuEntries
+            ]
+                ++ (if not (List.isEmpty menuFooterEntries) then
+                        [ div [ class "border-t-[1px] mr-4" ] []
+                        , View.Steps.view (title "") 0 menuFooterEntries
+                        ]
+
+                    else
+                        []
+                   )
 
         _ ->
             []
@@ -39,7 +54,7 @@ candidateView candidacy =
                 Nothing ->
                     ""
     in
-    div [class "ml-4"] [ span [ class "fr-icon--xl fr-icon-user-fill mr-2" ] [], span [ class "capitalize text-xl font-bold" ] [ text label ] ]
+    div [ class "ml-4" ] [ span [ class "fr-icon--xl fr-icon-user-fill mr-2" ] [], span [ class "capitalize text-xl font-bold" ] [ text label ] ]
 
 
 candidacyMenuEntryView :

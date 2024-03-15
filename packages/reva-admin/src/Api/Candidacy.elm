@@ -259,7 +259,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
                 |> with Admin.Object.Candidacy.readyForJuryEstimatedAt
                 |> with (Admin.Object.Candidacy.jury Api.Jury.selection)
-                |> with (SelectionSet.succeed (Data.Candidacy.CandidacyMenu [] []))
+                |> with (SelectionSet.succeed (Data.Candidacy.CandidacyMenu [] [] []))
     in
     SelectionSet.succeed
         (\maybeCandidacy companions candidacyMenu ->
@@ -391,6 +391,7 @@ getCandidacyMenuSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyMenu
         |> with (Admin.Object.CandidacyMenu.menuHeader candidacyMenuEntrySelection)
         |> with (Admin.Object.CandidacyMenu.mainMenu candidacyMenuEntrySelection)
+        |> with (Admin.Object.CandidacyMenu.menuFooter candidacyMenuEntrySelection)
 
 
 candidacyMenuEntrySelection : SelectionSet Data.Candidacy.CandidacyMenuEntry Admin.Object.CandidacyMenuEntry

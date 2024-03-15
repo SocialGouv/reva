@@ -19,6 +19,11 @@ const getCandidacyMenuQuery = graphql(`
         url
         status
       }
+      menuFooter {
+        label
+        url
+        status
+      }
     }
     getCandidacyById(id: $candidacyId) {
       candidate {
@@ -49,6 +54,9 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const mainMenuEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.mainMenu;
 
+  const menuFooterEntries =
+    getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.menuFooter;
+
   const candidate = getCandidacyMenuResponse?.getCandidacyById?.candidate;
 
   return (
@@ -74,6 +82,16 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
             <MenuEntry key={e.label} menuEntry={e} />
           ))}
         </ul>
+        {!!menuFooterEntries?.length && (
+          <>
+            <div className="border-t-[1px] -ml-4 mr-4 mt-8 mb-7" />
+            <ul>
+              {menuFooterEntries?.map((e) => (
+                <MenuEntry key={e.label} menuEntry={e} />
+              ))}
+            </ul>
+          </>
+        )}
       </CandidacyLayoutSideMenu>
       {children}
     </div>

@@ -121,6 +121,7 @@ type alias Candidacy =
 type alias CandidacyMenu =
     { menuHeader : List CandidacyMenuEntry
     , mainMenu : List CandidacyMenuEntry
+    , menuFooter : List CandidacyMenuEntry
     }
 
 
