@@ -135,8 +135,15 @@ getCandidacyConventionCollectives page context =
 view : Context -> Model -> Html Msg
 view context model =
     let
-        backRoute =
-            Route.Candidacy { value = Profile, candidacyId = model.candidacyId }
+        newCandidacySummaryPageActive =
+            List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
+
+        url =
+            if newCandidacySummaryPageActive then
+                "/admin2/candidacies/" ++ Data.Candidacy.candidacyIdToString model.candidacyId ++ "/summary"
+
+            else
+                Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = model.candidacyId })
 
         viewPage content =
             View.layout
@@ -144,7 +151,7 @@ view context model =
                 (NavigationSteps.view model.candidacy)
                 [ View.article
                     "Définition du parcours"
-                    (Route.toString context.baseUrl backRoute)
+                    url
                     "Aperçu de la candidature"
                     content
                 ]

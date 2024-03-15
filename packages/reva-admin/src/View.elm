@@ -181,8 +181,22 @@ popupErrors messages =
 
 backLink : String -> String -> Accessibility.Html msg
 backLink url label =
+    let
+        externalUrl =
+            String.contains "/admin2/" url
+
+        targetAttribute =
+            if externalUrl then
+                "_self"
+
+            else
+                ""
+    in
     Button.new { onClick = Nothing, label = label }
         |> Button.linkButton url
+        |> Button.withAttrs
+            [ attribute "target" targetAttribute
+            ]
         |> Button.leftIcon Icons.arrowGoBackFill
         |> Button.tertiary
         |> Button.view

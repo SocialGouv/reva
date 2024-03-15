@@ -34,7 +34,7 @@ import Api.Referential
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, candidacyIdToString)
 import Data.Context exposing (Context)
 import Data.DossierDeValidation
 import Data.Feasibility
@@ -163,10 +163,20 @@ view :
     -> Html Msg
 view context model =
     let
+        newCandidacySummaryPageActive =
+            List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
+
+        urlAndTarget =
+            if newCandidacySummaryPageActive then
+                ( "/admin2/candidacies/" ++ candidacyIdToString model.tab.candidacyId ++ "/summary", "_self" )
+
+            else
+                ( Route.toString context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)), "" )
+
         viewArticle name c =
             View.article
                 name
-                (Route.toString context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
+                (Tuple.first urlAndTarget)
                 "Aperçu de la candidature"
                 c
 
