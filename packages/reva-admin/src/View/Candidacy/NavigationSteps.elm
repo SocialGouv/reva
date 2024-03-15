@@ -22,10 +22,24 @@ view remoteCandidacy =
                 mainMenuEntries =
                     List.map candidacyMenuEntryView candidacy.candidacyMenu.mainMenu
             in
-            [ View.Steps.view (title "") 0 menuHeaderEntries, View.Steps.view (title "Toutes les étapes") 0 mainMenuEntries ]
+            [ candidateView candidacy, View.Steps.view (title "") 0 menuHeaderEntries, View.Steps.view (title "Toutes les étapes") 0 mainMenuEntries ]
 
         _ ->
             []
+
+
+candidateView : Candidacy -> Html msg
+candidateView candidacy =
+    let
+        label =
+            case candidacy.candidate of
+                Just c ->
+                    String.toLower c.firstname ++ " " ++ String.toLower c.lastname
+
+                Nothing ->
+                    ""
+    in
+    div [class "ml-4"] [ span [ class "fr-icon--xl fr-icon-user-fill mr-2" ] [], span [ class "capitalize text-xl font-bold" ] [ text label ] ]
 
 
 candidacyMenuEntryView :
