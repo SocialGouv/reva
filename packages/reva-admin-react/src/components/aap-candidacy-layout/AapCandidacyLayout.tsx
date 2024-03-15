@@ -62,7 +62,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col lg:flex-row">
       <CandidacyLayoutSideMenu>
-        <div className="flex text-xl font-bold mb-8">
+        <div className="flex text-xl font-bold mt-2 md:mt-0 mb-8">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
             {candidate?.firstname?.toLowerCase()}{" "}
@@ -132,7 +132,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
   <nav
     role="navigation"
     aria-label="Menu latéral"
-    className="fr-sidemenu bg-white h-full w-[300px] mb-2 flex-shrink-0"
+    className="fr-sidemenu bg-white md:h-full w-full md:max-w-[300px] mb-2 flex-shrink-0"
   >
     <div className="h-full md:border-r mr-1 lg:mr-0">
       <div className="fr-sidemenu__inner shadow-none pr-0 h-full md:pb-24">
