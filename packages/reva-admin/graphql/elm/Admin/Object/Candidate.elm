@@ -50,9 +50,9 @@ lastname =
     Object.selectionForField "String" "lastname" [] Decode.string
 
 
-usename : SelectionSet (Maybe String) Admin.Object.Candidate
-usename =
-    Object.selectionForField "(Maybe String)" "usename" [] (Decode.string |> Decode.nullable)
+givenName : SelectionSet (Maybe String) Admin.Object.Candidate
+givenName =
+    Object.selectionForField "(Maybe String)" "givenName" [] (Decode.string |> Decode.nullable)
 
 
 email : SelectionSet String Admin.Object.Candidate
@@ -70,9 +70,11 @@ birthCity =
     Object.selectionForField "(Maybe String)" "birthCity" [] (Decode.string |> Decode.nullable)
 
 
-birthDepartment : SelectionSet (Maybe String) Admin.Object.Candidate
-birthDepartment =
-    Object.selectionForField "(Maybe String)" "birthDepartment" [] (Decode.string |> Decode.nullable)
+birthDepartment :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
+birthDepartment object____ =
+    Object.selectionForCompositeField "birthDepartment" [] object____ (Basics.identity >> Decode.nullable)
 
 
 birthdate : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Candidate
@@ -92,9 +94,9 @@ nationality =
     Object.selectionForField "(Maybe String)" "nationality" [] (Decode.string |> Decode.nullable)
 
 
-securiteSocialeNumber : SelectionSet (Maybe String) Admin.Object.Candidate
-securiteSocialeNumber =
-    Object.selectionForField "(Maybe String)" "securiteSocialeNumber" [] (Decode.string |> Decode.nullable)
+socialSecurityNumber : SelectionSet (Maybe String) Admin.Object.Candidate
+socialSecurityNumber =
+    Object.selectionForField "(Maybe String)" "socialSecurityNumber" [] (Decode.string |> Decode.nullable)
 
 
 candidacy :
