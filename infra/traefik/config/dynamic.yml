@@ -167,7 +167,7 @@ http:
     add-security-headers:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self';script-src https://reva.incubateur.net https://vae.gouv.fr https://client.crisp.chat https://static.userguiding.com https://public.produktly.com 'unsafe-inline'; object-src 'none'"
+          Content-Security-Policy: "frame-ancestors 'self';script-src 'self' https://client.crisp.chat https://static.userguiding.com https://public.produktly.com 'unsafe-inline'; object-src 'none'"
           X-Frame-Options: SAMEORIGIN
 
     removePath:
