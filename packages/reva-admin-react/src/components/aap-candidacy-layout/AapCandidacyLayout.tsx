@@ -60,7 +60,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const candidate = getCandidacyMenuResponse?.getCandidacyById?.candidate;
 
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="flex flex-col md:flex-row">
       <CandidacyLayoutSideMenu>
         <div className="flex text-xl font-bold mt-2 md:mt-0 mb-8">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
