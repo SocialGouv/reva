@@ -15,42 +15,42 @@ http:
       service: metabase-reva-incubateur-net
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     site-web-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/`)"
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     site-web-staging-subscription:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
       service: site-web-staging-subscription
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     espace-pro-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
       service: espace-pro-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     espace-pro-react-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
       service: app-candidat-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
@@ -64,7 +64,7 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     # Should be removed after the creation of the /api path
     ping-staging:
@@ -163,6 +163,11 @@ http:
       headers:
         customResponseHeaders:
           Content-Security-Policy: "frame-ancestors 'self';"
+          X-Frame-Options: SAMEORIGIN
+    add-security-headers:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "frame-ancestors 'self';script-src https://reva.incubateur.net https://vae.gouv.fr https://client.crisp.chat https://static.userguiding.com https://public.produktly.com 'unsafe-inline'; object-src 'none'"
           X-Frame-Options: SAMEORIGIN
 
     removePath:
