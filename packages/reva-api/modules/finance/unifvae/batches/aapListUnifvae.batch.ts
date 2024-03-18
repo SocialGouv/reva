@@ -73,7 +73,7 @@ export async function generateCsvStream(itemsToSendIds: string[]) {
         include: { gestionnaire: true },
         skip,
         take: RECORDS_PER_FETCH,
-        orderBy: { createdAt: "asc" },
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       });
 
       results.length
