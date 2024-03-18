@@ -10,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
@@ -24,7 +25,8 @@ const CandidacySummaryPage = () => {
 
   if (!candidacy) return null;
 
-  const { candidate } = candidacy;
+  const { candidate, admissibilityFvae } = candidacy;
+
   const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
     "lastname",
@@ -55,6 +57,10 @@ const CandidacySummaryPage = () => {
     "city",
     "department",
   ]);
+
+  const isCandidacyAdmissibilityComplete =
+    admissibilityFvae &&
+    (!admissibilityFvae.isAlreadyAdmissible || admissibilityFvae.expiresAt);
 
   return (
     <>
@@ -152,7 +158,29 @@ const CandidacySummaryPage = () => {
               </div>
             )}
           </CandidacySectionCard>
-
+          <CandidacySectionCard
+            title="Sa recevabilité"
+            hasButton
+            buttonOnClick={() =>
+              router.push(`/candidacies/${candidacyId}/admissibility`)
+            }
+            buttonTitle={
+              isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
+            }
+            buttonPriority={
+              isCandidacyAdmissibilityComplete ? "secondary" : "primary"
+            }
+            Badge={
+              isCandidacyAdmissibilityComplete
+                ? BadgeCompleted
+                : BadgeToComplete
+            }
+          >
+            <SmallNotice>
+              Besoin d'aide sur la recevabilité ? Consultez les questions
+              fréquentes de nos utilisateurs à ce sujet.
+            </SmallNotice>
+          </CandidacySectionCard>
           <CandidateExperiencesSectionCard
             experiences={candidacy.experiences.map((e) => ({
               id: e.id,

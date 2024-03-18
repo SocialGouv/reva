@@ -9,6 +9,10 @@ const getCandidacyById = graphql(`
       certification {
         label
       }
+      admissibilityFvae {
+        isAlreadyAdmissible
+        expiresAt
+      }
       candidate {
         id
         firstname
