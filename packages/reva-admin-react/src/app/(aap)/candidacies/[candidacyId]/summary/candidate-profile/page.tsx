@@ -15,7 +15,6 @@ const CandidateProfilePage = () => {
     resetForm,
   } = useCandidateProfilePageLogic();
 
-  console.log(highestDegreeLevelController.field.value);
   return (
     <div className="flex flex-col">
       <PageTitle className="!mb-4 md:!mt-0">Compléter le profil</PageTitle>
@@ -36,8 +35,8 @@ const CandidateProfilePage = () => {
                 highestDegreeLevelController.field.onChange(event.target.value),
               value: highestDegreeLevelController.field.value,
             }}
-            state={errors.highestDegreeLevelId ? "error" : "default"}
-            stateRelatedMessage={errors.highestDegreeLevelId?.message}
+            state={errors.highestDegreeId ? "error" : "default"}
+            stateRelatedMessage={errors.highestDegreeId?.message}
           >
             <option
               value=""

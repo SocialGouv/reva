@@ -1,14 +1,15 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm, useController } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
-  highestDegreeLevelId: z.string({
+  highestDegreeId: z.string({
     required_error: "Ce champ est obligatoire",
   }),
 });
@@ -18,8 +19,8 @@ type FormData = z.infer<typeof schema>;
 const getCandidateProfileQuery = graphql(`
   query getCandidateProfile($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
-      id
       candidate {
+        id
         highestDegree {
           id
           longLabel
@@ -34,6 +35,16 @@ const getReferentialQuery = graphql(`
     getDegrees {
       id
       longLabel
+    }
+  }
+`);
+
+const updateCandidateProfileMutation = graphql(`
+  mutation updateCandidateProfileMutation(
+    $candidateProfile: CandidateProfileUpdateInput!
+  ) {
+    candidate_updateCandidateProfile(candidateProfile: $candidateProfile) {
+      id
     }
   }
 `);
@@ -57,13 +68,23 @@ export const useCandidateProfilePageLogic = () => {
     queryFn: () => graphqlClient.request(getReferentialQuery),
   });
 
+  const updateCandidateProfile = useMutation({
+    mutationFn: (candidateProfile: {
+      candidateId: string;
+      highestDegreeId: string;
+    }) =>
+      graphqlClient.request(updateCandidateProfileMutation, {
+        candidateProfile,
+      }),
+  });
+
   const candidate = getCandidateProfileResponse?.getCandidacyById?.candidate;
 
   const degrees = getReferentialResponse?.getDegrees;
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { highestDegreeLevelId: candidate?.highestDegree?.id },
+    defaultValues: { highestDegreeId: candidate?.highestDegree?.id },
   });
   const {
     control,
@@ -73,20 +94,28 @@ export const useCandidateProfilePageLogic = () => {
   } = methods;
 
   const highestDegreeLevelController = useController({
-    name: "highestDegreeLevelId",
+    name: "highestDegreeId",
     control,
   });
 
   const resetForm = useCallback(() => {
-    reset({ highestDegreeLevelId: candidate?.highestDegree?.id });
+    reset({ highestDegreeId: candidate?.highestDegree?.id });
   }, [reset, candidate]);
 
   useEffect(() => {
     resetForm();
   }, [resetForm]);
 
-  const handleFormSubmit = handleSubmit((data) => {
-    alert(JSON.stringify(data));
+  const handleFormSubmit = handleSubmit(async (data) => {
+    try {
+      await updateCandidateProfile.mutateAsync({
+        candidateId: candidate?.id,
+        ...data,
+      });
+      successToast("Les modifications ont bien été enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   });
 
   return {
