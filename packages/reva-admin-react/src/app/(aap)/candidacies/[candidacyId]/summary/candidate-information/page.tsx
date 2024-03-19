@@ -1,5 +1,5 @@
 "use client";
-import { successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Candidate, CandidateUpdateInput } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -362,9 +362,13 @@ const CandidateInformationPage = () => {
       birthDepartmentId: data.birthDepartment,
     };
 
-    await updateCandidateInformationMutate({ candidate: candidateInput });
-    successToast("Les informations ont bien été mises à jour");
-    await getCandidacyRefetch();
+    try {
+      await updateCandidateInformationMutate({ candidate: candidateInput });
+      successToast("Les informations ont bien été mises à jour");
+      await getCandidacyRefetch();
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   };
 
   if (!candidacy?.candidate) return null;
