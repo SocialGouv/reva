@@ -40,6 +40,9 @@ const getCandidacyById = graphql(`
           label
           code
         }
+        highestDegree {
+          id
+        }
       }
     }
   }

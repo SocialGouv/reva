@@ -30,6 +30,10 @@ const CandidacySummaryPage = () => {
     "department",
   ]);
 
+  const isCandidateProfileCompleted = checkObjectFields(candidate, [
+    "highestDegree",
+  ]);
+
   return (
     <div className="flex flex-col w-full gap-8">
       <div>
@@ -42,39 +46,57 @@ const CandidacySummaryPage = () => {
         </p>
       </div>
       {!!candidate && (
-        <CandidacySectionCard
-          title="Les informations du candidat"
-          hasButton
-          buttonOnClick={() =>
-            router.push(
-              `/candidacies/${candidacyId}/summary/candidate-information`,
-            )
-          }
-          buttonTitle={
-            isCandidateInformationCompleted ? "Modifier" : "Compléter"
-          }
-          buttonPriority={
-            isCandidateInformationCompleted ? "secondary" : "primary"
-          }
-          Badge={
-            isCandidateInformationCompleted ? BadgeCompleted : BadgeToComplete
-          }
-        >
-          <div>
-            <div className="mb-4">
-              <p>
-                {candidate.firstname} {candidate.lastname}
-              </p>
-              <p>
-                {candidate.department.label} ({candidate.department.code})
-              </p>
-            </div>
+        <div className="flex flex-col gap-8">
+          <CandidacySectionCard
+            title="Les informations du candidat"
+            hasButton
+            buttonOnClick={() =>
+              router.push(
+                `/candidacies/${candidacyId}/summary/candidate-information`,
+              )
+            }
+            buttonTitle={
+              isCandidateInformationCompleted ? "Modifier" : "Compléter"
+            }
+            buttonPriority={
+              isCandidateInformationCompleted ? "secondary" : "primary"
+            }
+            Badge={
+              isCandidateInformationCompleted ? BadgeCompleted : BadgeToComplete
+            }
+          >
             <div>
-              <p>{candidate.phone}</p>
-              <p>{candidate.email}</p>
+              <div className="mb-4">
+                <p>
+                  {candidate.firstname} {candidate.lastname}
+                </p>
+                <p>
+                  {candidate.department.label} ({candidate.department.code})
+                </p>
+              </div>
+              <div>
+                <p>{candidate.phone}</p>
+                <p>{candidate.email}</p>
+              </div>
             </div>
-          </div>
-        </CandidacySectionCard>
+          </CandidacySectionCard>
+          <CandidacySectionCard
+            title="Son profil"
+            hasButton
+            buttonOnClick={() =>
+              router.push(
+                `/candidacies/${candidacyId}/summary/candidate-profile`,
+              )
+            }
+            buttonTitle={isCandidateProfileCompleted ? "Modifier" : "Compléter"}
+            buttonPriority={
+              isCandidateProfileCompleted ? "secondary" : "primary"
+            }
+            Badge={
+              isCandidateProfileCompleted ? BadgeCompleted : BadgeToComplete
+            }
+          ></CandidacySectionCard>
+        </div>
       )}
     </div>
   );

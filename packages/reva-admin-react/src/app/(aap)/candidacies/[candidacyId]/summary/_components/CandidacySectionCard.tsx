@@ -1,3 +1,4 @@
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
 
@@ -16,7 +17,7 @@ type HasButton =
     };
 
 interface CandidacySectionCardProps {
-  children: ReactNode;
+  children?: ReactNode;
   title: string;
   Badge: () => ReactNode;
 }
@@ -31,7 +32,7 @@ const CandidacySectionCard = ({
   Badge,
 }: CandidacySectionCardProps & HasButton) => {
   return (
-    <div className="flex w-full flex-col p-6 bg-light-grey">
+    <GrayCard>
       <div className="flex justify-between w-full mb-6">
         <div className="flex items-center gap-4">
           <h4 className="text-2xl font-bold">{title}</h4>
@@ -44,7 +45,7 @@ const CandidacySectionCard = ({
         )}
       </div>
       {children}
-    </div>
+    </GrayCard>
   );
 };
 
