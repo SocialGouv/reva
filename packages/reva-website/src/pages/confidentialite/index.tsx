@@ -261,7 +261,7 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Pour vous aider dans votre démarche, vous trouverez un modèle de
             courrier élaboré par la CNIL ici : &nbsp;
-            <a href="https://www.cnil.fr/fr/modele/courrier/exercer- son-droit-dacces">
+            <a href="https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces">
               https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces
             </a>
           </SectionParagraph>
@@ -352,7 +352,7 @@ const IndexConfidentialitePage = () => {
                     <TextBoldCell>Scalingo</TextBoldCell>
                     <TextCell>Europe</TextCell>
                     <TextCell>Infogérance</TextCell>
-                    <LinkCell url="https://scalingo.com/fr/data-processing-agreement" />
+                    <LinkCell url="https://scalingo.com/fr/contrat-gestion-traitements-donnees-personnelles" />
                   </tr>
                   <tr>
                     <TextBoldCell>Outscale</TextBoldCell>
