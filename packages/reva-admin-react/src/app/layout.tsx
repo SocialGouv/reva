@@ -22,11 +22,13 @@ import {
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
   KEYCLOAK_URL,
+  PRODUKTLY_CLIENT_TOKEN,
 } from "@/config/config";
 import { useCrisp } from "@/components/crisp/useCrisp";
 import { fr } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import Script from "next/script";
+import { Produktly } from "@/components/produktly/Produktly";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -48,6 +50,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
         <StartDsfr />
         <DsfrHead Link={Link} />
         {HELP_BUBBLE_URL && <Script src={HELP_BUBBLE_URL} />}
+        {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
       </head>
       <body>
         <DsfrProvider>
