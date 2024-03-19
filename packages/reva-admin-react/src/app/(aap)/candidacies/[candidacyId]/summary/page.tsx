@@ -31,7 +31,7 @@ const CandidacySummaryPage = () => {
   ]);
 
   return (
-    <div className="flex flex-col w-full p-8 gap-8">
+    <div className="flex flex-col w-full gap-8">
       <div>
         <h1 className="text-[40px] leading-[48px] font-bold mb-2">
           Résumé de la candidature
