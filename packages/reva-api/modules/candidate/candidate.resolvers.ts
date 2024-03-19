@@ -6,7 +6,10 @@ import { Right } from "purify-ts";
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { generateJwt } from "./auth.helper";
-import { CandidateUpdateInput } from "./candidate.types";
+import {
+  CandidateProfileUpdateInput,
+  CandidateUpdateInput,
+} from "./candidate.types";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
   getCandidateWithCandidacyFromKeycloakId,
@@ -23,6 +26,7 @@ import {
   sendUnknownUserEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { updateCandidateProfile } from "./features/updateCandidateProfile";
 
 const unsafeResolvers = {
   Candidate: {
@@ -177,6 +181,23 @@ const unsafeResolvers = {
       const candidateUpdated = await updateCandidate({ candidate });
       return candidateUpdated;
     },
+    candidate_updateCandidateProfile: async (
+      _: unknown,
+      {
+        candidateProfile,
+      }: {
+        candidateProfile: CandidateProfileUpdateInput;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidateProfile({
+        params: {
+          ...candidateProfile,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
   },
 };
 

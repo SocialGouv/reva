@@ -11,4 +11,5 @@ export const resolversSecurityMap = {
   "Mutation.candidate_login": isAnyone,
   "Mutation.candidate_askForLogin": isAnyone,
   "Mutation.candidate_updateCandidate": isAdminOrCandidacyCompanion,
+  "Mutation.candidate_updateCandidateProfile": isAdminOrCandidacyCompanion,
 };

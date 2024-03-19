@@ -79,3 +79,8 @@ export interface CandidateUpdateInput {
   zip: string;
   city: string;
 }
+
+export interface CandidateProfileUpdateInput {
+  candidateId: string;
+  highestDegreeId: string;
+}
