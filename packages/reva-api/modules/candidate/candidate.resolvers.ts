@@ -3,8 +3,10 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { generateJwt } from "./auth.helper";
+import { CandidateUpdateInput } from "./candidate.types";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
   getCandidateWithCandidacyFromKeycloakId,
@@ -14,13 +16,15 @@ import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "./features/getCandidateByEmail";
+import { updateCandidate } from "./features/updateCandidate";
 import {
   sendLoginEmail,
   sendRegistrationEmail,
   sendUnknownUserEmail,
 } from "./mails";
+import { resolversSecurityMap } from "./security/security";
 
-export const resolvers = {
+const unsafeResolvers = {
   Candidate: {
     department: async (parent: { departmentId: string }) => {
       const department = await prismaClient.department.findUnique({
@@ -31,11 +35,29 @@ export const resolvers = {
 
       return department;
     },
+    country: async (parent: { countryId: string }) => {
+      const country = await prismaClient.country.findUnique({
+        where: {
+          id: parent.countryId,
+        },
+      });
+
+      return country;
+    },
+    birthDepartment: async (parent: { birthDepartmentId: string }) => {
+      const birthDepartment = await prismaClient.department.findUnique({
+        where: {
+          id: parent.birthDepartmentId,
+        },
+      });
+
+      return birthDepartment;
+    },
   },
   Query: {
     candidate_getCandidateWithCandidacy: async (
       _: any,
-      params: any,
+      _params: any,
       context: { auth: any },
     ) => {
       const result = await getCandidateWithCandidacy({
@@ -141,5 +163,21 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+    candidate_updateCandidate: async (
+      _: any,
+      {
+        candidate,
+      }: {
+        candidate: CandidateUpdateInput;
+      },
+    ) => {
+      const candidateUpdated = await updateCandidate({ candidate });
+      return candidateUpdated;
+    },
   },
 };
+
+export const candidateResolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap,
+);

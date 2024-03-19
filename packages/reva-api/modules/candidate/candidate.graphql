@@ -44,6 +44,9 @@ type Candidate {
   highestDegree: Degree
   vulnerabilityIndicator: VulnerabilityIndicator
   department: Department!
+  zip: String
+  street: String
+  city: String
 }
 
 type Query {
@@ -72,8 +75,30 @@ input FullCandidateInput {
   vulnerabilityIndicatorId: UUID
 }
 
+input CandidateUpdateInput {
+  id: UUID!
+  gender: Gender!
+  lastname: String!
+  givenName: String
+  firstname: String!
+  firstname2: String
+  firstname3: String
+  birthdate: Timestamp!
+  birthCity: String!
+  birthDepartmentId: String
+  countryId: UUID!
+  nationality: String!
+  socialSecurityNumber: String!
+  street: String!
+  zip: String!
+  city: String!
+  email: String!
+  phone: String!
+}
+
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
+  candidate_updateCandidate(candidate: CandidateUpdateInput!): Candidate
 }

@@ -8,26 +8,28 @@ export enum GenderEnum {
 }
 
 const defaultErrorMessage = "Ce champ est obligatoire";
+const socialSecurityNumberErrorMessage =
+  "Le numéro de sécurité sociale doit contenir 15 caractères";
 
 export const candidateInformationSchema = z
   .object({
     gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
-    lastName: z.string().min(1, defaultErrorMessage),
+    lastname: z.string().min(1, defaultErrorMessage),
     givenName: z.string().optional(),
-    firstName: z.string().min(1, defaultErrorMessage),
-    firstName2: z.string().optional(),
-    firstName3: z.string().optional(),
+    firstname: z.string().min(1, defaultErrorMessage),
+    firstname2: z.string().optional(),
+    firstname3: z.string().optional(),
     birthdate: z.string(),
     country: z.string().min(1, defaultErrorMessage).default("France"),
     birthDepartment: z.string().optional(),
     birthCity: z.string().min(1, defaultErrorMessage),
     nationality: z.string().min(1, defaultErrorMessage),
-    socialSecurityNumber: z.string().min(1, defaultErrorMessage),
+    socialSecurityNumber: z.string().min(15, socialSecurityNumberErrorMessage),
     street: z.string().min(1, defaultErrorMessage),
     city: z.string().min(1, defaultErrorMessage),
-    postalCode: z.string().min(1, defaultErrorMessage),
-    phone: z.string().min(1, defaultErrorMessage),
-    email: z.string().min(1, defaultErrorMessage),
+    zip: z.string().min(5, defaultErrorMessage),
+    phone: z.string().length(10, defaultErrorMessage),
+    email: z.string().email(defaultErrorMessage),
     countryIsFrance: z.boolean(),
   })
   .superRefine((data, ctx) => {

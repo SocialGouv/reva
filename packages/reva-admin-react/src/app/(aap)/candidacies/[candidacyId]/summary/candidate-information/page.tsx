@@ -1,12 +1,14 @@
 "use client";
+import { successToast } from "@/components/toast/toast";
+import { Candidate, CandidateUpdateInput } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import Tabs from "@codegouvfr/react-dsfr/Tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import useCandidateSummary from "../_components/useCandidateSummary";
 import {
@@ -14,6 +16,7 @@ import {
   GenderEnum,
   candidateInformationSchema,
 } from "./_components/candidateInformationSchema";
+import useUpdateCandidateInformation from "./_components/useUpdateCandidateInformation.hook";
 
 const InformationsCivilesTab = () => {
   const { candidacyId } = useParams<{
@@ -22,7 +25,7 @@ const InformationsCivilesTab = () => {
   const genders = [
     { label: "Madame", value: "woman" },
     { label: "Monsieur", value: "man" },
-    { label: "Non précisé", value: "undisclosed" },
+    { label: "Ne se prononce pas", value: "undisclosed" },
   ];
 
   const {
@@ -32,7 +35,8 @@ const InformationsCivilesTab = () => {
     formState: { errors },
     clearErrors,
   } = useFormContext<FormCandidateInformationData>();
-  const { countries, candidacy } = useCandidateSummary(candidacyId);
+  const { countries, candidacy, departments } =
+    useCandidateSummary(candidacyId);
   const country = watch("country");
   const [disabledDepartment, setDisabledDepartment] = useState(
     country !== "France",
@@ -85,10 +89,10 @@ const InformationsCivilesTab = () => {
             label="Nom de naissance"
             className="w-full"
             nativeInputProps={{
-              ...register("lastName"),
+              ...register("lastname"),
             }}
-            state={errors.lastName ? "error" : "default"}
-            stateRelatedMessage={errors.lastName?.message}
+            state={errors.lastname ? "error" : "default"}
+            stateRelatedMessage={errors.lastname?.message}
           />
           <Input
             label="Nom d'usage (optionnel)"
@@ -103,23 +107,23 @@ const InformationsCivilesTab = () => {
             label="Prénom principal"
             className="w-full"
             nativeInputProps={{
-              ...register("firstName"),
+              ...register("firstname"),
             }}
-            state={errors.firstName ? "error" : "default"}
-            stateRelatedMessage={errors.firstName?.message}
+            state={errors.firstname ? "error" : "default"}
+            stateRelatedMessage={errors.firstname?.message}
           />
           <Input
             label="Prénom 2 (optionnel)"
             className="w-full"
             nativeInputProps={{
-              ...register("firstName2"),
+              ...register("firstname2"),
             }}
           />
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full"
             nativeInputProps={{
-              ...register("firstName3"),
+              ...register("firstname3"),
             }}
           />
         </div>
@@ -151,16 +155,27 @@ const InformationsCivilesTab = () => {
           </Select>
         </div>
         <div className="flex gap-6">
-          <Input
-            label="Département de naissance"
+          <Select
             className="w-full"
+            label="Département de naissance"
             disabled={disabledDepartment}
-            nativeInputProps={{
+            nativeSelectProps={{
               ...register("birthDepartment"),
+              value: watch("birthDepartment"),
             }}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
-          />
+          >
+            <option value="" disabled hidden>
+              Votre département
+            </option>
+            {departments?.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.label} ({d.code})
+              </option>
+            ))}
+          </Select>
+
           <Input
             label="Ville de naissance"
             className="w-full"
@@ -219,10 +234,10 @@ const InformationsContactTab = () => {
             label="Code postal"
             className="w-full"
             nativeInputProps={{
-              ...register("postalCode"),
+              ...register("zip"),
             }}
-            state={errors.postalCode ? "error" : "default"}
-            stateRelatedMessage={errors.postalCode?.message}
+            state={errors.zip ? "error" : "default"}
+            stateRelatedMessage={errors.zip?.message}
           />
           <Input
             label="Ville"
@@ -263,36 +278,93 @@ const CandidateInformationPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-  const router = useRouter();
-  const { candidacy, countries } = useCandidateSummary(candidacyId);
+  const { candidacy, countries, getCandidacyRefetch } =
+    useCandidateSummary(candidacyId);
+  const { updateCandidateInformationMutate } =
+    useUpdateCandidateInformation(candidacyId);
   const candidate = candidacy?.candidate;
   const franceId = countries?.find((c) => c.label === "France")?.id;
-
   const methods = useForm<FormCandidateInformationData>({
     resolver: zodResolver(candidateInformationSchema),
     defaultValues: {
-      firstName: candidate?.firstname,
-      lastName: candidate?.lastname,
+      firstname: candidate?.firstname,
+      lastname: candidate?.lastname,
       givenName: candidate?.givenName ?? "",
-      firstName2: candidate?.firstname2 ?? "",
-      firstName3: candidate?.firstname3 ?? "",
+      firstname2: candidate?.firstname2 ?? "",
+      firstname3: candidate?.firstname3 ?? "",
       gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       birthCity: candidate?.birthCity ?? "",
       birthdate: format(
         candidate?.birthdate ? new Date(candidate?.birthdate) : new Date(),
         "yyyy-MM-dd",
       ),
-      birthDepartment: candidate?.birthDepartment?.label ?? "",
+      birthDepartment: candidate?.birthDepartment?.id ?? "",
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
       socialSecurityNumber: candidate?.socialSecurityNumber ?? "",
       countryIsFrance: candidate?.country?.id === franceId,
     },
   });
-  const { handleSubmit } = methods;
+  const { handleSubmit, reset } = methods;
+
+  const resetFormData = useCallback(
+    (candidate: Candidate) => {
+      if (!candidate) return;
+      reset({
+        firstname: candidate.firstname,
+        lastname: candidate.lastname,
+        givenName: candidate.givenName ?? "",
+        firstname2: candidate.firstname2 ?? "",
+        firstname3: candidate.firstname3 ?? "",
+        birthCity: candidate.birthCity ?? "",
+        birthdate: format(
+          candidate.birthdate ? new Date(candidate?.birthdate) : new Date(),
+          "yyyy-MM-dd",
+        ),
+        birthDepartment: candidate.birthDepartment?.id ?? "",
+        country: candidate.country?.id ?? franceId,
+        city: candidate.city ?? "",
+        countryIsFrance: candidate.country?.id === franceId,
+        email: candidate.email ?? "",
+        phone: candidate.phone ?? "",
+        gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
+        nationality: candidate.nationality ?? "",
+        socialSecurityNumber: candidate.socialSecurityNumber ?? "",
+        street: candidate.street ?? "",
+        zip: candidate.zip ?? "",
+      });
+    },
+    [reset, franceId],
+  );
+  useEffect(() => {
+    resetFormData(candidate as Candidate);
+  }, [candidate, resetFormData]);
 
   const onSubmit = async (data: FormCandidateInformationData) => {
-    console.log(data);
+    const candidateInput: CandidateUpdateInput = {
+      id: candidacy?.candidate?.id,
+      firstname: data.firstname,
+      firstname2: data.firstname2,
+      firstname3: data.firstname3,
+      lastname: data.lastname,
+      givenName: data.givenName,
+      birthCity: data.birthCity,
+      city: data.city,
+      email: data.email,
+      phone: data.phone,
+      nationality: data.nationality,
+      socialSecurityNumber: data.socialSecurityNumber,
+      street: data.street,
+      zip: data.zip,
+      gender: data.gender as GenderEnum,
+      countryId: data.country,
+      birthdate: new Date(data.birthdate).getTime(),
+      birthDepartmentId: data.birthDepartment,
+    };
+
+    await updateCandidateInformationMutate({ candidate: candidateInput });
+    successToast("Les informations ont bien été mises à jour");
+    await getCandidacyRefetch();
   };
 
   if (!candidacy?.candidate) return null;
@@ -327,7 +399,7 @@ const CandidateInformationPage = () => {
       <div className="flex gap-6 justify-end">
         <Button
           priority="secondary"
-          onClick={() => router.push(`/candidacies/${candidacyId}/summary`)}
+          onClick={() => resetFormData(candidate as Candidate)}
         >
           Annuler
         </Button>

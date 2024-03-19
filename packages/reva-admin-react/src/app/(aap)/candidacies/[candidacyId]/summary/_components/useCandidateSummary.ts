@@ -10,6 +10,7 @@ const getCandidacyById = graphql(`
         label
       }
       candidate {
+        id
         firstname
         firstname2
         firstname3
@@ -18,9 +19,13 @@ const getCandidacyById = graphql(`
         lastname
         phone
         email
+        street
+        city
+        zip
         birthdate
         birthCity
         birthDepartment {
+          id
           label
           code
         }
@@ -31,6 +36,7 @@ const getCandidacyById = graphql(`
         nationality
         socialSecurityNumber
         department {
+          id
           label
           code
         }
@@ -48,17 +54,30 @@ const getCountries = graphql(`
   }
 `);
 
+const getDepartments = graphql(`
+  query getDepartments {
+    getDepartments {
+      id
+      label
+      code
+    }
+  }
+`);
+
 const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading } =
-    useQuery({
-      queryKey: ["getCandidacyById", candidacyId],
-      queryFn: () =>
-        graphqlClient.request(getCandidacyById, {
-          candidacyId,
-        }),
-    });
+  const {
+    data: getCandidacyByIdData,
+    isLoading: getCandidacyIsLoading,
+    refetch: getCandidacyRefetch,
+  } = useQuery({
+    queryKey: ["getCandidacyById", candidacyId],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyById, {
+        candidacyId,
+      }),
+  });
 
   const { data: getCountriesData, isLoading: getCountriesIsLoading } = useQuery(
     {
@@ -67,10 +86,24 @@ const useCandidateSummary = (candidacyId: string) => {
     },
   );
 
+  const { data: getDepartmentsData, isLoading: getDepartmentsIsLoading } =
+    useQuery({
+      queryKey: ["getDepartments"],
+      queryFn: () => graphqlClient.request(getDepartments),
+    });
+
   const candidacy = getCandidacyByIdData?.getCandidacyById;
   const countries = getCountriesData?.getCountries;
+  const departments = getDepartmentsData?.getDepartments;
 
-  return { candidacy, getCandidacyIsLoading, countries, getCountriesIsLoading };
+  return {
+    candidacy,
+    getCandidacyIsLoading,
+    countries,
+    getCountriesIsLoading,
+    departments,
+    getCandidacyRefetch,
+  };
 };
 
 export default useCandidateSummary;

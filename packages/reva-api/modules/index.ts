@@ -15,8 +15,11 @@ import mercurius, { MercuriusOptions } from "mercurius";
 
 import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
+import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
+import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
+import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 import * as candidacy from "./candidacy/candidacy.resolvers";
-import * as candidate from "./candidate";
+import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
 import { dossierDeValidationLoaders } from "./dossier-de-validation/dossier-de-validation.loaders";
@@ -35,9 +38,6 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
-import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
-import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
-import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 
 // Resolvers
 
@@ -49,7 +49,7 @@ const resolvers = mergeResolvers([
   candidacy.resolvers,
   referentialResolvers,
   accountResolvers,
-  candidate.resolvers,
+  candidateResolvers,
   financeResolvers,
   subscriptionRequestResolvers,
   feasibilityResolvers,

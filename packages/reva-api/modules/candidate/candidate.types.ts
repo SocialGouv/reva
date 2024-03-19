@@ -1,3 +1,4 @@
+import { Country } from "@prisma/client";
 import {
   Degree,
   VulnerabilityIndicator,
@@ -56,4 +57,25 @@ export interface TrainingForm {
 
 export enum CandidateBusinessEvent {
   CREATED_CANDIDATE = "Created Candidate",
+}
+
+export interface CandidateUpdateInput {
+  id: string;
+  gender: Gender;
+  email: string;
+  phone: string;
+  firstname: string;
+  firstname2?: string;
+  firstname3?: string;
+  lastname: string;
+  givenName?: string;
+  birthdate: string;
+  birthCity: string;
+  birthDepartmentId: string;
+  countryId: Country["id"];
+  nationality: string;
+  socialSecurityNumber: string;
+  street: string;
+  zip: string;
+  city: string;
 }
