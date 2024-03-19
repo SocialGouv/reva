@@ -8,7 +8,9 @@ import { useForm, useController } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
-  highestDegreeLevelId: z.string(),
+  highestDegreeLevelId: z.string({
+    required_error: "Ce champ est obligatoire",
+  }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -67,7 +69,7 @@ export const useCandidateProfilePageLogic = () => {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const highestDegreeLevelController = useController({
@@ -91,6 +93,7 @@ export const useCandidateProfilePageLogic = () => {
     degrees,
     highestDegreeLevelController,
     handleFormSubmit,
+    errors,
     isSubmitting,
     resetForm,
   };

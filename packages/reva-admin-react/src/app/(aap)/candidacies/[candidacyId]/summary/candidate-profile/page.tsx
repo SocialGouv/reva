@@ -10,6 +10,7 @@ const CandidateProfilePage = () => {
     degrees,
     highestDegreeLevelController,
     handleFormSubmit,
+    errors,
     isSubmitting,
     resetForm,
   } = useCandidateProfilePageLogic();
@@ -35,6 +36,8 @@ const CandidateProfilePage = () => {
                 highestDegreeLevelController.field.onChange(event.target.value),
               value: highestDegreeLevelController.field.value,
             }}
+            state={errors.highestDegreeLevelId ? "error" : "default"}
+            stateRelatedMessage={errors.highestDegreeLevelId?.message}
           >
             <option
               value=""
