@@ -3,8 +3,9 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { Candidate } from "@/graphql/generated/graphql";
 
-const checkObjectFields = (object: any, fields: string[]) => {
+const checkCandidateFields = (object: any, fields: (keyof Candidate)[]) => {
   return fields.every((field) => object[field]);
 };
 
@@ -22,7 +23,7 @@ const CandidacySummaryPage = () => {
   if (!candidacy) return null;
 
   const { candidate } = candidacy;
-  const isCandidateInformationCompleted = checkObjectFields(candidate, [
+  const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
     "lastname",
     "phone",
@@ -30,7 +31,7 @@ const CandidacySummaryPage = () => {
     "department",
   ]);
 
-  const isCandidateProfileCompleted = checkObjectFields(candidate, [
+  const isCandidateProfileCompleted = checkCandidateFields(candidate, [
     "highestDegree",
   ]);
 
