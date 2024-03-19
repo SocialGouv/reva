@@ -1,4 +1,4 @@
-import { errorToast, successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { UpdateMaisonMereAapInput } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useState } from "react";
@@ -89,8 +89,7 @@ function MaisonMereAAPForm(params: {
 
       successToast("modifications enregistrées");
     } catch (e) {
-      console.log(e);
-      errorToast("Une erreur est survenue");
+      graphqlErrorToast(e);
     }
   });
 
