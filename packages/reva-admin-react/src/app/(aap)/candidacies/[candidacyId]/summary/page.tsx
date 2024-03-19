@@ -47,7 +47,7 @@ const CandidacySummaryPage = () => {
         </p>
       </div>
       {!!candidate && (
-        <div className="flex flex-col gap-8">
+        <ul className="flex flex-col gap-8">
           <CandidacySectionCard
             title="Les informations du candidat"
             hasButton
@@ -97,7 +97,7 @@ const CandidacySummaryPage = () => {
               isCandidateProfileCompleted ? BadgeCompleted : BadgeToComplete
             }
           ></CandidacySectionCard>
-        </div>
+        </ul>
       )}
     </div>
   );
