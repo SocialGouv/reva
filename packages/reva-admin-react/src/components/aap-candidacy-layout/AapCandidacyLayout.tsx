@@ -3,6 +3,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -110,20 +111,20 @@ const MenuEntry = ({
   <li key={menuEntry.label} className="mt-5 mb-7 font-bold">
     {menuEntry.status === "INACTIVE" && <span>{menuEntry.label}</span>}
     {menuEntry.status === "ACTIVE_WITHOUT_HINT" && (
-      <a className="bg-none" href={menuEntry.url}>
+      <Link className="bg-none" href={menuEntry.url}>
         {menuEntry.label}
-      </a>
+      </Link>
     )}
 
     {menuEntry.status === "ACTIVE_WITH_EDIT_HINT" && (
-      <a href={menuEntry.url}>
+      <Link href={menuEntry.url}>
         <div className="flex flex-col gap-2">
           <span className="text-dsfr-blue-france-sun-113 font-bold">
             {menuEntry.label}
           </span>
           <Button className="mt-1">Compléter</Button>
         </div>
-      </a>
+      </Link>
     )}
   </li>
 );
