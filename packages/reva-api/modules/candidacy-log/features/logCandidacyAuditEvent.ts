@@ -19,12 +19,14 @@ export const logCandidacyAuditEvent = ({
 }: LogCandidacyAuditEventParams) => {
   if (!userKeycloakId) {
     throw new Error(
-      `No userKeycloakId when logging candidacy event ${eventType}`,
+      `Id keycloak absent lors du log de l'évenement de candidature ${eventType}`,
     );
   }
 
   if (!userEmail) {
-    throw new Error(`No userEmail when logging candidacy event ${eventType}`);
+    throw new Error(
+      `Email absent lors du log de l'évenement de candidature ${eventType}`,
+    );
   }
 
   return prismaClient.candidacyLog.create({
