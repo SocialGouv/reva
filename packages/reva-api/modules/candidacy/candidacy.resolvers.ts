@@ -479,7 +479,7 @@ const unsafeResolvers = {
           select: { id: true },
         });
 
-        Promise.all(
+        await Promise.all(
           candidacies.map(async (c) => {
             logCandidacyAuditEvent({
               candidacyId: c.id,
