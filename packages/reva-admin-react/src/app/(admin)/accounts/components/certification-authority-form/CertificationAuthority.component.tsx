@@ -70,7 +70,7 @@ const CertificationAuthorityForm = (props: Props) => {
 
   return (
     <div>
-      <h2 className="text-l font-bold my-4">Informations structure</h2>
+      <h2>Informations structure</h2>
 
       <form className="flex flex-col gap-8" onSubmit={handleFormSubmit}>
         <fieldset className="flex flex-col">

@@ -48,18 +48,16 @@ const CandidacySummaryPage = () => {
   ]);
 
   return (
-    <div className="flex flex-col w-full gap-8">
+    <>
       <div>
-        <h1 className="text-[40px] leading-[48px] font-bold mb-2">
-          Résumé de la candidature
-        </h1>
+        <h1 className="mb-1">Résumé de la candidature</h1>
         <p>
           Vous pouvez compléter ou modifier ces informations jusqu'à l'envoi du
           dossier de faisabilité.
         </p>
       </div>
       {!!candidate && (
-        <ul className="flex flex-col gap-8">
+        <ul className="flex flex-col gap-8 pl-0 mt-8">
           <CandidacySectionCard
             title="Les informations du candidat"
             hasButton
@@ -125,7 +123,7 @@ const CandidacySummaryPage = () => {
           </CandidacySectionCard>
         </ul>
       )}
-    </div>
+    </>
   );
 };
 

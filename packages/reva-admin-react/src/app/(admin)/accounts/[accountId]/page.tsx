@@ -66,7 +66,7 @@ const AccountPage = () => {
           Toutes les comptes
         </BackButton>
 
-        <h1 className="text-4xl font-bold">Compte utilisateur</h1>
+        <h1>Compte utilisateur</h1>
 
         <AccountForm account={account} />
 

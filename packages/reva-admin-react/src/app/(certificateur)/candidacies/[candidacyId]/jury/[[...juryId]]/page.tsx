@@ -6,6 +6,7 @@ import { useJuryPageLogic } from "./juryPageLogic";
 
 import { DateDeJury } from "./DateDeJury";
 import { Resultat } from "./Resultat";
+import { BackButton } from "@/components/back-button/BackButton";
 
 interface Props {
   params: {
@@ -28,7 +29,7 @@ const JuryPage = (_props: Props) => {
   return (
     <div className="flex flex-col w-full">
       <BackButton href="/candidacies/juries">Tous les dossiers</BackButton>
-      <h1 className="text-3xl font-bold my-8">Jury</h1>
+      <h1>Jury</h1>
 
       {!getCandidacy.isLoading && isDossierDeValidationSent && (
         <Tabs

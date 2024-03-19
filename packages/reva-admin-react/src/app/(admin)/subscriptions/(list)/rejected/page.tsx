@@ -68,7 +68,6 @@ const RejectedSubscriptionRequestsPage = () => {
           d'ajouter ou d'accepter de nouveaux architecte de parcours ou
           certificateur.
         </p>
-        <br />
         {getRejectedSubscriptionRequestsStatus === "success" && (
           <SearchList
             title="Inscriptions refusées"

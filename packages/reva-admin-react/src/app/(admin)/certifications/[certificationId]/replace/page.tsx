@@ -71,7 +71,6 @@ const ReplaceCertificationPage = () => {
             </BackButton>
             <PageTitle> Remplacer une certification</PageTitle>
             <FormOptionalFieldsDisclaimer />
-            <br />
             <UpdateOrReplaceCertificationForm
               certification={
                 { ...certification, codeRncp: "" } as Certification

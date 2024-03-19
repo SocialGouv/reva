@@ -75,15 +75,9 @@ const CertificationsPage = () => {
 
   return isFeatureActive("ADMIN_CERTIFICATION_PAGE") ? (
     <div className="flex flex-col flex-1">
-      <h1 className="leading-6 font-bold text-2xl mb-8">
-        Gestion des certifications
-      </h1>
-      <h2 className="leading-6 font-bold text-xl">
-        Niveaux de diplômes couverts par votre structure
-      </h2>
-
+      <h1>Gestion des certifications</h1>
+      <h2>Niveaux de diplômes couverts par votre structure</h2>
       <Alert
-        className="mt-8"
         severity="info"
         title=""
         description={

@@ -37,7 +37,6 @@ const UpdateCertificationPage = () => {
             Retour
           </BackButton>
           <PageTitle>Modifier les blocs de compétence</PageTitle>
-          <br />
           <UpdateCompetenceBlocsForm
             blocs={certification.competenceBlocs}
             onSubmit={handleFormSubmit}

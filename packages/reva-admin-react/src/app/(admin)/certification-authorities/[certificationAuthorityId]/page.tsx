@@ -24,9 +24,7 @@ const CertificationAuthorityPage = () => {
       </BackButton>
       {certificationAuthority && (
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold mt-8 mb-6">
-            {certificationAuthority.label}
-          </h1>
+          <h1>{certificationAuthority.label}</h1>
           <p className="text-xl mb-4">{certificationAuthority.contactEmail}</p>
           <form onSubmit={handleFormSubmit} className="flex flex-col">
             <fieldset className="mt-3 grid grid-cols-2 gap-x-8">

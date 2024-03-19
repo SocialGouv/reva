@@ -62,7 +62,7 @@ const InterventionZonePage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="leading-6 font-bold text-2xl mb-8">Zone d'intervention</h1>
+      <h1>Zone d'intervention</h1>
 
       {interventionZoneIsError && (
         <Alert
@@ -75,9 +75,7 @@ const InterventionZonePage = () => {
       {maisonMereAAP && (
         <div className="flex flex-col gap-8">
           <fieldset className="flex flex-col gap-4">
-            <h3 className="leading-6 font-bold text-lg">
-              Informations sur la typologie
-            </h3>
+            <h2>Informations sur la typologie</h2>
             <Input
               label="Typologie d'Architecte Accompagnateur de Parcours"
               hintText="Les certifications vous sont rattachées en fonction de la typologie sélectionnée."

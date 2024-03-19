@@ -67,7 +67,6 @@ const ValidatedSubscriptionRequestsPage = () => {
           d'ajouter ou d'accepter de nouveaux architecte de parcours ou
           certificateur.
         </p>
-        <br />
         {getValidatedSubscriptionRequestsStatus === "success" && (
           <SearchList
             title="Inscriptions validées"

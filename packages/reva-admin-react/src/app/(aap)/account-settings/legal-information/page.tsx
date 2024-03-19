@@ -13,9 +13,7 @@ const LegalInformationPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="leading-6 font-bold text-2xl mb-8">
-        Informations juridiques
-      </h1>
+      <h1>Informations juridiques</h1>
 
       {legalInformationsIsError && (
         <Alert

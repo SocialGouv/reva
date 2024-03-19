@@ -66,7 +66,6 @@ const CertificationAuthoritiesListPage = () => {
     certificationAuthorityPage && (
       <div className="flex flex-col flex-1">
         <PageTitle>Espace pro administrateur</PageTitle>
-        <br />
         {getCertificationAuthoritiesStatus === "success" && (
           <SearchList
             title="Certificateurs"

@@ -21,9 +21,9 @@ export const SearchFilterBar = ({
       <SearchBar className="mb-6" onButtonClick={onSearchFilterChange} />
       {searchFilter ? (
         <>
-          <p className="font-semibold text-xl">
+          <div className="font-semibold text-xl">
             {resultCountLabel} pour « {searchFilter} »
-          </p>
+          </div>
           <Button
             className="mt-2"
             priority="secondary"
@@ -33,7 +33,7 @@ export const SearchFilterBar = ({
           </Button>
         </>
       ) : (
-        <p className="font-semibold text-xl">{resultCountLabel}</p>
+        <div className="font-semibold text-xl">{resultCountLabel}</div>
       )}
     </div>
   );

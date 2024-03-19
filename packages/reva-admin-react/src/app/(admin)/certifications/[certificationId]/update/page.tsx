@@ -70,7 +70,6 @@ const UpdateCertificationPage = () => {
             </BackButton>
             <PageTitle> Modifier une certification</PageTitle>
             <FormOptionalFieldsDisclaimer />
-            <br />
             <UpdateOrReplaceCertificationForm
               certification={certification as Certification}
               typeDiplomes={typeDiplomes}

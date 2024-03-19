@@ -49,7 +49,7 @@ export const SearchList = <T,>({
         resultCount={searchResultsPage.info.totalRows}
         onSearchFilterChange={updateSearchFilter}
       />
-      <ul className="flex flex-col gap-5">
+      <ul className="flex flex-col gap-5 my-0 pl-0">
         {searchResultsPage.rows.map((r) => children?.(r))}
       </ul>
 

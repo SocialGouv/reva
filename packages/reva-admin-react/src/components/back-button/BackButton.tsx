@@ -10,6 +10,7 @@ export const BackButton = ({
 }) => (
   <Button
     priority="tertiary"
+    className="mb-6"
     iconId="fr-icon-arrow-go-back-line"
     linkProps={{
       href,

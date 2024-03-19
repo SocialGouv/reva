@@ -69,7 +69,6 @@ const PendingSubscriptionRequestsPage = () => {
           d'ajouter ou d'accepter de nouveaux architecte de parcours ou
           certificateur.
         </p>
-        <br />
         {getPendingSubscriptionRequestsStatus === "success" && (
           <SearchList
             title="Inscriptions en attente"

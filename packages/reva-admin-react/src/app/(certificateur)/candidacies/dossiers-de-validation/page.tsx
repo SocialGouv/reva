@@ -122,7 +122,7 @@ const DossiersDeValidationPage = () => {
           }
         >
           {(r) => (
-            <p className="text-lg col-span-2">
+            <p className="text-lg col-span-2 mb-0">
               Dossier envoyé le{" "}
               {format(r?.dossierDeValidationSentAt, "d MMM yyyy")}
             </p>

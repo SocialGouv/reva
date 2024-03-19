@@ -6,6 +6,4 @@ export const PageTitle = ({
 }: {
   children: ReactNode;
   className?: string;
-}) => (
-  <h1 className={`font-bold text-4xl mb-8 ${className || ""}`}>{children}</h1>
-);
+}) => <h1 className={`${className || ""}`}>{children}</h1>;

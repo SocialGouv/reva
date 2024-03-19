@@ -46,10 +46,14 @@ const FeasibilityPage = () => {
       </BackButton>
       {feasibility && candidacy && (
         <div className="flex flex-col gap-8">
-          <h1 className="text-3xl font-bold mt-8">
-            {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
-          </h1>
-          <p className="text-2xl font-bold">{candidacy.certification?.label}</p>
+          <div>
+            <h1>
+              {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
+            </h1>
+            <p className="text-2xl font-bold mb-0">
+              {candidacy.certification?.label}
+            </p>
+          </div>
           {feasibility.feasibilityFile && (
             <GrayBlock>
               <FileLink
@@ -118,7 +122,7 @@ const FeasibilityPage = () => {
                   ? "Décision précédente"
                   : "Décisions précédentes"}
               </h5>
-              <ul>
+              <ul className="list-none pl-0">
                 {feasibility.history.map((previousFeasibility) => (
                   <li className="mb-2" key={previousFeasibility.decisionSentAt}>
                     <FeasibilityDecisionInfo
@@ -192,7 +196,7 @@ const FeasibilityDecisionInfo = ({
         )}
         <h6 className="text-xl font-bold mb-4">Motifs de la décision</h6>
         {decisionComment ? (
-          <p>{decisionComment}</p>
+          <p className="mb-0">{decisionComment}</p>
         ) : (
           <p className="italic">Motifs non précisés</p>
         )}

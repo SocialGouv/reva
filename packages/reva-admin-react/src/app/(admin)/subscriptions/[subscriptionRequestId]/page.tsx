@@ -161,7 +161,7 @@ const SubscriptionRequestPage = () => {
         )}
         {subscriptionRequest.status === "REJECTED" && (
           <>
-            <h2 className="text-xl font-bold mb-4">Motif du refus</h2>
+            <h3>Motif du refus</h3>
             <pre className="whitespace-normal">
               {subscriptionRequest.rejectionReason}
             </pre>

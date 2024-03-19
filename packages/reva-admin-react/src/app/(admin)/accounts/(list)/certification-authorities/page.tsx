@@ -72,7 +72,6 @@ const CertificationAuthoritiesPage = () => {
           En tant qu'administrateur, vous avez la possibilité de modifier les
           informations des comptes utilisateurs et des structures.
         </p>
-        <br />
         {status === "success" && (
           <SearchList
             title="Compte certificateurs"

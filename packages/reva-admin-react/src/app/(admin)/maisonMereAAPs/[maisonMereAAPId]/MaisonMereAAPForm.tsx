@@ -146,7 +146,7 @@ function MaisonMereAAPForm(params: {
               </div>
               <div>
                 <legend className="text-2xl font-bold">
-                  Zone d'intervention en distanciel
+                  <h3>Zone d'intervention en distanciel</h3>
                 </legend>
 
                 <TreeSelect

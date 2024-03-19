@@ -13,9 +13,8 @@ const DossierDeValidationPage = () => {
       <BackButton href="/candidacies/dossiers-de-validation">
         Tous les dossiers
       </BackButton>
-      <h2>Dossier de validation</h2>
+      <h1>Dossier de validation</h1>
       <Tabs
-        className="mt-4"
         tabs={[
           {
             label: "Date prévisionnelle",
@@ -104,7 +103,7 @@ const DossierDeValidationTab = () => {
             <p className="text-gray-600 mb-12">
               Voici les documents du dossier de validation du candidat.
             </p>
-            <p className="text-xs mb-7">
+            <p className="text-xs">
               <span className="uppercase text-xs font-bold align-text-top">
                 dossier déposé le :{" "}
               </span>
@@ -119,20 +118,20 @@ const DossierDeValidationTab = () => {
               <span className="uppercase text-xs font-bold">
                 contenu du dossier :
               </span>
-            </p>
-            <ul>
-              <li className="mt-4">
-                <FileLink
-                  text={dossierDeValidation.dossierDeValidationFile.name}
-                  url={dossierDeValidation.dossierDeValidationFile.url}
-                />
-              </li>
-              {dossierDeValidation.dossierDeValidationOtherFiles.map((f) => (
-                <li key={f.url} className="mt-2">
-                  <FileLink text={f.name} url={f.url} />
+              <ul>
+                <li>
+                  <FileLink
+                    text={dossierDeValidation.dossierDeValidationFile.name}
+                    url={dossierDeValidation.dossierDeValidationFile.url}
+                  />
                 </li>
-              ))}
-            </ul>
+                {dossierDeValidation.dossierDeValidationOtherFiles.map((f) => (
+                  <li key={f.url} className="mt-2">
+                    <FileLink text={f.name} url={f.url} />
+                  </li>
+                ))}
+              </ul>
+            </p>
 
             {canSignalProblem && (
               <Button

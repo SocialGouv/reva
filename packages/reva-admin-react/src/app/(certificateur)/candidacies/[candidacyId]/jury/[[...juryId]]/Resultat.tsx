@@ -111,11 +111,9 @@ export const Resultat = (): JSX.Element => {
   return (
     <div className="flex flex-col">
       <>
-        <h5 className="text-xl font-bold">
-          Résultat à l'issue de l'entretien avec le jury
-        </h5>
+        <h5>Résultat à l'issue de l'entretien avec le jury</h5>
         {!result && (
-          <p className="text-gray-600 mt-4 mb-12">
+          <p className="text-gray-600">
             Sélectionner l'option de résultat qui convient. Le résultat est
             envoyé par e-mail à l’AAP et au candidat. Un document officiel devra
             être envoyé au candidat.

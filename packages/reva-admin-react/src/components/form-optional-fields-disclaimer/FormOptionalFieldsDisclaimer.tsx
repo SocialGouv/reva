@@ -4,7 +4,7 @@ export const FormOptionalFieldsDisclaimer = ({
   classname?: string;
 }) => (
   <p
-    className={`text-light-text-mention-grey text-xs leading-5 ${
+    className={`text-light-text-mention-grey text-xs leading-5 -mt-6 ${
       classname || ""
     }`}
   >

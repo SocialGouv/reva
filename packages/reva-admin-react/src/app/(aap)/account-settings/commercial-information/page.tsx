@@ -69,9 +69,7 @@ const CommercialInformationPage = () => {
 
   return (
     <div className="flex flex-col">
-      <h1 className="leading-6 font-bold text-2xl mb-8">
-        Informations commerciales
-      </h1>
+      <h1>Informations commerciales</h1>
 
       {informationsCommercialesStatus === "error" && (
         <Alert

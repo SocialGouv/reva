@@ -377,9 +377,7 @@ const CandidateInformationPage = () => {
   return (
     <div className="flex flex-col w-full p-8 gap-8">
       <div>
-        <h1 className="text-[40px] leading-[48px] font-bold mb-2">
-          Renseigner les informations
-        </h1>
+        <h1>Renseigner les informations</h1>
         <FormOptionalFieldsDisclaimer />
       </div>
 

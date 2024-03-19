@@ -74,7 +74,7 @@ export const DateDeJury = (): JSX.Element => {
           Attribution d’une date de passage en jury au candidat
         </h5>
         {!jury && (
-          <p className="text-gray-600 mt-4">
+          <p className="text-gray-600">
             Une convocation officielle devra être émise à destination du
             candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
             candidat l’aura dans son e-mail récapitulatif) ou transmise par
@@ -84,7 +84,7 @@ export const DateDeJury = (): JSX.Element => {
       </>
 
       <>
-        <label className="text-xs font-bold py-2 mt-12">
+        <label className="text-xs font-bold py-2">
           Certification concernée
         </label>
 

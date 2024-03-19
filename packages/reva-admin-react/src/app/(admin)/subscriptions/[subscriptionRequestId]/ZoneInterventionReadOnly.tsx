@@ -9,10 +9,10 @@ export const ZoneInterventionReadOnly = ({
   remoteDepartmentsOnRegions: TreeSelectItem[];
 }) => {
   return (
-    <fieldset className="flex flex-col sm:flex-row gap-y-8 justify-between p-8 border mt-8">
+    <fieldset className="mt-12 flex flex-col sm:flex-row gap-y-8 justify-between p-8 border mt-8 mb-16">
       <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-        <legend className="text-xl text-gray-900 font-bold">
-          Zone d'intervention en présentiel
+        <legend>
+          <h3>Zone d'intervention en présentiel</h3>
         </legend>
         <TreeSelect
           readonly
@@ -29,8 +29,8 @@ export const ZoneInterventionReadOnly = ({
       </div>
 
       <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-        <legend className="text-xl text-gray-900 font-bold">
-          Zone d'intervention en distanciel
+        <legend>
+          <h3>Zone d'intervention en distanciel</h3>
         </legend>
         <TreeSelect
           readonly

@@ -20,7 +20,7 @@ const CandidateProfilePage = () => {
 
   return (
     <div className="flex flex-col">
-      <PageTitle className="!mb-4 md:!mt-0">Compléter le profil</PageTitle>
+      <PageTitle>Compléter le profil</PageTitle>
       <FormOptionalFieldsDisclaimer />
       <form
         onSubmit={handleFormSubmit}

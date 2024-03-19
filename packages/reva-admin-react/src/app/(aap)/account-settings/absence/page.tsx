@@ -57,9 +57,7 @@ const AbsencePage = () => {
 
   return isFeatureActive("FERMETURE_AGENCE_POUR_ABSENCE_OU_CONGES") ? (
     <div className="flex flex-col">
-      <h1 className="leading-6 font-bold text-2xl mb-8">
-        Gestion des absences et fermetures
-      </h1>
+      <h1>Gestion des absences et fermetures</h1>
 
       {organismQueryStatus === "error" && (
         <Alert

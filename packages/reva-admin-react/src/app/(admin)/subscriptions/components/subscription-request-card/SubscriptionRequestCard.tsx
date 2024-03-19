@@ -14,9 +14,8 @@ export const SubscriptionRequestCard = ({
   <GrayCard>
     <strong>Raison sociale de la structure</strong>
     <p>{companyName}</p>
-    <br />
     <strong>Date d'envoi de l'inscription</strong>
-    <p>{format(createdAt, "d MMM yyyy")}</p>
+    <p className="mb-0">{format(createdAt, "d MMM yyyy")}</p>
     {href && (
       <Button className="ml-auto" linkProps={{ href }}>
         Voir plus

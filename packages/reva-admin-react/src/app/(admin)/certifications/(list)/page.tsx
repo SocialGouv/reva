@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
+
 const getCertificationsQuery = graphql(`
   query getCertificationsForListPage(
     $offset: Int
@@ -74,9 +75,8 @@ const CertificationListPage = () => {
     getCertificationsResponse?.searchCertificationsForAdmin;
   return (
     certificationPage && (
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <PageTitle>Espace pro administrateur</PageTitle>
-        <br />
         {getCertificationsQueryStatus === "success" && (
           <SearchList
             title={`Certifications ${

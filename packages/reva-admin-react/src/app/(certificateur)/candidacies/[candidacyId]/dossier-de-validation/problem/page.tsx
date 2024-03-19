@@ -50,11 +50,10 @@ const DossierDeValidationProblemPage = () => {
         >
           Retour au dossier
         </BackButton>
-        <h1 className="text-3xl font-bold my-8">
-          Dossier de validation - Signaler un problème
-        </h1>
+        <h1>Dossier de validation</h1>
+        <h2>Signaler un problème</h2>
         <form className="flex flex-col w-full" onSubmit={handleFormSubmit}>
-          <div className="flex items-center gap-2 mb-16">
+          <div className="flex items-center gap-2 mb-8">
             <span className="uppercase text-xs font-bold">
               dossier déposé le :
             </span>

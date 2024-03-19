@@ -1,18 +1,26 @@
 "use client";
+
+// The three following files must be imported in this specific order:
+// Step 1-  Reset the styles for browser consistency
+import "./tailwind-base.css";
+// Step 2 - Add defaults to html tags (eg. a DSFR h1 has a 40px font size by default)
+import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
+// Step 3 - Add utilities and other classes that, coming last, can override DSFR styles
+import "./globals.css";
+
 import { useEffect } from "react";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
-import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import Keycloak from "keycloak-js";
-import "./globals.css";
+
 import {
   KeycloakProvider,
   useKeycloakContext,

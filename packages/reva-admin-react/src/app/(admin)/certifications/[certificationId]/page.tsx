@@ -27,12 +27,13 @@ const CertificationPage = () => {
       <BackButton href="/certifications">Toutes les certifications</BackButton>
       {certification && (
         <>
-          <h1 className="text-2xl font-bold mt-8">{certification.label}</h1>
-          <p>{certification.codeRncp}</p>
-          <p>Statut: {certificationStatusToString(certification.status)}</p>
-          <h2 className="text-xl font-bold mt-12 mb-2">
-            Informations générales
-          </h2>
+          <h1>{certification.label}</h1>
+          <p>
+            {certification.codeRncp}
+            <br />
+            Statut: {certificationStatusToString(certification.status)}
+          </p>
+          <h2>Informations générales</h2>
           <div className="grid grid-cols-2">
             <Info title="Niveau de la certification">
               {certification.degree.longLabel}
@@ -50,7 +51,7 @@ const CertificationPage = () => {
           {certification.competenceBlocs.length > 0 ? (
             <>
               <br />
-              <h2 className="text-xl font-bold mb-2">Blocs de compétences</h2>
+              <h2>Blocs de compétences</h2>
               <div className="grid grid-cols-2">
                 <ul className="list-disc list-inside">
                   {certification.competenceBlocs.map((bloc) => (
@@ -62,9 +63,7 @@ const CertificationPage = () => {
           ) : null}
 
           <br />
-          <h2 className="text-xl font-bold mb-2">
-            Gestion de la certification
-          </h2>
+          <h2>Gestion de la certification</h2>
           <div className="grid grid-cols-2">
             {!!certification.domaines.length && (
               <Info title="Filières">
@@ -98,7 +97,7 @@ const CertificationPage = () => {
                 {certification.certificationAuthorities.map((c) => (
                   <li key={c.id}>
                     {c.label}
-                    <ul className="ml-6 pt-1 list-square list-inside">
+                    <ul className="m-0 ml-6 pt-1 list-square list-inside">
                       {c.certificationAuthorityLocalAccounts.map((l) => (
                         <li
                           key={l.id}
