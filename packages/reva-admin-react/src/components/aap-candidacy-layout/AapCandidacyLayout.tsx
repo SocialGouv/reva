@@ -94,7 +94,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
           </>
         )}
       </CandidacyLayoutSideMenu>
-      {children}
+      <div className="w-full">{children}</div>
     </div>
   );
 };
