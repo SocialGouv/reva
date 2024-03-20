@@ -16,7 +16,9 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const schema = z.object({ firstAppointmentOccuredAt: z.string().min(1) });
+const schema = z.object({
+  firstAppointmentOccuredAt: z.string().min(1, "Ce champ est obligatoire"),
+});
 
 type FormData = z.infer<typeof schema>;
 
@@ -138,6 +140,8 @@ const MeetingsPage = () => {
             type: "date",
             ...register("firstAppointmentOccuredAt"),
           }}
+          state={errors.firstAppointmentOccuredAt ? "error" : "default"}
+          stateRelatedMessage={errors.firstAppointmentOccuredAt?.message}
         />
         <SmallNotice>
           Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà
