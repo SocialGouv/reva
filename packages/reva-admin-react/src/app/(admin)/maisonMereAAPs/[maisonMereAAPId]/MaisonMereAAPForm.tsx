@@ -127,13 +127,13 @@ function MaisonMereAAPForm(params: {
 
   return (
     <>
-      <div className="w-full">
+      <div className="mt-8 w-full">
         <FormProvider {...methods}>
           <form onSubmit={handleFormSubmit}>
-            <fieldset className="my-8 grid grid-cols-2 gap-x-8">
+            <fieldset className="border p-8 grid grid-cols-2 gap-x-8 mb-8">
               <div>
                 <legend className="text-2xl font-bold">
-                  Zone d'intervention en présentiel
+                  <h3>Zone d'intervention en présentiel</h3>
                 </legend>
 
                 <TreeSelect

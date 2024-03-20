@@ -151,7 +151,6 @@ const SubscriptionRequestPage = () => {
           )}
         />
 
-        <hr className="mt-8 mb-4" />
         {!subscriptionRequest.isCompanyNameUnique && (
           <Alert
             className="mb-6"

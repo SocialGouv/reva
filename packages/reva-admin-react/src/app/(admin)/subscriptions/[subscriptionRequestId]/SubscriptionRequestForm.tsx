@@ -90,40 +90,33 @@ export const SubscriptionRequestForm = ({
   });
 
   return (
-    <>
-      <p className="text-gray-600">
-        Sauf mention contraire “(optionnel)” dans le label, tous les champs sont
-        obligatoires.
-      </p>
-      <br />
-      <form className="flex flex-col" onSubmit={handleFormSubmit}>
-        <RadioButtons
-          legend="Décision prise concernant cette inscription"
-          options={[
-            {
-              label: "Dossier valide",
-              nativeInputProps: { ...register("decision"), value: "validated" },
-            },
-            {
-              label: "Dossier invalide",
-              nativeInputProps: { ...register("decision"), value: "rejected" },
-            },
-          ]}
+    <form className="flex flex-col" onSubmit={handleFormSubmit}>
+      <RadioButtons
+        legend="Décision prise concernant cette inscription"
+        options={[
+          {
+            label: "Dossier valide",
+            nativeInputProps: { ...register("decision"), value: "validated" },
+          },
+          {
+            label: "Dossier invalide",
+            nativeInputProps: { ...register("decision"), value: "rejected" },
+          },
+        ]}
+      />
+      {decision === "rejected" && (
+        <Input
+          label="PRÉCISEZ LES MOTIFS DE VOTRE DÉCISION (OPTIONNEL)"
+          hintText="Texte de description libre"
+          textArea
+          classes={{ nativeInputOrTextArea: "!min-h-[200px]" }}
+          className="max-w-md"
+          nativeTextAreaProps={register("rejectionReason")}
         />
-        {decision === "rejected" && (
-          <Input
-            label="PRÉCISEZ LES MOTIFS DE VOTRE DÉCISION (OPTIONNEL)"
-            hintText="Texte de description libre"
-            textArea
-            classes={{ nativeInputOrTextArea: "!min-h-[200px]" }}
-            className="max-w-md"
-            nativeTextAreaProps={register("rejectionReason")}
-          />
-        )}
-        <Button className="ml-auto" disabled={isSubmitting || !isValid}>
-          Valider la décision
-        </Button>
-      </form>
-    </>
+      )}
+      <Button className="ml-auto" disabled={isSubmitting || !isValid}>
+        Valider la décision
+      </Button>
+    </form>
   );
 };

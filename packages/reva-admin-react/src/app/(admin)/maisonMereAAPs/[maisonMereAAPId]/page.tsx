@@ -12,6 +12,7 @@ import { selectedDepartmentsToTreeSelectItems } from "@/utils";
 import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/MaisonMereAAPForm";
 import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 import { BackButton } from "@/components/back-button/BackButton";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -150,9 +151,9 @@ const MaisonMereAAPPage = () => {
             (c) => c.ccn.label,
           )}
         />
-        <div>
-          <h2 className="text-xl font-bold my-4">Agences</h2>
-          <ul>
+        <GrayCard className="mt-8">
+          <h3>Agences</h3>
+          <ol>
             {maisonMereAAP.organisms.map((o) => (
               <li key={o.id} className="ml-4">
                 <h3 className="text-lg font-bold">
@@ -164,16 +165,14 @@ const MaisonMereAAPPage = () => {
                 <Info title="Niveaux de diplômes couverts:">
                   <ul>
                     {o.managedDegrees.map((d) => (
-                      <li key={d.id} className="list-disc list-inside">
-                        {d.degree.longLabel}
-                      </li>
+                      <li key={d.id}>{d.degree.longLabel}</li>
                     ))}
                   </ul>
                 </Info>
               </li>
             ))}
-          </ul>
-        </div>
+          </ol>
+        </GrayCard>
         <MaisonMereAAPForm
           maisonMereAAPId={maisonMereAAP.id}
           onSiteDepartmentsOnRegions={regions.map(

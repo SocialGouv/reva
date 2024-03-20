@@ -91,7 +91,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
 
   return (
     <div className="flex-1 flex flex-col gap-2 max-w-[450px]">
-      <h4>{title}</h4>
+      {title && <div>{title}</div>}
       <SearchBar
         renderInput={({ className, id, placeholder, type }) => (
           <input
