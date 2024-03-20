@@ -1,4 +1,5 @@
 "use client";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { ADMIN_ELM_URL } from "@/config/config";
@@ -42,6 +43,8 @@ const CandidacyLogsPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const { isFeatureActive } = useFeatureflipping();
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidacyLogsResponse } = useQuery({
@@ -85,7 +88,9 @@ const CandidacyLogsPage = () => {
           priority="tertiary"
           iconId="fr-icon-arrow-go-back-line"
           linkProps={{
-            href: `${ADMIN_ELM_URL}/candidacies/${candidacyId}`,
+            href: isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
+              ? `/candidacies/${candidacyId}/summary`
+              : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`,
             target: "_self",
           }}
         >
