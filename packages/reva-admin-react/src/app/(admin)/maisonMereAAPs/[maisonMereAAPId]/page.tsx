@@ -7,11 +7,11 @@ import {
 } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { selectedDepartmentsToTreeSelectItems } from "@/utils";
 import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/MaisonMereAAPForm";
 import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -124,12 +124,9 @@ const MaisonMereAAPPage = () => {
   return (
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
-        <Link
-          href="/subscriptions/validated"
-          className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-        >
+        <BackButton href="/subscriptions/validated">
           Toutes les inscriptions
-        </Link>
+        </BackButton>
         <OrganismSummary
           companyName={maisonMereAAP.raisonSociale}
           accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}

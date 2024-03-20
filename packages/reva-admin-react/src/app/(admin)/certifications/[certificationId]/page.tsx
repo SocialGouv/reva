@@ -4,9 +4,9 @@ import { CertificationStatus } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const CertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -24,12 +24,7 @@ const CertificationPage = () => {
   };
   return (
     <div className="flex flex-col w-full">
-      <Link
-        href="/certifications"
-        className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-      >
-        Toutes les certifications
-      </Link>
+      <BackButton href="/certifications">Toutes les certifications</BackButton>
       {certification && (
         <>
           <h1 className="text-2xl font-bold mt-8">{certification.label}</h1>

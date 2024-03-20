@@ -4,11 +4,11 @@ import { AuthenticatedLink } from "@/components/authenticated-link/Authenticated
 import { errorToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns/format";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 import { FeasibilityForm, FeasibilityFormData } from "./FeasibilityForm";
 import { useFeasibilityPageLogic } from "./feasibilityPageLogic";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const FeasibilityPage = () => {
   const { feasibility, candidacy, submitFeasibilityDecision } =
@@ -41,12 +41,9 @@ const FeasibilityPage = () => {
 
   return (
     <div className="flex flex-col flex-1 mb-2 w-full">
-      <Link
-        href="/candidacies/feasibilities"
-        className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-      >
+      <BackButton href="/candidacies/feasibilities">
         Tous les dossiers
-      </Link>
+      </BackButton>
       {feasibility && candidacy && (
         <div className="flex flex-col gap-8">
           <h1 className="text-3xl font-bold mt-8">

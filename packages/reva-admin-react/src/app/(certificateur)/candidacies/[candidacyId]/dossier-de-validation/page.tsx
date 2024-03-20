@@ -2,22 +2,20 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { format } from "date-fns";
-import Link from "next/link";
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { FileLink } from "../../(components)/FileLink";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const DossierDeValidationPage = () => {
   return (
     <div className="flex flex-col w-full">
-      <Link
-        href="/candidacies/dossiers-de-validation"
-        className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-      >
+      <BackButton href="/candidacies/dossiers-de-validation">
         Tous les dossiers
-      </Link>
-      <h1 className="text-3xl font-bold my-8">Dossier de validation</h1>
+      </BackButton>
+      <h2>Dossier de validation</h2>
       <Tabs
+        className="mt-4"
         tabs={[
           {
             label: "Date prévisionnelle",

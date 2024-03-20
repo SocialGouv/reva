@@ -2,7 +2,6 @@
 import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 import { useParams, useRouter } from "next/navigation";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
-import Link from "next/link";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import UpdateOrReplaceCertificationForm, {
   UpdateOrReplaceCertificationFormData,
@@ -10,6 +9,7 @@ import UpdateOrReplaceCertificationForm, {
 import { Certification } from "@/graphql/generated/graphql";
 import { parse } from "date-fns";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const UpdateCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -65,12 +65,9 @@ const UpdateCertificationPage = () => {
         degrees &&
         certificationAuthorityTags && (
           <>
-            <Link
-              href={`/certifications/${certificationId}`}
-              className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto mb-8"
-            >
+            <BackButton href={`/certifications/${certificationId}`}>
               Retour
-            </Link>
+            </BackButton>
             <PageTitle> Modifier une certification</PageTitle>
             <FormOptionalFieldsDisclaimer />
             <br />

@@ -2,7 +2,7 @@
 import { useCertificationAuthorityPageLogic } from "@/app/(admin)/certification-authorities/[certificationAuthorityId]/certificationAuthorityPageLogic";
 import { TreeSelect } from "@/components/tree-select";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Link from "next/link";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const CertificationAuthorityPage = () => {
   const {
@@ -19,12 +19,9 @@ const CertificationAuthorityPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <Link
-        href="/certification-authorities"
-        className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-      >
+      <BackButton href="/certification-authorities">
         Tous les certificateurs
-      </Link>
+      </BackButton>
       {certificationAuthority && (
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold mt-8 mb-6">

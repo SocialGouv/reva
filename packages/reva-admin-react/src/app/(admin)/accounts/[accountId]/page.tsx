@@ -2,11 +2,11 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import AccountForm from "../components/account-form/AccountForm.component";
 import OrganismForm from "../components/organism-form/OrganismForm.component";
 import CertificationAuthorityForm from "../components/certification-authority-form/CertificationAuthority.component";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const getAccount = graphql(`
   query getAccount($accountId: ID!) {
@@ -57,15 +57,14 @@ const AccountPage = () => {
 
   return (
     account && (
-      <div className="flex flex-col flex-1 px-8 py-4 gap-8">
-        <Link
+      <div className="flex-1 px-8 py-4">
+        <BackButton
           href={`/accounts/${
             organism ? "organisms" : "certification-authorities"
           }`}
-          className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
         >
           Toutes les comptes
-        </Link>
+        </BackButton>
 
         <h1 className="text-4xl font-bold">Compte utilisateur</h1>
 

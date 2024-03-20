@@ -5,13 +5,13 @@ import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   selectedDepartmentsToTreeSelectItems,
   sortRegionsByAlphabeticalOrderAndDOM,
 } from "@/utils";
 import { ZoneInterventionReadOnly } from "@/app/(admin)/subscriptions/[subscriptionRequestId]/ZoneInterventionReadOnly";
+import { BackButton } from "@/components/back-button/BackButton";
 
 const getSubscriptionRequest = graphql(`
   query getSubscriptionRequest($subscriptionRequestId: ID!) {
@@ -115,12 +115,9 @@ const SubscriptionRequestPage = () => {
   return (
     subscriptionRequest && (
       <div className="flex flex-col flex-1 px-8 py-4">
-        <Link
-          href="/subscriptions/pending"
-          className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
-        >
+        <BackButton href="/subscriptions/pending">
           Toutes les inscriptions
-        </Link>
+        </BackButton>
         <OrganismSummary
           companyName={subscriptionRequest.companyName}
           accountFirstname={subscriptionRequest.accountFirstname}

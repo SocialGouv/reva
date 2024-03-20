@@ -1,6 +1,5 @@
 "use client";
 import { format } from "date-fns";
-import Link from "next/link";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -10,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
+import { BackButton } from "@/components/back-button/BackButton";
+
 const schema = z.object({
   decisionComment: z.string().min(1, "Ce champ est obligatoire"),
 });
@@ -44,12 +45,11 @@ const DossierDeValidationProblemPage = () => {
   return (
     dossierDeValidation && (
       <div className="flex flex-col w-full">
-        <Link
+        <BackButton
           href={`/candidacies/${candidacy?.id}/dossier-de-validation`}
-          className="fr-icon-arrow-left-line fr-link--icon-left text-blue-900 text-lg mr-auto"
         >
           Retour au dossier
-        </Link>
+        </BackButton>
         <h1 className="text-3xl font-bold my-8">
           Dossier de validation - Signaler un problème
         </h1>
