@@ -43,6 +43,10 @@ const getCandidacyById = graphql(`
         highestDegree {
           id
         }
+        highestDegreeLabel
+        niveauDeFormationLePlusEleve {
+          id
+        }
       }
     }
   }

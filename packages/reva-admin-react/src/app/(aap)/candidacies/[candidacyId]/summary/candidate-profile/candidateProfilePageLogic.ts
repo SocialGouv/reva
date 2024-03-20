@@ -12,6 +12,11 @@ export const schema = z.object({
   highestDegreeId: z.string({
     required_error: "Ce champ est obligatoire",
   }),
+  highestDegreeLabel: z.string().min(1, "Ce champ est obligatoire"),
+
+  niveauDeFormationLePlusEleveDegreeId: z.string({
+    required_error: "Ce champ est obligatoire",
+  }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,6 +29,11 @@ const getCandidateProfileQuery = graphql(`
         highestDegree {
           id
           longLabel
+        }
+        highestDegreeLabel
+        niveauDeFormationLePlusEleve {
+          id
+          label
         }
       }
     }
@@ -84,9 +94,9 @@ export const useCandidateProfilePageLogic = () => {
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { highestDegreeId: candidate?.highestDegree?.id },
   });
   const {
+    register,
     control,
     handleSubmit,
     reset,
@@ -98,8 +108,18 @@ export const useCandidateProfilePageLogic = () => {
     control,
   });
 
+  const niveauDeFormationLePlusEleveController = useController({
+    name: "niveauDeFormationLePlusEleveDegreeId",
+    control,
+  });
+
   const resetForm = useCallback(() => {
-    reset({ highestDegreeId: candidate?.highestDegree?.id });
+    reset({
+      highestDegreeId: candidate?.highestDegree?.id,
+      highestDegreeLabel: candidate?.highestDegreeLabel || undefined,
+      niveauDeFormationLePlusEleveDegreeId:
+        candidate?.niveauDeFormationLePlusEleve?.id,
+    });
   }, [reset, candidate]);
 
   useEffect(() => {
@@ -121,6 +141,8 @@ export const useCandidateProfilePageLogic = () => {
   return {
     degrees,
     highestDegreeLevelController,
+    niveauDeFormationLePlusEleveController,
+    register,
     handleFormSubmit,
     errors,
     isSubmitting,

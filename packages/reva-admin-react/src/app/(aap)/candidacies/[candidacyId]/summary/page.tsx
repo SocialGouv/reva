@@ -33,6 +33,8 @@ const CandidacySummaryPage = () => {
 
   const isCandidateProfileCompleted = checkCandidateFields(candidate, [
     "highestDegree",
+    "highestDegreeLabel",
+    "niveauDeFormationLePlusEleve",
   ]);
 
   return (
