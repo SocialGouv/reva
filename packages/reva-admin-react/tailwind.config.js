@@ -18,6 +18,7 @@ module.exports = {
         "light-text-mention-grey": "#666",
         dsfr: {
           "blue-france-sun-113": "#000091",
+          orange: { 500: "#f94608" },
         },
       },
       listStyleType: {
