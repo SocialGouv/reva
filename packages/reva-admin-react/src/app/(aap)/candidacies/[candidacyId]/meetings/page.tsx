@@ -4,6 +4,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { SmallWarning } from "@/components/small-warning/SmallWarning";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -56,7 +57,7 @@ const MeetingsPage = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = methods;
 
   const { graphqlClient } = useGraphQlClient();
@@ -143,10 +144,19 @@ const MeetingsPage = () => {
           state={errors.firstAppointmentOccuredAt ? "error" : "default"}
           stateRelatedMessage={errors.firstAppointmentOccuredAt?.message}
         />
-        <SmallNotice>
-          Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà
-          de laquelle toute modification sera bloquée.
-        </SmallNotice>
+
+        {isValid ? (
+          <SmallNotice>
+            Le candidat pourra modifier sa candidature jusqu'à cette date,
+            au-delà de laquelle toute modification sera bloquée.
+          </SmallNotice>
+        ) : (
+          <SmallWarning>
+            Cette information est obligatoire pour continuer le parcours. Le
+            candidat pourra modifier sa candidature jusqu'à cette date, au-delà
+            de laquelle toute modification sera bloquée.
+          </SmallWarning>
+        )}
         <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
           <Button disabled={isSubmitting}>Enregistrer</Button>
         </div>
