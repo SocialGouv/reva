@@ -78,20 +78,20 @@ const CandidacySummaryPage = () => {
               isCandidateInformationCompleted ? BadgeCompleted : BadgeToComplete
             }
           >
-            <div>
-              <div className="mb-4">
-                <p>
-                  {candidate.firstname} {candidate.lastname}
-                </p>
-                <p>
-                  {candidate.department.label} ({candidate.department.code})
-                </p>
-              </div>
-              <div>
-                <p>{candidate.phone}</p>
-                <p>{candidate.email}</p>
-              </div>
-            </div>
+            <dl>
+              <dt className="sr-only">Prénom et nom</dt>
+              <dd>
+                {candidate.firstname} {candidate.lastname}
+              </dd>
+              <dt className="sr-only">Département</dt>
+              <dd className="mb-4">
+                {candidate.department.label} ({candidate.department.code})
+              </dd>
+              <dt className="sr-only">Téléphone</dt>
+              <dd>{candidate.phone}</dd>
+              <dt className="sr-only">Adresse email</dt>
+              <dd>{candidate.email}</dd>
+            </dl>
           </CandidacySectionCard>
           <CandidacySectionCard
             title="Son profil"

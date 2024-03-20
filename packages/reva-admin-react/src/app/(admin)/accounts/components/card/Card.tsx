@@ -11,11 +11,13 @@ export const Card = ({
   href?: string;
 }) => (
   <GrayCard>
-    <strong>RAISON SOCIALE</strong>
-    <p>{label}</p>
-    <br />
-    <strong>EMAIL DE CONTACT</strong>
-    <p>{email}</p>
+    <dl>
+      <dt className="uppercase font-bold">Raison sociale</dt>
+      <dd>{label}</dd>
+      <br />
+      <dl className="uppercase font-bold">Email de contact</dl>
+      <dd>{email}</dd>
+    </dl>
     {href && (
       <Button className="ml-auto" linkProps={{ href }}>
         Voir plus

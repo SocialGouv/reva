@@ -76,23 +76,18 @@ const CertificationAuthoritiesListPage = () => {
           >
             {(c) => (
               <GrayCard key={c.id}>
-                <span className="flex gap-2">
-                  <p>{c.label}</p>
-                  {c.type === "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT" ? (
-                    <Tag small className="bg-yellow-200 font-bold mb-4">
-                      Compte local
-                    </Tag>
-                  ) : null}
-                </span>
-                <p>{c.email}</p>
-                {c.type === "CERTIFICATION_AUTHORITY" && (
-                  <Button
-                    className="ml-auto"
-                    linkProps={{ href: `/certification-authorities/${c.id}` }}
-                  >
-                    Voir plus
-                  </Button>
-                )}
+                <dl>
+                  <dt className="sr-only">Nom</dt>
+                  <dd className="font-bold">{c.label}</dd>
+                  <dt className="sr-only">Adresse email</dt>
+                  <dd>{c.email}</dd>
+                </dl>
+                <Button
+                  className="ml-auto"
+                  linkProps={{ href: `/certification-authorities/${c.id}` }}
+                >
+                  Voir plus
+                </Button>
               </GrayCard>
             )}
           </SearchList>
