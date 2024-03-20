@@ -252,7 +252,6 @@ selection id =
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
                 |> with (Admin.Object.Candidacy.activeDossierDeValidation Api.DossierDeValidation.selection)
                 |> with Admin.Object.Candidacy.financeModule
-                |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
                 |> with Admin.Object.Candidacy.typology
                 |> with Admin.Object.Candidacy.typologyAdditional
                 |> with Admin.Object.Candidacy.ccnId

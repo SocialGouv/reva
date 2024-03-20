@@ -14,7 +14,6 @@ import Admin.Enum.DossierDeValidationDecision as DossierDeValidationDecision exp
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
-import Api.Form.Appointment
 import Api.Form.Archive
 import Api.Form.CancelDropOut
 import Api.Form.DossierDeValidation
@@ -38,7 +37,6 @@ import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, candidacyId
 import Data.Context exposing (Context)
 import Data.DossierDeValidation
 import Data.Feasibility
-import Data.Form.Appointment
 import Data.Form.Archive
 import Data.Form.CancelDropOut
 import Data.Form.DossierDeValidation
@@ -58,7 +56,6 @@ import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form
 import Page.Form.Admissibility
-import Page.Form.Appointment
 import Page.Form.Archive
 import Page.Form.CancelDropOut
 import Page.Form.DossierDeValidation
@@ -259,9 +256,6 @@ view context model =
 
                         _ ->
                             div [] []
-
-                Meetings ->
-                    viewForm "meetings"
 
                 PaymentRequest ->
                     case model.selected of
@@ -642,22 +636,6 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.CancelDropOut.cancelDropOut tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.CancelDropOut.validate
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.Meetings, Success _ ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Appointment.form
-                        , onLoad = Just <| Api.Form.Appointment.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Appointment.update tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.Appointment.validate
                         , status = Form.Editable
                         }
                         model.form

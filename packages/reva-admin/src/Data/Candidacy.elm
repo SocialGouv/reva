@@ -107,7 +107,6 @@ type alias Candidacy =
     , feasibility : Maybe Feasibility
     , activeDossierDeValidation : Maybe DossierDeValidation
     , financeModule : FinanceModule
-    , firstAppointmentOccuredAt : Maybe Time.Posix
     , typology : CandidateTypology
     , typologyAdditional : Maybe String
     , ccnId : Maybe String
