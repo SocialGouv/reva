@@ -22,7 +22,7 @@ export const getActiveCandidacyMenu = async ({
 
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",
-    url: buildUrl({ adminType: "Elm", suffix: "meetings" }),
+    url: buildUrl({ adminType: "React", suffix: "meetings" }),
     status:
       activeCandidacyStatus === "PRISE_EN_CHARGE"
         ? "ACTIVE_WITH_EDIT_HINT"
