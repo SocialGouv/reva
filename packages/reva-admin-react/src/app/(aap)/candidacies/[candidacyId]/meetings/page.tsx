@@ -62,7 +62,7 @@ const MeetingsPage = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyResponse } = useQuery({
+  const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
     queryKey: ["getCandidacy", candidacyId],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
@@ -125,42 +125,44 @@ const MeetingsPage = () => {
       <CandidacyBackButton candidacyId={candidacyId} />
       <PageTitle className="!mb-2">Rendez-vous pédagogique</PageTitle>
       <FormOptionalFieldsDisclaimer />
-      <form
-        onSubmit={handleFormSubmit}
-        onReset={(e) => {
-          e.preventDefault();
-          resetForm();
-        }}
-        className="flex flex-col mt-8"
-      >
-        <Input
-          className="max-w-xs"
-          label="Date du premier rendez-vous pédagogique"
-          hintText="Date au format 31/12/2022"
-          nativeInputProps={{
-            type: "date",
-            ...register("firstAppointmentOccuredAt"),
+      {getCandidacyStatus === "success" && (
+        <form
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
           }}
-          state={errors.firstAppointmentOccuredAt ? "error" : "default"}
-          stateRelatedMessage={errors.firstAppointmentOccuredAt?.message}
-        />
+          className="flex flex-col mt-8"
+        >
+          <Input
+            className="max-w-xs"
+            label="Date du premier rendez-vous pédagogique"
+            hintText="Date au format 31/12/2022"
+            nativeInputProps={{
+              type: "date",
+              ...register("firstAppointmentOccuredAt"),
+            }}
+            state={errors.firstAppointmentOccuredAt ? "error" : "default"}
+            stateRelatedMessage={errors.firstAppointmentOccuredAt?.message}
+          />
 
-        {isValid ? (
-          <SmallNotice>
-            Le candidat pourra modifier sa candidature jusqu'à cette date,
-            au-delà de laquelle toute modification sera bloquée.
-          </SmallNotice>
-        ) : (
-          <SmallWarning>
-            Cette information est obligatoire pour continuer le parcours. Le
-            candidat pourra modifier sa candidature jusqu'à cette date, au-delà
-            de laquelle toute modification sera bloquée.
-          </SmallWarning>
-        )}
-        <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
-          <Button disabled={isSubmitting}>Enregistrer</Button>
-        </div>
-      </form>
+          {isValid ? (
+            <SmallNotice>
+              Le candidat pourra modifier sa candidature jusqu'à cette date,
+              au-delà de laquelle toute modification sera bloquée.
+            </SmallNotice>
+          ) : (
+            <SmallWarning>
+              Cette information est obligatoire pour continuer le parcours. Le
+              candidat pourra modifier sa candidature jusqu'à cette date,
+              au-delà de laquelle toute modification sera bloquée.
+            </SmallWarning>
+          )}
+          <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
+            <Button disabled={isSubmitting}>Enregistrer</Button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };
