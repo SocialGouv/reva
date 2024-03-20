@@ -20,8 +20,13 @@ import { searchCertificationsForAdmin } from "./features/searchCertificationsFor
 import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { updateCertification } from "./features/updateCertification";
 import { referentialResolversSecurityMap } from "./referential.security";
-import { UpdateCertificationInput } from "./referential.types";
+import {
+  UpdateCertificationInput,
+  UpdateCompetenceBlocsInput,
+} from "./referential.types";
 import { RNCPReferential } from "./rncp";
+import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
+import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -34,6 +39,13 @@ const unsafeReferentialResolvers = {
       getDomainesByCertificationId({ certificationId }),
     conventionsCollectives: ({ id: certificationId }: { id: string }) =>
       getConventionsCollectivesByCertificationId({ certificationId }),
+    competenceBlocs: ({
+      id: certificationId,
+      rncpId,
+    }: {
+      id: string;
+      rncpId: string;
+    }) => getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
   },
   Department: {
     region: ({ regionId }: { regionId: string }) =>
@@ -91,6 +103,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCertificationInput },
     ) => replaceCertification({ replaceCertificationInput: input }),
+    referential_updateCompetenceBlocsByCertificationId: (
+      _parent: unknown,
+      { input }: { input: UpdateCompetenceBlocsInput },
+    ) => updateCompetenceBlocsByCertificationId(input),
   },
 };
 

@@ -43,6 +43,7 @@ export type RNCPCertification = {
     LISTE_COMPETENCES: string;
     PARSED_COMPETENCES: string[];
     MODALITES_EVALUATION?: string;
+    FACULTATIF?: boolean;
   }[];
 };
 
@@ -185,9 +186,19 @@ function splitString(value: string): string[] {
     return list;
   }
 
-  // -
-  const regEx6 = new RegExp(/(?:(- | - ))/g);
+  // ;
+  const regEx6 = new RegExp(/(?:(; | ; ))/g);
   if (cleanedValue.match(regEx6)) {
+    let list: string[] = [];
+    list = cleanedValue
+      .split(regEx6)
+      .filter((v) => v != "" && v != "; " && v != " ; ");
+    return list;
+  }
+
+  // -
+  const regEx7 = new RegExp(/(?:(- | - ))/g);
+  if (cleanedValue.match(regEx7)) {
     let list: string[] = [];
     list = cleanedValue
       .replace(
@@ -196,7 +207,7 @@ function splitString(value: string): string[] {
         ),
         "",
       )
-      .split(regEx6)
+      .split(regEx7)
       .filter((v) => v != "" && v != "- " && v != " - ");
     return list;
   }
@@ -228,6 +239,7 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
               (bloc.LISTE_COMPETENCES as string) || "",
             ),
             MODALITES_EVALUATION: bloc.MODALITES_EVALUATION,
+            FACULTATIF: bloc.LIBELLE?.toLowerCase().includes("facultatif"),
           };
         },
       ),

@@ -53,8 +53,37 @@ model Certification {
   previousVersionCertificationId                         String?                                                  @unique @map("previous_version_certification_id") @db.Uuid
   previousVersion                                        Certification?                                           @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                            Certification?                                           @relation("replacement")
+  //
+  competenceBlocs                                        CertificationCompetenceBloc[]
 
   @@map("certification")
+}
+
+model CertificationCompetenceBloc {
+  id              String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt       DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  code            String                    @unique @db.VarChar(255)
+  label           String                    @db.VarChar
+  isOptional      Boolean?                  @map("is_optional") @db.Boolean
+  //
+  certificationId String                    @map("certification_id") @db.Uuid
+  certification   Certification             @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  //
+  FCCompetences   String                    @map("fc_competences") @db.VarChar
+  competences     CertificationCompetence[]
+
+  @@map("certification_competence_bloc")
+}
+
+model CertificationCompetence {
+  id        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  label     String                      @db.VarChar
+  //
+  blocId    String                      @map("bloc_id") @db.Uuid
+  bloc      CertificationCompetenceBloc @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+
+  @@map("certification_competence")
 }
 
 enum FinanceModule {

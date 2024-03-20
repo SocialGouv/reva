@@ -1,5 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { UpdateCompetenceBlocsInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
@@ -41,6 +42,17 @@ const getCertificationQuery = graphql(`
       domaines {
         id
         label
+      }
+      competenceBlocs {
+        id
+        code
+        label
+        isOptional
+        FCCompetences
+        competences {
+          id
+          label
+        }
       }
     }
   }
@@ -85,6 +97,24 @@ const replaceCertificationMutation = graphql(`
   }
 `);
 
+const updateCompetenceBlocsByCertificationIdMutation = graphql(`
+  mutation updateCompetenceBlocsByCertificationIdMutation(
+    $input: UpdateCompetenceBlocsInput!
+  ) {
+    referential_updateCompetenceBlocsByCertificationId(input: $input) {
+      id
+      code
+      label
+      isOptional
+      FCCompetences
+      competences {
+        id
+        label
+      }
+    }
+  }
+`);
+
 export const useCertificationQueries = ({
   certificationId,
 }: {
@@ -92,13 +122,14 @@ export const useCertificationQueries = ({
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCertificationResponse } = useQuery({
-    queryKey: ["getCertification", certificationId],
-    queryFn: () =>
-      graphqlClient.request(getCertificationQuery, {
-        certificationId,
-      }),
-  });
+  const { data: getCertificationResponse, refetch: refetchCertification } =
+    useQuery({
+      queryKey: ["getCertification", certificationId],
+      queryFn: () =>
+        graphqlClient.request(getCertificationQuery, {
+          certificationId,
+        }),
+    });
 
   const { data: getReferentialResponse } = useQuery({
     queryKey: ["getReferential"],
@@ -139,6 +170,16 @@ export const useCertificationQueries = ({
       }),
   });
 
+  const updateCompetenceBlocsByCertificationId = useMutation({
+    mutationFn: (input: Omit<UpdateCompetenceBlocsInput, "certificationId">) =>
+      graphqlClient.request(updateCompetenceBlocsByCertificationIdMutation, {
+        input: { ...input, certificationId },
+      }),
+    onSuccess: () => {
+      refetchCertification();
+    },
+  });
+
   return {
     certification: getCertificationResponse?.getCertification,
     degrees: getReferentialResponse?.getDegrees,
@@ -149,5 +190,6 @@ export const useCertificationQueries = ({
       getReferentialResponse?.getCertificationAuthorityTags,
     updateCertification,
     replaceCertification,
+    updateCompetenceBlocsByCertificationId,
   };
 };

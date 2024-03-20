@@ -90,6 +90,21 @@ type Certification {
   conventionsCollectives: [ConventionCollective!]!
   availableAt: Timestamp!
   expiresAt: Timestamp!
+  competenceBlocs: [CertificationCompetenceBloc!]!
+}
+
+type CertificationCompetenceBloc {
+  id: ID!
+  code: String!
+  label: String!
+  isOptional: Boolean
+  FCCompetences: String
+  competences: [CertificationCompetence!]!
+}
+
+type CertificationCompetence {
+  id: ID!
+  label: String!
 }
 
 type CertificationPage {
@@ -103,6 +118,7 @@ type BlocCompetence {
   LISTE_COMPETENCES: String!
   PARSED_COMPETENCES: [String!]!
   MODALITES_EVALUATION: String
+  FACULTATIF: Boolean
 }
 
 type FCCertification {
@@ -160,6 +176,17 @@ input UpdateCertificationInput {
   expiresAt: Timestamp!
 }
 
+input CompetenceBlocInput {
+  id: ID!
+  isOptional: Boolean
+  competences: [String!]!
+}
+
+input UpdateCompetenceBlocsInput {
+  certificationId: ID!
+  blocs: [CompetenceBlocInput!]!
+}
+
 type Mutation {
   referential_updateCertification(
     input: UpdateCertificationInput!
@@ -167,4 +194,7 @@ type Mutation {
   referential_replaceCertification(
     input: UpdateCertificationInput!
   ): Certification!
+  referential_updateCompetenceBlocsByCertificationId(
+    input: UpdateCompetenceBlocsInput!
+  ): [CertificationCompetenceBloc!]!
 }

@@ -69,3 +69,27 @@ export interface UpdateCertificationInput {
   availableAt: Date;
   expiresAt: Date;
 }
+
+export interface UpdateCertificationInput {
+  certificationId: string;
+  label: string;
+  level: number;
+  codeRncp: string;
+  typeDiplomeId: string;
+  certificationAuthorityTag: string;
+  domaineIds: string[];
+  conventionCollectiveIds: string[];
+  availableAt: Date;
+  expiresAt: Date;
+}
+
+export interface CompetenceBlocInput {
+  id: string;
+  isOptional?: boolean;
+  competences: string[];
+}
+
+export interface UpdateCompetenceBlocsInput {
+  certificationId: string;
+  blocs: CompetenceBlocInput[];
+}
