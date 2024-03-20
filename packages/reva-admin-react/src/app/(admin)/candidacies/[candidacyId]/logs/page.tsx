@@ -1,14 +1,12 @@
 "use client";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageTitle } from "@/components/page/page-title/PageTitle";
-import { ADMIN_ELM_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import {
   CandidacyLogUser,
   CandidacyLogUserProfile,
 } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
@@ -44,7 +42,6 @@ const CandidacyLogsPage = () => {
     candidacyId: string;
   }>();
 
-  const { isFeatureActive } = useFeatureflipping();
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidacyLogsResponse } = useQuery({
@@ -83,19 +80,7 @@ const CandidacyLogsPage = () => {
   return (
     candidacy && (
       <div className="flex flex-col">
-        <Button
-          className="mb-6"
-          priority="tertiary"
-          iconId="fr-icon-arrow-go-back-line"
-          linkProps={{
-            href: isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
-              ? `/candidacies/${candidacyId}/summary`
-              : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`,
-            target: "_self",
-          }}
-        >
-          Aperçu de la candidature
-        </Button>
+        <CandidacyBackButton candidacyId={candidacyId} />
         <PageTitle className="!mb-4">
           {candidate?.firstname} {candidate?.lastname} - Suivi de la candidature
         </PageTitle>
