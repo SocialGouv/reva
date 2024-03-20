@@ -83,4 +83,6 @@ export interface CandidateUpdateInput {
 export interface CandidateProfileUpdateInput {
   candidateId: string;
   highestDegreeId: string;
+  highestDegreeLabel: string;
+  niveauDeFormationLePlusEleveDegreeId: string;
 }

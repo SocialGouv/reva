@@ -27,6 +27,7 @@ import {
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
+import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 
 const unsafeResolvers = {
   Candidate: {
@@ -60,6 +61,12 @@ const unsafeResolvers = {
 
       return birthDepartment;
     },
+    niveauDeFormationLePlusEleve: async ({
+      niveauDeFormationLePlusEleveDegreeId,
+    }: {
+      niveauDeFormationLePlusEleveDegreeId: string;
+    }) =>
+      getNiveauDeFormationLePlusEleve({ niveauDeFormationLePlusEleveDegreeId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: async (

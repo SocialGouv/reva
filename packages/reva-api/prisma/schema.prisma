@@ -181,36 +181,39 @@ enum Gender {
 }
 
 model Candidate {
-  id                       String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
-  gender                   Gender?
-  email                    String                  @unique @db.VarChar(255)
-  firstname                String                  @db.VarChar(255)
-  firstname2               String?                 @db.VarChar(255)
-  firstname3               String?                 @db.VarChar(255)
-  lastname                 String                  @db.VarChar(255)
-  givenName                String?                 @db.VarChar(255)
-  phone                    String                  @db.VarChar(255)
-  street                   String?                 @db.VarChar(255)
-  city                     String?                 @db.VarChar(255)
-  zip                      String?                 @db.VarChar(5)
-  departmentId             String                  @map("department_id") @db.Uuid
-  department               Department              @relation(fields: [departmentId], references: [id])
-  birthDepartmentId        String?                 @map("birth_department_id") @db.Uuid
-  birthDepartment          Department?             @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
-  birthdate                DateTime?               @map("birthdate") @db.Timestamptz(6)
-  birthCity                String?                 @map("birth_city") @db.VarChar(255)
-  countryId                String?                 @map("country_id") @db.Uuid
-  country                  Country?                @relation(fields: [countryId], references: [id])
-  nationality              String?                 @db.VarChar(255)
-  socialSecurityNumber     String?                 @map("social_security_number") @db.VarChar(255)
-  highestDegree            Degree?                 @relation(fields: [highestDegreeId], references: [id])
-  highestDegreeId          String?                 @map("highest_degree_id") @db.Uuid
-  vulnerabilityIndicator   VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
-  vulnerabilityIndicatorId String?                 @map("vulnerability_indicator_id") @db.Uuid
-  candidacies              Candidacy[]
-  createdAt                DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                DateTime?               @map("updated_at") @db.Timestamptz(6)
+  id                                   String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  keycloakId                           String                  @unique @map("keycloak_id") @db.Uuid
+  gender                               Gender?
+  email                                String                  @unique @db.VarChar(255)
+  firstname                            String                  @db.VarChar(255)
+  firstname2                           String?                 @db.VarChar(255)
+  firstname3                           String?                 @db.VarChar(255)
+  lastname                             String                  @db.VarChar(255)
+  givenName                            String?                 @db.VarChar(255)
+  phone                                String                  @db.VarChar(255)
+  street                               String?                 @db.VarChar(255)
+  city                                 String?                 @db.VarChar(255)
+  zip                                  String?                 @db.VarChar(5)
+  departmentId                         String                  @map("department_id") @db.Uuid
+  department                           Department              @relation(fields: [departmentId], references: [id])
+  birthDepartmentId                    String?                 @map("birth_department_id") @db.Uuid
+  birthDepartment                      Department?             @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
+  birthdate                            DateTime?               @map("birthdate") @db.Timestamptz(6)
+  birthCity                            String?                 @map("birth_city") @db.VarChar(255)
+  countryId                            String?                 @map("country_id") @db.Uuid
+  country                              Country?                @relation(fields: [countryId], references: [id])
+  nationality                          String?                 @db.VarChar(255)
+  socialSecurityNumber                 String?                 @map("social_security_number") @db.VarChar(255)
+  highestDegree                        Degree?                 @relation("highest_degree", fields: [highestDegreeId], references: [id])
+  highestDegreeLabel                   String?                 @db.VarChar(255)
+  niveauDeFormationLePlusEleveDegreeId String?                 @map("niveau_de_formation_le_plus_eleve_degree_id") @db.Uuid
+  niveauDeFormationLePlusEleve         Degree?                 @relation("niveau_de_formation_le_plus_eleve", fields: [niveauDeFormationLePlusEleveDegreeId], references: [id])
+  highestDegreeId                      String?                 @map("highest_degree_id") @db.Uuid
+  vulnerabilityIndicator               VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
+  vulnerabilityIndicatorId             String?                 @map("vulnerability_indicator_id") @db.Uuid
+  candidacies                          Candidacy[]
+  createdAt                            DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                            DateTime?               @map("updated_at") @db.Timestamptz(6)
 
   @@map("candidate")
 }
@@ -502,15 +505,16 @@ model BasicSkillOnCandidacies {
 }
 
 model Degree {
-  id                String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  code              String             @unique @db.VarChar(255)
-  label             String             @unique @db.VarChar(255)
-  longLabel         String             @unique @map("long_label") @db.VarChar(255)
-  level             Int
-  candidates        Candidate[]
-  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime?          @map("updated_at") @db.Timestamptz(6)
-  managingOrganisms OrganismOnDegree[]
+  id                                         String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code                                       String             @unique @db.VarChar(255)
+  label                                      String             @unique @db.VarChar(255)
+  longLabel                                  String             @unique @map("long_label") @db.VarChar(255)
+  level                                      Int
+  candidatesWithHighestDegree                Candidate[]        @relation("highest_degree")
+  createdAt                                  DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                  DateTime?          @map("updated_at") @db.Timestamptz(6)
+  managingOrganisms                          OrganismOnDegree[]
+  candidatesWithNiveauDeFormationLePlusEleve Candidate[]        @relation("niveau_de_formation_le_plus_eleve")
 
   @@map("degree")
 }

@@ -6,6 +6,8 @@ export const updateCandidateProfile = async ({
   params: {
     candidateId,
     highestDegreeId,
+    highestDegreeLabel,
+    niveauDeFormationLePlusEleveDegreeId,
     userKeycloakId,
     userEmail,
     userRoles,
@@ -19,7 +21,11 @@ export const updateCandidateProfile = async ({
 }) => {
   const result = await prismaClient.candidate.update({
     where: { id: candidateId },
-    data: { highestDegreeId },
+    data: {
+      highestDegreeId,
+      highestDegreeLabel,
+      niveauDeFormationLePlusEleveDegreeId,
+    },
   });
 
   const candidacies = await prismaClient.candidacy.findMany({

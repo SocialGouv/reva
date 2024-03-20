@@ -42,6 +42,8 @@ type Candidate {
   socialSecurityNumber: String
   candidacy: Candidacy!
   highestDegree: Degree
+  highestDegreeLabel: String
+  niveauDeFormationLePlusEleve: Degree
   vulnerabilityIndicator: VulnerabilityIndicator
   department: Department!
   zip: String
@@ -99,6 +101,8 @@ input CandidateUpdateInput {
 input CandidateProfileUpdateInput {
   candidateId: UUID!
   highestDegreeId: UUID!
+  highestDegreeLabel: String
+  niveauDeFormationLePlusEleveDegreeId: String
 }
 
 type Mutation {
