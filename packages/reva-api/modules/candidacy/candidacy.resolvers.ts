@@ -480,15 +480,15 @@ const unsafeResolvers = {
         });
 
         await Promise.all(
-          candidacies.map(async (c) => {
+          candidacies.map(async (c) =>
             logCandidacyAuditEvent({
               candidacyId: c.id,
               eventType: "CONTACT_INFO_UPDATED",
               userKeycloakId: context.auth.userInfo?.sub,
               userEmail: context.auth.userInfo?.email,
               userRoles: context.auth.userInfo?.realm_access?.roles || [],
-            });
-          }),
+            }),
+          ),
         );
 
         return result;
