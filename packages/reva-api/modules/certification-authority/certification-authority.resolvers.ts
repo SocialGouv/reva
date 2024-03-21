@@ -18,6 +18,7 @@ import { updateCertificationAuthorityLocalAccount } from "./features/updateCerti
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./certification-authority.security";
+import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 
 export const unsafeResolvers = {
   CertificationAuthority: {
@@ -164,6 +165,16 @@ export const unsafeResolvers = {
         searchFilter?: string;
       },
     ) => getCertificationAuthorities(params),
+
+    certification_authority_searchCertificationAuthoritiesAndLocalAccounts:
+      async (
+        _parent: unknown,
+        params: {
+          limit?: number;
+          offset?: number;
+          searchFilter?: string;
+        },
+      ) => searchCertificationAuthoritiesAndLocalAccounts(params),
   },
 };
 

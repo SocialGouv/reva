@@ -6,6 +6,8 @@ export const resolversSecurityMap = {
 
   "Query.certification_authority_getCertificationAuthority": isAnyone, //security handled in resolver
   "Query.certification_authority_getCertificationAuthorities": isAdmin,
+  "Query.certification_authority_searchCertificationAuthoritiesAndLocalAccounts":
+    isAdmin,
 
   "Mutation.certification_authority_updateCertificationAuthority": isAnyone, //security handled in resolver
   "Mutation.certification_authority_updateCertificationAuthorityDepartmentsAndCertifications":

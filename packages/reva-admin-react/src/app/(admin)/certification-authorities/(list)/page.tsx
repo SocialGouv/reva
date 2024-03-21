@@ -5,13 +5,14 @@ import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const getCertificationAuthorities = graphql(`
   query getCertificationAuthorities($offset: Int, $searchFilter: String) {
-    certification_authority_getCertificationAuthorities(
+    certification_authority_searchCertificationAuthoritiesAndLocalAccounts(
       limit: 10
       offset: $offset
       searchFilter: $searchFilter
@@ -19,7 +20,8 @@ const getCertificationAuthorities = graphql(`
       rows {
         id
         label
-        contactEmail
+        email
+        type
       }
       info {
         totalRows
@@ -59,7 +61,7 @@ const CertificationAuthoritiesListPage = () => {
   });
 
   const certificationAuthorityPage =
-    getCertificationAuthoritiesResponse?.certification_authority_getCertificationAuthorities;
+    getCertificationAuthoritiesResponse?.certification_authority_searchCertificationAuthoritiesAndLocalAccounts;
   return (
     certificationAuthorityPage && (
       <div className="flex flex-col flex-1">
@@ -74,15 +76,24 @@ const CertificationAuthoritiesListPage = () => {
           >
             {(c) => (
               <GrayCard key={c.id}>
-                <strong>Nom</strong>
+                <div className="flex justify-between">
+                  <strong>Nom</strong>
+                  {c.type === "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT" ? (
+                    <Tag small className="bg-yellow-200">
+                      Compte local
+                    </Tag>
+                  ) : null}
+                </div>
                 <p>{c.label}</p>
-                <p>{c.contactEmail}</p>
-                <Button
-                  className="ml-auto"
-                  linkProps={{ href: `/certification-authorities/${c.id}` }}
-                >
-                  Voir plus
-                </Button>
+                <p>{c.email}</p>
+                {c.type === "CERTIFICATION_AUTHORITY" && (
+                  <Button
+                    className="ml-auto"
+                    linkProps={{ href: `/certification-authorities/${c.id}` }}
+                  >
+                    Voir plus
+                  </Button>
+                )}
               </GrayCard>
             )}
           </SearchList>

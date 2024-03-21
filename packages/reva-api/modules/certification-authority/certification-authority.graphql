@@ -24,6 +24,23 @@ type Certification {
   certificationAuthorities: [CertificationAuthority!]!
 }
 
+enum CertificationAuthorityOrLocalAccountType {
+  CERTIFICATION_AUTHORITY
+  CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT
+}
+
+type CertificationAuthorityOrLocalAccount {
+  id: ID!
+  label: String!
+  email: String!
+  type: CertificationAuthorityOrLocalAccountType!
+}
+
+type CertificationAuhtorityOrLocalAccountPaginated {
+  rows: [CertificationAuthorityOrLocalAccount!]!
+  info: PaginationInfo!
+}
+
 type Query {
   certification_authority_getCertificationAuthority(
     id: ID!
@@ -33,6 +50,11 @@ type Query {
     limit: Int
     searchFilter: String
   ): CertificationAuhtorityPaginated!
+  certification_authority_searchCertificationAuthoritiesAndLocalAccounts(
+    offset: Int
+    limit: Int
+    searchFilter: String
+  ): CertificationAuhtorityOrLocalAccountPaginated!
 }
 
 input UpdateCertificationAuthorityInput {
