@@ -6,6 +6,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const schema = z
   .object({
@@ -55,10 +56,7 @@ export const FeasibilityForm = ({
       <fieldset>
         <legend>
           <h1 className="text-4xl font-bold mb-1">Envoi de la décision</h1>
-          <p className="text-gray-600 mb-2">
-            Sauf mention contraire “(optionnel)” dans le label, tous les champs
-            sont obligatoires.
-          </p>
+          <FormOptionalFieldsDisclaimer />
         </legend>
         <br />
         <RadioButtons

@@ -17,6 +17,7 @@ import {
   candidateInformationSchema,
 } from "./_components/candidateInformationSchema";
 import useUpdateCandidateInformation from "./_components/useUpdateCandidateInformation.hook";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const InformationsCivilesTab = () => {
   const { candidacyId } = useParams<{
@@ -379,10 +380,7 @@ const CandidateInformationPage = () => {
         <h1 className="text-[40px] leading-[48px] font-bold mb-2">
           Renseigner les informations
         </h1>
-        <p className="text-light-text-mention-grey text-xs leading-5">
-          Sauf mention contraire “(optionnel)” dans le label, tous les champs
-          sont obligatoires.
-        </p>
+        <FormOptionalFieldsDisclaimer />
       </div>
 
       <FormProvider {...methods}>

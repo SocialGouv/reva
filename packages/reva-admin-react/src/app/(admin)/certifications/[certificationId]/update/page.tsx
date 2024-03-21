@@ -9,6 +9,7 @@ import UpdateOrReplaceCertificationForm, {
 } from "@/app/(admin)/certifications/[certificationId]/_components/UpdateOrReplaceCertificationForm";
 import { Certification } from "@/graphql/generated/graphql";
 import { parse } from "date-fns";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const UpdateCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -71,10 +72,7 @@ const UpdateCertificationPage = () => {
               Retour
             </Link>
             <PageTitle> Modifier une certification</PageTitle>
-            <p>
-              Sauf mention contraire “(optionnel)” dans le label, tous les
-              champs sont obligatoires.
-            </p>
+            <FormOptionalFieldsDisclaimer />
             <br />
             <UpdateOrReplaceCertificationForm
               certification={certification as Certification}
