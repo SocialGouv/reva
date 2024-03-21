@@ -1,6 +1,11 @@
 "use client";
 import { Candidate } from "@/graphql/generated/graphql";
+import {
+  formatStringToPhoneNumberStructure,
+  formatStringToSocialSecurityNumberStructure,
+} from "@/utils";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
@@ -47,6 +52,13 @@ const CandidacySummaryPage = () => {
     "niveauDeFormationLePlusEleve",
   ]);
 
+  const candidateHasAddressCompleted = checkCandidateFields(candidate, [
+    "street",
+    "zip",
+    "city",
+    "department",
+  ]);
+
   return (
     <>
       <div>
@@ -81,14 +93,34 @@ const CandidacySummaryPage = () => {
               <dd>
                 {candidate.firstname} {candidate.lastname}
               </dd>
-              <dt className="sr-only">Département</dt>
+              <dt className="sr-only">
+                Date de naissance, département et nationalité
+              </dt>
+              <dd>
+                {candidate.birthdate &&
+                  format(candidate.birthdate, "dd/MM/yyyy")}{" "}
+                {candidate.department.label} ({candidate.department.code}){" "}
+                {candidate.nationality}
+              </dd>
+              <dt className="sr-only">Numéro de sécurité sociale</dt>
               <dd className="mb-4">
-                {candidate.department.label} ({candidate.department.code})
+                {candidate.socialSecurityNumber &&
+                  formatStringToSocialSecurityNumberStructure(
+                    candidate.socialSecurityNumber,
+                  )}
               </dd>
               <dt className="sr-only">Téléphone</dt>
-              <dd>{candidate.phone}</dd>
+              <dd>
+                {candidate.phone &&
+                  formatStringToPhoneNumberStructure(candidate.phone)}
+              </dd>
               <dt className="sr-only">Adresse email</dt>
               <dd>{candidate.email}</dd>
+              <dt className="sr-only">Adresse</dt>
+              <dd>
+                {candidateHasAddressCompleted &&
+                  `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
+              </dd>
             </dl>
           </CandidacySectionCard>
           <CandidacySectionCard
