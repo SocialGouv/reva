@@ -16,8 +16,10 @@ import { updateCertificationAuthorityById } from "./features/updateCertification
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { resolversSecurityMap } from "./certification-authority.security";
 
-export const resolvers = {
+export const unsafeResolvers = {
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>
       getDepartmentsByCertificationAuthorityId({
@@ -124,16 +126,8 @@ export const resolvers = {
             certificationIds: string[];
           };
         },
-        context: GraphqlContext,
-      ) => {
-        if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return updateCertificationAuthorityDepartmentsAndCertifications(
-          params.input,
-        );
-      },
+      ) =>
+        updateCertificationAuthorityDepartmentsAndCertifications(params.input),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
@@ -169,13 +163,11 @@ export const resolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext,
-    ) => {
-      if (!context.auth.hasRole("admin")) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return getCertificationAuthorities(params);
-    },
+    ) => getCertificationAuthorities(params),
   },
 };
+
+export const resolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap,
+);
