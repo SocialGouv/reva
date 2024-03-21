@@ -1,9 +1,9 @@
 "use client";
+import { Candidate } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { Candidate } from "@/graphql/generated/graphql";
 
 const checkCandidateFields = (object: any, fields: (keyof Candidate)[]) => {
   return fields.every((field) => object[field]);
@@ -29,6 +29,16 @@ const CandidacySummaryPage = () => {
     "phone",
     "email",
     "department",
+    "birthdate",
+    "country",
+    "birthCity",
+    "nationality",
+    "socialSecurityNumber",
+    "street",
+    "zip",
+    "city",
+    "phone",
+    "email",
   ]);
 
   const isCandidateProfileCompleted = checkCandidateFields(candidate, [
