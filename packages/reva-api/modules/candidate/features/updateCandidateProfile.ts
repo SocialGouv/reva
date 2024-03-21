@@ -33,15 +33,15 @@ export const updateCandidateProfile = async ({
   });
 
   await Promise.all(
-    candidacies.map(async (c) => {
+    candidacies.map(async (c) =>
       logCandidacyAuditEvent({
         candidacyId: c.id,
         eventType: "CANDIDATE_PROFILE_UPDATED",
         userKeycloakId,
         userEmail,
         userRoles,
-      });
-    }),
+      }),
+    ),
   );
 
   return result;

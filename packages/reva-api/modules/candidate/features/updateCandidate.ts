@@ -1,5 +1,6 @@
 import { Candidate } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
@@ -8,9 +9,13 @@ import { generateJwt } from "../../candidate/auth.helper";
 import { CandidateUpdateInput } from "../../candidate/candidate.types";
 
 export const updateCandidate = async ({
-  candidate,
+  params: { candidate, userRoles, userKeycloakId, userEmail },
 }: {
-  candidate: CandidateUpdateInput;
+  params: { candidate: CandidateUpdateInput } & {
+    userKeycloakId?: string;
+    userEmail?: string;
+    userRoles: KeyCloakUserRole[];
+  };
 }): Promise<Candidate> => {
   const candidateInput: Partial<CandidateUpdateInput> = { ...candidate };
   const { id, email, birthDepartmentId, countryId } = candidateInput;
@@ -71,6 +76,22 @@ export const updateCandidate = async ({
 
   //We don't want to update the email in the database, it will be done after the email confirmation
   delete candidateInput.email;
+
+  const candidacies = await prismaClient.candidacy.findMany({
+    where: { candidateId: id },
+  });
+
+  await Promise.all(
+    candidacies.map(async (c) =>
+      logCandidacyAuditEvent({
+        candidacyId: c.id,
+        eventType: "CANDIDATE_UPDATED",
+        userKeycloakId,
+        userEmail,
+        userRoles,
+      }),
+    ),
+  );
 
   return prismaClient.candidate.update({
     where: { id },

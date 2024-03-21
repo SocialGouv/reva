@@ -9,6 +9,8 @@ export const getCandidacyLogMessage = ({
   const { eventType, details } = candidacyLog;
 
   switch (eventType) {
+    case "CANDIDATE_UPDATED":
+      return "Informations du compte candidat modifiées.";
     case "CANDIDATE_REGISTRATION_CONFIRMED":
       return "Création du compte candidat.";
     case "CANDIDATE_PROFILE_UPDATED":

@@ -19,15 +19,15 @@ import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "./features/getCandidateByEmail";
+import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
+import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import {
   sendLoginEmail,
   sendRegistrationEmail,
   sendUnknownUserEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { updateCandidateProfile } from "./features/updateCandidateProfile";
-import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 
 const unsafeResolvers = {
   Candidate: {
@@ -177,18 +177,25 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidate_updateCandidate: async (
-      _: any,
+    candidate_updateCandidate: (
+      _: unknown,
       {
         candidate,
       }: {
         candidate: CandidateUpdateInput;
       },
-    ) => {
-      const candidateUpdated = await updateCandidate({ candidate });
-      return candidateUpdated;
-    },
-    candidate_updateCandidateProfile: async (
+      context: GraphqlContext,
+    ) =>
+      updateCandidate({
+        params: {
+          candidate,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
+
+    candidate_updateCandidateProfile: (
       _: unknown,
       {
         candidateProfile,

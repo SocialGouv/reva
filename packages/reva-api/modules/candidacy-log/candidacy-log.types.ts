@@ -7,6 +7,7 @@ export type CandidacyLogUserProfile =
 export type CandidacyLogEventTypeAndDetails =
   | {
       eventType:
+        | "CANDIDATE_UPDATED"
         | "CANDIDATE_REGISTRATION_CONFIRMED"
         | "CANDIDATE_PROFILE_UPDATED"
         | "DOSSIER_DE_VALIDATION_SENT"
