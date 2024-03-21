@@ -1,7 +1,6 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphql } from "@/graphql/generated";
 import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
@@ -102,7 +101,7 @@ const RejectedSubscriptionRequestsPage = () => {
   return (
     feasibilityPage && (
       <div className="flex flex-col">
-        {!isAdmin && <PageTitle>Espace certificateur</PageTitle>}
+        {!isAdmin && <h1>Espace certificateur</h1>}
         <CandidacySearchList
           title={categoryLabel}
           searchFilter={searchFilter}

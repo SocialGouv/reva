@@ -1,7 +1,6 @@
 "use client";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphql } from "@/graphql/generated";
 import {
   CandidacyLogUser,
@@ -81,9 +80,9 @@ const CandidacyLogsPage = () => {
     candidacy && (
       <div className="flex flex-col">
         <CandidacyBackButton candidacyId={candidacyId} />
-        <PageTitle className="!mb-4">
+        <h1>
           {candidate?.firstname} {candidate?.lastname} - Suivi de la candidature
-        </PageTitle>
+        </h1>
         <p className="text-xl text-gray-700 font-bold mb-11">
           {candidacy.certification?.label}
         </p>

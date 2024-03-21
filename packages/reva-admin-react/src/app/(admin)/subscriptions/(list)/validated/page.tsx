@@ -1,7 +1,6 @@
 "use client";
 import { SubscriptionRequestCard } from "@/app/(admin)/subscriptions/components/subscription-request-card/SubscriptionRequestCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -61,7 +60,7 @@ const ValidatedSubscriptionRequestsPage = () => {
   return (
     subscriptionRequestPage && (
       <div className="flex flex-col">
-        <PageTitle>Espace pro administrateur</PageTitle>
+        <h1>Espace pro administrateur</h1>
         <p>
           En tant qu'administrateur des conseillers, vous avez la possibilité
           d'ajouter ou d'accepter de nouveaux architecte de parcours ou

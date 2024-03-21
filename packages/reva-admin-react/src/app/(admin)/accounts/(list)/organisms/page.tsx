@@ -1,7 +1,6 @@
 "use client";
 import { Card } from "@/app/(admin)/accounts/components/card/Card";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -60,7 +59,7 @@ const OrganismsPage = () => {
   return (
     data && (
       <div className="flex flex-col">
-        <PageTitle>Espace pro administrateur</PageTitle>
+        <h1>Espace pro administrateur</h1>
         <p>
           En tant qu'administrateur, vous avez la possibilité de modifier les
           informations des comptes utilisateurs et des structures.

@@ -1,7 +1,6 @@
 "use client";
 import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 import { useParams, useRouter } from "next/navigation";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import UpdateOrReplaceCertificationForm, {
   UpdateOrReplaceCertificationFormData,
@@ -69,7 +68,7 @@ const ReplaceCertificationPage = () => {
             <BackButton href={`/certifications/${certificationId}`}>
               Retour
             </BackButton>
-            <PageTitle> Remplacer une certification</PageTitle>
+            <h1> Remplacer une certification</h1>
             <FormOptionalFieldsDisclaimer />
             <UpdateOrReplaceCertificationForm
               certification={

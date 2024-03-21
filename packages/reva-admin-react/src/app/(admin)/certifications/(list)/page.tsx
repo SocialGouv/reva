@@ -1,7 +1,6 @@
 "use client";
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { CertificationStatus } from "@/graphql/generated/graphql";
@@ -76,7 +75,7 @@ const CertificationListPage = () => {
   return (
     certificationPage && (
       <div className="flex flex-col w-full">
-        <PageTitle>Espace pro administrateur</PageTitle>
+        <h1>Espace pro administrateur</h1>
         {getCertificationsQueryStatus === "success" && (
           <SearchList
             title={`Certifications ${

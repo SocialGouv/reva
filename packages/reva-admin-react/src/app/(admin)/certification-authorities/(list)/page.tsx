@@ -1,7 +1,6 @@
 "use client";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -65,7 +64,7 @@ const CertificationAuthoritiesListPage = () => {
   return (
     certificationAuthorityPage && (
       <div className="flex flex-col flex-1">
-        <PageTitle>Espace pro administrateur</PageTitle>
+        <h1>Espace pro administrateur</h1>
         {getCertificationAuthoritiesStatus === "success" && (
           <SearchList
             title="Certificateurs"

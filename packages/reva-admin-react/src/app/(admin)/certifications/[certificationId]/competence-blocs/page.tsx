@@ -1,7 +1,6 @@
 "use client";
 import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 import { useParams, useRouter } from "next/navigation";
-import { PageTitle } from "@/components/page/page-title/PageTitle";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import UpdateCompetenceBlocsForm from "@/app/(admin)/certifications/[certificationId]/_components/UpdateCompetenceBlocsForm";
 import { CompetenceBlocInput } from "@/graphql/generated/graphql";
@@ -36,7 +35,7 @@ const UpdateCertificationPage = () => {
           <BackButton href={`/certifications/${certificationId}`}>
             Retour
           </BackButton>
-          <PageTitle>Modifier les blocs de compétence</PageTitle>
+          <h1>Modifier les blocs de compétence</h1>
           <UpdateCompetenceBlocsForm
             blocs={certification.competenceBlocs}
             onSubmit={handleFormSubmit}
