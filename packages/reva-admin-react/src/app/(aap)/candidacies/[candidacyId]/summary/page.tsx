@@ -108,7 +108,21 @@ const CandidacySummaryPage = () => {
             Badge={
               isCandidateProfileCompleted ? BadgeCompleted : BadgeToComplete
             }
-          ></CandidacySectionCard>
+          >
+            {isCandidateProfileCompleted && (
+              <div className="flex flex-col">
+                <p className="font-bold">
+                  Niveau de la formation la plus élevée
+                </p>
+                <p>{candidate.niveauDeFormationLePlusEleve?.label}</p>
+                <br />
+                <p className="font-bold">
+                  Intitulé de la certification la plus élevée obtenue
+                </p>
+                <p>{candidate.highestDegreeLabel}</p>
+              </div>
+            )}
+          </CandidacySectionCard>
         </ul>
       )}
     </div>
