@@ -1,5 +1,16 @@
-@tailwind components;
-@tailwind utilities;
+@layer tw_base, dsfr_icons, dsfr, tw_components_utils;
+
+@import "@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css" layer(dsfr_icons);
+@import "@codegouvfr/react-dsfr/dsfr/dsfr.min.css" layer(dsfr);
+
+@layer tw_base {
+    @tailwind base;
+}
+
+@layer tw_components_utils {
+    @tailwind components;
+    @tailwind utilities;
+}
 
 @layer components {
     .fix-accordion {
