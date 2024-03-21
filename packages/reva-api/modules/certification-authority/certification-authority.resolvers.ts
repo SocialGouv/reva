@@ -19,6 +19,7 @@ import { getCertificationAuthoritiesByCertificationId } from "./features/getCert
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./certification-authority.security";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
+import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
 
 export const unsafeResolvers = {
   CertificationAuthority: {
@@ -157,7 +158,7 @@ export const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    certification_authority_getCertificationAuthorities: async (
+    certification_authority_getCertificationAuthorities: (
       _parent: unknown,
       params: {
         limit?: number;
@@ -166,15 +167,24 @@ export const unsafeResolvers = {
       },
     ) => getCertificationAuthorities(params),
 
-    certification_authority_searchCertificationAuthoritiesAndLocalAccounts:
-      async (
-        _parent: unknown,
-        params: {
-          limit?: number;
-          offset?: number;
-          searchFilter?: string;
-        },
-      ) => searchCertificationAuthoritiesAndLocalAccounts(params),
+    certification_authority_searchCertificationAuthoritiesAndLocalAccounts: (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+        searchFilter?: string;
+      },
+    ) => searchCertificationAuthoritiesAndLocalAccounts(params),
+
+    certification_authority_getCertificationAuthorityLocalAccount: (
+      _parent: unknown,
+      params: {
+        id: string;
+      },
+    ) =>
+      getCertificationAuthorityLocalAccountById({
+        certificationAuthorityLocalAccountId: params.id,
+      }),
   },
 };
 

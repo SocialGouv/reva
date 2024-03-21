@@ -55,6 +55,10 @@ type Query {
     limit: Int
     searchFilter: String
   ): CertificationAuhtorityOrLocalAccountPaginated!
+
+  certification_authority_getCertificationAuthorityLocalAccount(
+    id: ID!
+  ): CertificationAuthorityLocalAccount
 }
 
 input UpdateCertificationAuthorityInput {
