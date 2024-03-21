@@ -13,6 +13,7 @@ type CertificationAuthorityLocalAccount {
   account: Account!
   departments: [Department!]!
   certifications: [Certification!]!
+  certificationAuthority: CertificationAuthority!
 }
 
 type CertificationAuhtorityPaginated {

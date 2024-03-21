@@ -20,6 +20,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./certification-authority.security";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
+import { CertificationAuthorityLocalAccount } from "@prisma/client";
 
 export const unsafeResolvers = {
   CertificationAuthority: {
@@ -31,6 +32,21 @@ export const unsafeResolvers = {
       getCertificationsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
+  },
+  CertificationAuthorityLocalAccount: {
+    certificationAuthority: (
+      parent: CertificationAuthorityLocalAccount,
+      _: unknown,
+      context: GraphqlContext,
+    ) =>
+      getCertificationAuthorityById(
+        {
+          hasRole: context.auth.hasRole,
+        },
+        {
+          id: parent.certificationAuthorityId,
+        },
+      ),
   },
   Certification: {
     certificationAuthorities: ({
