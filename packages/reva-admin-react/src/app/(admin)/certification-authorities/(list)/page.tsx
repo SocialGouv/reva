@@ -76,15 +76,14 @@ const CertificationAuthoritiesListPage = () => {
           >
             {(c) => (
               <GrayCard key={c.id}>
-                <div className="flex justify-between">
-                  <strong>Nom</strong>
+                <span className="flex gap-2">
+                  <p>{c.label}</p>
                   {c.type === "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT" ? (
-                    <Tag small className="bg-yellow-200">
+                    <Tag small className="bg-yellow-200 font-bold mb-4">
                       Compte local
                     </Tag>
                   ) : null}
-                </div>
-                <p>{c.label}</p>
+                </span>
                 <p>{c.email}</p>
                 {c.type === "CERTIFICATION_AUTHORITY" && (
                   <Button
