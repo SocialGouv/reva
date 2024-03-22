@@ -95,7 +95,7 @@ type Certification {
 
 type CertificationCompetenceBloc {
   id: ID!
-  code: String!
+  code: String
   label: String!
   isOptional: Boolean
   FCCompetences: String
@@ -177,8 +177,11 @@ input UpdateCertificationInput {
 }
 
 input CompetenceBlocInput {
-  id: ID!
+  id: ID
+  code: String
+  label: String!
   isOptional: Boolean
+  FCCompetences: String
   competences: [String!]!
 }
 

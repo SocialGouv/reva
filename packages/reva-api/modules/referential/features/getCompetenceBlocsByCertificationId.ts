@@ -18,10 +18,10 @@ export const getCompetenceBlocsByCertificationId = async (params: Params) => {
       },
       include: {
         competences: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: "asc" },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
     });
 
   // Set default blocs on the fly
@@ -70,10 +70,10 @@ const createDefaultBlocs = async (
       },
       include: {
         competences: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: "asc" },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
     });
 
   return competenceBlocs;

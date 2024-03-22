@@ -48,19 +48,20 @@ const CertificationPage = () => {
               {format(certification.expiresAt, "dd/MM/yyyy", { locale: fr })}
             </Info>
           </div>
-          {certification.competenceBlocs.length > 0 ? (
-            <>
-              <br />
-              <h2>Blocs de compétences</h2>
-              <div className="grid grid-cols-2">
-                <ul className="list-disc list-inside">
-                  {certification.competenceBlocs.map((bloc) => (
-                    <li key={bloc.id}>{bloc.label}</li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          ) : null}
+
+          <br />
+          <h2>Blocs de compétences</h2>
+          {certification.competenceBlocs.length == 0 ? (
+            <div>Aucun bloc de compétence</div>
+          ) : (
+            <div className="grid grid-cols-2">
+              <ul className="list-disc list-inside">
+                {certification.competenceBlocs.map((bloc) => (
+                  <li key={bloc.id}>{bloc.label}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <br />
           <h2>Gestion de la certification</h2>
@@ -112,15 +113,14 @@ const CertificationPage = () => {
         </>
       )}
       <div className="flex flex-col md:flex-row gap-4 mt-8 ml-auto">
-        {certification && certification.competenceBlocs.length > 0 && (
-          <Button
-            linkProps={{
-              href: `/certifications/${certificationId}/competence-blocs`,
-            }}
-          >
-            Blocs de compétence
-          </Button>
-        )}
+        <Button
+          linkProps={{
+            href: `/certifications/${certificationId}/competence-blocs`,
+          }}
+        >
+          Blocs de compétence
+        </Button>
+
         <Button
           linkProps={{ href: `/certifications/${certificationId}/update` }}
         >

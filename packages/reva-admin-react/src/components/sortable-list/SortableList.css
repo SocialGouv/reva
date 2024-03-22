@@ -1,0 +1,4 @@
+.SortableList {
+  display: flex;
+  flex-direction: column;
+}

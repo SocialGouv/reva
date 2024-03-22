@@ -1,6 +1,9 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { UpdateCompetenceBlocsInput } from "@/graphql/generated/graphql";
+import {
+  FcCertification,
+  UpdateCompetenceBlocsInput,
+} from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
@@ -115,6 +118,23 @@ const updateCompetenceBlocsByCertificationIdMutation = graphql(`
   }
 `);
 
+const getFCCertificationQuery = graphql(`
+  query getFCCertification($rncp: ID!) {
+    getFCCertification(rncp: $rncp) {
+      ID_FICHE
+      NUMERO_FICHE
+      BLOCS_COMPETENCES {
+        CODE
+        LIBELLE
+        LISTE_COMPETENCES
+        PARSED_COMPETENCES
+        MODALITES_EVALUATION
+        FACULTATIF
+      }
+    }
+  }
+`);
+
 export const useCertificationQueries = ({
   certificationId,
 }: {
@@ -192,4 +212,20 @@ export const useCertificationQueries = ({
     replaceCertification,
     updateCompetenceBlocsByCertificationId,
   };
+};
+
+export const useFCCertificationQuery = () => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const getFCCertification = async (
+    rncp: string,
+  ): Promise<FcCertification | undefined | null> => {
+    const response = await graphqlClient.request(getFCCertificationQuery, {
+      rncp: rncp,
+    });
+
+    return response.getFCCertification;
+  };
+
+  return { getFCCertification };
 };

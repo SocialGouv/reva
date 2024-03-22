@@ -84,7 +84,8 @@ export interface UpdateCertificationInput {
 }
 
 export interface CompetenceBlocInput {
-  id: string;
+  id?: string;
+  label: string;
   isOptional?: boolean;
   competences: string[];
 }
