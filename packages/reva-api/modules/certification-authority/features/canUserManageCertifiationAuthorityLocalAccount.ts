@@ -9,6 +9,10 @@ export const canUserManageCertificationAuthorityLocalAccount = async ({
   certificationAuthorityLocalAccountId: string;
   userRoles: KeyCloakUserRole[];
 }) => {
+  if (userRoles?.includes("admin")) {
+    return true;
+  }
+
   if (!userRoles?.includes("manage_certification_authority_local_account")) {
     return false;
   }
