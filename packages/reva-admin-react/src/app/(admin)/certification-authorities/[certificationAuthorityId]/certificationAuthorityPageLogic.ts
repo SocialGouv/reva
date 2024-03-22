@@ -4,6 +4,7 @@ import { TreeSelectItem } from "@/components/tree-select";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { sortBy } from "lodash";
 import { useParams } from "next/navigation";
 import { useMemo, useEffect } from "react";
 import { useForm, useController } from "react-hook-form";
@@ -132,7 +133,7 @@ export const useCertificationAuthorityPageLogic = () => {
     getCertificationAuthorityResponse?.certification_authority_getCertificationAuthority;
 
   const regions = useMemo(
-    () => getReferentialResponse?.getRegions || [],
+    () => sortBy(getReferentialResponse?.getRegions || [], (r) => r.label),
     [getReferentialResponse],
   );
   const certifications = useMemo(

@@ -5,6 +5,7 @@ import { graphql } from "@/graphql/generated";
 import { Department, Region } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { sortBy } from "lodash";
 import { useParams } from "next/navigation";
 import { useMemo, useEffect } from "react";
 import { useForm, useController } from "react-hook-form";
@@ -136,7 +137,7 @@ export const useCertificationAuthorityLocalAccountPageLogic = () => {
     const departments =
       certificationAuthorityLocalAccount?.certificationAuthority.departments ||
       [];
-    const newRegions: Region[] = [];
+    let newRegions: Region[] = [];
     for (const d of departments) {
       let region = newRegions.find((r) => r.id === d.region.id);
       if (!region) {
@@ -146,6 +147,10 @@ export const useCertificationAuthorityLocalAccountPageLogic = () => {
       }
       region.departments.push(d as Department);
     }
+    for (const r of newRegions) {
+      r.departments = sortBy(r.departments, (d) => d.label);
+    }
+    newRegions = sortBy(newRegions, (r) => r.label);
     return newRegions;
   }, [certificationAuthorityLocalAccount?.certificationAuthority.departments]);
 
