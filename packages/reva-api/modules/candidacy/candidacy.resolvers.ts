@@ -15,6 +15,7 @@ import {
 import { logger } from "../shared/logger";
 import {
   Admissibility,
+  AdmissibilityFvae,
   Candidacy,
   CandidacyBusinessEvent,
   CandidacyStatusFilter,
@@ -61,6 +62,10 @@ import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
+import { CandidateProfileUpdateInput } from "../candidate/candidate.types";
+import { updateCandidateProfile } from "../candidate/features/updateCandidateProfile";
+import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -102,6 +107,9 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .map((v) => v.extractNullable())
         .extract();
+    },
+    admissibilityFvae: async (parent: Candidacy) => {
+      return getAdmissibilityFvae({ candidacyId: parent.id });
     },
   },
   Query: {
@@ -918,6 +926,26 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+    candidacy_updateAdmissibilityFvae: (
+      _: unknown,
+      {
+        candidacyId,
+        admissibility,
+      }: {
+        candidacyId: string;
+        admissibility: AdmissibilityFvae;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateAdmissibilityFvae({
+        params: {
+          candidacyId,
+          ...admissibility,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
     candidacy_setReadyForJuryEstimatedAt: async (
       _parent: unknown,
       params: {

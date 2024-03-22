@@ -130,6 +130,7 @@ model Candidacy {
   fundingRequestUnifvae                      FundingRequestUnifvae[]
   isCertificationPartial                     Boolean?                                @map("is_certification_partial")
   admissibility                              Admissibility?
+  admissibilityFvae                          AdmissibilityFvae?
   examInfo                                   ExamInfo?
   readyForJuryEstimatedAt                    DateTime?                               @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
   Feasibility                                Feasibility[]
@@ -676,6 +677,18 @@ model Admissibility {
   updatedAt                      DateTime?            @map("updated_at") @db.Timestamptz(6)
 
   @@map("admissibility")
+}
+
+model AdmissibilityFvae {
+  id                  String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy           Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId         String    @unique @map("candidacy_id") @db.Uuid
+  isAlreadyAdmissible Boolean   @default(false) @map("is_already_admissible")
+  expiresAt           DateTime? @map("expires_at")
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("admissibility_fvae")
 }
 
 model PaymentRequest {

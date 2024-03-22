@@ -27,6 +27,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "TRAINING_FORM_CONFIRMED"
         | "CANDIDACY_DROPPED_OUT"
         | "CANDIDACY_DROP_OUT_CANCELED"
+        | "ADMISSIBILITY_FVAE_UPDATED"
         | "ADMISSIBILITY_UPDATED"
         | "FEASIBILITY_SENT"
         | "FEASIBILITY_VALIDATED"
@@ -81,6 +82,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "JURY_SESSION_SCHEDULED";
       details: { dateOfSession: Date; timeOfSession?: string };
+    }
+  | {
+      eventType: "ADMISSIBILITY_FVAE_UPDATED";
+      details: { isAlreadyAdmissible: boolean; expiresAt: Date | null };
     };
 
 export type CandidacyLog = {
