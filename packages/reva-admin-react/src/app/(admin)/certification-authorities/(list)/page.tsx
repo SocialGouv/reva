@@ -18,6 +18,7 @@ const getCertificationAuthorities = graphql(`
     ) {
       rows {
         id
+        certificationAuthorityId
         label
         email
         type
@@ -89,7 +90,7 @@ const CertificationAuthoritiesListPage = () => {
                     href:
                       c.type === "CERTIFICATION_AUTHORITY"
                         ? `/certification-authorities/${c.id}`
-                        : `/certification-authorities/local-account/${c.id}`,
+                        : `/certification-authorities/${c.certificationAuthorityId}/local-account/${c.id}`,
                   }}
                 >
                   Voir plus

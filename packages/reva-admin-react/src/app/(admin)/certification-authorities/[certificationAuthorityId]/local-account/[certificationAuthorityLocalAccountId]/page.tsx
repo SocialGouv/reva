@@ -2,7 +2,7 @@
 import { TreeSelect } from "@/components/tree-select";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { BackButton } from "@/components/back-button/BackButton";
-import { useCertificationAuthorityLocalAccountPageLogic } from "@/app/(admin)/certification-authorities/local-account/[certificationAuthorityLocalAccountId]/certificationAuthorityLocalAccountPageLogic";
+import { useCertificationAuthorityLocalAccountPageLogic } from "@/app/(admin)/certification-authorities/[certificationAuthorityId]/local-account/[certificationAuthorityLocalAccountId]/certificationAuthorityLocalAccountPageLogic";
 
 const CertificationAuthorityLocalAccountPage = () => {
   const {
