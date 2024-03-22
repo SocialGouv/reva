@@ -7,6 +7,7 @@ export interface CertificationAuthority {
 
 export interface CertificationAuthorityOrLocalAccount {
   id: string;
+  certificationAuthorityid: string;
   label: string;
   email: string;
   type: "CERTIFICATION_AUTHORITY" | "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT";

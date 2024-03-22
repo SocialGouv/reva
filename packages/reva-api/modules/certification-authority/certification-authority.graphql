@@ -35,6 +35,7 @@ type CertificationAuthorityOrLocalAccount {
   label: String!
   email: String!
   type: CertificationAuthorityOrLocalAccountType!
+  certificationAuthorityId: String!
 }
 
 type CertificationAuhtorityOrLocalAccountPaginated {
