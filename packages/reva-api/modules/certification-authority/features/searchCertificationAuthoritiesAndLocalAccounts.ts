@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 import { CertificationAuthorityOrLocalAccount } from "../certification-authority.types";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
 
 export const searchCertificationAuthoritiesAndLocalAccounts = async ({
   limit = 10,
@@ -15,8 +14,6 @@ export const searchCertificationAuthoritiesAndLocalAccounts = async ({
 }): Promise<PaginatedListResult<CertificationAuthorityOrLocalAccount>> => {
   const querySearchFilter = `%${searchFilter}%`;
   const certificationAuthorityBaseQuery = Prisma.sql`select id, label,contact_email as "email",  'CERTIFICATION_AUTHORITY' as "type" from certification_authority where label ilike ${querySearchFilter}`;
-
-  logger.info({ certificationAuthorityBaseQuery });
 
   const certificationAuthorityLocalAccountBaseQuery = Prisma.sql`select certification_authority_local_account.id,certification_authority.label, account.email as "email", 'CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT'as "type" from certification_authority_local_account join account on account.id = certification_authority_local_account.account_id join certification_authority on certification_authority.id=certification_authority_local_account.certification_authority_id where certification_authority.label ilike ${querySearchFilter}`;
 
