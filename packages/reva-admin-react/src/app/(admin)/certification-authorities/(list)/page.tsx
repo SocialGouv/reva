@@ -83,14 +83,17 @@ const CertificationAuthoritiesListPage = () => {
                   ) : null}
                 </span>
                 <p>{c.email}</p>
-                {c.type === "CERTIFICATION_AUTHORITY" && (
-                  <Button
-                    className="ml-auto"
-                    linkProps={{ href: `/certification-authorities/${c.id}` }}
-                  >
-                    Voir plus
-                  </Button>
-                )}
+                <Button
+                  className="ml-auto"
+                  linkProps={{
+                    href:
+                      c.type === "CERTIFICATION_AUTHORITY"
+                        ? `/certification-authorities/${c.id}`
+                        : `/certification-authorities/local-account/${c.id}`,
+                  }}
+                >
+                  Voir plus
+                </Button>
               </GrayCard>
             )}
           </SearchList>
