@@ -1,10 +1,10 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { errorToast, successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { TreeSelectItem } from "@/components/tree-select";
 import { graphql } from "@/graphql/generated";
 import { Department, Region } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useMemo, useEffect } from "react";
 import { useForm, useController } from "react-hook-form";
@@ -88,6 +88,18 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   }
 `);
 
+const updateCertificationAuthorityLocalAccountMutation = graphql(`
+  mutation updateCertificationAuthorityLocalAccountMutation(
+    $input: UpdateCertificationAuthorityLocalAccountInput!
+  ) {
+    certification_authority_updateCertificationAuthorityLocalAccount(
+      input: $input
+    ) {
+      id
+    }
+  }
+`);
+
 export const useCertificationAuthorityLocalAccountPageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
   const { certificationAuthorityLocalAccountId } = useParams<{
@@ -102,6 +114,17 @@ export const useCertificationAuthorityLocalAccountPageLogic = () => {
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
+      }),
+  });
+
+  const updateCertificationAuthorityLocalAccount = useMutation({
+    mutationFn: (input: {
+      certificationAuthorityLocalAccountId: string;
+      certificationIds: string[];
+      departmentIds: string[];
+    }) =>
+      graphqlClient.request(updateCertificationAuthorityLocalAccountMutation, {
+        input,
       }),
   });
 
@@ -264,10 +287,19 @@ export const useCertificationAuthorityLocalAccountPageLogic = () => {
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
+      await updateCertificationAuthorityLocalAccount.mutateAsync({
+        certificationAuthorityLocalAccountId,
+        departmentIds: data.regions
+          .flatMap((r) => r.children)
+          .filter((d) => d.selected)
+          .map((d) => d.id),
+        certificationIds: data.certifications
+          .filter((c) => c.selected)
+          .map((c) => c.id),
+      });
       successToast("modifications enregistrées");
     } catch (e) {
-      console.error(e);
-      errorToast("Une erreur est survenue");
+      graphqlErrorToast(e);
     }
   });
 
