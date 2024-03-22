@@ -306,16 +306,16 @@ candidacyAccessButton context candidacy candidatureName =
         newCandidacySummaryPageActive =
             List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
 
-        url =
+        urlAndTarget =
             if newCandidacySummaryPageActive then
-                context.adminReactUrl ++ "/candidacies/" ++ Data.Candidacy.candidacyIdToString candidacy.id ++ "/summary"
+                ( context.adminReactUrl ++ "/candidacies/" ++ Data.Candidacy.candidacyIdToString candidacy.id ++ "/summary", "_self" )
 
             else
-                Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id })
+                ( Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }), "" )
     in
     Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
-        |> Button.linkButton url
-        |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName), attribute "target" url ]
+        |> Button.linkButton (Tuple.first urlAndTarget)
+        |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName), attribute "target" (Tuple.second urlAndTarget) ]
         |> Button.view
 
 
