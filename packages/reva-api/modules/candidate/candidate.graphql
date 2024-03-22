@@ -109,8 +109,12 @@ type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
-  candidate_updateCandidate(candidate: CandidateUpdateInput!): Candidate
+  candidate_updateCandidate(
+    candidacyId: String!
+    candidate: CandidateUpdateInput!
+  ): Candidate
   candidate_updateCandidateProfile(
+    candidacyId: String!
     candidateProfile: CandidateProfileUpdateInput!
   ): Candidate
 }

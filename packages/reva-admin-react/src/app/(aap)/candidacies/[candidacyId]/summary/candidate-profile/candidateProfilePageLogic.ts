@@ -51,9 +51,13 @@ const getReferentialQuery = graphql(`
 
 const updateCandidateProfileMutation = graphql(`
   mutation updateCandidateProfileMutation(
+    $candidacyId: String!
     $candidateProfile: CandidateProfileUpdateInput!
   ) {
-    candidate_updateCandidateProfile(candidateProfile: $candidateProfile) {
+    candidate_updateCandidateProfile(
+      candidacyId: $candidacyId
+      candidateProfile: $candidateProfile
+    ) {
       id
     }
   }
@@ -84,6 +88,7 @@ export const useCandidateProfilePageLogic = () => {
       highestDegreeId: string;
     }) =>
       graphqlClient.request(updateCandidateProfileMutation, {
+        candidacyId,
         candidateProfile,
       }),
   });

@@ -5,9 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 
 const updateCandidateInformationMutation = graphql(`
   mutation updateCandidateInformationMutation(
+    $candidacyId: String!
     $candidate: CandidateUpdateInput!
   ) {
-    candidate_updateCandidate(candidate: $candidate) {
+    candidate_updateCandidate(
+      candidacyId: $candidacyId
+      candidate: $candidate
+    ) {
       id
     }
   }
@@ -23,6 +27,7 @@ const useUpdateCandidateInformation = (candidacyId: string) => {
     mutationKey: ["updateCandidateInformation", candidacyId],
     mutationFn: ({ candidate }: { candidate: CandidateUpdateInput }) =>
       graphqlClient.request(updateCandidateInformationMutation, {
+        candidacyId,
         candidate,
       }),
   });
