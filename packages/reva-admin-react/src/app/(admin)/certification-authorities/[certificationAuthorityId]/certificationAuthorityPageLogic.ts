@@ -1,5 +1,5 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { errorToast, successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { TreeSelectItem } from "@/components/tree-select";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -275,8 +275,7 @@ export const useCertificationAuthorityPageLogic = () => {
       });
       successToast("modifications enregistrées");
     } catch (e) {
-      console.error(e);
-      errorToast("Une erreur est survenue");
+      graphqlErrorToast(e);
     }
   });
 
