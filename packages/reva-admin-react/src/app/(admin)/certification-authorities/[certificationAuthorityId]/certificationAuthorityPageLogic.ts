@@ -198,34 +198,42 @@ export const useCertificationAuthorityPageLogic = () => {
   });
 
   const toggleRegionOrDepartment = (regionOrdepartmentId: string) => {
-    const newValues = [...regionsAndDeparmController.field.value];
     const type = regions.find((r) => r.id === regionOrdepartmentId)
       ? "region"
       : "department";
 
     if (type === "region") {
-      const regionIndex = newValues.findIndex(
-        (r) => r.id === regionOrdepartmentId,
-      );
-      const region = newValues[regionIndex];
-      region.selected = !region.selected;
-      for (const dep of region.children) {
-        dep.selected = region.selected;
-      }
+      toggleRegion(regionOrdepartmentId);
     } else {
-      const regionIndex = newValues.findIndex(
-        (r) => !!r.children.find((d) => d.id === regionOrdepartmentId),
-      );
-      const department = newValues[regionIndex].children.find(
-        (d) => d.id === regionOrdepartmentId,
-      );
-
-      if (department) {
-        department.selected = !department.selected;
-      }
-      const region = newValues[regionIndex];
-      region.selected = region.children.every((d) => d.selected);
+      toggleDepartment(regionOrdepartmentId);
     }
+  };
+
+  const toggleRegion = (regionId: string) => {
+    const newValues = [...regionsAndDeparmController.field.value];
+    const regionIndex = newValues.findIndex((r) => r.id === regionId);
+    const region = newValues[regionIndex];
+    region.selected = !region.selected;
+    for (const dep of region.children) {
+      dep.selected = region.selected;
+    }
+    regionsAndDeparmController.field.onChange({ target: { value: newValues } });
+  };
+
+  const toggleDepartment = (departmentId: string) => {
+    const newValues = [...regionsAndDeparmController.field.value];
+    const regionIndex = newValues.findIndex(
+      (r) => !!r.children.find((d) => d.id === departmentId),
+    );
+    const department = newValues[regionIndex].children.find(
+      (d) => d.id === departmentId,
+    );
+
+    if (department) {
+      department.selected = !department.selected;
+    }
+    const region = newValues[regionIndex];
+    region.selected = region.children.every((d) => d.selected);
     regionsAndDeparmController.field.onChange({ target: { value: newValues } });
   };
 
