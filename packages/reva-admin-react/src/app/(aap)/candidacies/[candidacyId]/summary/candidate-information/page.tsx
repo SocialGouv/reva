@@ -2,7 +2,8 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Tabs from "@codegouvfr/react-dsfr/Tabs";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import useCandidateSummary from "../_components/useCandidateSummary";
 import { checkCandidateFields } from "../page";
 import CandidateCivilInformationTab from "./_components/CandidateCivilInformationTab";
@@ -12,12 +13,9 @@ const CandidateInformationPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-
+  const router = useRouter();
   const { candidacy } = useCandidateSummary(candidacyId);
-
-  if (!candidacy) return null;
-
-  const { candidate } = candidacy;
+  const candidate = candidacy?.candidate ?? {};
 
   const isCandidateCivileInformationCompleted = checkCandidateFields(
     candidate,
@@ -40,31 +38,56 @@ const CandidateInformationPage = () => {
     ["street", "zip", "city", "phone", "email"],
   );
 
+  const defaultTabId =
+    !isCandidateCivileInformationCompleted ||
+    isCandidateContactInformationCompleted
+      ? "tabCivilInformation"
+      : "tabContactInformation";
+
+  const [selectedTabId, setSelectedTabId] = useState(defaultTabId);
+
+  const handleOnSubmitNavigation = () => {
+    if (selectedTabId === "tabCivilInformation") {
+      !isCandidateContactInformationCompleted
+        ? setSelectedTabId("tabContactInformation")
+        : router.push(`/candidacies/${candidacyId}/summary`);
+    } else {
+      !isCandidateCivileInformationCompleted
+        ? setSelectedTabId("tabCivilInformation")
+        : router.push(`/candidacies/${candidacyId}/summary`);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full p-8 gap-8">
       <div>
         <h1>Renseigner les informations</h1>
         <FormOptionalFieldsDisclaimer />
       </div>
-
       <Tabs
+        selectedTabId={selectedTabId}
+        onTabChange={setSelectedTabId}
         tabs={[
           {
+            tabId: "tabCivilInformation",
             label: "Informations civiles",
-            content: <CandidateCivilInformationTab />,
-            isDefault:
-              !isCandidateCivileInformationCompleted ||
-              isCandidateContactInformationCompleted,
           },
           {
+            tabId: "tabContactInformation",
             label: "Informations de contact",
-            content: <CandidateContactInformationTab />,
-            isDefault:
-              isCandidateCivileInformationCompleted &&
-              !isCandidateContactInformationCompleted,
           },
         ]}
-      />
+      >
+        {selectedTabId === "tabCivilInformation" ? (
+          <CandidateCivilInformationTab
+            handleOnSubmitNavigation={handleOnSubmitNavigation}
+          />
+        ) : (
+          <CandidateContactInformationTab
+            handleOnSubmitNavigation={handleOnSubmitNavigation}
+          />
+        )}
+      </Tabs>
     </div>
   );
 };

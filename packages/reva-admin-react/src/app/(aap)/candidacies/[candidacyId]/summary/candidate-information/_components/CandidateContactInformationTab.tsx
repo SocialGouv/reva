@@ -17,7 +17,11 @@ import {
 } from "./candidateContactInformationSchema";
 import useUpdateCandidateContactInformation from "./useUpdateCandidateContactInformation.hook";
 
-const CandidateContactInformationTab = () => {
+const CandidateContactInformationTab = ({
+  handleOnSubmitNavigation,
+}: {
+  handleOnSubmitNavigation(): void;
+}) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -77,6 +81,7 @@ const CandidateContactInformationTab = () => {
       });
       successToast("Les informations ont bien été mises à jour");
       await getCandidacyRefetch();
+      handleOnSubmitNavigation();
     } catch (e) {
       graphqlErrorToast(e);
     }

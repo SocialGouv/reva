@@ -21,7 +21,11 @@ import {
 } from "./candidateCivilInformationSchema";
 import useUpdateCandidateCivilInformation from "./useUpdateCandidateCivilInformation.hook";
 
-const CandidateCivilInformationTab = () => {
+const CandidateCivilInformationTab = ({
+  handleOnSubmitNavigation,
+}: {
+  handleOnSubmitNavigation(): void;
+}) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -148,6 +152,8 @@ const CandidateCivilInformationTab = () => {
       await queryClient.invalidateQueries({
         queryKey: [candidacyId],
       });
+
+      handleOnSubmitNavigation();
     } catch (e) {
       graphqlErrorToast(e);
     }
