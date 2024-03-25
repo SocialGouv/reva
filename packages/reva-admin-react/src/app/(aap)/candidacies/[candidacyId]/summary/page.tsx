@@ -10,7 +10,10 @@ import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
-const checkCandidateFields = (object: any, fields: (keyof Candidate)[]) => {
+export const checkCandidateFields = (
+  object: any,
+  fields: (keyof Candidate)[],
+) => {
   return fields.every((field) => object[field]);
 };
 
