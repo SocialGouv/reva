@@ -49,6 +49,13 @@ const getCandidacyById = graphql(`
           label
         }
       }
+      experiences {
+        id
+        title
+        startedAt
+        duration
+        description
+      }
     }
   }
 `);

@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 
 export const checkCandidateFields = (
   object: any,
@@ -156,6 +157,16 @@ const CandidacySummaryPage = () => {
               </div>
             )}
           </CandidacySectionCard>
+
+          <CandidateExperiencesSectionCard
+            experiences={candidacy.experiences.map((e) => ({
+              id: e.id,
+              title: e.title,
+              description: e.description,
+              startedAt: new Date(e.startedAt),
+              duration: e.duration,
+            }))}
+          />
         </ul>
       )}
     </>
