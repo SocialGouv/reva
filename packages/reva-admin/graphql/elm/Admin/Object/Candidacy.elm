@@ -227,6 +227,13 @@ admissibility object____ =
     Object.selectionForCompositeField "admissibility" [] object____ Basics.identity
 
 
+admissibilityFvae :
+    SelectionSet decodesTo Admin.Object.AdmissibilityFvae
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+admissibilityFvae object____ =
+    Object.selectionForCompositeField "admissibilityFvae" [] object____ (Basics.identity >> Decode.nullable)
+
+
 reorientationReason :
     SelectionSet decodesTo Admin.Object.ReorientationReason
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

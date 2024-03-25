@@ -378,6 +378,20 @@ candidacy_updateAdmissibility requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAdmissibility" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "admissibility" requiredArgs____.admissibility Admin.InputObject.encodeAdmissibilityInput ] object____ Basics.identity
 
 
+type alias CandidacyUpdateAdmissibilityFvaeRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , admissibility : Admin.InputObject.AdmissibilityInputFvae
+    }
+
+
+candidacy_updateAdmissibilityFvae :
+    CandidacyUpdateAdmissibilityFvaeRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.AdmissibilityFvae
+    -> SelectionSet decodesTo RootMutation
+candidacy_updateAdmissibilityFvae requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_updateAdmissibilityFvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "admissibility" requiredArgs____.admissibility Admin.InputObject.encodeAdmissibilityInputFvae ] object____ Basics.identity
+
+
 type alias CandidacySetReadyForJuryEstimatedAtRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , readyForJuryEstimatedAt : Data.Scalar.Timestamp
@@ -424,6 +438,34 @@ candidate_login :
     -> SelectionSet decodesTo RootMutation
 candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
+
+
+type alias CandidateUpdateCandidateRequiredArguments =
+    { candidacyId : String
+    , candidate : Admin.InputObject.CandidateUpdateInput
+    }
+
+
+candidate_updateCandidate :
+    CandidateUpdateCandidateRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet (Maybe decodesTo) RootMutation
+candidate_updateCandidate requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_updateCandidate" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidate" requiredArgs____.candidate Admin.InputObject.encodeCandidateUpdateInput ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias CandidateUpdateCandidateProfileRequiredArguments =
+    { candidacyId : String
+    , candidateProfile : Admin.InputObject.CandidateProfileUpdateInput
+    }
+
+
+candidate_updateCandidateProfile :
+    CandidateUpdateCandidateProfileRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet (Maybe decodesTo) RootMutation
+candidate_updateCandidateProfile requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_updateCandidateProfile" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateProfile" requiredArgs____.candidateProfile Admin.InputObject.encodeCandidateProfileUpdateInput ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CertificationAuthorityUpdateCertificationAuthorityRequiredArguments =
@@ -684,6 +726,18 @@ referential_replaceCertification :
     -> SelectionSet decodesTo RootMutation
 referential_replaceCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "referential_replaceCertification" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationInput ] object____ Basics.identity
+
+
+type alias ReferentialUpdateCompetenceBlocsByCertificationIdRequiredArguments =
+    { input : Admin.InputObject.UpdateCompetenceBlocsInput }
+
+
+referential_updateCompetenceBlocsByCertificationId :
+    ReferentialUpdateCompetenceBlocsByCertificationIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationCompetenceBloc
+    -> SelectionSet (List decodesTo) RootMutation
+referential_updateCompetenceBlocsByCertificationId requiredArgs____ object____ =
+    Object.selectionForCompositeField "referential_updateCompetenceBlocsByCertificationId" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCompetenceBlocsInput ] object____ (Basics.identity >> Decode.list)
 
 
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =

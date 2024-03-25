@@ -113,6 +113,18 @@ highestDegree object____ =
     Object.selectionForCompositeField "highestDegree" [] object____ (Basics.identity >> Decode.nullable)
 
 
+highestDegreeLabel : SelectionSet (Maybe String) Admin.Object.Candidate
+highestDegreeLabel =
+    Object.selectionForField "(Maybe String)" "highestDegreeLabel" [] (Decode.string |> Decode.nullable)
+
+
+niveauDeFormationLePlusEleve :
+    SelectionSet decodesTo Admin.Object.Degree
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
+niveauDeFormationLePlusEleve object____ =
+    Object.selectionForCompositeField "niveauDeFormationLePlusEleve" [] object____ (Basics.identity >> Decode.nullable)
+
+
 vulnerabilityIndicator :
     SelectionSet decodesTo Admin.Object.VulnerabilityIndicator
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
@@ -125,3 +137,18 @@ department :
     -> SelectionSet decodesTo Admin.Object.Candidate
 department object____ =
     Object.selectionForCompositeField "department" [] object____ Basics.identity
+
+
+zip : SelectionSet (Maybe String) Admin.Object.Candidate
+zip =
+    Object.selectionForField "(Maybe String)" "zip" [] (Decode.string |> Decode.nullable)
+
+
+street : SelectionSet (Maybe String) Admin.Object.Candidate
+street =
+    Object.selectionForField "(Maybe String)" "street" [] (Decode.string |> Decode.nullable)
+
+
+city : SelectionSet (Maybe String) Admin.Object.Candidate
+city =
+    Object.selectionForField "(Maybe String)" "city" [] (Decode.string |> Decode.nullable)

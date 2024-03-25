@@ -43,3 +43,10 @@ certifications :
     -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthorityLocalAccount
 certifications object____ =
     Object.selectionForCompositeField "certifications" [] object____ (Basics.identity >> Decode.list)
+
+
+certificationAuthority :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
+certificationAuthority object____ =
+    Object.selectionForCompositeField "certificationAuthority" [] object____ Basics.identity

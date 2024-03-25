@@ -119,6 +119,43 @@ encodeAdmissibilityInput input____ =
         [ ( "isCandidateAlreadyAdmissible", Encode.bool input____.isCandidateAlreadyAdmissible |> Just ), ( "reportSentAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.reportSentAt ), ( "certifierRespondedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.certifierRespondedAt ), ( "responseAvailableToCandidateAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.responseAvailableToCandidateAt ), ( "status", Encode.enum Admin.Enum.AdmissibilityStatus.toString |> Encode.optional input____.status ) ]
 
 
+buildAdmissibilityInputFvae :
+    AdmissibilityInputFvaeRequiredFields
+    -> (AdmissibilityInputFvaeOptionalFields -> AdmissibilityInputFvaeOptionalFields)
+    -> AdmissibilityInputFvae
+buildAdmissibilityInputFvae required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { expiresAt = Absent }
+    in
+    { isAlreadyAdmissible = required____.isAlreadyAdmissible, expiresAt = optionals____.expiresAt }
+
+
+type alias AdmissibilityInputFvaeRequiredFields =
+    { isAlreadyAdmissible : Bool }
+
+
+type alias AdmissibilityInputFvaeOptionalFields =
+    { expiresAt : OptionalArgument Data.Scalar.Timestamp }
+
+
+{-| Type for the AdmissibilityInputFvae input object.
+-}
+type alias AdmissibilityInputFvae =
+    { isAlreadyAdmissible : Bool
+    , expiresAt : OptionalArgument Data.Scalar.Timestamp
+    }
+
+
+{-| Encode a AdmissibilityInputFvae into a value that can be used as an argument.
+-}
+encodeAdmissibilityInputFvae : AdmissibilityInputFvae -> Value
+encodeAdmissibilityInputFvae input____ =
+    Encode.maybeObject
+        [ ( "isAlreadyAdmissible", Encode.bool input____.isAlreadyAdmissible |> Just ), ( "expiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.expiresAt ) ]
+
+
 buildAppointmentInformationsInput :
     (AppointmentInformationsInputOptionalFields -> AppointmentInformationsInputOptionalFields)
     -> AppointmentInformationsInput
@@ -263,6 +300,120 @@ encodeCandidateInput input____ =
         [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "departmentId", Encode.string input____.departmentId |> Just ), ( "certificationId", Encode.string |> Encode.optional input____.certificationId ) ]
 
 
+buildCandidateProfileUpdateInput :
+    CandidateProfileUpdateInputRequiredFields
+    -> (CandidateProfileUpdateInputOptionalFields -> CandidateProfileUpdateInputOptionalFields)
+    -> CandidateProfileUpdateInput
+buildCandidateProfileUpdateInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { highestDegreeLabel = Absent, niveauDeFormationLePlusEleveDegreeId = Absent }
+    in
+    { candidateId = required____.candidateId, highestDegreeId = required____.highestDegreeId, highestDegreeLabel = optionals____.highestDegreeLabel, niveauDeFormationLePlusEleveDegreeId = optionals____.niveauDeFormationLePlusEleveDegreeId }
+
+
+type alias CandidateProfileUpdateInputRequiredFields =
+    { candidateId : Data.Scalar.Uuid
+    , highestDegreeId : Data.Scalar.Uuid
+    }
+
+
+type alias CandidateProfileUpdateInputOptionalFields =
+    { highestDegreeLabel : OptionalArgument String
+    , niveauDeFormationLePlusEleveDegreeId : OptionalArgument String
+    }
+
+
+{-| Type for the CandidateProfileUpdateInput input object.
+-}
+type alias CandidateProfileUpdateInput =
+    { candidateId : Data.Scalar.Uuid
+    , highestDegreeId : Data.Scalar.Uuid
+    , highestDegreeLabel : OptionalArgument String
+    , niveauDeFormationLePlusEleveDegreeId : OptionalArgument String
+    }
+
+
+{-| Encode a CandidateProfileUpdateInput into a value that can be used as an argument.
+-}
+encodeCandidateProfileUpdateInput : CandidateProfileUpdateInput -> Value
+encodeCandidateProfileUpdateInput input____ =
+    Encode.maybeObject
+        [ ( "candidateId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.candidateId |> Just ), ( "highestDegreeId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.highestDegreeId |> Just ), ( "highestDegreeLabel", Encode.string |> Encode.optional input____.highestDegreeLabel ), ( "niveauDeFormationLePlusEleveDegreeId", Encode.string |> Encode.optional input____.niveauDeFormationLePlusEleveDegreeId ) ]
+
+
+buildCandidateUpdateInput :
+    CandidateUpdateInputRequiredFields
+    -> (CandidateUpdateInputOptionalFields -> CandidateUpdateInputOptionalFields)
+    -> CandidateUpdateInput
+buildCandidateUpdateInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { givenName = Absent, firstname2 = Absent, firstname3 = Absent, birthDepartmentId = Absent }
+    in
+    { id = required____.id, gender = required____.gender, lastname = required____.lastname, givenName = optionals____.givenName, firstname = required____.firstname, firstname2 = optionals____.firstname2, firstname3 = optionals____.firstname3, birthdate = required____.birthdate, birthCity = required____.birthCity, birthDepartmentId = optionals____.birthDepartmentId, countryId = required____.countryId, nationality = required____.nationality, socialSecurityNumber = required____.socialSecurityNumber, street = required____.street, zip = required____.zip, city = required____.city, email = required____.email, phone = required____.phone }
+
+
+type alias CandidateUpdateInputRequiredFields =
+    { id : Data.Scalar.Uuid
+    , gender : Admin.Enum.Gender.Gender
+    , lastname : String
+    , firstname : String
+    , birthdate : Data.Scalar.Timestamp
+    , birthCity : String
+    , countryId : Data.Scalar.Uuid
+    , nationality : String
+    , socialSecurityNumber : String
+    , street : String
+    , zip : String
+    , city : String
+    , email : String
+    , phone : String
+    }
+
+
+type alias CandidateUpdateInputOptionalFields =
+    { givenName : OptionalArgument String
+    , firstname2 : OptionalArgument String
+    , firstname3 : OptionalArgument String
+    , birthDepartmentId : OptionalArgument String
+    }
+
+
+{-| Type for the CandidateUpdateInput input object.
+-}
+type alias CandidateUpdateInput =
+    { id : Data.Scalar.Uuid
+    , gender : Admin.Enum.Gender.Gender
+    , lastname : String
+    , givenName : OptionalArgument String
+    , firstname : String
+    , firstname2 : OptionalArgument String
+    , firstname3 : OptionalArgument String
+    , birthdate : Data.Scalar.Timestamp
+    , birthCity : String
+    , birthDepartmentId : OptionalArgument String
+    , countryId : Data.Scalar.Uuid
+    , nationality : String
+    , socialSecurityNumber : String
+    , street : String
+    , zip : String
+    , city : String
+    , email : String
+    , phone : String
+    }
+
+
+{-| Encode a CandidateUpdateInput into a value that can be used as an argument.
+-}
+encodeCandidateUpdateInput : CandidateUpdateInput -> Value
+encodeCandidateUpdateInput input____ =
+    Encode.maybeObject
+        [ ( "id", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.id |> Just ), ( "gender", Encode.enum Admin.Enum.Gender.toString input____.gender |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "givenName", Encode.string |> Encode.optional input____.givenName ), ( "firstname", Encode.string input____.firstname |> Just ), ( "firstname2", Encode.string |> Encode.optional input____.firstname2 ), ( "firstname3", Encode.string |> Encode.optional input____.firstname3 ), ( "birthdate", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.birthdate |> Just ), ( "birthCity", Encode.string input____.birthCity |> Just ), ( "birthDepartmentId", Encode.string |> Encode.optional input____.birthDepartmentId ), ( "countryId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.countryId |> Just ), ( "nationality", Encode.string input____.nationality |> Just ), ( "socialSecurityNumber", Encode.string input____.socialSecurityNumber |> Just ), ( "street", Encode.string input____.street |> Just ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ) ]
+
+
 buildCertificationChangeInput :
     CertificationChangeInputRequiredFields
     -> CertificationChangeInput
@@ -290,6 +441,53 @@ encodeCertificationChangeInput : CertificationChangeInput -> Value
 encodeCertificationChangeInput input____ =
     Encode.maybeObject
         [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+
+
+buildCompetenceBlocInput :
+    CompetenceBlocInputRequiredFields
+    -> (CompetenceBlocInputOptionalFields -> CompetenceBlocInputOptionalFields)
+    -> CompetenceBlocInput
+buildCompetenceBlocInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { id = Absent, code = Absent, isOptional = Absent, fCCompetences = Absent }
+    in
+    { id = optionals____.id, code = optionals____.code, label = required____.label, isOptional = optionals____.isOptional, fCCompetences = optionals____.fCCompetences, competences = required____.competences }
+
+
+type alias CompetenceBlocInputRequiredFields =
+    { label : String
+    , competences : List String
+    }
+
+
+type alias CompetenceBlocInputOptionalFields =
+    { id : OptionalArgument Data.Scalar.Id
+    , code : OptionalArgument String
+    , isOptional : OptionalArgument Bool
+    , fCCompetences : OptionalArgument String
+    }
+
+
+{-| Type for the CompetenceBlocInput input object.
+-}
+type alias CompetenceBlocInput =
+    { id : OptionalArgument Data.Scalar.Id
+    , code : OptionalArgument String
+    , label : String
+    , isOptional : OptionalArgument Bool
+    , fCCompetences : OptionalArgument String
+    , competences : List String
+    }
+
+
+{-| Encode a CompetenceBlocInput into a value that can be used as an argument.
+-}
+encodeCompetenceBlocInput : CompetenceBlocInput -> Value
+encodeCompetenceBlocInput input____ =
+    Encode.maybeObject
+        [ ( "id", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.optional input____.id ), ( "code", Encode.string |> Encode.optional input____.code ), ( "label", Encode.string input____.label |> Just ), ( "isOptional", Encode.bool |> Encode.optional input____.isOptional ), ( "FCCompetences", Encode.string |> Encode.optional input____.fCCompetences ), ( "competences", (Encode.string |> Encode.list) input____.competences |> Just ) ]
 
 
 buildCreateCertificationAuthorityLocalAccountInput :
@@ -1395,6 +1593,35 @@ encodeUpdateCertificationInput : UpdateCertificationInput -> Value
 encodeUpdateCertificationInput input____ =
     Encode.maybeObject
         [ ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "label", Encode.string input____.label |> Just ), ( "level", Encode.int input____.level |> Just ), ( "codeRncp", Encode.string input____.codeRncp |> Just ), ( "typeDiplomeId", Encode.string input____.typeDiplomeId |> Just ), ( "certificationAuthorityTag", Encode.string input____.certificationAuthorityTag |> Just ), ( "domaineIds", (Encode.string |> Encode.list) input____.domaineIds |> Just ), ( "conventionCollectiveIds", (Encode.string |> Encode.list) input____.conventionCollectiveIds |> Just ), ( "availableAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.availableAt |> Just ), ( "expiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.expiresAt |> Just ) ]
+
+
+buildUpdateCompetenceBlocsInput :
+    UpdateCompetenceBlocsInputRequiredFields
+    -> UpdateCompetenceBlocsInput
+buildUpdateCompetenceBlocsInput required____ =
+    { certificationId = required____.certificationId, blocs = required____.blocs }
+
+
+type alias UpdateCompetenceBlocsInputRequiredFields =
+    { certificationId : Data.Scalar.Id
+    , blocs : List CompetenceBlocInput
+    }
+
+
+{-| Type for the UpdateCompetenceBlocsInput input object.
+-}
+type alias UpdateCompetenceBlocsInput =
+    { certificationId : Data.Scalar.Id
+    , blocs : List CompetenceBlocInput
+    }
+
+
+{-| Encode a UpdateCompetenceBlocsInput into a value that can be used as an argument.
+-}
+encodeUpdateCompetenceBlocsInput : UpdateCompetenceBlocsInput -> Value
+encodeUpdateCompetenceBlocsInput input____ =
+    Encode.maybeObject
+        [ ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "blocs", (encodeCompetenceBlocInput |> Encode.list) input____.blocs |> Just ) ]
 
 
 buildUpdateMaisonMereAAPInput :

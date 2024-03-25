@@ -17,6 +17,10 @@ type Admissibility
     = Admissibility
 
 
+type AdmissibilityFvae
+    = AdmissibilityFvae
+
+
 type BasicSkill
     = BasicSkill
 
@@ -93,6 +97,10 @@ type Certification
     = Certification
 
 
+type CertificationAuhtorityOrLocalAccountPaginated
+    = CertificationAuhtorityOrLocalAccountPaginated
+
+
 type CertificationAuhtorityPaginated
     = CertificationAuhtorityPaginated
 
@@ -103,6 +111,18 @@ type CertificationAuthority
 
 type CertificationAuthorityLocalAccount
     = CertificationAuthorityLocalAccount
+
+
+type CertificationAuthorityOrLocalAccount
+    = CertificationAuthorityOrLocalAccount
+
+
+type CertificationCompetence
+    = CertificationCompetence
+
+
+type CertificationCompetenceBloc
+    = CertificationCompetenceBloc
 
 
 type CertificationPage

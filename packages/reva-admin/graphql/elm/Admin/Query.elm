@@ -279,6 +279,41 @@ certification_authority_getCertificationAuthorities fillInOptionals____ object__
     Object.selectionForCompositeField "certification_authority_getCertificationAuthorities" optionalArgs____ object____ Basics.identity
 
 
+type alias CertificationAuthoritySearchCertificationAuthoritiesAndLocalAccountsOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchFilter : OptionalArgument String
+    }
+
+
+certification_authority_searchCertificationAuthoritiesAndLocalAccounts :
+    (CertificationAuthoritySearchCertificationAuthoritiesAndLocalAccountsOptionalArguments -> CertificationAuthoritySearchCertificationAuthoritiesAndLocalAccountsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CertificationAuhtorityOrLocalAccountPaginated
+    -> SelectionSet decodesTo RootQuery
+certification_authority_searchCertificationAuthoritiesAndLocalAccounts fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "certification_authority_searchCertificationAuthoritiesAndLocalAccounts" optionalArgs____ object____ Basics.identity
+
+
+type alias CertificationAuthorityGetCertificationAuthorityLocalAccountRequiredArguments =
+    { id : Data.Scalar.Id }
+
+
+certification_authority_getCertificationAuthorityLocalAccount :
+    CertificationAuthorityGetCertificationAuthorityLocalAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
+    -> SelectionSet (Maybe decodesTo) RootQuery
+certification_authority_getCertificationAuthorityLocalAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_getCertificationAuthorityLocalAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias DossierDeValidationGetDossierDeValidationByIdRequiredArguments =
     { dossierDeValidationId : Data.Scalar.Id }
 

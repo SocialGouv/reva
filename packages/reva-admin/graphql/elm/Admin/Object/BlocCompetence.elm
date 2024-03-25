@@ -42,3 +42,8 @@ parsedCompetences =
 modalitesEvaluation : SelectionSet (Maybe String) Admin.Object.BlocCompetence
 modalitesEvaluation =
     Object.selectionForField "(Maybe String)" "MODALITES_EVALUATION" [] (Decode.string |> Decode.nullable)
+
+
+facultatif : SelectionSet (Maybe Bool) Admin.Object.BlocCompetence
+facultatif =
+    Object.selectionForField "(Maybe Bool)" "FACULTATIF" [] (Decode.bool |> Decode.nullable)

@@ -118,3 +118,10 @@ availableAt =
 expiresAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Certification
 expiresAt =
     Object.selectionForField "Data.Scalar.Timestamp" "expiresAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+competenceBlocs :
+    SelectionSet decodesTo Admin.Object.CertificationCompetenceBloc
+    -> SelectionSet (List decodesTo) Admin.Object.Certification
+competenceBlocs object____ =
+    Object.selectionForCompositeField "competenceBlocs" [] object____ (Basics.identity >> Decode.list)
