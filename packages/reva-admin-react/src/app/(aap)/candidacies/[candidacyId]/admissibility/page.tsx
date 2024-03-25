@@ -9,7 +9,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
@@ -67,6 +67,8 @@ const AdmissibilityPage = () => {
     candidacyId: string;
   }>();
 
+  const router = useRouter();
+
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -116,7 +118,6 @@ const AdmissibilityPage = () => {
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
-      console.log(candidacyId);
       await updateCandidacyFirstAppointmentInformations.mutateAsync({
         candidacyId,
         admissibility: {
@@ -127,6 +128,7 @@ const AdmissibilityPage = () => {
         },
       });
       successToast("Les modifications ont bien été enregistrées");
+      router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -139,14 +141,19 @@ const AdmissibilityPage = () => {
   const expiresAt =
     getCandidacyResponse?.getCandidacyById?.admissibilityFvae?.expiresAt;
 
+  const admissibilityFvaeResponse =
+    getCandidacyResponse?.getCandidacyById?.admissibilityFvae;
+
   const resetForm = useCallback(() => {
     reset({
-      admissibilityStatus: isAlreadyAdmissible
-        ? "alreadyAdmissible"
-        : "notAlreadyAdmissible",
+      admissibilityStatus: !admissibilityFvaeResponse
+        ? undefined
+        : isAlreadyAdmissible
+          ? "alreadyAdmissible"
+          : "notAlreadyAdmissible",
       expiresAt: expiresAt ? format(expiresAt, "yyyy-MM-dd") : undefined,
     });
-  }, [reset, expiresAt, isAlreadyAdmissible]);
+  }, [reset, expiresAt, isAlreadyAdmissible, admissibilityFvaeResponse]);
 
   useEffect(() => {
     resetForm();
