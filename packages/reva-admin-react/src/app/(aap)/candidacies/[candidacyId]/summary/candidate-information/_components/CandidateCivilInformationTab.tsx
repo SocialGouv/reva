@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +25,8 @@ const CandidateCivilInformationTab = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const queryClient = useQueryClient();
 
   const { candidacy, countries, departments, getCandidacyRefetch } =
     useCandidateSummary(candidacyId);
@@ -141,7 +144,10 @@ const CandidateCivilInformationTab = () => {
         candidateCivilInformation,
       });
       successToast("Les informations ont bien été mises à jour");
-      await getCandidacyRefetch();
+
+      await queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

@@ -42,7 +42,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidacyMenuResponse } = useQuery({
-    queryKey: ["getCandidacyMenu", candidacyId],
+    queryKey: [candidacyId, "getCandidacyMenu"],
     queryFn: () =>
       graphqlClient.request(getCandidacyMenuQuery, {
         candidacyId,

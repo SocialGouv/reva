@@ -80,7 +80,7 @@ const useCandidateSummary = (candidacyId: string) => {
     isLoading: getCandidacyIsLoading,
     refetch: getCandidacyRefetch,
   } = useQuery({
-    queryKey: ["getCandidacyById", candidacyId],
+    queryKey: [candidacyId, "getCandidacyById"],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
         candidacyId,
@@ -94,11 +94,10 @@ const useCandidateSummary = (candidacyId: string) => {
     },
   );
 
-  const { data: getDepartmentsData, isLoading: getDepartmentsIsLoading } =
-    useQuery({
-      queryKey: ["getDepartments"],
-      queryFn: () => graphqlClient.request(getDepartments),
-    });
+  const { data: getDepartmentsData } = useQuery({
+    queryKey: ["getDepartments"],
+    queryFn: () => graphqlClient.request(getDepartments),
+  });
 
   const candidacy = getCandidacyByIdData?.getCandidacyById;
   const countries = getCountriesData?.getCountries;
