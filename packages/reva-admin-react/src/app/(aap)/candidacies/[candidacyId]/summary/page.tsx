@@ -1,5 +1,5 @@
 "use client";
-import { Candidate } from "@/graphql/generated/graphql";
+import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import {
   formatStringToPhoneNumberStructure,
   formatStringToSocialSecurityNumberStructure,
@@ -8,15 +8,8 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import CandidacySectionCard from "./_components/CandidacySectionCard";
+import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
-
-export const checkCandidateFields = (
-  object: any,
-  fields: (keyof Candidate)[],
-) => {
-  return fields.every((field) => object[field]);
-};
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 

@@ -4,8 +4,8 @@ import Tabs from "@codegouvfr/react-dsfr/Tabs";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { checkCandidateFields } from "../_components/checkCandidateFields";
 import useCandidateSummary from "../_components/useCandidateSummary";
-import { checkCandidateFields } from "../page";
 import CandidateCivilInformationTab from "./_components/CandidateCivilInformationTab";
 import CandidateContactInformationTab from "./_components/CandidateContactInformationTab";
 
