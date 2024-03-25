@@ -241,6 +241,7 @@ const CandidacySummaryPage = () => {
             )}
           </CandidacySectionCard>
           <CandidateExperiencesSectionCard
+            candidacyId={candidacyId}
             experiences={candidacy.experiences.map((e) => ({
               id: e.id,
               title: e.title,

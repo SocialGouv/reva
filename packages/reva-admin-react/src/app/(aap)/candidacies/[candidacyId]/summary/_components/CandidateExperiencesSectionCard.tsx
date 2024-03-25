@@ -1,6 +1,7 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Duration } from "@/graphql/generated/graphql";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const durationToString: {
@@ -15,8 +16,10 @@ const durationToString: {
 };
 
 export const CandidateExperiencesSectionCard = ({
+  candidacyId,
   experiences,
 }: {
+  candidacyId: string;
   experiences: {
     id: string;
     title: string;
@@ -38,6 +41,12 @@ export const CandidateExperiencesSectionCard = ({
           <div>{e.description}</div>
         </div>
       ))}
+      <Link
+        className="mt-6 bg-none fr-link fr-icon-add-line fr-link--icon-left"
+        href={`/candidacies/${candidacyId}/summary/candidate-experiences/new`}
+      >
+        Ajouter une expérience
+      </Link>
     </GrayCard>
   );
 };
