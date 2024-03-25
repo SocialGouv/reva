@@ -12,6 +12,7 @@ import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import request from "graphql-request";
 import { truncate } from "lodash";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -158,52 +159,65 @@ const HelpArticle = ({
 const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
   const { isFeatureActive } = useFeatureflipping();
   return (
-    <MainLayout>
-      <div className="flex flex-col">
-        <div className="flex flex-col min-h-[300px] items-center justify-center bg-white p-4">
-          <h1 className="text-5xl font-bold">En savoir plus sur la VAE</h1>
-          <h2 className="text-2xl font-bold">
-            Trouvez des réponses à vos questions à propos de votre VAE.
-          </h2>
-          <div className="flex gap-4">
-            {isFeatureActive("FAQ_SITE_INSTITUTIONNEL") ? (
-              <Button size="small" linkProps={{ href: "/faq" }}>
-                Questions fréquentes
+    <>
+      <Head>
+        <title>France VAE | Espace d'information </title>
+        <meta charSet="UTF-8" />
+        <meta
+          name="description"
+          content="Retrouvez des informations sur la VAE, des conseils et des réponses à vos questions sur la Validation des Acquis de l'Expérience."
+        />
+        <meta name="keywords" content="Gouvernement, France, VAE, France VAE" />
+        <meta name="author" content="France VAE" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <MainLayout>
+        <div className="flex flex-col">
+          <div className="flex flex-col min-h-[300px] items-center justify-center bg-white p-4">
+            <h1 className="text-5xl font-bold">En savoir plus sur la VAE</h1>
+            <h2 className="text-2xl font-bold">
+              Trouvez des réponses à vos questions à propos de votre VAE.
+            </h2>
+            <div className="flex gap-4">
+              {isFeatureActive("FAQ_SITE_INSTITUTIONNEL") ? (
+                <Button size="small" linkProps={{ href: "/faq" }}>
+                  Questions fréquentes
+                </Button>
+              ) : (
+                <Button size="small">
+                  <a href="https://reva.crisp.help/fr/category/candidat-rhr5rx/">
+                    Foire aux questions
+                  </a>
+                </Button>
+              )}
+              <Button priority="secondary" size="small">
+                <a href="https://vae.gouv.fr/nous-contacter/">Nous contacter</a>
               </Button>
-            ) : (
-              <Button size="small">
-                <a href="https://reva.crisp.help/fr/category/candidat-rhr5rx/">
-                  Foire aux questions
-                </a>
-              </Button>
-            )}
-            <Button priority="secondary" size="small">
-              <a href="https://vae.gouv.fr/nous-contacter/">Nous contacter</a>
-            </Button>
+            </div>
+          </div>
+          <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
+            {sections?.sectionDAides?.data.map((sa, index) => {
+              const articles = sa.attributes?.article_d_aides?.data;
+              if (!articles?.length) return null;
+
+              return (
+                <Accordion
+                  label={
+                    <span className="text-2xl text-dsfrBlue-franceSun">
+                      {sa.attributes?.titre || ""}
+                    </span>
+                  }
+                  defaultExpanded={!index}
+                  key={sa.id}
+                >
+                  <HelpSection articles={articles as ArticleDAideEntity[]} />
+                </Accordion>
+              );
+            })}
           </div>
         </div>
-        <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
-          {sections?.sectionDAides?.data.map((sa, index) => {
-            const articles = sa.attributes?.article_d_aides?.data;
-            if (!articles?.length) return null;
-
-            return (
-              <Accordion
-                label={
-                  <span className="text-2xl text-dsfrBlue-franceSun">
-                    {sa.attributes?.titre || ""}
-                  </span>
-                }
-                defaultExpanded={!index}
-                key={sa.id}
-              >
-                <HelpSection articles={articles as ArticleDAideEntity[]} />
-              </Accordion>
-            );
-          })}
-        </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 
