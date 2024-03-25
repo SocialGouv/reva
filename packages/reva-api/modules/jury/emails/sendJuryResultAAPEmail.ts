@@ -3,7 +3,10 @@ import mjml2html from "mjml";
 import { sendGenericEmail, templateMail } from "../../shared/email";
 import { logger } from "../../shared/logger";
 
-const baseUrl = process.env.ELM_ADMIN_BASE_URL || "https://vae.gouv.fr";
+const baseUrl =
+  process.env.ELM_ADMIN_BASE_URL ||
+  process.env.APP_BASE_URL ||
+  "https://vae.gouv.fr";
 
 export const sendJuryResultAAPEmail = async ({
   candidacyId,

@@ -7,6 +7,11 @@ import AccountForm from "../components/account-form/AccountForm.component";
 import OrganismForm from "../components/organism-form/OrganismForm.component";
 import CertificationAuthorityForm from "../components/certification-authority-form/CertificationAuthority.component";
 import { BackButton } from "@/components/back-button/BackButton";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useHooksAccount } from "./account.hooks";
+import { useAuth } from "@/components/auth/auth";
+import { CopyClipBoard } from "@/components/copy-clip-board";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const getAccount = graphql(`
   query getAccount($accountId: ID!) {
@@ -36,6 +41,9 @@ const getAccount = graphql(`
 const AccountPage = () => {
   const { accountId }: { accountId: string } = useParams();
 
+  const { isFeatureActive } = useFeatureflipping();
+  const { isAdmin } = useAuth();
+  const { getImpersonateUrl } = useHooksAccount();
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getAccountResponse } = useQuery({
@@ -66,7 +74,24 @@ const AccountPage = () => {
           Toutes les comptes
         </BackButton>
 
-        <h1>Compte utilisateur</h1>
+        <div className="flex justify-between">
+          <h1>Compte utilisateur</h1>
+
+          {isFeatureActive("IMPERSONATE") && isAdmin && (
+            <CopyClipBoard
+              onClick={async (callback) => {
+                const url = await getImpersonateUrl(account.id);
+                if (url) {
+                  callback(url);
+                }
+              }}
+            >
+              <Button priority="secondary" type="button">
+                Impersonate
+              </Button>
+            </CopyClipBoard>
+          )}
+        </div>
 
         <AccountForm account={account} />
 

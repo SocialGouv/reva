@@ -11,6 +11,7 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
+import { accountRoute } from "../../modules/account/account.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { juryRoute } from "../../modules/jury/jury.routes";
@@ -129,6 +130,7 @@ export const buildApp = async (
     prefix: "/api",
   });
 
+  app.register(accountRoute, { prefix: "/api" });
   app.register(feasibilityFileUploadRoute, { prefix: "/api" });
   app.register(dossierDeValidationRoute, { prefix: "/api" });
   app.register(juryRoute, { prefix: "/api" });

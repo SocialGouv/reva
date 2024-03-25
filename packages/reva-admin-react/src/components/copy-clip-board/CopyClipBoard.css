@@ -1,0 +1,40 @@
+.Container {
+  position: relative;
+
+  .CopiedClipBoardTooltip  {
+    position: absolute;
+    left: calc(50% - 30px);
+    top: -36px;
+
+    &.enabled {
+      opacity: 1;
+    }
+
+    &.disabled {
+      opacity: 0;
+    }
+
+    transition: opacity 0.3s;
+
+    border-radius: 5px;
+    border: 1px solid #dfe2ea;
+    background: #dfe2ea;
+
+    height: 24px;
+    width: 60px;
+
+    text-align: center;
+
+    padding: 0 8px;
+    box-sizing: border-box;
+
+    color: #14171f;
+
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+
+    user-select: none;
+  }
+}

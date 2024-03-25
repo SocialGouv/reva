@@ -14,6 +14,7 @@ import { getAccountById } from "./features/getAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getAccounts } from "./features/getAccounts";
 import { updateAccountById } from "./features/updateAccount";
+import { getImpersonateUrl } from "./features/impersonate";
 
 export const resolvers = {
   Mutation: {
@@ -36,17 +37,17 @@ export const resolvers = {
           keycloak: Keycloak.Keycloak;
           getKeycloakAdmin: () => KeycloakAdminClient;
         };
-      }
+      },
     ) => {
       if (!context.auth.hasRole("admin")) {
         return Left(
           new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
-          )
+            "Not authorized",
+          ),
         )
           .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
+            (error) => new mercurius.ErrorWithProps(error.message, error),
           )
           .extract();
       }
@@ -77,13 +78,13 @@ export const resolvers = {
           lastname: string;
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -95,7 +96,7 @@ export const resolvers = {
             keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -112,13 +113,13 @@ export const resolvers = {
         groupFilter?: AccountGroupFilter;
         searchFilter?: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -126,7 +127,7 @@ export const resolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -138,13 +139,13 @@ export const resolvers = {
       params: {
         id: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -161,8 +162,42 @@ export const resolvers = {
     account_getAccountForConnectedUser: async (
       _parent: unknown,
       _params: unknown,
-      context: GraphqlContext
+      context: GraphqlContext,
     ) =>
       getAccountByKeycloakId({ keycloakId: context.auth.userInfo?.sub || "" }),
+    account_getImpersonateUrl: async (
+      _parent: unknown,
+      params: {
+        input: { accountId?: string; candidateId?: string };
+      },
+      context: GraphqlContext,
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized",
+          );
+        }
+
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        const keycloakAdmin = await context.app.getKeycloakAdmin();
+
+        return getImpersonateUrl(
+          {
+            hasRole: context.auth.hasRole,
+            keycloakAdmin,
+            keycloakId: context.auth.userInfo?.sub,
+          },
+          params.input,
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
   },
 };

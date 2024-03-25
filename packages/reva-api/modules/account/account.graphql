@@ -29,6 +29,11 @@ input UpdateAccountInput {
   lastname: String
 }
 
+input GetImpersonateUrlInput {
+  accountId: String
+  candidateId: String
+}
+
 type Mutation {
   account_createAccount(account: AccountInput): Account!
   account_updateAccount(
@@ -51,4 +56,5 @@ type Query {
   ): AccountsPaginated!
   account_getAccount(id: ID!): Account
   account_getAccountForConnectedUser: Account
+  account_getImpersonateUrl(input: GetImpersonateUrlInput!): String
 }
