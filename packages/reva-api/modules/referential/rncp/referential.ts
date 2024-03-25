@@ -229,8 +229,8 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
     const certification: RNCPCertification = {
       ID_FICHE: data.ID_FICHE,
       NUMERO_FICHE: data.NUMERO_FICHE,
-      BLOCS_COMPETENCES: ((data.BLOCS_COMPETENCES || []) as any[]).map(
-        (bloc) => {
+      BLOCS_COMPETENCES: ((data.BLOCS_COMPETENCES || []) as any[])
+        .map((bloc) => {
           return {
             CODE: bloc.CODE,
             LIBELLE: bloc.LIBELLE,
@@ -241,8 +241,8 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
             MODALITES_EVALUATION: bloc.MODALITES_EVALUATION,
             FACULTATIF: bloc.LIBELLE?.toLowerCase().includes("facultatif"),
           };
-        },
-      ),
+        })
+        .sort((a, b) => (a.CODE > b.CODE ? 1 : -1)),
     };
 
     return certification;

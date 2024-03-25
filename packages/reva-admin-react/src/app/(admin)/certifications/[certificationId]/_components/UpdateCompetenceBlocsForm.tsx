@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { v4 } from "uuid";
 import {
   CertificationCompetence,
   CertificationCompetenceBloc,
@@ -7,9 +8,8 @@ import {
 } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useFCCertificationQuery } from "../certificationQueries";
-import { v4 } from "uuid";
 import { SortableList } from "@/components/sortable-list";
 
 const UpdateCompetenceBlocsForm = ({
@@ -258,7 +258,7 @@ const UpdateCompetenceBlocsForm = ({
             </div>
           )}
 
-          <Checkbox
+          <RadioButtons
             className="mt-6"
             legend="Facultatif"
             orientation="horizontal"
