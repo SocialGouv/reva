@@ -3,9 +3,9 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import { useForm, useController } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
@@ -68,6 +68,7 @@ export const useCandidateProfilePageLogic = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+  const router = useRouter();
 
   const { data: getCandidateProfileResponse } = useQuery({
     queryKey: ["getCandidateProfile", candidacyId],
@@ -138,6 +139,7 @@ export const useCandidateProfilePageLogic = () => {
         ...data,
       });
       successToast("Les modifications ont bien été enregistrées");
+      router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);
     }
