@@ -1,4 +1,9 @@
 import {
+  hasRole,
+  isCandidacyOwner,
+  whenHasRole,
+} from "../../shared/security/middlewares";
+import {
   defaultSecurity,
   isAdmin,
   isAdminOrCandidacyCompanion,
@@ -26,7 +31,11 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateGoals": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_updateExperience": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_removeExperience": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_addExperience": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_addExperience": [
+    hasRole(["admin", "manage_candidacy", "candidate"]),
+    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+    whenHasRole("manage_candidacy", isCandidacyOwner),
+  ],
   "Mutation.candidacy_selectOrganism": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_submitCandidacy": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_confirmTrainingForm": [isCandidateOwnerOfCandidacy],
