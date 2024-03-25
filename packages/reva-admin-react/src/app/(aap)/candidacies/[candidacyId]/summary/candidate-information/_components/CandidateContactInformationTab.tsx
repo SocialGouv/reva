@@ -7,6 +7,7 @@ import {
   CandidateContactInformationInput,
 } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -25,8 +26,9 @@ const CandidateContactInformationTab = ({
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+  const queryClient = useQueryClient();
 
-  const { candidacy, getCandidacyRefetch } = useCandidateSummary(candidacyId);
+  const { candidacy } = useCandidateSummary(candidacyId);
   const candidate = candidacy?.candidate;
 
   const { updateCandidateContactInformationMutate } =
@@ -80,7 +82,9 @@ const CandidateContactInformationTab = ({
         candidateContactInformation,
       });
       successToast("Les informations ont bien été mises à jour");
-      await getCandidacyRefetch();
+      await queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
       handleOnSubmitNavigation();
     } catch (e) {
       graphqlErrorToast(e);

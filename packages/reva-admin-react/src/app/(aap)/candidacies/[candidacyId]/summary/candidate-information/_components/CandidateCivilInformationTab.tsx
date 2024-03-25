@@ -32,7 +32,7 @@ const CandidateCivilInformationTab = ({
 
   const queryClient = useQueryClient();
 
-  const { candidacy, countries, departments, getCandidacyRefetch } =
+  const { candidacy, countries, departments } =
     useCandidateSummary(candidacyId);
   const { updateCandidateCivilInformationMutate } =
     useUpdateCandidateCivilInformation(candidacyId);
