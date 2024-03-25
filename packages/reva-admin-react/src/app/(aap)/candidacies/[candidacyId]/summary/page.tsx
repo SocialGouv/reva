@@ -145,15 +145,17 @@ const CandidacySummaryPage = () => {
           >
             {isCandidateProfileCompleted && (
               <div className="flex flex-col">
-                <p className="font-bold">
+                <p className="font-bold mb-0">
                   Niveau de la formation la plus élevée
                 </p>
-                <p>{candidate.niveauDeFormationLePlusEleve?.label}</p>
+                <p className="mb-0">
+                  {candidate.niveauDeFormationLePlusEleve?.label}
+                </p>
                 <br />
-                <p className="font-bold">
+                <p className="font-bold mb-0">
                   Intitulé de la certification la plus élevée obtenue
                 </p>
-                <p>{candidate.highestDegreeLabel}</p>
+                <p className="mb-0">{candidate.highestDegreeLabel}</p>
               </div>
             )}
           </CandidacySectionCard>
