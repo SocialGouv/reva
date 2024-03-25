@@ -7,8 +7,9 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { generateJwt } from "./auth.helper";
 import {
+  CandidateCivilInformationInput,
+  CandidateContactInformationInput,
   CandidateProfileUpdateInput,
-  CandidateUpdateInput,
 } from "./candidate.types";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
@@ -20,7 +21,8 @@ import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "./features/getCandidateByEmail";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
-import { updateCandidate } from "./features/updateCandidate";
+import { updateCandidateCivilInformation } from "./features/updateCandidateCivilInformation";
+import { updateCandidateContactInformation } from "./features/updateCandidateContactInformation";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import {
   sendLoginEmail,
@@ -177,18 +179,35 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidate_updateCandidate: (
+    candidate_updateCandidateCivilInformation: (
       _: unknown,
       {
-        candidate,
+        candidateCivilInformation,
       }: {
-        candidate: CandidateUpdateInput;
+        candidateCivilInformation: CandidateCivilInformationInput;
       },
       context: GraphqlContext,
     ) =>
-      updateCandidate({
+      updateCandidateCivilInformation({
         params: {
-          candidate,
+          candidateCivilInformation,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
+    candidate_updateCandidateContactInformation: (
+      _: unknown,
+      {
+        candidateContactInformation,
+      }: {
+        candidateContactInformation: CandidateContactInformationInput;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidateContactInformation({
+        params: {
+          candidateContactInformation,
           userKeycloakId: context.auth.userInfo?.sub,
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],

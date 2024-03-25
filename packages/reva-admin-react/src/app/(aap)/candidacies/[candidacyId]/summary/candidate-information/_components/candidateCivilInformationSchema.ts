@@ -11,7 +11,7 @@ const defaultErrorMessage = "Ce champ est obligatoire";
 const socialSecurityNumberErrorMessage =
   "Le numéro de sécurité sociale doit contenir 15 caractères";
 
-export const candidateInformationSchema = z
+export const candidateCivilInformationSchema = z
   .object({
     gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
     lastname: z.string().min(1, defaultErrorMessage),
@@ -25,11 +25,6 @@ export const candidateInformationSchema = z
     birthCity: z.string().min(1, defaultErrorMessage),
     nationality: z.string().min(1, defaultErrorMessage),
     socialSecurityNumber: z.string().min(15, socialSecurityNumberErrorMessage),
-    street: z.string().min(1, defaultErrorMessage),
-    city: z.string().min(1, defaultErrorMessage),
-    zip: z.string().min(5, defaultErrorMessage),
-    phone: z.string().length(10, defaultErrorMessage),
-    email: z.string().email(defaultErrorMessage),
     countryIsFrance: z.boolean(),
   })
   .superRefine((data, ctx) => {
@@ -72,6 +67,6 @@ export const candidateInformationSchema = z
     return data;
   });
 
-export type FormCandidateInformationData = z.infer<
-  typeof candidateInformationSchema
+export type FormCandidateCivilInformationData = z.infer<
+  typeof candidateCivilInformationSchema
 >;

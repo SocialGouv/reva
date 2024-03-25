@@ -80,6 +80,31 @@ export interface CandidateUpdateInput {
   city: string;
 }
 
+export interface CandidateCivilInformationInput {
+  id: string;
+  gender: Gender;
+  firstname: string;
+  firstname2?: string;
+  firstname3?: string;
+  lastname: string;
+  givenName?: string;
+  birthdate: string;
+  birthCity: string;
+  birthDepartmentId: string;
+  countryId: Country["id"];
+  nationality: string;
+  socialSecurityNumber: string;
+}
+
+export interface CandidateContactInformationInput {
+  id: string;
+  email: string;
+  phone: string;
+  street: string;
+  zip: string;
+  city: string;
+}
+
 export interface CandidateProfileUpdateInput {
   candidateId: string;
   highestDegreeId: string;

@@ -77,7 +77,7 @@ input FullCandidateInput {
   vulnerabilityIndicatorId: UUID
 }
 
-input CandidateUpdateInput {
+input CandidateCivilInformationInput {
   id: UUID!
   gender: Gender!
   lastname: String!
@@ -91,11 +91,15 @@ input CandidateUpdateInput {
   countryId: UUID!
   nationality: String!
   socialSecurityNumber: String!
+}
+
+input CandidateContactInformationInput {
+  id: UUID!
   street: String!
   zip: String!
   city: String!
-  email: String!
   phone: String!
+  email: String!
 }
 
 input CandidateProfileUpdateInput {
@@ -109,9 +113,13 @@ type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
-  candidate_updateCandidate(
+  candidate_updateCandidateCivilInformation(
     candidacyId: String!
-    candidate: CandidateUpdateInput!
+    candidateCivilInformation: CandidateCivilInformationInput!
+  ): Candidate
+  candidate_updateCandidateContactInformation(
+    candidacyId: String!
+    candidateContactInformation: CandidateContactInformationInput!
   ): Candidate
   candidate_updateCandidateProfile(
     candidacyId: String!
