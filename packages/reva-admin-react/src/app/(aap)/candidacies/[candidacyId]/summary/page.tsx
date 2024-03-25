@@ -62,6 +62,14 @@ const CandidacySummaryPage = () => {
     admissibilityFvae &&
     (!admissibilityFvae.isAlreadyAdmissible || admissibilityFvae.expiresAt);
 
+  const isCandidacyAlreadyAdmissible = admissibilityFvae?.isAlreadyAdmissible;
+
+  const isCandidacyAdmissibilityExpired =
+    admissibilityFvae &&
+    admissibilityFvae.isAlreadyAdmissible &&
+    admissibilityFvae.expiresAt &&
+    admissibilityFvae.expiresAt < new Date().getTime();
+
   return (
     <>
       <div>
@@ -87,8 +95,12 @@ const CandidacySummaryPage = () => {
             buttonPriority={
               isCandidateInformationCompleted ? "secondary" : "primary"
             }
-            Badge={
-              isCandidateInformationCompleted ? BadgeCompleted : BadgeToComplete
+            badge={
+              isCandidateInformationCompleted ? (
+                <BadgeCompleted />
+              ) : (
+                <BadgeToComplete />
+              )
             }
           >
             <dl>
@@ -138,8 +150,12 @@ const CandidacySummaryPage = () => {
             buttonPriority={
               isCandidateProfileCompleted ? "secondary" : "primary"
             }
-            Badge={
-              isCandidateProfileCompleted ? BadgeCompleted : BadgeToComplete
+            badge={
+              isCandidateProfileCompleted ? (
+                <BadgeCompleted />
+              ) : (
+                <BadgeToComplete />
+              )
             }
           >
             {isCandidateProfileCompleted && (
@@ -170,16 +186,32 @@ const CandidacySummaryPage = () => {
             buttonPriority={
               isCandidacyAdmissibilityComplete ? "secondary" : "primary"
             }
-            Badge={
-              isCandidacyAdmissibilityComplete
-                ? BadgeCompleted
-                : BadgeToComplete
+            badge={
+              isCandidacyAdmissibilityExpired ? (
+                <Badge severity="warning">Recevabilité favorable expirée</Badge>
+              ) : isCandidacyAlreadyAdmissible ? (
+                <Badge severity="success">
+                  Recevabilité favorable en cours
+                </Badge>
+              ) : isCandidacyAdmissibilityComplete ? (
+                <BadgeCompleted />
+              ) : (
+                <BadgeToComplete />
+              )
             }
           >
-            <SmallNotice>
-              Besoin d'aide sur la recevabilité ? Consultez les questions
-              fréquentes de nos utilisateurs à ce sujet.
-            </SmallNotice>
+            {admissibilityFvae?.expiresAt && (
+              <span>
+                Date de fin de validité :{" "}
+                {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
+              </span>
+            )}
+            {!isCandidacyAdmissibilityComplete && (
+              <SmallNotice>
+                Besoin d'aide sur la recevabilité ? Consultez les questions
+                fréquentes de nos utilisateurs à ce sujet.
+              </SmallNotice>
+            )}
           </CandidacySectionCard>
           <CandidateExperiencesSectionCard
             experiences={candidacy.experiences.map((e) => ({

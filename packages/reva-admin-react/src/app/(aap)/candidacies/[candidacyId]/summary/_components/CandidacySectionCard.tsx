@@ -19,7 +19,7 @@ type HasButton =
 interface CandidacySectionCardProps {
   children?: ReactNode;
   title: string;
-  Badge: () => ReactNode;
+  badge: ReactNode;
 }
 
 const CandidacySectionCard = ({
@@ -29,14 +29,14 @@ const CandidacySectionCard = ({
   buttonOnClick,
   buttonTitle,
   buttonPriority,
-  Badge,
+  badge,
 }: CandidacySectionCardProps & HasButton) => {
   return (
     <GrayCard>
       <div className="flex justify-between items-center w-full mb-5">
         <div className="flex items-center gap-4">
           <h4 className="text-2xl font-bold mb-0">{title}</h4>
-          {Badge && <Badge />}
+          {badge}
         </div>
         {hasButton && (
           <Button onClick={buttonOnClick} priority={buttonPriority}>
