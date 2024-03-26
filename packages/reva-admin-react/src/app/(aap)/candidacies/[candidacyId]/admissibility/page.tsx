@@ -14,14 +14,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useCallback, useEffect } from "react";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const schema = z
   .object({
-    admissibilityStatus: z.enum(["alreadyAdmissible", "notAlreadyAdmissible"], {
-      errorMap: (issue, ctx) => {
-        return { message: "Ce champ est obligatoire" };
+    admissibilityStatus: z.enum(
+      ["unknownAdmissibility", "alreadyAdmissible", "notAlreadyAdmissible"],
+      {
+        errorMap: (issue, ctx) => {
+          return { message: "Ce champ est obligatoire" };
+        },
       },
-    }),
+    ),
     expiresAt: z.string().optional(),
   })
   .refine(
@@ -77,7 +81,8 @@ const AdmissibilityPage = () => {
     register,
     reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState,
+    formState: { errors },
     watch,
   } = methods;
 
@@ -147,11 +152,11 @@ const AdmissibilityPage = () => {
   const resetForm = useCallback(() => {
     reset({
       admissibilityStatus: !admissibilityFvaeResponse
-        ? undefined
+        ? "unknownAdmissibility"
         : isAlreadyAdmissible
           ? "alreadyAdmissible"
           : "notAlreadyAdmissible",
-      expiresAt: expiresAt ? format(expiresAt, "yyyy-MM-dd") : undefined,
+      expiresAt: expiresAt ? format(expiresAt, "yyyy-MM-dd") : "",
     });
   }, [reset, expiresAt, isAlreadyAdmissible, admissibilityFvaeResponse]);
 
@@ -161,11 +166,17 @@ const AdmissibilityPage = () => {
 
   return (
     <div className="flex flex-col">
-      <CandidacyBackButton candidacyId={candidacyId} />
       <h1>Compléter la recevabilité </h1>
       <FormOptionalFieldsDisclaimer />
       {getCandidacyStatus === "success" && (
-        <form onSubmit={handleFormSubmit} className="flex flex-col mt-8">
+        <form
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
+          }}
+          className="flex flex-col mt-8"
+        >
           <RadioButtons
             legend="Le candidat a-t-il déjà obtenu une recevabilité favorable pour cette certification ?"
             options={[
@@ -200,17 +211,10 @@ const AdmissibilityPage = () => {
               stateRelatedMessage={errors.expiresAt?.message}
             />
           )}
-          <div className="flex gap-4 items-center justify-end mt-10">
-            <Button
-              priority="secondary"
-              linkProps={{ href: `/candidacies/${candidacyId}/summary` }}
-            >
-              Annuler
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              Enregistrer
-            </Button>
-          </div>
+          <FormButtons
+            backUrl={`/candidacies/${candidacyId}/summary`}
+            formState={formState}
+          />
         </form>
       )}
     </div>
