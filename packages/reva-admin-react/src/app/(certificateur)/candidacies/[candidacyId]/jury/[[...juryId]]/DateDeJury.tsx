@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
-import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
-import { format, formatInTimeZone } from "date-fns-tz";
+import { add, endOfDay, format, isAfter, isBefore, startOfDay } from "date-fns";
 
 import { errorToast } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,9 +55,9 @@ export const DateDeJury = (): JSX.Element => {
   const candidacy = getCandidacy.data?.getCandidacyById;
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-    setValue,
   } = useForm<DateDeJuryFormData>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -68,31 +67,32 @@ export const DateDeJury = (): JSX.Element => {
     if (candidacy?.jury?.dateOfSession) {
       setValue(
         "date",
-        format(new Date(candidacy?.jury?.dateOfSession), "dd/MM/yyyy"),
+        format(new Date(candidacy.jury.dateOfSession), "yyyy-MM-dd"),
       );
-      setValue(
-        "time",
-        format(new Date(candidacy?.jury?.dateOfSession), "HH:mm"),
-      );
+      setValue("time", format(new Date(candidacy.jury.dateOfSession), "HH:mm"));
     }
   }, [candidacy?.jury?.dateOfSession, setValue]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
       try {
-        let date = formatInTimeZone(data.date, "Europe/Paris", "yyyy-mm-dd");
+        let date = new Date(format(data.date, "yyyy-MM-dd"))
+          .valueOf()
+          .toString();
         let time;
         if (data.time) {
-          date = formatInTimeZone(
-            `${data.date}T${data.time}`,
-            "Europe/Paris",
-            "yyyy-MM-dd",
-          );
-          time = formatInTimeZone(
-            `${data.date}T${data.time}`,
-            "Europe/Paris",
-            "HH:mm",
-          );
+          date = new Date(data.date)
+            .setHours(
+              Number(data.time.split(":")[0]),
+              Number(data.time.split(":")[1]),
+            )
+            .valueOf()
+            .toString();
+          time = new Date(
+            format(`${data.date}T${data.time}`, "yyyy-MM-dd HH:mm"),
+          )
+            .valueOf()
+            .toString();
         }
         const response = await scheduleJury.mutateAsync({
           ...data,

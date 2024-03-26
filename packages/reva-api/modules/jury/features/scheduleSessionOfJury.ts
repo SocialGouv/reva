@@ -80,9 +80,18 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     }
   }
 
-  const dateOfSession = new Date(date);
+  const dateOfSession = new Date(Number(date));
   const today = startOfDay(new Date());
   const nextTwoYears = endOfDay(add(today, { years: 2 }));
+  let timeOfSession;
+
+  if (time) {
+    const timeOfSessionHours = new Date(Number(time)).getHours();
+    const timeOfSessionMinutes = (
+      "0" + new Date(Number(time)).getMinutes()
+    ).slice(-2);
+    timeOfSession = `${timeOfSessionHours}:${timeOfSessionMinutes}`;
+  }
 
   if (
     !isEqual(dateOfSession, today) &&
@@ -110,8 +119,8 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const jury = await prismaClient.jury.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
-      dateOfSession: dateOfSession,
-      timeOfSession: time,
+      dateOfSession,
+      timeOfSession,
       addressOfSession: address,
       informationOfSession: information,
       convocationFile: convocationFile
@@ -135,8 +144,8 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   if (candidacy.candidate) {
     sendJuryScheduledCandidateEmail({
       email: candidacy.candidate.email,
-      dateOfSession: new Date(date),
-      timeOfSession: time,
+      dateOfSession,
+      timeOfSession,
       addressOfSession: address,
       convocationFile,
     });
@@ -146,8 +155,8 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
         candidacyId,
         email: candidacy.organism?.contactAdministrativeEmail,
         candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
-        dateOfSession: new Date(date),
-        timeOfSession: time,
+        dateOfSession,
+        timeOfSession,
       });
     }
   }
@@ -158,7 +167,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     userRoles,
     userKeycloakId,
     userEmail,
-    details: { dateOfSession, timeOfSession: time },
+    details: { dateOfSession, timeOfSession },
   });
 
   return jury;

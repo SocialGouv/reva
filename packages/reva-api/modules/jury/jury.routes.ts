@@ -172,22 +172,10 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
         }
       }
 
-      let date = request.body.date.value;
-
-      if (request.body.time) {
-        if (
-          !/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(request.body.time.value)
-        ) {
-          return reply.status(400).send("Le format de l'heure est invalide.");
-        }
-
-        date = `${date}T${request.body.time.value}`;
-      }
-
       try {
         await scheduleSessionOfJury({
           candidacyId: request.body.candidacyId.value,
-          date,
+          date: request.body.date.value,
           time: request.body.time?.value,
           address: request.body.address?.value,
           information: request.body.information?.value,
