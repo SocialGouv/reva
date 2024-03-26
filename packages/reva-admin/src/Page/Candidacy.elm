@@ -52,7 +52,7 @@ import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, h2, p, text)
-import Html.Attributes exposing (alt, class, name)
+import Html.Attributes exposing (alt, attribute, class, name)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form
 import Page.Form.Admissibility
@@ -370,6 +370,17 @@ view context model =
 
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)
 viewTrainingSent context candidacyId =
+    let
+        newCandidacySummaryPageActive =
+            List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
+
+        urlAndTarget =
+            if newCandidacySummaryPageActive then
+                ( context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString candidacyId ++ "/summary", "_self" )
+
+            else
+                ( Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile), "" )
+    in
     [ div
         [ class "mt-12 px-20", role "status" ]
         [ View.title "Confirmation"
@@ -379,7 +390,8 @@ viewTrainingSent context candidacyId =
                 [ class "mt-6 mb-24" ]
                 [ text "Le parcours personnalisé a bien été envoyé." ]
             , Button.new { onClick = Nothing, label = "Retour à la candidature" }
-                |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile))
+                |> Button.linkButton (Tuple.first urlAndTarget)
+                |> Button.withAttrs [ attribute "target" (Tuple.second urlAndTarget) ]
                 |> Button.view
             ]
         ]
