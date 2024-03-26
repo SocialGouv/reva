@@ -10,12 +10,12 @@ import {
 } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { FileService, UploadedFile } from "../../shared/file";
 import {
   sendJuryScheduledAAPEmail,
   sendJuryScheduledCandidateEmail,
 } from "../emails";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;

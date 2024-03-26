@@ -1,26 +1,52 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
-import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, add, startOfDay, endOfDay, isBefore } from "date-fns";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Upload } from "@codegouvfr/react-dsfr/Upload";
+import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
+import { format, formatInTimeZone } from "date-fns-tz";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { errorToast } from "@/components/toast/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { useJuryPageLogic } from "./juryPageLogic";
 import { FileLink } from "../../../(components)/FileLink";
+import { useJuryPageLogic } from "./juryPageLogic";
 
-const schema = z.object({
-  date: z.string().min(1),
-  time: z.string().optional(),
-  address: z.string().optional(),
-  information: z.string().optional(),
-  convocationFile: z.object({ 0: z.instanceof(File).optional() }),
-});
+const schema = z
+  .object({
+    date: z.string(),
+    time: z.string().optional(),
+    address: z.string().optional(),
+    information: z.string().optional(),
+    convocationFile: z.object({ 0: z.instanceof(File).optional() }),
+  })
+  .superRefine((data, ctx) => {
+    const date = data.date;
+    if (!date) {
+      ctx.addIssue({
+        path: ["date"],
+        message: "La date est obligatoire",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+    if (isBefore(new Date(date), startOfDay(new Date()))) {
+      ctx.addIssue({
+        path: ["date"],
+        message: "La date doit être ultérieure à aujourd'hui",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+    if (isAfter(new Date(date), endOfDay(add(new Date(), { years: 2 })))) {
+      ctx.addIssue({
+        path: ["date"],
+        message: "La date doit être inférieure à 2 ans",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 type DateDeJuryFormData = z.infer<typeof schema>;
 
@@ -28,18 +54,50 @@ export const DateDeJury = (): JSX.Element => {
   const { getCandidacy, scheduleJury } = useJuryPageLogic();
 
   const candidacy = getCandidacy.data?.getCandidacyById;
-
   const {
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-  } = useForm<DateDeJuryFormData>({ resolver: zodResolver(schema) });
+    setValue,
+  } = useForm<DateDeJuryFormData>({
+    resolver: zodResolver(schema),
+    mode: "all",
+  });
+
+  useEffect(() => {
+    if (candidacy?.jury?.dateOfSession) {
+      setValue(
+        "date",
+        format(new Date(candidacy?.jury?.dateOfSession), "yyyy-MM-dd"),
+      );
+      setValue(
+        "time",
+        format(new Date(candidacy?.jury?.dateOfSession), "HH:mm"),
+      );
+    }
+  }, [candidacy?.jury?.dateOfSession, setValue]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
       try {
+        let date = formatInTimeZone(data.date, "Europe/Paris", "yyyy-mm-dd");
+        let time;
+        if (data.time) {
+          date = formatInTimeZone(
+            `${data.date}T${data.time}`,
+            "Europe/Paris",
+            "yyyy-MM-dd",
+          );
+          time = formatInTimeZone(
+            `${data.date}T${data.time}`,
+            "Europe/Paris",
+            "HH:mm",
+          );
+        }
         const response = await scheduleJury.mutateAsync({
           ...data,
+          date,
+          time,
           candidacyId: candidacy.id,
           convocationFile: data.convocationFile?.[0],
         });
@@ -108,10 +166,13 @@ export const DateDeJury = (): JSX.Element => {
           <div className="flex flex-row items-start justify-between gap-4">
             <Card
               label="Date"
-              value={format(jury.dateOfSession, "dd/MM/yyyy")}
+              value={format(new Date(jury?.dateOfSession), "yyyy-MM-dd")}
             />
 
-            <Card label="Heure de convocation" value={jury.timeOfSession} />
+            <Card
+              label="Heure de convocation"
+              value={format(new Date(jury?.dateOfSession), "HH:mm")}
+            />
 
             <Card label="Lieu" value={jury.addressOfSession} />
           </div>
@@ -149,16 +210,8 @@ export const DateDeJury = (): JSX.Element => {
             <Input
               label="Date"
               nativeInputProps={{
-                type: "date",
                 ...register("date"),
-                min: format(startOfDay(new Date()), "yyyy-MM-dd"),
-                max: format(
-                  endOfDay(add(new Date(), { years: 2 })),
-                  "yyyy-MM-dd",
-                ),
-                defaultValue: jury?.dateOfSession
-                  ? format(jury.dateOfSession, "yyyy-MM-dd")
-                  : "",
+                type: "date",
               }}
               state={errors.date ? "error" : "default"}
               stateRelatedMessage={errors.date?.message}

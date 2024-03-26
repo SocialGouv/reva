@@ -1,10 +1,10 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-import { REST_API_URL } from "@/config/config";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { REST_API_URL } from "@/config/config";
 import { JuryInfoInput } from "@/graphql/generated/graphql";
 
 const getJuryByCandidacyIdQuery = graphql(`
@@ -72,7 +72,7 @@ export type ScheduleJuryInputType = {
 
 export const useJuryPageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { candidacyId, juryId } = useParams<{
+  const { candidacyId } = useParams<{
     candidacyId: string;
     juryId?: string[];
   }>();
@@ -84,7 +84,6 @@ export const useJuryPageLogic = () => {
     queryFn: () =>
       graphqlClient.request(getJuryByCandidacyIdQuery, {
         candidacyId: candidacyId,
-        // juryId: juryId?.[0],
       }),
   });
 
