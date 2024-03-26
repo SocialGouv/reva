@@ -20,6 +20,7 @@ import {
   candidateCivilInformationSchema,
 } from "./candidateCivilInformationSchema";
 import useUpdateCandidateCivilInformation from "./useUpdateCandidateCivilInformation.hook";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const CandidateCivilInformationTab = ({
   handleOnSubmitNavigation,
@@ -51,6 +52,7 @@ const CandidateCivilInformationTab = ({
     watch,
     setValue,
     reset,
+    formState,
     formState: { errors },
     clearErrors,
     handleSubmit,
@@ -162,15 +164,20 @@ const CandidateCivilInformationTab = ({
   return (
     <>
       <h6 className="mb-12 text-xl font-bold">Informations civiles</h6>
-      <div className="flex flex-col gap-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={(e) => {
+          e.preventDefault();
+          resetFormData(candidate as Candidate);
+        }}
+        className="flex flex-col gap-6"
+      >
         <div className="flex gap-6">
           <Select
             label="Civilité"
             className="w-full"
             nativeSelectProps={{
-              onChange: (e) => {
-                setValue("gender", e.target.value as GenderEnum);
-              },
+              ...register("gender"),
               value: watch("gender"),
             }}
             state={errors.gender ? "error" : "default"}
@@ -305,16 +312,11 @@ const CandidateCivilInformationTab = ({
             stateRelatedMessage={errors.socialSecurityNumber?.message}
           />
         </div>
-      </div>
-      <div className="flex gap-6 justify-end">
-        <Button
-          priority="secondary"
-          onClick={() => resetFormData(candidate as Candidate)}
-        >
-          Annuler
-        </Button>
-        <Button onClick={handleSubmit(onSubmit)}>Enregistrer</Button>
-      </div>
+        <FormButtons
+          backUrl={`/candidacies/${candidacyId}/summary`}
+          formState={formState}
+        />
+      </form>
     </>
   );
 };

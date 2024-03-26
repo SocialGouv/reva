@@ -17,6 +17,7 @@ import {
   candidateContactInformationSchema,
 } from "./candidateContactInformationSchema";
 import useUpdateCandidateContactInformation from "./useUpdateCandidateContactInformation.hook";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const CandidateContactInformationTab = ({
   handleOnSubmitNavigation,
@@ -38,6 +39,7 @@ const CandidateContactInformationTab = ({
     register,
     reset,
     handleSubmit,
+    formState,
     formState: { errors },
   } = useForm<FormCandidateContactInformationData>({
     resolver: zodResolver(candidateContactInformationSchema),
@@ -93,7 +95,14 @@ const CandidateContactInformationTab = ({
   return (
     <>
       <h6 className="mb-12 text-xl font-bold">Informations de contact</h6>
-      <div className="flex flex-col gap-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={(e) => {
+          e.preventDefault();
+          resetFormData(candidate as Candidate);
+        }}
+        className="flex flex-col gap-6"
+      >
         <Input
           label="Numéro et nom de rue"
           className="w-full"
@@ -143,17 +152,11 @@ const CandidateContactInformationTab = ({
             stateRelatedMessage={errors.email?.message}
           />
         </div>
-      </div>
-
-      <div className="flex gap-6 justify-end">
-        <Button
-          priority="secondary"
-          onClick={() => resetFormData(candidate as Candidate)}
-        >
-          Annuler
-        </Button>
-        <Button onClick={handleSubmit(onSubmit)}>Enregistrer</Button>
-      </div>
+        <FormButtons
+          backUrl={`/candidacies/${candidacyId}/summary`}
+          formState={formState}
+        />
+      </form>
     </>
   );
 };

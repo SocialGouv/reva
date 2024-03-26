@@ -12,11 +12,7 @@ export const FormButtons = ({
 }) => {
   return (
     <div className="flex gap-4 items-center justify-between mt-10">
-      <Button
-        className="mb-6"
-        priority="secondary"
-        linkProps={{ href: backUrl }}
-      >
+      <Button priority="secondary" linkProps={{ href: backUrl }}>
         Retour
       </Button>
       <div className="flex gap-x-2">

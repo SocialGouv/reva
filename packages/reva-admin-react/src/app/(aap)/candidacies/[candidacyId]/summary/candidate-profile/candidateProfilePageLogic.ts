@@ -106,7 +106,8 @@ export const useCandidateProfilePageLogic = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState,
+    formState: { errors },
   } = methods;
 
   const highestDegreeLevelController = useController({
@@ -146,13 +147,14 @@ export const useCandidateProfilePageLogic = () => {
   });
 
   return {
+    candidacyId,
     degrees,
     highestDegreeLevelController,
     niveauDeFormationLePlusEleveController,
     register,
     handleFormSubmit,
+    formState,
     errors,
-    isSubmitting,
     resetForm,
   };
 };

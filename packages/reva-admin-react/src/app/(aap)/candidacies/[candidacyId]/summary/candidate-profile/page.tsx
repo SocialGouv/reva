@@ -4,16 +4,18 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const CandidateProfilePage = () => {
   const {
+    candidacyId,
     degrees,
     highestDegreeLevelController,
     niveauDeFormationLePlusEleveController,
     register,
     handleFormSubmit,
+    formState,
     errors,
-    isSubmitting,
     resetForm,
   } = useCandidateProfilePageLogic();
 
@@ -88,12 +90,10 @@ const CandidateProfilePage = () => {
             stateRelatedMessage={errors.highestDegreeLabel?.message}
           />
         </fieldset>
-        <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
-          <Button priority="secondary" type="reset">
-            Annuler
-          </Button>
-          <Button disabled={isSubmitting}>Valider</Button>
-        </div>
+        <FormButtons
+          backUrl={`/candidacies/${candidacyId}/summary`}
+          formState={formState}
+        />
       </form>
     </div>
   );
