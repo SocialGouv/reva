@@ -63,8 +63,6 @@ import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
-import { CandidateProfileUpdateInput } from "../candidate/candidate.types";
-import { updateCandidateProfile } from "../candidate/features/updateCandidateProfile";
 import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
 
 const withBasicSkills = (c: Candidacy) => ({
@@ -367,6 +365,7 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
         experience: payload.experience,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,
@@ -406,6 +405,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         experienceId: payload.experienceId,
         experience: payload.experience,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       logCandidacyEventUsingPurify({
         candidacyId: payload.candidacyId,

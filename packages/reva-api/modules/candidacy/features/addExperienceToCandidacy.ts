@@ -17,7 +17,11 @@ interface AddExperienceToCandidacyDeps {
 
 export const addExperienceToCandidacy =
   (deps: AddExperienceToCandidacyDeps) =>
-  async (params: { candidacyId: string; experience: ExperienceInput }) => {
+  async (params: {
+    candidacyId: string;
+    experience: ExperienceInput;
+    userRoles: KeyCloakUserRole[];
+  }) => {
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
@@ -39,6 +43,7 @@ export const addExperienceToCandidacy =
     );
 
     if (
+      params.userRoles.includes("candidate") &&
       !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
     ) {
       throw new Error(
