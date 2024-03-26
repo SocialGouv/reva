@@ -23,7 +23,6 @@
     "crisp-sdk-web": "^1.0.21",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
-    "date-fns-tz": "^3.0.0-beta.2",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "jwt-decode": "^4.0.0",
