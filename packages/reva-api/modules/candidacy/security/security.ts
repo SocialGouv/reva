@@ -29,7 +29,11 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateCertificationWithinOrganismScope":
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateGoals": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_updateExperience": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_updateExperience": [
+    hasRole(["admin", "manage_candidacy", "candidate"]),
+    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+    whenHasRole("manage_candidacy", isCandidacyOwner),
+  ],
   "Mutation.candidacy_removeExperience": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_addExperience": [
     hasRole(["admin", "manage_candidacy", "candidate"]),
