@@ -5,7 +5,7 @@ import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -60,7 +60,6 @@ const UpdateOrReplaceCertificationForm = ({
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors, isSubmitting },
   } = useForm<UpdateOrReplaceCertificationFormData>({
     resolver: zodResolver(schema),
@@ -68,31 +67,6 @@ const UpdateOrReplaceCertificationForm = ({
   });
 
   const handleFormSubmit = handleSubmit((data) => onSubmit(data));
-
-  const typeDiplomeController = useController({
-    control,
-    name: "typeDiplomeId",
-  });
-
-  const degreeController = useController({
-    control,
-    name: "degreeLevel",
-  });
-
-  const domaineController = useController({
-    control,
-    name: "domaineId",
-  });
-
-  const conventionCollectiveController = useController({
-    control,
-    name: "conventionCollectiveId",
-  });
-
-  const certificationAuthorityTagController = useController({
-    control,
-    name: "certificationAuthorityTag",
-  });
 
   return (
     <form
@@ -119,11 +93,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Select
         label="Tag certificateur"
         nativeSelectProps={{
-          onChange: (event) =>
-            certificationAuthorityTagController.field.onChange(
-              event.target.value,
-            ),
-          value: certificationAuthorityTagController.field.value,
+          ...register("certificationAuthorityTag"),
         }}
       >
         <option />
@@ -155,11 +125,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Select
         label="Niveau de la certification"
         nativeSelectProps={{
-          onChange: (event) =>
-            degreeController.field.onChange(
-              Number.parseInt(event.target.value),
-            ),
-          value: degreeController.field.value,
+          ...register("degreeLevel", { valueAsNumber: true }),
         }}
       >
         {degrees?.map((d) => (
@@ -171,9 +137,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Select
         label="Type de la certification"
         nativeSelectProps={{
-          onChange: (event) =>
-            typeDiplomeController.field.onChange(event.target.value),
-          value: typeDiplomeController.field.value,
+          ...register("typeDiplomeId"),
         }}
       >
         {typeDiplomes?.map((t) => (
@@ -185,9 +149,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Select
         label="Filière de la certification"
         nativeSelectProps={{
-          onChange: (event) =>
-            domaineController.field.onChange(event.target.value),
-          value: domaineController.field.value,
+          ...register("domaineId"),
         }}
       >
         <option />
@@ -200,9 +162,7 @@ const UpdateOrReplaceCertificationForm = ({
       <Select
         label="Branche de la certification"
         nativeSelectProps={{
-          onChange: (event) =>
-            conventionCollectiveController.field.onChange(event.target.value),
-          value: conventionCollectiveController.field.value,
+          ...register("conventionCollectiveId"),
         }}
       >
         <option />
