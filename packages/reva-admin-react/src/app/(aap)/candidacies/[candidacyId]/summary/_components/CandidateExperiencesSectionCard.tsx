@@ -1,5 +1,6 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Duration } from "@/graphql/generated/graphql";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,7 +36,17 @@ export const CandidateExperiencesSectionCard = ({
       <span className="text-2xl font-bold">Ses expériences</span>
       {experiences.map((e) => (
         <div key={e.id} className="flex flex-col gap-2 py-6 border-b-2">
-          <div className="text-xl font-bold mb-3 ">{e.title}</div>
+          <div className="flex justify-between text-xl font-bold mb-3">
+            {e.title}
+            <Button
+              priority="secondary"
+              linkProps={{
+                href: `/candidacies/${candidacyId}/summary/candidate-experiences/${e.id}`,
+              }}
+            >
+              Modifier
+            </Button>
+          </div>
           <div>Démarrée le {format(e.startedAt, "d MMMM yyyy")}</div>
           <div>Durée d'expérience {durationToString[e.duration]}</div>
           <div>{e.description}</div>
