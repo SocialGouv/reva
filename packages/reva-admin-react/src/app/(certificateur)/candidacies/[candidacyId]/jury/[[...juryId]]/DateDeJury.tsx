@@ -68,7 +68,7 @@ export const DateDeJury = (): JSX.Element => {
     if (candidacy?.jury?.dateOfSession) {
       setValue(
         "date",
-        format(new Date(candidacy?.jury?.dateOfSession), "yyyy-MM-dd"),
+        format(new Date(candidacy?.jury?.dateOfSession), "dd/MM/yyyy"),
       );
       setValue(
         "time",

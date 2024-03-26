@@ -152,11 +152,6 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     }
   }
 
-  // await updateCandidacyStatus({
-  //   candidacyId,
-  //   status: "DOSSIER_DE_VALIDATION_ENVOYE",
-  // });
-
   await logCandidacyAuditEvent({
     candidacyId,
     eventType: "JURY_SESSION_SCHEDULED",
