@@ -178,7 +178,6 @@ const CandidateCivilInformationTab = ({
             className="w-full"
             nativeSelectProps={{
               ...register("gender"),
-              value: watch("gender"),
             }}
             state={errors.gender ? "error" : "default"}
             stateRelatedMessage={errors.gender?.message}
@@ -267,7 +266,6 @@ const CandidateCivilInformationTab = ({
             disabled={disabledDepartment}
             nativeSelectProps={{
               ...register("birthDepartment"),
-              value: watch("birthDepartment"),
             }}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
