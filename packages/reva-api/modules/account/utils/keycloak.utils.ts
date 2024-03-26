@@ -1,6 +1,8 @@
 import { logger } from "../../shared/logger";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+// const domain = "reva.incubateur.net"; // || "vae.gouv.fr";
+const domain = "incubateur.net"; // || "vae.gouv.fr";
 
 export const impersonateAccount = async (
   keycloakId: string,
@@ -17,6 +19,8 @@ export const impersonateAccount = async (
   }
 
   const data = await impersonate(keycloakId, KEYCLOAK_ADMIN_REALM_REVA);
+  console.log("data.redirect", data?.redirect);
+
   if (data) {
     return {
       headers: data.headers,
@@ -88,8 +92,27 @@ export const impersonate = async (
     const headers = [];
 
     for (const header of response.headers) {
-      headers.push(header);
+      if (header[0] == "set-cookie") {
+        const key = "set-cookie";
+        const value = `${cleanCookieValue(header[1])}; Domain=${domain};`;
+        const cleanedHeader: [string, string] = [
+          key,
+          value,
+          // header[1]
+          // .replace("SameSite=None;", "")
+          // .replace("Secure;", "")
+          // .replace("Secure", "")
+          // .replace("Path=/realms/reva/; ", `Domain=${domain};`)
+          // .replace("Path=/auth/realms/reva/; ", `Domain=${domain};`)
+          // .replace("Path=/realms/reva/", `Domain=${domain};`)
+          // .replace("Path=/auth/realms/reva/", `Domain=${domain};`)
+          // .replace("HttpOnly", ""),
+        ];
+        headers.push(cleanedHeader);
+      }
     }
+
+    console.log(headers);
 
     return { headers, redirect };
   } catch (error) {
@@ -99,6 +122,20 @@ export const impersonate = async (
   }
 
   return undefined;
+};
+
+const cleanCookieValue = (value: string) => {
+  return (
+    value
+      .replace("SameSite=None;", "")
+      .replace("Secure;", "Secure")
+      .replace("Secure ", "Secure")
+      // .replace("Path=/realms/reva/; ", ``)
+      // .replace("Path=/auth/realms/reva/; ", ``)
+      // .replace("Path=/realms/reva/", ``)
+      // .replace("Path=/auth/realms/reva/", ``)
+      .replace("HttpOnly", "")
+  );
 };
 
 const getKeycloakAccessToken = async (): Promise<string | undefined> => {

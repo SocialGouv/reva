@@ -62,8 +62,9 @@ export class TokenService implements TokenServiceInterface {
         throw new Error("Token not found");
       }
 
+      this.invalidToken(token.id);
+
       if (token.isExpired) {
-        this.invalidToken(token.id);
         throw new Error("Token is expired");
       }
 
