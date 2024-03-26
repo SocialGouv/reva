@@ -1,7 +1,5 @@
 import { logger } from "../../shared/logger";
 
-const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-
 export const impersonateAccount = async (
   keycloakId: string,
 ): Promise<
@@ -18,9 +16,11 @@ export const impersonateAccount = async (
 
   const data = await impersonate(keycloakId, KEYCLOAK_ADMIN_REALM_REVA);
   if (data) {
+    const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+
     return {
       headers: data.headers,
-      redirect: `${baseUrl}/admin/candidacies`,
+      redirect: `${baseUrl}/admin`,
     };
   }
 
@@ -43,6 +43,8 @@ export const impersonateCandiate = async (
 
   const data = await impersonate(keycloakId, KEYCLOAK_APP_REALM);
   if (data) {
+    const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+
     return {
       headers: data.headers,
       redirect: `${baseUrl}/app`,
@@ -87,8 +89,15 @@ export const impersonate = async (
 
     const headers = [];
 
+    const domain = process.env.FRANCE_VAE_DOMAIN || "gouv.fr";
+
     for (const header of response.headers) {
-      headers.push(header);
+      if (header[0] == "set-cookie") {
+        const key = "set-cookie";
+        const value = `${cleanCookieValue(header[1])}; Domain=${domain};`;
+        const cleanedHeader: [string, string] = [key, value];
+        headers.push(cleanedHeader);
+      }
     }
 
     return { headers, redirect };
@@ -99,6 +108,14 @@ export const impersonate = async (
   }
 
   return undefined;
+};
+
+const cleanCookieValue = (value: string) => {
+  return value
+    .replace("SameSite=None;", "")
+    .replace("Secure;", "Secure")
+    .replace("Secure ", "Secure")
+    .replace("HttpOnly", "");
 };
 
 const getKeycloakAccessToken = async (): Promise<string | undefined> => {
