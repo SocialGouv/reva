@@ -3,7 +3,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useParams } from "next/navigation";
@@ -57,19 +57,14 @@ export const CandidateExperienceForm = ({
       duration: editedExperience?.duration || "unknown",
     },
   });
+
   const {
-    control,
     register,
     formState,
     formState: { isSubmitting, errors, isDirty },
     handleSubmit,
     reset,
   } = methods;
-
-  const durationController = useController({
-    name: "duration",
-    control,
-  });
 
   const resetForm = useCallback(() => {
     if (editedExperience) {
@@ -124,8 +119,7 @@ export const CandidateExperienceForm = ({
           <Select
             label="Durée"
             nativeSelectProps={{
-              onChange: durationController.field.onChange,
-              value: durationController.field.value,
+              ...register("duration"),
             }}
             state={errors.duration ? "error" : "default"}
             stateRelatedMessage={errors.duration?.message}
