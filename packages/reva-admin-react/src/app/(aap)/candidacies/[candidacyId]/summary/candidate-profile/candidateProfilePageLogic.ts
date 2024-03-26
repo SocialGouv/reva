@@ -121,10 +121,10 @@ export const useCandidateProfilePageLogic = () => {
 
   const resetForm = useCallback(() => {
     reset({
-      highestDegreeId: candidate?.highestDegree?.id,
-      highestDegreeLabel: candidate?.highestDegreeLabel || undefined,
+      highestDegreeId: candidate?.highestDegree?.id || "",
+      highestDegreeLabel: candidate?.highestDegreeLabel || "",
       niveauDeFormationLePlusEleveDegreeId:
-        candidate?.niveauDeFormationLePlusEleve?.id,
+        candidate?.niveauDeFormationLePlusEleve?.id || "",
     });
   }, [reset, candidate]);
 
