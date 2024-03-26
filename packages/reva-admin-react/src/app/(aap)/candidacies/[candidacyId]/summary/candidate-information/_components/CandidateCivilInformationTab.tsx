@@ -7,7 +7,6 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";

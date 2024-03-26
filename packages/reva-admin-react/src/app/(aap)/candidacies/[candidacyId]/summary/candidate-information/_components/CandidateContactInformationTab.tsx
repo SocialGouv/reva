@@ -6,7 +6,6 @@ import {
   Candidate,
   CandidateContactInformationInput,
 } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
