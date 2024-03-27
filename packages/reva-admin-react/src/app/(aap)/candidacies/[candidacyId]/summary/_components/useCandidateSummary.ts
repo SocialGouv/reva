@@ -6,6 +6,12 @@ const getCandidacyById = graphql(`
   query getCandidacyById($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      candidacyDropOut {
+        droppedOutAt
+      }
+      reorientationReason {
+        id
+      }
       candidacyStatuses {
         status
         isActive

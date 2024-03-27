@@ -19,6 +19,7 @@ import { useFeatureflipping } from "@/components/feature-flipping/featureFlippin
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useEffect } from "react";
+import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
@@ -127,175 +128,189 @@ const CandidacySummaryPage = () => {
         </p>
       </div>
       {!!candidate && (
-        <ul className="flex flex-col gap-8 pl-0 mt-8">
-          <CandidacySectionCard
-            title="Les informations du candidat"
-            hasButton
-            buttonOnClick={() =>
-              router.push(
-                `/candidacies/${candidacyId}/summary/candidate-information`,
-              )
-            }
-            buttonTitle={
-              isCandidateInformationCompleted ? "Modifier" : "Compléter"
-            }
-            buttonPriority={
-              isCandidateInformationCompleted ? "secondary" : "primary"
-            }
-            badge={
-              isCandidateInformationCompleted ? (
-                <BadgeCompleted />
+        <>
+          <ul className="flex flex-col gap-8 pl-0 mt-8">
+            <CandidacySectionCard
+              title="Les informations du candidat"
+              hasButton
+              buttonOnClick={() =>
+                router.push(
+                  `/candidacies/${candidacyId}/summary/candidate-information`,
+                )
+              }
+              buttonTitle={
+                isCandidateInformationCompleted ? "Modifier" : "Compléter"
+              }
+              buttonPriority={
+                isCandidateInformationCompleted ? "secondary" : "primary"
+              }
+              badge={
+                isCandidateInformationCompleted ? (
+                  <BadgeCompleted />
+                ) : (
+                  <BadgeToComplete />
+                )
+              }
+            >
+              <dl>
+                <dt className="sr-only">Prénom et nom</dt>
+                <dd>
+                  {candidate.firstname} {candidate.lastname}
+                </dd>
+                <dt className="sr-only">
+                  Date de naissance, département et nationalité
+                </dt>
+                <dd>
+                  {candidate.birthdate &&
+                    format(candidate.birthdate, "dd/MM/yyyy")}{" "}
+                  {candidate.department.label} ({candidate.department.code}){" "}
+                  {candidate.nationality}
+                </dd>
+                <dt className="sr-only">Numéro de sécurité sociale</dt>
+                <dd className="mb-4">
+                  {candidate.socialSecurityNumber &&
+                    formatStringToSocialSecurityNumberStructure(
+                      candidate.socialSecurityNumber,
+                    )}
+                </dd>
+                <dt className="sr-only">Téléphone</dt>
+                <dd>
+                  {candidate.phone &&
+                    formatStringToPhoneNumberStructure(candidate.phone)}
+                </dd>
+                <dt className="sr-only">Adresse email</dt>
+                <dd>{candidate.email}</dd>
+                <dt className="sr-only">Adresse</dt>
+                <dd>
+                  {candidateHasAddressCompleted &&
+                    `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
+                </dd>
+              </dl>
+            </CandidacySectionCard>
+            <CandidacySectionCard
+              title="Son profil"
+              hasButton
+              buttonOnClick={() =>
+                router.push(
+                  `/candidacies/${candidacyId}/summary/candidate-profile`,
+                )
+              }
+              buttonTitle={
+                isCandidateProfileCompleted ? "Modifier" : "Compléter"
+              }
+              buttonPriority={
+                isCandidateProfileCompleted ? "secondary" : "primary"
+              }
+              badge={
+                isCandidateProfileCompleted ? (
+                  <BadgeCompleted />
+                ) : (
+                  <BadgeToComplete />
+                )
+              }
+            >
+              {isCandidateProfileCompleted && (
+                <div className="flex flex-col">
+                  <p className="font-bold mb-0">
+                    Niveau de la formation la plus élevée
+                  </p>
+                  <p className="mb-0">
+                    {candidate.niveauDeFormationLePlusEleve?.label}
+                  </p>
+                  <br />
+                  <p className="font-bold mb-0">
+                    Intitulé de la certification la plus élevée obtenue
+                  </p>
+                  <p className="mb-0">{candidate.highestDegreeLabel}</p>
+                </div>
+              )}
+            </CandidacySectionCard>
+            <GrayCard>
+              <h4>La certification choisie</h4>
+              {certification ? (
+                <>
+                  <h6 className="mb-2">{certification.label}</h6>
+                  <p className="text-xs text-gray-600 mb-0">
+                    RNCP {certification.codeRncp}
+                  </p>
+                </>
               ) : (
-                <BadgeToComplete />
-              )
-            }
-          >
-            <dl>
-              <dt className="sr-only">Prénom et nom</dt>
-              <dd>
-                {candidate.firstname} {candidate.lastname}
-              </dd>
-              <dt className="sr-only">
-                Date de naissance, département et nationalité
-              </dt>
-              <dd>
-                {candidate.birthdate &&
-                  format(candidate.birthdate, "dd/MM/yyyy")}{" "}
-                {candidate.department.label} ({candidate.department.code}){" "}
-                {candidate.nationality}
-              </dd>
-              <dt className="sr-only">Numéro de sécurité sociale</dt>
-              <dd className="mb-4">
-                {candidate.socialSecurityNumber &&
-                  formatStringToSocialSecurityNumberStructure(
-                    candidate.socialSecurityNumber,
-                  )}
-              </dd>
-              <dt className="sr-only">Téléphone</dt>
-              <dd>
-                {candidate.phone &&
-                  formatStringToPhoneNumberStructure(candidate.phone)}
-              </dd>
-              <dt className="sr-only">Adresse email</dt>
-              <dd>{candidate.email}</dd>
-              <dt className="sr-only">Adresse</dt>
-              <dd>
-                {candidateHasAddressCompleted &&
-                  `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
-              </dd>
-            </dl>
-          </CandidacySectionCard>
-          <CandidacySectionCard
-            title="Son profil"
-            hasButton
-            buttonOnClick={() =>
-              router.push(
-                `/candidacies/${candidacyId}/summary/candidate-profile`,
-              )
-            }
-            buttonTitle={isCandidateProfileCompleted ? "Modifier" : "Compléter"}
-            buttonPriority={
-              isCandidateProfileCompleted ? "secondary" : "primary"
-            }
-            badge={
-              isCandidateProfileCompleted ? (
-                <BadgeCompleted />
+                <p className="mb-0">Aucune certification</p>
+              )}
+            </GrayCard>
+            <CandidacySectionCard
+              title="Sa recevabilité"
+              hasButton
+              buttonOnClick={() =>
+                router.push(`/candidacies/${candidacyId}/admissibility`)
+              }
+              buttonTitle={
+                isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
+              }
+              buttonPriority={
+                isCandidacyAdmissibilityComplete ? "secondary" : "primary"
+              }
+              badge={
+                isCandidacyAdmissibilityExpired ? (
+                  <Badge severity="warning">
+                    Recevabilité favorable expirée
+                  </Badge>
+                ) : isCandidacyAlreadyAdmissible ? (
+                  <Badge severity="success">
+                    Recevabilité favorable en cours
+                  </Badge>
+                ) : isCandidacyAdmissibilityComplete ? (
+                  <BadgeCompleted />
+                ) : (
+                  <BadgeToComplete />
+                )
+              }
+            >
+              {admissibilityFvae?.expiresAt && (
+                <span>
+                  Date de fin de validité :{" "}
+                  {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
+                </span>
+              )}
+              {!isCandidacyAdmissibilityComplete && (
+                <SmallNotice>
+                  Besoin d'aide sur la recevabilité ? Consultez les questions
+                  fréquentes de nos utilisateurs à ce sujet.
+                </SmallNotice>
+              )}
+            </CandidacySectionCard>
+            <GrayCard>
+              <span className="text-2xl font-bold mb-5">Ses objectifs</span>
+              {goals?.length ? (
+                <ul>
+                  {goals.map((g) => (
+                    <li key={g.id}>{g.label}</li>
+                  ))}
+                </ul>
               ) : (
-                <BadgeToComplete />
-              )
-            }
-          >
-            {isCandidateProfileCompleted && (
-              <div className="flex flex-col">
-                <p className="font-bold mb-0">
-                  Niveau de la formation la plus élevée
-                </p>
-                <p className="mb-0">
-                  {candidate.niveauDeFormationLePlusEleve?.label}
-                </p>
-                <br />
-                <p className="font-bold mb-0">
-                  Intitulé de la certification la plus élevée obtenue
-                </p>
-                <p className="mb-0">{candidate.highestDegreeLabel}</p>
-              </div>
-            )}
-          </CandidacySectionCard>
-          <GrayCard>
-            <h4>La certification choisie</h4>
-            {certification ? (
-              <>
-                <h6 className="mb-2">{certification.label}</h6>
-                <p className="text-xs text-gray-600 mb-0">
-                  RNCP {certification.codeRncp}
-                </p>
-              </>
-            ) : (
-              <p className="mb-0">Aucune certification</p>
-            )}
-          </GrayCard>
-          <CandidacySectionCard
-            title="Sa recevabilité"
-            hasButton
-            buttonOnClick={() =>
-              router.push(`/candidacies/${candidacyId}/admissibility`)
-            }
-            buttonTitle={
-              isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
-            }
-            buttonPriority={
-              isCandidacyAdmissibilityComplete ? "secondary" : "primary"
-            }
-            badge={
-              isCandidacyAdmissibilityExpired ? (
-                <Badge severity="warning">Recevabilité favorable expirée</Badge>
-              ) : isCandidacyAlreadyAdmissible ? (
-                <Badge severity="success">
-                  Recevabilité favorable en cours
-                </Badge>
-              ) : isCandidacyAdmissibilityComplete ? (
-                <BadgeCompleted />
-              ) : (
-                <BadgeToComplete />
-              )
-            }
-          >
-            {admissibilityFvae?.expiresAt && (
-              <span>
-                Date de fin de validité :{" "}
-                {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
-              </span>
-            )}
-            {!isCandidacyAdmissibilityComplete && (
-              <SmallNotice>
-                Besoin d'aide sur la recevabilité ? Consultez les questions
-                fréquentes de nos utilisateurs à ce sujet.
-              </SmallNotice>
-            )}
-          </CandidacySectionCard>
-          <GrayCard>
-            <span className="text-2xl font-bold mb-5">Ses objectifs</span>
-            {goals?.length ? (
-              <ul>
-                {goals.map((g) => (
-                  <li key={g.id}>{g.label}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mb-0">Non renseigné</p>
-            )}
-          </GrayCard>
-          <CandidateExperiencesSectionCard
+                <p className="mb-0">Non renseigné</p>
+              )}
+            </GrayCard>
+            <CandidateExperiencesSectionCard
+              candidacyId={candidacyId}
+              experiences={candidacy.experiences.map((e) => ({
+                id: e.id,
+                title: e.title,
+                description: e.description,
+                startedAt: new Date(e.startedAt),
+                duration: e.duration,
+              }))}
+            />
+          </ul>
+          <CandidacySummaryBottomButtons
             candidacyId={candidacyId}
-            experiences={candidacy.experiences.map((e) => ({
-              id: e.id,
-              title: e.title,
-              description: e.description,
-              startedAt: new Date(e.startedAt),
-              duration: e.duration,
-            }))}
+            isCandidacyReoriented={!!candidacy.reorientationReason}
+            isCandidacyArchived={candidacy.candidacyStatuses.some(
+              (s) => s.isActive && s.status === "ARCHIVE",
+            )}
+            isCandidacyDroppedOut={!!candidacy.candidacyDropOut}
           />
-        </ul>
+        </>
       )}
     </>
   );
