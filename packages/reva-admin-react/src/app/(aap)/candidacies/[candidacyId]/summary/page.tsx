@@ -17,6 +17,8 @@ import { useAuth } from "@/components/auth/auth";
 import { CopyClipBoard } from "@/components/copy-clip-board";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
+import { useEffect } from "react";
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
@@ -32,6 +34,23 @@ const CandidacySummaryPage = () => {
   const { isAdmin } = useAuth();
   const { getImpersonateUrl } = useHooksAccount();
   const { candidacy } = useCandidateSummary(candidacyId);
+
+  const { takeOverCandidacy } = useTakeOverCandidacy();
+
+  //mark the candidacy has "taken over" when the AAP opens it
+  useEffect(() => {
+    if (candidacy) {
+      const candidacyActiveStatus = candidacy.candidacyStatuses.find(
+        (s) => s.isActive && s.status === "VALIDATION",
+      )?.status;
+      if (candidacyActiveStatus) {
+        takeOverCandidacy({
+          candidacyId: candidacy.id,
+          candidacyActiveStatus,
+        });
+      }
+    }
+  }, [candidacy, takeOverCandidacy]);
 
   if (!candidacy) return null;
 

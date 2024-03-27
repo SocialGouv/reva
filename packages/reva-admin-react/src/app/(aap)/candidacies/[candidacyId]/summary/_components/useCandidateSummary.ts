@@ -6,6 +6,10 @@ const getCandidacyById = graphql(`
   query getCandidacyById($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      candidacyStatuses {
+        status
+        isActive
+      }
       certification {
         codeRncp
         label
