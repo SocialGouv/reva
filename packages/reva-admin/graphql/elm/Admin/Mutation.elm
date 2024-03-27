@@ -103,9 +103,7 @@ type alias CandidacyAddExperienceOptionalArguments =
 
 
 type alias CandidacyAddExperienceRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
-    }
+    { candidacyId : Data.Scalar.Id }
 
 
 candidacy_addExperience :
@@ -122,7 +120,7 @@ candidacy_addExperience fillInOptionals____ requiredArgs____ object____ =
             [ Argument.optional "experience" filledInOptionals____.experience Admin.InputObject.encodeExperienceInput ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForCompositeField "candidacy_addExperience" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_addExperience" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyUpdateExperienceOptionalArguments =
@@ -130,8 +128,7 @@ type alias CandidacyUpdateExperienceOptionalArguments =
 
 
 type alias CandidacyUpdateExperienceRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
+    { candidacyId : Data.Scalar.Id
     , experienceId : Data.Scalar.Id
     }
 
@@ -150,12 +147,11 @@ candidacy_updateExperience fillInOptionals____ requiredArgs____ object____ =
             [ Argument.optional "experience" filledInOptionals____.experience Admin.InputObject.encodeExperienceInput ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForCompositeField "candidacy_updateExperience" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "experienceId" requiredArgs____.experienceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_updateExperience" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "experienceId" requiredArgs____.experienceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyRemoveExperienceRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
+    { candidacyId : Data.Scalar.Id
     , experienceId : Data.Scalar.Id
     }
 
@@ -164,7 +160,7 @@ candidacy_removeExperience :
     CandidacyRemoveExperienceRequiredArguments
     -> SelectionSet (Maybe Data.Scalar.Void) RootMutation
 candidacy_removeExperience requiredArgs____ =
-    Object.selectionForField "(Maybe Data.Scalar.Void)" "candidacy_removeExperience" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "experienceId" requiredArgs____.experienceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecVoid |> .decoder |> Decode.nullable)
+    Object.selectionForField "(Maybe Data.Scalar.Void)" "candidacy_removeExperience" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "experienceId" requiredArgs____.experienceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecVoid |> .decoder |> Decode.nullable)
 
 
 type alias CandidacyUpdateGoalsRequiredArguments =
@@ -440,18 +436,32 @@ candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
 
 
-type alias CandidateUpdateCandidateRequiredArguments =
+type alias CandidateUpdateCandidateCivilInformationRequiredArguments =
     { candidacyId : String
-    , candidate : Admin.InputObject.CandidateUpdateInput
+    , candidateCivilInformation : Admin.InputObject.CandidateCivilInformationInput
     }
 
 
-candidate_updateCandidate :
-    CandidateUpdateCandidateRequiredArguments
+candidate_updateCandidateCivilInformation :
+    CandidateUpdateCandidateCivilInformationRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet (Maybe decodesTo) RootMutation
-candidate_updateCandidate requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_updateCandidate" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidate" requiredArgs____.candidate Admin.InputObject.encodeCandidateUpdateInput ] object____ (Basics.identity >> Decode.nullable)
+candidate_updateCandidateCivilInformation requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_updateCandidateCivilInformation" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateCivilInformation" requiredArgs____.candidateCivilInformation Admin.InputObject.encodeCandidateCivilInformationInput ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias CandidateUpdateCandidateContactInformationRequiredArguments =
+    { candidacyId : String
+    , candidateContactInformation : Admin.InputObject.CandidateContactInformationInput
+    }
+
+
+candidate_updateCandidateContactInformation :
+    CandidateUpdateCandidateContactInformationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet (Maybe decodesTo) RootMutation
+candidate_updateCandidateContactInformation requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_updateCandidateContactInformation" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateContactInformation" requiredArgs____.candidateContactInformation Admin.InputObject.encodeCandidateContactInformationInput ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidateUpdateCandidateProfileRequiredArguments =

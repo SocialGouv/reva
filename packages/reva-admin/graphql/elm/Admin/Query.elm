@@ -69,6 +69,17 @@ account_getAccountForConnectedUser object____ =
     Object.selectionForCompositeField "account_getAccountForConnectedUser" [] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias AccountGetImpersonateUrlRequiredArguments =
+    { input : Admin.InputObject.GetImpersonateUrlInput }
+
+
+account_getImpersonateUrl :
+    AccountGetImpersonateUrlRequiredArguments
+    -> SelectionSet (Maybe String) RootQuery
+account_getImpersonateUrl requiredArgs____ =
+    Object.selectionForField "(Maybe String)" "account_getImpersonateUrl" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeGetImpersonateUrlInput ] (Decode.string |> Decode.nullable)
+
+
 type alias GetCandidacyByIdRequiredArguments =
     { id : Data.Scalar.Id }
 
