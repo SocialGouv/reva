@@ -175,7 +175,7 @@ export const validateSubscriptionRequest = async (
 
     const newMaisonMereAAP = await createMaisonMereAAP({
       maisonMereAAP: {
-        phone: subscriptionRequest.contactAdministrativePhone ?? "",
+        phone: subscriptionRequest.accountPhoneNumber ?? "",
         raisonSociale: subscriptionRequest.companyName ?? "",
         adresse: subscriptionRequest.companyAddress ?? "",
         siteWeb: subscriptionRequest.companyWebsite,
