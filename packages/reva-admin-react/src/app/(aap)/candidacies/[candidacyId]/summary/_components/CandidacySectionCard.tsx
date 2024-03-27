@@ -35,7 +35,7 @@ const CandidacySectionCard = ({
     <GrayCard>
       <div className="flex justify-between items-center w-full mb-5">
         <div className="flex items-center gap-4">
-          <h4 className="text-2xl font-bold mb-0">{title}</h4>
+          <h4 className="mb-0">{title}</h4>
           {badge}
         </div>
         {hasButton && (

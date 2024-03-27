@@ -16,6 +16,7 @@ import { useHooksAccount } from "./summary.hooks";
 import { useAuth } from "@/components/auth/auth";
 import { CopyClipBoard } from "@/components/copy-clip-board";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
@@ -34,7 +35,7 @@ const CandidacySummaryPage = () => {
 
   if (!candidacy) return null;
 
-  const { candidate, admissibilityFvae } = candidacy;
+  const { candidate, certification, admissibilityFvae } = candidacy;
 
   const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
@@ -201,6 +202,19 @@ const CandidacySummaryPage = () => {
               </div>
             )}
           </CandidacySectionCard>
+          <GrayCard>
+            <h4>La certification choisie</h4>
+            {certification ? (
+              <>
+                <h6 className="mb-2">{certification.label}</h6>
+                <p className="text-xs text-gray-600 mb-0">
+                  RNCP {certification.codeRncp}
+                </p>
+              </>
+            ) : (
+              <p className="mb-0">Aucune certification</p>
+            )}
+          </GrayCard>
           <CandidacySectionCard
             title="Sa recevabilité"
             hasButton

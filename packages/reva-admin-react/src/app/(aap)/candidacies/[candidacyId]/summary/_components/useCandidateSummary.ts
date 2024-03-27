@@ -7,6 +7,7 @@ const getCandidacyById = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       certification {
+        codeRncp
         label
       }
       admissibilityFvae {
