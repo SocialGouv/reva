@@ -54,7 +54,7 @@ const CandidacySummaryPage = () => {
 
   if (!candidacy) return null;
 
-  const { candidate, certification, admissibilityFvae } = candidacy;
+  const { candidate, certification, admissibilityFvae, goals } = candidacy;
 
   const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
@@ -273,6 +273,18 @@ const CandidacySummaryPage = () => {
               </SmallNotice>
             )}
           </CandidacySectionCard>
+          <GrayCard>
+            <span className="text-2xl font-bold mb-5">Ses objectifs</span>
+            {goals?.length ? (
+              <ul>
+                {goals.map((g) => (
+                  <li key={g.id}>{g.label}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mb-0">Non renseigné</p>
+            )}
+          </GrayCard>
           <CandidateExperiencesSectionCard
             candidacyId={candidacyId}
             experiences={candidacy.experiences.map((e) => ({

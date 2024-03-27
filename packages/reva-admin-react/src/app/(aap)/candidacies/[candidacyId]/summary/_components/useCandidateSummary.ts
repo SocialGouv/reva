@@ -65,6 +65,10 @@ const getCandidacyById = graphql(`
         duration
         description
       }
+      goals {
+        id
+        label
+      }
     }
   }
 `);
