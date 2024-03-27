@@ -13,7 +13,6 @@ interface CandidacyAbstract {
 
   // companionId: string | null;
   experiences: Experience[];
-  goals: Goal[];
   email: string | null;
 }
 
@@ -109,11 +108,6 @@ export type CandidateTypology =
   | "DEMANDEUR_EMPLOI"
   | "AIDANTS_FAMILIAUX"
   | "AUTRE";
-
-export interface Goal {
-  goalId: string;
-  additionalInformation: string | null;
-}
 
 export interface Companion {
   id: string;

@@ -33,8 +33,7 @@
           ],
           "goals": [
             {
-              "goalId": "goal1",
-              "additionalInformation": null
+              "id": "goal1"
             }
           ],
           "candidacyStatuses": [

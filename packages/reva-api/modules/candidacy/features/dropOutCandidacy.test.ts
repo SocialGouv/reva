@@ -28,7 +28,6 @@ const blankCandidacy: Candidacy = {
   deviceId: "",
   email: null,
   experiences: [],
-  goals: [],
 };
 
 const candidacy1: Candidacy = {
@@ -58,7 +57,7 @@ const candidacyTable: Candidacy[] = [candidacy1, candidacy2];
 
 const getCandidacyById = (id: string): Either<string, Candidacy> =>
   Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
-    "not found"
+    "not found",
   );
 const getDropOutReasonById = (id: string): DropOutReason | null =>
   dropOutReasonTable.find((r) => r.id === id) || null;
@@ -80,7 +79,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
           status: "PRISE_EN_CHARGE",
           otherReasonContent: null,
         },
-      })
+      }),
     ),
 });
 
@@ -93,7 +92,7 @@ describe("drop out candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST
+      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
     );
   });
   test("should fail with CANDIDACY_ALREADY_DROPPED_OUT", async () => {
@@ -104,7 +103,7 @@ describe("drop out candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT
+      FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
     );
   });
   test("should fail with CANDIDACY_INVALID_DROP_OUT_REASON error code", async () => {
@@ -115,7 +114,7 @@ describe("drop out candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON
+      FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
     );
   });
 
@@ -129,7 +128,7 @@ describe("drop out candidacy", () => {
     const candidacy = result.extract() as Candidacy;
     expect(candidacy.candidacyDropOut).not.toBeNull();
     expect(candidacy.candidacyDropOut?.dropOutReason.id).toEqual(
-      dropOutReasonTable[1].id
+      dropOutReasonTable[1].id,
     );
   });
 });

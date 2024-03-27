@@ -1,100 +1,98 @@
 {
-    "data": {
-      "candidateLogged": {
-        "tokens": {
-          "accessToken": "abc",
-          "refreshToken": "def",
-          "idToken": "ghi"
-        },
-        "candidate": {
-          "firstname": "John",
-          "lastname": "Doe",
-          "email": "email@example.com",
-          "phone": "06-01-02-03-04",
-          "candidacy": {
-            "id": "c2",
-            "organism": {
-              "id": "o1",
-              "label": "Accompagnateur 1",
-              "address": "1 rue de l'exemple",
-              "zip": "75000",
-              "city": "Paris",
-              "contactAdministrativeEmail": "contact@example.com"
+  "data": {
+    "candidateLogged": {
+      "tokens": {
+        "accessToken": "abc",
+        "refreshToken": "def",
+        "idToken": "ghi"
+      },
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04",
+        "candidacy": {
+          "id": "c2",
+          "organism": {
+            "id": "o1",
+            "label": "Accompagnateur 1",
+            "address": "1 rue de l'exemple",
+            "zip": "75000",
+            "city": "Paris",
+            "contactAdministrativeEmail": "contact@example.com"
+          },
+          "createdAt": 1664376421912,
+          "certification": {
+            "id": "c1",
+            "label": "Titre 1",
+            "summary": "résumé 1",
+            "codeRncp": "34691",
+            "status": "AVAILABLE"
+          },
+
+          "experiences": [
+            {
+              "id": "e1",
+              "title": "Experience 1",
+              "startedAt": 1580428800000,
+              "duration": "unknown",
+              "description": "description 1"
+            }
+          ],
+          "goals": [
+            {
+              "id": "goal1"
+            }
+          ],
+          "candidacyStatuses": [
+            {
+              "status": "PROJET",
+              "isActive": false
             },
-            "createdAt": 1664376421912,
-            "certification": {
-              "id": "c1",
-              "label": "Titre 1",
-              "summary": "résumé 1",
-              "codeRncp": "34691",
-              "status": "AVAILABLE"
+            {
+              "status": "PRISE_EN_CHARGE",
+              "isActive": false
             },
-  
-            "experiences": [
-              {
-                "id": "e1",
-                "title": "Experience 1",
-                "startedAt": 1580428800000,
-                "duration": "unknown",
-                "description": "description 1"
-              }
-            ],
-            "goals": [
-              {
-                "goalId": "goal1",
-                "additionalInformation": null
-              }
-            ],
-            "candidacyStatuses": [
-              {
-                "status": "PROJET",
-                "isActive": false
-              },
-              {
-                "status": "PRISE_EN_CHARGE",
-                "isActive": false
-              },
-              {
-                "status": "PARCOURS_ENVOYE",
-                "isActive": false
-              },
-              {
-                "status": "PARCOURS_CONFIRME",
-                "isActive": false
-              },
-              {
-                "status": "PARCOURS_ENVOYE",
-                "isActive": true
-              }
-            ],
-            "appointmentCount": 0,
-            "certificateSkills": "Blocs de compétences métier",
-            "otherTraining": "Autres actions de formations complémentaires",
-            "individualHourCount": 1,
-            "collectiveHourCount": 2,
-            "additionalHourCount": 3,
-            "basicSkills": [
-              {
-                "label": "Base 1"
-              },
-              {
-                "label": "Base 2"
-              }
-            ],
-            "mandatoryTrainings": [
-              {
-                "label": "Obligatoire 1"
-              },
-              {
-                "label": "Obligatoire 2"
-              },
-              {
-                "label": "Obligatoire 3"
-              }
-            ]
-          }
+            {
+              "status": "PARCOURS_ENVOYE",
+              "isActive": false
+            },
+            {
+              "status": "PARCOURS_CONFIRME",
+              "isActive": false
+            },
+            {
+              "status": "PARCOURS_ENVOYE",
+              "isActive": true
+            }
+          ],
+          "appointmentCount": 0,
+          "certificateSkills": "Blocs de compétences métier",
+          "otherTraining": "Autres actions de formations complémentaires",
+          "individualHourCount": 1,
+          "collectiveHourCount": 2,
+          "additionalHourCount": 3,
+          "basicSkills": [
+            {
+              "label": "Base 1"
+            },
+            {
+              "label": "Base 2"
+            }
+          ],
+          "mandatoryTrainings": [
+            {
+              "label": "Obligatoire 1"
+            },
+            {
+              "label": "Obligatoire 2"
+            },
+            {
+              "label": "Obligatoire 3"
+            }
+          ]
         }
       }
     }
   }
-  
+}

@@ -151,7 +151,7 @@ export const useConfiguredMainMachine = () => {
               candidacyId: context.candidacyId,
               goals: event.goals
                 .filter((g) => g.checked)
-                .map((g) => ({ goalId: g.id })),
+                .map((g) => ({ id: g.id })),
             });
             return event.goals;
           },

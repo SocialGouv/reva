@@ -66,7 +66,6 @@ const candidacyPriseEnCharge: Candidacy = {
   deviceId: "",
   email: null,
   experiences: [],
-  goals: [],
   reorientationReason: null,
 };
 
@@ -96,7 +95,7 @@ const candidacyTable: Candidacy[] = [
 
 const getCandidacyById = (id: string): Either<string, Candidacy> =>
   Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
-    "not found"
+    "not found",
   );
 const getReorientationReasonById = (id: string): ReorientationReason | null =>
   reorientationReasonTable.find((r) => r.id === id) || null;
@@ -112,9 +111,9 @@ const archiveWithRightRole = archiveCandidacy({
         ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
         candidacyStatuses: candidacyStatusesArchive,
         reorientationReason: getReorientationReasonById(
-          params.reorientationReasonId || ""
+          params.reorientationReasonId || "",
         ),
-      })
+      }),
     ),
 });
 
@@ -126,7 +125,7 @@ describe("archive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST
+      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
     );
   });
   test("should fail with CANDIDACY_ALREADY_ARCHIVE", async () => {
@@ -136,7 +135,7 @@ describe("archive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED
+      FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED,
     );
   });
   test("should fail with CANDIDACY_INVALID_REORIENTATION_REASON error code", async () => {
@@ -146,7 +145,7 @@ describe("archive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON
+      FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON,
     );
   });
 
@@ -159,7 +158,7 @@ describe("archive candidacy", () => {
     const candidacy = result.extract() as Candidacy;
     expect(candidacy.reorientationReason).not.toBeNull();
     expect(candidacy.reorientationReason?.id).toEqual(
-      reorientationReasonTable[1].id
+      reorientationReasonTable[1].id,
     );
     expect(candidacy.candidacyStatuses).toEqual(candidacyStatusesArchive);
   });

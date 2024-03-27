@@ -62,11 +62,15 @@ export const saveGoals =
   }: {
     deviceId: string;
     candidacyId: string;
-    goals: { goalId: string }[];
+    goals: { id: string }[];
   }) =>
     client.mutate({
       mutation: SAVE_GOALS,
-      variables: { deviceId, candidacyId, goals },
+      variables: {
+        deviceId,
+        candidacyId,
+        goals: goals.map((g) => ({ goalId: g.id })),
+      },
     });
 
 const ADD_EXPERIENCE = gql`
@@ -295,8 +299,7 @@ const CANDIDACY_SELECTION = `
         description
       }
       goals {
-        goalId
-        additionalInformation
+        id
       }
       candidacyStatuses {
         status
@@ -435,7 +438,7 @@ function initializeApp({ candidateLogged, getReferential }: any) {
 function formatCandidacy(candidate: any, getReferential: any) {
   let candidacy = candidate?.candidacy;
   if (candidacy) {
-    const candidateGoals = candidacy.goals.map((g: any) => g.goalId);
+    const candidateGoals = candidacy.goals.map((g: any) => g.id);
 
     const goals = getReferential.goals.map((g: any) => ({
       ...g,

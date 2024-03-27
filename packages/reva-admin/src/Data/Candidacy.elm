@@ -72,8 +72,7 @@ type alias CandidacyStatus =
 
 
 type alias CandidacyGoal =
-    { goalId : String
-    , additionalInformation : Maybe String
+    { id : String
     }
 
 

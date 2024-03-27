@@ -13,9 +13,9 @@ import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
-import Admin.Object.CandidateGoal
 import Admin.Object.Certification
 import Admin.Object.Experience
+import Admin.Object.Goal
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
@@ -348,11 +348,10 @@ candidacyCountByStatusSelection =
 -- GOAL
 
 
-goalSelection : SelectionSet Data.Candidacy.CandidacyGoal Admin.Object.CandidateGoal
+goalSelection : SelectionSet Data.Candidacy.CandidacyGoal Admin.Object.Goal
 goalSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyGoal
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidateGoal.goalId)
-        |> with Admin.Object.CandidateGoal.additionalInformation
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Goal.id)
 
 
 

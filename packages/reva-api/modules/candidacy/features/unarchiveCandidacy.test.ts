@@ -52,7 +52,6 @@ const candidacyPriseEnCharge: Candidacy = {
   deviceId: "",
   email: null,
   experiences: [],
-  goals: [],
   reorientationReason: null,
 };
 
@@ -95,7 +94,7 @@ const unarchivedCandidacyStatuses = [
 
 const getCandidacyById = (id: string): Either<string, Candidacy> =>
   Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
-    "not found"
+    "not found",
   );
 
 const unarchiveWithRightRole = unarchiveCandidacy({
@@ -107,7 +106,7 @@ const unarchiveWithRightRole = unarchiveCandidacy({
       Right({
         ...candidacy,
         candidacyStatuses: unarchivedCandidacyStatuses,
-      })
+      }),
     );
   },
 });
@@ -119,7 +118,7 @@ describe("unarchive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST
+      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
     );
   });
   test("should fail with CANDIDACY_NOT_ARCHIVED", async () => {
@@ -128,7 +127,7 @@ describe("unarchive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED
+      FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
     );
   });
 
@@ -138,7 +137,7 @@ describe("unarchive candidacy", () => {
     });
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_IS_REORIENTATION
+      FunctionalCodeError.CANDIDACY_IS_REORIENTATION,
     );
   });
 

@@ -85,10 +85,6 @@ type Candidate
     = Candidate
 
 
-type CandidateGoal
-    = CandidateGoal
-
-
 type CandidateLogged
     = CandidateLogged
 

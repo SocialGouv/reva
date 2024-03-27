@@ -8,7 +8,6 @@ import { toDomainExperiences } from "./experiences";
 
 export const candidacyIncludes = {
   experiences: true,
-  goals: true,
   candidacyStatuses: true,
   department: true,
   certificationsAndRegions: {
@@ -41,7 +40,7 @@ export const candidacyIncludes = {
 };
 
 export const getCandidacyFromId = async (
-  candidacyId: string
+  candidacyId: string,
 ): Promise<Either<string, domain.Candidacy>> => {
   try {
     const candidacy = await prismaClient.candidacy.findUnique({
@@ -94,13 +93,13 @@ export const getCandidacyFromId = async (
     return Left(
       `error while retrieving the candidacy with id ${candidacyId} : ${
         (e as Error).message
-      }`
+      }`,
     );
   }
 };
 
 export const getCandidaciesFromIds = async (
-  candidacyIds: string[]
+  candidacyIds: string[],
 ): Promise<domain.Candidacy[]> => {
   const candidacies = await prismaClient.candidacy.findMany({
     where: {
@@ -156,7 +155,7 @@ export const existsCandidacyHavingHadStatus = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while retrieving the candidacy with id ${params.candidacyId}`
+      `error while retrieving the candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -182,7 +181,7 @@ export const existsCandidacyWithActiveStatus = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while retrieving the candidacy with id ${params.candidacyId}`
+      `error while retrieving the candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -210,7 +209,7 @@ export const existsCandidacyWithActiveStatuses = async (params: {
   } catch (e) {
     logger.error(e);
     throw new Error(
-      `error while retrieving the candidacy with id ${params.candidacyId}`
+      `error while retrieving the candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -272,7 +271,6 @@ export const updateCandidacyStatus = async (params: {
       },
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -282,7 +280,7 @@ export const updateCandidacyStatus = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating status on candidacy ${params.candidacyId}`
+      `error while updating status on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -345,7 +343,6 @@ export const archiveCandidacy = async (params: {
       },
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -355,7 +352,7 @@ export const archiveCandidacy = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating status on candidacy ${params.candidacyId}`
+      `error while updating status on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -427,7 +424,6 @@ export const unarchiveCandidacy = async (params: {
       },
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -437,7 +433,7 @@ export const unarchiveCandidacy = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating status on candidacy ${params.candidacyId}`
+      `error while updating status on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -517,7 +513,6 @@ export const updateCertification = async (params: {
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -527,7 +522,7 @@ export const updateCertification = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating certification on candidacy ${params.candidacyId}`
+      `error while updating certification on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -600,7 +595,6 @@ export const updateAppointmentInformations = async (params: {
       certification: candidaciesOnRegionsAndCertifications?.certification,
       organismId: candidacy.organismId,
       experiences: toDomainExperiences(candidacy.experiences),
-      goals: candidacy.goals,
       phone: candidacy.candidate?.phone || null,
       email: candidacy.candidate?.email || candidacy.email,
       typology: candidacy.typology,
@@ -616,7 +610,7 @@ export const updateAppointmentInformations = async (params: {
     return Left(
       `Erreur lors de la mise à jour des informations de rendez de la candidature, ${
         (e as any).message
-      }`
+      }`,
     );
   }
 };
@@ -661,7 +655,6 @@ export const updateOrganism = async (params: {
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -671,7 +664,7 @@ export const updateOrganism = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating contact on candidacy ${params.candidacyId}`
+      `error while updating contact on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -754,7 +747,6 @@ export const updateTrainingInformations = async (params: {
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -764,7 +756,7 @@ export const updateTrainingInformations = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating training informations on candidacy ${params.candidacyId}`
+      `error while updating training informations on candidacy ${params.candidacyId}`,
     );
   }
 };
@@ -825,7 +817,7 @@ export const dropOutCandidacy = async ({
   } catch (e) {
     logger.error(e);
     return Left(
-      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`,
     );
   }
 };
@@ -877,7 +869,7 @@ export const cancelDropOutCandidacy = async ({
   } catch (e) {
     logger.error(e);
     return Left(
-      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`,
     );
   }
 
@@ -891,14 +883,14 @@ export const cancelDropOutCandidacy = async ({
   } catch (e) {
     logger.error(e);
     return Left(
-      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`,
     );
   }
 };
 
 export const updateCandidacyGoals = async (params: {
   candidacyId: string;
-  goals: domain.Goal[];
+  goals: { candidacyId: string; goalId: string }[];
 }) => {
   try {
     const [, goals] = await prismaClient.$transaction([

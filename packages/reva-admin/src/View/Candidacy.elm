@@ -196,7 +196,7 @@ viewDepartment maybeDepartment =
 
 viewGoal : Referential -> CandidacyGoal -> Html msg
 viewGoal referential candidacyGoal =
-    case Dict.get candidacyGoal.goalId referential.goals of
+    case Dict.get candidacyGoal.id referential.goals of
         Just goal ->
             li [] [ text goal.label ]
 

@@ -63,7 +63,6 @@ export const updateCandidacyStatus = async (params: {
       },
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -73,7 +72,7 @@ export const updateCandidacyStatus = async (params: {
   } catch (e) {
     logger.error(e);
     return Error(
-      `error while updating status on candidacy ${params.candidacyId}`
+      `error while updating status on candidacy ${params.candidacyId}`,
     );
   }
 };

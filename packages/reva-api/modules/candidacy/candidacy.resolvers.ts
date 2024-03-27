@@ -64,6 +64,7 @@ import { resolversSecurityMap } from "./security/security";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
+import { getCandidacyGoals } from "./features/getCandidacyGoals";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -109,6 +110,8 @@ const unsafeResolvers = {
     admissibilityFvae: async (parent: Candidacy) => {
       return getAdmissibilityFvae({ candidacyId: parent.id });
     },
+    goals: async ({ id: candidacyId }: Candidacy) =>
+      getCandidacyGoals({ candidacyId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) => {

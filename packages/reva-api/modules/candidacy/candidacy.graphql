@@ -64,7 +64,7 @@ type Candidacy {
   certification: Certification
   isCertificationPartial: Boolean
   experiences: [Experience!]!
-  goals: [CandidateGoal!]!
+  goals: [Goal!]!
   firstname: String
   lastname: String
   email: String
@@ -161,11 +161,6 @@ type Experience {
   startedAt: Timestamp!
   duration: Duration!
   description: String!
-}
-
-type CandidateGoal {
-  goalId: ID!
-  additionalInformation: String
 }
 
 enum OrganismTypology {

@@ -94,7 +94,7 @@ experiences object____ =
 
 
 goals :
-    SelectionSet decodesTo Admin.Object.CandidateGoal
+    SelectionSet decodesTo Admin.Object.Goal
     -> SelectionSet (List decodesTo) Admin.Object.Candidacy
 goals object____ =
     Object.selectionForCompositeField "goals" [] object____ (Basics.identity >> Decode.list)
