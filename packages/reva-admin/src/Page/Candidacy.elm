@@ -576,6 +576,16 @@ updateTab context tab ( model, cmd ) =
             Nav.pushUrl
                 context.navKey
                 (Route.toString context.baseUrl tabValue)
+
+        newCandidacySummaryPageActive =
+            List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
+
+        redirectToProfile =
+            if newCandidacySummaryPageActive then
+                Nav.load (context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString tab.candidacyId ++ "/summary")
+
+            else
+                pushUrl <| candidacyTab Profile
     in
     case ( tab.value, model.selected ) of
         ( View.Candidacy.Tab.Archive, Success candidacy ) ->
@@ -593,7 +603,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.Archive.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Archive.archive tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.Archive.validate
                         , status = formStatus
                         }
@@ -609,7 +619,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.Unarchive.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Unarchive.unarchive tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.Unarchive.validate
                         , status = Form.Editable
                         }
@@ -625,7 +635,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.DropOut.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.DropOut.dropOut tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.DropOut.validate
                         , status =
                             if candidacy.dropOutDate /= Nothing then
@@ -646,7 +656,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.CancelDropOut.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.CancelDropOut.cancelDropOut tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.CancelDropOut.validate
                         , status = Form.Editable
                         }
@@ -662,7 +672,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.ReadyForJuryEstimatedDate.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.ReadyForJuryEstimatedDate.set tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.ReadyForJuryEstimatedDate.validate
                         , status =
                             if candidacy.readyForJuryEstimatedAt == Nothing then
@@ -683,7 +693,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Nothing
                         , onSave = Nothing
                         , onSubmit = Api.Form.DossierDeValidation.submit tab.candidacyId context.restApiEndpoint
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.DossierDeValidation.validate
                         , status =
                             Form.Editable
@@ -745,7 +755,7 @@ updateTab context tab ( model, cmd ) =
                             , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
                             , onSave = Nothing
                             , onSubmit = Api.Form.PaymentUploadsAndConfirmationUniFvae.submit tab.candidacyId context.restApiEndpoint
-                            , onRedirect = pushUrl <| candidacyTab Profile
+                            , onRedirect = redirectToProfile
                             , onValidate = Data.Form.PaymentUploadsAndConfirmationUniFvae.validateConfirmation
                             , status = Form.Editable
                             }
@@ -773,7 +783,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
                         , status = Form.Editable
                         }
@@ -799,7 +809,7 @@ updateTab context tab ( model, cmd ) =
                                 , onLoad = Just <| Api.Form.FundingRequestUniReva.get tab.candidacyId candidacy
                                 , onSave = Nothing
                                 , onSubmit = \_ _ _ _ _ -> Cmd.none
-                                , onRedirect = pushUrl <| candidacyTab Profile
+                                , onRedirect = redirectToProfile
                                 , onValidate = Data.Form.FundingRequestUniReva.validate
                                 , status =
                                     Form.ReadOnly
@@ -820,7 +830,7 @@ updateTab context tab ( model, cmd ) =
                                 , onLoad = Just <| Api.Form.FundingRequestUniFvae.get tab.candidacyId
                                 , onSave = Nothing
                                 , onSubmit = Api.Form.FundingRequestUniFvae.create tab.candidacyId
-                                , onRedirect = pushUrl <| candidacyTab Profile
+                                , onRedirect = redirectToProfile
                                 , onValidate = Data.Form.FundingRequestUniFvae.validate
                                 , status =
                                     if isReadOnly then
@@ -862,7 +872,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.Admissibility.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Admissibility.update tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
@@ -903,7 +913,7 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Just <| Api.Form.ExamInfo.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.ExamInfo.update tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = redirectToProfile
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
