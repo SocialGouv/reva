@@ -31,13 +31,6 @@ const schema = z
         code: z.ZodIssueCode.custom,
       });
     }
-    if (isBefore(new Date(date), startOfDay(new Date()))) {
-      ctx.addIssue({
-        path: ["date"],
-        message: "La date doit être ultérieure à aujourd'hui",
-        code: z.ZodIssueCode.custom,
-      });
-    }
     if (isAfter(new Date(date), endOfDay(add(new Date(), { years: 2 })))) {
       ctx.addIssue({
         path: ["date"],

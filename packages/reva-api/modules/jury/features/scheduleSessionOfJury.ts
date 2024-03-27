@@ -1,13 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 
-import {
-  add,
-  endOfDay,
-  isAfter,
-  isBefore,
-  isEqual,
-  startOfDay,
-} from "date-fns";
+import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
@@ -61,7 +54,13 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
     ) != -1;
 
-  if (!isDossierDeValidationSent) {
+  const isDemandeDePaiementSent =
+    candidacy.candidacyStatuses?.findIndex(
+      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE",
+    ) != -1;
+
+  // Need to check if isDemandeDePaiementSent for historical candidacies
+  if (!isDossierDeValidationSent && !isDemandeDePaiementSent) {
     throw new Error("Le dossier de validation n'a pas été envoyé");
   }
 
@@ -93,12 +92,9 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     timeOfSession = `${timeOfSessionHours}:${timeOfSessionMinutes}`;
   }
 
-  if (
-    !isEqual(dateOfSession, today) &&
-    !(isAfter(dateOfSession, today) && isBefore(dateOfSession, nextTwoYears))
-  ) {
+  if (isAfter(dateOfSession, nextTwoYears)) {
     throw new Error(
-      "La date du jury doit être supérieure à aujourd'hui et au maximum dans les 2 prochaines années",
+      "La date du jury doit être au maximum dans les 2 prochaines années",
     );
   }
 

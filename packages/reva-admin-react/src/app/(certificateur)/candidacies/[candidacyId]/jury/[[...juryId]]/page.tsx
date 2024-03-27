@@ -26,35 +26,44 @@ const JuryPage = (_props: Props) => {
       ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
     ) != -1;
 
+  // Need to check if isDemandeDePaiementSent for historical candidacies
+  const isDemandeDePaiementSent =
+    candidacyStatuses?.findIndex(
+      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE",
+    ) != -1;
+
   return (
     <div className="flex flex-col w-full">
       <BackButton href="/candidacies/juries">Tous les dossiers</BackButton>
       <h1>Jury</h1>
 
-      {!getCandidacy.isLoading && isDossierDeValidationSent && (
-        <Tabs
-          tabs={[
-            {
-              label: "Date de jury",
-              isDefault: true,
-              content: <DateDeJury />,
-            },
-            {
-              label: "Résultat",
-              content: <Resultat />,
-            },
-          ]}
-        />
-      )}
+      {!getCandidacy.isLoading &&
+        (isDossierDeValidationSent || isDemandeDePaiementSent) && (
+          <Tabs
+            tabs={[
+              {
+                label: "Date de jury",
+                isDefault: true,
+                content: <DateDeJury />,
+              },
+              {
+                label: "Résultat",
+                content: <Resultat />,
+              },
+            ]}
+          />
+        )}
 
-      {!getCandidacy.isLoading && !isDossierDeValidationSent && (
-        <div className="flex flex-col">
-          <p className="text-gray-600">
-            Veuillez envoyer le dossier de validation afin d'accéder à la
-            section jury.
-          </p>
-        </div>
-      )}
+      {!getCandidacy.isLoading &&
+        !isDossierDeValidationSent &&
+        !isDemandeDePaiementSent && (
+          <div className="flex flex-col">
+            <p className="text-gray-600">
+              Veuillez envoyer le dossier de validation afin d'accéder à la
+              section jury.
+            </p>
+          </div>
+        )}
     </div>
   );
 };
