@@ -374,21 +374,15 @@ type Mutation {
     certificationId: ID!
   ): Candidacy
   candidacy_addExperience(
-    deviceId: ID!
     candidacyId: ID!
     experience: ExperienceInput
   ): Experience
   candidacy_updateExperience(
-    deviceId: ID!
     candidacyId: ID!
     experienceId: ID!
     experience: ExperienceInput
   ): Experience
-  candidacy_removeExperience(
-    deviceId: ID!
-    candidacyId: ID!
-    experienceId: ID!
-  ): Void
+  candidacy_removeExperience(candidacyId: ID!, experienceId: ID!): Void
   candidacy_updateGoals(
     deviceId: ID!
     candidacyId: ID!

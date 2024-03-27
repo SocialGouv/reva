@@ -160,19 +160,15 @@ export const useConfiguredMainMachine = () => {
               return Promise.reject("Impossible state");
             }
 
-            const deviceId = await Device.getId();
-
             if (!!event.experience.id) {
               const { id, ...experienceContent } = event.experience;
               return updateExperience(client as ApolloClient<object>)({
-                deviceId: deviceId.uuid,
                 candidacyId: context.candidacyId,
                 experienceId: event.experience.id,
                 experience: experienceContent,
               });
             } else {
               return addExperience(client as ApolloClient<object>)({
-                deviceId: deviceId.uuid,
                 candidacyId: context.candidacyId,
                 experience: event.experience,
               });

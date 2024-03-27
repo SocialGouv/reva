@@ -70,14 +70,9 @@ export const saveGoals =
     });
 
 const ADD_EXPERIENCE = gql`
-  mutation add_experience(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $experience: ExperienceInput
-  ) {
+  mutation add_experience($candidacyId: ID!, $experience: ExperienceInput) {
     candidacy_addExperience(
       candidacyId: $candidacyId
-      deviceId: $deviceId
       experience: $experience
     ) {
       id
@@ -92,17 +87,15 @@ const ADD_EXPERIENCE = gql`
 export const addExperience =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     experience,
   }: {
-    deviceId: string;
     candidacyId: string;
     experience: Experience;
   }) => {
     const { data } = await client.mutate({
       mutation: ADD_EXPERIENCE,
-      variables: { deviceId, candidacyId, experience },
+      variables: { candidacyId, experience },
     });
 
     const newExperience = data.candidacy_addExperience;
@@ -112,14 +105,12 @@ export const addExperience =
 
 const UPDATE_EXPERIENCE = gql`
   mutation update_experience(
-    $deviceId: ID!
     $candidacyId: ID!
     $experienceId: ID!
     $experience: ExperienceInput
   ) {
     candidacy_updateExperience(
       candidacyId: $candidacyId
-      deviceId: $deviceId
       experienceId: $experienceId
       experience: $experience
     ) {
@@ -135,19 +126,17 @@ const UPDATE_EXPERIENCE = gql`
 export const updateExperience =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     experienceId,
     experience,
   }: {
-    deviceId: string;
     candidacyId: string;
     experienceId: string;
     experience: Experience;
   }) => {
     const { data } = await client.mutate({
       mutation: UPDATE_EXPERIENCE,
-      variables: { deviceId, candidacyId, experienceId, experience },
+      variables: { candidacyId, experienceId, experience },
     });
 
     const newExperience = data.candidacy_updateExperience;

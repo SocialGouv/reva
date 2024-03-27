@@ -32,7 +32,6 @@ const updateCandidacyExperienceMutation = graphql(`
     $experience: ExperienceInput
   ) {
     candidacy_updateExperience(
-      deviceId: $candidacyId
       candidacyId: $candidacyId
       experienceId: $experienceId
       experience: $experience

@@ -17,7 +17,6 @@ const addCandidacyExperienceMutation = graphql(`
     $experience: ExperienceInput
   ) {
     candidacy_addExperience(
-      deviceId: $candidacyId
       candidacyId: $candidacyId
       experience: $experience
     ) {
