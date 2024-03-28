@@ -96,14 +96,14 @@ http:
       service: noop@internal
       middlewares:
         - redirect-www
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     vae-gouv-main-page:
       rule: "Host(`vae.gouv.fr`)"
       service: site-web-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     auth-vae-gouv-fr:
       rule: "Host(`auth.vae.gouv.fr`)"
@@ -116,28 +116,28 @@ http:
       service: metabase-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     espace-pro-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin`)"
       service: espace-pro-production-2
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     espace-pro-react-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-production
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     app-candidat-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
       service: app-candidat-production-2
       middlewares:
         - removeHeader
-        - add-anti-clickjacking-headers
+        - add-security-headers
 
     api-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/api`)"
@@ -159,11 +159,6 @@ http:
         customResponseHeaders:
           x-request-id: "" # remove
           strict-transport-security: ""
-    add-anti-clickjacking-headers:
-      headers:
-        customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self';"
-          X-Frame-Options: SAMEORIGIN
     add-security-headers:
       headers:
         customResponseHeaders:
