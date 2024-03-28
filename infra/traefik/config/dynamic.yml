@@ -15,7 +15,7 @@ http:
       service: metabase-reva-incubateur-net
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-anti-clickjacking-headers
 
     site-web-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/`)"
@@ -116,7 +116,7 @@ http:
       service: metabase-production
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-anti-clickjacking-headers
 
     espace-pro-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin`)"
@@ -159,6 +159,11 @@ http:
         customResponseHeaders:
           x-request-id: "" # remove
           strict-transport-security: ""
+    add-anti-clickjacking-headers:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "frame-ancestors 'self';"
+          X-Frame-Options: SAMEORIGIN
     add-security-headers:
       headers:
         customResponseHeaders:
