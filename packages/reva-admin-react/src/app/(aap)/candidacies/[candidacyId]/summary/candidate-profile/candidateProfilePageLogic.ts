@@ -9,14 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
-  highestDegreeId: z.string({
-    required_error: "Ce champ est obligatoire",
-  }),
-  highestDegreeLabel: z.string().min(1, "Ce champ est obligatoire"),
-
-  niveauDeFormationLePlusEleveDegreeId: z.string({
-    required_error: "Ce champ est obligatoire",
-  }),
+  highestDegreeId: z.string().min(1, "Ce champ est obligatoire"),
+  highestDegreeLabel: z.string(),
+  niveauDeFormationLePlusEleveDegreeId: z
+    .string()
+    .min(1, "Ce champ est obligatoire"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -45,6 +42,7 @@ const getReferentialQuery = graphql(`
     getDegrees {
       id
       longLabel
+      level
     }
   }
 `);
@@ -87,6 +85,8 @@ export const useCandidateProfilePageLogic = () => {
     mutationFn: (candidateProfile: {
       candidateId: string;
       highestDegreeId: string;
+      niveauDeFormationLePlusEleveDegreeId: string;
+      highestDegreeLabel?: string;
     }) =>
       graphqlClient.request(updateCandidateProfileMutation, {
         candidacyId,
@@ -108,6 +108,7 @@ export const useCandidateProfilePageLogic = () => {
     reset,
     formState,
     formState: { errors },
+    setError,
   } = methods;
 
   const resetForm = useCallback(() => {
@@ -125,12 +126,22 @@ export const useCandidateProfilePageLogic = () => {
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
-      await updateCandidateProfile.mutateAsync({
-        candidateId: candidate?.id,
-        ...data,
-      });
-      successToast("Les modifications ont bien été enregistrées");
-      router.push(`/candidacies/${candidacyId}/summary`);
+      const { highestDegreeId, highestDegreeLabel } = data;
+      const highestDegreeLevel = degrees?.find((d) => d.id === highestDegreeId)
+        ?.level;
+      if (
+        !highestDegreeLevel ||
+        (highestDegreeLevel > 1 && !highestDegreeLabel)
+      ) {
+        setError("highestDegreeLabel", { message: "Ce champ est obligatoire" });
+      } else {
+        await updateCandidateProfile.mutateAsync({
+          candidateId: candidate?.id,
+          ...data,
+        });
+        successToast("Les modifications ont bien été enregistrées");
+        router.push(`/candidacies/${candidacyId}/summary`);
+      }
     } catch (e) {
       graphqlErrorToast(e);
     }
