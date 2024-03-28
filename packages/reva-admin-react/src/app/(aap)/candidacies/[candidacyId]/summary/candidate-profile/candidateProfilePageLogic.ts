@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
@@ -103,22 +103,12 @@ export const useCandidateProfilePageLogic = () => {
   });
   const {
     register,
-    control,
+    watch,
     handleSubmit,
     reset,
     formState,
     formState: { errors },
   } = methods;
-
-  const highestDegreeLevelController = useController({
-    name: "highestDegreeId",
-    control,
-  });
-
-  const niveauDeFormationLePlusEleveController = useController({
-    name: "niveauDeFormationLePlusEleveDegreeId",
-    control,
-  });
 
   const resetForm = useCallback(() => {
     reset({
@@ -149,12 +139,11 @@ export const useCandidateProfilePageLogic = () => {
   return {
     candidacyId,
     degrees,
-    highestDegreeLevelController,
-    niveauDeFormationLePlusEleveController,
     register,
     handleFormSubmit,
     formState,
     errors,
     resetForm,
+    watch,
   };
 };

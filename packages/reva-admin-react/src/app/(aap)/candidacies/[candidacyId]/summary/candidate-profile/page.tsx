@@ -9,14 +9,18 @@ const CandidateProfilePage = () => {
   const {
     candidacyId,
     degrees,
-    highestDegreeLevelController,
-    niveauDeFormationLePlusEleveController,
     register,
     handleFormSubmit,
     formState,
     errors,
     resetForm,
+    watch,
   } = useCandidateProfilePageLogic();
+
+  const highestDegreeId = watch("highestDegreeId");
+  const niveauDeFormationLePlusEleveDegreeId = watch(
+    "niveauDeFormationLePlusEleveDegreeId",
+  );
 
   return (
     <div className="flex flex-col">
@@ -37,11 +41,7 @@ const CandidateProfilePage = () => {
           <Select
             label="Niveau de formation le plus élevé"
             nativeSelectProps={{
-              onChange: (event) =>
-                niveauDeFormationLePlusEleveController.field.onChange(
-                  event.target.value,
-                ),
-              value: niveauDeFormationLePlusEleveController.field.value,
+              ...register("niveauDeFormationLePlusEleveDegreeId"),
             }}
             state={
               errors.niveauDeFormationLePlusEleveDegreeId ? "error" : "default"
@@ -52,8 +52,8 @@ const CandidateProfilePage = () => {
           >
             <option
               value=""
-              disabled={!!niveauDeFormationLePlusEleveController.field.value}
-              hidden={!!niveauDeFormationLePlusEleveController.field.value}
+              disabled={!!niveauDeFormationLePlusEleveDegreeId}
+              hidden={!!niveauDeFormationLePlusEleveDegreeId}
             ></option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
@@ -64,17 +64,15 @@ const CandidateProfilePage = () => {
           <Select
             label="Niveau de la certification obtenue le plus élevé"
             nativeSelectProps={{
-              onChange: (event) =>
-                highestDegreeLevelController.field.onChange(event.target.value),
-              value: highestDegreeLevelController.field.value,
+              ...register("highestDegreeId"),
             }}
             state={errors.highestDegreeId ? "error" : "default"}
             stateRelatedMessage={errors.highestDegreeId?.message}
           >
             <option
               value=""
-              disabled={!!highestDegreeLevelController.field.value}
-              hidden={!!highestDegreeLevelController.field.value}
+              disabled={!!highestDegreeId}
+              hidden={!!highestDegreeId}
             ></option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
