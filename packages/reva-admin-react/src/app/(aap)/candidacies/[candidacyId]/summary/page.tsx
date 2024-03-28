@@ -25,6 +25,7 @@ import {
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { CertificationCard } from "./_components/CertificationCard";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -193,19 +194,7 @@ const CandidacySummaryPage = () => {
                 </div>
               )}
             </DefaultCandidacySectionCard>
-            <GrayCard>
-              <h4>La certification choisie</h4>
-              {certification ? (
-                <>
-                  <h6 className="mb-2">{certification.label}</h6>
-                  <p className="text-xs text-gray-600 mb-0">
-                    RNCP {certification.codeRncp}
-                  </p>
-                </>
-              ) : (
-                <p className="mb-0">Aucune certification</p>
-              )}
-            </GrayCard>
+            <CertificationCard candidacy={candidacy} />
             <CandidacySectionCard
               title="Sa recevabilité"
               hasButton
