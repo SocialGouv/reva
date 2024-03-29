@@ -24,6 +24,13 @@ const CertificationPage = () => {
           </p>
         </div>
       </div>
+      <a
+        href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}/`}
+        target="_blank"
+        className="fr-link mr-auto"
+      >
+        Lire les détails de la fiche diplôme
+      </a>
     </div>
   );
 };
