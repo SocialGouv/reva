@@ -13,11 +13,13 @@ export type CandidacySectionCardStatus = "TO_COMPLETE" | "COMPLETED";
 
 export const DefaultCandidacySectionCard = ({
   title,
+  titleIconClass,
   status,
   buttonOnClickHref,
   children,
 }: {
   title: string;
+  titleIconClass?: string;
   status: "TO_COMPLETE" | "COMPLETED";
   buttonOnClickHref: string;
   children?: ReactNode;
@@ -26,6 +28,7 @@ export const DefaultCandidacySectionCard = ({
   return (
     <CandidacySectionCard
       title={title}
+      titleIconClass={titleIconClass}
       badge={status == "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />}
       hasButton={true}
       buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
