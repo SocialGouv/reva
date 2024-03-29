@@ -9,6 +9,11 @@ const getCandidacyById = graphql(`
       certification {
         label
         codeRncp
+        competenceBlocs {
+          id
+          code
+          label
+        }
       }
     }
   }
