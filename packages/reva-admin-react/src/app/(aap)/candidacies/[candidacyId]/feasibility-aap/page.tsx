@@ -22,7 +22,7 @@ const AapFeasibilityPage = () => {
           title="Descriptif de la certification"
           titleIconClass="fr-icon-award-fill"
           status="TO_COMPLETE"
-          buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap`}
+          buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
         >
           <p className="text-xl font-bold mb-2">{certification?.label}</p>
           <p className="text-xs mb-0 text-dsfr-light-text-mention-grey">
