@@ -15,10 +15,7 @@ const CertificationPage = () => {
       <div className="flex gap-2">
         <span className="fr-icon fr-icon--lg fr-icon-award-fill" />
         <div className="flex flex-col">
-          <p className="text-xl font-bold mb-0">
-            Bac Professionnel Métiers du commerce et de la vente - Option A :
-            Animation et gestion de l'espace commercial - MCV
-          </p>
+          <p className="text-xl font-bold mb-0">{certification?.label}</p>
           <p className="text-sm text-dsfr-light-text-mention-grey">
             RNCP {certification?.codeRncp}
           </p>
