@@ -4,11 +4,9 @@ import {
   formatStringToPhoneNumberStructure,
   formatStringToSocialSecurityNumberStructure,
 } from "@/utils";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import CandidacySectionCard from "./_components/CandidacySectionCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
@@ -20,10 +18,13 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useEffect } from "react";
 import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
-
-const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
-
-const BadgeToComplete = () => <Badge severity="warning">À compléter</Badge>;
+import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import {
+  BadgeCompleted,
+  BadgeToComplete,
+  DefaultCandidacySectionCard,
+} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -129,26 +130,11 @@ const CandidacySummaryPage = () => {
       {!!candidate && (
         <>
           <ul className="flex flex-col gap-8 pl-0 mt-8">
-            <CandidacySectionCard
+            <DefaultCandidacySectionCard
               title="Les informations du candidat"
-              hasButton
-              buttonOnClick={() =>
-                router.push(
-                  `/candidacies/${candidacyId}/summary/candidate-information`,
-                )
-              }
-              buttonTitle={
-                isCandidateInformationCompleted ? "Modifier" : "Compléter"
-              }
-              buttonPriority={
-                isCandidateInformationCompleted ? "secondary" : "primary"
-              }
-              badge={
-                isCandidateInformationCompleted ? (
-                  <BadgeCompleted />
-                ) : (
-                  <BadgeToComplete />
-                )
+              buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-information`}
+              status={
+                isCandidateInformationCompleted ? "COMPLETED" : "TO_COMPLETE"
               }
             >
               <dl>
@@ -185,28 +171,11 @@ const CandidacySummaryPage = () => {
                     `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
                 </dd>
               </dl>
-            </CandidacySectionCard>
-            <CandidacySectionCard
+            </DefaultCandidacySectionCard>
+            <DefaultCandidacySectionCard
               title="Son profil"
-              hasButton
-              buttonOnClick={() =>
-                router.push(
-                  `/candidacies/${candidacyId}/summary/candidate-profile`,
-                )
-              }
-              buttonTitle={
-                isCandidateProfileCompleted ? "Modifier" : "Compléter"
-              }
-              buttonPriority={
-                isCandidateProfileCompleted ? "secondary" : "primary"
-              }
-              badge={
-                isCandidateProfileCompleted ? (
-                  <BadgeCompleted />
-                ) : (
-                  <BadgeToComplete />
-                )
-              }
+              buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
+              status={isCandidateProfileCompleted ? "COMPLETED" : "TO_COMPLETE"}
             >
               {isCandidateProfileCompleted && (
                 <div className="flex flex-col">
@@ -223,7 +192,7 @@ const CandidacySummaryPage = () => {
                   <p className="mb-0">{candidate.highestDegreeLabel}</p>
                 </div>
               )}
-            </CandidacySectionCard>
+            </DefaultCandidacySectionCard>
             <GrayCard>
               <h4>La certification choisie</h4>
               {certification ? (
