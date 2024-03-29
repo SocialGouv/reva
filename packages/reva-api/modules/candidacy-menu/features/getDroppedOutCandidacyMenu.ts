@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -9,8 +10,10 @@ import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqu
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
+  userKeycloakId,
 }: {
   candidacy: CandidacyForMenu;
+  userKeycloakId?: string;
 }): Promise<CandidacyMenuEntry[]> => {
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
@@ -26,7 +29,13 @@ export const getDroppedOutCandidacyMenu = async ({
     status: "ACTIVE_WITHOUT_HINT",
   });
 
-  const getFundingRequestMenuEntry = (): CandidacyMenuEntry => {
+  const getFundingRequestMenuEntry = async (
+    userKeycloakId?: string,
+  ): Promise<CandidacyMenuEntry> => {
+    const isReactFundingPageActive = await isFeatureActiveForUser({
+      userKeycloakId,
+      feature: "REACT_FUNDING_PAGE",
+    });
     const editableStatus: CandidacyStatusStep[] = [
       "DOSSIER_FAISABILITE_RECEVABLE",
       "DOSSIER_FAISABILITE_NON_RECEVABLE",
@@ -34,7 +43,10 @@ export const getDroppedOutCandidacyMenu = async ({
     ];
     return {
       label: "Demande de prise en charge",
-      url: buildUrl({ adminType: "Elm", suffix: "funding" }),
+      url: buildUrl({
+        adminType: isReactFundingPageActive ? "React" : "Elm",
+        suffix: "funding",
+      }),
       status: editableStatus.includes(activeCandidacyStatus)
         ? "ACTIVE_WITH_EDIT_HINT"
         : "ACTIVE_WITHOUT_HINT",
@@ -60,7 +72,7 @@ export const getDroppedOutCandidacyMenu = async ({
 
   return [
     getDropOutMenuEntry(),
-    getFundingRequestMenuEntry(),
+    await getFundingRequestMenuEntry(userKeycloakId),
     getPaymentRequestMenuEntry(),
   ];
 };

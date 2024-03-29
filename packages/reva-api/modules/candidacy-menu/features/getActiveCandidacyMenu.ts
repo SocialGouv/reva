@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -9,8 +10,10 @@ import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqu
 
 export const getActiveCandidacyMenu = async ({
   candidacy,
+  userKeycloakId,
 }: {
   candidacy: CandidacyForMenu;
+  userKeycloakId?: string;
 }) => {
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
@@ -113,8 +116,14 @@ export const getActiveCandidacyMenu = async ({
     }
   };
 
-  const getFundingRequestMenuEntry = (): CandidacyMenuEntry => {
+  const getFundingRequestMenuEntry = async (
+    userKeycloakId?: string,
+  ): Promise<CandidacyMenuEntry> => {
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
+    const isReactFundingPageActive = await isFeatureActiveForUser({
+      userKeycloakId,
+      feature: "REACT_FUNDING_PAGE",
+    });
 
     if (candidacy.financeModule === "unireva") {
       if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
@@ -135,7 +144,10 @@ export const getActiveCandidacyMenu = async ({
     }
     return {
       label: "Demande de prise en charge",
-      url: buildUrl({ adminType: "Elm", suffix: "funding" }),
+      url: buildUrl({
+        adminType: isReactFundingPageActive ? "React" : "Elm",
+        suffix: "funding",
+      }),
       status: menuEntryStatus,
     };
   };
@@ -218,7 +230,7 @@ export const getActiveCandidacyMenu = async ({
     getTrainingValidationMenuEntry(),
     getAdmissibilityMenuEntry(),
     getFeasibilityMenuEntry(),
-    getFundingRequestMenuEntry(),
+    await getFundingRequestMenuEntry(userKeycloakId),
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),
     getJuryMenuEntry(),

@@ -1,11 +1,11 @@
-import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
-import { getCandidacyForMenu } from "./getCandidacyForMenu";
-import { getActiveCandidacyMenu } from "./getActiveCandidacyMenu";
-import { getDroppedOutCandidacyMenu } from "./getDroppedOutCandidacyMenu";
-import { getReorientedCandidacyMenu } from "./getReorientedCandidacyMenu";
-import { getDeletedCandidacyMenu } from "./getDeletedCandidacyMenu";
-import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
+import { getActiveCandidacyMenu } from "./getActiveCandidacyMenu";
+import { getCandidacyForMenu } from "./getCandidacyForMenu";
+import { getDeletedCandidacyMenu } from "./getDeletedCandidacyMenu";
+import { getDroppedOutCandidacyMenu } from "./getDroppedOutCandidacyMenu";
+import { menuUrlBuilder } from "./getMenuUrlBuilder";
+import { getReorientedCandidacyMenu } from "./getReorientedCandidacyMenu";
 
 export const getCandidacyMenu = async ({
   candidacyId,
@@ -47,7 +47,7 @@ export const getCandidacyMenu = async ({
   let mainMenu: CandidacyMenuEntry[] = [];
 
   if (candidacy.candidacyDropOut) {
-    mainMenu = await getDroppedOutCandidacyMenu({ candidacy });
+    mainMenu = await getDroppedOutCandidacyMenu({ candidacy, userKeycloakId });
   } else if (activeCandidacyStatus === "ARCHIVE") {
     if (candidacy.reorientationReasonId !== null) {
       mainMenu = await getReorientedCandidacyMenu({ candidacy });
@@ -55,7 +55,7 @@ export const getCandidacyMenu = async ({
       mainMenu = await getDeletedCandidacyMenu({ candidacy });
     }
   } else {
-    mainMenu = await getActiveCandidacyMenu({ candidacy });
+    mainMenu = await getActiveCandidacyMenu({ candidacy, userKeycloakId });
   }
 
   return { menuHeader, mainMenu, menuFooter };
