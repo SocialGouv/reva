@@ -84,11 +84,19 @@ export const getActiveCandidacyMenu = async ({
       : undefined;
   };
 
-  const getFeasibilityMenuEntry = (): CandidacyMenuEntry | undefined => {
+  const getFeasibilityMenuEntry = async (
+    userKeycloakId?: string,
+  ): Promise<CandidacyMenuEntry | undefined> => {
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
 
     const showFeasibilityEntry =
       candidacy.organism?.typology !== "experimentation";
+
+    const isDematerializedFeasibilityFeatureActive =
+      await isFeatureActiveForUser({
+        userKeycloakId,
+        feature: "DEMATERIALIZED_FEASIBILITY",
+      });
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
@@ -106,10 +114,14 @@ export const getActiveCandidacyMenu = async ({
         menuEntryStatus = "ACTIVE_WITHOUT_HINT";
       }
 
+      const url = isDematerializedFeasibilityFeatureActive
+        ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
+        : buildUrl({ adminType: "Elm", suffix: "feasibility" });
+
       return showFeasibilityEntry
         ? {
             label: "Dossier de faisabilité",
-            url: buildUrl({ adminType: "Elm", suffix: "feasibility" }),
+            url,
             status: menuEntryStatus,
           }
         : undefined;
@@ -229,7 +241,7 @@ export const getActiveCandidacyMenu = async ({
     getTrainingMenuEntry(),
     getTrainingValidationMenuEntry(),
     getAdmissibilityMenuEntry(),
-    getFeasibilityMenuEntry(),
+    await getFeasibilityMenuEntry(userKeycloakId),
     await getFundingRequestMenuEntry(userKeycloakId),
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),
