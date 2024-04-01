@@ -60,6 +60,7 @@ export const updateCertificationOfCandidacy = async ({
         certificationId,
         departmentId,
         author: "candidate",
+        feasibilityFormat: newCertification.feasibilityFormat,
       })
     ).unsafeCoerce();
 

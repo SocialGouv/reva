@@ -443,6 +443,7 @@ export const updateCertification = async (params: {
   certificationId: string;
   departmentId: string;
   author: string;
+  feasibilityFormat: "UPLOADED_PDF" | "DEMATERIALIZED";
 }) => {
   try {
     const department = await prismaClient.department.findFirst({
@@ -476,6 +477,7 @@ export const updateCertification = async (params: {
                 id: department.id,
               },
             },
+            feasibilityFormat: params.feasibilityFormat,
             certificationsAndRegions: {
               create: {
                 certificationId: params.certificationId,

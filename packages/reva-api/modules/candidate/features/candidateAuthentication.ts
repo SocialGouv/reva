@@ -23,6 +23,7 @@ import {
   getCandidateWithCandidacyFromKeycloakId,
 } from "../database/candidates";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const candidateAuthentication = async ({
   token,
@@ -129,11 +130,13 @@ const confirmRegistration = async ({
       departmentId: candidateRegistrationInput.departmentId,
     }))
   ) {
+    const certification = await getCertificationById({ certificationId });
     await updateCertification({
       candidacyId: candidateWithCandidacy.candidacies[0].id,
       author: "candidate",
       certificationId,
       departmentId: candidateRegistrationInput.departmentId,
+      feasibilityFormat: (await certification).feasibilityFormat,
     });
 
     //reload candidate and candidacy after certification update

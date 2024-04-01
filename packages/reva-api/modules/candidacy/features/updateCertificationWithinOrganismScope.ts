@@ -122,6 +122,7 @@ export const updateCertificationWithinOrganismScope = async ({
     certificationId,
     departmentId: candidacy.departmentId || "",
     author: hasRole("admin") ? "admin" : "organism",
+    feasibilityFormat: newCertification.feasibilityFormat,
   });
 
   await logCandidacyAuditEvent({

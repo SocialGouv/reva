@@ -59,6 +59,7 @@ model Certification {
   previousVersion                                        Certification?                                           @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                            Certification?                                           @relation("replacement")
   competenceBlocs                                        CertificationCompetenceBloc[]
+  feasibilityFormat                                      FeasibilityFormat                                        @default(UPLOADED_PDF) @map("feasibility_format")
 
   @@map("certification")
 }
