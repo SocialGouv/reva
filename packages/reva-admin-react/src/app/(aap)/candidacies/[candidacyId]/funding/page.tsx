@@ -10,7 +10,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import {
   CandidacyFundingFormData,
@@ -414,6 +414,7 @@ const FundingPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+  const [formConfirmation, setFormConfirmation] = useState(false);
 
   const { candidacy, createFundingRequestUnifvaeMutate } =
     useCandidacyFunding(candidacyId);
@@ -454,7 +455,6 @@ const FundingPage = () => {
         candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
       fundingContactPhone:
         candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
-      confirmation: false,
     },
   });
 
@@ -467,27 +467,7 @@ const FundingPage = () => {
 
   const onSubmit = async (data: CandidacyFundingFormData) => {
     try {
-      await createFundingRequestUnifvaeMutate({
-        basicSkillsCost: data.basicSkillsCost,
-        candidateSecondname: data.candidateSecondname,
-        candidateThirdname: data.candidateThirdname,
-        candidateGender: data.candidateGender,
-        individualHourCount: data.individualHourCount,
-        individualCost: data.individualCost,
-        collectiveHourCount: data.collectiveHourCount,
-        collectiveCost: data.collectiveCost,
-        basicSkillsHourCount: data.basicSkillsHourCount,
-        mandatoryTrainingsHourCount: data.mandatoryTrainingsHourCount,
-        mandatoryTrainingsCost: data.mandatoryTrainingsCost,
-        certificateSkillsHourCount: data.certificateSkillsHourCount,
-        certificateSkillsCost: data.certificateSkillsCost,
-        otherTrainingHourCount: data.otherTrainingHourCount,
-        otherTrainingCost: data.otherTrainingCost,
-        fundingContactFirstname: data.fundingContactFirstname,
-        fundingContactLastname: data.fundingContactLastname,
-        fundingContactEmail: data.fundingContactEmail,
-        fundingContactPhone: data.fundingContactPhone,
-      });
+      await createFundingRequestUnifvaeMutate(data);
       successToast("La demande de financement a bien été enregistrée.");
     } catch (e) {
       graphqlErrorToast(e);
@@ -529,7 +509,6 @@ const FundingPage = () => {
         candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
       fundingContactPhone:
         candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
-      confirmation: false,
     });
   }, [reset, candidacy?.fundingRequestUnifvae, candidacy?.candidate]);
 
@@ -568,7 +547,10 @@ const FundingPage = () => {
                 {
                   label:
                     "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
-                  nativeInputProps: register("confirmation"),
+                  nativeInputProps: {
+                    checked: formConfirmation,
+                    onChange: (e) => setFormConfirmation(e.target.checked),
+                  },
                 },
               ]}
             />
@@ -577,7 +559,7 @@ const FundingPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty,
+              isDirty: isDirty || formConfirmation,
               isSubmitting,
             }}
           />

@@ -21,7 +21,6 @@ export const candidacyFundingSchema = z.object({
   fundingContactLastname: z.string().optional(),
   fundingContactEmail: z.string().optional(),
   fundingContactPhone: z.string().optional(),
-  confirmation: z.literal<boolean>(true),
 });
 
 export type CandidacyFundingFormData = z.infer<typeof candidacyFundingSchema>;
