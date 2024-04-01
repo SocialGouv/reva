@@ -2,7 +2,10 @@
 import { useCertificationPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/certification/certificationPageLogic";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import Input from "@codegouvfr/react-dsfr/Input";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -10,6 +13,12 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
+  option: z.string(),
+  firstForeignLanguage: z.string(),
+  secondForeignlanguage: z.string(),
+  completion: z.enum(["PARTIAL", "COMPLETE"], {
+    invalid_type_error: "Ce champ est obligatoire",
+  }),
   competenceBlocs: z
     .object({
       id: z.string(),
@@ -33,7 +42,7 @@ const CertificationPage = () => {
     control,
     handleSubmit,
     reset,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -90,6 +99,52 @@ const CertificationPage = () => {
       </a>
       {certification && (
         <form className="mt-6" onSubmit={handleFormSubmit}>
+          <Input
+            label="Option ou parcours"
+            hintText="(le cas échéant)"
+            nativeInputProps={{ ...register("option") }}
+          />
+          <SmallNotice>
+            Toutes les informations sur les options et parcours sont sur
+            l’espace documentaire
+          </SmallNotice>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+            <Input
+              label="Langue vivante 1"
+              hintText="(Optionnel)"
+              nativeInputProps={{ ...register("firstForeignLanguage") }}
+            />
+            <Input
+              label="Langue vivante 2"
+              hintText="(Optionnel)"
+              nativeInputProps={{ ...register("secondForeignlanguage") }}
+            />
+          </div>
+
+          <RadioButtons
+            className="mb-6"
+            legend="Le candidat / la candidate vise :"
+            options={[
+              {
+                label: "La certification dans sa totalité",
+                nativeInputProps: {
+                  value: "COMPLETE",
+                  ...register("completion"),
+                },
+              },
+              {
+                label:
+                  "Un ou plusieurs bloc(s) de compétences de la certification",
+                nativeInputProps: {
+                  value: "PARTIAL",
+                  ...register("completion"),
+                },
+              },
+            ]}
+            state={errors.completion ? "error" : "default"}
+            stateRelatedMessage={errors.completion?.message}
+          />
+
           <Checkbox
             legend={
               <span className="text-xl font-bold">
