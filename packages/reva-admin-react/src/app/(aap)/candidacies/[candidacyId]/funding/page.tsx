@@ -2,14 +2,16 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { GenderEnum } from "@/constants";
 import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { GenderEnum } from "../summary/candidate-information/_components/candidateCivilInformationSchema";
 import {
   CandidacyFundingFormData,
   candidacyFundingSchema,
@@ -36,12 +38,12 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
       <fieldset className="grid grid-cols-2 gap-x-4 w-full">
         <Input
           label="Nom"
-          nativeInputProps={{ value: candidacy?.candidate?.lastname }}
+          nativeInputProps={{ value: candidacy?.candidate?.lastname ?? "" }}
           disabled
         />
         <Input
           label="Prénom"
-          nativeInputProps={{ value: candidacy?.candidate?.firstname }}
+          nativeInputProps={{ value: candidacy?.candidate?.firstname ?? "" }}
           disabled
         />
         <Input
@@ -107,11 +109,8 @@ const ParcoursPersonnaliseBlock = () => {
   const collectiveHourCount = watch("collectiveHourCount");
   const collectiveCost = watch("collectiveCost");
   const accompagnementCost =
-    Number(individualHourCount) * Number(individualCost) +
-    Number(collectiveHourCount) * Number(collectiveCost);
-  const accompagnementHourCount =
-    Number(individualHourCount) + Number(collectiveHourCount);
-
+    individualHourCount * individualCost + collectiveHourCount * collectiveCost;
+  const accompagnementHourCount = individualHourCount + collectiveHourCount;
   const mandatoryTrainingsHourCount = watch("mandatoryTrainingsHourCount");
   const mandatoryTrainingsCost = watch("mandatoryTrainingsCost");
   const basicSkillsHourCount = watch("basicSkillsHourCount");
@@ -121,20 +120,19 @@ const ParcoursPersonnaliseBlock = () => {
   const otherTrainingHourCount = watch("otherTrainingHourCount");
   const otherTrainingCost = watch("otherTrainingCost");
   const complementsFormatifsHourCount =
-    Number(mandatoryTrainingsHourCount) +
-    Number(basicSkillsHourCount) +
-    Number(certificateSkillsHourCount) +
-    Number(otherTrainingHourCount);
+    mandatoryTrainingsHourCount +
+    basicSkillsHourCount +
+    certificateSkillsHourCount +
+    otherTrainingHourCount;
   const complementsFormatifsCost =
-    Number(mandatoryTrainingsCost) +
-    Number(basicSkillsCost) +
-    Number(certificateSkillsCost) +
-    Number(otherTrainingCost);
+    mandatoryTrainingsCost +
+    basicSkillsCost +
+    certificateSkillsCost +
+    otherTrainingCost;
 
   const totalHourCount =
-    Number(accompagnementHourCount) + Number(complementsFormatifsHourCount);
-  const totalCost =
-    Number(accompagnementCost) + Number(complementsFormatifsCost);
+    accompagnementHourCount + complementsFormatifsHourCount;
+  const totalCost = accompagnementCost + complementsFormatifsCost;
 
   return (
     <div className="w-full">
@@ -166,7 +164,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("individualHourCount")}
+            nativeInputProps={{
+              ...register("individualHourCount", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.individualHourCount?.message as string}
             state={errors.individualHourCount ? "error" : "default"}
           />
@@ -174,7 +176,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("individualCost")}
+            nativeInputProps={{
+              ...register("individualCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.individualCost?.message as string}
             state={errors.individualCost ? "error" : "default"}
           />
@@ -186,7 +192,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("collectiveHourCount")}
+            nativeInputProps={{
+              ...register("collectiveHourCount", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.collectiveHourCount?.message as string}
             state={errors.collectiveHourCount ? "error" : "default"}
           />
@@ -194,7 +204,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("collectiveCost")}
+            nativeInputProps={{
+              ...register("collectiveCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.collectiveCost?.message as string}
             state={errors.collectiveCost ? "error" : "default"}
           />
@@ -217,7 +231,13 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("mandatoryTrainingsHourCount")}
+            nativeInputProps={{
+              ...register("mandatoryTrainingsHourCount", {
+                valueAsNumber: true,
+              }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={
               errors.mandatoryTrainingsHourCount?.message as string
             }
@@ -227,7 +247,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("mandatoryTrainingsCost")}
+            nativeInputProps={{
+              ...register("mandatoryTrainingsCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={
               errors.mandatoryTrainingsCost?.message as string
             }
@@ -241,7 +265,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("basicSkillsHourCount")}
+            nativeInputProps={{
+              ...register("basicSkillsHourCount", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.basicSkillsHourCount?.message as string}
             state={errors.basicSkillsHourCount ? "error" : "default"}
           />
@@ -249,7 +277,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("basicSkillsCost")}
+            nativeInputProps={{
+              ...register("basicSkillsCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.basicSkillsCost?.message as string}
             state={errors.basicSkillsCost ? "error" : "default"}
           />
@@ -261,7 +293,13 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("certificateSkillsHourCount")}
+            nativeInputProps={{
+              ...register("certificateSkillsHourCount", {
+                valueAsNumber: true,
+              }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={
               errors.certificateSkillsHourCount?.message as string
             }
@@ -271,7 +309,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("certificateSkillsCost")}
+            nativeInputProps={{
+              ...register("certificateSkillsCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={
               errors.certificateSkillsCost?.message as string
             }
@@ -285,7 +327,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={register("otherTrainingHourCount")}
+            nativeInputProps={{
+              ...register("otherTrainingHourCount", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={
               errors.otherTrainingHourCount?.message as string
             }
@@ -295,7 +341,11 @@ const ParcoursPersonnaliseBlock = () => {
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={register("otherTrainingCost")}
+            nativeInputProps={{
+              ...register("otherTrainingCost", { valueAsNumber: true }),
+              type: "number",
+              min: 0,
+            }}
             stateRelatedMessage={errors.otherTrainingCost?.message as string}
             state={errors.otherTrainingCost ? "error" : "default"}
           />
@@ -365,37 +415,129 @@ const FundingPage = () => {
     candidacyId: string;
   }>();
 
-  const { candidacy } = useCandidacyFunding(candidacyId);
+  const { candidacy, createFundingRequestUnifvaeMutate } =
+    useCandidacyFunding(candidacyId);
 
   const methods = useForm<CandidacyFundingFormData>({
     resolver: zodResolver(candidacyFundingSchema),
     defaultValues: {
       candidateSecondname: candidacy?.candidate?.firstname2 || "",
       candidateThirdname: candidacy?.candidate?.firstname3 || "",
-      candidateGender: GenderEnum.undisclosed,
-      individualHourCount: 0,
-      individualCost: 0,
-      collectiveHourCount: 0,
-      collectiveCost: 0,
-      basicSkillsHourCount: 0,
-      basicSkillsCost: 0,
-      mandatoryTrainingsHourCount: 0,
-      mandatoryTrainingsCost: 0,
-      certificateSkillsHourCount: 0,
-      certificateSkillsCost: 0,
-      otherTrainingHourCount: 0,
-      otherTrainingCost: 0,
-      fundingContactFirstname: "",
-      fundingContactLastname: "",
-      fundingContactEmail: "",
-      fundingContactPhone: "",
+      candidateGender:
+        (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
+      individualHourCount:
+        candidacy?.fundingRequestUnifvae?.individualHourCount ?? 0,
+      individualCost: candidacy?.fundingRequestUnifvae?.individualCost ?? 0,
+      collectiveHourCount:
+        candidacy?.fundingRequestUnifvae?.collectiveHourCount ?? 0,
+      collectiveCost: candidacy?.fundingRequestUnifvae?.collectiveCost ?? 0,
+      basicSkillsHourCount:
+        candidacy?.fundingRequestUnifvae?.basicSkillsHourCount ?? 0,
+      basicSkillsCost: candidacy?.fundingRequestUnifvae?.basicSkillsCost ?? 0,
+      mandatoryTrainingsHourCount:
+        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsHourCount ?? 0,
+      mandatoryTrainingsCost:
+        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsCost ?? 0,
+      certificateSkillsHourCount:
+        candidacy?.fundingRequestUnifvae?.certificateSkillsHourCount ?? 0,
+      certificateSkillsCost:
+        candidacy?.fundingRequestUnifvae?.certificateSkillsCost ?? 0,
+      otherTrainingHourCount:
+        candidacy?.fundingRequestUnifvae?.otherTrainingHourCount ?? 0,
+      otherTrainingCost:
+        candidacy?.fundingRequestUnifvae?.otherTrainingCost ?? 0,
+      fundingContactFirstname:
+        candidacy?.fundingRequestUnifvae?.fundingContactFirstname ?? "",
+      fundingContactLastname:
+        candidacy?.fundingRequestUnifvae?.fundingContactLastname ?? "",
+      fundingContactEmail:
+        candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
+      fundingContactPhone:
+        candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
       confirmation: false,
     },
   });
 
-  const onSubmit = (data: CandidacyFundingFormData) => {
-    console.log("data", data);
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { isDirty, isSubmitting },
+  } = methods;
+
+  const onSubmit = async (data: CandidacyFundingFormData) => {
+    try {
+      await createFundingRequestUnifvaeMutate({
+        basicSkillsCost: data.basicSkillsCost,
+        candidateSecondname: data.candidateSecondname,
+        candidateThirdname: data.candidateThirdname,
+        candidateGender: data.candidateGender,
+        individualHourCount: data.individualHourCount,
+        individualCost: data.individualCost,
+        collectiveHourCount: data.collectiveHourCount,
+        collectiveCost: data.collectiveCost,
+        basicSkillsHourCount: data.basicSkillsHourCount,
+        mandatoryTrainingsHourCount: data.mandatoryTrainingsHourCount,
+        mandatoryTrainingsCost: data.mandatoryTrainingsCost,
+        certificateSkillsHourCount: data.certificateSkillsHourCount,
+        certificateSkillsCost: data.certificateSkillsCost,
+        otherTrainingHourCount: data.otherTrainingHourCount,
+        otherTrainingCost: data.otherTrainingCost,
+        fundingContactFirstname: data.fundingContactFirstname,
+        fundingContactLastname: data.fundingContactLastname,
+        fundingContactEmail: data.fundingContactEmail,
+        fundingContactPhone: data.fundingContactPhone,
+      });
+      successToast("La demande de financement a bien été enregistrée.");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   };
+
+  const resetForm = useCallback(() => {
+    reset({
+      candidateSecondname: candidacy?.candidate?.firstname2 || "",
+      candidateThirdname: candidacy?.candidate?.firstname3 || "",
+      candidateGender:
+        (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
+      individualHourCount:
+        candidacy?.fundingRequestUnifvae?.individualHourCount || 0,
+      individualCost: candidacy?.fundingRequestUnifvae?.individualCost || 0,
+      collectiveHourCount:
+        candidacy?.fundingRequestUnifvae?.collectiveHourCount ?? 0,
+      collectiveCost: candidacy?.fundingRequestUnifvae?.collectiveCost ?? 0,
+      basicSkillsHourCount:
+        candidacy?.fundingRequestUnifvae?.basicSkillsHourCount ?? 0,
+      basicSkillsCost: candidacy?.fundingRequestUnifvae?.basicSkillsCost ?? 0,
+      mandatoryTrainingsHourCount:
+        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsHourCount ?? 0,
+      mandatoryTrainingsCost:
+        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsCost ?? 0,
+      certificateSkillsHourCount:
+        candidacy?.fundingRequestUnifvae?.certificateSkillsHourCount ?? 0,
+      certificateSkillsCost:
+        candidacy?.fundingRequestUnifvae?.certificateSkillsCost ?? 0,
+      otherTrainingHourCount:
+        candidacy?.fundingRequestUnifvae?.otherTrainingHourCount ?? 0,
+      otherTrainingCost:
+        candidacy?.fundingRequestUnifvae?.otherTrainingCost ?? 0,
+      fundingContactFirstname:
+        candidacy?.fundingRequestUnifvae?.fundingContactFirstname ?? "",
+      fundingContactLastname:
+        candidacy?.fundingRequestUnifvae?.fundingContactLastname ?? "",
+      fundingContactEmail:
+        candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
+      fundingContactPhone:
+        candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
+      confirmation: false,
+    });
+  }, [reset, candidacy?.fundingRequestUnifvae, candidacy?.candidate]);
+
+  useEffect(() => {
+    if (candidacy) {
+      resetForm();
+    }
+  }, [candidacy, resetForm]);
 
   return (
     <div className="flex flex-col w-full p-8">
@@ -406,7 +548,11 @@ const FundingPage = () => {
       <FormProvider {...methods}>
         <form
           className="flex flex-col"
-          onSubmit={methods.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
+          }}
         >
           <InformationCandidatBlock candidacy={candidacy as Candidacy} />
           <hr className="flex mb-2 mt-8" />
@@ -422,7 +568,7 @@ const FundingPage = () => {
                 {
                   label:
                     "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
-                  nativeInputProps: methods.register("confirmation"),
+                  nativeInputProps: register("confirmation"),
                 },
               ]}
             />
@@ -431,8 +577,8 @@ const FundingPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty: methods.formState.isDirty,
-              isSubmitting: methods.formState.isSubmitting,
+              isDirty,
+              isSubmitting,
             }}
           />
         </form>

@@ -1,14 +1,14 @@
+import { GenderEnum } from "@/constants";
 import { z } from "zod";
-import { GenderEnum } from "../../summary/candidate-information/_components/candidateCivilInformationSchema";
 
 export const candidacyFundingSchema = z.object({
   candidateSecondname: z.string().optional(),
   candidateThirdname: z.string().optional(),
   candidateGender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
-  individualHourCount: z.number().optional(),
-  individualCost: z.number().optional(),
-  collectiveHourCount: z.number().optional(),
-  collectiveCost: z.number().optional(),
+  individualHourCount: z.number(),
+  individualCost: z.number(),
+  collectiveHourCount: z.number(),
+  collectiveCost: z.number(),
   basicSkillsHourCount: z.number(),
   basicSkillsCost: z.number(),
   mandatoryTrainingsHourCount: z.number(),

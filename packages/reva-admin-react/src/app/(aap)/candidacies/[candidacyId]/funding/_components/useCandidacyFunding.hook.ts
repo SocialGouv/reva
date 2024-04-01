@@ -1,5 +1,4 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { FundingRequestUnifvaeInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -7,16 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const getCandidacyByIdFunding = graphql(`
   query getCandidacyByIdFunding($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
-      id
-      candidacyStatuses {
-        id
-        status
-      }
       organism {
         label
       }
       candidate {
-        id
         lastname
         firstname
         firstname2
@@ -26,13 +19,29 @@ const getCandidacyByIdFunding = graphql(`
         phone
       }
       certification {
-        id
         label
-        codeRncp
-        typeDiplome {
-          id
-          label
-        }
+      }
+      fundingRequestUnifvae {
+        id
+        candidateSecondname
+        candidateThirdname
+        candidateGender
+        individualHourCount
+        individualCost
+        collectiveHourCount
+        collectiveCost
+        basicSkillsHourCount
+        basicSkillsCost
+        mandatoryTrainingsHourCount
+        mandatoryTrainingsCost
+        certificateSkillsHourCount
+        certificateSkillsCost
+        otherTrainingHourCount
+        otherTrainingCost
+        fundingContactFirstname
+        fundingContactLastname
+        fundingContactEmail
+        fundingContactPhone
       }
     }
   }
@@ -72,7 +81,6 @@ export const useCandidacyFunding = (candidacyId: string) => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
-      successToast("La demande de financement a bien été enregistrée.");
     },
   });
 

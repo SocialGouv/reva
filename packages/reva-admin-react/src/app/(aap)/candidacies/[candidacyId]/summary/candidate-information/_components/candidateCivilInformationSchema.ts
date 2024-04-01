@@ -1,11 +1,6 @@
+import { GenderEnum } from "@/constants";
 import { isBefore, sub } from "date-fns";
 import { z } from "zod";
-
-export enum GenderEnum {
-  man = "man",
-  undisclosed = "undisclosed",
-  woman = "woman",
-}
 
 const defaultErrorMessage = "Ce champ est obligatoire";
 const socialSecurityNumberErrorMessage =

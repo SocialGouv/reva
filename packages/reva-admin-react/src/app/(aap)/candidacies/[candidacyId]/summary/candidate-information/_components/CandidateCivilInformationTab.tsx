@@ -6,7 +6,9 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { GenderEnum } from "@/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
@@ -15,11 +17,9 @@ import { useForm } from "react-hook-form";
 import useCandidateSummary from "../../_components/useCandidateSummary";
 import {
   FormCandidateCivilInformationData,
-  GenderEnum,
   candidateCivilInformationSchema,
 } from "./candidateCivilInformationSchema";
 import useUpdateCandidateCivilInformation from "./useUpdateCandidateCivilInformation.hook";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const CandidateCivilInformationTab = ({
   handleOnSubmitNavigation,
