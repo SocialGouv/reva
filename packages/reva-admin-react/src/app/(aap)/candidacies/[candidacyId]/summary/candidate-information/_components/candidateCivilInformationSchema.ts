@@ -40,7 +40,7 @@ export const candidateCivilInformationSchema = z
 
       const today = new Date();
 
-      const dateSelected = data.birthdate;
+      const dateSelected = new Date(data.birthdate);
       const eighteenYearsAgo = sub(today, { years: 18 });
       const candidateBirthdayIsOlderThan18YearsAgo = isBefore(
         dateSelected,

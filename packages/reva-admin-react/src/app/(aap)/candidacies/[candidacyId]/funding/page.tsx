@@ -3,7 +3,8 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Candidacy } from "@/graphql/generated/graphql";
-import Input from "@codegouvfr/react-dsfr/Input";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
@@ -30,34 +31,30 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
   return (
     <div className="w-full flex flex-col">
       <legend>
-        <h2>1. Informations du candidat</h2>
+        <h2 className="text-xl">1. Informations du candidat</h2>
       </legend>
       <fieldset className="grid grid-cols-2 gap-x-4 w-full">
         <Input
-          className="uppercase font-bold"
-          label="nom"
+          label="Nom"
           nativeInputProps={{ value: candidacy?.candidate?.lastname }}
           disabled
         />
         <Input
-          className="uppercase font-bold"
-          label="prénom"
+          label="Prénom"
           nativeInputProps={{ value: candidacy?.candidate?.firstname }}
           disabled
         />
         <Input
-          className="uppercase font-bold"
           label="2ème prénom (optionnel)"
           nativeInputProps={register("candidateSecondname")}
         />
         <Input
-          className="uppercase font-bold"
           label="3ème prénom (optionnel)"
           nativeInputProps={{ ...register("candidateThirdname") }}
         />
         <Select
-          className="uppercase w-full font-bold"
-          label="civilité"
+          className="w-full"
+          label="Civilité"
           nativeSelectProps={{ ...register("candidateGender") }}
           state={errors.candidateGender ? "error" : "default"}
           stateRelatedMessage={errors.candidateGender?.message as string}
@@ -77,159 +74,194 @@ const ChoixCandidatBlock = () => {
   return (
     <div className="w-full">
       <legend>
-        <h2>2. Choix du candidat</h2>
+        <h2 className="text-xl m-0">2. Choix du candidat</h2>
       </legend>
       <fieldset className="grid grid-cols-2 gap-x-4 w-full">
-        <Input className="uppercase font-bold" label="certification choisie" />
-        <Input className="uppercase font-bold" label="accompagnateur choisi" />
+        <Input label="Certification choisie" />
+        <Input label="Accompagnateur choisi" />
       </fieldset>
     </div>
   );
 };
 
 const ParcoursPersonnaliseBlock = () => {
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
+  const individualHourCount = watch("individualHourCount");
+  const individualCost = watch("individualCost");
+  const collectiveHourCount = watch("collectiveHourCount");
+  const collectiveCost = watch("collectiveCost");
+  const accompagnementCost =
+    Number(individualHourCount) * Number(individualCost) +
+    Number(collectiveHourCount) * Number(collectiveCost);
+  const accompagnementHourCount =
+    Number(individualHourCount) + Number(collectiveHourCount);
+
+  const mandatoryTrainingsHourCount = watch("mandatoryTrainingsHourCount");
+  const mandatoryTrainingsCost = watch("mandatoryTrainingsCost");
+  const basicSkillsHourCount = watch("basicSkillsHourCount");
+  const basicSkillsCost = watch("basicSkillsCost");
+  const certificateSkillsHourCount = watch("certificateSkillsHourCount");
+  const certificateSkillsCost = watch("certificateSkillsCost");
+  const otherTrainingHourCount = watch("otherTrainingHourCount");
+  const otherTrainingCost = watch("otherTrainingCost");
+  const complementsFormatifsHourCount =
+    Number(mandatoryTrainingsHourCount) +
+    Number(basicSkillsHourCount) +
+    Number(certificateSkillsHourCount) +
+    Number(otherTrainingHourCount);
+  const complementsFormatifsCost =
+    Number(mandatoryTrainingsCost) +
+    Number(basicSkillsCost) +
+    Number(certificateSkillsCost) +
+    Number(otherTrainingCost);
+
+  const totalHourCount =
+    Number(accompagnementHourCount) + Number(complementsFormatifsHourCount);
+  const totalCost =
+    Number(accompagnementCost) + Number(complementsFormatifsCost);
 
   return (
     <div className="w-full">
       <legend>
-        <h2>3. Parcours personnalisé</h2>
+        <h2 className="text-xl">3. Parcours personnalisé</h2>
       </legend>
 
       <div className="flex gap-4">
         <div>
-          <h3 className="text-sm">
+          <h3 className="text-lg mb-2 font-normal">
             Forfait d'étude de faisabilité et entretien post-jury
           </h3>
-          <p className="flex text-xs text-dsfrOrange-500">
-            Ne pourra être demandé que si l'étude a été réalisée dans sa
-            totalité.
+          <p className="flex text-xs text-dsfr-orange-500">
+            <span className="fr-icon-warning-fill fr-icon--sm mr-1" /> Ne pourra
+            être demandé que si l'étude a été réalisée dans sa totalité.
           </p>
         </div>
-        <div>
-          <h4 className="text-xs">FORFAIT</h4>
+        <div className="pl-6">
+          <h4 className="text-base font-normal mb-2">FORFAIT</h4>
           <p>300€ net</p>
         </div>
       </div>
 
-      <h3>Accompagnement (optionnel)</h3>
-      <fieldset className="flex flex-col gap-4 w-full">
-        <div className="flex justify-between">
-          <h4>Individuel</h4>
+      <h3 className="text-lg">Accompagnement (optionnel)</h3>
+      <fieldset className="flex flex-col w-full border-[1px] border-default-grey rounded-lg py-5">
+        <div className="flex gap-x-4 justify-between px-5">
+          <h4 className="text-base flex-1 font-normal">Individuel</h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("individualHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("individualCost")}
           />
         </div>
 
-        <div className="flex justify-between">
-          <h4>Collectif</h4>
+        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-6">
+          <h4 className="text-base flex-1 font-normal">Collectif</h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("collectiveHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("collectiveCost")}
           />
         </div>
 
-        <div className="flex justify-between">
-          <p>Sous-total des accompagnements</p>
-          <p>0 h</p>
-          <p>300 €</p>
+        <div className="flex gap-x-4 justify-between px-5 pt-6">
+          <p className="flex-1 m-0">Sous-total des accompagnements</p>
+          <p className="flex-1 m-0">{accompagnementHourCount} h</p>
+          <p className="flex-1 m-0">{accompagnementCost} €</p>
         </div>
       </fieldset>
 
-      <h3>Compléments formatifs</h3>
-      <fieldset className="flex flex-col gap-4 w-full">
-        <div className="flex justify-between">
-          <h4>Formation obligatoire</h4>
+      <h3 className="text-lg my-6">Compléments formatifs</h3>
+      <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6 ">
+        <div className="flex gap-x-4 justify-between px-5 ">
+          <h4 className="text-base flex-1 font-normal">
+            Formation obligatoire
+          </h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("mandatoryTrainingsHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("mandatoryTrainingsCost")}
           />
         </div>
 
-        <div className="flex justify-between">
-          <h4>Savoir de base</h4>
+        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4">
+          <h4 className="text-base flex-1 font-normal">Savoir de base</h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("basicSkillsHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("basicSkillsCost")}
           />
         </div>
 
-        <div className="flex justify-between">
-          <h4>Bloc de compétences</h4>
+        <div className="flex gap-x-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
+          <h4 className="text-base flex-1 font-normal">Bloc de compétences</h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("certificateSkillsHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("certificateSkillsCost")}
           />
         </div>
 
-        <div className="flex justify-between">
-          <h4>Autres</h4>
+        <div className="flex gap-x-4 justify-between px-5 pt-2">
+          <h4 className="text-base flex-1 font-normal">Autres</h4>
           <Input
-            className="font-bold"
-            label="NOMBRE D'HEURES"
+            className="flex-1"
+            label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("otherTrainingHourCount")}
           />
           <Input
-            className="font-bold"
-            label="COÛT HORAIRE"
+            className="flex-1"
+            label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("otherTrainingCost")}
           />
         </div>
       </fieldset>
 
-      <div className="flex justify-between">
-        <p>Sous-total des compléments formatifs</p>
-        <p>0 h</p>
-        <p>0 €</p>
+      <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-b-lg rounded-t-lg px-5 pt-6">
+        <p className="flex-1">Sous-total des compléments formatifs</p>
+        <p className="flex-1">{complementsFormatifsHourCount} h</p>
+        <p className="flex-1">{complementsFormatifsCost} €</p>
       </div>
 
-      <div className="flex justify-between">
-        <p>Total</p>
-        <p>0 h</p>
-        <p>300 €</p>
+      <div className="flex gap-x-4 justify-between pt-6 px-5">
+        <p className="flex-1 m-0 text-lg font-bold">Total</p>
+        <p className="flex-1 m-0">{totalHourCount} h</p>
+        <p className="flex-1 m-0">{totalCost} €</p>
       </div>
     </div>
   );
@@ -241,27 +273,23 @@ const ResponsableFinancementBlock = () => {
   return (
     <div className="w-full">
       <legend>
-        <h2>4. Responsable du financement</h2>
+        <h2 className="text-xl">4. Responsable du financement</h2>
       </legend>
       <fieldset className="grid grid-cols-2 gap-x-4 w-full">
         <Input
-          className="uppercase font-bold"
-          label="nom (optionnel)"
+          label="Nom (optionnel)"
           nativeInputProps={register("fundingContactFirstname")}
         />
         <Input
-          className="uppercase font-bold"
-          label="prénom (optionnel)"
+          label="Prénom (optionnel)"
           nativeInputProps={register("fundingContactLastname")}
         />
         <Input
-          className="uppercase font-bold"
-          label="téléphone (optionnel)"
+          label="Téléphone (optionnel)"
           nativeInputProps={register("fundingContactPhone")}
         />
         <Input
-          className="uppercase font-bold"
-          label="adresse mail (optionnel)"
+          label="Adresse mail (optionnel)"
           nativeInputProps={register("fundingContactEmail")}
         />
       </fieldset>
@@ -298,6 +326,7 @@ const FundingPage = () => {
       fundingContactLastname: "",
       fundingContactEmail: "",
       fundingContactPhone: "",
+      confirmation: false,
     },
   });
 
@@ -308,28 +337,33 @@ const FundingPage = () => {
         <FormOptionalFieldsDisclaimer />
       </div>
       <FormProvider {...methods}>
-        <form className="flex flex-col gap-8">
+        <form className="flex flex-col">
           <InformationCandidatBlock candidacy={candidacy as Candidacy} />
-          <hr />
+          <hr className="flex mb-2 mt-8" />
           <ChoixCandidatBlock />
-          <hr />
+          <hr className="flex mb-2 mt-8" />
           <ParcoursPersonnaliseBlock />
-          <hr />
+          <hr className="flex mb-2 mt-8" />
           <ResponsableFinancementBlock />
           <GrayCard>
-            <h2>Avant de finaliser votre envoi :</h2>
-            <div className="flex">
-              <input type="checkbox" />
-              <p>
-                Je confirme le montant de la prise en charge. Je ne pourrai pas
-                modifier cette demande après son envoi.
-              </p>
-            </div>
+            <h2 className="text-xl">Avant de finaliser votre envoi :</h2>
+            <Checkbox
+              options={[
+                {
+                  label:
+                    "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
+                  nativeInputProps: methods.register("confirmation"),
+                },
+              ]}
+            />
           </GrayCard>
 
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
-            formState={{ isDirty: false, isSubmitting: false }}
+            formState={{
+              isDirty: methods.formState.isDirty,
+              isSubmitting: methods.formState.isSubmitting,
+            }}
           />
         </form>
       </FormProvider>
