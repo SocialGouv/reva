@@ -12,6 +12,9 @@ const getCandidacyByIdFunding = graphql(`
         id
         status
       }
+      organism {
+        label
+      }
       candidate {
         id
         lastname

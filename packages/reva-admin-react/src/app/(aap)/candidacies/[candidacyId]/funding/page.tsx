@@ -75,15 +75,23 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
 };
 
 const ChoixCandidatBlock = () => {
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+  const { candidacy } = useCandidacyFunding(candidacyId);
   return (
-    <div className="w-full">
-      <legend>
-        <h2 className="text-xl m-0">2. Choix du candidat</h2>
-      </legend>
-      <fieldset className="grid grid-cols-2 gap-x-4 w-full">
-        <Input label="Certification choisie" />
-        <Input label="Accompagnateur choisi" />
-      </fieldset>
+    <div className="w-full ">
+      <h2 className="text-xl">2. Choix du candidat</h2>
+      <div className="flex gap-x-8">
+        <div className="flex-1">
+          <p className="text-sm font-bold">CERTIFICATION CHOISIE</p>
+          <p className="m-0">{candidacy?.certification?.label}</p>
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-bold">ACCOMPAGNATEUR CHOISI</p>
+          <p className="m-0">{candidacy?.organism?.label}</p>
+        </div>
+      </div>
     </div>
   );
 };
@@ -136,7 +144,7 @@ const ParcoursPersonnaliseBlock = () => {
 
       <div className="flex gap-4">
         <div>
-          <h3 className="text-lg mb-2 font-normal">
+          <h3 className="text-lg mb-2 font-medium">
             Forfait d'étude de faisabilité et entretien post-jury
           </h3>
           <p className="flex text-xs text-dsfr-orange-500">
@@ -145,7 +153,7 @@ const ParcoursPersonnaliseBlock = () => {
           </p>
         </div>
         <div className="pl-6">
-          <h4 className="text-base font-normal mb-2">FORFAIT</h4>
+          <h4 className="text-base mb-2 font-medium">FORFAIT</h4>
           <p>300€ net</p>
         </div>
       </div>
@@ -385,6 +393,10 @@ const FundingPage = () => {
     },
   });
 
+  const onSubmit = (data: CandidacyFundingFormData) => {
+    console.log("data", data);
+  };
+
   return (
     <div className="flex flex-col w-full p-8">
       <div>
@@ -392,7 +404,10 @@ const FundingPage = () => {
         <FormOptionalFieldsDisclaimer />
       </div>
       <FormProvider {...methods}>
-        <form className="flex flex-col">
+        <form
+          className="flex flex-col"
+          onSubmit={methods.handleSubmit(onSubmit)}
+        >
           <InformationCandidatBlock candidacy={candidacy as Candidacy} />
           <hr className="flex mb-2 mt-8" />
           <ChoixCandidatBlock />
