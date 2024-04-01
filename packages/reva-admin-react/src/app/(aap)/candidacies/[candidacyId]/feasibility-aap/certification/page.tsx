@@ -9,7 +9,7 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -40,6 +40,7 @@ const CertificationPage = () => {
   const {
     register,
     control,
+    setValue,
     handleSubmit,
     reset,
     formState: { isDirty, isSubmitting, errors },
@@ -47,10 +48,11 @@ const CertificationPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const { fields: competenceBlocFields } = useFieldArray({
-    control,
-    name: "competenceBlocs",
-  });
+  const { fields: competenceBlocFields, update: updateCompetenceBlocs } =
+    useFieldArray({
+      control,
+      name: "competenceBlocs",
+    });
 
   const resetForm = useCallback(
     () =>
@@ -65,6 +67,29 @@ const CertificationPage = () => {
   );
 
   useEffect(resetForm, [resetForm]);
+
+  const completion = useWatch({ name: "completion", control });
+
+  useEffect(() => {
+    switch (completion) {
+      case "COMPLETE": {
+        if (competenceBlocFields.some((cbf) => !cbf.checked)) {
+          competenceBlocFields.forEach((cbf, i) =>
+            updateCompetenceBlocs(i, { ...cbf, checked: true }),
+          );
+        }
+        break;
+      }
+      case "PARTIAL": {
+        if (competenceBlocFields.some((cbf) => cbf.checked)) {
+          competenceBlocFields.forEach((cbf, i) =>
+            updateCompetenceBlocs(i, { ...cbf, checked: false }),
+          );
+        }
+        break;
+      }
+    }
+  }, [competenceBlocFields, completion, updateCompetenceBlocs]);
 
   const handleFormSubmit = handleSubmit(
     (data) => {
@@ -151,9 +176,11 @@ const CertificationPage = () => {
                 Bloc(s) de compétence visé(s)
               </span>
             }
+            disabled={!completion}
             options={competenceBlocFields.map((b, bIndex) => ({
               label: b.label,
               nativeInputProps: {
+                key: competenceBlocFields[bIndex].id,
                 ...register(`competenceBlocs.${bIndex}.checked`),
               },
             }))}
