@@ -84,9 +84,13 @@ export const getActiveCandidacyMenu = async ({
       : undefined;
   };
 
-  const getFeasibilityMenuEntry = async (
-    userKeycloakId?: string,
-  ): Promise<CandidacyMenuEntry | undefined> => {
+  const getFeasibilityMenuEntry = async ({
+    userKeycloakId,
+    feasibilityFormat,
+  }: {
+    userKeycloakId?: string;
+    feasibilityFormat: "UPLOADED_PDF" | "DEMATERIALIZED";
+  }): Promise<CandidacyMenuEntry | undefined> => {
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
 
     const showFeasibilityEntry =
@@ -114,9 +118,11 @@ export const getActiveCandidacyMenu = async ({
         menuEntryStatus = "ACTIVE_WITHOUT_HINT";
       }
 
-      const url = isDematerializedFeasibilityFeatureActive
-        ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
-        : buildUrl({ adminType: "Elm", suffix: "feasibility" });
+      const url =
+        isDematerializedFeasibilityFeatureActive &&
+        feasibilityFormat === "DEMATERIALIZED"
+          ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
+          : buildUrl({ adminType: "Elm", suffix: "feasibility" });
 
       return showFeasibilityEntry
         ? {
@@ -241,7 +247,10 @@ export const getActiveCandidacyMenu = async ({
     getTrainingMenuEntry(),
     getTrainingValidationMenuEntry(),
     getAdmissibilityMenuEntry(),
-    await getFeasibilityMenuEntry(userKeycloakId),
+    await getFeasibilityMenuEntry({
+      userKeycloakId,
+      feasibilityFormat: candidacy.feasibilityFormat,
+    }),
     await getFundingRequestMenuEntry(userKeycloakId),
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),

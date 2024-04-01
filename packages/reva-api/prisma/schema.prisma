@@ -23,6 +23,11 @@ enum ExperienceDuration {
   moreThanTenYears
 }
 
+enum FeasibilityFormat {
+  UPLOADED_PDF
+  DEMATERIALIZED
+}
+
 model Certification {
   id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                                  String                                                   @db.VarChar(255)
@@ -53,7 +58,6 @@ model Certification {
   previousVersionCertificationId                         String?                                                  @unique @map("previous_version_certification_id") @db.Uuid
   previousVersion                                        Certification?                                           @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                            Certification?                                           @relation("replacement")
-  //
   competenceBlocs                                        CertificationCompetenceBloc[]
 
   @@map("certification")
@@ -139,6 +143,7 @@ model Candidacy {
   Jury                                       Jury[]
   CandidacyLog                               CandidacyLog[]
   reminderToOrganismDVDeadlineExceededSentAt DateTime?                               @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
+  feasibilityFormat                          FeasibilityFormat                       @default(UPLOADED_PDF) @map("feasibility_format")
 
   @@map("candidacy")
 }
