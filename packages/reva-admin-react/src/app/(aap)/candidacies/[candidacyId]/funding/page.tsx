@@ -47,15 +47,19 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
         <Input
           label="2ème prénom (optionnel)"
           nativeInputProps={register("candidateSecondname")}
+          stateRelatedMessage={errors.candidateSecondname?.message as string}
+          state={errors.candidateSecondname ? "error" : "default"}
         />
         <Input
           label="3ème prénom (optionnel)"
-          nativeInputProps={{ ...register("candidateThirdname") }}
+          nativeInputProps={register("candidateThirdname")}
+          stateRelatedMessage={errors.candidateThirdname?.message as string}
+          state={errors.candidateThirdname ? "error" : "default"}
         />
         <Select
           className="w-full"
           label="Civilité"
-          nativeSelectProps={{ ...register("candidateGender") }}
+          nativeSelectProps={register("candidateGender")}
           state={errors.candidateGender ? "error" : "default"}
           stateRelatedMessage={errors.candidateGender?.message as string}
         >
@@ -85,7 +89,11 @@ const ChoixCandidatBlock = () => {
 };
 
 const ParcoursPersonnaliseBlock = () => {
-  const { register, watch } = useFormContext();
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
   const individualHourCount = watch("individualHourCount");
   const individualCost = watch("individualCost");
   const collectiveHourCount = watch("collectiveHourCount");
@@ -151,12 +159,16 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("individualHourCount")}
+            stateRelatedMessage={errors.individualHourCount?.message as string}
+            state={errors.individualHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("individualCost")}
+            stateRelatedMessage={errors.individualCost?.message as string}
+            state={errors.individualCost ? "error" : "default"}
           />
         </div>
 
@@ -167,12 +179,16 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("collectiveHourCount")}
+            stateRelatedMessage={errors.collectiveHourCount?.message as string}
+            state={errors.collectiveHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("collectiveCost")}
+            stateRelatedMessage={errors.collectiveCost?.message as string}
+            state={errors.collectiveCost ? "error" : "default"}
           />
         </div>
 
@@ -194,12 +210,20 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("mandatoryTrainingsHourCount")}
+            stateRelatedMessage={
+              errors.mandatoryTrainingsHourCount?.message as string
+            }
+            state={errors.mandatoryTrainingsHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("mandatoryTrainingsCost")}
+            stateRelatedMessage={
+              errors.mandatoryTrainingsCost?.message as string
+            }
+            state={errors.mandatoryTrainingsCost ? "error" : "default"}
           />
         </div>
 
@@ -210,12 +234,16 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("basicSkillsHourCount")}
+            stateRelatedMessage={errors.basicSkillsHourCount?.message as string}
+            state={errors.basicSkillsHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("basicSkillsCost")}
+            stateRelatedMessage={errors.basicSkillsCost?.message as string}
+            state={errors.basicSkillsCost ? "error" : "default"}
           />
         </div>
 
@@ -226,12 +254,20 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("certificateSkillsHourCount")}
+            stateRelatedMessage={
+              errors.certificateSkillsHourCount?.message as string
+            }
+            state={errors.certificateSkillsHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("certificateSkillsCost")}
+            stateRelatedMessage={
+              errors.certificateSkillsCost?.message as string
+            }
+            state={errors.certificateSkillsCost ? "error" : "default"}
           />
         </div>
 
@@ -242,12 +278,18 @@ const ParcoursPersonnaliseBlock = () => {
             label="Nombre d'heures"
             hintText="Exemple: saisir 2.5 pour 2H30"
             nativeInputProps={register("otherTrainingHourCount")}
+            stateRelatedMessage={
+              errors.otherTrainingHourCount?.message as string
+            }
+            state={errors.otherTrainingHourCount ? "error" : "default"}
           />
           <Input
             className="flex-1"
             label="Coût horaire"
             hintText="Un décimal supérieur ou égal à 0"
             nativeInputProps={register("otherTrainingCost")}
+            stateRelatedMessage={errors.otherTrainingCost?.message as string}
+            state={errors.otherTrainingCost ? "error" : "default"}
           />
         </div>
       </fieldset>
@@ -268,7 +310,10 @@ const ParcoursPersonnaliseBlock = () => {
 };
 
 const ResponsableFinancementBlock = () => {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="w-full">
@@ -279,18 +324,28 @@ const ResponsableFinancementBlock = () => {
         <Input
           label="Nom (optionnel)"
           nativeInputProps={register("fundingContactFirstname")}
+          stateRelatedMessage={
+            errors.fundingContactFirstname?.message as string
+          }
+          state={errors.fundingContactFirstname ? "error" : "default"}
         />
         <Input
           label="Prénom (optionnel)"
           nativeInputProps={register("fundingContactLastname")}
+          stateRelatedMessage={errors.fundingContactLastname?.message as string}
+          state={errors.fundingContactLastname ? "error" : "default"}
         />
         <Input
           label="Téléphone (optionnel)"
           nativeInputProps={register("fundingContactPhone")}
+          stateRelatedMessage={errors.fundingContactPhone?.message as string}
+          state={errors.fundingContactPhone ? "error" : "default"}
         />
         <Input
           label="Adresse mail (optionnel)"
           nativeInputProps={register("fundingContactEmail")}
+          stateRelatedMessage={errors.fundingContactEmail?.message as string}
+          state={errors.fundingContactEmail ? "error" : "default"}
         />
       </fieldset>
     </div>
