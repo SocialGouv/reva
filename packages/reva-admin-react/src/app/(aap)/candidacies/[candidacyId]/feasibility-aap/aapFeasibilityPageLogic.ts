@@ -21,7 +21,7 @@ export const useAapFeasibilityPageLogic = () => {
   }>();
 
   const { data: getCandidacyByIdResponse } = useQuery({
-    queryKey: [candidacyId, "getCandidacyById"],
+    queryKey: [candidacyId, "getCandidacyByIdForAAPFeasibilityPage"],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
         candidacyId,

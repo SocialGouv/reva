@@ -26,7 +26,10 @@ export const useCertificationPageLogic = () => {
   }>();
 
   const { data: getCandidacyByIdResponse } = useQuery({
-    queryKey: [candidacyId, "getCandidacyById"],
+    queryKey: [
+      candidacyId,
+      "getCandidacyByIdForAapFeasibilityCertificationPage",
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
         candidacyId,
