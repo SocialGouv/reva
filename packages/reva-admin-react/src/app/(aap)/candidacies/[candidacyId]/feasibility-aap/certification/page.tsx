@@ -104,7 +104,7 @@ const CertificationPage = () => {
             }))}
           />
           <FormButtons
-            backUrl={`/candidacies/${candidacyId}}/feasibility-aap/certification`}
+            backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
             formState={{ isDirty, isSubmitting }}
           />
         </form>
