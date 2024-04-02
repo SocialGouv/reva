@@ -518,7 +518,7 @@ const FundingPage = () => {
   }, [candidacy, resetForm]);
 
   return (
-    <div className="flex flex-col w-full p-8">
+    <div className="flex flex-col w-full p-2">
       <div>
         <h1>Demande de prise en charge</h1>
         <FormOptionalFieldsDisclaimer />
