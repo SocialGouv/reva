@@ -65,7 +65,7 @@ export const useCandidacyFunding = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
   const { data: candidacyData, isLoading: candidacyIsLoading } = useQuery({
-    queryKey: [candidacyId, "getCandidacyById"],
+    queryKey: [candidacyId, "getCandidacyByIdFunding"],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdFunding, { candidacyId }),
   });
