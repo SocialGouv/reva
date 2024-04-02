@@ -24,7 +24,13 @@ const genders = [
   { label: "Ne se prononce pas", value: "undisclosed" },
 ];
 
-const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
+const InformationCandidatBlock = ({
+  candidacy,
+  isReadOnly,
+}: {
+  candidacy: Candidacy;
+  isReadOnly: boolean;
+}) => {
   const {
     register,
     formState: { errors },
@@ -51,12 +57,14 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
           nativeInputProps={register("candidateSecondname")}
           stateRelatedMessage={errors.candidateSecondname?.message as string}
           state={errors.candidateSecondname ? "error" : "default"}
+          disabled={isReadOnly}
         />
         <Input
           label="3ème prénom (optionnel)"
           nativeInputProps={register("candidateThirdname")}
           stateRelatedMessage={errors.candidateThirdname?.message as string}
           state={errors.candidateThirdname ? "error" : "default"}
+          disabled={isReadOnly}
         />
         <Select
           className="w-full"
@@ -64,6 +72,7 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
           nativeSelectProps={register("candidateGender")}
           state={errors.candidateGender ? "error" : "default"}
           stateRelatedMessage={errors.candidateGender?.message as string}
+          disabled={isReadOnly}
         >
           {genders.map(({ value, label }: { value: string; label: string }) => (
             <option key={value} value={value}>
@@ -76,11 +85,7 @@ const InformationCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
   );
 };
 
-const ChoixCandidatBlock = () => {
-  const { candidacyId } = useParams<{
-    candidacyId: string;
-  }>();
-  const { candidacy } = useCandidacyFunding(candidacyId);
+const ChoixCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
   return (
     <div className="w-full ">
       <h2 className="text-xl">2. Choix du candidat</h2>
@@ -98,11 +103,15 @@ const ChoixCandidatBlock = () => {
   );
 };
 
-const ParcoursPersonnaliseBlock = () => {
-  const { candidacyId } = useParams<{
-    candidacyId: string;
-  }>();
-  const { candidacy } = useCandidacyFunding(candidacyId);
+const ParcoursPersonnaliseBlock = ({
+  candidacy,
+  isReadOnly,
+  isForfaitOnly,
+}: {
+  candidacy: Candidacy;
+  isReadOnly: boolean;
+  isForfaitOnly: boolean;
+}) => {
   const {
     register,
     watch,
@@ -160,246 +169,281 @@ const ParcoursPersonnaliseBlock = () => {
         </div>
       </div>
 
-      <h3 className="text-lg">Accompagnement (optionnel)</h3>
-      <fieldset className="flex flex-col w-full border-[1px] border-default-grey rounded-lg py-5">
-        <div className="flex gap-x-4 justify-between px-5">
-          <h4 className="text-base flex-1 font-normal">Individuel</h4>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("individualHourCount", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.individualHourCount?.message as string}
-            state={errors.individualHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("individualCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.individualCost?.message as string}
-            state={errors.individualCost ? "error" : "default"}
-          />
-        </div>
-
-        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-6">
-          <h4 className="text-base flex-1 font-normal">Collectif</h4>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("collectiveHourCount", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.collectiveHourCount?.message as string}
-            state={errors.collectiveHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("collectiveCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.collectiveCost?.message as string}
-            state={errors.collectiveCost ? "error" : "default"}
-          />
-        </div>
-
-        <div className="flex gap-x-4 justify-between px-5 pt-6">
-          <p className="flex-1 m-0">Sous-total des accompagnements</p>
-          <p className="flex-1 m-0">{accompagnementHourCount} h</p>
-          <p className="flex-1 m-0">{accompagnementCost} €</p>
-        </div>
-      </fieldset>
-
-      <h3 className="text-lg my-6">Compléments formatifs</h3>
-      <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6 ">
-        <div className="flex gap-x-4 justify-between px-5 ">
-          <div className="flex-1">
-            <h4 className="text-base font-normal pb-1">
-              Formation obligatoire
-            </h4>
-            <div className="overflow-y-auto max-h-[200px]">
-              {candidacy?.mandatoryTrainings?.map((training) => (
-                <p key={training.id} className="my-1 fr-tag fr-tag--sm mr-1">
-                  {training.label}
-                </p>
-              ))}
+      {!isForfaitOnly && (
+        <>
+          <h3 className="text-lg">Accompagnement (optionnel)</h3>
+          <fieldset className="flex flex-col w-full border-[1px] border-default-grey rounded-lg py-5">
+            <div className="flex gap-x-4 justify-between px-5">
+              <h4 className="text-base flex-1 font-normal">Individuel</h4>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("individualHourCount", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.individualHourCount?.message as string
+                }
+                state={errors.individualHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("individualCost", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={errors.individualCost?.message as string}
+                state={errors.individualCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
             </div>
-          </div>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("mandatoryTrainingsHourCount", {
-                valueAsNumber: true,
-              }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={
-              errors.mandatoryTrainingsHourCount?.message as string
-            }
-            state={errors.mandatoryTrainingsHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("mandatoryTrainingsCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={
-              errors.mandatoryTrainingsCost?.message as string
-            }
-            state={errors.mandatoryTrainingsCost ? "error" : "default"}
-          />
-        </div>
 
-        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
-          <div className="flex-1">
-            <h4 className="text-base font-normal pb-1">Savoir de base</h4>
-            <div className="overflow-y-auto max-h-[200px]">
-              {candidacy?.basicSkills?.map((skill) => (
-                <p key={skill.id} className="my-1 fr-tag fr-tag--sm mr-1">
-                  {skill.label}
-                </p>
-              ))}
+            <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-6">
+              <h4 className="text-base flex-1 font-normal">Collectif</h4>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("collectiveHourCount", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.collectiveHourCount?.message as string
+                }
+                state={errors.collectiveHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("collectiveCost", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={errors.collectiveCost?.message as string}
+                state={errors.collectiveCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
             </div>
+
+            <div className="flex gap-x-4 justify-between px-5 pt-6">
+              <p className="flex-1 m-0">Sous-total des accompagnements</p>
+              <p className="flex-1 m-0">{accompagnementHourCount} h</p>
+              <p className="flex-1 m-0">{accompagnementCost} €</p>
+            </div>
+          </fieldset>
+
+          <h3 className="text-lg my-6">Compléments formatifs</h3>
+          <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6 ">
+            <div className="flex gap-x-4 justify-between px-5 ">
+              <div className="flex-1">
+                <h4 className="text-base font-normal pb-1">
+                  Formation obligatoire
+                </h4>
+                <div className="overflow-y-auto max-h-[200px]">
+                  {candidacy?.mandatoryTrainings?.map((training) => (
+                    <p
+                      key={training.id}
+                      className="my-1 fr-tag fr-tag--sm mr-1"
+                    >
+                      {training.label}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("mandatoryTrainingsHourCount", {
+                    valueAsNumber: true,
+                  }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.mandatoryTrainingsHourCount?.message as string
+                }
+                state={errors.mandatoryTrainingsHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("mandatoryTrainingsCost", {
+                    valueAsNumber: true,
+                  }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.mandatoryTrainingsCost?.message as string
+                }
+                state={errors.mandatoryTrainingsCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+            </div>
+
+            <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
+              <div className="flex-1">
+                <h4 className="text-base font-normal pb-1">Savoir de base</h4>
+                <div className="overflow-y-auto max-h-[200px]">
+                  {candidacy?.basicSkills?.map((skill) => (
+                    <p key={skill.id} className="my-1 fr-tag fr-tag--sm mr-1">
+                      {skill.label}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("basicSkillsHourCount", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.basicSkillsHourCount?.message as string
+                }
+                state={errors.basicSkillsHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("basicSkillsCost", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={errors.basicSkillsCost?.message as string}
+                state={errors.basicSkillsCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+            </div>
+
+            <div className="flex gap-x-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
+              <div className="flex-1">
+                <h4 className="text-base font-normal">Bloc de compétences</h4>
+                <p className="m-0 text-sm text-gray-500">
+                  {candidacy?.certificateSkills}
+                </p>
+              </div>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("certificateSkillsHourCount", {
+                    valueAsNumber: true,
+                  }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.certificateSkillsHourCount?.message as string
+                }
+                state={errors.certificateSkillsHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("certificateSkillsCost", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.certificateSkillsCost?.message as string
+                }
+                state={errors.certificateSkillsCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+            </div>
+
+            <div className="flex gap-x-4 justify-between px-5 pt-2">
+              <div className="flex-1">
+                <h4 className="text-base font-normal">Autres</h4>
+                <p className="m-0 text-sm text-gray-500">
+                  {candidacy?.otherTraining}
+                </p>
+              </div>
+              <Input
+                className="flex-1"
+                label="Nombre d'heures"
+                hintText="Exemple: saisir 2.5 pour 2H30"
+                nativeInputProps={{
+                  ...register("otherTrainingHourCount", {
+                    valueAsNumber: true,
+                  }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.otherTrainingHourCount?.message as string
+                }
+                state={errors.otherTrainingHourCount ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+              <Input
+                className="flex-1"
+                label="Coût horaire"
+                hintText="Un décimal supérieur ou égal à 0"
+                nativeInputProps={{
+                  ...register("otherTrainingCost", { valueAsNumber: true }),
+                  type: "number",
+                  min: 0,
+                }}
+                stateRelatedMessage={
+                  errors.otherTrainingCost?.message as string
+                }
+                state={errors.otherTrainingCost ? "error" : "default"}
+                disabled={isReadOnly}
+              />
+            </div>
+          </fieldset>
+
+          <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
+            <p className="flex-1">Sous-total des compléments formatifs</p>
+            <p className="flex-1">{complementsFormatifsHourCount} h</p>
+            <p className="flex-1">{complementsFormatifsCost} €</p>
           </div>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("basicSkillsHourCount", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.basicSkillsHourCount?.message as string}
-            state={errors.basicSkillsHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("basicSkillsCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.basicSkillsCost?.message as string}
-            state={errors.basicSkillsCost ? "error" : "default"}
-          />
-        </div>
 
-        <div className="flex gap-x-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
-          <div className="flex-1">
-            <h4 className="text-base font-normal">Bloc de compétences</h4>
-            <p className="m-0 text-sm text-gray-500">
-              {candidacy?.certificateSkills}
-            </p>
+          <div className="flex gap-x-4 justify-between pt-6 px-5">
+            <p className="flex-1 m-0 text-lg font-bold">Total</p>
+            <p className="flex-1 m-0">{totalHourCount} h</p>
+            <p className="flex-1 m-0">{totalCost} €</p>
           </div>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("certificateSkillsHourCount", {
-                valueAsNumber: true,
-              }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={
-              errors.certificateSkillsHourCount?.message as string
-            }
-            state={errors.certificateSkillsHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("certificateSkillsCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={
-              errors.certificateSkillsCost?.message as string
-            }
-            state={errors.certificateSkillsCost ? "error" : "default"}
-          />
-        </div>
-
-        <div className="flex gap-x-4 justify-between px-5 pt-2">
-          <div className="flex-1">
-            <h4 className="text-base font-normal">Autres</h4>
-            <p className="m-0 text-sm text-gray-500">
-              {candidacy?.otherTraining}
-            </p>
-          </div>
-          <Input
-            className="flex-1"
-            label="Nombre d'heures"
-            hintText="Exemple: saisir 2.5 pour 2H30"
-            nativeInputProps={{
-              ...register("otherTrainingHourCount", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={
-              errors.otherTrainingHourCount?.message as string
-            }
-            state={errors.otherTrainingHourCount ? "error" : "default"}
-          />
-          <Input
-            className="flex-1"
-            label="Coût horaire"
-            hintText="Un décimal supérieur ou égal à 0"
-            nativeInputProps={{
-              ...register("otherTrainingCost", { valueAsNumber: true }),
-              type: "number",
-              min: 0,
-            }}
-            stateRelatedMessage={errors.otherTrainingCost?.message as string}
-            state={errors.otherTrainingCost ? "error" : "default"}
-          />
-        </div>
-      </fieldset>
-
-      <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
-        <p className="flex-1">Sous-total des compléments formatifs</p>
-        <p className="flex-1">{complementsFormatifsHourCount} h</p>
-        <p className="flex-1">{complementsFormatifsCost} €</p>
-      </div>
-
-      <div className="flex gap-x-4 justify-between pt-6 px-5">
-        <p className="flex-1 m-0 text-lg font-bold">Total</p>
-        <p className="flex-1 m-0">{totalHourCount} h</p>
-        <p className="flex-1 m-0">{totalCost} €</p>
-      </div>
+        </>
+      )}
     </div>
   );
 };
 
-const ResponsableFinancementBlock = () => {
+const ResponsableFinancementBlock = ({
+  isReadOnly,
+}: {
+  isReadOnly: boolean;
+}) => {
   const {
     register,
     formState: { errors },
@@ -418,24 +462,28 @@ const ResponsableFinancementBlock = () => {
             errors.fundingContactFirstname?.message as string
           }
           state={errors.fundingContactFirstname ? "error" : "default"}
+          disabled={isReadOnly}
         />
         <Input
           label="Prénom (optionnel)"
           nativeInputProps={register("fundingContactLastname")}
           stateRelatedMessage={errors.fundingContactLastname?.message as string}
           state={errors.fundingContactLastname ? "error" : "default"}
+          disabled={isReadOnly}
         />
         <Input
           label="Téléphone (optionnel)"
           nativeInputProps={register("fundingContactPhone")}
           stateRelatedMessage={errors.fundingContactPhone?.message as string}
           state={errors.fundingContactPhone ? "error" : "default"}
+          disabled={isReadOnly}
         />
         <Input
           label="Adresse mail (optionnel)"
           nativeInputProps={register("fundingContactEmail")}
           stateRelatedMessage={errors.fundingContactEmail?.message as string}
           state={errors.fundingContactEmail ? "error" : "default"}
+          disabled={isReadOnly}
         />
       </fieldset>
     </div>
@@ -448,8 +496,18 @@ const FundingPage = () => {
   }>();
   const [formConfirmation, setFormConfirmation] = useState(false);
 
-  const { candidacy, createFundingRequestUnifvaeMutate } =
-    useCandidacyFunding(candidacyId);
+  const {
+    candidacy,
+    createFundingRequestUnifvaeMutate,
+    candidacyHasAlreadyFundingRequest,
+    candidacyIsXpReva,
+    candidacyHasDroppedOutAndIsIncomplete,
+    candidacyIsNotRecevable,
+  } = useCandidacyFunding(candidacyId);
+
+  const isReadOnly = candidacyIsXpReva || candidacyHasAlreadyFundingRequest;
+  const isForfaitOnly =
+    candidacyHasDroppedOutAndIsIncomplete || candidacyIsNotRecevable;
 
   const methods = useForm<CandidacyFundingFormData>({
     resolver: zodResolver(candidacyFundingSchema),
@@ -579,13 +637,20 @@ const FundingPage = () => {
             resetForm();
           }}
         >
-          <InformationCandidatBlock candidacy={candidacy as Candidacy} />
+          <InformationCandidatBlock
+            candidacy={candidacy as Candidacy}
+            isReadOnly={isReadOnly}
+          />
           <hr className="flex mb-2 mt-8" />
-          <ChoixCandidatBlock />
+          <ChoixCandidatBlock candidacy={candidacy as Candidacy} />
           <hr className="flex mb-2 mt-8" />
-          <ParcoursPersonnaliseBlock />
+          <ParcoursPersonnaliseBlock
+            candidacy={candidacy as Candidacy}
+            isReadOnly={isReadOnly}
+            isForfaitOnly={isForfaitOnly}
+          />
           <hr className="flex mb-2 mt-8" />
-          <ResponsableFinancementBlock />
+          <ResponsableFinancementBlock isReadOnly={isReadOnly} />
           <GrayCard className="pb-2">
             <h2 className="text-xl">Avant de finaliser votre envoi :</h2>
             <Checkbox
@@ -605,7 +670,7 @@ const FundingPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty: isDirty || formConfirmation,
+              isDirty: (isDirty || formConfirmation) && !isReadOnly,
               isSubmitting,
             }}
           />

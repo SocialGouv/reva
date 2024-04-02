@@ -3,9 +3,52 @@ import { graphql } from "@/graphql/generated";
 import { FundingRequestUnifvaeInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+const getCandidateFundingRequestReva = graphql(`
+  query getCandidateFundingRequestReva($candidacyId: UUID!) {
+    candidate_getFundingRequest(candidacyId: $candidacyId) {
+      fundingRequest {
+        diagnosisHourCount
+        diagnosisCost
+        postExamHourCount
+        postExamCost
+        individualHourCount
+        individualCost
+        collectiveHourCount
+        collectiveCost
+        basicSkills {
+          label
+        }
+        basicSkillsHourCount
+        basicSkillsCost
+        mandatoryTrainings {
+          label
+        }
+        mandatoryTrainingsHourCount
+        mandatoryTrainingsCost
+        certificateSkills
+        certificateSkillsHourCount
+        certificateSkillsCost
+        otherTraining
+        otherTrainingHourCount
+        otherTrainingCost
+        examHourCount
+        examCost
+      }
+    }
+  }
+`);
+
 const getCandidacyByIdFunding = graphql(`
   query getCandidacyByIdFunding($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      financeModule
+      candidacyStatuses {
+        status
+        isActive
+      }
+      candidacyDropOut {
+        droppedOutAt
+      }
       certificateSkills
       otherTraining
       basicSkillIds
@@ -94,13 +137,41 @@ export const useCandidacyFunding = (candidacyId: string) => {
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
     },
   });
-
   const candidacy = candidacyData?.getCandidacyById;
+  const candidacyIsXpReva = candidacy?.financeModule === "unireva";
+  const candidacyHasAlreadyFundingRequest = !!candidacy?.fundingRequestUnifvae;
+  const candidacyHasDroppedOutAndIsIncomplete = !!(
+    candidacy?.candidacyDropOut &&
+    candidacy.candidacyStatuses.some(
+      (status) =>
+        status.status === "DOSSIER_FAISABILITE_INCOMPLET" && status.isActive,
+    )
+  );
+  const candidacyIsNotRecevable = !!candidacy?.candidacyStatuses.some(
+    (status) =>
+      status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE" && status.isActive,
+  );
+
+  const {
+    data: candidateFundingRequestRevaData,
+    isLoading: candidateFundingRequestRevaIsLoading,
+  } = useQuery({
+    queryKey: [candidacyId, "getCandidateFundingRequestReva"],
+    queryFn: () =>
+      graphqlClient.request(getCandidateFundingRequestReva, { candidacyId }),
+    enabled: candidacyIsXpReva,
+  });
 
   return {
     candidacy,
     candidacyIsLoading,
     createFundingRequestUnifvaeMutate,
     createFundingRequestUnifvaeIsPending,
+    candidateFundingRequestRevaData,
+    candidateFundingRequestRevaIsLoading,
+    candidacyIsXpReva,
+    candidacyHasAlreadyFundingRequest,
+    candidacyHasDroppedOutAndIsIncomplete,
+    candidacyIsNotRecevable,
   };
 };
