@@ -1,14 +1,27 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { Candidacy, CandidacyStatus } from "@/graphql/generated/graphql";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useAuth } from "@/components/auth/auth";
-import { ADMIN_ELM_URL } from "@/config/config";
 
-export const CertificationCard = ({ candidacy }: { candidacy: Candidacy }) => {
+type CandidacyStatusSummary = {
+  isActive: boolean;
+  status: CandidacyStatusStep;
+};
+
+export const CertificationCard = ({
+  candidacy,
+}: {
+  candidacy: {
+    id: string;
+    candidacyStatuses: CandidacyStatusSummary[];
+    certification?: { codeRncp: string; label: string } | null;
+    candidacyDropOut?: { droppedOutAt: number } | null;
+  };
+}) => {
   const { isAdmin } = useAuth();
   const certification = candidacy.certification;
   const lastStatus = candidacy.candidacyStatuses.find(
-    (s: CandidacyStatus) => s.isActive,
+    (s: CandidacyStatusSummary) => s.isActive,
   );
 
   const canUpdateCertification =
@@ -31,7 +44,7 @@ export const CertificationCard = ({ candidacy }: { candidacy: Candidacy }) => {
             priority="secondary"
             linkProps={{
               target: "_self",
-              href: `${ADMIN_ELM_URL}/candidacies/${candidacy.id}/reorientation?page=1&organism=${candidacy.organismId}`,
+              href: `/candidacies/${candidacy.id}/reorientation`,
             }}
           >
             Changer la certification
