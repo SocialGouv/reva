@@ -129,11 +129,7 @@ const CertificationPage = () => {
             hintText="(le cas échéant)"
             nativeInputProps={{ ...register("option") }}
           />
-          <SmallNotice>
-            Toutes les informations sur les options et parcours sont sur
-            l’espace documentaire
-          </SmallNotice>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Langue vivante 1"
               hintText="(Optionnel)"
@@ -147,7 +143,7 @@ const CertificationPage = () => {
           </div>
 
           <RadioButtons
-            className="mb-6"
+            className="mb-4"
             legend="Le candidat / la candidate vise :"
             options={[
               {
