@@ -38,6 +38,7 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
+import { dematerializedFeasibilityFileResolvers } from "./dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
 
 // Resolvers
 
@@ -62,6 +63,7 @@ const resolvers = mergeResolvers([
   juryResolvers,
   candidacyLogResolvers,
   candidacyMenuResolvers,
+  dematerializedFeasibilityFileResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

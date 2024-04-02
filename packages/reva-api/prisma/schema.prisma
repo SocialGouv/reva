@@ -145,6 +145,7 @@ model Candidacy {
   CandidacyLog                               CandidacyLog[]
   reminderToOrganismDVDeadlineExceededSentAt DateTime?                               @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
   feasibilityFormat                          FeasibilityFormat                       @default(UPLOADED_PDF) @map("feasibility_format")
+  DematerializedFeasibilityFile              DematerializedFeasibilityFile[]
 
   @@map("candidacy")
 }
@@ -1370,4 +1371,15 @@ model CandidacyLog {
   updatedAt   DateTime?               @map("updated_at") @db.Timestamptz(6)
 
   @@map("candidacy_log")
+}
+
+model DematerializedFeasibilityFile {
+  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId           String    @map("candidacy_id") @db.Uuid
+  candidacy             Candidacy @relation(fields: [candidacyId], references: [id])
+  firstForeignLanguage  String?   @map("first_foreign_language")
+  secondForeignLanguage String?   @map("second_foreign_language")
+  option                String?   @map("option")
+
+  @@map("dematerialized_feasibility_file")
 }

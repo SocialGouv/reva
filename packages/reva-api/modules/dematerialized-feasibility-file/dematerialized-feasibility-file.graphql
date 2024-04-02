@@ -1,0 +1,24 @@
+type DematerializedFeasibilityFile {
+  id: ID!
+  candidacyId: ID!
+  firstForeignLanguage: String
+  secondForeignLanguage: String
+  option: String
+}
+
+type Candidacy {
+  dematerializedFeasibilityFile: DematerializedFeasibilityFile
+}
+
+input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
+  candidacyId: String!
+  firstForeignLanguage: String
+  secondForeignLanguage: String
+  option: String
+}
+
+type Mutation {
+  dematerialized_feasibility_file_createOrUpdateCertificationInfo(
+    input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
+  ): DematerializedFeasibilityFile!
+}
