@@ -5,7 +5,7 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 
-interface Training {
+export interface Training {
   id: string;
   label: string;
 }
@@ -21,6 +21,6 @@ export const getTrainings =
       () =>
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Erreur lors de la récupération des accompagnants"
-        )
+          "Erreur lors de la récupération des accompagnants",
+        ),
     );
