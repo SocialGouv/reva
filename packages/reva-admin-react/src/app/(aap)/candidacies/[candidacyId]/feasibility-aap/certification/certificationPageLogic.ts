@@ -15,6 +15,11 @@ const getCandidacyById = graphql(`
           label
         }
       }
+      dematerializedFeasibilityFile {
+        firstForeignLanguage
+        secondForeignLanguage
+        option
+      }
     }
   }
 `);
@@ -62,5 +67,11 @@ export const useCertificationPageLogic = () => {
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
-  return { certification, updateFeasibilityCertification };
+  const dematerializedFeasibilityFile =
+    candidacy?.dematerializedFeasibilityFile;
+  return {
+    certification,
+    dematerializedFeasibilityFile,
+    updateFeasibilityCertification,
+  };
 };

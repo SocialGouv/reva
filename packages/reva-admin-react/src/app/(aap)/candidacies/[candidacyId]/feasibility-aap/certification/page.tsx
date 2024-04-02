@@ -36,8 +36,11 @@ const CertificationPage = () => {
     candidacyId: string;
   }>();
 
-  const { certification, updateFeasibilityCertification } =
-    useCertificationPageLogic();
+  const {
+    certification,
+    dematerializedFeasibilityFile,
+    updateFeasibilityCertification,
+  } = useCertificationPageLogic();
 
   const {
     register,
@@ -58,13 +61,24 @@ const CertificationPage = () => {
   const resetForm = useCallback(
     () =>
       reset({
+        option: dematerializedFeasibilityFile?.option || "",
+        firstForeignLanguage:
+          dematerializedFeasibilityFile?.firstForeignLanguage || "",
+        secondForeignlanguage:
+          dematerializedFeasibilityFile?.secondForeignLanguage || "",
         competenceBlocs: certification?.competenceBlocs.map((b) => ({
           id: b.id,
           label: b.code ? `${b.code} - ${b.label}` : b.label,
           checked: false,
         })),
       }),
-    [certification?.competenceBlocs, reset],
+    [
+      certification?.competenceBlocs,
+      dematerializedFeasibilityFile?.firstForeignLanguage,
+      dematerializedFeasibilityFile?.option,
+      dematerializedFeasibilityFile?.secondForeignLanguage,
+      reset,
+    ],
   );
 
   useEffect(resetForm, [resetForm]);
@@ -131,7 +145,14 @@ const CertificationPage = () => {
         Lire les détails de la fiche diplôme
       </a>
       {certification && (
-        <form className="mt-6" onSubmit={handleFormSubmit}>
+        <form
+          className="mt-6"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
+          }}
+        >
           <Input
             label="Option ou parcours"
             hintText="(le cas échéant)"
