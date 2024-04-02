@@ -1,20 +1,27 @@
-import KcAdminClient from "@keycloak/keycloak-admin-client";
+import KeycloakAdminClientClass from "@keycloak/keycloak-admin-client";
 import { FastifyPluginCallback } from "fastify";
 import fp from "fastify-plugin";
 
 import { logger } from "../../../modules/shared/logger";
 
+const dynamicImport = async (packageName: string) =>
+  new Function(`return import('${packageName}')`)();
+
 const keycloakAdminPlugin: FastifyPluginCallback<Record<string, never>> = (
   app,
   _opts,
-  next
+  next,
 ): void => {
-  const kcAdminClient = new KcAdminClient({
-    baseUrl: process.env.KEYCLOAK_ADMIN_URL,
-    realmName: process.env.KEYCLOAK_ADMIN_REALM,
-  });
-
   const getKeycloakAdmin = async () => {
+    const KeycloakAdminClient = (
+      await dynamicImport("@keycloak/keycloak-admin-client")
+    ).default as typeof KeycloakAdminClientClass;
+
+    const kcAdminClient = new KeycloakAdminClient({
+      baseUrl: process.env.KEYCLOAK_ADMIN_URL,
+      realmName: process.env.KEYCLOAK_ADMIN_REALM,
+    });
+
     try {
       await kcAdminClient.auth({
         grantType: "client_credentials",

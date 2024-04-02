@@ -1,5 +1,4 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { Either, Just, Left, Maybe, Right } from "purify-ts";
 
@@ -27,9 +26,9 @@ export const getAccount =
       });
 
       return Right(Maybe.fromNullable(userByUsername));
-    } catch (e) {
+    } catch (_error) {
       return Left(
-        `An error occured while retrieving ${params.email} or ${params.username} on IAM`
+        `An error occured while retrieving ${params.email} or ${params.username} on IAM`,
       );
     }
   };
@@ -61,10 +60,7 @@ export const createAccount =
         groups: [account.group],
         firstName: account.firstname,
         lastName: account.lastname,
-        requiredActions: [
-          RequiredActionAlias.UPDATE_PASSWORD,
-          RequiredActionAlias.VERIFY_EMAIL,
-        ],
+        requiredActions: ["UPDATE_PASSWORD", "VERIFY_EMAIL"],
         enabled: true,
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
       };
@@ -89,15 +85,15 @@ export const createAccount =
       await keycloakAdmin.users.executeActionsEmail({
         id,
         clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
-        actions: [RequiredActionAlias.UPDATE_PASSWORD],
+        actions: ["UPDATE_PASSWORD"],
         lifespan: 4 * 24 * 60 * 60, // 4 days
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
       });
 
       return Right(id);
-    } catch (e) {
+    } catch (_error) {
       return Left(
-        `An error occured while creating user with ${account.email} on IAM`
+        `An error occured while creating user with ${account.email} on IAM`,
       );
     }
   };
