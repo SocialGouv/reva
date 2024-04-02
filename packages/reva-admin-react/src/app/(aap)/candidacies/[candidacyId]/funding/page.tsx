@@ -461,6 +461,7 @@ const FundingPage = () => {
   const {
     reset,
     handleSubmit,
+    setError,
     formState: { isDirty, isSubmitting },
   } = methods;
 
@@ -468,7 +469,21 @@ const FundingPage = () => {
     try {
       await createFundingRequestUnifvaeMutate(data);
       successToast("La demande de financement a bien été enregistrée.");
-    } catch (e) {
+    } catch (e: any) {
+      if (e.response?.errors) {
+        e.response.errors.forEach((error: any) => {
+          const isInputError = error.message.startsWith("input.");
+          if (isInputError) {
+            const errorField = error.message.split(".")[1].split(":")[0];
+            const errorMessage = error.message.split(":")[1].trim();
+            if (errorField && errorMessage) {
+              return setError(errorField as keyof CandidacyFundingFormData, {
+                message: errorMessage,
+              });
+            }
+          }
+        });
+      }
       graphqlErrorToast(e);
     }
   };
