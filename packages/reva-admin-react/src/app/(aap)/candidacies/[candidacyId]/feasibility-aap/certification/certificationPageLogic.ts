@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyById = graphql(`
@@ -15,6 +15,18 @@ const getCandidacyById = graphql(`
           label
         }
       }
+    }
+  }
+`);
+
+const updateFeasibilityCertificationMutation = graphql(`
+  mutation updateFeasibilityCertificationMutation(
+    $input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
+  ) {
+    dematerialized_feasibility_file_createOrUpdateCertificationInfo(
+      input: $input
+    ) {
+      id
     }
   }
 `);
@@ -36,7 +48,19 @@ export const useCertificationPageLogic = () => {
       }),
   });
 
+  const updateFeasibilityCertification = useMutation({
+    mutationFn: (input: {
+      candidacyId: string;
+      option?: string;
+      firstForeignLanguage?: string;
+      secondForeignLanguage?: string;
+    }) =>
+      graphqlClient.request(updateFeasibilityCertificationMutation, {
+        input,
+      }),
+  });
+
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
-  return { certification };
+  return { certification, updateFeasibilityCertification };
 };

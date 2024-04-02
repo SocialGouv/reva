@@ -3,6 +3,7 @@ import { useCertificationPageLogic } from "@/app/(aap)/candidacies/[candidacyId]
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
@@ -35,12 +36,12 @@ const CertificationPage = () => {
     candidacyId: string;
   }>();
 
-  const { certification } = useCertificationPageLogic();
+  const { certification, updateFeasibilityCertification } =
+    useCertificationPageLogic();
 
   const {
     register,
     control,
-    setValue,
     handleSubmit,
     reset,
     formState: { isDirty, isSubmitting, errors },
@@ -91,12 +92,19 @@ const CertificationPage = () => {
     }
   }, [competenceBlocFields, completion, updateCompetenceBlocs]);
 
-  const handleFormSubmit = handleSubmit(
-    (data) => {
-      console.log({ data });
-    },
-    (e) => console.log(e),
-  );
+  const handleFormSubmit = handleSubmit(async (data) => {
+    try {
+      await updateFeasibilityCertification.mutateAsync({
+        candidacyId,
+        option: data.option,
+        firstForeignLanguage: data.firstForeignLanguage,
+        secondForeignLanguage: data.secondForeignlanguage,
+      });
+      successToast("Modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  });
 
   return (
     <div className="flex flex-col">
