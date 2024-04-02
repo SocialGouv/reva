@@ -352,7 +352,7 @@ const ParcoursPersonnaliseBlock = () => {
         </div>
       </fieldset>
 
-      <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-b-lg rounded-t-lg px-5 pt-6">
+      <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
         <p className="flex-1">Sous-total des compléments formatifs</p>
         <p className="flex-1">{complementsFormatifsHourCount} h</p>
         <p className="flex-1">{complementsFormatifsCost} €</p>
@@ -460,7 +460,6 @@ const FundingPage = () => {
 
   const {
     reset,
-    register,
     handleSubmit,
     formState: { isDirty, isSubmitting },
   } = methods;
