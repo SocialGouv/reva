@@ -99,6 +99,10 @@ const ChoixCandidatBlock = () => {
 };
 
 const ParcoursPersonnaliseBlock = () => {
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+  const { candidacy } = useCandidacyFunding(candidacyId);
   const {
     register,
     watch,
@@ -224,9 +228,18 @@ const ParcoursPersonnaliseBlock = () => {
       <h3 className="text-lg my-6">Compléments formatifs</h3>
       <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6 ">
         <div className="flex gap-x-4 justify-between px-5 ">
-          <h4 className="text-base flex-1 font-normal">
-            Formation obligatoire
-          </h4>
+          <div className="flex-1">
+            <h4 className="text-base font-normal pb-1">
+              Formation obligatoire
+            </h4>
+            <div className="overflow-y-auto max-h-[200px]">
+              {candidacy?.mandatoryTrainings?.map((training) => (
+                <p key={training.id} className="my-1 fr-tag fr-tag--sm mr-1">
+                  {training.label}
+                </p>
+              ))}
+            </div>
+          </div>
           <Input
             className="flex-1"
             label="Nombre d'heures"
@@ -259,8 +272,17 @@ const ParcoursPersonnaliseBlock = () => {
           />
         </div>
 
-        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4">
-          <h4 className="text-base flex-1 font-normal">Savoir de base</h4>
+        <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
+          <div className="flex-1">
+            <h4 className="text-base font-normal pb-1">Savoir de base</h4>
+            <div className="overflow-y-auto max-h-[200px]">
+              {candidacy?.basicSkills?.map((skill) => (
+                <p key={skill.id} className="my-1 fr-tag fr-tag--sm mr-1">
+                  {skill.label}
+                </p>
+              ))}
+            </div>
+          </div>
           <Input
             className="flex-1"
             label="Nombre d'heures"
@@ -288,7 +310,12 @@ const ParcoursPersonnaliseBlock = () => {
         </div>
 
         <div className="flex gap-x-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
-          <h4 className="text-base flex-1 font-normal">Bloc de compétences</h4>
+          <div className="flex-1">
+            <h4 className="text-base font-normal">Bloc de compétences</h4>
+            <p className="m-0 text-sm text-gray-500">
+              {candidacy?.certificateSkills}
+            </p>
+          </div>
           <Input
             className="flex-1"
             label="Nombre d'heures"
@@ -322,7 +349,12 @@ const ParcoursPersonnaliseBlock = () => {
         </div>
 
         <div className="flex gap-x-4 justify-between px-5 pt-2">
-          <h4 className="text-base flex-1 font-normal">Autres</h4>
+          <div className="flex-1">
+            <h4 className="text-base font-normal">Autres</h4>
+            <p className="m-0 text-sm text-gray-500">
+              {candidacy?.otherTraining}
+            </p>
+          </div>
           <Input
             className="flex-1"
             label="Nombre d'heures"
@@ -554,7 +586,7 @@ const FundingPage = () => {
           <ParcoursPersonnaliseBlock />
           <hr className="flex mb-2 mt-8" />
           <ResponsableFinancementBlock />
-          <GrayCard>
+          <GrayCard className="pb-2">
             <h2 className="text-xl">Avant de finaliser votre envoi :</h2>
             <Checkbox
               options={[

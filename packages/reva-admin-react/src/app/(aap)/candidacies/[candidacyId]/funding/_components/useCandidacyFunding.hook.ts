@@ -6,6 +6,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const getCandidacyByIdFunding = graphql(`
   query getCandidacyByIdFunding($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      certificateSkills
+      otherTraining
+      basicSkillIds
+      basicSkills {
+        id
+        label
+      }
+      mandatoryTrainings {
+        id
+        label
+      }
       organism {
         label
       }
