@@ -16,7 +16,6 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacy as Candidacy
 import Page.Loading
 import Page.Search.Candidacies as Candidacies exposing (Model)
-import Page.Search.Certifications as Certifications
 import Page.Search.Typology as Typology
 import Page.SiteMap as SiteMap
 import RemoteData exposing (RemoteData(..))
@@ -51,7 +50,6 @@ type alias Model =
 
 type Page
     = Candidacies Candidacies.Model
-    | Certifications Certifications.Model
     | Candidacy Candidacy.Model
     | Typology Typology.Model
     | LoggingOut
@@ -66,7 +64,6 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
-    | GotCertificationsMsg Certifications.Msg
     | GotCandidacyMsg Candidacy.Msg
     | GotTypologyMsg Typology.Msg
     | GotLoggedIn Token
@@ -126,10 +123,6 @@ viewPage model =
             Candidacies.view model.context candidaciesModel
                 |> Html.map GotCandidaciesMsg
 
-        Certifications certificationsModel ->
-            Certifications.view model.context certificationsModel
-                |> Html.map GotCertificationsMsg
-
         Candidacy candidacyModel ->
             Candidacy.view model.context candidacyModel
                 |> Html.map GotCandidacyMsg
@@ -187,40 +180,6 @@ changeRouteTo context route model =
                 |> Candidacy.resetSelected
                 |> Candidacy.updateTab context tab
                 |> updateWith Candidacy GotCandidacyMsg model
-
-        ( Route.Certifications filters, Certifications certificationsModel ) ->
-            certificationsModel
-                |> Certifications.withFilters context
-                    { candidacyId = Nothing
-                    , organismId = filters.organismId
-                    , page = filters.page
-                    }
-                |> updateWith Certifications GotCertificationsMsg model
-
-        ( Route.Certifications filters, _ ) ->
-            Certifications.init context
-                { candidacyId = Nothing
-                , organismId = filters.organismId
-                , page = filters.page
-                }
-                |> updateWith Certifications GotCertificationsMsg model
-
-        ( Route.Reorientation candidacyId filters, Certifications certificationsModel ) ->
-            certificationsModel
-                |> Certifications.withFilters context
-                    { candidacyId = Just candidacyId
-                    , organismId = filters.organismId
-                    , page = filters.page
-                    }
-                |> updateWith Certifications GotCertificationsMsg model
-
-        ( Route.Reorientation candidacyId filters, _ ) ->
-            Certifications.init context
-                { candidacyId = Just candidacyId
-                , organismId = filters.organismId
-                , page = filters.page
-                }
-                |> updateWith Certifications GotCertificationsMsg model
 
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
@@ -298,16 +257,6 @@ update msg model =
             in
             ( { model | page = Candidacies newCandidaciesModel }
             , Cmd.map GotCandidaciesMsg candidaciesCmd
-            )
-
-        -- Certifications
-        ( GotCertificationsMsg candidaciesMsg, Certifications certificationsModel ) ->
-            let
-                ( newCertificationsModel, certificationsCmd ) =
-                    Certifications.update model.context candidaciesMsg certificationsModel
-            in
-            ( { model | page = Certifications newCertificationsModel }
-            , Cmd.map GotCertificationsMsg certificationsCmd
             )
 
         -- Candidacy

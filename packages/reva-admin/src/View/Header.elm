@@ -12,8 +12,6 @@ import View
 
 type HeaderLink
     = Candidacies
-    | Subscriptions
-    | Certifications
 
 
 view : Context -> Route -> Accessibility.Html msg
@@ -22,9 +20,6 @@ view context route =
         activeHeaderLink =
             case route of
                 Route.Candidacies _ ->
-                    Just Candidacies
-
-                Route.Reorientation _ _ ->
                     Just Candidacies
 
                 Route.Candidacy _ ->

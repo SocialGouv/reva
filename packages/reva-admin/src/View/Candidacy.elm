@@ -73,12 +73,12 @@ view context config =
                             [ Button.new
                                 { onClick = Nothing, label = "Changer\u{00A0}la\u{00A0}certification" }
                                 |> Button.linkButton
-                                    (Route.toString context.baseUrl
-                                        (Route.Reorientation config.candidacy.id
-                                            { organismId = Maybe.map .id config.candidacy.organism
-                                            , page = 1
-                                            }
-                                        )
+                                    (String.concat
+                                        [ context.adminReactUrl
+                                        , "/candidacies/"
+                                        , Candidacy.candidacyIdToString config.candidacy.id
+                                        , "/reorientation"
+                                        ]
                                     )
                                 |> Button.secondary
                                 |> Button.view

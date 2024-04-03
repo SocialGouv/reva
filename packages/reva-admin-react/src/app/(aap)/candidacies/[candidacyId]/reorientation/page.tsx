@@ -13,6 +13,9 @@ import {
 import { useState } from "react";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { ADMIN_ELM_URL } from "@/config/config";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 
 const getCertificationsQuery = graphql(`
   query getCertificationsForCandidate(
@@ -127,6 +130,8 @@ const ReorientationPage = () => {
       }),
   });
 
+  const { isFeatureActive } = useFeatureflipping();
+
   const handleSubmitCertification = async (certificationId: string) => {
     try {
       await updateCertification.mutateAsync({
@@ -134,7 +139,10 @@ const ReorientationPage = () => {
         certificationId,
       });
       successToast("La certification a bien été modifiée.");
-      router.push(`/candidacies/${candidacyId}/summary`);
+      const backUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
+        ? `/candidacies/${candidacyId}/summary`
+        : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -146,6 +154,7 @@ const ReorientationPage = () => {
   return (
     certificationPage && (
       <div className="flex flex-col w-full">
+        <CandidacyBackButton candidacyId={candidacyId} />
         <h1>Changement de certification</h1>
         <h2 className="text-2xl">Certification sélectionnée</h2>
         <div className="bg-neutral-100 px-6 py-4 rounded-lg mb-8">

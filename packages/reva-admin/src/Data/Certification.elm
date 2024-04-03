@@ -1,6 +1,5 @@
-module Data.Certification exposing (Certification, CertificationPage, CertificationSummary, idToString)
+module Data.Certification exposing (Certification, CertificationPage, CertificationSummary)
 
-import Admin.Scalar exposing (Id(..))
 import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
 
@@ -22,8 +21,3 @@ type alias CertificationSummary =
     { id : Data.Scalar.Id
     , label : String
     }
-
-
-idToString : Id -> String
-idToString (Id id) =
-    id

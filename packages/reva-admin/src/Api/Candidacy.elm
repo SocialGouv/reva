@@ -1,4 +1,4 @@
-module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, submitTypologyForm, takeOver, updateCertification)
+module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, statusSelection, submitTypologyForm, takeOver, updateCertification)
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidateTypology exposing (CandidateTypology)
@@ -13,7 +13,6 @@ import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
-import Admin.Object.Certification
 import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Query as Query
@@ -32,7 +31,6 @@ import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
-import Data.Certification
 import Graphql.Operation
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
@@ -85,38 +83,6 @@ get endpointGraphql token toMsg candidacyId =
     in
     selection id
         |> Auth.makeQuery "getCandidacy" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
-
-
-getCertification :
-    String
-    -> Token
-    -> (RemoteData (List String) Data.Certification.Certification -> msg)
-    -> CandidacyId
-    -> Cmd msg
-getCertification endpointGraphql token toMsg candidacyId =
-    let
-        id =
-            Data.Candidacy.candidacyIdToString candidacyId
-
-        candidacyRequiredArgs =
-            Query.GetCandidacyByIdRequiredArguments (Id id)
-
-        certificationSelection =
-            SelectionSet.succeed Data.Certification.Certification
-                |> with Admin.Object.Certification.id
-                |> with Admin.Object.Certification.codeRncp
-                |> with Admin.Object.Certification.label
-    in
-    SelectionSet.succeed identity
-        |> with (Admin.Object.Candidacy.certification certificationSelection)
-        |> Query.getCandidacyById candidacyRequiredArgs
-        |> Auth.makeQuery "getCurrentCertification"
-            endpointGraphql
-            token
-            (nothingToError "Cette candidature est introuvable"
-                >> nothingToError "Cette candidature n'a pas de certification"
-                >> toMsg
-            )
 
 
 submitTypologyForm :

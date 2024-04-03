@@ -4,8 +4,6 @@ module Route exposing
     , Route(..)
     , TypologyFilters
     , emptyCandidacyFilters
-    , emptyCertificationsFilters
-    , emptyTypologyFilters
     , fromUrl
     , href
     , toString
@@ -40,28 +38,16 @@ type Route
     = Candidacy Tab.Tab
     | Typology CandidacyId TypologyFilters
     | Candidacies CandidacyFilters
-    | Certifications CertificationsFilters
     | Home
     | Login
     | Logout
     | NotFound
-    | Reorientation CandidacyId CertificationsFilters
     | SiteMap
 
 
 emptyCandidacyFilters : CandidacyFilters
 emptyCandidacyFilters =
     { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
-
-
-emptyCertificationsFilters : CertificationsFilters
-emptyCertificationsFilters =
-    { organismId = Nothing, page = 1 }
-
-
-emptyTypologyFilters : TypologyFilters
-emptyTypologyFilters =
-    { page = 1 }
 
 
 parser : String -> Parser (Route -> a) a
@@ -84,12 +70,6 @@ parser baseUrl =
 
         toCandidaciesRoute s p =
             Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
-
-        toCertificationsRoute organismId p =
-            Certifications (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
-
-        toReorientationRoute candidacyId organismId p =
-            Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
     in
     s baseUrl
         </> oneOf
@@ -98,7 +78,6 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
-                , s "certifications" <?> Query.string "organism" <?> Query.string "page" |> map toCertificationsRoute
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "candidacies" "ready-for-jury-estimated-date" |> candidacyTab Tab.ReadyForJuryEstimatedDate
@@ -119,7 +98,6 @@ parser baseUrl =
                 , subLevel "candidacies" "jury" </> s "date" |> candidacyTab Tab.JuryDate
                 , subLevel "candidacies" "jury" </> s "result" |> candidacyTab Tab.JuryResult
                 , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
-                , subLevel "candidacies" "reorientation" <?> Query.string "organism" <?> Query.string "page" |> map toReorientationRoute
                 ]
 
 
@@ -142,13 +120,6 @@ toString baseUrl route =
 
         subLevel candidacyId path params =
             topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
-
-        certificationsFiltersToParams filters =
-            Url.Builder.int "page" filters.page
-                :: (filters.organismId
-                        |> Maybe.map (Url.Builder.string "organism" >> List.singleton)
-                        |> Maybe.withDefault []
-                   )
 
         typologyFiltersToParams filters =
             [ Url.Builder.int "page" filters.page ]
@@ -173,14 +144,8 @@ toString baseUrl route =
             topLevel [ "candidacies" ]
                 [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status), Url.Builder.int "page" filters.page ]
 
-        Certifications filters ->
-            topLevel [ "certifications" ] (certificationsFiltersToParams filters)
-
         Candidacy tab ->
             tabToString topLevel subLevel tab
-
-        Reorientation candidacyId filters ->
-            subLevel candidacyId [ "reorientation" ] (certificationsFiltersToParams filters)
 
         Typology candidacyId filters ->
             subLevel candidacyId [ "typology" ] (typologyFiltersToParams filters)
