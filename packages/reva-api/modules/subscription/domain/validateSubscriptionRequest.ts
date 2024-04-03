@@ -94,7 +94,7 @@ export const validateSubscriptionRequest = async (
       const oldIamAccount = (
         await getIamAccount({
           email: subscriptionRequest.accountEmail,
-          username: "",
+          username: subscriptionRequest.accountEmail,
         })
       )
         .unsafeCoerce()
