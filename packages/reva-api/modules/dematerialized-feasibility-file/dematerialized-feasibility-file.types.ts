@@ -4,4 +4,5 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInp
   secondForeignLanguage?: string;
   option?: string;
   blocDeCompetencesIds: string[];
+  completion: "COMPLETE" | "PARTIAL";
 }

@@ -16,12 +16,18 @@ type Candidacy {
   dematerializedFeasibilityFile: DematerializedFeasibilityFile
 }
 
+enum CertificationCompletion {
+  COMPLETE
+  PARTIAL
+}
+
 input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
   candidacyId: String!
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
   blocDeCompetencesIds: [String!]!
+  completion: CertificationCompletion!
 }
 
 type Mutation {

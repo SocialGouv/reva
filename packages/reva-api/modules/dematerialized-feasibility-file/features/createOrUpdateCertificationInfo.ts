@@ -2,6 +2,7 @@ import { DFFCertificationCompetenceBloc } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 import { getCompetenceBlocsAndCompetencesByIds } from "../../referential/features/getCompetenceBlocsAndCompetencesByIds";
+import { updateCandidacyCertificationCompletion } from "../../candidacy/features/updateCandidacyCertificationCompletion";
 
 export const createOrUpdateCertificationInfo = async ({
   input,
@@ -51,6 +52,11 @@ export const createOrUpdateCertificationInfo = async ({
         data,
       })
     : prismaClient.dematerializedFeasibilityFile.create({ data }));
+
+  await updateCandidacyCertificationCompletion({
+    candidacyId: input.candidacyId,
+    completion: input.completion,
+  });
 
   await prismaClient.dFFCertificationCompetence.createMany({
     data: certificationCompetenceBloc.flatMap((c) => c.competences),
