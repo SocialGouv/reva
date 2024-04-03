@@ -226,20 +226,24 @@ export const getActiveCandidacyMenu = async ({
   };
 
   const getJuryMenuEntry = (): CandidacyMenuEntry | undefined => {
-    const showJuryMenuEntry = candidacy.financeModule == "unifvae";
+    const newJuryMenu = candidacy.financeModule == "unifvae";
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
       "DEMANDE_FINANCEMENT_ENVOYE",
     )
       ? "ACTIVE_WITHOUT_HINT"
       : "INACTIVE";
 
-    return showJuryMenuEntry
+    return newJuryMenu
       ? {
           label: "Jury",
           url: buildUrl({ adminType: "Elm", suffix: "jury/date" }),
           status: menuEntryStatus,
         }
-      : undefined;
+      : {
+          label: "Jury",
+          url: buildUrl({ adminType: "Elm", suffix: "examInfo" }),
+          status: menuEntryStatus,
+        };
   };
 
   return [
