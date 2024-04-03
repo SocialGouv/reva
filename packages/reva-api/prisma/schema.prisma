@@ -1374,12 +1374,36 @@ model CandidacyLog {
 }
 
 model DematerializedFeasibilityFile {
-  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacyId           String    @map("candidacy_id") @db.Uuid
-  candidacy             Candidacy @relation(fields: [candidacyId], references: [id])
-  firstForeignLanguage  String?   @map("first_foreign_language")
-  secondForeignLanguage String?   @map("second_foreign_language")
-  option                String?   @map("option")
+  id                              String                           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                     String                           @map("candidacy_id") @db.Uuid
+  candidacy                       Candidacy                        @relation(fields: [candidacyId], references: [id])
+  firstForeignLanguage            String?                          @map("first_foreign_language")
+  secondForeignLanguage           String?                          @map("second_foreign_language")
+  option                          String?                          @map("option")
+  dFFCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
 
   @@map("dematerialized_feasibility_file")
+}
+
+model DFFCertificationCompetenceBloc {
+  id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
+  createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  code                            String?                       @unique @db.VarChar(255)
+  label                           String                        @db.VarChar
+  isOptional                      Boolean?                      @map("is_optional") @db.Boolean
+  competences                     DFFCertificationCompetence[]
+
+  @@map("dff_certification_competence_bloc")
+}
+
+model DFFCertificationCompetence {
+  id        String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  label     String                         @db.VarChar
+  blocId    String                         @map("bloc_id") @db.Uuid
+  bloc      DFFCertificationCompetenceBloc @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+
+  @@map("dff_certification_competence")
 }

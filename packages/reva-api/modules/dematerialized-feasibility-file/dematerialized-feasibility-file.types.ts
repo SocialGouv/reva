@@ -3,4 +3,5 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInp
   firstForeignLanguage?: string;
   secondForeignLanguage?: string;
   option?: string;
+  blocDeCompetencesIds: string[];
 }

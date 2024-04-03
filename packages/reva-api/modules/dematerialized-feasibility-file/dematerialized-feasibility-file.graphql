@@ -4,6 +4,12 @@ type DematerializedFeasibilityFile {
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
+  blocsDeCompetences: [BlocDeCompetences!]!
+}
+
+type BlocDeCompetences {
+  id: String!
+  label: String!
 }
 
 type Candidacy {
@@ -15,6 +21,7 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
+  blocDeCompetencesIds: [String!]!
 }
 
 type Mutation {
