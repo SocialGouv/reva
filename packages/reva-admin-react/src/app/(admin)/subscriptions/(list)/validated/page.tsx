@@ -77,6 +77,7 @@ const ValidatedSubscriptionRequestsPage = () => {
               <SubscriptionRequestCard
                 key={r.id}
                 companyName={r.raisonSociale}
+                createdAtLabel="Date de validation de l'inscription"
                 createdAt={new Date(r.createdAt)}
                 href={`/maisonMereAAPs/${r.id}`}
               />

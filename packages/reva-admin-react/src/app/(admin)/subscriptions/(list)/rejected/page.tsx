@@ -78,6 +78,7 @@ const RejectedSubscriptionRequestsPage = () => {
               <SubscriptionRequestCard
                 key={r.id}
                 companyName={r.companyName}
+                createdAtLabel="Date d'envoi de l'inscription"
                 createdAt={new Date(r.createdAt)}
                 href={`/subscriptions/${r.id}`}
               />
