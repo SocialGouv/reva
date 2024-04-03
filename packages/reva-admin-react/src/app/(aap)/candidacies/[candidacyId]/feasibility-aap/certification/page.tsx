@@ -2,7 +2,6 @@
 import { useCertificationPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/certification/certificationPageLogic";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -20,13 +19,7 @@ const schema = z.object({
   completion: z.enum(["PARTIAL", "COMPLETE"], {
     invalid_type_error: "Ce champ est obligatoire",
   }),
-  competenceBlocs: z
-    .object({
-      id: z.string(),
-      label: z.string(),
-      checked: z.boolean(),
-    })
-    .array(),
+  competenceBlocs: z.any().array(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -67,9 +60,11 @@ const CertificationPage = () => {
         secondForeignlanguage:
           dematerializedFeasibilityFile?.secondForeignLanguage || "",
         competenceBlocs: certification?.competenceBlocs.map((b) => ({
-          id: b.id,
+          competenceBlocId: b.id,
           label: b.code ? `${b.code} - ${b.label}` : b.label,
-          checked: false,
+          checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
+            (bc) => bc.id === b.id,
+          ),
         })),
       }),
     [
@@ -113,6 +108,9 @@ const CertificationPage = () => {
         option: data.option,
         firstForeignLanguage: data.firstForeignLanguage,
         secondForeignLanguage: data.secondForeignlanguage,
+        blocDeCompetencesIds: data.competenceBlocs
+          .filter((bc) => bc.checked)
+          .map((bc) => bc.competenceBlocId),
       });
       successToast("Modifications enregistrées");
     } catch (e) {

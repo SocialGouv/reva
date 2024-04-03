@@ -19,6 +19,9 @@ const getCandidacyById = graphql(`
         firstForeignLanguage
         secondForeignLanguage
         option
+        blocsDeCompetences {
+          id
+        }
       }
     }
   }
@@ -59,6 +62,7 @@ export const useCertificationPageLogic = () => {
       option?: string;
       firstForeignLanguage?: string;
       secondForeignLanguage?: string;
+      blocDeCompetencesIds: string[];
     }) =>
       graphqlClient.request(updateFeasibilityCertificationMutation, {
         input,
