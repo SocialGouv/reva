@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAapFeasibilityCertificationPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      isCertificationPartial
       certification {
         label
         codeRncp
@@ -63,6 +64,7 @@ export const useCertificationPageLogic = () => {
       firstForeignLanguage?: string;
       secondForeignLanguage?: string;
       blocDeCompetencesIds: string[];
+      completion: "COMPLETE" | "PARTIAL";
     }) =>
       graphqlClient.request(updateFeasibilityCertificationMutation, {
         input,
@@ -74,6 +76,7 @@ export const useCertificationPageLogic = () => {
   const dematerializedFeasibilityFile =
     candidacy?.dematerializedFeasibilityFile;
   return {
+    candidacy,
     certification,
     dematerializedFeasibilityFile,
     updateFeasibilityCertification,

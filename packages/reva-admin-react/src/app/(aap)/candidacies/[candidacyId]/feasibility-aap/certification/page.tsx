@@ -30,6 +30,7 @@ const CertificationPage = () => {
   }>();
 
   const {
+    candidacy,
     certification,
     dematerializedFeasibilityFile,
     updateFeasibilityCertification,
@@ -59,6 +60,7 @@ const CertificationPage = () => {
           dematerializedFeasibilityFile?.firstForeignLanguage || "",
         secondForeignlanguage:
           dematerializedFeasibilityFile?.secondForeignLanguage || "",
+        completion: candidacy?.isCertificationPartial ? "PARTIAL" : "COMPLETE",
         competenceBlocs: certification?.competenceBlocs.map((b) => ({
           competenceBlocId: b.id,
           label: b.code ? `${b.code} - ${b.label}` : b.label,
@@ -68,7 +70,9 @@ const CertificationPage = () => {
         })),
       }),
     [
+      candidacy?.isCertificationPartial,
       certification?.competenceBlocs,
+      dematerializedFeasibilityFile?.blocsDeCompetences,
       dematerializedFeasibilityFile?.firstForeignLanguage,
       dematerializedFeasibilityFile?.option,
       dematerializedFeasibilityFile?.secondForeignLanguage,
@@ -81,25 +85,27 @@ const CertificationPage = () => {
   const completion = useWatch({ name: "completion", control });
 
   useEffect(() => {
-    switch (completion) {
-      case "COMPLETE": {
-        if (competenceBlocFields.some((cbf) => !cbf.checked)) {
-          competenceBlocFields.forEach((cbf, i) =>
-            updateCompetenceBlocs(i, { ...cbf, checked: true }),
-          );
+    if (isDirty) {
+      switch (completion) {
+        case "COMPLETE": {
+          if (competenceBlocFields.some((cbf) => !cbf.checked)) {
+            competenceBlocFields.forEach((cbf, i) =>
+              updateCompetenceBlocs(i, { ...cbf, checked: true }),
+            );
+          }
+          break;
         }
-        break;
-      }
-      case "PARTIAL": {
-        if (competenceBlocFields.some((cbf) => cbf.checked)) {
-          competenceBlocFields.forEach((cbf, i) =>
-            updateCompetenceBlocs(i, { ...cbf, checked: false }),
-          );
+        case "PARTIAL": {
+          if (competenceBlocFields.some((cbf) => cbf.checked)) {
+            competenceBlocFields.forEach((cbf, i) =>
+              updateCompetenceBlocs(i, { ...cbf, checked: false }),
+            );
+          }
+          break;
         }
-        break;
       }
     }
-  }, [competenceBlocFields, completion, updateCompetenceBlocs]);
+  }, [competenceBlocFields, completion, isDirty, updateCompetenceBlocs]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -108,6 +114,7 @@ const CertificationPage = () => {
         option: data.option,
         firstForeignLanguage: data.firstForeignLanguage,
         secondForeignLanguage: data.secondForeignlanguage,
+        completion: data.completion,
         blocDeCompetencesIds: data.competenceBlocs
           .filter((bc) => bc.checked)
           .map((bc) => bc.competenceBlocId),
