@@ -51,6 +51,8 @@ export const KeycloakProvider = ({
 
     setAuthenticated(false);
     setTokens([]);
+
+    keycloakInstance?.logout();
   };
 
   useEffect(() => {

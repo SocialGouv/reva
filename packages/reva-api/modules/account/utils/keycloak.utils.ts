@@ -92,9 +92,12 @@ export const impersonate = async (
     const domain = process.env.FRANCE_VAE_DOMAIN || "gouv.fr";
 
     for (const header of response.headers) {
-      if (header[0] == "set-cookie") {
+      if (
+        header[0] == "set-cookie" &&
+        header[1].indexOf("KEYCLOAK_IDENTITY") != -1
+      ) {
         const key = "set-cookie";
-        const value = `${cleanCookieValue(header[1])}; Domain=${domain};`;
+        const value = `${cleanCookieValue(header[1])} Domain=${domain};`;
         const cleanedHeader: [string, string] = [key, value];
         headers.push(cleanedHeader);
       }
@@ -112,10 +115,11 @@ export const impersonate = async (
 
 const cleanCookieValue = (value: string) => {
   return value
-    .replace("SameSite=None;", "")
-    .replace("Secure;", "Secure")
-    .replace("Secure ", "Secure")
-    .replace("HttpOnly", "");
+    .replace("SameSite=None", "")
+    .replace("Secure", ";")
+    .replace("HttpOnly", "")
+    .replace(";;;", "")
+    .replace(";;", "");
 };
 
 const getKeycloakAccessToken = async (): Promise<string | undefined> => {
