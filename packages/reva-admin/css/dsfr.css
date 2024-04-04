@@ -48,3 +48,11 @@
 .fr-notice .fr-notice__body:before {
     mask-image: url("../icons/system/fr--info-fill.svg");
 }
+
+.fr-pagination__link--next:before, .fr-pagination__link--next.fr-pagination__link--lg-label:after {
+    mask-image: url("../icons/system/arrow-right-s-line.svg");
+}
+
+.fr-pagination__link--prev:before, .fr-pagination__link--prev.fr-pagination__link--lg-label:before {
+    mask-image: url("../icons/system/arrow-left-s-line.svg");
+}
