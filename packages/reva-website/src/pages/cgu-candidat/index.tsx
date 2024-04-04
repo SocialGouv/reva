@@ -91,7 +91,7 @@ const CguPage = () => (
         </li>
         <li>
           Il sélectionne un Architecte accompagnateur de parcours parmi une
-          liste proposée par la Plateforme REVA.
+          liste proposée par la Plateforme France VAE.
         </li>
       </ul>
 
