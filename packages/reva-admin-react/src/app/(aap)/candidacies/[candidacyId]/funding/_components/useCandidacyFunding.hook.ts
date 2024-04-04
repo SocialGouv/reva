@@ -162,13 +162,17 @@ export const useCandidacyFunding = (candidacyId: string) => {
     enabled: candidacyIsXpReva,
   });
 
+  const candidacyFundingRequest = candidacyIsXpReva
+    ? candidateFundingRequestRevaData?.candidate_getFundingRequest
+        .fundingRequest
+    : candidacy?.fundingRequestUnifvae;
+
   return {
     candidacy,
     candidacyIsLoading,
     createFundingRequestUnifvaeMutate,
     createFundingRequestUnifvaeIsPending,
-    candidateFundingRequestRevaData,
-    candidateFundingRequestRevaIsLoading,
+    candidacyFundingRequest,
     candidacyIsXpReva,
     candidacyHasAlreadyFundingRequest,
     candidacyHasDroppedOutAndIsIncomplete,

@@ -92,11 +92,13 @@ const ChoixCandidatBlock = ({ candidacy }: { candidacy: Candidacy }) => {
       <div className="flex gap-x-8">
         <div className="flex-1">
           <p className="text-sm font-bold">CERTIFICATION CHOISIE</p>
-          <p className="m-0">{candidacy?.certification?.label}</p>
+          <p className="m-0">
+            {candidacy?.certification?.label ?? "Aucune certification choisie"}
+          </p>
         </div>
         <div className="flex-1">
           <p className="text-sm font-bold">ACCOMPAGNATEUR CHOISI</p>
-          <p className="m-0">{candidacy?.organism?.label}</p>
+          <p className="m-0">{candidacy?.organism?.label ?? "Non précisé"}</p>
         </div>
       </div>
     </div>
@@ -503,6 +505,7 @@ const FundingPage = () => {
     candidacyIsXpReva,
     candidacyHasDroppedOutAndIsIncomplete,
     candidacyIsNotRecevable,
+    candidacyFundingRequest,
   } = useCandidacyFunding(candidacyId);
 
   const isReadOnly = candidacyIsXpReva || candidacyHasAlreadyFundingRequest;
@@ -516,27 +519,23 @@ const FundingPage = () => {
       candidateThirdname: candidacy?.candidate?.firstname3 || "",
       candidateGender:
         (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
-      individualHourCount:
-        candidacy?.fundingRequestUnifvae?.individualHourCount ?? 0,
-      individualCost: candidacy?.fundingRequestUnifvae?.individualCost ?? 0,
-      collectiveHourCount:
-        candidacy?.fundingRequestUnifvae?.collectiveHourCount ?? 0,
-      collectiveCost: candidacy?.fundingRequestUnifvae?.collectiveCost ?? 0,
-      basicSkillsHourCount:
-        candidacy?.fundingRequestUnifvae?.basicSkillsHourCount ?? 0,
-      basicSkillsCost: candidacy?.fundingRequestUnifvae?.basicSkillsCost ?? 0,
+      individualHourCount: candidacyFundingRequest?.individualHourCount ?? 0,
+      individualCost: candidacyFundingRequest?.individualCost ?? 0,
+      collectiveHourCount: candidacyFundingRequest?.collectiveHourCount ?? 0,
+      collectiveCost: candidacyFundingRequest?.collectiveCost ?? 0,
+      basicSkillsHourCount: candidacyFundingRequest?.basicSkillsHourCount ?? 0,
+      basicSkillsCost: candidacyFundingRequest?.basicSkillsCost ?? 0,
       mandatoryTrainingsHourCount:
-        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsHourCount ?? 0,
+        candidacyFundingRequest?.mandatoryTrainingsHourCount ?? 0,
       mandatoryTrainingsCost:
-        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsCost ?? 0,
+        candidacyFundingRequest?.mandatoryTrainingsCost ?? 0,
       certificateSkillsHourCount:
-        candidacy?.fundingRequestUnifvae?.certificateSkillsHourCount ?? 0,
+        candidacyFundingRequest?.certificateSkillsHourCount ?? 0,
       certificateSkillsCost:
-        candidacy?.fundingRequestUnifvae?.certificateSkillsCost ?? 0,
+        candidacyFundingRequest?.certificateSkillsCost ?? 0,
       otherTrainingHourCount:
-        candidacy?.fundingRequestUnifvae?.otherTrainingHourCount ?? 0,
-      otherTrainingCost:
-        candidacy?.fundingRequestUnifvae?.otherTrainingCost ?? 0,
+        candidacyFundingRequest?.otherTrainingHourCount ?? 0,
+      otherTrainingCost: candidacyFundingRequest?.otherTrainingCost ?? 0,
       fundingContactFirstname:
         candidacy?.fundingRequestUnifvae?.fundingContactFirstname ?? "",
       fundingContactLastname:
@@ -584,27 +583,23 @@ const FundingPage = () => {
       candidateThirdname: candidacy?.candidate?.firstname3 || "",
       candidateGender:
         (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
-      individualHourCount:
-        candidacy?.fundingRequestUnifvae?.individualHourCount || 0,
-      individualCost: candidacy?.fundingRequestUnifvae?.individualCost || 0,
-      collectiveHourCount:
-        candidacy?.fundingRequestUnifvae?.collectiveHourCount ?? 0,
-      collectiveCost: candidacy?.fundingRequestUnifvae?.collectiveCost ?? 0,
-      basicSkillsHourCount:
-        candidacy?.fundingRequestUnifvae?.basicSkillsHourCount ?? 0,
-      basicSkillsCost: candidacy?.fundingRequestUnifvae?.basicSkillsCost ?? 0,
+      individualHourCount: candidacyFundingRequest?.individualHourCount || 0,
+      individualCost: candidacyFundingRequest?.individualCost || 0,
+      collectiveHourCount: candidacyFundingRequest?.collectiveHourCount ?? 0,
+      collectiveCost: candidacyFundingRequest?.collectiveCost ?? 0,
+      basicSkillsHourCount: candidacyFundingRequest?.basicSkillsHourCount ?? 0,
+      basicSkillsCost: candidacyFundingRequest?.basicSkillsCost ?? 0,
       mandatoryTrainingsHourCount:
-        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsHourCount ?? 0,
+        candidacyFundingRequest?.mandatoryTrainingsHourCount ?? 0,
       mandatoryTrainingsCost:
-        candidacy?.fundingRequestUnifvae?.mandatoryTrainingsCost ?? 0,
+        candidacyFundingRequest?.mandatoryTrainingsCost ?? 0,
       certificateSkillsHourCount:
-        candidacy?.fundingRequestUnifvae?.certificateSkillsHourCount ?? 0,
+        candidacyFundingRequest?.certificateSkillsHourCount ?? 0,
       certificateSkillsCost:
-        candidacy?.fundingRequestUnifvae?.certificateSkillsCost ?? 0,
+        candidacyFundingRequest?.certificateSkillsCost ?? 0,
       otherTrainingHourCount:
-        candidacy?.fundingRequestUnifvae?.otherTrainingHourCount ?? 0,
-      otherTrainingCost:
-        candidacy?.fundingRequestUnifvae?.otherTrainingCost ?? 0,
+        candidacyFundingRequest?.otherTrainingHourCount ?? 0,
+      otherTrainingCost: candidacyFundingRequest?.otherTrainingCost ?? 0,
       fundingContactFirstname:
         candidacy?.fundingRequestUnifvae?.fundingContactFirstname ?? "",
       fundingContactLastname:
@@ -614,7 +609,7 @@ const FundingPage = () => {
       fundingContactPhone:
         candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
     });
-  }, [reset, candidacy?.fundingRequestUnifvae, candidacy?.candidate]);
+  }, [reset, candidacyFundingRequest, candidacy]);
 
   useEffect(() => {
     if (candidacy) {
