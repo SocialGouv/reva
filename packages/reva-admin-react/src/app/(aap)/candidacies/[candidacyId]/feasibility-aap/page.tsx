@@ -8,7 +8,8 @@ const AapFeasibilityPage = () => {
     candidacyId: string;
   }>();
 
-  const { certification } = useAapFeasibilityPageLogic();
+  const { certification, dematerializedFeasibilityFile } =
+    useAapFeasibilityPageLogic();
 
   return (
     <div className="flex flex-col">
@@ -21,7 +22,11 @@ const AapFeasibilityPage = () => {
         <DefaultCandidacySectionCard
           title="Descriptif de la certification"
           titleIconClass="fr-icon-award-fill"
-          status="TO_COMPLETE"
+          status={
+            dematerializedFeasibilityFile?.certificationPartComplete
+              ? "COMPLETED"
+              : "TO_COMPLETE"
+          }
           buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
         >
           <p className="text-xl font-bold mb-2">{certification?.label}</p>

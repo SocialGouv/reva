@@ -10,6 +10,9 @@ const getCandidacyById = graphql(`
         label
         codeRncp
       }
+      dematerializedFeasibilityFile {
+        certificationPartComplete
+      }
     }
   }
 `);
@@ -30,5 +33,7 @@ export const useAapFeasibilityPageLogic = () => {
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
-  return { certification };
+  const dematerializedFeasibilityFile =
+    candidacy?.dematerializedFeasibilityFile;
+  return { certification, dematerializedFeasibilityFile };
 };
