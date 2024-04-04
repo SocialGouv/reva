@@ -1381,6 +1381,7 @@ model DematerializedFeasibilityFile {
   secondForeignLanguage           String?                          @map("second_foreign_language")
   option                          String?                          @map("option")
   dFFCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
+  certificationPartComplete       Boolean                          @default(false) @map("certification_part_complete")
 
   @@map("dematerialized_feasibility_file")
 }

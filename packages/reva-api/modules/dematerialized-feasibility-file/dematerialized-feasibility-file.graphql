@@ -5,6 +5,7 @@ type DematerializedFeasibilityFile {
   secondForeignLanguage: String
   option: String
   blocsDeCompetences: [BlocDeCompetences!]!
+  certificationPartComplete: Boolean!
 }
 
 type BlocDeCompetences {

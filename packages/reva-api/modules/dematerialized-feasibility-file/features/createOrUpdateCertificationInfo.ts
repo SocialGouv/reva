@@ -49,9 +49,11 @@ export const createOrUpdateCertificationInfo = async ({
   const dff = await (currentFile
     ? prismaClient.dematerializedFeasibilityFile.update({
         where: { id: currentFile.id },
-        data,
+        data: { ...data, certificationPartComplete: true },
       })
-    : prismaClient.dematerializedFeasibilityFile.create({ data }));
+    : prismaClient.dematerializedFeasibilityFile.create({
+        data: { ...data, certificationPartComplete: true },
+      }));
 
   await updateCandidacyCertificationCompletion({
     candidacyId: input.candidacyId,
