@@ -114,9 +114,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   return (
     <>
       <Page title="Création de compte">
-        <BackToHomeButton />
         {hasCandidacy ? (
-          <></>
+          <BackToHomeButton />
         ) : state.context.error ? (
           <RegistrationErrorMessage error={state.context.error} />
         ) : (
