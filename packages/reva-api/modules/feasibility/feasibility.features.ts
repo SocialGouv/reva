@@ -34,6 +34,8 @@ import { FeasibilityFile, uploadFeasibilityFiles } from "./feasibility.file";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
+  excludeArchivedAndDroppedOutCandidacy,
+  excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
@@ -442,18 +444,12 @@ export const getActiveFeasibilities = async ({
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
-  const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput = {
-    candidacy: {
-      candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
-      candidacyDropOut: { is: null },
-    },
-  };
   switch (categoryFilter) {
     case undefined:
     case "ALL":
       queryWhereClause = {
         ...queryWhereClause,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedAndDroppedOutCandidacy,
       };
       break;
     case "ARCHIVED":

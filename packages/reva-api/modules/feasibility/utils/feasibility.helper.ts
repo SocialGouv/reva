@@ -6,21 +6,37 @@ export type FeasibilityStatusFilter =
   | "ARCHIVED"
   | "DROPPED_OUT";
 
-export const getWhereClauseFromStatusFilter = (
-  statusFilter?: FeasibilityStatusFilter
-) => {
-  let whereClause: Prisma.FeasibilityWhereInput = { isActive: true };
-  const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput = {
+export const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
+  {
     candidacy: {
       candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
       candidacyDropOut: { is: null },
     },
   };
+
+export const excludeRejectedArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
+  {
+    candidacy: {
+      candidacyStatuses: {
+        none: {
+          isActive: true,
+          status: { in: ["ARCHIVE", "DOSSIER_FAISABILITE_NON_RECEVABLE"] },
+        },
+      },
+      candidacyDropOut: { is: null },
+    },
+  };
+
+export const getWhereClauseFromStatusFilter = (
+  statusFilter?: FeasibilityStatusFilter,
+) => {
+  let whereClause: Prisma.FeasibilityWhereInput = { isActive: true };
+
   switch (statusFilter) {
     case "ALL":
       whereClause = {
         ...whereClause,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedAndDroppedOutCandidacy,
       };
       break;
     case "PENDING":
