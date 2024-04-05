@@ -154,13 +154,13 @@ export const useCandidacyFunding = (candidacyId: string) => {
       status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE" && status.isActive,
   );
   const candidacyStatusEligible: CandidacyStatusStep[] = [
+    "DOSSIER_FAISABILITE_RECEVABLE",
     "DOSSIER_FAISABILITE_INCOMPLET",
     "DOSSIER_FAISABILITE_NON_RECEVABLE",
     "DEMANDE_FINANCEMENT_ENVOYE",
     "PRISE_EN_CHARGE",
-    "ARCHIVE",
-    "DOSSIER_FAISABILITE_RECEVABLE",
     "DEMANDE_PAIEMENT_ENVOYEE",
+    "ARCHIVE",
   ];
   const isEligibleToViewFundingRequest =
     !candidacyIsLoading &&
