@@ -161,6 +161,8 @@ export const useCandidacyFunding = (candidacyId: string) => {
     "PRISE_EN_CHARGE",
     "DEMANDE_PAIEMENT_ENVOYEE",
     "ARCHIVE",
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+    "DOSSIER_DE_VALIDATION_SIGNALE",
   ];
   const isEligibleToViewFundingRequest =
     !candidacyIsLoading &&
