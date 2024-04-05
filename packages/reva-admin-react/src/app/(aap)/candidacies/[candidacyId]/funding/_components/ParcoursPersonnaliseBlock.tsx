@@ -37,10 +37,10 @@ export const ParcoursPersonnaliseBlock = ({
     certificateSkillsHourCount +
     otherTrainingHourCount;
   const complementsFormatifsCost =
-    mandatoryTrainingsCost +
-    basicSkillsCost +
-    certificateSkillsCost +
-    otherTrainingCost;
+    mandatoryTrainingsCost * mandatoryTrainingsHourCount +
+    basicSkillsCost * basicSkillsHourCount +
+    certificateSkillsCost * certificateSkillsHourCount +
+    otherTrainingCost * otherTrainingHourCount;
 
   const totalHourCount =
     accompagnementHourCount + complementsFormatifsHourCount;
