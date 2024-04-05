@@ -62,22 +62,39 @@ export const FeasibilityForm = ({
           legend="Décision prise concernant ce dossier"
           options={[
             {
-              label: "Dossier recevable",
+              label: (
+                <p className="mb-0">
+                  Ce dossier est <strong>recevable</strong>
+                </p>
+              ),
               nativeInputProps: {
                 ...register("decision"),
                 value: "Admissible",
               },
             },
             {
-              label: "Dossier non recevable",
-              nativeInputProps: { ...register("decision"), value: "Rejected" },
-            },
-            {
-              label: "Dossier incomplet",
+              label: (
+                <p className="mb-0">
+                  Ce dossier est considéré comme{" "}
+                  <strong>incomplet ou incorrect</strong>
+                </p>
+              ),
+              hintText:
+                "Un dossier est incorrect ou incomplet si il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n’est pas le bon, s’il manque des éléments ou si les pièces jointes sont inexploitables, erronées etc... Il sera renvoyé à l’AAP qui devra le compléter ou le corriger rapidement.",
               nativeInputProps: {
                 ...register("decision"),
                 value: "Incomplete",
               },
+            },
+            {
+              label: (
+                <p className="mb-0">
+                  Ce dossier n'est <strong>pas recevable</strong>
+                </p>
+              ),
+              hintText:
+                "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
+              nativeInputProps: { ...register("decision"), value: "Rejected" },
             },
           ]}
           state={errors.decision ? "error" : "default"}
