@@ -88,7 +88,13 @@ export const getWhereClauseFromStatusFilter = (
           some: {
             AND: {
               isActive: true,
-              status: { notIn: ["ARCHIVE", "PROJET"] },
+              status: {
+                notIn: [
+                  "ARCHIVE",
+                  "PROJET",
+                  "DOSSIER_FAISABILITE_NON_RECEVABLE",
+                ],
+              },
             },
           },
         },
