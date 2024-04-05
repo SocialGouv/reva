@@ -16,21 +16,21 @@ export const ParcoursPersonnaliseBlock = ({
     watch,
     formState: { errors },
   } = useFormContext();
-  const individualHourCount = watch("individualHourCount");
-  const individualCost = watch("individualCost");
-  const collectiveHourCount = watch("collectiveHourCount");
-  const collectiveCost = watch("collectiveCost");
+  const individualHourCount = watch("individualHourCount") || 0;
+  const individualCost = watch("individualCost") || 0;
+  const collectiveHourCount = watch("collectiveHourCount") || 0;
+  const collectiveCost = watch("collectiveCost") || 0;
   const accompagnementCost =
     individualHourCount * individualCost + collectiveHourCount * collectiveCost;
   const accompagnementHourCount = individualHourCount + collectiveHourCount;
-  const mandatoryTrainingsHourCount = watch("mandatoryTrainingsHourCount");
-  const mandatoryTrainingsCost = watch("mandatoryTrainingsCost");
-  const basicSkillsHourCount = watch("basicSkillsHourCount");
-  const basicSkillsCost = watch("basicSkillsCost");
-  const certificateSkillsHourCount = watch("certificateSkillsHourCount");
-  const certificateSkillsCost = watch("certificateSkillsCost");
-  const otherTrainingHourCount = watch("otherTrainingHourCount");
-  const otherTrainingCost = watch("otherTrainingCost");
+  const mandatoryTrainingsHourCount = watch("mandatoryTrainingsHourCount") || 0;
+  const mandatoryTrainingsCost = watch("mandatoryTrainingsCost") || 0;
+  const basicSkillsHourCount = watch("basicSkillsHourCount") || 0;
+  const basicSkillsCost = watch("basicSkillsCost") || 0;
+  const certificateSkillsHourCount = watch("certificateSkillsHourCount") || 0;
+  const certificateSkillsCost = watch("certificateSkillsCost") || 0;
+  const otherTrainingHourCount = watch("otherTrainingHourCount") || 0;
+  const otherTrainingCost = watch("otherTrainingCost") || 0;
   const complementsFormatifsHourCount =
     mandatoryTrainingsHourCount +
     basicSkillsHourCount +

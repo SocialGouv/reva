@@ -8,7 +8,7 @@ import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
 import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
@@ -64,13 +64,12 @@ const FundingPage = () => {
   const isForfaitOnly =
     candidacyHasDroppedOutAndIsIncomplete || candidacyIsNotRecevable;
 
-  const methods = useForm<CandidacyFundingFormData>({
-    resolver: zodResolver(candidacyFundingSchema),
-    defaultValues: {
-      candidateSecondname: candidacy?.candidate?.firstname2 || "",
-      candidateThirdname: candidacy?.candidate?.firstname3 || "",
+  const candidacyToFormData = useMemo(
+    () => ({
+      candidateSecondname: candidacy?.candidate?.firstname2 ?? "",
+      candidateThirdname: candidacy?.candidate?.firstname3 ?? "",
       candidateGender:
-        (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
+        (candidacy?.candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       individualHourCount: candidacyFundingRequest?.individualHourCount ?? 0,
       individualCost: candidacyFundingRequest?.individualCost ?? 0,
       collectiveHourCount: candidacyFundingRequest?.collectiveHourCount ?? 0,
@@ -96,7 +95,13 @@ const FundingPage = () => {
         candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
       fundingContactPhone:
         candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
-    },
+    }),
+    [candidacy, candidacyFundingRequest],
+  );
+
+  const methods = useForm<CandidacyFundingFormData>({
+    resolver: zodResolver(candidacyFundingSchema),
+    defaultValues: candidacyToFormData,
   });
 
   const {
@@ -130,45 +135,11 @@ const FundingPage = () => {
     }
   };
 
-  const resetForm = useCallback(() => {
-    reset({
-      candidateSecondname: candidacy?.candidate?.firstname2 || "",
-      candidateThirdname: candidacy?.candidate?.firstname3 || "",
-      candidateGender:
-        (candidacy?.candidate?.gender as GenderEnum) || GenderEnum.undisclosed,
-      individualHourCount: candidacyFundingRequest?.individualHourCount || 0,
-      individualCost: candidacyFundingRequest?.individualCost || 0,
-      collectiveHourCount: candidacyFundingRequest?.collectiveHourCount ?? 0,
-      collectiveCost: candidacyFundingRequest?.collectiveCost ?? 0,
-      basicSkillsHourCount: candidacyFundingRequest?.basicSkillsHourCount ?? 0,
-      basicSkillsCost: candidacyFundingRequest?.basicSkillsCost ?? 0,
-      mandatoryTrainingsHourCount:
-        candidacyFundingRequest?.mandatoryTrainingsHourCount ?? 0,
-      mandatoryTrainingsCost:
-        candidacyFundingRequest?.mandatoryTrainingsCost ?? 0,
-      certificateSkillsHourCount:
-        candidacyFundingRequest?.certificateSkillsHourCount ?? 0,
-      certificateSkillsCost:
-        candidacyFundingRequest?.certificateSkillsCost ?? 0,
-      otherTrainingHourCount:
-        candidacyFundingRequest?.otherTrainingHourCount ?? 0,
-      otherTrainingCost: candidacyFundingRequest?.otherTrainingCost ?? 0,
-      fundingContactFirstname:
-        candidacy?.fundingRequestUnifvae?.fundingContactFirstname ?? "",
-      fundingContactLastname:
-        candidacy?.fundingRequestUnifvae?.fundingContactLastname ?? "",
-      fundingContactEmail:
-        candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
-      fundingContactPhone:
-        candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
-    });
-  }, [reset, candidacyFundingRequest, candidacy]);
-
   useEffect(() => {
     if (candidacy) {
-      resetForm();
+      reset(candidacyToFormData);
     }
-  }, [candidacy, resetForm]);
+  }, [candidacy, reset, candidacyToFormData]);
 
   return (
     <div className="flex flex-col w-full p-2">
@@ -182,7 +153,7 @@ const FundingPage = () => {
           onSubmit={handleSubmit(onSubmit)}
           onReset={(e) => {
             e.preventDefault();
-            resetForm();
+            reset(candidacyToFormData);
           }}
         >
           <InformationCandidatBlock
