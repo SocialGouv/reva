@@ -14,6 +14,13 @@ import {
   FormLocalAccount,
   LocalAccount,
 } from "../components/form-local-account";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
+
+const deleteConfirmationModal = createModal({
+  id: "delete-confirmation-modal",
+  isOpenedByDefault: false,
+});
 
 const EditLocalAccountPage = () => {
   const router = useRouter();
@@ -50,25 +57,37 @@ const EditLocalAccountPage = () => {
       }
     : undefined;
 
-  const handleDeleteButtonClick = async () => {
-    const confirmed = confirm(
-      "Souhaitez-vous vraiment supprimer ce compte local ? ",
-    );
-    if (confirmed) {
-      try {
-        await useDeleteCertificationAuthorityLocalAccountMutation.mutateAsync(
-          local_account_id as string,
-        );
-        successToast("Compte local supprimé");
-        router.push("/certification-authorities/local-accounts");
-      } catch (e) {
-        graphqlErrorToast(e);
-      }
+  const handleDelete = async () => {
+    try {
+      await useDeleteCertificationAuthorityLocalAccountMutation.mutateAsync(
+        local_account_id as string,
+      );
+      successToast("Compte local supprimé");
+      router.push("/certification-authorities/local-accounts");
+    } catch (e) {
+      graphqlErrorToast(e);
     }
   };
 
+  useIsModalOpen(deleteConfirmationModal);
+
   return (
     <>
+      <deleteConfirmationModal.Component
+        title="Vous allez supprimer ce compte."
+        buttons={[
+          {
+            children: "Annuler",
+          },
+          {
+            onClick: handleDelete,
+            children: "Continuer",
+          },
+        ]}
+      >
+        <p>Cette action est irréversible.</p>
+      </deleteConfirmationModal.Component>
+
       <FormLocalAccount
         localAccount={localAccount}
         onSubmit={async (data) => {
@@ -95,7 +114,7 @@ const EditLocalAccountPage = () => {
         }}
         buttonValidateText="Valider"
         showDeleteButton
-        onDeleteButtonClick={handleDeleteButtonClick}
+        onDeleteButtonClick={() => deleteConfirmationModal.open()}
       />
     </>
   );
