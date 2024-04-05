@@ -106,4 +106,8 @@ type Mutation {
   certification_authority_updateCertificationAuthorityLocalAccount(
     input: UpdateCertificationAuthorityLocalAccountInput!
   ): CertificationAuthorityLocalAccount!
+
+  certification_authority_deleteCertificationAuthorityLocalAccount(
+    certificationAuthorityLocalAccountId: ID!
+  ): CertificationAuthorityLocalAccount!
 }
