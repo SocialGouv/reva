@@ -118,14 +118,15 @@ const FundingPage = () => {
             const errorField = error.message.split(".")[1].split(":")[0];
             const errorMessage = error.message.split(":")[1].trim();
             if (errorField && errorMessage) {
-              return setError(errorField as keyof CandidacyFundingFormData, {
+              setError(errorField as keyof CandidacyFundingFormData, {
                 message: errorMessage,
               });
             }
           }
         });
+      } else {
+        graphqlErrorToast(e);
       }
-      graphqlErrorToast(e);
     }
   };
 
