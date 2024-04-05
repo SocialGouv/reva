@@ -31,10 +31,18 @@ interface Props {
   localAccount?: LocalAccount;
   onSubmit: (data: LocalAccount) => Promise<void>;
   buttonValidateText: string;
+  showDeleteButton?: boolean;
+  onDeleteButtonClick?: () => void;
 }
 
 export const FormLocalAccount = (props: Props): JSX.Element => {
-  const { localAccount, onSubmit, buttonValidateText } = props;
+  const {
+    localAccount,
+    onSubmit,
+    buttonValidateText,
+    showDeleteButton,
+    onDeleteButtonClick,
+  } = props;
 
   const isEditing = !!localAccount;
 
@@ -245,9 +253,18 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
             </div>
           </fieldset>
 
-          <div className="flex flex-col md:flex-row items-center md:items-end justify-between mt-10">
-            <div></div>
-            <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
+          <div className="flex flex-col-reverse gap-6 md:flex-row items-center md:items-end justify-between mt-10">
+            {showDeleteButton && (
+              <Button
+                priority="secondary"
+                type="button"
+                className="text-red-500 shadow-[inset_0_0_0_1px_red]"
+                onClick={onDeleteButtonClick}
+              >
+                Supprimer
+              </Button>
+            )}
+            <div className="flex flex-col md:flex-row gap-4 items-center md:ml-auto mt-8 md:mt-0">
               <Button priority="secondary" type="reset">
                 Annuler les modifications
               </Button>

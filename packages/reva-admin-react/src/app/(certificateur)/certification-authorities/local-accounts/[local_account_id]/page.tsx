@@ -2,7 +2,11 @@
 
 import { useRouter } from "next/navigation";
 
-import { errorToast, successToast } from "@/components/toast/toast";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 
 import { useParams } from "next/navigation";
 import { useCertificationAuthorityQueries } from "../certificationAuthorityQueries";
@@ -19,6 +23,7 @@ const EditLocalAccountPage = () => {
   const {
     certifictionAuthority,
     useUpdateCertificationAuthorityMutation,
+    useDeleteCertificationAuthorityLocalAccountMutation,
     refetchCertifictionAuthority,
   } = useCertificationAuthorityQueries();
 
@@ -45,33 +50,54 @@ const EditLocalAccountPage = () => {
       }
     : undefined;
 
+  const handleDeleteButtonClick = async () => {
+    const confirmed = confirm(
+      "Souhaitez-vous vraiment supprimer ce compte local ? ",
+    );
+    if (confirmed) {
+      try {
+        await useDeleteCertificationAuthorityLocalAccountMutation.mutateAsync(
+          local_account_id as string,
+        );
+        successToast("Compte local supprimé");
+        router.push("/certification-authorities/local-accounts");
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    }
+  };
+
   return (
-    <FormLocalAccount
-      localAccount={localAccount}
-      onSubmit={async (data) => {
-        if (data.id) {
-          try {
-            await updateCertificationAuthorityMutation({
-              certificationAuthorityLocalAccountId: data.id,
-              departmentIds: data.departmentIds,
-              certificationIds: data.certificationIds,
-            });
-            await refetchCertifictionAuthority();
+    <>
+      <FormLocalAccount
+        localAccount={localAccount}
+        onSubmit={async (data) => {
+          if (data.id) {
+            try {
+              await updateCertificationAuthorityMutation({
+                certificationAuthorityLocalAccountId: data.id,
+                departmentIds: data.departmentIds,
+                certificationIds: data.certificationIds,
+              });
+              await refetchCertifictionAuthority();
 
-            successToast("Le compte local a bien été mis à jour");
+              successToast("Le compte local a bien été mis à jour");
 
-            router.push("/certification-authorities/local-accounts");
-          } catch (error) {
-            const errorMessage =
-              (error as any)?.response?.errors?.[0]?.message ||
-              '"Une erreur est survenue"';
+              router.push("/certification-authorities/local-accounts");
+            } catch (error) {
+              const errorMessage =
+                (error as any)?.response?.errors?.[0]?.message ||
+                '"Une erreur est survenue"';
 
-            errorToast(errorMessage);
+              errorToast(errorMessage);
+            }
           }
-        }
-      }}
-      buttonValidateText="Valider"
-    />
+        }}
+        buttonValidateText="Valider"
+        showDeleteButton
+        onDeleteButtonClick={handleDeleteButtonClick}
+      />
+    </>
   );
 };
 

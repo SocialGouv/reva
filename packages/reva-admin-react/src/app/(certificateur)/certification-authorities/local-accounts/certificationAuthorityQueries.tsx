@@ -82,6 +82,18 @@ const updateCertificationAuthorityMutation = graphql(`
   }
 `);
 
+const deleteCertificationAuthorityLocalAccountMutation = graphql(`
+  mutation deleteCertificationAuthorityLocalAccountMutation(
+    $certificationAuthorityLocalAccountId: ID!
+  ) {
+    certification_authority_deleteCertificationAuthorityLocalAccount(
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useCertificationAuthorityQueries = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -108,11 +120,19 @@ export const useCertificationAuthorityQueries = () => {
       }),
   });
 
+  const useDeleteCertificationAuthorityLocalAccountMutation = useMutation({
+    mutationFn: (certificationAuthorityLocalAccountId: string) =>
+      graphqlClient.request(deleteCertificationAuthorityLocalAccountMutation, {
+        certificationAuthorityLocalAccountId,
+      }),
+  });
+
   return {
     certifictionAuthority,
     certifictionAuthorityStatus: queryCertifictionAuthority.status,
     refetchCertifictionAuthority: queryCertifictionAuthority.refetch,
     useCreateCertificationAuthorityMutation,
     useUpdateCertificationAuthorityMutation,
+    useDeleteCertificationAuthorityLocalAccountMutation,
   };
 };
