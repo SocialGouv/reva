@@ -7,7 +7,7 @@ import { GenderEnum } from "@/constants";
 import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
@@ -49,6 +49,7 @@ const FundingPage = () => {
     candidacyId: string;
   }>();
   const [formConfirmation, setFormConfirmation] = useState(false);
+  const router = useRouter();
 
   const {
     candidacy,
@@ -57,7 +58,9 @@ const FundingPage = () => {
     candidacyIsXpReva,
     candidacyHasDroppedOutAndIsIncomplete,
     candidacyIsNotRecevable,
+    candidacyIsLoading,
     candidacyFundingRequest,
+    isEligibleToViewFundingRequest,
   } = useCandidacyFunding(candidacyId);
 
   const isReadOnly = candidacyIsXpReva || candidacyHasAlreadyFundingRequest;
@@ -140,6 +143,12 @@ const FundingPage = () => {
       reset(candidacyFormData);
     }
   }, [candidacy, reset, candidacyFormData]);
+
+  if (!isEligibleToViewFundingRequest) {
+    router.push(`/candidacies/${candidacyId}/summary`);
+  }
+
+  if (!candidacyIsLoading) return null;
 
   return (
     <div className="flex flex-col w-full p-2">

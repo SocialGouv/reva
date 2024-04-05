@@ -1,6 +1,9 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { FundingRequestUnifvaeInput } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  FundingRequestUnifvaeInput,
+} from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidateFundingRequestReva = graphql(`
@@ -143,14 +146,28 @@ export const useCandidacyFunding = (candidacyId: string) => {
   const candidacyHasDroppedOutAndIsIncomplete = !!(
     candidacy?.candidacyDropOut &&
     candidacy.candidacyStatuses.some(
-      (status) =>
-        status.status === "DOSSIER_FAISABILITE_INCOMPLET" && status.isActive,
+      (status) => status.status === "DOSSIER_FAISABILITE_INCOMPLET",
     )
   );
   const candidacyIsNotRecevable = !!candidacy?.candidacyStatuses.some(
     (status) =>
       status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE" && status.isActive,
   );
+  const candidacyStatusEligible: CandidacyStatusStep[] = [
+    "DOSSIER_FAISABILITE_INCOMPLET",
+    "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    "DEMANDE_FINANCEMENT_ENVOYE",
+    "PRISE_EN_CHARGE",
+    "ARCHIVE",
+    "DOSSIER_FAISABILITE_RECEVABLE",
+    "DEMANDE_PAIEMENT_ENVOYEE",
+  ];
+  const isEligibleToViewFundingRequest =
+    !candidacyIsLoading &&
+    !!candidacy?.candidacyStatuses.some(
+      ({ status, isActive }) =>
+        candidacyStatusEligible.includes(status) && isActive,
+    );
 
   const { data: candidateFundingRequestRevaData } = useQuery({
     queryKey: [candidacyId, "getCandidateFundingRequestReva"],
@@ -174,5 +191,6 @@ export const useCandidacyFunding = (candidacyId: string) => {
     candidacyHasAlreadyFundingRequest,
     candidacyHasDroppedOutAndIsIncomplete,
     candidacyIsNotRecevable,
+    isEligibleToViewFundingRequest,
   };
 };
