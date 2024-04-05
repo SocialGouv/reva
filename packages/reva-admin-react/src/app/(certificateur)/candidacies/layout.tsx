@@ -150,7 +150,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       category: "INCOMPLETE",
     }),
     menuItem({
-      text: `Dossiers archivés (${feasibilityCountByCategory?.ARCHIVED})`,
+      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED})`,
       path: "/candidacies/feasibilities",
       category: "ARCHIVED",
     }),
