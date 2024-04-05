@@ -64,7 +64,7 @@ const FundingPage = () => {
   const isForfaitOnly =
     candidacyHasDroppedOutAndIsIncomplete || candidacyIsNotRecevable;
 
-  const candidacyToFormData = useMemo(
+  const candidacyFormData = useMemo(
     () => ({
       candidateSecondname: candidacy?.candidate?.firstname2 ?? "",
       candidateThirdname: candidacy?.candidate?.firstname3 ?? "",
@@ -101,7 +101,7 @@ const FundingPage = () => {
 
   const methods = useForm<CandidacyFundingFormData>({
     resolver: zodResolver(candidacyFundingSchema),
-    defaultValues: candidacyToFormData,
+    defaultValues: candidacyFormData,
   });
 
   const {
@@ -137,9 +137,9 @@ const FundingPage = () => {
 
   useEffect(() => {
     if (candidacy) {
-      reset(candidacyToFormData);
+      reset(candidacyFormData);
     }
-  }, [candidacy, reset, candidacyToFormData]);
+  }, [candidacy, reset, candidacyFormData]);
 
   return (
     <div className="flex flex-col w-full p-2">
@@ -153,7 +153,7 @@ const FundingPage = () => {
           onSubmit={handleSubmit(onSubmit)}
           onReset={(e) => {
             e.preventDefault();
-            reset(candidacyToFormData);
+            reset(candidacyFormData);
           }}
         >
           <InformationCandidatBlock
@@ -178,6 +178,7 @@ const FundingPage = () => {
                   label:
                     "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
                   nativeInputProps: {
+                    disabled: isReadOnly || isSubmitting,
                     checked: formConfirmation,
                     onChange: (e) => setFormConfirmation(e.target.checked),
                   },
