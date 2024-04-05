@@ -144,11 +144,14 @@ const FundingPage = () => {
     }
   }, [candidacy, reset, candidacyFormData]);
 
-  if (!candidacyIsLoading) return null;
+  if (candidacyIsLoading) {
+    return null;
+  }
 
   if (!isEligibleToViewFundingRequest) {
     router.push(`/candidacies/${candidacyId}/summary`);
   }
+
   return (
     <div className="flex flex-col w-full p-2">
       <div>
