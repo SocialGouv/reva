@@ -152,10 +152,7 @@ export const useCandidacyFunding = (candidacyId: string) => {
       status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE" && status.isActive,
   );
 
-  const {
-    data: candidateFundingRequestRevaData,
-    isLoading: candidateFundingRequestRevaIsLoading,
-  } = useQuery({
+  const { data: candidateFundingRequestRevaData } = useQuery({
     queryKey: [candidacyId, "getCandidateFundingRequestReva"],
     queryFn: () =>
       graphqlClient.request(getCandidateFundingRequestReva, { candidacyId }),
