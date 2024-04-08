@@ -144,7 +144,7 @@ export const ParcoursPersonnaliseBlock = ({
           </fieldset>
 
           <h3 className="text-lg my-6">Compléments formatifs</h3>
-          <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6">
+          <fieldset className="flex flex-col w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg pt-6">
             <div className="flex flex-col md:flex-row gap-4 justify-between px-5">
               <div className="flex-1">
                 <h4 className="text-base font-normal pb-1">
@@ -197,7 +197,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
+            <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4">
               <div className="flex-1">
                 <h4 className="text-base font-normal pb-1">Savoir de base</h4>
                 <div className="overflow-y-auto max-h-[200px]">
@@ -240,7 +240,9 @@ export const ParcoursPersonnaliseBlock = ({
 
             <div className="flex flex-col md:flex-row gap-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
               <div className="flex-1">
-                <h4 className="text-base font-normal">Bloc de compétences</h4>
+                <h4 className="text-base font-normal pb-1">
+                  Bloc de compétences
+                </h4>
                 <p className="m-0 text-sm text-gray-500">
                   {candidacy?.certificateSkills}
                 </p>
@@ -281,7 +283,7 @@ export const ParcoursPersonnaliseBlock = ({
 
             <div className="flex flex-col md:flex-row gap-4 justify-between px-5 pt-2">
               <div className="flex-1">
-                <h4 className="text-base font-normal">Autres</h4>
+                <h4 className="text-base font-normal pb-1">Autres</h4>
                 <p className="m-0 text-sm text-gray-500">
                   {candidacy?.otherTraining}
                 </p>
