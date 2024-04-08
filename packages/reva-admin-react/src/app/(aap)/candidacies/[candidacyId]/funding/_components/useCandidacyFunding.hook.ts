@@ -149,26 +149,20 @@ export const useCandidacyFunding = (candidacyId: string) => {
       (status) => status.status === "DOSSIER_FAISABILITE_INCOMPLET",
     )
   );
+
   const candidacyIsNotRecevable = !!candidacy?.candidacyStatuses.some(
-    (status) =>
-      status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE" && status.isActive,
+    (status) => status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE",
   );
+
   const candidacyStatusEligible: CandidacyStatusStep[] = [
     "DOSSIER_FAISABILITE_RECEVABLE",
     "DOSSIER_FAISABILITE_INCOMPLET",
     "DOSSIER_FAISABILITE_NON_RECEVABLE",
-    "DEMANDE_FINANCEMENT_ENVOYE",
-    "PRISE_EN_CHARGE",
-    "DEMANDE_PAIEMENT_ENVOYEE",
-    "ARCHIVE",
-    "DOSSIER_DE_VALIDATION_ENVOYE",
-    "DOSSIER_DE_VALIDATION_SIGNALE",
   ];
   const isEligibleToViewFundingRequest =
     !candidacyIsLoading &&
-    !!candidacy?.candidacyStatuses.some(
-      ({ status, isActive }) =>
-        candidacyStatusEligible.includes(status) && isActive,
+    !!candidacy?.candidacyStatuses.some(({ status }) =>
+      candidacyStatusEligible.includes(status),
     );
 
   const { data: candidateFundingRequestRevaData } = useQuery({
@@ -192,7 +186,7 @@ export const useCandidacyFunding = (candidacyId: string) => {
     candidacyIsXpReva,
     candidacyHasAlreadyFundingRequest,
     candidacyHasDroppedOutAndIsIncomplete,
-    candidacyIsNotRecevable,
     isEligibleToViewFundingRequest,
+    candidacyIsNotRecevable,
   };
 };
