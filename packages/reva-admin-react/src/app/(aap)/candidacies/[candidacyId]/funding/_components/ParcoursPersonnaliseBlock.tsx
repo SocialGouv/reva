@@ -82,6 +82,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("individualHourCount", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.individualHourCount?.message as string
@@ -97,6 +98,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("individualCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={errors.individualCost?.message as string}
                 state={errors.individualCost ? "error" : "default"}
@@ -114,6 +116,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("collectiveHourCount", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.collectiveHourCount?.message as string
@@ -129,6 +132,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("collectiveCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={errors.collectiveCost?.message as string}
                 state={errors.collectiveCost ? "error" : "default"}
@@ -171,6 +175,7 @@ export const ParcoursPersonnaliseBlock = ({
                   }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.mandatoryTrainingsHourCount?.message as string
@@ -188,6 +193,7 @@ export const ParcoursPersonnaliseBlock = ({
                   }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.mandatoryTrainingsCost?.message as string
@@ -216,6 +222,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("basicSkillsHourCount", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.basicSkillsHourCount?.message as string
@@ -231,6 +238,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("basicSkillsCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={errors.basicSkillsCost?.message as string}
                 state={errors.basicSkillsCost ? "error" : "default"}
@@ -257,6 +265,7 @@ export const ParcoursPersonnaliseBlock = ({
                   }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.certificateSkillsHourCount?.message as string
@@ -272,6 +281,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("certificateSkillsCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.certificateSkillsCost?.message as string
@@ -298,6 +308,7 @@ export const ParcoursPersonnaliseBlock = ({
                   }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.otherTrainingHourCount?.message as string
@@ -313,6 +324,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("otherTrainingCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
+                  step: 0.1,
                 }}
                 stateRelatedMessage={
                   errors.otherTrainingCost?.message as string
