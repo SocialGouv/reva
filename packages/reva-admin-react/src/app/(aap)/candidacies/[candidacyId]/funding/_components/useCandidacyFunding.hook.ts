@@ -149,9 +149,11 @@ export const useCandidacyFunding = (candidacyId: string) => {
       (status) => status.status === "DOSSIER_FAISABILITE_INCOMPLET",
     )
   );
-
   const candidacyIsNotRecevable = !!candidacy?.candidacyStatuses.some(
     (status) => status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE",
+  );
+  const candidacyIsRecevable = !!candidacy?.candidacyStatuses.some(
+    (status) => status.status === "DOSSIER_FAISABILITE_RECEVABLE",
   );
 
   const candidacyStatusEligible: CandidacyStatusStep[] = [
@@ -188,5 +190,6 @@ export const useCandidacyFunding = (candidacyId: string) => {
     candidacyHasDroppedOutAndIsIncomplete,
     isEligibleToViewFundingRequest,
     candidacyIsNotRecevable,
+    candidacyIsRecevable,
   };
 };

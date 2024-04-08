@@ -87,11 +87,13 @@ const FundingPage = () => {
     isEligibleToViewFundingRequest,
     candidacyIsNotRecevable,
     candidacyHasDroppedOutAndIsIncomplete,
+    candidacyIsRecevable,
   } = useCandidacyFunding(candidacyId);
 
   const isReadOnly = candidacyIsXpReva || candidacyHasAlreadyFundingRequest;
   const isForfaitOnly =
-    candidacyIsNotRecevable || candidacyHasDroppedOutAndIsIncomplete;
+    (candidacyIsNotRecevable || candidacyHasDroppedOutAndIsIncomplete) &&
+    !candidacyIsRecevable;
 
   const candidacyFormData = useMemo(
     () => ({
