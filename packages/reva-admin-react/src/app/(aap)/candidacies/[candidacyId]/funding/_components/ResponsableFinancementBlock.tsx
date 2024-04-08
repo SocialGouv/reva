@@ -16,7 +16,7 @@ export const ResponsableFinancementBlock = ({
       <legend>
         <h2 className="text-xl">4. Responsable du financement</h2>
       </legend>
-      <fieldset className="grid grid-cols-2 gap-x-4 w-full">
+      <fieldset className="grid md:grid-cols-2 gap-4 w-full">
         <Input
           label="Nom (optionnel)"
           nativeInputProps={register("fundingContactFirstname")}

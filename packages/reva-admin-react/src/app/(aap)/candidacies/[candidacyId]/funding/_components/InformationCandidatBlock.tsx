@@ -26,7 +26,7 @@ export const InformationCandidatBlock = ({
       <legend>
         <h2 className="text-xl">1. Informations du candidat</h2>
       </legend>
-      <fieldset className="grid grid-cols-2 gap-x-4 w-full">
+      <fieldset className="grid md:grid-cols-2 gap-x-4 w-full">
         <Input
           label="Nom"
           nativeInputProps={{ value: candidacy?.candidate?.lastname ?? "" }}

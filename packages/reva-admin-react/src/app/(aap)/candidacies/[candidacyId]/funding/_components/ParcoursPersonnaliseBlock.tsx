@@ -52,7 +52,7 @@ export const ParcoursPersonnaliseBlock = ({
         <h2 className="text-xl">3. Parcours personnalisé</h2>
       </legend>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <div>
           <h3 className="text-lg mb-2 font-medium">
             Forfait d'étude de faisabilité et entretien post-jury
@@ -62,7 +62,7 @@ export const ParcoursPersonnaliseBlock = ({
             être demandé que si l'étude a été réalisée dans sa totalité.
           </p>
         </div>
-        <div className="pl-6">
+        <div className="md:pl-6">
           <h4 className="text-base mb-2 font-medium">FORFAIT</h4>
           <p>300€ net</p>
         </div>
@@ -72,7 +72,7 @@ export const ParcoursPersonnaliseBlock = ({
         <>
           <h3 className="text-lg">Accompagnement (optionnel)</h3>
           <fieldset className="flex flex-col w-full border-[1px] border-default-grey rounded-lg py-5">
-            <div className="flex gap-x-4 justify-between px-5">
+            <div className="flex flex-col md:flex-row gap-4 justify-between px-5">
               <h4 className="text-base flex-1 font-normal">Individuel</h4>
               <Input
                 className="flex-1"
@@ -104,7 +104,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-6">
               <h4 className="text-base flex-1 font-normal">Collectif</h4>
               <Input
                 className="flex-1"
@@ -136,7 +136,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex gap-x-4 justify-between px-5 pt-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between px-5 pt-6">
               <p className="flex-1 m-0">Sous-total des accompagnements</p>
               <p className="flex-1 m-0">{accompagnementHourCount} h</p>
               <p className="flex-1 m-0">{accompagnementCost} €</p>
@@ -144,8 +144,8 @@ export const ParcoursPersonnaliseBlock = ({
           </fieldset>
 
           <h3 className="text-lg my-6">Compléments formatifs</h3>
-          <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6 ">
-            <div className="flex gap-x-4 justify-between px-5 ">
+          <fieldset className="flex flex-col gap-4 w-full border-[1px] border-b-0 border-default-grey rounded-tr-lg rounded-tl-lg py-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between px-5">
               <div className="flex-1">
                 <h4 className="text-base font-normal pb-1">
                   Formation obligatoire
@@ -197,7 +197,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex gap-x-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
+            <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-l-0 border-r-0 border-default-grey px-5 pt-4 pb-2">
               <div className="flex-1">
                 <h4 className="text-base font-normal pb-1">Savoir de base</h4>
                 <div className="overflow-y-auto max-h-[200px]">
@@ -238,7 +238,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex gap-x-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
+            <div className="flex flex-col md:flex-row gap-4 justify-between border-b-[1px] border-default-grey px-5 pt-2">
               <div className="flex-1">
                 <h4 className="text-base font-normal">Bloc de compétences</h4>
                 <p className="m-0 text-sm text-gray-500">
@@ -279,7 +279,7 @@ export const ParcoursPersonnaliseBlock = ({
               />
             </div>
 
-            <div className="flex gap-x-4 justify-between px-5 pt-2">
+            <div className="flex flex-col md:flex-row gap-4 justify-between px-5 pt-2">
               <div className="flex-1">
                 <h4 className="text-base font-normal">Autres</h4>
                 <p className="m-0 text-sm text-gray-500">
@@ -321,13 +321,13 @@ export const ParcoursPersonnaliseBlock = ({
             </div>
           </fieldset>
 
-          <div className="flex gap-x-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
+          <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
             <p className="flex-1">Sous-total des compléments formatifs</p>
             <p className="flex-1">{complementsFormatifsHourCount} h</p>
             <p className="flex-1">{complementsFormatifsCost} €</p>
           </div>
 
-          <div className="flex gap-x-4 justify-between pt-6 px-5">
+          <div className="flex flex-col md:flex-row gap-4 justify-between pt-6 px-5">
             <p className="flex-1 m-0 text-lg font-bold">Total</p>
             <p className="flex-1 m-0">{totalHourCount} h</p>
             <p className="flex-1 m-0">{totalCost} €</p>

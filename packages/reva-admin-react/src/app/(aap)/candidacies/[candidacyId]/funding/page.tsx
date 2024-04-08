@@ -153,7 +153,7 @@ const FundingPage = () => {
   }
 
   return (
-    <div className="flex flex-col w-full p-2">
+    <div className="flex flex-col w-full p-1 md:p-2">
       <div>
         <h1>Demande de prise en charge</h1>
         <FormOptionalFieldsDisclaimer />
@@ -181,8 +181,10 @@ const FundingPage = () => {
           />
           <CustomSeparator />
           <ResponsableFinancementBlock isReadOnly={isReadOnly} />
-          <GrayCard className="pb-2">
-            <h2 className="text-xl">Avant de finaliser votre envoi :</h2>
+          <GrayCard className="mt-4 md:mt-0 pb-2">
+            <h2 className="text-lg md:text-xl">
+              Avant de finaliser votre envoi :
+            </h2>
             <Checkbox
               options={[
                 {
