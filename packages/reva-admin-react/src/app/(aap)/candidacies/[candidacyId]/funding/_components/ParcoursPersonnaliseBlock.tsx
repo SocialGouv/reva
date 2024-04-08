@@ -98,7 +98,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("individualCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={errors.individualCost?.message as string}
                 state={errors.individualCost ? "error" : "default"}
@@ -132,7 +132,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("collectiveCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={errors.collectiveCost?.message as string}
                 state={errors.collectiveCost ? "error" : "default"}
@@ -143,7 +143,7 @@ export const ParcoursPersonnaliseBlock = ({
             <div className="flex flex-col md:flex-row gap-4 justify-between px-5 pt-6">
               <p className="flex-1 m-0">Sous-total des accompagnements</p>
               <p className="flex-1 m-0">{accompagnementHourCount} h</p>
-              <p className="flex-1 m-0">{accompagnementCost} €</p>
+              <p className="flex-1 m-0">{accompagnementCost.toFixed(2)} €</p>
             </div>
           </fieldset>
 
@@ -193,7 +193,7 @@ export const ParcoursPersonnaliseBlock = ({
                   }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={
                   errors.mandatoryTrainingsCost?.message as string
@@ -238,7 +238,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("basicSkillsCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={errors.basicSkillsCost?.message as string}
                 state={errors.basicSkillsCost ? "error" : "default"}
@@ -281,7 +281,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("certificateSkillsCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={
                   errors.certificateSkillsCost?.message as string
@@ -324,7 +324,7 @@ export const ParcoursPersonnaliseBlock = ({
                   ...register("otherTrainingCost", { valueAsNumber: true }),
                   type: "number",
                   min: 0,
-                  step: 0.1,
+                  step: 0.01,
                 }}
                 stateRelatedMessage={
                   errors.otherTrainingCost?.message as string
@@ -338,7 +338,7 @@ export const ParcoursPersonnaliseBlock = ({
           <div className="flex flex-col md:flex-row gap-4 justify-between border-[1px] border-default-grey rounded-br-lg rounded-bl-lg px-5 pt-6">
             <p className="flex-1">Sous-total des compléments formatifs</p>
             <p className="flex-1">{complementsFormatifsHourCount} h</p>
-            <p className="flex-1">{complementsFormatifsCost} €</p>
+            <p className="flex-1">{complementsFormatifsCost.toFixed(2)} €</p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 justify-between pt-6 px-5">
