@@ -18,22 +18,48 @@ import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
 import { z } from "zod";
 
+const errorNumber = "Veuillez saisir une valeur numérique.";
+
 const candidacyFundingSchema = z.object({
   candidateSecondname: z.string().optional(),
   candidateThirdname: z.string().optional(),
   candidateGender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
-  individualHourCount: z.number(),
-  individualCost: z.number(),
-  collectiveHourCount: z.number(),
-  collectiveCost: z.number(),
-  basicSkillsHourCount: z.number(),
-  basicSkillsCost: z.number(),
-  mandatoryTrainingsHourCount: z.number(),
-  mandatoryTrainingsCost: z.number(),
-  certificateSkillsHourCount: z.number(),
-  certificateSkillsCost: z.number(),
-  otherTrainingHourCount: z.number(),
-  otherTrainingCost: z.number(),
+  individualHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  individualCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  collectiveHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  collectiveCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  basicSkillsHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  basicSkillsCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  mandatoryTrainingsHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  mandatoryTrainingsCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  certificateSkillsHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  certificateSkillsCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  otherTrainingHourCount: z.number({
+    invalid_type_error: errorNumber,
+  }),
+  otherTrainingCost: z.number({
+    invalid_type_error: errorNumber,
+  }),
   fundingContactFirstname: z.string().optional(),
   fundingContactLastname: z.string().optional(),
   fundingContactEmail: z.string().optional(),
