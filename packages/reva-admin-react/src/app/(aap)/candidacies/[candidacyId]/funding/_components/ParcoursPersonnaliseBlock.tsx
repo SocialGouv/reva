@@ -63,7 +63,7 @@ export const ParcoursPersonnaliseBlock = ({
           </p>
         </div>
         <div className="md:pl-6">
-          <h4 className="text-base mb-2 font-medium">FORFAIT</h4>
+          <h4 className="text-base mb-2 font-medium uppercase">Forfait</h4>
           <p>300€ net</p>
         </div>
       </div>
