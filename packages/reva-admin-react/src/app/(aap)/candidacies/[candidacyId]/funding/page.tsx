@@ -203,7 +203,7 @@ const FundingPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty: (isDirty || formConfirmation) && !isReadOnly,
+              isDirty: isDirty && formConfirmation && !isReadOnly,
               isSubmitting,
             }}
           />
