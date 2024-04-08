@@ -6,7 +6,6 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
 import Data.Referential exposing (Referential)
-import Html exposing (Html, p, span, text)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import View

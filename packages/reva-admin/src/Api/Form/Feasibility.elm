@@ -3,7 +3,6 @@ module Api.Form.Feasibility exposing (..)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.CertificationAuthority exposing (CertificationAuthority)
-import Data.Feasibility exposing (Decision(..))
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility
 import Data.Referential

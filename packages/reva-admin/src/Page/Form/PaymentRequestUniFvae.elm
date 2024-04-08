@@ -1,9 +1,6 @@
 module Page.Form.PaymentRequestUniFvae exposing (form)
 
 import Accessibility exposing (Html, div, h3, h4, p, span, text)
-import Accessibility.Aria as Aria
-import Admin.Enum.Gender exposing (Gender(..))
-import Admin.Object.FundingRequest exposing (numAction)
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)

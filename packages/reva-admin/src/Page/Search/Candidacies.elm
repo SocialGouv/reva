@@ -7,7 +7,7 @@ module Page.Search.Candidacies exposing
     , withFilters
     )
 
-import Accessibility exposing (a, h1, h3)
+import Accessibility exposing (h1, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep
 import Api.Candidacy
@@ -17,8 +17,8 @@ import Data.Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacySumm
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential
-import Html exposing (Html, div, li, nav, p, text, ul)
-import Html.Attributes exposing (attribute, class, classList, href, target)
+import Html exposing (Html, div, nav, p, text)
+import Html.Attributes exposing (attribute, class, classList)
 import Html.Attributes.Extra exposing (role)
 import Page.Search as Search
 import RemoteData exposing (RemoteData(..))

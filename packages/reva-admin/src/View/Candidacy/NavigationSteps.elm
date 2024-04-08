@@ -1,9 +1,6 @@
 module View.Candidacy.NavigationSteps exposing (view)
 
 import Admin.Enum.CandidacyMenuEntryStatus as CandidacyMenuEntryStatus
-import Admin.Enum.FinanceModule exposing (FinanceModule(..))
-import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
-import Admin.Object.CandidacyMenu exposing (menuFooter)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy exposing (Candidacy, CandidacyMenuEntry)
 import Html exposing (Html, div, h2, span, text)

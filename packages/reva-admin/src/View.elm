@@ -1,6 +1,6 @@
 module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, summaryBlockWithItems, title, warningHint)
 
-import Accessibility exposing (a, br, button, h3, h5, hr, nav, p, span)
+import Accessibility exposing (br, button, h3, h5, hr, nav, p, span)
 import Accessibility.Aria as Aria
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons

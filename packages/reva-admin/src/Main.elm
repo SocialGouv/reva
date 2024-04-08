@@ -1,7 +1,6 @@
 port module Main exposing (Page)
 
 import Accessibility exposing (h1)
-import Admin.Object.CandidacySummaryFilterInfo exposing (active)
 import Api.FeatureFlipping exposing (getActiveFeatures)
 import Api.Token exposing (Token)
 import Browser

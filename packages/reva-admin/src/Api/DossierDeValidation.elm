@@ -2,10 +2,8 @@ module Api.DossierDeValidation exposing (selection)
 
 import Admin.Object
 import Admin.Object.DossierDeValidation
-import Admin.Scalar exposing (Uuid(..))
 import Api.File as File
 import Data.DossierDeValidation
-import File
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 
 

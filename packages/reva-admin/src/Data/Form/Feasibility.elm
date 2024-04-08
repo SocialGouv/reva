@@ -1,6 +1,5 @@
 module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisionToString, fromDict, hasOptionalFiles, keys, validate, validateSubmittedFiles)
 
-import Admin.Object.Feasibility exposing (iDFile)
 import Data.Candidacy exposing (Candidacy)
 import Data.Feasibility exposing (Feasibility)
 import Data.Form exposing (FormData)

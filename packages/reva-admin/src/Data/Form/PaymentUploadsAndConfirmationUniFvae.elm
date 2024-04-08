@@ -4,7 +4,6 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
-import Route exposing (Route(..))
 
 
 keys =

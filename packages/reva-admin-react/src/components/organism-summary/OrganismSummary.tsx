@@ -1,7 +1,5 @@
 import { format } from "date-fns";
 import { ReactNode } from "react";
-import { TreeSelect, TreeSelectItem } from "@/components/tree-select";
-import { isInterventionZoneIsFullySelectedWithoutDOM } from "@/utils";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 export type Typology =

@@ -5,7 +5,6 @@ import Data.Feasibility exposing (Decision(..), Feasibility)
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Time exposing (Posix)
-import View
 import View.Date
 
 

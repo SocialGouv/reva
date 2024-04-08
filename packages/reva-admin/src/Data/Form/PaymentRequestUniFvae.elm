@@ -7,7 +7,6 @@ module Data.Form.PaymentRequestUniFvae exposing
     , validate
     )
 
-import Admin.Enum.Gender exposing (Gender(..))
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)

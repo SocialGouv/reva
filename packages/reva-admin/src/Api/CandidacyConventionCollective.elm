@@ -4,7 +4,6 @@ import Admin.Object
 import Admin.Object.CandidacyConventionCollective
 import Admin.Object.CandidacyConventionCollectivePaginated
 import Admin.Query as Query
-import Admin.Scalar exposing (Uuid(..))
 import Api.Auth as Auth
 import Api.Pagination exposing (pageInfoSelection)
 import Api.Token exposing (Token)
