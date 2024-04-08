@@ -139,6 +139,7 @@ const FundingPage = () => {
     reset,
     handleSubmit,
     setError,
+    setFocus,
     formState: { isDirty, isSubmitting, isValid },
   } = methods;
 
@@ -148,7 +149,7 @@ const FundingPage = () => {
       successToast("La demande de financement a bien été enregistrée.");
     } catch (e: any) {
       if (e.response?.errors) {
-        e.response.errors.forEach((error: any) => {
+        return e.response.errors.forEach((error: any) => {
           const isInputError = error.message.startsWith("input.");
           if (isInputError) {
             const errorField = error.message.split(".")[1].split(":")[0];
@@ -157,12 +158,14 @@ const FundingPage = () => {
               setError(errorField as keyof CandidacyFundingFormData, {
                 message: errorMessage,
               });
+              setFocus(errorField as keyof CandidacyFundingFormData);
+              return;
             }
           }
+          graphqlErrorToast(e);
         });
-      } else {
-        graphqlErrorToast(e);
       }
+      graphqlErrorToast(e);
     }
   };
 
