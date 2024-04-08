@@ -137,7 +137,7 @@ const FundingPage = () => {
     reset,
     handleSubmit,
     setError,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, isValid },
   } = methods;
 
   const onSubmit = async (data: CandidacyFundingFormData) => {
@@ -207,11 +207,12 @@ const FundingPage = () => {
           />
           <CustomSeparator />
           <ResponsableFinancementBlock isReadOnly={isReadOnly} />
-          <GrayCard className="mt-4 md:mt-0 pb-2">
+          <GrayCard className="mt-4 md:mt-0">
             <h2 className="text-lg md:text-xl">
               Avant de finaliser votre envoi :
             </h2>
             <Checkbox
+              className="mb-0"
               options={[
                 {
                   label:
@@ -223,13 +224,19 @@ const FundingPage = () => {
                   },
                 },
               ]}
+              state={formConfirmation || isReadOnly ? "default" : "error"}
+              stateRelatedMessage={
+                formConfirmation || isReadOnly
+                  ? ""
+                  : "Veuillez confirmer le montant de la prise en charge."
+              }
             />
           </GrayCard>
 
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty: isDirty && formConfirmation && !isReadOnly,
+              isDirty: (isDirty || isValid) && formConfirmation && !isReadOnly,
               isSubmitting,
             }}
           />
