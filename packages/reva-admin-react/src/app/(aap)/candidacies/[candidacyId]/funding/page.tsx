@@ -85,15 +85,15 @@ const FundingPage = () => {
     candidacyIsLoading,
     candidacyFundingRequest,
     isEligibleToViewFundingRequest,
-    candidacyIsNotRecevable,
-    candidacyHasDroppedOutAndIsIncomplete,
-    candidacyIsRecevable,
+    candidacyHasBeenNotRecevable,
+    candidacyHasBeenDroppedOutAndIncomplete,
+    candidacyHasBeenRecevable,
   } = useCandidacyFunding(candidacyId);
 
   const isReadOnly = candidacyIsXpReva || candidacyHasAlreadyFundingRequest;
   const isForfaitOnly =
-    (candidacyIsNotRecevable || candidacyHasDroppedOutAndIsIncomplete) &&
-    !candidacyIsRecevable;
+    (candidacyHasBeenNotRecevable || candidacyHasBeenDroppedOutAndIncomplete) &&
+    !candidacyHasBeenRecevable;
 
   const candidacyFormData = useMemo(
     () => ({

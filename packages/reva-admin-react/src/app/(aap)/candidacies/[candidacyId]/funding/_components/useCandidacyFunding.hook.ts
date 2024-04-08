@@ -143,16 +143,16 @@ export const useCandidacyFunding = (candidacyId: string) => {
   const candidacy = candidacyData?.getCandidacyById;
   const candidacyIsXpReva = candidacy?.financeModule === "unireva";
   const candidacyHasAlreadyFundingRequest = !!candidacy?.fundingRequestUnifvae;
-  const candidacyHasDroppedOutAndIsIncomplete = !!(
+  const candidacyHasBeenDroppedOutAndIncomplete = !!(
     candidacy?.candidacyDropOut &&
     candidacy.candidacyStatuses.some(
       (status) => status.status === "DOSSIER_FAISABILITE_INCOMPLET",
     )
   );
-  const candidacyIsNotRecevable = !!candidacy?.candidacyStatuses.some(
+  const candidacyHasBeenNotRecevable = !!candidacy?.candidacyStatuses.some(
     (status) => status.status === "DOSSIER_FAISABILITE_NON_RECEVABLE",
   );
-  const candidacyIsRecevable = !!candidacy?.candidacyStatuses.some(
+  const candidacyHasBeenRecevable = !!candidacy?.candidacyStatuses.some(
     (status) => status.status === "DOSSIER_FAISABILITE_RECEVABLE",
   );
 
@@ -187,9 +187,9 @@ export const useCandidacyFunding = (candidacyId: string) => {
     candidacyFundingRequest,
     candidacyIsXpReva,
     candidacyHasAlreadyFundingRequest,
-    candidacyHasDroppedOutAndIsIncomplete,
+    candidacyHasBeenDroppedOutAndIncomplete,
     isEligibleToViewFundingRequest,
-    candidacyIsNotRecevable,
-    candidacyIsRecevable,
+    candidacyHasBeenNotRecevable,
+    candidacyHasBeenRecevable,
   };
 };
