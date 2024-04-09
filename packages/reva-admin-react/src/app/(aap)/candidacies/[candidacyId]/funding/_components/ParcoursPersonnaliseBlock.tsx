@@ -344,7 +344,7 @@ export const ParcoursPersonnaliseBlock = ({
           <div className="flex flex-col md:flex-row gap-4 justify-between pt-6 px-5">
             <p className="flex-1 m-0 text-lg font-bold">Total</p>
             <p className="flex-1 m-0">{totalHourCount} h</p>
-            <p className="flex-1 m-0">{totalCost} €</p>
+            <p className="flex-1 m-0">{totalCost.toFixed(2)} €</p>
           </div>
         </>
       )}
