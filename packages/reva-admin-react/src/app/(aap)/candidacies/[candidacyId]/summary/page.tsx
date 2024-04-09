@@ -12,14 +12,11 @@ import CandidacySectionCard from "./_components/CandidacySectionCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useHooksAccount } from "./summary.hooks";
-import { useAuth } from "@/components/auth/auth";
-import { CopyClipBoard } from "@/components/copy-clip-board";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useEffect } from "react";
 import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
+import { Impersonate } from "@/components/impersonate";
 
 const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
 
@@ -31,9 +28,6 @@ const CandidacySummaryPage = () => {
   }>();
   const router = useRouter();
 
-  const { isFeatureActive } = useFeatureflipping();
-  const { isAdmin } = useAuth();
-  const { getImpersonateUrl } = useHooksAccount();
   const { candidacy } = useCandidateSummary(candidacyId);
 
   const { takeOverCandidacy } = useTakeOverCandidacy();
@@ -105,20 +99,7 @@ const CandidacySummaryPage = () => {
         <div className="flex justify-between mb-1">
           <h1>Résumé de la candidature</h1>
 
-          {isFeatureActive("IMPERSONATE") && isAdmin && (
-            <CopyClipBoard
-              onClick={async (callback) => {
-                const url = await getImpersonateUrl(candidacy.candidate?.id);
-                if (url) {
-                  callback(url);
-                }
-              }}
-            >
-              <Button priority="secondary" type="button">
-                Impersonate
-              </Button>
-            </CopyClipBoard>
-          )}
+          <Impersonate candidateId={candidacy.candidate?.id} />
         </div>
 
         <p>
