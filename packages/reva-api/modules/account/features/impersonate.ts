@@ -27,10 +27,10 @@ export const getImpersonateUrl = async (
 
   if (accountId) {
     const token = await getImpersonateUrlForAccount(context, { accountId });
-    return `${baseUrl}/api/account/impersonate/${token}`;
+    return `${baseUrl}/api/account/impersonate?token=${token}`;
   } else if (candidateId) {
     const token = await getImpersonateUrlForCandidate(context, { candidateId });
-    return `${baseUrl}/api/account/impersonate/${token}`;
+    return `${baseUrl}/api/account/impersonate?token=${token}`;
   }
 
   return undefined;
@@ -92,7 +92,7 @@ const getImpersonateUrlForAccount = async (
     }
   }
 
-  const token = TokenService.getInstance().getTokenId({
+  const token = TokenService.getInstance().getToken({
     accountId: accountToUpdate.keycloakId,
   });
   return token;
@@ -136,7 +136,7 @@ const getImpersonateUrlForCandidate = async (
     );
   }
 
-  const token = TokenService.getInstance().getTokenId({
+  const token = TokenService.getInstance().getToken({
     candidateId: candidateToUpdate.keycloakId,
   });
 
