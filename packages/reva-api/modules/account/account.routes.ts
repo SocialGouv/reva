@@ -3,9 +3,9 @@ import { FastifyPluginAsync } from "fastify";
 import { impersonate } from "./features/impersonate";
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
-  server.get<{ Params: { token: string } }>("/account/impersonate/:token", {
+  server.get<{ Querystring: { token: string } }>("/account/impersonate", {
     schema: {
-      params: {
+      querystring: {
         type: "object",
         properties: {
           token: { type: "string" },
@@ -14,7 +14,7 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
       },
     },
     handler: async (request, reply) => {
-      const { token } = request.params;
+      const { token } = request.query;
 
       const data = await impersonate(token);
 

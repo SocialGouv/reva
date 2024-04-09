@@ -1,5 +1,5 @@
-import { add, isBefore } from "date-fns";
-import { v4 } from "uuid";
+import CryptoJS from "crypto-js";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const TOKEN_LIFETIME_IN_SECONDS = 60;
 
@@ -7,37 +7,13 @@ export type Payload = {
   [key: string]: string;
 };
 
-class Token {
-  id: string;
-  createdAt: Date;
-  payload: Payload;
-  lifetime?: number;
-
-  constructor(params: { payload: Payload; lifetime?: number }) {
-    this.id = v4();
-    this.createdAt = new Date();
-    this.payload = params.payload;
-    this.lifetime = params.lifetime || TOKEN_LIFETIME_IN_SECONDS;
-  }
-
-  get isExpired(): boolean {
-    const expirationDate = add(this.createdAt, {
-      seconds: this.lifetime,
-    });
-
-    return isBefore(expirationDate, new Date());
-  }
-}
-
 interface TokenServiceInterface {
-  getTokenId(payload: Payload, lifetime?: number): string;
+  getToken(payload: Payload, lifetime?: number): string;
   getPayload(token: string): Payload | undefined;
 }
 
 export class TokenService implements TokenServiceInterface {
   private static instance: TokenService;
-
-  private tokens: Token[] = [];
 
   public static getInstance(): TokenService {
     if (!TokenService.instance) {
@@ -49,33 +25,48 @@ export class TokenService implements TokenServiceInterface {
 
   private constructor() {}
 
-  getTokenId(payload: Payload, lifetime?: number): string {
-    const token = new Token({ payload, lifetime });
-    this.tokens.push(token);
-    return token.id;
+  getToken(payload: Payload, lifetime?: number): string {
+    const token = this.generateJwt(payload, lifetime);
+    return token;
   }
 
-  getPayload(tokenId: string): Payload | undefined {
+  private generateJwt = (
+    payload: unknown,
+    expiresIn: number = TOKEN_LIFETIME_IN_SECONDS,
+  ): string => {
+    const data = JSON.stringify(payload);
+    const cryptedData = CryptoJS.AES.encrypt(
+      data,
+      process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
+    );
+
+    const token = jwt.sign(
+      { data: cryptedData.toString() },
+      process.env.JWT_PRIVATE_KEY || "secret",
+      { expiresIn },
+    );
+
+    return token;
+  };
+
+  getPayload(token: string): Payload | undefined {
     try {
-      const token = this.tokens.find((t) => t.id === tokenId);
-      if (!token) {
-        throw new Error("Token not found");
-      }
+      const tokenData = jwt.verify(
+        token,
+        process.env.JWT_PRIVATE_KEY || "secret",
+      ) as JwtPayload;
+      const dataBytes = CryptoJS.AES.decrypt(
+        tokenData.data,
+        process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
+      );
 
-      this.invalidToken(token.id);
+      const data = dataBytes.toString(CryptoJS.enc.Utf8);
 
-      if (token.isExpired) {
-        throw new Error("Token is expired");
-      }
+      const payload = JSON.parse(data);
 
-      return token.payload;
+      return payload;
     } catch (error) {
-      this.invalidToken(tokenId);
       console.error(error);
     }
-  }
-
-  invalidToken(tokenId: string): void {
-    this.tokens = this.tokens.filter((t) => t.id !== tokenId);
   }
 }
