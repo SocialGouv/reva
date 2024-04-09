@@ -8,7 +8,7 @@ import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
 import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
@@ -64,6 +64,7 @@ const candidacyFundingSchema = z.object({
   fundingContactLastname: z.string().optional(),
   fundingContactEmail: z.string().optional(),
   fundingContactPhone: z.string().optional(),
+  confirmation: z.literal<boolean>(true),
 });
 
 type CandidacyFundingFormData = z.infer<typeof candidacyFundingSchema>;
@@ -74,7 +75,6 @@ const FundingPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-  const [formConfirmation, setFormConfirmation] = useState(false);
   const router = useRouter();
 
   const {
@@ -140,12 +140,15 @@ const FundingPage = () => {
     handleSubmit,
     setError,
     setFocus,
-    formState: { isDirty, isSubmitting, isValid },
+    register,
+    formState: { isDirty, isSubmitting, errors },
   } = methods;
 
   const onSubmit = async (data: CandidacyFundingFormData) => {
+    const dataToSend = JSON.parse(JSON.stringify(data));
+    delete dataToSend.confirmation;
     try {
-      await createFundingRequestUnifvaeMutate(data);
+      await createFundingRequestUnifvaeMutate(dataToSend);
       successToast("La demande de financement a bien été enregistrée.");
     } catch (e: any) {
       if (e.response?.errors) {
@@ -223,17 +226,16 @@ const FundingPage = () => {
                   label:
                     "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
                   nativeInputProps: {
-                    disabled: isReadOnly || isSubmitting,
-                    checked: formConfirmation,
-                    onChange: (e) => setFormConfirmation(e.target.checked),
+                    ...register("confirmation"),
+                    disabled: isReadOnly,
                   },
                 },
               ]}
-              state={formConfirmation || isReadOnly ? "default" : "error"}
+              state={errors.confirmation?.message ? "error" : "default"}
               stateRelatedMessage={
-                formConfirmation || isReadOnly
-                  ? ""
-                  : "Veuillez confirmer le montant de la prise en charge."
+                errors.confirmation?.message
+                  ? "Veuillez confirmer le montant de la prise en charge."
+                  : ""
               }
             />
           </GrayCard>
@@ -241,7 +243,7 @@ const FundingPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/summary`}
             formState={{
-              isDirty: (isDirty || isValid) && formConfirmation && !isReadOnly,
+              isDirty: isDirty && !isReadOnly,
               isSubmitting,
             }}
           />
