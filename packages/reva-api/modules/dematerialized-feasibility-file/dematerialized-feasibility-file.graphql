@@ -11,6 +11,7 @@ type DematerializedFeasibilityFile {
 type BlocDeCompetences {
   id: String!
   label: String!
+  code: String
 }
 
 type Candidacy {
