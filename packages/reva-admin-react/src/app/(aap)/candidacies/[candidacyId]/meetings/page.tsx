@@ -2,6 +2,7 @@
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { Impersonate } from "@/components/impersonate";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { SmallWarning } from "@/components/small-warning/SmallWarning";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
@@ -26,6 +27,9 @@ const getCandidacyQuery = graphql(`
   query getCandidacyForMeetingsPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       firstAppointmentOccuredAt
+      candidate {
+        id
+      }
     }
   }
 `);
@@ -91,6 +95,8 @@ const MeetingsPage = () => {
   const firstAppointmentOccuredAt =
     getCandidacyResponse?.getCandidacyById?.firstAppointmentOccuredAt;
 
+  const candidateId = getCandidacyResponse?.getCandidacyById?.candidate?.id;
+
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       await updateCandidacyFirstAppointmentInformations.mutateAsync({
@@ -122,7 +128,10 @@ const MeetingsPage = () => {
   return (
     <div className="flex flex-col">
       <CandidacyBackButton candidacyId={candidacyId} />
-      <h1>Rendez-vous pédagogique</h1>
+      <div className="flex flex-row justify-between">
+        <h1>Rendez-vous pédagogique</h1>
+        <Impersonate candidateId={candidateId} />
+      </div>
       <FormOptionalFieldsDisclaimer />
       {getCandidacyStatus === "success" && (
         <form
