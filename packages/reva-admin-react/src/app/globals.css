@@ -70,12 +70,31 @@
         }
     }
 
-    dl, dt, dd {
-        --xl-block: 0;
-        --ul-start: 0;
-        --li-bottom: 0;
+    .bg-admin, .bg-organism, .bg-certification-authority, .bg-unknown {
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-color: white
     }
 
+    .bg-admin {
+        background-image: url("../../public/backgrounds/bg-admin.svg");
+    }
+
+    .bg-organism {
+        background-image: url("../../public/backgrounds/bg-organism.svg");
+    }
+
+    .bg-certification-authority {
+        background-image: url("../../public/backgrounds/bg-certification-authority.svg");
+    }
+
+    .bg-unknown {
+        background-image: url("../../public/backgrounds/bg-unknown.svg");
+    }
 }
 
-
+dl, dt, dd {
+    --xl-block: 0;
+    --ul-start: 0;
+    --li-bottom: 0;
+}

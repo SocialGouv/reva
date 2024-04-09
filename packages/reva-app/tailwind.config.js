@@ -38,6 +38,9 @@ module.exports = {
       listStyleType: {
         square: "square",
       },
+      boxShadow: {
+        lifted: "0 6px 18px rgba(0, 0, 18, 16%)",
+      },
     },
   },
 };

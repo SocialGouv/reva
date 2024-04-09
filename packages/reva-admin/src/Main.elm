@@ -116,7 +116,7 @@ viewPage : Model -> Html Msg
 viewPage model =
     case model.page of
         NotLoggedIn _ ->
-            Page.Loading.view
+            Page.Loading.view model.context
 
         Candidacies candidaciesModel ->
             Candidacies.view model.context candidaciesModel
@@ -134,7 +134,7 @@ viewPage model =
             h1 [] [ text "Page introuvable" ]
 
         LoggingOut ->
-            Page.Loading.view
+            Page.Loading.view model.context
 
         SiteMap ->
             SiteMap.view model.context

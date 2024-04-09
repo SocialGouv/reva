@@ -30,6 +30,7 @@ import { fr } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
 import Script from "next/script";
 import { Produktly } from "@/components/produktly/Produktly";
+import { useAuth } from "@/components/auth/auth";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -72,6 +73,22 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
 
   const { configureUser, resetUser } = useCrisp();
 
+  const {
+    isAdmin,
+    isCertificationAuthority,
+    isOrganism,
+    isGestionnaireMaisonMereAAP,
+    isAdminCertificationAuthority,
+  } = useAuth();
+
+  const bgClass = isAdmin
+    ? "lg:bg-admin"
+    : isOrganism || isGestionnaireMaisonMereAAP
+      ? "lg:bg-organism"
+      : isCertificationAuthority || isAdminCertificationAuthority
+        ? "lg:bg-certification-authority"
+        : "lg:bg-unknown";
+
   useEffect(() => {
     if (keycloakUser) {
       const { id, email } = keycloakUser;
@@ -105,11 +122,11 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       <main
         role="main"
         id="content"
-        className="flex flex-col flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] "
+        className={`flex flex-col flex-1 ${bgClass}`}
       >
         <div className="fr-container flex flex-col flex-1">
           <div
-            className={`fr-container flex-1 md:mt-16 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
+            className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
           >
             {authenticated && children}
           </div>

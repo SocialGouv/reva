@@ -147,6 +147,7 @@ view context model =
 
         viewPage content =
             View.layout
+                context
                 "Accéder aux étapes du parcours"
                 (NavigationSteps.view model.candidacy)
                 [ View.article

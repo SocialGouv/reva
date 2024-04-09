@@ -1,9 +1,11 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, summaryBlockWithItems, title, warningHint)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, summaryBlockWithItems, title, warningHint)
 
 import Accessibility exposing (br, button, h3, h5, hr, nav, p, span)
 import Accessibility.Aria as Aria
+import Api.Token
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons
+import Data.Context exposing (Context)
 import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -34,19 +36,36 @@ skeleton extraClass =
         []
 
 
-baseLayout : List (Html msg) -> Html msg
-baseLayout content =
+baseLayout : Context -> List (Html msg) -> Html msg
+baseLayout context content =
+    let
+        bgClass =
+            if Api.Token.isAdmin context.token then
+                "lg:bg-admin"
+
+            else if Api.Token.isOrganism context.token then
+                "lg:bg-organism"
+
+            else if
+                Api.Token.isCertificationAuthority context.token
+                    || Api.Token.isAdminCertificationAuthority context.token
+            then
+                "lg:bg-certification-authority"
+
+            else
+                "lg:bg-unknown"
+    in
     node "main"
         [ role "main"
-        , class "flex relative"
-        , class "lg:bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
+        , class "flex relative bg-triangle"
+        , class bgClass
         , id "content"
         ]
         [ div
             [ class "fr-container" ]
             [ div
-                [ class "lg:mt-16 fr-grid-row"
-                , class "bg-white mb-12"
+                [ class "lg:mt-8 fr-grid-row"
+                , class "bg-white lg:shadow-lifted mb-12"
                 ]
                 content
             ]
@@ -54,15 +73,17 @@ baseLayout content =
 
 
 layoutHelper :
-    { sidebarClasses : String
-    , mainClasses : String
-    , navContent : List (Html msg)
-    , navButtonLabel : String
-    , content : List (Html msg)
-    }
+    Context
+    ->
+        { sidebarClasses : String
+        , mainClasses : String
+        , navContent : List (Html msg)
+        , navButtonLabel : String
+        , content : List (Html msg)
+        }
     -> Html msg
-layoutHelper config =
-    baseLayout
+layoutHelper context config =
+    baseLayout context
         [ div
             [ class config.sidebarClasses ]
             [ nav
@@ -106,9 +127,9 @@ layoutHelper config =
         ]
 
 
-layout : String -> List (Html msg) -> List (Html msg) -> Html msg
-layout navButtonLabel navContent content =
-    layoutHelper
+layout : Context -> String -> List (Html msg) -> List (Html msg) -> Html msg
+layout context navButtonLabel navContent content =
+    layoutHelper context
         { sidebarClasses = "fr-col-12 fr-col-md-3"
         , mainClasses = "fr-col-12 fr-col-md-9"
         , navButtonLabel = navButtonLabel
@@ -117,26 +138,15 @@ layout navButtonLabel navContent content =
         }
 
 
-layoutWithLargeSidebar : String -> List (Html msg) -> List (Html msg) -> Html msg
-layoutWithLargeSidebar navButtonLabel navContent content =
-    layoutHelper
+layoutWithLargeSidebar : Context -> String -> List (Html msg) -> List (Html msg) -> Html msg
+layoutWithLargeSidebar context navButtonLabel navContent content =
+    layoutHelper context
         { sidebarClasses = "fr-col-12 fr-col-md-3 fr-col-lg-4"
         , mainClasses = "fr-col-12 fr-col-md-9 fr-col-lg-8"
         , navButtonLabel = navButtonLabel
         , navContent = navContent
         , content = content
         }
-
-
-noNavLayout : List (Html msg) -> Html msg
-noNavLayout content =
-    baseLayout
-        [ div
-            [ class "bg-white sm:shadow"
-            , class "fr-col-12 mb-24"
-            ]
-            content
-        ]
 
 
 article : String -> String -> String -> List (Accessibility.Html msg) -> Html msg

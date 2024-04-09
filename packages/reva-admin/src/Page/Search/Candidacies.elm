@@ -137,6 +137,7 @@ view context model =
     let
         viewWithFilters filterContent =
             View.layoutWithLargeSidebar
+                context
                 filterByStatusTitle
                 filterContent
                 (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))

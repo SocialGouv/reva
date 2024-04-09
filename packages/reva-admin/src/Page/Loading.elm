@@ -1,13 +1,14 @@
 module Page.Loading exposing (view)
 
+import Data.Context exposing (Context)
 import Html exposing (Html, div)
 import Html.Attributes exposing (class)
 import View
 
 
-view : Html msg
-view =
-    View.layout
+view : Context -> Html msg
+view context =
+    View.layout context
         ""
         []
         [ div

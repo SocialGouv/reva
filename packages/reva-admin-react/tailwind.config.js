@@ -28,6 +28,9 @@ module.exports = {
       backgroundColor: {
         "light-grey": "#F6F6F6",
       },
+      boxShadow: {
+        lifted: "0 6px 18px rgba(0, 0, 18, 16%)",
+      },
     },
   },
   plugins: [],
