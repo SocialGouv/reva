@@ -81,13 +81,18 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     isAdminCertificationAuthority,
   } = useAuth();
 
-  const bgClass = isAdmin
-    ? "lg:bg-admin"
-    : isOrganism || isGestionnaireMaisonMereAAP
-      ? "lg:bg-organism"
-      : isCertificationAuthority || isAdminCertificationAuthority
-        ? "lg:bg-certification-authority"
-        : "lg:bg-unknown";
+  const bgClass = () => {
+    if (isAdmin) {
+      return "lg:bg-admin";
+    }
+    if (isOrganism || isGestionnaireMaisonMereAAP) {
+      return "lg:bg-organism";
+    }
+    if (isCertificationAuthority || isAdminCertificationAuthority) {
+      return "lg:bg-certification-authority";
+    }
+    return "lg:bg-unknown";
+  };
 
   useEffect(() => {
     if (keycloakUser) {
@@ -122,7 +127,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       <main
         role="main"
         id="content"
-        className={`flex flex-col flex-1 ${bgClass}`}
+        className={`flex flex-col flex-1 ${bgClass()}`}
       >
         <div className="fr-container flex flex-col flex-1">
           <div
