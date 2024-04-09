@@ -1,12 +1,19 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import { useParams } from "next/navigation";
+import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
+import {
+  BadgeToComplete,
+  DefaultCandidacySectionCard,
+} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useParams, useRouter } from "next/navigation";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const router = useRouter();
 
   const { certification, dematerializedFeasibilityFile } =
     useAapFeasibilityPageLogic();
@@ -18,7 +25,7 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
-      <ul>
+      <ul className="flex flex-col gap-8">
         <DefaultCandidacySectionCard
           title="Descriptif de la certification"
           titleIconClass="fr-icon-award-fill"
@@ -34,6 +41,29 @@ const AapFeasibilityPage = () => {
             RNCP {certification?.codeRncp}
           </p>
         </DefaultCandidacySectionCard>
+        <CandidacySectionCard
+          title="Blocs de compétences"
+          titleIconClass="fr-icon-survey-fill"
+          badge={<BadgeToComplete />}
+        >
+          {dematerializedFeasibilityFile && (
+            <ul className="list-none flex flex-col gap-2">
+              {dematerializedFeasibilityFile?.blocsDeCompetences?.map((bc) => (
+                <li key={bc.id} className="flex flex-grow items-center">
+                  <span>{bc.code ? `${bc.code} - ${bc.label}` : bc.label}</span>
+                  <Button
+                    className="ml-auto"
+                    linkProps={{
+                      href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.id}`,
+                    }}
+                  >
+                    Compléter
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CandidacySectionCard>
       </ul>
     </div>
   );
