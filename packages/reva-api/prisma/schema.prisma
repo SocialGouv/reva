@@ -65,17 +65,18 @@ model Certification {
 }
 
 model CertificationCompetenceBloc {
-  id              String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt       DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
-  code            String?                   @unique @db.VarChar(255)
-  label           String                    @db.VarChar
-  isOptional      Boolean?                  @map("is_optional") @db.Boolean
+  id                             String                           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                      DateTime                         @default(now()) @map("created_at") @db.Timestamptz(6)
+  code                           String?                          @unique @db.VarChar(255)
+  label                          String                           @db.VarChar
+  isOptional                     Boolean?                         @map("is_optional") @db.Boolean
   //
-  certificationId String                    @map("certification_id") @db.Uuid
-  certification   Certification             @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  certificationId                String                           @map("certification_id") @db.Uuid
+  certification                  Certification                    @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
   //
-  FCCompetences   String?                   @map("fc_competences") @db.VarChar
-  competences     CertificationCompetence[]
+  FCCompetences                  String?                          @map("fc_competences") @db.VarChar
+  competences                    CertificationCompetence[]
+  DFFCertificationCompetenceBloc DFFCertificationCompetenceBloc[]
 
   @@map("certification_competence_bloc")
 }
@@ -1390,21 +1391,9 @@ model DFFCertificationCompetenceBloc {
   id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
   dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
+  certificationCompetenceBlocId   String                        @map("certification_competence_bloc_id") @db.Uuid
+  certificationCompetenceBloc     CertificationCompetenceBloc   @relation(fields: [certificationCompetenceBlocId], references: [id])
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
-  code                            String?                       @unique @db.VarChar(255)
-  label                           String                        @db.VarChar
-  isOptional                      Boolean?                      @map("is_optional") @db.Boolean
-  competences                     DFFCertificationCompetence[]
 
   @@map("dff_certification_competence_bloc")
-}
-
-model DFFCertificationCompetence {
-  id        String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
-  label     String                         @db.VarChar
-  blocId    String                         @map("bloc_id") @db.Uuid
-  bloc      DFFCertificationCompetenceBloc @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
-
-  @@map("dff_certification_competence")
 }

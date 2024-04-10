@@ -4,14 +4,8 @@ type DematerializedFeasibilityFile {
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
-  blocsDeCompetences(blocDeCompetencesId: ID): [BlocDeCompetences!]!
+  blocsDeCompetences(blocDeCompetencesId: ID): [CertificationCompetenceBloc!]!
   certificationPartComplete: Boolean!
-}
-
-type BlocDeCompetences {
-  id: String!
-  label: String!
-  code: String
 }
 
 type Candidacy {

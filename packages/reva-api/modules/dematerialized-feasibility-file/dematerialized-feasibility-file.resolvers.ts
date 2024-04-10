@@ -4,7 +4,7 @@ import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDem
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "./dematerialized-feasibility-file.types";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
-import { getBlocsDeCompetencesById } from "./features/getBlocsDeCompetencesById";
+import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -17,7 +17,7 @@ export const unsafeResolvers = {
       { blocDeCompetencesId }: { blocDeCompetencesId?: string },
     ) =>
       blocDeCompetencesId
-        ? [getBlocsDeCompetencesById({ blocDeCompetencesId })]
+        ? [getCompetenceBlocsById({ competenceBlocId: blocDeCompetencesId })]
         : getBlocsDeCompetencesByDFFId({ dematerializedFeasibilityFileId }),
   },
   Candidacy: {

@@ -1,8 +1,7 @@
-import { DFFCertificationCompetenceBloc } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
-import { getCompetenceBlocsAndCompetencesByIds } from "../../referential/features/getCompetenceBlocsAndCompetencesByIds";
 import { updateCandidacyCertificationCompletion } from "../../candidacy/features/updateCandidacyCertificationCompletion";
+import { logger } from "../../shared/logger";
 
 export const createOrUpdateCertificationInfo = async ({
   input,
@@ -20,36 +19,29 @@ export const createOrUpdateCertificationInfo = async ({
     });
   }
 
-  const certificationCompetenceBloc =
-    await getCompetenceBlocsAndCompetencesByIds({
-      competenceBlocIds: input.blocDeCompetencesIds,
-    });
-
-  const blocsDeCompetences: Omit<
-    DFFCertificationCompetenceBloc,
-    "dematerializedFeasibilityFileId"
-  >[] = certificationCompetenceBloc.map((c) => ({
-    id: c.id,
-    code: c.code,
-    createdAt: c.createdAt,
-    isOptional: c.isOptional,
-    label: c.label,
-  }));
-
   const data = {
     candidacyId: input.candidacyId,
     firstForeignLanguage: input.firstForeignLanguage,
     secondForeignLanguage: input.secondForeignLanguage,
     option: input.option,
     dFFCertificationCompetenceBlocs: {
-      createMany: { data: blocsDeCompetences },
+      createMany: {
+        data: input.blocDeCompetencesIds.map((bcid) => ({
+          certificationCompetenceBlocId: bcid,
+        })),
+      },
     },
   };
+
+  logger.info({ data });
 
   const dff = await (currentFile
     ? prismaClient.dematerializedFeasibilityFile.update({
         where: { id: currentFile.id },
-        data: { ...data, certificationPartComplete: true },
+        data: {
+          ...data,
+          certificationPartComplete: true,
+        },
       })
     : prismaClient.dematerializedFeasibilityFile.create({
         data: { ...data, certificationPartComplete: true },
@@ -58,10 +50,6 @@ export const createOrUpdateCertificationInfo = async ({
   await updateCandidacyCertificationCompletion({
     candidacyId: input.candidacyId,
     completion: input.completion,
-  });
-
-  await prismaClient.dFFCertificationCompetence.createMany({
-    data: certificationCompetenceBloc.flatMap((c) => c.competences),
   });
 
   return dff;
