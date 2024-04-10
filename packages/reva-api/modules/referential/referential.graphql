@@ -176,13 +176,19 @@ input UpdateCertificationInput {
   expiresAt: Timestamp!
 }
 
+input CompetenceInput {
+  id: ID
+  index: Int!
+  label: String!
+}
+
 input CompetenceBlocInput {
   id: ID
   code: String
   label: String!
   isOptional: Boolean
   FCCompetences: String
-  competences: [String!]!
+  competences: [CompetenceInput!]!
 }
 
 input UpdateCompetenceBlocsInput {

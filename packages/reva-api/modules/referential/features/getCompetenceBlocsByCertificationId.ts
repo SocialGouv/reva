@@ -18,7 +18,7 @@ export const getCompetenceBlocsByCertificationId = async (params: Params) => {
       },
       include: {
         competences: {
-          orderBy: { createdAt: "asc" },
+          orderBy: { index: "asc" },
         },
       },
       orderBy: { createdAt: "asc" },
@@ -55,7 +55,8 @@ const createDefaultBlocs = async (
       );
 
       await prismaClient.certificationCompetence.createMany({
-        data: bloc.PARSED_COMPETENCES.map((competence) => ({
+        data: bloc.PARSED_COMPETENCES.map((competence, index) => ({
+          index,
           label: competence,
           blocId: createdBloc.id,
         })),
@@ -70,7 +71,7 @@ const createDefaultBlocs = async (
       },
       include: {
         competences: {
-          orderBy: { createdAt: "asc" },
+          orderBy: { index: "asc" },
         },
       },
       orderBy: { createdAt: "asc" },

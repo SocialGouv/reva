@@ -83,11 +83,17 @@ export interface UpdateCertificationInput {
   expiresAt: Date;
 }
 
+export interface CompetenceInput {
+  id?: string;
+  index: number;
+  label: string;
+}
+
 export interface CompetenceBlocInput {
   id?: string;
   label: string;
   isOptional?: boolean;
-  competences: string[];
+  competences: CompetenceInput[];
 }
 
 export interface UpdateCompetenceBlocsInput {

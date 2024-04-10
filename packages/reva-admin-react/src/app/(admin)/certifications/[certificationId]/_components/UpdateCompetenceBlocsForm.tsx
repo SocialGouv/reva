@@ -12,6 +12,15 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useFCCertificationQuery } from "../certificationQueries";
 import { SortableList } from "@/components/sortable-list";
 
+type EnhancecCertificationCompetence = CertificationCompetence & {
+  created?: boolean;
+};
+
+type EnhancecCertificationCompetenceBloc = CertificationCompetenceBloc & {
+  created?: boolean;
+  competences: Array<EnhancecCertificationCompetence>;
+};
+
 const UpdateCompetenceBlocsForm = ({
   codeRncp,
   blocs,
@@ -24,37 +33,34 @@ const UpdateCompetenceBlocsForm = ({
   const { getFCCertification } = useFCCertificationQuery();
 
   const [competenceBlocs, setCompetenceBlocs] =
-    useState<(CertificationCompetenceBloc & { created?: boolean })[]>(blocs);
+    useState<EnhancecCertificationCompetenceBloc[]>(blocs);
 
   const reset = () => {
-    const resetedBlocs: (CertificationCompetenceBloc & {
-      created?: boolean;
-    })[] = blocs.map((bloc) => ({
-      ...bloc,
-      id: v4(),
-      created: true,
-    }));
-
-    setCompetenceBlocs(resetedBlocs);
+    setCompetenceBlocs(blocs);
   };
 
   const resetWithFCCertification = async () => {
     const certification = await getFCCertification(codeRncp);
 
-    const FCBlocs: (CertificationCompetenceBloc & { created?: boolean })[] = (
+    const FCBlocs: EnhancecCertificationCompetenceBloc[] = (
       certification?.BLOCS_COMPETENCES || []
-    ).map((bloc) => ({
-      id: v4(),
-      code: bloc.CODE,
-      label: bloc.LIBELLE,
-      isOptional: bloc.FACULTATIF,
-      FCCompetences: bloc.LISTE_COMPETENCES,
-      competences: bloc.PARSED_COMPETENCES.map((competence) => ({
-        id: v4(),
-        label: competence,
-      })),
-      created: true,
-    }));
+    ).map((bloc) => {
+      const existingBlocBasedOnCode = blocs.find((b) => b.code == bloc.CODE)
+        ?.id;
+
+      return {
+        id: existingBlocBasedOnCode || v4(),
+        code: bloc.CODE,
+        label: bloc.LIBELLE,
+        isOptional: bloc.FACULTATIF,
+        FCCompetences: bloc.LISTE_COMPETENCES,
+        competences: bloc.PARSED_COMPETENCES.map((competence) => ({
+          id: v4(),
+          label: competence,
+        })),
+        created: existingBlocBasedOnCode ? false : true,
+      };
+    });
 
     setCompetenceBlocs(FCBlocs);
   };
@@ -163,7 +169,11 @@ const UpdateCompetenceBlocsForm = ({
       label: bloc.label,
       isOptional: bloc.isOptional,
       FCCompetences: bloc.FCCompetences,
-      competences: bloc.competences.map((c) => c.label),
+      competences: bloc.competences.map((c, index) =>
+        (c as EnhancecCertificationCompetence).created
+          ? { index, label: c.label }
+          : { id: c.id, index, label: c.label },
+      ),
     }));
 
     onSubmit(blocs);

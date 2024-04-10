@@ -85,6 +85,7 @@ model CertificationCompetence {
   id        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
   label     String                      @db.VarChar
+  index     Int?                        @db.Integer
   //
   blocId    String                      @map("bloc_id") @db.Uuid
   bloc      CertificationCompetenceBloc @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
