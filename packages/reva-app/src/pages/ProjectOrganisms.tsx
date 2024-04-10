@@ -13,8 +13,10 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
+import { OrganismCard } from "../components/organisms/OrganismCard/OrganismCard";
 import { Page } from "../components/organisms/Page";
-import { Organism } from "../interface";
+import { useMainMachineContext } from "../contexts/MainMachineContext/MainMachineContext";
+import { Department, Organism } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 const modalDistanceInfo = createModal({
@@ -26,16 +28,20 @@ interface PropsOrganisms {
   availableOrganisms?: { rows: Organism[]; totalRows: number };
   setOrganismId: Dispatch<SetStateAction<string>>;
   alreadySelectedOrganismId: string;
+  selectedDepartment?: Department;
 }
 
 const Organisms: FC<PropsOrganisms> = ({
   availableOrganisms = { rows: [], totalRows: 0 },
   setOrganismId,
   alreadySelectedOrganismId,
+  selectedDepartment,
 }) => {
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     alreadySelectedOrganismId
   );
+
+  const { state } = useMainMachineContext();
 
   const getOrganismDisplayInfo = (o: Organism) => {
     const ic = o?.informationsCommerciales;
@@ -51,6 +57,18 @@ const Organisms: FC<PropsOrganisms> = ({
       addressCity: ic?.adresseVille,
     };
   };
+
+  if (state.context.activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")) {
+    return (
+      <div className="columns-2 space-y-4 gap-4">
+        {availableOrganisms.rows.map((organism) => {
+          return (
+            <OrganismCard organism={organism} department={selectedDepartment} />
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <RadioGroup
@@ -329,6 +347,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             totalRows: organisms?.totalRows || 0,
           }}
           setOrganismId={setSelectedOrganismId}
+          selectedDepartment={selectedDepartment}
         />
         <div className="mt-6 w-full flex flex-row items-center justify-between">
           {state.hasMore ? (

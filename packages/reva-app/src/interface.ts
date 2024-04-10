@@ -101,6 +101,7 @@ type ConformiteNormeAccessibilite =
 
 export interface OrganismOnDepartment {
   id: string;
+  departmentId: string;
   isRemote: boolean;
   isOnSite: boolean;
 }
