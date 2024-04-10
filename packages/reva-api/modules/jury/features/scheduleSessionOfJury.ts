@@ -79,7 +79,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     }
   }
 
-  const dateOfSession = new Date(Number(date));
+  let dateOfSession = new Date(Number(date));
   const today = startOfDay(new Date());
   const nextTwoYears = endOfDay(add(today, { years: 2 }));
   let timeOfSession;
@@ -90,6 +90,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       "0" + new Date(Number(time)).getMinutes()
     ).slice(-2);
     timeOfSession = `${timeOfSessionHours}:${timeOfSessionMinutes}`;
+    dateOfSession = new Date(Number(time));
   }
 
   if (isAfter(dateOfSession, nextTwoYears)) {
