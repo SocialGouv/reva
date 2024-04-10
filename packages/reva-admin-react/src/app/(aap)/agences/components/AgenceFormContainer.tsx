@@ -439,27 +439,35 @@ function AgenceFormContainer({
           </form>
         </FormProvider>
       </div>
-      <modalCreateAgence.Component title="" size="large">
+      <modalCreateAgence.Component
+        title={
+          <>
+            <span className="fr-icon-check-line fr-icon--lg mr-2"></span>
+            Votre demande de création d'agence a bien été validée
+          </>
+        }
+        size="large"
+      >
         <div className="flex flex-col gap-4">
-          <div className="self-center text-2xl">✔️</div>
-          <p>Votre demande de création d'agence a bien été validée.</p>
-          <p>
-            Un mail va être adressé au responsable d'agence, à l'adresse saisie
-            en fin de formulaire. Il contient un lien d'activation qui sera
-            valable 4 jours.
-          </p>
-          <p>
-            Après avoir défini un mot de passe, l'agence pourra accéder à son
-            propre espace professionnel. Seules les nouvelles candidatures qui
-            auront sélectionné votre agence arriveront dans son espace. Les
-            candidatures déjà reçues et en cours de traitement ne pourront lui
-            être transférées.
-          </p>
-          <p>
-            En cas de question, vous pouvez nous contacter à l'adresse mail
-            suivante:{" "}
-            <Link href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</Link>
-          </p>
+          <div>
+            <p>
+              Un mail va être adressé au responsable d'agence, à l'adresse
+              saisie en fin de formulaire. Il contient un lien d'activation qui
+              sera valable 4 jours.
+            </p>
+            <p>
+              Après avoir défini un mot de passe, l'agence pourra accéder à son
+              propre espace professionnel. Seules les nouvelles candidatures qui
+              auront sélectionné votre agence arriveront dans son espace. Les
+              candidatures déjà reçues et en cours de traitement ne pourront lui
+              être transférées.
+            </p>
+            <p>
+              En cas de question, vous pouvez nous contacter à l'adresse mail
+              suivante:{" "}
+              <Link href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</Link>
+            </p>
+          </div>
           <Alert
             severity="info"
             title=""
@@ -468,7 +476,7 @@ function AgenceFormContainer({
                 Afin de vous assurer que vous recevez bien nos e-mails,{" "}
                 <b>
                   pensez à vérifier votre dossier de courrier indésirable ou
-                  votre outil de filtra de spams
+                  votre outil de filtre de spams
                 </b>{" "}
                 si votre structure en utilise un (ex: Mail in Black).
               </span>
