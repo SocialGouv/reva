@@ -8,7 +8,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -36,6 +36,34 @@ const CertificationPage = () => {
     updateFeasibilityCertification,
   } = useCertificationPageLogic();
 
+  const defaultValues = useMemo(
+    () => ({
+      option: dematerializedFeasibilityFile?.option || "",
+      firstForeignLanguage:
+        dematerializedFeasibilityFile?.firstForeignLanguage || "",
+      secondForeignlanguage:
+        dematerializedFeasibilityFile?.secondForeignLanguage || "",
+      completion: candidacy?.isCertificationPartial
+        ? ("PARTIAL" as const)
+        : ("COMPLETE" as const),
+      competenceBlocs: certification?.competenceBlocs.map((b) => ({
+        competenceBlocId: b.id,
+        label: b.code ? `${b.code} - ${b.label}` : b.label,
+        checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
+          (bc) => bc.id === b.id,
+        ),
+      })),
+    }),
+    [
+      candidacy?.isCertificationPartial,
+      certification?.competenceBlocs,
+      dematerializedFeasibilityFile?.blocsDeCompetences,
+      dematerializedFeasibilityFile?.firstForeignLanguage,
+      dematerializedFeasibilityFile?.option,
+      dematerializedFeasibilityFile?.secondForeignLanguage,
+    ],
+  );
+
   const {
     register,
     control,
@@ -44,6 +72,7 @@ const CertificationPage = () => {
     formState: { isDirty, isSubmitting, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues,
   });
 
   const { fields: competenceBlocFields, update: updateCompetenceBlocs } =
@@ -53,31 +82,8 @@ const CertificationPage = () => {
     });
 
   const resetForm = useCallback(
-    () =>
-      reset({
-        option: dematerializedFeasibilityFile?.option || "",
-        firstForeignLanguage:
-          dematerializedFeasibilityFile?.firstForeignLanguage || "",
-        secondForeignlanguage:
-          dematerializedFeasibilityFile?.secondForeignLanguage || "",
-        completion: candidacy?.isCertificationPartial ? "PARTIAL" : "COMPLETE",
-        competenceBlocs: certification?.competenceBlocs.map((b) => ({
-          competenceBlocId: b.id,
-          label: b.code ? `${b.code} - ${b.label}` : b.label,
-          checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
-            (bc) => bc.id === b.id,
-          ),
-        })),
-      }),
-    [
-      candidacy?.isCertificationPartial,
-      certification?.competenceBlocs,
-      dematerializedFeasibilityFile?.blocsDeCompetences,
-      dematerializedFeasibilityFile?.firstForeignLanguage,
-      dematerializedFeasibilityFile?.option,
-      dematerializedFeasibilityFile?.secondForeignLanguage,
-      reset,
-    ],
+    () => reset(defaultValues),
+    [defaultValues, reset],
   );
 
   useEffect(resetForm, [resetForm]);
