@@ -16,13 +16,77 @@ type alias Filters =
 
 
 view :
-    Filters
+    CandidacyCountByStatus
+    -> Filters
     -> Context
     -> List (Html msg)
-view filters context =
+view candidacyCountByStatus filters context =
     let
+        count : CandidacyStatusFilter -> Int
+        count status =
+            case status of
+                CandidacyStatusFilter.ActiveHorsAbandon ->
+                    candidacyCountByStatus.activeHorsAbandon
+
+                CandidacyStatusFilter.Abandon ->
+                    candidacyCountByStatus.abandon
+
+                CandidacyStatusFilter.Reorientee ->
+                    candidacyCountByStatus.reorientee
+
+                CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->
+                    candidacyCountByStatus.archiveHorsAbandonHorsReorientation
+
+                CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon ->
+                    candidacyCountByStatus.demandePaiementEnvoyeHorsAbandon
+
+                CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon ->
+                    candidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
+
+                CandidacyStatusFilter.ParcoursConfirmeHorsAbandon ->
+                    candidacyCountByStatus.parcourConfirmeHorsAbandon
+
+                CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteEnvoyeHorsAbandon
+
+                CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteIncompletHorsAbandon
+
+                CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteRecevableHorsAbandon
+
+                CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteNonRecevableHorsAbandon
+
+                CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon ->
+                    candidacyCountByStatus.dossierDeValidationEnvoyeHorsAbandon
+
+                CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon ->
+                    candidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
+
+                CandidacyStatusFilter.JuryHorsAbandon ->
+                    candidacyCountByStatus.juryHorsAbandon
+
+                CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
+                    candidacyCountByStatus.juryProgrammeHorsAbandon
+
+                CandidacyStatusFilter.JuryPasseHorsAbandon ->
+                    candidacyCountByStatus.juryPasseHorsAbandon
+
+                CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
+                    candidacyCountByStatus.parcoursEnvoyeHorsAbandon
+
+                CandidacyStatusFilter.PriseEnChargeHorsAbandon ->
+                    candidacyCountByStatus.priseEnChargeHorsAbandon
+
+                CandidacyStatusFilter.ValidationHorsAbandon ->
+                    candidacyCountByStatus.validationHorsAbandon
+
+                CandidacyStatusFilter.ProjetHorsAbandon ->
+                    candidacyCountByStatus.projetHorsAbandon
+
         link status label =
-            viewLink context filters status label
+            viewLink context filters (count status) status label
 
         statuses : List CandidacyStatusFilter
         statuses =
@@ -91,8 +155,8 @@ view filters context =
     ]
 
 
-viewLink : Context -> Filters -> CandidacyStatusFilter -> String -> Html msg
-viewLink context filters statusFilter label =
+viewLink : Context -> Filters -> Int -> CandidacyStatusFilter -> String -> Html msg
+viewLink context filters count statusFilter label =
     let
         isSelected =
             filters.status == statusFilter
@@ -115,7 +179,7 @@ viewLink context filters statusFilter label =
             , Route.href context.baseUrl <|
                 Route.Candidacies { status = statusFilter, page = 1 }
             ]
-            [ text label ]
+            [ text label, viewCount count ]
         ]
 
 

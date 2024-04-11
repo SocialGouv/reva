@@ -98,7 +98,13 @@ init context statusFilter page =
             }
 
         defaultCmd =
-            searchCmd
+            Cmd.batch
+                [ searchCmd
+                , Api.Candidacy.getCandidacyCountByStatus context.endpoint
+                    context.token
+                    defaultModel.search.keywords.submitted
+                    GotCandidacyCountByStatus
+                ]
     in
     ( defaultModel, defaultCmd )
 
@@ -140,7 +146,7 @@ view context model =
             div [] []
 
         ( _, Loading ) ->
-            viewWithFilters <| View.Candidacy.Filters.view model.filters context
+            viewWithFilters []
 
         ( True, _ ) ->
             viewWithFilters []
@@ -148,8 +154,8 @@ view context model =
         ( _, Failure errors ) ->
             viewWithFilters <| [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
 
-        ( _, Success _ ) ->
-            viewWithFilters <| View.Candidacy.Filters.view model.filters context
+        ( _, Success candidacyCountByStatus ) ->
+            viewWithFilters <| View.Candidacy.Filters.view candidacyCountByStatus model.filters context
 
 
 filterByStatusTitle : String
