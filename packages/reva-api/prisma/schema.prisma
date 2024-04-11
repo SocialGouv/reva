@@ -61,6 +61,7 @@ model Certification {
   competenceBlocs                                        CertificationCompetenceBloc[]
   feasibilityFormat                                      FeasibilityFormat                                        @default(UPLOADED_PDF) @map("feasibility_format")
 
+  @@index([typeDiplomeId])
   @@map("certification")
 }
 
@@ -149,6 +150,9 @@ model Candidacy {
   feasibilityFormat                          FeasibilityFormat                       @default(UPLOADED_PDF) @map("feasibility_format")
   DematerializedFeasibilityFile              DematerializedFeasibilityFile[]
 
+  @@index([organismId])
+  @@index([candidateId])
+  @@index([departmentId])
   @@map("candidacy")
 }
 
@@ -162,6 +166,11 @@ model CandidaciesStatus {
   createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?           @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId, isActive])
+  @@index([candidacyId, status, isActive])
+  @@index([candidacyId, status])
+  @@index([status, isActive])
+  @@index([candidacyId])
   @@map("candidacy_candidacy_status")
 }
 
@@ -265,6 +274,7 @@ model Experience {
   createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
   @@map("experience")
 }
 
@@ -318,6 +328,7 @@ model Department {
   certificationAuthorityLocalAccountOnDepartment         CertificationAuthorityLocalAccountOnDepartment[]
   CandidateBirthDerpartment                              Candidate[]                                              @relation("birthDepartmentCandidate")
 
+  @@index([regionId])
   @@map("department")
 }
 
@@ -344,6 +355,8 @@ model CandidaciesOnRegionsAndCertifications {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId, regionId, certificationId, isActive])
+  @@index([candidacyId, certificationId, isActive])
   @@map("candidacy_region_certification")
 }
 
@@ -362,6 +375,9 @@ model Account {
   featureBetaTest                    FeatureBetaTest[]
   certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
 
+  @@index([email])
+  @@index([organismId])
+  @@index([certificationAuthorityId])
   @@map("account")
 }
 
@@ -398,6 +414,8 @@ model Organism {
   fermePourAbsenceOuConges Boolean            @default(false) @map("ferme_pour_absence_ou_conges")
   managedDegrees           OrganismOnDegree[]
 
+  @@index([typology, isActive])
+  @@index([maisonMereAAPId])
   @@map("organism")
 }
 
@@ -408,6 +426,7 @@ model OrganismOnDegree {
   degree     Degree   @relation(fields: [degreeId], references: [id], onDelete: Cascade)
   degreeId   String   @map("degree_id") @db.Uuid
 
+  @@unique([organismId, degreeId])
   @@map("organism_on_degree")
 }
 
@@ -1050,6 +1069,8 @@ model CertificationAuthorityLocalAccount {
   certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
 
+  @@index([accountId])
+  @@index([certificationAuthorityId])
   @@map("certification_authority_local_account")
 }
 
@@ -1110,6 +1131,8 @@ model Feasibility {
   createdAt                     DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                     DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId, isActive])
+  @@index([certificationAuthorityId, isActive])
   @@map("feasibility")
 }
 
@@ -1135,6 +1158,8 @@ model DossierDeValidation {
   createdAt                     DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                     DateTime?                             @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId, isActive])
+  @@index([certificationAuthorityId, isActive])
   @@map("dossier_de_validation")
 }
 
@@ -1168,6 +1193,8 @@ model Jury {
   updatedAt                                  DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
   reminderToCandidateWithScheduledJurySendAt DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
 
+  @@index([candidacyId, isActive])
+  @@index([certificationAuthorityId, isActive])
   @@map("jury")
 }
 
@@ -1291,6 +1318,8 @@ model MaisonMereAAP {
   updatedAt             DateTime?  @map("updated_at") @db.Timestamptz(6)
   organismes            Organism[]
 
+  @@index([typologie])
+  @@index([gestionnaireAccountId])
   @@map("maison_mere_aap")
 }
 
@@ -1317,6 +1346,7 @@ model MaisonMereAAPOnDepartement {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
+  @@index([maisonMereAAPId, departementId, estADistance, estSurPlace])
   @@map("maison_mere_aap_on_departement")
 }
 
@@ -1372,6 +1402,7 @@ model CandidacyLog {
   createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?               @map("updated_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
   @@map("candidacy_log")
 }
 
