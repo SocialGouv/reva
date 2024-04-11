@@ -106,7 +106,11 @@ form maybeCertification formData ( candidacy, referential ) =
                                 (totalCompanionHourCount formData |> displayHours)
                                 (totalCompanionCost formData |> displayEuros)
                       )
-                    , ( "training", Form.Title2 "Compléments formatifs" )
+                    , ( "training",  Form.Title2 "Compléments formatifs" )
+                    , ( "trainingHint"
+                      , Form.StaticHtml <|
+                            View.warningHint "Merci de prendre en compte que les actes formatifs doivent être facturés au tarif réel, plafonné à 25€ de l'heure. Des contrôles aléatoires seront effectués avant tout paiement, veuillez donc conserver et être prêt à présenter les factures acquittées correspondant aux actes formatifs, sur demande d'Uniformation."
+                      )
                     , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
                     , ( keys.mandatoryTrainingIds
                       , Form.ReadOnlyElement <|

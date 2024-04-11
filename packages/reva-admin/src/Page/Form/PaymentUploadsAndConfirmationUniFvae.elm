@@ -28,10 +28,10 @@ form config _ ( _, _ ) =
                     }
           )
         , ( "files-heading", Form.Title1 "1 - Pièces jointes liées à la facturation" )
-        , ( "invoiceFile", Form.Title2 "Joindre la facture" )
+        , ( "invoiceFile", Form.Title2 "Joindre la facture globale avec un RIB inclus" )
         , ( keys.invoiceFiles, Form.File "La facture doit être nette de TVA et doit contenir un RIB." "Taille maximale : 10 Mo. Format supporté : pdf." )
-        , ( "certificateFile", Form.Title2 "Joindre un récapitulatif des attestations de présence" )
-        , ( keys.certificateOfAttendanceFiles, Form.File "Le document doit comprendre l’ensemble des attestations d’accompagnement individuel, collectif et formatif du candidat." "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( "certificateFile", Form.Title2 "Joindre le certificat de réalisation signé par le candidat et l'AAP" )
+        , ( keys.certificateOfAttendanceFiles, Form.File "Le document est disponible dans l'espace documentaire et doit comprendre l'ensemble des actes réalisés pour le parcours (étude de faisabilité, heures d'accompagnement individuel et collectif, actes formatifs)." "Format supporté : PDF uniquement avec un poids maximum de 2Mo" )
         , ( "confirmation-heading", Form.Title1 "2 - Confirmation" )
         , ( "confirmation-checks-heading", Form.Title2 "Avant de finaliser votre envoi :" )
         , ( keys.confirmationCheckPart1
