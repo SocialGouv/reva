@@ -16,77 +16,13 @@ type alias Filters =
 
 
 view :
-    CandidacyCountByStatus
-    -> Filters
+    Filters
     -> Context
     -> List (Html msg)
-view candidacyCountByStatus filters context =
+view filters context =
     let
-        count : CandidacyStatusFilter -> Int
-        count status =
-            case status of
-                CandidacyStatusFilter.ActiveHorsAbandon ->
-                    candidacyCountByStatus.activeHorsAbandon
-
-                CandidacyStatusFilter.Abandon ->
-                    candidacyCountByStatus.abandon
-
-                CandidacyStatusFilter.Reorientee ->
-                    candidacyCountByStatus.reorientee
-
-                CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->
-                    candidacyCountByStatus.archiveHorsAbandonHorsReorientation
-
-                CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon ->
-                    candidacyCountByStatus.demandePaiementEnvoyeHorsAbandon
-
-                CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon ->
-                    candidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
-
-                CandidacyStatusFilter.ParcoursConfirmeHorsAbandon ->
-                    candidacyCountByStatus.parcourConfirmeHorsAbandon
-
-                CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon ->
-                    candidacyCountByStatus.dossierFaisabiliteEnvoyeHorsAbandon
-
-                CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon ->
-                    candidacyCountByStatus.dossierFaisabiliteIncompletHorsAbandon
-
-                CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon ->
-                    candidacyCountByStatus.dossierFaisabiliteRecevableHorsAbandon
-
-                CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon ->
-                    candidacyCountByStatus.dossierFaisabiliteNonRecevableHorsAbandon
-
-                CandidacyStatusFilter.DossierDeValidationEnvoyeHorsAbandon ->
-                    candidacyCountByStatus.dossierDeValidationEnvoyeHorsAbandon
-
-                CandidacyStatusFilter.DossierDeValidationSignaleHorsAbandon ->
-                    candidacyCountByStatus.dossierDeValidationSignaleHorsAbandon
-
-                CandidacyStatusFilter.JuryHorsAbandon ->
-                    candidacyCountByStatus.juryHorsAbandon
-
-                CandidacyStatusFilter.JuryProgrammeHorsAbandon ->
-                    candidacyCountByStatus.juryProgrammeHorsAbandon
-
-                CandidacyStatusFilter.JuryPasseHorsAbandon ->
-                    candidacyCountByStatus.juryPasseHorsAbandon
-
-                CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
-                    candidacyCountByStatus.parcoursEnvoyeHorsAbandon
-
-                CandidacyStatusFilter.PriseEnChargeHorsAbandon ->
-                    candidacyCountByStatus.priseEnChargeHorsAbandon
-
-                CandidacyStatusFilter.ValidationHorsAbandon ->
-                    candidacyCountByStatus.validationHorsAbandon
-
-                CandidacyStatusFilter.ProjetHorsAbandon ->
-                    candidacyCountByStatus.projetHorsAbandon
-
         link status label =
-            viewLink context filters (count status) status label
+            viewLink context filters status label
 
         statuses : List CandidacyStatusFilter
         statuses =
@@ -155,8 +91,8 @@ view candidacyCountByStatus filters context =
     ]
 
 
-viewLink : Context -> Filters -> Int -> CandidacyStatusFilter -> String -> Html msg
-viewLink context filters count statusFilter label =
+viewLink : Context -> Filters -> CandidacyStatusFilter -> String -> Html msg
+viewLink context filters statusFilter label =
     let
         isSelected =
             filters.status == statusFilter
@@ -179,7 +115,7 @@ viewLink context filters count statusFilter label =
             , Route.href context.baseUrl <|
                 Route.Candidacies { status = statusFilter, page = 1 }
             ]
-            [ text label, viewCount count ]
+            [ text label ]
         ]
 
 
