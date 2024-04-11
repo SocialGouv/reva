@@ -75,6 +75,8 @@ const CertificationPage = () => {
     defaultValues,
   });
 
+  const completion = useWatch({ name: "completion", control });
+
   const { fields: competenceBlocFields, update: updateCompetenceBlocs } =
     useFieldArray({
       control,
@@ -87,31 +89,6 @@ const CertificationPage = () => {
   );
 
   useEffect(resetForm, [resetForm]);
-
-  const completion = useWatch({ name: "completion", control });
-
-  useEffect(() => {
-    if (isDirty) {
-      switch (completion) {
-        case "COMPLETE": {
-          if (competenceBlocFields.some((cbf) => !cbf.checked)) {
-            competenceBlocFields.forEach((cbf, i) =>
-              updateCompetenceBlocs(i, { ...cbf, checked: true }),
-            );
-          }
-          break;
-        }
-        case "PARTIAL": {
-          if (competenceBlocFields.some((cbf) => cbf.checked)) {
-            competenceBlocFields.forEach((cbf, i) =>
-              updateCompetenceBlocs(i, { ...cbf, checked: false }),
-            );
-          }
-          break;
-        }
-      }
-    }
-  }, [competenceBlocFields, completion, isDirty, updateCompetenceBlocs]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -131,6 +108,29 @@ const CertificationPage = () => {
     }
   });
 
+  const handleCertificationCompletionChange = useCallback(
+    (completion: "PARTIAL" | "COMPLETE") => {
+      switch (completion) {
+        case "COMPLETE": {
+          if (competenceBlocFields.some((cbf) => !cbf.checked)) {
+            competenceBlocFields.forEach((cbf, i) =>
+              updateCompetenceBlocs(i, { ...cbf, checked: true }),
+            );
+          }
+          break;
+        }
+        case "PARTIAL": {
+          if (competenceBlocFields.some((cbf) => cbf.checked)) {
+            competenceBlocFields.forEach((cbf, i) =>
+              updateCompetenceBlocs(i, { ...cbf, checked: false }),
+            );
+          }
+          break;
+        }
+      }
+    },
+    [competenceBlocFields, updateCompetenceBlocs],
+  );
   return (
     <div className="flex flex-col">
       <h1>Descriptif de la certification</h1>
@@ -190,7 +190,10 @@ const CertificationPage = () => {
                 label: "La certification dans sa totalité",
                 nativeInputProps: {
                   value: "COMPLETE",
-                  ...register("completion"),
+                  ...register("completion", {
+                    onChange: (e) =>
+                      handleCertificationCompletionChange(e.target.value),
+                  }),
                 },
               },
               {
@@ -198,7 +201,10 @@ const CertificationPage = () => {
                   "Un ou plusieurs bloc(s) de compétences de la certification",
                 nativeInputProps: {
                   value: "PARTIAL",
-                  ...register("completion"),
+                  ...register("completion", {
+                    onChange: (e) =>
+                      handleCertificationCompletionChange(e.target.value),
+                  }),
                 },
               },
             ]}
