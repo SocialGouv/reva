@@ -2,7 +2,7 @@ import mjml2html from "mjml";
 import { sendGenericEmail, templateMail } from "../../shared/email";
 import { logger } from "../../shared/logger";
 
-export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
+export const sendPreviousOrganismCandidateChangeOrganismEmail = async ({
   email,
   candidateFullName,
   certificationName,
@@ -16,7 +16,7 @@ export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
   const htmlContent = mjml2html(
     templateMail({
       content: `<p>Bonjour,</p><p>France VAE vous informe que <strong>${candidateFullName}</strong> a choisi un autre Architecte Accompagnateur de Parcours pour l’accompagner dans son projet de <i>"${certificationName}"</i>.</p>
-          <p>Ce candidat n’est désormais plus dans votre portefeuille.</p>
+          <p>Ce candidat n'est désormais plus dans votre portefeuille.</p>
           ${
             date
               ? `<p>De fait, le rendez-vous planifié le <strong>${date.toLocaleDateString(
@@ -24,8 +24,7 @@ export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
                 )}</strong> est donc annulé. </p>`
               : ""
           }
-
-          <p>L’équipe France VAE.</p>
+          <p>L'équipe France VAE.</p>
         `,
     }),
   );

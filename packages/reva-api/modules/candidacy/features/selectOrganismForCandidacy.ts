@@ -7,7 +7,10 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import { updateOrganism } from "../database/candidacies";
-import { sendPreventOrganismCandidateChangeOrganismEmail } from "../mails";
+import {
+  sendNewOrganismCandidateNewCandidacyEmail,
+  sendPreviousOrganismCandidateChangeOrganismEmail,
+} from "../mails";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 export const selectOrganismForCandidacy = async ({
@@ -80,6 +83,8 @@ export const selectOrganismForCandidacy = async ({
       (currentCandidacyStatus?.status == "PRISE_EN_CHARGE" ||
         currentCandidacyStatus?.status == "VALIDATION");
 
+    const newOrganism = await getOrganismById({ organismId });
+
     if (
       candidate &&
       organism &&
@@ -87,15 +92,17 @@ export const selectOrganismForCandidacy = async ({
       certification &&
       isValidStatus
     ) {
-      sendPreventOrganismCandidateChangeOrganismEmail({
+      sendPreviousOrganismCandidateChangeOrganismEmail({
         email: organism.contactAdministrativeEmail,
         candidateFullName: `${candidate.firstname} ${candidate.lastname}`,
         certificationName: certification.label,
         date: firstAppointmentOccuredAt,
       });
-    }
 
-    const newOrganism = await getOrganismById({ organismId });
+      sendNewOrganismCandidateNewCandidacyEmail({
+        email: newOrganism.contactAdministrativeEmail,
+      });
+    }
 
     await logCandidacyAuditEvent({
       candidacyId,
