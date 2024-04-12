@@ -27,6 +27,7 @@ import {
 import { RNCPReferential } from "./rncp";
 import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
+import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -46,6 +47,10 @@ const unsafeReferentialResolvers = {
       id: string;
       rncpId: string;
     }) => getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
+  },
+  CertificationCompetenceBloc: {
+    competences: ({ id: certificationCompetenceBlocId }: { id: string }) =>
+      getCertificationCompetencesByBlocId({ certificationCompetenceBlocId }),
   },
   Department: {
     region: ({ regionId }: { regionId: string }) =>

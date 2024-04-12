@@ -16,11 +16,6 @@ export const getCompetenceBlocsByCertificationId = async (params: Params) => {
       where: {
         certificationId: certificationId,
       },
-      include: {
-        competences: {
-          orderBy: { index: "asc" },
-        },
-      },
       orderBy: { createdAt: "asc" },
     });
 
