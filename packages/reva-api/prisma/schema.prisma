@@ -1184,6 +1184,7 @@ model Jury {
   convocationFileId                          String?                @unique @map("convocation_file_id") @db.Uuid
   dateOfSession                              DateTime               @map("date_of_session") @db.Timestamptz(6)
   timeOfSession                              String?                @map("time_of_session")
+  timeSpecified                              Boolean                @default(false) @map("time_specified")
   addressOfSession                           String?                @map("address_of_session")
   informationOfSession                       String?                @map("information_of_session")
   result                                     String?                @map("result")

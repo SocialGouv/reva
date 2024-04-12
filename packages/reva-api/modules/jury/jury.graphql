@@ -24,6 +24,7 @@ type Jury {
   candidacy: Candidacy!
   dateOfSession: Timestamp!
   timeOfSession: String
+  timeSpecified: Boolean
   addressOfSession: String
   informationOfSession: String
   convocationFile: File

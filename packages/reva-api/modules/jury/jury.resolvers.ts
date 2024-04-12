@@ -1,20 +1,20 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { Candidacy } from "../candidacy/candidacy.types";
-import { getExamInfo } from "./features/getExamInfo";
-import { updateExamInfo } from "./features/updateExamInfo";
-import { ExamInfo, JuryInfo } from "./jury.types";
-import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
-import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
-import { JuryStatusFilter } from "./types/juryStatusFilter.type";
-import { getActiveJuries } from "./features/getActiveJuries";
-import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
-import { updateResultOfJury } from "./features/updateResultOfJury";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
+import { getActiveJuries } from "./features/getActiveJuries";
+import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
+import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
+import { getExamInfo } from "./features/getExamInfo";
+import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
+import { updateExamInfo } from "./features/updateExamInfo";
+import { updateResultOfJury } from "./features/updateResultOfJury";
+import { ExamInfo, JuryInfo } from "./jury.types";
 import { resolversSecurityMap } from "./security";
+import { JuryStatusFilter } from "./types/juryStatusFilter.type";
 
 const unsafeResolvers = {
   Candidacy: {

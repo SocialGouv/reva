@@ -225,8 +225,18 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getJuryMenuEntry = (): CandidacyMenuEntry | undefined => {
+  const getJuryMenuEntry = async (
+    userKeycloakId?: string,
+  ): Promise<CandidacyMenuEntry | undefined> => {
     const newJuryMenu = candidacy.financeModule == "unifvae";
+    const isReactAapJuryPageActive = await isFeatureActiveForUser({
+      userKeycloakId,
+      feature: "REACT_AAP_JURY_PAGE",
+    });
+    const juryUrl = isReactAapJuryPageActive
+      ? buildUrl({ adminType: "React", suffix: "jury-aap" })
+      : buildUrl({ adminType: "Elm", suffix: "jury/date" });
+
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
       "DEMANDE_FINANCEMENT_ENVOYE",
     )
@@ -236,7 +246,7 @@ export const getActiveCandidacyMenu = async ({
     return newJuryMenu
       ? {
           label: "Jury",
-          url: buildUrl({ adminType: "Elm", suffix: "jury/date" }),
+          url: juryUrl,
           status: menuEntryStatus,
         }
       : {
@@ -258,6 +268,6 @@ export const getActiveCandidacyMenu = async ({
     await getFundingRequestMenuEntry(userKeycloakId),
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),
-    getJuryMenuEntry(),
+    await getJuryMenuEntry(userKeycloakId),
   ].filter((e) => e) as CandidacyMenuEntry[];
 };
