@@ -2,10 +2,12 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
+import { CompetenceIdAndText } from "@/graphql/generated/graphql";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useMemo, useCallback, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -26,6 +28,7 @@ const getBlocDeCompetencesQuery = graphql(`
   ) {
     getCandidacyById(id: $candidacyId) {
       dematerializedFeasibilityFile {
+        id
         blocsDeCompetences(blocDeCompetencesId: $blocDeCompetencesId) {
           id
           code
@@ -36,6 +39,18 @@ const getBlocDeCompetencesQuery = graphql(`
           }
         }
       }
+    }
+  }
+`);
+
+const createOrUpdateCompetenceDetailsMutation = graphql(`
+  mutation createOrUpdateCompetenceDetailsMutaion(
+    $input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
+  ) {
+    dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+      input: $input
+    ) {
+      id
     }
   }
 `);
@@ -56,9 +71,22 @@ const CompetenciesBlockPage = () => {
       }),
   });
 
-  const block =
+  const createOrUpdateCompetenceDetails = useMutation({
+    mutationFn: (input: {
+      candidacyId: string;
+      dematerializedFeasibilityFileId: string;
+      competenceIdAndTexts: CompetenceIdAndText[];
+    }) =>
+      graphqlClient.request(createOrUpdateCompetenceDetailsMutation, {
+        input,
+      }),
+  });
+
+  const dematerializedFile =
     getBlocDeCompetencesResponse?.getCandidacyById
-      ?.dematerializedFeasibilityFile?.blocsDeCompetences?.[0];
+      ?.dematerializedFeasibilityFile;
+
+  const block = dematerializedFile?.blocsDeCompetences?.[0];
 
   const competencesFromBlock = block?.competences;
 
@@ -96,8 +124,20 @@ const CompetenciesBlockPage = () => {
 
   useEffect(resetForm, [resetForm]);
 
-  const handleFormSubmit = handleSubmit((data) => {
-    console.log({ data });
+  const handleFormSubmit = handleSubmit(async (data) => {
+    try {
+      await createOrUpdateCompetenceDetails.mutateAsync({
+        candidacyId,
+        dematerializedFeasibilityFileId: dematerializedFile?.id || "",
+        competenceIdAndTexts: data.competences.map((c) => ({
+          competenceId: c.competenceId,
+          text: c.text,
+        })),
+      });
+      successToast("Modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   });
 
   return (
