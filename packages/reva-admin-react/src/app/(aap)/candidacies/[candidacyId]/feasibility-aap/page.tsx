@@ -2,18 +2,19 @@
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
 import {
+  BadgeCompleted,
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { CompetenceBlocsPartCompletion } from "@/graphql/generated/graphql";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-
-  const router = useRouter();
 
   const { certification, dematerializedFeasibilityFile } =
     useAapFeasibilityPageLogic();
@@ -25,28 +26,34 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
-      <ul className="flex flex-col gap-8">
-        <DefaultCandidacySectionCard
-          title="Descriptif de la certification"
-          titleIconClass="fr-icon-award-fill"
-          status={
-            dematerializedFeasibilityFile?.certificationPartComplete
-              ? "COMPLETED"
-              : "TO_COMPLETE"
-          }
-          buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
-        >
-          <p className="text-xl font-bold mb-2">{certification?.label}</p>
-          <p className="text-xs mb-0 text-dsfr-light-text-mention-grey">
-            RNCP {certification?.codeRncp}
-          </p>
-        </DefaultCandidacySectionCard>
-        <CandidacySectionCard
-          title="Blocs de compétences"
-          titleIconClass="fr-icon-survey-fill"
-          badge={<BadgeToComplete />}
-        >
-          {dematerializedFeasibilityFile && (
+      {dematerializedFeasibilityFile && (
+        <ul className="flex flex-col gap-8">
+          <DefaultCandidacySectionCard
+            title="Descriptif de la certification"
+            titleIconClass="fr-icon-award-fill"
+            status={
+              dematerializedFeasibilityFile?.certificationPartComplete
+                ? "COMPLETED"
+                : "TO_COMPLETE"
+            }
+            buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
+          >
+            <p className="text-xl font-bold mb-2">{certification?.label}</p>
+            <p className="text-xs mb-0 text-dsfr-light-text-mention-grey">
+              RNCP {certification?.codeRncp}
+            </p>
+          </DefaultCandidacySectionCard>
+          <CandidacySectionCard
+            title="Blocs de compétences"
+            titleIconClass="fr-icon-survey-fill"
+            badge={
+              <CompetencesSectionBadge
+                completion={
+                  dematerializedFeasibilityFile?.competenceBlocsPartCompletion
+                }
+              />
+            }
+          >
             <ul className="list-none flex flex-col gap-2">
               {dematerializedFeasibilityFile?.blocsDeCompetences?.map((bc) => (
                 <li key={bc.id} className="flex flex-grow items-center">
@@ -62,11 +69,26 @@ const AapFeasibilityPage = () => {
                 </li>
               ))}
             </ul>
-          )}
-        </CandidacySectionCard>
-      </ul>
+          </CandidacySectionCard>
+        </ul>
+      )}
     </div>
   );
 };
 
 export default AapFeasibilityPage;
+
+const CompetencesSectionBadge = ({
+  completion,
+}: {
+  completion: CompetenceBlocsPartCompletion;
+}) => {
+  switch (completion) {
+    case "COMPLETED":
+      return <BadgeCompleted />;
+    case "IN_PROGRESS":
+      return <Badge severity="info">En cours</Badge>;
+    default:
+      return <BadgeToComplete />;
+  }
+};

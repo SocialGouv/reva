@@ -12,6 +12,7 @@ const getCandidacyById = graphql(`
       }
       dematerializedFeasibilityFile {
         certificationPartComplete
+        competenceBlocsPartCompletion
         blocsDeCompetences {
           id
           code
