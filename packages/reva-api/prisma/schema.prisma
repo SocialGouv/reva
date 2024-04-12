@@ -77,7 +77,7 @@ model CertificationCompetenceBloc {
   //
   FCCompetences                  String?                          @map("fc_competences") @db.VarChar
   competences                    CertificationCompetence[]
-  DFFCertificationCompetenceBloc DFFCertificationCompetenceBloc[]
+  dffCertificationCompetenceBloc DFFCertificationCompetenceBloc[]
 
   @@map("certification_competence_bloc")
 }
@@ -1407,14 +1407,8 @@ model CandidacyLog {
 }
 
 model DematerializedFeasibilityFile {
-  id                              String                           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacyId                     String                           @map("candidacy_id") @db.Uuid
-  candidacy                       Candidacy                        @relation(fields: [candidacyId], references: [id])
-  firstForeignLanguage            String?                          @map("first_foreign_language")
-  secondForeignLanguage           String?                          @map("second_foreign_language")
-  option                          String?                          @map("option")
-  dFFCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
-  certificationPartComplete       Boolean                          @default(false) @map("certification_part_complete")
+  dffCertificationCompetenceBlocs   DFFCertificationCompetenceBloc[]
+  certificationPartComplete         Boolean                             @default(false) @map("certification_part_complete")
 
   @@map("dematerialized_feasibility_file")
 }

@@ -17,7 +17,7 @@ export const createOrUpdateCertificationInfo = async ({
     firstForeignLanguage: input.firstForeignLanguage,
     secondForeignLanguage: input.secondForeignLanguage,
     option: input.option,
-    dFFCertificationCompetenceBlocs: {
+    dffCertificationCompetenceBlocs: {
       createMany: {
         data: input.blocDeCompetencesIds.map((bcid) => ({
           certificationCompetenceBlocId: bcid,

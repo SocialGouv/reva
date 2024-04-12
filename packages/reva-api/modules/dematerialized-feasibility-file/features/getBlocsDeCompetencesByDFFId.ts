@@ -7,7 +7,7 @@ export const getBlocsDeCompetencesByDFFId = ({
 }) =>
   prismaClient.certificationCompetenceBloc.findMany({
     where: {
-      DFFCertificationCompetenceBloc: {
+      dffCertificationCompetenceBloc: {
         some: { dematerializedFeasibilityFileId },
       },
     },
