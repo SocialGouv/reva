@@ -6,6 +6,12 @@ type DematerializedFeasibilityFile {
   option: String
   blocsDeCompetences(blocDeCompetencesId: ID): [CertificationCompetenceBloc!]!
   certificationPartComplete: Boolean!
+  certificationCompetenceDetails: [CertificationCompetenceDetails!]!
+}
+
+type CertificationCompetenceDetails {
+  certificationCompetence: CertificationCompetence!
+  text: String!
 }
 
 type Candidacy {

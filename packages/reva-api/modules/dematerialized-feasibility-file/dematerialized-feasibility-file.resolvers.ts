@@ -9,6 +9,8 @@ import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertif
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
+import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
+import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -23,6 +25,21 @@ export const unsafeResolvers = {
       blocDeCompetencesId
         ? [getCompetenceBlocsById({ competenceBlocId: blocDeCompetencesId })]
         : getBlocsDeCompetencesByDFFId({ dematerializedFeasibilityFileId }),
+    certificationCompetenceDetails: ({
+      id: dematerializedFeasibilityFileId,
+    }: {
+      id: string;
+    }) =>
+      getCertificationCompetenceDetailsByDFFId({
+        dematerializedFeasibilityFileId,
+      }),
+  },
+  CertificationCompetenceDetails: {
+    certificationCompetence: ({
+      certificationCompetenceId,
+    }: {
+      certificationCompetenceId: string;
+    }) => getCertificationCompetenceById({ certificationCompetenceId }),
   },
   Candidacy: {
     dematerializedFeasibilityFile: ({ id: candidacyId }: { id: string }) =>
