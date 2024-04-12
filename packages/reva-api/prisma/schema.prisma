@@ -1407,15 +1407,23 @@ model CandidacyLog {
   @@map("candidacy_log")
 }
 
+enum CompetenceBlocsPartCompletionEnum {
+  TO_COMPLETE
+  COMPLETED
+  IN_PROGRESS
+}
+
 model DematerializedFeasibilityFile {
-  id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacyId                       String                              @map("candidacy_id") @db.Uuid
-  candidacy                         Candidacy                           @relation(fields: [candidacyId], references: [id])
-  firstForeignLanguage              String?                             @map("first_foreign_language")
-  secondForeignLanguage             String?                             @map("second_foreign_language")
-  option                            String?                             @map("option")
-  dffCertificationCompetenceBlocs   DFFCertificationCompetenceBloc[]
-  certificationPartComplete         Boolean                             @default(false) @map("certification_part_complete")
+  id                              String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                     String                            @map("candidacy_id") @db.Uuid
+  candidacy                       Candidacy                         @relation(fields: [candidacyId], references: [id])
+  firstForeignLanguage            String?                           @map("first_foreign_language")
+  secondForeignLanguage           String?                           @map("second_foreign_language")
+  option                          String?                           @map("option")
+  dffCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
+  certificationPartComplete       Boolean                           @default(false) @map("certification_part_complete")
+  competenceBlocsPartCompletion   CompetenceBlocsPartCompletionEnum @default(TO_COMPLETE) @map("competence_blocs_part_completion")
+
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("dematerialized_feasibility_file")

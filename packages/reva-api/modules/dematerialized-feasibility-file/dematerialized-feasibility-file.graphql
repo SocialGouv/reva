@@ -6,7 +6,14 @@ type DematerializedFeasibilityFile {
   option: String
   blocsDeCompetences(blocDeCompetencesId: ID): [CertificationCompetenceBloc!]!
   certificationPartComplete: Boolean!
+  competenceBlocsPartCompletion: CompetenceBlocsPartCompletion!
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
+}
+
+enum CompetenceBlocsPartCompletion {
+  TO_COMPLETE
+  COMPLETED
+  IN_PROGRESS
 }
 
 type CertificationCompetenceDetails {
