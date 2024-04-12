@@ -29,6 +29,12 @@ const getBlocDeCompetencesQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       dematerializedFeasibilityFile {
         id
+        certificationCompetenceDetails {
+          certificationCompetence {
+            id
+          }
+          text
+        }
         blocsDeCompetences(blocDeCompetencesId: $blocDeCompetencesId) {
           id
           code
@@ -95,10 +101,12 @@ const CompetenciesBlockPage = () => {
       competences: competencesFromBlock?.map((c) => ({
         competenceId: c.id,
         label: c.label,
-        text: "",
+        text: dematerializedFile?.certificationCompetenceDetails.find(
+          (ccd) => ccd.certificationCompetence.id === c.id,
+        )?.text,
       })),
     }),
-    [competencesFromBlock],
+    [competencesFromBlock, dematerializedFile?.certificationCompetenceDetails],
   );
 
   const {
@@ -153,9 +161,10 @@ const CompetenciesBlockPage = () => {
           <h2 className="mb-0">{block.code}</h2>
           <p className="text-lg font-medium">{block.label}</p>
           <form
-            onSubmit={(e) => {
+            onSubmit={handleFormSubmit}
+            onReset={(e) => {
               e.preventDefault();
-              handleFormSubmit();
+              resetForm();
             }}
           >
             {competencesFields?.map((c, i) => (
