@@ -83,13 +83,14 @@ model CertificationCompetenceBloc {
 }
 
 model CertificationCompetence {
-  id        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
-  label     String                      @db.VarChar
-  index     Int?                        @db.Integer
+  id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                         DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
+  label                             String                              @db.VarChar
+  index                             Int?                                @db.Integer
   //
-  blocId    String                      @map("bloc_id") @db.Uuid
-  bloc      CertificationCompetenceBloc @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  blocId                            String                              @map("bloc_id") @db.Uuid
+  bloc                              CertificationCompetenceBloc         @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("certification_competence")
 }
@@ -1407,8 +1408,15 @@ model CandidacyLog {
 }
 
 model DematerializedFeasibilityFile {
+  id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                       String                              @map("candidacy_id") @db.Uuid
+  candidacy                         Candidacy                           @relation(fields: [candidacyId], references: [id])
+  firstForeignLanguage              String?                             @map("first_foreign_language")
+  secondForeignLanguage             String?                             @map("second_foreign_language")
+  option                            String?                             @map("option")
   dffCertificationCompetenceBlocs   DFFCertificationCompetenceBloc[]
   certificationPartComplete         Boolean                             @default(false) @map("certification_part_complete")
+  dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("dematerialized_feasibility_file")
 }
@@ -1422,4 +1430,16 @@ model DFFCertificationCompetenceBloc {
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("dff_certification_competence_bloc")
+}
+
+model DFFCertificationCompetenceDetails {
+  id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
+  certificationCompetenceId       String                        @map("certification_competence_bloc_id") @db.Uuid
+  certificationCompetence         CertificationCompetence       @relation(fields: [certificationCompetenceId], references: [id])
+  text                            String
+  createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("dff_certification_competence_details")
 }

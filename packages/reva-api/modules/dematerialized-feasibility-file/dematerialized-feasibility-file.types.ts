@@ -6,3 +6,9 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInp
   blocDeCompetencesIds: string[];
   completion: "COMPLETE" | "PARTIAL";
 }
+
+export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
+  candidacyId: string;
+  dematerializedFeasibilityFileId: string;
+  competenceIdAndTexts: { competenceId: string; text: string }[];
+}

@@ -26,8 +26,23 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
   completion: CertificationCompletion!
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
+  candidacyId: ID!
+  dematerializedFeasibilityFileId: ID!
+  competenceIdAndTexts: [CompetenceIdAndText!]!
+}
+
+input CompetenceIdAndText {
+  competenceId: ID!
+  text: String!
+}
+
 type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationInfo(
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+    input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
   ): DematerializedFeasibilityFile!
 }
