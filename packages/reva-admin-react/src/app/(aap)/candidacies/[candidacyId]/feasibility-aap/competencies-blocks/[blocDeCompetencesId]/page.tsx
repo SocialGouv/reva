@@ -81,6 +81,7 @@ const CompetenciesBlockPage = () => {
     mutationFn: (input: {
       candidacyId: string;
       dematerializedFeasibilityFileId: string;
+      competenceBlocId: string;
       competenceIdAndTexts: CompetenceIdAndText[];
     }) =>
       graphqlClient.request(createOrUpdateCompetenceDetailsMutation, {
@@ -137,6 +138,7 @@ const CompetenciesBlockPage = () => {
       await createOrUpdateCompetenceDetails.mutateAsync({
         candidacyId,
         dematerializedFeasibilityFileId: dematerializedFile?.id || "",
+        competenceBlocId: blocDeCompetencesId,
         competenceIdAndTexts: data.competences.map((c) => ({
           competenceId: c.competenceId,
           text: c.text,

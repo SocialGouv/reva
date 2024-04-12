@@ -4,6 +4,7 @@ import { CompetenceBlocsPartCompletionEnum } from "@prisma/client";
 
 export const createOrUpdateCertificationCompetenceDetails = async ({
   dematerializedFeasibilityFileId,
+  competenceBlocId,
   competenceIdAndTexts,
 }: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput) => {
   if (!dematerializedFeasibilityFileId) {
@@ -11,7 +12,10 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
   }
 
   await prismaClient.dFFCertificationCompetenceDetails.deleteMany({
-    where: { dematerializedFeasibilityFileId },
+    where: {
+      dematerializedFeasibilityFileId,
+      certificationCompetence: { blocId: competenceBlocId },
+    },
   });
 
   await prismaClient.dFFCertificationCompetenceDetails.createMany({

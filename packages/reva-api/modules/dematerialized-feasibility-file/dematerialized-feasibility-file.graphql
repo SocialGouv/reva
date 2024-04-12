@@ -42,6 +42,7 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
 input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
   candidacyId: ID!
   dematerializedFeasibilityFileId: ID!
+  competenceBlocId: ID!
   competenceIdAndTexts: [CompetenceIdAndText!]!
 }
 
