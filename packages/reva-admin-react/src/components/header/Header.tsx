@@ -117,8 +117,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isAdminCertificationAuthority &&
-        isFeatureActive("ADMIN_CERTIFICATION_AUTHORITY")
+        ...(isAdminCertificationAuthority
           ? [
               {
                 text: "Gestion des comptes locaux",
