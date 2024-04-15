@@ -15,7 +15,11 @@ import { z } from "zod";
 
 const schema = z.object({
   competences: z
-    .object({ competenceId: z.string(), label: z.string(), text: z.string() })
+    .object({
+      competenceId: z.string(),
+      label: z.string(),
+      text: z.string().min(1, "Ce champ est obligatoire"),
+    })
     .array(),
 });
 
@@ -115,7 +119,7 @@ const CompetenciesBlockPage = () => {
     handleSubmit,
     reset,
     control,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -178,6 +182,10 @@ const CompetenciesBlockPage = () => {
                 nativeTextAreaProps={{
                   ...register(`competences.${i}.text`),
                 }}
+                stateRelatedMessage={
+                  errors?.competences?.[i]?.text?.message as string
+                }
+                state={errors?.competences?.[i]?.text ? "error" : "default"}
               />
             ))}
             <FormButtons
