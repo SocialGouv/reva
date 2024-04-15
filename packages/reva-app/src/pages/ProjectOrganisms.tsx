@@ -9,7 +9,7 @@ import { useActor } from "@xstate/react";
 import classNames from "classnames";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { SearchBar } from "components/molecules/SearchBar/SearchBar";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -160,8 +160,14 @@ interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
+interface State {
+  rows: Organism[];
+  offset: number;
+  hasMore: boolean;
+}
+
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
-  const [state, send] = useActor(mainService);
+  const [xstate, send] = useActor(mainService);
   const {
     selectedDepartment,
     organism,
@@ -170,7 +176,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchText,
     organismSearchOnsite,
     organismSearchRemote,
-  } = state.context;
+  } = xstate.context;
 
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     organism?.id || ""
@@ -185,6 +191,34 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
 
   const isOrganismsLoaded = organisms && organisms.rows.length > 0;
 
+  const [state, setState] = useState<State>({
+    rows: [],
+    offset: 0,
+    hasMore: false,
+  });
+
+  const loadOrganisms = () => {
+    const { offset } = state;
+
+    const nextOffset = offset + 10;
+    const rows = organisms?.rows.slice(0, nextOffset) || [];
+
+    setState({
+      ...state,
+      rows,
+      offset: nextOffset,
+      hasMore: rows.length < (organisms?.rows || []).length,
+    });
+  };
+
+  useEffect(() => {
+    if (isOrganismsLoaded) {
+      loadOrganisms();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOrganismsLoaded]);
+
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
@@ -198,7 +232,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         <SearchBar
           label="Recherchez votre organisme d’accompagnement en saisissant son nom"
           nativeInputProps={{
-            defaultValue: state.context.organismSearchText,
+            defaultValue: organismSearchText,
             onChange: (e) => {
               send({
                 type: "SET_ORGANISM_SEARCH",
@@ -292,23 +326,28 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         )}
         <Organisms
           alreadySelectedOrganismId={selectedOrganismId}
-          availableOrganisms={organisms}
+          availableOrganisms={{
+            rows: state.rows,
+            totalRows: organisms?.totalRows || 0,
+          }}
           setOrganismId={setSelectedOrganismId}
         />
         <div className="mt-6 w-full flex flex-row items-center justify-between">
-          <Button
-            data-test="project-organisms-refresh-organisms"
-            priority="secondary"
-            nativeButtonProps={{
-              onClick: () => {
-                send({
-                  type: "REFRESH_ORGANISMS",
-                });
-              },
-            }}
-          >
-            Rafraîchir la liste
-          </Button>
+          {state.hasMore ? (
+            <Button
+              data-test="project-organisms-refresh-organisms"
+              priority="secondary"
+              nativeButtonProps={{
+                onClick: () => {
+                  loadOrganisms();
+                },
+              }}
+            >
+              Afficher plus d'organismes
+            </Button>
+          ) : (
+            <div />
+          )}
           <Button
             data-test="project-organisms-submit-organism"
             disabled={!isOrganismsLoaded}
@@ -320,7 +359,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                     organism: {
                       candidacyId,
                       selectedOrganismId:
-                        selectedOrganismId || organisms.rows[0]?.id,
+                        selectedOrganismId || state.rows[0]?.id,
                     },
                   });
                 }
