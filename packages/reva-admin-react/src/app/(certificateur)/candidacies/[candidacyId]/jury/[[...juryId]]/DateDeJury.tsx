@@ -91,6 +91,7 @@ export const DateDeJury = (): JSX.Element => {
           ...data,
           date,
           time,
+          timeSpecified: !!data.time,
           candidacyId: candidacy.id,
           convocationFile: data.convocationFile?.[0],
         });

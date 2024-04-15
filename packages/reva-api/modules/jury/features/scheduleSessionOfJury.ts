@@ -14,6 +14,7 @@ interface ScheduleSessionOfJury {
   candidacyId: string;
   date: string;
   time?: string;
+  timeSpecified: boolean;
   address?: string;
   information?: string;
   convocationFile?: UploadedFile;
@@ -26,6 +27,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const {
     candidacyId,
     date,
+    timeSpecified,
     time,
     address,
     information,
@@ -84,7 +86,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const nextTwoYears = endOfDay(add(today, { years: 2 }));
   let timeOfSession;
 
-  if (time) {
+  if (time && timeSpecified) {
     const timeOfSessionHours = new Date(Number(time)).getHours();
     const timeOfSessionMinutes = (
       "0" + new Date(Number(time)).getMinutes()
@@ -118,6 +120,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       candidacy: { connect: { id: candidacyId } },
       dateOfSession,
       timeOfSession,
+      timeSpecified,
       addressOfSession: address,
       informationOfSession: information,
       convocationFile: convocationFile

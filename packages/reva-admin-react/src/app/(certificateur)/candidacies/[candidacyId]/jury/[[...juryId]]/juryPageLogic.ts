@@ -48,6 +48,7 @@ const updateJuryResultMutation = graphql(`
       id
       dateOfSession
       timeOfSession
+      timeSpecified
       addressOfSession
       informationOfSession
       result
@@ -65,6 +66,7 @@ export type ScheduleJuryInputType = {
   candidacyId: string;
   date: string;
   time?: string;
+  timeSpecified: boolean;
   address?: string;
   information?: string;
   convocationFile?: File;
@@ -93,6 +95,7 @@ export const useJuryPageLogic = () => {
       const formData = new FormData();
       formData.append("candidacyId", data.candidacyId);
       formData.append("date", data.date);
+      formData.append("timeSpecified", data.timeSpecified ? "true" : "false");
 
       if (data.time) {
         formData.append("time", data.time);

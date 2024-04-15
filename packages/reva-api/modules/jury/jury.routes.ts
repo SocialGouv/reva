@@ -11,6 +11,7 @@ interface ScheduleSessionOfJuryBody {
   candidacyId: { value: string };
   date: { value: string };
   time?: { value: string };
+  timeSpecified?: { value: string };
   address?: { value: string };
   information?: { value: string };
   convocationFile?: UploadedFile;
@@ -112,6 +113,14 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
               },
             },
           },
+          timeSpecified: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
           address: {
             type: "object",
             properties: {
@@ -177,6 +186,7 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           candidacyId: request.body.candidacyId.value,
           date: request.body.date.value,
           time: request.body.time?.value,
+          timeSpecified: request.body.timeSpecified?.value === "true",
           address: request.body.address?.value,
           information: request.body.information?.value,
           convocationFile,
