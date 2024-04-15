@@ -127,12 +127,6 @@ headerMenuModal context activeHeaderLink =
         adminReactUrl url =
             context.adminReactUrl ++ url
 
-        isAccountSettingsActive =
-            List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures
-
-        isAgenciesActive =
-            List.member "AAP_AGENCES" context.activeFeatures
-
         certificateursCandidaciesLabel =
             if Api.Token.isAdmin context.token then
                 "Certificateurs/Candidatures"
@@ -159,21 +153,16 @@ headerMenuModal context activeHeaderLink =
                 [ itemLink "Dossiers de faisabilité" (adminReactUrl "/candidacies/feasibilities") True False ]
 
             else if
-                (isAccountSettingsActive || isAgenciesActive)
-                    && Api.Token.isOrganism context.token
+                Api.Token.isOrganism context.token
                     && not (Api.Token.isAdmin context.token)
             then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
-                , if isAgenciesActive && Api.Token.isGestionnaireMaisonMereAAP context.token then
+                , if Api.Token.isGestionnaireMaisonMereAAP context.token then
                     itemLink "Gestion des agences" (adminReactUrl "/agences") True False
 
                   else
                     text ""
-                , if isAccountSettingsActive then
-                    itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False
-
-                  else
-                    text ""
+                , itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False
                 ]
 
             else

@@ -37,7 +37,7 @@ export const Header = () => {
             ]
           : []),
 
-        ...(isGestionnaireMaisonMereAAP && isFeatureActive("AAP_AGENCES")
+        ...(isGestionnaireMaisonMereAAP
           ? [
               {
                 text: "Gestion des agences",
@@ -49,7 +49,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isOrganism && !isAdmin && isFeatureActive("AAP_ACCOUNT_SETTINGS")
+        ...(isOrganism && !isAdmin
           ? [
               {
                 text: "Paramètres du compte",
