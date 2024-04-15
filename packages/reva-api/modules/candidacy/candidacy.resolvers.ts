@@ -4,6 +4,7 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { Role } from "../account/account.types";
+import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { generateJwt } from "../candidate/auth.helper";
 import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
@@ -32,12 +33,15 @@ import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
+import { getAAPsWithZipCodeAndDistance } from "./features/getAAPsWithZipCodeAndDistance";
 import { getAdmissibility } from "./features/getAdmissibility";
+import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getBasicSkills } from "./features/getBasicSkills";
 import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
+import { getCandidacyGoals } from "./features/getCandidacyGoals";
 import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getOrganismsForCandidacy";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
@@ -49,6 +53,7 @@ import { submitTraining } from "./features/submitTrainingForm";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAdmissibility } from "./features/updateAdmissibility";
+import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
@@ -61,10 +66,6 @@ import { logCandidacyEvent } from "./logCandidacyEvent";
 import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import { sendCandidacyDropOutEmail, sendTrainingEmail } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
-import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
-import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
-import { getCandidacyGoals } from "./features/getCandidacyGoals";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -170,18 +171,34 @@ const unsafeResolvers = {
       _: unknown,
       {
         candidacyId,
-        searchText,
         searchFilter,
+        searchText,
+        searchZipOrCity,
+        searchDistance,
       }: {
         candidacyId: string;
-        searchText?: string;
         searchFilter: SearchOrganismFilter;
+        searchText?: string;
+        searchZipOrCity?: string;
+        searchDistance?: number;
       },
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: candidacyId },
         include: { organism: true },
       });
+
+      if (searchZipOrCity && searchDistance) {
+        const searchIsZip = searchZipOrCity.match(/^\d{5}$/);
+        const res = await getAAPsWithZipCodeAndDistance({
+          zip: searchIsZip ? searchZipOrCity : undefined,
+          city: searchIsZip ? undefined : searchZipOrCity,
+          distance: searchDistance,
+          limit: 51,
+          searchText,
+        });
+        console.log("res", res);
+      }
 
       const result = await getRandomOrganismsForCandidacyWithNewTypologies({
         getRandomActiveOrganismForCertificationAndDepartment:

@@ -389,6 +389,7 @@ model Organism {
   address                                                String
   zip                                                    String                                                   @db.VarChar(5)
   city                                                   String                                                   @db.VarChar(255)
+  ll_to_earth                                            String?                                                  @map("ll_to_earth")
   contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
   contactAdministrativePhone                             String?                                                  @map("contact_administrative_phone") @db.VarChar(50)
   siret                                                  String

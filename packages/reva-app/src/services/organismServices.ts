@@ -6,11 +6,15 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
     $departmentId: UUID!
     $searchText: String
     $searchFilter: SearchOrganismFilter
+    $searchZipOrCity: String
+    $searchDistance: Int
   ) {
     getRandomOrganismsForCandidacy(
       candidacyId: $candidacyId
       searchText: $searchText
       searchFilter: $searchFilter
+      searchZipOrCity: $searchZipOrCity
+      searchDistance: $searchDistance
     ) {
       rows {
         id
@@ -48,15 +52,26 @@ export const getRandomOrganismsForCandidacy =
     departmentId,
     searchText,
     searchFilter,
+    searchDistance,
+    searchZipOrCity,
   }: {
     candidacyId: string;
     departmentId: string;
     searchText?: string;
     searchFilter: { distanceStatus?: string };
+    searchDistance?: number;
+    searchZipOrCity?: string;
   }) =>
     client.query({
       query: GET_ORGANISMS_FOR_CANDIDACY,
-      variables: { candidacyId, departmentId, searchText, searchFilter },
+      variables: {
+        candidacyId,
+        departmentId,
+        searchText,
+        searchFilter,
+        searchDistance,
+        searchZipOrCity,
+      },
       fetchPolicy: "no-cache",
     });
 
