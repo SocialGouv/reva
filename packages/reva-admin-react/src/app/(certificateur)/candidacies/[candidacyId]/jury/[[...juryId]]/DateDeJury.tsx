@@ -69,9 +69,7 @@ export const DateDeJury = (): JSX.Element => {
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
       try {
-        let date = new Date(format(data.date, "yyyy-MM-dd"))
-          .valueOf()
-          .toString();
+        let date = new Date(`${data.date}T00:00:00`).valueOf().toString();
         let time;
         if (data.time) {
           date = new Date(data.date)
@@ -165,7 +163,11 @@ export const DateDeJury = (): JSX.Element => {
 
             <Card
               label="Heure de convocation"
-              value={format(new Date(jury?.dateOfSession), "HH:mm")}
+              value={
+                jury?.timeSpecified
+                  ? format(new Date(jury?.dateOfSession), "HH:mm")
+                  : "Non renseigné"
+              }
             />
 
             <Card label="Lieu" value={jury.addressOfSession} />

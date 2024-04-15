@@ -28,6 +28,7 @@ const getJuryByCandidacyIdQuery = graphql(`
         id
         dateOfSession
         timeOfSession
+        timeSpecified
         addressOfSession
         informationOfSession
         result
