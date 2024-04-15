@@ -21,7 +21,6 @@ export const Header = () => {
   const candidaciesLabel = isAdmin
     ? "Certificateurs/Candidatures"
     : "Candidatures";
-
   const navigation = authenticated
     ? [
         ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
@@ -33,6 +32,20 @@ export const Header = () => {
                   target: "_self",
                 },
                 isActive: !!currentPathname.match(/\/candidacies\/.*\/logs/),
+              },
+            ]
+          : []),
+
+        ...(isFeatureActive("AGENCIES_SETTINGS") &&
+        (isOrganism || isGestionnaireMaisonMereAAP)
+          ? [
+              {
+                text: "Paramètres des agences",
+                linkProps: {
+                  href: "/agencies-settings",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith("/agencies-settings"),
               },
             ]
           : []),
