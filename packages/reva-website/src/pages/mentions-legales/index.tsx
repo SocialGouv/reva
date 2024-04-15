@@ -34,8 +34,8 @@ const IndexMentionsLegalesPage = () => {
           title="Directeur de la publication"
         >
           <SectionParagraph>
-            Monsieur Bruno Lucas, Délégué général à l’emploi et à la formation
-            professionnelle. 
+            Monsieur Jérôme Marchand-Arvier, Délégué général à l’emploi et à la
+            formation professionnelle. 
           </SectionParagraph>
         </ContentSection>
         <ContentSection id="hebergement" title="Hébergement du site">

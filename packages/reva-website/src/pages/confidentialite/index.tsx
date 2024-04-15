@@ -28,7 +28,7 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Le responsable de traitement est la Délégation générale à l’emploi
             et à la formation professionnelle (DGEFP) représentée par Monsieur
-            Bruno Lucas.
+            Jérôme Marchand-Arvier.
           </SectionParagraph>
           <SectionParagraph>
             Le responsable de traitement s’engage à ce que la collecte et le
