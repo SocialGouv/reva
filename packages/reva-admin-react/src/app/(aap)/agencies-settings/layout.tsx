@@ -1,7 +1,20 @@
 "use client";
-import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
+import { useAuth } from "@/components/auth/auth";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+const agenciesInfoForConnectedUserQuery = graphql(`
+  query getAgenciesInfoForConnectedUser {
+    account_getAccountForConnectedUser {
+      organism {
+        id
+      }
+    }
+  }
+`);
 
 export const AgenciesSettingsLayout = ({
   children,
@@ -9,12 +22,43 @@ export const AgenciesSettingsLayout = ({
   children: ReactNode;
 }) => {
   const currentPathname = usePathname();
+  const { isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
 
-  const getNavItem = ({ text, href }: { text: string; href: string }) => ({
+  const { graphqlClient } = useGraphQlClient();
+
+  const { data: agenciesInfoForConnectedUserResponse } = useQuery({
+    queryKey: ["agencies"],
+    queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
+  });
+
+  const getNavItem = ({
+    text,
+    href,
+  }: {
+    text: string;
+    href: string;
+  }): SideMenuProps.Item => ({
     text,
     linkProps: { href },
     isActive: !!currentPathname.match(new RegExp(`^${href}.*$`)),
   });
+  const getNavItems = () => {
+    let items: SideMenuProps.Item[] = [];
+    if (isGestionnaireMaisonMereAAP) {
+      items = [];
+    } else if (isOrganism) {
+      const organismId =
+        agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
+          ?.organism?.id;
+      items = [
+        getNavItem({
+          text: "Informations commerciales",
+          href: `/agencies-settings/${organismId}/commercial-information`,
+        }),
+      ];
+    }
+    return items;
+  };
 
   return (
     <div className="flex">
@@ -30,6 +74,7 @@ export const AgenciesSettingsLayout = ({
             text: "Informations juridiques",
             href: "/agencies-settings/legal-information",
           }),
+          ...getNavItems(),
         ]}
       />
       {children}
