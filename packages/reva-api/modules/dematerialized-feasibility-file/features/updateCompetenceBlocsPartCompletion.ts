@@ -41,9 +41,16 @@ export const updateCompetenceBlocsPartCompletion = async ({
 
   let competenceBlocsPartCompletion: CompetenceBlocsPartCompletionEnum =
     "TO_COMPLETE";
+
+  //all details are completed
   if (dffCompetenceCount - dffCertificationCompetenceDetailsCount === 0) {
     competenceBlocsPartCompletion = "COMPLETED";
-  } else if (dffCompetenceCount > 0) {
+  }
+  //some details are not completed
+  else if (
+    dffCertificationCompetenceDetailsCount !== 0 &&
+    dffCompetenceCount >= 0
+  ) {
     competenceBlocsPartCompletion = "IN_PROGRESS";
   }
 
