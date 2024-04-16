@@ -1,7 +1,5 @@
 "use client";
-import { NotImplementedPage } from "@/app/(aap)/account-settings/components/not-implemented-page/NotImplementedPage";
 import { useAbsencePage } from "@/app/(aap)/agencies-settings/[organismId]/absence/absencePage.hook";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -18,8 +16,6 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const AbsencePage = () => {
-  const { isFeatureActive } = useFeatureflipping();
-
   const {
     organism,
     organismQueryStatus,
@@ -55,7 +51,7 @@ const AbsencePage = () => {
     await refetchOrganism();
   });
 
-  return isFeatureActive("FERMETURE_AGENCE_POUR_ABSENCE_OU_CONGES") ? (
+  return (
     <div className="flex flex-col">
       <h1>Gestion des absences et fermetures</h1>
 
@@ -122,8 +118,6 @@ const AbsencePage = () => {
         </>
       )}
     </div>
-  ) : (
-    <NotImplementedPage title="Gestion des absences et congés" />
   );
 };
 
