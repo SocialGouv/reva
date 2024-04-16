@@ -1,5 +1,5 @@
 "use client";
-import { useCommercialInformationPage } from "@/app/(aap)/agencies-settings/[organismId]/commercial-information/commercialInformationPage.hook";
+import { useCommercialInformationPage } from "./commercialInformationPage.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";

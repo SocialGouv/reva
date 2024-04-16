@@ -1,5 +1,5 @@
 "use client";
-import { useAbsencePage } from "@/app/(aap)/agencies-settings/[organismId]/absence/absencePage.hook";
+import { useAbsencePage } from "./absencePage.hook";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
