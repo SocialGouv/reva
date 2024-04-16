@@ -55,6 +55,10 @@ export const AgenciesSettingsLayout = ({
           text: "Informations commerciales",
           href: `/agencies-settings/${organismId}/commercial-information`,
         }),
+        getNavItem({
+          text: "Absences et fermetures",
+          href: `/agencies-settings/${organismId}/absence`,
+        }),
       ];
     }
     return items;
