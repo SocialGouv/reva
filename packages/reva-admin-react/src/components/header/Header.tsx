@@ -37,6 +37,7 @@ export const Header = () => {
           : []),
 
         ...(isFeatureActive("AGENCIES_SETTINGS") &&
+        !isAdmin &&
         (isOrganism || isGestionnaireMaisonMereAAP)
           ? [
               {
