@@ -197,10 +197,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     hasMore: false,
   });
 
-  const loadOrganisms = () => {
-    const { offset } = state;
+  const loadOrganisms = (offset?: number) => {
+    const { offset: stateOffset } = state;
 
-    const nextOffset = offset + 10;
+    const nextOffset = (offset !== undefined ? offset : stateOffset) + 10;
     const rows = organisms?.rows.slice(0, nextOffset) || [];
 
     setState({
@@ -212,12 +212,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   };
 
   useEffect(() => {
-    if (isOrganismsLoaded) {
-      loadOrganisms();
-    }
+    loadOrganisms(0);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOrganismsLoaded]);
+  }, [organisms]);
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
