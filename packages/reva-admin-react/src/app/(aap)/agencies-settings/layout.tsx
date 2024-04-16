@@ -59,6 +59,10 @@ export const AgenciesSettingsLayout = ({
           text: "Absences et fermetures",
           href: `/agencies-settings/${organismId}/absence`,
         }),
+        getNavItem({
+          text: "Responsable d'agence",
+          href: `/agencies-settings/${organismId}/manager`,
+        }),
       ];
     }
     return items;
