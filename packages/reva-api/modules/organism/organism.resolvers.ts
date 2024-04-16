@@ -272,7 +272,17 @@ export const resolvers = {
         }
 
         if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
+          if (!context.auth.hasRole("organism")) {
+            const account = await getAccountByKeycloakId({
+              keycloakId: context.auth.userInfo.sub,
+            });
+            logger.info({ account, id: params.id });
+            if (account?.organismId !== params.id) {
+              throw new Error("Utilisateur non autorisé");
+            }
+          } else {
+            throw new Error("Utilisateur non autorisé");
+          }
         }
 
         return getOrganismById({ organismId: params.id });
