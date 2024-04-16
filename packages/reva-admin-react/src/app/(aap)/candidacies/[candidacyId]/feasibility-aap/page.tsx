@@ -16,7 +16,7 @@ const AapFeasibilityPage = () => {
     candidacyId: string;
   }>();
 
-  const { certification, dematerializedFeasibilityFile } =
+  const { certification, dematerializedFeasibilityFile, queryStatus } =
     useAapFeasibilityPageLogic();
 
   return (
@@ -26,7 +26,7 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
-      {dematerializedFeasibilityFile && (
+      {queryStatus === "success" && (
         <ul className="flex flex-col gap-8">
           <DefaultCandidacySectionCard
             title="Descriptif de la certification"
@@ -49,7 +49,8 @@ const AapFeasibilityPage = () => {
             badge={
               <CompetencesSectionBadge
                 completion={
-                  dematerializedFeasibilityFile?.competenceBlocsPartCompletion
+                  dematerializedFeasibilityFile?.competenceBlocsPartCompletion ||
+                  "TO_COMPLETE"
                 }
               />
             }

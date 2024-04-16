@@ -29,17 +29,22 @@ export const useAapFeasibilityPageLogic = () => {
     candidacyId: string;
   }>();
 
-  const { data: getCandidacyByIdResponse } = useQuery({
-    queryKey: [candidacyId, "getCandidacyByIdForAAPFeasibilityPage"],
-    queryFn: () =>
-      graphqlClient.request(getCandidacyById, {
-        candidacyId,
-      }),
-  });
+  const { data: getCandidacyByIdResponse, status: getCandidacyByIdStatus } =
+    useQuery({
+      queryKey: [candidacyId, "getCandidacyByIdForAAPFeasibilityPage"],
+      queryFn: () =>
+        graphqlClient.request(getCandidacyById, {
+          candidacyId,
+        }),
+    });
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
   const dematerializedFeasibilityFile =
     candidacy?.dematerializedFeasibilityFile;
-  return { certification, dematerializedFeasibilityFile };
+  return {
+    certification,
+    dematerializedFeasibilityFile,
+    queryStatus: getCandidacyByIdStatus,
+  };
 };
