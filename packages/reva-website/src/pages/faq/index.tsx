@@ -68,7 +68,7 @@ const FaqPage = ({ sections }: { sections: GetSectionFaqsQuery }) => (
               }}
               className="max-h-[100px]"
               title={
-                <span className="flex items-center gap-8 mt-3.5">
+                <span className="flex items-center gap-8 -mt-5 mr-8">
                   {s.attributes?.pictogramme && (
                     <span>{PICTOGRAMS[s.attributes?.pictogramme]}</span>
                   )}
