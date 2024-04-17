@@ -52,6 +52,10 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           href: `/agencies-settings/${organismId}/commercial-information`,
         }),
         getNavItem({
+          text: "Certifications",
+          href: `/agencies-settings/${organismId}/certifications`,
+        }),
+        getNavItem({
           text: "Absences et fermetures",
           href: `/agencies-settings/${organismId}/absence`,
         }),
