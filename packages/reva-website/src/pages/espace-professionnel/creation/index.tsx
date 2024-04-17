@@ -145,15 +145,16 @@ const ProfessionalSpaceCreationPage = ({
 export default ProfessionalSpaceCreationPage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const availableDomaines = (await request(GRAPHQL_API_URL, getDomaines))
-    .getDomaines;
+  const availableDomaines = (
+    (await request(GRAPHQL_API_URL, getDomaines)) as any
+  ).getDomaines;
 
   const availableConventions = (
-    await request(GRAPHQL_API_URL, getConventionsCollectives)
+    (await request(GRAPHQL_API_URL, getConventionsCollectives)) as any
   ).getConventionCollectives;
 
   const availableDepartments = (
-    await request(GRAPHQL_API_URL, getDepartments)
+    (await request(GRAPHQL_API_URL, getDepartments)) as any
   ).getDepartments.sort((a: Department, b: Department) =>
     a.code.localeCompare(b.code)
   );
