@@ -1,4 +1,2 @@
-CREATE EXTENSION cube;
-CREATE EXTENSION earthdistance;
-
+-- AlterTable
 ALTER TABLE "organism" ADD COLUMN     "ll_to_earth" TEXT;
