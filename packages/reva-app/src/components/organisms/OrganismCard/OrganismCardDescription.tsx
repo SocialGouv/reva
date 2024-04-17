@@ -14,8 +14,22 @@ export const OrganismCardDescription = ({
 }) => {
   return (
     <>
-      <p className="truncate">{email}</p>
-      {phone && <p>{phone}</p>}
+      <p className="truncate">
+        <span
+          className="fr-icon-mail-line fr-icon--sm mr-2"
+          aria-hidden="true"
+        ></span>
+        {email}
+      </p>
+      {phone && (
+        <p>
+          <span
+            className="fr-icon-phone-line fr-icon--sm mr-2"
+            aria-hidden="true"
+          ></span>
+          {phone}
+        </p>
+      )}
       {location && (
         <div className="flex justify-end gap-1 mt-4">
           {location.isOnSite && (

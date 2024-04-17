@@ -36,7 +36,7 @@ export const OrganismCard = ({
         label={mandatoryInfo.label}
         website={mandatoryInfo.website}
       />
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-3">
         <OrganismCardInformationsCommerciales
           informationsCommerciales={organism.informationsCommerciales}
         />
