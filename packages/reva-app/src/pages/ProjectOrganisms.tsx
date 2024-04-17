@@ -60,19 +60,34 @@ const Organisms: FC<PropsOrganisms> = ({
     };
   };
 
+  const OrganismGroup = ({
+    indexPredicate,
+  }: {
+    indexPredicate: (index: number) => boolean;
+  }) => {
+    return (
+      <>
+        {availableOrganisms.rows
+          .filter((_, index) => indexPredicate(index))
+          .map((organism) => {
+            return (
+              <OrganismCard
+                key={organism.id}
+                organism={organism}
+                department={selectedDepartment}
+                onClick={() => submitOrganism({ organismId: organism.id })}
+              />
+            );
+          })}
+      </>
+    );
+  };
+
   if (state.context.activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")) {
     return (
       <div className="columns-2 space-y-4 gap-4">
-        {availableOrganisms.rows.map((organism) => {
-          return (
-            <OrganismCard
-              key={organism.id}
-              organism={organism}
-              department={selectedDepartment}
-              onClick={() => submitOrganism({ organismId: organism.id })}
-            />
-          );
-        })}
+        {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
+        {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
       </div>
     );
   }
@@ -201,6 +216,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchText,
     organismSearchOnsite,
     organismSearchRemote,
+    activeFeatures,
   } = xstate.context;
 
   const [selectedOrganismId, setSelectedOrganismId] = useState(
@@ -365,7 +381,13 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           setOrganismId={setSelectedOrganismId}
           selectedDepartment={selectedDepartment}
         />
-        <div className="mt-6 w-full flex flex-row items-center justify-between">
+        <div
+          className={`mt-6 w-full flex flex-row items-center ${
+            activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")
+              ? "justify-center"
+              : "justify-between"
+          }`}
+        >
           {state.hasMore ? (
             <Button
               data-test="project-organisms-refresh-organisms"
@@ -381,26 +403,28 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           ) : (
             <div />
           )}
-          <Button
-            data-test="project-organisms-submit-organism"
-            disabled={!isOrganismsLoaded}
-            nativeButtonProps={{
-              onClick: () => {
-                if (isOrganismsLoaded) {
-                  send({
-                    type: "SUBMIT_ORGANISM",
-                    organism: {
-                      candidacyId,
-                      selectedOrganismId:
-                        selectedOrganismId || state.rows[0]?.id,
-                    },
-                  });
-                }
-              },
-            }}
-          >
-            Validez votre organisme d'accompagnement
-          </Button>
+          {!activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS") && (
+            <Button
+              data-test="project-organisms-submit-organism"
+              disabled={!isOrganismsLoaded}
+              nativeButtonProps={{
+                onClick: () => {
+                  if (isOrganismsLoaded) {
+                    send({
+                      type: "SUBMIT_ORGANISM",
+                      organism: {
+                        candidacyId,
+                        selectedOrganismId:
+                          selectedOrganismId || state.rows[0]?.id,
+                      },
+                    });
+                  }
+                },
+              }}
+            >
+              Validez votre organisme d'accompagnement
+            </Button>
+          )}
         </div>
       </Page>
       <modalDistanceInfo.Component
