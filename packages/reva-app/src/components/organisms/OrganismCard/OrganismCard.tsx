@@ -36,16 +36,10 @@ export const OrganismCard = ({
         label={mandatoryInfo.label}
         website={mandatoryInfo.website}
       />
-      <div>
-        {organism.informationsCommerciales ? (
-          <OrganismCardInformationsCommerciales
-            informationsCommerciales={organism.informationsCommerciales}
-          />
-        ) : (
-          <div className="h-20 bg-gray-50 flex items-center justify-center text-gray-500 text-xs mb-4">
-            Adresse non précisée
-          </div>
-        )}
+      <div className="flex flex-col gap-y-2">
+        <OrganismCardInformationsCommerciales
+          informationsCommerciales={organism.informationsCommerciales}
+        />
         <OrganismCardDescription
           email={mandatoryInfo.email}
           phone={mandatoryInfo.phone}
