@@ -432,11 +432,11 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         size="large"
       >
         <p className="my-4">
-          Les accompagnement <strong>sur site </strong>
-          sont réalisées directement dans des locaux de l’organisme sélectionné.
+          Les accompagnements <strong>sur site </strong>
+          sont réalisés directement dans les locaux de l’organisme sélectionné.
         </p>
         <p>
-          Les accompagnement <strong>à distance</strong> se déroulent
+          Les accompagnements <strong>à distance</strong> se déroulent
           essentiellement par téléphone ou sur internet, via des outils de
           visio-conférence.
         </p>

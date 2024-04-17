@@ -27,7 +27,7 @@ export const ContactTimelineElement = () => {
               onClick={() => mainService.send("UPDATE_CONTACT")}
               disabled={status === "disabled"}
             >
-              Modifier les informations
+              Modifiez les informations
             </Button>
           )}
         </>

@@ -116,7 +116,7 @@ export const CandidateRegistrationForm = ({
         <Select
           data-testid="candidate-registration-form-department-select"
           label="Département"
-          hint="Entrez votre département"
+          hint="Entrez votre département de résidence"
           state={errors.departmentId ? "error" : "default"}
           stateRelatedMessage={errors.departmentId?.message}
           nativeSelectProps={{

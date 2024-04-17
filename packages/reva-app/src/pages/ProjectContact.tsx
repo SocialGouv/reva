@@ -167,7 +167,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             <legend>
               <h2 className="mt-6 text-3xl mb-2 text-dsfrBlue-500">
                 {hasCandidacy
-                  ? "Modifier vos informations"
+                  ? "Modifiez vos informations"
                   : "Créer votre compte"}
               </h2>
             </legend>
@@ -256,7 +256,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             data-test={`project-contact-${editedContact ? "save" : "add"}`}
             className="mt-6 self-end w-full sm:w-auto flex justify-center"
           >
-            {hasCandidacy ? "Modifier les informations" : "Créer votre compte"}
+            {hasCandidacy ? "Modifiez les informations" : "Créer votre compte"}
           </Button>
         </form>
         {!hasCandidacy && (
