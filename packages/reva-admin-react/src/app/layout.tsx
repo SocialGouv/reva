@@ -34,7 +34,7 @@ import { useAuth } from "@/components/auth/auth";
 
 const keycloakInstance =
   typeof window !== "undefined"
-    ? Keycloak({
+    ? new Keycloak({
         clientId: KEYCLOAK_CLIENT_ID || "",
         realm: KEYCLOAK_REALM || "",
         url: KEYCLOAK_URL,

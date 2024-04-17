@@ -8,7 +8,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useSearchFilterFeasibilitiesStore } from "./(components)/useSearchFilterFeasibilitiesStore";
 
-export const getFeasibilityCountByCategoryQuery = graphql(`
+const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory($searchFilter: String) {
     feasibilityCountByCategory(searchFilter: $searchFilter) {
       ALL
@@ -22,7 +22,7 @@ export const getFeasibilityCountByCategoryQuery = graphql(`
   }
 `);
 
-export const getDossierDeValidationCountByCategoryQuery = graphql(`
+const getDossierDeValidationCountByCategoryQuery = graphql(`
   query getDossierDeValidationCountByCategory($searchFilter: String) {
     dossierDeValidation_dossierDeValidationCountByCategory(
       searchFilter: $searchFilter
@@ -34,7 +34,7 @@ export const getDossierDeValidationCountByCategoryQuery = graphql(`
   }
 `);
 
-export const getJuryCountByCategoryQuery = graphql(`
+const getJuryCountByCategoryQuery = graphql(`
   query getJuryCountByCategory($searchFilter: String) {
     jury_juryCountByCategory(searchFilter: $searchFilter) {
       SCHEDULED

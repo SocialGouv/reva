@@ -16,11 +16,7 @@ const agenciesInfoForConnectedUserQuery = graphql(`
   }
 `);
 
-export const AgenciesSettingsLayout = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
   const { isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
 
