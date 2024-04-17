@@ -1,3 +1,5 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+
 import { Department, Organism } from "../../../interface";
 import { OrganismCardDescription } from "./OrganismCardDescription";
 import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
@@ -21,27 +23,36 @@ const getMandatoryInfo = (organism: Organism, department?: Department) => {
 export const OrganismCard = ({
   organism,
   department,
+  onClick,
 }: {
   organism: Organism;
   department?: Department;
+  onClick: () => void;
 }) => {
   let mandatoryInfo = getMandatoryInfo(organism, department);
   return (
-    <div className="break-inside-avoid-column border p-4">
+    <div className="break-inside-avoid-column border p-6 flex flex-col gap-y-5">
       <OrganismCardTitle
         label={mandatoryInfo.label}
         website={mandatoryInfo.website}
       />
-      {organism.informationsCommerciales && (
-        <OrganismCardInformationsCommerciales
-          informationsCommerciales={organism.informationsCommerciales}
+      <div>
+        {organism.informationsCommerciales && (
+          <OrganismCardInformationsCommerciales
+            informationsCommerciales={organism.informationsCommerciales}
+          />
+        )}
+        <OrganismCardDescription
+          email={mandatoryInfo.email}
+          phone={mandatoryInfo.phone}
+          location={mandatoryInfo.location}
         />
-      )}
-      <OrganismCardDescription
-        email={mandatoryInfo.email}
-        phone={mandatoryInfo.phone}
-        location={mandatoryInfo.location}
-      />
+      </div>
+      <div className="flex justify-end">
+        <Button priority="secondary" nativeButtonProps={{ onClick }}>
+          Choisir
+        </Button>
+      </div>
     </div>
   );
 };

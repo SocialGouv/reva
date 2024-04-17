@@ -25,6 +25,7 @@ const modalDistanceInfo = createModal({
 });
 
 interface PropsOrganisms {
+  submitOrganism: ({ organismId }: { organismId: string }) => void;
   availableOrganisms?: { rows: Organism[]; totalRows: number };
   setOrganismId: Dispatch<SetStateAction<string>>;
   alreadySelectedOrganismId: string;
@@ -32,6 +33,7 @@ interface PropsOrganisms {
 }
 
 const Organisms: FC<PropsOrganisms> = ({
+  submitOrganism,
   availableOrganisms = { rows: [], totalRows: 0 },
   setOrganismId,
   alreadySelectedOrganismId,
@@ -63,7 +65,12 @@ const Organisms: FC<PropsOrganisms> = ({
       <div className="columns-2 space-y-4 gap-4">
         {availableOrganisms.rows.map((organism) => {
           return (
-            <OrganismCard organism={organism} department={selectedDepartment} />
+            <OrganismCard
+              key={organism.id}
+              organism={organism}
+              department={selectedDepartment}
+              onClick={() => submitOrganism({ organismId: organism.id })}
+            />
           );
         })}
       </div>
@@ -341,6 +348,15 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           </>
         )}
         <Organisms
+          submitOrganism={({ organismId }) =>
+            send({
+              type: "SUBMIT_ORGANISM",
+              organism: {
+                candidacyId,
+                selectedOrganismId: organismId,
+              },
+            })
+          }
           alreadySelectedOrganismId={selectedOrganismId}
           availableOrganisms={{
             rows: state.rows,

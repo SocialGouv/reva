@@ -14,7 +14,7 @@ export const OrganismCardTitle = ({
   label: string;
 }) => {
   return (
-    <div className="font-semibold mb-2">
+    <div className="font-semibold">
       {website ? (
         <a
           className="fr-link text-xl"
