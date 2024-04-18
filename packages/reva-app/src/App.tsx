@@ -2,7 +2,7 @@ import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { useKeycloakContext } from "contexts/keycloakContext";
 import { CertificateDetails } from "pages/CertificateDetails";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCrisp } from "utils/useCrisp";
 
 import { Footer } from "./components/organisms/Footer";
@@ -22,6 +22,23 @@ import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
+
+type ScrollTopWrapperProps = {
+  offset?: number;
+  children: React.ReactNode;
+};
+
+const ScrollTopWrapper = (props: ScrollTopWrapperProps): JSX.Element => {
+  const { offset, children } = props;
+
+  useEffect(() => {
+    document.getElementById("main-scroll")?.scrollTo({ top: offset || 0 });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return <>{children}</>;
+};
 
 function App() {
   const { state, mainService } = useMainMachineContext();
@@ -47,52 +64,80 @@ function App() {
   // @ts-ignore
   window.state = state;
 
-  const certificatesPage = (
-    <Certificates key="show-results" mainService={mainService} />
+  const certificatesPage = () => (
+    <ScrollTopWrapper>
+      <Certificates key="show-results" mainService={mainService} />
+    </ScrollTopWrapper>
+  );
+
+  const certificateDetailsPage = () => (
+    <ScrollTopWrapper>
+      <CertificateDetails />
+    </ScrollTopWrapper>
   );
 
   const projectGoalsPage = () => (
-    <ProjectGoals key="project-goals" mainService={mainService} />
+    <ScrollTopWrapper>
+      <ProjectGoals key="project-goals" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const projectOrganismsPage = () => (
-    <ProjectOrganisms key="project-organism" mainService={mainService} />
+    <ScrollTopWrapper>
+      <ProjectOrganisms key="project-organism" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const projectExperiencePage = () => (
-    <ProjectExperience key="project-experience" mainService={mainService} />
+    <ScrollTopWrapper>
+      <ProjectExperience key="project-experience" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const loginHomePage = () => (
-    <LoginHome key="login-home" mainService={mainService} />
+    <ScrollTopWrapper>
+      <LoginHome key="login-home" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const loginConfirmationPage = () => (
-    <LoginConfirmation key="login-confirmation" mainService={mainService} />
+    <ScrollTopWrapper>
+      <LoginConfirmation key="login-confirmation" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const logoutConfirmationPage = () => (
-    <LogoutConfirmation key="logout-confirmation" mainService={mainService} />
+    <ScrollTopWrapper>
+      <LogoutConfirmation key="logout-confirmation" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const projectContactPage = () => (
-    <ProjectContact key="project-contact" mainService={mainService} />
+    <ScrollTopWrapper>
+      <ProjectContact key="project-contact" mainService={mainService} />
+    </ScrollTopWrapper>
   );
 
   const projectContactConfirmationPage = () => (
-    <ProjectContactConfirmation key="project-contact-confirmation" />
+    <ScrollTopWrapper>
+      <ProjectContactConfirmation key="project-contact-confirmation" />
+    </ScrollTopWrapper>
   );
+
+  const refHomePageScrollTop = useRef<number>(0);
 
   const projectHomePage = ({
     certification,
   }: {
     certification: Certification;
   }) => (
-    <ProjectHome
-      key={`project-home-ready`}
-      mainService={mainService}
-      certification={certification}
-    />
+    <ScrollTopWrapper offset={refHomePageScrollTop.current}>
+      <ProjectHome
+        key={`project-home-ready`}
+        mainService={mainService}
+        certification={certification}
+      />
+    </ScrollTopWrapper>
   );
 
   const projectDroppedOutPage = (contact: Contact) => {
@@ -100,11 +145,13 @@ function App() {
     const lastname = contact?.lastname ?? "";
     const fullName = `${firstname} ${lastname}`;
     return (
-      <ProjectDroppedOut
-        candidateEmail={contact?.email ?? ""}
-        candidateName={fullName}
-        supportEmail="support@vae.gouv.fr"
-      />
+      <ScrollTopWrapper>
+        <ProjectDroppedOut
+          candidateEmail={contact?.email ?? ""}
+          candidateName={fullName}
+          supportEmail="support@vae.gouv.fr"
+        />
+      </ScrollTopWrapper>
     );
   };
 
@@ -118,11 +165,11 @@ function App() {
     <>
       {["loadingCertifications", "searchResults", "searchResultsError"].some(
         state.matches
-      ) && certificatesPage}
+      ) && certificatesPage()}
 
       {["certificateDetails", "submittingSelectedCertification"].some(
         state.matches
-      ) && <CertificateDetails />}
+      ) && certificateDetailsPage()}
 
       {state.matches("loginHome") && loginHomePage()}
       {state.matches("loginConfirmation") && loginConfirmationPage()}
@@ -165,6 +212,12 @@ function App() {
     <div
       id="main-scroll"
       className="h-screen w-screen flex flex-col overflow-auto"
+      onScroll={(e) => {
+        if (state.matches("projectHome")) {
+          const element = e.target as Element;
+          refHomePageScrollTop.current = element.scrollTop;
+        }
+      }}
     >
       <SkipLinks
         links={[
