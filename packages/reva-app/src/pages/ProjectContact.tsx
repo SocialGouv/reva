@@ -162,7 +162,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             </h1>
           </>
         )}
-        <form onSubmit={onSubmit} className="flex flex-col">
+        <form onSubmit={onSubmit} className="max-w-2xl flex flex-col">
           <fieldset>
             <legend>
               <h2 className="mt-6 text-3xl mb-2 text-dsfrBlue-500">

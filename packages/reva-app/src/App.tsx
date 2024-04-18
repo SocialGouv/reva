@@ -179,12 +179,11 @@ function App() {
         ]}
       />
       <Header />
-      <div className="flex flex-1">
-        <div className="bg-gradient-to-r from-[#557AFF] to-[#2400FF] w-0 lg:w-[25%]" />
+      <div className="xl:bg-candidate">
         <main
           role="main"
           id="content"
-          className="relative flex flex-1 flex-col w-full"
+          className="fr-container lg:shadow-lifted bg-white xl:my-8"
         >
           {pageContent}
         </main>

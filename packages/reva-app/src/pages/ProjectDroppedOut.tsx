@@ -19,7 +19,7 @@ export const ProjectDroppedOut = ({
       title="Abandon de la candidature"
       className="z-[80] overflow-hidden h-full flex flex-col bg-white pt-6"
     >
-      <div className="relative overflow-y-auto flex flex-col rounded-xl p-12 text-black leading-loose">
+      <div className="relative overflow-y-auto flex flex-col rounded-xl p-4 text-black leading-loose">
         <Title
           label={`Bonjour ${candidateName},`}
           size="large"

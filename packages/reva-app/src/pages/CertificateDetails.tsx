@@ -12,7 +12,10 @@ export const CertificateDetails = () => {
   const selectedCertification = state.context.selectedCertification;
 
   return selectedCertification ? (
-    <Page title={`Détails de la certification ${selectedCertification.label}`}>
+    <Page
+      className="max-w-2xl"
+      title={`Détails de la certification ${selectedCertification.label}`}
+    >
       <BackButton className="mb-6" />
       <h1
         data-test="certification-label"

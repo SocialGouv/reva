@@ -85,7 +85,7 @@ const Organisms: FC<PropsOrganisms> = ({
 
   if (state.context.activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")) {
     return (
-      <div className="md:columns-2 space-y-4 gap-4">
+      <div className="md:columns-2 space-y-4 gap-4 max-w-3xl">
         {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
         {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
       </div>
@@ -98,7 +98,7 @@ const Organisms: FC<PropsOrganisms> = ({
       onChange={setSelectedOrganismId}
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-2xl">
         {availableOrganisms.rows.map((organism) => {
           const organismDisplayInfo = getOrganismDisplayInfo(organism);
           return (
@@ -281,7 +281,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
               });
             },
           }}
-          className="mt-6"
+          className="mt-6 max-w-2xl"
         />
 
         <div>
@@ -385,7 +385,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           className={`mt-6 w-full flex flex-row items-center ${
             activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")
               ? "justify-center"
-              : "justify-between"
+              : "justify-between max-w-2xl"
           }`}
         >
           {state.hasMore ? (

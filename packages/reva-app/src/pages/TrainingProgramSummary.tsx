@@ -89,7 +89,7 @@ export const TrainingProgramSummary = ({
   } = state.context;
 
   return (
-    <Page title="Votre parcours">
+    <Page title="Votre parcours" className="max-w-2xl">
       <BackToHomeButton />
       <h1 className="mt-4 text-3xl font-bold">
         {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}

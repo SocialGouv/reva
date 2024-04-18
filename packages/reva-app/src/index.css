@@ -82,3 +82,12 @@ input::-webkit-date-and-time-value {
     -webkit-mask-image: url("../public/icons/remixicon/wheelchair-fill.svg");
     mask-image: url("../public/icons/remixicon/wheelchair-fill.svg");
 }
+
+@layer components {
+    .bg-candidate {
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-color: white;
+        background-image: url("../public/bg-candidate.svg");
+    }
+}

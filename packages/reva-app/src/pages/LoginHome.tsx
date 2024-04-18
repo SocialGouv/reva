@@ -44,7 +44,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Page data-test="login-home" title="Connexion">
+    <Page className="max-w-2xl" data-test="login-home" title="Connexion">
       <h1 className="text-3xl font-bold text-dsfrBlue-500">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>
@@ -59,7 +59,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
           </p>
         </>
       )}
-      <form onSubmit={onSubmit} className="mb-6">
+      <form onSubmit={onSubmit} className="mb-6 max-w-xl">
         <Input
           hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{

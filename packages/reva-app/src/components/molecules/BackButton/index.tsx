@@ -25,9 +25,9 @@ export const BasicBackButton = ({
       data-test="button-back"
       iconId="fr-icon-arrow-go-back-fill"
       onClick={onClick}
-      priority="tertiary no outline"
+      priority="tertiary"
       title="Revenir"
-      className={`!pl-0 min-w-[120px] ${className} ${colorClass} ${hoverBgClass}`}
+      className={`${className} ${colorClass} ${hoverBgClass}`}
     >
       {label}
     </Button>

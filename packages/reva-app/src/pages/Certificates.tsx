@@ -59,7 +59,11 @@ export const Certificates = ({ mainService }: Props) => {
       .map((el) => <li>{el}</li>);
   };
   return (
-    <Page data-test="certificates" title="Choix du diplôme">
+    <Page
+      className="max-w-2xl"
+      data-test="certificates"
+      title="Choix du diplôme"
+    >
       <BackToHomeButton />
       <ErrorAlertFromState />
       <NameBadge as="h1" className="mt-4" />
@@ -125,28 +129,24 @@ export const Certificates = ({ mainService }: Props) => {
             title=""
             listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
           >
-            <>
-              {displayCards()}
-              <Pagination
-                className="mt-8"
-                count={state.context.certificationPage.info.totalPages}
-                defaultPage={state.context.certificationPage.info.currentPage}
-                getPageLinkProps={(page) => ({
-                  href: "#",
-                  "aria-label": `page ${page}`,
-                  onClick: () => {
-                    send({
-                      type: "SET_CURRENT_CERTIFICATION_PAGE_NUMBER",
-                      pageNumber: page,
-                    });
-                    document
-                      .getElementById("main-scroll")
-                      ?.scrollTo({ top: 0 });
-                  },
-                })}
-              />
-            </>
+            {displayCards()}
           </Results>
+          <Pagination
+            className="mt-8"
+            count={state.context.certificationPage.info.totalPages}
+            defaultPage={state.context.certificationPage.info.currentPage}
+            getPageLinkProps={(page) => ({
+              href: "#",
+              "aria-label": `page ${page}`,
+              onClick: () => {
+                send({
+                  type: "SET_CURRENT_CERTIFICATION_PAGE_NUMBER",
+                  pageNumber: page,
+                });
+                document.getElementById("main-scroll")?.scrollTo({ top: 0 });
+              },
+            })}
+          />
         </div>
       )}
     </Page>

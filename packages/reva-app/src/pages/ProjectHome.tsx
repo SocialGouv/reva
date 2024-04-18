@@ -30,7 +30,7 @@ export const ProjectHome = ({
   const retryErrorScreen = (
     <div
       data-test="project-home-error"
-      className="absolute ml-[-16px] mt-[-16px] lg:ml-[-64px] lg:mt-[-80px]  w-full  bg-neutral-100 h-full grow flex flex-col text-center items-center justify-center px-10"
+      className="w-full flex flex-col justify-center items-center min-h-[420px]"
     >
       <Header label="Oups..." size="small" />
       <ErrorAlertFromState />
@@ -53,7 +53,7 @@ export const ProjectHome = ({
   const loadingScreen = (
     <div
       data-test="project-home-loading"
-      className="absolute ml-[-16px] mt-[-16px] lg:ml-[-64px] lg:mt-[-80px] w-full h-full flex flex-col bg-neutral-100 grow text-center items-center justify-center px-10"
+      className="flex flex-col min-h-[420px] items-center justify-center"
     >
       <Header label="Connexion en cours" size="small" />
       <div className="mt-8 w-8">

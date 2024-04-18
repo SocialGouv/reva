@@ -10,7 +10,11 @@ interface LogoutHomeProps {
 
 export const LogoutConfirmation = (_props: LogoutHomeProps) => {
   return (
-    <Page data-test="logout-confirmation" title="Confirmation de déconnexion">
+    <Page
+      className="max-w-2xl"
+      data-test="logout-confirmation"
+      title="Confirmation de déconnexion"
+    >
       <div>
         <h1 className="text-3xl font-bold text-dsfrBlue-500">
           Vous êtes bien déconnecté du service France VAE

@@ -8,7 +8,7 @@ export const ProjectSubmissionConfirmation = () => {
   const { mainService } = useMainMachineContext();
   const { state } = useMainMachineContext();
   return (
-    <Page title="Envoi de votre candidature">
+    <Page className="max-w-2xl" title="Envoi de votre candidature">
       <BackToHomeButton />
       <h1 className="text-2xl text-black mt-6">Envoi de votre candidature</h1>
       {state.context.error ? (
