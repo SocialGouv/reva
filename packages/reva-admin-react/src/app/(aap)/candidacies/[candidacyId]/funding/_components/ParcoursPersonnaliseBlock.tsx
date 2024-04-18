@@ -44,7 +44,7 @@ export const ParcoursPersonnaliseBlock = ({
 
   const totalHourCount =
     accompagnementHourCount + complementsFormatifsHourCount;
-  const totalCost = accompagnementCost + complementsFormatifsCost;
+  const totalCost = accompagnementCost + complementsFormatifsCost + 300;
 
   return (
     <div className="w-full">
