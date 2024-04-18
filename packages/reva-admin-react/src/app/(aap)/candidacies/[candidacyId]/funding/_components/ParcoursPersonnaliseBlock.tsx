@@ -16,6 +16,7 @@ export const ParcoursPersonnaliseBlock = ({
     watch,
     formState: { errors },
   } = useFormContext();
+  const forfaitCost = 300;
   const individualHourCount = watch("individualHourCount") || 0;
   const individualCost = watch("individualCost") || 0;
   const collectiveHourCount = watch("collectiveHourCount") || 0;
@@ -44,7 +45,7 @@ export const ParcoursPersonnaliseBlock = ({
 
   const totalHourCount =
     accompagnementHourCount + complementsFormatifsHourCount;
-  const totalCost = accompagnementCost + complementsFormatifsCost + 300;
+  const totalCost = accompagnementCost + complementsFormatifsCost + forfaitCost;
 
   return (
     <div className="w-full">
@@ -64,7 +65,7 @@ export const ParcoursPersonnaliseBlock = ({
         </div>
         <div className="md:pl-6">
           <h4 className="text-base mb-2 font-medium uppercase">Forfait</h4>
-          <p>300€ net</p>
+          <p>{forfaitCost}€ net</p>
         </div>
       </div>
 
