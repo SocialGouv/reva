@@ -85,7 +85,7 @@ const Organisms: FC<PropsOrganisms> = ({
 
   if (state.context.activeFeatures.includes("NEW_CANDIDATE_ORGANISM_RESULTS")) {
     return (
-      <div className="columns-2 space-y-4 gap-4">
+      <div className="md:columns-2 space-y-4 gap-4">
         {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
         {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
       </div>

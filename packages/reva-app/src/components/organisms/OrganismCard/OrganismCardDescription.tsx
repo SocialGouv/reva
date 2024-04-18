@@ -19,27 +19,28 @@ export const OrganismCardDescription = ({
           className="fr-icon-mail-line fr-icon--sm mr-2"
           aria-hidden="true"
         ></span>
-        {email}
+        <a href={`mailto:${email}`}>{email}</a>
       </p>
-      {phone && (
+
+      <div className="flex justify-between">
         <p>
-          <span
-            className="fr-icon-phone-line fr-icon--sm mr-2"
-            aria-hidden="true"
-          ></span>
-          {phone}
+          {phone && (
+            <>
+              <span
+                className="fr-icon-phone-line fr-icon--sm mr-2"
+                aria-hidden="true"
+              ></span>
+              {phone}
+            </>
+          )}
         </p>
-      )}
-      {location && (
-        <div className="flex justify-end gap-1 mt-4">
-          {location.isOnSite && (
-            <Tag className="bg-dsfrBlue-500 text-white">Sur place</Tag>
-          )}
-          {location.isRemote && (
-            <Tag className="bg-dsfrBlue-300 text-dsfrBlue-500">À distance</Tag>
-          )}
-        </div>
-      )}
+        {location && (
+          <div className="flex gap-1 -mt-1">
+            {location.isOnSite && <Tag>Sur site</Tag>}
+            {location.isRemote && <Tag>À distance</Tag>}
+          </div>
+        )}
+      </div>
     </>
   );
 };

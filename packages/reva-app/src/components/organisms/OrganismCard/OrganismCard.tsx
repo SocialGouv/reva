@@ -31,7 +31,7 @@ export const OrganismCard = ({
 }) => {
   let mandatoryInfo = getMandatoryInfo(organism, department);
   return (
-    <div className="break-inside-avoid-column border p-6 flex flex-col gap-y-5">
+    <div className="break-inside-avoid-column border border-dsfrGray-200 p-6 flex flex-col gap-y-4">
       <OrganismCardTitle
         label={mandatoryInfo.label}
         website={mandatoryInfo.website}
@@ -47,7 +47,11 @@ export const OrganismCard = ({
         />
       </div>
       <div className="flex justify-end">
-        <Button priority="secondary" nativeButtonProps={{ onClick }}>
+        <Button
+          priority="secondary"
+          size="small"
+          nativeButtonProps={{ onClick }}
+        >
           Choisir
         </Button>
       </div>
