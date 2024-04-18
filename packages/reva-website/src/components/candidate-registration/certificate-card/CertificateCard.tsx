@@ -28,11 +28,23 @@ export const CertificateCard = ({
       >
         {rncpCode}
       </div>
-      <div
-        data-testid="selected-certificate-label"
-        className="text-dsfrGray-titleGrey text-xl font-bold"
-      >
-        {label}
+      <div className="flex flex-col">
+        <div
+          data-testid="selected-certificate-label"
+          className="text-dsfrGray-titleGrey text-xl font-bold"
+        >
+          {label}
+        </div>
+        <div>
+          <a
+            data-test="certification-more-info-link"
+            target="_blank"
+            rel="noreferrer"
+            href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}/`}
+          >
+            Lire les détails de la fiche diplôme
+          </a>
+        </div>
       </div>
     </div>
   </div>
