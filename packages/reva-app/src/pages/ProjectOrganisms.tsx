@@ -1,8 +1,4 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { ReactComponent as IconBuilding } from "@codegouvfr/react-dsfr/dsfr/icons/buildings/building-fill.svg";
-import { ReactComponent as IconCustomerService } from "@codegouvfr/react-dsfr/dsfr/icons/business/customer-service-fill.svg";
-import { ReactComponent as IconInformation } from "@codegouvfr/react-dsfr/dsfr/icons/system/information-fill.svg";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
@@ -14,15 +10,11 @@ import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { OrganismCard } from "../components/organisms/OrganismCard/OrganismCard";
+import { OrganismFilters } from "../components/organisms/OrganismFilters/OrganismFilters";
 import { Page } from "../components/organisms/Page";
 import { useMainMachineContext } from "../contexts/MainMachineContext/MainMachineContext";
 import { Department, Organism } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
-
-const modalDistanceInfo = createModal({
-  id: "distance-organism-info",
-  isOpenedByDefault: false,
-});
 
 interface PropsOrganisms {
   submitOrganism: ({ organismId }: { organismId: string }) => void;
@@ -223,13 +215,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organism?.id || ""
   );
 
-  const tagFilledStyle = (isSelected: boolean) =>
-    isSelected
-      ? "bg-dsfrBlue-500 text-white"
-      : "bg-dsfrBlue-300 text-dsfrBlue-500";
-  const iconTagFilledStyle = (isSelected: boolean) =>
-    isSelected ? "fill-white" : "fill-dsfrBlue-500";
-
   const isOrganismsLoaded = organisms && organisms.rows.length > 0;
 
   const [state, setState] = useState<State>({
@@ -284,73 +269,25 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           className="mt-6 max-w-2xl"
         />
 
-        <div>
-          <p className="mt-4 mb-2">
-            Comment souhaitez-vous être suivi pour votre VAE ?
-          </p>
-          <div className="flex items-center">
-            <Button
-              data-test="button-select-onsite"
-              priority="tertiary no outline"
-              title="Choisir sur site"
-              onClick={() => {
-                send({
-                  type: "SET_ORGANISM_SEARCH",
-                  organismSearchText,
-                  organismSearchOnsite: !organismSearchOnsite,
-                  organismSearchRemote,
-                });
-              }}
-              className="p-2"
-            >
-              <Tag className={tagFilledStyle(organismSearchOnsite)}>
-                <IconBuilding
-                  className={classNames(
-                    iconTagFilledStyle(organismSearchOnsite),
-                    "mr-1"
-                  )}
-                />
-                <span>Sur place</span>
-              </Tag>
-            </Button>
-            <Button
-              data-test="button-select-remote"
-              priority="tertiary no outline"
-              title="Choisir à distance"
-              onClick={() => {
-                send({
-                  type: "SET_ORGANISM_SEARCH",
-                  organismSearchText,
-                  organismSearchOnsite,
-                  organismSearchRemote: !organismSearchRemote,
-                });
-              }}
-              className="p-2"
-            >
-              <Tag className={tagFilledStyle(organismSearchRemote)}>
-                <IconCustomerService
-                  className={classNames(
-                    iconTagFilledStyle(organismSearchRemote),
-                    "mr-1"
-                  )}
-                />
-                <span>À distance</span>
-              </Tag>
-            </Button>
-            <Button
-              data-test="button-open-modal-distance"
-              priority="tertiary no outline"
-              title="Quelle option à distance choisir ?"
-              className="flex py-1 pl-2 pr-3"
-              onClick={() => modalDistanceInfo.open()}
-            >
-              <IconInformation className="fill-dsfrBlue-500 mr-2" />
-              <span className="text-dsfrBlue-500 text-sm font-bold">
-                Quelle option choisir ?
-              </span>
-            </Button>
-          </div>
-        </div>
+        <OrganismFilters
+          onSearch={({
+            organismSearchText,
+            organismSearchOnsite,
+            organismSearchRemote,
+          }) =>
+            send({
+              type: "SET_ORGANISM_SEARCH",
+              organismSearchText,
+              organismSearchOnsite,
+              organismSearchRemote,
+            })
+          }
+          filters={{
+            organismSearchText,
+            organismSearchRemote,
+            organismSearchOnsite,
+          }}
+        />
 
         {selectedDepartment && (
           <>
@@ -427,20 +364,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           )}
         </div>
       </Page>
-      <modalDistanceInfo.Component
-        title="Comment bien choisir entre “sur site” et “à distance” ?"
-        size="large"
-      >
-        <p className="my-4">
-          Les accompagnements <strong>sur site </strong>
-          sont réalisés directement dans les locaux de l’organisme sélectionné.
-        </p>
-        <p>
-          Les accompagnements <strong>à distance</strong> se déroulent
-          essentiellement par téléphone ou sur internet, via des outils de
-          visio-conférence.
-        </p>
-      </modalDistanceInfo.Component>
     </>
   );
 };
