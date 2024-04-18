@@ -42,6 +42,7 @@ export const CertificateAutocompleteDsfr = ({
           label: r.label,
         }))
       }
+      emptyLabel="Le diplôme que vous recherchez n’est pas encore couvert par France VAE."
       onOptionSelection={onOptionSelection}
       onSubmit={onSubmit}
       placeholder="Ex : bac, cap, master, titre professionnel..."

@@ -12,12 +12,14 @@ export const AutocompleteDsfr = ({
   placeholder,
   onSubmit,
   defaultLabel,
+  emptyLabel,
 }: {
   searchFunction: (searchText: string) => Promise<AutocompleteOption[]>;
   onOptionSelection: (selectedOption: AutocompleteOption) => void;
   placeholder?: string;
   onSubmit?: (selectedOption: AutocompleteOption) => void;
   defaultLabel?: string;
+  emptyLabel?: string;
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
 
@@ -128,7 +130,7 @@ export const AutocompleteDsfr = ({
           data-testid="autocomplete-input"
           iconId="fr-icon-award-fill"
         />
-        {status === "GOT_RESULTS" && displayOptions ? (
+        {status === "GOT_RESULTS" && displayOptions && (
           <div
             data-testid="autocomplete-options"
             className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
@@ -149,7 +151,21 @@ export const AutocompleteDsfr = ({
               );
             })}
           </div>
-        ) : null}
+        )}
+
+        {status === "GOT_NO_RESULT" && (
+          <div
+            data-testid="autocomplete-options"
+            className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+          >
+            <div
+              key="empty-label"
+              className="whitespace-normal cursor-default select-none py"
+            >
+              {emptyLabel}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
