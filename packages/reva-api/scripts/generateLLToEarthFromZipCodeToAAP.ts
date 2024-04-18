@@ -1,6 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "../prisma/client";
 
-export const generateLLToEarthFromZipCodeToAAP = async () => {
+(async () => {
   try {
     const organisms = await prismaClient.organism.findMany({
       where: {
@@ -45,4 +45,4 @@ export const generateLLToEarthFromZipCodeToAAP = async () => {
   } catch (error) {
     console.log("error >>", error);
   }
-};
+})();
