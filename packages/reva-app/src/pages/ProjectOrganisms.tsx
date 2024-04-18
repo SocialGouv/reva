@@ -94,7 +94,7 @@ const Organisms: FC<PropsOrganisms> = ({
 
   return (
     <RadioGroup
-      value={selectedOrganismId || availableOrganisms.rows[0]?.id}
+      value={selectedOrganismId || availableOrganisms.rows[0]?.id || ""}
       onChange={setSelectedOrganismId}
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>

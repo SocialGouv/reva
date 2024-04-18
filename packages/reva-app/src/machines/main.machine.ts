@@ -967,6 +967,7 @@ export const mainMachine =
               },
               EDIT_ORGANISM: {
                 target: "projectOrganism",
+                actions: ["resetOrganisms"],
               },
               OPEN_CERTIFICATIONS_SELECTION: [
                 {
