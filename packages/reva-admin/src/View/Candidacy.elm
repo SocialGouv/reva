@@ -11,7 +11,7 @@ import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
 import Html exposing (Html, a, dd, div, dl, dt, h4, li, p, text, ul)
-import Html.Attributes exposing (class, classList, href)
+import Html.Attributes exposing (attribute, class, classList, href)
 import RemoteData exposing (RemoteData(..))
 import Route
 import Time
@@ -80,6 +80,7 @@ view context config =
                                         , "/reorientation"
                                         ]
                                     )
+                                |> Button.withAttrs [ attribute "target" "_self" ]
                                 |> Button.secondary
                                 |> Button.view
                             ]
