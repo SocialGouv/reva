@@ -356,7 +356,7 @@ model CandidaciesOnRegionsAndCertifications {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
-  @@index([candidacyId, regionId, certificationId, isActive])
+  @@index([certificationId, isActive, candidacyId])
   @@index([candidacyId, certificationId, isActive])
   @@map("candidacy_region_certification")
 }
