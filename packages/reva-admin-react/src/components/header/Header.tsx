@@ -41,7 +41,7 @@ export const Header = () => {
         (isOrganism || isGestionnaireMaisonMereAAP)
           ? [
               {
-                text: "Paramètres des agences",
+                text: "Paramètres",
                 linkProps: {
                   href: "/agencies-settings",
                   target: "_self",

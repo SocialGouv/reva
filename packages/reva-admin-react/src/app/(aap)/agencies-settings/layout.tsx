@@ -78,8 +78,8 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         className="flex-shrink-0 md:w-[330px]"
         align="left"
         classes={{ inner: "h-full" }}
-        burgerMenuButtonText="Agences"
-        title="Paramètres des agences"
+        burgerMenuButtonText="Paramètres"
+        title="Paramètres"
         fullHeight
         items={[
           getNavItem({
