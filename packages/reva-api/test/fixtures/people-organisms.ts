@@ -45,6 +45,7 @@ const organismIperia = {
   contactAdministrativeEmail: "josette@iperia.fr",
   isActive: true,
   typology: "experimentation" as const,
+  ll_to_earth: "(4622585.927620327, 437370.0268140378, 4372806.174258723)",
 };
 
 const generalisteOrganism = {

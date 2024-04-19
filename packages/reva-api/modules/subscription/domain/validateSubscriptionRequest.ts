@@ -13,7 +13,6 @@ import {
 } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
-import { getLLToEarthFromZipOrCity } from "../../organism/features/getLLToEarthFromZipOrCity";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -108,11 +107,6 @@ export const validateSubscriptionRequest = async (
         );
     }
 
-    const ll_to_earth = await getLLToEarthFromZipOrCity({
-      zip: subscriptionRequest.companyZipCode,
-      city: subscriptionRequest.companyCity,
-    });
-
     //organism creation
     const newOrganism = (
       await createOrganism({
@@ -128,6 +122,7 @@ export const validateSubscriptionRequest = async (
         legalStatus: subscriptionRequest.companyLegalStatus,
         isActive: true,
         typology: subscriptionRequest.typology ?? "generaliste",
+        ll_to_earth: null,
         domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
           (o: any) => o.domaineId,
         ),
@@ -139,7 +134,6 @@ export const validateSubscriptionRequest = async (
           subscriptionRequest.departmentsWithOrganismMethods ?? [],
         qualiopiCertificateExpiresAt:
           subscriptionRequest.qualiopiCertificateExpiresAt,
-        ll_to_earth,
       })
     ).unsafeCoerce();
 

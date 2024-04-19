@@ -99,7 +99,7 @@ describe("Subscription Request / Validate", () => {
     const result = resp.json();
     expect(result).toHaveProperty("errors");
     expect(result.errors[0].extensions.code).toBe(
-      "SUBSCRIPTION_REQUEST_NOT_FOUND"
+      "SUBSCRIPTION_REQUEST_NOT_FOUND",
     );
   });
 
@@ -147,7 +147,7 @@ describe("Subscription Request / Validate", () => {
     const result = resp.json();
     expect(result).toHaveProperty("errors");
     expect(result.errors[0].extensions.code).toBe(
-      "ACCOUNT_IN_IAM_ALREADY_EXISTS"
+      "ACCOUNT_IN_IAM_ALREADY_EXISTS",
     );
   });
 
@@ -314,7 +314,7 @@ describe("Subscription Request / Validate", () => {
       const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
         {
           where: { subscriptionRequestId: subreqId },
-        }
+        },
       );
       expect(subOnDom.length).toEqual(0);
       const subOnDep =
@@ -390,7 +390,7 @@ describe("Subscription Request / Validate", () => {
       const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
         {
           where: { subscriptionRequestId: subreqId },
-        }
+        },
       );
       expect(subOnDom.length).toEqual(0);
       const subOnDep =
@@ -466,7 +466,7 @@ describe("Subscription Request / Validate", () => {
       const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
         {
           where: { subscriptionRequestId: subreqId },
-        }
+        },
       );
       expect(subOnDom.length).toEqual(0);
       const subOnDep =
