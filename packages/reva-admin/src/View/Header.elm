@@ -158,7 +158,7 @@ headerMenuModal context activeHeaderLink =
             then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
                 , if List.member "AGENCIES_SETTINGS" context.activeFeatures then
-                    itemLink "Paramètres des agences" (adminReactUrl "/agencies-settings") True False
+                    itemLink "Paramètres" (adminReactUrl "/agencies-settings") True False
 
                   else
                     text ""
