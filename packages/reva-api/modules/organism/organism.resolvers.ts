@@ -271,12 +271,33 @@ export const resolvers = {
           );
         }
 
-        if (!context.auth.hasRole("admin")) {
-          if (!context.auth.hasRole("organism")) {
+        const organism = await getOrganismById({ organismId: params.id });
+
+        const roles = context.auth.userInfo.realm_access?.roles || [];
+        //admin has every rights
+        if (!roles.includes("admin")) {
+          //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
+          if (roles.includes("gestion_maison_mere_aap")) {
+            const maisonMere = await getMaisonMereAAPById({
+              id: organism.maisonMereAAPId || "",
+            });
             const account = await getAccountByKeycloakId({
               keycloakId: context.auth.userInfo.sub,
             });
-            logger.info({ account, id: params.id });
+
+            if (!account) {
+              throw new Error("Utilisateur non trouvé");
+            }
+
+            if (maisonMere?.gestionnaireAccountId !== account.id) {
+              throw new Error("Utilisateur non autorisé");
+            }
+          }
+          //if user is a "aap" he can access his own organism/agency
+          else if (roles.includes("manage_candidacy")) {
+            const account = await getAccountByKeycloakId({
+              keycloakId: context.auth.userInfo.sub,
+            });
             if (account?.organismId !== params.id) {
               throw new Error("Utilisateur non autorisé");
             }
@@ -285,7 +306,7 @@ export const resolvers = {
           }
         }
 
-        return getOrganismById({ organismId: params.id });
+        return organism;
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
