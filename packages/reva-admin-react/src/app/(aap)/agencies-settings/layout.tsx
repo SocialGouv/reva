@@ -2,7 +2,8 @@
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { SideMenu, SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
@@ -32,7 +33,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: agenciesInfoForConnectedUserResponse } = useQuery({
-    queryKey: ["agencies"],
+    queryKey: ["organisms"],
     queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
   });
 
@@ -97,20 +98,34 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             href: "#",
             className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
           },
-          items: agencies.map((a) => ({
-            text: `${a.informationsCommerciales?.nom} ${
-              a.id === organismId ? "(Agence administratrice)" : ""
-            }`,
-            linkProps: {
-              href: "#",
-              className: `fr-sidemenu__btn bg-transparent font-bold ${
-                isOrgansismSelected({ organismId: a.id })
-                  ? selectedItemStyle
-                  : ""
-              } `,
+          items: [
+            ...agencies.map((a) => ({
+              text: `${a.informationsCommerciales?.nom} ${
+                a.id === organismId ? "(Agence administratrice)" : ""
+              }`,
+              linkProps: {
+                href: "#",
+                className: `fr-sidemenu__btn bg-transparent font-bold ${
+                  isOrgansismSelected({ organismId: a.id })
+                    ? selectedItemStyle
+                    : ""
+                } `,
+              },
+              items: getOrganismNavItems({ organismId: a.id }),
+            })),
+            {
+              isActive: false,
+              linkProps: {
+                href: "/agencies-settings/add-agence/",
+                target: "_self",
+              },
+              text: (
+                <Button size="small" priority="secondary">
+                  Ajouter une agence
+                </Button>
+              ),
             },
-            items: getOrganismNavItems({ organismId: a.id }),
-          })),
+          ],
         },
       ];
     } else if (isOrganism) {
