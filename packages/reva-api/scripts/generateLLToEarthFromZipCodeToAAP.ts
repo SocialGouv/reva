@@ -1,5 +1,33 @@
 import { prismaClient } from "../prisma/client";
 
+type SearchResponse = {
+  features: [
+    {
+      type: string;
+      geometry: {
+        type: string;
+        coordinates: [number, number];
+      };
+      properties: {
+        label: string;
+        score: number;
+        housenumber: string;
+        id: string;
+        type: string;
+        name: string;
+        postcode: string;
+        citycode: string;
+        x: number;
+        y: number;
+        city: string;
+        context: string;
+        importance: number;
+        street: string;
+      };
+    },
+  ];
+};
+
 (async () => {
   try {
     const organisms = await prismaClient.organism.findMany({
@@ -18,7 +46,7 @@ import { prismaClient } from "../prisma/client";
         `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1"`,
       );
 
-      const { features } = (await res.json()) as any;
+      const { features }: SearchResponse = await res.json();
       if (!features.length) {
         console.error(`No feature found for zip code ${zip}`);
         continue;
@@ -29,11 +57,12 @@ import { prismaClient } from "../prisma/client";
         },
       ] = features;
 
-      const [longitude, latitude] = coordinates as [number, number];
+      const [longitude, latitude] = coordinates;
 
-      const [{ ll_to_earth }] = (await prismaClient.$queryRawUnsafe(
-        `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`,
-      )) as any;
+      const [{ ll_to_earth }]: { ll_to_earth: string }[] =
+        await prismaClient.$queryRawUnsafe(
+          `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`,
+        );
 
       await prismaClient.organism.update({
         where: { id: organism.id },
@@ -43,6 +72,6 @@ import { prismaClient } from "../prisma/client";
       });
     }
   } catch (error) {
-    console.log("error >>", error);
+    console.log("error generateLLToEarthFromZipCodeToAAP : ", error);
   }
 })();

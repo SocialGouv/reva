@@ -75,6 +75,8 @@ export interface MainContext {
   organismSearchText: string;
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
+  organismSearchDistance?: number;
+  organismSearchZipOrCity?: string;
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
@@ -261,6 +263,8 @@ export const mainMachine =
           organismSearchText: "",
           organismSearchOnsite: false,
           organismSearchRemote: false,
+          organismSearchDistance: undefined,
+          organismSearchZipOrCity: undefined,
           departments: [],
           selectedDepartment: undefined,
           organisms: undefined,

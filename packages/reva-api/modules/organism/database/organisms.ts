@@ -15,7 +15,7 @@ export const getAAPOrganisms = async (params: {
 };
 
 export const getOrganismById = async (
-  organismId: string
+  organismId: string,
 ): Promise<Either<string, Maybe<domain.Organism>>> => {
   try {
     const organism = await prismaClient.organism.findFirst({
@@ -96,7 +96,7 @@ const getOrganisms = async (params: {
 
 export const getOrganismBySiretAndTypology = async (
   siret: string,
-  typology: OrganismTypology
+  typology: OrganismTypology,
 ): Promise<Either<string, Maybe<domain.Organism>>> => {
   try {
     const organism = await prismaClient.organism.findFirst({
@@ -128,6 +128,7 @@ export const createOrganism = async (data: {
   domaineIds?: string[];
   qualiopiCertificateExpiresAt: Date;
   departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
+  ll_to_earth: string | null;
 }): Promise<Either<string, domain.Organism>> => {
   try {
     const degrees = await getDegrees();
@@ -193,7 +194,7 @@ export const getActiveOrganismForCertificationAndDepartment = async ({
             some: { AND: [{ certificationId }, { departmentId }] },
           },
         },
-      })
+      }),
     );
   } catch (e) {
     logger.error(e);
@@ -202,7 +203,7 @@ export const getActiveOrganismForCertificationAndDepartment = async ({
 };
 
 export const getReferentOrganismFromCandidacyId = async (
-  candidacyId: string
+  candidacyId: string,
 ) => {
   try {
     const candidacy = await prismaClient.candidacy.findUnique({
@@ -214,7 +215,7 @@ export const getReferentOrganismFromCandidacyId = async (
   } catch (e) {
     logger.error(e);
     return Left(
-      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`
+      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`,
     );
   }
 };
@@ -274,7 +275,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     const results = (
       await prismaClient.$queryRawUnsafe<Organism[]>(queryResults)
     ).map(
-      (o) => mapKeys(o, (v, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
+      (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
     ) as unknown as domain.Organism[];
 
     const queryCount = `
@@ -286,7 +287,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
 
     const count = Number(
       (await prismaClient.$queryRawUnsafe<{ count: number }[]>(queryCount))[0]
-        .count
+        .count,
     );
 
     return Right({ rows: results, totalRows: count });

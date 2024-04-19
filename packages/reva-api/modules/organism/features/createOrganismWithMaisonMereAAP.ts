@@ -19,6 +19,7 @@ import { getInformationsCommercialesByEmailContact } from "./getInformationsComm
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
 import { getMaisonMereOnDomaineByMaisonMereId } from "./getMaisonMereOnDomaineByMaisonMereId";
+import { getLLToEarthFromZipOrCity } from "./getLLToEarthFromZipOrCity";
 
 interface CreateOrganismWithMaisonMereAAPRequestParams {
   organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
@@ -106,6 +107,10 @@ export const createOrganismWithMaisonMereAAP = async ({
         `Un organisme existe déjà avec l'email de contacte ${contactAdministrativeEmail}`,
       );
     }
+    const ll_to_earth = await getLLToEarthFromZipOrCity({
+      zip: organismData.zip,
+      city: organismData.city,
+    });
 
     //organism creation
     const newOrganism = (
@@ -123,6 +128,7 @@ export const createOrganismWithMaisonMereAAP = async ({
         typology: typologie,
         departmentsWithOrganismMethods,
         qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
+        ll_to_earth,
       })
     ).unsafeCoerce();
 

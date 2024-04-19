@@ -117,14 +117,14 @@ const adminAccount1 = {
 };
 
 export {
-  organismIperia,
-  generalisteOrganism,
-  expertFiliereOrganism,
-  expertBrancheOrganism,
-  expertBrancheEtFiliereOrganism,
-  candidateJPL,
-  candidateMPB,
+  adminAccount1,
   archiIperia1,
   archiIperia2,
-  adminAccount1,
+  candidateJPL,
+  candidateMPB,
+  expertBrancheEtFiliereOrganism,
+  expertBrancheOrganism,
+  expertFiliereOrganism,
+  generalisteOrganism,
+  organismIperia,
 };
