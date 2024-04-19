@@ -12,6 +12,15 @@ const agenciesInfoForConnectedUserQuery = graphql(`
       organism {
         id
       }
+      maisonMereAAP {
+        organisms {
+          id
+          label
+          informationsCommerciales {
+            nom
+          }
+        }
+      }
     }
   }
 `);
@@ -38,36 +47,61 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     linkProps: { href },
     isActive: !!currentPathname.match(new RegExp(`^${href}.*$`)),
   });
+
+  const getOrganismNavItems = ({ organismId }: { organismId: string }) => [
+    getNavItem({
+      text: "Informations commerciales",
+      href: `/agencies-settings/${organismId}/commercial-information`,
+    }),
+    getNavItem({
+      text: "Zone d'intervention",
+      href: `/agencies-settings/${organismId}/intervention-zone`,
+    }),
+    getNavItem({
+      text: "Certifications",
+      href: `/agencies-settings/${organismId}/certifications`,
+    }),
+    getNavItem({
+      text: "Absences et fermetures",
+      href: `/agencies-settings/${organismId}/absence`,
+    }),
+    getNavItem({
+      text: "Responsable d'agence",
+      href: `/agencies-settings/${organismId}/manager`,
+    }),
+  ];
+
   const getNavItems = () => {
     let items: SideMenuProps.Item[] = [];
+    const organismId =
+      agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
+        ?.organism?.id;
+    const agencies =
+      agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
+        ?.maisonMereAAP?.organisms || [];
+
     if (isGestionnaireMaisonMereAAP) {
-      items = [];
-    } else if (isOrganism) {
-      const organismId =
-        agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
-          ?.organism?.id;
       items = [
-        getNavItem({
-          text: "Informations commerciales",
-          href: `/agencies-settings/${organismId}/commercial-information`,
-        }),
-        getNavItem({
-          text: "Zone d'intervention",
-          href: `/agencies-settings/${organismId}/intervention-zone`,
-        }),
-        getNavItem({
-          text: "Certifications",
-          href: `/agencies-settings/${organismId}/certifications`,
-        }),
-        getNavItem({
-          text: "Absences et fermetures",
-          href: `/agencies-settings/${organismId}/absence`,
-        }),
-        getNavItem({
-          text: "Responsable d'agence",
-          href: `/agencies-settings/${organismId}/manager`,
-        }),
+        {
+          text: "Agences",
+          linkProps: {
+            href: "#",
+            className: "fr-sidemenu__btn text-xl font-bold",
+          },
+          items: agencies.map((a) => ({
+            text: `${a.informationsCommerciales?.nom} ${
+              a.id === organismId ? "(Agence administratrice)" : ""
+            }`,
+            linkProps: {
+              href: "#",
+              className: "fr-sidemenu__btn bg-transparent font-bold",
+            },
+            items: getOrganismNavItems({ organismId: a.id }),
+          })),
+        },
       ];
+    } else if (isOrganism) {
+      items = getOrganismNavItems({ organismId });
     }
     return items;
   };
