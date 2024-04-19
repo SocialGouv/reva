@@ -72,6 +72,14 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   ];
 
   const getNavItems = () => {
+    const selectedItemStyle =
+      "before:content-[''] before:absolute before:top-[0.75rem] before:bottom-[0.75rem] before:bg-dsfr-blue-france-sun-113 before:w-[2px] before:left-0 text-dsfr-blue-france-sun-113";
+
+    const isOrgansismSelected = ({ organismId }: { organismId: string }) => {
+      const href = `/agencies-settings/${organismId}`;
+      return !!currentPathname.match(new RegExp(`^${href}.*$`));
+    };
+
     let items: SideMenuProps.Item[] = [];
     const organismId =
       agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
@@ -84,9 +92,10 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       items = [
         {
           text: "Agences",
+          expandedByDefault: true,
           linkProps: {
             href: "#",
-            className: "fr-sidemenu__btn text-xl font-bold",
+            className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
           },
           items: agencies.map((a) => ({
             text: `${a.informationsCommerciales?.nom} ${
@@ -94,7 +103,11 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             }`,
             linkProps: {
               href: "#",
-              className: "fr-sidemenu__btn bg-transparent font-bold",
+              className: `fr-sidemenu__btn bg-transparent font-bold ${
+                isOrgansismSelected({ organismId: a.id })
+                  ? selectedItemStyle
+                  : ""
+              } `,
             },
             items: getOrganismNavItems({ organismId: a.id }),
           })),
