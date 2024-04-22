@@ -8,6 +8,7 @@ interface SearchBarProps {
     onChange: (e: any) => void;
   };
 }
+
 export const SearchBar = (props: SearchBarProps) => {
   const searchTextRef = useRef(null);
   const handleSubmit = (e: SyntheticEvent) => {
@@ -19,7 +20,7 @@ export const SearchBar = (props: SearchBarProps) => {
   };
   return (
     <form
-      className={`fr-search-bar ${props.className || ""}`}
+      className={`fr-search-bar fr-search-bar--lg ${props.className || ""}`}
       role="search"
       onSubmit={handleSubmit}
     >

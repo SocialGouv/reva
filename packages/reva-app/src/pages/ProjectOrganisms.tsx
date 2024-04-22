@@ -250,25 +250,27 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
       <Page title="Votre organisme d'accompagnement">
         <BackToHomeButton />
         <ErrorAlertFromState />
-        <h1 className="mt-4 text-3xl font-bold">
-          Votre organisme d'accompagnement
+        <h1 className="mt-6 text-[40px] font-bold">
+          Choisissez votre accompagnateur
         </h1>
-        <SearchBar
-          label="Recherchez votre organisme d’accompagnement en saisissant son nom"
-          nativeInputProps={{
-            defaultValue: organismSearchText,
-            onChange: (e) => {
-              send({
-                type: "SET_ORGANISM_SEARCH",
-                organismSearchText: e.target.value,
-                organismSearchOnsite,
-                organismSearchRemote,
-              });
-            },
-          }}
-          className="mt-6"
-        />
-
+        <div className="mt-12 lg:mb-8 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
+          <h2 className="text-3xl font-semibold">Recherchez par nom</h2>
+          <SearchBar
+            label="Recherchez votre organisme d’accompagnement en saisissant son nom"
+            nativeInputProps={{
+              defaultValue: organismSearchText,
+              onChange: (e) => {
+                send({
+                  type: "SET_ORGANISM_SEARCH",
+                  organismSearchText: e.target.value,
+                  organismSearchOnsite,
+                  organismSearchRemote,
+                });
+              },
+            }}
+            className="mt-6"
+          />
+        </div>
         <div className="lg:flex gap-x-6">
           <div className="lg:w-1/3">
             <OrganismFilters
