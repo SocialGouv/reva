@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
-import { getLLToEarthFromZipOrCity } from "modules/organism/features/getLLToEarthFromZipOrCity";
 import {
   createAccountProfile,
   getAccountFromEmail,
@@ -14,6 +13,7 @@ import {
 } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
+import { getLLToEarthFromZipOrCity } from "../../organism/features/getLLToEarthFromZipOrCity";
 import {
   FunctionalCodeError,
   FunctionalError,

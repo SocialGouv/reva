@@ -12,6 +12,7 @@ import { upsertRegions } from "./referentials/table-regions";
 import { insertReorientationReasonsIfNone } from "./referentials/table-reorientation-reasons";
 import { upsertTrainings } from "./referentials/table-trainings";
 import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
+import { addExtensions } from "./add-extensions";
 
 async function main() {
   const seedRestrictedToContainer = process.env.RESTRICT_SEED_TO_CONTAINER;
@@ -80,6 +81,8 @@ const executeSeed = async () => {
   await seedCertifications(prisma);
 
   await seedCandidacyConventionCollective(prisma);
+
+  await addExtensions(prisma);
 };
 
 export const prisma = new PrismaClient();
