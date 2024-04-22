@@ -456,6 +456,7 @@ export const mainMachine =
                 {
                   actions: [
                     "submitCertification",
+                    "resetOrganism",
                     "resetOrganisms",
                     "resetFirstAppointmentOccuredAt",
                     "resetCandidacyStatus",
@@ -1111,8 +1112,10 @@ export const mainMachine =
           resetError: assign((_context, _event) => ({
             error: undefined,
           })),
-          resetOrganisms: assign((_context, _event) => ({
+          resetOrganism: assign((_context, _event) => ({
             organism: undefined,
+          })),
+          resetOrganisms: assign((_context, _event) => ({
             organisms: undefined,
           })),
           selectingDepartment: assign({
