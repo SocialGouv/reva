@@ -60,7 +60,10 @@ const Organisms: FC<PropsOrganisms> = ({
     return (
       <>
         {availableOrganisms.rows
-          .filter((_, index) => indexPredicate(index))
+          .filter(
+            (organism, index) =>
+              indexPredicate(index) && organism.id !== alreadySelectedOrganismId
+          )
           .map((organism) => {
             return (
               <OrganismCard
@@ -253,7 +256,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         <h1 className="mt-6 text-[40px] font-bold">
           Choisissez votre accompagnateur
         </h1>
-        <div className="mt-12 lg:mb-8 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
+        <div className="mt-12 lg:mb-14 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
           <h2 className="text-3xl font-semibold">Recherchez par nom</h2>
           <SearchBar
             label="Recherchez votre organisme d’accompagnement en saisissant son nom"
@@ -294,15 +297,32 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             />
           </div>
           <div className="lg:w-2/3">
-            {selectedDepartment && (
+            {selectedDepartment && organisms && (
               <>
-                <p className="mt-6 text-black">
-                  {organisms && organisms.totalRows > 0
-                    ? `Il y a ${organisms.totalRows} organisme(s) d'accompagnement disponible(s) dans votre
-              département.`
-                    : "Il n'y a pas d'organismes d'accompagnement disponibles dans votre département."}
-                </p>
-                <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
+                {organisms.totalRows > 0 ? (
+                  <p className="mt-3 mb-4 text-gray-500">
+                    {organisms.totalRows === 1
+                      ? `Résultat filtré : ${organisms.totalRows} accompagnateur`
+                      : `Résultats filtrés : ${organisms.totalRows} accompagnateurs`}
+                  </p>
+                ) : activeFeatures.includes(
+                    "NEW_CANDIDATE_ORGANISM_RESULTS"
+                  ) ? (
+                  <div className="min-h-80 h-full flex flex-col items-center justify-center">
+                    <h3 className="text-2xl font-bold mb-4">
+                      Pas de résultats
+                    </h3>
+                    <p className="text-lg max-w-md text-center leading-relaxed">
+                      Nous ne trouvons pas d’accompagnateurs sur votre diplôme
+                      avec les critères sélectionnés.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mt-3 mb-4 text-gray-500">
+                    Il n'y a pas d'organismes d'accompagnement disponibles dans
+                    votre département.
+                  </div>
+                )}
               </>
             )}
             <Organisms
