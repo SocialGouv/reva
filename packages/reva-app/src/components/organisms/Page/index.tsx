@@ -10,7 +10,7 @@ interface PageConfig {
 export const Page = ({ title, children, className, ...props }: PageConfig) => {
   return (
     <div
-      className={`flex flex-col px-6 pt-10 pb-16 ${className || ""} `}
+      className={`flex flex-col px-4 pt-10 pb-8 ${className || ""} `}
       {...props}
     >
       <Helmet>

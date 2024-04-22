@@ -26,11 +26,12 @@ export const OrganismFilters = ({
   filters: filters;
 }) => {
   return (
-    <div>
-      <p className="mt-4 mb-2">
-        Comment souhaitez-vous être suivi pour votre VAE ?
-      </p>
-      <div className="flex items-center">
+    <div className="mt-8 w-full">
+      <h2 className="text-3xl font-semibold mb-4">Filtres :</h2>
+      <h3 className="px-4 py-2 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
+        Modalités d'accompagnement
+      </h3>
+      <div>
         <Button
           data-test="button-select-onsite"
           priority="tertiary no outline"
