@@ -113,7 +113,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   ]);
   return (
     <>
-      <Page title="Création de compte">
+      <Page className="max-w-4xl" title="Création de compte">
         {hasCandidacy ? (
           <BackToHomeButton />
         ) : state.context.error ? (
@@ -162,7 +162,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             </h1>
           </>
         )}
-        <form onSubmit={onSubmit} className="max-w-2xl flex flex-col">
+        <form onSubmit={onSubmit} className="flex flex-col">
           <fieldset>
             <legend>
               <h2 className="mt-6 text-3xl mb-2 text-dsfrBlue-500">
@@ -254,7 +254,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           </fieldset>
           <Button
             data-test={`project-contact-${editedContact ? "save" : "add"}`}
-            className="mt-6 self-end w-full sm:w-auto flex justify-center"
+            className="my-6 self-end w-full sm:w-auto flex justify-center"
           >
             {hasCandidacy ? "Modifiez les informations" : "Créer votre compte"}
           </Button>
