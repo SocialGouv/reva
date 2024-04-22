@@ -2,6 +2,8 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
+import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
+
 const tagFilledStyle = (isSelected: boolean) =>
   isSelected
     ? "bg-dsfrBlue-500 text-white"
@@ -99,6 +101,7 @@ export const OrganismFilters = ({
           </p>
         </modalDistanceInfo.Component>
       </div>
+      <OrganismDistanceFilter />
     </div>
   );
 };
