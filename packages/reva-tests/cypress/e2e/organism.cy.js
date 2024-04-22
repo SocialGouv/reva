@@ -19,6 +19,13 @@ context("Empty candidacy", () => {
 
 context("Candidacy with department certification selected", () => {
   it("list all available organisms", function () {
+    Cypress.on("uncaught:exception", (err) => {
+      // Suppress the error that started occurring after the DSFR update
+      if (err.message.includes("this.removeEventListener is not a function")) {
+        return false;
+      }
+    });
+
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate3.json");
