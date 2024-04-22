@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
+import { getLLToEarthFromZipOrCity } from "modules/organism/features/getLLToEarthFromZipOrCity";
 import {
   createAccountProfile,
   getAccountFromEmail,
@@ -107,6 +108,11 @@ export const validateSubscriptionRequest = async (
         );
     }
 
+    const ll_to_earth = await getLLToEarthFromZipOrCity({
+      zip: subscriptionRequest.companyZipCode,
+      city: subscriptionRequest.companyCity,
+    });
+
     //organism creation
     const newOrganism = (
       await createOrganism({
@@ -122,7 +128,7 @@ export const validateSubscriptionRequest = async (
         legalStatus: subscriptionRequest.companyLegalStatus,
         isActive: true,
         typology: subscriptionRequest.typology ?? "generaliste",
-        ll_to_earth: null,
+        ll_to_earth,
         domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
           (o: any) => o.domaineId,
         ),

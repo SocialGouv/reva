@@ -49,6 +49,6 @@ jobs:
           app_user_password: password
           app_db: reva-test
           exposed_postgres_port: 5444
-          postgres_extensions: uuid-ossp unaccent pg_trgm plpgsql
+          postgres_extensions: uuid-ossp unaccent pg_trgm plpgsql cube earthdistance
       - name: Launch tests
         run: npm run test-api
