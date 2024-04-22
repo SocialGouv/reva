@@ -52,6 +52,16 @@ const Organisms: FC<PropsOrganisms> = ({
     };
   };
 
+  const organismSearchResults =
+    // The API appends the already selected organism, if any.
+    // We remove it from search results, unless the selected organism is part of the search results.
+    // Once this new feature is enabled by default, we'll update the API instead.
+    availableOrganisms.totalRows === availableOrganisms.rows.length
+      ? availableOrganisms.rows
+      : availableOrganisms.rows.filter(
+          (organism) => organism.id !== alreadySelectedOrganismId
+        );
+
   const OrganismGroup = ({
     indexPredicate,
   }: {
@@ -59,11 +69,8 @@ const Organisms: FC<PropsOrganisms> = ({
   }) => {
     return (
       <>
-        {availableOrganisms.rows
-          .filter(
-            (organism, index) =>
-              indexPredicate(index) && organism.id !== alreadySelectedOrganismId
-          )
+        {organismSearchResults
+          .filter((organism, index) => indexPredicate(index))
           .map((organism) => {
             return (
               <OrganismCard
