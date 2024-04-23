@@ -18,13 +18,23 @@ interface filters {
   organismSearchText: string;
   organismSearchRemote: boolean;
   organismSearchOnsite: boolean;
+  organismSearchDistance?: number;
+  organismSearchZipOrCity?: string;
 }
 
 export const OrganismFilters = ({
   onSearch,
-  filters: { organismSearchText, organismSearchRemote, organismSearchOnsite },
+  filterDistanceIsActive,
+  filters: {
+    organismSearchText,
+    organismSearchRemote,
+    organismSearchOnsite,
+    organismSearchDistance,
+    organismSearchZipOrCity,
+  },
 }: {
   onSearch: (filters: filters) => void;
+  filterDistanceIsActive: boolean;
   filters: filters;
 }) => {
   return (
@@ -40,9 +50,11 @@ export const OrganismFilters = ({
           title="Choisir sur site"
           onClick={() => {
             onSearch({
-              organismSearchText,
               organismSearchOnsite: !organismSearchOnsite,
-              organismSearchRemote: organismSearchRemote,
+              organismSearchText,
+              organismSearchRemote,
+              organismSearchDistance,
+              organismSearchZipOrCity,
             });
           }}
           className="p-2"
@@ -60,9 +72,11 @@ export const OrganismFilters = ({
           title="Choisir à distance"
           onClick={() => {
             onSearch({
+              organismSearchRemote: !organismSearchRemote,
               organismSearchText,
               organismSearchOnsite,
-              organismSearchRemote: !organismSearchRemote,
+              organismSearchDistance,
+              organismSearchZipOrCity,
             });
           }}
           className="p-2"
@@ -101,7 +115,28 @@ export const OrganismFilters = ({
           </p>
         </modalDistanceInfo.Component>
       </div>
-      <OrganismDistanceFilter />
+      {filterDistanceIsActive && (
+        <OrganismDistanceFilter
+          onChangeSearchDistance={(distance) => {
+            onSearch({
+              organismSearchDistance: distance,
+              organismSearchText,
+              organismSearchRemote,
+              organismSearchOnsite,
+              organismSearchZipOrCity,
+            });
+          }}
+          onChangeSearchZipOrCity={(zipOrCity) => {
+            onSearch({
+              organismSearchZipOrCity: zipOrCity,
+              organismSearchText,
+              organismSearchRemote,
+              organismSearchOnsite,
+              organismSearchDistance,
+            });
+          }}
+        />
+      )}
     </div>
   );
 };

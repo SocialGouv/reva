@@ -24,7 +24,7 @@ type SearchResponse = {
         importance: number;
         street: string;
       };
-    },
+    }
   ];
 };
 
@@ -33,22 +33,30 @@ type SearchResponse = {
     const organisms = await prismaClient.organism.findMany({
       where: {
         ll_to_earth: null,
-        zip: {
-          not: "",
+        organismInformationsCommerciales: {
+          adresseCodePostal: {
+            not: "",
+          },
         },
+      },
+      include: {
+        organismInformationsCommerciales: true,
       },
     });
 
     for (const organism of organisms) {
-      const { zip } = organism;
+      const { organismInformationsCommerciales } = organism;
+      if (!organismInformationsCommerciales) continue;
+      const { adresseCodePostal } = organismInformationsCommerciales;
+      if (!adresseCodePostal) continue;
 
       const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1"`,
+        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${adresseCodePostal}&limit=1"`
       );
 
       const { features }: SearchResponse = await res.json();
       if (!features.length) {
-        console.error(`No feature found for zip code ${zip}`);
+        console.error(`No feature found for zip code ${adresseCodePostal}`);
         continue;
       }
       const [
@@ -61,7 +69,7 @@ type SearchResponse = {
 
       const [{ ll_to_earth }]: { ll_to_earth: string }[] =
         await prismaClient.$queryRawUnsafe(
-          `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`,
+          `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`
         );
 
       await prismaClient.organism.update({

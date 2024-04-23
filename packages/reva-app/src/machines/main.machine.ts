@@ -106,6 +106,8 @@ type SetOrganismSearch = {
   organismSearchText: string;
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
+  organismSearchDistance?: number;
+  organismSearchZipOrCity?: string;
 };
 
 type RefreshOrganisms = {
@@ -1169,7 +1171,16 @@ export const mainMachine =
               return typedEvent.organismSearchRemote;
             },
             selectedCertification: (_) => undefined,
+            organismSearchDistance: (_context, event) => {
+              const typedEvent = event as SetOrganismSearch;
+              return typedEvent.organismSearchDistance;
+            },
+            organismSearchZipOrCity: (_context, event) => {
+              const typedEvent = event as SetOrganismSearch;
+              return typedEvent.organismSearchZipOrCity;
+            },
           }),
+
           sendErrorToSentry: (_, event: any) =>
             Sentry.captureException(event.data),
           resetFirstAppointmentOccuredAt: assign({
