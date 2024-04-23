@@ -250,6 +250,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   };
 
   useEffect(() => {
+    send({ type: "CLEAR_ORGANISM_SEARCH" });
+  }, [send]);
+
+  useEffect(() => {
     loadOrganisms(0);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

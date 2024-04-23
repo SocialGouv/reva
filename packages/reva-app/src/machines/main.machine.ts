@@ -114,6 +114,10 @@ type RefreshOrganisms = {
   type: "REFRESH_ORGANISMS";
 };
 
+type ClearOrganismSearch = {
+  type: "CLEAR_ORGANISM_SEARCH";
+};
+
 export type MainEvent =
   | selectedDepartment
   | SelectCertification
@@ -121,6 +125,7 @@ export type MainEvent =
   | setCurrentCertificationPageNumber
   | SetOrganismSearch
   | RefreshOrganisms
+  | ClearOrganismSearch
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
@@ -759,6 +764,10 @@ export const mainMachine =
                   SUBMIT_ORGANISM: {
                     target: "submitting",
                   },
+                  CLEAR_ORGANISM_SEARCH: {
+                    actions: "clearOrganismSearch",
+                    target: "#mainMachine.projectOrganism",
+                  },
                 },
               },
               error: {
@@ -1180,7 +1189,13 @@ export const mainMachine =
               return typedEvent.organismSearchZipOrCity;
             },
           }),
-
+          clearOrganismSearch: assign({
+            organismSearchText: (_) => "",
+            organismSearchZipOrCity: (_) => "",
+            organismSearchDistance: (_) => 0,
+            organismSearchRemote: (_) => false,
+            organismSearchOnsite: (_) => false,
+          }),
           sendErrorToSentry: (_, event: any) =>
             Sentry.captureException(event.data),
           resetFirstAppointmentOccuredAt: assign({

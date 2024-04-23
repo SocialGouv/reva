@@ -50,10 +50,10 @@ export const OrganismDistanceFilter = ({
           min={0}
           suffix=" km"
           nativeInputProps={{
+            value: distance,
             onChange: (e) => {
               setDistance(e.target.value);
             },
-            value: distance,
           }}
         />
       </fieldset>
