@@ -2,8 +2,6 @@
 
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
-import { useDepartementsOnRegions } from "@/hooks";
-import { ZoneInterventionList } from "@/types";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -13,11 +11,12 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useController, useForm } from "react-hook-form";
 import { AgenceFormData, agenceFormSchema } from "./agenceFormSchema";
-import { useAgencePage } from "@/app/(aap)/agencies-settings/add-agence/addAgencePage.hook";
+import { useAgencePage } from "./addAgencePage.hook";
 import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
+import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/_components/zone-intervention/zoneInterventionAAP.hook";
 
 const modalCreateAgence = createModal({
   id: "modal-create-agence",
@@ -29,12 +28,25 @@ const AddAgencePage = () => {
   const modalCreateAgenceIsOpen = useIsModalOpen(modalCreateAgence);
   const router = useRouter();
 
-  const { createOrganismByMaisonMereAAP } = useAgencePage();
+  const { createOrganismByMaisonMereAAP, maisonMereAAPOnDepartements } =
+    useAgencePage();
+
+  const { getZonesInterventionMaisonMereAAP, mergeZonesIntervention } =
+    useZoneInterventionAAP();
+
+  const zonesInterventionMaisonMereAAP = useMemo(
+    () =>
+      getZonesInterventionMaisonMereAAP({
+        maisonMereAAPOnDepartements: maisonMereAAPOnDepartements,
+      }),
+    [getZonesInterventionMaisonMereAAP, maisonMereAAPOnDepartements],
+  );
+
   const methods = useForm<AgenceFormData>({
     resolver: zodResolver(agenceFormSchema),
     defaultValues: {
-      zoneInterventionDistanciel: [],
-      zoneInterventionPresentiel: [],
+      zoneInterventionDistanciel: zonesInterventionMaisonMereAAP.remote,
+      zoneInterventionPresentiel: zonesInterventionMaisonMereAAP.onSite,
     },
   });
 
@@ -43,8 +55,6 @@ const AddAgencePage = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-    watch,
-    setValue,
     control,
   } = methods;
 
@@ -58,70 +68,11 @@ const AddAgencePage = () => {
     control,
   });
 
-  useDepartementsOnRegions({
-    zoneInterventionDistanciel: watch(
-      "zoneInterventionDistanciel",
-    ) as ZoneInterventionList,
-    zoneInterventionPresentiel: watch(
-      "zoneInterventionPresentiel",
-    ) as ZoneInterventionList,
-    setValue,
-  });
-
   const handleFormSubmit = handleSubmit(async (data) => {
-    const zoneInterventionPresentiel = data.zoneInterventionPresentiel;
-    const zoneInterventionDistanciel = data.zoneInterventionDistanciel;
-
-    const departmentsWithOrganismMethodUnfiltered: Record<
-      string,
-      { isOnSite: boolean; isRemote: boolean }
-    > = {};
-
-    if (zoneInterventionPresentiel) {
-      zoneInterventionPresentiel.forEach((region) => {
-        region.children.forEach((departement) => {
-          if (departement.selected) {
-            if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
-              departmentsWithOrganismMethodUnfiltered[departement.id] = {
-                isOnSite: true,
-                isRemote: false,
-              };
-            } else {
-              departmentsWithOrganismMethodUnfiltered[departement.id].isOnSite =
-                true;
-            }
-          }
-        });
-      });
-    }
-
-    if (zoneInterventionDistanciel) {
-      zoneInterventionDistanciel.forEach((region) => {
-        region.children.forEach((departement) => {
-          if (departement.selected) {
-            if (!departmentsWithOrganismMethodUnfiltered[departement.id]) {
-              departmentsWithOrganismMethodUnfiltered[departement.id] = {
-                isOnSite: false,
-                isRemote: true,
-              };
-            } else {
-              departmentsWithOrganismMethodUnfiltered[departement.id].isRemote =
-                true;
-            }
-          }
-        });
-      });
-    }
-
-    const departmentsWithOrganismMethod = Object.entries(
-      departmentsWithOrganismMethodUnfiltered,
-    )
-      .filter(([, { isOnSite, isRemote }]) => isOnSite || isRemote)
-      .map(([departmentId, { isOnSite, isRemote }]) => ({
-        departmentId,
-        isOnSite,
-        isRemote,
-      }));
+    const departmentsWithOrganismMethod = mergeZonesIntervention({
+      onSiteZone: data.zoneInterventionPresentiel,
+      remoteZone: data.zoneInterventionDistanciel,
+    });
 
     if (!departmentsWithOrganismMethod.length) {
       errorToast("Veuillez sélectionner au moins un département");
@@ -154,8 +105,15 @@ const AddAgencePage = () => {
   });
 
   const handleReset = useCallback(() => {
-    reset({ zoneInterventionDistanciel: [], zoneInterventionPresentiel: [] });
-  }, [reset]);
+    reset({
+      zoneInterventionDistanciel: zonesInterventionMaisonMereAAP.remote,
+      zoneInterventionPresentiel: zonesInterventionMaisonMereAAP.onSite,
+    });
+  }, [reset, zonesInterventionMaisonMereAAP]);
+
+  useEffect(() => {
+    handleReset();
+  }, [handleReset]);
 
   useEffect(() => {
     if (isSubmittingModal && !modalCreateAgenceIsOpen) {

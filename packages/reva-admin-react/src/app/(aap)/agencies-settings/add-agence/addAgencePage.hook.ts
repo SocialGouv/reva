@@ -4,44 +4,13 @@ import { CreateOrUpdateOrganismWithMaisonMereAapInput } from "@/graphql/generate
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const getAccountForConnectionUser = graphql(`
-  query getMaisonMereAAP {
+const getAccountForConnectedUserQuery = graphql(`
+  query getMaisonMereAAPForAgencePage {
     account_getAccountForConnectedUser {
       organism {
         id
         maisonMereAAP {
           id
-          organisms {
-            id
-            label
-            fermePourAbsenceOuConges
-            isActive
-            organismOnDepartments {
-              id
-              departmentId
-              isRemote
-              isOnSite
-            }
-            informationsCommerciales {
-              conformeNormesAccessbilite
-              adresseInformationsComplementaires
-              nom
-              telephone
-              siteInternet
-              emailContact
-              adresseNumeroEtNomDeRue
-              adresseInformationsComplementaires
-              adresseCodePostal
-              adresseVille
-              conformeNormesAccessbilite
-            }
-            organismOnAccount {
-              id
-              firstname
-              lastname
-              email
-            }
-          }
           maisonMereAAPOnDepartements {
             departement {
               id
@@ -73,14 +42,9 @@ export const useAgencePage = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
-  const {
-    data: organismsResponse,
-    status: organismsStatus,
-    refetch: organismsRefetch,
-    isRefetching: organismsIsRefetching,
-  } = useQuery({
+  const { data: getAccountForConnectedUserResponse } = useQuery({
     queryKey: ["account"],
-    queryFn: () => graphqlClient.request(getAccountForConnectionUser),
+    queryFn: () => graphqlClient.request(getAccountForConnectedUserQuery),
   });
 
   const createOrganismByMaisonMereAAP = useMutation({
@@ -92,28 +56,12 @@ export const useAgencePage = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["organisms"] }),
   });
 
-  const organisms =
-    organismsResponse?.account_getAccountForConnectedUser?.organism
-      ?.maisonMereAAP?.organisms;
   const maisonMereAAPOnDepartements =
-    organismsResponse?.account_getAccountForConnectedUser?.organism
-      ?.maisonMereAAP?.maisonMereAAPOnDepartements;
-
-  const maisonMereAAP =
-    organismsResponse?.account_getAccountForConnectedUser?.organism
-      ?.maisonMereAAP;
-
-  const organismMaisonMereAAPId =
-    organismsResponse?.account_getAccountForConnectedUser?.organism?.id;
+    getAccountForConnectedUserResponse?.account_getAccountForConnectedUser
+      ?.organism?.maisonMereAAP?.maisonMereAAPOnDepartements || [];
 
   return {
     createOrganismByMaisonMereAAP,
-    organisms,
-    organismsRefetch,
-    organismsIsRefetching,
-    maisonMereAAP,
     maisonMereAAPOnDepartements,
-    organismsStatus,
-    organismMaisonMereAAPId,
   };
 };
