@@ -122,6 +122,27 @@ export interface TrainingProgram {
   otherTraining: string;
 }
 
+export interface File {
+  name: string;
+  url: string;
+}
+
+export enum FeasibilityDecision {
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+  ADMISSIBLE = "ADMISSIBLE",
+  INCOMPLETE = "INCOMPLETE",
+}
+
+export interface Feasibility {
+  id: string;
+  feasibilityFileSentAt: Date;
+  decision: FeasibilityDecision;
+  decisionComment?: string;
+  decisionSentAt?: Date;
+  decisionFile?: File;
+}
+
 export type Page<T> = {
   rows: T[];
   info: {

@@ -323,6 +323,17 @@ const CANDIDACY_SELECTION = `
       }
       mandatoryTrainings {
         label
+      }
+      feasibility {
+        id
+        feasibilityFileSentAt
+        decision
+        decisionComment
+        decisionSentAt
+        decisionFile {
+          name
+          url
+        }
       }`;
 
 const CONFIRM_REGISTRATION = gql`

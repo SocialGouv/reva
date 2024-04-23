@@ -1129,6 +1129,8 @@ model Feasibility {
   decision                      FeasibilityStatus      @default(PENDING)
   decisionComment               String?                @map("decision_comment")
   decisionSentAt                DateTime?              @map("decision_sent_at") @db.Timestamptz(6)
+  decisionFileId                String?                @map("decision_file_id") @db.Uuid
+  decisionFile                  File?                  @relation("decision_file", fields: [decisionFileId], references: [id])
   isActive                      Boolean                @default(true) @map("is_active")
   createdAt                     DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                     DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -1210,6 +1212,7 @@ model File {
   linkedAsIDFileBy                      Feasibility[]                         @relation("ID_file")
   linkedAsDocumentaryProofFileBy        Feasibility[]                         @relation("documentary_proof_file")
   linkedAsCertificateOfAttendanceFileBy Feasibility[]                         @relation("certificate_of_attendance_file")
+  linkedAsDecisionFileBy                Feasibility[]                         @relation("decision_file")
   DossierDeValidationFile               DossierDeValidation?                  @relation("dossier_de_validation_file")
   DossierDeValidationOtherFiles         DossierDeValidationOtherFilesOnFile[]
   Jury                                  Jury?                                 @relation("convocation_file")

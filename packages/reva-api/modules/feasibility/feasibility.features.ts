@@ -644,12 +644,36 @@ export const validateFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
+    let infoFileInstance: FeasibilityFile | undefined;
+    if (infoFile) {
+      infoFileInstance = new FeasibilityFile({
+        candidacyId: feasibility.candidacyId,
+        fileToUpload: infoFile,
+      });
+
+      const success = await uploadFeasibilityFiles([infoFileInstance]);
+      if (!success) {
+        throw new Error(
+          `Le fichier du dossiers de faisabilité n'a pas pu être enregistré. Veuillez réessayer.`,
+        );
+      }
+    }
+
     const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "ADMISSIBLE",
         decisionComment: comment,
         decisionSentAt: new Date(),
+        decisionFile: infoFile
+          ? {
+              create: {
+                id: infoFileInstance?.id,
+                mimeType: infoFile.mimetype,
+                name: infoFile.filename,
+              },
+            }
+          : undefined,
       },
       include: {
         candidacy: {
@@ -744,12 +768,36 @@ export const rejectFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
+    let infoFileInstance: FeasibilityFile | undefined;
+    if (infoFile) {
+      infoFileInstance = new FeasibilityFile({
+        candidacyId: feasibility.candidacyId,
+        fileToUpload: infoFile,
+      });
+
+      const success = await uploadFeasibilityFiles([infoFileInstance]);
+      if (!success) {
+        throw new Error(
+          `Le fichier du dossiers de faisabilité n'a pas pu être enregistré. Veuillez réessayer.`,
+        );
+      }
+    }
+
     const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "REJECTED",
         decisionComment: comment,
         decisionSentAt: new Date(),
+        decisionFile: infoFile
+          ? {
+              create: {
+                id: infoFileInstance?.id,
+                mimeType: infoFile.mimetype,
+                name: infoFile.filename,
+              },
+            }
+          : undefined,
       },
       include: {
         candidacy: {
@@ -897,8 +945,31 @@ export const canDownloadFeasibilityFiles = async ({
       hasRole,
       candidacyId,
       keycloakId,
-    })) || (await canManageFeasibility({ hasRole, feasibility, keycloakId }))
+    })) ||
+    (await canManageFeasibility({ hasRole, feasibility, keycloakId })) ||
+    (await isCandidacyOwner(keycloakId, candidacyId))
   );
+};
+
+export const isCandidacyOwner = async (
+  keycloakId: string,
+  candidacyId: string,
+): Promise<boolean> => {
+  const candidate = await prismaClient.candidate.findFirst({
+    where: { keycloakId },
+  });
+  if (!candidate) {
+    return false;
+  }
+
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+  });
+  if (candidacy?.candidateId != candidate.id) {
+    return false;
+  }
+
+  return true;
 };
 
 export const canManageFeasibility = async ({

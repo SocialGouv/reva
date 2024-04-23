@@ -11,6 +11,7 @@ import {
   handleFeasibilityDecision,
 } from "./feasibility.features";
 import { FeasibilityFile } from "./feasibility.file";
+import { prismaClient } from "prisma/client";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };

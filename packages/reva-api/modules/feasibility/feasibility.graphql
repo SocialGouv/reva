@@ -17,6 +17,7 @@ type Feasibility {
   decision: FeasibilityDecision!
   decisionComment: String
   decisionSentAt: Timestamp
+  decisionFile: File
   history: [FeasibilityHistory!]!
 }
 

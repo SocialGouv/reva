@@ -7,6 +7,7 @@ import {
   Department,
   Experience,
   Experiences,
+  Feasibility,
   Goal,
   Organism,
   OrganismForCandidacy,
@@ -84,6 +85,7 @@ export interface MainContext {
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
   firstAppointmentOccuredAt?: Date;
+  feasibility?: Feasibility;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -279,6 +281,7 @@ export const mainMachine =
           isCertificationPartial: false,
           isTrainingProgramConfirmed: false,
           certificationSearchText: "",
+          feasibility: undefined,
         },
         initial: "loadDepartments",
         id: "mainMachine",
@@ -1117,6 +1120,7 @@ export const mainMachine =
                   event.data.candidacy?.candidacyStatus,
                   event.data.candidacy?.candidacyStatuses
                 ),
+              feasibility: event.data.candidacy?.feasibility,
             };
           }),
           navigateHome,
