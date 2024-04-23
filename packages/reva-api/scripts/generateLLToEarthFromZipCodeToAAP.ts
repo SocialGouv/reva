@@ -33,11 +33,20 @@ type SearchResponse = {
     const organisms = await prismaClient.organism.findMany({
       where: {
         ll_to_earth: null,
-        organismInformationsCommerciales: {
-          adresseCodePostal: {
-            not: "",
+        OR: [
+          {
+            organismInformationsCommerciales: {
+              adresseCodePostal: {
+                not: "",
+              },
+            },
           },
-        },
+          {
+            zip: {
+              not: "",
+            },
+          },
+        ],
       },
       include: {
         organismInformationsCommerciales: true,
@@ -45,18 +54,17 @@ type SearchResponse = {
     });
 
     for (const organism of organisms) {
-      const { organismInformationsCommerciales } = organism;
-      if (!organismInformationsCommerciales) continue;
-      const { adresseCodePostal } = organismInformationsCommerciales;
-      if (!adresseCodePostal) continue;
+      const { organismInformationsCommerciales, zip } = organism;
+      const selectedZipCode =
+        organismInformationsCommerciales?.adresseCodePostal || zip;
 
       const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${adresseCodePostal}&limit=1"`
+        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${selectedZipCode}&limit=1"`
       );
 
       const { features }: SearchResponse = await res.json();
       if (!features.length) {
-        console.error(`No feature found for zip code ${adresseCodePostal}`);
+        console.error(`No feature found for zip code ${selectedZipCode}`);
         continue;
       }
       const [
