@@ -14,10 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useController, useForm } from "react-hook-form";
 import { AgenceFormData, agenceFormSchema } from "./agenceFormSchema";
 import { useAgencePage } from "@/app/(aap)/agencies-settings/add-agence/addAgencePage.hook";
-import ZoneIntervention from "@/app/(aap)/agences/components/zone-intervention/ZoneIntervention";
+import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
 
 const modalCreateAgence = createModal({
   id: "modal-create-agence",
@@ -32,6 +32,10 @@ const AddAgencePage = () => {
   const { createOrganismByMaisonMereAAP } = useAgencePage();
   const methods = useForm<AgenceFormData>({
     resolver: zodResolver(agenceFormSchema),
+    defaultValues: {
+      zoneInterventionDistanciel: [],
+      zoneInterventionPresentiel: [],
+    },
   });
 
   const {
@@ -41,7 +45,18 @@ const AddAgencePage = () => {
     formState: { errors, isSubmitting },
     watch,
     setValue,
+    control,
   } = methods;
+
+  const onSiteInterventionZoneController = useController({
+    name: "zoneInterventionPresentiel",
+    control,
+  });
+
+  const remoteInterventionZoneController = useController({
+    name: "zoneInterventionDistanciel",
+    control,
+  });
 
   useDepartementsOnRegions({
     zoneInterventionDistanciel: watch(
@@ -139,7 +154,7 @@ const AddAgencePage = () => {
   });
 
   const handleReset = useCallback(() => {
-    reset({});
+    reset({ zoneInterventionDistanciel: [], zoneInterventionPresentiel: [] });
   }, [reset]);
 
   useEffect(() => {
@@ -307,7 +322,27 @@ const AddAgencePage = () => {
               </div>
 
               <div className="w-full">
-                <ZoneIntervention />
+                <fieldset>
+                  <legend className="text-2xl font-bold mb-4">
+                    Zone d'intervention
+                  </legend>
+                  <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-x-8">
+                    <ZoneIntervention
+                      type="ON_SITE"
+                      zoneIntervention={
+                        onSiteInterventionZoneController.field.value
+                      }
+                      onChange={onSiteInterventionZoneController.field.onChange}
+                    />
+                    <ZoneIntervention
+                      type="REMOTE"
+                      zoneIntervention={
+                        remoteInterventionZoneController.field.value
+                      }
+                      onChange={remoteInterventionZoneController.field.onChange}
+                    />
+                  </div>
+                </fieldset>
               </div>
 
               <fieldset className="flex flex-col gap-4 w-full">
