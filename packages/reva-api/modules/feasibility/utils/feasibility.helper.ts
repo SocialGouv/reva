@@ -16,11 +16,15 @@ export const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput
 
 export const excludeRejectedArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
   {
+    NOT: {
+      isActive: true,
+      decision: "REJECTED",
+    },
     candidacy: {
       candidacyStatuses: {
         none: {
           isActive: true,
-          status: { in: ["ARCHIVE", "DOSSIER_FAISABILITE_NON_RECEVABLE"] },
+          status: "ARCHIVE",
         },
       },
       candidacyDropOut: { is: null },
