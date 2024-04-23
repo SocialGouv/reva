@@ -1,5 +1,4 @@
 import { Timeline } from "components/molecules/Timeline/Timeline";
-import { AccompanimentTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/AccompanimentTimelineElement/AccompanimentTimelineElement";
 import { FeasibilityAppointmentTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/FeasibilityAppointmentTimelineElement/FeasibilityAppointmentTimelineElement";
 import { ProjectEndedTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
@@ -30,7 +29,6 @@ export const ProjectTimeline = ({
       <ProjectSubmissionTimelineElement />
       <FeasibilityAppointmentTimelineElement />
       <TrainingProgramTimelineElement />
-      <AccompanimentTimelineElement />
       <ProjectEndedTimelineElement />
     </Timeline>
   );
