@@ -31,15 +31,15 @@ const AddAgencePage = () => {
   const { createOrganismByMaisonMereAAP, maisonMereAAPOnDepartements } =
     useAgencePage();
 
-  const { getZonesInterventionMaisonMereAAP, mergeZonesIntervention } =
+  const { getZonesIntervention, mergeZonesIntervention } =
     useZoneInterventionAAP();
 
   const zonesInterventionMaisonMereAAP = useMemo(
     () =>
-      getZonesInterventionMaisonMereAAP({
+      getZonesIntervention({
         maisonMereAAPOnDepartements: maisonMereAAPOnDepartements,
       }),
-    [getZonesInterventionMaisonMereAAP, maisonMereAAPOnDepartements],
+    [getZonesIntervention, maisonMereAAPOnDepartements],
   );
 
   const methods = useForm<AgenceFormData>({

@@ -2,21 +2,31 @@ import { TreeSelectRegion } from "@/types";
 import { sortDepartmentsByAlphabeticalOrderAndDOM } from "@/utils";
 import { useCallback } from "react";
 
+interface ZoneInterventionMaisonMere {
+  departement: {
+    id: string;
+    code: string;
+    label: string;
+    region: { id: string; label: string };
+  };
+  estADistance: boolean;
+  estSurPlace: boolean;
+}
+
+interface ZoneInterventionOrganism {
+  departmentId: string;
+  isRemote: boolean;
+  isOnSite: boolean;
+}
+
 export const useZoneInterventionAAP = () => {
-  const getZonesInterventionMaisonMereAAP = useCallback(
+  const getZonesIntervention = useCallback(
     ({
       maisonMereAAPOnDepartements,
+      organismOnDepartments,
     }: {
-      maisonMereAAPOnDepartements: {
-        departement: {
-          id: string;
-          code: string;
-          label: string;
-          region: { id: string; label: string };
-        };
-        estADistance: boolean;
-        estSurPlace: boolean;
-      }[];
+      maisonMereAAPOnDepartements: ZoneInterventionMaisonMere[];
+      organismOnDepartments?: ZoneInterventionOrganism[];
     }) => {
       const departementsOnRegionsRemote: Record<string, TreeSelectRegion> = {};
       const departementsOnRegionsOnSite: Record<string, TreeSelectRegion> = {};
@@ -24,28 +34,37 @@ export const useZoneInterventionAAP = () => {
       maisonMereAAPOnDepartements?.forEach(
         ({ departement, estADistance, estSurPlace }) => {
           const id = departement.region.id;
+          const departementSelected = organismOnDepartments?.find(
+            (organismOnDepartment) =>
+              organismOnDepartment.departmentId === departement.id,
+          );
 
           if (estADistance) {
             if (!departementsOnRegionsRemote[id]) {
               departementsOnRegionsRemote[id] = {
                 id: departement.region.id,
                 label: departement.region.label,
-                selected: false,
+                selected: departementSelected?.isRemote ?? false,
                 children: [
                   {
                     label: departement.label,
                     id: departement.id,
-                    selected: false,
+                    selected: departementSelected?.isRemote ?? false,
                     code: departement.code,
                   },
                 ],
               };
             } else {
-              departementsOnRegionsRemote[id].selected = false;
+              const regionIsSelected = departementsOnRegionsRemote[
+                id
+              ].children?.every((departement) => departement.selected);
+
+              departementsOnRegionsRemote[id].selected =
+                (regionIsSelected && departementSelected?.isRemote) || false;
               departementsOnRegionsRemote[id].children?.push({
                 label: departement.label,
                 id: departement.id,
-                selected: false,
+                selected: departementSelected?.isRemote ?? false,
                 code: departement.code,
               });
             }
@@ -56,23 +75,28 @@ export const useZoneInterventionAAP = () => {
               departementsOnRegionsOnSite[id] = {
                 id: departement.region.id,
                 label: departement.region.label,
-                selected: false,
+                selected: departementSelected?.isOnSite ?? false,
                 children: [
                   {
                     label: departement.label,
                     id: departement.id,
-                    selected: false,
+                    selected: departementSelected?.isOnSite ?? false,
                     code: departement.code,
                   },
                 ],
               };
             } else {
-              departementsOnRegionsOnSite[id].selected = false;
+              const regionIsSelected = departementsOnRegionsOnSite[
+                id
+              ].children?.every((departement) => departement.selected);
+
+              departementsOnRegionsOnSite[id].selected =
+                (regionIsSelected && departementSelected?.isOnSite) || false;
 
               departementsOnRegionsOnSite[id].children?.push({
                 label: departement.label,
                 id: departement.id,
-                selected: false,
+                selected: departementSelected?.isOnSite ?? false,
                 code: departement.code,
               });
             }
@@ -133,5 +157,5 @@ export const useZoneInterventionAAP = () => {
       }));
   };
 
-  return { getZonesInterventionMaisonMereAAP, mergeZonesIntervention };
+  return { getZonesIntervention, mergeZonesIntervention };
 };
