@@ -134,7 +134,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     return items;
   };
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row w-full">
       <SideMenu
         className="flex-shrink-0 md:w-[330px] mt-2 md:-mt-7"
         align="left"

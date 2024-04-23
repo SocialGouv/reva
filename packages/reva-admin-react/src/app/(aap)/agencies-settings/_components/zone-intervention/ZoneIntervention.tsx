@@ -11,10 +11,12 @@ export const ZoneIntervention = ({
   zoneIntervention,
   onChange,
   type,
+  disabled,
 }: {
   zoneIntervention: TreeSelectItem[];
   onChange?(newValue: TreeSelectItem[]): void;
   type: "ON_SITE" | "REMOTE";
+  disabled?: boolean;
 }) => {
   const onClickDepartmentItem = (item: TreeSelectDepartment) => {
     const mappedDepartmentItems = updateSelectedValueForAllItemsBasedOnItem(
@@ -43,6 +45,7 @@ export const ZoneIntervention = ({
       toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
         zoneIntervention,
       )}
+      readonly={disabled}
     />
   );
 };

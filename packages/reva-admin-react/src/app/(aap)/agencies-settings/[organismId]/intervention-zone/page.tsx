@@ -1,17 +1,14 @@
 "use client";
 import { agenceFormSchema } from "@/app/(aap)/agences/components/agenceFormSchema";
-import { TreeSelect } from "@/components/tree-select";
-import { Organism } from "@/graphql/generated/graphql";
-import { useDepartementsOnRegions } from "@/hooks";
-import { ZoneInterventionList } from "@/types";
-import { isInterventionZoneIsFullySelectedWithoutDOM } from "@/utils";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { InterventionZoneFormData } from "./interventionZoneFormSchema";
 import { useInterventionZonePage } from "./interventionZonePage.hook";
+import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/_components/zone-intervention/zoneInterventionAAP.hook";
+import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
 
 const InterventionZonePage = () => {
   const { interventionZoneIsError, maisonMereAAP, organism } =
@@ -19,46 +16,30 @@ const InterventionZonePage = () => {
   const methods = useForm<InterventionZoneFormData>({
     resolver: zodResolver(agenceFormSchema),
   });
-  const { reset, watch, setValue } = methods;
+  const { reset } = methods;
 
-  const {
-    organismOndepartementsOnRegionsOnSite,
-    organismOndepartementsOnRegionsRemote,
-  } = useDepartementsOnRegions({
-    setValue,
-    zoneInterventionDistanciel: watch(
-      "zoneInterventionDistanciel",
-    ) as ZoneInterventionList,
-    zoneInterventionPresentiel: watch(
-      "zoneInterventionPresentiel",
-    ) as ZoneInterventionList,
-    organism: organism as Partial<Organism>,
-  });
+  const { getZonesIntervention } = useZoneInterventionAAP();
+
+  const zonesIntervention = useMemo(
+    () =>
+      getZonesIntervention({
+        maisonMereAAPOnDepartements:
+          maisonMereAAP?.maisonMereAAPOnDepartements || [],
+        organismOnDepartments: organism?.organismOnDepartments || [],
+      }),
+    [getZonesIntervention, maisonMereAAP, organism],
+  );
 
   const handleReset = useCallback(() => {
     reset({
-      zoneInterventionPresentiel: organismOndepartementsOnRegionsOnSite,
-      zoneInterventionDistanciel: organismOndepartementsOnRegionsRemote,
+      zoneInterventionDistanciel: zonesIntervention.remote,
+      zoneInterventionPresentiel: zonesIntervention.onSite,
     });
-  }, [
-    organismOndepartementsOnRegionsOnSite,
-    organismOndepartementsOnRegionsRemote,
-    reset,
-  ]);
+  }, [reset, zonesIntervention]);
 
   useEffect(() => {
-    if (
-      organismOndepartementsOnRegionsOnSite &&
-      organismOndepartementsOnRegionsRemote
-    ) {
-      handleReset();
-    }
-  }, [
-    reset,
-    handleReset,
-    organismOndepartementsOnRegionsOnSite,
-    organismOndepartementsOnRegionsRemote,
-  ]);
+    handleReset();
+  }, [handleReset]);
 
   return (
     <div className="flex flex-col w-full">
@@ -68,7 +49,7 @@ const InterventionZonePage = () => {
         <Alert
           className="mb-6"
           severity="error"
-          title="Une erreur est survenue pendant la récupération des informations juridiques."
+          title="Une erreur est survenue pendant la récupération de la zone d'intervention."
         />
       )}
 
@@ -86,46 +67,16 @@ const InterventionZonePage = () => {
             />
           </fieldset>
           <fieldset className="flex gap-4 w-full">
-            <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-              <legend className="text-lg font-bold">
-                Zone d'intervention en présentiel
-              </legend>
-              <span className="text-sm ">
-                Cochez les régions ou départements couverts en présentiel
-              </span>
-              <TreeSelect
-                readonly
-                title=""
-                label="Toute la France Métropolitaine"
-                items={organismOndepartementsOnRegionsOnSite}
-                onClickSelectAll={() => {}}
-                onClickItem={() => {}}
-                toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
-                  organismOndepartementsOnRegionsOnSite,
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-y-4 sm:gap-x-8 w-full">
-              <legend className="text-lg font-bold">
-                Zone d'intervention en distanciel
-              </legend>
-              <span className="text-sm">
-                Cochez les régions ou départements couverts en distanciel
-              </span>
-
-              <TreeSelect
-                readonly
-                title=""
-                label="Toute la France Métropolitaine"
-                items={organismOndepartementsOnRegionsRemote}
-                onClickSelectAll={() => {}}
-                onClickItem={() => {}}
-                toggleButtonIsSelected={isInterventionZoneIsFullySelectedWithoutDOM(
-                  organismOndepartementsOnRegionsRemote,
-                )}
-              />
-            </div>
+            <ZoneIntervention
+              type="ON_SITE"
+              zoneIntervention={zonesIntervention.onSite}
+              disabled
+            />
+            <ZoneIntervention
+              type="REMOTE"
+              zoneIntervention={zonesIntervention.remote}
+              disabled
+            />
           </fieldset>
         </div>
       )}

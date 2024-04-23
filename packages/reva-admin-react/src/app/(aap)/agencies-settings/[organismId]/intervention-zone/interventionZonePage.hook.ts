@@ -15,6 +15,20 @@ const interventionZoneQuery = graphql(`
       }
       maisonMereAAP {
         typologie
+        maisonMereAAPOnDepartements {
+          estSurPlace
+          estADistance
+          departement {
+            id
+            code
+            label
+            region {
+              id
+              code
+              label
+            }
+          }
+        }
       }
     }
   }
