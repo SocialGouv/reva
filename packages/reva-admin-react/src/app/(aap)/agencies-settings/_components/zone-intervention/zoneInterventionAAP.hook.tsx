@@ -128,25 +128,31 @@ export const useZoneInterventionAAP = () => {
       { isOnSite: boolean; isRemote: boolean }
     > = {};
 
-    const fillZone = (zone: TreeSelectRegion[]) => {
+    const fillZone = (zone: TreeSelectRegion[], type: "ON_SITE" | "REMOTE") => {
       zone.forEach((region) => {
         (region.children || []).forEach((departement) => {
           if (departement.selected) {
             if (!interventionZone[departement.id]) {
               interventionZone[departement.id] = {
-                isOnSite: true,
+                isOnSite: false,
                 isRemote: false,
               };
-            } else {
-              interventionZone[departement.id].isOnSite = true;
+            }
+            switch (type) {
+              case "ON_SITE":
+                interventionZone[departement.id].isOnSite = true;
+                break;
+              case "REMOTE":
+                interventionZone[departement.id].isRemote = true;
+                break;
             }
           }
         });
       });
     };
 
-    fillZone(onSiteZone);
-    fillZone(remoteZone);
+    fillZone(onSiteZone, "ON_SITE");
+    fillZone(remoteZone, "REMOTE");
 
     return Object.entries(interventionZone)
       .filter(([, { isOnSite, isRemote }]) => isOnSite || isRemote)
