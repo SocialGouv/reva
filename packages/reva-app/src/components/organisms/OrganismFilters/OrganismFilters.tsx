@@ -37,6 +37,7 @@ export const OrganismFilters = ({
   filterDistanceIsActive: boolean;
   filters: filters;
 }) => {
+  const searchIsOnlyOnsite = organismSearchOnsite && !organismSearchRemote;
   return (
     <div className="mt-8 lg:mt-0 w-full">
       <h2>Filtres :</h2>
@@ -117,6 +118,7 @@ export const OrganismFilters = ({
       </div>
       {filterDistanceIsActive && (
         <OrganismDistanceFilter
+          disabled={!searchIsOnlyOnsite}
           onChangeSearchDistance={(distance) => {
             onSearch({
               organismSearchDistance: distance,

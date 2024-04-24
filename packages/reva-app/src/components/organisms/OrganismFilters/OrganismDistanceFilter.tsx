@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 interface OrganismDistanceFilterProps {
   onChangeSearchDistance: (distance: number) => void;
   onChangeSearchZipOrCity: (zipOrCity: string) => void;
+  disabled: boolean;
 }
 
 export const OrganismDistanceFilter = ({
   onChangeSearchDistance,
   onChangeSearchZipOrCity,
+  disabled,
 }: OrganismDistanceFilterProps) => {
   const [zipOrCity, setZipOrCity] = useState("");
   const [distance, setDistance] = useState("0");
@@ -36,6 +38,7 @@ export const OrganismDistanceFilter = ({
         <legend className="mb-2">Indiquez une ville ou un code postal</legend>
         <Input
           label=""
+          disabled={disabled}
           nativeInputProps={{
             placeholder: "Angers",
             onChange: (e) => setZipOrCity(e.target.value),
@@ -45,6 +48,7 @@ export const OrganismDistanceFilter = ({
       </fieldset>
       <fieldset>
         <Range
+          disabled={disabled}
           label="Dans un rayon de"
           max={100}
           min={0}
@@ -54,6 +58,7 @@ export const OrganismDistanceFilter = ({
             onChange: (e) => {
               setDistance(e.target.value);
             },
+            disabled,
           }}
         />
       </fieldset>
