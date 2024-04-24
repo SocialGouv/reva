@@ -30,7 +30,11 @@ import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId"
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
-import { CreateOrUpdateOrganismWithMaisonMereAAPDataRequest } from "./organism.types";
+import {
+  CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
+  UpdateOrganismInterventionZoneInput,
+} from "./organism.types";
+import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
 
 export const resolvers = {
   Account: {
@@ -254,6 +258,49 @@ export const resolvers = {
         organismId: params.data.organismId,
         degreeIds: params.data.degreeIds,
       }),
+    organism_updateOrganismInterventionZone: async (
+      _parent: unknown,
+      params: {
+        data: UpdateOrganismInterventionZoneInput;
+      },
+      context: GraphqlContext,
+    ) => {
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
+      }
+
+      const roles = context.auth.userInfo.realm_access?.roles || [];
+      //admin has every rights
+      if (!roles.includes("admin")) {
+        //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
+        if (roles.includes("gestion_maison_mere_aap")) {
+          const organism = await getOrganismById({
+            organismId: params.data.organismId,
+          });
+          const maisonMere = await getMaisonMereAAPById({
+            id: organism.maisonMereAAPId || "",
+          });
+          const account = await getAccountByKeycloakId({
+            keycloakId: context.auth.userInfo.sub,
+          });
+
+          if (!account) {
+            throw new Error("Utilisateur non trouvé");
+          }
+
+          if (maisonMere?.gestionnaireAccountId !== account.id) {
+            throw new Error("Utilisateur non autorisé");
+          }
+        } else {
+          throw new Error("Utilisateur non autorisé");
+        }
+      }
+
+      return updateOrganismInterventionZone({ params: params.data });
+    },
   },
   Query: {
     organism_getOrganism: async (

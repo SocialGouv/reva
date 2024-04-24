@@ -183,6 +183,17 @@ type MaisonMereAAPsPaginated {
   info: PaginationInfo!
 }
 
+input UpdateOrganismInterventionZoneInput {
+  organismId: ID!
+  interventionZone: [InterventionZoneInput!]!
+}
+
+input InterventionZoneInput {
+  departmentId: ID!
+  isOnSite: Boolean!
+  isRemote: Boolean!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -210,4 +221,8 @@ type Mutation {
   organism_createOrUpdateOrganismOnDegrees(
     data: CreateOrUpdateOrganismOnDegreesInput!
   ): [OrganismOnDegree!]!
+
+  organism_updateOrganismInterventionZone(
+    data: UpdateOrganismInterventionZoneInput
+  ): Organism!
 }

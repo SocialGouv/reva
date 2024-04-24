@@ -89,3 +89,14 @@ export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   email: string;
   accountId?: string;
 }
+
+export interface UpdateOrganismInterventionZoneInput {
+  organismId: string;
+  interventionZone: InterventionZoneInput[];
+}
+
+export interface InterventionZoneInput {
+  departmentId: string;
+  isOnSite: boolean;
+  isRemote: boolean;
+}
