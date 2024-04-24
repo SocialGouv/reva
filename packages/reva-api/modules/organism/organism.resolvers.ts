@@ -35,6 +35,8 @@ import {
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
 import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
+import { isUserGestionnaireMaisonMereAAPOfOrganism } from "modules/organism/features/isUserGestionnaireMaisonMereAAPOfOrganism";
+import { isUserOwnerOfOrganism } from "modules/organism/features/isUserOwnerOfOrganism";
 
 export const resolvers = {
   Account: {
@@ -273,28 +275,18 @@ export const resolvers = {
       }
 
       const roles = context.auth.userInfo.realm_access?.roles || [];
+      const userKeycloakId = context.auth.userInfo.sub;
+
       //admin has every rights
       if (!roles.includes("admin")) {
         //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
-        if (roles.includes("gestion_maison_mere_aap")) {
-          const organism = await getOrganismById({
+        if (
+          !isUserGestionnaireMaisonMereAAPOfOrganism({
             organismId: params.data.organismId,
-          });
-          const maisonMere = await getMaisonMereAAPById({
-            id: organism.maisonMereAAPId || "",
-          });
-          const account = await getAccountByKeycloakId({
-            keycloakId: context.auth.userInfo.sub,
-          });
-
-          if (!account) {
-            throw new Error("Utilisateur non trouvé");
-          }
-
-          if (maisonMere?.gestionnaireAccountId !== account.id) {
-            throw new Error("Utilisateur non autorisé");
-          }
-        } else {
+            userKeycloakId,
+            userRoles: roles,
+          })
+        ) {
           throw new Error("Utilisateur non autorisé");
         }
       }
@@ -321,31 +313,30 @@ export const resolvers = {
         const organism = await getOrganismById({ organismId: params.id });
 
         const roles = context.auth.userInfo.realm_access?.roles || [];
+        const userKeycloakId = context.auth.userInfo.sub;
         //admin has every rights
         if (!roles.includes("admin")) {
           //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
           if (roles.includes("gestion_maison_mere_aap")) {
-            const maisonMere = await getMaisonMereAAPById({
-              id: organism.maisonMereAAPId || "",
-            });
-            const account = await getAccountByKeycloakId({
-              keycloakId: context.auth.userInfo.sub,
-            });
-
-            if (!account) {
-              throw new Error("Utilisateur non trouvé");
-            }
-
-            if (maisonMere?.gestionnaireAccountId !== account.id) {
+            if (
+              !isUserGestionnaireMaisonMereAAPOfOrganism({
+                organismId: organism.id,
+                userKeycloakId,
+                userRoles: roles,
+              })
+            ) {
               throw new Error("Utilisateur non autorisé");
             }
           }
           //if user is a "aap" he can access his own organism/agency
           else if (roles.includes("manage_candidacy")) {
-            const account = await getAccountByKeycloakId({
-              keycloakId: context.auth.userInfo.sub,
-            });
-            if (account?.organismId !== params.id) {
+            if (
+              !isUserOwnerOfOrganism({
+                organismId: organism.id,
+                userKeycloakId,
+                userRoles: roles,
+              })
+            ) {
               throw new Error("Utilisateur non autorisé");
             }
           } else {
