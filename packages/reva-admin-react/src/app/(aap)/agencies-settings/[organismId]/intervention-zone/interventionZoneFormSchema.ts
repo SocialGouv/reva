@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const interventionZoneFormSchema = z.object({
-  typologie: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
   zoneInterventionPresentiel: z
     .array(
       z

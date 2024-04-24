@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const interventionZoneQuery = graphql(`
@@ -34,18 +34,38 @@ const interventionZoneQuery = graphql(`
   }
 `);
 
+const updateInterventionZoneMutation = graphql(`
+  mutation updateOrganismInterventionZoneMutationForInterventionZonePage(
+    $data: UpdateOrganismInterventionZoneInput!
+  ) {
+    organism_updateOrganismInterventionZone(data: $data) {
+      id
+    }
+  }
+`);
 export const useInterventionZonePage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { organismId } = useParams<{ organismId: string }>();
 
-  const {
-    data: interventionZoneResponse,
-    status: interventionZoneStatus,
-    isError: interventionZoneIsError,
-    isSuccess: interventionZoneIsSuccess,
-  } = useQuery({
-    queryKey: ["interventionZone"],
-    queryFn: () => graphqlClient.request(interventionZoneQuery, { organismId }),
+  const { data: interventionZoneResponse, isError: interventionZoneIsError } =
+    useQuery({
+      queryKey: ["interventionZone"],
+      queryFn: () =>
+        graphqlClient.request(interventionZoneQuery, { organismId }),
+    });
+
+  const updateOrganismInterventionZone = useMutation({
+    mutationFn: (data: {
+      organismId: string;
+      interventionZone: {
+        departmentId: string;
+        isOnSite: boolean;
+        isRemote: boolean;
+      }[];
+    }) =>
+      graphqlClient.request(updateInterventionZoneMutation, {
+        data,
+      }),
   });
 
   const maisonMereAAP =
@@ -54,10 +74,8 @@ export const useInterventionZonePage = () => {
   const organism = interventionZoneResponse?.organism_getOrganism;
   return {
     interventionZoneIsError,
-    interventionZoneResponse,
-    interventionZoneStatus,
-    interventionZoneIsSuccess,
     maisonMereAAP,
     organism,
+    updateOrganismInterventionZone,
   };
 };
