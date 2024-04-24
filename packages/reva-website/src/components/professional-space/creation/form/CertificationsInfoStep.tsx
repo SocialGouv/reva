@@ -16,7 +16,7 @@ import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpac
 
 const zodSchema = z
   .object({
-    typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
+    typology: z.enum(["expertFiliere", "expertBranche"]),
     domaineIds: z.string().array(),
     ccnIds: z.string().array(),
     onSiteDepartmentsIds: z.string().array(),
@@ -74,7 +74,7 @@ export const CertificationsInfoStepForm = ({
 
   const typologyController = useController({
     name: "typology",
-    defaultValue: "generaliste",
+    defaultValue: "expertFiliere",
     control,
     rules: { required: true },
   });
@@ -192,33 +192,10 @@ export const CertificationsInfoStepForm = ({
                   "Typologie d'Architecte Accompagnateur de Parcours, une liste déroulante apparaît à l'activation des options Expert de filière(s) et Expert de branche(s)",
               }}
             >
-              <option value="generaliste">Généraliste</option>
               <option value="expertFiliere">Expert de filière(s)</option>
               <option value="expertBranche">Expert de branche(s)</option>
             </Select>
-            {(!currentTypology || currentTypology === "generaliste") && (
-              <Notice
-                title={
-                  <>
-                    <span>
-                      En tant qu'Architecte Accompagnateur de Parcours
-                      généraliste, votre offre de service couvre toutes les
-                      certifications hormis celles rattachées aux conventions
-                      collectives.
-                    </span>
-                    <br />
-                    <a
-                      href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
-                      target="_blank"
-                      title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
-                    >
-                      Retrouvez l'ensemble des certifications vous concernant
-                    </a>
-                  </>
-                }
-              />
-            )}
-            {currentTypology === "expertFiliere" && (
+            {(!currentTypology || currentTypology === "expertFiliere") && (
               <>
                 <Notice
                   className="mb-4"

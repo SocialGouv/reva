@@ -28,7 +28,7 @@ interface ProfessionalSpaceInfo {
   accountEmail: string;
   accountPhoneNumber: string;
   companyWebsite: string;
-  typology: "generaliste" | "expertFiliere" | "expertBranche";
+  typology: "expertFiliere" | "expertBranche";
   domaineIds: string[];
   qualiopiCertificateExpiresAt: Date;
   qualiopiSwornStatement: boolean;
