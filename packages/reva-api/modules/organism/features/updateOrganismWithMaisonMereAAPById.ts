@@ -51,7 +51,11 @@ export const updateOrganismWithMaisonMereAAPById = async (
     );
   }
 
-  await updateAccountById(context, {
+  if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
+    throw new Error("Utilisateur non autorisé");
+  }
+
+  await updateAccountById({
     accountId: organismData.accountId as string,
     accountData: {
       email: organismData.email,

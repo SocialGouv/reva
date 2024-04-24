@@ -88,16 +88,12 @@ export const resolvers = {
           );
         }
 
-        const keycloakAdmin = await context.app.getKeycloakAdmin();
+        const hasRole = context.auth.hasRole;
+        if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
+          throw new Error("Utilisateur non autorisé");
+        }
 
-        return updateAccountById(
-          {
-            hasRole: context.auth.hasRole,
-            keycloakAdmin,
-            keycloakId: context.auth.userInfo?.sub,
-          },
-          params,
-        );
+        return updateAccountById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

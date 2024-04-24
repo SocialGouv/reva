@@ -1,29 +1,16 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { prismaClient } from "../../../prisma/client";
 import { Account } from "../account.types";
 import { notifyNewEmailAddress, notifyPreviousEmailAddress } from "../mail";
+import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
-export const updateAccountById = async (
-  context: {
-    hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
-    keycloakId: string;
-  },
-  params: {
-    accountId: string;
-    accountData: {
-      email: string;
-      firstname: string;
-      lastname: string;
-    };
-  }
-): Promise<Account> => {
-  const { hasRole } = context;
-  if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
-    throw new Error("Utilisateur non autorisé");
-  }
-
+export const updateAccountById = async (params: {
+  accountId: string;
+  accountData: {
+    email: string;
+    firstname: string;
+    lastname: string;
+  };
+}): Promise<Account> => {
   const { accountId, accountData } = params;
 
   // Check if accountToUpdate with accountId exsits
@@ -45,34 +32,34 @@ export const updateAccountById = async (
     throw new Error(`L'email ${accountData.email} est déjà utilisé`);
   }
 
+  const keycloakAdmin = await getKeycloakAdmin();
+
   // Check if account with accountToUpdate.keycloakId exsits
-  const keycloakAccount = await context.keycloakAdmin.users.findOne({
+  const keycloakAccount = await keycloakAdmin.users.findOne({
     id: accountToUpdate.keycloakId,
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
   });
 
   if (!keycloakAccount) {
     throw new Error(
-      `Compte utilisateur keycloak pour l'id ${accountToUpdate.keycloakId} non trouvé`
+      `Compte utilisateur keycloak pour l'id ${accountToUpdate.keycloakId} non trouvé`,
     );
   }
 
-  // Check if keycloakId of logged user is different from accountToUpdate.keycloakId
-  // If false, check if accountToUpdate is not an admin
-  if (context.keycloakId != accountToUpdate.keycloakId) {
-    // Get groups of accountToUpdate
-    const groups = await context.keycloakAdmin.users.listGroups({
-      id: accountToUpdate.keycloakId,
-      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-    });
+  // Check if account is an admin account. Throw an error if it is
 
-    // Check if account with accountToUpdate.keycloakId is not an admin account
-    const groupAdmin = groups.find((group) => group.name == "admin");
-    if (groupAdmin) {
-      throw new Error(
-        `Les informations d'un compte utilisateur keycloak de type "admin" ne peuvent pas être modifiées`
-      );
-    }
+  // Get groups of accountToUpdate
+  const groups = await keycloakAdmin.users.listGroups({
+    id: accountToUpdate.keycloakId,
+    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
+  });
+
+  // Check if account with accountToUpdate.keycloakId is not an admin account
+  const groupAdmin = groups.find((group) => group.name == "admin");
+  if (groupAdmin) {
+    throw new Error(
+      `Les informations d'un compte utilisateur keycloak de type "admin" ne peuvent pas être modifiées`,
+    );
   }
 
   const prevEmail = accountToUpdate.email;
@@ -94,7 +81,7 @@ export const updateAccountById = async (
   });
 
   // Update Keycloak DB
-  await context.keycloakAdmin.users.update(
+  await keycloakAdmin.users.update(
     {
       id: accountToUpdate.keycloakId,
       realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
@@ -104,7 +91,7 @@ export const updateAccountById = async (
       lastName: accountData.lastname,
       username: accountData.email,
       email: accountData.email,
-    }
+    },
   );
 
   if (prevEmail != nextEmail) {
