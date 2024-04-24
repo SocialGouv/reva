@@ -36,7 +36,6 @@ export const getAAPsWithZipCodeAndDistance = async ({
     SELECT o.* FROM organism o
     INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
     ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
-    AND o.contact_administrative_email IS NOT NULL
     ORDER BY (earth_distance(ll_to_earth(${latitude},${longitude}), o.ll_to_earth::earth) / 1000) ASC
     LIMIT ${limit}
     `);
