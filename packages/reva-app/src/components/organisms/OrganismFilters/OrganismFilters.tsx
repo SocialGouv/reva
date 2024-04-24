@@ -39,10 +39,10 @@ export const OrganismFilters = ({
 }) => {
   return (
     <div className="mt-8 lg:mt-0 w-full">
-      <h2 className="text-3xl font-semibold mb-4">Filtres :</h2>
-      <h3 className="px-4 py-2 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
+      <h2>Filtres :</h2>
+      <div className="px-4 py-4 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
         Modalités d'accompagnement
-      </h3>
+      </div>
       <div>
         <Button
           data-test="button-select-onsite"

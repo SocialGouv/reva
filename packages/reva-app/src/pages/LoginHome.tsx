@@ -45,7 +45,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
 
   return (
     <Page className="max-w-2xl" data-test="login-home" title="Connexion">
-      <h1 className="text-3xl font-bold text-dsfrBlue-500">
+      <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>
       {state.context.error ? (

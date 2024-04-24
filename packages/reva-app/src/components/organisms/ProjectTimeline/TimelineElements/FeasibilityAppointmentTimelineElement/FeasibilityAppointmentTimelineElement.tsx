@@ -18,7 +18,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
       {({ status }) =>
         state.context.firstAppointmentOccuredAt && state.context.organism ? (
           status === "readonly" ? (
-            <p className="text-sm text-dsfrGray-500">
+            <p className="text-sm text-dsfrGray-500 mb-0">
               RDV effectué le{" "}
               {format(state.context.firstAppointmentOccuredAt, "dd/MM/yyyy")}{" "}
               avec{" "}
@@ -29,7 +29,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
             <div className="flex text-[#0063CB] italic">
               <span className="fr-icon fr-icon-information-fill mr-2 self-center" />
               <div>
-                <p className="text-sm">
+                <p className="text-sm mb-0">
                   Votre rendez-vous pédagogique est prévu le
                   <strong>
                     {" "}
@@ -43,7 +43,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
                     .
                   </strong>
                 </p>
-                <p className="text-sm">
+                <p className="text-sm mb-0">
                   Vous avez jusqu’à cette date pour modifier votre candidature.
                   Au-delà de cette date, votre candidature ne sera plus
                   modifiable.
@@ -54,7 +54,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
         ) : (
           <div className="flex text-dsfrGray-500 italic">
             <span className="fr-icon  fr-icon-time-fill mr-2 self-center" />
-            <p className="text-sm">
+            <p className="text-sm mb-0">
               Votre organisme accompagnateur va bientôt vous contacter pour
               organiser avec vous votre premier rendez-vous pédagogique.
             </p>

@@ -59,22 +59,18 @@ export const Certificates = ({ mainService }: Props) => {
       .map((el) => <li>{el}</li>);
   };
   return (
-    <Page
-      className="max-w-2xl"
-      data-test="certificates"
-      title="Choix du diplôme"
-    >
+    <Page data-test="certificates" title="Choix du diplôme">
       <BackToHomeButton />
       <ErrorAlertFromState />
-      <NameBadge as="h1" className="mt-4" />
-      <h2 className="text-lg text-dsfrGray-500 font-bold mt-6">
+      <NameBadge as="h1" className="mt-4 mb-0" />
+      <h2 className="text-lg text-dsfrGray-500 font-bold mt-6 mb-0">
         Nouveau parcours VAE - Choix du diplôme
       </h2>
-      <p className=" text-sm">
+      <p className="text-sm mb-0">
         Sélectionnez le diplôme que vous voulez valider
       </p>
       <Select
-        className="my-4"
+        className="my-4 max-w-4xl"
         data-test="certificates-select-department"
         label="Département"
         nativeSelectProps={{
@@ -101,7 +97,7 @@ export const Certificates = ({ mainService }: Props) => {
       </Select>
       <SearchBar
         label="Rechercher un diplôme"
-        className="mb-8"
+        className="mb-8 max-w-4xl"
         nativeInputProps={{
           defaultValue: state.context.certificationSearchText,
           onChange: (e) => {
@@ -112,7 +108,7 @@ export const Certificates = ({ mainService }: Props) => {
           },
         }}
       />
-      <p role="status">
+      <p className="mb-0" role="status">
         {chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
         !!state.context.selectedDepartment
           ? `Nombre de diplômes disponibles pour le département ${

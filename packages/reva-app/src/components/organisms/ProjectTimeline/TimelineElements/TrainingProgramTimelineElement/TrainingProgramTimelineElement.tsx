@@ -16,7 +16,7 @@ export const TrainingProgramTimelineElement = () => {
     <TimelineElement
       title="Validation de parcours"
       description={
-        <p className="text-sm text-dsfrGray-500 mt-4" role="status">
+        <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
           {state.context.candidacyStatus === "PROJET" ? null : [
               "VALIDATION",
               "PRISE_EN_CHARGE",

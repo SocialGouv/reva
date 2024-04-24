@@ -38,25 +38,23 @@ export const OrganismTimelineElement = () => {
               {state.context.organism?.label && (
                 <h3
                   data-test="project-home-organism-label"
-                  className="text-base font-medium"
+                  className="text-base font-medium mb-0"
                 >
                   {organismDisplayInfo?.label}
                 </h3>
               )}
-              <address className="not-italic">
-                <p>
-                  <span data-test="project-home-organism-email">
-                    {organismDisplayInfo.email}
-                  </span>
-                  {organismDisplayInfo.phone && (
-                    <>
-                      &nbsp; - &nbsp;
-                      <span data-test="project-home-organism-phone">
-                        {organismDisplayInfo.phone}
-                      </span>
-                    </>
-                  )}
-                </p>
+              <address className="not-italic text-base">
+                <span data-test="project-home-organism-email">
+                  {organismDisplayInfo.email}
+                </span>
+                {organismDisplayInfo.phone && (
+                  <>
+                    &nbsp; - &nbsp;
+                    <span data-test="project-home-organism-phone">
+                      {organismDisplayInfo.phone}
+                    </span>
+                  </>
+                )}
               </address>
             </div>
           )}

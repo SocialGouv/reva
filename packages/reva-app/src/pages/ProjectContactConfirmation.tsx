@@ -4,13 +4,12 @@ import { Page } from "../components/organisms/Page";
 
 export const ProjectContactConfirmation = () => (
   <Page
+    className="items-center text-center my-8"
     data-test="project-contact-confirmation"
     title="Confirmation de création de compte"
   >
-    <div role="status">
-      <h1 className="text-3xl font-bold text-dsfrBlue-500">
-        Votre demande de création de compte a bien été enregistrée.
-      </h1>
+    <div className="max-w-xl" role="status">
+      <h1>Votre demande de création de compte a bien été enregistrée.</h1>
       <p className="mt-4 text-lg font-bold text-dsfrGray-500">
         Vous allez recevoir un mail contenant un lien d'activation qui sera
         valable pendant 4 jours.

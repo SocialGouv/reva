@@ -33,7 +33,7 @@ export const ExperiencesTimelineElement = () => {
           {!!sortedExperiences.length && (
             <ul
               data-test="timeline-experiences-list"
-              className="mb-2 pb-2 flex flex-col space-y-3"
+              className="mb-2 mx-0 px-0 pb-2 flex flex-col space-y-3"
             >
               {sortedExperiences.map((se, i) =>
                 ExperienceSummary(
@@ -80,10 +80,10 @@ const ExperienceSummary = (
       onClick={() => !disabled && send({ type: "EDIT_EXPERIENCE", index })}
     >
       <div className="flex flex-col">
-        <p data-test="timeline-experience-title" className="font-medium">
+        <p data-test="timeline-experience-title" className="font-medium mb-0">
           {experience.title}
         </p>
-        <p data-test="timeline-experience-duration">
+        <p data-test="timeline-experience-duration" className="mb-0">
           {durationToString[experience.duration]}
         </p>
       </div>

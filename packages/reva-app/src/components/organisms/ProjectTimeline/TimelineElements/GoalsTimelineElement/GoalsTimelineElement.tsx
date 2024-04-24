@@ -23,7 +23,7 @@ export const GoalsTimelineElement = () => {
     >
       {({ status }) => (
         <>
-          <ul className="mb-2 leading-tight">
+          <ul className="mt-0 mb-2 leading-tight">
             {selectedGoals.map((goal) => (
               <li className="mb-2" key={goal.id}>
                 {goal.label}

@@ -125,7 +125,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               severity="warning"
               title={
                 <div className="flex flex-col items-start gap-2 font-normal">
-                  <h2 className="font-bold ">Attention</h2>
+                  <h2 className="font-bold text-xl">Attention</h2>
                   <p>Seuls quelques diplômes sont actuellement éligibles : </p>
                   <a
                     className="fr-link"
@@ -157,7 +157,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
                 </div>
               }
             />
-            <h1 className="text-3xl font-bold text-dsfrBlue-500">
+            <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
               Bienvenue <span aria-hidden="true">🤝</span>,
             </h1>
           </>
@@ -165,7 +165,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         <form onSubmit={onSubmit} className="flex flex-col">
           <fieldset>
             <legend>
-              <h2 className="mt-6 text-3xl mb-2 text-dsfrBlue-500">
+              <h2 className="mt-6 mb-2">
                 {hasCandidacy
                   ? "Modifiez vos informations"
                   : "Créer votre compte"}

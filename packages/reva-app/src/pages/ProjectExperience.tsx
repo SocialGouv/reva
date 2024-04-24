@@ -62,7 +62,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
         {!!state.context.experiences.edited ? "Modifier" : "Ajouter"} une
         expérience
       </h1>
-      <p className="text-xs text-dsfrGray-500">
+      <p className="text-xs text-dsfrGray-500 mb-0">
         Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
         d’une activité extra-professionnelle.
       </p>

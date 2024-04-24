@@ -10,17 +10,17 @@ export const ProjectSubmissionConfirmation = () => {
   return (
     <Page className="max-w-2xl" title="Envoi de votre candidature">
       <BackToHomeButton />
-      <h1 className="text-2xl text-black mt-6">Envoi de votre candidature</h1>
+      <h1 className="mt-6">Envoi de votre candidature</h1>
       {state.context.error ? (
         <ErrorAlert message={state.context.error} />
       ) : (
-        <p className="mt-6">
+        <p>
           Après réception de votre candidature, votre organisme d'accompagnement
           vous contactera pour fixer un rendez-vous pour définir votre parcours.
         </p>
       )}
       <Button
-        className="mt-6 justify-center w-[100%]  md:w-fit"
+        className="justify-center w-[100%]  md:w-fit"
         data-test="project-submit"
         nativeButtonProps={{
           onClick: () => {

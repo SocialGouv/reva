@@ -14,7 +14,7 @@ export const OrganismCardDescription = ({
 }) => {
   return (
     <>
-      <p className="truncate">
+      <p className="truncate mb-0">
         <span
           className="fr-icon-mail-line fr-icon--sm mr-2"
           aria-hidden="true"
@@ -23,7 +23,7 @@ export const OrganismCardDescription = ({
       </p>
 
       <div className="flex justify-between">
-        <p>
+        <p className="mb-0">
           {phone && (
             <>
               <span

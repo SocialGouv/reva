@@ -91,19 +91,19 @@ export const TrainingProgramSummary = ({
   return (
     <Page title="Votre parcours" className="max-w-2xl">
       <BackToHomeButton />
-      <h1 className="mt-4 text-3xl font-bold">
+      <h1 className="mt-4">
         {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}
       </h1>
 
       <ErrorAlertFromState />
 
-      <p className="text-dsfrGray-800 mt-6">
+      <p>
         Suite à votre rendez-vous de faisabilité avec votre Architecte de
         Parcours, veuillez valider la proposition de parcours suivante :
       </p>
 
       <ul
-        className="mt-6 text-dsfrGray-700 list-square list-inside"
+        className="text-dsfrGray-700 list-square list-inside"
         data-test="general-informations"
       >
         {isCertificationPartial ? (

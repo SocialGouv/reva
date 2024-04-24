@@ -26,16 +26,16 @@ export const ProjectDroppedOut = ({
           data-test="home-dropped-out-name"
         />
 
-        <p className="font-bold mt-6" data-test="home-dropped-out-email">
+        <p className="font-bold" data-test="home-dropped-out-email">
           Email: {candidateEmail}
         </p>
 
-        <p className="mt-8">
+        <p>
           Nous avons enregistré l'interruption de votre parcours.
           <br />
           Nous vous informons que vous ne pourrez pas candidater à nouveau.
         </p>
-        <p className="mt-8">
+        <p>
           Vous avez une question ?{" "}
           <EmailLink
             email={supportEmail}

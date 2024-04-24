@@ -31,7 +31,7 @@ export const OrganismCardInformationsCommerciales = ({
         )}
       </div>
       {ic?.conformeNormesAccessbilite === "CONFORME" && (
-        <p className="text-sm mt-0.5">
+        <p className="text-sm mt-0.5 mb-0">
           <span
             className="fr-icon-wheelchair-fill fr-icon--xs mr-3"
             aria-hidden="true"

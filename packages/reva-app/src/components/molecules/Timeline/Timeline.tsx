@@ -38,22 +38,18 @@ export const TimelineElement = ({
       }
 `}
     >
-      <h3 className="text-black !leading-none">{title}</h3>
+      <h3 className="text-xl leading-none mb-0">{title}</h3>
 
       {description ? (
         typeof description === "string" ? (
-          <p className="text-sm text-dsfrGray-500 mt-4">{description}</p>
+          <p className="text-sm text-dsfrGray-500 mt-4 mb-0">{description}</p>
         ) : (
           description
         )
       ) : null}
 
       {children && (
-        <div
-          className={`flex flex-col text-sm text-black pb-6 ${
-            description ? "mt-2" : "mt-4"
-          }`}
-        >
+        <div className="flex flex-col text-sm text-black pb-6 mt-4">
           {children?.({ status })}
         </div>
       )}

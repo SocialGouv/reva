@@ -44,7 +44,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   return (
     <Page title="Vos objectifs">
       <BackToHomeButton />
-      <h1 className="mt-4 text-4xl font-bold">Mes objectifs</h1>
+      <h1 className="mt-4 text-4xl font-bold mb-0">Mes objectifs</h1>
       <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
       {state.matches("projectGoals.error") && <ErrorAlertFromState />}
       {goalSet}

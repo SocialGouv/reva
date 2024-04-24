@@ -8,7 +8,7 @@ export const ContactTimelineElement = () => {
     <TimelineElement title="Vos informations de contact" status="editable">
       {({ status }) => (
         <>
-          <ul className="leading-tight">
+          <ul className="list-none mt-0 pl-0 leading-tight">
             {state.context.contact?.phone && (
               <li data-test="project-home-contact-phone" className="mb-2">
                 {state.context.contact?.phone}

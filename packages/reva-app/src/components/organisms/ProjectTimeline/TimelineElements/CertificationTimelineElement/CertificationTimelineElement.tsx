@@ -17,7 +17,10 @@ export const CertificationTimelineElement = () => {
       {({ status }) => (
         <>
           {state.context.certification && (
-            <h4 data-test="certification-label" className="text-base mb-4">
+            <h4
+              data-test="certification-label"
+              className="mb-4 text-base font-normal"
+            >
               {state.context.certification?.label}
             </h4>
           )}
