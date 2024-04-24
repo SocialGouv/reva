@@ -99,6 +99,7 @@ const getCandidacyByIdFunding = graphql(`
         fundingContactLastname
         fundingContactEmail
         fundingContactPhone
+        numAction
       }
     }
   }

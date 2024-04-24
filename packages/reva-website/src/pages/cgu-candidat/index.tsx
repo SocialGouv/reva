@@ -1,4 +1,3 @@
-import { Cgu } from "@/components/cgu/Cgu";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 

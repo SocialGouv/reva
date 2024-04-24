@@ -190,7 +190,13 @@ const FundingPage = () => {
     <div className="flex flex-col w-full p-1 md:p-2">
       <div>
         <h1>Demande de prise en charge</h1>
-        <FormOptionalFieldsDisclaimer />
+        <FormOptionalFieldsDisclaimer classname="mb-0"/>
+        {candidacy?.fundingRequestUnifvae?.numAction && (
+          <p className="m-0">
+            <span className="font-bold">Numéro : </span>
+            {candidacy.fundingRequestUnifvae.numAction}
+          </p>
+        )}
       </div>
       <FormProvider {...methods}>
         <form

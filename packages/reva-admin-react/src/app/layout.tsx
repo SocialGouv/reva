@@ -1,9 +1,7 @@
 "use client";
 
-import "./globals.css";
-import { useEffect } from "react";
-import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
+import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
@@ -11,13 +9,18 @@ import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast";
 import Keycloak from "keycloak-js";
+import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import "./globals.css";
 
+import { useAuth } from "@/components/auth/auth";
 import {
   KeycloakProvider,
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
+import { useCrisp } from "@/components/crisp/useCrisp";
+import { Produktly } from "@/components/produktly/Produktly";
 import {
   HELP_BUBBLE_URL,
   KEYCLOAK_CLIENT_ID,
@@ -25,12 +28,9 @@ import {
   KEYCLOAK_URL,
   PRODUKTLY_CLIENT_TOKEN,
 } from "@/config/config";
-import { useCrisp } from "@/components/crisp/useCrisp";
-import { fr } from "date-fns/locale";
 import { setDefaultOptions } from "date-fns";
+import { fr } from "date-fns/locale";
 import Script from "next/script";
-import { Produktly } from "@/components/produktly/Produktly";
-import { useAuth } from "@/components/auth/auth";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -53,6 +53,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
         <DsfrHead />
         {HELP_BUBBLE_URL && <Script src={HELP_BUBBLE_URL} />}
         {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
+        <title>France VAE</title>
       </head>
       <body>
         <DsfrProvider>

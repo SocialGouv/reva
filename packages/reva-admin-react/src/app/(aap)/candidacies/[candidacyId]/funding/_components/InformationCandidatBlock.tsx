@@ -22,7 +22,7 @@ export const InformationCandidatBlock = ({
   } = useFormContext();
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col mt-6">
       <legend>
         <h2 className="text-xl">1. Informations du candidat</h2>
       </legend>
@@ -66,6 +66,6 @@ export const InformationCandidatBlock = ({
           ))}
         </Select>
       </fieldset>
-    </div>
+      </div>
   );
 };
