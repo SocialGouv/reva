@@ -219,7 +219,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchOnsite,
     organismSearchRemote,
     activeFeatures,
-    organismSearchDistance,
     organismSearchZipOrCity,
   } = xstate.context;
 
@@ -279,7 +278,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                   organismSearchText: e.target.value,
                   organismSearchOnsite,
                   organismSearchRemote,
-                  organismSearchDistance,
                   organismSearchZipOrCity,
                 });
               },
@@ -294,7 +292,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                 organismSearchText,
                 organismSearchOnsite,
                 organismSearchRemote,
-                organismSearchDistance,
                 organismSearchZipOrCity,
               }) =>
                 send({
@@ -302,7 +299,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                   organismSearchText,
                   organismSearchOnsite,
                   organismSearchRemote,
-                  organismSearchDistance,
                   organismSearchZipOrCity,
                 })
               }
@@ -310,7 +306,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                 organismSearchText,
                 organismSearchRemote,
                 organismSearchOnsite,
-                organismSearchDistance,
                 organismSearchZipOrCity,
               }}
               filterDistanceIsActive={activeFeatures.includes(

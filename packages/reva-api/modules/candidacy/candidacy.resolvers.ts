@@ -175,13 +175,11 @@ const unsafeResolvers = {
         searchFilter,
         searchText,
         searchZipOrCity,
-        searchDistance,
       }: {
         candidacyId: string;
         searchFilter: SearchOrganismFilter;
         searchText?: string;
         searchZipOrCity?: string;
-        searchDistance?: number;
       }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
@@ -191,12 +189,11 @@ const unsafeResolvers = {
 
       let randomOrganisms: OrganismCamelCase[];
 
-      if (searchZipOrCity && searchDistance) {
+      if (searchZipOrCity && searchFilter?.distanceStatus === "ONSITE") {
         const searchIsZip = searchZipOrCity.match(/^\d{5}$/);
         randomOrganisms = await getAAPsWithZipCodeAndDistance({
           zip: searchIsZip ? searchZipOrCity : undefined,
           city: searchIsZip ? undefined : searchZipOrCity,
-          distance: searchDistance,
           limit: 51,
           searchText,
         });

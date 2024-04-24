@@ -278,7 +278,6 @@ type Query {
     searchText: String
     searchFilter: SearchOrganismFilter
     searchZipOrCity: String
-    searchDistance: Int
   ): RamdomOrganisms!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!

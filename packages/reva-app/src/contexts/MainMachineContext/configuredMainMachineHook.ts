@@ -79,7 +79,6 @@ export const useConfiguredMainMachine = () => {
               organismSearchRemote,
               organismSearchOnsite,
               organismSearchText: searchText,
-              organismSearchDistance: searchDistance,
               organismSearchZipOrCity: searchZipOrCity,
             } = context;
             if (!candidacyId)
@@ -107,7 +106,6 @@ export const useConfiguredMainMachine = () => {
               departmentId: selectedDepartment?.id,
               searchText,
               searchFilter: { distanceStatus },
-              searchDistance,
               searchZipOrCity,
             });
           },
