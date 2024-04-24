@@ -1,4 +1,4 @@
-import _Keycloak from "keycloak-js";
+import _Keycloak, { KeycloakInitOptions } from "keycloak-js";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 
 type KeycloakUser = {
@@ -41,7 +41,9 @@ export const KeycloakProvider = ({
 
   const logout = () => {
     setAuthenticated(false);
-    keycloakInstance?.logout();
+    keycloakInstance?.logout({
+      redirectUri: window.location.origin + "/admin2/post-login",
+    });
   };
 
   const setTimeoutRefreshToken = useCallback(() => {
@@ -63,7 +65,7 @@ export const KeycloakProvider = ({
   useEffect(() => {
     const initKeycloak = async () => {
       if (keycloakInstance) {
-        let config: any = {
+        let config: KeycloakInitOptions = {
           enableLogging: process.env.NODE_ENV !== "production",
           onLoad: "check-sso",
           //@ts-ignore
@@ -110,19 +112,20 @@ export const KeycloakProvider = ({
             setTimeoutRefreshToken();
           } else {
             keycloakInstance.login({
-              redirectUri: window.location.origin + "/admin2/post-login",
+              redirectUri: window.location.href,
             });
           }
 
           setReady(true);
         } catch (e: any) {
           console.log("Error keycloak", e);
-          if (e.error === "login_required") {
+          if (e?.error === "login_required") {
             setReady(true);
           }
         }
       }
     };
+
     initKeycloak();
   }, [keycloakInstance, setTimeoutRefreshToken]);
 
