@@ -194,6 +194,13 @@ input InterventionZoneInput {
   isRemote: Boolean!
 }
 
+input UpdateOrganismAccountInput {
+  organismId: ID!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -225,4 +232,6 @@ type Mutation {
   organism_updateOrganismInterventionZone(
     data: UpdateOrganismInterventionZoneInput
   ): Organism!
+
+  organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!
 }

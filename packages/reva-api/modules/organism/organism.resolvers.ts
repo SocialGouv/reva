@@ -32,11 +32,13 @@ import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
 import {
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
+  UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
 import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
-import { isUserGestionnaireMaisonMereAAPOfOrganism } from "modules/organism/features/isUserGestionnaireMaisonMereAAPOfOrganism";
-import { isUserOwnerOfOrganism } from "modules/organism/features/isUserOwnerOfOrganism";
+import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
+import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
+import { updateOrganismAccount } from "./features/updateOrganismAccount";
 
 export const resolvers = {
   Account: {
@@ -292,6 +294,34 @@ export const resolvers = {
       }
 
       return updateOrganismInterventionZone({ params: params.data });
+    },
+    organism_updateOrganismAccount: async (
+      _parent: unknown,
+      params: {
+        data: UpdateOrganismAccountInput;
+      },
+      context: GraphqlContext,
+    ) => {
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      const roles = context.auth.userInfo.realm_access?.roles || [];
+      const userKeycloakId = context.auth.userInfo.sub;
+
+      if (!roles.includes("admin")) {
+        //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
+        if (
+          !isUserGestionnaireMaisonMereAAPOfOrganism({
+            organismId: params.data.organismId,
+            userKeycloakId,
+            userRoles: roles,
+          })
+        ) {
+          throw new Error("Utilisateur non autorisé");
+        }
+      }
+      return updateOrganismAccount({ params: params.data });
     },
   },
   Query: {
