@@ -4,6 +4,7 @@ import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ type FormData = z.infer<typeof schema>;
 const CertificationsPage = () => {
   const {
     organismId,
+    organismTypology,
     degrees,
     degreesStatus,
     managedDegrees,
@@ -73,6 +75,24 @@ const CertificationsPage = () => {
   return (
     <div className="flex flex-col flex-1">
       <h1>Gestion des certifications</h1>
+      <h2>Typologie</h2>
+      <Input
+        label={
+          <span className="text-black">
+            Typologie d'Architecte Accompagnateur de Parcours
+          </span>
+        }
+        hintText={
+          <span className="text-dsfr-light-text-mention-grey">
+            Les certifications vous sont rattachées en fonction de la typologie
+            sélectionnée.
+          </span>
+        }
+        nativeInputProps={{
+          value: organismTypology,
+        }}
+        disabled
+      />
       <h2>Niveaux de diplômes couverts par votre structure</h2>
       <Alert
         severity="info"

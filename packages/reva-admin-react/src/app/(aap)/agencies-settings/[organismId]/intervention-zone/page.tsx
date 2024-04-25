@@ -102,50 +102,37 @@ const InterventionZonePage = () => {
       )}
 
       {maisonMereAAP && (
-        <div className="flex flex-col gap-8">
-          <fieldset className="flex flex-col gap-4">
-            <h2>Informations sur la typologie</h2>
-            <Input
-              label="Typologie d'Architecte Accompagnateur de Parcours"
-              hintText="Les certifications vous sont rattachées en fonction de la typologie sélectionnée."
-              nativeInputProps={{
-                value: maisonMereAAP.typologie,
-              }}
-              disabled
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            handleReset();
+          }}
+        >
+          <fieldset className="flex gap-4 w-full mt-4">
+            <ZoneIntervention
+              type="ON_SITE"
+              zoneIntervention={onSiteInterventionZoneController.field.value}
+              onChange={onSiteInterventionZoneController.field.onChange}
+              disabled={!isGestionnaireMaisonMereAAP}
+            />
+            <ZoneIntervention
+              type="REMOTE"
+              zoneIntervention={remoteInterventionZoneController.field.value}
+              onChange={remoteInterventionZoneController.field.onChange}
+              disabled={!isGestionnaireMaisonMereAAP}
             />
           </fieldset>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleFormSubmit}
-            onReset={(e) => {
-              e.preventDefault();
-              handleReset();
-            }}
-          >
-            <fieldset className="flex gap-4 w-full">
-              <ZoneIntervention
-                type="ON_SITE"
-                zoneIntervention={onSiteInterventionZoneController.field.value}
-                onChange={onSiteInterventionZoneController.field.onChange}
-                disabled={!isGestionnaireMaisonMereAAP}
-              />
-              <ZoneIntervention
-                type="REMOTE"
-                zoneIntervention={remoteInterventionZoneController.field.value}
-                onChange={remoteInterventionZoneController.field.onChange}
-                disabled={!isGestionnaireMaisonMereAAP}
-              />
-            </fieldset>
-            {isGestionnaireMaisonMereAAP && (
-              <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
-                <Button priority="secondary" type="reset">
-                  Réinitialiser
-                </Button>
-                <Button disabled={isSubmitting}>Enregistrer</Button>
-              </div>
-            )}
-          </form>
-        </div>
+          {isGestionnaireMaisonMereAAP && (
+            <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
+              <Button priority="secondary" type="reset">
+                Réinitialiser
+              </Button>
+              <Button disabled={isSubmitting}>Enregistrer</Button>
+            </div>
+          )}
+        </form>
       )}
     </div>
   );

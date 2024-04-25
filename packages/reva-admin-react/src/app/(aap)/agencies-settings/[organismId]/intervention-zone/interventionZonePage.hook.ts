@@ -14,7 +14,6 @@ const interventionZoneQuery = graphql(`
         isOnSite
       }
       maisonMereAAP {
-        typologie
         maisonMereAAPOnDepartements {
           estSurPlace
           estADistance

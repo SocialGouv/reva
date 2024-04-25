@@ -8,6 +8,7 @@ const managedDegreesQuery = graphql(`
   query getOrganismAndManagedDegreesForCertificationsPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
+      typology
       managedDegrees {
         degree {
           id
@@ -84,6 +85,7 @@ export const useCertificationsPage = () => {
 
   return {
     organismId,
+    organismTypology: managedDegreesResponse?.organism_getOrganism?.typology,
     degrees,
     degreesStatus,
     managedDegrees,
