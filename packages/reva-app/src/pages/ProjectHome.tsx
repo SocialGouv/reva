@@ -68,10 +68,10 @@ export const ProjectHome = ({
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>
       <NameBadge as="h2" className="mt-4" data-test="project-home-fullname" />
-      <p className="my-4 pr-6 text-dsfrGray-500 text-base">
-        France VAE est le portail officiel du service public qui a pour mission
-        de simplifier et accélérer la certification de vos compétences
-        professionnelles. Choisissez votre diplôme et laissez-vous accompagner !
+      <p className="max-w-xl my-4 pr-6 text-dsfrGray-500 text-base">
+        Transmettez ici toutes les informations relatives à votre parcours VAE
+        et suivez, étape par étape, l’avancement de votre démarche. Nous vous
+        souhaitons une pleine réussite dans ce projet !
       </p>
 
       <ProjectTimeline className="mt-8" data-test="project-home-timeline" />
