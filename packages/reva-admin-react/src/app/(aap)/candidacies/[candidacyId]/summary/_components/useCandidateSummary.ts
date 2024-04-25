@@ -50,7 +50,6 @@ const getCandidacyById = graphql(`
           label
         }
         nationality
-        socialSecurityNumber
         department {
           id
           label

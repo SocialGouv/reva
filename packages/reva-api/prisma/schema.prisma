@@ -223,7 +223,6 @@ model Candidate {
   countryId                            String?                 @map("country_id") @db.Uuid
   country                              Country?                @relation(fields: [countryId], references: [id])
   nationality                          String?                 @db.VarChar(255)
-  socialSecurityNumber                 String?                 @map("social_security_number") @db.VarChar(255)
   highestDegree                        Degree?                 @relation("highest_degree", fields: [highestDegreeId], references: [id])
   highestDegreeLabel                   String?                 @db.VarChar(255)
   niveauDeFormationLePlusEleveDegreeId String?                 @map("niveau_de_formation_le_plus_eleve_degree_id") @db.Uuid

@@ -72,7 +72,6 @@ const CandidateCivilInformationTab = ({
       birthDepartment: candidate?.birthDepartment?.id ?? "",
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
-      socialSecurityNumber: candidate?.socialSecurityNumber ?? "",
       countryIsFrance: candidate?.country?.id === franceId,
     },
   });
@@ -101,7 +100,6 @@ const CandidateCivilInformationTab = ({
         countryIsFrance: candidate.country?.id === franceId,
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
         nationality: candidate.nationality ?? "",
-        socialSecurityNumber: candidate.socialSecurityNumber ?? "",
       });
     },
     [reset, franceId],
@@ -137,7 +135,6 @@ const CandidateCivilInformationTab = ({
       givenName: data.givenName,
       birthCity: data.birthCity,
       nationality: data.nationality,
-      socialSecurityNumber: data.socialSecurityNumber,
       gender: data.gender as GenderEnum,
       countryId: data.country,
       birthdate: new Date(data.birthdate).getTime(),
@@ -298,15 +295,6 @@ const CandidateCivilInformationTab = ({
             }}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
-          />
-          <Input
-            label="Numéro de sécurité sociale"
-            className="w-full"
-            nativeInputProps={{
-              ...register("socialSecurityNumber"),
-            }}
-            state={errors.socialSecurityNumber ? "error" : "default"}
-            stateRelatedMessage={errors.socialSecurityNumber?.message}
           />
         </div>
         <FormButtons

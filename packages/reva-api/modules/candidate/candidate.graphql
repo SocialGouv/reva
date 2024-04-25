@@ -39,7 +39,6 @@ type Candidate {
   birthdate: Timestamp
   country: Country
   nationality: String
-  socialSecurityNumber: String
   candidacy: Candidacy!
   highestDegree: Degree
   highestDegreeLabel: String
@@ -90,7 +89,6 @@ input CandidateCivilInformationInput {
   birthDepartmentId: String
   countryId: UUID!
   nationality: String!
-  socialSecurityNumber: String!
 }
 
 input CandidateContactInformationInput {
