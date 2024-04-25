@@ -29,7 +29,6 @@ const CandidateInformationPage = () => {
       "country",
       "birthCity",
       "nationality",
-      "socialSecurityNumber",
     ],
   );
 
