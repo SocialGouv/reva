@@ -70,7 +70,7 @@ const Organisms: FC<PropsOrganisms> = ({
     return (
       <>
         {organismSearchResults
-          .filter((organism, index) => indexPredicate(index))
+          .filter((_, index) => indexPredicate(index))
           .map((organism) => {
             return (
               <OrganismCard
