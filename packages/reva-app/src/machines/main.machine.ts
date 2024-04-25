@@ -76,7 +76,7 @@ export interface MainContext {
   organismSearchText: string;
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
-  organismSearchZipOrCity?: string;
+  organismSearchZip?: string;
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
@@ -107,7 +107,7 @@ type SetOrganismSearch = {
   organismSearchText: string;
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
-  organismSearchZipOrCity?: string;
+  organismSearchZip?: string;
 };
 
 type RefreshOrganisms = {
@@ -270,7 +270,7 @@ export const mainMachine =
           organismSearchText: "",
           organismSearchOnsite: false,
           organismSearchRemote: false,
-          organismSearchZipOrCity: undefined,
+          organismSearchZip: undefined,
           departments: [],
           selectedDepartment: undefined,
           organisms: undefined,
@@ -1181,14 +1181,14 @@ export const mainMachine =
               return typedEvent.organismSearchRemote;
             },
             selectedCertification: (_) => undefined,
-            organismSearchZipOrCity: (_context, event) => {
+            organismSearchZip: (_context, event) => {
               const typedEvent = event as SetOrganismSearch;
-              return typedEvent.organismSearchZipOrCity;
+              return typedEvent.organismSearchZip;
             },
           }),
           clearOrganismSearch: assign({
             organismSearchText: (_) => "",
-            organismSearchZipOrCity: (_) => "",
+            organismSearchZip: (_) => "",
             organismSearchRemote: (_) => false,
             organismSearchOnsite: (_) => false,
           }),

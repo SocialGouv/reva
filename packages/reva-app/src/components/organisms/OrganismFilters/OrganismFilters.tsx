@@ -18,7 +18,7 @@ interface filters {
   organismSearchText: string;
   organismSearchRemote: boolean;
   organismSearchOnsite: boolean;
-  organismSearchZipOrCity?: string;
+  organismSearchZip?: string;
 }
 
 export const OrganismFilters = ({
@@ -28,7 +28,7 @@ export const OrganismFilters = ({
     organismSearchText,
     organismSearchRemote,
     organismSearchOnsite,
-    organismSearchZipOrCity,
+    organismSearchZip,
   },
 }: {
   onSearch: (filters: filters) => void;
@@ -52,7 +52,7 @@ export const OrganismFilters = ({
               organismSearchOnsite: !organismSearchOnsite,
               organismSearchText,
               organismSearchRemote,
-              organismSearchZipOrCity,
+              organismSearchZip,
             });
           }}
           className="p-2"
@@ -73,7 +73,7 @@ export const OrganismFilters = ({
               organismSearchRemote: !organismSearchRemote,
               organismSearchText,
               organismSearchOnsite,
-              organismSearchZipOrCity,
+              organismSearchZip,
             });
           }}
           className="p-2"
@@ -115,9 +115,9 @@ export const OrganismFilters = ({
       {filterDistanceIsActive && (
         <OrganismDistanceFilter
           disabled={!searchIsOnlyOnsite}
-          onChangeSearchZipOrCity={(zipOrCity) => {
+          onChangeSearchZip={(zip) => {
             onSearch({
-              organismSearchZipOrCity: zipOrCity,
+              organismSearchZip: zip,
               organismSearchText,
               organismSearchRemote,
               organismSearchOnsite,

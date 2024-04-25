@@ -277,7 +277,7 @@ type Query {
     candidacyId: UUID!
     searchText: String
     searchFilter: SearchOrganismFilter
-    searchZipOrCity: String
+    searchZip: String
   ): RamdomOrganisms!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!

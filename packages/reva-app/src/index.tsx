@@ -11,12 +11,14 @@ import { setContext } from "@apollo/client/link/context";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import * as Sentry from "@sentry/react";
 // import { inspect } from "@xstate/inspect";
-import React from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
-import { Keycloak, getTokens } from "./contexts/keycloakContext";
-import { KeycloakProvider } from "./contexts/keycloakContext";
+import {
+  Keycloak,
+  KeycloakProvider,
+  getTokens,
+} from "./contexts/keycloakContext";
 import { MainMachineContextProvider } from "./contexts/MainMachineContext/MainMachineContext";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";

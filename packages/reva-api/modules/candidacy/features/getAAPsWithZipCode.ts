@@ -4,22 +4,46 @@ import { camelCase, mapKeys } from "lodash";
 import { prismaClient } from "../../../prisma/client";
 import { Organism as OrganismCamelCase } from "../../organism/organism.types";
 
-export const getAAPsWithZipCodeAndDistance = async ({
+type SearchResponse = {
+  features: [
+    {
+      type: string;
+      geometry: {
+        type: string;
+        coordinates: [number, number];
+      };
+      properties: {
+        label: string;
+        score: number;
+        housenumber: string;
+        id: string;
+        type: string;
+        name: string;
+        postcode: string;
+        citycode: string;
+        x: number;
+        y: number;
+        city: string;
+        context: string;
+        importance: number;
+        street: string;
+      };
+    }
+  ];
+};
+
+export const getAAPsWithZipCode = async ({
   zip,
-  city,
   limit,
   searchText,
 }: {
-  city?: string;
-  zip?: string;
-  searchText?: string;
+  zip: string;
   limit: number;
+  searchText?: string;
 }) => {
-  const query = `https://api-adresse.data.gouv.fr/search/?q=${
-    city ?? "centre"
-  }${zip ? `&postcode=${zip}` : ""}&limit=1`;
-  const res = (await fetch(query)) as any;
-  const { features } = await res.json();
+  const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
+  const res = await fetch(query);
+  const { features }: SearchResponse = await res.json();
 
   if (!features?.length) {
     return [];

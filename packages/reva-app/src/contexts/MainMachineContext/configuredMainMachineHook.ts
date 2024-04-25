@@ -79,7 +79,7 @@ export const useConfiguredMainMachine = () => {
               organismSearchRemote,
               organismSearchOnsite,
               organismSearchText: searchText,
-              organismSearchZipOrCity: searchZipOrCity,
+              organismSearchZip: searchZip,
             } = context;
             if (!candidacyId)
               return Promise.reject(
@@ -106,7 +106,7 @@ export const useConfiguredMainMachine = () => {
               departmentId: selectedDepartment?.id,
               searchText,
               searchFilter: { distanceStatus },
-              searchZipOrCity,
+              searchZip,
             });
           },
           updateCertification: async (context, event) => {

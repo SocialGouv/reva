@@ -2,37 +2,47 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { useEffect, useState } from "react";
 
 interface OrganismDistanceFilterProps {
-  onChangeSearchZipOrCity: (zipOrCity: string) => void;
+  onChangeSearchZip: (zip: string) => void;
   disabled: boolean;
 }
 
 export const OrganismDistanceFilter = ({
-  onChangeSearchZipOrCity,
+  onChangeSearchZip,
   disabled,
 }: OrganismDistanceFilterProps) => {
-  const [zipOrCity, setZipOrCity] = useState("");
+  const [zip, setZipOrCity] = useState("");
 
   useEffect(() => {
+    if (zip.length !== 5) {
+      return;
+    }
+
     const timeoutId = setTimeout(() => {
-      onChangeSearchZipOrCity(zipOrCity);
+      onChangeSearchZip(zip);
     }, 500);
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zipOrCity]);
+  }, [zip]);
 
   return (
     <div className="flex flex-col gap-6 mt-6">
       <fieldset>
         <legend className={`mb-2 ${disabled ? "text-gray-400" : ""}`}>
-          Indiquez une ville ou un code postal
+          Indiquez un code postal
         </legend>
         <Input
           label=""
           disabled={disabled}
           nativeInputProps={{
-            placeholder: "Angers",
-            onChange: (e) => setZipOrCity(e.target.value),
-            value: zipOrCity,
+            placeholder: "93100",
+            onChange: (e) => {
+              // Ensure the input contains only digits and is at most 5 characters long for the zip code
+              if (!/^\d{0,5}$/.test(e.target.value)) {
+                return;
+              }
+              setZipOrCity(e.target.value);
+            },
+            value: zip,
           }}
         />
       </fieldset>

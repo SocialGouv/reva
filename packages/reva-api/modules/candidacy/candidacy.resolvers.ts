@@ -34,7 +34,7 @@ import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
-import { getAAPsWithZipCodeAndDistance } from "./features/getAAPsWithZipCodeAndDistance";
+import { getAAPsWithZipCode } from "./features/getAAPsWithZipCode";
 import { getAdmissibility } from "./features/getAdmissibility";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getBasicSkills } from "./features/getBasicSkills";
@@ -174,12 +174,12 @@ const unsafeResolvers = {
         candidacyId,
         searchFilter,
         searchText,
-        searchZipOrCity,
+        searchZip,
       }: {
         candidacyId: string;
         searchFilter: SearchOrganismFilter;
         searchText?: string;
-        searchZipOrCity?: string;
+        searchZip?: string;
       }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
@@ -189,11 +189,13 @@ const unsafeResolvers = {
 
       let randomOrganisms: OrganismCamelCase[];
 
-      if (searchZipOrCity && searchFilter?.distanceStatus === "ONSITE") {
-        const searchIsZip = searchZipOrCity.match(/^\d{5}$/);
-        randomOrganisms = await getAAPsWithZipCodeAndDistance({
-          zip: searchIsZip ? searchZipOrCity : undefined,
-          city: searchIsZip ? undefined : searchZipOrCity,
+      if (
+        searchZip &&
+        searchZip.length === 5 &&
+        searchFilter?.distanceStatus === "ONSITE"
+      ) {
+        randomOrganisms = await getAAPsWithZipCode({
+          zip: searchZip,
           limit: 51,
           searchText,
         });
