@@ -675,12 +675,7 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.ReadyForJuryEstimatedDate.set tab.candidacyId
                         , onRedirect = redirectToProfile
                         , onValidate = Data.Form.ReadyForJuryEstimatedDate.validate
-                        , status =
-                            if candidacy.readyForJuryEstimatedAt == Nothing then
-                                Form.Editable
-
-                            else
-                                Form.ReadOnly
+                        , status = Form.Editable
                         }
                         model.form
             in

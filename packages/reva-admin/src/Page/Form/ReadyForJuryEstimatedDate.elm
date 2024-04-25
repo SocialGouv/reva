@@ -27,12 +27,7 @@ form _ ( candidacy, _ ) =
                     , li [] [ text "à la date de dépôt du dossier de validation pour les autres certifications" ]
                     ]
           )
-        , case candidacy.readyForJuryEstimatedAt of
-            Just date ->
-                ( keys.estimatedDate, Form.Info "Date prévisionnelle" (View.Date.toFullFormat date) )
-
-            Nothing ->
-                ( keys.estimatedDate, Form.Date "Date prévisionnelle" )
+        , ( keys.estimatedDate, Form.Date "Date prévisionnelle" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

@@ -34,10 +34,6 @@ export const setReadyForJuryEstimatedAt = async ({
     throw new Error("Cette candidature n'existe pas");
   }
 
-  if (candidacy.readyForJuryEstimatedAt !== null) {
-    throw new Error("Une date prévisionnelle est déjà renseignée");
-  }
-
   return prismaClient.candidacy.update({
     where: { id: candidacyId },
     data: {
