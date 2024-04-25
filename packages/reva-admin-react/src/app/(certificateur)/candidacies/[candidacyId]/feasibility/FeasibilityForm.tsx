@@ -19,7 +19,7 @@ const schema = z
     infoFile: z.object({ 0: z.instanceof(File).optional() }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
-    if (decision === "Incomplete" && !comment) {
+    if (decision !== "Admissible" && !comment) {
       addIssue({
         path: ["comment"],
         code: "too_small",
@@ -107,7 +107,7 @@ export const FeasibilityForm = ({
           label={
             <span className="uppercase text-xs font-semibold">
               PRÉCISEZ LES MOTIFS DE VOTRE DÉCISION{" "}
-              {decision !== "Incomplete" ? "(OPTIONNEL)" : ""}
+              {decision === "Admissible" ? "(OPTIONNEL)" : ""}
             </span>
           }
           hintText="Texte de description libre"
