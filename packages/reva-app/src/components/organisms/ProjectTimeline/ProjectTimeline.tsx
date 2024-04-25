@@ -6,6 +6,7 @@ import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTi
 import { TrainingProgramTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { isBefore } from "date-fns";
+import { FeasibilityDecision } from "interface";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -21,6 +22,11 @@ export const ProjectTimeline = ({
   className?: string;
   "data-test"?: string;
 }) => {
+  const { state } = useMainMachineContext();
+
+  const { feasibility } = state.context;
+  const REJECTED = feasibility?.decision === FeasibilityDecision.REJECTED;
+
   return (
     <Timeline className={className} data-test={dataTest}>
       <ContactTimelineElement />
@@ -32,8 +38,12 @@ export const ProjectTimeline = ({
       <FeasibilityAppointmentTimelineElement />
       <TrainingProgramTimelineElement />
       <FeasibilityTimelineElement />
-      <DossierDeValidationTimelineElement />
-      <ProjectEndedTimelineElement />
+      {!REJECTED && (
+        <>
+          <DossierDeValidationTimelineElement />
+          <ProjectEndedTimelineElement />
+        </>
+      )}
     </Timeline>
   );
 };

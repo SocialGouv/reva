@@ -37,10 +37,16 @@ export const FeasibilityTimelineElement = () => {
   return (
     <TimelineElement
       title="Recevabilité"
-      status={!feasibility || PENDING || INCOMPLETE ? "disabled" : "readonly"}
+      status={
+        ADMISSIBLE || REJECTED
+          ? "readonly"
+          : PENDING || INCOMPLETE
+          ? "active"
+          : "disabled"
+      }
       description={
         !!feasibility ? (
-          <p className="text-sm text-dsfrGray-500 mt-4" role="status">
+          <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
             À partir de vos expériences et de votre projet, votre accompagnateur
             prépare un dossier de faisabilité. Ce dossier sera ensuite transmis
             au certificateur pour l'obtention de la recevabilité, nécessaire
@@ -52,7 +58,7 @@ export const FeasibilityTimelineElement = () => {
       {() =>
         !!feasibility && (
           <>
-            <div className="flex text-dsfrGray-500 mt-2">
+            <div className="flex text-dsfrGray-500">
               <span className={`fr-icon ${icon} mr-2 self-center`} />
               <div>
                 <p className="text-sm">{text}</p>
@@ -61,8 +67,6 @@ export const FeasibilityTimelineElement = () => {
                     {feasibility?.decisionComment &&
                       feasibility.decisionSentAt && (
                         <>
-                          <br />
-
                           <p className="text-sm">
                             <strong>Commentaire du certificateur :</strong>
                             <br />
@@ -74,7 +78,6 @@ export const FeasibilityTimelineElement = () => {
                         </>
                       )}
 
-                    <br />
                     <p className="text-sm italic">
                       Pour plus d'informations, vous pouvez contacter votre
                       accompagnateur en lui écrivant à l'e-mail indiqué dans
@@ -84,7 +87,7 @@ export const FeasibilityTimelineElement = () => {
                 )}
               </div>
             </div>
-            <div className="mt-4">
+            <div>
               {feasibility.decisionFile && (
                 <FileLink
                   text={feasibility.decisionFile.name}
@@ -100,5 +103,5 @@ export const FeasibilityTimelineElement = () => {
 };
 
 const FileLink = ({ url, text }: { url: string; text: string }) => (
-  <AuthenticatedLink text={text} title={text} url={url} />
+  <AuthenticatedLink text={text} title={text} url={url} className="mb-0" />
 );

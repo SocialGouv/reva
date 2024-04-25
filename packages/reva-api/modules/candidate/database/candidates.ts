@@ -15,10 +15,7 @@ const candidateIncludes = {
 const ongoingCandidacyFilter: Prisma.CandidacyWhereInput = {
   candidacyStatuses: {
     none: {
-      OR: [
-        { status: "ARCHIVE", isActive: true },
-        { status: "DOSSIER_FAISABILITE_NON_RECEVABLE" },
-      ],
+      OR: [{ status: "ARCHIVE", isActive: true }],
     },
   },
 };
