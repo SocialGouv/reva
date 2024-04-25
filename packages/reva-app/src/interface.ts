@@ -143,6 +143,18 @@ export interface Feasibility {
   decisionFile?: File;
 }
 
+export enum DossierDeValidationDecision {
+  PENDING = "PENDING",
+  INCOMPLETE = "INCOMPLETE",
+}
+
+export interface DossierDeValidation {
+  id: string;
+  decision: DossierDeValidationDecision;
+  decisionComment?: String;
+  decisionSentAt?: Date;
+}
+
 export type Page<T> = {
   rows: T[];
   info: {

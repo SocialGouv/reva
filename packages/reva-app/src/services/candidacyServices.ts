@@ -334,6 +334,12 @@ const CANDIDACY_SELECTION = `
           name
           url
         }
+      }
+      activeDossierDeValidation {
+        id
+        decision
+        decisionComment
+        decisionSentAt
       }`;
 
 const CONFIRM_REGISTRATION = gql`

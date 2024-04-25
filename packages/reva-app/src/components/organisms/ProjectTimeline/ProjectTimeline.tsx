@@ -9,6 +9,7 @@ import { isBefore } from "date-fns";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
+import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
 import { ExperiencesTimelineElement } from "./TimelineElements/ExperiencesTimelineElement/ExperiencesTimelineElement";
 import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/GoalsTimelineElement";
 import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
@@ -31,6 +32,7 @@ export const ProjectTimeline = ({
       <FeasibilityAppointmentTimelineElement />
       <TrainingProgramTimelineElement />
       <FeasibilityTimelineElement />
+      <DossierDeValidationTimelineElement />
       <ProjectEndedTimelineElement />
     </Timeline>
   );

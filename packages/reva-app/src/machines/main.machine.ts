@@ -5,6 +5,7 @@ import {
   Certification,
   Contact,
   Department,
+  DossierDeValidation,
   Experience,
   Experiences,
   Feasibility,
@@ -85,6 +86,7 @@ export interface MainContext {
   isTrainingProgramConfirmed: boolean;
   firstAppointmentOccuredAt?: Date;
   feasibility?: Feasibility;
+  dossierDeValidation?: DossierDeValidation;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -279,6 +281,7 @@ export const mainMachine =
           isTrainingProgramConfirmed: false,
           certificationSearchText: "",
           feasibility: undefined,
+          dossierDeValidation: undefined,
         },
         initial: "loadDepartments",
         id: "mainMachine",
@@ -1118,6 +1121,8 @@ export const mainMachine =
                   event.data.candidacy?.candidacyStatuses
                 ),
               feasibility: event.data.candidacy?.feasibility,
+              dossierDeValidation:
+                event.data.candidacy?.activeDossierDeValidation,
             };
           }),
           navigateHome,
