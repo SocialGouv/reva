@@ -22,7 +22,7 @@ export const OrganismCardDescription = ({
         <a href={`mailto:${email}`}>{email}</a>
       </p>
 
-      <div className="flex justify-between">
+      <div className="flex flex-wrap justify-between gap-4">
         <p className="mb-0">
           {phone && (
             <>
@@ -36,8 +36,24 @@ export const OrganismCardDescription = ({
         </p>
         {location && (
           <div className="flex gap-1 -mt-1">
-            {location.isOnSite && <Tag>Sur site</Tag>}
-            {location.isRemote && <Tag>À distance</Tag>}
+            {location.isOnSite && (
+              <Tag className="min-h-4 text-xs sm:text-sm sm:min-h-8">
+                <span
+                  aria-hidden="true"
+                  className="sm:hidden fr-icon-building-fill fr-icon--xs mr-1"
+                />
+                Sur site
+              </Tag>
+            )}
+            {location.isRemote && (
+              <Tag className="min-h-4 text-xs sm:text-sm sm:min-h-8">
+                <span
+                  aria-hidden="true"
+                  className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
+                />
+                À distance
+              </Tag>
+            )}
           </div>
         )}
       </div>
