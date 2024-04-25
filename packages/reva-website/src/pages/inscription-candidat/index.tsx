@@ -10,7 +10,7 @@ import {
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
-import { FullHeightBlueLayout } from "@/components/layout/full-height-blue-layout/FullHeightBlueLayout";
+import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
@@ -93,15 +93,13 @@ const OrientationCandidatPage = () => {
       <Head>
         <title>Orientation candidat - France VAE</title>
       </Head>
-      <FullHeightBlueLayout>
-        <div className="w-full mx-auto flex flex-col">
-          <h1 className="text-dsfrBlue-franceSun text-3xl font-bold mb-2">
-            Démarrez votre parcours
-          </h1>
+      <CandidateBackground>
+        <div className="flex flex-col px-4 pt-10 pb-8">
+          <h1 className="text-4xl font-bold mb-0">Démarrez votre parcours</h1>
           <p className="text-dsfrGray-mentionGrey mb-8">
             Tous les champs sont obligatoires
           </p>
-          <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
+          <div className="max-w-2xl flex flex-col ml-0 gap-4">
             <fieldset className="mb-4">
               <CertificateAutocompleteDsfr
                 defaultLabel={defaultAutocompleteLabel}
@@ -128,7 +126,7 @@ const OrientationCandidatPage = () => {
                   rncpCode={certification.codeRncp}
                   certificateType={certification.typeDiplome.label}
                 />
-                <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-4 mb-2">
+                <h2 className="text-2xl font-bold mt-4 mb-0">
                   Quel candidat êtes vous ?
                 </h2>
                 <div className="flex flex-col gap-2 lg:flex-row lg:gap-6">
@@ -182,7 +180,7 @@ const OrientationCandidatPage = () => {
             {!certification && <WouldYouLikeToKnowMorePanel />}
             {validTypology && (
               <>
-                <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-8 mb-2">
+                <h2 className="text-2xl font-bold mt-8 mb-0">
                   Créez votre compte
                 </h2>
                 <CandidateRegistrationForm onSubmit={handleFormSubmit} />
@@ -190,7 +188,7 @@ const OrientationCandidatPage = () => {
             )}
           </div>
         </div>
-      </FullHeightBlueLayout>
+      </CandidateBackground>
     </MainLayout>
   );
 };

@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -19,6 +19,9 @@ module.exports = {
           titleGrey: "#161616",
         },
         dsfrBlue: { franceSun: "#000091", openBlueFrance: "#E3E3FD" },
+      },
+      boxShadow: {
+        lifted: "0 6px 18px rgba(0, 0, 18, 16%)",
       },
     },
   },

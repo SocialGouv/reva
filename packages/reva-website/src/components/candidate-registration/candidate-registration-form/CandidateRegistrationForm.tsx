@@ -134,7 +134,7 @@ export const CandidateRegistrationForm = ({
       </fieldset>
       <Button
         data-testid="candidate-registration-submit-button"
-        className="self-center mt-8"
+        className="self-end mt-8"
         type="submit"
       >
         Créez votre compte

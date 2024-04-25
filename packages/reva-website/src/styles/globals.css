@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .bg-candidate {
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-color: white;
+        background-image: url("../../public/candidate-space/bg-candidate.svg");
+    }
+}
