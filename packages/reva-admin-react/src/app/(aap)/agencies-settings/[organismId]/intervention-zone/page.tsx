@@ -139,11 +139,9 @@ const InterventionZonePage = () => {
             {isGestionnaireMaisonMereAAP && (
               <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
                 <Button priority="secondary" type="reset">
-                  Annuler les modifications
+                  Réinitialiser
                 </Button>
-                <Button disabled={isSubmitting}>
-                  Valider les modifications
-                </Button>
+                <Button disabled={isSubmitting}>Enregistrer</Button>
               </div>
             )}
           </form>
