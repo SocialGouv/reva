@@ -1,6 +1,5 @@
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
 
 const CandidateRegistrationConfirmationPage = () => (

@@ -1,5 +1,3 @@
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
-
 export const WouldYouLikeToKnowMorePanel = () => (
   <div
     data-testid="candidate-typology-would-you-like-to-know-more-panel"
