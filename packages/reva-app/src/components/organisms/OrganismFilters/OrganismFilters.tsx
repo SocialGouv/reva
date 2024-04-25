@@ -61,7 +61,7 @@ export const OrganismFilters = ({
             iconId="fr-icon-building-fill"
             className={tagFilledStyle(organismSearchOnsite)}
           >
-            Sur place
+            Sur site
           </Tag>
         </Button>
         <Button

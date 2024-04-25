@@ -174,7 +174,7 @@ const Organisms: FC<PropsOrganisms> = ({
                             data-test="project-organisms-onsite-tag"
                             className="bg-dsfrBlue-500 text-white"
                           >
-                            Sur place
+                            Sur site
                           </Tag>
                         )}
                         {organism.organismOnDepartments?.[0]?.isRemote && (
