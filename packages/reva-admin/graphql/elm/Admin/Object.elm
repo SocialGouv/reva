@@ -223,11 +223,7 @@ type Jury
 
 type JuryCountByCategory
     = JuryCountByCategory
-
-
-type JuryPage
-    = JuryPage
-
+    
 
 type MaisonMereAAP
     = MaisonMereAAP

@@ -82,7 +82,6 @@ import View.Candidate
 import View.Date as Date
 import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
-import View.Jury
 import View.Tabs
 
 
@@ -332,7 +331,7 @@ view context model =
                                 [ juryDateTab candidacy.id True
                                 , juryResultTab candidacy.id False
                                 ]
-                                [ View.Jury.viewDate candidacy.jury ]
+                                [  ]
 
                 JuryResult ->
                     displayWithCandidacy <|
@@ -342,7 +341,7 @@ view context model =
                                 [ juryDateTab candidacy.id False
                                 , juryResultTab candidacy.id True
                                 ]
-                                [ View.Jury.viewResult candidacy.jury ]
+                                [  ]
 
                 Feasibility ->
                     case model.selected of

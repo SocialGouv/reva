@@ -5,11 +5,8 @@
 module Admin.Object.Jury exposing (..)
 
 import Admin.Enum.JuryResult
-import Admin.InputObject
-import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.Union
 import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -37,9 +34,6 @@ dateOfSession =
     Object.selectionForField "Data.Scalar.Timestamp" "dateOfSession" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
 
 
-timeOfSession : SelectionSet (Maybe String) Admin.Object.Jury
-timeOfSession =
-    Object.selectionForField "(Maybe String)" "timeOfSession" [] (Decode.string |> Decode.nullable)
 
 
 addressOfSession : SelectionSet (Maybe String) Admin.Object.Jury

@@ -10,7 +10,6 @@ selection : SelectionSet Data.Jury.Jury Admin.Object.Jury
 selection =
     SelectionSet.succeed Data.Jury.Jury
         |> with Admin.Object.Jury.dateOfSession
-        |> with Admin.Object.Jury.timeOfSession
         |> with Admin.Object.Jury.addressOfSession
         |> with Admin.Object.Jury.informationOfSession
         |> with Admin.Object.Jury.informationOfResult
