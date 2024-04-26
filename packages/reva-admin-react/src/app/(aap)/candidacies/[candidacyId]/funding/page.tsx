@@ -17,6 +17,8 @@ import { ResponsableFinancementBlock } from "./_components/ResponsableFinancemen
 import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
 import { z } from "zod";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { ADMIN_ELM_URL } from "@/config/config";
 
 const errorNumber = "Veuillez saisir une valeur numérique.";
 
@@ -76,6 +78,11 @@ const FundingPage = () => {
     candidacyId: string;
   }>();
   const router = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
+
+  const candidacySummaryUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
+    ? `/candidacies/${candidacyId}/summary`
+    : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
 
   const {
     candidacy,
@@ -183,14 +190,14 @@ const FundingPage = () => {
   }
 
   if (!isEligibleToViewFundingRequest) {
-    router.push(`/candidacies/${candidacyId}/summary`);
+    router.push(candidacySummaryUrl);
   }
 
   return (
     <div className="flex flex-col w-full p-1 md:p-2">
       <div>
         <h1>Demande de prise en charge</h1>
-        <FormOptionalFieldsDisclaimer classname="mb-0"/>
+        <FormOptionalFieldsDisclaimer classname="mb-0" />
         {candidacy?.fundingRequestUnifvae?.numAction && (
           <p className="m-0">
             <span className="font-bold">Numéro : </span>
@@ -247,7 +254,7 @@ const FundingPage = () => {
           </GrayCard>
 
           <FormButtons
-            backUrl={`/candidacies/${candidacyId}/summary`}
+            backUrl={candidacySummaryUrl}
             formState={{
               isDirty: isDirty && !isReadOnly,
               isSubmitting,
