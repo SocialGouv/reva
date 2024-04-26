@@ -100,7 +100,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           },
           items: [
             ...agencies.map((a) => ({
-              text: `${a.informationsCommerciales?.nom} ${
+              text: `${a.informationsCommerciales?.nom || a.label} ${
                 a.id === organismId ? "(Agence administratrice)" : ""
               }`,
               linkProps: {
