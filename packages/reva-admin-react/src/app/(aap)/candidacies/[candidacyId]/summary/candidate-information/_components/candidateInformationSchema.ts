@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const defaultErrorMessage = "Ce champ est obligatoire";
 
-export const candidateCivilInformationSchema = z
+export const candidateInformationSchema = z
   .object({
     gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
     lastname: z.string().min(1, defaultErrorMessage),
@@ -18,6 +18,11 @@ export const candidateCivilInformationSchema = z
     birthCity: z.string().min(1, defaultErrorMessage),
     nationality: z.string().min(1, defaultErrorMessage),
     countryIsFrance: z.boolean(),
+    street: z.string().min(1, defaultErrorMessage),
+    city: z.string().min(1, defaultErrorMessage),
+    zip: z.string().min(5, defaultErrorMessage),
+    phone: z.string().length(10, defaultErrorMessage),
+    email: z.string().email(defaultErrorMessage),
   })
   .superRefine((data, ctx) => {
     if (data.birthdate) {
@@ -59,6 +64,6 @@ export const candidateCivilInformationSchema = z
     return data;
   });
 
-export type FormCandidateCivilInformationData = z.infer<
-  typeof candidateCivilInformationSchema
+export type FormCandidateInformationData = z.infer<
+  typeof candidateInformationSchema
 >;
