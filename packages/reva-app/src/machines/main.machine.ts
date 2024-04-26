@@ -10,6 +10,7 @@ import {
   Experiences,
   Feasibility,
   Goal,
+  Jury,
   Organism,
   OrganismForCandidacy,
   Page,
@@ -87,6 +88,7 @@ export interface MainContext {
   firstAppointmentOccuredAt?: Date;
   feasibility?: Feasibility;
   dossierDeValidation?: DossierDeValidation;
+  jury?: Jury;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -282,6 +284,7 @@ export const mainMachine =
           certificationSearchText: "",
           feasibility: undefined,
           dossierDeValidation: undefined,
+          jury: undefined,
         },
         initial: "loadDepartments",
         id: "mainMachine",
@@ -1123,6 +1126,7 @@ export const mainMachine =
               feasibility: event.data.candidacy?.feasibility,
               dossierDeValidation:
                 event.data.candidacy?.activeDossierDeValidation,
+              jury: event.data.candidacy?.jury,
             };
           }),
           navigateHome,

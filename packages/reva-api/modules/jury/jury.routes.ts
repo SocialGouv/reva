@@ -6,6 +6,7 @@ import { logger } from "../shared/logger";
 import { canManageJury } from "./features/canManageJury";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { scheduleSessionOfJury } from "./features/scheduleSessionOfJury";
+import { isCandidacyOwner } from "./features/isCandidacyOwner";
 
 interface ScheduleSessionOfJuryBody {
   candidacyId: { value: string };
@@ -47,11 +48,14 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           candidacyId,
         });
 
-        const authorized = await canManageJury({
-          keycloakId: request.auth?.userInfo?.sub,
-          candidacyId,
-          roles: request.auth.userInfo?.realm_access?.roles || [],
-        });
+        const authorized =
+          (await canManageJury({
+            keycloakId: request.auth?.userInfo?.sub,
+            candidacyId,
+            roles: request.auth.userInfo?.realm_access?.roles || [],
+          })) ||
+          (await isCandidacyOwner(request.auth?.userInfo?.sub, candidacyId));
+
         if (!authorized) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à accéder à ce fichier.",

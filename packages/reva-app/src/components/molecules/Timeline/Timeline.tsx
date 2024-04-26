@@ -22,13 +22,15 @@ export const TimelineElement = ({
   description,
   status,
   children,
-  className,
+  className = "",
+  classNameChildren = "",
 }: {
   title: string;
   description?: string | ReactElement;
   status: TimeLineElementStatus;
   children?: (args: { status: TimeLineElementStatus }) => React.ReactNode;
   className?: string;
+  classNameChildren?: string;
 }) => (
   <section className={`relative flex gap-3 h-full ${className}`}>
     <BarWithWhiteDot status={status} />
@@ -49,7 +51,9 @@ export const TimelineElement = ({
       ) : null}
 
       {children && (
-        <div className="flex flex-col text-sm text-black pb-6 mt-4">
+        <div
+          className={`flex flex-col text-sm text-black pb-6 mt-4 ${classNameChildren}`}
+        >
           {children?.({ status })}
         </div>
       )}

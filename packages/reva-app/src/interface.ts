@@ -155,6 +155,29 @@ export interface DossierDeValidation {
   decisionSentAt?: Date;
 }
 
+export enum JuryResult {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION = "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION = "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION = "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION = "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  FAILURE = "FAILURE",
+  CANDIDATE_EXCUSED = "CANDIDATE_EXCUSED",
+  CANDIDATE_ABSENT = "CANDIDATE_ABSENT",
+}
+
+export interface Jury {
+  id: string;
+  dateOfSession: Date;
+  timeOfSession?: string;
+  timeSpecified?: boolean;
+  addressOfSession?: string;
+  informationOfSession?: string;
+  convocationFile?: File;
+  result?: JuryResult;
+  dateOfResult?: Date;
+  informationOfResult?: string;
+}
+
 export type Page<T> = {
   rows: T[];
   info: {

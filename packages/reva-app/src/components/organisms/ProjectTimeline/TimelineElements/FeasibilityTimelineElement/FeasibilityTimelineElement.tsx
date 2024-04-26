@@ -59,9 +59,9 @@ export const FeasibilityTimelineElement = () => {
         !!feasibility && (
           <>
             <div className="flex text-dsfrGray-500">
-              <span className={`fr-icon ${icon} mr-2 self-center`} />
+              <span className={`fr-icon ${icon} mr-2 self-center mb-6`} />
               <div>
-                <p className="text-sm">{text}</p>
+                <p className="text-sm italic">{text}</p>
                 {REJECTED && (
                   <>
                     {feasibility?.decisionComment &&

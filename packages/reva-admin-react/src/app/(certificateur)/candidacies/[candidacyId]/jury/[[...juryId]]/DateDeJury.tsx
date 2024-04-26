@@ -192,7 +192,7 @@ export const DateDeJury = (): JSX.Element => {
                 className="ml-auto mt-8 text-right"
                 onClick={() => setEditing(true)}
               >
-                Modifer
+                Modifier
               </Button>
             </div>
           )}

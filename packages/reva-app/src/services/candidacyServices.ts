@@ -341,6 +341,21 @@ const CANDIDACY_SELECTION = `
         decision
         decisionComment
         decisionSentAt
+      }
+      jury {
+        id
+        dateOfSession
+        timeOfSession
+        timeSpecified
+        addressOfSession
+        informationOfSession
+        result
+        dateOfResult
+        informationOfResult
+        convocationFile {
+          name
+          url
+        }
       }`;
 
 const CONFIRM_REGISTRATION = gql`

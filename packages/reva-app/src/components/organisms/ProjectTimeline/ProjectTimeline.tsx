@@ -13,6 +13,7 @@ import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElemen
 import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
 import { ExperiencesTimelineElement } from "./TimelineElements/ExperiencesTimelineElement/ExperiencesTimelineElement";
 import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/GoalsTimelineElement";
+import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
 import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
 
 export const ProjectTimeline = ({
@@ -24,7 +25,7 @@ export const ProjectTimeline = ({
 }) => {
   const { state } = useMainMachineContext();
 
-  const { feasibility } = state.context;
+  const { feasibility, jury } = state.context;
   const REJECTED = feasibility?.decision === FeasibilityDecision.REJECTED;
 
   return (
@@ -41,9 +42,10 @@ export const ProjectTimeline = ({
       {!REJECTED && (
         <>
           <DossierDeValidationTimelineElement />
-          <ProjectEndedTimelineElement />
+          <JuryTimelineElement />
         </>
       )}
+      {jury?.result && <ProjectEndedTimelineElement />}
     </Timeline>
   );
 };

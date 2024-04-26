@@ -49,7 +49,7 @@ export const DossierDeValidationTimelineElement = () => {
           <>
             <div className="flex text-dsfrGray-500">
               <span className={`fr-icon ${icon} mr-2 self-center`} />
-              <p className="text-sm mb-0">{text}</p>
+              <p className="text-sm italic mb-0">{text}</p>
             </div>
           </>
         )
