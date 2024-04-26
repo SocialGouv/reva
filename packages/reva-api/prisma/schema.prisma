@@ -50,7 +50,7 @@ model Certification {
   typeDiplome                                            TypeDiplome?                                             @relation(fields: [typeDiplomeId], references: [id])
   typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
   certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
-  searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
+  searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
   certificationAuthorityLocalAccountOnCertification      CertificationAuthorityLocalAccountOnCertification[]
   certificationAuthorityTag                              String?                                                  @map("certification_authority_tag") @db.VarChar(255)
   availableAt                                            DateTime                                                 @map("available_at") @db.Timestamptz(6)
