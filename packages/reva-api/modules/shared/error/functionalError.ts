@@ -66,7 +66,7 @@ export class FunctionalError {
   constructor(
     code: FunctionalCodeError,
     message: string,
-    errors: string[] = []
+    errors: string[] = [],
   ) {
     this.code = code;
     this.message = message;

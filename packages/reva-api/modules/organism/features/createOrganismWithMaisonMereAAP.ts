@@ -223,13 +223,9 @@ export const createOrganismWithMaisonMereAAP = async ({
     return "Ok";
   } catch (e) {
     if (e instanceof FunctionalError) {
-      throw e;
+      throw new Error(e.message);
     } else {
-      logger.error(e);
-      throw new FunctionalError(
-        FunctionalCodeError.TECHNICAL_ERROR,
-        "Erreur pendant la création de l'organisme",
-      );
+      throw e;
     }
   }
 };

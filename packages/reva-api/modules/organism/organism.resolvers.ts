@@ -198,29 +198,25 @@ export const resolvers = {
       },
       context: GraphqlContext,
     ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        if (!context.auth.hasRole("gestion_maison_mere_aap")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-        const keycloakAdmin = await context.app.getKeycloakAdmin();
-        const keycloakId = context.auth.userInfo.sub;
-
-        return createOrganismWithMaisonMereAAP({
-          keycloakAdmin,
-          params,
-          keycloakId,
-        });
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
       }
+
+      if (!context.auth.hasRole("gestion_maison_mere_aap")) {
+        throw new Error("Utilisateur non autorisé");
+      }
+      const keycloakAdmin = await context.app.getKeycloakAdmin();
+      const keycloakId = context.auth.userInfo.sub;
+
+      const result = await createOrganismWithMaisonMereAAP({
+        keycloakAdmin,
+        params,
+        keycloakId,
+      });
+      return result;
     },
     organism_updateOrganismWithMaisonMereAAP: async (
       _parent: unknown,
