@@ -2,7 +2,6 @@
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import {
   formatStringToPhoneNumberStructure,
-  formatStringToSocialSecurityNumberStructure,
 } from "@/utils";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
