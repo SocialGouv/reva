@@ -4,11 +4,8 @@
 
 module Admin.Object.FundingRequest exposing (..)
 
-import Admin.InputObject
-import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.Union
 import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object

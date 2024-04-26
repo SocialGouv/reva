@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
@@ -18,7 +19,7 @@ export const getActiveCandidacyMenu = async ({
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
-    activeCandidacyStatus,
+    activeCandidacyStatus
   );
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
@@ -134,14 +135,8 @@ export const getActiveCandidacyMenu = async ({
     }
   };
 
-  const getFundingRequestMenuEntry = async (
-    userKeycloakId?: string,
-  ): Promise<CandidacyMenuEntry> => {
+  const getFundingRequestMenuEntry = (): CandidacyMenuEntry => {
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
-    const isReactFundingPageActive = await isFeatureActiveForUser({
-      userKeycloakId,
-      feature: "REACT_FUNDING_PAGE",
-    });
 
     if (candidacy.financeModule === "unireva") {
       if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
@@ -163,7 +158,7 @@ export const getActiveCandidacyMenu = async ({
     return {
       label: "Demande de prise en charge",
       url: buildUrl({
-        adminType: isReactFundingPageActive ? "React" : "Elm",
+        adminType: "React",
         suffix: "funding",
       }),
       status: menuEntryStatus,
@@ -225,20 +220,11 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getJuryMenuEntry = async (
-    userKeycloakId?: string,
-  ): Promise<CandidacyMenuEntry | undefined> => {
+  const getJuryMenuEntry = (): CandidacyMenuEntry => {
     const newJuryMenu = candidacy.financeModule == "unifvae";
-    const isReactAapJuryPageActive = await isFeatureActiveForUser({
-      userKeycloakId,
-      feature: "REACT_AAP_JURY_PAGE",
-    });
-    const juryUrl = isReactAapJuryPageActive
-      ? buildUrl({ adminType: "React", suffix: "jury-aap" })
-      : buildUrl({ adminType: "Elm", suffix: "jury/date" });
 
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
-      "DEMANDE_FINANCEMENT_ENVOYE",
+      "DEMANDE_FINANCEMENT_ENVOYE"
     )
       ? "ACTIVE_WITHOUT_HINT"
       : "INACTIVE";
@@ -246,7 +232,7 @@ export const getActiveCandidacyMenu = async ({
     return newJuryMenu
       ? {
           label: "Jury",
-          url: juryUrl,
+          url: buildUrl({ adminType: "React", suffix: "jury-aap" }),
           status: menuEntryStatus,
         }
       : {
@@ -265,9 +251,9 @@ export const getActiveCandidacyMenu = async ({
       userKeycloakId,
       feasibilityFormat: candidacy.feasibilityFormat,
     }),
-    await getFundingRequestMenuEntry(userKeycloakId),
+    getFundingRequestMenuEntry(),
     getDossierDeValidationMenuEntry(),
     getPaymentRequestMenuEntry(),
-    await getJuryMenuEntry(userKeycloakId),
+    getJuryMenuEntry(),
   ].filter((e) => e) as CandidacyMenuEntry[];
 };

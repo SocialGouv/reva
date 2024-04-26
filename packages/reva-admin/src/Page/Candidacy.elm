@@ -62,10 +62,6 @@ import Page.Form.DossierDeValidation
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
-import Page.Form.FundingRequestUniFvae
-import Page.Form.FundingRequestUniReva
-import Page.Form.PaymentRequestUniFvae
-import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
 import Page.Form.ReadyForJuryEstimatedDate
@@ -697,44 +693,7 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.PaymentRequest, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    if candidacy.financeModule == FinanceModule.Unifvae then
-                        Form.updateForm context
-                            { form = Page.Form.PaymentRequestUniFvae.form candidacy.certification
-                            , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
-                            , onSave = Nothing
-                            , onSubmit = Api.Form.PaymentRequestUniFvae.createOrUpdate tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
-                            , onValidate = Data.Form.PaymentRequestUniFvae.validate
-                            , status =
-                                if Candidacy.isPaymentRequestSent candidacy then
-                                    Form.ReadOnly
-
-                                else
-                                    Form.Editable
-                            }
-                            model.form
-
-                    else
-                        Form.updateForm context
-                            { form = Page.Form.PaymentRequestUniReva.form candidacy.certification
-                            , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
-                            , onSave = Nothing
-                            , onSubmit = Api.Form.PaymentRequestUniReva.createOrUpdate tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
-                            , onValidate = Data.Form.PaymentRequestUniReva.validate
-                            , status =
-                                if Candidacy.isPaymentRequestSent candidacy then
-                                    Form.ReadOnly
-
-                                else
-                                    Form.Editable
-                            }
-                            model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+    
 
         ( View.Candidacy.Tab.PaymentUploads, Success candidacy ) ->
             let
@@ -770,73 +729,6 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.PaymentRequestConfirmation, Success _ ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.PaymentRequestUniReva.confirmationForm
-                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.FundingRequest, Success candidacy ) ->
-            let
-                isReadOnly =
-                    Candidacy.isFundingRequestSent candidacy
-
-                ( formModel, formCmd ) =
-                    case candidacy.financeModule of
-                        FinanceModule.Unireva ->
-                            Form.updateForm context
-                                { form =
-                                    if candidacy.dropOutDate == Nothing || isReadOnly then
-                                        Page.Form.FundingRequestUniReva.form candidacy.certification
-
-                                    else
-                                        Page.Form.FundingRequestUniReva.droppedOutForm candidacy.certification
-                                , onLoad = Just <| Api.Form.FundingRequestUniReva.get tab.candidacyId candidacy
-                                , onSave = Nothing
-                                , onSubmit = \_ _ _ _ _ -> Cmd.none
-                                , onRedirect = redirectToProfile
-                                , onValidate = Data.Form.FundingRequestUniReva.validate
-                                , status =
-                                    Form.ReadOnly
-                                }
-                                model.form
-
-                        FinanceModule.Unifvae ->
-                            Form.updateForm context
-                                { form =
-                                    Page.Form.FundingRequestUniFvae.form
-                                        (if isReadOnly then
-                                            Form.ReadOnly
-
-                                         else
-                                            Form.Editable
-                                        )
-                                        candidacy.certification
-                                , onLoad = Just <| Api.Form.FundingRequestUniFvae.get tab.candidacyId
-                                , onSave = Nothing
-                                , onSubmit = Api.Form.FundingRequestUniFvae.create tab.candidacyId
-                                , onRedirect = redirectToProfile
-                                , onValidate = Data.Form.FundingRequestUniFvae.validate
-                                , status =
-                                    if isReadOnly then
-                                        Form.ReadOnly
-
-                                    else
-                                        Form.Editable
-                                }
-                                model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
         ( View.Candidacy.Tab.Training, Success candidacy ) ->
             let
