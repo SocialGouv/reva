@@ -24,7 +24,8 @@ export const ExperiencesTimelineElement = () => {
     <TimelineElement
       title="Vos expériences"
       status={getTimelineElementStatus({
-        previousElementFilled: !!selectedGoals.length,
+        previousElementFilled:
+          !!state.context.certification && !!selectedGoals.length, //certification can be unfilled after the goals have been filled if the certification becomes inactive, hence the additional  !!state.context.certification condition
         currentElementFilled: !!sortedExperiences.length,
       })}
     >

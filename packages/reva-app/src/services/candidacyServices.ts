@@ -289,6 +289,7 @@ const CANDIDACY_SELECTION = `
         codeRncp
         label
         summary
+        status
       }
       isCertificationPartial
       experiences {

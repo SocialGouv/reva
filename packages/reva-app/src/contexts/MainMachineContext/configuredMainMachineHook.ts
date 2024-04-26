@@ -4,6 +4,7 @@ import {
   getApolloContext,
 } from "@apollo/client";
 import { Device } from "@capacitor/device";
+import { Certification, Goal, candidacyStatus } from "interface";
 import { useContext, useMemo } from "react";
 import { getActiveFeaturesForConnectedUser } from "services/featureFlippingServices";
 import { getDepartments } from "services/referenceDataService";
@@ -54,6 +55,13 @@ export const useConfiguredMainMachine = () => {
               const data = await getCandidateWithCandidacy(
                 client as ApolloClient<object>
               );
+
+              //if the candidacy is still in project and a certification has been chosen but became inactive we reset the certification and the aap of the candidacy
+              data.candidacy =
+                resetCandidacyCertificationAndAAPIfCertificationIsInactiveAndCandidacyIsStillInProject(
+                  data.candidacy
+                );
+
               const activeFeatures = await getActiveFeaturesForConnectedUser(
                 client as ApolloClient<object>
               );
@@ -237,3 +245,28 @@ export const useConfiguredMainMachine = () => {
 
   return { configuredMainMachine: machine };
 };
+
+const resetCandidacyCertificationAndAAPIfCertificationIsInactiveAndCandidacyIsStillInProject =
+  (candidacy: {
+    certification?: Certification;
+    organism?: unknown;
+    goals: Goal[];
+    experiences: unknown[];
+    candidacyStatuses: { isActive: boolean; status: candidacyStatus }[];
+  }) => {
+    let newCandidacy = { ...candidacy };
+
+    const activeCandidacyStatus = candidacy.candidacyStatuses.find(
+      (s) => s.isActive === true
+    );
+
+    if (
+      activeCandidacyStatus?.status === "PROJET" &&
+      newCandidacy.certification?.status === "INACTIVE"
+    ) {
+      newCandidacy.certification = undefined;
+      newCandidacy.organism = undefined;
+    }
+
+    return newCandidacy;
+  };

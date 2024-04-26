@@ -27,7 +27,9 @@ export const OrganismTimelineElement = () => {
       title="Votre organisme d'accompagnement"
       description="Il vous guide tout au long du parcours"
       status={getTimelineElementStatus({
-        previousElementFilled: !!state.context.experiences.rest.length,
+        previousElementFilled:
+          !!state.context.certification &&
+          !!state.context.experiences.rest.length, //certification can be unfilled after the goals have been filled if the certification becomes inactive, hence the additional  !!state.context.certification condition
         currentElementFilled: !!state.context.organism,
       })}
     >
