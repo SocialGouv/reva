@@ -62,7 +62,6 @@ const CandidacySummaryPage = () => {
     "country",
     "birthCity",
     "nationality",
-    "socialSecurityNumber",
     "street",
     "zip",
     "city",
@@ -131,13 +130,6 @@ const CandidacySummaryPage = () => {
                     format(candidate.birthdate, "dd/MM/yyyy")}{" "}
                   {candidate.department.label} ({candidate.department.code}){" "}
                   {candidate.nationality}
-                </dd>
-                <dt className="sr-only">Numéro de sécurité sociale</dt>
-                <dd className="mb-4">
-                  {candidate.socialSecurityNumber &&
-                    formatStringToSocialSecurityNumberStructure(
-                      candidate.socialSecurityNumber,
-                    )}
                 </dd>
                 <dt className="sr-only">Téléphone</dt>
                 <dd>
