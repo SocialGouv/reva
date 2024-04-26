@@ -158,7 +158,9 @@ function App() {
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
   const projectSubmissionConfirmationPage = () => (
-    <ProjectSubmissionConfirmation />
+    <ScrollTopWrapper>
+      <ProjectSubmissionConfirmation />
+    </ScrollTopWrapper>
   );
 
   const pageContent = (
@@ -192,10 +194,12 @@ function App() {
         projectDroppedOutPage(state.context.contact)}
 
       {state.matches("trainingProgramSummary") && (
-        <TrainingProgramSummary
-          key="training-program-summary"
-          mainService={mainService}
-        />
+        <ScrollTopWrapper>
+          <TrainingProgramSummary
+            key="training-program-summary"
+            mainService={mainService}
+          />
+        </ScrollTopWrapper>
       )}
 
       {state.matches("projectHome") || state.matches("trainingProgramConfirmed")
