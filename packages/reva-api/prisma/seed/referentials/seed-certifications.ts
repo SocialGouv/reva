@@ -26,20 +26,6 @@ const certificationsXp = [
 
 export async function seedCertifications(prisma: PrismaClient) {
   await prisma.$transaction(async (tx) => {
-    //defer constraints validation till end of transaction
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" DEFERRED;`,
-    );
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" DEFERRED;`,
-    );
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "calaoc_certification" DEFERRED;`,
-    );
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" DEFERRED;`,
-    );
-
     // On supprime toutes les certifications, sauf celles de l'XP
     const { count } = await tx.certification.deleteMany({
       where: { id: { notIn: certificationsXp } },
@@ -168,21 +154,6 @@ export async function seedCertifications(prisma: PrismaClient) {
         });
       }
     }
-
-    //defer constraints validation till end of transaction
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" IMMEDIATE;`,
-    );
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" IMMEDIATE;`,
-    );
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "calaoc_certification" IMMEDIATE;`,
-    );
-
-    await tx.$executeRawUnsafe(
-      `SET CONSTRAINTS "certification_authority_on_certification_certification_id_fkey" IMMEDIATE;`,
-    );
   });
 }
 
