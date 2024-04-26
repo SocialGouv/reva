@@ -1,6 +1,6 @@
 import {
   Candidate,
-  CandidateCivilInformationInput,
+  CandidateUpdateInformationInput,
 } from "@/graphql/generated/graphql";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -11,35 +11,37 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import useCandidateSummary from "../../_components/useCandidateSummary";
 import {
-  FormCandidateCivilInformationData,
-  candidateCivilInformationSchema,
-} from "./candidateCivilInformationSchema";
-import useUpdateCandidateCivilInformation from "./useUpdateCandidateCivilInformation.hook";
+  FormCandidateInformationData,
+  candidateInformationSchema,
+} from "./candidateInformationSchema";
+import { useUpdateCandidateInformation } from "./useCandidateInformation";
+import { Candidacy, Countries, Departments } from "./useCandidateInformation";
 
-const CandidateCivilInformationTab = ({
-  handleOnSubmitNavigation,
-}: {
-  handleOnSubmitNavigation(): void;
-}) => {
-  const { candidacyId } = useParams<{
+const CandidateInformationForm = (
+  {
+    candidacyId,
+    candidacy,
+    countries,
+    departments,
+  } : {
     candidacyId: string;
-  }>();
+    candidacy?: Candidacy;
+    countries?: Countries;
+    departments?: Departments;
+  }
+) => {
 
   const queryClient = useQueryClient();
+  const { updateCandidateInformationMutate } =
+    useUpdateCandidateInformation(candidacyId);
 
-  const { candidacy, countries, departments } =
-    useCandidateSummary(candidacyId);
-  const { updateCandidateCivilInformationMutate } =
-    useUpdateCandidateCivilInformation(candidacyId);
-
+    
   const candidate = candidacy?.candidate;
   const franceId = countries?.find((c) => c.label === "France")?.id;
-
+    
   const genders = [
     { label: "Madame", value: "woman" },
     { label: "Monsieur", value: "man" },
@@ -55,8 +57,8 @@ const CandidateCivilInformationTab = ({
     formState: { errors },
     clearErrors,
     handleSubmit,
-  } = useForm<FormCandidateCivilInformationData>({
-    resolver: zodResolver(candidateCivilInformationSchema),
+  } = useForm<FormCandidateInformationData>({
+    resolver: zodResolver(candidateInformationSchema),
     defaultValues: {
       firstname: candidate?.firstname,
       lastname: candidate?.lastname,
@@ -73,6 +75,11 @@ const CandidateCivilInformationTab = ({
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
       countryIsFrance: candidate?.country?.id === franceId,
+      street: candidate?.street ?? "",
+      city: candidate?.city ?? "",
+      zip: candidate?.zip ?? "",
+      phone: candidate?.phone ?? "",
+      email: candidate?.email ?? "",
     },
   });
 
@@ -100,6 +107,11 @@ const CandidateCivilInformationTab = ({
         countryIsFrance: candidate.country?.id === franceId,
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
         nationality: candidate.nationality ?? "",
+        street: candidate.street ?? "",
+        city: candidate.city ?? "",
+        zip: candidate.zip ?? "",
+        phone: candidate.phone ?? "",
+        email: candidate.email ?? "",
       });
     },
     [reset, franceId],
@@ -125,8 +137,8 @@ const CandidateCivilInformationTab = ({
     setValue("country", candidacy?.candidate?.country?.id ?? franceId);
   }, [franceId, countries, candidacy, setValue]);
 
-  const onSubmit = async (data: FormCandidateCivilInformationData) => {
-    const candidateCivilInformation: CandidateCivilInformationInput = {
+  const onSubmit = async (data: FormCandidateInformationData) => {
+    const candidateInformation: CandidateUpdateInformationInput = {
       id: candidacy?.candidate?.id,
       firstname: data.firstname,
       firstname2: data.firstname2,
@@ -139,11 +151,16 @@ const CandidateCivilInformationTab = ({
       countryId: data.country,
       birthdate: new Date(data.birthdate).getTime(),
       birthDepartmentId: data.birthDepartment,
+      street: data.street,
+      zip: data.zip,
+      city: data.city,
+      phone: data.phone,
+      email: data.email,
     };
 
     try {
-      await updateCandidateCivilInformationMutate({
-        candidateCivilInformation,
+      await updateCandidateInformationMutate({
+        candidateInformation,
       });
       successToast("Les informations ont bien été mises à jour");
 
@@ -151,7 +168,6 @@ const CandidateCivilInformationTab = ({
         queryKey: [candidacyId],
       });
 
-      handleOnSubmitNavigation();
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -159,7 +175,6 @@ const CandidateCivilInformationTab = ({
 
   return (
     <>
-      <h6 className="mb-12 text-xl font-bold">Informations civiles</h6>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onReset={(e) => {
@@ -168,6 +183,7 @@ const CandidateCivilInformationTab = ({
         }}
         className="flex flex-col gap-6"
       >
+        <h6 className="mb-0 text-xl font-bold">Informations civiles</h6>
         <div className="flex gap-6">
           <Select
             label="Civilité"
@@ -297,6 +313,56 @@ const CandidateCivilInformationTab = ({
             stateRelatedMessage={errors.nationality?.message}
           />
         </div>
+        <h6 className="mb-0 text-xl font-bold">Informations de contact</h6>
+        <Input
+          label="Numéro et nom de rue"
+          className="w-full"
+          nativeInputProps={{
+            ...register("street"),
+          }}
+          state={errors.street ? "error" : "default"}
+          stateRelatedMessage={errors.street?.message}
+        />
+        <div className="flex gap-4">
+          <Input
+            label="Code postal"
+            className="w-full"
+            nativeInputProps={{
+              ...register("zip"),
+            }}
+            state={errors.zip ? "error" : "default"}
+            stateRelatedMessage={errors.zip?.message}
+          />
+          <Input
+            label="Ville"
+            className="w-full"
+            nativeInputProps={{
+              ...register("city"),
+            }}
+            state={errors.city ? "error" : "default"}
+            stateRelatedMessage={errors.city?.message}
+          />
+        </div>
+        <div className="flex gap-4">
+          <Input
+            label="Numéro de téléphone"
+            className="w-full"
+            nativeInputProps={{
+              ...register("phone"),
+            }}
+            state={errors.phone ? "error" : "default"}
+            stateRelatedMessage={errors.phone?.message}
+          />
+          <Input
+            label="Email"
+            className="w-full"
+            nativeInputProps={{
+              ...register("email"),
+            }}
+            state={errors.email ? "error" : "default"}
+            stateRelatedMessage={errors.email?.message}
+          />
+        </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/summary`}
           formState={formState}
@@ -306,4 +372,4 @@ const CandidateCivilInformationTab = ({
   );
 };
 
-export default CandidateCivilInformationTab;
+export default CandidateInformationForm;

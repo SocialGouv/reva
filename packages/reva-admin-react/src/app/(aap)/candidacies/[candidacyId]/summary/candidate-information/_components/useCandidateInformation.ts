@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { CandidateUpdateInformationInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCandidacyById = graphql(`
   query getCandidacyById($candidacyId: ID!) {
@@ -98,7 +99,7 @@ const getDepartments = graphql(`
   }
 `);
 
-const useCandidateSummary = (candidacyId: string) => {
+export const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading } =
@@ -135,8 +136,45 @@ const useCandidateSummary = (candidacyId: string) => {
   };
 };
 
+const updateCandidateInformationMutation = graphql(`
+  mutation updateCandidateInformationMutation(
+    $candidacyId: String!
+    $candidateInformation: CandidateUpdateInformationInput!
+  ) {
+    candidate_updateCandidateInformation(
+      candidacyId: $candidacyId
+      candidateInformation: $candidateInformation
+    ) {
+      id
+    }
+  }
+`);
+
+export const useUpdateCandidateInformation = (candidacyId: string) => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const {
+    mutateAsync: updateCandidateInformationMutate,
+    isPending: updateCandidateInformationIsPending,
+  } = useMutation({
+    mutationKey: ["updateCandidateInformation", candidacyId],
+    mutationFn: ({
+      candidateInformation,
+    }: {
+      candidateInformation: CandidateUpdateInformationInput;
+    }) =>
+      graphqlClient.request(updateCandidateInformationMutation, {
+        candidacyId,
+        candidateInformation,
+      }),
+  });
+
+  return {
+    updateCandidateInformationMutate,
+    updateCandidateInformationIsPending,
+  };
+};
+
 export type Candidacy = ReturnType<typeof  useCandidateSummary>["candidacy"];
 export type Countries = ReturnType<typeof useCandidateSummary>["countries"];
 export type Departments = ReturnType<typeof useCandidateSummary>["departments"];
-
-export default useCandidateSummary;
