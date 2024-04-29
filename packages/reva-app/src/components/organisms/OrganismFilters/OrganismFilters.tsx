@@ -24,17 +24,13 @@ interface filters {
 export const OrganismFilters = ({
   onSearch,
   filterDistanceIsActive,
-  filters: {
-    organismSearchText,
-    organismSearchRemote,
-    organismSearchOnsite,
-    organismSearchZip,
-  },
+  filters,
 }: {
   onSearch: (filters: filters) => void;
   filterDistanceIsActive: boolean;
   filters: filters;
 }) => {
+  const { organismSearchRemote, organismSearchOnsite } = filters;
   const searchIsOnlyOnsite = organismSearchOnsite && !organismSearchRemote;
   return (
     <div className="mt-8 lg:mt-0 w-full">
@@ -49,10 +45,8 @@ export const OrganismFilters = ({
           title="Choisir sur site"
           onClick={() => {
             onSearch({
+              ...filters,
               organismSearchOnsite: !organismSearchOnsite,
-              organismSearchText,
-              organismSearchRemote,
-              organismSearchZip,
             });
           }}
           className="p-2"
@@ -70,10 +64,8 @@ export const OrganismFilters = ({
           title="Choisir à distance"
           onClick={() => {
             onSearch({
+              ...filters,
               organismSearchRemote: !organismSearchRemote,
-              organismSearchText,
-              organismSearchOnsite,
-              organismSearchZip,
             });
           }}
           className="p-2"
@@ -117,10 +109,8 @@ export const OrganismFilters = ({
           disabled={!searchIsOnlyOnsite}
           onChangeSearchZip={(zip) => {
             onSearch({
+              ...filters,
               organismSearchZip: zip,
-              organismSearchText,
-              organismSearchRemote,
-              organismSearchOnsite,
             });
           }}
         />
