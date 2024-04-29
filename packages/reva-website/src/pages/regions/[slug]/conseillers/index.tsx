@@ -1,9 +1,8 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { RegionPageContent, regionPageContents } from "@/data/regions";
 import { Table } from "@codegouvfr/react-dsfr/Table";
 import Head from "next/head";
 import Image from "next/image";
-
-import { RegionPageContent, regionPageContents } from "../regions";
 
 const RegionAdvisorsPage = ({
   regionPageContent,
