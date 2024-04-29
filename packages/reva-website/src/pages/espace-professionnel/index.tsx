@@ -1,3 +1,4 @@
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   Hexagon,
@@ -15,7 +16,11 @@ const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-2 " aria-hidden="true" />
 );
 
-const SuiviCandidat = () => (
+interface SuiviCandidatProps {
+  isAAPSubsritpionSuspended?: boolean;
+}
+
+const SuiviCandidat = (props: SuiviCandidatProps) => (
   <section className="fr-container flex flex-col gap-10 lg:flex-row lg:gap-10">
     <div className="flex flex-col basis-3/5">
       <header>
@@ -38,7 +43,11 @@ const SuiviCandidat = () => (
       <Button
         priority="primary"
         className="justify-center !w-full  lg:!w-fit"
-        linkProps={{ href: "/espace-professionnel/creation" }}
+        linkProps={{
+          href: props.isAAPSubsritpionSuspended
+            ? "/espace-professionnel/creation-suspendue"
+            : "/espace-professionnel/creation",
+        }}
         size="large"
       >
         S'inscrire sur la plateforme
@@ -159,7 +168,11 @@ const EngagementAAP = () => (
   </section>
 );
 
-const TypologiesAAP = () => (
+interface TypologiesAAPProps {
+  isAAPSubsritpionSuspended?: boolean;
+}
+
+const TypologiesAAP = (props: TypologiesAAPProps) => (
   <section className="pb-24 bg-dsfrGray-altblueFrance lg:bg-[url('/professional-space/home-page/section-background/polygons-section4.svg')] lg:bg-cover bg-no-repeat">
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
       <div className="px-5 sm:flex-1 mx-auto max-w-[1208px]  mt-[100px] mb-40">
@@ -232,7 +245,11 @@ const TypologiesAAP = () => (
         <Button
           priority="secondary"
           className="justify-center !w-full  lg:!w-fit"
-          linkProps={{ href: "/espace-professionnel/creation" }}
+          linkProps={{
+            href: props.isAAPSubsritpionSuspended
+              ? "/espace-professionnel/creation-suspendue"
+              : "/espace-professionnel/creation",
+          }}
           size="large"
         >
           S'inscrire sur la plateforme
@@ -310,6 +327,12 @@ const MessagerieIntantanee = () => (
 );
 
 const ProfessionalSpaceHomePage = () => {
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isAAPSubsritpionSuspended = isFeatureActive(
+    "AAP_SUBSCRIPTION_SUSPENDED"
+  );
+
   return (
     <MainLayout className=" py-20  gap-32 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
@@ -322,10 +345,10 @@ const ProfessionalSpaceHomePage = () => {
         />
       </Head>
 
-      <SuiviCandidat />
+      <SuiviCandidat isAAPSubsritpionSuspended={isAAPSubsritpionSuspended} />
       <InterfaceProfessionnels />
       <EngagementAAP />
-      <TypologiesAAP />
+      <TypologiesAAP isAAPSubsritpionSuspended={isAAPSubsritpionSuspended} />
       <NotreEquipeVousAccompagne />
       <MessagerieIntantanee />
     </MainLayout>
