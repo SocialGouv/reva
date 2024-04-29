@@ -11,6 +11,7 @@ export interface RegionPageArticle {
   slug: string;
   summary: string;
   thumbnailUrl: string;
+  content: string;
 }
 
 export interface PRC {
@@ -34,6 +35,13 @@ export const regionPageContents: RegionPageContent[] = [
         thumbnailUrl: "/regions/normandie/articles/article-1/thumbnail.png",
         summary:
           "La Région Normandie et son Agence de l’Orientation et des Métiers sont engagées auprès des publics qui souhaitent valider une expérience à travers une Validation des Acquis de l’Expérience (VAE).",
+        content: `<p>Vous souhaitez vous informer sur la VAE en Normandie ? Contacter un Point Relais Conseil qui vous aidera et vous conseillera sur les démarches, les procédures et vous guidera vers la certification qui correspond le mieux à votre profil et votre projet professionnel.</p>
+          <p><a href="/regions/normandie/conseillers">Découvrir les Points Relais Conseil (PRC)</a></p>
+          <p><strong>Si votre certification est proposée dans le site France VAE,</strong> suivez les démarches qui sont proposées en ligne.</p>
+          <p><strong>Si votre certification n’est pas proposée sur le site France VAE,</strong> vous pouvez contacter un certificateur en Normandie qui traitera votre demande de VAE.</p>
+          <p><a target="_blank" href="https://parcours-metier.normandie.fr/vae-les-certificateurs-en-region">Consultez la liste des certificateurs en Normandie.</a></p>
+          <p>En Normandie, La Région Normandie et France Travail ont passé un accord de partenariat qui vise à garantir un financement à tout candidat à la VAE demandeur d’emploi.</p>
+          <p>Pour en savoir plus, consultez la rubrique <a target="_blank" href="https://parcours-metier.normandie.fr/vae-financement-pour-les-demandeurs-demploi">“Financement pour les demandeurs d'emploi | Des parcours, un métier - Région Normandie”</a>.</p>`,
       },
     ],
     prcs: [
