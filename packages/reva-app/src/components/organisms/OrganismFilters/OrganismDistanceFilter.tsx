@@ -34,7 +34,6 @@ export const OrganismDistanceFilter = ({
           label=""
           disabled={disabled}
           nativeInputProps={{
-            placeholder: "93100",
             onChange: (e) => {
               // Ensure the input contains only digits and is at most 5 characters long for the zip code
               if (!/^\d{0,5}$/.test(e.target.value)) {

@@ -11,7 +11,7 @@ export const OrganismCardDistance = ({
         aria-hidden="true"
       ></span>
       <span className="font-bold text-sm">
-        À {distanceKm === 0 ? 0 : distanceKm?.toFixed(2)} km
+        À {distanceKm === 0 ? 0 : distanceKm?.toFixed(1)} km
       </span>
     </div>
   );
