@@ -19,6 +19,7 @@ import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrgani
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountByOrganismId } from "./features/getAccountByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
+import { getLLToEarthFromZip } from "./features/getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
@@ -27,18 +28,19 @@ import { getMaisonMereAAPOnDomaines } from "./features/getMaisonMereAAPOnDomaine
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
+import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
+import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
+import { updateOrganismAccount } from "./features/updateOrganismAccount";
+import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
+import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
 import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
 import {
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
   UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
-import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
-import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
-import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
-import { updateOrganismAccount } from "./features/updateOrganismAccount";
 
 export const resolvers = {
   Account: {
@@ -109,13 +111,13 @@ export const resolvers = {
           isActive: boolean;
         };
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
+            "Not authorized"
           );
         }
 
@@ -123,7 +125,7 @@ export const resolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params,
+          params
         );
       } catch (e) {
         logger.error(e);
@@ -142,7 +144,7 @@ export const resolvers = {
           }[];
         };
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (
         context.auth.userInfo?.sub == undefined ||
@@ -153,17 +155,31 @@ export const resolvers = {
 
       return adminUpdateMaisonMereAAP(params);
     },
-    organism_createOrUpdateInformationsCommerciales: (
+    organism_createOrUpdateInformationsCommerciales: async (
       _parent: unknown,
       params: {
         informationsCommerciales: OrganismInformationsCommerciales & {
           id: string | null;
         };
-      },
-    ) =>
-      createOrUpdateInformationsCommerciales({
+      }
+    ) => {
+      const organismUpdated = await createOrUpdateInformationsCommerciales({
         informationsCommerciales: params.informationsCommerciales,
-      }),
+      });
+
+      const llToEarth = await getLLToEarthFromZip({
+        zip: organismUpdated.adresseCodePostal,
+      });
+
+      if (llToEarth) {
+        await updateOrganismLLToEarth({
+          organismId: params.informationsCommerciales.organismId,
+          llToEarth,
+        });
+      }
+
+      return organismUpdated;
+    },
 
     organism_updateFermePourAbsenceOuConges: async (
       _parent: unknown,
@@ -174,7 +190,7 @@ export const resolvers = {
         organismId: string;
         fermePourAbsenceOuConges: boolean;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const account = await getAccountByKeycloakId({
         keycloakId: context.auth.userInfo?.sub || "",
@@ -183,7 +199,7 @@ export const resolvers = {
       if (account?.organismId !== organismId) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
+          "Not authorized"
         );
       }
       return updateFermePourAbsenceOuConges({
@@ -196,12 +212,12 @@ export const resolvers = {
       params: {
         organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
+          "Not authorized"
         );
       }
 
@@ -224,13 +240,13 @@ export const resolvers = {
         organismId: string;
         organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
+            "Not authorized"
           );
         }
         const keycloakAdmin = await context.app.getKeycloakAdmin();
@@ -241,7 +257,7 @@ export const resolvers = {
             keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
-          params,
+          params
         );
       } catch (e) {
         logger.error(e);
@@ -252,7 +268,7 @@ export const resolvers = {
       _parent: unknown,
       params: {
         data: { organismId: string; degreeIds: string[] };
-      },
+      }
     ) =>
       createOrUpdateOrganismOnDegrees({
         organismId: params.data.organismId,
@@ -263,12 +279,12 @@ export const resolvers = {
       params: {
         data: UpdateOrganismInterventionZoneInput;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
+          "Not authorized"
         );
       }
 
@@ -296,7 +312,7 @@ export const resolvers = {
       params: {
         data: UpdateOrganismAccountInput;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new Error("Utilisateur non autorisé");
@@ -326,13 +342,13 @@ export const resolvers = {
       params: {
         id: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
+            "Not authorized"
           );
         }
 
@@ -383,7 +399,7 @@ export const resolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (!context.auth.hasRole("admin")) {
         throw new Error("Utilisateur non autorisé");
@@ -396,7 +412,7 @@ export const resolvers = {
       params: {
         maisonMereAAPId: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       if (!context.auth.hasRole("admin")) {
         throw new Error("Utilisateur non autorisé");

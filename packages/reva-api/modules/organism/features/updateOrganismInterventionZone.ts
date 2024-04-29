@@ -1,6 +1,6 @@
-import { getOrganismById } from "./getOrganism";
-import { UpdateOrganismInterventionZoneInput } from "../organism.types";
 import { prismaClient } from "../../../prisma/client";
+import { UpdateOrganismInterventionZoneInput } from "../organism.types";
+import { getOrganismById } from "./getOrganism";
 
 export const updateOrganismInterventionZone = async ({
   params: { organismId, interventionZone },

@@ -6,7 +6,7 @@ import {
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
   Organism,
 } from "../organism.types";
-import { getLLToEarthFromZipOrCity } from "./getLLToEarthFromZipOrCity";
+import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 
 export const updateOrganismWithMaisonMereAAPById = async (
   context: {
@@ -77,9 +77,8 @@ export const updateOrganismWithMaisonMereAAPById = async (
     telephone: organismData.contactAdministrativePhone,
   };
 
-  const llToEarth = await getLLToEarthFromZipOrCity({
+  const llToEarth = await getLLToEarthFromZip({
     zip: informationsCommerciales.adresseCodePostal,
-    city: informationsCommerciales.adresseVille,
   });
 
   const [, , organismUpdate] = await prismaClient.$transaction([
