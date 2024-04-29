@@ -102,7 +102,7 @@ const getDepartments = graphql(`
 export const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading } =
+  const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading, error: getCandidacyError } =
     useQuery({
       queryKey: [candidacyId, "getCandidacyById"],
       queryFn: () =>
@@ -111,14 +111,14 @@ export const useCandidateSummary = (candidacyId: string) => {
         }),
     });
 
-  const { data: getCountriesData, isLoading: getCountriesIsLoading } = useQuery(
+  const { data: getCountriesData, isLoading: getCountriesIsLoading, error: getCountriesError } = useQuery(
     {
       queryKey: ["getCountries"],
       queryFn: () => graphqlClient.request(getCountries),
     },
   );
 
-  const { data: getDepartmentsData } = useQuery({
+  const { data: getDepartmentsData, isLoading: getDepartmentsIsLoading, error: getDepartmentsError } = useQuery({
     queryKey: ["getDepartments"],
     queryFn: () => graphqlClient.request(getDepartments),
   });
@@ -130,9 +130,13 @@ export const useCandidateSummary = (candidacyId: string) => {
   return {
     candidacy,
     getCandidacyIsLoading,
+    getCandidacyError,
     countries,
     getCountriesIsLoading,
+    getCountriesError,
     departments,
+    getDepartmentsIsLoading,
+    getDepartmentsError,
   };
 };
 

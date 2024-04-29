@@ -4,33 +4,61 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { useParams } from "next/navigation";
 import { useCandidateSummary } from "./_components/useCandidateInformation";
 import CandidateInformationForm from "./_components/CandidateInformationForm";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 
 const CandidateInformationPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
 
-  const { candidacy, countries, departments } =
-    useCandidateSummary(candidacyId);
+  const {
+    candidacy,
+    countries,
+    departments,
+    getCandidacyIsLoading,
+    getCountriesIsLoading,
+    getDepartmentsIsLoading,
+    getCandidacyError,
+    getCountriesError,
+    getDepartmentsError,
+  } = useCandidateSummary(candidacyId);
+
+  if (
+    getCandidacyIsLoading ||
+    getCountriesIsLoading ||
+    getDepartmentsIsLoading
+  ) {
+    return (
+      <div className="flex flex-col w-full p-8 gap-8">
+        <Alert severity="info" title="Chargement..." className="bg-white" />
+      </div>
+    );
+  }
+
+  if (getCandidacyError || getCountriesError || getDepartmentsError) {
+    return (
+      <div className="flex flex-col w-full p-8 gap-8">
+        <Alert
+          severity="error"
+          title="Une erreur est survenue"
+          className="bg-white"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full p-8 gap-8">
-      {
-        candidacy && countries && departments ? (
-          <>
-            <div>
-              <h1>Renseigner les informations</h1>
-              <FormOptionalFieldsDisclaimer />
-            </div>
-            <CandidateInformationForm
-              candidacyId={candidacyId}
-              candidacy={candidacy}
-              countries={countries}
-              departments={departments}
-            />
-          </>
-        ) : (<p>Chargement...</p>)
-      }
+      <div>
+        <h1>Renseigner les informations</h1>
+        <FormOptionalFieldsDisclaimer />
+      </div>
+      <CandidateInformationForm
+        candidacyId={candidacyId}
+        candidacy={candidacy}
+        countries={countries}
+        departments={departments}
+      />
     </div>
   );
 };
