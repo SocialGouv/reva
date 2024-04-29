@@ -1,4 +1,5 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { useEffect, useState } from "react";
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const { isFeatureActive } = useFeatureflipping();
 
   useEffect(() => {
     setIsClient(true);
@@ -26,6 +28,17 @@ export const Header = (props: { className?: string }) => {
       },
       text: "Professionnels",
     },
+    ...(isFeatureActive("WEBSITE_REGIONS")
+      ? [
+          {
+            isActive: !!asPath.match(/\/regions/)?.length,
+            linkProps: {
+              href: "/regions",
+            },
+            text: "La VAE dans votre région",
+          },
+        ]
+      : []),
     {
       isActive: !!asPath.match(/\/savoir-plus/)?.length,
       linkProps: {
