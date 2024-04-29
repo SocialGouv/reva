@@ -19,8 +19,10 @@ const durationToString: {
 export const CandidateExperiencesSectionCard = ({
   candidacyId,
   experiences,
+  isEditable = true,
 }: {
   candidacyId: string;
+  isEditable?: boolean;
   experiences: {
     id: string;
     title: string;
@@ -35,29 +37,35 @@ export const CandidateExperiencesSectionCard = ({
     <GrayCard>
       <span className="text-2xl font-bold">Ses expériences</span>
       {experiences.map((e) => (
-        <div key={e.id} className="flex flex-col gap-2 py-6 border-b-2">
+        <div key={e.id} className="flex flex-col gap-2 pt-6">
           <div className="flex justify-between text-xl font-bold mb-3">
             {e.title}
-            <Button
-              priority="secondary"
-              linkProps={{
-                href: `/candidacies/${candidacyId}/summary/candidate-experiences/${e.id}`,
-              }}
-            >
-              Modifier
-            </Button>
+            {isEditable && (
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: `/candidacies/${candidacyId}/summary/candidate-experiences/${e.id}`,
+                }}
+              >
+                Modifier
+              </Button>
+            )}
           </div>
           <div>Démarrée le {format(e.startedAt, "d MMMM yyyy")}</div>
           <div>Durée d'expérience {durationToString[e.duration]}</div>
           <div>{e.description}</div>
         </div>
       ))}
-      <Link
-        className="mt-6 bg-none fr-link fr-icon-add-line fr-link--icon-left"
-        href={`/candidacies/${candidacyId}/summary/candidate-experiences/new`}
-      >
-        Ajouter une expérience
-      </Link>
+      {
+        isEditable && (
+          <Link
+          className="mt-6 pt-6 border-t-2 bg-none fr-link fr-icon-add-line fr-link--icon-left"
+          href={`/candidacies/${candidacyId}/summary/candidate-experiences/new`}
+        >
+          Ajouter une expérience
+        </Link>
+        )
+      }
     </GrayCard>
   );
 };

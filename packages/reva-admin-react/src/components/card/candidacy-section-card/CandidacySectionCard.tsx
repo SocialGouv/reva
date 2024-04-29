@@ -20,7 +20,7 @@ interface CandidacySectionCardProps {
   children?: ReactNode;
   title: string;
   titleIconClass?: string;
-  badge: ReactNode;
+  badge?: ReactNode;
 }
 
 const CandidacySectionCard = ({

@@ -11,29 +11,61 @@ export const BadgeToComplete = () => (
 
 export type CandidacySectionCardStatus = "TO_COMPLETE" | "COMPLETED";
 
+type CandidacySectionCardProps = {
+  title: string;
+  titleIconClass?: string;
+  buttonOnClickHref: string;
+  children?: ReactNode;
+}
+
+type AllowEdition = {
+  isDematerialized: true;
+  status: "TO_COMPLETE" | "COMPLETED";
+} | {
+  isDematerialized?: false;
+  status: never;
+}
+
 export const DefaultCandidacySectionCard = ({
   title,
   titleIconClass,
   status,
+  isEditable = false,
   buttonOnClickHref,
   children,
 }: {
   title: string;
   titleIconClass?: string;
   status: "TO_COMPLETE" | "COMPLETED";
+  isEditable?: boolean;
   buttonOnClickHref: string;
   children?: ReactNode;
 }) => {
   const router = useRouter();
+
+  if (isEditable) {
+    return (
+      <CandidacySectionCard
+        title={title}
+        titleIconClass={titleIconClass}
+        badge={
+          status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />
+        }
+        hasButton={true}
+        buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
+        buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
+        buttonOnClick={() => router.push(buttonOnClickHref)}
+      >
+        {children}
+      </CandidacySectionCard>
+    );
+  }
+
   return (
     <CandidacySectionCard
       title={title}
       titleIconClass={titleIconClass}
-      badge={status == "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />}
-      hasButton={true}
-      buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
-      buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
-      buttonOnClick={() => router.push(buttonOnClickHref)}
+      hasButton={false}
     >
       {children}
     </CandidacySectionCard>

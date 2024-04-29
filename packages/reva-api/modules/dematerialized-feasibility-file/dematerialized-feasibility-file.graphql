@@ -16,6 +16,11 @@ enum CompetenceBlocsPartCompletion {
   IN_PROGRESS
 }
 
+enum CandidacyFeasibilityFormat {
+  UPLOADED_PDF
+  DEMATERIALIZED
+}
+
 type CertificationCompetenceDetails {
   certificationCompetence: CertificationCompetence!
   text: String!
@@ -23,6 +28,7 @@ type CertificationCompetenceDetails {
 
 type Candidacy {
   dematerializedFeasibilityFile: DematerializedFeasibilityFile
+  feasibilityFormat: CandidacyFeasibilityFormat
 }
 
 enum CertificationCompletion {
