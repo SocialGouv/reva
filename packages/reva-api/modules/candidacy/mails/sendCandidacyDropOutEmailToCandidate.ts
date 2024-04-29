@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
 import { sendGenericEmail, templateMail } from "../../shared/email";
 
-export const sendCandidacyDropOutEmail = async (email: string) => {
+export const sendCandidacyDropOutEmailToCandidate = async (email: string) => {
   const htmlContent = mjml2html(
     templateMail({
       headlineDsfr: `<div>Votre accompagnateur a déclaré votre abandon de candidature</div>`,

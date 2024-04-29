@@ -1,4 +1,6 @@
-export * from "./sendCandidacyDropOutEmail";
+export * from "./sendCandidacyDropOutEmailToCertificateur";
+export * from "./sendCandidacyDropOutEmailToCandidate";
+export * from "./sendCandidacyArchivedEmailToCertificateur";
 export * from "./sendConfirmationCandidacySubmissionEmail";
 export * from "./sendNewCandidacyEmail";
 export * from "./sendNewEmailCandidateEmail";
