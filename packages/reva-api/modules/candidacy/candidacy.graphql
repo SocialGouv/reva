@@ -257,6 +257,7 @@ enum DistanceStatus {
 
 input SearchOrganismFilter {
   distanceStatus: DistanceStatus
+  pmr: Boolean
 }
 
 type RamdomOrganisms {

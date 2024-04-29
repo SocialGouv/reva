@@ -88,6 +88,7 @@ export const useConfiguredMainMachine = () => {
               organismSearchOnsite,
               organismSearchText: searchText,
               organismSearchZip: searchZip,
+              organismSearchPmr: pmr,
             } = context;
             if (!candidacyId)
               return Promise.reject(
@@ -99,13 +100,13 @@ export const useConfiguredMainMachine = () => {
                 "unavailable selectedDepartment in XState context"
               );
 
-            const distanceStatus =
+            const searchFilter =
               (organismSearchOnsite && organismSearchRemote) ||
               (!organismSearchOnsite && !organismSearchRemote)
-                ? undefined
+                ? { distanceStatus: undefined, pmr: undefined }
                 : organismSearchOnsite
-                ? "ONSITE"
-                : "REMOTE";
+                ? { distanceStatus: "ONSITE", pmr }
+                : { distanceStatus: "REMOTE", pmr: undefined };
 
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>
@@ -113,7 +114,7 @@ export const useConfiguredMainMachine = () => {
               candidacyId,
               departmentId: selectedDepartment?.id,
               searchText,
-              searchFilter: { distanceStatus },
+              searchFilter,
               searchZip,
             });
           },

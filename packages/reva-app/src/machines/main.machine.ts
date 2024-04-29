@@ -59,6 +59,7 @@ export const INVALID_REGISTRATION_TOKEN_ERROR =
   "INVALID_REGISTRATION_TOKEN_ERROR";
 export const INVALID_LOGIN_TOKEN_ERROR = "INVALID_LOGIN_TOKEN_ERROR";
 export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
+
 export interface MainContext {
   error: string;
   activeFeatures: string[];
@@ -79,6 +80,7 @@ export interface MainContext {
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
   organismSearchZip?: string;
+  organismSearchPmr: boolean;
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
@@ -112,6 +114,7 @@ type SetOrganismSearch = {
   organismSearchOnsite: boolean;
   organismSearchRemote: boolean;
   organismSearchZip?: string;
+  organismSearchPmr: boolean;
 };
 
 type RefreshOrganisms = {
@@ -275,6 +278,7 @@ export const mainMachine =
           organismSearchOnsite: false,
           organismSearchRemote: false,
           organismSearchZip: undefined,
+          organismSearchPmr: false,
           departments: [],
           selectedDepartment: undefined,
           organisms: undefined,
@@ -1193,6 +1197,10 @@ export const mainMachine =
             organismSearchZip: (_context, event) => {
               const typedEvent = event as SetOrganismSearch;
               return typedEvent.organismSearchZip;
+            },
+            organismSearchPmr: (_context, event) => {
+              const typedEvent = event as SetOrganismSearch;
+              return typedEvent.organismSearchPmr;
             },
           }),
           clearOrganismSearch: assign({

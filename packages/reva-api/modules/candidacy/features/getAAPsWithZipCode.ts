@@ -28,16 +28,18 @@ type SearchResponse = {
         importance: number;
         street: string;
       };
-    }
+    },
   ];
 };
 
 export const getAAPsWithZipCode = async ({
   zip,
+  pmr,
   limit,
   searchText,
 }: {
   zip: string;
+  pmr?: boolean;
   limit: number;
   searchText?: string;
 }) => {
@@ -55,6 +57,7 @@ export const getAAPsWithZipCode = async ({
     },
   ] = features;
   const [longitude, latitude] = coordinates as [number, number];
+
   /*
     The following query filters for AAPs based on the following criteria:
     - Must have at least one onsite department.
@@ -62,22 +65,24 @@ export const getAAPsWithZipCode = async ({
     - Must have a non-null 'll_to_earth' value.
   */
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
-    SELECT DISTINCT(o.*), (earth_distance(ll_to_earth(${latitude},${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km FROM organism o
-    INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
-    INNER JOIN organism_department od ON o.id = od.organism_id
-    WHERE od.is_onsite = true 
-    AND o.ll_to_earth IS NOT NULL 
-    AND oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'
-    ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
-    ORDER BY distance_km ASC
-    LIMIT ${limit}
-    `);
+      SELECT DISTINCT(o.*),
+                     (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) /
+                      1000) AS distance_km
+      FROM organism o
+               INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
+               INNER JOIN organism_department od ON o.id = od.organism_id
+      WHERE od.is_onsite = true
+        AND o.ll_to_earth IS NOT NULL
+        AND oic."conformeNormesAccessbilite" ${pmr ? `= 'CONFORME'` : `!= 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`} ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
+      ORDER BY distance_km ASC
+          LIMIT ${limit}
+  `);
 
   if (!organisms?.length) {
     return [];
   }
 
   return organisms.map(
-    (o) => mapKeys(o, (_, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
+    (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
   ) as unknown as OrganismCamelCase[];
 };

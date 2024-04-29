@@ -220,6 +220,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchRemote,
     activeFeatures,
     organismSearchZip,
+    organismSearchPmr,
   } = xstate.context;
 
   const [selectedOrganismId, setSelectedOrganismId] = useState(
@@ -279,6 +280,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                   organismSearchOnsite,
                   organismSearchRemote,
                   organismSearchZip,
+                  organismSearchPmr,
                 });
               },
             }}
@@ -299,6 +301,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                 organismSearchRemote,
                 organismSearchOnsite,
                 organismSearchZip,
+                organismSearchPmr,
               }}
               filterDistanceIsActive={activeFeatures.includes(
                 "CANDIDATE_APP_FILTER_DISTANCE"
