@@ -187,14 +187,14 @@ const unsafeResolvers = {
         include: { organism: true },
       });
 
-      let randomOrganisms: OrganismCamelCase[];
+      let organismsFound: OrganismCamelCase[];
 
       if (
         searchZip &&
         searchZip.length === 5 &&
         searchFilter?.distanceStatus === "ONSITE"
       ) {
-        randomOrganisms = await getAAPsWithZipCode({
+        organismsFound = await getAAPsWithZipCode({
           zip: searchZip,
           limit: 51,
           searchText,
@@ -221,24 +221,24 @@ const unsafeResolvers = {
           totalRows: number;
         };
 
-        randomOrganisms = data.rows
+        organismsFound = data.rows
           .filter((c) => c.id !== candidacy?.organism?.id)
           .slice(0, 50);
       }
       //add the candidacy selected organism as the first result if it exists
       if (
         candidacy?.organismId &&
-        !randomOrganisms.some((org) => org.id == candidacy.organismId)
+        !organismsFound.some((org) => org.id == candidacy.organismId)
       ) {
-        randomOrganisms = [
+        organismsFound = [
           candidacy.organism as OrganismCamelCase,
-          ...randomOrganisms.slice(0, 49),
+          ...organismsFound.slice(0, 49),
         ];
       }
 
       return {
-        totalRows: randomOrganisms?.length ?? 0,
-        rows: randomOrganisms,
+        totalRows: organismsFound?.length ?? 0,
+        rows: organismsFound,
       };
     },
     getBasicSkills: async () => {

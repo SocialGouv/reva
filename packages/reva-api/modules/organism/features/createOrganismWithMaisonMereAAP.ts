@@ -16,10 +16,10 @@ import { CreateOrUpdateOrganismWithMaisonMereAAPDataRequest } from "../organism.
 import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getInformationsCommercialesByEmailContact } from "./getInformationsCommercialesByEmailContact";
+import { getLLToEarthFromZipOrCity } from "./getLLToEarthFromZipOrCity";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
 import { getMaisonMereOnDomaineByMaisonMereId } from "./getMaisonMereOnDomaineByMaisonMereId";
-import { getLLToEarthFromZipOrCity } from "./getLLToEarthFromZipOrCity";
 
 interface CreateOrganismWithMaisonMereAAPRequestParams {
   organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
@@ -51,7 +51,7 @@ export const createOrganismWithMaisonMereAAP = async ({
     if (accountExist) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-        `Un compte IAM existe déjà pour l'email ${organismData.email}`,
+        `Un compte IAM existe déjà pour l'email ${organismData.email}`
       );
     }
 
@@ -62,7 +62,7 @@ export const createOrganismWithMaisonMereAAP = async ({
     if (!account) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_NOT_FOUND,
-        `Le compte n'existe pas avec l'ID keycloak: ${keycloakId}`,
+        `Le compte n'existe pas avec l'ID keycloak: ${keycloakId}`
       );
     }
 
@@ -73,7 +73,7 @@ export const createOrganismWithMaisonMereAAP = async ({
     if (!maisonMereAAP) {
       throw new FunctionalError(
         FunctionalCodeError.MAISON_MERE_AAP_NOT_FOUND,
-        `La maison mère AAP n'existe pas`,
+        `La maison mère AAP n'existe pas`
       );
     }
     const {
@@ -104,10 +104,10 @@ export const createOrganismWithMaisonMereAAP = async ({
     if (organismInfoCommercialesWithEmailContactAlreadyExist.length > 0) {
       throw new FunctionalError(
         FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
-        `Un organisme existe déjà avec l'email de contacte ${contactAdministrativeEmail}`,
+        `Un organisme existe déjà avec l'email de contacte ${contactAdministrativeEmail}`
       );
     }
-    const ll_to_earth = await getLLToEarthFromZipOrCity({
+    const llToEarth = await getLLToEarthFromZipOrCity({
       zip: organismData.zip,
       city: organismData.city,
     });
@@ -128,12 +128,12 @@ export const createOrganismWithMaisonMereAAP = async ({
         typology: typologie,
         departmentsWithOrganismMethods,
         qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
-        ll_to_earth,
+        llToEarth,
       })
     ).unsafeCoerce();
 
     logger.info(
-      `[validateorganismData] Successfuly created organism with siret ${siret}`,
+      `[validateorganismData] Successfuly created organism with siret ${siret}`
     );
 
     await createOrUpdateInformationsCommerciales({
@@ -199,7 +199,7 @@ export const createOrganismWithMaisonMereAAP = async ({
     ).unsafeCoerce();
 
     logger.info(
-      `[validateorganismData] Successfuly created IAM account ${newKeycloakId}`,
+      `[validateorganismData] Successfuly created IAM account ${newKeycloakId}`
     );
 
     //db account creation
@@ -212,7 +212,7 @@ export const createOrganismWithMaisonMereAAP = async ({
     });
 
     logger.info(
-      `[validateorganismData] Successfuly created AP with organismId ${newOrganism.id}`,
+      `[validateorganismData] Successfuly created AP with organismId ${newOrganism.id}`
     );
 
     await assignMaisonMereAAPToOrganism({

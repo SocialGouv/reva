@@ -2,6 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import { Department, Organism } from "../../../interface";
 import { OrganismCardDescription } from "./OrganismCardDescription";
+import { OrganismCardDistance } from "./OrganismCardDistance";
 import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
 import { OrganismCardTitle } from "./OrganismCardTitle";
 
@@ -46,7 +47,12 @@ export const OrganismCard = ({
           location={mandatoryInfo.location}
         />
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <div>
+          {organism.distanceKm !== undefined && (
+            <OrganismCardDistance distanceKm={organism.distanceKm} />
+          )}
+        </div>
         <Button
           priority="secondary"
           size="small"

@@ -20,6 +20,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
         contactAdministrativeEmail
         contactAdministrativePhone
         website
+        distanceKm
         organismOnDepartments(departmentId: $departmentId) {
           id
           departmentId

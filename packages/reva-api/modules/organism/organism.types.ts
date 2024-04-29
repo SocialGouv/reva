@@ -14,7 +14,8 @@ export interface Organism {
   qualiopiCertificateExpiresAt: Date | null;
   fermePourAbsenceOuConges: boolean;
   maisonMereAAPId: string | null;
-  ll_to_earth: string | null;
+  llToEarth: string | null;
+  distanceKm?: number;
 }
 
 export type OrganismTypology =

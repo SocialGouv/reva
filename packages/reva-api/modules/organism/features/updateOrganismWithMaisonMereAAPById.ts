@@ -17,7 +17,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
   params: {
     organismId: string;
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
-  },
+  }
 ): Promise<Organism> => {
   const { hasRole, keycloakId } = context;
   if (!hasRole("gestion_maison_mere_aap")) {
@@ -47,7 +47,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
 
   if (maisonMereAAP.length === 0) {
     throw new Error(
-      `L'organisme pour l'id ${organismId} n'est pas géré par la maison mère`,
+      `L'organisme pour l'id ${organismId} n'est pas géré par la maison mère`
     );
   }
 
@@ -77,7 +77,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
     telephone: organismData.contactAdministrativePhone,
   };
 
-  const ll_to_earth = await getLLToEarthFromZipOrCity({
+  const llToEarth = await getLLToEarthFromZipOrCity({
     zip: informationsCommerciales.adresseCodePostal,
     city: informationsCommerciales.adresseVille,
   });
@@ -100,7 +100,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
         contactAdministrativeEmail: organismData.contactAdministrativeEmail,
         contactAdministrativePhone: organismData.contactAdministrativePhone,
         website: organismData.website,
-        ll_to_earth,
+        llToEarth,
         organismInformationsCommerciales: {
           upsert: {
             create: informationsCommerciales,

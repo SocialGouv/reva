@@ -57,11 +57,11 @@ export const getAAPsWithZipCode = async ({
   const [longitude, latitude] = coordinates as [number, number];
 
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
-    SELECT o.* FROM organism o
+    SELECT o.*, (earth_distance(ll_to_earth(${latitude},${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km FROM organism o
     INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
     ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
     WHERE o.ll_to_earth IS NOT NULL
-    ORDER BY (earth_distance(ll_to_earth(${latitude},${longitude}), o.ll_to_earth::earth) / 1000) ASC
+    ORDER BY distance_km ASC
     LIMIT ${limit}
     `);
 

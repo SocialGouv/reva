@@ -28,6 +28,8 @@ type Organism {
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
   organismOnAccount: Account
+  llToEarth: String
+  distanceKm: Float
 }
 
 type OrganismOnDegree {

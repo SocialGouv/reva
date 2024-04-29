@@ -78,6 +78,7 @@ export interface Organism {
   website?: string;
   organismOnDepartments?: OrganismOnDepartment[];
   informationsCommerciales?: OrganismInformationsCommerciales;
+  distanceKm?: number;
 }
 
 export interface OrganismInformationsCommerciales {

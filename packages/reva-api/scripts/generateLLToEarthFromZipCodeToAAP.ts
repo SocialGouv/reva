@@ -32,7 +32,7 @@ type SearchResponse = {
   try {
     const organisms = await prismaClient.organism.findMany({
       where: {
-        ll_to_earth: null,
+        llToEarth: null,
         OR: [
           {
             organismInformationsCommerciales: {
@@ -71,7 +71,7 @@ type SearchResponse = {
 
       const [longitude, latitude] = coordinates;
 
-      const [{ ll_to_earth }]: { ll_to_earth: string }[] =
+      const [{ ll_to_earth: llToEarth }]: { ll_to_earth: string }[] =
         await prismaClient.$queryRawUnsafe(
           `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`
         );
@@ -79,7 +79,7 @@ type SearchResponse = {
       await prismaClient.organism.update({
         where: { id: organism.id },
         data: {
-          ll_to_earth,
+          llToEarth,
         },
       });
     }
