@@ -189,4 +189,5 @@ export type CandidacyStatusFilter =
 
 export interface SearchOrganismFilter {
   distanceStatus?: string;
+  pmr?: boolean;
 }

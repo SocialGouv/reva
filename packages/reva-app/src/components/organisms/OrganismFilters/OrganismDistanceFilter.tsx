@@ -1,13 +1,16 @@
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useEffect, useState } from "react";
 
 interface OrganismDistanceFilterProps {
   onChangeSearchZip: (zip: string) => void;
+  onChangeSearchPmr: (pmr: boolean) => void;
   disabled: boolean;
 }
 
 export const OrganismDistanceFilter = ({
   onChangeSearchZip,
+  onChangeSearchPmr,
   disabled,
 }: OrganismDistanceFilterProps) => {
   const [zip, setZipOrCity] = useState("");
@@ -38,6 +41,19 @@ export const OrganismDistanceFilter = ({
             },
             value: zip,
           }}
+        />
+        <Checkbox
+          className="mt-8"
+          options={[
+            {
+              label:
+                "N'afficher que les sites qui peuvent recevoir du public à mobilité réduite (PMR)",
+              nativeInputProps: {
+                disabled,
+                onChange: (e) => onChangeSearchPmr(e.target.checked),
+              },
+            },
+          ]}
         />
       </fieldset>
     </div>

@@ -201,6 +201,7 @@ const unsafeResolvers = {
       ) {
         organismsFound = await getAAPsWithZipCode({
           zip: searchZip,
+          pmr: searchFilter.pmr,
           limit: 51,
           searchText,
         });

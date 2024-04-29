@@ -56,7 +56,7 @@ export const getRandomOrganismsForCandidacy =
     candidacyId: string;
     departmentId: string;
     searchText?: string;
-    searchFilter: { distanceStatus?: string };
+    searchFilter: { distanceStatus?: string; pmr?: boolean };
     searchZip?: string;
   }) =>
     client.query({

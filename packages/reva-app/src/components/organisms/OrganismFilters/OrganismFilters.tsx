@@ -19,6 +19,7 @@ interface filters {
   organismSearchRemote: boolean;
   organismSearchOnsite: boolean;
   organismSearchZip?: string;
+  organismSearchPmr: boolean;
 }
 
 export const OrganismFilters = ({
@@ -103,18 +104,24 @@ export const OrganismFilters = ({
             visio-conférence.
           </p>
         </modalDistanceInfo.Component>
+        {filterDistanceIsActive && (
+          <OrganismDistanceFilter
+            disabled={!searchIsOnlyOnsite}
+            onChangeSearchZip={(zip) => {
+              onSearch({
+                ...filters,
+                organismSearchZip: zip,
+              });
+            }}
+            onChangeSearchPmr={(pmr) => {
+              onSearch({
+                ...filters,
+                organismSearchPmr: pmr,
+              });
+            }}
+          />
+        )}
       </div>
-      {filterDistanceIsActive && (
-        <OrganismDistanceFilter
-          disabled={!searchIsOnlyOnsite}
-          onChangeSearchZip={(zip) => {
-            onSearch({
-              ...filters,
-              organismSearchZip: zip,
-            });
-          }}
-        />
-      )}
     </div>
   );
 };
