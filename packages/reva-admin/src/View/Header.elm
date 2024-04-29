@@ -156,19 +156,16 @@ headerMenuModal context activeHeaderLink =
                 Api.Token.isOrganism context.token
                     && not (Api.Token.isAdmin context.token)
             then
-                [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
-                , if List.member "AGENCIES_SETTINGS" context.activeFeatures then
-                    itemLink "Paramètres" (adminReactUrl "/agencies-settings") True False
+                navItemLink "Candidatures" "/admin/candidacies" Candidacies
+                    :: (if List.member "AGENCIES_SETTINGS" context.activeFeatures then
+                            [ itemLink "Paramètres" (adminReactUrl "/agencies-settings") True False ]
 
-                  else
-                    text ""
-                , if Api.Token.isGestionnaireMaisonMereAAP context.token then
-                    itemLink "Gestion des agences" (adminReactUrl "/agences") True False
+                        else if Api.Token.isGestionnaireMaisonMereAAP context.token then
+                            [ itemLink "Gestion des agences" (adminReactUrl "/agences") True False, itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False ]
 
-                  else
-                    text ""
-                , itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False
-                ]
+                        else
+                            [ itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False ]
+                       )
 
             else
                 []
