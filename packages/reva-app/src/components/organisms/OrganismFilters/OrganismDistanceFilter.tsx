@@ -13,14 +13,9 @@ export const OrganismDistanceFilter = ({
   const [zip, setZipOrCity] = useState("");
 
   useEffect(() => {
-    if (zip.length !== 5) {
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
+    if (zip.length === 0 || zip.length === 5) {
       onChangeSearchZip(zip);
-    }, 500);
-    return () => clearTimeout(timeoutId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zip]);
 
