@@ -29,11 +29,11 @@ export const regionPageContents: RegionPageContent[] = [
     articles: [
       {
         title:
-          "Articuler le Projet de transition professionnelle et la VAE, c’est possible !",
+          "La Région Normandie et son Agence de l’Orientation et des Métiers",
         slug: "article-1",
         thumbnailUrl: "/regions/normandie/articles/article-1/thumbnail.png",
         summary:
-          "La validation des acquis de l'expérience (VAE) permet à toute personne engagée dans la vie active de faire valider son expérience professionnelle et d'obtenir un diplôme, un titre professionnel ou un certificat de qualification.",
+          "La Région Normandie et son Agence de l’Orientation et des Métiers sont engagées auprès des publics qui souhaitent valider une expérience à travers une Validation des Acquis de l’Expérience (VAE).",
       },
     ],
     prcs: [
