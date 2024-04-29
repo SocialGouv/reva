@@ -2,7 +2,7 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { AuthenticatedLink } from "components/atoms/AuthenticatedLink/AuthenticatedLink";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
-import { format, isAfter } from "date-fns";
+import { format, isBefore } from "date-fns";
 import { JuryResult } from "interface";
 
 export const JuryTimelineElement = () => {
@@ -23,7 +23,7 @@ export const JuryTimelineElement = () => {
 
   const icon = !jury ? "fr-icon-time-fill" : "fr-icon-information-fill";
 
-  const juryOutOfDate = jury ? isAfter(jury.dateOfSession, new Date()) : false;
+  const juryOutOfDate = jury ? isBefore(jury.dateOfSession, new Date()) : false;
 
   if (jury && juryOutOfDate) {
     text =
