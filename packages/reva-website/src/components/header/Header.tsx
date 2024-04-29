@@ -1,5 +1,4 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -7,7 +6,6 @@ import { useEffect, useState } from "react";
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const { isFeatureActive } = useFeatureflipping();
 
   useEffect(() => {
     setIsClient(true);
@@ -42,34 +40,21 @@ export const Header = (props: { className?: string }) => {
         !!asPath.match(/\/faq/)?.length,
       text: "Besoin d'aide ?",
       menuLinks: [
-        ...(isFeatureActive("FAQ_SITE_INSTITUTIONNEL")
-          ? [
-              {
-                linkProps: {
-                  href: "/faq",
-                },
-                isActive: !!asPath.match(/\/savoir-plus/)?.length,
-                text: "Questions fréquentes",
-              },
-            ]
-          : [
-              {
-                linkProps: {
-                  href: "https://reva.crisp.help/fr/category/candidat-rhr5rx/",
-                },
-                isActive: false,
-                text: "Questions fréquentes",
-              },
-            ]),
-        ...[
-          {
-            linkProps: {
-              href: "/nous-contacter",
-            },
-            isActive: !!asPath.match(/\/nous-contacter/)?.length,
-            text: "Nous contacter",
+        {
+          linkProps: {
+            href: "/faq",
           },
-        ],
+          isActive: !!asPath.match(/\/savoir-plus/)?.length,
+          text: "Questions fréquentes",
+        },
+
+        {
+          linkProps: {
+            href: "/nous-contacter",
+          },
+          isActive: !!asPath.match(/\/nous-contacter/)?.length,
+          text: "Nous contacter",
+        },
       ],
     },
   ];
