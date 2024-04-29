@@ -288,18 +288,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         <div className="lg:flex gap-x-6">
           <div className="lg:w-1/3">
             <OrganismFilters
-              onSearch={({
-                organismSearchText,
-                organismSearchOnsite,
-                organismSearchRemote,
-                organismSearchZip,
-              }) =>
+              onSearch={(filters) =>
                 send({
+                  ...filters,
                   type: "SET_ORGANISM_SEARCH",
-                  organismSearchText,
-                  organismSearchOnsite,
-                  organismSearchRemote,
-                  organismSearchZip,
                 })
               }
               filters={{
