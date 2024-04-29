@@ -11,7 +11,6 @@ import {
   handleFeasibilityDecision,
 } from "./feasibility.features";
 import { FeasibilityFile } from "./feasibility.file";
-import { prismaClient } from "prisma/client";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };
@@ -73,6 +72,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
             feasibility?.IDFileId,
             feasibility?.documentaryProofFileId,
             feasibility?.certificateOfAttendanceFileId,
+            feasibility?.decisionFileId,
           ].includes(fileId)
         ) {
           return reply.status(403).send({
