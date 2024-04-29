@@ -44,13 +44,13 @@ export const KeycloakProvider = ({
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
   const [ready, setReady] = useState<boolean>(false);
-  const [tokens, setTokens] = useState(getTokens);
+  const [tokens, setTokens] = useState(getTokens());
 
   const logout = () => {
     localStorage.removeItem(storageKey);
 
     setAuthenticated(false);
-    setTokens([]);
+    setTokens(undefined);
 
     keycloakInstance?.logout();
   };
@@ -86,6 +86,8 @@ export const KeycloakProvider = ({
         };
         keycloakInstance.onAuthRefreshSuccess = async () => {
           console.log("Token refresh success");
+          setToken(keycloakInstance.token);
+
           localStorage.setItem(
             storageKey,
             JSON.stringify({
