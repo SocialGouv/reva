@@ -47,7 +47,7 @@ const CandidacySummaryPage = () => {
 
   if (!candidacy) return null;
 
-  const { candidate, certification, admissibilityFvae, goals } = candidacy;
+  const { candidate, admissibilityFvae, goals } = candidacy;
 
   const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
@@ -113,6 +113,7 @@ const CandidacySummaryPage = () => {
               status={
                 isCandidateInformationCompleted ? "COMPLETED" : "TO_COMPLETE"
               }
+              isEditable={candidacy.feasibilityFormat === "DEMATERIALIZED"}
             >
               <dl>
                 <dt className="sr-only">Prénom et nom</dt>
@@ -142,69 +143,76 @@ const CandidacySummaryPage = () => {
                 </dd>
               </dl>
             </DefaultCandidacySectionCard>
-            <DefaultCandidacySectionCard
-              title="Son profil"
-              buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
-              status={isCandidateProfileCompleted ? "COMPLETED" : "TO_COMPLETE"}
-            >
-              {isCandidateProfileCompleted && (
-                <div className="flex flex-col">
-                  <p className="font-bold mb-0">
-                    Niveau de la formation la plus élevée
-                  </p>
-                  <p className="mb-0">
-                    {candidate.niveauDeFormationLePlusEleve?.label}
-                  </p>
-                  <br />
-                  <p className="font-bold mb-0">
-                    Intitulé de la certification la plus élevée obtenue
-                  </p>
-                  <p className="mb-0">{candidate.highestDegreeLabel}</p>
-                </div>
-              )}
-            </DefaultCandidacySectionCard>
+            {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
+              <DefaultCandidacySectionCard
+                title="Son profil"
+                buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
+                status={
+                  isCandidateProfileCompleted ? "COMPLETED" : "TO_COMPLETE"
+                }
+              >
+                {isCandidateProfileCompleted && (
+                  <div className="flex flex-col">
+                    <p className="font-bold mb-0">
+                      Niveau de la formation la plus élevée
+                    </p>
+                    <p className="mb-0">
+                      {candidate.niveauDeFormationLePlusEleve?.label}
+                    </p>
+                    <br />
+                    <p className="font-bold mb-0">
+                      Intitulé de la certification la plus élevée obtenue
+                    </p>
+                    <p className="mb-0">{candidate.highestDegreeLabel}</p>
+                  </div>
+                )}
+              </DefaultCandidacySectionCard>
+            )}
             <CertificationCard candidacy={candidacy} />
-            <CandidacySectionCard
-              title="Sa recevabilité"
-              hasButton
-              buttonOnClick={() =>
-                router.push(`/candidacies/${candidacyId}/admissibility`)
-              }
-              buttonTitle={
-                isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
-              }
-              buttonPriority={
-                isCandidacyAdmissibilityComplete ? "secondary" : "primary"
-              }
-              badge={
-                isCandidacyAdmissibilityExpired ? (
-                  <Badge severity="warning">
-                    Recevabilité favorable expirée
-                  </Badge>
-                ) : isCandidacyAlreadyAdmissible ? (
-                  <Badge severity="success">
-                    Recevabilité favorable en cours
-                  </Badge>
-                ) : isCandidacyAdmissibilityComplete ? (
-                  <BadgeCompleted />
-                ) : (
-                  <BadgeToComplete />
-                )
-              }
-            >
-              {admissibilityFvae?.expiresAt && (
-                <span>
-                  Date de fin de validité :{" "}
-                  {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
-                </span>
-              )}
-              {!isCandidacyAdmissibilityComplete && (
-                <SmallNotice>
-                  Besoin d'aide sur la recevabilité ? Consultez les questions
-                  fréquentes de nos utilisateurs à ce sujet.
-                </SmallNotice>
-              )}
-            </CandidacySectionCard>
+            {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
+              <CandidacySectionCard
+                title="Sa recevabilité"
+                hasButton
+                buttonOnClick={() =>
+                  router.push(`/candidacies/${candidacyId}/admissibility`)
+                }
+                buttonTitle={
+                  isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
+                }
+                buttonPriority={
+                  isCandidacyAdmissibilityComplete ? "secondary" : "primary"
+                }
+                badge={
+                  isCandidacyAdmissibilityExpired ? (
+                    <Badge severity="warning">
+                      Recevabilité favorable expirée
+                    </Badge>
+                  ) : isCandidacyAlreadyAdmissible ? (
+                    <Badge severity="success">
+                      Recevabilité favorable en cours
+                    </Badge>
+                  ) : isCandidacyAdmissibilityComplete ? (
+                    <BadgeCompleted />
+                  ) : (
+                    <BadgeToComplete />
+                  )
+                }
+              >
+                {admissibilityFvae?.expiresAt && (
+                  <span>
+                    Date de fin de validité :{" "}
+                    {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
+                  </span>
+                )}
+                {!isCandidacyAdmissibilityComplete && (
+                  <SmallNotice>
+                    Besoin d'aide sur la recevabilité ? Consultez les questions
+                    fréquentes de nos utilisateurs à ce sujet.
+                  </SmallNotice>
+                )}
+              </CandidacySectionCard>
+            )}
+
             <GrayCard>
               <span className="text-2xl font-bold mb-5">Ses objectifs</span>
               {goals?.length ? (
@@ -219,6 +227,7 @@ const CandidacySummaryPage = () => {
             </GrayCard>
             <CandidateExperiencesSectionCard
               candidacyId={candidacyId}
+              isEditable={candidacy.feasibilityFormat === "DEMATERIALIZED"}
               experiences={candidacy.experiences.map((e) => ({
                 id: e.id,
                 title: e.title,

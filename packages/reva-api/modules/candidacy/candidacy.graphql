@@ -51,11 +51,6 @@ enum FinanceModule {
 
 # QUERY
 
-enum CandidacyFeasibilityFormat {
-  UPLOADED_PDF
-  DEMATERIALIZED
-}
-
 type Candidacy {
   id: ID!
   deviceId: ID
@@ -96,7 +91,6 @@ type Candidacy {
   admissibilityFvae: AdmissibilityFvae
   reorientationReason: ReorientationReason
   financeModule: FinanceModule!
-  feasibilityFormat: CandidacyFeasibilityFormat
 }
 
 type CandidacyDropOut {

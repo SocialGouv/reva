@@ -3,7 +3,7 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 
 const getCandidacyById = graphql(`
-  query getCandidacyById($candidacyId: ID!) {
+  query getCandidacySummaryById($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
       candidacyDropOut {
@@ -75,6 +75,7 @@ const getCandidacyById = graphql(`
         id
         label
       }
+      feasibilityFormat
     }
   }
 `);
@@ -103,7 +104,7 @@ const useCandidateSummary = (candidacyId: string) => {
 
   const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading } =
     useQuery({
-      queryKey: [candidacyId, "getCandidacyById"],
+      queryKey: [candidacyId, "getCandidacySummaryById"],
       queryFn: () =>
         graphqlClient.request(getCandidacyById, {
           candidacyId,
