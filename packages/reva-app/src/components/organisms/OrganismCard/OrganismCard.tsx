@@ -49,9 +49,7 @@ export const OrganismCard = ({
       </div>
       <div className="flex justify-between">
         <div>
-          {organism.distanceKm !== undefined && (
-            <OrganismCardDistance distanceKm={organism.distanceKm} />
-          )}
+          <OrganismCardDistance distanceKm={organism.distanceKm} />
         </div>
         <Button
           priority="secondary"
