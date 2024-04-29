@@ -45,7 +45,7 @@ export const getStaticPaths = async () => {
   return {
     paths: regionPageContents.map((rpc) => ({
       params: {
-        slug: rpc.slug,
+        regionSlug: rpc.slug,
       },
     })),
     fallback: true,
@@ -53,11 +53,13 @@ export const getStaticPaths = async () => {
 };
 
 export async function getStaticProps({
-  params: { slug },
+  params: { regionSlug },
 }: {
-  params: { slug: string };
+  params: { regionSlug: string };
 }) {
-  const regionPageContent = regionPageContents.find((rpc) => rpc.slug === slug);
+  const regionPageContent = regionPageContents.find(
+    (rpc) => rpc.slug === regionSlug
+  );
   return { props: { regionPageContent } };
 }
 
