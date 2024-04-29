@@ -1,5 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { CallOut } from "@codegouvfr/react-dsfr/Callout";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Head from "next/head";
 import Image from "next/image";
@@ -45,18 +45,23 @@ const RegionHomePage = ({
           titleAs="h2"
         />
       )}
-      <CallOut
-        buttonProps={{
-          children: "Consultez la liste des conseillers",
-          linkProps: {
+      <div id="fr-callout-:r1h:" className="fr-callout">
+        <h3 className="fr-card__title">
+          Vous souhaitez être accompagné pour démarrer votre VAE ?
+        </h3>
+        <p className="fr-callout__text">
+          Si vous n’êtes pas sûr de votre projet, si vous hésitez entre
+          plusieurs diplômes, ou entre VAE et formation, contactez un de nos
+          conseillers.
+        </p>
+        <Button
+          linkProps={{
             href: `/regions/${regionPageContent.slug}/conseillers`,
-          },
-        }}
-        title="Vous souhaitez être accompagné pour démarrer votre VAE ?"
-      >
-        Si vous n’êtes pas sûr de votre projet, si vous hésitez entre plusieurs
-        diplômes, ou entre VAE et formation, contactez un de nos conseillers.
-      </CallOut>
+          }}
+        >
+          Consultez la liste des conseillers
+        </Button>
+      </div>
     </MainLayout>
   ) : null;
 };
