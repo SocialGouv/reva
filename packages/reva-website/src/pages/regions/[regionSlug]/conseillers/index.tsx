@@ -28,6 +28,7 @@ const RegionAdvisorsPage = ({
         diplômes, ou entre VAE et formation, contactez un de nos conseillers.
       </p>
       <Table
+        fixed
         data={regionPageContent.prcs.map((p) => Object.values(p))}
         headers={[
           "Département",
