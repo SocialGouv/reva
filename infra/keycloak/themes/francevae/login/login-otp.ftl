@@ -29,7 +29,7 @@
                 </div>
 
             <div class="${properties.kcInputWrapperClass!}">
-                <input id="otp" name="otp" autocomplete="off" type="text" class="${properties.kcInputClass!}"
+                <input id="otp" style="border: 1px solid black; outline: none;" name="otp" autocomplete="off" type="text" class="${properties.kcInputClass!}"
                        autofocus aria-invalid="<#if messagesPerField.existsError('totp')>true</#if>"/>
 
                 <#if messagesPerField.existsError('totp')>
@@ -49,6 +49,7 @@
 
                 <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                     <input
+                        style="border: 1px solid black; margin-top: 16px; color: black;"
                         class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
                         name="login" id="kc-login" type="submit" value="${msg("doLogIn")}" />
                 </div>
