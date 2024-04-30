@@ -28,6 +28,13 @@ export const Header = (props: { className?: string }) => {
       },
       text: "Professionnels",
     },
+    {
+      isActive: !!asPath.match(/\/savoir-plus/)?.length,
+      linkProps: {
+        href: "/savoir-plus",
+      },
+      text: "Espace d'informations",
+    },
     ...(isFeatureActive("WEBSITE_REGIONS")
       ? [
           {
@@ -39,14 +46,6 @@ export const Header = (props: { className?: string }) => {
           },
         ]
       : []),
-    {
-      isActive: !!asPath.match(/\/savoir-plus/)?.length,
-      linkProps: {
-        href: "/savoir-plus",
-      },
-      text: "Espace d'informations",
-    },
-
     {
       isActive:
         !!asPath.match(/\/nous-contacter/)?.length ||
