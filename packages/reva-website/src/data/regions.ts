@@ -25,6 +25,296 @@ export interface RegionPRC {
 
 export const regions: Region[] = [
   {
+    name: "Centre Val de Loire",
+    slug: "centre-val-de-loire",
+    logoUrl: "/regions/centre-val-de-loire/logo.png",
+    prcs: [
+      {
+        department: "18",
+        name: "Espace VAE 18",
+        address:
+          "CIBC chez la Chambre des Métiers et de l’Artisanat Cher15 Rue Henri Dunant, 18000 Bourges",
+        phone: "02 48 65 46 83",
+        email: "contact@cibc18.fr",
+      },
+      {
+        department: "28",
+        name: "Espace VAE 28",
+        address:
+          "Les 2 Rives chez ADECCO CHARTRES 8 All. Prométhée, 28000 Chartres",
+        phone: "06 64 66 53 24",
+        email: "marina.danesin@les2rives.fr",
+      },
+      {
+        department: "36",
+        name: "Espace VAE 36",
+        address:
+          "Les 2 Rives chez ADECCO CHATEAUROUX 388 av de la Châtre 36000 CHATEAUROUX",
+        phone: "06 64 66 53 24",
+        email: "marina.danesin@les2rives.fr",
+      },
+      {
+        department: "37",
+        name: "Espace VAE 37",
+        address: "36-42 route de Saint Avertin 37204 TOURS",
+        phone: "02 47 25 24 85",
+        email: "espacevae@cma-cvl.fr",
+      },
+      {
+        department: "41",
+        name: "Espace VAE 41",
+        address: "16 rue de la Vallée Maillard 41000 BLOIS",
+        phone: "02 47 25 24 85",
+        email: "espacevae@cma-cvl.fr",
+      },
+      {
+        department: "45",
+        name: "Espace VAE 45",
+        address: "931 rue de Bourges 45160 OLIVET",
+        phone: "02 38 49 35 35",
+        email: "v.odion@transitionspro-cvl.fr",
+      },
+    ],
+    articles: [
+      {
+        title:
+          "Avec la Région Centre Val-de-Loire, votre expérience a de la valeur",
+        slug: "article-1",
+        thumbnailUrl:
+          "/regions/centre-val-de-loire/articles/article-1/thumbnail.png",
+        summary:
+          "Depuis plusieurs années, la Région Centre Val de Loire a mis en place une politique ambitieuse en matière de VAE.  Pour faciliter l'accès à la VAE, la Région finance 6 Espaces VAE sur le territoire régional (un par département).",
+        content: `
+          <p>
+            Depuis plusieurs années, la Région Centre Val de Loire a mis en place une
+            politique ambitieuse en matière de VAE. Pour faciliter l'accès à la VAE, la
+            Région finance 6 Espaces VAE sur le territoire régional (un par département).
+          </p>
+          <p>Il s'agit d'un service ouvert à tous, gratuit, neutre et confidentiel.</p>
+          <p>
+            Un conseiller vous <strong>informe</strong> et vous
+            <strong>accompagne</strong> dans votre projet. Il vous aide à trouver le bon
+            diplôme (ou la certification) en fonction de votre projet et de votre
+            expérience et vous met en relation avec les bons
+            <strong>interlocuteurs.</strong>
+          </p>
+          <p>
+            Il peut aussi vous réorienter vers d'autres dispositifs plus adaptés si
+            nécessaire (formation, etc.)
+          </p>
+          <p>
+            Vous le rencontrez <strong>en face à face</strong> ou
+            <strong>à distance</strong> selon vos besoins et vos disponibilités.
+          </p>
+          <p>
+            <a target="_blank" href="https://alfacentre.resovae.net/evenements-vae/"
+              >Obtenez des informations en participant à un évènement</a
+            >
+            (réunion d'information, atelier, forum, …) organisé par les espaces VAE.
+          </p>
+          <p>
+            Ou rapprochez-vous de
+            <a target="_self" href="/regions/centre-val-de-loire/conseillers"
+              >votre Espace VAE</a
+            >
+            pour obtenir un rendez-vous.
+          </p>
+          <p>
+            <a
+              target="_blank"
+              href="https://orientation.centre-valdeloire.fr/sorienter-dans-sa-vie-professionnelle/sinformer/validation-des-acquis-de-lexperience"
+              >Consultez la page officielle de la VAE du Centre Val de Loire</a
+            >
+          </p>
+          <p class="mt-12">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/cOqZjr-2LJU?si=oxUsG4mpVqprsusg"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </p>
+        `,
+      },
+      {
+        title: "Financement",
+        slug: "article-2",
+        thumbnailUrl:
+          "/regions/centre-val-de-loire/articles/article-2/thumbnail.png",
+        summary: "",
+        content: `
+          <p>
+            Si le parcours France VAE n'est pas accessible pour vous,
+            <a target="_self" href="/regions/centre-val-de-loire/conseillers"
+              >les conseillers VAE</a
+            >
+            peuvent vous aider à mobiliser différentes aides selon votre situation.
+          </p>
+          <p>
+            <strong>Le chèque accompagnement VAE</strong> de la Région Centre-Val de Loire
+            est une <strong>aide financière</strong> qui peut être mobilisée pour les
+            demandeurs d'emploi et à la marge les salariés sans solution de financement.
+          </p>
+          <p>
+            Pour plus d'informations,
+            <a
+              target="_blank"
+              href="https://gipalfa.centre-valdeloire.fr/informer/dispositifs/validation-des-acquis-de-lexperience/financer-une-vae"
+              >consultez le site du Gip Alfa Centre-Val de Loire.</a
+            >
+          </p>
+        `,
+      },
+      {
+        title: "Les rendez-vous des professionnels de la VAE",
+        slug: "article-3",
+        thumbnailUrl:
+          "/regions/centre-val-de-loire/articles/article-3/thumbnail.png",
+        summary: "",
+        content: `
+          <p>
+            La Région a conçu une
+            <strong>offre d’animation et de professionnalisation à la VAE,</strong>
+            accessible à tous les professionnels intervenant dans les parcours
+            d'accompagnement de l'emploi et de la formation.
+          </p>
+          <br/>
+          <h2>Objectifs et enjeux :</h2>
+          <ul>
+            <li>
+              Outiller les acteurs et accompagner l’évolution des pratiques en lien avec
+              les enjeux régionaux et les évolutions réglementaires ;
+            </li>
+            <li>
+              Renforcer les compétences cœur de métier, en favorisant les échanges entre
+              les acteurs et en forgeant une culture partagée sur les priorités régionales
+              ;
+            </li>
+            <li>
+              Préparer les professionnels à répondre collectivement aux défis
+              d’aujourd’hui et de demain sur la VAE
+            </li>
+          </ul>
+          <p>
+            Pour en savoir plus, consultez l’article  <a target="_blank" href="https://gipalfa.centre-valdeloire.fr/transformation-animation-vae">“Animation des acteurs de la VAE”</a> sur
+            le site du Gip Alfa.
+          </p>
+          <p>
+            Le Gip Alfa intervient en complémentarité de ces animations et propose des
+            webinaires ouverts à tous les professionnels de l'emploi, la formation et
+            l'orientation.
+          </p>
+          <p>
+            Pour en savoir plus, consultez l’article <a target="_blank" href="https://gipalfa.centre-valdeloire.fr/actions-professionnalisation">“Les actions de professionnalisation”</a>
+            sur le site du Gip Alfa.
+          </p>
+          <br/>
+          <h2>Les outils du Gip Alfa</h2>
+          <p>
+            Le Gip Alfa, Carif Oref Centre-Val de Loire, met à disposition différents
+            outils à destination du grand public et des professionnels :
+          </p>
+          <ul>
+            <li><a target="_blank" href="https://alfacentre.resovae.net/evenements-vae/">Le site RésoVAE</a> permet à toute personne de :</li>
+            <ul>
+              <li>
+                visualiser l’ensemble des informations collectives planifiées et
+                manifestations auxquelles les Espaces VAE participent sur chacun des
+                départements (forum, salon, …)
+              </li>
+              <li>
+                s’inscrire directement à ces évènements et ainsi se mettre en contact avec
+                des conseillers Espace VAE experts de ce dispositif.
+              </li>
+            </ul>
+            <li>
+              <a target="_blank" href="https://formation.centre-valdeloire.fr/">Le site formation</a> : pour accompagner le grand public et retrouver l'offre de
+              formation régionale.
+            </li>
+            <li><a target="_blank" href="https://formation.centre-valdeloire.fr/notre-agenda">L’agenda des évènements en région</a> (informations collectives, etc.).</li>
+            <li>
+              <a target="_blank" href="https://gipalfa.centre-valdeloire.fr/actualites/nouveau-oriom-entree-dediee-observations-specifiques">Le site ORIOM</a> : pour les données socio-économiques, sectorielles par
+              territoire.
+            </li>
+          </ul>      
+      `,
+      },
+      {
+        title: "Les entreprises",
+        slug: "article-4",
+        thumbnailUrl:
+          "/regions/centre-val-de-loire/articles/article-4/thumbnail.png",
+        summary: "",
+        content: `
+          <p>
+            Depuis de nombreuses années, la Région Centre-Val de Loire poursuit sa volonté
+            de développer la VAE comme
+            <strong>un outil d’accès à la qualification</strong>, au bénéfice des actifs,
+            des entreprises et des territoires.
+          </p>
+          <p>
+            Pour professionnaliser et valoriser ses salariés ou pour développer les
+            compétences de son entreprise, il existe de nombreuses raisons de s’intéresser
+            à la VAE quand on est une entreprise.
+          </p>
+          <p>
+            <a target="_self" href="/regions/centre-val-de-loire/conseillers"
+              >Les espaces VAE</a
+            >
+            analysent vos besoins et vous conseillent pour la mise en place de solutions
+            sur mesure individuelles ou collectives.
+          </p>
+          <br/>
+          <h2>En s’investissant dans la VAE, l’entreprise :</h2>
+          <ul>
+            <li>recense, développe et actualise ses compétences internes.</li>
+            <li>valorise, professionnalise et fidélise ses salariés.</li>
+            <li>
+              favorise la mobilité interne de ses salariés et résout ses difficultés de
+              recrutement externe.
+            </li>
+            <li>améliore son image et renforce sa démarche qualité.</li>
+            <li>réduit la durée et les coûts de ses formations.</li>
+          </ul>
+          <br/>
+          <h2>La VAE collective : un outil au service des entreprises</h2>
+          <p>
+            L’entreprise peut non seulement encourager les démarches individuelles de VAE
+            mais elle peut aussi prendre l’initiative d’organiser une VAE collective. Mise
+            en œuvre pour plusieurs salariés en même temps, celle-ci peut également être
+            réalisée entre plusieurs entreprises et être à l’initiative des branches
+            professionnelles.
+          </p>
+          <br/>
+          <h2>Ressources</h2>
+          <p>
+            <a
+              target="_blank"
+              href="https://gipalfa.centre-valdeloire.fr/sites/alfacentre/files/Upload/Formation_metiers/VAE/2023/Plaquette_entreprise.pdf"
+              >Télécharger la plaquette d'information pour les entreprises
+            </a>
+          </p>
+          <p class="mt-12">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/1cQtRZT43KY?si=UvJuXVPNG3mnXXu-"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </p>
+        `,
+      },
+    ],
+  },
+  {
     name: "Normandie",
     slug: "normandie",
     logoUrl: "/regions/normandie/logo.png",
