@@ -40,11 +40,13 @@ const RegionAdvisorsPage = ({ region }: { region?: Region }) => {
 
 export const getStaticPaths = async () => {
   return {
-    paths: regions.map((r) => ({
-      params: {
-        regionSlug: r.slug,
-      },
-    })),
+    paths: regions
+      .filter((r) => !r.externalPrcsPageUrl)
+      .map((r) => ({
+        params: {
+          regionSlug: r.slug,
+        },
+      })),
     fallback: true,
   };
 };
