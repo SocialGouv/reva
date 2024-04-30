@@ -231,16 +231,6 @@ const unsafeResolvers = {
           .filter((c) => c.id !== candidacy?.organism?.id)
           .slice(0, 50);
       }
-      //add the candidacy selected organism as the first result if it exists
-      if (
-        candidacy?.organismId &&
-        !organismsFound.some((org) => org.id == candidacy.organismId)
-      ) {
-        organismsFound = [
-          candidacy.organism as OrganismCamelCase,
-          ...organismsFound.slice(0, 49),
-        ];
-      }
 
       return {
         totalRows: organismsFound?.length ?? 0,

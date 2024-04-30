@@ -13,6 +13,7 @@
           "organismOnDepartments": [
             {
               "id": "orgaOnDepartment1",
+              "departmentId": "department1",
               "isRemote": false,
               "isOnSite": true,
               "__typename": "OrganismOnDepartment"
@@ -30,6 +31,7 @@
           "organismOnDepartments": [
             {
               "id": "orgaOnDepartment2",
+              "departmentId": "department1",
               "isRemote": true,
               "isOnSite": false,
               "__typename": "OrganismOnDepartment"

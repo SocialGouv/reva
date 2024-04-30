@@ -76,7 +76,7 @@ context("Candidacy with department certification selected", () => {
     });
   });
 
-  it("submit default first organism", function () {
+  it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate3.json");
@@ -101,7 +101,7 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="project-home-edit-organism').click();
     cy.wait("@getRandomOrganismsForCandidacy");
 
-    cy.get('[data-test="project-organisms-submit-organism').click();
+    cy.get('[data-test="project-organisms-submit-organism-o1').click();
     cy.wait("@candidacy_selectOrganism");
 
     cy.get('[data-test="project-home-organism-label"]').should(

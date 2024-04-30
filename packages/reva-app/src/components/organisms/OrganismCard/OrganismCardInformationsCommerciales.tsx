@@ -17,7 +17,10 @@ export const OrganismCardInformationsCommerciales = ({
           ic.adresseInformationsComplementaires ||
           ic.adresseCodePostal ||
           ic.adresseVille) ? (
-          <address className="not-italic">
+          <address
+            data-test="project-organisms-organism-address"
+            className="not-italic"
+          >
             {ic.adresseNumeroEtNomDeRue}
             {ic.adresseNumeroEtNomDeRue && <br />}
             {ic.adresseInformationsComplementaires}

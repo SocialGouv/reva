@@ -19,11 +19,16 @@ export const OrganismCardDescription = ({
           className="fr-icon-mail-line fr-icon--sm mr-2"
           aria-hidden="true"
         ></span>
-        <a href={`mailto:${email}`}>{email}</a>
+        <a
+          data-test="project-organisms-organism-email"
+          href={`mailto:${email}`}
+        >
+          {email}
+        </a>
       </p>
 
       <div className="flex flex-wrap justify-between gap-4">
-        <p className="mb-0">
+        <p data-test="project-organisms-organism-phone" className="mb-0">
           {phone && (
             <>
               <span
@@ -37,7 +42,10 @@ export const OrganismCardDescription = ({
         {location && (
           <div className="flex gap-1 -mt-1">
             {location.isOnSite && (
-              <Tag className="min-h-4 text-xs sm:text-sm sm:min-h-8">
+              <Tag
+                data-test="project-organisms-onsite-tag"
+                className="min-h-4 text-xs sm:text-sm sm:min-h-8"
+              >
                 <span
                   aria-hidden="true"
                   className="sm:hidden fr-icon-building-fill fr-icon--xs mr-1"
@@ -46,7 +54,10 @@ export const OrganismCardDescription = ({
               </Tag>
             )}
             {location.isRemote && (
-              <Tag className="min-h-4 text-xs sm:text-sm sm:min-h-8">
+              <Tag
+                data-test="project-organisms-remote-tag"
+                className="min-h-4 text-xs sm:text-sm sm:min-h-8"
+              >
                 <span
                   aria-hidden="true"
                   className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
