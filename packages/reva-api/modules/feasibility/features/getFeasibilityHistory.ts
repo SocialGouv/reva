@@ -19,6 +19,7 @@ export const getFeasibilityHistory = async ({
   });
 
   const history = relatedFeasibilities.map((f) => ({
+    id: f.id,
     decision: f.decision,
     decisionComment: f.decisionComment,
     decisionSentAt: f.decisionSentAt,

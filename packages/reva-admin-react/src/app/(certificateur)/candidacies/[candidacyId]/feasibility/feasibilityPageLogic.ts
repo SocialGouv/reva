@@ -32,6 +32,7 @@ const getCandidacyWithFeasibilityQuery = graphql(`
         decisionComment
         decisionSentAt
         history {
+          id
           decision
           decisionComment
           decisionSentAt

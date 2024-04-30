@@ -110,7 +110,11 @@ const FeasibilityPage = () => {
               </h5>
               <FeasibilityDecisionInfo
                 decision={feasibility.decision}
-                decisionSentAt={new Date(feasibility.decisionSentAt || "")}
+                decisionSentAt={
+                  feasibility.decisionSentAt
+                    ? new Date(feasibility.decisionSentAt)
+                    : undefined
+                }
                 decisionComment={feasibility.decisionComment}
               />
             </div>
@@ -124,11 +128,13 @@ const FeasibilityPage = () => {
               </h5>
               <ul className="list-none pl-0">
                 {feasibility.history.map((previousFeasibility) => (
-                  <li className="mb-2" key={previousFeasibility.decisionSentAt}>
+                  <li className="mb-2" key={previousFeasibility.id}>
                     <FeasibilityDecisionInfo
                       decision={previousFeasibility.decision}
                       decisionSentAt={
-                        new Date(previousFeasibility.decisionSentAt || "")
+                        previousFeasibility.decisionSentAt
+                          ? new Date(previousFeasibility.decisionSentAt)
+                          : undefined
                       }
                       decisionComment={previousFeasibility.decisionComment}
                     />
