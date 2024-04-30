@@ -6,7 +6,7 @@ import Head from "next/head";
 import Image from "next/image";
 
 const RegionHomePage = ({ region }: { region?: Region }) => {
-  const firstArticle = region?.articles[0];
+  const [firstArticle, ...otherArticles] = region?.articles || [];
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
@@ -35,7 +35,6 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
             href: `/regions/${region.slug}/articles/${firstArticle.slug}`,
           }}
           ratio="33/66"
-          size="medium"
           title={firstArticle.title}
           titleAs="h2"
         />
@@ -59,6 +58,28 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
           Consultez la liste des conseillers
         </Button>
       </div>
+      {!!otherArticles.length && (
+        <>
+          <h2 className="mt-32 mb-16">Nos actualités</h2>
+          <div className="flex flex-wrap gap-6">
+            {otherArticles.map((a) => (
+              <Card
+                key={a.slug}
+                className="w-[585px]"
+                background
+                border
+                enlargeLink
+                imageAlt="Vignette de l'article"
+                imageUrl={a.thumbnailUrl}
+                linkProps={{
+                  href: `/regions/${region.slug}/articles/${a.slug}`,
+                }}
+                title={a.title}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </MainLayout>
   ) : null;
 };
