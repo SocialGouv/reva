@@ -1,5 +1,5 @@
 export interface RegionPageContent {
-  title: string;
+  regionName: string;
   slug: string;
   logoUrl: string;
   articles: RegionPageArticle[];
@@ -24,7 +24,7 @@ export interface PRC {
 
 export const regionPageContents: RegionPageContent[] = [
   {
-    title: "La VAE en Normandie",
+    regionName: "Normandie",
     slug: "normandie",
     logoUrl: "/regions/normandie/logo.png",
     articles: [

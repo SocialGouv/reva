@@ -12,10 +12,10 @@ const RegionAdvisorsPage = ({
   return regionPageContent ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>{regionPageContent.title}</title>
+        <title>Vos conseillers VAE en {regionPageContent.regionName}</title>
       </Head>
       <div className="flex justify-between align-top">
-        <h1>{regionPageContent.title}</h1>
+        <h1>Vos conseillers VAE en {regionPageContent.regionName}</h1>
         <Image
           src={regionPageContent.logoUrl}
           width={140}

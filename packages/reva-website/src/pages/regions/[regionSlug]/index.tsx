@@ -14,10 +14,10 @@ const RegionHomePage = ({
   return regionPageContent ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>{regionPageContent.title}</title>
+        <title>La VAE en {regionPageContent.regionName}</title>
       </Head>
       <div className="flex justify-between align-top mb-12">
-        <h1>{regionPageContent.title}</h1>
+        <h1>La VAE en {regionPageContent.regionName}</h1>
         <Image
           src={regionPageContent.logoUrl}
           width={140}
