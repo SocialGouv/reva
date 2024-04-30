@@ -51,7 +51,9 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
         </p>
         <Button
           linkProps={{
-            href: `/regions/${region.slug}/conseillers`,
+            href: region.externalPrcsPageUrl
+              ? region.externalPrcsPageUrl
+              : `/regions/${region.slug}/conseillers`,
           }}
         >
           Consultez la liste des conseillers

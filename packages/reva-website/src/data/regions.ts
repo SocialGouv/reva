@@ -4,6 +4,7 @@ export interface Region {
   logoUrl: string;
   articles: RegionArticle[];
   prcs: RegionPRC[];
+  externalPrcsPageUrl?: string;
 }
 
 export interface RegionArticle {
@@ -313,6 +314,166 @@ export const regions: Region[] = [
           "Rouen rive gauche : 108 avenue de Bretagne Immeuble Le Rollon 76100 ROUEN",
         phone: "02 35 62 60 27",
         email: "prcvae-rouen@infrep.org",
+      },
+    ],
+  },
+  {
+    name: "Pays de la Loire",
+    slug: "pays-de-la-loire",
+    logoUrl: "/regions/pays-de-la-loire/logo.png",
+    externalPrcsPageUrl:
+      "https://www.choisirmonmetier-paysdelaloire.fr/information/recherche?toggle%5Bcep%5D=true#quoteZone",
+    prcs: [],
+    articles: [
+      {
+        title:
+          "Vous avez entendu parler de la VAE et vous vous  demandez si c’est fait pour vous ?",
+        slug: "article-1",
+        thumbnailUrl:
+          "/regions/pays-de-la-loire/articles/article-1/thumbnail.png",
+        summary:
+          "Des conseillers proches de chez vous, vous apportent gratuitement un premier niveau d’informations sur la VAE pour vous aider à apprécier l’opportunité de vous engager dans cette démarche.",
+        content: `
+          <p>
+            Des conseillers proches de chez vous, vous apportent gratuitement un premier
+            niveau d’informations sur la VAE pour vous aider à apprécier l’opportunité de
+            vous engager dans cette démarche.
+          </p>
+          <p>
+            Retrouvez
+            <a
+              target="_blank"
+              href="https://www.choisirmonmetier-paysdelaloire.fr/information/recherche?libInsee=Nantes&radius=1000000#quoteZone"
+              >la liste des organismes dispensant ce service en proximité.</a
+            >
+          </p>
+          <p>
+            La plateforme téléphonique « Choisir mon métier Pays de la Loire »
+            <strong>0800 200 303</strong> peut également vous aider à identifier le bon
+            interlocuteur près de chez vous.
+          </p>
+          <p>
+            Par ailleurs, l’association Transition pro Pays de la Loire organise
+            régulièrement
+            <strong>des réunions d’information collectives sur la VAE</strong> à
+            destination des salariés et des demandeurs d’emploi, sans condition.
+          </p>
+          <p>
+            Pour en savoir plus,
+            <a
+              target="_blank"
+              href="https://www.transitionspro-pdl.fr/je-suis-un-salariee/la-validation-des-acquis-et-de-lexperience/nos-reunions-vae/"
+              >consultez le calendrier des réunions.</a
+            >
+          </p>
+          <p>
+            Pour aller plus loin dans votre réflexion, un
+            <a
+              target="_blank"
+              href="https://www.choisirmonmetier-paysdelaloire.fr/article/le-conseil-en-evolution-professionnelle-cep"
+              >conseiller en évolution professionnelle</a
+            >
+            (CEP) pourra étudier avec vous la pertinence du projet,
+            <a target="_blank" href="https://www.francecompetences.fr/"
+              >cibler les certifications correspondantes</a
+            >, identifier les modalités de réalisation et de financement de la démarche
+            VAE.
+          </p>
+          <p>
+            En cas de besoin, le conseiller CEP pourra vous aiguiller vers
+            <strong>un conseiller expert VAE</strong> (service gratuit proposé par la
+            Région des Pays de la Loire) qui vous proposera un rendez-vous dans les 15
+            jours pour approfondir votre projet.
+          </p>
+          <p>
+            Pendant cette période de mise en œuvre progressive de la réforme, le
+            conseiller en évolution professionnelle saura vous aiguiller dans vos
+            démarches en fonction du diplôme ou de la certification visés.
+          </p>
+          <p>
+            Pour en savoir plus,
+            <a
+              target="_blank"
+              href="https://www.choisirmonmetier-paysdelaloire.fr/info-orientation/article/la-validation-des-acquis-de-lexperience-vae"
+              >consultez la page officielle sur la VAE en Pays de la Loire.</a
+            >
+          </p>
+        `,
+      },
+      {
+        title: "Une VAE hybride pour les aides-soignants",
+        slug: "article-2",
+        thumbnailUrl:
+          "/regions/pays-de-la-loire/articles/article-2/thumbnail.png",
+        summary: "",
+        content: `
+          <p>
+            Transitions Pro Pays de la Loire et l’IFSO (Institut de Formation en Santé de
+            l’Ouest) ont mis en place un parcours de formation complémentaire à la
+            démarche VAE. Cette action de formation est à destination des professionnels
+            en poste visant le diplôme d’Etat Aide-Soignant.
+          </p>
+          <p>
+            Elle est structurée sur 70h et s’articule en complément de l’ancien dispositif
+            d’accompagnement VAE de 24h. L’objectif est de renforcer les connaissances des
+            candidats pour leur permettre de rédiger un dossier professionnel riche et de
+            sécuriser le passage devant le jury.
+          </p>
+          <p>
+            De plus, ce dispositif de formation permet d’accompagner les salariés vers
+            leur nouvelle fonction.
+          </p>
+          <p>
+            <strong>Cinq candidats ont pu en bénéficier fin 2023</strong> : ils ont
+            exprimé une vive satisfaction au regard de cet appui complémentaire et se
+            disent aujourd’hui beaucoup plus confiants quant au passage devant le jury qui
+            devrait intervenir prochainement.
+          </p>
+          <p>
+            D’ores et déjà, de nombreuses structures, notamment des EPHAD, se disent
+            intéressées pour s’inscrire dans ce dispositif en 2024 en complément de
+            l’accompagnement France VAE.
+          </p>
+          <p>
+            <a
+              target="_blank"
+              href="https://www.ifso-asso.org/formations-continues/vae-accompagnement-a-la-validation-des-acquis-de-lexperience-inter/"
+              >Pour plus d’informations, consultez la page dédiée au dispositif.</a
+            >
+          </p>
+        `,
+      },
+      {
+        title:
+          "Professionnels EFOP : faites le point sur la réforme avec l’atelier régional du 16 mai à Angers",
+        slug: "article-3",
+        thumbnailUrl:
+          "/regions/pays-de-la-loire/articles/article-3/thumbnail.png",
+        summary: "",
+        content: `
+          <p>
+            La Région Pays de la Loire et le Cariforef des Pays de la Loire proposent aux
+            acteurs de l’emploi, de la formation et de l’orientation professionnelles
+            (EFOP) un atelier régional le 16 mai matin à Angers en présence d’Olivier
+            Gérard, chef de projet national préfigurateur du service public de la VAE, et
+            des principaux acteurs de la VAE en région (professionnels de l’information
+            conseil VAE, certificateurs, financeurs, Architectes accompagnateurs de
+            parcours).
+          </p>
+          <p>
+            Cet atelier sera l’occasion de faire un point d’étape sur la mise en œuvre de
+            la réforme et d’appréhender concrètement les questions qui se posent encore à
+            ce stade de coexistence des deux systèmes.
+          </p>
+          <p>
+            Pour en savoir plus et pour vous inscrire,
+            <a
+              target="_blank"
+              href="https://pro.choisirmonmetier-paysdelaloire.fr/territoire/professionnalisation/Detail-d-une-formation?s=205691"
+              >consultez la fiche programme.</a
+            >
+          </p>
+        `,
       },
     ],
   },
