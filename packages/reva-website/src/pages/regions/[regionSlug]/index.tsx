@@ -46,7 +46,7 @@ const RegionHomePage = ({
       )}
       <div id="fr-callout-:r1h:" className="fr-callout">
         <h3 className="fr-card__title">
-          Vous souhaitez être accompagné pour démarrer votre VAE ?
+          Vous souhaitez être orienté avant de démarrer votre VAE ?
         </h3>
         <p className="fr-callout__text">
           Si vous n’êtes pas sûr de votre projet, si vous hésitez entre
