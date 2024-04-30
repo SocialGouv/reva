@@ -3,7 +3,7 @@ ${msg("loginTotpIntro")}
 
 ${msg("loginTotpStep1")}
 
-<#list totp.policy.supportedApplications as app>
+<#list totp.supportedApplications as app>
 * ${app}
 </#list>
 

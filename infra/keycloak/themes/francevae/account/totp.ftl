@@ -46,7 +46,7 @@
             <p>${msg("totpStep1")}</p>
 
             <ul>
-                <#list totp.policy.supportedApplications as app>
+                <#list totp.supportedApplications as app>
                     <li>${app}</li>
                 </#list>
             </ul>

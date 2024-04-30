@@ -9,8 +9,8 @@
                 <p>${msg("loginTotpStep1")}</p>
 
                 <ul id="kc-totp-supported-apps">
-                    <#list totp.policy.supportedApplications as app>
-                        <li>${app}</li>
+                    <#list totp.supportedApplications as app>
+                        <li>${msg(app)}</li>
                     </#list>
                 </ul>
             </li>
@@ -52,10 +52,10 @@
         <form action="${url.loginAction}" class="${properties.kcFormClass!}" id="kc-totp-settings-form" method="post">
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcInputWrapperClass!}">
-                    <label for="totp" class="control-label">${msg("authenticatorCode")} *</label>
+                    <label style="margin-top: 16px;" for="totp" class="control-label">${msg("authenticatorCode")} *</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="totp" name="totp" autocomplete="off" class="${properties.kcInputClass!}"
+                    <input style="border: 1px solid black; outline: none;" type="text" id="totp" name="totp" autocomplete="off" class="${properties.kcInputClass!}"
                            aria-invalid="<#if messagesPerField.existsError('totp')>true</#if>"
                     />
 
@@ -72,11 +72,11 @@
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcInputWrapperClass!}">
-                    <label for="userLabel" class="control-label">${msg("loginTotpDeviceName")}</label> <#if totp.otpCredentials?size gte 1><span class="required">*</span></#if>
+                    <label style="margin-top: 16px;" for="userLabel" class="control-label">${msg("loginTotpDeviceName")}</label> <#if totp.otpCredentials?size gte 1><span class="required">*</span></#if>
                 </div>
 
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" class="${properties.kcInputClass!}" id="userLabel" name="userLabel" autocomplete="off"
+                    <input style="border: 1px solid black; outline: none;" type="text" class="${properties.kcInputClass!}" id="userLabel" name="userLabel" autocomplete="off"
                            aria-invalid="<#if messagesPerField.existsError('userLabel')>true</#if>"
                     />
 
@@ -90,15 +90,18 @@
 
             <#if isAppInitiatedAction??>
                 <input type="submit"
+                       style="border: 1px solid black; margin-top: 16px; color: black;"
                        class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}"
                        id="saveTOTPBtn" value="${msg("doSubmit")}"
                 />
                 <button type="submit"
+                        style="border: 1px solid black; margin-top: 16px; color: black;"
                         class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!} ${properties.kcButtonLargeClass!}"
                         id="cancelTOTPBtn" name="cancel-aia" value="true" />${msg("doCancel")}
                 </button>
             <#else>
                 <input type="submit"
+                       style="border: 1px solid black; margin-top: 16px; color: black;"
                        class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
                        id="saveTOTPBtn" value="${msg("doSubmit")}"
                 />
