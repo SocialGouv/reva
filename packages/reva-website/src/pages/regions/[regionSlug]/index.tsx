@@ -1,25 +1,21 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { RegionPageContent, regionPageContents } from "@/data/regions";
+import { Region, regions } from "@/data/regions";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Head from "next/head";
 import Image from "next/image";
 
-const RegionHomePage = ({
-  regionPageContent,
-}: {
-  regionPageContent?: RegionPageContent;
-}) => {
-  const firstArticle = regionPageContent?.articles[0];
-  return regionPageContent ? (
+const RegionHomePage = ({ region }: { region?: Region }) => {
+  const firstArticle = region?.articles[0];
+  return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>La VAE en {regionPageContent.regionName}</title>
+        <title>La VAE en {region.name}</title>
       </Head>
       <div className="flex justify-between align-top mb-12">
-        <h1>La VAE en {regionPageContent.regionName}</h1>
+        <h1>La VAE en {region.name}</h1>
         <Image
-          src={regionPageContent.logoUrl}
+          src={region.logoUrl}
           width={140}
           height={88}
           alt="logo de la région"
@@ -36,7 +32,7 @@ const RegionHomePage = ({
           imageAlt="Vignette de l'article"
           imageUrl={firstArticle.thumbnailUrl}
           linkProps={{
-            href: `/regions/${regionPageContent.slug}/articles/${firstArticle.slug}`,
+            href: `/regions/${region.slug}/articles/${firstArticle.slug}`,
           }}
           ratio="33/66"
           size="medium"
@@ -55,7 +51,7 @@ const RegionHomePage = ({
         </p>
         <Button
           linkProps={{
-            href: `/regions/${regionPageContent.slug}/conseillers`,
+            href: `/regions/${region.slug}/conseillers`,
           }}
         >
           Consultez la liste des conseillers
@@ -67,9 +63,9 @@ const RegionHomePage = ({
 
 export const getStaticPaths = async () => {
   return {
-    paths: regionPageContents.map((rpc) => ({
+    paths: regions.map((r) => ({
       params: {
-        regionSlug: rpc.slug,
+        regionSlug: r.slug,
       },
     })),
     fallback: true,
@@ -81,10 +77,8 @@ export async function getStaticProps({
 }: {
   params: { regionSlug: string };
 }) {
-  const regionPageContent = regionPageContents.find(
-    (rpc) => rpc.slug === regionSlug
-  );
-  return { props: { regionPageContent } };
+  const region = regions.find((r) => r.slug === regionSlug);
+  return { props: { region } };
 }
 
 export default RegionHomePage;

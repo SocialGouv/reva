@@ -1,12 +1,12 @@
-export interface RegionPageContent {
-  regionName: string;
+export interface Region {
+  name: string;
   slug: string;
   logoUrl: string;
-  articles: RegionPageArticle[];
-  prcs: PRC[];
+  articles: RegionArticle[];
+  prcs: RegionPRC[];
 }
 
-export interface RegionPageArticle {
+export interface RegionArticle {
   title: string;
   slug: string;
   summary: string;
@@ -14,7 +14,7 @@ export interface RegionPageArticle {
   content: string;
 }
 
-export interface PRC {
+export interface RegionPRC {
   name: string;
   department: string;
   address: string;
@@ -22,9 +22,9 @@ export interface PRC {
   email: string;
 }
 
-export const regionPageContents: RegionPageContent[] = [
+export const regions: Region[] = [
   {
-    regionName: "Normandie",
+    name: "Normandie",
     slug: "normandie",
     logoUrl: "/regions/normandie/logo.png",
     articles: [

@@ -1,23 +1,19 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { RegionPageContent, regionPageContents } from "@/data/regions";
+import { Region, regions } from "@/data/regions";
 import { Table } from "@codegouvfr/react-dsfr/Table";
 import Head from "next/head";
 import Image from "next/image";
 
-const RegionAdvisorsPage = ({
-  regionPageContent,
-}: {
-  regionPageContent?: RegionPageContent;
-}) => {
-  return regionPageContent ? (
+const RegionAdvisorsPage = ({ region }: { region?: Region }) => {
+  return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>Vos conseillers VAE en {regionPageContent.regionName}</title>
+        <title>Vos conseillers VAE en {region.name}</title>
       </Head>
       <div className="flex justify-between align-top">
-        <h1>Vos conseillers VAE en {regionPageContent.regionName}</h1>
+        <h1>Vos conseillers VAE en {region.name}</h1>
         <Image
-          src={regionPageContent.logoUrl}
+          src={region.logoUrl}
           width={140}
           height={88}
           alt="logo de la région"
@@ -29,7 +25,7 @@ const RegionAdvisorsPage = ({
       </p>
       <Table
         fixed
-        data={regionPageContent.prcs.map((p) => Object.values(p))}
+        data={region.prcs.map((p) => Object.values(p))}
         headers={[
           "Département",
           "Nom du point relais",
@@ -44,9 +40,9 @@ const RegionAdvisorsPage = ({
 
 export const getStaticPaths = async () => {
   return {
-    paths: regionPageContents.map((rpc) => ({
+    paths: regions.map((r) => ({
       params: {
-        regionSlug: rpc.slug,
+        regionSlug: r.slug,
       },
     })),
     fallback: true,
@@ -58,10 +54,8 @@ export async function getStaticProps({
 }: {
   params: { regionSlug: string };
 }) {
-  const regionPageContent = regionPageContents.find(
-    (rpc) => rpc.slug === regionSlug
-  );
-  return { props: { regionPageContent } };
+  const region = regions.find((r) => r.slug === regionSlug);
+  return { props: { region } };
 }
 
 export default RegionAdvisorsPage;

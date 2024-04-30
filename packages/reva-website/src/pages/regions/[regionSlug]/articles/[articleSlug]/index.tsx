@@ -1,5 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { RegionPageArticle, regionPageContents } from "@/data/regions";
+import { RegionArticle, regions } from "@/data/regions";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
 import Image from "next/image";
@@ -8,7 +8,7 @@ const RegionArticlePage = ({
   article,
   regionSlug,
 }: {
-  article?: RegionPageArticle;
+  article?: RegionArticle;
   regionSlug?: string;
 }) => {
   return article && regionSlug ? (
@@ -38,10 +38,10 @@ const RegionArticlePage = ({
 
 export const getStaticPaths = async () => {
   return {
-    paths: regionPageContents.flatMap((rpc) =>
-      rpc.articles.map((a) => ({
+    paths: regions.flatMap((r) =>
+      r.articles.map((a) => ({
         params: {
-          regionSlug: rpc.slug,
+          regionSlug: r.slug,
           articleSlug: a.slug,
         },
       }))
@@ -55,13 +55,9 @@ export async function getStaticProps({
 }: {
   params: { regionSlug: string; articleSlug: string };
 }) {
-  const regionPageContent = regionPageContents.find(
-    (rpc) => rpc.slug === regionSlug
-  );
+  const region = regions.find((r) => r.slug === regionSlug);
 
-  const article = regionPageContent?.articles.find(
-    (a) => a.slug === articleSlug
-  );
+  const article = region?.articles.find((a) => a.slug === articleSlug);
   return { props: { article, regionSlug } };
 }
 

@@ -1,12 +1,7 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { Region, regions } from "@/data/regions";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Head from "next/head";
-
-interface Region {
-  name: string;
-  url: string;
-  logoUrl: string;
-}
 
 const RegionsPage = ({ regions }: { regions: Region[] }) => {
   return (
@@ -25,7 +20,7 @@ const RegionsPage = ({ regions }: { regions: Region[] }) => {
 
         <ul className="list-none flex flex-col items-center md:flex-row flex-wrap gap-6 pl-0">
           {regions.map((r) => (
-            <li key={r.name}>
+            <li key={r.slug}>
               <RegionCard {...r} />
             </li>
           ))}
@@ -48,14 +43,14 @@ const RegionsPage = ({ regions }: { regions: Region[] }) => {
   );
 };
 
-const RegionCard = ({ name, url, logoUrl }: Region) => (
+const RegionCard = ({ name, slug, logoUrl }: Region) => (
   <Card
     className="w-[280px] h-[280px]"
     border
     imageAlt="Logo de la région"
     imageUrl={logoUrl}
     linkProps={{
-      href: url,
+      href: `/regions/${slug}`,
     }}
     size="medium"
     title={name}
@@ -64,24 +59,7 @@ const RegionCard = ({ name, url, logoUrl }: Region) => (
 );
 
 export async function getStaticProps() {
-  const regions: Region[] = [
-    {
-      name: "Centre Val de Loire",
-      url: "/regions/centre-val-de-loire",
-      logoUrl: "/regions/centre-val-de-loire/logo.png",
-    },
-    {
-      name: "Normandie",
-      url: "/regions/normandie",
-      logoUrl: "/regions/normandie/logo.png",
-    },
-    {
-      name: "Pays de la loire",
-      url: "/regions/pays-de-la-loire",
-      logoUrl: "/regions/pays-de-la-loire/logo.png",
-    },
-  ];
-  return { props: { regions } };
+  return { props: { regions: regions } };
 }
 
 export default RegionsPage;
