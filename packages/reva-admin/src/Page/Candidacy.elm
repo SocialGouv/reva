@@ -10,7 +10,7 @@ module Page.Candidacy exposing
 
 import Accessibility exposing (h1, h4)
 import Admin.Enum.CandidacyStatusStep as Step
-import Admin.Enum.DossierDeValidationDecision as DossierDeValidationDecision exposing (DossierDeValidationDecision)
+import Admin.Enum.DossierDeValidationDecision as DossierDeValidationDecision
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
@@ -20,8 +20,7 @@ import Api.Form.DossierDeValidation
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
-import Api.Form.FundingRequestUniFvae
-import Api.Form.FundingRequestUniReva
+
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
@@ -42,8 +41,6 @@ import Data.Form.CancelDropOut
 import Data.Form.DossierDeValidation
 import Data.Form.DropOut
 import Data.Form.Feasibility
-import Data.Form.FundingRequestUniFvae
-import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
@@ -62,6 +59,8 @@ import Page.Form.DossierDeValidation
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
+import Page.Form.PaymentRequestUniFvae
+import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
 import Page.Form.ReadyForJuryEstimatedDate
@@ -693,7 +692,44 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-    
+        ( View.Candidacy.Tab.PaymentRequest, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    if candidacy.financeModule == FinanceModule.Unifvae then
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniFvae.form candidacy.certification
+                            , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniFvae.createOrUpdate tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                            , onValidate = Data.Form.PaymentRequestUniFvae.validate
+                            , status =
+                                if Candidacy.isPaymentRequestSent candidacy then
+                                    Form.ReadOnly
+
+                                else
+                                    Form.Editable
+                            }
+                            model.form
+
+                    else
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniReva.form candidacy.certification
+                            , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniReva.createOrUpdate tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                            , onValidate = Data.Form.PaymentRequestUniReva.validate
+                            , status =
+                                if Candidacy.isPaymentRequestSent candidacy then
+                                    Form.ReadOnly
+
+                                else
+                                    Form.Editable
+                            }
+                            model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
         ( View.Candidacy.Tab.PaymentUploads, Success candidacy ) ->
             let
@@ -726,6 +762,22 @@ updateTab context tab ( model, cmd ) =
                             , status = Form.Editable
                             }
                             model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.PaymentRequestConfirmation, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.PaymentRequestUniReva.confirmationForm
+                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
+                        , onRedirect = redirectToProfile
+                        , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
+                        , status = Form.Editable
+                        }
+                        model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
