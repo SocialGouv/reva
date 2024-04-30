@@ -8,7 +8,7 @@ const RegionAdvisorsPage = ({ region }: { region?: Region }) => {
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>Vos conseillers VAE en {region.name}</title>
+        <title>{`Vos conseillers VAE en ${region.name}`}</title>
       </Head>
       <div className="flex justify-between align-top">
         <h1>Vos conseillers VAE en {region.name}</h1>
