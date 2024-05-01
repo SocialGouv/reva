@@ -32,7 +32,7 @@ export const OrganismFilters = ({
   filters: filters;
 }) => {
   const { organismSearchRemote, organismSearchOnsite } = filters;
-  const searchIsOnlyOnsite = organismSearchOnsite && !organismSearchRemote;
+  const searchHasOnSiteSelected = organismSearchOnsite;
   return (
     <div className="mt-8 lg:mt-0 w-full">
       <h2>Filtres :</h2>
@@ -106,7 +106,7 @@ export const OrganismFilters = ({
         </modalDistanceInfo.Component>
         {filterDistanceIsActive && (
           <OrganismDistanceFilter
-            disabled={!searchIsOnlyOnsite}
+            disabled={!searchHasOnSiteSelected}
             onChangeSearchZip={(zip) => {
               onSearch({
                 ...filters,

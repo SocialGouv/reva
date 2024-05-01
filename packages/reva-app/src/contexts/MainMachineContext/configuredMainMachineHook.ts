@@ -87,7 +87,7 @@ export const useConfiguredMainMachine = () => {
               organismSearchRemote,
               organismSearchOnsite,
               organismSearchText: searchText,
-              organismSearchZip: searchZip,
+              organismSearchZip: zip,
               organismSearchPmr: pmr,
             } = context;
             if (!candidacyId)
@@ -100,13 +100,35 @@ export const useConfiguredMainMachine = () => {
                 "unavailable selectedDepartment in XState context"
               );
 
-            const searchFilter =
-              (organismSearchOnsite && organismSearchRemote) ||
-              (!organismSearchOnsite && !organismSearchRemote)
-                ? { distanceStatus: undefined, pmr: undefined }
-                : organismSearchOnsite
-                ? { distanceStatus: "ONSITE", pmr }
-                : { distanceStatus: "REMOTE", pmr: undefined };
+            const formatSearchFilter = () => {
+              if (organismSearchOnsite && organismSearchRemote) {
+                return {
+                  distanceStatus: "ONSITE_REMOTE",
+                  pmr,
+                  zip,
+                };
+              }
+              if (organismSearchOnsite) {
+                return {
+                  distanceStatus: "ONSITE",
+                  pmr,
+                  zip,
+                };
+              }
+              if (organismSearchRemote) {
+                return {
+                  distanceStatus: "REMOTE",
+                  pmr: undefined,
+                  zip: undefined,
+                };
+              }
+              return {
+                distanceStatus: undefined,
+                pmr: undefined,
+                zip: undefined,
+              };
+            };
+            const searchFilter = formatSearchFilter();
 
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>
@@ -115,7 +137,6 @@ export const useConfiguredMainMachine = () => {
               departmentId: selectedDepartment?.id,
               searchText,
               searchFilter,
-              searchZip,
             });
           },
           updateCertification: async (context, event) => {

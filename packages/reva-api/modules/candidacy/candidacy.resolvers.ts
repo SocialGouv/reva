@@ -102,7 +102,7 @@ const unsafeResolvers = {
     admissibility: async (
       parent: Candidacy,
       _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } },
+      context: { auth: { hasRole: (role: Role) => boolean } }
     ) => {
       const result = await getAdmissibility({
         hasRole: context.auth.hasRole,
@@ -139,7 +139,7 @@ const unsafeResolvers = {
         statusFilter?: CandidacyStatusFilter;
         searchFilter?: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         return getCandidacySummaries({
@@ -161,7 +161,7 @@ const unsafeResolvers = {
     },
     getOrganismsForCandidacy: async (
       _: unknown,
-      params: { candidacyId: string },
+      params: { candidacyId: string }
     ) => {
       const result = await getActiveOrganismsForCandidacyWithNewTypologies({
         getActiveOrganismForCertificationAndDepartment:
@@ -179,13 +179,11 @@ const unsafeResolvers = {
         candidacyId,
         searchFilter,
         searchText,
-        searchZip,
       }: {
         candidacyId: string;
         searchFilter: SearchOrganismFilter;
         searchText?: string;
-        searchZip?: string;
-      },
+      }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: candidacyId },
@@ -195,15 +193,17 @@ const unsafeResolvers = {
       let organismsFound: OrganismCamelCase[];
 
       if (
-        searchZip &&
-        searchZip.length === 5 &&
-        searchFilter?.distanceStatus === "ONSITE"
+        searchFilter.zip &&
+        searchFilter.zip.length === 5 &&
+        (searchFilter?.distanceStatus === "ONSITE" ||
+          searchFilter?.distanceStatus === "ONSITE_REMOTE")
       ) {
         organismsFound = await getAAPsWithZipCode({
-          zip: searchZip,
+          zip: searchFilter.zip,
           pmr: searchFilter.pmr,
           limit: 51,
           searchText,
+          distanceStatus: searchFilter.distanceStatus,
         });
       } else {
         const result = await getRandomOrganismsForCandidacyWithNewTypologies({
@@ -213,12 +213,12 @@ const unsafeResolvers = {
         })({ candidacyId, searchText, searchFilter, limit: 51 });
 
         result.mapLeft(
-          (error) => new mercurius.ErrorWithProps(error.message, error),
+          (error) => new mercurius.ErrorWithProps(error.message, error)
         );
 
         if (result.isLeft()) {
           return result.mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error),
+            (error) => new mercurius.ErrorWithProps(error.message, error)
           );
         }
 
@@ -246,7 +246,7 @@ const unsafeResolvers = {
     },
     getCompanionsForCandidacy: async (
       _: unknown,
-      params: { candidacyId: string },
+      params: { candidacyId: string }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: params.candidacyId },
@@ -266,7 +266,7 @@ const unsafeResolvers = {
 
         return result
           .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error),
+            (error) => new mercurius.ErrorWithProps(error.message, error)
           )
           .extract();
       }
@@ -277,7 +277,7 @@ const unsafeResolvers = {
       _params: {
         searchFilter?: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) =>
       getCandidacyCountByStatus({
         hasRole: context.auth!.hasRole,
@@ -291,13 +291,13 @@ const unsafeResolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
+            "Not authorized"
           );
         }
 
@@ -305,7 +305,7 @@ const unsafeResolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params,
+          params
         );
       } catch (e) {
         logger.error(e);
@@ -317,7 +317,7 @@ const unsafeResolvers = {
     candidacy_submitCandidacy: async (
       _: unknown,
       payload: { deviceId: string; candidacyId: string },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await submitCandidacy({
         candidacyId: payload.candidacyId,
@@ -341,7 +341,7 @@ const unsafeResolvers = {
     candidacy_updateCertification: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateCertificationOfCandidacy({
         candidacyId: payload.candidacyId,
@@ -357,7 +357,7 @@ const unsafeResolvers = {
     candidacy_updateCertificationWithinOrganismScope: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateCertificationWithinOrganismScope({
         hasRole: context.auth.hasRole,
@@ -373,7 +373,7 @@ const unsafeResolvers = {
     candidacy_addExperience: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await addExperienceToCandidacy({
         createExperience: experienceDb.insertExperience,
@@ -411,7 +411,7 @@ const unsafeResolvers = {
     candidacy_updateExperience: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateExperienceOfCandidacy({
         updateExperience: experienceDb.updateExperience,
@@ -452,7 +452,7 @@ const unsafeResolvers = {
     candidacy_updateGoals: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateGoalsOfCandidacy({
         updateGoals: candidacyDb.updateCandidacyGoals,
@@ -493,7 +493,7 @@ const unsafeResolvers = {
           email: string;
         };
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         const result = await updateContactOfCandidacy(params);
@@ -511,8 +511,8 @@ const unsafeResolvers = {
               userKeycloakId: context.auth.userInfo?.sub,
               userEmail: context.auth.userInfo?.email,
               userRoles: context.auth.userInfo?.realm_access?.roles || [],
-            }),
-          ),
+            })
+          )
         );
 
         return result;
@@ -525,7 +525,7 @@ const unsafeResolvers = {
     candidacy_deleteById: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await deleteCandidacy({
         deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
@@ -555,7 +555,7 @@ const unsafeResolvers = {
     candidacy_archiveById: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await archiveCandidacy({
         archiveCandidacy: candidacyDb.archiveCandidacy,
@@ -598,7 +598,7 @@ const unsafeResolvers = {
     candidacy_unarchiveById: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await unarchiveCandidacy({
         unarchiveCandidacy: candidacyDb.unarchiveCandidacy,
@@ -628,7 +628,7 @@ const unsafeResolvers = {
     candidacy_updateAppointmentInformations: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateAppointmentInformations({
         updateAppointmentInformations:
@@ -665,7 +665,7 @@ const unsafeResolvers = {
     candidacy_takeOver: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await takeOverCandidacy({
         existsCandidacyWithActiveStatus:
@@ -697,7 +697,7 @@ const unsafeResolvers = {
     candidacy_selectOrganism: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await selectOrganismForCandidacy({
         candidacyId: payload.candidacyId,
@@ -717,13 +717,13 @@ const unsafeResolvers = {
         additionalInformation?: string;
         ccnId?: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
+            "Not authorized"
           );
         }
 
@@ -737,7 +737,7 @@ const unsafeResolvers = {
     candidacy_submitTrainingForm: async (
       _: unknown,
       payload: any,
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await submitTraining({
         updateTrainingInformations: candidacyDb.updateTrainingInformations,
@@ -753,7 +753,7 @@ const unsafeResolvers = {
       if (candidacy?.email) {
         const token = generateJwt(
           { email: candidacy?.email, action: "login" },
-          1 * 60 * 60 * 24 * 4,
+          1 * 60 * 60 * 24 * 4
         );
         sendTrainingEmail(candidacy.email, token);
       }
@@ -784,7 +784,7 @@ const unsafeResolvers = {
     candidacy_confirmTrainingForm: async (
       _: unknown,
       { candidacyId }: { candidacyId: string },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await confirmTrainingFormByCandidate({
         existsCandidacyWithActiveStatus:
@@ -822,7 +822,7 @@ const unsafeResolvers = {
           otherReasonContent?: string;
         };
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const droppedOutAt: Date = payload.dropOut.droppedOutAt
         ? new Date(payload.dropOut.droppedOutAt)
@@ -873,7 +873,7 @@ const unsafeResolvers = {
       payload: {
         candidacyId: string;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await cancelDropOutCandidacy({
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
@@ -921,7 +921,7 @@ const unsafeResolvers = {
         candidacyId,
         admissibility,
       }: { candidacyId: string; admissibility: Admissibility },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await updateAdmissibility({
         getAdmissibilityFromCandidacyId:
@@ -962,7 +962,7 @@ const unsafeResolvers = {
         candidacyId: string;
         admissibility: AdmissibilityFvae;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) =>
       updateAdmissibilityFvae({
         params: {
@@ -979,7 +979,7 @@ const unsafeResolvers = {
         candidacyId: string;
         readyForJuryEstimatedAt: Date;
       },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await setReadyForJuryEstimatedAt(params);
       await logCandidacyAuditEvent({
@@ -997,5 +997,5 @@ const unsafeResolvers = {
 
 export const resolvers = composeResolvers(
   unsafeResolvers,
-  resolversSecurityMap,
+  resolversSecurityMap
 );

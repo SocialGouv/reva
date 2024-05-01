@@ -28,7 +28,7 @@ type SearchResponse = {
         importance: number;
         street: string;
       };
-    },
+    }
   ];
 };
 
@@ -37,11 +37,13 @@ export const getAAPsWithZipCode = async ({
   pmr,
   limit,
   searchText,
+  distanceStatus,
 }: {
   zip: string;
   pmr?: boolean;
   limit: number;
   searchText?: string;
+  distanceStatus?: string;
 }) => {
   const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
   const res = await fetch(query);
@@ -71,9 +73,13 @@ export const getAAPsWithZipCode = async ({
       FROM organism o
                INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
                INNER JOIN organism_department od ON o.id = od.organism_id
-      WHERE od.is_onsite = true
+      WHERE od.is_onsite = true ${
+        distanceStatus === "ONSITE_REMOTE" ? `AND od.is_remote = true` : ""
+      }
         AND o.ll_to_earth IS NOT NULL
-        AND oic."conformeNormesAccessbilite" ${pmr ? `= 'CONFORME'` : `!= 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`} ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
+        AND oic."conformeNormesAccessbilite" ${
+          pmr ? `= 'CONFORME'` : `!= 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`
+        } ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
       ORDER BY distance_km ASC
           LIMIT ${limit}
   `);
@@ -83,6 +89,6 @@ export const getAAPsWithZipCode = async ({
   }
 
   return organisms.map(
-    (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
+    (o) => mapKeys(o, (_, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
   ) as unknown as OrganismCamelCase[];
 };

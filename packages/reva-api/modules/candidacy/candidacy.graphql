@@ -253,11 +253,13 @@ enum CandidacyStatusFilter {
 enum DistanceStatus {
   ONSITE
   REMOTE
+  ONSITE_REMOTE
 }
 
 input SearchOrganismFilter {
   distanceStatus: DistanceStatus
   pmr: Boolean
+  zip: String
 }
 
 type RamdomOrganisms {
@@ -278,7 +280,6 @@ type Query {
     candidacyId: UUID!
     searchText: String
     searchFilter: SearchOrganismFilter
-    searchZip: String
   ): RamdomOrganisms!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
