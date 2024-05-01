@@ -1,6 +1,5 @@
-import { v4 as uuidV4 } from "uuid";
-
 import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
+import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
@@ -53,12 +52,12 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   const isDossierDeValidationSent =
     candidacy.candidacyStatuses?.findIndex(
-      ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
+      ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE"
     ) != -1;
 
   const isDemandeDePaiementSent =
     candidacy.candidacyStatuses?.findIndex(
-      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE",
+      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE"
     ) != -1;
 
   // Need to check if isDemandeDePaiementSent for historical candidacies
@@ -97,7 +96,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   if (isAfter(dateOfSession, nextTwoYears)) {
     throw new Error(
-      "La date du jury doit être au maximum dans les 2 prochaines années",
+      "La date du jury doit être au maximum dans les 2 prochaines années"
     );
   }
 
@@ -144,9 +143,6 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   if (candidacy.candidate) {
     sendJuryScheduledCandidateEmail({
       email: candidacy.candidate.email,
-      dateOfSession,
-      timeOfSession,
-      addressOfSession: address,
       convocationFile,
     });
 
@@ -155,8 +151,6 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
         candidacyId,
         email: candidacy.organism?.contactAdministrativeEmail,
         candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
-        dateOfSession,
-        timeOfSession,
       });
     }
   }
@@ -187,5 +181,5 @@ const uploadFile = ({
       fileKeyPath: `${candidacyId}/${fileUuid}`,
       fileType: file.mimetype,
     },
-    file._buf,
+    file._buf
   );

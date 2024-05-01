@@ -1,4 +1,5 @@
 import mjml2html from "mjml";
+
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendNewOrganismCandidateNewCandidacyEmail = async ({
@@ -16,14 +17,13 @@ export const sendNewOrganismCandidateNewCandidacyEmail = async ({
         url,
         labelCTA: "Accéder à mon espace",
         bottomLine: "L'équipe France VAE",
-      }),
+      })
     );
 
   return sendEmailWithLink({
     to: { email },
     htmlContent,
     subject: "Une nouvelle candidature est arrivée",
-    action: "",
     app: "admin",
   });
 };

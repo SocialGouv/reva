@@ -1,4 +1,5 @@
 import { add, endOfDay, startOfDay } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
 import { sendJuryScheduledReminderCandidateEmail } from "../emails";
@@ -28,9 +29,6 @@ export const sendReminderToCandidateWithScheduledJury = async () => {
       if (jury.candidacy.candidate?.email) {
         await sendJuryScheduledReminderCandidateEmail({
           email: jury.candidacy.candidate?.email,
-          dateOfSession: jury.dateOfSession,
-          timeOfSession: jury.timeOfSession || undefined,
-          addressOfSession: jury.addressOfSession || undefined,
         });
 
         await prismaClient.jury.update({

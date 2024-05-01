@@ -1,4 +1,5 @@
 import mjml2html from "mjml";
+
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendConfirmationCandidacySubmissionEmail = async ({
@@ -40,13 +41,12 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
         `,
         url,
         labelCTA: "Accéder à ma candidature",
-      }),
+      })
     );
 
   return sendEmailWithLink({
     to: { email },
     htmlContent,
     subject: "Votre candidature a été transmise",
-    action: "",
   });
 };

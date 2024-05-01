@@ -1,14 +1,15 @@
-import { sendGenericEmail } from ".";
 import { logger } from "../logger";
+import { sendGenericEmail } from ".";
 
 export const sendEmailWithLink = async ({
   to,
   token,
-  action,
+  action = "",
   app = "app",
   htmlContent,
   subject,
   customUrl,
+  attachment,
 }: {
   to: { email: string } | { email: string }[];
   token?: string;
@@ -17,6 +18,7 @@ export const sendEmailWithLink = async ({
   app?: "app" | "admin" | "admin2";
   htmlContent: (url: string) => { html: string };
   subject?: string;
+  attachment?: { name: string; content: string }[];
 }) => {
   const baseUrl = `${process.env.BASE_URL}/${app}`;
   const url = customUrl
@@ -24,7 +26,7 @@ export const sendEmailWithLink = async ({
     : `${baseUrl}/${action}${token ? `?token=${token}` : ""}`;
   const emailContent = htmlContent(url);
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "production") {
     logger.info("======= EMAIL URL =======");
     logger.info(url);
     logger.info("=========================");
@@ -34,5 +36,6 @@ export const sendEmailWithLink = async ({
     htmlContent: emailContent.html,
     to,
     subject: subject || "France VAE",
+    attachment,
   });
 };

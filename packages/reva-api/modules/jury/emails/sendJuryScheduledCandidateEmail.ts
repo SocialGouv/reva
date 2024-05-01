@@ -1,41 +1,34 @@
 import mjml2html from "mjml";
-import { format } from "date-fns";
 
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import { sendEmailWithLink, templateMail } from "../../shared/email";
 import { UploadedFile } from "../../shared/file";
-import { logger } from "../../shared/logger";
 
 export const sendJuryScheduledCandidateEmail = async ({
   email,
-  dateOfSession,
-  timeOfSession,
-  addressOfSession,
   convocationFile,
 }: {
   email: string;
-  dateOfSession: Date;
-  timeOfSession?: string;
-  addressOfSession?: string;
   convocationFile?: UploadedFile;
 }) => {
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+  const htmlContent = (url: string) =>
+    mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour,</p>
-      <p>Voici la date de votre passage devant un jury VAE : </p>
-      <p>${format(dateOfSession, "dd/MM/yyyy")} ${timeOfSession ? `à ${timeOfSession} ` : ``}${addressOfSession ? `à ${addressOfSession}` : ``}</p>
-      <p>${convocationFile ? "Vous trouverez toutes les informations importantes dans la convocation officielle disponible en pièce jointe de cet e-mail." : "Le certificateur vous fera parvenir la convocation officielle par courrier. Vous y trouverez toutes les informations importantes et tous les détails nécessaires."}</p>
+      <p>La date de votre passage devant un jury VAE a été planifiée et est disponible dans votre espace candidat.</p>
     `,
-    }),
-  );
-
-  if (htmlContent.errors.length > 0) {
-    const errorMessage = htmlContent.errors
-      .map((e) => e.formattedMessage)
-      .join("\n");
-    logger.error(errorMessage);
-    throw new Error(errorMessage);
-  }
+        labelCTA: "Accéder à mon espace",
+        bottomLine: `
+      <p>${
+        convocationFile
+          ? "Vous trouverez toutes les informations importantes dans la convocation officielle disponible en pièce jointe de cet e-mail."
+          : "Le certificateur vous fera parvenir la convocation officielle par courrier. Vous y trouverez toutes les informations importantes et tous les détails nécessaires."
+      }</p>
+      <p>L'équipe France VAE.</p>
+        `,
+        url,
+      })
+    );
 
   const attachment = convocationFile
     ? [
@@ -46,9 +39,9 @@ export const sendJuryScheduledCandidateEmail = async ({
       ]
     : undefined;
 
-  return sendGenericEmail({
+  return sendEmailWithLink({
     to: { email },
-    htmlContent: htmlContent.html,
+    htmlContent,
     subject: "Convocation de passage devant un jury VAE",
     attachment,
   });
