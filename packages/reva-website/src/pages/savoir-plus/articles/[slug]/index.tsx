@@ -13,6 +13,7 @@ const articleQuery = graphql(`
         id
         attributes {
           titre
+          slug
           vignette {
             data {
               attributes {
@@ -46,6 +47,23 @@ const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
         <meta name="keywords" content="Gouvernement, France, VAE, France VAE" />
         <meta name="author" content="France VAE" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          property="og:url"
+          content={`https://vae.gouv.fr/savoir-plus/articles/${article.attributes?.slug}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`France VAE | ${article.attributes?.titre ?? ""}`}
+        />
+        <meta
+          property="og:description"
+          content={article.attributes?.description ?? ""}
+        />
+        <meta
+          property="og:image"
+          content={article.attributes?.vignette.data?.attributes?.url ?? ""}
+        />
       </Head>
       <MainLayout>
         {
