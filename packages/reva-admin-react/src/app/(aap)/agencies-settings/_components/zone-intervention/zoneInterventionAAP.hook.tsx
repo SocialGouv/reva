@@ -47,7 +47,7 @@ export const useZoneInterventionAAP = () => {
                 selected: departementSelected?.isRemote ?? false,
                 children: [
                   {
-                    label: departement.label,
+                    label: `${departement.label} (${departement.code})`,
                     id: departement.id,
                     selected: departementSelected?.isRemote ?? false,
                     code: departement.code,
@@ -62,7 +62,7 @@ export const useZoneInterventionAAP = () => {
               departementsOnRegionsRemote[id].selected =
                 (regionIsSelected && departementSelected?.isRemote) || false;
               departementsOnRegionsRemote[id].children?.push({
-                label: departement.label,
+                label: `${departement.label} (${departement.code})`,
                 id: departement.id,
                 selected: departementSelected?.isRemote ?? false,
                 code: departement.code,
@@ -78,7 +78,7 @@ export const useZoneInterventionAAP = () => {
                 selected: departementSelected?.isOnSite ?? false,
                 children: [
                   {
-                    label: departement.label,
+                    label: `${departement.label} (${departement.code})`,
                     id: departement.id,
                     selected: departementSelected?.isOnSite ?? false,
                     code: departement.code,
@@ -94,7 +94,7 @@ export const useZoneInterventionAAP = () => {
                 (regionIsSelected && departementSelected?.isOnSite) || false;
 
               departementsOnRegionsOnSite[id].children?.push({
-                label: departement.label,
+                label: `${departement.label} (${departement.code})`,
                 id: departement.id,
                 selected: departementSelected?.isOnSite ?? false,
                 code: departement.code,
