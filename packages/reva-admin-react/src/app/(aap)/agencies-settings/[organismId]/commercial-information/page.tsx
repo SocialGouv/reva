@@ -26,7 +26,9 @@ const schema = z.object({
     .default(""),
   adresseNumeroEtNomDeRue: z.string().optional().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
-  adresseCodePostal: z.string().optional().default(""),
+  adresseCodePostal: z
+    .string()
+    .regex(/^(\d{5}|)$/, "Ce champ doit être vide ou contenir un code postal"),
   adresseVille: z.string().optional().default(""),
   conformeNormesAccessbilite: z
     .enum(["CONFORME", "NON_CONFORME", "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"])
@@ -178,6 +180,8 @@ const CommercialInformationPage = () => {
                   nativeInputProps={{
                     ...register("adresseCodePostal"),
                   }}
+                  state={errors.adresseCodePostal ? "error" : "default"}
+                  stateRelatedMessage={errors.adresseCodePostal?.message}
                 />
                 <Input
                   label="Ville (optionnel)"

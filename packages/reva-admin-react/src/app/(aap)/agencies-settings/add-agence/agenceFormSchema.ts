@@ -20,8 +20,7 @@ export const agenceFormSchema = z.object({
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
     .string()
-    .min(5, "Ce champ doit contenir au moins 5 caractères")
-    .default(""),
+    .regex(/^(\d{5}|)$/, "Ce champ doit être vide ou contenir un code postal"),
   adresseVille: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
