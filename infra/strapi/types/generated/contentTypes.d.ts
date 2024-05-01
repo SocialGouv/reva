@@ -770,6 +770,95 @@ export interface ApiArticleFaqArticleFaq extends Schema.CollectionType {
   };
 }
 
+export interface ApiArticleRegionArticleRegion extends Schema.CollectionType {
+  collectionName: "article_regions";
+  info: {
+    singularName: "article-region";
+    pluralName: "article-regions";
+    displayName: "Article r\u00E9gion";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    resume: Attribute.Text;
+    contenu: Attribute.RichText &
+      Attribute.CustomField<
+        "plugin::ckeditor.CKEditor",
+        {
+          output: "HTML";
+          preset: "rich";
+        }
+      >;
+    vignette: Attribute.Media & Attribute.Required;
+    ordre: Attribute.Integer;
+    regions: Attribute.Relation<
+      "api::article-region.article-region",
+      "manyToMany",
+      "api::region.region"
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::article-region.article-region",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::article-region.article-region",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRegionRegion extends Schema.CollectionType {
+  collectionName: "regions";
+  info: {
+    singularName: "region";
+    pluralName: "regions";
+    displayName: "R\u00E9gion";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    nom: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    vignette: Attribute.Media & Attribute.Required;
+    urlExternePRCs: Attribute.String;
+    prcs: Attribute.JSON;
+    ordre: Attribute.Integer;
+    article_regions: Attribute.Relation<
+      "api::region.region",
+      "manyToMany",
+      "api::article-region.article-region"
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::region.region",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::region.region",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiSectionDAideSectionDAide extends Schema.CollectionType {
   collectionName: "section_d_aides";
   info: {
@@ -966,6 +1055,8 @@ declare module "@strapi/types" {
       "plugin::users-permissions.user": PluginUsersPermissionsUser;
       "api::article-d-aide.article-d-aide": ApiArticleDAideArticleDAide;
       "api::article-faq.article-faq": ApiArticleFaqArticleFaq;
+      "api::article-region.article-region": ApiArticleRegionArticleRegion;
+      "api::region.region": ApiRegionRegion;
       "api::section-d-aide.section-d-aide": ApiSectionDAideSectionDAide;
       "api::section-faq.section-faq": ApiSectionFaqSectionFaq;
       "api::sous-section-faq.sous-section-faq": ApiSousSectionFaqSousSectionFaq;

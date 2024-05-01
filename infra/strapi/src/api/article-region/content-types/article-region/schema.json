@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_regions",
+  "info": {
+    "singularName": "article-region",
+    "pluralName": "article-regions",
+    "displayName": "Article région",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "resume": {
+      "type": "text",
+      "required": false
+    },
+    "contenu": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "rich"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
+    },
+    "vignette": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "ordre": {
+      "type": "integer"
+    },
+    "regions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::region.region",
+      "mappedBy": "article_regions"
+    }
+  }
+}
