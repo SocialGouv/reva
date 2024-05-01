@@ -1,21 +1,67 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { Region, regions } from "@/data/regions";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
+import { GetRegionsBySlugQueryForRegionHomePageQuery } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 
-const RegionHomePage = ({ region }: { region?: Region }) => {
-  const [firstArticle, ...otherArticles] = region?.articles || [];
+const getRegionsBySlugQuery = graphql(`
+  query getRegionsBySlugQueryForRegionHomePage($filters: RegionFiltersInput!) {
+    regions(filters: $filters) {
+      data {
+        attributes {
+          nom
+          slug
+          urlExternePRCs
+          vignette {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+          article_regions(sort: "ordre") {
+            data {
+              attributes {
+                titre
+                slug
+                resume
+                vignette {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+const RegionHomePage = ({
+  getRegionsBySlugResponse,
+}: {
+  getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionHomePageQuery;
+}) => {
+  const region = getRegionsBySlugResponse?.regions?.data[0];
+  const [firstArticle, ...otherArticles] =
+    region?.attributes?.article_regions?.data || [];
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>{`La VAE en ${region.name}`}</title>
+        <title>{`La VAE en ${region.attributes?.nom}`}</title>
       </Head>
       <div className="flex justify-between align-top mb-12">
-        <h1>La VAE en {region.name}</h1>
+        <h1>La VAE en {region.attributes?.nom}</h1>
         <Image
-          src={region.logoUrl}
+          src={region.attributes?.vignette.data?.attributes?.url || ""}
           width={140}
           height={88}
           alt="logo de la région"
@@ -26,16 +72,18 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
           className="mb-12"
           background
           border
-          desc={firstArticle.summary}
+          desc={firstArticle.attributes?.resume}
           enlargeLink
           horizontal
           imageAlt="Vignette de l'article"
-          imageUrl={firstArticle.thumbnailUrl}
+          imageUrl={
+            firstArticle.attributes?.vignette.data?.attributes?.url || ""
+          }
           linkProps={{
-            href: `/regions/${region.slug}/articles/${firstArticle.slug}`,
+            href: `/regions/${region.attributes?.slug}/articles/${firstArticle.attributes?.slug}`,
           }}
           ratio="33/66"
-          title={firstArticle.title}
+          title={firstArticle.attributes?.titre}
           titleAs="h2"
         />
       )}
@@ -50,9 +98,9 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
         </p>
         <Button
           linkProps={{
-            href: region.externalPrcsPageUrl
-              ? region.externalPrcsPageUrl
-              : `/regions/${region.slug}/conseillers`,
+            href: region.attributes?.urlExternePRCs
+              ? region.attributes.urlExternePRCs
+              : `/regions/${region.attributes?.slug}/conseillers`,
           }}
         >
           Consultez la liste des conseillers
@@ -64,17 +112,17 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
           <div className="flex flex-wrap gap-6">
             {otherArticles.map((a) => (
               <Card
-                key={a.slug}
+                key={a.attributes?.slug}
                 className="w-[585px]"
                 background
                 border
                 enlargeLink
                 imageAlt="Vignette de l'article"
-                imageUrl={a.thumbnailUrl}
+                imageUrl={a.attributes?.vignette.data?.attributes?.url || ""}
                 linkProps={{
-                  href: `/regions/${region.slug}/articles/${a.slug}`,
+                  href: `/regions/${region.attributes?.slug}/articles/${a.attributes?.slug}`,
                 }}
-                title={a.title}
+                title={a.attributes?.titre}
               />
             ))}
           </div>
@@ -84,24 +132,19 @@ const RegionHomePage = ({ region }: { region?: Region }) => {
   ) : null;
 };
 
-export const getStaticPaths = async () => {
-  return {
-    paths: regions.map((r) => ({
-      params: {
-        regionSlug: r.slug,
-      },
-    })),
-    fallback: true,
-  };
-};
-
-export async function getStaticProps({
+export async function getServerSideProps({
   params: { regionSlug },
 }: {
   params: { regionSlug: string };
 }) {
-  const region = regions.find((r) => r.slug === regionSlug);
-  return { props: { region } };
+  const getRegionsBySlugResponse = await request(
+    STRAPI_GRAPHQL_API_URL,
+    getRegionsBySlugQuery,
+    {
+      filters: { slug: { eq: regionSlug } },
+    }
+  );
+  return { props: { getRegionsBySlugResponse } };
 }
 
 export default RegionHomePage;
