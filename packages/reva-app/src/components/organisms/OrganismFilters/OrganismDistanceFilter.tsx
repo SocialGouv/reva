@@ -1,20 +1,22 @@
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface OrganismDistanceFilterProps {
   onChangeSearchZip: (zip: string) => void;
   onChangeSearchPmr: (pmr: boolean) => void;
   disabled: boolean;
+  zip: string;
+  setZip: (zip: string) => void;
 }
 
 export const OrganismDistanceFilter = ({
   onChangeSearchZip,
   onChangeSearchPmr,
   disabled,
+  zip,
+  setZip,
 }: OrganismDistanceFilterProps) => {
-  const [zip, setZipOrCity] = useState("");
-
   useEffect(() => {
     if (zip.length === 0 || zip.length === 5) {
       onChangeSearchZip(zip);
@@ -26,18 +28,19 @@ export const OrganismDistanceFilter = ({
     <div className="flex flex-col gap-6 mt-6">
       <fieldset>
         <legend className={`mb-2 ${disabled ? "text-gray-400" : ""}`}>
-          Indiquez un code postal
+          Où souhaitez vous réalisez votre accompagnement ?
         </legend>
         <Input
           label=""
           disabled={disabled}
           nativeInputProps={{
+            placeholder: "Indiquez un code postal",
             onChange: (e) => {
               // Ensure the input contains only digits and is at most 5 characters long for the zip code
               if (!/^\d{0,5}$/.test(e.target.value)) {
                 return;
               }
-              setZipOrCity(e.target.value);
+              setZip(e.target.value);
             },
             value: zip,
           }}

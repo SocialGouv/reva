@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { useState } from "react";
 
 import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
 
@@ -31,10 +32,12 @@ export const OrganismFilters = ({
   filterDistanceIsActive: boolean;
   filters: filters;
 }) => {
+  const [zip, setZip] = useState("");
   const { organismSearchRemote, organismSearchOnsite } = filters;
   const searchHasOnSiteSelected = organismSearchOnsite;
+
   return (
-    <div className="mt-8 lg:mt-0 w-full">
+    <div className="mt-8 lg:mt-0 w-full flex flex-col">
       <h2>Filtres :</h2>
       <div className="px-4 py-4 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
         Modalités d'accompagnement
@@ -119,8 +122,28 @@ export const OrganismFilters = ({
                 organismSearchPmr: pmr,
               });
             }}
+            zip={zip}
+            setZip={setZip}
           />
         )}
+        <hr />
+        <div className="flex justify-center">
+          <Button
+            priority="secondary"
+            onClick={() => {
+              onSearch({
+                organismSearchRemote: false,
+                organismSearchOnsite: false,
+                organismSearchPmr: false,
+                organismSearchZip: "",
+                organismSearchText: "",
+              });
+              setZip("");
+            }}
+          >
+            Réinitialiser les filtres
+          </Button>
+        </div>
       </div>
     </div>
   );

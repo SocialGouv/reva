@@ -78,6 +78,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchPmr,
   } = xstate.context;
 
+  const [searchText, setSearchText] = useState(organismSearchText);
   const [state, setState] = useState<State>({
     rows: [],
     offset: 0,
@@ -103,6 +104,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   }, [send]);
 
   useEffect(() => {
+    setSearchText(organismSearchText);
+  }, [organismSearchText]);
+
+  useEffect(() => {
     loadOrganisms(0);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,18 +125,17 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           <h2>Recherchez par nom</h2>
           <SearchBar
             label="Recherchez votre organisme d’accompagnement en saisissant son nom"
-            nativeInputProps={{
-              defaultValue: organismSearchText,
-              onChange: (e) => {
-                send({
-                  type: "SET_ORGANISM_SEARCH",
-                  organismSearchText: e.target.value,
-                  organismSearchOnsite,
-                  organismSearchRemote,
-                  organismSearchZip,
-                  organismSearchPmr,
-                });
-              },
+            value={searchText}
+            setValue={setSearchText}
+            onSubmit={() => {
+              send({
+                type: "SET_ORGANISM_SEARCH",
+                organismSearchText: searchText,
+                organismSearchOnsite,
+                organismSearchRemote,
+                organismSearchZip,
+                organismSearchPmr,
+              });
             }}
             className="mt-6"
           />

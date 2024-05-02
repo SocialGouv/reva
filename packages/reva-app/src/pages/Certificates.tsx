@@ -3,7 +3,7 @@ import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { SearchBar } from "components/molecules/SearchBar/SearchBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -25,6 +25,13 @@ export const Certificates = ({ mainService }: Props) => {
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
     state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
   );
+  const [certificationSearchText, setCertificationSearchText] = useState(
+    state.context.certificationSearchText
+  );
+
+  useEffect(() => {
+    setCertificationSearchText(state.context.certificationSearchText);
+  }, [state.context.certificationSearchText]);
 
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
@@ -98,14 +105,13 @@ export const Certificates = ({ mainService }: Props) => {
       <SearchBar
         label="Rechercher un diplôme"
         className="mb-8 max-w-4xl"
-        nativeInputProps={{
-          defaultValue: state.context.certificationSearchText,
-          onChange: (e) => {
-            send({
-              type: "SET_CERTIFICATION_SEARCH_TEXT",
-              certificationSearchText: e.target.value,
-            });
-          },
+        value={certificationSearchText}
+        setValue={setCertificationSearchText}
+        onSubmit={() => {
+          send({
+            type: "SET_CERTIFICATION_SEARCH_TEXT",
+            certificationSearchText,
+          });
         }}
       />
       <p className="mb-0" role="status">

@@ -1,35 +1,39 @@
-import { SyntheticEvent, useRef } from "react";
+import { SyntheticEvent } from "react";
 
 interface SearchBarProps {
   label: string;
+  value: string;
+  setValue: (e: any) => void;
+  onSubmit: () => void;
   className?: string;
-  nativeInputProps: {
-    defaultValue: string;
-    onChange: (e: any) => void;
-  };
 }
 
-export const SearchBar = (props: SearchBarProps) => {
-  const searchTextRef = useRef(null);
+export const SearchBar = ({
+  label,
+  value,
+  setValue,
+  onSubmit,
+  className,
+}: SearchBarProps) => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    props.nativeInputProps.onChange({
-      ...e,
-      target: searchTextRef.current,
-    });
+    onSubmit();
   };
+
   return (
     <form
-      className={`fr-search-bar fr-search-bar--lg ${props.className || ""}`}
+      className={`fr-search-bar fr-search-bar--lg ${className || ""}`}
       role="search"
       onSubmit={handleSubmit}
     >
       <input
         className="fr-input"
-        placeholder={props.label}
+        placeholder={label}
         type="search"
-        defaultValue={props.nativeInputProps.defaultValue}
-        ref={searchTextRef}
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
       />
       <button
         className="fr-btn !bg-dsfrBlue-500"
