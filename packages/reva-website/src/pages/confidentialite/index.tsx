@@ -2,6 +2,7 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   ContentSection,
   MainTitle,
+  SectionList,
   SectionParagraph,
 } from "@/components/legals-content/LegalsContent";
 import Head from "next/head";
@@ -35,8 +36,8 @@ const IndexConfidentialitePage = () => {
             traitement des données personnelles, effectués à partir de la
             plateforme France VAE soient conformes au règlement européen n°
             2016/679 général sur la protection des données du 27 avril 2016 dit
-            « RGPD » et à la loi n° 78-17 relative à l’informatique, aux
-            fichiers et aux libertés dite « LIL ».
+            « RGPD » et à la loi n° 78-17 relative à l’informatique, aux
+            fichiers et aux libertés dite « LIL ».
           </SectionParagraph>
         </ContentSection>
 
@@ -47,38 +48,37 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             France VAE traite des données à caractère personnel pour les raisons
             suivantes :
-            <ul className="list-inside">
-              <li>
-                Permettre aux personnes utilisatrices de candidater en vue
-                d’obtenir une certification inscrite au répertoire national des
-                certifications professionnelles (RNCP) en adéquation avec leurs
-                compétences et leurs aspirations professionnelles ;
-              </li>
-              <li>
-                Permettre aux personnes utilisatrices d’être accompagnées par un
-                organisme spécialisé (architecte accompagnateur de parcours)
-                dans la définition de leur projet, la description de leurs
-                expériences, la rédaction du dossier professionnel et la
-                préparation au jury ;
-              </li>
-              <li>
-                Permettre aux organismes professionnels de l’accompagnement de
-                suivre la confiance et la motivation de la personne candidate
-                dans leurs parcours et dans le dispositif France VAE ;
-              </li>
-              <li>
-                Permettre d’identifier les financeurs d’un parcours de VAE ;
-              </li>
-              <li>
-                Reconnaître les expériences et compétences de l’utilisateur
-                candidat ;
-              </li>
-              <li>
-                Étudier et comprendre les comportements des utilisateurs sur la
-                plateforme.
-              </li>
-            </ul>
           </SectionParagraph>
+          <SectionList className="list-inside">
+            <li>
+              Permettre aux personnes utilisatrices de candidater en vue
+              d’obtenir une certification inscrite au répertoire national des
+              certifications professionnelles (RNCP) en adéquation avec leurs
+              compétences et leurs aspirations professionnelles ;
+            </li>
+            <li>
+              Permettre aux personnes utilisatrices d’être accompagnées par un
+              organisme spécialisé (architecte accompagnateur de parcours) dans
+              la définition de leur projet, la description de leurs expériences,
+              la rédaction du dossier professionnel et la préparation au jury ;
+            </li>
+            <li>
+              Permettre aux organismes professionnels de l’accompagnement de
+              suivre la confiance et la motivation de la personne candidate dans
+              leurs parcours et dans le dispositif France VAE ;
+            </li>
+            <li>
+              Permettre d’identifier les financeurs d’un parcours de VAE ;
+            </li>
+            <li>
+              Reconnaître les expériences et compétences de l’utilisateur
+              candidat ;
+            </li>
+            <li>
+              Étudier et comprendre les comportements des utilisateurs sur la
+              plateforme.
+            </li>
+          </SectionList>
         </ContentSection>
 
         <ContentSection
@@ -88,59 +88,59 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             France VAE traite les catégories de données suivantes de
             l’utilisateur candidat :
-            <ul className="list-inside">
-              <li>
-                <strong>Données d’inscription et de candidature</strong>{" "}
-                (adresse e-mail, numéro de téléphone, nom, prénom, département
-                de résidence) ;
-              </li>
-              <li>
-                <strong>Données relatives aux parcours du candidat</strong>{" "}
-                (niveau de diplôme, expériences professionnelles, objectifs,
-                indicateur public fragile des candidats, RQTH, bénéficiaire de
-                minima sociaux, demandeur d’emploi de plus d’un an) ;
-              </li>
-              <li>
-                <strong>
-                  Données relatives à l’envoi du dossier du candidat au
-                  certificateur par l’accompagnateur{" "}
-                </strong>{" "}
-                (carte nationale d’identité du candidat) ;
-              </li>
-              <li>
-                <strong>
-                  Données relatives aux expériences professionnelles
-                </strong>{" "}
-                (métier exercé, durée, champ libre en rapport avec l’expérience
-                professionnelle) ;
-              </li>
-              <li>
-                <strong>
-                  Données relatives aux rendez-vous et suivi avec les
-                  Architectes accompagnateurs de parcours
-                </strong>{" "}
-                (nom, prénom, e-mail, numéro de téléphone, département de
-                résidence, niveau de diplôme, expériences professionnelles,
-                objectifs, indicateur public fragile des candidats, RQTH,
-                bénéficiaire de minima sociaux, demandeur d’emploi de plus d’un
-                an).
-              </li>
-            </ul>
           </SectionParagraph>
+          <SectionList className="list-inside">
+            <li>
+              <strong>Données d’inscription et de candidature</strong> (adresse
+              e-mail, numéro de téléphone, nom, prénom, département de
+              résidence) ;
+            </li>
+            <li>
+              <strong>Données relatives aux parcours du candidat</strong>{" "}
+              (niveau de diplôme, expériences professionnelles, objectifs,
+              indicateur public fragile des candidats, RQTH, bénéficiaire de
+              minima sociaux, demandeur d’emploi de plus d’un an) ;
+            </li>
+            <li>
+              <strong>
+                Données relatives à l’envoi du dossier du candidat au
+                certificateur par l’accompagnateur{" "}
+              </strong>{" "}
+              (carte nationale d’identité du candidat) ;
+            </li>
+            <li>
+              <strong>
+                Données relatives aux expériences professionnelles
+              </strong>{" "}
+              (métier exercé, durée, champ libre en rapport avec l’expérience
+              professionnelle) ;
+            </li>
+            <li>
+              <strong>
+                Données relatives aux rendez-vous et suivi avec les Architectes
+                accompagnateurs de parcours
+              </strong>{" "}
+              (nom, prénom, e-mail, numéro de téléphone, département de
+              résidence, niveau de diplôme, expériences professionnelles,
+              objectifs, indicateur public fragile des candidats, RQTH,
+              bénéficiaire de minima sociaux, demandeur d’emploi de plus d’un
+              an).
+            </li>
+          </SectionList>
           <SectionParagraph>
             France VAE traite également les catégories de données suivantes des
             architectes accompagnateurs de parcours (AAP) :
-            <ul>
-              <li>
-                <strong>Données de compte des AAP</strong> (nom et prénom,
-                adresse e-mail, adresse postale) ;
-              </li>
-              <li>
-                <strong>Données de contact des AAP</strong> (adresse e-mail,
-                numéro de téléphone).
-              </li>
-            </ul>
           </SectionParagraph>
+          <SectionList>
+            <li>
+              <strong>Données de compte des AAP</strong> (nom et prénom, adresse
+              e-mail, adresse postale) ;
+            </li>
+            <li>
+              <strong>Données de contact des AAP</strong> (adresse e-mail,
+              numéro de téléphone).
+            </li>
+          </SectionList>
         </ContentSection>
 
         <ContentSection
@@ -232,12 +232,14 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Vous disposez des droits suivants concernant vos données à caractère
             personnel :
-            <ul className="list-inside">
-              <li>Droit d’information et droit d’accès aux données;</li>
-              <li>Droit de rectification des données;</li>
-              <li>Droit à la limitation du traitement de vos données;</li>
-              <li>Droit d’opposition;</li>
-            </ul>
+          </SectionParagraph>
+          <SectionList className="list-inside">
+            <li>Droit d’information et droit d’accès aux données;</li>
+            <li>Droit de rectification des données;</li>
+            <li>Droit à la limitation du traitement de vos données;</li>
+            <li>Droit d’opposition;</li>
+          </SectionList>
+          <SectionParagraph>
             Pour les exercer, contactez-nous à :{" "}
             <a href="mailto:contact@vae.gouv.fr">contact@vae.gouv.fr</a>
           </SectionParagraph>
@@ -306,23 +308,21 @@ const IndexConfidentialitePage = () => {
             Les mesures techniques et organisationnelles de sécurité adoptées
             pour assurer la confidentialité, l’intégrité et protéger l’accès des
             données sont notamment :
-            <ul className="list-inside">
-              <li>Stockage des données en base de données</li>
-              <li>Stockage des mots de passe en base sont hachés</li>
-              <li>Cloisonnement des données</li>
-              <li>Mesures de traçabilité</li>
-              <li>Surveillance</li>
-              <li>
-                Protection contre les virus, malwares et logiciels espions
-              </li>
-              <li>Protection des réseaux</li>
-              <li>Sauvegarde</li>
-              <li>
-                Mesures restrictives limitant l’accès physique aux données à
-                caractère personnel
-              </li>
-            </ul>
           </SectionParagraph>
+          <SectionList className="list-inside">
+            <li>Stockage des données en base de données</li>
+            <li>Stockage des mots de passe en base sont hachés</li>
+            <li>Cloisonnement des données</li>
+            <li>Mesures de traçabilité</li>
+            <li>Surveillance</li>
+            <li>Protection contre les virus, malwares et logiciels espions</li>
+            <li>Protection des réseaux</li>
+            <li>Sauvegarde</li>
+            <li>
+              Mesures restrictives limitant l’accès physique aux données à
+              caractère personnel
+            </li>
+          </SectionList>
         </ContentSection>
 
         <ContentSection
@@ -336,52 +336,50 @@ const IndexConfidentialitePage = () => {
             adéquates et du respect de conditions strictes de confidentialité,
             d’usage et de protection des données.
           </SectionParagraph>
-          <SectionParagraph>
-            <div className="fr-table">
-              <table>
-                <thead className="text-lg font-medium">
-                  <tr>
-                    <th>Partenaire</th>
-                    <th>Pays destinataire</th>
-                    <th>Traitement réalisé</th>
-                    <th>Garanties</th>
-                  </tr>
-                </thead>
-                <tbody className="text-lg">
-                  <tr>
-                    <TextBoldCell>Scalingo</TextBoldCell>
-                    <TextCell>Europe</TextCell>
-                    <TextCell>Infogérance</TextCell>
-                    <LinkCell url="https://scalingo.com/fr/contrat-gestion-traitements-donnees-personnelles" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Outscale</TextBoldCell>
-                    <TextCell>Europe</TextCell>
-                    <TextCell>Hébergement du site web </TextCell>
-                    <LinkCell url="https://fr.outscale.com/contact-donnees-personnelles/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Crisp</TextBoldCell>
-                    <TextCell>France</TextCell>
-                    <TextCell>Chat de support </TextCell>
-                    <LinkCell url="https://crisp.chat/fr/privacy/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>DigitalOcean, LLC</TextBoldCell>
-                    <TextCell>Union européenne</TextCell>
-                    <TextCell>Hébergement des données de Crisp</TextCell>
-                    <LinkCell url="https://www.digitalocean.com/legal/data-processing-agreement " />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Matomo</TextBoldCell>
-                    <TextCell>France</TextCell>
-                    <TextCell>Mesure d’audience</TextCell>
-                    <LinkCell url="https://fr.matomo.org/privacy-policy/" />
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </SectionParagraph>
+          <div className="text-base md:text-xl xl:text-2xl pb-8 leading-8 fr-table">
+            <table>
+              <thead className="text-lg font-medium">
+                <tr>
+                  <th>Partenaire</th>
+                  <th>Pays destinataire</th>
+                  <th>Traitement réalisé</th>
+                  <th>Garanties</th>
+                </tr>
+              </thead>
+              <tbody className="text-lg">
+                <tr>
+                  <TextBoldCell>Scalingo</TextBoldCell>
+                  <TextCell>Europe</TextCell>
+                  <TextCell>Infogérance</TextCell>
+                  <LinkCell url="https://scalingo.com/fr/contrat-gestion-traitements-donnees-personnelles" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Outscale</TextBoldCell>
+                  <TextCell>Europe</TextCell>
+                  <TextCell>Hébergement du site web </TextCell>
+                  <LinkCell url="https://fr.outscale.com/contact-donnees-personnelles/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Crisp</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Chat de support </TextCell>
+                  <LinkCell url="https://crisp.chat/fr/privacy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>DigitalOcean, LLC</TextBoldCell>
+                  <TextCell>Union européenne</TextCell>
+                  <TextCell>Hébergement des données de Crisp</TextCell>
+                  <LinkCell url="https://www.digitalocean.com/legal/data-processing-agreement " />
+                </tr>
+                <tr>
+                  <TextBoldCell>Matomo</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Mesure d’audience</TextCell>
+                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ContentSection>
 
         <ContentSection title="Qu’est-ce qu’un cookie ?" id="definition-cookie">
@@ -397,25 +395,24 @@ const IndexConfidentialitePage = () => {
             protection de la vie privée dans le secteur des communications
             électroniques, transposée à l’article 82 de la loi n°78-17 du 6
             janvier 1978 relative à l’informatique, aux fichiers et aux
-            libertés, les traceurs ou cookies suivent deux régimes distincts :
-            <ul>
-              <li>
-                Les cookies strictement nécessaires au service ou ayant pour
-                finalité exclusive de faciliter la communication par voie
-                électronique sont dispensés de consentement préalable au titre
-                de l’article 82 de la LIL ;
-              </li>
-              <li>
-                Les cookies n’étant pas strictement nécessaires au service ou
-                n’ayant pas pour finalité exclusive de faciliter la
-                communication par voie électronique doivent être consenti par
-                l’utilisateur. Ce consentement de la personne concernée pour une
-                ou plusieurs finalités spécifiques constitue une base légale au
-                sens du RGPD et doit être entendu au sens de l’article 6-a du
-                RGPD.
-              </li>
-            </ul>
+            libertés, les traceurs ou cookies suivent deux régimes distincts :
           </SectionParagraph>
+          <SectionList>
+            <li>
+              Les cookies strictement nécessaires au service ou ayant pour
+              finalité exclusive de faciliter la communication par voie
+              électronique sont dispensés de consentement préalable au titre de
+              l’article 82 de la LIL ;
+            </li>
+            <li>
+              Les cookies n’étant pas strictement nécessaires au service ou
+              n’ayant pas pour finalité exclusive de faciliter la communication
+              par voie électronique doivent être consenti par l’utilisateur. Ce
+              consentement de la personne concernée pour une ou plusieurs
+              finalités spécifiques constitue une base légale au sens du RGPD et
+              doit être entendu au sens de l’article 6-a du RGPD.
+            </li>
+          </SectionList>
 
           <SectionParagraph>
             La plateforme France VAE dépose différents cookies. Certains cookies
@@ -424,7 +421,7 @@ const IndexConfidentialitePage = () => {
           </SectionParagraph>
           <SectionParagraph>
             La plateforme France VAE utilise des cookies afin de faire
-            fonctionner le « chatbot » CRISP permettant une assistance continue
+            fonctionner le « chatbot » CRISP permettant une assistance continue
             sur la plateforme.
           </SectionParagraph>
           <SectionParagraph>
@@ -435,54 +432,51 @@ const IndexConfidentialitePage = () => {
             paramétré pour être en conformité avec la recommandation « Cookies »
             de la CNIL.
           </SectionParagraph>
-
-          <SectionParagraph>
-            <div className="fr-table">
-              <table>
-                <thead className="text-lg font-medium">
-                  <tr>
-                    <th>Cookie</th>
-                    <th></th>
-                    <th>Base juridique</th>
-                    <th>Utilisation</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody className="text-lg">
-                  <tr>
-                    <TextBoldCell>Matomo</TextBoldCell>
-                    <TextCell>France</TextCell>
-                    <TextCell>Exemption de consentement</TextCell>
-                    <TextCell>Mesure d’audience</TextCell>
-                    <LinkCell url="https://fr.matomo.org/privacy-policy/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Crisp</TextBoldCell>
-                    <TextCell>Union européenne</TextCell>
-                    <TextCell>Consentement</TextCell>
-                    <TextCell>Support</TextCell>
-                    <LinkCell url="https://crisp.chat/fr/privacy/" />
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </SectionParagraph>
+          <div className="text-base md:text-xl xl:text-2xl pb-8 leading-8 fr-table">
+            <table>
+              <thead className="text-lg font-medium">
+                <tr>
+                  <th>Cookie</th>
+                  <th></th>
+                  <th>Base juridique</th>
+                  <th>Utilisation</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className="text-lg">
+                <tr>
+                  <TextBoldCell>Matomo</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Exemption de consentement</TextCell>
+                  <TextCell>Mesure d’audience</TextCell>
+                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Crisp</TextBoldCell>
+                  <TextCell>Union européenne</TextCell>
+                  <TextCell>Consentement</TextCell>
+                  <TextCell>Support</TextCell>
+                  <LinkCell url="https://crisp.chat/fr/privacy/" />
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <SectionParagraph>
             Pour aller plus loin, vous avez la possibilité de consulter les
             fiches proposées par la CNIL grâce aux liens suivants :
-            <ul className="list-inside">
-              <li>
-                <a href="https://www.cnil.fr/fr/cookies-et-traceurs-que-dit-la-loi">
-                  Cookies & traceurs : que dit la loi ?
-                </a>
-              </li>
-              <li>
-                <a href="https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-maitriser-votre-navigateur">
-                  Cookies : les outils pour les maîtriser
-                </a>
-              </li>
-            </ul>
           </SectionParagraph>
+          <SectionList className="list-inside">
+            <li>
+              <a href="https://www.cnil.fr/fr/cookies-et-traceurs-que-dit-la-loi">
+                Cookies & traceurs : que dit la loi ?
+              </a>
+            </li>
+            <li>
+              <a href="https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-maitriser-votre-navigateur">
+                Cookies : les outils pour les maîtriser
+              </a>
+            </li>
+          </SectionList>
         </ContentSection>
       </div>
     </MainLayout>

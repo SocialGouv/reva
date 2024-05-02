@@ -46,6 +46,21 @@ export const SectionParagraph = ({
   className?: string;
   children: React.ReactNode;
 }) => (
-  <p className={`text-base md:text-xl xl:text-2xl pb-8 leading-8 ${className}`}>{children}</p>
+  <p className={`text-base md:text-xl xl:text-2xl leading-8 ${className}`}>
+    {children}
+  </p>
 );
 
+export const SectionList = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => (
+  <ul
+    className={`text-base md:text-xl xl:text-2xl mb-6 leading-8 ${className}`}
+  >
+    {children}
+  </ul>
+);
