@@ -268,11 +268,20 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       searchFilter.distanceStatus === "ONSITE" ||
       searchFilter.distanceStatus === "ONSITE_REMOTE"
     ) {
-      whereClause += ` and od.is_onsite = true ${
-        searchFilter.pmr
-          ? `and oic."conformeNormesAccessbilite" = 'CONFORME'`
-          : ""
-      }`;
+      whereClause += `
+        and od.is_onsite = true 
+        and oic."adresse_numero_et_nom_de_rue" IS NOT NULL
+        and oic."adresse_code_postal" IS NOT NULL
+        and oic."adresse_ville" IS NOT NULL
+        ${
+          searchFilter.pmr
+            ? `
+        and oic."conformeNormesAccessbilite" = 'CONFORME' 
+
+          `
+            : ""
+        }
+        `;
     }
 
     const queryResults = `

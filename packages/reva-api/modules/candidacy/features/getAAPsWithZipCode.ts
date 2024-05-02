@@ -64,7 +64,7 @@ export const getAAPsWithZipCode = async ({
     The following query filters for AAPs based on the following criteria:
     - Must have at least one onsite department.
     - Must not belong to the "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" category.
-    - Must have a non-null 'll_to_earth' value.
+    - Must have a non-null 'll_to_earth', 'adresse_numero_et_nom_de_rue', 'adresse_code_postal', 'adresse_ville' values.
   */
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
       SELECT DISTINCT(o.*),
@@ -77,6 +77,9 @@ export const getAAPsWithZipCode = async ({
         distanceStatus === "ONSITE_REMOTE" ? `AND od.is_remote = true` : ""
       }
         AND o.ll_to_earth IS NOT NULL
+        AND oic."adresse_numero_et_nom_de_rue" IS NOT NULL
+        AND oic."adresse_code_postal" IS NOT NULL
+        AND oic."adresse_ville" IS NOT NULL
         AND oic."conformeNormesAccessbilite" ${
           pmr ? `= 'CONFORME'` : `!= 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`
         } ${searchText ? `AND o.label ILIKE '%${searchText}%'` : ""}
