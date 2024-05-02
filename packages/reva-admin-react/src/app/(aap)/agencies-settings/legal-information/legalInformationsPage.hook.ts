@@ -15,6 +15,7 @@ const legalInformationQueries = graphql(`
           adresse
           ville
           codePostal
+          statutValidationInformationsJuridiquesMaisonMereAAP
         }
       }
     }
