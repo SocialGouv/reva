@@ -18,7 +18,7 @@ export const TarteAuCitronWrapper = () => {
         src={`${tarteAuCitronFolder}/tarteaucitron.js`}
         onLoad={() => {
           if (typeof window !== "undefined") {
-            (window as any).tarteaucitron.init({
+            (window as any).tarteaucitron?.init({
               useExternalCss: true,
               removeCredit: true,
               iconPosition: "BottomLeft",

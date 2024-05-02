@@ -103,7 +103,7 @@ const InterfaceProfessionnels = () => (
         className="mb-12"
         linkProps={{
           target: "_blank",
-          href: "https://reva.crisp.help/fr/article/etapes-daccompagnement-dun-candidat-1waqti5/",
+          href: "https://vae.gouv.fr/savoir-plus/articles/etapes-parcours-france-vae/",
           "aria-label":
             "Découvrir les étapes d’accompagnement d’un candidat - nouvelle page",
         }}
@@ -156,7 +156,7 @@ const EngagementAAP = () => (
         className="mt-12"
         linkProps={{
           target: "_blank",
-          href: "https://reva.crisp.help/fr/article/droits-et-obligations-des-architectes-accompagnateurs-de-parcours-1joypnz/",
+          href: "https://vae.gouv.fr/savoir-plus/articles/droits-obligations-aap/",
           "aria-label":
             "Consulter les droits et obligations des Architectes Accompagnateurs de Parcours - nouvelle page",
         }}
@@ -290,38 +290,12 @@ const NotreEquipeVousAccompagne = () => (
         <Button
           priority="secondary"
           title="Accéder au centre d'aide - nouvelle fenêtre"
-          linkProps={{ href: "https://reva.crisp.help/fr/" }}
+          linkProps={{ href: "https://vae.gouv.fr/faq/#section-2" }}
           size="large"
         >
           Accéder au centre d'aide
         </Button>
       </div>
-    </div>
-  </section>
-);
-
-const MessagerieIntantanee = () => (
-  <section className="fr-container flex flex-col gap-10 lg:flex-row lg:gap-10">
-    <div className="flex flex-col basis-3/5">
-      <header>
-        <SectionHeader>
-          Une messagerie instantanée à votre service
-        </SectionHeader>
-      </header>
-      <SectionParagraph>
-        Pour une communication rapide et efficace avec l'équipe, une messagerie
-        instantanée vous est proposée sur le site.
-      </SectionParagraph>
-    </div>
-    <div className="relative min-h-[300px] mt-10 lg:mt-0 basis-2/5">
-      <Image
-        src="/professional-space/home-page/young-man-face-smiling.png"
-        alt=""
-        fill
-        style={{
-          objectFit: "contain",
-        }}
-      />
     </div>
   </section>
 );
@@ -350,7 +324,6 @@ const ProfessionalSpaceHomePage = () => {
       <EngagementAAP />
       <TypologiesAAP isAAPSubsritpionSuspended={isAAPSubsritpionSuspended} />
       <NotreEquipeVousAccompagne />
-      <MessagerieIntantanee />
     </MainLayout>
   );
 };
