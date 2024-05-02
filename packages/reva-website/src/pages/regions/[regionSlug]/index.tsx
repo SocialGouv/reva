@@ -54,18 +54,18 @@ const RegionHomePage = ({
   const [firstArticle, ...otherArticles] =
     region?.attributes?.article_regions?.data || [];
   return region ? (
-    <MainLayout className="fr-container pt-16 pb-12">
+    <MainLayout className="fr-container pt-6 md:pt-16 pb-12">
       <Head>
         <title>{`La VAE en ${region.attributes?.nom}`}</title>
       </Head>
-      <div className="flex justify-between align-top mb-12">
-        <h1>La VAE en {region.attributes?.nom}</h1>
+      <div className="flex flex-col md:flex-row-reverse justify-between align-top mb-6 md:mb-12 gap-4">
         <Image
           src={region.attributes?.vignette.data?.attributes?.url || ""}
           width={140}
           height={88}
           alt="logo de la région"
         />
+        <h1>La VAE en {region.attributes?.nom}</h1>
       </div>
       {firstArticle && (
         <Card
