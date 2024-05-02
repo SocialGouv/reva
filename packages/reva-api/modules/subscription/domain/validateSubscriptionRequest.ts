@@ -30,7 +30,7 @@ interface ValidateSubscriptionRequestParams {
 }
 
 export const validateSubscriptionRequest = async (
-  params: ValidateSubscriptionRequestParams
+  params: ValidateSubscriptionRequestParams,
 ) => {
   const getIamAccount = IAM.getAccount(params.keycloakAdmin);
   const createAccountInIAM = IAM.createAccount(params.keycloakAdmin);
@@ -48,7 +48,7 @@ export const validateSubscriptionRequest = async (
       logger.error(`[validateSubscriptionRequestDeps] ${errorMessage}`);
       throw new FunctionalError(
         FunctionalCodeError.SUBSCRIPTION_REQUEST_NOT_FOUND,
-        errorMessage
+        errorMessage,
       );
     }
 
@@ -56,7 +56,7 @@ export const validateSubscriptionRequest = async (
     const oldOrganism = (
       await getOrganismBySiretAndTypology(
         subscriptionRequest.companySiret,
-        subscriptionRequest.typology
+        subscriptionRequest.typology,
       )
     )
       .unsafeCoerce()
@@ -65,7 +65,7 @@ export const validateSubscriptionRequest = async (
     if (oldOrganism) {
       throw new FunctionalError(
         FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
-        `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret} pour la typologie ${subscriptionRequest.typology}`
+        `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret} pour la typologie ${subscriptionRequest.typology}`,
       );
     }
 
@@ -79,7 +79,7 @@ export const validateSubscriptionRequest = async (
     if (oldAccount) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-        `Un compte existe déjà avec l'email ${subscriptionRequest.accountEmail}`
+        `Un compte existe déjà avec l'email ${subscriptionRequest.accountEmail}`,
       );
     }
 
@@ -87,7 +87,7 @@ export const validateSubscriptionRequest = async (
     if (subscriptionRequest.accountEmail === __TEST_IAM_FAIL_CHECK__) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
-        "TEST : le compte IAM existe déjà"
+        "TEST : le compte IAM existe déjà",
       );
     }
     if (subscriptionRequest.accountEmail !== __TEST_IAM_PASS_CHECK__) {
@@ -103,7 +103,7 @@ export const validateSubscriptionRequest = async (
       if (oldIamAccount)
         throw new FunctionalError(
           FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
-          `Un compte IAM existe déjà avec l'email ${subscriptionRequest.accountEmail}`
+          `Un compte IAM existe déjà avec l'email ${subscriptionRequest.accountEmail}`,
         );
     }
 
@@ -124,11 +124,11 @@ export const validateSubscriptionRequest = async (
         typology: subscriptionRequest.typology ?? "generaliste",
         llToEarth: null,
         domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
-          (o: any) => o.domaineId
+          (o: any) => o.domaineId,
         ),
         ccnIds:
           subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
-            (o: any) => o.ccnId
+            (o: any) => o.ccnId,
           ),
         departmentsWithOrganismMethods:
           subscriptionRequest.departmentsWithOrganismMethods ?? [],
@@ -138,7 +138,7 @@ export const validateSubscriptionRequest = async (
     ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly created organism with siret ${subscriptionRequest.companySiret}`
+      `[validateSubscriptionRequest] Successfuly created organism with siret ${subscriptionRequest.companySiret}`,
     );
 
     //iam account creation
@@ -156,7 +156,7 @@ export const validateSubscriptionRequest = async (
           ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly created IAM account ${newKeycloakId}`
+      `[validateSubscriptionRequest] Successfuly created IAM account ${newKeycloakId}`,
     );
 
     //db account creation
@@ -171,7 +171,7 @@ export const validateSubscriptionRequest = async (
     ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly created AP with organismId ${subscriptionRequest.organismId}`
+      `[validateSubscriptionRequest] Successfuly created AP with organismId ${subscriptionRequest.organismId}`,
     );
 
     const newMaisonMereAAP = await createMaisonMereAAP({
@@ -188,13 +188,15 @@ export const validateSubscriptionRequest = async (
         dateExpirationCertificationQualiopi:
           subscriptionRequest.qualiopiCertificateExpiresAt,
         gestionnaireAccountId: account.id,
+        statutValidationInformationsJuridiquesMaisonMereAAP:
+          "EN_ATTENTE_DE_VERIFICATION",
       },
       domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
-        (o: { domaineId: string }) => o.domaineId
+        (o: { domaineId: string }) => o.domaineId,
       ),
       ccnIds:
         subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
-          (o: { ccnId: string }) => o.ccnId
+          (o: { ccnId: string }) => o.ccnId,
         ),
       maisonMereAAPOnDepartements:
         subscriptionRequest.departmentsWithOrganismMethods?.map(
@@ -206,7 +208,7 @@ export const validateSubscriptionRequest = async (
             departementId: d.departmentId,
             estSurPlace: d.isOnSite,
             estADistance: d.isRemote,
-          })
+          }),
         ) ?? [],
     });
 
@@ -221,7 +223,7 @@ export const validateSubscriptionRequest = async (
     ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly deleted subscriptionRequest ${subscriptionRequest.id}`
+      `[validateSubscriptionRequest] Successfuly deleted subscriptionRequest ${subscriptionRequest.id}`,
     );
 
     return "Ok";
@@ -232,7 +234,7 @@ export const validateSubscriptionRequest = async (
       logger.error(e);
       throw new FunctionalError(
         FunctionalCodeError.TECHNICAL_ERROR,
-        "Erreur pendant la validation de la demande d'inscription"
+        "Erreur pendant la validation de la demande d'inscription",
       );
     }
   }

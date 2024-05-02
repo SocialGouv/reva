@@ -1301,6 +1301,12 @@ model AuditEvent {
   @@map("audit_event")
 }
 
+enum StatutValidationInformationsJuridiquesMaisonMereAAP {
+  A_METTRE_A_JOUR
+  EN_ATTENTE_DE_VERIFICATION
+  A_JOUR
+}
+
 model MaisonMereAAP {
   id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   raisonSociale                       String                                @map("raison_sociale") @db.VarChar(255)
@@ -1317,11 +1323,12 @@ model MaisonMereAAP {
   siteWeb                             String?                               @map("site_web") @db.VarChar(255)
   dateExpirationCertificationQualiopi DateTime                              @map("date_expiration_certification_qualiopi")
 
-  gestionnaire          Account    @relation(fields: [gestionnaireAccountId], references: [id])
-  gestionnaireAccountId String     @map("gestionnaire_account_id") @db.Uuid
-  createdAt             DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime?  @map("updated_at") @db.Timestamptz(6)
-  organismes            Organism[]
+  gestionnaire                                        Account                                             @relation(fields: [gestionnaireAccountId], references: [id])
+  gestionnaireAccountId                               String                                              @map("gestionnaire_account_id") @db.Uuid
+  createdAt                                           DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                           DateTime?                                           @map("updated_at") @db.Timestamptz(6)
+  organismes                                          Organism[]
+  statutValidationInformationsJuridiquesMaisonMereAAP StatutValidationInformationsJuridiquesMaisonMereAAP @default(A_METTRE_A_JOUR) @map("statut_validation_informations_juridiques_maison_mere_aap")
 
   @@index([typologie])
   @@index([gestionnaireAccountId])

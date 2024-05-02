@@ -52,10 +52,17 @@ type MaisonMereAAP {
   dateExpirationCertificationQualiopi: Timestamp
   gestionnaire: Account!
   organisms: [Organism!]!
+  statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAAP!
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
   maisonMereAAPOnDomaines: [MaisonMereAAPOnDomaine!]!
   maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
   createdAt: Timestamp!
+}
+
+enum StatutValidationInformationsJuridiquesMaisonMereAAP {
+  A_METTRE_A_JOUR
+  EN_ATTENTE_DE_VERIFICATION
+  A_JOUR
 }
 
 type MaisonMereAAPOnDomaine {
