@@ -107,39 +107,37 @@ const LegalInformationPage = () => {
                   Voici les documents en version numérique que vous devez
                   préparer :
                 </p>
+                <br />
                 <p>
-                  <p>
-                    <strong>Documents requis pour tous les organismes :</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      Attestation URSSAF (qui affiche le code de vérification) -
-                      Exemples : attestation de vigilance, attestation fiscale.
-                    </li>
-                    <li>
-                      Une copie du justificatif d'identité du dirigeant
-                      "certifiée conforme à l'original” signée par lui-même
-                    </li>
-                  </ul>
+                  <strong>Documents requis pour tous les organismes :</strong>
                 </p>
+                <ul>
+                  <li>
+                    Attestation URSSAF (qui affiche le code de vérification) -
+                    Exemples : attestation de vigilance, attestation fiscale.
+                  </li>
+                  <li>
+                    Une copie du justificatif d'identité du dirigeant "certifiée
+                    conforme à l'original” signée par lui-même
+                  </li>
+                </ul>
+                <br />
                 <p>
-                  <p>
-                    <strong>
-                      Si l'administrateur du compte France VAE et le dirigeant
-                      sont différents, ajoutez également :
-                    </strong>
-                  </p>
-                  <ul>
-                    <li>
-                      Une lettre de délégation signée par le dirigeant et le
-                      délégataire
-                    </li>
-                    <li>
-                      Une copie du justificatif d'identité de la personne ayant
-                      reçu délégation.
-                    </li>
-                  </ul>
+                  <strong>
+                    Si l'administrateur du compte France VAE et le dirigeant
+                    sont différents, ajoutez également :
+                  </strong>
                 </p>
+                <ul>
+                  <li>
+                    Une lettre de délégation signée par le dirigeant et le
+                    délégataire
+                  </li>
+                  <li>
+                    Une copie du justificatif d'identité de la personne ayant
+                    reçu délégation.
+                  </li>
+                </ul>
                 <p>Assurez-vous d'avoir ces documents en version numérique.</p>
               </div>
             )}
