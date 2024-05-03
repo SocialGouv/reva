@@ -1,7 +1,6 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
@@ -15,7 +14,6 @@ export const Header = () => {
     isCertificationAuthority,
     isAdminCertificationAuthority,
   } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
   const { authenticated, logout } = useKeycloakContext();
 
   const candidaciesLabel = isAdmin
@@ -36,9 +34,7 @@ export const Header = () => {
             ]
           : []),
 
-        ...(isFeatureActive("AGENCIES_SETTINGS") &&
-        !isAdmin &&
-        (isOrganism || isGestionnaireMaisonMereAAP)
+        ...(!isAdmin && (isOrganism || isGestionnaireMaisonMereAAP)
           ? [
               {
                 text: "Paramètres",
@@ -47,31 +43,6 @@ export const Header = () => {
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/agencies-settings"),
-              },
-            ]
-          : []),
-
-        ...(!isFeatureActive("AGENCIES_SETTINGS") && isGestionnaireMaisonMereAAP
-          ? [
-              {
-                text: "Gestion des agences",
-                linkProps: {
-                  href: "/agences/",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/agences"),
-              },
-            ]
-          : []),
-        ...(!isFeatureActive("AGENCIES_SETTINGS") && isOrganism && !isAdmin
-          ? [
-              {
-                text: "Paramètres du compte",
-                linkProps: {
-                  href: "/account-settings/commercial-information",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/account-settings"),
               },
             ]
           : []),
