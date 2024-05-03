@@ -9,8 +9,8 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
 
 const schema = z.object({
-  managerFirstname: z.string(),
-  managerLastname: z.string(),
+  managerFirstname: z.string().min(1, "Ce champ est obligatoire."),
+  managerLastname: z.string().min(1, "Ce champ est obligatoire."),
   attestationURSSAF: z.any(),
   justificatifIdentiteGestionnaire: z.any(),
   delegataire: z.boolean(),
@@ -25,7 +25,7 @@ export const LegalInformationUpdateForm = () => {
     register,
     handleSubmit,
     control,
-    formState: { isDirty, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -47,6 +47,8 @@ export const LegalInformationUpdateForm = () => {
           className="my-0"
           label="Prénom"
           nativeInputProps={{ ...register("managerFirstname") }}
+          state={errors.managerFirstname ? "error" : "default"}
+          stateRelatedMessage={errors.managerLastname?.message?.toString()}
         />
         <Input
           className="my-0"
