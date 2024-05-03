@@ -3,8 +3,8 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useLegalInformationsPage } from "./legalInformationsPage.hook";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useAuth } from "@/components/auth/auth";
+import { LegalInformationUpdateBlock } from "@/app/(aap)/agencies-settings/legal-information/_components/legal-information-update-block/LegalInformationUpdateBlock";
 
 const LegalInformationPage = () => {
   const { maisonMereAAP, legalInformationsStatus } = useLegalInformationsPage();
@@ -92,54 +92,13 @@ const LegalInformationPage = () => {
             </div>
           </fieldset>
           {isFeatureActive("LEGAL_INFORMATION_VALIDATION") &&
-            isGestionnaireMaisonMereAAP && (
-              <div className="flex flex-col border p-6">
-                <h2>Mise à jour du compte</h2>
-                <Badge severity="warning" className="mb-6">
-                  À mettre à jour
-                </Badge>
-                <p>
-                  Pour s'assurer de la conformité des inscriptions, nous
-                  vérifions les documents administratifs et légaux de chaque
-                  organisme d'accompagnement.
-                </p>
-                <p>
-                  Voici les documents en version numérique que vous devez
-                  préparer :
-                </p>
-                <br />
-                <p>
-                  <strong>Documents requis pour tous les organismes :</strong>
-                </p>
-                <ul>
-                  <li>
-                    Attestation URSSAF (qui affiche le code de vérification) -
-                    Exemples : attestation de vigilance, attestation fiscale.
-                  </li>
-                  <li>
-                    Une copie du justificatif d'identité du dirigeant "certifiée
-                    conforme à l'original” signée par lui-même
-                  </li>
-                </ul>
-                <br />
-                <p>
-                  <strong>
-                    Si l'administrateur du compte France VAE et le dirigeant
-                    sont différents, ajoutez également :
-                  </strong>
-                </p>
-                <ul>
-                  <li>
-                    Une lettre de délégation signée par le dirigeant et le
-                    délégataire
-                  </li>
-                  <li>
-                    Une copie du justificatif d'identité de la personne ayant
-                    reçu délégation.
-                  </li>
-                </ul>
-                <p>Assurez-vous d'avoir ces documents en version numérique.</p>
-              </div>
+            isGestionnaireMaisonMereAAP &&
+            maisonMereAAP && (
+              <LegalInformationUpdateBlock
+                statutValidationInformationsJuridiquesMaisonMereAAP={
+                  maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+                }
+              />
             )}
         </>
       )}
