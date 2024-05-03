@@ -1,10 +1,12 @@
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
 
 const schema = z.object({
   managerFirstname: z.string(),
@@ -51,21 +53,37 @@ export const LegalInformationUpdateForm = () => {
           label="Nom"
           nativeInputProps={{ ...register("managerLastname") }}
         />
-        <Upload
+
+        <FancyUpload
           className="col-span-2"
-          label="Attestation URSSAF"
-          hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+          title="Attestation URSSAF"
+          description="L’attestation URSSAF doit afficher le code de vérification -
+         Exemples : attestation de vigilance, attestation fiscale."
           nativeInputProps={{ type: "file", ...register("attestationURSSAF") }}
         />
-        <Upload
+        <FancyUpload
           className="col-span-2"
-          label="Copie du justificatif d'identité du dirigeant"
-          hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+          title="Copie du justificatif d'identité du dirigeant"
+          description={
+            <>
+              Le dirigeant est la personne mentionnée sur l’attestation de
+              vigilance. La pièce d’identité peut être une carte nationale
+              d’identité en cours de validité ou périmé de moins de 5 ans
+              (resto/verso) ou un passeport en cours de validité.
+              <br />
+              <strong>
+                Veillez à ce que votre photocopie soit lisible, non tronquée,
+                bien cadrée et y apporter la mention manuscrite « Certifiée
+                conforme à l’original », datée et signée par le dirigeant.
+              </strong>
+            </>
+          }
           nativeInputProps={{
             type: "file",
             ...register("justificatifIdentiteGestionnaire"),
           }}
         />
+
         <Checkbox
           className="col-span-2 mt-4 mb-0"
           options={[
@@ -79,19 +97,31 @@ export const LegalInformationUpdateForm = () => {
         />
         {delegataire && (
           <>
-            <Upload
+            <FancyUpload
               className="col-span-2"
-              label="Lettre de délégation"
-              hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+              title="Lettre de délégation"
+              description="Lettre de délégation de l'administration du compte FVAE signée par le dirigeant et le délégataire"
               nativeInputProps={{
                 type: "file",
                 ...register("lettreDeDelegation"),
               }}
             />
-            <Upload
+
+            <FancyUpload
               className="col-span-2"
-              label="Copie du justificatif d'identité du délégataire"
-              hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+              title="Copie du justificatif d'identité du délégataire"
+              description={
+                <>
+                  La pièce d’identité peut être une carte nationale d’identité
+                  en cours de validité ou périmé de moins de 5 ans (resto/verso)
+                  ou un passeport en cours de validité.
+                  <br />
+                  <strong>
+                    Veillez à ce que votre photocopie soit lisible, non
+                    tronquée, bien cadrée.
+                  </strong>
+                </>
+              }
               nativeInputProps={{
                 type: "file",
                 ...register("justificatifIdentiteDelegataire"),
@@ -107,3 +137,37 @@ export const LegalInformationUpdateForm = () => {
     </div>
   );
 };
+
+const FancyUpload = ({
+  title,
+  description,
+  className,
+  nativeInputProps,
+}: {
+  title: string;
+  description: string | ReactNode;
+  className?: string;
+  nativeInputProps?: DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  >;
+}) => (
+  <Upload
+    className={`border bg-dsfr-light-neutral-grey-1000 p-8 ${className || ""}`}
+    label={
+      <>
+        <span className="text-2xl font-bold">{title}</span>
+        <CallOut
+          className="ml-8 my-4 py-0 bg-transparent"
+          classes={{
+            text: "text-sm leading-6 ",
+          }}
+        >
+          {description}
+        </CallOut>
+      </>
+    }
+    hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+    nativeInputProps={nativeInputProps}
+  />
+);

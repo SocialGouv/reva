@@ -20,6 +20,7 @@ module.exports = {
           "blue-france-sun-113": "#000091",
           orange: { 500: "#f94608" },
           "light-text-mention-grey": "#666666",
+          "light-neutral-grey-1000": "#F6F6F6",
         },
       },
       listStyleType: {
