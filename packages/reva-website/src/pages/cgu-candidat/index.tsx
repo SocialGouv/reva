@@ -113,6 +113,16 @@ const CguPage = () => (
         ses motivations et ses expériences. Il devra choisir une structure
         professionnelle qui l’accompagnera dans ses démarches de VAE.
       </p>
+      <p>
+        Dans le cadre du traitement des demandes soumises au service
+        d'assistance utilisateur, France VAE pourra être amené à effectuer des
+        vérifications d'identité et, le cas échéant, à demander des
+        justificatifs afin d'assurer la sécurité et la protection des parties
+        prenantes. Ces contrôles sont destinés à garantir que le traitement des
+        demandes respecte les droits des utilisateurs et ne leur cause aucun
+        préjudice. Le cas échéant, les justificatifs d’identité ne seront pas
+        conservés après vérification de leur conformité à la demande émise
+      </p>
 
       <h3>3.3 Validation du parcours</h3>
       <p>
