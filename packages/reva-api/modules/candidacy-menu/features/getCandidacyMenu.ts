@@ -17,7 +17,9 @@ export const getCandidacyMenu = async ({
   userRoles: KeyCloakUserRole[];
 }): Promise<CandidacyMenu> => {
   const candidacy = await getCandidacyForMenu({ candidacyId });
-  const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
+  const activeCandidacyStatus = candidacy.candidacyStatuses.find(
+    (status) => status.isActive
+  )?.status;
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 

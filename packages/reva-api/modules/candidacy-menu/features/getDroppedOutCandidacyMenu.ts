@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
@@ -18,7 +19,7 @@ export const getDroppedOutCandidacyMenu = async ({
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
-    activeCandidacyStatus,
+    activeCandidacyStatus
   );
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
@@ -30,7 +31,7 @@ export const getDroppedOutCandidacyMenu = async ({
   });
 
   const getFundingRequestMenuEntry = async (
-    userKeycloakId?: string,
+    userKeycloakId?: string
   ): Promise<CandidacyMenuEntry> => {
     const isReactFundingPageActive = await isFeatureActiveForUser({
       userKeycloakId,
@@ -70,9 +71,21 @@ export const getDroppedOutCandidacyMenu = async ({
     };
   };
 
-  return [
-    getDropOutMenuEntry(),
-    await getFundingRequestMenuEntry(userKeycloakId),
-    getPaymentRequestMenuEntry(),
-  ];
+  const droppedOutCandidacyMenu = [getDropOutMenuEntry()];
+  const candidacyHasSentFeasibilityRequest = candidacy.candidacyStatuses.find(
+    ({ status }) => status === "DOSSIER_FAISABILITE_ENVOYE"
+  );
+
+  if (candidacyHasSentFeasibilityRequest) {
+    const fundingRequestMenuEntry = await getFundingRequestMenuEntry(
+      userKeycloakId
+    );
+    const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
+
+    droppedOutCandidacyMenu.push(
+      ...[fundingRequestMenuEntry, paymentRequestMenuEntry]
+    );
+  }
+
+  return droppedOutCandidacyMenu;
 };

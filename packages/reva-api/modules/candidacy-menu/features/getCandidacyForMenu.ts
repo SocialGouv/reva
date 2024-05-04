@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const getCandidacyForMenu = ({ candidacyId }: { candidacyId: string }) =>
@@ -6,7 +7,7 @@ export const getCandidacyForMenu = ({ candidacyId }: { candidacyId: string }) =>
     .findFirstOrThrow({
       where: { id: candidacyId },
       include: {
-        candidacyStatuses: { where: { isActive: true } },
+        candidacyStatuses: true,
         Feasibility: true,
         organism: true,
         candidacyDropOut: true,
