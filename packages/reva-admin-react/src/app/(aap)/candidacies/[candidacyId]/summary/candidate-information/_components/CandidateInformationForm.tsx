@@ -20,28 +20,24 @@ import {
 import { useUpdateCandidateInformation } from "./useCandidateInformation";
 import { Candidacy, Countries, Departments } from "./useCandidateInformation";
 
-const CandidateInformationForm = (
-  {
-    candidacyId,
-    candidacy,
-    countries,
-    departments,
-  } : {
-    candidacyId: string;
-    candidacy?: Candidacy;
-    countries?: Countries;
-    departments?: Departments;
-  }
-) => {
-
+const CandidateInformationForm = ({
+  candidacyId,
+  candidacy,
+  countries,
+  departments,
+}: {
+  candidacyId: string;
+  candidacy?: Candidacy;
+  countries?: Countries;
+  departments?: Departments;
+}) => {
   const queryClient = useQueryClient();
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
 
-    
   const candidate = candidacy?.candidate;
   const franceId = countries?.find((c) => c.label === "France")?.id;
-    
+
   const genders = [
     { label: "Madame", value: "woman" },
     { label: "Monsieur", value: "man" },
@@ -167,7 +163,6 @@ const CandidateInformationForm = (
       await queryClient.invalidateQueries({
         queryKey: [candidacyId],
       });
-
     } catch (e) {
       graphqlErrorToast(e);
     }

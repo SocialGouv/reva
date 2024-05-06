@@ -66,6 +66,6 @@ export const InformationCandidatBlock = ({
           ))}
         </Select>
       </fieldset>
-      </div>
+    </div>
   );
 };

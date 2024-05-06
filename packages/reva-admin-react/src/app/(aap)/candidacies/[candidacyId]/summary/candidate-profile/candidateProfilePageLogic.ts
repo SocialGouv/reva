@@ -127,8 +127,9 @@ export const useCandidateProfilePageLogic = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       const { highestDegreeId, highestDegreeLabel } = data;
-      const highestDegreeLevel = degrees?.find((d) => d.id === highestDegreeId)
-        ?.level;
+      const highestDegreeLevel = degrees?.find(
+        (d) => d.id === highestDegreeId,
+      )?.level;
       if (
         !highestDegreeLevel ||
         (highestDegreeLevel > 1 && !highestDegreeLabel)

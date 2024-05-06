@@ -102,23 +102,32 @@ const getDepartments = graphql(`
 export const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading, error: getCandidacyError } =
-    useQuery({
-      queryKey: [candidacyId, "getCandidacyById"],
-      queryFn: () =>
-        graphqlClient.request(getCandidacyById, {
-          candidacyId,
-        }),
-    });
+  const {
+    data: getCandidacyByIdData,
+    isLoading: getCandidacyIsLoading,
+    error: getCandidacyError,
+  } = useQuery({
+    queryKey: [candidacyId, "getCandidacyById"],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyById, {
+        candidacyId,
+      }),
+  });
 
-  const { data: getCountriesData, isLoading: getCountriesIsLoading, error: getCountriesError } = useQuery(
-    {
-      queryKey: ["getCountries"],
-      queryFn: () => graphqlClient.request(getCountries),
-    },
-  );
+  const {
+    data: getCountriesData,
+    isLoading: getCountriesIsLoading,
+    error: getCountriesError,
+  } = useQuery({
+    queryKey: ["getCountries"],
+    queryFn: () => graphqlClient.request(getCountries),
+  });
 
-  const { data: getDepartmentsData, isLoading: getDepartmentsIsLoading, error: getDepartmentsError } = useQuery({
+  const {
+    data: getDepartmentsData,
+    isLoading: getDepartmentsIsLoading,
+    error: getDepartmentsError,
+  } = useQuery({
     queryKey: ["getDepartments"],
     queryFn: () => graphqlClient.request(getDepartments),
   });
@@ -179,6 +188,6 @@ export const useUpdateCandidateInformation = (candidacyId: string) => {
   };
 };
 
-export type Candidacy = ReturnType<typeof  useCandidateSummary>["candidacy"];
+export type Candidacy = ReturnType<typeof useCandidateSummary>["candidacy"];
 export type Countries = ReturnType<typeof useCandidateSummary>["countries"];
 export type Departments = ReturnType<typeof useCandidateSummary>["departments"];

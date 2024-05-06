@@ -1,1 +1,1 @@
-export * from './CopyClipBoard.component'
+export * from "./CopyClipBoard.component";

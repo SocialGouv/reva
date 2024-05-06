@@ -135,7 +135,7 @@ const useCandidateSummary = (candidacyId: string) => {
   };
 };
 
-export type Candidacy = ReturnType<typeof  useCandidateSummary>["candidacy"];
+export type Candidacy = ReturnType<typeof useCandidateSummary>["candidacy"];
 export type Countries = ReturnType<typeof useCandidateSummary>["countries"];
 export type Departments = ReturnType<typeof useCandidateSummary>["departments"];
 

@@ -45,8 +45,9 @@ const UpdateCompetenceBlocsForm = ({
     const FCBlocs: EnhancecCertificationCompetenceBloc[] = (
       certification?.BLOCS_COMPETENCES || []
     ).map((bloc) => {
-      const existingBlocBasedOnCode = blocs.find((b) => b.code == bloc.CODE)
-        ?.id;
+      const existingBlocBasedOnCode = blocs.find(
+        (b) => b.code == bloc.CODE,
+      )?.id;
 
       return {
         id: existingBlocBasedOnCode || v4(),

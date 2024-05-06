@@ -1,8 +1,6 @@
 "use client";
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
-import {
-  formatStringToPhoneNumberStructure,
-} from "@/utils";
+import { formatStringToPhoneNumberStructure } from "@/utils";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
