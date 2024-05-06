@@ -1,16 +1,17 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
+import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
+import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
-import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
 } from "./dematerialized-feasibility-file.types";
+import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
-import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
-import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
-import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
+import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {

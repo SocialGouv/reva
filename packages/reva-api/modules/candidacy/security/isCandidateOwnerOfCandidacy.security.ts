@@ -1,4 +1,5 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
+
 import { isCandidateOwnerOfCandidacy as isCandidateOwnerOfCandidacyFeature } from "../features/isCandidateOwnerOfCandidacy";
 
 export const isCandidateOwnerOfCandidacy =

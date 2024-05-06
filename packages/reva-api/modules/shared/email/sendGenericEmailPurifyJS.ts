@@ -1,8 +1,8 @@
+import { Either, Left, Right } from "purify-ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
-import { Either, Left, Right } from "purify-ts";
 import { logger } from "../logger";
 import { EmailAccount } from "./email.types";
 

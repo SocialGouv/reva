@@ -73,6 +73,6 @@ test("should return an exisiting certification local account list of 1 item for 
   const obj = resp.json();
   expect(
     obj.data.account_getAccountForConnectedUser.certificationAuthority
-      .certificationAuthorityLocalAccounts
+      .certificationAuthorityLocalAccounts,
   ).toMatchObject([{ id: certificationAuthorityLocalAccount1.id }]);
 });

@@ -17,7 +17,7 @@ export const sendNewOrganismCandidateNewCandidacyEmail = async ({
         url,
         labelCTA: "Accéder à mon espace",
         bottomLine: "L'équipe France VAE",
-      })
+      }),
     );
 
   return sendEmailWithLink({

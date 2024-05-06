@@ -41,7 +41,7 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
         `,
         url,
         labelCTA: "Accéder à ma candidature",
-      })
+      }),
     );
 
   return sendEmailWithLink({

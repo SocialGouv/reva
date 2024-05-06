@@ -50,8 +50,9 @@ export const getMaisonMereAAPs = async ({
     };
   }
 
-  const maisonMereAAPs =
-    await prismaClient.maisonMereAAP.findMany(queryMaisonMereAAPs);
+  const maisonMereAAPs = await prismaClient.maisonMereAAP.findMany(
+    queryMaisonMereAAPs,
+  );
   const count = await prismaClient.maisonMereAAP.count(queryCount);
   return {
     rows: maisonMereAAPs,

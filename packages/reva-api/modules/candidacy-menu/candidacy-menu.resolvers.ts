@@ -1,4 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
 import { resolversSecurityMap } from "./candidacy-menu.security";
 import { getCandidacyMenu } from "./features/getCandidacyMenu";
 

@@ -30,7 +30,7 @@ export const updateEmailOfCandidacy = async ({
       },
       {
         email: newEmail,
-      }
+      },
     );
   }
 

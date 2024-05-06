@@ -10,14 +10,14 @@ export const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
   const cryptedData = CryptoJS.AES.encrypt(
     dataStr,
-    process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret"
+    process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
   );
   return jwt.sign(
     {
       data: cryptedData.toString(),
     },
     process.env.JWT_PRIVATE_KEY || "secret",
-    { expiresIn }
+    { expiresIn },
   );
 };
 
@@ -25,11 +25,11 @@ export const getJWTContent = (token: string) => {
   try {
     const tokenData = jwt.verify(
       token,
-      process.env.JWT_PRIVATE_KEY || "secret"
+      process.env.JWT_PRIVATE_KEY || "secret",
     ) as JwtPayload;
     const dataBytes = CryptoJS.AES.decrypt(
       tokenData.data,
-      process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret"
+      process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
     );
 
     return Right(JSON.parse(dataBytes.toString(CryptoJS.enc.Utf8)));
@@ -61,7 +61,7 @@ const exCharacters = "!@#$%^&*_-=+";
 const createPassword = (
   length: number,
   hasNumbers: boolean,
-  hasSymbols: boolean
+  hasSymbols: boolean,
 ) => {
   let chars = alpha;
   if (hasNumbers) {
@@ -102,7 +102,7 @@ export const createCandidateAccountInIAM =
     } catch (e) {
       logger.error(e);
       return Left(
-        `An error occured while creating user with ${account.email} on IAM`
+        `An error occured while creating user with ${account.email} on IAM`,
       );
     }
   };
@@ -143,11 +143,11 @@ export const generateIAMToken =
           credentials: {
             secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
           },
-        }
+        },
       );
       const grant = await _keycloak.grantManager.obtainDirectly(
         user.username as string,
-        randomPassword
+        randomPassword,
       );
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

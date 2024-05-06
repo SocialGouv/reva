@@ -17,7 +17,7 @@ export const getSubscriptionRequests = async (
     offset?: number;
     status?: SubscriptionRequestStatus;
     searchFilter?: string;
-  }
+  },
 ): Promise<PaginatedListResult<SubscriptionRequest>> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {
@@ -63,7 +63,7 @@ export const getSubscriptionRequests = async (
   }
 
   const subscriptionRequest = await prismaClient.subscriptionRequest.findMany(
-    querySubscriptionRequests
+    querySubscriptionRequests,
   );
   const count = await prismaClient.subscriptionRequest.count(queryCount);
 

@@ -1,12 +1,11 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import { prismaClient } from "../../../prisma/client";
-
-import { TokenService } from "../utils/token.service";
 import {
   impersonateAccount,
   impersonateCandiate,
 } from "../utils/keycloak.utils";
+import { TokenService } from "../utils/token.service";
 
 const { BASE_URL, KEYCLOAK_ADMIN_REALM_REVA, KEYCLOAK_APP_REALM } = process.env;
 

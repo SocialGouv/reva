@@ -35,8 +35,8 @@ export const updateAdmissibility =
       return Left(
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "La date d'envoi du dossier de la faisabilité doit être après 2019 "
-        )
+          "La date d'envoi du dossier de la faisabilité doit être après 2019 ",
+        ),
       );
     }
     if (
@@ -46,8 +46,8 @@ export const updateAdmissibility =
       return Left(
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "La date du prononcé de la recevabilité doit être après 2019 "
-        )
+          "La date du prononcé de la recevabilité doit être après 2019 ",
+        ),
       );
     }
     if (
@@ -57,13 +57,13 @@ export const updateAdmissibility =
       return Left(
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "La date de réception de l'avis de recevabilité doit être après 2019 "
-        )
+          "La date de réception de l'avis de recevabilité doit être après 2019 ",
+        ),
       );
     }
 
     const updateAdmissibilityOrRaiseError = (
-      existingAdmissibility: Maybe<Admissibility>
+      existingAdmissibility: Maybe<Admissibility>,
     ): Promise<Either<string, Admissibility>> =>
       existingAdmissibility.caseOf({
         Just: (a) =>
@@ -81,19 +81,19 @@ export const updateAdmissibility =
 
         Nothing: () =>
           Promise.resolve(
-            Left("Erreur admissibilité non trouvé pour la candidature")
+            Left("Erreur admissibilité non trouvé pour la candidature"),
           ),
       });
 
     return EitherAsync.fromPromise(() =>
-      deps.getAdmissibilityFromCandidacyId({ candidacyId: candidacyId })
+      deps.getAdmissibilityFromCandidacyId({ candidacyId: candidacyId }),
     )
       .chain(updateAdmissibilityOrRaiseError)
       .mapLeft(
         () =>
           new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            `Erreur pendant la création ou la mise à jour de la recevabilité de la candidature`
-          )
+            `Erreur pendant la création ou la mise à jour de la recevabilité de la candidature`,
+          ),
       );
   };

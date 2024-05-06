@@ -18,7 +18,7 @@ export const getPaymentRequestByCandidacyId = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while retrieving payment request for candidacy with id ${params.candidacyId}`
+      `error while retrieving payment request for candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -39,7 +39,7 @@ export const createPaymentRequest = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while creating payment request for candidacy with id ${params.candidacyId}`
+      `error while creating payment request for candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -60,7 +60,7 @@ export const updatePaymentRequest = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while updating payment request with id ${params.paymentRequestId}`
+      `error while updating payment request with id ${params.paymentRequestId}`,
     );
   }
 };

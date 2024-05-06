@@ -17,7 +17,7 @@ interface CandidateInput {
 
 interface AskForRegistrationDeps {
   generateJWTForRegistration: (
-    params: CandidateRegistrationInput
+    params: CandidateRegistrationInput,
   ) => Promise<Either<string, string>>;
   sendRegistrationEmail: (params: {
     email: string;
@@ -28,13 +28,13 @@ interface AskForRegistrationDeps {
 export const askForRegistration =
   (deps: AskForRegistrationDeps) => async (params: CandidateInput) => {
     const generateJWTForRegistration = EitherAsync.fromPromise(() =>
-      deps.generateJWTForRegistration({ ...params, action: "registration" })
+      deps.generateJWTForRegistration({ ...params, action: "registration" }),
     ).mapLeft(
       (error) =>
         new FunctionalError(
           FunctionalCodeError.CANDIDATE_JWT_GENERATION_ERROR,
-          error
-        )
+          error,
+        ),
     );
 
     const sendRegistrationEmail = (params: { email: string; token: string }) =>
@@ -42,11 +42,11 @@ export const askForRegistration =
         (error) =>
           new FunctionalError(
             FunctionalCodeError.CANDIDATE_REGISTRATION_EMAIL_ERROR,
-            error
-          )
+            error,
+          ),
       );
 
     return generateJWTForRegistration.chain((token: string) =>
-      sendRegistrationEmail({ email: params.email, token })
+      sendRegistrationEmail({ email: params.email, token }),
     );
   };

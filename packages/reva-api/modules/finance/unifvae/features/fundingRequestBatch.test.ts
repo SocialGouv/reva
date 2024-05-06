@@ -123,7 +123,7 @@ afterAll(async () => {
 
 test("Should create a nice batch", async () => {
   batch = await createBatchFromFundingRequestUnifvae(
-    (fundReq as FundingRequestUnifvae).id
+    (fundReq as FundingRequestUnifvae).id,
   );
   expect(batch).not.toBeNull();
   expect(batch.content).toMatchObject({

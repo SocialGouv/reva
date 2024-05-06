@@ -19,7 +19,7 @@ const unsafeResolvers = {
   SubscriptionRequest: {
     isCompanyNameUnique: async ({ companyName }: { companyName: string }) =>
       !(await OrganismDb.doesOrganismWithSameLabelExludingThoseInExperimentationExists(
-        companyName
+        companyName,
       )),
   },
   Query: {
@@ -31,13 +31,13 @@ const unsafeResolvers = {
         status?: SubscriptionRequestStatus;
         searchFilter?: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -45,7 +45,7 @@ const unsafeResolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -54,11 +54,11 @@ const unsafeResolvers = {
     },
     subscription_getSubscriptionRequest: async (
       _parent: unknown,
-      { subscriptionRequestId: id }: { subscriptionRequestId: string }
+      { subscriptionRequestId: id }: { subscriptionRequestId: string },
     ) => {
       const result = await domain.getSubscriptionRequest(
         { getSubscriptionRequestById: db.getSubscriptionRequestById },
-        id
+        id,
       );
 
       return result
@@ -71,7 +71,7 @@ const unsafeResolvers = {
       _: unknown,
       payload: {
         subscriptionRequest: SubscriptionRequestInput;
-      }
+      },
     ) => {
       const result = await domain.createSubscriptionRequest(
         {
@@ -83,7 +83,7 @@ const unsafeResolvers = {
           sendSubscriptionValidationInProgressEmail:
             sendSubscriptionValidationInProgressEmail,
         },
-        payload.subscriptionRequest
+        payload.subscriptionRequest,
       );
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -98,7 +98,7 @@ const unsafeResolvers = {
         app: {
           getKeycloakAdmin: () => KeycloakAdminClient;
         };
-      }
+      },
     ) => {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
       try {
@@ -116,7 +116,7 @@ const unsafeResolvers = {
       payload: {
         subscriptionRequestId: string;
         reason: string;
-      }
+      },
     ) => {
       const result = await domain.rejectSubscriptionRequest(
         {
@@ -127,7 +127,7 @@ const unsafeResolvers = {
         {
           subscriptionRequestId: payload.subscriptionRequestId,
           reason: payload.reason,
-        }
+        },
       );
 
       return result
@@ -140,5 +140,5 @@ const unsafeResolvers = {
 
 export const subscriptionRequestResolvers = composeResolvers(
   unsafeResolvers,
-  resolversSecurityMap
+  resolversSecurityMap,
 );

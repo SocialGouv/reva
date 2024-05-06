@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { DossierDeValidationStatusFilter } from "../types/dossierDeValidationStatusFilter.type";
 
 export const getWhereClauseFromDossierDeValidationStatusFilter = (
-  statusFilter?: DossierDeValidationStatusFilter
+  statusFilter?: DossierDeValidationStatusFilter,
 ) => {
   let whereClause: Prisma.DossierDeValidationWhereInput = { isActive: true };
   const excludeArchivedAndDroppedOutCandidacy: Prisma.DossierDeValidationWhereInput =

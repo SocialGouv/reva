@@ -5,8 +5,8 @@ import { FileService, UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import { canManageJury } from "./features/canManageJury";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
-import { scheduleSessionOfJury } from "./features/scheduleSessionOfJury";
 import { isCandidacyOwner } from "./features/isCandidacyOwner";
+import { scheduleSessionOfJury } from "./features/scheduleSessionOfJury";
 
 interface ScheduleSessionOfJuryBody {
   candidacyId: { value: string };

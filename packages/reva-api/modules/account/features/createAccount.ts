@@ -24,7 +24,7 @@ export const createAccount = async (params: {
   if (!params.email) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_EMAIL_EMPTY,
-      `Email invalide`
+      `Email invalide`,
     );
   }
 
@@ -38,7 +38,7 @@ export const createAccount = async (params: {
       if (!params.organismId) {
         throw new FunctionalError(
           FunctionalCodeError.ACCOUNT_ORGANISMID_EMPTY,
-          `L'organismId est obligatoire pour un groupe "organism"`
+          `L'organismId est obligatoire pour un groupe "organism"`,
         );
       }
       if (
@@ -48,7 +48,7 @@ export const createAccount = async (params: {
       ) {
         throw new FunctionalError(
           FunctionalCodeError.ORGANISM_NOT_FOUND,
-          `Organisme non trouvé`
+          `Organisme non trouvé`,
         );
       }
       break;
@@ -57,17 +57,17 @@ export const createAccount = async (params: {
       if (!params.certificationAuthorityId) {
         throw new FunctionalError(
           FunctionalCodeError.ACCOUNT_CERTIFICATION_AUTHORITY_ID_EMPTY,
-          `certificationAuthorityId est obligatoire pour un groupe "certification_authority"`
+          `certificationAuthorityId est obligatoire pour un groupe "certification_authority"`,
         );
       }
       if (
         (await getCertificationAuthorityById(
-          params.certificationAuthorityId || ""
+          params.certificationAuthorityId || "",
         )) == null
       ) {
         throw new FunctionalError(
           FunctionalCodeError.CERTIFICATION_AUTHORITY_NOT_FOUND,
-          `Autorité certificatrice non trouvée`
+          `Autorité certificatrice non trouvée`,
         );
       }
       break;
@@ -84,7 +84,7 @@ export const createAccount = async (params: {
   if (maybeExistingAccount.isJust()) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-      `Un compte existe déjà pour cet email`
+      `Un compte existe déjà pour cet email`,
     );
   }
 

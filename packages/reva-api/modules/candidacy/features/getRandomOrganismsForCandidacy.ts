@@ -9,7 +9,7 @@ import { Candidacy, SearchOrganismFilter } from "../candidacy.types";
 
 interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   getRandomActiveOrganismForCertificationAndDepartment: (params: {
     certificationId: string;
@@ -44,13 +44,13 @@ export const getRandomOrganismsForCandidacyWithNewTypologies =
           searchText,
           searchFilter,
           limit,
-        })
+        }),
       )
       .mapLeft(
         () =>
           new FunctionalError(
             FunctionalCodeError.AAP_ORGANISMS_NOT_FOUND,
-            `Erreur lors de la récupération des organismes AAP de la candidature`
-          )
+            `Erreur lors de la récupération des organismes AAP de la candidature`,
+          ),
       );
   };

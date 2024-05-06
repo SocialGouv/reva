@@ -23,18 +23,18 @@ export const getPaymentRequestByCandidacyId =
       return Left(
         new FunctionalError(
           FunctionalCodeError.NOT_AUTHORIZED,
-          `Vous n'avez pas accès à la recevabilité de cette candidature`
-        )
+          `Vous n'avez pas accès à la recevabilité de cette candidature`,
+        ),
       );
     }
 
     return EitherAsync.fromPromise(() =>
-      deps.getPaymentRequestByCandidacyId({ candidacyId: params.candidacyId })
+      deps.getPaymentRequestByCandidacyId({ candidacyId: params.candidacyId }),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          `Erreur pendant la récupération de la demande de paiement de la candidature`
-        )
+          `Erreur pendant la récupération de la demande de paiement de la candidature`,
+        ),
     );
   };

@@ -27,12 +27,12 @@ const toDomainCandidacySummary = (
     lastname: string | undefined;
     department: Department | null;
     candidacyDropOut: CandidacyDropOut | null;
-  }
+  },
 ) => {
   const statuses = candidacy.candidacyStatuses;
   const lastStatus = statuses.filter((status) => status.isActive)[0];
   const sentStatus = statuses.filter(
-    (status) => status.status == "VALIDATION"
+    (status) => status.status == "VALIDATION",
   )?.[0];
   const sentAt = sentStatus?.createdAt;
 
@@ -69,7 +69,7 @@ const toDomainCandidacySummaries = (
     lastname: string | undefined;
     department: Department | null;
     candidacyDropOut: CandidacyDropOut | null;
-  })[]
+  })[],
 ): domain.CandidacySummary[] => {
   return candidacies.map(toDomainCandidacySummary);
 };
@@ -159,7 +159,7 @@ export const getCandidaciesFromDb = async ({
         lastname: c.candidate?.lastname,
         phone: c.candidate?.phone || null,
         email: c.candidate?.email || c.email,
-      }))
+      })),
     ),
   };
 };

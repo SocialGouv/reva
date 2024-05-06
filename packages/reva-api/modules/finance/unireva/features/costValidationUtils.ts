@@ -50,24 +50,24 @@ export const validateIndividualCosts = ({
 
   if (!isBetween1And3(hoursAndCosts.diagnosisHourCount)) {
     errors.push(
-      "input.diagnosisHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
+      "input.diagnosisHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h.",
     );
   }
   if (!isLower1(hoursAndCosts.postExamHourCount)) {
     errors.push(
-      "input.postExamHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
+      "input.postExamHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h.",
     );
   }
 
   if (!isLower70(hoursAndCosts.diagnosisCost.toNumber())) {
     errors.push(
-      "input.diagnosisCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
+      "input.diagnosisCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros.",
     );
   }
 
   if (!isLower70(hoursAndCosts.postExamCost.toNumber())) {
     errors.push(
-      "input.postExamCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
+      "input.postExamCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros.",
     );
   }
 
@@ -76,17 +76,17 @@ export const validateIndividualCosts = ({
     !isLower15(hoursAndCosts.individualHourCount)
   ) {
     errors.push(
-      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
+      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h.",
     );
   } else if (!isLower30(hoursAndCosts.individualHourCount)) {
     errors.push(
-      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
+      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h.",
     );
   }
 
   if (!isLower70(hoursAndCosts.individualCost.toNumber())) {
     errors.push(
-      "input.individualCost: Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
+      "input.individualCost: Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros.",
     );
   }
 
@@ -95,23 +95,23 @@ export const validateIndividualCosts = ({
     !isLower15(hoursAndCosts.collectiveHourCount)
   ) {
     errors.push(
-      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
+      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h.",
     );
   } else if (!isLower30(hoursAndCosts.collectiveHourCount)) {
     errors.push(
-      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
+      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h.",
     );
   }
 
   if (!isLower35(hoursAndCosts.collectiveCost.toNumber())) {
     errors.push(
-      "input.collectiveCost: Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
+      "input.collectiveCost: Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros.",
     );
   }
 
   if (!isLower20(hoursAndCosts.basicSkillsCost.toNumber())) {
     errors.push(
-      "input.basicSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
+      "input.basicSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros.",
     );
   }
 
@@ -119,44 +119,44 @@ export const validateIndividualCosts = ({
     !isLower78(
       hoursAndCosts.mandatoryTrainingsHourCount +
         hoursAndCosts.basicSkillsHourCount +
-        hoursAndCosts.certificateSkillsHourCount
+        hoursAndCosts.certificateSkillsHourCount,
     )
   ) {
     errors.push(
-      "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h."
+      "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h.",
     );
   }
 
   if (!isLower2(hoursAndCosts.examHourCount)) {
     errors.push(
-      "input.examHourCount: Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
+      "input.examHourCount: Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h.",
     );
   }
   if (!isLower20(hoursAndCosts.examCost.toNumber())) {
     errors.push(
-      "input.examCost: Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
+      "input.examCost: Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros.",
     );
   }
 
   if (mandatoryTrainingContainAfgsu) {
     if (numberOfMandatoryTrainings > 1) {
       errors.push(
-        "Impossible de combiner l'AFGSU et une autre formation obligatoire."
+        "Impossible de combiner l'AFGSU et une autre formation obligatoire.",
       );
     } else if (!isLower25(hoursAndCosts.mandatoryTrainingsCost.toNumber())) {
       errors.push(
-        "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
+        "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros.",
       );
     }
   } else if (!isLower20(hoursAndCosts.mandatoryTrainingsCost.toNumber())) {
     errors.push(
-      "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
+      "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros.",
     );
   }
 
   if (!isLower20(hoursAndCosts.certificateSkillsCost.toNumber())) {
     errors.push(
-      "input.certificateSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
+      "input.certificateSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros.",
     );
   }
 
@@ -168,8 +168,8 @@ export const getTotalCost = (hoursAndCosts: HoursAndCosts) =>
     .times(hoursAndCosts.basicSkillsHourCount)
     .plus(
       hoursAndCosts.certificateSkillsCost.times(
-        hoursAndCosts.certificateSkillsHourCount
-      )
+        hoursAndCosts.certificateSkillsHourCount,
+      ),
     )
     .plus(hoursAndCosts.collectiveCost.times(hoursAndCosts.collectiveHourCount))
     .plus(hoursAndCosts.diagnosisCost.times(hoursAndCosts.diagnosisHourCount))
@@ -177,19 +177,19 @@ export const getTotalCost = (hoursAndCosts: HoursAndCosts) =>
     .plus(hoursAndCosts.individualCost.times(hoursAndCosts.individualHourCount))
     .plus(
       hoursAndCosts.mandatoryTrainingsCost.times(
-        hoursAndCosts.mandatoryTrainingsHourCount
-      )
+        hoursAndCosts.mandatoryTrainingsHourCount,
+      ),
     )
     .plus(hoursAndCosts.postExamCost.times(hoursAndCosts.postExamHourCount))
     .plus(
       hoursAndCosts.otherTrainingCost.times(
-        hoursAndCosts.otherTrainingHourCount
-      )
+        hoursAndCosts.otherTrainingHourCount,
+      ),
     );
 
 export const validateTotalCost = (
   totalCost: Decimal,
-  isCandidateBacNonFragile: boolean
+  isCandidateBacNonFragile: boolean,
 ) => {
   if (isCandidateBacNonFragile) {
     return totalCost.lessThanOrEqualTo(1755)

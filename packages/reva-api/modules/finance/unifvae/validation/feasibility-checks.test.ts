@@ -86,7 +86,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
     expect(errors[0].message).toContain(
-      "le dossier de faisabilité n'a pas été envoyé"
+      "le dossier de faisabilité n'a pas été envoyé",
     );
   });
 
@@ -98,7 +98,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
     expect(errors[0].message).toContain(
-      "la recevabilité n'a pas été prononcée"
+      "la recevabilité n'a pas été prononcée",
     );
   });
 

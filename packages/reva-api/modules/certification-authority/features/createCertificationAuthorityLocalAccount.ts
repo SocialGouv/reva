@@ -29,7 +29,7 @@ export const createCertificationAuthorityLocalAccount = async ({
 
   if (!certificationAuthorityAccount) {
     throw new Error(
-      "Erreur pendant la récupération du compte de l'utiliseur de l'autorité de certification"
+      "Erreur pendant la récupération du compte de l'utiliseur de l'autorité de certification",
     );
   }
 
@@ -42,7 +42,7 @@ export const createCertificationAuthorityLocalAccount = async ({
 
   if (!certificationAuthority) {
     throw new Error(
-      "Erreur pendant la récupération de l'autorité de certification"
+      "Erreur pendant la récupération de l'autorité de certification",
     );
   }
 

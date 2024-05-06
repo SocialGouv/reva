@@ -1,6 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
 import { CertificationCompetenceBloc } from "@prisma/client";
 
+import { prismaClient } from "../../../prisma/client";
 import { RNCPReferential } from "../rncp";
 
 type Params = {
@@ -32,8 +32,9 @@ const createDefaultBlocs = async (
 ): Promise<CertificationCompetenceBloc[]> => {
   const { certificationId, rncpId } = params;
 
-  const rncpCertification =
-    await RNCPReferential.getInstance().findOneByRncp(rncpId);
+  const rncpCertification = await RNCPReferential.getInstance().findOneByRncp(
+    rncpId,
+  );
 
   if (rncpCertification) {
     for (const bloc of rncpCertification.BLOCS_COMPETENCES) {

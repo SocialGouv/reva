@@ -42,8 +42,8 @@ export const confirmPaymentRequest =
       return Left(
         new FunctionalError(
           FunctionalCodeError.NOT_AUTHORIZED,
-          `Vous n'avez pas accès à la recevabilité de cette candidature`
-        )
+          `Vous n'avez pas accès à la recevabilité de cette candidature`,
+        ),
       );
     }
 
@@ -51,14 +51,14 @@ export const confirmPaymentRequest =
       deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,
         status: "DEMANDE_FINANCEMENT_ENVOYE",
-      })
+      }),
     )
       .chain((existsCandidacy) => {
         if (!existsCandidacy) {
           return EitherAsync.liftEither(
             Left(
-              `La demande de paiement de la candidature ${params.candidacyId} ne peut être confirmée: statut invalide.`
-            )
+              `La demande de paiement de la candidature ${params.candidacyId} ne peut être confirmée: statut invalide.`,
+            ),
           );
         }
         return EitherAsync.liftEither(Right(existsCandidacy));
@@ -67,8 +67,8 @@ export const confirmPaymentRequest =
         (error: string) =>
           new FunctionalError(
             FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-            error
-          )
+            error,
+          ),
       );
 
     const getCandidacyPaymentRequest = async () =>
@@ -81,28 +81,28 @@ export const confirmPaymentRequest =
           pr.isJust()
             ? Right(pr.extract())
             : Left(
-                `Aucune demande de paiement trouvée pour la candidature ${params.candidacyId}`
-              )
+                `Aucune demande de paiement trouvée pour la candidature ${params.candidacyId}`,
+              ),
         )
         .mapLeft(
           (error: string) =>
             new FunctionalError(
               FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-              error
-            )
+              error,
+            ),
         );
 
     const updateCandidacy = EitherAsync.fromPromise(() =>
       deps.updateCandidacyStatus({
         candidacyId: params.candidacyId,
         status: "DEMANDE_PAIEMENT_ENVOYEE",
-      })
+      }),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-          `Erreur lors de la confirmation de la demande de paiement de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors de la confirmation de la demande de paiement de la candidature ${params.candidacyId}`,
+        ),
     );
 
     const createPaymentRequestBatch = async (paymentRequest: PaymentRequest) =>
@@ -111,12 +111,12 @@ export const confirmPaymentRequest =
           EitherAsync.fromPromise(() =>
             deps.getFundingRequestByCandidacyId({
               candidacyId: params.candidacyId,
-            })
+            }),
           ).map((fundingRequest) => ({
             fundingRequest,
             candidacy,
             paymentRequest,
-          }))
+          })),
         )
         .join()
         .map(mapPaymentRequestBatchContent)
@@ -124,14 +124,14 @@ export const confirmPaymentRequest =
           deps.createPaymentRequestBatch({
             paymentRequestId: paymentRequest.id,
             content,
-          })
+          }),
         )
         .mapLeft(
           (e) =>
             new FunctionalError(
               FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-              e
-            )
+              e,
+            ),
         );
 
     return validateCandidacyStatus

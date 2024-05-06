@@ -7,7 +7,7 @@ export const hasRole =
     root: any,
     args: Record<string, any>,
     context: MercuriusContext,
-    info: any
+    info: any,
   ) => {
     if (!context.auth.userInfo) {
       throw new Error("Votre session a expiré, veuillez vous reconnecter.");

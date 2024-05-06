@@ -132,7 +132,7 @@ export class FileService implements FileServiceInterface {
   }
 
   private async getSignedUrlForUpload(
-    fileKeyPath: string
+    fileKeyPath: string,
   ): Promise<string | undefined> {
     try {
       const command = new PutObjectCommand({
@@ -152,7 +152,7 @@ export class FileService implements FileServiceInterface {
   }
 
   private async getSignedUrlForDownload(
-    fileKeyPath: string
+    fileKeyPath: string,
   ): Promise<string | undefined> {
     try {
       const command = new GetObjectCommand({

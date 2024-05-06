@@ -1,4 +1,5 @@
 import { CandidacyLog } from "@prisma/client";
+
 import { getCandidacyLogUsers } from "./features/getCandidacyLogUsers";
 
 export const candidacyLogLoaders = {

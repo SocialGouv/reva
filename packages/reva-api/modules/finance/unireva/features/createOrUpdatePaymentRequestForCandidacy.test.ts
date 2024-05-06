@@ -63,7 +63,7 @@ describe("create or update payment request", () => {
             Right({
               highestDegree: { level: 1 },
               vulnerabilityIndicator: { label: "Vide" },
-            } as Candidate)
+            } as Candidate),
           ),
       });
       const result = await cpr({
@@ -91,7 +91,7 @@ describe("create or update payment request", () => {
           Right({
             highestDegree: { level: 1 },
             vulnerabilityIndicator: { label: "Vide" },
-          } as Candidate)
+          } as Candidate),
         ),
     });
     const result = await cpr({

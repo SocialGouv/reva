@@ -53,14 +53,14 @@ export default async (batchKey: string) => {
             where: { id },
           })) as FileUploadSpooler;
           logger.info(
-            `Processing file ${spoolerFile.description} created at ${spoolerFile.createdAt}`
+            `Processing file ${spoolerFile.description} created at ${spoolerFile.createdAt}`,
           );
 
           // Upload file
           const stream = Readable.from(spoolerFile?.fileContent);
           await ftpClient.uploadFrom(
             stream,
-            `${spoolerFile.destinationPath}/${spoolerFile.destinationFileName}`
+            `${spoolerFile.destinationPath}/${spoolerFile.destinationFileName}`,
           );
           stream.destroy();
 

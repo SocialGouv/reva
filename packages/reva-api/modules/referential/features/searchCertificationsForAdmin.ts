@@ -1,9 +1,9 @@
+import { $Enums, Prisma } from "@prisma/client";
 import { deburr } from "lodash";
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification, CertificationStatus } from "../referential.types";
-import { $Enums, Prisma } from "@prisma/client";
 
 export const searchCertificationsForAdmin = async ({
   offset,

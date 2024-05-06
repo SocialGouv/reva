@@ -3,6 +3,7 @@ import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { Role } from "../../account/account.types";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { Candidacy } from "../../candidacy/candidacy.types";
 import {
   existsCandidacyWithActiveStatus,
@@ -19,7 +20,6 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpd
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Candidacy: {

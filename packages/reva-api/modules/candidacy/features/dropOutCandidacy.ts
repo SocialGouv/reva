@@ -9,13 +9,13 @@ import { Candidacy } from "../candidacy.types";
 
 interface DropOutCandidacyDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   getDropOutReasonById: (params: {
     dropOutReasonId: string;
   }) => Promise<DropOutReason | null>;
   dropOutCandidacy: (
-    params: DropOutCandidacyParams
+    params: DropOutCandidacyParams,
   ) => Promise<Either<string, Candidacy>>;
 }
 
@@ -29,13 +29,13 @@ interface DropOutCandidacyParams {
 export const dropOutCandidacy =
   (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
+      deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+          `Aucune candidature n'a été trouvée`,
+        ),
     );
 
     const checkIfCandidacyIsNotAbandonned = (candidacy: Candidacy) => {
@@ -44,9 +44,9 @@ export const dropOutCandidacy =
         Maybe.fromFalsy(!hasDropOut).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
-            `La candidature est déjà abandonnée`
-          )
-        )
+            `La candidature est déjà abandonnée`,
+          ),
+        ),
       );
     };
 
@@ -57,19 +57,19 @@ export const dropOutCandidacy =
       return Maybe.fromNullable(r).toEither(
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
-          `La raison d'abandon n'est pas valide`
-        )
+          `La raison d'abandon n'est pas valide`,
+        ),
       );
     });
 
     const dropOutCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.dropOutCandidacy(params)
+      deps.dropOutCandidacy(params),
     ).mapLeft(
       (error: string) =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
-          error
-        )
+          error,
+        ),
     );
 
     return checkIfCandidacyExists

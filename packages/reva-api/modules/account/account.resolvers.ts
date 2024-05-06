@@ -13,8 +13,8 @@ import { createAccount } from "./features/createAccount";
 import { getAccountById } from "./features/getAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getAccounts } from "./features/getAccounts";
-import { updateAccountById } from "./features/updateAccount";
 import { getImpersonateUrl } from "./features/impersonate";
+import { updateAccountById } from "./features/updateAccount";
 
 export const resolvers = {
   Mutation: {

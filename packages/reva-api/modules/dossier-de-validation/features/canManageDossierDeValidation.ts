@@ -54,7 +54,7 @@ export const canManageDossierDeValidation = async ({
 
       if (!certificationAuthorityLocalAccount) {
         throw new Error(
-          "Compte local de l'autorité de certification non trouvé"
+          "Compte local de l'autorité de certification non trouvé",
         );
       }
 
@@ -67,12 +67,12 @@ export const canManageDossierDeValidation = async ({
 
       const departmentIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId
+          (calad) => calad.departmentId,
         );
 
       const certificationIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId
+          (calac) => calac.certificationId,
         );
 
       return !!(await prismaClient.dossierDeValidation.findFirst({

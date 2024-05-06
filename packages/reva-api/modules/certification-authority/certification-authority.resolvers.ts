@@ -1,3 +1,5 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { CertificationAuthorityLocalAccount } from "@prisma/client";
 import mercurius from "mercurius";
 
 import {
@@ -5,23 +7,21 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { resolversSecurityMap } from "./certification-authority.security";
 import { CertificationAuthority } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
+import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
+import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
+import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
+import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
-import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { resolversSecurityMap } from "./certification-authority.security";
-import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
-import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
-import { CertificationAuthorityLocalAccount } from "@prisma/client";
-import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
 
 export const unsafeResolvers = {
   CertificationAuthority: {

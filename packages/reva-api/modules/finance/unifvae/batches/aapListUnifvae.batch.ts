@@ -54,7 +54,7 @@ export const batchAapListUnifvae = async (batchKey: string) => {
   } catch (e) {
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
-      e
+      e,
     );
     e instanceof Error && logger.error(e.message);
   } finally {
@@ -85,7 +85,7 @@ export async function generateCsvStream(itemsToSendIds: string[]) {
               Adresse_NomVoie: mmaap.adresse,
               Adresse_Ville: mmaap.ville,
               Adresse_CodePostal: mmaap.codePostal,
-            })
+            }),
           )
         : this.push(null);
       skip += RECORDS_PER_FETCH;

@@ -7,7 +7,7 @@ import { logger } from "../../../shared/logger";
 import { sendStreamToFtp } from "../../shared/ftp";
 
 const generatePaymentRequestBatchCsvStream = async (
-  itemsToSendIds: string[]
+  itemsToSendIds: string[],
 ) => {
   const RECORDS_PER_FETCH = 10;
   let skip = 0;
@@ -52,7 +52,7 @@ export const batchPaymentRequest = async (batchKey: string) => {
       logger.info("Found no fundingRequestUnifvae to process.");
     } else {
       const batchReadableStream = await generatePaymentRequestBatchCsvStream(
-        itemsToSendIds
+        itemsToSendIds,
       );
 
       const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
@@ -80,7 +80,7 @@ export const batchPaymentRequest = async (batchKey: string) => {
   } catch (e) {
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
-      e
+      e,
     );
     e instanceof Error && logger.error(e.message);
   } finally {

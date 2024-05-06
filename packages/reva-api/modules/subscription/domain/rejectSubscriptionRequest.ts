@@ -8,11 +8,11 @@ import { logger } from "../../shared/logger";
 
 interface RejectSubscriptionRequestDeps {
   getSubscriptionRequestById: (
-    id: string
+    id: string,
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
   rejectSubscriptionRequestById: (
     id: string,
-    reason: string
+    reason: string,
   ) => Promise<Either<string, void>>;
   sendRejectionEmail: ({
     email,
@@ -24,7 +24,7 @@ interface RejectSubscriptionRequestDeps {
 }
 export const rejectSubscriptionRequest = async (
   deps: RejectSubscriptionRequestDeps,
-  params: { subscriptionRequestId: string; reason: string }
+  params: { subscriptionRequestId: string; reason: string },
 ) => {
   const $store: {
     subreq?: SubscriptionRequest;
@@ -32,14 +32,14 @@ export const rejectSubscriptionRequest = async (
 
   const getSubscriptionRequest = EitherAsync.fromPromise(async () => {
     const eitherSubreq = await deps.getSubscriptionRequestById(
-      params.subscriptionRequestId
+      params.subscriptionRequestId,
     );
     if (eitherSubreq.isLeft()) {
       return Left(
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          eitherSubreq.extract()
-        )
+          eitherSubreq.extract(),
+        ),
       );
     }
     const maybeSubReq = eitherSubreq.extract() as Maybe<SubscriptionRequest>;
@@ -49,8 +49,8 @@ export const rejectSubscriptionRequest = async (
       return Left(
         new FunctionalError(
           FunctionalCodeError.SUBSCRIPTION_REQUEST_NOT_FOUND,
-          errorMessage
-        )
+          errorMessage,
+        ),
       );
     }
     const subreq = maybeSubReq.extract() as SubscriptionRequest;
@@ -62,15 +62,15 @@ export const rejectSubscriptionRequest = async (
     deps.sendRejectionEmail({
       email: $store.subreq?.accountEmail ?? "",
       reason: params.reason,
-    })
+    }),
   )
     .mapLeft(
       (error: string) =>
-        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
+        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error),
     )
     .ifRight(() => {
       logger.info(
-        `[rejectSubscriptionRequestDeps] Successfuly sent rejection mail for subscription request ${$store.subreq?.id}`
+        `[rejectSubscriptionRequestDeps] Successfuly sent rejection mail for subscription request ${$store.subreq?.id}`,
       );
     });
 
@@ -78,18 +78,18 @@ export const rejectSubscriptionRequest = async (
     (
       await deps.rejectSubscriptionRequestById(
         params.subscriptionRequestId,
-        params.reason
+        params.reason,
       )
     )
       .mapLeft(
         (error: string) =>
-          new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
+          new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error),
       )
       .ifRight(() => {
         logger.info(
-          `[rejectSubscriptionRequestDeps] Successfuly rejected subscriptionRequest ${$store.subreq?.id}`
+          `[rejectSubscriptionRequestDeps] Successfuly rejected subscriptionRequest ${$store.subreq?.id}`,
         );
-      })
+      }),
   );
 
   return getSubscriptionRequest

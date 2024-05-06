@@ -10,7 +10,7 @@ import { Candidacy } from "../candidacy.types";
 
 interface ArchiveCandidacyDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   getReorientationReasonById: (params: {
     reorientationReasonId: string;
@@ -34,36 +34,36 @@ export const archiveCandidacy =
 
     if (!hasRequiredRole) {
       return EitherAsync.liftEither(
-        Left(`Vous n'êtes pas autorisé à archiver cette candidature.`)
+        Left(`Vous n'êtes pas autorisé à archiver cette candidature.`),
       ).mapLeft(
         (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
+          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error),
       );
     }
 
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
+      deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+          `Aucune candidature n'a été trouvée`,
+        ),
     );
 
     const checkIfCandidacyIsNotArchived = (candidacy: Candidacy) => {
       const isArchived = Boolean(
         candidacy.candidacyStatuses.find(
-          (status) => status.status === "ARCHIVE" && status.isActive
-        )
+          (status) => status.status === "ARCHIVE" && status.isActive,
+        ),
       );
       return Promise.resolve(
         Maybe.fromFalsy(!isArchived).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED,
-            `La candidature est déjà archivée`
-          )
-        )
+            `La candidature est déjà archivée`,
+          ),
+        ),
       );
     };
 
@@ -75,20 +75,20 @@ export const archiveCandidacy =
         return Maybe.fromNullable(r).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON,
-            `La raison de réorientation n'est pas valide`
-          )
+            `La raison de réorientation n'est pas valide`,
+          ),
         );
-      }
+      },
     );
 
     const archiveCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.archiveCandidacy(params)
+      deps.archiveCandidacy(params),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-          `Erreur lors de l'archivage de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors de l'archivage de la candidature ${params.candidacyId}`,
+        ),
     );
 
     if (params.reorientationReasonId) {

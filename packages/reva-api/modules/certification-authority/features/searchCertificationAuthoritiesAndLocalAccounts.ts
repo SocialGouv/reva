@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { CertificationAuthorityOrLocalAccount } from "../certification-authority.types";
-import { processPaginationInfo } from "../../shared/list/pagination";
+
 import { prismaClient } from "../../../prisma/client";
+import { processPaginationInfo } from "../../shared/list/pagination";
+import { CertificationAuthorityOrLocalAccount } from "../certification-authority.types";
 
 export const searchCertificationAuthoritiesAndLocalAccounts = async ({
   limit = 10,

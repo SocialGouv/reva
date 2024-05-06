@@ -1,4 +1,5 @@
 import { Candidate } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import {

@@ -20,8 +20,8 @@ const costFields = [
   "otherTrainingCost",
 ] as const;
 
-type HourFields = { [Key in (typeof hourFields)[number]]: Decimal };
-type CostFields = { [Key in (typeof costFields)[number]]: Decimal };
+type HourFields = { [Key in typeof hourFields[number]]: Decimal };
+type CostFields = { [Key in typeof costFields[number]]: Decimal };
 
 export const validHoursCountAndCosts = (input: CostFields & HourFields) =>
   ([] as BusinessRulesValidationError[])

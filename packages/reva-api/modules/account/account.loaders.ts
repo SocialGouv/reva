@@ -14,12 +14,12 @@ export const loaders = {
       return organismIds.map((cid) => organisms.find((c) => c.id === cid));
     },
     certificationAuthority: async (
-      queries: { obj: { certificationAuthorityId?: string } }[]
+      queries: { obj: { certificationAuthorityId?: string } }[],
     ) => {
       const certificationAuthorityIds: string[] = queries
         .map(({ obj }) => obj.certificationAuthorityId)
         .filter(
-          (certificationAuthorityId) => !!certificationAuthorityId
+          (certificationAuthorityId) => !!certificationAuthorityId,
         ) as string[];
 
       const certificationAuthorities =
@@ -28,7 +28,7 @@ export const loaders = {
         });
 
       return certificationAuthorityIds.map((cid) =>
-        certificationAuthorities.find((c) => c.id === cid)
+        certificationAuthorities.find((c) => c.id === cid),
       );
     },
   },

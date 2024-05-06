@@ -17,7 +17,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
   params: {
     organismId: string;
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
-  }
+  },
 ): Promise<Organism> => {
   const { hasRole, keycloakId } = context;
   if (!hasRole("gestion_maison_mere_aap")) {
@@ -47,7 +47,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
 
   if (maisonMereAAP.length === 0) {
     throw new Error(
-      `L'organisme pour l'id ${organismId} n'est pas géré par la maison mère`
+      `L'organisme pour l'id ${organismId} n'est pas géré par la maison mère`,
     );
   }
 

@@ -12,7 +12,7 @@ export const updateCertificationAuthorityById = async (
       contactFullName: string | null;
       contactEmail: string | null;
     };
-  }
+  },
 ): Promise<CertificationAuthority> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {
@@ -29,7 +29,7 @@ export const updateCertificationAuthorityById = async (
 
   if (!certificationAuthority) {
     throw new Error(
-      `Authorité de certification pour l'id ${certificationAuthorityId} non trouvé`
+      `Authorité de certification pour l'id ${certificationAuthorityId} non trouvé`,
     );
   }
 

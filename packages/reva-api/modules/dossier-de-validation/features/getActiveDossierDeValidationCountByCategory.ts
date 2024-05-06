@@ -42,7 +42,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
   await Promise.all(
     (
       Object.keys(
-        DossierDeValidationCountByCategory
+        DossierDeValidationCountByCategory,
       ) as DossierDeValidationStatusFilter[]
     ).map(async (statusFilter) => {
       try {
@@ -58,7 +58,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                     account,
                     isCertificationAuthorityLocalAccount,
                     certificationAuthorityLocalAccount,
-                  }
+                  },
                 ),
               };
             }
@@ -71,13 +71,13 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                 .candidacy,
               ...getWhereClauseFromSearchFilter(
                 candidacySearchWord,
-                searchFilter
+                searchFilter,
               ),
             };
             whereClause = {
               ...whereClause,
               ...getWhereClauseFromDossierDeValidationStatusFilter(
-                statusFilter
+                statusFilter,
               ),
               candidacy: candidacyClause,
             };
@@ -99,7 +99,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
       } catch (e) {
         e;
       }
-    })
+    }),
   );
 
   return DossierDeValidationCountByCategory;

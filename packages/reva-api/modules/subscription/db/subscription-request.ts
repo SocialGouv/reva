@@ -25,7 +25,7 @@ const departmentsWithOrganismMethods = ({
   }));
 
 export const createSubscriptionRequest = async (
-  subscriptionRequestInput: SubscriptionRequestInput
+  subscriptionRequestInput: SubscriptionRequestInput,
 ): Promise<Either<string, SubscriptionRequest>> => {
   try {
     const subscriptionRequest = await prismaClient.subscriptionRequest.create({
@@ -78,7 +78,7 @@ export const createSubscriptionRequest = async (
 };
 
 export const getSubscriptionRequestById = async (
-  id: string
+  id: string,
 ): Promise<Either<string, Maybe<SubscriptionRequest>>> => {
   try {
     const subreq = await prismaClient.subscriptionRequest.findUnique({
@@ -95,8 +95,8 @@ export const getSubscriptionRequestById = async (
     });
     return Right(
       Maybe.fromNullable(subreq).map(
-        (subreq) => withoutNullFields(subreq) as SubscriptionRequest
-      )
+        (subreq) => withoutNullFields(subreq) as SubscriptionRequest,
+      ),
     );
   } catch (e) {
     logger.error(e);
@@ -105,7 +105,7 @@ export const getSubscriptionRequestById = async (
 };
 
 export const deleteSubscriptionRequestById = async (
-  id: string
+  id: string,
 ): Promise<Either<string, void>> => {
   try {
     await prismaClient.subscriptionRequest.update({
@@ -127,7 +127,7 @@ export const deleteSubscriptionRequestById = async (
 
 export const rejectSubscriptionRequestById = async (
   id: string,
-  reason: string
+  reason: string,
 ): Promise<Either<string, SubscriptionRequest>> => {
   try {
     return Right(
@@ -137,7 +137,7 @@ export const rejectSubscriptionRequestById = async (
           status: "REJECTED",
           rejectionReason: reason,
         },
-      })
+      }),
     );
   } catch (e) {
     logger.error(e);

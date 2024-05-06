@@ -1,4 +1,5 @@
 import mjml2html from "mjml";
+
 import { sendGenericEmail, templateMail } from "../../shared/email";
 
 export const sendDVSentToCandidateEmail = ({ email }: { email: string }) => {

@@ -5,11 +5,11 @@ import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveD
 import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
 import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
+import { getDossierDeValidationHistory } from "./features/getDossierDeValidationHistory";
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
-import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
-import { getDossierDeValidationHistory } from "./features/getDossierDeValidationHistory";
+import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 
 const unsafeResolvers = {
   DossierDeValidation: {

@@ -16,12 +16,12 @@ export const getCompanionsForCandidacy =
   (deps: GetCompanionsForCandidacyDeps) =>
   (params: { candidacyId: string }) => {
     return EitherAsync.fromPromise(() =>
-      deps.getCompanionsForCandidacy(params)
+      deps.getCompanionsForCandidacy(params),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Erreur lors de la récupération des accompagnateurs"
-        )
+          "Erreur lors de la récupération des accompagnateurs",
+        ),
     );
   };

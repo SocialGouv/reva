@@ -30,7 +30,7 @@ export const sendJuryScheduledAAPEmail = async ({
       <p>L'équipe France VAE.</p>
       `,
         url,
-      })
+      }),
     );
 
   return sendEmailWithLink({

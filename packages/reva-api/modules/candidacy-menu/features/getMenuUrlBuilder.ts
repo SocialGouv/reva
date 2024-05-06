@@ -8,5 +8,7 @@ export const menuUrlBuilder =
       process.env.BASE_URL ||
       "https://vae.gouv.fr";
 
-    return `${baseUrl}/${adminType === "Elm" ? "admin" : "admin2"}/candidacies/${candidacyId}/${suffix}`;
+    return `${baseUrl}/${
+      adminType === "Elm" ? "admin" : "admin2"
+    }/candidacies/${candidacyId}/${suffix}`;
   };

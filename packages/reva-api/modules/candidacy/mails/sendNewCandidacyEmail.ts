@@ -16,7 +16,7 @@ export const sendNewCandidacyEmail = ({ email }: { email: string }) => {
          `,
         url,
         labelCTA: "Accéder à mon espace",
-      })
+      }),
     );
 
   return sendEmailWithLink({

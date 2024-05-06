@@ -113,7 +113,7 @@ test("Should generate a CSV stream with fundingRequest to be sent", async () => 
   });
   expect(itemsToSend.length).toBe(2);
   const batchReadableStream = await generateFundingRequestUnifvaeBatchCsvStream(
-    itemsToSend.map((item) => item.id)
+    itemsToSend.map((item) => item.id),
   );
   let output = "";
   for await (const chunk of batchReadableStream) {

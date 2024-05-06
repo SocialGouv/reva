@@ -81,7 +81,7 @@ describe("Subscription Request / Reject", () => {
     const result = resp.json();
     expect(result).toHaveProperty("errors");
     expect(result.errors[0].extensions.code).toBe(
-      "SUBSCRIPTION_REQUEST_NOT_FOUND"
+      "SUBSCRIPTION_REQUEST_NOT_FOUND",
     );
   });
 

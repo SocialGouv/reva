@@ -9,7 +9,7 @@ import { Candidacy } from "../candidacy.types";
 
 interface GetActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   getActiveOrganismForCertificationAndDepartment: (params: {
     certificationId: string;
@@ -28,13 +28,13 @@ export const getActiveOrganismsForCandidacyWithNewTypologies =
         getActiveOrganismForCertificationAndDepartment({
           certificationId: candidacy.certificationId || "",
           departmentId: candidacy.department?.id || "",
-        })
+        }),
       )
       .mapLeft(
         () =>
           new FunctionalError(
             FunctionalCodeError.AAP_ORGANISMS_NOT_FOUND,
-            `Erreur lors de la récupération des organismes AAP de la candidature`
-          )
+            `Erreur lors de la récupération des organismes AAP de la candidature`,
+          ),
       );
   };

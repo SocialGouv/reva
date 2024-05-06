@@ -1,4 +1,5 @@
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput } from "modules/dematerialized-feasibility-file/dematerialized-feasibility-file.types";
+
 import { prismaClient } from "../../../prisma/client";
 import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPartCompletion";
 

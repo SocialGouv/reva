@@ -20,13 +20,13 @@ export const updateAppointmentInformations =
     appointmentInformations: AppointmentInformations;
   }) => {
     const result = EitherAsync.fromPromise(() =>
-      deps.updateAppointmentInformations(params)
+      deps.updateAppointmentInformations(params),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.APPOINTMENT_INFORMATIONS_NOT_SAVED,
-          `Erreur lors de l'enregistrement des informations de rendez-vous de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors de l'enregistrement des informations de rendez-vous de la candidature ${params.candidacyId}`,
+        ),
     );
 
     return result;

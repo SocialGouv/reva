@@ -24,7 +24,7 @@ export const sendJuryScheduledReminderCandidateEmail = async ({
         <p>Cordialement,</p>
         <p>L'équipe France VAE</p>
         `,
-      })
+      }),
     );
 
   return sendEmailWithLink({

@@ -1,8 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
 import { resolversSecurityMap } from "./candidacy-log.security";
-import { getCandidacyLogs } from "./features/getCandidacyLogs";
-import { getCandidacyLogMessage } from "./features/getCandidacyLogMessage";
 import { CandidacyLog } from "./candidacy-log.types";
+import { getCandidacyLogMessage } from "./features/getCandidacyLogMessage";
+import { getCandidacyLogs } from "./features/getCandidacyLogs";
 
 const unsafeResolvers = {
   Candidacy: {

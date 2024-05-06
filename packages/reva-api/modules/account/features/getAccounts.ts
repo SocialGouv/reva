@@ -18,7 +18,7 @@ export const getAccounts = async (
     offset?: number;
     groupFilter?: AccountGroupFilter;
     searchFilter?: string;
-  }
+  },
 ): Promise<PaginatedListResult<Account>> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {

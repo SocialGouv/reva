@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
 import { CertificationCompetenceBloc } from "@prisma/client";
+
+import { prismaClient } from "../../../prisma/client";
 
 type Competence = {
   id?: string;

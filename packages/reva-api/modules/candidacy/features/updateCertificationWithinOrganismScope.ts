@@ -2,6 +2,8 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -10,8 +12,6 @@ import {
   updateCandidacyStatus,
   updateCertification,
 } from "../database/candidacies";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const updateCertificationWithinOrganismScope = async ({
   hasRole,

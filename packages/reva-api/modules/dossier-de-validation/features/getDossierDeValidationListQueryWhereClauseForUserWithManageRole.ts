@@ -26,17 +26,17 @@ export const getDossierDeValidationListQueryWhereClauseForUserWithManageRole =
     if (isCertificationAuthorityLocalAccount) {
       if (!certificationAuthorityLocalAccount) {
         throw new Error(
-          "Compte local de l'autorité de certification non trouvée"
+          "Compte local de l'autorité de certification non trouvée",
         );
       }
 
       const departmentIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId
+          (calad) => calad.departmentId,
         );
       const certificationIds =
         certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId
+          (calac) => calac.certificationId,
         );
 
       queryWhereClause = {

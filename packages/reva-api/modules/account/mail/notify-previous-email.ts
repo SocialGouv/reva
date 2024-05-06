@@ -17,7 +17,7 @@ export const notifyPreviousEmailAddress = async ({
         <p>Si vous n'êtes pas à l'origine de cette demande, contactez immédiatement le support par email à <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.</p>
         <p>L’équipe France VAE</p>
       `,
-    })
+    }),
   );
 
   if (process.env.NODE_ENV !== "production") {

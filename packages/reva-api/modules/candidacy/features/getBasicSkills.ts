@@ -17,6 +17,6 @@ export const getBasicSkills =
       () =>
         new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Erreur lors de la récupération des savoirs de base"
-        )
+          "Erreur lors de la récupération des savoirs de base",
+        ),
     );

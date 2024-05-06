@@ -9,7 +9,7 @@ import { CandidateLoginInput } from "../candidate.types";
 interface AskForLoginDeps {
   doesUserExists: (params: { userEmail: string }) => Promise<boolean>;
   generateJWTForLogin: (
-    params: CandidateLoginInput
+    params: CandidateLoginInput,
   ) => Promise<Either<string, string>>;
   sendUnknownUserEmail: (params: {
     email: string;
@@ -22,13 +22,13 @@ interface AskForLoginDeps {
 
 export const askForLogin = (deps: AskForLoginDeps) => async (email: string) => {
   const generateJWTForLogin = EitherAsync.fromPromise(() =>
-    deps.generateJWTForLogin({ email, action: "login" })
+    deps.generateJWTForLogin({ email, action: "login" }),
   ).mapLeft(
     (error) =>
       new FunctionalError(
         FunctionalCodeError.CANDIDATE_JWT_GENERATION_ERROR,
-        error
-      )
+        error,
+      ),
   );
 
   const sendLoginEmail = (params: { email: string; token: string }) =>
@@ -36,13 +36,13 @@ export const askForLogin = (deps: AskForLoginDeps) => async (email: string) => {
       (error) =>
         new FunctionalError(
           FunctionalCodeError.CANDIDATE_LOGIN_EMAIL_ERROR,
-          error
-        )
+          error,
+        ),
     );
 
   const sendMagicLinkEmail = () =>
     generateJWTForLogin.chain((token: string) =>
-      sendLoginEmail({ email, token })
+      sendLoginEmail({ email, token }),
     );
 
   const sendUnknownUserEmail = () =>
@@ -50,8 +50,8 @@ export const askForLogin = (deps: AskForLoginDeps) => async (email: string) => {
       (error) =>
         new FunctionalError(
           FunctionalCodeError.CANDIDATE_LOGIN_EMAIL_ERROR,
-          error
-        )
+          error,
+        ),
     );
 
   return (await deps.doesUserExists({ userEmail: email }))

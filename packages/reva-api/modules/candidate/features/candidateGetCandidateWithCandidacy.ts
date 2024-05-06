@@ -8,7 +8,7 @@ import { Candidate } from "../candidate.types";
 
 interface GetCandidacyDeps {
   getCandidateWithCandidacy: (
-    keycloakId: string
+    keycloakId: string,
   ) => Promise<Either<string, Candidate>>;
 }
 
@@ -18,7 +18,7 @@ export const getCandidateWithCandidacy =
     keycloakId: string;
   }): Promise<Either<FunctionalError, Candidate>> =>
     EitherAsync.fromPromise(() =>
-      deps.getCandidateWithCandidacy(params.keycloakId)
+      deps.getCandidateWithCandidacy(params.keycloakId),
     )
       .map((candidate: any) => {
         return { ...candidate, candidacy: candidate.candidacies[0] };
@@ -27,7 +27,7 @@ export const getCandidateWithCandidacy =
         () =>
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-            `Aucune candidat n'a été trouvée`
-          )
+            `Aucune candidat n'a été trouvée`,
+          ),
       )
       .run();

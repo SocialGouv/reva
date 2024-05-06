@@ -60,7 +60,9 @@ export const adminUpdateMaisonMereAAP = async (params: {
 
   const departmentList =
     departmentLabels.length > 1
-      ? `${departmentLabels.slice(0, -1).join(", ")} et ${departmentLabels.slice(-1)}`
+      ? `${departmentLabels
+          .slice(0, -1)
+          .join(", ")} et ${departmentLabels.slice(-1)}`
       : departmentLabels[0] || "";
 
   if (departmentsNotOnZoneIntervention.length > 0) {

@@ -24,14 +24,14 @@ export const confirmTrainingFormByCandidate =
       deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,
         status: "PARCOURS_ENVOYE",
-      })
+      }),
     )
       .chain((existsCandidacy) => {
         if (!existsCandidacy) {
           return EitherAsync.liftEither(
             Left(
-              `Le parcours candidat de la candidature ${params.candidacyId} ne peut être confirmé`
-            )
+              `Le parcours candidat de la candidature ${params.candidacyId} ne peut être confirmé`,
+            ),
           );
         }
         return EitherAsync.liftEither(Right(existsCandidacy));
@@ -40,21 +40,21 @@ export const confirmTrainingFormByCandidate =
         (error: string) =>
           new FunctionalError(
             FunctionalCodeError.TRAINING_FORM_NOT_CONFIRMED,
-            error
-          )
+            error,
+          ),
       );
 
     const updateCandidacy = EitherAsync.fromPromise(() =>
       deps.updateCandidacyStatus({
         candidacyId: params.candidacyId,
         status: "PARCOURS_CONFIRME",
-      })
+      }),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.TRAINING_FORM_NOT_CONFIRMED,
-          `Erreur lors de la confirmation du parcours candidat de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors de la confirmation du parcours candidat de la candidature ${params.candidacyId}`,
+        ),
     );
 
     return existsCandidacyInValidation.chain(() => updateCandidacy);

@@ -17,7 +17,7 @@ export const getCandidacyCcns = async (
     limit?: number;
     offset?: number;
     searchFilter?: string;
-  }
+  },
 ): Promise<PaginatedListResult<CandidacyConventionCollective>> => {
   const { hasRole } = context;
   if (!(hasRole("admin") || hasRole("manage_candidacy"))) {
@@ -60,7 +60,7 @@ export const getCandidacyCcns = async (
 
   const rows = await prismaClient.candidacyConventionCollective.findMany(query);
   const count = await prismaClient.candidacyConventionCollective.count(
-    queryCount
+    queryCount,
   );
 
   return {

@@ -17,7 +17,7 @@ export const CertificationStatus = {
 };
 
 export type CertificationStatus =
-  (typeof CertificationStatus)[keyof typeof CertificationStatus];
+  typeof CertificationStatus[keyof typeof CertificationStatus];
 
 export interface Certification {
   id: string;

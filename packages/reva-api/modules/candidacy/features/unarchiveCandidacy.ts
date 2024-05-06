@@ -9,7 +9,7 @@ import { Candidacy } from "../candidacy.types";
 
 interface UnarchiveCandidacyDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   hasRole: (role: Role) => boolean;
   unarchiveCandidacy: (params: {
@@ -28,28 +28,28 @@ export const unarchiveCandidacy =
 
     if (!hasRequiredRole) {
       return EitherAsync.liftEither(
-        Left(`Vous n'êtes pas autorisé à désarchiver cette candidature.`)
+        Left(`Vous n'êtes pas autorisé à désarchiver cette candidature.`),
       ).mapLeft(
         (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
+          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error),
       );
     }
 
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
+      deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+          `Aucune candidature n'a été trouvée`,
+        ),
     );
 
     const checkIfCandidacyIsArchived = (candidacy: Candidacy) => {
       const isArchived = Boolean(
         candidacy.candidacyStatuses.find(
-          (status) => status.status === "ARCHIVE" && status.isActive
-        )
+          (status) => status.status === "ARCHIVE" && status.isActive,
+        ),
       );
       return Promise.resolve(
         Maybe.fromFalsy(isArchived)
@@ -57,9 +57,9 @@ export const unarchiveCandidacy =
           .toEither(
             new FunctionalError(
               FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-              `La candidature n'est pas archivée`
-            )
-          )
+              `La candidature n'est pas archivée`,
+            ),
+          ),
       );
     };
 
@@ -69,20 +69,20 @@ export const unarchiveCandidacy =
         Maybe.fromFalsy(!isReorientation).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_IS_REORIENTATION,
-            `Impossible de restaurer la candidature : la candidat a été réorienté.`
-          )
-        )
+            `Impossible de restaurer la candidature : la candidat a été réorienté.`,
+          ),
+        ),
       );
     };
 
     const unarchiveCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.unarchiveCandidacy(params)
+      deps.unarchiveCandidacy(params),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-          `Erreur lors du désarchivage de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors du désarchivage de la candidature ${params.candidacyId}`,
+        ),
     );
 
     return checkIfCandidacyExists

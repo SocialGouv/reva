@@ -7,7 +7,7 @@ export const organismLoaders = {
       queries: {
         obj: { id: string };
         params: { departmentId?: string };
-      }[]
+      }[],
     ) => {
       const organismAndDepartmentIds: {
         organismId: string;
@@ -25,8 +25,8 @@ export const organismLoaders = {
         organismOnDepartments.filter(
           (ood) =>
             ood.organismId === odids.organismId &&
-            (odids.departmentId === ood.departmentId || !odids.departmentId)
-        )
+            (odids.departmentId === ood.departmentId || !odids.departmentId),
+        ),
       );
 
       return mapped;
@@ -34,7 +34,7 @@ export const organismLoaders = {
     informationsCommerciales: async (
       queries: {
         obj: { id: string };
-      }[]
+      }[],
     ) => {
       const organismIds = queries.map((q) => q.obj.id);
 
@@ -42,7 +42,7 @@ export const organismLoaders = {
         await getInformationsCommercialesByOrganismIds({ organismIds });
 
       return organismIds.map((oid) =>
-        informationsCommerciales.find((ic) => ic.organismId === oid)
+        informationsCommerciales.find((ic) => ic.organismId === oid),
       );
     },
   },

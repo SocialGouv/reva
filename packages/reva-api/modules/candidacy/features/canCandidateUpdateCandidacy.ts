@@ -18,7 +18,7 @@ export const canCandidateUpdateCandidacy = async ({
 
   const candidacyStatus = candidacy.candidacyStatuses[0];
   const statusOk = ["PROJET", "VALIDATION", "PRISE_EN_CHARGE"].includes(
-    candidacyStatus.status
+    candidacyStatus.status,
   );
   const firstAppointmentDateOk =
     !candidacy.firstAppointmentOccuredAt ||

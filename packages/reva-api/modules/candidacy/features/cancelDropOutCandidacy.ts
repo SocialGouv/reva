@@ -8,10 +8,10 @@ import { Candidacy } from "../candidacy.types";
 
 interface CancelDropOutCandidacyDeps {
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
   cancelDropOutCandidacy: (
-    params: CancelDropOutCandidacyParams
+    params: CancelDropOutCandidacyParams,
   ) => Promise<Either<string, Candidacy>>;
 }
 
@@ -23,13 +23,13 @@ export const cancelDropOutCandidacy =
   (deps: CancelDropOutCandidacyDeps) =>
   (params: CancelDropOutCandidacyParams) => {
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
+      deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+          `Aucune candidature n'a été trouvée`,
+        ),
     );
 
     const checkIfCandidacyIsAbandonned = (candidacy: Candidacy) => {
@@ -38,20 +38,20 @@ export const cancelDropOutCandidacy =
         Maybe.fromFalsy(hasDropOut).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_NOT_DROPPED_OUT,
-            `La candidature n'est pas abandonnée`
-          )
-        )
+            `La candidature n'est pas abandonnée`,
+          ),
+        ),
       );
     };
 
     const cancelDropOutCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.cancelDropOutCandidacy(params)
+      deps.cancelDropOutCandidacy(params),
     ).mapLeft(
       (error: string) =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
-          error
-        )
+          error,
+        ),
     );
 
     return checkIfCandidacyExists

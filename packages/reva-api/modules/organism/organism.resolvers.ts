@@ -111,13 +111,13 @@ export const resolvers = {
           isActive: boolean;
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -125,7 +125,7 @@ export const resolvers = {
           {
             hasRole: context.auth.hasRole,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -144,7 +144,7 @@ export const resolvers = {
           }[];
         };
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (
         context.auth.userInfo?.sub == undefined ||
@@ -161,7 +161,7 @@ export const resolvers = {
         informationsCommerciales: OrganismInformationsCommerciales & {
           id: string | null;
         };
-      }
+      },
     ) => {
       const organismUpdated = await createOrUpdateInformationsCommerciales({
         informationsCommerciales: params.informationsCommerciales,
@@ -190,7 +190,7 @@ export const resolvers = {
         organismId: string;
         fermePourAbsenceOuConges: boolean;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       const account = await getAccountByKeycloakId({
         keycloakId: context.auth.userInfo?.sub || "",
@@ -199,7 +199,7 @@ export const resolvers = {
       if (account?.organismId !== organismId) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized"
+          "Not authorized",
         );
       }
       return updateFermePourAbsenceOuConges({
@@ -212,12 +212,12 @@ export const resolvers = {
       params: {
         organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized"
+          "Not authorized",
         );
       }
 
@@ -240,13 +240,13 @@ export const resolvers = {
         organismId: string;
         organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
         const keycloakAdmin = await context.app.getKeycloakAdmin();
@@ -257,7 +257,7 @@ export const resolvers = {
             keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
-          params
+          params,
         );
       } catch (e) {
         logger.error(e);
@@ -268,7 +268,7 @@ export const resolvers = {
       _parent: unknown,
       params: {
         data: { organismId: string; degreeIds: string[] };
-      }
+      },
     ) =>
       createOrUpdateOrganismOnDegrees({
         organismId: params.data.organismId,
@@ -279,12 +279,12 @@ export const resolvers = {
       params: {
         data: UpdateOrganismInterventionZoneInput;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new FunctionalError(
           FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized"
+          "Not authorized",
         );
       }
 
@@ -312,7 +312,7 @@ export const resolvers = {
       params: {
         data: UpdateOrganismAccountInput;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
         throw new Error("Utilisateur non autorisé");
@@ -342,13 +342,13 @@ export const resolvers = {
       params: {
         id: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       try {
         if (context.auth.userInfo?.sub == undefined) {
           throw new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized"
+            "Not authorized",
           );
         }
 
@@ -399,7 +399,7 @@ export const resolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (!context.auth.hasRole("admin")) {
         throw new Error("Utilisateur non autorisé");
@@ -412,7 +412,7 @@ export const resolvers = {
       params: {
         maisonMereAAPId: string;
       },
-      context: GraphqlContext
+      context: GraphqlContext,
     ) => {
       if (!context.auth.hasRole("admin")) {
         throw new Error("Utilisateur non autorisé");

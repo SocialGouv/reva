@@ -5,7 +5,7 @@ import { AuditEvent } from "./audit-event.entity";
 import { AuditEventDataInterface } from "./audit-event.type";
 
 export async function saveAuditEvent<T extends AuditEventDataInterface>(
-  event: AuditEvent<T>
+  event: AuditEvent<T>,
 ) {
   try {
     await prismaClient.auditEvent.create({
@@ -17,7 +17,7 @@ export async function saveAuditEvent<T extends AuditEventDataInterface>(
 }
 
 export async function findFirstAuditEventContent<
-  T extends AuditEventDataInterface
+  T extends AuditEventDataInterface,
 >(args: Prisma.AuditEventFindFirstArgs): Promise<T | null> {
   try {
     const event = await prismaClient.auditEvent.findFirst(args);
@@ -34,7 +34,7 @@ export async function findFirstAuditEventContent<
 }
 
 export async function findAuditEventContent<
-  T extends AuditEventDataInterface[]
+  T extends AuditEventDataInterface[],
 >(args: Prisma.AuditEventFindManyArgs): Promise<T | null> {
   try {
     const events = await prismaClient.auditEvent.findMany(args);

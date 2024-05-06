@@ -19,7 +19,7 @@ export const getActiveCandidacyMenu = async ({
   const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
-    activeCandidacyStatus
+    activeCandidacyStatus,
   );
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
@@ -224,7 +224,7 @@ export const getActiveCandidacyMenu = async ({
     const newJuryMenu = candidacy.financeModule == "unifvae";
 
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
-      "DEMANDE_FINANCEMENT_ENVOYE"
+      "DEMANDE_FINANCEMENT_ENVOYE",
     )
       ? "ACTIVE_WITHOUT_HINT"
       : "INACTIVE";

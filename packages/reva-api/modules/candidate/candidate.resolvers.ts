@@ -1,14 +1,14 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { generateJwt } from "./auth.helper";
 import {
-  CandidateUpdateInput,
   CandidateProfileUpdateInput,
+  CandidateUpdateInput,
 } from "./candidate.types";
 import {
   getCandidateByEmail as getCandidateByEmailFromDb,
@@ -20,6 +20,7 @@ import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "./features/getCandidateByEmail";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
+import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import {
   sendLoginEmail,
@@ -27,7 +28,6 @@ import {
   sendUnknownUserEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { updateCandidate } from "./features/updateCandidate";
 
 const unsafeResolvers = {
   Candidate: {

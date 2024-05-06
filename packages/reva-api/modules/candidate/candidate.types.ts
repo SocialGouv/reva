@@ -1,4 +1,5 @@
 import { Country } from "@prisma/client";
+
 import {
   Degree,
   VulnerabilityIndicator,

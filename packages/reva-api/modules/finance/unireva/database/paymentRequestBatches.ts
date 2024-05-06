@@ -12,7 +12,7 @@ export const createPaymentRequestBatch = async (params: {
     return Right(
       (await prismaClient.paymentRequestBatch.create({
         data: { ...params },
-      })) as unknown as PaymentRequestBatch
+      })) as unknown as PaymentRequestBatch,
     );
   } catch (e) {
     logger.error(e);

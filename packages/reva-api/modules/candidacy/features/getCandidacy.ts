@@ -18,7 +18,7 @@ export const getCandidacy =
         () =>
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-            `Aucune candidature n'a été trouvée`
-          )
+            `Aucune candidature n'a été trouvée`,
+          ),
       )
       .run();

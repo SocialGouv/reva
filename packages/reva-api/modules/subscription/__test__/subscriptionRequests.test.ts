@@ -19,7 +19,7 @@ const subreqSampleFull = Object.assign(
     companyAddress: "64 boulevard du Général Leclerc",
     companyZipCode: "35660",
     companyCity: "Fougères",
-  }
+  },
 );
 
 let onSiteDepartmentsIds: string[], remoteDepartmentsIds: string[];
@@ -107,7 +107,7 @@ test("Should fail to create a subscription request when matching existing organi
   const data = resp.json();
   expect(data).toHaveProperty("errors");
   expect(data.errors[0].extensions.code).toBe(
-    FunctionalCodeError.SUBSCRIPTION_REQUEST_HAS_MATCHING_ORGANISM
+    FunctionalCodeError.SUBSCRIPTION_REQUEST_HAS_MATCHING_ORGANISM,
   );
 });
 
@@ -145,7 +145,7 @@ test("Should fail to create a similar subscription request based on siret/typolo
   const data = resp.json();
   expect(data).toHaveProperty("errors");
   expect(data.errors[0].extensions.code).toBe(
-    FunctionalCodeError.SUBSCRIPTION_REQUEST_ALREADY_EXISTS
+    FunctionalCodeError.SUBSCRIPTION_REQUEST_ALREADY_EXISTS,
   );
 });
 

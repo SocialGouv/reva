@@ -27,7 +27,7 @@ export const sendJuryScheduledCandidateEmail = async ({
       <p>L'équipe France VAE.</p>
         `,
         url,
-      })
+      }),
     );
 
   const attachment = convocationFile

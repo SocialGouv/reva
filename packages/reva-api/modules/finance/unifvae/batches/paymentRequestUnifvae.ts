@@ -61,7 +61,7 @@ export const batchPaymentRequestUnifvae = async (batchKey: string) => {
   } catch (e) {
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
-      e
+      e,
     );
     e instanceof Error && logger.error(e.message);
   } finally {
@@ -70,7 +70,7 @@ export const batchPaymentRequestUnifvae = async (batchKey: string) => {
 };
 
 export async function generatePaymentRequestUnifvaeBatchCsvStream(
-  itemsToSendIds: string[]
+  itemsToSendIds: string[],
 ) {
   const RECORDS_PER_FETCH = 10;
   let skip = 0;

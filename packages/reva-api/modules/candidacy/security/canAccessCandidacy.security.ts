@@ -1,4 +1,5 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
+
 import { canAccessCandidacy as canAccessCandidacyFeature } from "../features/canAccessCandidacy";
 
 export const canAccessCandidacy =

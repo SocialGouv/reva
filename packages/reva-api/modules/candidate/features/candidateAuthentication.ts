@@ -1,7 +1,9 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCertification } from "../../candidacy/database/candidacies";
 import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 import { isCertificationAvailableInDepartment } from "../../referential/features/isCertificationAvailableInDepartment";
 import {
   FunctionalCodeError,
@@ -22,8 +24,6 @@ import {
   createCandidateWithCandidacy,
   getCandidateWithCandidacyFromKeycloakId,
 } from "../database/candidates";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const candidateAuthentication = async ({
   token,

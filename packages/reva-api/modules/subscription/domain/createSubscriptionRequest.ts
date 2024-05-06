@@ -8,13 +8,13 @@ import {
 
 interface createSubscriptionRequestDeps {
   createSubscriptionRequest: (
-    params: SubscriptionRequestInput
+    params: SubscriptionRequestInput,
   ) => Promise<Either<string, SubscriptionRequest>>;
   existSubscriptionRequestWithTypologyAndSiret: (
-    params: Pick<SubscriptionRequestInput, "companySiret" | "typology">
+    params: Pick<SubscriptionRequestInput, "companySiret" | "typology">,
   ) => Promise<Either<string, boolean>>;
   existOrganismWithTypologyAndSiret: (
-    params: Pick<Prisma.OrganismWhereInput, "siret" | "typology">
+    params: Pick<Prisma.OrganismWhereInput, "siret" | "typology">,
   ) => Promise<Either<string, boolean>>;
   sendSubscriptionValidationInProgressEmail: ({
     email,
@@ -25,7 +25,7 @@ interface createSubscriptionRequestDeps {
 
 export const createSubscriptionRequest = async (
   deps: createSubscriptionRequestDeps,
-  params: SubscriptionRequestInput
+  params: SubscriptionRequestInput,
 ) => {
   const checkMatchingSubscriptionRequest = () =>
     EitherAsync.fromPromise(async () => {
@@ -38,8 +38,8 @@ export const createSubscriptionRequest = async (
         return Left(
           new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            eitherHasMatchingSubReq.extract() as string
-          )
+            eitherHasMatchingSubReq.extract() as string,
+          ),
         );
       }
       const hasMatchingSubReq = eitherHasMatchingSubReq.extract() as boolean;
@@ -47,8 +47,8 @@ export const createSubscriptionRequest = async (
         ? Left(
             new FunctionalError(
               FunctionalCodeError.SUBSCRIPTION_REQUEST_ALREADY_EXISTS,
-              `Une demande existe déjà pour ce Siret en tant que "${params.typology}"`
-            )
+              `Une demande existe déjà pour ce Siret en tant que "${params.typology}"`,
+            ),
           )
         : Right(true);
     });
@@ -64,8 +64,8 @@ export const createSubscriptionRequest = async (
         return Left(
           new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
-            eitherHasMatchingOrganism.extract() as string
-          )
+            eitherHasMatchingOrganism.extract() as string,
+          ),
         );
       }
       const hasMatchingOrganism =
@@ -74,8 +74,8 @@ export const createSubscriptionRequest = async (
         ? Left(
             new FunctionalError(
               FunctionalCodeError.SUBSCRIPTION_REQUEST_HAS_MATCHING_ORGANISM,
-              `Un organisme existe déjà avec ce Siret en tant que "${params.typology}"`
-            )
+              `Un organisme existe déjà avec ce Siret en tant que "${params.typology}"`,
+            ),
           )
         : Right(true);
     });
@@ -91,7 +91,7 @@ export const createSubscriptionRequest = async (
       return result;
     }).mapLeft(
       (err: string) =>
-        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err)
+        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err),
     );
 
   return checkMatchingSubscriptionRequest()

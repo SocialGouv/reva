@@ -38,7 +38,7 @@ export const createOrUpdatePaymentRequestForCandidacy =
     paymentRequest: PaymentRequest;
   }): Promise<Either<FunctionalError, PaymentRequest>> => {
     const createOrUpdatePaymentRequest = (
-      existingPaymentRequest: Maybe<PaymentRequest>
+      existingPaymentRequest: Maybe<PaymentRequest>,
     ): Promise<Either<string, PaymentRequest>> =>
       existingPaymentRequest.caseOf({
         Just: (pr) =>
@@ -57,12 +57,12 @@ export const createOrUpdatePaymentRequestForCandidacy =
     const afgsuTrainingId = await deps.getAfgsuTrainingId();
 
     return EitherAsync.fromPromise(() =>
-      deps.getFundingRequestByCandidacyId({ candidacyId: params.candidacyId })
+      deps.getFundingRequestByCandidacyId({ candidacyId: params.candidacyId }),
     )
       .map((fundingRequest) =>
         EitherAsync.fromPromise(() =>
-          deps.getCandidateByCandidacyId(params.candidacyId)
-        ).map((candidate) => ({ fundingRequest, candidate }))
+          deps.getCandidateByCandidacyId(params.candidacyId),
+        ).map((candidate) => ({ fundingRequest, candidate })),
       )
       .join()
       .chain((candidateAndFundingRequest) =>
@@ -71,12 +71,14 @@ export const createOrUpdatePaymentRequestForCandidacy =
             candidateAndFundingRequest.candidate,
             params.paymentRequest,
             candidateAndFundingRequest.fundingRequest,
-            afgsuTrainingId
-          )
-        )
+            afgsuTrainingId,
+          ),
+        ),
       )
       .chain(() =>
-        deps.getPaymentRequestByCandidacyId({ candidacyId: params.candidacyId })
+        deps.getPaymentRequestByCandidacyId({
+          candidacyId: params.candidacyId,
+        }),
       )
       .chain(createOrUpdatePaymentRequest)
       .mapLeft((v) =>
@@ -84,8 +86,8 @@ export const createOrUpdatePaymentRequestForCandidacy =
           ? v
           : new FunctionalError(
               FunctionalCodeError.TECHNICAL_ERROR,
-              `Erreur pendant la création ou la mise à jour de la demande de paiement pour la candidature ${params.candidacyId}`
-            )
+              `Erreur pendant la création ou la mise à jour de la demande de paiement pour la candidature ${params.candidacyId}`,
+            ),
       );
   };
 
@@ -93,7 +95,7 @@ export const validatePaymentRequest = (
   candidate: Candidate,
   pr: PaymentRequest,
   fr: FundingRequest | null,
-  afgsuTrainingId: string | null
+  afgsuTrainingId: string | null,
 ): Either<FunctionalError, PaymentRequest> => {
   let errors: string[] = [];
 
@@ -128,7 +130,8 @@ export const validatePaymentRequest = (
       hoursAndCosts,
       isCandidateBacNonFragile,
       mandatoryTrainingContainAfgsu: fr.mandatoryTrainings.some(
-        (mt: { training: { id: string } }) => mt.training.id === afgsuTrainingId
+        (mt: { training: { id: string } }) =>
+          mt.training.id === afgsuTrainingId,
       ),
       numberOfMandatoryTrainings: fr.mandatoryTrainings.length,
     });
@@ -136,7 +139,7 @@ export const validatePaymentRequest = (
     const total = getTotalCost(hoursAndCosts);
     const totalCostErrorMessage = validateTotalCost(
       total,
-      isCandidateBacNonFragile
+      isCandidateBacNonFragile,
     );
     totalCostErrorMessage && errors.push(totalCostErrorMessage);
   }
@@ -146,8 +149,8 @@ export const validatePaymentRequest = (
         new FunctionalError(
           FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
           `Une erreur est survenue lors de la validation du formulaire`,
-          errors
-        )
+          errors,
+        ),
       )
     : Right(pr);
 };

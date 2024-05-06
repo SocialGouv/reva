@@ -1,6 +1,7 @@
 import { Right } from "purify-ts";
-import { sendGenericEmailPurifyJS } from ".";
+
 import { logger } from "../logger";
+import { sendGenericEmailPurifyJS } from ".";
 
 export const sendEmailWithLinkPurifyJS = async ({
   email,

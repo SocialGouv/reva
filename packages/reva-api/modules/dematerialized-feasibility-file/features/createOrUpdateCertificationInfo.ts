@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
-import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 import { updateCandidacyCertificationCompletion } from "../../candidacy/features/updateCandidacyCertificationCompletion";
+import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPartCompletion";
 
 export const createOrUpdateCertificationInfo = async ({

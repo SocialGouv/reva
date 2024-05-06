@@ -6,18 +6,19 @@ import {
   Candidacy,
   Candidate,
   CertificationAuthority,
+  CertificationAuthorityLocalAccount,
   Feasibility,
+  File,
   MaisonMereAAP,
   Organism,
-  File,
-  CertificationAuthorityLocalAccount,
 } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import {
-  organismIperia,
-  expertBrancheEtFiliereOrganism,
   candidateJPL,
   candidateMPB,
+  expertBrancheEtFiliereOrganism,
+  organismIperia,
 } from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";

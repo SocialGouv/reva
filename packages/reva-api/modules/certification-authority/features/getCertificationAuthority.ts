@@ -7,7 +7,7 @@ export const getCertificationAuthorityById = async (
   },
   params: {
     id: string;
-  }
+  },
 ): Promise<CertificationAuthority> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {

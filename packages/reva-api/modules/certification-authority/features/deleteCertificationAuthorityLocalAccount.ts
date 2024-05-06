@@ -1,5 +1,5 @@
-import { deleteAccount } from "../../account/features/deleteAccount";
 import { prismaClient } from "../../../prisma/client";
+import { deleteAccount } from "../../account/features/deleteAccount";
 
 export const deleteCertificationAuthorityLocalAccount = async ({
   certificationAuthorityLocalAccountId,

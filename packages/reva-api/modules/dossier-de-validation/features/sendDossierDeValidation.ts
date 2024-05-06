@@ -3,12 +3,12 @@ import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
 import { getAccountById } from "../../account/features/getAccount";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { FileService, UploadedFile } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const sendDossierDeValidation = async ({
   candidacyId,

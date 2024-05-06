@@ -23,14 +23,14 @@ export const takeOverCandidacy =
       deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,
         status: "VALIDATION",
-      })
+      }),
     )
       .chain((existsCandidacyInValidation) => {
         if (!existsCandidacyInValidation) {
           return EitherAsync.liftEither(
             Left(
-              `La candidature ${params.candidacyId} ne peut être prise en charge`
-            )
+              `La candidature ${params.candidacyId} ne peut être prise en charge`,
+            ),
           );
         }
         return EitherAsync.liftEither(Right(existsCandidacyInValidation));
@@ -39,21 +39,21 @@ export const takeOverCandidacy =
         (error: string) =>
           new FunctionalError(
             FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-            error
-          )
+            error,
+          ),
       );
 
     const updateCandidacy = EitherAsync.fromPromise(() =>
       deps.updateCandidacyStatus({
         candidacyId: params.candidacyId,
         status: "PRISE_EN_CHARGE",
-      })
+      }),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-          `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`
-        )
+          `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`,
+        ),
     );
 
     return existsCandidacyInValidation.chain(() => updateCandidacy);

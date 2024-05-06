@@ -13,7 +13,7 @@ export const notifyNewEmailAddress = async ({ email }: { email: string }) => {
         <p>Cet e-mail est désormais votre nouvel identifiant, il vous sera utile pour vous connecter à France VAE.</p>
         <p>L’équipe France VAE</p>
       `,
-    })
+    }),
   );
 
   if (process.env.NODE_ENV !== "production") {

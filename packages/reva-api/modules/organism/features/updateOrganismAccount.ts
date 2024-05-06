@@ -1,6 +1,6 @@
 import { updateAccountById } from "../../account/features/updateAccount";
-import { getAccountByOrganismId } from "./getAccountByOrganismId";
 import { UpdateOrganismAccountInput } from "../organism.types";
+import { getAccountByOrganismId } from "./getAccountByOrganismId";
 
 export const updateOrganismAccount = async ({
   params: { organismId, accountEmail, accountFirstname, accountLastname },

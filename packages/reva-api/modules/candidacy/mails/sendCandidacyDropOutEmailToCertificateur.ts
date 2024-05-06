@@ -1,6 +1,7 @@
 import mjml2html from "mjml";
-import { sendGenericEmail, templateMail } from "../../shared/email";
+
 import { prismaClient } from "../../../prisma/client";
+import { sendGenericEmail, templateMail } from "../../shared/email";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -26,7 +27,9 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
 
   const candidateFullName =
     candidate &&
-    `${candidate?.firstname || ""}${candidate?.lastname ? ` ${candidate?.lastname}` : ""}`;
+    `${candidate?.firstname || ""}${
+      candidate?.lastname ? ` ${candidate?.lastname}` : ""
+    }`;
 
   if (!contactEmail || !candidateFullName) {
     return;

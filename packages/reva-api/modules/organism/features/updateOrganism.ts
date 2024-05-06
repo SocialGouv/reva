@@ -14,7 +14,7 @@ export const updateOrganismById = async (
       website: string | null;
       isActive: boolean;
     };
-  }
+  },
 ): Promise<Organism> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {

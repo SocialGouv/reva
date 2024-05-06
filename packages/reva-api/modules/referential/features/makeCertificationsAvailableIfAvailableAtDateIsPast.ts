@@ -1,4 +1,5 @@
 import { startOfToday } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const makeCertificationsAvailableIfAvailableAtDateIsPast = () =>

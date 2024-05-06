@@ -61,7 +61,7 @@ export const canManageCandidacy = async ({
     candidacyOrganismId === accountOrganismId;
   log(
     "Manager and candidacy have same organismId:",
-    isCandidacyorganismSameAsAccountOrganism
+    isCandidacyorganismSameAsAccountOrganism,
   );
 
   if (isCandidacyorganismSameAsAccountOrganism) {
@@ -86,7 +86,7 @@ export const canManageCandidacy = async ({
 
   log(
     "candidacy has an organism that is part of manager maison mere:",
-    isMaisonMereManagingCandidacyOrganism
+    isMaisonMereManagingCandidacyOrganism,
   );
 
   return isMaisonMereManagingCandidacyOrganism;

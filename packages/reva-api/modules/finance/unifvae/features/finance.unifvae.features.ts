@@ -3,11 +3,11 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { format } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,

@@ -7,7 +7,7 @@ export const hasNotRole =
     root: any,
     args: Record<string, any>,
     context: MercuriusContext,
-    info: any
+    info: any,
   ) => {
     if (roles.some((role) => context.auth.hasRole(role))) {
       throw new Error("You are not authorized!");

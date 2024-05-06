@@ -20,7 +20,7 @@ export const getReferentOrganismFromCandidacyId = async ({
   } catch (e) {
     logger.error(e);
     throw Error(
-      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`
+      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`,
     );
   }
 };

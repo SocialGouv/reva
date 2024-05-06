@@ -14,7 +14,7 @@ interface GetFundingRequestDeps {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;
   getCandidacyFromId: (
-    candidacyId: string
+    candidacyId: string,
   ) => Promise<Either<string, Candidacy>>;
 }
 
@@ -27,34 +27,34 @@ export const getFundingRequest =
       return Left(
         new FunctionalError(
           FunctionalCodeError.NOT_AUTHORIZED,
-          `Vous n'avez pas accès à la demande de financement de cette candidature`
-        )
+          `Vous n'avez pas accès à la demande de financement de cette candidature`,
+        ),
       );
     }
 
     const getCandidacy = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
+      deps.getCandidacyFromId(params.candidacyId),
     ).mapLeft(
       () =>
         new FunctionalError(
           FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+          `Aucune candidature n'a été trouvée`,
+        ),
     );
 
     const getFundingRequest = (candidacy: any) =>
       EitherAsync.fromPromise(() =>
-        deps.getFundingRequestFromCandidacyId(params)
+        deps.getFundingRequestFromCandidacyId(params),
       )
         .map((fundingRequest: FundingRequest | null) => {
           return {
             fundingRequest: fundingRequest && {
               ...fundingRequest,
               basicSkills: fundingRequest.basicSkills.map(
-                (b: any) => b.basicSkill
+                (b: any) => b.basicSkill,
               ),
               mandatoryTrainings: fundingRequest.mandatoryTrainings.map(
-                (t: any) => t.training
+                (t: any) => t.training,
               ),
             },
             training: {
@@ -64,7 +64,7 @@ export const getFundingRequest =
               otherTraining: candidacy.otherTraining || "",
               basicSkills: candidacy.basicSkills.map((b: any) => b.basicSkill),
               mandatoryTrainings: candidacy.trainings.map(
-                (t: any) => t.training
+                (t: any) => t.training,
               ),
             },
           };
@@ -73,8 +73,8 @@ export const getFundingRequest =
           () =>
             new FunctionalError(
               FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-              `La demande de financement n'est pas possible`
-            )
+              `La demande de financement n'est pas possible`,
+            ),
         );
 
     return getCandidacy.chain((candidacy: any) => getFundingRequest(candidacy));

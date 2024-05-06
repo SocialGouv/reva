@@ -9,7 +9,7 @@ import { AuditEventType } from "./audit-event.type";
 
 export async function cancelDropOutCandidacyEvent(
   accountId: string,
-  data: CandidacyDropOut
+  data: CandidacyDropOut,
 ) {
   const event = new AuditEvent({
     type: AuditEventType.CANCEL_CANDIDACY_DROP_OUT,
@@ -22,7 +22,7 @@ export async function cancelDropOutCandidacyEvent(
 
 // This is a sample on how to search AuditEvent in db
 export async function findFirstCandidacyDropout(
-  candidacyId: string
+  candidacyId: string,
 ): Promise<CandidacyDropOut | null> {
   const candidacyDropOut = await findFirstAuditEventContent<CandidacyDropOut>({
     where: {
@@ -39,7 +39,7 @@ export async function findFirstCandidacyDropout(
 
 // This is a sample on how to search AuditEvent in db
 export async function findCandidacyDropout(
-  candidacyId: string
+  candidacyId: string,
 ): Promise<CandidacyDropOut[] | null> {
   const candidacyDropOut = await findAuditEventContent<CandidacyDropOut[]>({
     where: {

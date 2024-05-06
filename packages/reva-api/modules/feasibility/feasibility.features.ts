@@ -11,6 +11,7 @@ import { prismaClient } from "../../prisma/client";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
+import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import {
   getCandidaciesFromIds,
   updateCandidacyStatus,
@@ -38,7 +39,6 @@ import {
   excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 

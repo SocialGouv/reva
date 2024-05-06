@@ -5,7 +5,7 @@ export const featureFlippingResolvers = {
     activeFeaturesForConnectedUser: (
       _parent: unknown,
       _args: unknown,
-      context: GraphqlContext
+      context: GraphqlContext,
     ) =>
       activeFeaturesForConnectedUser({
         userKeycloakId: context.auth.userInfo?.sub,

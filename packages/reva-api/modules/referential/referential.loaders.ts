@@ -6,7 +6,7 @@ export const referentialLoaders = {
       const regionIds: string[] = queries.map(({ obj }) => obj.id);
       const departments = await getDepartmentsByRegionIds({ regionIds });
       return regionIds.map((rid) =>
-        departments.filter((d) => d.regionId === rid)
+        departments.filter((d) => d.regionId === rid),
       );
     },
   },

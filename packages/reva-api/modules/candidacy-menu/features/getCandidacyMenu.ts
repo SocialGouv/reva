@@ -18,7 +18,7 @@ export const getCandidacyMenu = async ({
 }): Promise<CandidacyMenu> => {
   const candidacy = await getCandidacyForMenu({ candidacyId });
   const activeCandidacyStatus = candidacy.candidacyStatuses.find(
-    (status) => status.isActive
+    (status) => status.isActive,
   )?.status;
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });

@@ -1,8 +1,9 @@
 import { CertificationAuthorityLocalAccount } from "@prisma/client";
+
 import { getAccountsByIds } from "../account/features/getAccountsByIds";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityIds } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityIds";
 import { getCertificationRelationsByCertificationAuthorityLocalAccountIds } from "./features/getCertificationRelationsByCertificationAuthorityLocalAccountIds";
 import { getDepartmentRelationsByCertificationAuthorityLocalAccountIds } from "./features/getDepartmentRelationsByCertificationAuthorityLocalAccountIds";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityIds } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityIds";
 
 export const certificationAuthorityLoaders = {
   CertificationAuthority: {

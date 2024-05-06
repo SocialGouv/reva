@@ -24,7 +24,7 @@ type SearchResponse = {
         importance: number;
         street: string;
       };
-    }
+    },
   ];
 };
 
@@ -51,7 +51,7 @@ export const getLLToEarthFromZip = async ({ zip }: { zip?: string | null }) => {
 
   const [{ ll_to_earth }]: { ll_to_earth: string }[] =
     await prismaClient.$queryRawUnsafe(
-      `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`
+      `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`,
     );
 
   return ll_to_earth;

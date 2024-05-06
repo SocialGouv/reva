@@ -1,7 +1,10 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
 import { prismaClient } from "../../prisma/client";
 import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
 import { getCertificationById } from "./features/getCertificationById";
+import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
+import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
@@ -19,15 +22,13 @@ import { replaceCertification } from "./features/replaceCertification";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
 import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { updateCertification } from "./features/updateCertification";
+import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
   UpdateCertificationInput,
   UpdateCompetenceBlocsInput,
 } from "./referential.types";
 import { RNCPReferential } from "./rncp";
-import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
-import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
-import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
 
 const unsafeReferentialResolvers = {
   Certification: {

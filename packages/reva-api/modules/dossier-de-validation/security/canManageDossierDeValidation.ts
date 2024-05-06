@@ -8,7 +8,7 @@ export const canManageDossierDeValidation =
     root: unknown,
     args: { dossierDeValidationId?: string; [x: string]: unknown },
     context: MercuriusContext,
-    info: any
+    info: any,
   ) => {
     const dossierDeValidationId = args.dossierDeValidationId ?? "";
     const keycloakId = context.auth.userInfo?.sub ?? "";

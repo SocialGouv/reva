@@ -11,7 +11,7 @@ export const isCandidacyOwner =
     root: unknown,
     args: { candidacyId?: string; [x: string]: unknown },
     context: MercuriusContext,
-    info: any
+    info: any,
   ) => {
     log("isCandidacyOwner");
     const candidacyId = args.candidacyId ?? "";

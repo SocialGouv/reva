@@ -6,7 +6,7 @@ import { logger } from "../../shared/logger";
 import * as domain from "../candidacy.types";
 
 export const toDomainExperiences = (
-  experiences: Experience[]
+  experiences: Experience[],
 ): domain.Experience[] => {
   return experiences.map((xp) => {
     return {
@@ -28,7 +28,7 @@ export const getExperienceFromId = async (id: string) => {
     });
 
     return Maybe.fromNullable(candidacy).toEither(
-      `Experience with id ${id} not found`
+      `Experience with id ${id} not found`,
     );
   } catch (e) {
     logger.error(e);

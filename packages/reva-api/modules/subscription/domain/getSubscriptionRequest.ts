@@ -7,17 +7,17 @@ import {
 
 interface getSubscriptionRequestsDeps {
   getSubscriptionRequestById: (
-    id: string
+    id: string,
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
 }
 
 export const getSubscriptionRequest = async (
   deps: getSubscriptionRequestsDeps,
-  id: string
+  id: string,
 ) =>
   EitherAsync.fromPromise(() => deps.getSubscriptionRequestById(id))
     .mapLeft(
       (err: string) =>
-        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err)
+        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err),
     )
     .map((maybeSubReq) => maybeSubReq.extractNullable());

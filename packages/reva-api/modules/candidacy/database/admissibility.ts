@@ -18,7 +18,7 @@ export const getAdmissibilityFromCandidacyId = async (params: {
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while retrieving admissibility for candidacy with id ${params.candidacyId}`
+      `error while retrieving admissibility for candidacy with id ${params.candidacyId}`,
     );
   }
 };
@@ -32,12 +32,12 @@ export const updateAdmissibility = async (params: {
       await prismaClient.admissibility.update({
         where: { id: params.admissibilityId },
         data: params.admissibility,
-      })
+      }),
     );
   } catch (e) {
     logger.error(e);
     return Left(
-      `error while creating admissibility with id ${params.admissibilityId}`
+      `error while creating admissibility with id ${params.admissibilityId}`,
     );
   }
 };
