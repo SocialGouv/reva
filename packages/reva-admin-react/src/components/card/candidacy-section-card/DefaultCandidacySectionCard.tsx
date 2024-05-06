@@ -9,23 +9,6 @@ export const BadgeToComplete = () => (
   <Badge severity="warning">À compléter</Badge>
 );
 
-export type CandidacySectionCardStatus = "TO_COMPLETE" | "COMPLETED";
-
-type CandidacySectionCardProps = {
-  title: string;
-  titleIconClass?: string;
-  buttonOnClickHref: string;
-  children?: ReactNode;
-}
-
-type AllowEdition = {
-  isDematerialized: true;
-  status: "TO_COMPLETE" | "COMPLETED";
-} | {
-  isDematerialized?: false;
-  status: never;
-}
-
 export const DefaultCandidacySectionCard = ({
   title,
   titleIconClass,

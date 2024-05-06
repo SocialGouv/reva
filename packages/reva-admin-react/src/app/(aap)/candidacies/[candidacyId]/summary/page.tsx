@@ -147,6 +147,7 @@ const CandidacySummaryPage = () => {
               <DefaultCandidacySectionCard
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
+                isEditable
                 status={
                   isCandidateProfileCompleted ? "COMPLETED" : "TO_COMPLETE"
                 }
