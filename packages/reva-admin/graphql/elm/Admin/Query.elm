@@ -12,8 +12,10 @@ import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.JuryCategoryFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
+import Admin.Interface
 import Admin.Object
 import Admin.Scalar
+import Admin.Union
 import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -472,6 +474,20 @@ type alias JuryGetJuriesOptionalArguments =
     }
 
 
+jury_getJuries :
+    (JuryGetJuriesOptionalArguments -> JuryGetJuriesOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.JuryPage
+    -> SelectionSet decodesTo RootQuery
+jury_getJuries fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, categoryFilter = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "categoryFilter" filledInOptionals____.categoryFilter (Encode.enum Admin.Enum.JuryCategoryFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "jury_getJuries" optionalArgs____ object____ Basics.identity
 
 
 type alias JuryJuryCountByCategoryOptionalArguments =

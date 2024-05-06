@@ -20,6 +20,11 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
+id : SelectionSet Data.Scalar.Id Admin.Object.FeasibilityHistory
+id =
+    Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+
+
 decision : SelectionSet Admin.Enum.FeasibilityDecision.FeasibilityDecision Admin.Object.FeasibilityHistory
 decision =
     Object.selectionForField "Enum.FeasibilityDecision.FeasibilityDecision" "decision" [] Admin.Enum.FeasibilityDecision.decoder

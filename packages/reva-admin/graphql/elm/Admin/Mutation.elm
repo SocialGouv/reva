@@ -436,32 +436,18 @@ candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
 
 
-type alias CandidateUpdateCandidateCivilInformationRequiredArguments =
+type alias CandidateUpdateCandidateInformationRequiredArguments =
     { candidacyId : String
-    , candidateCivilInformation : Admin.InputObject.CandidateCivilInformationInput
+    , candidateInformation : Admin.InputObject.CandidateUpdateInformationInput
     }
 
 
-candidate_updateCandidateCivilInformation :
-    CandidateUpdateCandidateCivilInformationRequiredArguments
+candidate_updateCandidateInformation :
+    CandidateUpdateCandidateInformationRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet (Maybe decodesTo) RootMutation
-candidate_updateCandidateCivilInformation requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_updateCandidateCivilInformation" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateCivilInformation" requiredArgs____.candidateCivilInformation Admin.InputObject.encodeCandidateCivilInformationInput ] object____ (Basics.identity >> Decode.nullable)
-
-
-type alias CandidateUpdateCandidateContactInformationRequiredArguments =
-    { candidacyId : String
-    , candidateContactInformation : Admin.InputObject.CandidateContactInformationInput
-    }
-
-
-candidate_updateCandidateContactInformation :
-    CandidateUpdateCandidateContactInformationRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidate
-    -> SelectionSet (Maybe decodesTo) RootMutation
-candidate_updateCandidateContactInformation requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_updateCandidateContactInformation" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateContactInformation" requiredArgs____.candidateContactInformation Admin.InputObject.encodeCandidateContactInformationInput ] object____ (Basics.identity >> Decode.nullable)
+candidate_updateCandidateInformation requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_updateCandidateInformation" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "candidateInformation" requiredArgs____.candidateInformation Admin.InputObject.encodeCandidateUpdateInformationInput ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidateUpdateCandidateProfileRequiredArguments =
@@ -526,6 +512,42 @@ certification_authority_updateCertificationAuthorityLocalAccount :
     -> SelectionSet decodesTo RootMutation
 certification_authority_updateCertificationAuthorityLocalAccount requiredArgs____ object____ =
     Object.selectionForCompositeField "certification_authority_updateCertificationAuthorityLocalAccount" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeUpdateCertificationAuthorityLocalAccountInput ] object____ Basics.identity
+
+
+type alias CertificationAuthorityDeleteCertificationAuthorityLocalAccountRequiredArguments =
+    { certificationAuthorityLocalAccountId : Data.Scalar.Id }
+
+
+certification_authority_deleteCertificationAuthorityLocalAccount :
+    CertificationAuthorityDeleteCertificationAuthorityLocalAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
+    -> SelectionSet decodesTo RootMutation
+certification_authority_deleteCertificationAuthorityLocalAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_deleteCertificationAuthorityLocalAccount" [ Argument.required "certificationAuthorityLocalAccountId" requiredArgs____.certificationAuthorityLocalAccountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateCertificationInfoRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput }
+
+
+dematerialized_feasibility_file_createOrUpdateCertificationInfo :
+    DematerializedFeasibilityFileCreateOrUpdateCertificationInfoRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet decodesTo RootMutation
+dematerialized_feasibility_file_createOrUpdateCertificationInfo requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_createOrUpdateCertificationInfo" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput ] object____ Basics.identity
+
+
+type alias DematerializedFeasibilityFileCreateOrupdateCertificationCompetenceDetailsRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput }
+
+
+dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails :
+    DematerializedFeasibilityFileCreateOrupdateCertificationCompetenceDetailsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet decodesTo RootMutation
+dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput ] object____ Basics.identity
 
 
 type alias DossierDeValidationSignalProblemRequiredArguments =
@@ -712,6 +734,46 @@ organism_createOrUpdateOrganismOnDegrees :
     -> SelectionSet (List decodesTo) RootMutation
 organism_createOrUpdateOrganismOnDegrees requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_createOrUpdateOrganismOnDegrees" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateOrUpdateOrganismOnDegreesInput ] object____ (Basics.identity >> Decode.list)
+
+
+type alias OrganismUpdateOrganismInterventionZoneOptionalArguments =
+    { data : OptionalArgument Admin.InputObject.UpdateOrganismInterventionZoneInput }
+
+
+organism_updateOrganismInterventionZone :
+    (OrganismUpdateOrganismInterventionZoneOptionalArguments -> OrganismUpdateOrganismInterventionZoneOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo RootMutation
+organism_updateOrganismInterventionZone fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { data = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "data" filledInOptionals____.data Admin.InputObject.encodeUpdateOrganismInterventionZoneInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "organism_updateOrganismInterventionZone" optionalArgs____ object____ Basics.identity
+
+
+type alias OrganismUpdateOrganismAccountOptionalArguments =
+    { data : OptionalArgument Admin.InputObject.UpdateOrganismAccountInput }
+
+
+organism_updateOrganismAccount :
+    (OrganismUpdateOrganismAccountOptionalArguments -> OrganismUpdateOrganismAccountOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo RootMutation
+organism_updateOrganismAccount fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { data = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "data" filledInOptionals____.data Admin.InputObject.encodeUpdateOrganismAccountInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "organism_updateOrganismAccount" optionalArgs____ object____ Basics.identity
 
 
 type alias ReferentialUpdateCertificationRequiredArguments =

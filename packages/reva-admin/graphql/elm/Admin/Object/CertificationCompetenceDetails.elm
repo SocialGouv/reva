@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.FundingRequestInformations exposing (..)
+module Admin.Object.CertificationCompetenceDetails exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,15 +19,13 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-training :
-    SelectionSet decodesTo Admin.Object.TrainingForm
-    -> SelectionSet decodesTo Admin.Object.FundingRequestInformations
-training object____ =
-    Object.selectionForCompositeField "training" [] object____ Basics.identity
+certificationCompetence :
+    SelectionSet decodesTo Admin.Object.CertificationCompetence
+    -> SelectionSet decodesTo Admin.Object.CertificationCompetenceDetails
+certificationCompetence object____ =
+    Object.selectionForCompositeField "certificationCompetence" [] object____ Basics.identity
 
 
-fundingRequest :
-    SelectionSet decodesTo Admin.Object.FundingRequest
-    -> SelectionSet (Maybe decodesTo) Admin.Object.FundingRequestInformations
-fundingRequest object____ =
-    Object.selectionForCompositeField "fundingRequest" [] object____ (Basics.identity >> Decode.nullable)
+text : SelectionSet String Admin.Object.CertificationCompetenceDetails
+text =
+    Object.selectionForField "String" "text" [] Decode.string

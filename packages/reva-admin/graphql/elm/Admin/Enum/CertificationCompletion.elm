@@ -2,55 +2,48 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Enum.DistanceStatus exposing (..)
+module Admin.Enum.CertificationCompletion exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type DistanceStatus
-    = Onsite
-    | Remote
-    | OnsiteRemote
+type CertificationCompletion
+    = Complete
+    | Partial
 
 
-list : List DistanceStatus
+list : List CertificationCompletion
 list =
-    [ Onsite, Remote, OnsiteRemote ]
+    [ Complete, Partial ]
 
 
-decoder : Decoder DistanceStatus
+decoder : Decoder CertificationCompletion
 decoder =
     Decode.string
         |> Decode.andThen
             (\string ->
                 case string of
-                    "ONSITE" ->
-                        Decode.succeed Onsite
+                    "COMPLETE" ->
+                        Decode.succeed Complete
 
-                    "REMOTE" ->
-                        Decode.succeed Remote
-
-                    "ONSITE_REMOTE" ->
-                        Decode.succeed OnsiteRemote
+                    "PARTIAL" ->
+                        Decode.succeed Partial
 
                     _ ->
-                        Decode.fail ("Invalid DistanceStatus type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
+                        Decode.fail ("Invalid CertificationCompletion type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
             )
 
 
 {-| Convert from the union type representing the Enum to a string that the GraphQL server will recognize.
 -}
-toString : DistanceStatus -> String
+toString : CertificationCompletion -> String
 toString enum____ =
     case enum____ of
-        Onsite ->
-            "ONSITE"
+        Complete ->
+            "COMPLETE"
 
-        Remote ->
-            "REMOTE"
-
-        OnsiteRemote ->
-            "ONSITE_REMOTE"
+        Partial ->
+            "PARTIAL"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -64,17 +57,14 @@ This is the inverse of the Enum `toString` function. So you can call `toString` 
 This can be useful for generating Strings to use for <select> menus to check which item was selected.
 
 -}
-fromString : String -> Maybe DistanceStatus
+fromString : String -> Maybe CertificationCompletion
 fromString enumString____ =
     case enumString____ of
-        "ONSITE" ->
-            Just Onsite
+        "COMPLETE" ->
+            Just Complete
 
-        "REMOTE" ->
-            Just Remote
-
-        "ONSITE_REMOTE" ->
-            Just OnsiteRemote
+        "PARTIAL" ->
+            Just Partial
 
         _ ->
             Nothing

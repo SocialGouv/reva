@@ -253,6 +253,13 @@ candidacyLogs object____ =
     Object.selectionForCompositeField "candidacyLogs" [] object____ (Basics.identity >> Decode.list)
 
 
+dematerializedFeasibilityFile :
+    SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+dematerializedFeasibilityFile object____ =
+    Object.selectionForCompositeField "dematerializedFeasibilityFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
 activeDossierDeValidation :
     SelectionSet decodesTo Admin.Object.DossierDeValidation
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

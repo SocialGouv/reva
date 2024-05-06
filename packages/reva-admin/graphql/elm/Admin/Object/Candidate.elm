@@ -94,11 +94,6 @@ nationality =
     Object.selectionForField "(Maybe String)" "nationality" [] (Decode.string |> Decode.nullable)
 
 
-socialSecurityNumber : SelectionSet (Maybe String) Admin.Object.Candidate
-socialSecurityNumber =
-    Object.selectionForField "(Maybe String)" "socialSecurityNumber" [] (Decode.string |> Decode.nullable)
-
-
 candidacy :
     SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet decodesTo Admin.Object.Candidate

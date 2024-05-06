@@ -121,3 +121,13 @@ organismOnAccount :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
 organismOnAccount object____ =
     Object.selectionForCompositeField "organismOnAccount" [] object____ (Basics.identity >> Decode.nullable)
+
+
+llToEarth : SelectionSet (Maybe String) Admin.Object.Organism
+llToEarth =
+    Object.selectionForField "(Maybe String)" "llToEarth" [] (Decode.string |> Decode.nullable)
+
+
+distanceKm : SelectionSet (Maybe Float) Admin.Object.Organism
+distanceKm =
+    Object.selectionForField "(Maybe Float)" "distanceKm" [] (Decode.float |> Decode.nullable)

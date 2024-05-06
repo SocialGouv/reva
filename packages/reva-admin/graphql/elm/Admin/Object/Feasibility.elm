@@ -87,6 +87,13 @@ decisionSentAt =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "decisionSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
+decisionFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
+decisionFile object____ =
+    Object.selectionForCompositeField "decisionFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
 history :
     SelectionSet decodesTo Admin.Object.FeasibilityHistory
     -> SelectionSet (List decodesTo) Admin.Object.Feasibility

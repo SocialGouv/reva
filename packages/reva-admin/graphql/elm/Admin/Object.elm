@@ -121,6 +121,10 @@ type CertificationCompetenceBloc
     = CertificationCompetenceBloc
 
 
+type CertificationCompetenceDetails
+    = CertificationCompetenceDetails
+
+
 type CertificationPage
     = CertificationPage
 
@@ -139,6 +143,10 @@ type Country
 
 type Degree
     = Degree
+
+
+type DematerializedFeasibilityFile
+    = DematerializedFeasibilityFile
 
 
 type Department
@@ -223,7 +231,11 @@ type Jury
 
 type JuryCountByCategory
     = JuryCountByCategory
-    
+
+
+type JuryPage
+    = JuryPage
+
 
 type MaisonMereAAP
     = MaisonMereAAP
