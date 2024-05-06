@@ -62,7 +62,7 @@ export const CandidateRegistrationForm = ({
       setAvailableDepartments(
         (await request(GRAPHQL_API_URL, getDepartmentsQuery)).getDepartments
           .sort((a, b) => a.label.localeCompare(b.label))
-          .map((d) => ({ label: d.label, value: d.id }))
+          .map((d) => ({ label: d.label, value: d.id })),
       );
     initAvailableDepartments();
   }, []);

@@ -73,7 +73,7 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   goBackToPreviousStep: () => void;
   submitCguStep: (stepData: cguStepData) => void;
   submitQualiopiCertificateInfoStep: (
-    stepData: QualiopiCertificateInfoStepData
+    stepData: QualiopiCertificateInfoStepData,
   ) => void;
   submitCompanyInfoStep: (stepData: CompanyInfoStepData) => void;
   submitCertificationsInfoStep: (stepData: CertificationsInfoStepData) => void;
@@ -82,7 +82,7 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
 
 const ProfessionalSpaceCreationContext =
   createContext<ProfessionalSpaceCreationContext>(
-    {} as ProfessionalSpaceCreationContext
+    {} as ProfessionalSpaceCreationContext,
   );
 
 export const ProfessionalSpaceCreationProvider = (props: {
@@ -127,7 +127,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
         },
       });
     },
-    [state]
+    [state],
   );
 
   const submitQualiopiCertificateInfoStep = useCallback(
@@ -140,7 +140,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
         },
       });
     },
-    [state]
+    [state],
   );
   const submitCompanyInfoStep = useCallback(
     (stepData: CompanyInfoStepData) => {
@@ -152,7 +152,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
         },
       });
     },
-    [state]
+    [state],
   );
 
   const submitCertificationsInfoStep = useCallback(
@@ -165,7 +165,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
         },
       });
     },
-    [state]
+    [state],
   );
 
   const executeGraphqlSubscriptionMutation = useCallback(
@@ -173,7 +173,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
       professionalSpaceInfos: Omit<
         ProfessionalSpaceInfo,
         "qualiopiSwornStatement"
-      >
+      >,
     ) => {
       const createSubscription = gql`
         mutation createSubscriptionRequest(
@@ -191,7 +191,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
         subscriptionRequest: professionalSpaceInfos,
       });
     },
-    []
+    [],
   );
 
   const submitAccountInfoStep = useCallback(
@@ -209,11 +209,11 @@ export const ProfessionalSpaceCreationProvider = (props: {
         newState.professionalSpaceInfos;
 
       await executeGraphqlSubscriptionMutation(
-        mutationParameters as ProfessionalSpaceInfo
+        mutationParameters as ProfessionalSpaceInfo,
       );
       router.push("/espace-professionnel/creation/confirmation");
     },
-    [executeGraphqlSubscriptionMutation, router, state.professionalSpaceInfos]
+    [executeGraphqlSubscriptionMutation, router, state.professionalSpaceInfos],
   );
 
   return (

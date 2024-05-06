@@ -1,4 +1,5 @@
-import { Html, Head, Main, NextScript, DocumentProps } from "next/document";
+import { DocumentProps, Head, Html, Main, NextScript } from "next/document";
+
 import { dsfrDocumentApi } from "./_app";
 
 const { getColorSchemeHtmlAttributes, augmentDocumentForDsfr } =

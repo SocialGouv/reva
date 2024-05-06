@@ -43,12 +43,12 @@ export const MultiSelect = (props: Props) => {
     if (values.indexOf(ALL_SELECTED) != -1) {
       const ignoredOptions = ignoredOptionsOnSelectAll.filter(
         (option) =>
-          selectedOptions.findIndex((o) => o.value == option.value) == -1
+          selectedOptions.findIndex((o) => o.value == option.value) == -1,
       );
 
       const allOptions = options.filter(
         (option) =>
-          ignoredOptions.findIndex((o) => o.value == option.value) == -1
+          ignoredOptions.findIndex((o) => o.value == option.value) == -1,
       );
 
       onChange(allOptions);
@@ -113,7 +113,7 @@ export const MultiSelect = (props: Props) => {
                     type="checkbox"
                     checked={
                       selectedOptions.findIndex(
-                        (o) => o.value == option.value
+                        (o) => o.value == option.value,
                       ) != -1
                     }
                     readOnly

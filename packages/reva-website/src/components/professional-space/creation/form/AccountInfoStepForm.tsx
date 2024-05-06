@@ -21,7 +21,7 @@ type AccountInfoStepFormSchema = z.infer<typeof zodSchema>;
 
 export const AccountInfoStepForm = () => {
   const [submissionError, setSubmissionError] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const {
     professionalSpaceInfos,
@@ -44,7 +44,7 @@ export const AccountInfoStepForm = () => {
     } catch (err: any) {
       console.log(err);
       setSubmissionError(
-        (err?.response?.errors?.[0].message as string) ?? "erreur inconnue"
+        (err?.response?.errors?.[0].message as string) ?? "erreur inconnue",
       );
     }
   };

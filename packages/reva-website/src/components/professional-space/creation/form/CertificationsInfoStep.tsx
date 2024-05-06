@@ -118,7 +118,7 @@ export const CertificationsInfoStepForm = ({
       }
       typologyController.field.onChange(newTypology);
     },
-    [setValue, typologyController.field]
+    [setValue, typologyController.field],
   );
 
   // Domains
@@ -126,11 +126,11 @@ export const CertificationsInfoStepForm = ({
     (availableDomaine) => ({
       label: availableDomaine.label,
       value: availableDomaine.id,
-    })
+    }),
   );
 
   const selectedDomaineOptions = availableDomaineOptions.filter((option) =>
-    domaineIdsController.field.value.includes(option.value)
+    domaineIdsController.field.value.includes(option.value),
   );
 
   // Conventions
@@ -141,7 +141,7 @@ export const CertificationsInfoStepForm = ({
     }));
 
   const selectedConventionOptions = availableConventionOptions.filter(
-    (option) => ccnIdsController.field.value.includes(option.value)
+    (option) => ccnIdsController.field.value.includes(option.value),
   );
 
   // Departments
@@ -152,11 +152,11 @@ export const CertificationsInfoStepForm = ({
     }));
 
   const selectedOnSiteDepartmentOptions = availableDepartmentOptions.filter(
-    (option) => onSiteDepartmentsController.field.value.includes(option.value)
+    (option) => onSiteDepartmentsController.field.value.includes(option.value),
   );
 
   const selectedRemoteDepartmentOptions = availableDepartmentOptions.filter(
-    (option) => remoteDepartmentsController.field.value.includes(option.value)
+    (option) => remoteDepartmentsController.field.value.includes(option.value),
   );
 
   const domTomDepartmentOptions = availableDepartments
@@ -236,7 +236,7 @@ export const CertificationsInfoStepForm = ({
                   }
                   onChange={(values) => {
                     domaineIdsController.field.onChange(
-                      values.map((value) => value.value)
+                      values.map((value) => value.value),
                     );
                   }}
                 />
@@ -281,7 +281,7 @@ export const CertificationsInfoStepForm = ({
                   }
                   onChange={(values) => {
                     ccnIdsController.field.onChange(
-                      values.map((value) => value.value)
+                      values.map((value) => value.value),
                     );
                   }}
                 />
@@ -308,7 +308,7 @@ export const CertificationsInfoStepForm = ({
               }
               onChange={(values) => {
                 onSiteDepartmentsController.field.onChange(
-                  values.map((value) => value.value)
+                  values.map((value) => value.value),
                 );
               }}
             />
@@ -328,7 +328,7 @@ export const CertificationsInfoStepForm = ({
               }
               onChange={(values) => {
                 remoteDepartmentsController.field.onChange(
-                  values.map((value) => value.value)
+                  values.map((value) => value.value),
                 );
               }}
             />

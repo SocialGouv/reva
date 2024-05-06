@@ -88,7 +88,7 @@ const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
                   __html:
                     article.attributes?.contenu?.replaceAll(
                       "<a",
-                      "<a target='_'"
+                      "<a target='_'",
                     ) || "",
                 }}
               />

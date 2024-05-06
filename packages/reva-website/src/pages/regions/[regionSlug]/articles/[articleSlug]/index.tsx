@@ -78,7 +78,7 @@ export async function getServerSideProps({
         regions: { slug: { eq: regionSlug } },
         slug: { eq: articleSlug },
       },
-    }
+    },
   );
 
   return { props: { getArticleRegionsBySlugResponse, regionSlug } };

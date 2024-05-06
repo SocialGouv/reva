@@ -142,7 +142,7 @@ export async function getServerSideProps({
     getRegionsBySlugQuery,
     {
       filters: { slug: { eq: regionSlug } },
-    }
+    },
   );
   return { props: { getRegionsBySlugResponse } };
 }

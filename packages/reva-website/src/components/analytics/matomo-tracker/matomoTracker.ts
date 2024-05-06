@@ -48,7 +48,7 @@ export function push(
     | string
     | null
     | undefined
-  )[]
+  )[],
 ): void {
   if (!window._paq) {
     window._paq = [];

@@ -78,7 +78,7 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
       showMore
         ? articles
         : articles.slice(0, numberOfArticlesToDisplayInitially),
-    [showMore, articles, numberOfArticlesToDisplayInitially]
+    [showMore, articles, numberOfArticlesToDisplayInitially],
   );
   const displayMoreButton =
     articles.length > numberOfArticlesToDisplayInitially && !showMore;

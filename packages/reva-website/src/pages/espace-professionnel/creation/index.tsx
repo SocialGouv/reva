@@ -156,7 +156,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const availableDepartments = (
     (await request(GRAPHQL_API_URL, getDepartments)) as any
   ).getDepartments.sort((a: Department, b: Department) =>
-    a.code.localeCompare(b.code)
+    a.code.localeCompare(b.code),
   );
 
   return {

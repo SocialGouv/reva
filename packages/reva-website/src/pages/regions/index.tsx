@@ -103,7 +103,7 @@ const RegionCard = ({
 export async function getServerSideProps() {
   const getRegionsResponse = await request(
     STRAPI_GRAPHQL_API_URL,
-    getRegionsQuery
+    getRegionsQuery,
   );
 
   return { props: { getRegionsResponse } };

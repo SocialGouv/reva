@@ -51,7 +51,7 @@ export const AutocompleteDsfr = ({
         e.preventDefault();
         if (options.length) {
           const index = options.findIndex(
-            (option) => option.value === selectedOption?.value
+            (option) => option.value === selectedOption?.value,
           );
           const nextOption = options[index + 1] || options[0];
           setSelectedOption(nextOption);
@@ -61,7 +61,7 @@ export const AutocompleteDsfr = ({
         e.preventDefault();
         if (options.length) {
           const index = options.findIndex(
-            (option) => option.value === selectedOption?.value
+            (option) => option.value === selectedOption?.value,
           );
           const nextOption = options[index - 1] || options[options.length - 1];
           setSelectedOption(nextOption);

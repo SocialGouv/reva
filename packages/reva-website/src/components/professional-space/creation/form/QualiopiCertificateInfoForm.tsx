@@ -57,7 +57,7 @@ export const QualiopiCertificateInfoStepForm = () => {
     defaultValues: {
       ...professionalSpaceInfos,
       qualiopiCertificateExpiresAt: formatDate(
-        professionalSpaceInfos.qualiopiCertificateExpiresAt
+        professionalSpaceInfos.qualiopiCertificateExpiresAt,
       ) as unknown as Date,
     },
   });

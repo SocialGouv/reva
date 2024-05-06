@@ -74,7 +74,7 @@ const OrientationCandidatPage = () => {
             await request(GRAPHQL_API_URL, getCertificationQuery, {
               certificationId: certificationId as string,
             })
-          ).getCertification
+          ).getCertification,
         );
       } else {
         setCertification(null);

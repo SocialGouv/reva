@@ -108,7 +108,7 @@ const FaqPage = ({ sections }: { sections: GetSectionFaqsQuery }) => (
                                 __html:
                                   a.attributes?.reponse?.replaceAll(
                                     "<a",
-                                    "<a target='_'"
+                                    "<a target='_'",
                                   ) || "",
                               }}
                             />

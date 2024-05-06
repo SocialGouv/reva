@@ -63,7 +63,7 @@ const RegionAdvisorsPage = ({
             adresse: string;
             telephone: string;
             email: string;
-          }) => [p.departement, p.nom, p.adresse, p.telephone, p.email]
+          }) => [p.departement, p.nom, p.adresse, p.telephone, p.email],
         )}
         headers={[
           "Département",
@@ -87,7 +87,7 @@ export async function getServerSideProps({
     getRegionsBySlugQuery,
     {
       filters: { slug: { eq: regionSlug } },
-    }
+    },
   );
   return { props: { getRegionsBySlugResponse } };
 }

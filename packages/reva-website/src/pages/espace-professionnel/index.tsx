@@ -304,7 +304,7 @@ const ProfessionalSpaceHomePage = () => {
   const { isFeatureActive } = useFeatureflipping();
 
   const isAAPSubsritpionSuspended = isFeatureActive(
-    "AAP_SUBSCRIPTION_SUSPENDED"
+    "AAP_SUBSCRIPTION_SUSPENDED",
   );
 
   return (

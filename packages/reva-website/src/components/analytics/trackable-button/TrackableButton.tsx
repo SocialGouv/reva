@@ -1,6 +1,6 @@
-import { ComponentPropsWithRef, MouseEvent, useCallback } from "react";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { ComponentPropsWithRef, MouseEvent, useCallback } from "react";
 
 type TrackableButtonProps = ComponentPropsWithRef<typeof Button> & {
   eventTracked: { location: string; event: string };
@@ -22,7 +22,7 @@ export const TrackableButton = ({
       ]);
       nativeButtonProps?.onClick?.(e);
     },
-    [nativeButtonProps, eventTracked]
+    [nativeButtonProps, eventTracked],
   );
 
   const handleLinkClick = useCallback(
@@ -35,7 +35,7 @@ export const TrackableButton = ({
       ]);
       linkProps?.onClick?.(e);
     },
-    [linkProps, eventTracked]
+    [linkProps, eventTracked],
   );
 
   return (
