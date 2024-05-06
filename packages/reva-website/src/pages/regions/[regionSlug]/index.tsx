@@ -69,7 +69,7 @@ const RegionHomePage = ({
       </div>
       {firstArticle && (
         <Card
-          className="mb-12"
+          className="mb-12 "
           background
           border
           desc={firstArticle.attributes?.resume}
@@ -79,6 +79,7 @@ const RegionHomePage = ({
           imageUrl={
             firstArticle.attributes?.vignette.data?.attributes?.url || ""
           }
+          classes={{ imgTag: "!object-left-top" }}
           linkProps={{
             href: `/regions/${region.attributes?.slug}/articles/${firstArticle.attributes?.slug}`,
           }}
