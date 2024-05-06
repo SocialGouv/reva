@@ -23,10 +23,10 @@ export const Certificates = ({ mainService }: Props) => {
   const UNKNOWN_DEPARTMENT = "unknown";
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
-    state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
+    state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT,
   );
   const [certificationSearchText, setCertificationSearchText] = useState(
-    state.context.certificationSearchText
+    state.context.certificationSearchText,
   );
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export const Certificates = ({ mainService }: Props) => {
         !!state.context.selectedDepartment
           ? `Nombre de diplômes disponibles pour le département ${
               selectsOptionsDepartments.find(
-                (o) => o.value === chosenDepartmentCode
+                (o) => o.value === chosenDepartmentCode,
               )?.label
             } : ${state.context.certificationPage.info.totalRows}`
           : null}

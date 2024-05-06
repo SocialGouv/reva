@@ -10,7 +10,7 @@ export const GoalsTimelineElement = () => {
 
   const selectedGoals = useMemo(
     () => state.context.goals.filter((goal) => goal.checked),
-    [state.context.goals]
+    [state.context.goals],
   );
 
   return (

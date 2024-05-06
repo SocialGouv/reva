@@ -16,7 +16,7 @@ const getMandatoryInfo = (organism: Organism, department?: Department) => {
     location:
       department &&
       organism.organismOnDepartments?.find(
-        (od) => od.departmentId === department.id
+        (od) => od.departmentId === department.id,
       ),
   };
 };

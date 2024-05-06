@@ -15,7 +15,7 @@ export const JuryTimelineElement = () => {
   if (jury?.dateOfSession) {
     text = `Votre passage devant le jury est programmé le ${format(
       jury.dateOfSession,
-      "dd MMMM yyyy"
+      "dd MMMM yyyy",
     )}${
       jury?.timeSpecified ? ` à ${format(jury.dateOfSession, "HH:mm")}` : ""
     }. Veuillez vous présenter au lieu et à la date indiqués sur la convocation officielle que vous avez reçue.`;

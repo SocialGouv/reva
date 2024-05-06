@@ -12,12 +12,12 @@ export const ExperiencesTimelineElement = () => {
 
   const selectedGoals = useMemo(
     () => state.context.goals.filter((goal) => goal.checked),
-    [state.context.goals]
+    [state.context.goals],
   );
 
   const sortedExperiences = useMemo(
     () => sortExperiences(state.context.experiences),
-    [state.context.experiences]
+    [state.context.experiences],
   );
 
   return (
@@ -40,8 +40,8 @@ export const ExperiencesTimelineElement = () => {
                 ExperienceSummary(
                   se,
                   i,
-                  ["disabled", "readonly"].includes(status)
-                )
+                  ["disabled", "readonly"].includes(status),
+                ),
               )}
             </ul>
           )}
@@ -66,7 +66,7 @@ export const ExperiencesTimelineElement = () => {
 const ExperienceSummary = (
   experience: Experience,
   index: number,
-  disabled?: boolean
+  disabled?: boolean,
 ) => {
   const {
     mainService: { send },

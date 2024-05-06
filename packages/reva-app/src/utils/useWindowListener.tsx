@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 
 function useWindowListener<K extends keyof WindowEventMap>(
   eventName: K,
-  handler: (event: WindowEventMap[K]) => void
+  handler: (event: WindowEventMap[K]) => void,
 ) {
   // Create a ref that stores handler
   const savedHandler = useRef(handler);

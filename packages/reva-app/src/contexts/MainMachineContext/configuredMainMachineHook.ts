@@ -32,7 +32,7 @@ import { useKeycloakContext } from "../keycloakContext";
 
 export const useConfiguredMainMachine = () => {
   const { client } = useContext(
-    getApolloContext() as React.Context<ApolloContextValue>
+    getApolloContext() as React.Context<ApolloContextValue>,
   );
 
   //@ts-ignore
@@ -53,29 +53,29 @@ export const useConfiguredMainMachine = () => {
           initializeApp: async (_context, _event, { data }) => {
             if (authenticated && !data.isConfirmEmail) {
               const data = await getCandidateWithCandidacy(
-                client as ApolloClient<object>
+                client as ApolloClient<object>,
               );
 
               //if the candidacy is still in project and a certification has been chosen but became inactive we reset the certification and the aap of the candidacy
               data.candidacy =
                 resetCandidacyCertificationAndAAPIfCertificationIsInactiveAndCandidacyIsStillInProject(
-                  data.candidacy
+                  data.candidacy,
                 );
 
               const activeFeatures = await getActiveFeaturesForConnectedUser(
-                client as ApolloClient<object>
+                client as ApolloClient<object>,
               );
 
               return { ...data, activeFeatures };
             } else {
               const { tokens, ...rest } = await confirmRegistration(
-                client as ApolloClient<object>
+                client as ApolloClient<object>,
               )({
                 token: data.loginToken,
               });
               setTokens(tokens);
               const activeFeatures = await getActiveFeaturesForConnectedUser(
-                client as ApolloClient<object>
+                client as ApolloClient<object>,
               );
               return { ...rest, activeFeatures };
             }
@@ -92,12 +92,12 @@ export const useConfiguredMainMachine = () => {
             } = context;
             if (!candidacyId)
               return Promise.reject(
-                "unavailable candidacyId in XState context"
+                "unavailable candidacyId in XState context",
               );
 
             if (!selectedDepartment)
               return Promise.reject(
-                "unavailable selectedDepartment in XState context"
+                "unavailable selectedDepartment in XState context",
               );
 
             const formatSearchFilter = () => {
@@ -131,7 +131,7 @@ export const useConfiguredMainMachine = () => {
             const searchFilter = formatSearchFilter();
 
             return getRandomOrganismsForCandidacy(
-              client as ApolloClient<object>
+              client as ApolloClient<object>,
             )({
               candidacyId,
               departmentId: selectedDepartment?.id,
@@ -164,7 +164,7 @@ export const useConfiguredMainMachine = () => {
               !event.organism?.selectedOrganismId
             )
               return Promise.reject(
-                "unavailable candidacyId or organism in XState context"
+                "unavailable candidacyId or organism in XState context",
               );
 
             await selectOrganismForCandidacy(client as ApolloClient<object>)({
@@ -219,7 +219,7 @@ export const useConfiguredMainMachine = () => {
             }
 
             return askForRegistration(client as ApolloClient<object>)(
-              event.contact
+              event.contact,
             );
           },
           updateContact: async (context, event) => {
@@ -262,7 +262,7 @@ export const useConfiguredMainMachine = () => {
         },
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [client]
+    [client],
   );
 
   return { configuredMainMachine: machine };
@@ -279,7 +279,7 @@ const resetCandidacyCertificationAndAAPIfCertificationIsInactiveAndCandidacyIsSt
     let newCandidacy = { ...candidacy };
 
     const activeCandidacyStatus = candidacy.candidacyStatuses.find(
-      (s) => s.isActive === true
+      (s) => s.isActive === true,
     );
 
     if (

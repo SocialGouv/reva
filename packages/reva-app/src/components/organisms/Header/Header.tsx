@@ -27,7 +27,7 @@ export const Header = (props: { className?: string }) => {
         }}
       >
         Se déconnecter
-      </Button>
+      </Button>,
     );
   }
 

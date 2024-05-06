@@ -6,7 +6,7 @@ export const TrainingProgramTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
   const status = ["PROJET", "VALIDATION", "PRISE_EN_CHARGE"].includes(
-    state.context.candidacyStatus
+    state.context.candidacyStatus,
   )
     ? "disabled"
     : ["PARCOURS_ENVOYE"].includes(state.context.candidacyStatus)

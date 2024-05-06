@@ -157,7 +157,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                 organismSearchPmr,
               }}
               filterDistanceIsActive={activeFeatures.includes(
-                "CANDIDATE_APP_FILTER_DISTANCE"
+                "CANDIDATE_APP_FILTER_DISTANCE",
               )}
             />
           </div>

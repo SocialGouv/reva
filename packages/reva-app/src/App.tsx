@@ -166,11 +166,11 @@ function App() {
   const pageContent = (
     <>
       {["loadingCertifications", "searchResults", "searchResultsError"].some(
-        state.matches
+        state.matches,
       ) && certificatesPage()}
 
       {["certificateDetails", "submittingSelectedCertification"].some(
-        state.matches
+        state.matches,
       ) && certificateDetailsPage()}
 
       {state.matches("loginHome") && loginHomePage()}

@@ -81,7 +81,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const editedContact = state.context.contact;
   const initialEmail = useMemo(
     () => editedContact?.email || "",
-    [editedContact]
+    [editedContact],
   );
   const firstnameRef = useRef<HTMLInputElement>(null);
   const lastnameRef = useRef<HTMLInputElement>(null);

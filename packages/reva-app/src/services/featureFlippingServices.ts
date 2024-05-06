@@ -7,7 +7,7 @@ const GET_ACTIVE_FEATURES_FOR_CONNECTED_USER = gql`
 `;
 
 export const getActiveFeaturesForConnectedUser = async (
-  client: ApolloClient<object>
+  client: ApolloClient<object>,
 ) => {
   const { data } = await client.query({
     query: GET_ACTIVE_FEATURES_FOR_CONNECTED_USER,

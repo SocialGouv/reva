@@ -23,7 +23,7 @@ export const FeasibilityTimelineElement = () => {
   if (ADMISSIBLE && feasibility.decisionSentAt) {
     text = `Votre dossier de faisabilité a été jugé recevable par le certificateur le ${format(
       feasibility.decisionSentAt,
-      "dd/MM/yyyy"
+      "dd/MM/yyyy",
     )}. Votre accompagnateur va prendre contact avec vous prochainement pour démarrer votre accompagnement.`;
   }
 

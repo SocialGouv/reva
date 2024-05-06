@@ -443,7 +443,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = gql`
 `;
 
 export const getCandidateWithCandidacy = async (
-  client: ApolloClient<object>
+  client: ApolloClient<object>,
 ) => {
   const { data } = await client.query({
     query: GET_CANDIDATE_WITH_CANDIDACY,
@@ -510,7 +510,7 @@ function formatCandidacy(candidate: any, getReferential: any) {
       ...candidacy,
       candidateId: candidate.id,
       candidacyStatus: candidacy.candidacyStatuses?.find(
-        (s: { isActive: string; status: candidacyStatus }) => s.isActive
+        (s: { isActive: string; status: candidacyStatus }) => s.isActive,
       ).status,
       createdAt: new Date(candidacy.createdAt),
       experiences,

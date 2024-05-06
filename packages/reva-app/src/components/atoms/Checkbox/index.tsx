@@ -59,7 +59,7 @@ export const Checkbox = ({
           className={classNames(
             "block",
             "leading-snug",
-            theme === "light" ? "text-slate-700" : "text-slate-400"
+            theme === "light" ? "text-slate-700" : "text-slate-400",
           )}
         >
           {label}

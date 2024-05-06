@@ -94,7 +94,7 @@ export const KeycloakProvider = ({
               accessToken: keycloakInstance.token,
               refreshToken: keycloakInstance.refreshToken,
               idToken: keycloakInstance.idToken,
-            })
+            }),
           );
         };
         keycloakInstance.onTokenExpired = async () => {
@@ -151,7 +151,7 @@ export const useKeycloakContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      `useKeycloakContext must be used within a KeycloakProvider`
+      `useKeycloakContext must be used within a KeycloakProvider`,
     );
   }
 

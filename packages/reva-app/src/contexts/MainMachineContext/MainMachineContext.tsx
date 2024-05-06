@@ -11,7 +11,7 @@ interface MainMachineContextType {
 }
 
 const MainMachineContext = createContext<MainMachineContextType>(
-  {} as MainMachineContextType
+  {} as MainMachineContextType,
 );
 
 export const MainMachineContextProvider = ({

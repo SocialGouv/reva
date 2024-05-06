@@ -233,16 +233,16 @@ const loginToken =
 const navigateHome = () => window.history.pushState({}, "", "/app/");
 const hasCandidacyAlreadyHadStatus = (
   status: string,
-  statuses: [{ status: string }] | [] = []
+  statuses: [{ status: string }] | [] = [],
 ): boolean => !!statuses.find((cs: { status: string }) => cs.status === status);
 
 const isTrainingProgramConsideredAsConfirmed = (
   currentStatus: string,
-  candidacyStatuses: [{ status: string }] | [] = []
+  candidacyStatuses: [{ status: string }] | [] = [],
 ) => {
   const isPreviouslyConfirmed = hasCandidacyAlreadyHadStatus(
     "PARCOURS_CONFIRME",
-    candidacyStatuses
+    candidacyStatuses,
   );
 
   const isCurrentlySubmitted = currentStatus === "PARCOURS_ENVOYE";
@@ -518,7 +518,7 @@ export const mainMachine =
                         assign({
                           candidacyCreatedAt: (_, event) => {
                             return new Date(
-                              event.data.data.candidacy_confirmTrainingForm.createdAt
+                              event.data.data.candidacy_confirmTrainingForm.createdAt,
                             );
                           },
                           isTrainingProgramConfirmed: (_context, _event) =>
@@ -805,7 +805,8 @@ export const mainMachine =
                           organism: (context, event) =>
                             context.organisms?.rows?.find(
                               (o) =>
-                                o.id === event.data.organism?.selectedOrganismId
+                                o.id ===
+                                event.data.organism?.selectedOrganismId,
                             ),
                         }),
                         "resetFirstAppointmentOccuredAt",
@@ -1015,7 +1016,7 @@ export const mainMachine =
                   experiences: (context, event) => ({
                     edited: context.experiences.rest[event.index],
                     rest: context.experiences.rest.filter(
-                      (_, i) => i !== event.index
+                      (_, i) => i !== event.index,
                     ),
                   }),
                 }),
@@ -1119,13 +1120,13 @@ export const mainMachine =
               organism: event.data.candidacy.organism,
               selectedDepartment: context.departments.find(
                 (department: Department) =>
-                  department.id === event.data.candidacy.department?.id
+                  department.id === event.data.candidacy.department?.id,
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
               isTrainingProgramConfirmed:
                 isTrainingProgramConsideredAsConfirmed(
                   event.data.candidacy?.candidacyStatus,
-                  event.data.candidacy?.candidacyStatuses
+                  event.data.candidacy?.candidacyStatuses,
                 ),
               feasibility: event.data.candidacy?.feasibility,
               dossierDeValidation:
@@ -1148,7 +1149,7 @@ export const mainMachine =
               const typedEvent = event as selectedDepartment;
               return context.departments.find(
                 (department: Department) =>
-                  department.code === typedEvent.departmentCode
+                  department.code === typedEvent.departmentCode,
               );
             },
             error: (_context, _event) => "",
@@ -1231,7 +1232,7 @@ export const mainMachine =
 
             return isTrainingProgramConsideredAsConfirmed(
               typedEvent.data.candidacy?.candidacyStatus,
-              typedEvent.data.candidacy?.candidacyStatuses
+              typedEvent.data.candidacy?.candidacyStatuses,
             );
           },
 
@@ -1246,7 +1247,7 @@ export const mainMachine =
               isRegistration &&
               eventHasGQLErrorWithExtensionsCode(
                 typedEvent,
-                "CANDIDATE_INVALID_TOKEN"
+                "CANDIDATE_INVALID_TOKEN",
               )
             );
             // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
@@ -1258,7 +1259,7 @@ export const mainMachine =
               isLogin &&
               eventHasGQLErrorWithExtensionsCode(
                 typedEvent,
-                "CANDIDATE_INVALID_TOKEN"
+                "CANDIDATE_INVALID_TOKEN",
               )
             );
             // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
@@ -1268,20 +1269,20 @@ export const mainMachine =
             const typedEvent = event as DoneInvokeEvent<any>;
             return eventHasGQLErrorWithExtensionsCode(
               typedEvent,
-              "ACCOUNT_IN_IAM_NOT_FOUND"
+              "ACCOUNT_IN_IAM_NOT_FOUND",
             );
           },
         },
-      }
+      },
     );
 
 const eventHasGQLErrorWithExtensionsCode = (
   evt: DoneInvokeEvent<any>,
-  code: string
+  code: string,
 ): boolean => {
   return evt.data.graphQLErrors && Array.isArray(evt.data.graphQLErrors)
     ? evt.data.graphQLErrors.some(
-        (gqlError: any) => gqlError.extensions?.code === code
+        (gqlError: any) => gqlError.extensions?.code === code,
       )
     : false;
 };

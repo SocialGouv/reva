@@ -6,7 +6,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
   const { state } = useMainMachineContext();
 
   const status = ["VALIDATION", "PRISE_EN_CHARGE"].includes(
-    state.context.candidacyStatus
+    state.context.candidacyStatus,
   )
     ? "active"
     : state.context.candidacyStatus === "PROJET"
@@ -35,7 +35,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
                     {" "}
                     {format(
                       state.context.firstAppointmentOccuredAt,
-                      "dd/MM/yyyy"
+                      "dd/MM/yyyy",
                     )}{" "}
                     avec{" "}
                     {state.context.organism?.informationsCommerciales?.nom ??

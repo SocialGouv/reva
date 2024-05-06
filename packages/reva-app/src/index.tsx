@@ -70,7 +70,7 @@ root.render(
       </MainMachineContextProvider>
     </ApolloProvider>
     {/* </React.StrictMode> */}
-  </KeycloakProvider>
+  </KeycloakProvider>,
 );
 
 // If you want your app to work offline and load faster, you can change
