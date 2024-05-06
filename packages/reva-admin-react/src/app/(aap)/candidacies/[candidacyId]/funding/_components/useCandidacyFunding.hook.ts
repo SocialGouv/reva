@@ -164,9 +164,10 @@ export const useCandidacyFunding = (candidacyId: string) => {
   ];
   const isEligibleToViewFundingRequest =
     !candidacyIsLoading &&
-    !!candidacy?.candidacyStatuses.some(({ status }) =>
+    (!!candidacy?.candidacyStatuses.some(({ status }) =>
       candidacyStatusEligible.includes(status),
-    );
+    ) ||
+      candidacyIsXpReva);
 
   const { data: candidateFundingRequestRevaData } = useQuery({
     queryKey: [candidacyId, "getCandidateFundingRequestReva"],
