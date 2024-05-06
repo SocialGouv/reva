@@ -20,6 +20,10 @@ type alias Timestamp =
     Admin.Scalar.Timestamp
 
 
+type alias Upload =
+    Admin.Scalar.Upload
+
+
 type alias Uuid =
     Admin.Scalar.Uuid
 
@@ -28,12 +32,13 @@ type alias Void =
     Admin.Scalar.Void
 
 
-codecs : Admin.Scalar.Codecs Decimal Id Timestamp Uuid Void
+codecs : Admin.Scalar.Codecs Decimal Id Timestamp Upload Uuid Void
 codecs =
     Admin.Scalar.defineCodecs
         { codecDecimal = defaultCodecs.codecDecimal
         , codecId = defaultCodecs.codecId
         , codecTimestamp = defaultCodecs.codecTimestamp
+        , codecUpload = defaultCodecs.codecUpload
         , codecUuid = defaultCodecs.codecUuid
         , codecVoid = defaultCodecs.codecVoid
         }

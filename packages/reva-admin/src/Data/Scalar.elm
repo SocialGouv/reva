@@ -1,4 +1,4 @@
-module Data.Scalar exposing (Decimal, Id, Timestamp, Uuid, Void, codecs)
+module Data.Scalar exposing (Decimal, Id, Timestamp, Upload, Uuid, Void, codecs)
 
 import Admin.Scalar exposing (defaultCodecs)
 import Json.Decode as Decode
@@ -26,7 +26,11 @@ type alias Decimal =
     Admin.Scalar.Decimal
 
 
-codecs : Admin.Scalar.Codecs Decimal Id Timestamp Uuid Void
+type alias Upload =
+    Admin.Scalar.Upload
+
+
+codecs : Admin.Scalar.Codecs Decimal Id Timestamp Upload Uuid Void
 codecs =
     Admin.Scalar.defineCodecs
         { codecTimestamp =
@@ -35,6 +39,7 @@ codecs =
             }
         , codecId = defaultCodecs.codecId
         , codecUuid = defaultCodecs.codecUuid
+        , codecUpload = defaultCodecs.codecUpload
         , codecVoid = defaultCodecs.codecVoid
         , codecDecimal = defaultCodecs.codecDecimal
         }

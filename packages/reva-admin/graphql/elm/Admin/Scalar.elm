@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Scalar exposing (Codecs, Decimal(..), Id(..), Timestamp(..), Uuid(..), Void(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
+module Admin.Scalar exposing (Codecs, Decimal(..), Id(..), Timestamp(..), Upload(..), Uuid(..), Void(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
 
 import Graphql.Codec exposing (Codec)
 import Graphql.Internal.Builder.Object as Object
@@ -23,6 +23,10 @@ type Timestamp
     = Timestamp String
 
 
+type Upload
+    = Upload String
+
+
 type Uuid
     = Uuid String
 
@@ -35,20 +39,22 @@ defineCodecs :
     { codecDecimal : Codec valueDecimal
     , codecId : Codec valueId
     , codecTimestamp : Codec valueTimestamp
+    , codecUpload : Codec valueUpload
     , codecUuid : Codec valueUuid
     , codecVoid : Codec valueVoid
     }
-    -> Codecs valueDecimal valueId valueTimestamp valueUuid valueVoid
+    -> Codecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid
 defineCodecs definitions =
     Codecs definitions
 
 
 unwrapCodecs :
-    Codecs valueDecimal valueId valueTimestamp valueUuid valueVoid
+    Codecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid
     ->
         { codecDecimal : Codec valueDecimal
         , codecId : Codec valueId
         , codecTimestamp : Codec valueTimestamp
+        , codecUpload : Codec valueUpload
         , codecUuid : Codec valueUuid
         , codecVoid : Codec valueVoid
         }
@@ -57,28 +63,29 @@ unwrapCodecs (Codecs unwrappedCodecs) =
 
 
 unwrapEncoder :
-    (RawCodecs valueDecimal valueId valueTimestamp valueUuid valueVoid -> Codec getterValue)
-    -> Codecs valueDecimal valueId valueTimestamp valueUuid valueVoid
+    (RawCodecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid -> Codec getterValue)
+    -> Codecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid
     -> getterValue
     -> Graphql.Internal.Encode.Value
 unwrapEncoder getter (Codecs unwrappedCodecs) =
     (unwrappedCodecs |> getter |> .encoder) >> Graphql.Internal.Encode.fromJson
 
 
-type Codecs valueDecimal valueId valueTimestamp valueUuid valueVoid
-    = Codecs (RawCodecs valueDecimal valueId valueTimestamp valueUuid valueVoid)
+type Codecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid
+    = Codecs (RawCodecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid)
 
 
-type alias RawCodecs valueDecimal valueId valueTimestamp valueUuid valueVoid =
+type alias RawCodecs valueDecimal valueId valueTimestamp valueUpload valueUuid valueVoid =
     { codecDecimal : Codec valueDecimal
     , codecId : Codec valueId
     , codecTimestamp : Codec valueTimestamp
+    , codecUpload : Codec valueUpload
     , codecUuid : Codec valueUuid
     , codecVoid : Codec valueVoid
     }
 
 
-defaultCodecs : RawCodecs Decimal Id Timestamp Uuid Void
+defaultCodecs : RawCodecs Decimal Id Timestamp Upload Uuid Void
 defaultCodecs =
     { codecDecimal =
         { encoder = \(Decimal raw) -> Encode.string raw
@@ -91,6 +98,10 @@ defaultCodecs =
     , codecTimestamp =
         { encoder = \(Timestamp raw) -> Encode.string raw
         , decoder = Object.scalarDecoder |> Decode.map Timestamp
+        }
+    , codecUpload =
+        { encoder = \(Upload raw) -> Encode.string raw
+        , decoder = Object.scalarDecoder |> Decode.map Upload
         }
     , codecUuid =
         { encoder = \(Uuid raw) -> Encode.string raw
