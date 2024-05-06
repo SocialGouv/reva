@@ -56,16 +56,16 @@ export const CandidateExperiencesSectionCard = ({
           <div>{e.description}</div>
         </div>
       ))}
-      {
-        isEditable && (
+      {isEditable && (
+        <div className="mt-6 pt-6 border-t-2">
           <Link
-          className="mt-6 pt-6 border-t-2 bg-none fr-link fr-icon-add-line fr-link--icon-left"
-          href={`/candidacies/${candidacyId}/summary/candidate-experiences/new`}
-        >
-          Ajouter une expérience
-        </Link>
-        )
-      }
+            className="bg-none p-2 fr-link fr-icon-add-line fr-link--icon-left"
+            href={`/candidacies/${candidacyId}/summary/candidate-experiences/new`}
+          >
+            Ajouter une expérience
+          </Link>
+        </div>
+      )}
     </GrayCard>
   );
 };
