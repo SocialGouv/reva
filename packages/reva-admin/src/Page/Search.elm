@@ -120,7 +120,11 @@ view context model =
         , div [ class "flex justify-center" ] <|
             case model.results of
                 Success results ->
-                    [ viewPager context model results.info.currentPage results.info.totalPages ]
+                    if List.length results.rows > 0 then
+                        [ viewPager context model results.info.currentPage results.info.totalPages ]
+
+                    else
+                        []
 
                 _ ->
                     []
