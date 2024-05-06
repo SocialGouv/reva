@@ -5,3 +5,5 @@ scalar Void
 scalar UUID
 
 scalar Decimal
+
+scalar Upload

@@ -39,6 +39,7 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
+import { GraphQLUpload } from "graphql-upload-minimal";
 
 // Resolvers
 
@@ -69,6 +70,7 @@ resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
 resolvers.UUID = UUIDResolver;
 resolvers.Decimal = DecimalGraphqlScalar;
+resolvers.Upload = GraphQLUpload;
 
 export const graphqlConfiguration: MercuriusOptions = {
   schema: makeExecutableSchema({

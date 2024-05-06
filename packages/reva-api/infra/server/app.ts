@@ -1,16 +1,13 @@
 import path from "path";
-
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
-
 import fastify, {
   FastifyInstance,
   FastifyPluginAsync,
   FastifyPluginOptions,
   FastifyServerOptions,
 } from "fastify";
-
 import { accountRoute } from "../../modules/account/account.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
@@ -23,6 +20,7 @@ import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
+import MercuriusGQLUpload from "mercurius-upload";
 import { organismRoutes } from "../../modules/organism/organism.routes";
 
 const APP_ROUTE_PATH = "/app";
@@ -118,6 +116,8 @@ export const buildApp = async (
   });
 
   app.register(keycloakAdminPlugin);
+
+  app.register(MercuriusGQLUpload, { prefix: "/api" });
 
   app.register(mercuriusGraphQL, {
     prefix: "/api",
