@@ -11,7 +11,7 @@ context("Certificate list", () => {
       stubMutation(
         req,
         "candidacy_updateCertification",
-        "updated-candidacy1.json"
+        "updated-candidacy1.json",
       );
     });
 

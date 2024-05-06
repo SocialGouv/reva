@@ -8,7 +8,7 @@ context("Training Program", () => {
         stubMutation(
           req,
           "candidate_login",
-          "candidate2-training-confirmed.json"
+          "candidate2-training-confirmed.json",
         );
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -52,7 +52,7 @@ context("Training Program", () => {
         stubQuery(
           req,
           "candidate_login",
-          "candidate2-missing-training-fields.json"
+          "candidate2-missing-training-fields.json",
         );
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -92,7 +92,7 @@ context("Training Program", () => {
         stubQuery(
           req,
           "candidacy_confirmTrainingForm",
-          "confirm-training-form.json"
+          "confirm-training-form.json",
         );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
@@ -107,7 +107,7 @@ context("Training Program", () => {
         .not("be.checked");
 
       cy.get('[data-test="submit-training-program-button"]').should(
-        "be.disabled"
+        "be.disabled",
       );
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
@@ -129,13 +129,13 @@ context("Training Program", () => {
         stubMutation(
           req,
           "candidate_login",
-          "candidate2-training-confirmed-sent-again.json"
+          "candidate2-training-confirmed-sent-again.json",
         );
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
           req,
           "candidacy_confirmTrainingForm",
-          "confirm-training-form.json"
+          "confirm-training-form.json",
         );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
@@ -150,7 +150,7 @@ context("Training Program", () => {
         .not("be.checked");
 
       cy.get('[data-test="submit-training-program-button"]').should(
-        "be.disabled"
+        "be.disabled",
       );
       cy.get('[data-test="accept-conditions-checkbox-group"]')
         .find("label")

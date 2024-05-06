@@ -11,7 +11,7 @@ context("Certificates", () => {
       stubMutation(
         req,
         "candidacy_updateCertification",
-        "updated-candidacy1.json"
+        "updated-candidacy1.json",
       );
     });
 
@@ -33,7 +33,7 @@ context("Certificates", () => {
     cy.get('[data-test="certification-more-info-link"]').should(
       "have.attr",
       "href",
-      "https://www.francecompetences.fr/recherche/rncp/34692/"
+      "https://www.francecompetences.fr/recherche/rncp/34692/",
     );
   });
 

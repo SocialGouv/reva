@@ -36,11 +36,11 @@ context("Dropped out", () => {
 
     cy.get('[data-test="home-dropped-out-name"').should(
       "have.text",
-      `Bonjour ${firstname} ${lastname},`
+      `Bonjour ${firstname} ${lastname},`,
     );
     cy.get('[data-test="home-dropped-out-email"').should(
       "have.text",
-      `Email: ${email}`
+      `Email: ${email}`,
     );
   });
 
@@ -58,7 +58,7 @@ context("Dropped out", () => {
 
     cy.get('[data-test="home-dropped-out-support-email"').should(
       "have.text",
-      `${supportEmail}`
+      `${supportEmail}`,
     );
   });
 });

@@ -13,7 +13,7 @@ context("Experiences", () => {
       stubMutation(
         req,
         "candidate_login",
-        "candidate1-certification-and-goals-selected.json"
+        "candidate1-certification-and-goals-selected.json",
       );
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "add_experience", "added-experience1.json");
@@ -39,11 +39,11 @@ context("Experiences", () => {
       .within(() => {
         cy.get('[data-test="timeline-experience-title"]').should(
           "have.text",
-          experienceTitle1
+          experienceTitle1,
         );
         cy.get('[data-test="timeline-experience-duration"]').should(
           "have.text",
-          "Entre 1 et 3 ans"
+          "Entre 1 et 3 ans",
         );
       });
 
@@ -52,7 +52,7 @@ context("Experiences", () => {
     cy.get("[name='title']").type(`{selectAll}${experienceTitle2}`);
     cy.get("[name='duration']").select("moreThanFiveYears");
     cy.get("textarea[name='description']").type(
-      `{selectAll}${experienceDescription2}`
+      `{selectAll}${experienceDescription2}`,
     );
     cy.get('[data-test="project-experience-save"]').click();
 
@@ -61,11 +61,11 @@ context("Experiences", () => {
       .within(() => {
         cy.get('[data-test="timeline-experience-title"]').should(
           "have.text",
-          experienceTitle2
+          experienceTitle2,
         );
         cy.get('[data-test="timeline-experience-duration"]').should(
           "have.text",
-          "Plus de 5 ans"
+          "Plus de 5 ans",
         );
       });
   });

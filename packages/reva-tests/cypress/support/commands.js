@@ -3,7 +3,7 @@ Cypress.Commands.add("auth", () => {
     "**/realms/reva-app/protocol/openid-connect/3p-cookies/step1.html",
     {
       fixture: "auth-step1.html",
-    }
+    },
   );
 
   cy.intercept("GET", "**/realms/reva-app/protocol/openid-connect/auth*", {

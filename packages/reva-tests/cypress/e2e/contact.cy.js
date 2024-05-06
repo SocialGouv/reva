@@ -38,12 +38,12 @@ context("Candidate account", () => {
 
     cy.get('[data-test="project-contact-save"]').click();
     cy.get(
-      '[title="Fermer"][aria-controls="project-home-modal-email"]'
+      '[title="Fermer"][aria-controls="project-home-modal-email"]',
     ).click();
     cy.wait("@update_contact");
 
     cy.get('[data-test="project-home-fullname"]').contains(
-      `${firstname2} ${lastname2}`
+      `${firstname2} ${lastname2}`,
     );
     cy.get('[data-test="project-home-contact-phone"]').contains(phone2);
     cy.get('[data-test="project-home-contact-email"]').contains(email2);

@@ -8,7 +8,7 @@ context("Funding Request Sent", () => {
         stubMutation(
           req,
           "candidate_login",
-          "candidate2-funding-request-sent.json"
+          "candidate2-funding-request-sent.json",
         );
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");

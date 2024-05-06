@@ -44,15 +44,15 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="project-organisms-organism-o1"]').within(() => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
         "have.text",
-        "Architecte 1"
+        "Architecte 1",
       );
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
-        "email@exemple.com"
+        "email@exemple.com",
       );
       cy.get('[data-test="project-organisms-organism-phone"]').should(
         "have.text",
-        "0111111111"
+        "0111111111",
       );
       cy.get('[data-test="project-organisms-onsite-tag"]').should("exist");
       cy.get('[data-test="project-organisms-remote-tag"]').should("not.exist");
@@ -61,15 +61,15 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="project-organisms-organism-o2"]').within(() => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
         "have.text",
-        "Architecte 2"
+        "Architecte 2",
       );
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
-        "email2@exemple.com"
+        "email2@exemple.com",
       );
       cy.get('[data-test="project-organisms-organism-phone"]').should(
         "have.text",
-        "0222222222"
+        "0222222222",
       );
       cy.get('[data-test="project-organisms-onsite-tag"]').should("not.exist");
       cy.get('[data-test="project-organisms-remote-tag"]').should("exist");
@@ -92,7 +92,7 @@ context("Candidacy with department certification selected", () => {
         onBeforeLoad(win) {
           cy.stub(win.Math, "random").returns(0);
         },
-      }
+      },
     );
 
     cy.wait("@candidate_login");
@@ -106,15 +106,15 @@ context("Candidacy with department certification selected", () => {
 
     cy.get('[data-test="project-home-organism-label"]').should(
       "have.text",
-      "Architecte 1"
+      "Architecte 1",
     );
     cy.get('[data-test="project-home-organism-email"]').should(
       "have.text",
-      "email@exemple.com"
+      "email@exemple.com",
     );
     cy.get('[data-test="project-home-organism-phone"]').should(
       "have.text",
-      "0111111111"
+      "0111111111",
     );
   });
 });
