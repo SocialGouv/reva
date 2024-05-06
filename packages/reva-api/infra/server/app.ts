@@ -23,6 +23,7 @@ import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
+import { organismRoutes } from "../../modules/organism/organism.routes";
 
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
@@ -134,6 +135,7 @@ export const buildApp = async (
   app.register(feasibilityFileUploadRoute, { prefix: "/api" });
   app.register(dossierDeValidationRoute, { prefix: "/api" });
   app.register(juryRoute, { prefix: "/api" });
+  app.register(organismRoutes, { prefix: "/api" });
 
   logger.info("started");
   return app;

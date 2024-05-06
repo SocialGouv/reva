@@ -1,0 +1,145 @@
+import fastifyMultipart from "@fastify/multipart";
+import { FastifyPluginAsync } from "fastify";
+
+import { UploadedFile } from "../shared/file";
+import { logger } from "../shared/logger";
+
+interface UpdatedMaisonMereAAPLegalInformationRequestBody {
+  managerFirstname: { value: string };
+  managerLastname: { value: string };
+  attestationURSSAF: UploadedFile;
+  justificatifIdentiteGestionnaire: UploadedFile;
+  delegataire?: { value: boolean };
+  lettreDeDelegation?: UploadedFile;
+  justificatifIdentiteDelegataire?: UploadedFile;
+}
+
+type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
+
+export const organismRoutes: FastifyPluginAsync = async (server) => {
+  const maxUploadFileSizeInBytes = 15728640;
+
+  server.register(fastifyMultipart, {
+    attachFieldsToBody: true,
+    limits: { fileSize: maxUploadFileSizeInBytes },
+  });
+
+  server.post<{
+    Body: UpdatedMaisonMereAAPLegalInformationRequestBody;
+  }>("/maisonMereAAP/:maisonMereAAPId/legal-information", {
+    schema: {
+      body: {
+        type: "object",
+        properties: {
+          managerFirstname: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          managerLastname: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          attestationURSSAF: { type: "object" },
+          justificatifIdentiteGestionnaire: { type: "object" },
+          delegataire: {
+            type: "object",
+            properties: {
+              value: {
+                type: "boolean",
+              },
+            },
+          },
+          lettreDeDelegation: { type: "object" },
+          justificatifIdentiteDelegataire: { type: "object" },
+        },
+        required: [
+          "managerFirstname",
+          "managerLastname",
+          "attestationURSSAF",
+          "justificatifIdentiteGestionnaire",
+        ],
+      },
+      params: {
+        type: "object",
+        properties: {
+          maisonMereAAPId: { type: "string" },
+        },
+        required: ["maisonMereAAPId"],
+      },
+    },
+    handler: async (request, reply) => {
+      try {
+        const authorized = true;
+        if (!authorized) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+          });
+        }
+
+        const attestationURSSAF = request.body.attestationURSSAF;
+        const justificatifIdentiteGestionnaire =
+          request.body.justificatifIdentiteGestionnaire;
+        const lettreDeDelegation = request.body.lettreDeDelegation;
+        const justificatifIdentiteDelegataire =
+          request.body.justificatifIdentiteDelegataire;
+
+        const delagataire = request.body.delegataire?.value;
+
+        const files = [
+          attestationURSSAF,
+          justificatifIdentiteGestionnaire,
+          lettreDeDelegation,
+          justificatifIdentiteDelegataire,
+        ];
+
+        if (files.some((f) => f && !hasValidMimeType(f, ["application/pdf"]))) {
+          return reply
+            .status(400)
+            .send(
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
+            );
+        }
+        if (
+          files.some((f) => f && f._buf?.byteLength > maxUploadFileSizeInBytes)
+        ) {
+          return reply
+            .status(400)
+            .send(
+              `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
+                maxUploadFileSizeInBytes / 1024 / 1024,
+              )} Mo.`,
+            );
+        }
+
+        const requiredFiles = delagataire
+          ? files
+          : [attestationURSSAF, justificatifIdentiteGestionnaire];
+
+        if (requiredFiles.some((f) => !f)) {
+          return reply
+            .status(400)
+            .send(`Un des fichiers obligatoire n'a pas été fourni `);
+        }
+      } catch (e) {
+        logger.error(e);
+        const message = e instanceof Error ? e.message : "unknown error";
+        reply.status(500).send(message);
+      }
+    },
+  });
+
+  const hasValidMimeType = (
+    file: UploadedFile,
+    validMimeTypes: MimeType[],
+  ): boolean => {
+    return validMimeTypes.includes(file.mimetype as MimeType);
+  };
+};
