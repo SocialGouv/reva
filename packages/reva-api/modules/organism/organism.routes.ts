@@ -8,7 +8,7 @@ interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };
   managerLastname: { value: string };
   attestationURSSAF: UploadedFile;
-  justificatifIdentiteGestionnaire: UploadedFile;
+  justificatifIdentiteDirigeant: UploadedFile;
   delegataire?: { value: boolean };
   lettreDeDelegation?: UploadedFile;
   justificatifIdentiteDelegataire?: UploadedFile;
@@ -48,7 +48,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
             },
           },
           attestationURSSAF: { type: "object" },
-          justificatifIdentiteGestionnaire: { type: "object" },
+          justificatifIdentiteDirigeant: { type: "object" },
           delegataire: {
             type: "object",
             properties: {
@@ -64,7 +64,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           "managerFirstname",
           "managerLastname",
           "attestationURSSAF",
-          "justificatifIdentiteGestionnaire",
+          "justificatifIdentiteDirigeant",
         ],
       },
       params: {
@@ -85,8 +85,8 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
         }
 
         const attestationURSSAF = request.body.attestationURSSAF;
-        const justificatifIdentiteGestionnaire =
-          request.body.justificatifIdentiteGestionnaire;
+        const justificatifIdentiteDirigeant =
+          request.body.justificatifIdentiteDirigeant;
         const lettreDeDelegation = request.body.lettreDeDelegation;
         const justificatifIdentiteDelegataire =
           request.body.justificatifIdentiteDelegataire;
@@ -95,7 +95,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
 
         const files = [
           attestationURSSAF,
-          justificatifIdentiteGestionnaire,
+          justificatifIdentiteDirigeant,
           lettreDeDelegation,
           justificatifIdentiteDelegataire,
         ];
@@ -121,7 +121,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
 
         const requiredFiles = delagataire
           ? files
-          : [attestationURSSAF, justificatifIdentiteGestionnaire];
+          : [attestationURSSAF, justificatifIdentiteDirigeant];
 
         if (requiredFiles.some((f) => !f)) {
           return reply

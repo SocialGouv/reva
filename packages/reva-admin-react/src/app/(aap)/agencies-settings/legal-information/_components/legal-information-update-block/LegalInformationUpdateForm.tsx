@@ -18,7 +18,7 @@ const schema = z
     attestationURSSAF: z.object({
       0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
     }),
-    justificatifIdentiteGestionnaire: z.object({
+    justificatifIdentiteDirigeant: z.object({
       0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
     }),
 
@@ -87,10 +87,10 @@ export const LegalInformationUpdateForm = ({
       if (data.attestationURSSAF?.[0]) {
         formData.append("attestationURSSAF", data.attestationURSSAF?.[0]);
       }
-      if (data.justificatifIdentiteGestionnaire?.[0]) {
+      if (data.justificatifIdentiteDirigeant?.[0]) {
         formData.append(
-          "justificatifIdentiteGestionnaire",
-          data.justificatifIdentiteGestionnaire?.[0],
+          "justificatifIdentiteDirigeant",
+          data.justificatifIdentiteDirigeant?.[0],
         );
       }
       if (data.lettreDeDelegation?.[0]) {
@@ -172,11 +172,11 @@ export const LegalInformationUpdateForm = ({
           }
           nativeInputProps={{
             type: "file",
-            ...register("justificatifIdentiteGestionnaire"),
+            ...register("justificatifIdentiteDirigeant"),
           }}
-          state={errors.justificatifIdentiteGestionnaire ? "error" : "default"}
+          state={errors.justificatifIdentiteDirigeant ? "error" : "default"}
           stateRelatedMessage={
-            errors.justificatifIdentiteGestionnaire?.[0]?.message
+            errors.justificatifIdentiteDirigeant?.[0]?.message
           }
         />
 
