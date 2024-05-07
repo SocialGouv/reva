@@ -76,17 +76,17 @@ export const getAAPsWithZipCode = async ({
   `;
 
   if (distanceStatus === "ONSITE_REMOTE") {
-    whereClause += `and od.is_remote = true`;
+    whereClause += ` and od.is_remote = true`;
   }
 
   if (searchText) {
-    whereClause += `and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
+    whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
   }
 
   if (pmr) {
-    whereClause += `and oic."conformeNormesAccessbilite" = 'CONFORME'`;
+    whereClause += ` and oic."conformeNormesAccessbilite" = 'CONFORME' `;
   } else {
-    whereClause += `and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
+    whereClause += ` and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
   }
 
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
