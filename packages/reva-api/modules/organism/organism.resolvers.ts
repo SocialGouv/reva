@@ -1,4 +1,4 @@
-import { Organism, OrganismInformationsCommerciales } from "@prisma/client";
+import { Organism, OrganismInformationsCommerciales, StatutValidationInformationsJuridiquesMaisonMereAAP } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { getAccountById } from "../account/features/getAccount";
@@ -398,6 +398,7 @@ export const resolvers = {
         limit?: number;
         offset?: number;
         searchFilter?: string;
+        legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
       },
       context: GraphqlContext,
     ) => {
