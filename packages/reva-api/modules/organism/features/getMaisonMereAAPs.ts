@@ -1,7 +1,12 @@
-import { MaisonMereAAP, Prisma } from "@prisma/client";
+import {
+  MaisonMereAAP,
+  Prisma,
+  type StatutValidationInformationsJuridiquesMaisonMereAAP,
+} from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
+// import { LegalValidationStatus } from "../organism.types";
 
 const buildContainsFilterClause =
   (searchFilter: string) => (field: string) => ({
@@ -12,10 +17,12 @@ export const getMaisonMereAAPs = async ({
   limit = 10,
   offset = 0,
   searchFilter,
+  legalValidationStatus,
 }: {
   limit?: number;
   offset?: number;
   searchFilter?: string;
+  legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
 }): Promise<PaginatedListResult<MaisonMereAAP>> => {
   const queryMaisonMereAAPs: Prisma.MaisonMereAAPFindManyArgs = {
     orderBy: [{ createdAt: "desc" }],
@@ -50,9 +57,32 @@ export const getMaisonMereAAPs = async ({
     };
   }
 
-  const maisonMereAAPs = await prismaClient.maisonMereAAP.findMany(
-    queryMaisonMereAAPs,
-  );
+  if (legalValidationStatus) {
+    queryMaisonMereAAPs.where = {
+      ...queryMaisonMereAAPs.where,
+      AND: [
+        {
+          statutValidationInformationsJuridiquesMaisonMereAAP:
+            legalValidationStatus,
+        },
+      ],
+    };
+
+    queryCount.where = {
+      ...queryCount.where,
+      AND: [
+        {
+          statutValidationInformationsJuridiquesMaisonMereAAP:
+            legalValidationStatus,
+        },
+      ],
+    };
+  }
+
+  const maisonMereAAPs =
+    await prismaClient.maisonMereAAP.findMany(
+      queryMaisonMereAAPs
+    );
   const count = await prismaClient.maisonMereAAP.count(queryCount);
   return {
     rows: maisonMereAAPs,

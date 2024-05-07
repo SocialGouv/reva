@@ -124,6 +124,7 @@ type Query {
     offset: Int
     limit: Int
     searchFilter: String
+    legalValidationStatus: StatutValidationInformationsJuridiquesMaisonMereAAP
   ): MaisonMereAAPsPaginated!
   organism_getMaisonMereAAPById(maisonMereAAPId: ID!): MaisonMereAAP!
 }
