@@ -63,13 +63,11 @@ const root = createRoot(container!);
 
 root.render(
   <KeycloakProvider keycloakInstance={keycloakInstance}>
-    {/* <React.StrictMode> */}
     <ApolloProvider client={client}>
       <MainMachineContextProvider>
         <App />
       </MainMachineContextProvider>
     </ApolloProvider>
-    {/* </React.StrictMode> */}
   </KeycloakProvider>,
 );
 

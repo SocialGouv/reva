@@ -1,6 +1,5 @@
 import { ApolloClient, gql } from "@apollo/client";
 
-import { getTokens } from "../contexts/keycloakContext";
 import { Experience, candidacyStatus } from "../interface";
 
 const UPDATE_CERTIFICATION = gql`
@@ -234,11 +233,6 @@ export const updateContact =
     };
   }) => {
     const { data } = await client.mutate({
-      context: {
-        headers: {
-          authorization: `Bearer ${getTokens().accessToken}`,
-        },
-      },
       mutation: UPDATE_CONTACT,
       variables: { candidateId, candidateData },
     });
