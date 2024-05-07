@@ -156,13 +156,9 @@ headerMenuModal context activeHeaderLink =
                 Api.Token.isOrganism context.token
                     && not (Api.Token.isAdmin context.token)
             then
-                navItemLink "Candidatures" "/admin/candidacies" Candidacies
-                    :: (if List.member "AGENCIES_SETTINGS" context.activeFeatures then
-                            [ itemLink "Paramètres" (adminReactUrl "/agencies-settings") True False ]
-
-                        else
-                            []
-                       )
+                [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
+                , itemLink "Paramètres" (adminReactUrl "/agencies-settings") True False
+                ]
 
             else
                 []
