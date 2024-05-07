@@ -8,6 +8,8 @@ interface OrganismDistanceFilterProps {
   disabled: boolean;
   zip: string;
   setZip: (zip: string) => void;
+  pmr: boolean;
+  setPmr: (pmr: boolean) => void;
 }
 
 export const OrganismDistanceFilter = ({
@@ -16,6 +18,8 @@ export const OrganismDistanceFilter = ({
   disabled,
   zip,
   setZip,
+  pmr,
+  setPmr,
 }: OrganismDistanceFilterProps) => {
   useEffect(() => {
     if (zip.length === 0 || zip.length === 5) {
@@ -23,6 +27,11 @@ export const OrganismDistanceFilter = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zip]);
+
+  const handleChangePmr = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeSearchPmr(e.target.checked);
+    setPmr(e.target.checked);
+  };
 
   return (
     <div className="flex flex-col gap-6 mt-6">
@@ -53,7 +62,8 @@ export const OrganismDistanceFilter = ({
                 "N'afficher que les sites qui peuvent recevoir du public à mobilité réduite (PMR)",
               nativeInputProps: {
                 disabled,
-                onChange: (e) => onChangeSearchPmr(e.target.checked),
+                onChange: handleChangePmr,
+                checked: pmr,
               },
             },
           ]}

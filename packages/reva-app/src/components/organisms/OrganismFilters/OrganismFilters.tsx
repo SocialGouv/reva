@@ -33,6 +33,7 @@ export const OrganismFilters = ({
   filters: filters;
 }) => {
   const [zip, setZip] = useState("");
+  const [pmr, setPmr] = useState(false);
   const { organismSearchRemote, organismSearchOnsite } = filters;
   const searchHasOnSiteSelected = organismSearchOnsite;
 
@@ -124,6 +125,8 @@ export const OrganismFilters = ({
             }}
             zip={zip}
             setZip={setZip}
+            pmr={pmr}
+            setPmr={setPmr}
           />
         )}
         <hr />
@@ -139,6 +142,7 @@ export const OrganismFilters = ({
                 organismSearchText: "",
               });
               setZip("");
+              setPmr(false);
             }}
           >
             Réinitialiser les filtres
