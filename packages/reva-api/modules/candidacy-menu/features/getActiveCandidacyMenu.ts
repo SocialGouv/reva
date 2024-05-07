@@ -16,7 +16,9 @@ export const getActiveCandidacyMenu = async ({
   candidacy: CandidacyForMenu;
   userKeycloakId?: string;
 }) => {
-  const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
+  const activeCandidacyStatus = candidacy.candidacyStatuses.find(
+    (status) => status.isActive,
+  )?.status as CandidacyStatusStep;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus,
