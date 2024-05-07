@@ -1203,18 +1203,22 @@ model Jury {
 }
 
 model File {
-  id                                    String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                                  String                                @map("name") @db.VarChar(255)
-  mimeType                              String                                @map("mime_type") @db.VarChar(255)
-  createdAt                             DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
-  linkedAsFeasibilityFileBy             Feasibility[]                         @relation("feasibility_file")
-  linkedAsIDFileBy                      Feasibility[]                         @relation("ID_file")
-  linkedAsDocumentaryProofFileBy        Feasibility[]                         @relation("documentary_proof_file")
-  linkedAsCertificateOfAttendanceFileBy Feasibility[]                         @relation("certificate_of_attendance_file")
-  linkedAsDecisionFileBy                Feasibility[]                         @relation("decision_file")
-  DossierDeValidationFile               DossierDeValidation?                  @relation("dossier_de_validation_file")
-  DossierDeValidationOtherFiles         DossierDeValidationOtherFilesOnFile[]
-  Jury                                  Jury?                                 @relation("convocation_file")
+  id                                                     String                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                                                   String                                   @map("name") @db.VarChar(255)
+  mimeType                                               String                                   @map("mime_type") @db.VarChar(255)
+  createdAt                                              DateTime                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  linkedAsFeasibilityFileBy                              Feasibility[]                            @relation("feasibility_file")
+  linkedAsIDFileBy                                       Feasibility[]                            @relation("ID_file")
+  linkedAsDocumentaryProofFileBy                         Feasibility[]                            @relation("documentary_proof_file")
+  linkedAsCertificateOfAttendanceFileBy                  Feasibility[]                            @relation("certificate_of_attendance_file")
+  linkedAsDecisionFileBy                                 Feasibility[]                            @relation("decision_file")
+  DossierDeValidationFile                                DossierDeValidation?                     @relation("dossier_de_validation_file")
+  DossierDeValidationOtherFiles                          DossierDeValidationOtherFilesOnFile[]
+  Jury                                                   Jury?                                    @relation("convocation_file")
+  linkedAsMaisonMereAAPAttestationUrssafFile             MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_attestation_urssaf_file")
+  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFile MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_dirigeant_file")
+  linkedAsLettreDeDelegationFile                         MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_lettre_de_delegation_file")
+  linkedAsJustificatifIdentiteDelegataireFile            MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_delegataire_file")
 
   @@map("file")
 }
@@ -1329,6 +1333,7 @@ model MaisonMereAAP {
   updatedAt                                           DateTime?                                           @map("updated_at") @db.Timestamptz(6)
   organismes                                          Organism[]
   statutValidationInformationsJuridiquesMaisonMereAAP StatutValidationInformationsJuridiquesMaisonMereAAP @default(A_METTRE_A_JOUR) @map("statut_validation_informations_juridiques_maison_mere_aap")
+  MaisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments[]
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
@@ -1461,4 +1466,23 @@ model DFFCertificationCompetenceDetails {
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("dff_certification_competence_details")
+}
+
+model MaisonMereAAPLegalInformationDocuments {
+  id                                    String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  maisonMereAAP                         MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId                       String        @unique @map("maison_mere_aap_id") @db.Uuid
+  managerFirstname                      String        @map("manager_firstname")
+  managerLastname                       String        @map("manager_lastname")
+  delegataire                           Boolean       @map("delagataire")
+  attestationURSSAFFileId               String        @map("attestation_urssaf_file_id") @db.Uuid
+  attestationURSSAFFile                 File          @relation("mmaap_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id])
+  justificatifIdentiteDirigeantFileId   String        @map("justificatif_identite_dirigeant_file_id") @db.Uuid
+  justificatifIdentiteDirigeantFile     File          @relation("mmaap_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "mmaap_justificatif_identite_dirigeant_file")
+  lettreDeDelegationFileId              String?       @map("lettre_de_delegation_file_id") @db.Uuid
+  lettreDeDelegationFile                File?         @relation("mmaap_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
+  justificatifIdentiteDelegataireFileId String?       @map("justificatif_identite_delegataire_file_id") @db.Uuid
+  justificatifIdentiteDelegataireFile   File?         @relation("mmaap_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "mmaap_justificatif_identite_delegataire_file")
+
+  @@map("maison_mere_aap_legal_information_documents")
 }
