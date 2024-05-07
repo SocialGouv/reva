@@ -8,6 +8,7 @@ const legalInformationQueries = graphql(`
     account_getAccountForConnectedUser {
       organism {
         maisonMereAAP {
+          id
           raisonSociale
           siret
           statutJuridique

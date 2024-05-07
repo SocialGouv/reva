@@ -7,20 +7,41 @@ import { z } from "zod";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
+import { REST_API_URL } from "@/config/config";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { errorToast, successToast } from "@/components/toast/toast";
 
 const schema = z.object({
   managerFirstname: z.string().min(1, "Ce champ est obligatoire."),
   managerLastname: z.string().min(1, "Ce champ est obligatoire."),
-  attestationURSSAF: z.any(),
-  justificatifIdentiteGestionnaire: z.any(),
+  attestationURSSAF: z.object({
+    0: z.undefined().or(z.instanceof(File)),
+  }),
+  justificatifIdentiteGestionnaire: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
   delegataire: z.boolean(),
-  lettreDeDelegation: z.any().optional(),
-  justificatifIdentiteDelegataire: z.any(),
+  lettreDeDelegation: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
+  justificatifIdentiteDelegataire: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export const LegalInformationUpdateForm = () => {
+export const LegalInformationUpdateForm = ({
+  maisonMereAAPId,
+}: {
+  maisonMereAAPId: string;
+}) => {
   const {
     register,
     handleSubmit,
@@ -31,9 +52,48 @@ export const LegalInformationUpdateForm = () => {
   });
 
   const { delegataire } = useWatch({ control });
+  const { accessToken } = useKeycloakContext();
 
-  const handleFormSubmit = handleSubmit((data) => {
-    console.log({ data });
+  const handleFormSubmit = handleSubmit(async (data) => {
+    const formData = new FormData();
+    formData.append("managerFirstname", data.managerFirstname);
+    formData.append("managerLastname", data.managerLastname);
+    formData.append("delegataire", data.delegataire.toString());
+
+    if (data.attestationURSSAF?.[0]) {
+      formData.append("attestationURSSAF", data.attestationURSSAF?.[0]);
+    }
+    if (data.justificatifIdentiteGestionnaire?.[0]) {
+      formData.append(
+        "justificatifIdentiteGestionnaire",
+        data.justificatifIdentiteGestionnaire?.[0],
+      );
+    }
+    if (data.lettreDeDelegation?.[0]) {
+      formData.append("lettreDeDelegation", data.lettreDeDelegation?.[0]);
+    }
+    if (data.justificatifIdentiteDelegataire?.[0]) {
+      formData.append(
+        "justificatifIdentiteDelegataire",
+        data.justificatifIdentiteDelegataire?.[0],
+      );
+    }
+
+    const result = await fetch(
+      `${REST_API_URL}/maisonMereAAP/${maisonMereAAPId}/legal-information`,
+      {
+        method: "post",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      },
+    );
+    if (result.ok) {
+      successToast("Modifications enregistrées");
+    } else {
+      errorToast(await result.text());
+    }
   });
 
   return (

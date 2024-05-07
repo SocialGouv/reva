@@ -5,8 +5,10 @@ import { useState } from "react";
 import { LegalInformationUpdateForm } from "./LegalInformationUpdateForm";
 
 export const LegalInformationUpdateBlock = ({
+  maisonMereAAPId,
   statutValidationInformationsJuridiquesMaisonMereAAP,
 }: {
+  maisonMereAAPId: string;
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
 }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -29,7 +31,9 @@ export const LegalInformationUpdateBlock = ({
           />
         )}
       </div>
-      {showUpdateForm && <LegalInformationUpdateForm />}
+      {showUpdateForm && (
+        <LegalInformationUpdateForm maisonMereAAPId={maisonMereAAPId} />
+      )}
     </div>
   );
 };

@@ -95,6 +95,7 @@ const LegalInformationPage = () => {
             isGestionnaireMaisonMereAAP &&
             maisonMereAAP && (
               <LegalInformationUpdateBlock
+                maisonMereAAPId={maisonMereAAP.id}
                 statutValidationInformationsJuridiquesMaisonMereAAP={
                   maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
                 }
