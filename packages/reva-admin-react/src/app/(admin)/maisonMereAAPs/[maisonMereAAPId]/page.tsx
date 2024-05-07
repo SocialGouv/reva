@@ -5,6 +5,10 @@ import {
   Info,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
+import {
+  OrganismSummary as OrganismSummaryNewLegal,
+  Info as InfoNewLegal,
+} from "@/components/organism-summary/OrganismSummaryNewLegal";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -13,6 +17,9 @@ import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/Ma
 import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 import { BackButton } from "@/components/back-button/BackButton";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import LegalDocumentList from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/(components)/LegalDocumentsList";
+import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -28,6 +35,8 @@ const getMaisonMereAAP = graphql(`
       codePostal
       typologie
       siteWeb
+      createdAt
+      statutValidationInformationsJuridiquesMaisonMereAAP
       maisonMereAAPOnDepartements {
         estSurPlace
         estADistance
@@ -92,6 +101,11 @@ const MaisonMereAAPPage = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
+  const featureFlipping = useFeatureflipping();
+  const showLegalValidation = featureFlipping.isFeatureActive(
+    "LEGAL_INFORMATION_VALIDATION",
+  );
+
   const { data: getMaisonMereAAPResponse, isLoading: isMaisonMereAAPLoading } =
     useQuery({
       queryKey: ["getMaisonMereAAP", maisonMereAAPId],
@@ -125,33 +139,87 @@ const MaisonMereAAPPage = () => {
   return (
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
-        <BackButton href="/subscriptions/validated">
-          Toutes les inscriptions
-        </BackButton>
-        <OrganismSummary
-          companyName={maisonMereAAP.raisonSociale}
-          accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
-          accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
-          accountEmail={maisonMereAAP.gestionnaire.email}
-          accountPhoneNumber={maisonMereAAP.phone || ""}
-          companyQualiopiCertificateExpiresAt={
-            new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
-          }
-          companySiret={maisonMereAAP.siret}
-          companyLegalStatus={maisonMereAAP.statutJuridique}
-          companyAddress={maisonMereAAP.adresse}
-          companyZipCode={maisonMereAAP.codePostal}
-          companyCity={maisonMereAAP.ville}
-          companyWebsite={maisonMereAAP.siteWeb}
-          companyTypology={maisonMereAAP.typologie as Typology}
-          domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
-            (d) => d.domaine.label,
-          )}
-          ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
-            (c) => c.ccn.label,
-          )}
-        />
-        <GrayCard className="mt-8">
+        {!showLegalValidation && (
+          <BackButton href="/subscriptions/validated">
+            Toutes les inscriptions
+          </BackButton>
+        )}
+        {showLegalValidation ? (
+          <OrganismSummaryNewLegal
+            companyName={maisonMereAAP.raisonSociale}
+            accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
+            accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
+            accountEmail={maisonMereAAP.gestionnaire.email}
+            accountPhoneNumber={maisonMereAAP.phone || ""}
+            companyQualiopiCertificateExpiresAt={
+              new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
+            }
+            companySiret={maisonMereAAP.siret}
+            companyLegalStatus={maisonMereAAP.statutJuridique}
+            companyAddress={maisonMereAAP.adresse}
+            companyZipCode={maisonMereAAP.codePostal}
+            companyCity={maisonMereAAP.ville}
+            companyWebsite={maisonMereAAP.siteWeb}
+            companyTypology={maisonMereAAP.typologie as Typology}
+            domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
+              (d) => d.domaine.label,
+            )}
+            ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
+              (c) => c.ccn.label,
+            )}
+            createdAt={new Date(maisonMereAAP.createdAt)}
+          />
+        ) : (
+          <OrganismSummary
+            companyName={maisonMereAAP.raisonSociale}
+            accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
+            accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
+            accountEmail={maisonMereAAP.gestionnaire.email}
+            accountPhoneNumber={maisonMereAAP.phone || ""}
+            companyQualiopiCertificateExpiresAt={
+              new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
+            }
+            companySiret={maisonMereAAP.siret}
+            companyLegalStatus={maisonMereAAP.statutJuridique}
+            companyAddress={maisonMereAAP.adresse}
+            companyZipCode={maisonMereAAP.codePostal}
+            companyCity={maisonMereAAP.ville}
+            companyWebsite={maisonMereAAP.siteWeb}
+            companyTypology={maisonMereAAP.typologie as Typology}
+            domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
+              (d) => d.domaine.label,
+            )}
+            ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
+              (c) => c.ccn.label,
+            )}
+          />
+        )}
+
+        {showLegalValidation ? (
+          <GrayCard className="mt-8">
+          <h3>Agences</h3>
+          <ol className="grid grid-cols-1 md:grid-cols-2">
+            {maisonMereAAP.organisms.map((o) => (
+              <li key={o.id} className="ml-4">
+                <h3 className="text-lg font-bold">
+                  {o.informationsCommerciales?.nom || o.label}
+                </h3>
+                <InfoNewLegal title="Fermée pour absence ou congés:">
+                  <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
+                </InfoNewLegal>
+                <InfoNewLegal title="Niveaux de diplômes couverts:">
+                  <ul>
+                    {o.managedDegrees.map((d) => (
+                      <li key={d.id}>{d.degree.longLabel}</li>
+                    ))}
+                  </ul>
+                </InfoNewLegal>
+              </li>
+            ))}
+          </ol>
+        </GrayCard>
+        ) : (
+          <GrayCard className="mt-8">
           <h3>Agences</h3>
           <ol>
             {maisonMereAAP.organisms.map((o) => (
@@ -173,6 +241,7 @@ const MaisonMereAAPPage = () => {
             ))}
           </ol>
         </GrayCard>
+        )}
         <MaisonMereAAPForm
           maisonMereAAPId={maisonMereAAP.id}
           onSiteDepartmentsOnRegions={regions.map(
@@ -181,7 +250,20 @@ const MaisonMereAAPPage = () => {
           remoteDepartmentsOnRegions={regions.map(
             selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
           )}
+          statutValidationInformationsJuridiquesMaisonMereAAP={
+            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+          }
+          showLegalValidation={showLegalValidation}
         />
+        {showLegalValidation &&
+          maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+            "EN_ATTENTE_DE_VERIFICATION" && (
+            <>
+              <LegalDocumentList />
+              <hr />
+              <ValidationDecisionForm />
+            </>
+          )}
       </div>
     )
   );

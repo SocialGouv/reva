@@ -30,6 +30,8 @@ function MaisonMereAAPForm(params: {
   maisonMereAAPId: string;
   onSiteDepartmentsOnRegions: TreeSelectItem[];
   remoteDepartmentsOnRegions: TreeSelectItem[];
+  statutValidationInformationsJuridiquesMaisonMereAAP?: string;
+  showLegalValidation: boolean;
 }) {
   const { graphqlClient } = useGraphQlClient();
 
@@ -142,6 +144,7 @@ function MaisonMereAAPForm(params: {
                   items={onSiteDepartmentsOnRegions}
                   onClickSelectAll={onClickSelectAllOnSiteDepartmentItems}
                   onClickItem={onClickOnSiteDepartmentItem}
+                  readonly={params.showLegalValidation}
                 />
               </div>
               <div>
@@ -155,16 +158,20 @@ function MaisonMereAAPForm(params: {
                   items={remoteDepartmentsOnRegions}
                   onClickSelectAll={onClickSelectAllRemoteDepartmentItems}
                   onClickItem={onClickRemoteDepartmentItem}
+                  readonly={params.showLegalValidation}
                 />
               </div>
             </fieldset>
 
-            <div className="flex flex-col md:flex-row items-center md:items-end justify-between">
+            {!params.showLegalValidation && (
+              <div className="flex flex-col md:flex-row items-center md:items-end justify-between">
               <div></div>
               <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
                 <Button disabled={isSubmitting}>Enregistrer</Button>
               </div>
             </div>
+            )}
+            
           </form>
         </FormProvider>
       </div>
