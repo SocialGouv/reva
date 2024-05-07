@@ -363,7 +363,7 @@ const CguPage = () => (
       </p>
 
       <p>Vous pouvez avoir accès à un versionnage des CGU ici :</p>
-      <p>Dernière version des CGU : 12/03/2024</p>
+      <p>Dernière version des CGU : 07/05/2024</p>
     </div>
   </MainLayout>
 );
