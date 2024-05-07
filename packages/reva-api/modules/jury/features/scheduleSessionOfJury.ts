@@ -128,6 +128,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
               name: convocationFile.filename,
               mimeType: convocationFile.mimetype,
               id: convocationFileId,
+              path: `${candidacyId}/${convocationFileId}`,
             },
           }
         : undefined,

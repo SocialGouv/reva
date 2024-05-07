@@ -74,6 +74,7 @@ beforeAll(async () => {
     data: {
       name: "filename",
       mimeType: "application/pdf",
+      path: "filename",
     },
   });
 

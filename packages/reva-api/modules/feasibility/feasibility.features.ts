@@ -147,6 +147,7 @@ export const createFeasibility = async ({
           id: feasibilityFileInstance.id,
           mimeType: feasibilityFile.mimetype,
           name: feasibilityFile.filename,
+          path: `${candidacyId}/${feasibilityFileInstance.id}`,
         },
       },
       IDFile: {
@@ -154,6 +155,7 @@ export const createFeasibility = async ({
           id: IDFileInstance.id,
           mimeType: IDFile.mimetype,
           name: IDFile.filename,
+          path: `${candidacyId}/${IDFileInstance.id}`,
         },
       },
       documentaryProofFile: documentaryProofFile
@@ -162,6 +164,7 @@ export const createFeasibility = async ({
               id: documentaryProofFileInstance?.id,
               mimeType: documentaryProofFile.mimetype,
               name: documentaryProofFile.filename,
+              path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
             },
           }
         : undefined,
@@ -171,6 +174,7 @@ export const createFeasibility = async ({
               id: certificateOfAttendanceFileInstance?.id,
               mimeType: certificateOfAttendanceFile.mimetype,
               name: certificateOfAttendanceFile.filename,
+              path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
             },
           }
         : undefined,
@@ -671,6 +675,7 @@ export const validateFeasibility = async ({
                 id: infoFileInstance?.id,
                 mimeType: infoFile.mimetype,
                 name: infoFile.filename,
+                path: `${feasibility.candidacyId}/${infoFileInstance?.id}`,
               },
             }
           : undefined,
@@ -795,6 +800,7 @@ export const rejectFeasibility = async ({
                 id: infoFileInstance?.id,
                 mimeType: infoFile.mimetype,
                 name: infoFile.filename,
+                path: `${feasibility.candidacyId}/${infoFileInstance?.id}`,
               },
             }
           : undefined,

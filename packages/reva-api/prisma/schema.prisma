@@ -1207,6 +1207,7 @@ model File {
   name                                                   String                                   @map("name") @db.VarChar(255)
   mimeType                                               String                                   @map("mime_type") @db.VarChar(255)
   createdAt                                              DateTime                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  path                                                   String
   linkedAsFeasibilityFileBy                              Feasibility[]                            @relation("feasibility_file")
   linkedAsIDFileBy                                       Feasibility[]                            @relation("ID_file")
   linkedAsDocumentaryProofFileBy                         Feasibility[]                            @relation("documentary_proof_file")

@@ -86,6 +86,7 @@ export const sendDossierDeValidation = async ({
       id: d.id,
       mimeType: d.file.mimetype,
       name: d.file.filename,
+      path: `${candidacyId}/${d.id}`,
     })),
   });
 
@@ -103,6 +104,7 @@ export const sendDossierDeValidation = async ({
           name: dossierDeValidationFile.filename,
           mimeType: dossierDeValidationFile.mimetype,
           id: dossierDeValidationFileId,
+          path: `${candidacyId}/${dossierDeValidationFileId}`,
         },
       },
       dossierDeValidationOtherFiles: {

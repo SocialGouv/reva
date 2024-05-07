@@ -137,6 +137,7 @@ beforeAll(async () => {
             create: {
               name: "dummyFile.ext",
               mimeType: "kikoo/lol",
+              path: "dummyFile.ext",
             },
           },
         },

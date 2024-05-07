@@ -156,7 +156,7 @@ beforeAll(async () => {
   });
 
   feasibilityFile = await prismaClient.file.create({
-    data: { name: "file", mimeType: "text/plain" },
+    data: { name: "file", mimeType: "text/plain", path: "file" },
   });
 
   feasibility = await prismaClient.feasibility.create({

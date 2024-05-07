@@ -30,6 +30,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 name: "dummyFile.ext",
                 mimeType: "kikoo/lol",
+                path: "dummyFile.ext",
               },
             },
           },
@@ -47,6 +48,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 name: "dummyFile.ext",
                 mimeType: "kikoo/lol",
+                path: "dummyFile.ext",
               },
             },
           },
@@ -64,6 +66,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 name: "dummyFile.ext",
                 mimeType: "kikoo/lol",
+                path: "dummyFile.ext",
               },
             },
           },
