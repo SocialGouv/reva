@@ -1,19 +1,41 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+
+const menuItem = (text: string, path: string, currentPathname: string) => ({
+  isActive: currentPathname.startsWith(path),
+  linkProps: {
+    href: path,
+    target: "_self",
+  },
+  text,
+});
 
 const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
 
-  const menuItem = (text: string, path: string) => ({
-    isActive: currentPathname.startsWith(path),
-    linkProps: {
-      href: path,
-      target: "_self",
-    },
-    text,
-  });
+
+  const featureFlipping = useFeatureflipping();
+  const showLegalMenuItems = featureFlipping.isFeatureActive("LEGAL_INFORMATION_VALIDATION")
+
+  const items = useMemo(() => {
+    if (showLegalMenuItems) {
+      return [
+        menuItem("En attente", "/subscriptions/pending", currentPathname),
+        menuItem("Validées (sous l'ancienne méthode)", "/subscriptions/validated", currentPathname),
+        menuItem("Refusées", "/subscriptions/rejected", currentPathname),
+        menuItem("Pièces jointes à vérifier", "/subscriptions/check-legal-information", currentPathname),
+        menuItem("Validées et mises à jour", "/subscriptions/up-to-date", currentPathname)
+        ]
+    }
+    return [
+      menuItem("En attente", "/subscriptions/pending", currentPathname),
+      menuItem("Validées", "/subscriptions/validated", currentPathname),
+      menuItem("Refusées", "/subscriptions/rejected", currentPathname),
+    ];
+  }, [showLegalMenuItems, currentPathname]);
 
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
@@ -23,11 +45,8 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
         burgerMenuButtonText="Inscriptions"
         sticky
         fullHeight
-        items={[
-          menuItem("Inscriptions en attente", "/subscriptions/pending"),
-          menuItem("Inscriptions refusées", "/subscriptions/rejected"),
-          menuItem("Inscriptions validées", "/subscriptions/validated"),
-        ]}
+        title="Inscriptions"
+        items={items}
       />
       <div className="mt-3">{children}</div>
     </div>
