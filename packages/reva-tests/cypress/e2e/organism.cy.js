@@ -54,6 +54,7 @@ context("Candidacy with department certification selected", () => {
         "have.text",
         "0111111111",
       );
+      cy.get('[data-test="project-organisms-onsite-tag"]').should("exist");
       cy.get('[data-test="project-organisms-remote-tag"]').should("not.exist");
     });
 
@@ -70,6 +71,7 @@ context("Candidacy with department certification selected", () => {
         "have.text",
         "0222222222",
       );
+      cy.get('[data-test="project-organisms-onsite-tag"]').should("not.exist");
       cy.get('[data-test="project-organisms-remote-tag"]').should("exist");
     });
   });

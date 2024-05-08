@@ -18,7 +18,13 @@
               "isOnSite": true,
               "__typename": "OrganismOnDepartment"
             }
-          ]
+          ],
+          "informationsCommerciales": {
+            "adresseNumeroEtNomDeRue": "1 rue de l'exemple",
+            "adresseCodePostal": "75000",
+            "adresseVille": "Paris",
+            "conformeNormesAccessbilite": "CONFORME"
+          }
         },
         {
           "id": "o2",
