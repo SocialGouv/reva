@@ -1334,7 +1334,8 @@ model MaisonMereAAP {
   updatedAt                                           DateTime?                                           @map("updated_at") @db.Timestamptz(6)
   organismes                                          Organism[]
   statutValidationInformationsJuridiquesMaisonMereAAP StatutValidationInformationsJuridiquesMaisonMereAAP @default(A_METTRE_A_JOUR) @map("statut_validation_informations_juridiques_maison_mere_aap")
-  MaisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments[]
+  maisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments[]
+  maisonMereAAPLegalInformationDocumentsDecision      MaisonMereAAPLegalInformationDocumentsDecision[]
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
@@ -1487,4 +1488,23 @@ model MaisonMereAAPLegalInformationDocuments {
   createdAt                             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("maison_mere_aap_legal_information_documents")
+}
+
+enum MaisonMereAAPLegalInformationDocumentsDecisionEnum {
+  VALIDE
+  DEMANDE_DE_PRECISION
+}
+
+model MaisonMereAAPLegalInformationDocumentsDecision {
+  id                    String                                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  maisonMereAAP         MaisonMereAAP                                      @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId       String                                             @map("maison_mere_aap_id") @db.Uuid
+  decision              MaisonMereAAPLegalInformationDocumentsDecisionEnum
+  internalComment       String                                             @map("internal_comment")
+  aapComment            String                                             @map("aap_comment")
+  aapUpdatedDocumentsAt DateTime                                           @map("aap_updated_documents_at") @db.Timestamptz(6)
+  decisionTakenAt       DateTime                                           @default(now()) @map("decision_taken_at") @db.Timestamptz(6)
+  createdAt             DateTime                                           @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("maison_mere_aap_legal_information_documents_decision")
 }
