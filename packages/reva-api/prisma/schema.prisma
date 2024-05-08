@@ -1484,6 +1484,7 @@ model MaisonMereAAPLegalInformationDocuments {
   lettreDeDelegationFile                File?         @relation("mmaap_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
   justificatifIdentiteDelegataireFileId String?       @map("justificatif_identite_delegataire_file_id") @db.Uuid
   justificatifIdentiteDelegataireFile   File?         @relation("mmaap_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "mmaap_justificatif_identite_delegataire_file")
+  createdAt                             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("maison_mere_aap_legal_information_documents")
 }
