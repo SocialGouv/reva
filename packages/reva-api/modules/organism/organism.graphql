@@ -38,6 +38,24 @@ type OrganismOnDegree {
   degree: Degree!
 }
 
+enum MaisonMereAAPLegalInformationDocumentsDecisionEnum {
+  VALIDE
+  DEMANDE_DE_PRECISION
+}
+
+input MaisonMereAAPLegalInformationDocumentsDecisionsInput {
+  decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum
+}
+
+type MaisonMereAAPLegalInformationDocumentsDecision {
+  id: UUID!
+  decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
+  internalComment: String!
+  aapComment: String!
+  aapUpdatedDocumentsAt: Timestamp!
+  decisionTakenAt: Timestamp!
+}
+
 type MaisonMereAAP {
   id: UUID!
   raisonSociale: String!
@@ -56,6 +74,9 @@ type MaisonMereAAP {
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
   maisonMereAAPOnDomaines: [MaisonMereAAPOnDomaine!]!
   maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
+  maisonMereAAPLegalInformationDocumentsDecisions(
+    input: MaisonMereAAPLegalInformationDocumentsDecisionsInput
+  ): [MaisonMereAAPLegalInformationDocumentsDecision!]!
   createdAt: Timestamp!
 }
 

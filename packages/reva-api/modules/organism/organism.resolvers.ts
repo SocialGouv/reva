@@ -1,4 +1,9 @@
-import { Organism, OrganismInformationsCommerciales, StatutValidationInformationsJuridiquesMaisonMereAAP } from "@prisma/client";
+import {
+  MaisonMereAAPLegalInformationDocumentsDecisionEnum,
+  Organism,
+  OrganismInformationsCommerciales,
+  StatutValidationInformationsJuridiquesMaisonMereAAP,
+} from "@prisma/client";
 import mercurius from "mercurius";
 
 import { getAccountById } from "../account/features/getAccount";
@@ -41,6 +46,7 @@ import {
   UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
+import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 
 export const resolvers = {
   Account: {
@@ -85,6 +91,18 @@ export const resolvers = {
     }: {
       gestionnaireAccountId: string;
     }) => getAccountById({ id: gestionnaireAccountId }),
+    maisonMereAAPLegalInformationDocumentsDecisions: (
+      { id }: { id: string },
+      {
+        decision,
+      }: { decision?: MaisonMereAAPLegalInformationDocumentsDecisionEnum },
+    ) =>
+      getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision(
+        {
+          maisonMereAAPId: id,
+          decision,
+        },
+      ),
   },
   MaisonMereAAPOnDomaine: {
     domaine: ({ domaineId }: { domaineId: string }) =>
