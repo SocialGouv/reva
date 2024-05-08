@@ -155,7 +155,11 @@ export const LegalInformationUpdateForm = ({
           title="Attestation URSSAF"
           description="L’attestation URSSAF doit afficher le code de vérification -
          Exemples : attestation de vigilance, attestation fiscale."
-          nativeInputProps={{ type: "file", ...register("attestationURSSAF") }}
+          hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+          nativeInputProps={{
+            ...register("attestationURSSAF"),
+            accept: ".pdf",
+          }}
           state={errors.attestationURSSAF ? "error" : "default"}
           stateRelatedMessage={errors.attestationURSSAF?.[0]?.message}
         />
@@ -176,9 +180,10 @@ export const LegalInformationUpdateForm = ({
               </strong>
             </>
           }
+          hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
           nativeInputProps={{
-            type: "file",
             ...register("justificatifIdentiteDirigeant"),
+            accept: ".pdf",
           }}
           state={errors.justificatifIdentiteDirigeant ? "error" : "default"}
           stateRelatedMessage={
@@ -203,9 +208,10 @@ export const LegalInformationUpdateForm = ({
               className="col-span-2"
               title="Lettre de délégation"
               description="Lettre de délégation de l'administration du compte FVAE signée par le dirigeant et le délégataire"
+              hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
               nativeInputProps={{
-                type: "file",
                 ...register("lettreDeDelegation"),
+                accept: ".pdf",
               }}
               state={errors.lettreDeDelegation ? "error" : "default"}
               stateRelatedMessage={errors.lettreDeDelegation?.[0]?.message}
@@ -226,9 +232,10 @@ export const LegalInformationUpdateForm = ({
                   </strong>
                 </>
               }
+              hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
               nativeInputProps={{
-                type: "file",
                 ...register("justificatifIdentiteDelegataire"),
+                accept: ".pdf",
               }}
               state={
                 errors.justificatifIdentiteDelegataire ? "error" : "default"
@@ -251,6 +258,7 @@ export const LegalInformationUpdateForm = ({
 const FancyUpload = ({
   title,
   description,
+  hint,
   className,
   nativeInputProps,
   state,
@@ -258,6 +266,7 @@ const FancyUpload = ({
 }: {
   title: string;
   description: ReactNode;
+  hint?: string;
   className?: string;
   nativeInputProps?: DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
@@ -281,7 +290,7 @@ const FancyUpload = ({
         </CallOut>
       </>
     }
-    hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+    hint={hint}
     nativeInputProps={nativeInputProps}
     state={state}
     stateRelatedMessage={stateRelatedMessage}
