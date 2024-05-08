@@ -3,13 +3,22 @@ import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/g
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useState } from "react";
 import { LegalInformationUpdateForm } from "./LegalInformationUpdateForm";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { format } from "date-fns";
 
+interface Decision {
+  id: string;
+  aapComment: string;
+  decisionTakenAt: Date;
+}
 export const LegalInformationUpdateBlock = ({
   maisonMereAAPId,
   statutValidationInformationsJuridiquesMaisonMereAAP,
+  decisions,
 }: {
   maisonMereAAPId: string;
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
+  decisions: Decision[];
 }) => {
   const [showUpdateFormButtonPressed, setShowUpdateFormButtonPressed] =
     useState(false);
@@ -32,6 +41,7 @@ export const LegalInformationUpdateBlock = ({
           <NeedUpdateStatusBlock
             showUpdateButton={!showUpdateForm}
             onUpdateButtonClick={() => setShowUpdateFormButtonPressed(true)}
+            decisions={decisions}
           />
         )}
       </div>
@@ -60,12 +70,27 @@ const ValidationPendingStatusBlock = () => (
 const NeedUpdateStatusBlock = ({
   showUpdateButton,
   onUpdateButtonClick,
+  decisions,
 }: {
   showUpdateButton: boolean;
   onUpdateButtonClick(): void;
+  decisions: Decision[];
 }) => {
   return (
     <>
+      {!!decisions.length && (
+        <div className="flex flex-col mb-10 gap-6">
+          {decisions.map((d) => (
+            <GrayCard key={d.id}>
+              <dt className="font-bold text-xl">Retour des pièces jointes :</dt>
+              <dd>Retournées le {format(d.decisionTakenAt, "dd/MM/yyyy")}</dd>
+              <br />
+              <dt className="font-bold text-xl">Commentaire :</dt>
+              <dd>{d.aapComment}</dd>
+            </GrayCard>
+          ))}
+        </div>
+      )}
       <Badge severity="warning">À mettre à jour</Badge>
       <br />
       <p>

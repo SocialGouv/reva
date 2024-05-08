@@ -99,6 +99,12 @@ const LegalInformationPage = () => {
                 statutValidationInformationsJuridiquesMaisonMereAAP={
                   maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
                 }
+                decisions={maisonMereAAP.maisonMereAAPLegalInformationDocumentsDecisions.map(
+                  (d) => ({
+                    ...d,
+                    decisionTakenAt: new Date(d.decisionTakenAt),
+                  }),
+                )}
               />
             )}
         </>
