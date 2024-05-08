@@ -21,7 +21,6 @@ interface PropsOrganisms {
 const Organisms: FC<PropsOrganisms> = ({
   submitOrganism,
   availableOrganisms = { rows: [], totalRows: 0 },
-  selectedDepartment,
 }) => {
   const OrganismGroup = ({
     indexPredicate,
@@ -37,7 +36,6 @@ const Organisms: FC<PropsOrganisms> = ({
               <OrganismCard
                 key={organism.id}
                 organism={organism}
-                department={selectedDepartment}
                 onClick={() => submitOrganism({ organismId: organism.id })}
               />
             );

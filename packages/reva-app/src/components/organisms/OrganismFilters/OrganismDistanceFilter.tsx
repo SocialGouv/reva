@@ -37,7 +37,7 @@ export const OrganismDistanceFilter = ({
     <div className="flex flex-col gap-6 mt-6">
       <fieldset>
         <legend className={`mb-2 ${disabled ? "text-gray-400" : ""}`}>
-          Où souhaitez vous réalisez votre accompagnement ?
+          Où souhaitez-vous réaliser votre accompagnement ?
         </legend>
         <Input
           label=""

@@ -3,14 +3,13 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 export const OrganismCardDescription = ({
   email,
   phone,
-  location,
+  isOnSite,
+  isRemote,
 }: {
   email: string;
   phone: string | null;
-  location?: {
-    isOnSite: boolean;
-    isRemote: boolean;
-  };
+  isOnSite: boolean;
+  isRemote: boolean;
 }) => {
   return (
     <>
@@ -39,9 +38,9 @@ export const OrganismCardDescription = ({
             </>
           )}
         </p>
-        {location && (
+        {(isOnSite || isRemote) && (
           <div className="flex gap-1 -mt-1">
-            {location.isOnSite && (
+            {isOnSite && (
               <Tag
                 data-test="project-organisms-onsite-tag"
                 className="min-h-4 text-xs sm:text-sm sm:min-h-8"
@@ -53,7 +52,7 @@ export const OrganismCardDescription = ({
                 Sur site
               </Tag>
             )}
-            {location.isRemote && (
+            {isRemote && (
               <Tag
                 data-test="project-organisms-remote-tag"
                 className="min-h-4 text-xs sm:text-sm sm:min-h-8"

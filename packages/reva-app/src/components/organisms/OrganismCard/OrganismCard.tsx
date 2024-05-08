@@ -1,36 +1,42 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
-import { Department, Organism } from "../../../interface";
+import { Organism } from "../../../interface";
 import { OrganismCardDescription } from "./OrganismCardDescription";
 import { OrganismCardDistance } from "./OrganismCardDistance";
 import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
 import { OrganismCardTitle } from "./OrganismCardTitle";
 
-const getMandatoryInfo = (organism: Organism, department?: Department) => {
+const getMandatoryInfo = (organism: Organism) => {
   const { informationsCommerciales: ic } = organism;
+  const isOnSite = !!(
+    ic?.adresseNumeroEtNomDeRue &&
+    ic?.adresseCodePostal &&
+    ic?.adresseVille &&
+    ic?.conformeNormesAccessbilite !== "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"
+  );
+  const isRemote = !!(
+    ic?.conformeNormesAccessbilite ===
+      "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" ||
+    organism.organismOnDepartments?.find((od) => od.isRemote)
+  );
   return {
     label: ic?.nom || organism.label,
     website: ic?.siteInternet || organism.website,
     email: ic?.emailContact || organism.contactAdministrativeEmail,
     phone: ic?.telephone || organism.contactAdministrativePhone,
-    location:
-      department &&
-      organism.organismOnDepartments?.find(
-        (od) => od.departmentId === department.id,
-      ),
+    isOnSite,
+    isRemote,
   };
 };
 
 export const OrganismCard = ({
   organism,
-  department,
   onClick,
 }: {
   organism: Organism;
-  department?: Department;
   onClick: () => void;
 }) => {
-  let mandatoryInfo = getMandatoryInfo(organism, department);
+  let mandatoryInfo = getMandatoryInfo(organism);
   return (
     <div
       data-test={`project-organisms-organism-${organism.id}`}
@@ -47,7 +53,8 @@ export const OrganismCard = ({
         <OrganismCardDescription
           email={mandatoryInfo.email}
           phone={mandatoryInfo.phone}
-          location={mandatoryInfo.location}
+          isOnSite={mandatoryInfo.isOnSite}
+          isRemote={mandatoryInfo.isRemote}
         />
       </div>
       <div className="flex justify-between">

@@ -269,17 +269,13 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       searchFilter.distanceStatus === "ONSITE_REMOTE"
     ) {
       whereClause += `
-        and od.is_onsite = true 
-        and oic."adresse_numero_et_nom_de_rue" IS NOT NULL
-        and oic."adresse_code_postal" IS NOT NULL
-        and oic."adresse_ville" IS NOT NULL
+        and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
+        and (oic."adresse_code_postal" IS NOT NULL or oic."adresse_code_postal" != '')
+        and (oic."adresse_ville" IS NOT NULL or oic."adresse_ville" != '')
         ${
           searchFilter.pmr
-            ? `
-        and oic."conformeNormesAccessbilite" = 'CONFORME' 
-
-          `
-            : ""
+            ? ` and oic."conformeNormesAccessbilite" = 'CONFORME'`
+            : ` and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`
         }
         `;
     }
