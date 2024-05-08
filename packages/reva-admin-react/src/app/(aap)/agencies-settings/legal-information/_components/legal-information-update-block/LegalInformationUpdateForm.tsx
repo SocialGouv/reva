@@ -10,6 +10,7 @@ import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
 import { REST_API_URL } from "@/config/config";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { errorToast, successToast } from "@/components/toast/toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z
   .object({
@@ -77,6 +78,8 @@ export const LegalInformationUpdateForm = ({
   const { delegataire } = useWatch({ control });
   const { accessToken } = useKeycloakContext();
 
+  const queryClient = useQueryClient();
+
   const handleFormSubmit = handleSubmit(
     async (data) => {
       const formData = new FormData();
@@ -115,6 +118,9 @@ export const LegalInformationUpdateForm = ({
       );
       if (result.ok) {
         successToast("Modifications enregistrées");
+        queryClient.invalidateQueries({
+          queryKey: ["maisonMereAAPLegalInformation"],
+        });
       } else {
         errorToast(await result.text());
       }

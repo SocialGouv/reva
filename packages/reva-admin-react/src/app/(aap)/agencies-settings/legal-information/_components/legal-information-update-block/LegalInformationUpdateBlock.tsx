@@ -11,8 +11,12 @@ export const LegalInformationUpdateBlock = ({
   maisonMereAAPId: string;
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
 }) => {
-  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [showUpdateFormButtonPressed, setShowUpdateFormButtonPressed] =
+    useState(false);
 
+  const showUpdateForm =
+    statutValidationInformationsJuridiquesMaisonMereAAP === "A_METTRE_A_JOUR" &&
+    showUpdateFormButtonPressed;
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col border p-6">
@@ -27,7 +31,7 @@ export const LegalInformationUpdateBlock = ({
           "A_METTRE_A_JOUR" && (
           <NeedUpdateStatusBlock
             showUpdateButton={!showUpdateForm}
-            onUpdateButtonClick={() => setShowUpdateForm(true)}
+            onUpdateButtonClick={() => setShowUpdateFormButtonPressed(true)}
           />
         )}
       </div>

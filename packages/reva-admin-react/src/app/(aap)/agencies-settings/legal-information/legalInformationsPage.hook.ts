@@ -28,7 +28,7 @@ export const useLegalInformationsPage = () => {
 
   const { data: legalInformationsResponse, status: legalInformationsStatus } =
     useQuery({
-      queryKey: ["legalInformations"],
+      queryKey: ["maisonMereAAPLegalInformation"],
       queryFn: () => graphqlClient.request(legalInformationQueries),
     });
 
