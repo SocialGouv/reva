@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from "fastify";
 
 import { UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
+import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
 
 interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };
@@ -26,6 +27,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
 
   server.post<{
     Body: UpdatedMaisonMereAAPLegalInformationRequestBody;
+    Params: { maisonMereAAPId: string };
   }>("/maisonMereAAP/:maisonMereAAPId/legal-information", {
     schema: {
       body: {
@@ -84,14 +86,17 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           });
         }
 
-        const attestationURSSAF = request.body.attestationURSSAF;
-        const justificatifIdentiteDirigeant =
-          request.body.justificatifIdentiteDirigeant;
-        const lettreDeDelegation = request.body.lettreDeDelegation;
-        const justificatifIdentiteDelegataire =
-          request.body.justificatifIdentiteDelegataire;
+        const {
+          attestationURSSAF,
+          justificatifIdentiteDirigeant,
+          lettreDeDelegation,
+          justificatifIdentiteDelegataire,
+        } = request.body;
 
-        const delagataire = request.body.delegataire?.value;
+        const maisonMereAAPId = request.params.maisonMereAAPId;
+        const managerFirstname = request.body.managerFirstname.value;
+        const managerLastname = request.body.managerLastname.value;
+        const delegataire = request.body.delegataire?.value;
 
         const files = [
           attestationURSSAF,
@@ -119,7 +124,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
             );
         }
 
-        const requiredFiles = delagataire
+        const requiredFiles = delegataire
           ? files
           : [attestationURSSAF, justificatifIdentiteDirigeant];
 
@@ -128,6 +133,16 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
             .status(400)
             .send(`Un des fichiers obligatoire n'a pas été fourni `);
         }
+        return submitMaisonMereAAPLegalInformationDocuments({
+          maisonMereAAPId,
+          managerFirstname,
+          managerLastname,
+          delegataire: !!delegataire,
+          attestationURSSAF,
+          justificatifIdentiteDirigeant,
+          lettreDeDelegation,
+          justificatifIdentiteDelegataire,
+        });
       } catch (e) {
         logger.error(e);
         const message = e instanceof Error ? e.message : "unknown error";
