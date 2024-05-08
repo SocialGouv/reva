@@ -1475,7 +1475,7 @@ model MaisonMereAAPLegalInformationDocuments {
   maisonMereAAPId                       String        @unique @map("maison_mere_aap_id") @db.Uuid
   managerFirstname                      String        @map("manager_firstname")
   managerLastname                       String        @map("manager_lastname")
-  delegataire                           Boolean       @map("delagataire")
+  delegataire                           Boolean       @map("delegataire")
   attestationURSSAFFileId               String        @map("attestation_urssaf_file_id") @db.Uuid
   attestationURSSAFFile                 File          @relation("mmaap_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id])
   justificatifIdentiteDirigeantFileId   String        @map("justificatif_identite_dirigeant_file_id") @db.Uuid
