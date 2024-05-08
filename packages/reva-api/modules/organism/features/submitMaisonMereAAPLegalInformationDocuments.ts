@@ -98,6 +98,14 @@ export const submitMaisonMereAAPLegalInformationDocuments = async ({
         : undefined,
     },
   });
+
+  return prismaClient.maisonMereAAP.update({
+    where: { id: maisonMereAAPId },
+    data: {
+      statutValidationInformationsJuridiquesMaisonMereAAP:
+        "EN_ATTENTE_DE_VERIFICATION",
+    },
+  });
 };
 
 const getFilePath = ({
