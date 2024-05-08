@@ -4,6 +4,7 @@ import { FastifyPluginAsync } from "fastify";
 import { UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
+import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
 
 interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };
@@ -79,13 +80,6 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
     },
     handler: async (request, reply) => {
       try {
-        const authorized = true;
-        if (!authorized) {
-          return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
-          });
-        }
-
         const {
           attestationURSSAF,
           justificatifIdentiteDirigeant,
@@ -97,6 +91,17 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
         const managerFirstname = request.body.managerFirstname.value;
         const managerLastname = request.body.managerLastname.value;
         const delegataire = request.body.delegataire?.value;
+
+        const authorized = isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
+          maisonMereAAPId,
+          userKeycloakId: request.auth.userInfo.sub,
+          userRoles: request.auth.userInfo.realm_access?.roles || [],
+        });
+        if (!authorized) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+          });
+        }
 
         const files = [
           attestationURSSAF,
