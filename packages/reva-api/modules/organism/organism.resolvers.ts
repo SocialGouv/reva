@@ -54,6 +54,7 @@ import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndD
 import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
 import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
+import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
 
 export const resolvers = {
   Account: {
@@ -116,38 +117,78 @@ export const resolvers = {
       }),
   },
   MaisonMereAAPLegalInformation: {
-    attestationURSSAFFile: ({ maisonMereAAPId }: { maisonMereAAPId: string }) =>
-      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+    attestationURSSAFFile: async (
+      { maisonMereAAPId }: { maisonMereAAPId: string },
+      _: unknown,
+      context: GraphqlContext,
+    ) => {
+      await assertIsAdminOrGestionnaireMaisonMereAAP({
+        maisonMereAAPId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles,
+      });
+      return getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
         maisonMereAAPId,
         fileType: "attestationURSSAFFile",
-      }),
-    justificatifIdentiteDirigeantFile: ({
-      maisonMereAAPId,
-    }: {
-      maisonMereAAPId: string;
-    }) =>
-      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+      });
+    },
+    justificatifIdentiteDirigeantFile: async (
+      {
+        maisonMereAAPId,
+      }: {
+        maisonMereAAPId: string;
+      },
+      _: unknown,
+      context: GraphqlContext,
+    ) => {
+      await assertIsAdminOrGestionnaireMaisonMereAAP({
+        maisonMereAAPId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles,
+      });
+      return getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
         maisonMereAAPId,
         fileType: "justificatifIdentiteDirigeantFile",
-      }),
-    lettreDeDelegationFile: ({
-      maisonMereAAPId,
-    }: {
-      maisonMereAAPId: string;
-    }) =>
-      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+      });
+    },
+    lettreDeDelegationFile: async (
+      {
+        maisonMereAAPId,
+      }: {
+        maisonMereAAPId: string;
+      },
+      _: unknown,
+      context: GraphqlContext,
+    ) => {
+      await assertIsAdminOrGestionnaireMaisonMereAAP({
+        maisonMereAAPId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles,
+      });
+      return getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
         maisonMereAAPId,
         fileType: "lettreDeDelegationFile",
-      }),
-    justificatifIdentiteDelegataireFile: ({
-      maisonMereAAPId,
-    }: {
-      maisonMereAAPId: string;
-    }) =>
-      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+      });
+    },
+    justificatifIdentiteDelegataireFile: async (
+      {
+        maisonMereAAPId,
+      }: {
+        maisonMereAAPId: string;
+      },
+      _: unknown,
+      context: GraphqlContext,
+    ) => {
+      await assertIsAdminOrGestionnaireMaisonMereAAP({
+        maisonMereAAPId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles,
+      });
+      return getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
         maisonMereAAPId,
         fileType: "justificatifIdentiteDelegataireFile",
-      }),
+      });
+    },
   },
   MaisonMereAAPOnDomaine: {
     domaine: ({ domaineId }: { domaineId: string }) =>
@@ -519,4 +560,25 @@ export const resolvers = {
       return getMaisonMereAAPById({ id: params.maisonMereAAPId });
     },
   },
+};
+
+const assertIsAdminOrGestionnaireMaisonMereAAP = async ({
+  maisonMereAAPId,
+  userRoles,
+  userKeycloakId,
+}: {
+  maisonMereAAPId: string;
+  userRoles?: KeyCloakUserRole[];
+  userKeycloakId?: string;
+}) => {
+  const authorized =
+    userRoles?.includes("admin") ||
+    (await isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
+      maisonMereAAPId,
+      userKeycloakId: userKeycloakId || "",
+      userRoles: userRoles || [],
+    }));
+  if (!authorized) {
+    throw new Error("Utilisateur non authorisé");
+  }
 };

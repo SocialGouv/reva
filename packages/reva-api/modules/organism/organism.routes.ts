@@ -1,11 +1,10 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { FileService, UploadedFile } from "../shared/file";
+import { UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
 import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
-import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
 
 interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };
@@ -93,11 +92,13 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
         const managerLastname = request.body.managerLastname.value;
         const delegataire = request.body.delegataire?.value;
 
-        const authorized = isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
-          maisonMereAAPId,
-          userKeycloakId: request.auth.userInfo.sub,
-          userRoles: request.auth.userInfo.realm_access?.roles || [],
-        });
+        const authorized = await isUserGestionnaireMaisonMereAAPOfMaisonMereAAP(
+          {
+            maisonMereAAPId,
+            userKeycloakId: request.auth.userInfo.sub,
+            userRoles: request.auth.userInfo.realm_access?.roles || [],
+          },
+        );
         if (!authorized) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à gérer cette candidature.",
@@ -149,90 +150,6 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           lettreDeDelegation,
           justificatifIdentiteDelegataire,
         });
-      } catch (e) {
-        logger.error(e);
-        const message = e instanceof Error ? e.message : "unknown error";
-        reply.status(500).send(message);
-      }
-    },
-  });
-
-  server.get<{
-    Params: {
-      maisonMereAAPId: string;
-      fileType:
-        | "attestationURSSAFFile"
-        | "justificatifIdentiteDirigeantFile"
-        | "lettreDeDelegationFile"
-        | "justificatifIdentiteDelegataireFile";
-    };
-  }>("/maisonMereAAP/:maisonMereAAPId/legal-information/:fileType", {
-    schema: {
-      params: {
-        type: "object",
-        properties: {
-          maisonMereAAPId: { type: "string" },
-          fileType: { type: "string" },
-        },
-        required: ["maisonMereAAPId", "fileType"],
-      },
-    },
-    handler: async (request, reply) => {
-      try {
-        const { maisonMereAAPId, fileType } = request.params;
-
-        const userRoles = request.auth.userInfo.realm_access?.roles || [];
-
-        const authorized =
-          userRoles.includes("admin") ||
-          isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
-            maisonMereAAPId,
-            userKeycloakId: request.auth.userInfo.sub,
-            userRoles,
-          });
-
-        if (!authorized) {
-          return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
-          });
-        }
-
-        const docs = await getMaisonMereAAPLegalInformation({
-          maisonMereAAPId,
-        });
-        if (!docs) {
-          throw new Error("Documents d'informations légales non trouvés");
-        }
-        let file;
-        switch (fileType) {
-          case "attestationURSSAFFile":
-            file = docs.attestationURSSAFFile;
-            break;
-          case "justificatifIdentiteDirigeantFile":
-            file = docs.justificatifIdentiteDirigeantFile;
-            break;
-          case "lettreDeDelegationFile":
-            file = docs.lettreDeDelegationFile;
-            break;
-          case "justificatifIdentiteDelegataireFile":
-            file = docs.justificatifIdentiteDelegataireFile;
-            break;
-        }
-
-        const fileUrl = await FileService.getInstance().getDownloadLink({
-          fileKeyPath: file?.path || "",
-        });
-
-        if (fileUrl) {
-          reply
-            .code(200)
-            .header("Content-Type", "application/json; charset=utf-8")
-            .send({ url: fileUrl });
-
-          return;
-        }
-
-        reply.status(400).send("Fichier non trouvé.");
       } catch (e) {
         logger.error(e);
         const message = e instanceof Error ? e.message : "unknown error";

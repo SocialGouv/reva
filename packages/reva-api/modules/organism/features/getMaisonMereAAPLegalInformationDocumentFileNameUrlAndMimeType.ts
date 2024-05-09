@@ -1,3 +1,4 @@
+import { FileService } from "../..//shared/file";
 import { prismaClient } from "../../../prisma/client";
 
 export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
@@ -27,28 +28,35 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
     }
     let filename = "";
     let mimeType = "";
+    let filePath = "";
     switch (fileType) {
       case "attestationURSSAFFile":
         filename = docs.attestationURSSAFFile.name;
         mimeType = docs.attestationURSSAFFile.mimeType;
+        filePath = docs.attestationURSSAFFile.path;
         break;
       case "justificatifIdentiteDirigeantFile":
         filename = docs.justificatifIdentiteDirigeantFile.name;
         mimeType = docs.justificatifIdentiteDirigeantFile.mimeType;
+        filePath = docs.justificatifIdentiteDirigeantFile.path;
         break;
       case "lettreDeDelegationFile":
         filename = docs.lettreDeDelegationFile?.name || "";
         mimeType = docs.lettreDeDelegationFile?.mimeType || "";
+        filePath = docs.lettreDeDelegationFile?.path || "";
         break;
       case "justificatifIdentiteDelegataireFile":
         filename = docs.justificatifIdentiteDelegataireFile?.name || "";
         mimeType = docs.justificatifIdentiteDelegataireFile?.mimeType || "";
+        filePath = docs.justificatifIdentiteDelegataireFile?.path || "";
         break;
     }
 
     return {
       name: filename,
       mimeType,
-      url: `${process.env.BASE_URL}/api/maisonMereAAP/${maisonMereAAPId}/legal-information/${fileType}`,
+      url: FileService.getInstance().getDownloadLink({
+        fileKeyPath: filePath,
+      }),
     };
   };
