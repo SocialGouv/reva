@@ -114,11 +114,11 @@ type MaisonMereAAPOnDepartment {
 
 type MaisonMereAAPLegalInformation {
   maisonMereAAP: MaisonMereAAP!
-  managerFirstname: String
-  managerLastname: String
+  managerFirstname: String!
+  managerLastname: String!
   delegataire: Boolean!
-  attestationURSSAFFile: File
-  justificatifIdentiteDirigeantFile: File
+  attestationURSSAFFile: File!
+  justificatifIdentiteDirigeantFile: File!
   lettreDeDelegationFile: File
   justificatifIdentiteDelegataireFile: File
 }
