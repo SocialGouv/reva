@@ -31,6 +31,7 @@ type FeasibilityHistory {
 type File {
   url: String!
   name: String!
+  mimeType: String!
 }
 
 type Candidacy {
