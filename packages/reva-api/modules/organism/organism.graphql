@@ -78,6 +78,7 @@ type MaisonMereAAP {
     input: MaisonMereAAPLegalInformationDocumentsDecisionsInput
   ): [MaisonMereAAPLegalInformationDocumentsDecision!]!
   createdAt: Timestamp!
+  legalInformation: MaisonMereAAPLegalInformation
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -109,6 +110,24 @@ type MaisonMereAAPOnDepartment {
   estSurPlace: Boolean!
   estADistance: Boolean!
   departement: Department!
+}
+
+type MaisonMereAAPLegalInformation {
+  maisonMereAAP: MaisonMereAAP!
+  managerFirstname: String
+  managerLastname: String
+  delegataire: Boolean!
+  attestationURSSAFFile: File
+  justificatifIdentiteDirigeantFile: File
+  lettreDeDelegationFile: File
+  justificatifIdentiteDelegataireFile: File
+}
+
+input UpdateMaisonMereAAPLegalValidationDecisionInput {
+  maisonMereAAPId: UUID!
+  decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
+  internalComment: String
+  aapComment: String
 }
 
 type OrganismOnDepartment {
@@ -265,4 +284,5 @@ type Mutation {
   ): Organism!
 
   organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!
+  organism_updateLegalInformationValidationDecision(data: UpdateMaisonMereAAPLegalValidationDecisionInput): MaisonMereAAP!
 }

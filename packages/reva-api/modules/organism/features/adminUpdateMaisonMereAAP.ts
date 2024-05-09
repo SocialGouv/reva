@@ -1,3 +1,4 @@
+import { StatutValidationInformationsJuridiquesMaisonMereAAP } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { Organism } from "../organism.types";
 
@@ -87,3 +88,18 @@ export const adminUpdateMaisonMereAAP = async (params: {
 
   return "OK";
 };
+
+export const adminUpdateLegalInformationValidationStatus = async (params: {
+  maisonMereAAPId: string;
+  maisonMereAAPData: {
+    statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAAP;
+    internalComment?: string;
+    aapComment?: string;
+  };
+}) => {
+  const { maisonMereAAPId } = params;
+  return prismaClient.maisonMereAAP.update({
+    where: { id: maisonMereAAPId },
+    data: params.maisonMereAAPData,
+  })
+}

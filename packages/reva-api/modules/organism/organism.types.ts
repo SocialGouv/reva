@@ -36,6 +36,9 @@ type ConformiteNormeAccessibilite =
   | "NON_CONFORME"
   | "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC";
 
+type StatutValidationInformationsJuridiquesMaisonMereAAP =
+"A_METTRE_A_JOUR" | "EN_ATTENTE_DE_VERIFICATION" | "A_JOUR"
+
 export interface OrganismInformationsCommerciales {
   id: string;
   organismId: string;
@@ -107,4 +110,18 @@ export interface UpdateOrganismAccountInput {
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
+}
+
+export interface UpdateMaisonMereAAPLegalValidationInput {
+  maisonMereAAPId: string;
+  statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAAP
+  internalComment?: string
+  aapComment?: string
+}
+
+export type LegalInformationValidationDecisionInput = {
+  decision: 'VALIDE' | "DEMANDE_DE_PRECISION";
+  internalComment: string;
+  aapComment: string;
+  aapUpdatedDocumentsAt: Date;
 }

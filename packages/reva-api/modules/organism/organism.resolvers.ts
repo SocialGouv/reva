@@ -17,7 +17,10 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
-import { adminUpdateMaisonMereAAP } from "./features/adminUpdateMaisonMereAAP";
+import {
+  adminUpdateLegalInformationValidationStatus,
+  adminUpdateMaisonMereAAP,
+} from "./features/adminUpdateMaisonMereAAP";
 import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrganismOnDegrees";
@@ -43,10 +46,13 @@ import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
 import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
 import {
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
+  UpdateMaisonMereAAPLegalValidationInput,
   UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
+import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
+import { FileService } from "../../modules/shared/file";
 
 export const resolvers = {
   Account: {
@@ -103,6 +109,16 @@ export const resolvers = {
           decision,
         },
       ),
+    legalInformation: ({ id: maisonMereAAPId }: { id: string }) =>
+      getMaisonMereAAPLegalInformation({
+        maisonMereAAPId,
+      }),
+  },
+  File: {
+    url: ({ path }: { path: string }) =>
+      FileService.getInstance().getDownloadLink({
+        fileKeyPath: path,
+      }) ?? "",
   },
   MaisonMereAAPOnDomaine: {
     domaine: ({ domaineId }: { domaineId: string }) =>
@@ -352,6 +368,24 @@ export const resolvers = {
         }
       }
       return updateOrganismAccount({ params: params.data });
+    },
+    organism_updateLegalInformationValidationStatus: async (
+      _parent: unknown,
+      params: {
+        data: UpdateMaisonMereAAPLegalValidationInput
+      },
+      context: GraphqlContext,
+    ) => {
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new Error("Utilisateur non autorisé");
+      }
+      await  adminUpdateLegalInformationValidationStatus({
+        maisonMereAAPId: params.data.maisonMereAAPId,
+        maisonMereAAPData: {
+          statutValidationInformationsJuridiquesMaisonMereAAP:
+            params.data.statutValidationInformationsJuridiquesMaisonMereAAP,
+        },
+      });
     },
   },
   Query: {
