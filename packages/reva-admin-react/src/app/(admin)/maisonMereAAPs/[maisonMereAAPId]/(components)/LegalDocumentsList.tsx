@@ -1,3 +1,5 @@
+import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
+
 type File = {
   name: string;
   url: string;
@@ -18,9 +20,7 @@ const DownloadTile = ({
       <div className="fr-tile__body">
         <div className="fr-tile__content">
           <h3 className="fr-tile__title">
-            <a href={url} target="blank" download>
-              {name}
-            </a>
+            <AuthenticatedLink text={name} title={name} url={url} />
           </h3>
           <p className="fr-tile__detail">
             {mimeType.split("/").pop()?.toUpperCase()}

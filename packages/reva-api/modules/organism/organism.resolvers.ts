@@ -52,7 +52,7 @@ import {
 } from "./organism.types";
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
-import { FileService } from "../../modules/shared/file";
+import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 
 export const resolvers = {
@@ -115,11 +115,39 @@ export const resolvers = {
         maisonMereAAPId,
       }),
   },
-  File: {
-    url: ({ path }: { path: string }) =>
-      FileService.getInstance().getDownloadLink({
-        fileKeyPath: path,
-      }) ?? "",
+  MaisonMereAAPLegalInformation: {
+    attestationURSSAFFile: ({ maisonMereAAPId }: { maisonMereAAPId: string }) =>
+      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+        maisonMereAAPId,
+        fileType: "attestationURSSAFFile",
+      }),
+    justificatifIdentiteDirigeantFile: ({
+      maisonMereAAPId,
+    }: {
+      maisonMereAAPId: string;
+    }) =>
+      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+        maisonMereAAPId,
+        fileType: "justificatifIdentiteDirigeantFile",
+      }),
+    lettreDeDelegationFile: ({
+      maisonMereAAPId,
+    }: {
+      maisonMereAAPId: string;
+    }) =>
+      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+        maisonMereAAPId,
+        fileType: "lettreDeDelegationFile",
+      }),
+    justificatifIdentiteDelegataireFile: ({
+      maisonMereAAPId,
+    }: {
+      maisonMereAAPId: string;
+    }) =>
+      getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType({
+        maisonMereAAPId,
+        fileType: "justificatifIdentiteDelegataireFile",
+      }),
   },
   MaisonMereAAPOnDomaine: {
     domaine: ({ domaineId }: { domaineId: string }) =>
@@ -373,7 +401,7 @@ export const resolvers = {
     organism_updateLegalInformationValidationDecision: async (
       _parent: unknown,
       params: {
-        data: UpdateMaisonMereAAPLegalValidationInput
+        data: UpdateMaisonMereAAPLegalValidationInput;
       },
       context: GraphqlContext,
     ) => {
@@ -381,19 +409,19 @@ export const resolvers = {
         throw new Error("Utilisateur non autorisé");
       }
 
-      const statutValidationInformationsJuridiquesMaisonMereAAP = 
-      params.data.decision === 'VALIDE' ? 'A_JOUR' : 'A_METTRE_A_JOUR'
-      
-      const decision = await adminCreateMaisonMereAAPLegalInformationValidationDecision(
-        params.data.maisonMereAAPId,
-        {
-          decision:
-            params.data.decision,
-          internalComment: params.data.internalComment ?? "",
-          aapComment: params.data.aapComment ?? "",
-          aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
-        },
-      )
+      const statutValidationInformationsJuridiquesMaisonMereAAP =
+        params.data.decision === "VALIDE" ? "A_JOUR" : "A_METTRE_A_JOUR";
+
+      const decision =
+        await adminCreateMaisonMereAAPLegalInformationValidationDecision(
+          params.data.maisonMereAAPId,
+          {
+            decision: params.data.decision,
+            internalComment: params.data.internalComment ?? "",
+            aapComment: params.data.aapComment ?? "",
+            aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
+          },
+        );
 
       await adminUpdateLegalInformationValidationStatus({
         maisonMereAAPId: params.data.maisonMereAAPId,
