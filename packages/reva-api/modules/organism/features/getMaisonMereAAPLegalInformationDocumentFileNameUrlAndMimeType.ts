@@ -52,11 +52,13 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
         break;
     }
 
-    return {
-      name: filename,
-      mimeType,
-      url: FileService.getInstance().getDownloadLink({
-        fileKeyPath: filePath,
-      }),
-    };
+    return filename
+      ? {
+          name: filename,
+          mimeType,
+          url: FileService.getInstance().getDownloadLink({
+            fileKeyPath: filePath,
+          }),
+        }
+      : null;
   };
