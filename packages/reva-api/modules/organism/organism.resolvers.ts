@@ -53,6 +53,7 @@ import {
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
 import { FileService } from "../../modules/shared/file";
+import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 
 export const resolvers = {
   Account: {
@@ -379,13 +380,29 @@ export const resolvers = {
       if (context.auth.userInfo?.sub == undefined) {
         throw new Error("Utilisateur non autorisé");
       }
+
+      const statutValidationInformationsJuridiquesMaisonMereAAP = 
+      params.data.decision === 'VALIDE' ? 'A_JOUR' : 'A_METTRE_A_JOUR'
+      
+      const decision = await adminCreateMaisonMereAAPLegalInformationValidationDecision(
+        params.data.maisonMereAAPId,
+        {
+          decision:
+            params.data.decision,
+          internalComment: params.data.internalComment ?? "",
+          aapComment: params.data.aapComment ?? "",
+          aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
+        },
+      )
+
       await adminUpdateLegalInformationValidationStatus({
         maisonMereAAPId: params.data.maisonMereAAPId,
         maisonMereAAPData: {
-          statutValidationInformationsJuridiquesMaisonMereAAP:
-            params.data.statutValidationInformationsJuridiquesMaisonMereAAP,
+          statutValidationInformationsJuridiquesMaisonMereAAP,
         },
       });
+
+      return decision;
     },
   },
   Query: {

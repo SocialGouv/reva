@@ -121,6 +121,7 @@ type MaisonMereAAPLegalInformation {
   justificatifIdentiteDirigeantFile: File!
   lettreDeDelegationFile: File
   justificatifIdentiteDelegataireFile: File
+  createdAt: Timestamp!
 }
 
 input UpdateMaisonMereAAPLegalValidationDecisionInput {
@@ -128,6 +129,7 @@ input UpdateMaisonMereAAPLegalValidationDecisionInput {
   decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
   internalComment: String
   aapComment: String
+  aapUpdatedDocumentsAt: Timestamp!
 }
 
 type OrganismOnDepartment {
