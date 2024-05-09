@@ -9,31 +9,6 @@ import { graphqlErrorToast } from "@/components/toast/toast";
 import { MaisonMereAapLegalInformationDocumentsDecisionEnum, UpdateMaisonMereAapLegalValidationDecisionInput } from "@/graphql/generated/graphql";
 import { graphql } from "@/graphql/generated";
 
-// type Decisions = Array<{ label: string; value: "A_JOUR" | "A_METTRE_A_JOUR" }>;
-
-// const DecisionRadioButtons = () => {
-//   return (
-//     <RadioButtons
-//       small
-//       legend="Décision prise sur cette inscription"
-//       options={[
-//         {
-//           label: "Accepté",
-//           nativeInputProps: {
-//             value: "A_JOUR",
-//           },
-//         },
-//         {
-//           label: "Demande de précision",
-//           nativeInputProps: {
-//             value: "A_METTRE_A_JOUR",
-//           },
-//         },
-//       ]}
-//     />
-//   );
-// };
-
 const updateMaisonMereAAPLegalValidationDecisionMutation = graphql(`
   mutation updateLegalInformationValidationDecision(
     $data: UpdateMaisonMereAAPLegalValidationDecisionInput!
@@ -118,9 +93,8 @@ export default function ValidationDecisionForm({
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-x-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <fieldset className="grid">
-            {/* <legend>Décision prise sur cette inscription</legend> */}
             <RadioButtons
               small
               legend="Décision prise sur cette inscription"
