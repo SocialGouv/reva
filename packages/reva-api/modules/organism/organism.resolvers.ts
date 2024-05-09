@@ -579,6 +579,6 @@ const assertIsAdminOrGestionnaireMaisonMereAAP = async ({
       userRoles: userRoles || [],
     }));
   if (!authorized) {
-    throw new Error("Utilisateur non authorisé");
+    throw new Error("Utilisateur non autorisé");
   }
 };
