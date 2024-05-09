@@ -2,51 +2,141 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { SyntheticEvent, useState } from "react";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { MaisonMereAapLegalInformationDocumentsDecisionEnum, UpdateMaisonMereAapLegalValidationDecisionInput } from "@/graphql/generated/graphql";
+import { graphql } from "@/graphql/generated";
 
-const DecisionRadioButtons = () => {
-  return (
-    <RadioButtons
-      small
-      legend="Décision prise sur cette inscription"
-      options={[
-        {
-          label: "Accepté",
-          nativeInputProps: {
-            value: "ACCEPTED",
-          },
-        },
-        {
-          label: "Demande de précision",
-          nativeInputProps: {
-            value: "PENDING",
-          },
-        },
-      ]}
-    />
-  );
+// type Decisions = Array<{ label: string; value: "A_JOUR" | "A_METTRE_A_JOUR" }>;
+
+// const DecisionRadioButtons = () => {
+//   return (
+//     <RadioButtons
+//       small
+//       legend="Décision prise sur cette inscription"
+//       options={[
+//         {
+//           label: "Accepté",
+//           nativeInputProps: {
+//             value: "A_JOUR",
+//           },
+//         },
+//         {
+//           label: "Demande de précision",
+//           nativeInputProps: {
+//             value: "A_METTRE_A_JOUR",
+//           },
+//         },
+//       ]}
+//     />
+//   );
+// };
+
+const updateMaisonMereAAPLegalValidationDecisionMutation = graphql(`
+  mutation updateLegalInformationValidationDecision(
+    $data: UpdateMaisonMereAAPLegalValidationDecisionInput!
+  ) {
+    organism_updateLegalInformationValidationDecision(data: $data) {
+      id
+    }
+  }
+`);
+
+const useUpdateMaisonMereAAPLegalValidationDecision = (
+  maisonMereAAPId: string,
+) => {
+  const { graphqlClient } = useGraphQlClient();
+  const {
+    mutateAsync: updateMaisonMereAAPLegalValidationDecisionMutate,
+    isPending: updateMaisonMereAAPLegalValidationDecisionIsPending,
+  } = useMutation({
+    mutationKey: ["updateMaisonMereAAPLegalValidationStatus", maisonMereAAPId],
+    mutationFn: ({ data }: { data: UpdateMaisonMereAapLegalValidationDecisionInput }) =>
+      graphqlClient.request(updateMaisonMereAAPLegalValidationDecisionMutation, {
+        data,
+      }),
+  });
+
+  return {
+    updateMaisonMereAAPLegalValidationDecisionMutate,
+    updateMaisonMereAAPLegalValidationDecisionIsPending,
+  };
 };
 
-export default function ValidationDecisionForm() {
+export default function ValidationDecisionForm({
+  maisonMereAAPId,
+  aapUpdatedDocumentsAt,
+}: {
+  maisonMereAAPId: string;
+  aapUpdatedDocumentsAt: number;
+}) {
+  const [aapCommentState, setAapCommentState] = useState<
+    "default" | "success" | "error"
+  >("default");
+  const [aapCommentStateMessage, setAapCommentStateMessage] =
+    useState<string>("");
+
+  const {
+    updateMaisonMereAAPLegalValidationDecisionMutate,
+    updateMaisonMereAAPLegalValidationDecisionIsPending,
+  } = useUpdateMaisonMereAAPLegalValidationDecision(maisonMereAAPId);
+
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    console.log("maisonMereAAPId", maisonMereAAPId);
+    console.log(formData);
+    if (
+      formData.get("decision") === "DEMANDE_DE_PRECISION" &&
+      !formData.get("aapComment")
+    ) {
+      setAapCommentState("error");
+      setAapCommentStateMessage(
+        "Veuillez renseigner un commentaire lorsque vous demandez des précisions",
+      );
+      return;
+    }
+    try {
+      await updateMaisonMereAAPLegalValidationDecisionMutate({
+        data: {
+          maisonMereAAPId: maisonMereAAPId,
+          decision: formData.get("decision") as MaisonMereAapLegalInformationDocumentsDecisionEnum,
+          aapComment: formData.get("aapComment") as string,
+          internalComment: formData.get("internalComment") as string,
+          aapUpdatedDocumentsAt: aapUpdatedDocumentsAt
+        },
+      });
+      setAapCommentState("success");
+      setAapCommentStateMessage("Succès");
+    } catch(e) {
+      graphqlErrorToast(e);
+    }
+  };
+
   return (
     <div className="w-full">
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-x-8">
           <fieldset className="grid">
             {/* <legend>Décision prise sur cette inscription</legend> */}
             <RadioButtons
               small
               legend="Décision prise sur cette inscription"
+              name="decision"
               options={[
                 {
                   label: "Accepté",
                   nativeInputProps: {
-                    value: "ACCEPTED",
+                    value: "VALIDE",
                   },
                 },
                 {
                   label: "Demande de précision",
                   nativeInputProps: {
-                    value: "PENDING",
+                    defaultChecked: true,
+                    value: "DEMANDE_DE_PRECISION",
                   },
                 },
               ]}
@@ -54,8 +144,10 @@ export default function ValidationDecisionForm() {
             <Input
               label="Commentaire à destination de l'AAP : "
               textArea
+              state={aapCommentState}
+              stateRelatedMessage={aapCommentStateMessage}
               nativeTextAreaProps={{
-                name: "commentaire",
+                name: "aapComment",
                 rows: 4,
               }}
             />
@@ -69,7 +161,7 @@ export default function ValidationDecisionForm() {
               hintText="(optionnel)"
               textArea
               nativeTextAreaProps={{
-                name: "commentaire",
+                name: "internalComment",
                 rows: 8,
               }}
             />
@@ -80,8 +172,15 @@ export default function ValidationDecisionForm() {
           </fieldset>
         </div>
         <div className="w-full mt-8 flex flex-row justify-between">
-          <Button priority="secondary" linkProps={{ href: "/subscriptions/check-legal-information/" }} >Retour</Button>
-          <Button>Envoyer</Button>
+          <Button
+            priority="secondary"
+            linkProps={{ href: "/subscriptions/check-legal-information/" }}
+          >
+            Retour
+          </Button>
+          <Button type="submit" disabled={updateMaisonMereAAPLegalValidationDecisionIsPending}>
+            Envoyer
+          </Button>
         </div>
       </form>
     </div>

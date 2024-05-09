@@ -37,6 +37,32 @@ const getMaisonMereAAP = graphql(`
       siteWeb
       createdAt
       statutValidationInformationsJuridiquesMaisonMereAAP
+      legalInformation {
+        managerFirstname
+        managerLastname
+        delegataire
+        createdAt
+        attestationURSSAFFile {
+            name
+            url
+            mimeType
+        }
+        justificatifIdentiteDirigeantFile {
+            name
+            url
+            mimeType
+        }
+        lettreDeDelegationFile {
+            name
+            url
+            mimeType
+        }
+        justificatifIdentiteDelegataireFile {
+            name
+            url
+            mimeType
+        }
+      }
       maisonMereAAPOnDepartements {
         estSurPlace
         estADistance
@@ -168,6 +194,8 @@ const MaisonMereAAPPage = () => {
               (c) => c.ccn.label,
             )}
             createdAt={new Date(maisonMereAAP.createdAt)}
+            companyManagerFirstname={maisonMereAAP.legalInformation?.managerFirstname ?? "Non renseigné"}
+            companyManagerLastname={maisonMereAAP.legalInformation?.managerLastname ?? "Non renseigné"}
           />
         ) : (
           <OrganismSummary
@@ -257,11 +285,16 @@ const MaisonMereAAPPage = () => {
         />
         {showLegalValidation &&
           maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-            "EN_ATTENTE_DE_VERIFICATION" && (
+            "EN_ATTENTE_DE_VERIFICATION" && maisonMereAAP.legalInformation && (
             <>
-              <LegalDocumentList />
+              <LegalDocumentList
+                attestationURSSAFFile={maisonMereAAP.legalInformation?.attestationURSSAFFile}
+                justificatifIdentiteDirigeantFile={maisonMereAAP.legalInformation?.justificatifIdentiteDirigeantFile}
+                lettreDeDelegationFile={maisonMereAAP.legalInformation?.lettreDeDelegationFile}
+                justificatifIdentiteDelegataireFile={maisonMereAAP.legalInformation?.justificatifIdentiteDelegataireFile}
+              />
               <hr />
-              <ValidationDecisionForm />
+              <ValidationDecisionForm maisonMereAAPId={maisonMereAAP.id} aapUpdatedDocumentsAt={maisonMereAAP.legalInformation.createdAt} />
             </>
           )}
       </div>
