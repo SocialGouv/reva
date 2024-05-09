@@ -463,7 +463,6 @@ export const resolvers = {
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
-
       await adminUpdateLegalInformationValidationStatus({
         maisonMereAAPId: params.data.maisonMereAAPId,
         maisonMereAAPData: {

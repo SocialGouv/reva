@@ -1,6 +1,7 @@
 import { StatutValidationInformationsJuridiquesMaisonMereAAP } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { Organism } from "../organism.types";
+import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";
 
 export const adminUpdateMaisonMereAAP = async (params: {
   maisonMereAAPId: string;
@@ -98,8 +99,29 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
   };
 }) => {
   const { maisonMereAAPId } = params;
-  return prismaClient.maisonMereAAP.update({
+
+  if (
+    params.maisonMereAAPData
+      .statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
+  ) {
+    try {
+      await prismaClient.maisonMereAAP.update({
+        where: { id: maisonMereAAPId },
+        data: params.maisonMereAAPData,
+      });
+      await deleteOldMaisonMereAAPLegalInformationDocuments({
+        maisonMereAAPId,
+      });
+      return;
+    } catch (e) {
+      throw new Error(
+        `Impossible de modifier le statut de validation des documents légaux: ${e}.`,
+      );
+    }
+  }
+
+  await prismaClient.maisonMereAAP.update({
     where: { id: maisonMereAAPId },
     data: params.maisonMereAAPData,
-  })
-}
+  });
+};

@@ -1,6 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
 import { LegalInformationValidationDecisionInput } from "../organism.types";
-// import { getMaisonMereAAPById } from "./getMaisonMereAAPById";
 
 export const adminCreateMaisonMereAAPLegalInformationValidationDecision = async (
   maisonMereAAPId: string,
