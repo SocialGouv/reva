@@ -369,7 +369,7 @@ export const resolvers = {
       }
       return updateOrganismAccount({ params: params.data });
     },
-    organism_updateLegalInformationValidationStatus: async (
+    organism_updateLegalInformationValidationDecision: async (
       _parent: unknown,
       params: {
         data: UpdateMaisonMereAAPLegalValidationInput
@@ -379,7 +379,7 @@ export const resolvers = {
       if (context.auth.userInfo?.sub == undefined) {
         throw new Error("Utilisateur non autorisé");
       }
-      await  adminUpdateLegalInformationValidationStatus({
+      await adminUpdateLegalInformationValidationStatus({
         maisonMereAAPId: params.data.maisonMereAAPId,
         maisonMereAAPData: {
           statutValidationInformationsJuridiquesMaisonMereAAP:
