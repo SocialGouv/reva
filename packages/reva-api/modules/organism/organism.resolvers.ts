@@ -102,8 +102,12 @@ export const resolvers = {
     maisonMereAAPLegalInformationDocumentsDecisions: (
       { id }: { id: string },
       {
-        decision,
-      }: { decision?: MaisonMereAAPLegalInformationDocumentsDecisionEnum },
+        input: { decision },
+      }: {
+        input: {
+          decision?: MaisonMereAAPLegalInformationDocumentsDecisionEnum;
+        };
+      },
     ) =>
       getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision(
         {
