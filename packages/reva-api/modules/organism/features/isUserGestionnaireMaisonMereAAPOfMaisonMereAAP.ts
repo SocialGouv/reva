@@ -18,7 +18,7 @@ export const isUserGestionnaireMaisonMereAAPOfMaisonMereAAP = async ({
     if (
       userAccount &&
       maisonMereAAP &&
-      userAccount.keycloakId === maisonMereAAP?.gestionnaireAccountId
+      userAccount.id === maisonMereAAP?.gestionnaireAccountId
     ) {
       return true;
     }
