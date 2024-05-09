@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
+import { serializeStringToPhoneNumberStructure } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
@@ -17,8 +18,12 @@ import {
   FormCandidateInformationData,
   candidateInformationSchema,
 } from "./candidateInformationSchema";
-import { useUpdateCandidateInformation } from "./useCandidateInformation";
-import { Candidacy, Countries, Departments } from "./useCandidateInformation";
+import {
+  Candidacy,
+  Countries,
+  Departments,
+  useUpdateCandidateInformation,
+} from "./useCandidateInformation";
 
 const CandidateInformationForm = ({
   candidacyId,
@@ -74,7 +79,7 @@ const CandidateInformationForm = ({
       street: candidate?.street ?? "",
       city: candidate?.city ?? "",
       zip: candidate?.zip ?? "",
-      phone: candidate?.phone ?? "",
+      phone: serializeStringToPhoneNumberStructure(candidate?.phone ?? ""),
       email: candidate?.email ?? "",
     },
   });
@@ -106,7 +111,7 @@ const CandidateInformationForm = ({
         street: candidate.street ?? "",
         city: candidate.city ?? "",
         zip: candidate.zip ?? "",
-        phone: candidate.phone ?? "",
+        phone: serializeStringToPhoneNumberStructure(candidate.phone ?? ""),
         email: candidate.email ?? "",
       });
     },
@@ -344,6 +349,14 @@ const CandidateInformationForm = ({
             className="w-full"
             nativeInputProps={{
               ...register("phone"),
+              onChange: (e) => {
+                setValue(
+                  "phone",
+                  serializeStringToPhoneNumberStructure(e.target.value),
+                  { shouldDirty: true },
+                );
+              },
+              maxLength: 18,
             }}
             state={errors.phone ? "error" : "default"}
             stateRelatedMessage={errors.phone?.message}

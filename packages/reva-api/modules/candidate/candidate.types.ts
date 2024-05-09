@@ -79,6 +79,7 @@ export interface CandidateUpdateInput {
   street: string;
   zip: string;
   city: string;
+  departmentId?: string;
 }
 
 export interface CandidateCivilInformationInput {

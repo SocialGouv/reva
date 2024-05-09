@@ -1,4 +1,5 @@
 import { GenderEnum } from "@/constants";
+import { deserializeStringToPhoneNumberStructure } from "@/utils";
 import { isBefore, sub } from "date-fns";
 import { z } from "zod";
 
@@ -20,8 +21,13 @@ export const candidateInformationSchema = z
     countryIsFrance: z.boolean(),
     street: z.string().min(1, defaultErrorMessage),
     city: z.string().min(1, defaultErrorMessage),
-    zip: z.string().min(5, defaultErrorMessage),
-    phone: z.string().length(10, defaultErrorMessage),
+    zip: z
+      .string()
+      .regex(
+        /^(\d{5}|)$/,
+        "Ce champ doit être vide ou contenir un code postal",
+      ),
+    phone: z.string(),
     email: z.string().email(defaultErrorMessage),
   })
   .superRefine((data, ctx) => {
@@ -51,6 +57,23 @@ export const candidateInformationSchema = z
           path: ["birthdate"],
         });
       }
+    }
+
+    const phoneNumberFormatted = deserializeStringToPhoneNumberStructure(
+      data.phone,
+    );
+
+    if (
+      phoneNumberFormatted.length >= 10 &&
+      phoneNumberFormatted.length <= 14
+    ) {
+      data.phone = phoneNumberFormatted;
+    } else {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Le numéro de téléphone est invalide",
+        path: ["phone"],
+      });
     }
 
     if (data.countryIsFrance && !data.birthDepartment?.length) {

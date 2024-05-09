@@ -22,6 +22,7 @@ export const updateCandidate = async ({
   const { id, email, birthDepartmentId, countryId } = candidateInput;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
     where: { id },
+    include: { department: true },
   });
 
   if (!candidateToUpdate) {
@@ -56,6 +57,24 @@ export const updateCandidate = async ({
 
   if (!countrySelected) {
     throw new Error(`Le pays n'existe pas`);
+  }
+
+  const isDifferentZipCode =
+    candidateToUpdate.zip &&
+    candidateToUpdate.zip !== candidateInput.zip &&
+    candidateToUpdate.zip?.match(/^(\d{5}|)$/);
+
+  if (isDifferentZipCode) {
+    const departmentCode = candidateInput.zip?.slice(0, 2);
+
+    const department = await prismaClient.department.findUnique({
+      where: { code: departmentCode },
+    });
+
+    if (!department) {
+      throw new Error(`Le département n'existe pas`);
+    }
+    candidateInput.departmentId = department.id;
   }
 
   const previousEmail = candidateToUpdate.email;

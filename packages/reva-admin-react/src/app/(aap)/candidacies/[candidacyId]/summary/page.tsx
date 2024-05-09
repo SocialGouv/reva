@@ -1,24 +1,24 @@
 "use client";
-import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
-import { formatStringToPhoneNumberStructure } from "@/utils";
-import { format } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
-import { checkCandidateFields } from "./_components/checkCandidateFields";
-import useCandidateSummary from "./_components/useCandidateSummary";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
-import { useEffect } from "react";
 import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
+import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
+import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import {
   BadgeCompleted,
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import { CertificationCard } from "./_components/CertificationCard";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { serializeStringToPhoneNumberStructure } from "@/utils";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { format } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { CertificationCard } from "./_components/CertificationCard";
+import { checkCandidateFields } from "./_components/checkCandidateFields";
+import useCandidateSummary from "./_components/useCandidateSummary";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -132,7 +132,7 @@ const CandidacySummaryPage = () => {
                 <dt className="sr-only">Téléphone</dt>
                 <dd>
                   {candidate.phone &&
-                    formatStringToPhoneNumberStructure(candidate.phone)}
+                    serializeStringToPhoneNumberStructure(candidate.phone)}
                 </dd>
                 <dt className="sr-only">Adresse email</dt>
                 <dd>{candidate.email}</dd>
