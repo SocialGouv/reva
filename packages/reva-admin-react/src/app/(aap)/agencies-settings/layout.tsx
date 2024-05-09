@@ -99,20 +99,33 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
           },
           items: [
-            ...agencies.map((a) => ({
-              text: `${a.informationsCommerciales?.nom || a.label} ${
-                a.id === organismId ? "(Agence administratrice)" : ""
-              }`,
-              linkProps: {
-                href: "#",
-                className: `fr-sidemenu__btn bg-transparent font-bold ${
-                  isOrgansismSelected({ organismId: a.id })
-                    ? selectedItemStyle
-                    : ""
-                } `,
-              },
-              items: getOrganismNavItems({ organismId: a.id }),
-            })),
+            ...agencies
+              .sort((a, b) => {
+                if (a.id === organismId) return -1;
+                const aName = a.informationsCommerciales?.nom || a.label;
+                const bName = b.informationsCommerciales?.nom || b.label;
+                return aName.localeCompare(bName);
+              })
+              .map((a) => {
+                const isMaisonMereAAPAgency = a.id === organismId;
+                return {
+                  text: `${a.informationsCommerciales?.nom || a.label} ${
+                    isMaisonMereAAPAgency ? "(Agence administratrice)" : ""
+                  }`,
+                  expandedByDefault: isMaisonMereAAPAgency,
+                  linkProps: {
+                    href: "#",
+                    className: `fr-sidemenu__btn bg-transparent font-bold ${
+                      isOrgansismSelected({ organismId: a.id })
+                        ? selectedItemStyle
+                        : ""
+                    } `,
+                  },
+                  items: getOrganismNavItems({
+                    organismId: a.id,
+                  }),
+                };
+              }),
             {
               isActive: false,
               linkProps: {
@@ -129,7 +142,9 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         },
       ];
     } else if (isOrganism) {
-      items = getOrganismNavItems({ organismId });
+      items = getOrganismNavItems({
+        organismId,
+      });
     }
     return items;
   };
