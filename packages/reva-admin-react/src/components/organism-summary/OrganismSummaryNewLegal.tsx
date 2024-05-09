@@ -38,6 +38,8 @@ export const OrganismSummary = ({
   ccns,
   domaines,
   createdAt,
+  companyManagerFirstname,
+  companyManagerLastname,
 }: {
   companyName: string;
   accountFirstname: string;
@@ -55,6 +57,8 @@ export const OrganismSummary = ({
   ccns?: string[];
   domaines?: string[];
   createdAt?: Date;
+  companyManagerFirstname?: string;
+  companyManagerLastname?: string;
 }) => (
   <>
     <h1>{companyName}</h1>
@@ -103,10 +107,10 @@ export const OrganismSummary = ({
         <h2>Dirigeant</h2>
         <div className="grid md:grid-cols-2">
           <Info title="Prénom">
-            {accountFirstname}
+            {companyManagerFirstname}
           </Info>
           <Info title="Nom">
-            {accountLastname}
+            {companyManagerLastname}
           </Info>
         </div>
       </GrayCard>
