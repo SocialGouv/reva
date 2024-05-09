@@ -28,7 +28,7 @@ export const submitMaisonMereAAPLegalInformationDocuments = async ({
 
   const filesAndIds = [
     [attestationURSSAF, attestationURSSAFFileId],
-    [justificatifIdentiteDirigeant, justificatifIdentiteDelegataireFileId],
+    [justificatifIdentiteDirigeant, justificatifIdentiteDirigeantFileId],
     [lettreDeDelegation, lettreDeDelegationFileId],
     [justificatifIdentiteDelegataire, justificatifIdentiteDelegataireFileId],
   ] as const;
