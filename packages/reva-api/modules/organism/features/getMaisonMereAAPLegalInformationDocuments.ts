@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getMaisonMereAAPLegalInformation = async ({
+export const getMaisonMereAAPLegalInformationDocuments = async ({
   maisonMereAAPId,
 }: {
   maisonMereAAPId: string;
@@ -12,6 +12,6 @@ export const getMaisonMereAAPLegalInformation = async ({
       justificatifIdentiteDirigeantFile: true,
       lettreDeDelegationFile: true,
       justificatifIdentiteDelegataireFile: true,
-    }
+    },
   });
-}
+};

@@ -51,7 +51,7 @@ import {
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
-import { getMaisonMereAAPLegalInformation } from "./features/getMaisonMereAAPLegalInformation";
+import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonMereAAPLegalInformationDocuments";
 import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
@@ -99,7 +99,7 @@ export const resolvers = {
     }: {
       gestionnaireAccountId: string;
     }) => getAccountById({ id: gestionnaireAccountId }),
-    maisonMereAAPLegalInformationDocumentsDecisions: (
+    legalInformationDocumentsDecisions: (
       { id }: { id: string },
       {
         input,
@@ -115,12 +115,12 @@ export const resolvers = {
           decision: input?.decision,
         },
       ),
-    legalInformation: ({ id: maisonMereAAPId }: { id: string }) =>
-      getMaisonMereAAPLegalInformation({
+    legalInformationDocuments: ({ id: maisonMereAAPId }: { id: string }) =>
+      getMaisonMereAAPLegalInformationDocuments({
         maisonMereAAPId,
       }),
   },
-  MaisonMereAAPLegalInformation: {
+  MaisonMereAAPLegalInformationDocuments: {
     attestationURSSAFFile: async (
       { maisonMereAAPId }: { maisonMereAAPId: string },
       _: unknown,

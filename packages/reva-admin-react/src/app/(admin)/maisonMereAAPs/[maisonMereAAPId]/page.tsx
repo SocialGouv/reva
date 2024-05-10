@@ -34,7 +34,7 @@ const getMaisonMereAAP = graphql(`
       siteWeb
       createdAt
       statutValidationInformationsJuridiquesMaisonMereAAP
-      legalInformation {
+      legalInformationDocuments {
         managerFirstname
         managerLastname
         delegataire
@@ -60,7 +60,7 @@ const getMaisonMereAAP = graphql(`
           mimeType
         }
       }
-      maisonMereAAPLegalInformationDocumentsDecisions {
+      legalInformationDocumentsDecisions {
         id
         decision
         internalComment
@@ -200,13 +200,14 @@ const MaisonMereAAPPage = () => {
             )}
             createdAt={new Date(maisonMereAAP.createdAt)}
             companyManagerFirstname={
-              maisonMereAAP.legalInformation?.managerFirstname ??
+              maisonMereAAP.legalInformationDocuments?.managerFirstname ??
               "Non renseigné"
             }
             companyManagerLastname={
-              maisonMereAAP.legalInformation?.managerLastname ?? "Non renseigné"
+              maisonMereAAP.legalInformationDocuments?.managerLastname ??
+              "Non renseigné"
             }
-            legalInformationDocumentsDecisions={maisonMereAAP.maisonMereAAPLegalInformationDocumentsDecisions.map(
+            legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
               (d) => ({
                 ...d,
                 aapUpdatedDocumentsAt: new Date(d.aapUpdatedDocumentsAt),
@@ -303,28 +304,31 @@ const MaisonMereAAPPage = () => {
         {showLegalValidation &&
           maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
             "EN_ATTENTE_DE_VERIFICATION" &&
-          maisonMereAAP.legalInformation && (
+          maisonMereAAP.legalInformationDocuments && (
             <>
               <LegalDocumentList
                 attestationURSSAFFile={
-                  maisonMereAAP.legalInformation?.attestationURSSAFFile
+                  maisonMereAAP.legalInformationDocuments?.attestationURSSAFFile
                 }
                 justificatifIdentiteDirigeantFile={
-                  maisonMereAAP.legalInformation
+                  maisonMereAAP.legalInformationDocuments
                     ?.justificatifIdentiteDirigeantFile
                 }
                 lettreDeDelegationFile={
-                  maisonMereAAP.legalInformation?.lettreDeDelegationFile
+                  maisonMereAAP.legalInformationDocuments
+                    ?.lettreDeDelegationFile
                 }
                 justificatifIdentiteDelegataireFile={
-                  maisonMereAAP.legalInformation
+                  maisonMereAAP.legalInformationDocuments
                     ?.justificatifIdentiteDelegataireFile
                 }
               />
               <hr />
               <ValidationDecisionForm
                 maisonMereAAPId={maisonMereAAP.id}
-                aapUpdatedDocumentsAt={maisonMereAAP.legalInformation.createdAt}
+                aapUpdatedDocumentsAt={
+                  maisonMereAAP.legalInformationDocuments.createdAt
+                }
               />
             </>
           )}

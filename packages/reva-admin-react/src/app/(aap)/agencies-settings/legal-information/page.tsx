@@ -99,7 +99,7 @@ const LegalInformationPage = () => {
                 statutValidationInformationsJuridiquesMaisonMereAAP={
                   maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
                 }
-                decisions={maisonMereAAP.maisonMereAAPLegalInformationDocumentsDecisions.map(
+                decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
                   (d) => ({
                     ...d,
                     decisionTakenAt: new Date(d.decisionTakenAt),

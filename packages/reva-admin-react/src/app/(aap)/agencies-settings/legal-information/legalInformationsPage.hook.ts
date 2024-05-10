@@ -17,7 +17,7 @@ const legalInformationQueries = graphql(`
           ville
           codePostal
           statutValidationInformationsJuridiquesMaisonMereAAP
-          maisonMereAAPLegalInformationDocumentsDecisions(
+          legalInformationDocumentsDecisions(
             input: { decision: DEMANDE_DE_PRECISION }
           ) {
             id

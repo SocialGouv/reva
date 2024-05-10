@@ -74,11 +74,11 @@ type MaisonMereAAP {
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
   maisonMereAAPOnDomaines: [MaisonMereAAPOnDomaine!]!
   maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
-  maisonMereAAPLegalInformationDocumentsDecisions(
+  legalInformationDocumentsDecisions(
     input: MaisonMereAAPLegalInformationDocumentsDecisionsInput
   ): [MaisonMereAAPLegalInformationDocumentsDecision!]!
   createdAt: Timestamp!
-  legalInformation: MaisonMereAAPLegalInformation
+  legalInformationDocuments: MaisonMereAAPLegalInformationDocuments
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -112,7 +112,7 @@ type MaisonMereAAPOnDepartment {
   departement: Department!
 }
 
-type MaisonMereAAPLegalInformation {
+type MaisonMereAAPLegalInformationDocuments {
   maisonMereAAP: MaisonMereAAP!
   managerFirstname: String!
   managerLastname: String!
@@ -286,5 +286,7 @@ type Mutation {
   ): Organism!
 
   organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!
-  organism_updateLegalInformationValidationDecision(data: UpdateMaisonMereAAPLegalValidationDecisionInput): MaisonMereAAP!
+  organism_updateLegalInformationValidationDecision(
+    data: UpdateMaisonMereAAPLegalValidationDecisionInput
+  ): MaisonMereAAP!
 }
