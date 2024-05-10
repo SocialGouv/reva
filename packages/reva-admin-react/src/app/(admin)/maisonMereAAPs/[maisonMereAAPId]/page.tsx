@@ -2,13 +2,9 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import {
   OrganismSummary,
-  Info,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
-import {
-  OrganismSummary as OrganismSummaryNewLegal,
-  Info as InfoNewLegal,
-} from "@/components/organism-summary/OrganismSummaryNewLegal";
+import { OrganismSummary as OrganismSummaryNewLegal } from "@/components/organism-summary/OrganismSummaryNewLegal";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -20,6 +16,7 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import LegalDocumentList from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/(components)/LegalDocumentsList";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { Info } from "@/components/organism-summary/Info";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -43,25 +40,33 @@ const getMaisonMereAAP = graphql(`
         delegataire
         createdAt
         attestationURSSAFFile {
-            name
-            url
-            mimeType
+          name
+          url
+          mimeType
         }
         justificatifIdentiteDirigeantFile {
-            name
-            url
-            mimeType
+          name
+          url
+          mimeType
         }
         lettreDeDelegationFile {
-            name
-            url
-            mimeType
+          name
+          url
+          mimeType
         }
         justificatifIdentiteDelegataireFile {
-            name
-            url
-            mimeType
+          name
+          url
+          mimeType
         }
+      }
+      maisonMereAAPLegalInformationDocumentsDecisions {
+        id
+        decision
+        internalComment
+        aapComment
+        aapUpdatedDocumentsAt
+        decisionTakenAt
       }
       maisonMereAAPOnDepartements {
         estSurPlace
@@ -194,8 +199,20 @@ const MaisonMereAAPPage = () => {
               (c) => c.ccn.label,
             )}
             createdAt={new Date(maisonMereAAP.createdAt)}
-            companyManagerFirstname={maisonMereAAP.legalInformation?.managerFirstname ?? "Non renseigné"}
-            companyManagerLastname={maisonMereAAP.legalInformation?.managerLastname ?? "Non renseigné"}
+            companyManagerFirstname={
+              maisonMereAAP.legalInformation?.managerFirstname ??
+              "Non renseigné"
+            }
+            companyManagerLastname={
+              maisonMereAAP.legalInformation?.managerLastname ?? "Non renseigné"
+            }
+            legalInformationDocumentsDecisions={maisonMereAAP.maisonMereAAPLegalInformationDocumentsDecisions.map(
+              (d) => ({
+                ...d,
+                aapUpdatedDocumentsAt: new Date(d.aapUpdatedDocumentsAt),
+                decisionTakenAt: new Date(d.decisionTakenAt),
+              }),
+            )}
           />
         ) : (
           <OrganismSummary
@@ -225,50 +242,50 @@ const MaisonMereAAPPage = () => {
 
         {showLegalValidation ? (
           <GrayCard className="mt-8">
-          <h3>Agences</h3>
-          <ol className="grid grid-cols-1 md:grid-cols-2">
-            {maisonMereAAP.organisms.map((o) => (
-              <li key={o.id} className="ml-4">
-                <h3 className="text-lg font-bold">
-                  {o.informationsCommerciales?.nom || o.label}
-                </h3>
-                <InfoNewLegal title="Fermée pour absence ou congés:">
-                  <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
-                </InfoNewLegal>
-                <InfoNewLegal title="Niveaux de diplômes couverts:">
-                  <ul>
-                    {o.managedDegrees.map((d) => (
-                      <li key={d.id}>{d.degree.longLabel}</li>
-                    ))}
-                  </ul>
-                </InfoNewLegal>
-              </li>
-            ))}
-          </ol>
-        </GrayCard>
+            <h3>Agences</h3>
+            <ol className="grid grid-cols-1 md:grid-cols-2">
+              {maisonMereAAP.organisms.map((o) => (
+                <li key={o.id} className="ml-4">
+                  <h3 className="text-lg font-bold">
+                    {o.informationsCommerciales?.nom || o.label}
+                  </h3>
+                  <Info title="Fermée pour absence ou congés:">
+                    <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
+                  </Info>
+                  <Info title="Niveaux de diplômes couverts:">
+                    <ul>
+                      {o.managedDegrees.map((d) => (
+                        <li key={d.id}>{d.degree.longLabel}</li>
+                      ))}
+                    </ul>
+                  </Info>
+                </li>
+              ))}
+            </ol>
+          </GrayCard>
         ) : (
           <GrayCard className="mt-8">
-          <h3>Agences</h3>
-          <ol>
-            {maisonMereAAP.organisms.map((o) => (
-              <li key={o.id} className="ml-4">
-                <h3 className="text-lg font-bold">
-                  {o.informationsCommerciales?.nom || o.label}
-                </h3>
-                <Info title="Fermée pour absence ou congées:">
-                  <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
-                </Info>
-                <Info title="Niveaux de diplômes couverts:">
-                  <ul>
-                    {o.managedDegrees.map((d) => (
-                      <li key={d.id}>{d.degree.longLabel}</li>
-                    ))}
-                  </ul>
-                </Info>
-              </li>
-            ))}
-          </ol>
-        </GrayCard>
+            <h3>Agences</h3>
+            <ol>
+              {maisonMereAAP.organisms.map((o) => (
+                <li key={o.id} className="ml-4">
+                  <h3 className="text-lg font-bold">
+                    {o.informationsCommerciales?.nom || o.label}
+                  </h3>
+                  <Info title="Fermée pour absence ou congées:">
+                    <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
+                  </Info>
+                  <Info title="Niveaux de diplômes couverts:">
+                    <ul>
+                      {o.managedDegrees.map((d) => (
+                        <li key={d.id}>{d.degree.longLabel}</li>
+                      ))}
+                    </ul>
+                  </Info>
+                </li>
+              ))}
+            </ol>
+          </GrayCard>
         )}
         <MaisonMereAAPForm
           maisonMereAAPId={maisonMereAAP.id}
@@ -285,16 +302,30 @@ const MaisonMereAAPPage = () => {
         />
         {showLegalValidation &&
           maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-            "EN_ATTENTE_DE_VERIFICATION" && maisonMereAAP.legalInformation && (
+            "EN_ATTENTE_DE_VERIFICATION" &&
+          maisonMereAAP.legalInformation && (
             <>
               <LegalDocumentList
-                attestationURSSAFFile={maisonMereAAP.legalInformation?.attestationURSSAFFile}
-                justificatifIdentiteDirigeantFile={maisonMereAAP.legalInformation?.justificatifIdentiteDirigeantFile}
-                lettreDeDelegationFile={maisonMereAAP.legalInformation?.lettreDeDelegationFile}
-                justificatifIdentiteDelegataireFile={maisonMereAAP.legalInformation?.justificatifIdentiteDelegataireFile}
+                attestationURSSAFFile={
+                  maisonMereAAP.legalInformation?.attestationURSSAFFile
+                }
+                justificatifIdentiteDirigeantFile={
+                  maisonMereAAP.legalInformation
+                    ?.justificatifIdentiteDirigeantFile
+                }
+                lettreDeDelegationFile={
+                  maisonMereAAP.legalInformation?.lettreDeDelegationFile
+                }
+                justificatifIdentiteDelegataireFile={
+                  maisonMereAAP.legalInformation
+                    ?.justificatifIdentiteDelegataireFile
+                }
               />
               <hr />
-              <ValidationDecisionForm maisonMereAAPId={maisonMereAAP.id} aapUpdatedDocumentsAt={maisonMereAAP.legalInformation.createdAt} />
+              <ValidationDecisionForm
+                maisonMereAAPId={maisonMereAAP.id}
+                aapUpdatedDocumentsAt={maisonMereAAP.legalInformation.createdAt}
+              />
             </>
           )}
       </div>

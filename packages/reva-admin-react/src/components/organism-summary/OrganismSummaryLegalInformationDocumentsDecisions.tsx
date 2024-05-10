@@ -1,0 +1,51 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { Info } from "./Info";
+import { formatDate } from "date-fns";
+
+export interface OrganismSummaryLegalInformationDocumentsDecisionProps {
+  id: string;
+  internalComment: string;
+  aapComment: string;
+  aapUpdatedDocumentsAt: Date;
+  decisionTakenAt: Date;
+}
+export const OrganismSummaryLegalInformationDocumentsDecisions = ({
+  decisions,
+  className,
+}: {
+  decisions: OrganismSummaryLegalInformationDocumentsDecisionProps[];
+  className?: string;
+}) => (
+  <Accordion label="Décisions précédentes" className={`${className || ""}`}>
+    <div className="flex flex-col">
+      {decisions.map((d) => (
+        <OrganismSummaryLegalInformationDocumentsDecision
+          key={d.id}
+          {...d}
+          className="pt-4 pb-3 first:border-none last:border-t-[1.5px] first:pt-0"
+        />
+      ))}
+    </div>
+  </Accordion>
+);
+
+export const OrganismSummaryLegalInformationDocumentsDecision = ({
+  decisionTakenAt,
+  aapComment,
+  aapUpdatedDocumentsAt,
+  internalComment,
+  className,
+}: OrganismSummaryLegalInformationDocumentsDecisionProps & {
+  className?: string;
+}) => (
+  <div className={`grid md:grid-cols-2 ${className || ""}`}>
+    <Info title="Mise à jour par l'AAP le : ">
+      {formatDate(aapUpdatedDocumentsAt, "dd/MM/yyyy")}
+    </Info>
+    <Info title="Décision prise le : ">
+      {formatDate(decisionTakenAt, "dd/MM/yyyy")}
+    </Info>
+    <Info title="Commentaire de l'AAP : ">{aapComment}</Info>
+    <Info title="Commentaire interne : ">{internalComment}</Info>
+  </div>
+);

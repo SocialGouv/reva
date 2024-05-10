@@ -1,6 +1,10 @@
 import { format } from "date-fns";
-import { ReactNode } from "react";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { Info } from "./Info";
+import {
+  OrganismSummaryLegalInformationDocumentsDecisionProps,
+  OrganismSummaryLegalInformationDocumentsDecisions,
+} from "./OrganismSummaryLegalInformationDocumentsDecisions";
 
 export type Typology =
   | "generaliste"
@@ -21,6 +25,28 @@ const getTypologyLabel = (typology: Typology) => {
   }
 };
 
+export interface OrganismSummaryProps {
+  companyName: string;
+  accountFirstname: string;
+  accountLastname: string;
+  accountEmail: string;
+  accountPhoneNumber: string;
+  companyWebsite?: string | null;
+  companyQualiopiCertificateExpiresAt: Date;
+  companySiret: string;
+  companyLegalStatus: string;
+  companyAddress: string;
+  companyZipCode: string;
+  companyCity: string;
+  companyTypology: Typology;
+  ccns?: string[];
+  domaines?: string[];
+  createdAt?: Date;
+  companyManagerFirstname?: string;
+  companyManagerLastname?: string;
+  legalInformationDocumentsDecisions: OrganismSummaryLegalInformationDocumentsDecisionProps[];
+}
+
 export const OrganismSummary = ({
   companyName,
   accountFirstname,
@@ -40,30 +66,18 @@ export const OrganismSummary = ({
   createdAt,
   companyManagerFirstname,
   companyManagerLastname,
-}: {
-  companyName: string;
-  accountFirstname: string;
-  accountLastname: string;
-  accountEmail: string;
-  accountPhoneNumber: string;
-  companyWebsite?: string | null;
-  companyQualiopiCertificateExpiresAt: Date;
-  companySiret: string;
-  companyLegalStatus: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
-  companyTypology: Typology;
-  ccns?: string[];
-  domaines?: string[];
-  createdAt?: Date;
-  companyManagerFirstname?: string;
-  companyManagerLastname?: string;
-}) => (
+  legalInformationDocumentsDecisions,
+}: OrganismSummaryProps) => (
   <>
     <h1>{companyName}</h1>
     {createdAt && (
       <p>AAP inscrit depuis le {format(createdAt, "dd/MM/yyyy")}</p>
+    )}
+    {!!legalInformationDocumentsDecisions.length && (
+      <OrganismSummaryLegalInformationDocumentsDecisions
+        decisions={legalInformationDocumentsDecisions}
+        className="mb-8"
+      />
     )}
     <div className="grid grid-cols-2 gap-8">
       <GrayCard>
@@ -144,19 +158,4 @@ export const OrganismSummary = ({
       </GrayCard>
     </div>
   </>
-);
-
-export const Info = ({
-  title,
-  children,
-  className,
-}: {
-  title: string;
-  children: ReactNode;
-  className?: string;
-}) => (
-  <dl className={`m-2 ${className || ""}`}>
-    <dt className="font-bold mb-1">{title}</dt>
-    <dd>{children}</dd>
-  </dl>
 );

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
-import { ReactNode } from "react";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { Info } from "./Info";
 
 export type Typology =
   | "generaliste"
@@ -125,17 +125,4 @@ export const OrganismSummary = ({
       </GrayCard>
     </div>
   </>
-);
-
-export const Info = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) => (
-  <dl className="m-2">
-    <dt className="font-normal text-sm text-gray-600 mb-1">{title}</dt>
-    <dd>{children}</dd>
-  </dl>
 );
