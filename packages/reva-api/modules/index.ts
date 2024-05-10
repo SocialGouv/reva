@@ -33,7 +33,7 @@ import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { juryLoaders } from "./jury/jury.loaders";
 import { juryResolvers } from "./jury/jury.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
-import { resolvers as organismResolvers } from "./organism/organism.resolvers";
+import { organismResolvers } from "./organism/organism.resolvers";
 import { referentialLoaders } from "./referential/referential.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
