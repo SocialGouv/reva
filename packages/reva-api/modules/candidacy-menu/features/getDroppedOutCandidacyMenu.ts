@@ -16,10 +16,12 @@ export const getDroppedOutCandidacyMenu = async ({
   candidacy: CandidacyForMenu;
   userKeycloakId?: string;
 }): Promise<CandidacyMenuEntry[]> => {
-  const activeCandidacyStatus = candidacy.candidacyStatuses[0].status;
+  const activeCandidacyStatus = candidacy.candidacyStatuses.find(
+    ({ isActive }) => isActive,
+  )?.status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
-    activeCandidacyStatus,
+    activeCandidacyStatus as CandidacyStatusStep,
   );
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
@@ -48,7 +50,9 @@ export const getDroppedOutCandidacyMenu = async ({
         adminType: isReactFundingPageActive ? "React" : "Elm",
         suffix: "funding",
       }),
-      status: editableStatus.includes(activeCandidacyStatus)
+      status: editableStatus.includes(
+        activeCandidacyStatus as CandidacyStatusStep,
+      )
         ? "ACTIVE_WITH_EDIT_HINT"
         : "ACTIVE_WITHOUT_HINT",
     };
@@ -77,9 +81,8 @@ export const getDroppedOutCandidacyMenu = async ({
   );
 
   if (candidacyHasSentFeasibilityRequest) {
-    const fundingRequestMenuEntry = await getFundingRequestMenuEntry(
-      userKeycloakId,
-    );
+    const fundingRequestMenuEntry =
+      await getFundingRequestMenuEntry(userKeycloakId);
     const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
 
     droppedOutCandidacyMenu.push(
