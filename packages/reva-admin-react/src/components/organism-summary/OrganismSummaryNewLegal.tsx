@@ -62,11 +62,9 @@ export const OrganismSummary = ({
 }) => (
   <>
     <h1>{companyName}</h1>
-      {createdAt && (
-        <p>
-          AAP inscrit depuis le {format(createdAt, "dd/MM/yyyy")}
-        </p>
-      )}
+    {createdAt && (
+      <p>AAP inscrit depuis le {format(createdAt, "dd/MM/yyyy")}</p>
+    )}
     <div className="grid grid-cols-2 gap-8">
       <GrayCard>
         <h2>Administrateur du compte France VAE</h2>
@@ -74,12 +72,10 @@ export const OrganismSummary = ({
           <Info title="Nom">
             {accountFirstname} {accountLastname}
           </Info>
-          <Info title="Adresse email">
+          <Info title="Adresse email" className="break-words">
             {accountEmail}
           </Info>
-          <Info title="Téléphone">
-            {accountPhoneNumber}
-          </Info>
+          <Info title="Téléphone">{accountPhoneNumber}</Info>
           <Info title="Site internet de la structure">
             {companyWebsite || "Non spécifié"}
           </Info>
@@ -106,18 +102,16 @@ export const OrganismSummary = ({
       <GrayCard>
         <h2>Dirigeant</h2>
         <div className="grid md:grid-cols-2">
-          <Info title="Prénom">
-            {companyManagerFirstname}
-          </Info>
-          <Info title="Nom">
-            {companyManagerLastname}
-          </Info>
+          <Info title="Prénom">{companyManagerFirstname}</Info>
+          <Info title="Nom">{companyManagerLastname}</Info>
         </div>
       </GrayCard>
       <GrayCard>
         <h2>Qualiopi</h2>
         <div className="grid md:grid-cols-2">
-          <Info title="Date d'expiration">{format(companyQualiopiCertificateExpiresAt, "dd/MM/yyyy")}</Info>
+          <Info title="Date d'expiration">
+            {format(companyQualiopiCertificateExpiresAt, "dd/MM/yyyy")}
+          </Info>
         </div>
       </GrayCard>
       <GrayCard className="col-span-2">
@@ -155,11 +149,13 @@ export const OrganismSummary = ({
 export const Info = ({
   title,
   children,
+  className,
 }: {
   title: string;
   children: ReactNode;
+  className?: string;
 }) => (
-  <dl className="m-2">
+  <dl className={`m-2 ${className || ""}`}>
     <dt className="font-bold mb-1">{title}</dt>
     <dd>{children}</dd>
   </dl>

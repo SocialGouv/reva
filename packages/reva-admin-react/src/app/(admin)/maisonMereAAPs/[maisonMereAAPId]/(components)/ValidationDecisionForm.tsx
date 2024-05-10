@@ -5,7 +5,10 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ValidationDecisionFormData, validationDecisionFormSchema } from "./validationDecisionFormSchema";
+import {
+  ValidationDecisionFormData,
+  validationDecisionFormSchema,
+} from "./validationDecisionFormSchema";
 import { useUpdateMaisonMereAAPLegalValidationDecision } from "./useUpdateMaisonMereAAPLegalValidationDecision";
 
 export default function ValidationDecisionForm({
@@ -15,9 +18,8 @@ export default function ValidationDecisionForm({
   maisonMereAAPId: string;
   aapUpdatedDocumentsAt: number;
 }) {
-  const {
-    updateMaisonMereAAPLegalValidationDecisionMutate,
-  } = useUpdateMaisonMereAAPLegalValidationDecision(maisonMereAAPId);
+  const { updateMaisonMereAAPLegalValidationDecisionMutate } =
+    useUpdateMaisonMereAAPLegalValidationDecision(maisonMereAAPId);
 
   const {
     register,
@@ -52,8 +54,8 @@ export default function ValidationDecisionForm({
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <fieldset className="grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-2">
+          <fieldset className="grid pt-4">
             <RadioButtons
               small
               state={errors.decision ? "error" : "default"}
@@ -61,29 +63,30 @@ export default function ValidationDecisionForm({
               legend="Décision prise sur cette inscription"
               options={[
                 {
-                  label: "Accepté",
+                  label: "Validé",
                   nativeInputProps: {
                     value: "VALIDE",
-                    ...register("decision")
+                    ...register("decision"),
                   },
                 },
                 {
                   label: "Demande de précision",
                   nativeInputProps: {
                     value: "DEMANDE_DE_PRECISION",
-                    ...register("decision")
+                    ...register("decision"),
                   },
                 },
               ]}
             />
             <Input
+              className="mt-2"
               label="Commentaire à destination de l'AAP : "
               textArea
               state={errors.aapComment ? "error" : "default"}
               stateRelatedMessage={errors.aapComment?.message}
               nativeTextAreaProps={{
                 rows: 4,
-                ...register("aapComment")
+                ...register("aapComment"),
               }}
             />
             <SmallNotice>
@@ -98,8 +101,8 @@ export default function ValidationDecisionForm({
               hintText="(optionnel)"
               textArea
               nativeTextAreaProps={{
-                rows: 8,
-                ...register("internalComment")
+                rows: 10,
+                ...register("internalComment"),
               }}
             />
             <SmallNotice>
@@ -115,10 +118,7 @@ export default function ValidationDecisionForm({
           >
             Retour
           </Button>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" disabled={isSubmitting}>
             Envoyer
           </Button>
         </div>
