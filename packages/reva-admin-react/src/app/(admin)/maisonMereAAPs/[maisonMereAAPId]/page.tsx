@@ -214,6 +214,7 @@ const MaisonMereAAPPage = () => {
                 decisionTakenAt: new Date(d.decisionTakenAt),
               }),
             )}
+            statutValidationInformationsJuridiquesMaisonMereAAP={maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP}
           />
         ) : (
           <OrganismSummary
