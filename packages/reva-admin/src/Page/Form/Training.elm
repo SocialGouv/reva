@@ -2,7 +2,7 @@ module Page.Form.Training exposing (..)
 
 import Accessibility exposing (Html, div, text)
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy)
+import Data.Candidacy exposing (Candidacy, candidacyIdToString)
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
@@ -10,7 +10,6 @@ import Data.Form.Training exposing (scopeToString)
 import Data.Referential exposing (Referential)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
-import Route
 
 
 form : Context -> FormData -> ( Candidacy, Referential ) -> Form
@@ -41,8 +40,8 @@ form context _ ( candidacy, referential ) =
           , Form.CheckboxList "Savoirs de base" <|
                 Data.Form.Helper.toIdList referential.basicSkills
           )
-        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") False)
-        , ( keys.otherTraining, Form.Textarea "Autres actions de formation" Nothing False)
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") False )
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formation" Nothing False )
         , ( keys.certificationScope
           , Form.RadioList "Le candidat / la candidate vise :" certificationScopes
           )
@@ -73,6 +72,6 @@ editCcn context candidacy =
             |> Button.tertiary
             |> Button.small
             |> Button.withAttrs [ class "ml-12 fr-fi-edit-line fr-btn--icon-left" ]
-            |> Button.linkButton (Route.toString context.baseUrl <| Route.Typology candidacy.id { page = 1 })
+            |> Button.linkButton (context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString candidacy.id ++ "/typology")
             |> Button.view
         ]

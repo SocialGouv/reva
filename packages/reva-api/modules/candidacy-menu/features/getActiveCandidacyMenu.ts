@@ -56,7 +56,7 @@ export const getActiveCandidacyMenu = async ({
       });
     } else if (candidacy.firstAppointmentOccuredAt) {
       trainingUrl = buildUrl({
-        adminType: "Elm",
+        adminType: "React",
         suffix: "typology",
       });
     } else {
