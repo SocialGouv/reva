@@ -7,6 +7,12 @@ import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
+import { useEffect } from "react";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { useRouter } from "next/navigation";
+import { ADMIN_ELM_URL } from "@/config/config";
 
 const typologyFormSchema = z.object({
   typology: z.enum([
@@ -16,28 +22,60 @@ const typologyFormSchema = z.object({
     "AIDANTS_FAMILIAUX",
     "BENEVOLE",
   ]),
+  ccnId: z.string().optional(),
 });
 type TypologyFormData = z.infer<typeof typologyFormSchema>;
 
 const TypologyPage = () => {
-  const { candidacy } = useTypologyPage();
+  const router = useRouter();
 
-  const { register, control } = useForm<TypologyFormData>({
-    resolver: zodResolver(typologyFormSchema),
-    defaultValues: {
-      typology:
-        (candidacy?.typology as TypologyFormData["typology"]) || "NON_SPECIFIE",
-    },
-  });
+  const { candidacy, submitTypologyForm } = useTypologyPage();
+
+  const { register, control, setValue, handleSubmit, reset } =
+    useForm<TypologyFormData>({
+      resolver: zodResolver(typologyFormSchema),
+      defaultValues: {
+        typology:
+          (candidacy?.typology as TypologyFormData["typology"]) ||
+          "NON_SPECIFIE",
+        ccnId: candidacy?.conventionCollective?.id,
+      },
+    });
 
   const { typology } = useWatch({ control });
+
+  const handleCcnChoice = (ccnId: string) => {
+    console.log({ ccnId });
+    setValue("ccnId", ccnId);
+    handleFormSubmit();
+  };
+
+  const handleFormSubmit = handleSubmit(async (data) => {
+    try {
+      await submitTypologyForm.mutateAsync(data);
+      router.push(`${ADMIN_ELM_URL}/candidacies/${candidacy?.id}/training`);
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  });
+
+  useEffect(
+    () =>
+      reset({
+        typology:
+          (candidacy?.typology as TypologyFormData["typology"]) ||
+          "NON_SPECIFIE",
+        ccnId: candidacy?.conventionCollective?.id,
+      }),
+    [candidacy, reset],
+  );
 
   return (
     <>
       <CandidacyBackButton candidacyId={candidacy?.id as string} />
       <h1>Définition du parcours</h1>
       <FormOptionalFieldsDisclaimer />
-      <>
+      <form className="flex flex-col" onSubmit={handleFormSubmit}>
         <Select
           className="max-w-sm"
           label="Typologie"
@@ -51,49 +89,59 @@ const TypologyPage = () => {
           <option value="AIDANTS_FAMILIAUX">Aidant familial</option>
           <option value="BENEVOLE">Bénévole</option>
         </Select>
-      </>
-      {typology !== "NON_SPECIFIE" && (
-        <>
-          <span className="font-bold">Convention collective sélectionnée</span>
-          <div className="flex flex-col mt-2 bg-gray-100 rounded-lg p-6 mb-8">
-            {candidacy?.conventionCollective ? (
-              <>
-                <p className="m-0 text-gray-500">
-                  {candidacy.conventionCollective.idcc}
+        {(typology === "DEMANDEUR_EMPLOI" || typology === "SALARIE_PRIVE") && (
+          <>
+            <span className="font-bold">
+              Convention collective sélectionnée
+            </span>
+            <div className="flex flex-col mt-2 bg-gray-100 rounded-xl p-4 mb-10">
+              {candidacy?.conventionCollective ? (
+                <>
+                  <p className="m-0 text-gray-500">
+                    {candidacy.conventionCollective.idcc}
+                  </p>
+                  <p className="m-0 font-bold">
+                    {candidacy.conventionCollective.label}
+                  </p>
+                </>
+              ) : (
+                <p className="text-gray-400 text-sm font-medium m-auto p-2">
+                  Aucune convention collective sélectionnée
                 </p>
-                <p className="m-0 font-bold">
-                  {candidacy.conventionCollective.label}
+              )}
+            </div>
+            <p className="uppercase font-bold text-xs mb-2">
+              CONVENTION COLLECTIVE (UNE SEULE CONVENTION POUR UN CANDIDAT)
+            </p>
+            <Alert
+              severity="info"
+              title="Comment trouver la convention collective ?"
+              description={
+                <p>
+                  Vous pouvez retrouver le nom de sa convention collective sur
+                  son bulletin de paie ou sur son contrat de travail.
+                  <br />
+                  <a
+                    className="fr-link"
+                    href="https://code.travail.gouv.fr/outils/convention-collective"
+                    target="_blank"
+                  >
+                    Retrouvez la liste complète sur le site du code du travail
+                  </a>
                 </p>
-              </>
-            ) : (
-              <p className="text-gray-400 text-sm font-medium m-auto">
-                Aucune convention collective sélectionnée
-              </p>
-            )}
-          </div>
-          <p className="uppercase font-bold text-xs mb-2">
-            CONVENTION COLLECTIVE (UNE SEULE CONVENTION POUR UN CANDIDAT)
-          </p>
-          <Alert
-            severity="info"
-            title="Comment trouver la convention collective ?"
-            description={
-              <p>
-                Vous pouvez retrouver le nom de sa convention collective sur son
-                bulletin de paie ou sur son contrat de travail.
-                <br />
-                <a
-                  className="fr-link"
-                  href="https://code.travail.gouv.fr/outils/convention-collective"
-                  target="_blank"
-                >
-                  Retrouvez la liste complète sur le site du code du travail
-                </a>
-              </p>
-            }
-          />
-        </>
-      )}
+              }
+            />
+            <p className="mt-8 mb-2">
+              Recherchez parmi les conventions collectives disponibles
+            </p>
+            <CcnSearchList onCcnButtonClick={handleCcnChoice} />
+          </>
+        )}
+
+        {(typology === "AIDANTS_FAMILIAUX" || typology === "BENEVOLE") && (
+          <Button className="ml-auto">Suivant</Button>
+        )}
+      </form>
     </>
   );
 };

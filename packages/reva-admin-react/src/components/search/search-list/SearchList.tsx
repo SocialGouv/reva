@@ -9,7 +9,7 @@ type SearchResultsPage<T> = {
 };
 
 export interface SearchListProps<T> {
-  title: string;
+  title?: string;
   searchFilter: string;
   searchResultsPage: SearchResultsPage<T>;
   updateSearchFilter: (searchFilter: string) => void;
@@ -39,9 +39,11 @@ export const SearchList = <T,>({
 
   return (
     <div className="flex flex-col">
-      <h4 className="text-2xl font-bold mb-6">
-        {`${title} (${searchResultsPage.info.totalRows})`}
-      </h4>
+      {title && (
+        <h4 className="text-2xl font-bold mb-6">
+          {`${title} (${searchResultsPage.info.totalRows})`}
+        </h4>
+      )}
 
       <SearchFilterBar
         className="mb-6"

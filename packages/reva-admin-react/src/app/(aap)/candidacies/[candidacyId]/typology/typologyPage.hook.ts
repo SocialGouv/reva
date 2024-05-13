@@ -1,11 +1,34 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { CandidateTypology } from "@/graphql/generated/graphql";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyById = graphql(`
   query getCandidacyForCandidacyTypologyPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      id
+      typology
+      conventionCollective {
+        id
+        idcc
+        label
+      }
+    }
+  }
+`);
+
+const submitTypologyFormMutation = graphql(`
+  mutation submitTypologyFormForCandidacyTypologyPage(
+    $candidacyId: ID!
+    $ccnId: ID
+    $typology: CandidateTypology!
+  ) {
+    candidacy_submitTypologyForm(
+      candidacyId: $candidacyId
+      ccnId: $ccnId
+      typology: $typology
+    ) {
       id
       typology
       conventionCollective {
@@ -32,7 +55,22 @@ export const useTypologyPage = () => {
       }),
   });
 
+  const submitTypologyForm = useMutation({
+    mutationFn: ({
+      ccnId,
+      typology,
+    }: {
+      ccnId?: string;
+      typology: CandidateTypology;
+    }) =>
+      graphqlClient.request(submitTypologyFormMutation, {
+        candidacyId,
+        ccnId,
+        typology,
+      }),
+  });
+
   const candidacy = getCandidacyByIdData?.getCandidacyById;
 
-  return { candidacy };
+  return { candidacy, submitTypologyForm };
 };
