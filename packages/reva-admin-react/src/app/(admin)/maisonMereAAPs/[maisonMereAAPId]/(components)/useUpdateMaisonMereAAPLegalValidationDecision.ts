@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { UpdateMaisonMereAapLegalValidationDecisionInput } from "@/graphql/generated/graphql";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const updateMaisonMereAAPLegalValidationDecisionMutation = graphql(`
   mutation updateLegalInformationValidationDecision(
@@ -16,9 +16,15 @@ const updateMaisonMereAAPLegalValidationDecisionMutation = graphql(`
 export const useUpdateMaisonMereAAPLegalValidationDecision = (
   maisonMereAAPId: string,
 ) => {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
   const { mutateAsync: updateMaisonMereAAPLegalValidationDecisionMutate } =
     useMutation({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["getMaisonMereAAP", maisonMereAAPId]
+        })
+      },
       mutationKey: [
         "updateMaisonMereAAPLegalValidationStatus",
         maisonMereAAPId,
