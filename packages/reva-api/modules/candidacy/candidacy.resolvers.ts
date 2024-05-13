@@ -728,7 +728,9 @@ const unsafeResolvers = {
         }
 
         await updateCandidacyTypologyAndCcn(context.auth, payload);
-        return candidacyDb.getCandidacyFromId(payload.candidacyId);
+        return (
+          await candidacyDb.getCandidacyFromId(payload.candidacyId)
+        ).unsafeCoerce();
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
