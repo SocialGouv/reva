@@ -27,7 +27,7 @@ export const sendTrainingEmail = async (email: string, token: string) => {
           Cela permettra à votre architecte accompagnateur de parcours de transmettre votre dossier au certificateur et de faire la demande de financement de votre projet.
           <br />
           <br />
-          Nos équipes ont élaboré <a href="https://scribehow.com/shared/Validation_du_parcours_candidat__QHFNcjJ4T56E3cSYEphpYQ">un guide en ligne pour vous aider dans cette démarche</a>.
+          Nos équipes ont élaboré <a href="https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw#6062f89d">un guide en ligne pour vous aider dans cette démarche</a>.
           <br />
           <br />
           L’équipe France VAE
