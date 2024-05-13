@@ -15,7 +15,6 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacy as Candidacy
 import Page.Loading
 import Page.Search.Candidacies as Candidacies exposing (Model)
-import Page.Search.Typology as Typology
 import Page.SiteMap as SiteMap
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
@@ -50,7 +49,6 @@ type alias Model =
 type Page
     = Candidacies Candidacies.Model
     | Candidacy Candidacy.Model
-    | Typology Typology.Model
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
@@ -64,7 +62,6 @@ type Msg
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
     | GotCandidacyMsg Candidacy.Msg
-    | GotTypologyMsg Typology.Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
@@ -126,10 +123,6 @@ viewPage model =
             Candidacy.view model.context candidacyModel
                 |> Html.map GotCandidacyMsg
 
-        Typology typologyModel ->
-            Typology.view model.context typologyModel
-                |> Html.map GotTypologyMsg
-
         NotFound ->
             h1 [] [ text "Page introuvable" ]
 
@@ -183,21 +176,6 @@ changeRouteTo context route model =
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
                 |> updateWith Candidacy GotCandidacyMsg model
-
-        ( Route.Typology candidacyId filters, Typology typologyModel ) ->
-            typologyModel
-                |> Typology.withFilters context
-                    { candidacyId = candidacyId
-                    , page = filters.page
-                    }
-                |> updateWith Typology GotTypologyMsg model
-
-        ( Route.Typology candidacyId filters, _ ) ->
-            Typology.init context
-                { candidacyId = candidacyId
-                , page = filters.page
-                }
-                |> updateWith Typology GotTypologyMsg model
 
         ( Route.Login, _ ) ->
             noChange
@@ -266,16 +244,6 @@ update msg model =
             in
             ( { model | page = Candidacy newCandidacyModel }
             , Cmd.map GotCandidacyMsg candidacyCmd
-            )
-
-        -- Typology
-        ( GotTypologyMsg typlogyMsg, Typology typolgyModel ) ->
-            let
-                ( newTypologyModel, typologyCmd ) =
-                    Typology.update model.context typlogyMsg typolgyModel
-            in
-            ( { model | page = Typology newTypologyModel }
-            , Cmd.map GotTypologyMsg typologyCmd
             )
 
         -- Auth

@@ -2,7 +2,6 @@ module Route exposing
     ( CandidacyFilters
     , CertificationsFilters
     , Route(..)
-    , TypologyFilters
     , emptyCandidacyFilters
     , fromUrl
     , href
@@ -10,7 +9,7 @@ module Route exposing
     )
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
-import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
+import Data.Candidacy exposing (candidacyIdFromString, candidacyIdToString)
 import Html
 import Html.Attributes
 import Url
@@ -24,10 +23,6 @@ type alias CandidacyFilters =
     { status : CandidacyStatusFilter, page : Int }
 
 
-type alias TypologyFilters =
-    { page : Int }
-
-
 type alias CertificationsFilters =
     { organismId : Maybe String
     , page : Int
@@ -36,7 +31,6 @@ type alias CertificationsFilters =
 
 type Route
     = Candidacy Tab.Tab
-    | Typology CandidacyId TypologyFilters
     | Candidacies CandidacyFilters
     | Home
     | Login
@@ -65,9 +59,6 @@ parser baseUrl =
         candidacyStatusStringToStatusFilter s =
             Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
 
-        toTypologyRoute candidacyId p =
-            Typology (candidacyIdFromString candidacyId) (TypologyFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
-
         toCandidaciesRoute s p =
             Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
     in
@@ -90,7 +81,6 @@ parser baseUrl =
                 , subLevel "candidacies" "payment" |> candidacyTab Tab.PaymentRequest
                 , subLevel "candidacies" "payment" </> s "confirmation" |> candidacyTab Tab.PaymentRequestConfirmation
                 , subLevel "candidacies" "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
-                , subLevel "candidacies" "typology" <?> Query.string "page" |> map toTypologyRoute
                 , subLevel "candidacies" "training" |> candidacyTab Tab.Training
                 , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
@@ -120,9 +110,6 @@ toString baseUrl route =
 
         subLevel candidacyId path params =
             topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
-
-        typologyFiltersToParams filters =
-            [ Url.Builder.int "page" filters.page ]
     in
     case route of
         Home ->
@@ -146,9 +133,6 @@ toString baseUrl route =
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
-
-        Typology candidacyId filters ->
-            subLevel candidacyId [ "typology" ] (typologyFiltersToParams filters)
 
 
 tabToString :
