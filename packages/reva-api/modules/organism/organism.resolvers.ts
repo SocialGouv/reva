@@ -56,6 +56,7 @@ import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./organism.security";
+import { sendLegalInformationDocumentsApprovalEmail, sendLegalInformationDocumentsUpdateNeededEmail } from "./emails/sendLegalInformationDocumentsDecisionEmail";
 
 const unsafeResolvers = {
   Account: {
@@ -440,12 +441,25 @@ const unsafeResolvers = {
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
-      await adminUpdateLegalInformationValidationStatus({
+      const maisonMereAAP = await adminUpdateLegalInformationValidationStatus({
         maisonMereAAPId: params.data.maisonMereAAPId,
         maisonMereAAPData: {
           statutValidationInformationsJuridiquesMaisonMereAAP,
         },
       });
+
+      if (params.data.decision === "DEMANDE_DE_PRECISION") {
+        await sendLegalInformationDocumentsUpdateNeededEmail({
+          email: maisonMereAAP.gestionnaire.email,
+          managerName: `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`,
+          aapComment: decision.aapComment,
+        });
+      } else if (params.data.decision === "VALIDE") {
+        await sendLegalInformationDocumentsApprovalEmail({
+          email: maisonMereAAP.gestionnaire.email,
+          managerName: `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`,
+        });
+      }
 
       return decision;
     },

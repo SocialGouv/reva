@@ -100,28 +100,32 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
 }) => {
   const { maisonMereAAPId } = params;
 
-  if (
-    params.maisonMereAAPData
-      .statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
-  ) {
-    try {
-      await prismaClient.maisonMereAAP.update({
-        where: { id: maisonMereAAPId },
-        data: params.maisonMereAAPData,
-      });
+  try {
+    const maisonMereAAP = await prismaClient.maisonMereAAP.update({
+      where: { id: maisonMereAAPId },
+      data: params.maisonMereAAPData,
+      include: {
+        gestionnaire: true,
+      }
+    });
+
+    if (
+      params.maisonMereAAPData
+        .statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
+    ) {
       await deleteOldMaisonMereAAPLegalInformationDocuments({
         maisonMereAAPId,
       });
-      return;
-    } catch (e) {
-      throw new Error(
-        `Impossible de modifier le statut de validation des documents légaux: ${e}.`,
-      );
     }
+    return maisonMereAAP;
+  } catch (e) {
+    throw new Error(
+      `Impossible de modifier le statut de validation des documents légaux: ${e}.`,
+    );
   }
 
-  await prismaClient.maisonMereAAP.update({
-    where: { id: maisonMereAAPId },
-    data: params.maisonMereAAPData,
-  });
+  // await prismaClient.maisonMereAAP.update({
+  //   where: { id: maisonMereAAPId },
+  //   data: params.maisonMereAAPData,
+  // });
 };
