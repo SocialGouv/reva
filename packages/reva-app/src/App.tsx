@@ -1,9 +1,7 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
-import { useKeycloakContext } from "contexts/keycloakContext";
 import { CertificateDetails } from "pages/CertificateDetails";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect, useRef } from "react";
-import { useCrisp } from "utils/useCrisp";
 
 import { Footer } from "./components/organisms/Footer";
 import { Header } from "./components/organisms/Header/Header";
@@ -42,24 +40,6 @@ const ScrollTopWrapper = (props: ScrollTopWrapperProps): JSX.Element => {
 
 function App() {
   const { state, mainService } = useMainMachineContext();
-  const authContext = useKeycloakContext();
-
-  const { configureUser, resetUser } = useCrisp();
-
-  useEffect(() => {
-    if (authContext?.keycloakUser) {
-      const { id, email } = authContext?.keycloakUser;
-
-      configureUser({
-        id,
-        email,
-      });
-    } else {
-      resetUser();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authContext?.keycloakUser]);
 
   // @ts-ignore
   window.state = state;

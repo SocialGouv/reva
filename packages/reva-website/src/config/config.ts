@@ -13,8 +13,4 @@ export const MATOMO = {
   CONTAINER_NAME: process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME,
 };
 
-export const CRISP = {
-  WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
-};
-
 export const FeatureFlags = {};

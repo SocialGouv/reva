@@ -4,7 +4,6 @@ import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import { Elm } from "../src/Main.elm";
 import keycloakElement from "./custom-elements/keycloak";
 import AuthenticatedLinkElement from "./custom-elements/authenticated-link";
-import { CrispElm } from "./crisp";
 import { initUserguiding } from "./userguiding";
 import { initProduktly } from "./produktly";
 
@@ -13,9 +12,6 @@ customElements.define(
   AuthenticatedLinkElement.name,
   AuthenticatedLinkElement.clazz,
 );
-
-// Init Crisp
-CrispElm.getInstance();
 
 // Init Elm app
 const app = Elm.Main.init({

@@ -10,7 +10,6 @@ import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Keycloak from "keycloak-js";
-import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -19,7 +18,6 @@ import {
   KeycloakProvider,
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
-import { useCrisp } from "@/components/crisp/useCrisp";
 import { Produktly } from "@/components/produktly/Produktly";
 import {
   HELP_BUBBLE_URL,
@@ -70,9 +68,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 }
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const { authenticated, keycloakUser } = useKeycloakContext();
-
-  const { configureUser, resetUser } = useCrisp();
+  const { authenticated } = useKeycloakContext();
 
   const {
     isAdmin,
@@ -94,21 +90,6 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     }
     return "lg:bg-unknown";
   };
-
-  useEffect(() => {
-    if (keycloakUser) {
-      const { id, email } = keycloakUser;
-
-      configureUser({
-        id,
-        email,
-      });
-    } else {
-      resetUser();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keycloakUser]);
 
   return (
     <div className="w-full min-h-screen flex flex-col">
