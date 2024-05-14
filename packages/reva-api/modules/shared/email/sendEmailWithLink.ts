@@ -13,7 +13,7 @@ export const sendEmailWithLink = async ({
 }: {
   to: { email: string } | { email: string }[];
   token?: string;
-  action?: "registration" | "login" | "confirmEmail" | "admin" | "";
+  action?: "registration" | "login" | "confirmEmail" | "admin" | "agencies-settings/legal-information" | "";
   customUrl?: string;
   app?: "app" | "admin" | "admin2";
   htmlContent: (url: string) => { html: string };

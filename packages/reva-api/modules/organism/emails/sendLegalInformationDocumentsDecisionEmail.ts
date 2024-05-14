@@ -1,6 +1,10 @@
 import mjml2html from "mjml";
 
-import { sendEmailWithLink, sendGenericEmail, templateMail } from "../../shared/email";
+import {
+  sendEmailWithLink,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
 import { logger } from "../../shared/logger";
 
 // const baseUrl = process.env.APP_BASE_URL || "https://vae.gouv.fr";
@@ -51,7 +55,8 @@ export const sendLegalInformationDocumentsUpdateNeededEmail = async ({
   aapComment: string;
 }) => {
   return sendEmailWithLink({
-    app: "admin",
+    app: "admin2",
+    action: "agencies-settings/legal-information",
     to: { email },
     htmlContent: (url: string) => {
       const htmlContent = mjml2html(
@@ -62,14 +67,15 @@ export const sendLegalInformationDocumentsUpdateNeededEmail = async ({
           <p>Après examen de l’administrateur VAE, votre compte ne peut être vérifié pour les raisons suivantes : </p>
           <p style="border-left: 3px solid #ccc; padding-left: 15px;">${aapComment}</p>
           <p>Rendez-vous dans votre espace professionnel afin de renvoyer vos documents : </p>
+        `,
+          labelCTA: "Accéder à mon compte",
+          url,
+          bottomLine: `
           <p>Besoin d’aide ? Vous pouvez nous contacter à l’adresse support@vae.gouv.fr.</p>
 
           <p>Cordialement,</p>
           
-          <p>L’équipe France VAE</p>
-        `,
-        labelCTA: "Accéder à mon compte",
-        url,
+          <p>L’équipe France VAE</p>`,
         }),
       );
       if (htmlContent.errors.length > 0) {
@@ -79,7 +85,7 @@ export const sendLegalInformationDocumentsUpdateNeededEmail = async ({
         logger.error(errorMessage);
         throw new Error(errorMessage);
       }
-      return htmlContent
+      return htmlContent;
     },
     subject: "Une action est attendue de votre part dans votre espace",
   });
