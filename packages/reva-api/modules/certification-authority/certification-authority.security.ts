@@ -1,4 +1,9 @@
-import { defaultSecurity, isAdmin, isAnyone } from "../shared/security/presets";
+import {
+  defaultSecurity,
+  isAdmin,
+  isAdminOrManager,
+  isAnyone,
+} from "../shared/security/presets";
 
 export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
@@ -10,6 +15,8 @@ export const resolversSecurityMap = {
     isAdmin,
   "Query.certification_authority_getCertificationAuthorityLocalAccount":
     isAdmin,
+  "Query.certification_authority_getCertificationAuthoritiesToTransferCandidacy":
+    isAdminOrManager,
 
   "Mutation.certification_authority_updateCertificationAuthority": isAnyone, //security handled in resolver
   "Mutation.certification_authority_updateCertificationAuthorityDepartmentsAndCertifications":
@@ -20,4 +27,6 @@ export const resolversSecurityMap = {
     isAnyone, //security handled in resolver
   "Mutation.certification_authority_deleteCertificationAuthorityLocalAccount":
     isAnyone, //security handled in resolver
+  "Mutation.certification_authority_transferCandidacyToAnotherCertificationAuthority":
+    isAdminOrManager,
 };

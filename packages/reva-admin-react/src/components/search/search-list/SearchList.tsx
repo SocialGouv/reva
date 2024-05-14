@@ -14,6 +14,7 @@ export interface SearchListProps<T> {
   searchResultsPage: SearchResultsPage<T>;
   updateSearchFilter: (searchFilter: string) => void;
   children?: (searchResult: T) => ReactNode;
+  childrenContainerClassName?: string;
 }
 
 export const SearchList = <T,>({
@@ -22,6 +23,7 @@ export const SearchList = <T,>({
   children,
   searchResultsPage,
   updateSearchFilter,
+  childrenContainerClassName,
 }: SearchListProps<T>) => {
   const pathname = usePathname();
 
@@ -51,7 +53,9 @@ export const SearchList = <T,>({
         resultCount={searchResultsPage.info.totalRows}
         onSearchFilterChange={updateSearchFilter}
       />
-      <ul className="flex flex-col gap-5 my-0 pl-0">
+      <ul
+        className={`flex flex-col gap-5 my-0 pl-0 ${childrenContainerClassName}`}
+      >
         {searchResultsPage.rows.map((r) => children?.(r))}
       </ul>
 

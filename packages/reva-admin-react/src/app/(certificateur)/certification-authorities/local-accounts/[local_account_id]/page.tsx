@@ -8,14 +8,14 @@ import {
   successToast,
 } from "@/components/toast/toast";
 
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import { useParams } from "next/navigation";
 import { useCertificationAuthorityQueries } from "../certificationAuthorityQueries";
 import {
   FormLocalAccount,
   LocalAccount,
 } from "../components/form-local-account";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 
 const deleteConfirmationModal = createModal({
   id: "delete-confirmation-modal",
@@ -62,7 +62,9 @@ const EditLocalAccountPage = () => {
       await useDeleteCertificationAuthorityLocalAccountMutation.mutateAsync(
         local_account_id as string,
       );
-      successToast("Compte local supprimé");
+      successToast({
+        title: "Compte local supprimé",
+      });
       router.push("/certification-authorities/local-accounts");
     } catch (e) {
       graphqlErrorToast(e);
@@ -100,7 +102,9 @@ const EditLocalAccountPage = () => {
               });
               await refetchCertifictionAuthority();
 
-              successToast("Le compte local a bien été mis à jour");
+              successToast({
+                title: "Le compte local a bien été mis à jour",
+              });
 
               router.push("/certification-authorities/local-accounts");
             } catch (error) {

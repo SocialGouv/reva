@@ -1,14 +1,14 @@
 "use client";
-import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
-import { useParams, useRouter } from "next/navigation";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import UpdateOrReplaceCertificationForm, {
   UpdateOrReplaceCertificationFormData,
 } from "@/app/(admin)/certifications/[certificationId]/_components/UpdateOrReplaceCertificationForm";
+import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
+import { BackButton } from "@/components/back-button/BackButton";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Certification } from "@/graphql/generated/graphql";
 import { parse } from "date-fns";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { BackButton } from "@/components/back-button/BackButton";
+import { useParams, useRouter } from "next/navigation";
 
 const UpdateCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -48,7 +48,9 @@ const UpdateCertificationPage = () => {
         expiresAt: parse(data.expiresAt, "yyyy-MM-dd", new Date()).getTime(),
       });
 
-      successToast("Certification enregistrée");
+      successToast({
+        title: "Certification enregistrée",
+      });
       router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);

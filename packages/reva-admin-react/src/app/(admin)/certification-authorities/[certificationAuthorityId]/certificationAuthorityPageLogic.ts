@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import { useParams } from "next/navigation";
-import { useMemo, useEffect } from "react";
-import { useForm, useController } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
@@ -282,7 +282,9 @@ export const useCertificationAuthorityPageLogic = () => {
           .filter((c) => c.selected)
           .map((c) => c.id),
       });
-      successToast("modifications enregistrées");
+      successToast({
+        title: "modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

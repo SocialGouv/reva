@@ -97,8 +97,8 @@ type CertificationAuhtorityOrLocalAccountPaginated
     = CertificationAuhtorityOrLocalAccountPaginated
 
 
-type CertificationAuhtorityPaginated
-    = CertificationAuhtorityPaginated
+type CertificationAuthorityPaginated
+    = CertificationAuthorityPaginated
 
 
 type CertificationAuthority

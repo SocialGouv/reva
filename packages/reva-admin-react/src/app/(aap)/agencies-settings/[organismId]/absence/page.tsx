@@ -1,5 +1,4 @@
 "use client";
-import { useAbsencePage } from "./absencePage.hook";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -8,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useAbsencePage } from "./absencePage.hook";
 
 const schema = z.object({
   structureVisible: z.enum(["oui", "non"]),
@@ -47,7 +47,9 @@ const AbsencePage = () => {
       organismId: organism?.id,
       fermePourAbsenceOuConges: data.structureVisible === "non",
     });
-    successToast("modifications enregistrées");
+    successToast({
+      title: "modifications enregistrées",
+    });
     await refetchOrganism();
   });
 

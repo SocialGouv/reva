@@ -1,18 +1,18 @@
 "use client";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useCallback, useEffect } from "react";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const schema = z
   .object({
@@ -130,7 +130,9 @@ const AdmissibilityPage = () => {
             : null,
         },
       });
-      successToast("Les modifications ont bien été enregistrées");
+      successToast({
+        title: "Les modifications ont bien été enregistrées",
+      });
       router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);

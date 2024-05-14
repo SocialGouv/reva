@@ -13,18 +13,16 @@ import Admin.Enum.JuryCategoryFilter
 import Admin.Enum.StatutValidationInformationsJuridiquesMaisonMereAAP
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
-import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.Union
 import Data.Scalar
-import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
+import Graphql.Internal.Builder.Argument as Argument
 import Graphql.Internal.Builder.Object as Object
-import Graphql.Internal.Encode as Encode exposing (Value)
-import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
+import Graphql.Internal.Encode as Encode
+import Graphql.Operation exposing (RootQuery)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
-import Json.Decode as Decode exposing (Decoder)
+import Json.Decode as Decode
 
 
 type alias AccountGetAccountsOptionalArguments =
@@ -277,7 +275,7 @@ type alias CertificationAuthorityGetCertificationAuthoritiesOptionalArguments =
 
 certification_authority_getCertificationAuthorities :
     (CertificationAuthorityGetCertificationAuthoritiesOptionalArguments -> CertificationAuthorityGetCertificationAuthoritiesOptionalArguments)
-    -> SelectionSet decodesTo Admin.Object.CertificationAuhtorityPaginated
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityPaginated
     -> SelectionSet decodesTo RootQuery
 certification_authority_getCertificationAuthorities fillInOptionals____ object____ =
     let

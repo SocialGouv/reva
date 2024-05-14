@@ -9,8 +9,8 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { useMemo, useCallback, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useCallback, useEffect, useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -148,7 +148,9 @@ const CompetenciesBlockPage = () => {
           text: c.text,
         })),
       });
-      successToast("Modifications enregistrées");
+      successToast({
+        title: "Modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

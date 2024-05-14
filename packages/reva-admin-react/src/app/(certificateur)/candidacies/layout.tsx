@@ -50,10 +50,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
   const { isFeatureActive } = useFeatureflipping();
 
-  const {
-    data: getFeasibilityCountByCategoryResponse,
-    status: getFeasibilityCountByCategoryStatus,
-  } = useQuery({
+  const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: ["getFeasibilityCountByCategory", searchFilter],
     queryFn: () =>
       graphqlClient.request(getFeasibilityCountByCategoryQuery, {
@@ -72,10 +69,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       }),
   });
 
-  const {
-    data: getJuryCountByCategoryResponse,
-    status: getJuryCountByCategoryStatus,
-  } = useQuery({
+  const { data: getJuryCountByCategoryResponse } = useQuery({
     queryKey: ["getJuryCountByCategory", searchFilter],
     queryFn: () =>
       graphqlClient.request(getJuryCountByCategoryQuery, {

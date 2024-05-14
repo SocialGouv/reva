@@ -1,15 +1,15 @@
 "use client";
-import { format } from "date-fns";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useRouter } from "next/navigation";
 import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
 import { BackButton } from "@/components/back-button/BackButton";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const schema = z.object({
   decisionComment: z.string().min(1, "Ce champ est obligatoire"),
@@ -36,7 +36,9 @@ const DossierDeValidationProblemPage = () => {
         dossierDeValidationId: dossierDeValidation?.id || "",
         decisionComment: data.decisionComment,
       });
-      successToast("Problème signalé avec succès");
+      successToast({
+        title: "Problème signalé avec succès",
+      });
       router.push(`/candidacies/${candidacy?.id}/dossier-de-validation`);
     } catch (e) {
       graphqlErrorToast(e);

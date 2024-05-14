@@ -102,7 +102,9 @@ const CertificationPage = () => {
           .filter((bc) => bc.checked)
           .map((bc) => bc.competenceBlocId),
       });
-      successToast("Modifications enregistrées");
+      successToast({
+        title: "Modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

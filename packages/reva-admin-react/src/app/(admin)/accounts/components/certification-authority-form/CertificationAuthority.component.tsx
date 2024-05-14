@@ -58,7 +58,9 @@ const CertificationAuthorityForm = (props: Props) => {
         certificationAuthorityData: data,
       });
 
-      successToast("L'autorité de certification a bien été mis à jour");
+      successToast({
+        title: "L'autorité de certification a bien été mis à jour",
+      });
     } catch (error) {
       const errorMessage =
         (error as any)?.response?.errors?.[0]?.message ||

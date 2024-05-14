@@ -1,5 +1,4 @@
 "use client";
-import { useCommercialInformationPage } from "./commercialInformationPage.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
@@ -10,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useCommercialInformationPage } from "./commercialInformationPage.hook";
 
 const schema = z.object({
   nom: z.string().optional().default(""),
@@ -65,7 +65,9 @@ const CommercialInformationPage = () => {
       organismId,
       ...data,
     });
-    successToast("modifications enregistrées");
+    successToast({
+      title: "modifications enregistrées",
+    });
     await refetchInformationsCommerciales();
   });
 

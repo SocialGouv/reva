@@ -1,8 +1,13 @@
 "use client";
 
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { ADMIN_ELM_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   useParams,
@@ -11,11 +16,6 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { ADMIN_ELM_URL } from "@/config/config";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 
 const getCertificationsQuery = graphql(`
   query getCertificationsForCandidate(
@@ -138,7 +138,9 @@ const ReorientationPage = () => {
         candidacyId,
         certificationId,
       });
-      successToast("La certification a bien été modifiée.");
+      successToast({
+        title: "La certification a bien été modifiée.",
+      });
       const backUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
         ? `/candidacies/${candidacyId}/summary`
         : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;

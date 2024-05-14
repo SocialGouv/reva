@@ -150,6 +150,7 @@ model Candidacy {
   reminderToOrganismDVDeadlineExceededSentAt DateTime?                               @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
   feasibilityFormat                          FeasibilityFormat                       @default(UPLOADED_PDF) @map("feasibility_format")
   DematerializedFeasibilityFile              DematerializedFeasibilityFile[]
+  certificationAuthorityTransferReason       String?                                 @map("certification_authority_transfer_reason")
 
   @@index([organismId])
   @@index([candidateId])

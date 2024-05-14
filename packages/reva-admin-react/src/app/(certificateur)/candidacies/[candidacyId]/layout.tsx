@@ -2,6 +2,7 @@
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
@@ -14,6 +15,9 @@ const getCandidacyQuery = graphql(`
       candidate {
         firstname
         lastname
+      }
+      jury {
+        dateOfSession
       }
     }
   }
@@ -37,8 +41,10 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const candidate = getCandidacyResponse?.getCandidacyById?.candidate;
+  const juryDateOfSession =
+    getCandidacyResponse?.getCandidacyById?.jury?.dateOfSession;
 
-  const menuItem = (text: string, path: string) => ({
+  const menuItem = (text: string | ReactNode, path: string) => ({
     isActive: currentPathname.startsWith(path),
     linkProps: {
       href: path,
@@ -57,6 +63,20 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
 
   if (isFeatureActive("JURY")) {
     items.push(menuItem("Jury", `/candidacies/${candidacyId}/jury`));
+  }
+
+  if (
+    isFeatureActive("CERTIFICATEUR_TRANSFER_CANDIDACY") &&
+    !juryDateOfSession
+  ) {
+    items.push(
+      menuItem(
+        <Button size="small" priority="secondary" className="m-auto my-3">
+          Transférer la candidature
+        </Button>,
+        `/candidacies/${candidacyId}/transfer?page=1`,
+      ),
+    );
   }
 
   return (

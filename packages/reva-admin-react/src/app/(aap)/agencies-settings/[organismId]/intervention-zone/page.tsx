@@ -1,5 +1,10 @@
 "use client";
+import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
+import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/_components/zone-intervention/zoneInterventionAAP.hook";
+import { useAuth } from "@/components/auth/auth";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo } from "react";
 import { useController, useForm } from "react-hook-form";
@@ -8,11 +13,6 @@ import {
   interventionZoneFormSchema,
 } from "./interventionZoneFormSchema";
 import { useInterventionZonePage } from "./interventionZonePage.hook";
-import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/_components/zone-intervention/zoneInterventionAAP.hook";
-import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useAuth } from "@/components/auth/auth";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const InterventionZonePage = () => {
   const {
@@ -81,7 +81,9 @@ const InterventionZonePage = () => {
         organismId: organism?.id || "",
         interventionZone,
       });
-      successToast("modifications enregistrées");
+      successToast({
+        title: "modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

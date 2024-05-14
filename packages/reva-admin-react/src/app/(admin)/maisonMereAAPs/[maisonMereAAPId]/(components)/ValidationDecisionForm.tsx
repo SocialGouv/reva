@@ -1,15 +1,15 @@
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useUpdateMaisonMereAAPLegalValidationDecision } from "./useUpdateMaisonMereAAPLegalValidationDecision";
 import {
   ValidationDecisionFormData,
   validationDecisionFormSchema,
 } from "./validationDecisionFormSchema";
-import { useUpdateMaisonMereAAPLegalValidationDecision } from "./useUpdateMaisonMereAAPLegalValidationDecision";
 
 export default function ValidationDecisionForm({
   maisonMereAAPId,
@@ -45,7 +45,9 @@ export default function ValidationDecisionForm({
           aapUpdatedDocumentsAt: aapUpdatedDocumentsAt,
         },
       });
-      successToast("Décision enregistrée avec succès pour cet AAP");
+      successToast({
+        title: "Décision enregistrée avec succès pour cet AAP",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

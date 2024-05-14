@@ -1,5 +1,4 @@
 "use client";
-import { useCertificationsPage } from "./certificationsPage.hook";
 import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -9,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
+import { useCertificationsPage } from "./certificationsPage.hook";
 
 const schema = z.object({
   managedDegrees: z
@@ -68,7 +68,9 @@ const CertificationsPage = () => {
         .filter((md) => md.checked)
         .map((md) => md.id),
     });
-    successToast("modifications enregistrées");
+    successToast({
+      title: "modifications enregistrées",
+    });
     await refetchmanagedDegrees();
   });
 

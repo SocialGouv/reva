@@ -77,7 +77,7 @@ export const searchCertificationsForCandidate = async ({
     (
       (await prismaClient.$queryRawUnsafe(`select count(distinct(c.id))
       ${commonQuery}
-      `)) as { count: BigInt }[]
+      `)) as { count: bigint }[]
     )[0].count,
   );
 

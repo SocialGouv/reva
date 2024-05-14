@@ -140,7 +140,9 @@ export const useCandidateProfilePageLogic = () => {
           candidateId: candidate?.id,
           ...data,
         });
-        successToast("Les modifications ont bien été enregistrées");
+        successToast({
+          title: "Les modifications ont bien été enregistrées",
+        });
         router.push(`/candidacies/${candidacyId}/summary`);
       }
     } catch (e) {

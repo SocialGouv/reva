@@ -1,10 +1,30 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import toast from "react-hot-toast";
 
-export const successToast = (message: string) =>
-  toast.custom(() => (
-    <Alert severity="success" title={message} className="bg-white" />
-  ));
+export const successToast = ({
+  title,
+  description,
+  closable,
+}: {
+  title: string;
+  description?: string;
+  closable?: boolean;
+}) =>
+  toast.custom(
+    () => (
+      <Alert
+        severity="success"
+        title={title}
+        description={description}
+        className="bg-white"
+        closable={closable as true}
+        onClose={() => {
+          toast.dismiss();
+        }}
+      />
+    ),
+    { duration: closable ? 10000 : 3000 },
+  );
 
 export const errorToast = (message: string) =>
   toast.custom(() => (

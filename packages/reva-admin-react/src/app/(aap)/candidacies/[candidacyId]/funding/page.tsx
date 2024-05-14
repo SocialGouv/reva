@@ -16,9 +16,9 @@ import { ParcoursPersonnaliseBlock } from "./_components/ParcoursPersonnaliseBlo
 import { ResponsableFinancementBlock } from "./_components/ResponsableFinancementBlock";
 import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
-import { z } from "zod";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
+import { z } from "zod";
 
 const errorNumber = "Veuillez saisir une valeur numérique.";
 
@@ -156,7 +156,9 @@ const FundingPage = () => {
     delete dataToSend.confirmation;
     try {
       await createFundingRequestUnifvaeMutate(dataToSend);
-      successToast("La demande de financement a bien été enregistrée.");
+      successToast({
+        title: "La demande de financement a bien été enregistrée.",
+      });
     } catch (e: any) {
       if (e.response?.errors) {
         return e.response.errors.forEach((error: any) => {

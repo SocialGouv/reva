@@ -310,7 +310,9 @@ export const useCertificationAuthorityLocalAccountPageLogic = () => {
           .filter((c) => c.selected)
           .map((c) => c.id),
       });
-      successToast("modifications enregistrées");
+      successToast({
+        title: "modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }

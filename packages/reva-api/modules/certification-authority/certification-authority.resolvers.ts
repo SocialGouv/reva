@@ -14,11 +14,13 @@ import { createCertificationAuthorityLocalAccount } from "./features/createCerti
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
+import { getCertificationAuthoritiesToTransferCandidacy } from "./features/getCertificationAuthoritiesToTransferCandidacy";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
+import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
@@ -171,6 +173,16 @@ export const unsafeResolvers = {
           params.certificationAuthorityLocalAccountId,
       });
     },
+
+    certification_authority_transferCandidacyToAnotherCertificationAuthority:
+      async (
+        _parent: unknown,
+        params: {
+          candidacyId: string;
+          certificationAuthorityId: string;
+          transferReason: string;
+        },
+      ) => transferCandidacyToAnotherCertificationAuthority(params),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
@@ -226,6 +238,16 @@ export const unsafeResolvers = {
       getCertificationAuthorityLocalAccountById({
         certificationAuthorityLocalAccountId: params.id,
       }),
+
+    certification_authority_getCertificationAuthoritiesToTransferCandidacy: (
+      _parent: unknown,
+      params: {
+        candidacyId: string;
+        offset?: number;
+        limit?: number;
+        searchFilter?: string;
+      },
+    ) => getCertificationAuthoritiesToTransferCandidacy(params),
   },
 };
 

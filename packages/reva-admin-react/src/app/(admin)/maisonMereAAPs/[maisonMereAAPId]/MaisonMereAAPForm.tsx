@@ -1,18 +1,18 @@
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { UpdateMaisonMereAapInput } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { treeSelectItemsToSelectedDepartmentIds } from "@/utils";
-import { graphql } from "@/graphql/generated";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
   TreeSelect,
   TreeSelectItem,
   updateSelectedValueForAllItemsBasedOnItem,
   updateSelectedValueForAllItemsBasedOnValue,
 } from "@/components/tree-select";
+import { graphql } from "@/graphql/generated";
+import { UpdateMaisonMereAapInput } from "@/graphql/generated/graphql";
+import { treeSelectItemsToSelectedDepartmentIds } from "@/utils";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 const adminUpdateMaisonMereAAPMutation = graphql(`
   mutation adminUpdateMaisonMereAAP(
@@ -89,7 +89,9 @@ function MaisonMereAAPForm(params: {
         queryKey: ["getMaisonMereAAP", params.maisonMereAAPId],
       });
 
-      successToast("modifications enregistrées");
+      successToast({
+        title: "modifications enregistrées",
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -165,13 +167,12 @@ function MaisonMereAAPForm(params: {
 
             {!params.showLegalValidation && (
               <div className="flex flex-col md:flex-row items-center md:items-end justify-between">
-              <div></div>
-              <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
-                <Button disabled={isSubmitting}>Enregistrer</Button>
+                <div></div>
+                <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
+                  <Button disabled={isSubmitting}>Enregistrer</Button>
+                </div>
               </div>
-            </div>
             )}
-            
           </form>
         </FormProvider>
       </div>

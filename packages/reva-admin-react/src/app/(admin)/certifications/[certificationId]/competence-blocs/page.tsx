@@ -1,10 +1,10 @@
 "use client";
-import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
-import { useParams, useRouter } from "next/navigation";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import UpdateCompetenceBlocsForm from "@/app/(admin)/certifications/[certificationId]/_components/UpdateCompetenceBlocsForm";
-import { CompetenceBlocInput } from "@/graphql/generated/graphql";
+import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 import { BackButton } from "@/components/back-button/BackButton";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { CompetenceBlocInput } from "@/graphql/generated/graphql";
+import { useParams, useRouter } from "next/navigation";
 
 const UpdateCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -21,7 +21,9 @@ const UpdateCertificationPage = () => {
         blocs,
       });
 
-      successToast("Blocs enregistrés");
+      successToast({
+        title: "Blocs enregistrés",
+      });
       router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);

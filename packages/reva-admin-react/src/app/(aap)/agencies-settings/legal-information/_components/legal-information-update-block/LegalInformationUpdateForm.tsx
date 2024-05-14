@@ -1,16 +1,16 @@
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { errorToast, successToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
-import { REST_API_URL } from "@/config/config";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { errorToast, successToast } from "@/components/toast/toast";
-import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z
   .object({
@@ -117,7 +117,9 @@ export const LegalInformationUpdateForm = ({
         },
       );
       if (result.ok) {
-        successToast("Modifications enregistrées");
+        successToast({
+          title: "Modifications enregistrées",
+        });
         queryClient.invalidateQueries({
           queryKey: ["maisonMereAAPLegalInformation"],
         });

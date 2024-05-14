@@ -16,7 +16,7 @@ type CertificationAuthorityLocalAccount {
   certificationAuthority: CertificationAuthority!
 }
 
-type CertificationAuhtorityPaginated {
+type CertificationAuthorityPaginated {
   rows: [CertificationAuthority!]!
   info: PaginationInfo!
 }
@@ -51,7 +51,7 @@ type Query {
     offset: Int
     limit: Int
     searchFilter: String
-  ): CertificationAuhtorityPaginated!
+  ): CertificationAuthorityPaginated!
   certification_authority_searchCertificationAuthoritiesAndLocalAccounts(
     offset: Int
     limit: Int
@@ -61,6 +61,13 @@ type Query {
   certification_authority_getCertificationAuthorityLocalAccount(
     id: ID!
   ): CertificationAuthorityLocalAccount
+
+  certification_authority_getCertificationAuthoritiesToTransferCandidacy(
+    offset: Int
+    limit: Int
+    searchFilter: String
+    candidacyId: String!
+  ): CertificationAuthorityPaginated!
 }
 
 input UpdateCertificationAuthorityInput {
@@ -110,4 +117,10 @@ type Mutation {
   certification_authority_deleteCertificationAuthorityLocalAccount(
     certificationAuthorityLocalAccountId: ID!
   ): CertificationAuthorityLocalAccount!
+
+  certification_authority_transferCandidacyToAnotherCertificationAuthority(
+    candidacyId: String!
+    certificationAuthorityId: String!
+    transferReason: String!
+  ): Boolean!
 }

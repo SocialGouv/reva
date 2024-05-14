@@ -24,7 +24,9 @@ const AddLocalAccountPage = () => {
           await createCertificationAuthorityMutation(data);
           await refetchCertifictionAuthority();
 
-          successToast("Le compte local a bien été créé");
+          successToast({
+            title: "Le compte local a bien été créé",
+          });
 
           router.push("/certification-authorities/local-accounts");
         } catch (error) {

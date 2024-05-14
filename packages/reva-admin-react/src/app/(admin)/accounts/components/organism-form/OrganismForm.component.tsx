@@ -67,7 +67,9 @@ const OrganismForm = (props: Props) => {
         },
       });
 
-      successToast("La structure a bien été mis à jour");
+      successToast({
+        title: "La structure a bien été mis à jour",
+      });
     } catch (error) {
       const errorMessage =
         (error as any)?.response?.errors?.[0]?.message ||

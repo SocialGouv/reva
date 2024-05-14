@@ -57,7 +57,9 @@ const AccountForm = (props: Props) => {
         accountData: data,
       });
 
-      successToast("Le compte a bien été mis à jour");
+      successToast({
+        title: "Le compte a bien été mis à jour",
+      });
     } catch (error) {
       const errorMessage =
         (error as any)?.response?.errors?.[0]?.message ||

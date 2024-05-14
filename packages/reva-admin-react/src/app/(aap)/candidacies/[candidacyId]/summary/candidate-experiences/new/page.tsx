@@ -52,7 +52,9 @@ const NewCandidateExperiencePage = () => {
           new Date(),
         ).getTime(),
       });
-      successToast("Expérience ajoutée");
+      successToast({
+        title: "Expérience ajoutée",
+      });
       router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);
