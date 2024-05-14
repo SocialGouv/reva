@@ -61,10 +61,9 @@ export const getAAPsWithZipCode = async ({
   const [longitude, latitude] = coordinates as [number, number];
 
   /*
-    The following query filters for AAPs based on the following criteria:
-    - Must have at least one onsite department.
-    - Must not belong to the "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" category.
-    - Must have a non-null 'll_to_earth', 'adresse_numero_et_nom_de_rue', 'adresse_code_postal', 'adresse_ville' values.
+    This query filters AAPs with specific conditions:
+    - Excludes AAPs categorized under "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC".
+    - Ensures the presence of non-null values for 'll_to_earth', 'adresse_numero_et_nom_de_rue', 'adresse_code_postal', 'adresse_ville'.
   */
 
   let additionalTablesToJoin = "";
