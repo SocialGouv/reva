@@ -104,7 +104,7 @@ const NeedUpdateStatusBlock = ({
       </p>
       <ul>
         <li>
-          Attestation URSSAF (qui affiche le code de vérification) - Exemples :
+          Attestation URSSAF (qui affiche le code de sécurité) - Exemples :
           attestation de vigilance, attestation fiscale.
         </li>
         <li>

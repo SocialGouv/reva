@@ -153,7 +153,7 @@ export const LegalInformationUpdateForm = ({
         <FancyUpload
           className="col-span-2"
           title="Attestation URSSAF"
-          description="L’attestation URSSAF doit afficher le code de vérification -
+          description="L’attestation URSSAF doit afficher le code de sécurité -
          Exemples : attestation de vigilance, attestation fiscale."
           hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
           nativeInputProps={{
@@ -168,10 +168,10 @@ export const LegalInformationUpdateForm = ({
           title="Copie du justificatif d'identité du dirigeant"
           description={
             <>
-              Le dirigeant est la personne mentionnée sur l’attestation de
-              vigilance. La pièce d’identité peut être une carte nationale
-              d’identité en cours de validité ou périmé de moins de 5 ans
-              (resto/verso) ou un passeport en cours de validité.
+              Le dirigeant est la personne mentionnée sur l’attestation URSSAF.
+              La pièce d’identité peut être une carte nationale d’identité en
+              cours de validité ou périmée de moins de 5 ans (recto/verso) ou un
+              passeport en cours de validité.
               <br />
               <strong>
                 Veillez à ce que votre photocopie soit lisible, non tronquée,
@@ -223,7 +223,7 @@ export const LegalInformationUpdateForm = ({
               description={
                 <>
                   La pièce d’identité peut être une carte nationale d’identité
-                  en cours de validité ou périmé de moins de 5 ans (resto/verso)
+                  en cours de validité ou périmée de moins de 5 ans (recto/verso)
                   ou un passeport en cours de validité.
                   <br />
                   <strong>
