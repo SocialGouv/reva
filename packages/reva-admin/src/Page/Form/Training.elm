@@ -8,7 +8,7 @@ import Data.Form exposing (FormData)
 import Data.Form.Helper
 import Data.Form.Training exposing (scopeToString)
 import Data.Referential exposing (Referential)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, target)
 import Page.Form as Form exposing (Form)
 
 
@@ -71,7 +71,7 @@ editCcn context candidacy =
         , Button.new { label = "Modifier", onClick = Nothing }
             |> Button.tertiary
             |> Button.small
-            |> Button.withAttrs [ class "ml-12 fr-fi-edit-line fr-btn--icon-left" ]
+            |> Button.withAttrs [ class "ml-12 fr-fi-edit-line fr-btn--icon-left", target "_self" ]
             |> Button.linkButton (context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString candidacy.id ++ "/typology")
             |> Button.view
         ]
