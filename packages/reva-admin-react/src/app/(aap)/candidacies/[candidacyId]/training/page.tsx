@@ -1,11 +1,11 @@
 "use client";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useTrainingPage } from "./trainingPage.hook";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
+import { useTrainingPage } from "./trainingPage.hook";
 
 const getTypologyLabel = (typology?: string) => {
   switch (typology) {
@@ -33,7 +33,7 @@ const TrainingPage = () => {
           isCertificationPartial: certificationScope === "PARTIAL",
         },
       });
-      successToast("Le parcours personnalisé a bien été envoyé.");
+      successToast({ title: "Le parcours personnalisé a bien été envoyé." });
     } catch (e) {
       graphqlErrorToast(e);
     }
