@@ -1,6 +1,6 @@
 "use client";
 
-import { BlueLayout } from "@/components/layout/blue-layout/BlueLayout";
+import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   ProfessionalSpaceCreationProvider,
@@ -61,11 +61,13 @@ const getDepartments = gql`
     }
   }
 `;
+
 interface PageProps {
   availableDomaines: Domaine[];
   availableConventions: ConventionCollective[];
   availableDepartments: Department[];
 }
+
 const PageContent = ({
   availableDomaines,
   availableConventions,
@@ -107,29 +109,15 @@ const ProfessionalSpaceCreationPage = ({
           professionnel en main
         </title>
       </Head>
-      <BlueLayout
-        title="Créez le compte administrateur de votre établissement (direction nationale ou régionale)"
-        description={
-          <>
-            <p className="text-white text-sm md:text-xl md:leading-relaxed mb-2">
-              Vous êtes responsable d’un réseau au niveau national ou régional,
-              créez le compte administrateur de votre structure qui vous
-              permettra :
-            </p>
-            <ul className="text-white text-sm md:text-xl md:leading-relaxed ml-4">
-              <li>
-                prochainement de créer et de gérer les accès de vos conseillers
-                habilités à traiter les dossiers des candidats
-              </li>
-              <li>
-                d'attribuer les candidatures à chacun de vos conseillers afin
-                qu'ils assurent le suivi et la gestion du parcours des
-                candidats.
-              </li>
-            </ul>
-          </>
-        }
-      >
+      <OrganismBackground>
+        <h1 className="mb-12">
+          Créez le compte administrateur de votre établissement (direction
+          nationale ou régionale)
+          <div className="mt-1 text-xs text-gray-600 font-normal">
+            Sauf mention contraire “optionnel” dans le label, tous les champs
+            sont obligatoires.
+          </div>
+        </h1>
         <ProfessionalSpaceCreationProvider>
           <PageContent
             availableDomaines={availableDomaines}
@@ -137,7 +125,7 @@ const ProfessionalSpaceCreationPage = ({
             availableDepartments={availableDepartments}
           />
         </ProfessionalSpaceCreationProvider>
-      </BlueLayout>
+      </OrganismBackground>
     </MainLayout>
   );
 };

@@ -167,7 +167,7 @@ export const CertificationsInfoStepForm = ({
     }));
 
   return (
-    <div className="flex flex-col min-w-[70vw]">
+    <>
       <Stepper
         title="Identifier les certifications qui vous concernent"
         nextTitle="Saisir les informations pour la facturation"
@@ -341,6 +341,6 @@ export const CertificationsInfoStepForm = ({
           <Button type="submit"> Passer à l'étape 5</Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };

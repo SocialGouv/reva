@@ -76,7 +76,7 @@ export const CompanyInfoStepForm = () => {
     submitCompanyInfoStep(data);
 
   return (
-    <div className="flex flex-col min-w-[70vw]">
+    <>
       <Stepper
         title="Saisir vos informations pour l'établissement"
         currentStep={3}
@@ -176,6 +176,6 @@ export const CompanyInfoStepForm = () => {
           <Button type="submit">Passer à l'étape 4</Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };

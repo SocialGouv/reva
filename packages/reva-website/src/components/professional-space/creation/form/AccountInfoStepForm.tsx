@@ -50,7 +50,7 @@ export const AccountInfoStepForm = () => {
   };
 
   return (
-    <div className="flex flex-col min-w-[70vw]">
+    <>
       <Stepper
         title="Saisir vos informations de contact et de connexion du compte administrateur"
         currentStep={5}
@@ -121,6 +121,6 @@ export const AccountInfoStepForm = () => {
           <Button type="submit">Valider le formulaire</Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };

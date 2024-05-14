@@ -66,7 +66,7 @@ export const QualiopiCertificateInfoStepForm = () => {
     submitQualiopiCertificateInfoStep(data);
 
   return (
-    <div className="flex flex-col min-w-[70vw]">
+    <>
       <Stepper
         title="Certification de l'établissement"
         currentStep={2}
@@ -105,10 +105,10 @@ export const QualiopiCertificateInfoStepForm = () => {
               }),
               type: "date",
             }}
-            className="max-w-lg"
+            className="max-w-md"
           />
           <Notice
-            className="max-w-lg"
+            className="max-w-md"
             title="
             Votre certification Qualiopi doit être encore valide au minimum 3
             mois au moment de votre inscription."
@@ -122,6 +122,6 @@ export const QualiopiCertificateInfoStepForm = () => {
           <Button type="submit">Passer à l'étape 3</Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };
