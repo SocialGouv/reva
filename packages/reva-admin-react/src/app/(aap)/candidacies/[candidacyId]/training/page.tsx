@@ -50,8 +50,10 @@ const TrainingPage = () => {
           <h2 className="text-xl">Typologie et convention collective</h2>
           <div className="flex items-start gap-4 mb-6">
             <span className="text-sm text-gray-500">
-              {getTypologyLabel(candidacy.typology)} -{" "}
-              {candidacy.conventionCollective?.label}
+              {getTypologyLabel(candidacy.typology)}
+              {candidacy.conventionCollective
+                ? ` - ${candidacy.conventionCollective?.label}`
+                : ""}
             </span>
             <Button
               priority="tertiary"
