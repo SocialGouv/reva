@@ -51,7 +51,7 @@ export const getActiveCandidacyMenu = async ({
 
     if (candidacy.ccnId) {
       trainingUrl = buildUrl({
-        adminType: "Elm",
+        adminType: "React",
         suffix: "training",
       });
     } else if (candidacy.firstAppointmentOccuredAt) {

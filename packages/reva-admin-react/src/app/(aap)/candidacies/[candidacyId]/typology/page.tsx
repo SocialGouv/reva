@@ -53,7 +53,7 @@ const TypologyPage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       await submitTypologyForm.mutateAsync(data);
-      router.push(`${ADMIN_ELM_URL}/candidacies/${candidacy?.id}/training`);
+      router.push(`/candidacies/${candidacy?.id}/training`);
     } catch (e) {
       graphqlErrorToast(e);
     }
