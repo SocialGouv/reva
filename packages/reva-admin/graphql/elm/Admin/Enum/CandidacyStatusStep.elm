@@ -22,13 +22,11 @@ type CandidacyStatusStep
     | DossierDeValidationSignale
     | DemandeFinancementEnvoye
     | DemandePaiementEnvoyee
-    | DossierPro
-    | Certification
 
 
 list : List CandidacyStatusStep
 list =
-    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DossierFaisabiliteRecevable, DossierFaisabiliteIncomplet, DossierFaisabiliteNonRecevable, DossierDeValidationEnvoye, DossierDeValidationSignale, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
+    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DossierFaisabiliteRecevable, DossierFaisabiliteIncomplet, DossierFaisabiliteNonRecevable, DossierDeValidationEnvoye, DossierDeValidationSignale, DemandeFinancementEnvoye, DemandePaiementEnvoyee ]
 
 
 decoder : Decoder CandidacyStatusStep
@@ -78,12 +76,6 @@ decoder =
 
                     "DEMANDE_PAIEMENT_ENVOYEE" ->
                         Decode.succeed DemandePaiementEnvoyee
-
-                    "DOSSIER_PRO" ->
-                        Decode.succeed DossierPro
-
-                    "CERTIFICATION" ->
-                        Decode.succeed Certification
 
                     _ ->
                         Decode.fail ("Invalid CandidacyStatusStep type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -136,12 +128,6 @@ toString enum____ =
 
         DemandePaiementEnvoyee ->
             "DEMANDE_PAIEMENT_ENVOYEE"
-
-        DossierPro ->
-            "DOSSIER_PRO"
-
-        Certification ->
-            "CERTIFICATION"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -199,12 +185,6 @@ fromString enumString____ =
 
         "DEMANDE_PAIEMENT_ENVOYEE" ->
             Just DemandePaiementEnvoyee
-
-        "DOSSIER_PRO" ->
-            Just DossierPro
-
-        "CERTIFICATION" ->
-            Just Certification
 
         _ ->
             Nothing

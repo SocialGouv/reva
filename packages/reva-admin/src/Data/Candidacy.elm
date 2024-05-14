@@ -384,9 +384,6 @@ statusToProgressPosition status =
         DemandePaiementEnvoyee ->
             11
 
-        _ ->
-            -1
-
 
 lastStatusHelper : List CandidacyStatus -> CandidacyStatus
 lastStatusHelper statuses =
