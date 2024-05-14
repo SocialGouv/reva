@@ -25,7 +25,6 @@ module Data.Candidacy exposing
     , isPaymentRequestSent
     , isStatusEqual
     , isStatusEqualOrAbove
-    , isTrainingSent
     , lastStatus
     , lastStatusDate
     , sentDate
@@ -437,11 +436,6 @@ isFundingRequestSent candidacy =
 isPaymentRequestSent : Candidacy -> Bool
 isPaymentRequestSent candidacy =
     isStatusEqualOrAbove candidacy DemandePaiementEnvoyee
-
-
-isTrainingSent : Candidacy -> Bool
-isTrainingSent candidacy =
-    isStatusEqualOrAbove candidacy ParcoursEnvoye
 
 
 isFeasibilityFileSent : Candidacy -> Bool

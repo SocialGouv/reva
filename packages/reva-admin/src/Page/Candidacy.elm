@@ -20,13 +20,11 @@ import Api.Form.DossierDeValidation
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
-
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
 import Api.Form.PaymentUploadsUniReva
 import Api.Form.ReadyForJuryEstimatedDate
-import Api.Form.Training
 import Api.Form.Unarchive
 import Api.Referential
 import Api.Token
@@ -45,7 +43,6 @@ import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
 import Data.Form.ReadyForJuryEstimatedDate
-import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, h2, p, text)
@@ -64,7 +61,6 @@ import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
 import Page.Form.ReadyForJuryEstimatedDate
-import Page.Form.Training
 import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -273,12 +269,6 @@ view context model =
                 Profile ->
                     viewCandidacyPanel context model
 
-                Training ->
-                    viewForm "training"
-
-                TrainingSent ->
-                    viewMain context "training-sent" <| viewTrainingSent context model.tab.candidacyId
-
                 Admissibility ->
                     viewForm "admissibility"
 
@@ -326,7 +316,7 @@ view context model =
                                 [ juryDateTab candidacy.id True
                                 , juryResultTab candidacy.id False
                                 ]
-                                [  ]
+                                []
 
                 JuryResult ->
                     displayWithCandidacy <|
@@ -336,7 +326,7 @@ view context model =
                                 [ juryDateTab candidacy.id False
                                 , juryResultTab candidacy.id True
                                 ]
-                                [  ]
+                                []
 
                 Feasibility ->
                     case model.selected of
@@ -361,36 +351,6 @@ view context model =
         "Accéder aux étapes du parcours"
         (NavigationSteps.view model.selected)
         [ content ]
-
-
-viewTrainingSent : Context -> CandidacyId -> List (Html msg)
-viewTrainingSent context candidacyId =
-    let
-        newCandidacySummaryPageActive =
-            List.member "NEW_CANDIDACY_SUMMARY_PAGE" context.activeFeatures
-
-        urlAndTarget =
-            if newCandidacySummaryPageActive then
-                ( context.adminReactUrl ++ "/candidacies/" ++ candidacyIdToString candidacyId ++ "/summary", "_self" )
-
-            else
-                ( Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile), "" )
-    in
-    [ div
-        [ class "mt-12 px-20", role "status" ]
-        [ View.title "Confirmation"
-        , div [ class "flex flex-col items-center w-full p-10" ]
-            [ View.image [ alt "", class "w-[60px]" ] context.baseUrl "confirmation.png"
-            , p
-                [ class "mt-6 mb-24" ]
-                [ text "Le parcours personnalisé a bien été envoyé." ]
-            , Button.new { onClick = Nothing, label = "Retour à la candidature" }
-                |> Button.linkButton (Tuple.first urlAndTarget)
-                |> Button.withAttrs [ attribute "target" (Tuple.second urlAndTarget) ]
-                |> Button.view
-            ]
-        ]
-    ]
 
 
 viewFeasibilitySent : Context -> Candidacy -> Data.Feasibility.Feasibility -> List (Html msg)
@@ -776,28 +736,6 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = redirectToProfile
                         , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
                         , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-
-        ( View.Candidacy.Tab.Training, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Training.form context
-                        , onLoad = Just <| Api.Form.Training.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Training.update tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab TrainingSent
-                        , onValidate = Data.Form.Training.validate
-                        , status =
-                            if Candidacy.isFeasibilityFileSent candidacy then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
                         }
                         model.form
             in

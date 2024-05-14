@@ -21,8 +21,6 @@ type Value
     | PaymentRequestConfirmation
     | PaymentUploads
     | Profile
-    | Training
-    | TrainingSent
     | FundingRequest
     | ExamInfo
     | Feasibility
