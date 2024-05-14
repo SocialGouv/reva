@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { TrainingInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyById = graphql(`
@@ -13,6 +14,28 @@ const getCandidacyById = graphql(`
         idcc
         label
       }
+      individualHourCount
+      collectiveHourCount
+      additionalHourCount
+      basicSkillIds
+      mandatoryTrainingIds
+      certificateSkills
+      otherTraining
+      isCertificationPartial
+    }
+  }
+`);
+
+const submitTrainingMutation = graphql(`
+  mutation submitTrainingForCandidacyTrainingPage(
+    $candidacyId: UUID!
+    $training: TrainingInput!
+  ) {
+    candidacy_submitTrainingForm(
+      candidacyId: $candidacyId
+      training: $training
+    ) {
+      id
     }
   }
 `);
@@ -32,7 +55,21 @@ export const useTrainingPage = () => {
       }),
   });
 
+  const submitTraining = useMutation({
+    mutationFn: ({
+      candidacyId,
+      training,
+    }: {
+      candidacyId?: string;
+      training: TrainingInput;
+    }) =>
+      graphqlClient.request(submitTrainingMutation, {
+        candidacyId,
+        training,
+      }),
+  });
+
   const candidacy = getCandidacyByIdData?.getCandidacyById;
 
-  return { candidacy };
+  return { candidacy, submitTraining };
 };

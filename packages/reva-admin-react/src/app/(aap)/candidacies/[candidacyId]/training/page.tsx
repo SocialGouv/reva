@@ -3,6 +3,8 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useTrainingPage } from "./trainingPage.hook";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const getTypologyLabel = (typology?: string) => {
   switch (typology) {
@@ -18,7 +20,23 @@ const getTypologyLabel = (typology?: string) => {
   return typology;
 };
 const TrainingPage = () => {
-  const { candidacy } = useTrainingPage();
+  const { candidacy, submitTraining } = useTrainingPage();
+
+  const handleFormSubmit = async (values: TrainingFormValues) => {
+    try {
+      const { certificationScope, ...rest } = values;
+      await submitTraining.mutateAsync({
+        candidacyId: candidacy?.id,
+        training: {
+          ...rest,
+          isCertificationPartial: certificationScope === "PARTIAL",
+        },
+      });
+      successToast("Le parcours personnalisé a bien été envoyé.");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
   return (
     <>
@@ -45,6 +63,24 @@ const TrainingPage = () => {
             </Button>
           </div>
           <hr />
+          <TrainingForm
+            defaultValues={{
+              individualHourCount: candidacy.individualHourCount,
+              collectiveHourCount: candidacy.collectiveHourCount,
+              additionalHourCount: candidacy.additionalHourCount,
+              mandatoryTrainingIds: candidacy.mandatoryTrainingIds,
+              basicSkillIds: candidacy.basicSkillIds,
+              certificateSkills: candidacy.certificateSkills,
+              otherTraining: candidacy.otherTraining,
+              certificationScope:
+                candidacy.isCertificationPartial !== null
+                  ? candidacy.isCertificationPartial
+                    ? "PARTIAL"
+                    : "COMPLETE"
+                  : null,
+            }}
+            onSubmit={handleFormSubmit}
+          />
         </>
       )}
     </>
