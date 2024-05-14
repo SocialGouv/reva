@@ -138,9 +138,7 @@ const ReorientationPage = () => {
         candidacyId,
         certificationId,
       });
-      successToast({
-        title: "La certification a bien été modifiée.",
-      });
+      successToast("La certification a bien été modifiée.");
       const backUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
         ? `/candidacies/${candidacyId}/summary`
         : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;

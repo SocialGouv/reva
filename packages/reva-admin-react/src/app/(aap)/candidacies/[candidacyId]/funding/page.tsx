@@ -156,9 +156,7 @@ const FundingPage = () => {
     delete dataToSend.confirmation;
     try {
       await createFundingRequestUnifvaeMutate(dataToSend);
-      successToast({
-        title: "La demande de financement a bien été enregistrée.",
-      });
+      successToast("La demande de financement a bien été enregistrée.");
     } catch (e: any) {
       if (e.response?.errors) {
         return e.response.errors.forEach((error: any) => {

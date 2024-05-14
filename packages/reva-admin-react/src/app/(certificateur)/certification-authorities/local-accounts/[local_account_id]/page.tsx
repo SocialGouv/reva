@@ -62,9 +62,7 @@ const EditLocalAccountPage = () => {
       await useDeleteCertificationAuthorityLocalAccountMutation.mutateAsync(
         local_account_id as string,
       );
-      successToast({
-        title: "Compte local supprimé",
-      });
+      successToast("Compte local supprimé");
       router.push("/certification-authorities/local-accounts");
     } catch (e) {
       graphqlErrorToast(e);
@@ -102,9 +100,7 @@ const EditLocalAccountPage = () => {
               });
               await refetchCertifictionAuthority();
 
-              successToast({
-                title: "Le compte local a bien été mis à jour",
-              });
+              successToast("Le compte local a bien été mis à jour");
 
               router.push("/certification-authorities/local-accounts");
             } catch (error) {

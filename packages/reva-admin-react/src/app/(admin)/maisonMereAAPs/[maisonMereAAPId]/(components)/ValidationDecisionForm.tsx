@@ -45,9 +45,7 @@ export default function ValidationDecisionForm({
           aapUpdatedDocumentsAt: aapUpdatedDocumentsAt,
         },
       });
-      successToast({
-        title: "Décision enregistrée avec succès pour cet AAP",
-      });
+      successToast("Décision enregistrée avec succès pour cet AAP");
     } catch (e) {
       graphqlErrorToast(e);
     }

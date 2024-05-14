@@ -36,9 +36,7 @@ const DossierDeValidationProblemPage = () => {
         dossierDeValidationId: dossierDeValidation?.id || "",
         decisionComment: data.decisionComment,
       });
-      successToast({
-        title: "Problème signalé avec succès",
-      });
+      successToast("Problème signalé avec succès");
       router.push(`/candidacies/${candidacy?.id}/dossier-de-validation`);
     } catch (e) {
       graphqlErrorToast(e);

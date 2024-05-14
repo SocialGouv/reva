@@ -33,7 +33,7 @@ const TrainingPage = () => {
           isCertificationPartial: certificationScope === "PARTIAL",
         },
       });
-      successToast({ title: "Le parcours personnalisé a bien été envoyé." });
+      successToast("Le parcours personnalisé a bien été envoyé.");
     } catch (e) {
       graphqlErrorToast(e);
     }

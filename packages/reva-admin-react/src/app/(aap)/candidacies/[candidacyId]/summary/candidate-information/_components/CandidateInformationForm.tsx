@@ -163,9 +163,7 @@ const CandidateInformationForm = ({
       await updateCandidateInformationMutate({
         candidateInformation,
       });
-      successToast({
-        title: "Les informations ont bien été mises à jour",
-      });
+      successToast("Les informations ont bien été mises à jour");
 
       await queryClient.invalidateQueries({
         queryKey: [candidacyId],

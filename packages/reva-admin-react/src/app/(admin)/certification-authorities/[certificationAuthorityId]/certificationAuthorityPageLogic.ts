@@ -282,9 +282,7 @@ export const useCertificationAuthorityPageLogic = () => {
           .filter((c) => c.selected)
           .map((c) => c.id),
       });
-      successToast({
-        title: "modifications enregistrées",
-      });
+      successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

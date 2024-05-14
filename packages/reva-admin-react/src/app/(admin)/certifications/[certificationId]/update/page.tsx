@@ -48,9 +48,7 @@ const UpdateCertificationPage = () => {
         expiresAt: parse(data.expiresAt, "yyyy-MM-dd", new Date()).getTime(),
       });
 
-      successToast({
-        title: "Certification enregistrée",
-      });
+      successToast("Certification enregistrée");
       router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);

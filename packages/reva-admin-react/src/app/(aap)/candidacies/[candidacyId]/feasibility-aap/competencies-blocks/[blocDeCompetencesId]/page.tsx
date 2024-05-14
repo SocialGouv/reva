@@ -148,9 +148,7 @@ const CompetenciesBlockPage = () => {
           text: c.text,
         })),
       });
-      successToast({
-        title: "Modifications enregistrées",
-      });
+      successToast("Modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

@@ -117,9 +117,7 @@ export const LegalInformationUpdateForm = ({
         },
       );
       if (result.ok) {
-        successToast({
-          title: "Modifications enregistrées",
-        });
+        successToast("Modifications enregistrées");
         queryClient.invalidateQueries({
           queryKey: ["maisonMereAAPLegalInformation"],
         });
@@ -225,8 +223,8 @@ export const LegalInformationUpdateForm = ({
               description={
                 <>
                   La pièce d’identité peut être une carte nationale d’identité
-                  en cours de validité ou périmée de moins de 5 ans (recto/verso)
-                  ou un passeport en cours de validité.
+                  en cours de validité ou périmée de moins de 5 ans
+                  (recto/verso) ou un passeport en cours de validité.
                   <br />
                   <strong>
                     Veillez à ce que votre photocopie soit lisible, non

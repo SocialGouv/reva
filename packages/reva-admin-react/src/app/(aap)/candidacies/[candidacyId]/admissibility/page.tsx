@@ -130,9 +130,7 @@ const AdmissibilityPage = () => {
             : null,
         },
       });
-      successToast({
-        title: "Les modifications ont bien été enregistrées",
-      });
+      successToast("Les modifications ont bien été enregistrées");
       router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);

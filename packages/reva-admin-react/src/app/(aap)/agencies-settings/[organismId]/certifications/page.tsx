@@ -68,9 +68,7 @@ const CertificationsPage = () => {
         .filter((md) => md.checked)
         .map((md) => md.id),
     });
-    successToast({
-      title: "modifications enregistrées",
-    });
+    successToast("modifications enregistrées");
     await refetchmanagedDegrees();
   });
 

@@ -81,9 +81,7 @@ const InterventionZonePage = () => {
         organismId: organism?.id || "",
         interventionZone,
       });
-      successToast({
-        title: "modifications enregistrées",
-      });
+      successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

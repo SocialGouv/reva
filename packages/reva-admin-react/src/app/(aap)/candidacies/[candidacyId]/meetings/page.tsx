@@ -107,9 +107,7 @@ const MeetingsPage = () => {
           new Date(),
         ),
       });
-      successToast({
-        title: "Les modifications ont bien été enregistrées",
-      });
+      successToast("Les modifications ont bien été enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

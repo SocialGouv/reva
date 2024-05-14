@@ -65,9 +65,7 @@ const CommercialInformationPage = () => {
       organismId,
       ...data,
     });
-    successToast({
-      title: "modifications enregistrées",
-    });
+    successToast("modifications enregistrées");
     await refetchInformationsCommerciales();
   });
 

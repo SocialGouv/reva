@@ -80,9 +80,7 @@ const EditCandidateExperiencePage = () => {
           new Date(),
         ).getTime(),
       });
-      successToast({
-        title: "Expérience modifiée",
-      });
+      successToast("Expérience modifiée");
     } catch (e) {
       graphqlErrorToast(e);
     }

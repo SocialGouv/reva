@@ -49,9 +49,7 @@ const ReplaceCertificationPage = () => {
         expiresAt: parse(data.expiresAt, "yyyy-MM-dd", new Date()).getTime(),
       });
 
-      successToast({
-        title: "Certification remplacée",
-      });
+      successToast("Certification remplacée");
       router.push(`/certifications/${newCertificationId}`);
     } catch (e) {
       graphqlErrorToast(e);

@@ -64,9 +64,7 @@ const AgencyManagerPage = () => {
         organismId,
         ...data,
       });
-      successToast({
-        title: "modifications enregistrées",
-      });
+      successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

@@ -47,9 +47,7 @@ const AbsencePage = () => {
       organismId: organism?.id,
       fermePourAbsenceOuConges: data.structureVisible === "non",
     });
-    successToast({
-      title: "modifications enregistrées",
-    });
+    successToast("modifications enregistrées");
     await refetchOrganism();
   });
 

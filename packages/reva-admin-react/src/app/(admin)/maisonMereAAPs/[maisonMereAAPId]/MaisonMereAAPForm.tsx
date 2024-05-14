@@ -89,9 +89,7 @@ function MaisonMereAAPForm(params: {
         queryKey: ["getMaisonMereAAP", params.maisonMereAAPId],
       });
 
-      successToast({
-        title: "modifications enregistrées",
-      });
+      successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }

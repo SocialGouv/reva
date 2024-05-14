@@ -21,9 +21,7 @@ const UpdateCertificationPage = () => {
         blocs,
       });
 
-      successToast({
-        title: "Blocs enregistrés",
-      });
+      successToast("Blocs enregistrés");
       router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);
