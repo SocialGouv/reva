@@ -91,7 +91,7 @@ const NeedUpdateStatusBlock = ({
           ))}
         </div>
       )}
-      <Badge severity="warning">À mettre à jour</Badge>
+      <Badge severity="warning" className="mb-8">À mettre à jour</Badge>
       <br />
       <p>
         Pour s'assurer de la conformité des inscriptions, nous vérifions les
