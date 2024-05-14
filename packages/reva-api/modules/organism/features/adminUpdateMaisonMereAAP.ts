@@ -106,7 +106,7 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
       data: params.maisonMereAAPData,
       include: {
         gestionnaire: true,
-      }
+      },
     });
 
     if (
@@ -123,9 +123,4 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
       `Impossible de modifier le statut de validation des documents légaux: ${e}.`,
     );
   }
-
-  // await prismaClient.maisonMereAAP.update({
-  //   where: { id: maisonMereAAPId },
-  //   data: params.maisonMereAAPData,
-  // });
 };
