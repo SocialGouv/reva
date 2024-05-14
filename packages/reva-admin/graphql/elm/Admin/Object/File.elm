@@ -27,3 +27,8 @@ url =
 name : SelectionSet String Admin.Object.File
 name =
     Object.selectionForField "String" "name" [] Decode.string
+
+
+mimeType : SelectionSet String Admin.Object.File
+mimeType =
+    Object.selectionForField "String" "mimeType" [] Decode.string

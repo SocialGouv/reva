@@ -117,6 +117,33 @@ maisonMereAAPOnConventionCollectives object____ =
     Object.selectionForCompositeField "maisonMereAAPOnConventionCollectives" [] object____ (Basics.identity >> Decode.list)
 
 
+type alias LegalInformationDocumentsDecisionsOptionalArguments =
+    { input : OptionalArgument Admin.InputObject.MaisonMereAAPLegalInformationDocumentsDecisionsInput }
+
+
+legalInformationDocumentsDecisions :
+    (LegalInformationDocumentsDecisionsOptionalArguments -> LegalInformationDocumentsDecisionsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAPLegalInformationDocumentsDecision
+    -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
+legalInformationDocumentsDecisions fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { input = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "input" filledInOptionals____.input Admin.InputObject.encodeMaisonMereAAPLegalInformationDocumentsDecisionsInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "legalInformationDocumentsDecisions" optionalArgs____ object____ (Basics.identity >> Decode.list)
+
+
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.MaisonMereAAP
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+legalInformationDocuments :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAPLegalInformationDocuments
+    -> SelectionSet (Maybe decodesTo) Admin.Object.MaisonMereAAP
+legalInformationDocuments object____ =
+    Object.selectionForCompositeField "legalInformationDocuments" [] object____ (Basics.identity >> Decode.nullable)

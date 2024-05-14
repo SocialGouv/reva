@@ -241,6 +241,14 @@ type MaisonMereAAP
     = MaisonMereAAP
 
 
+type MaisonMereAAPLegalInformationDocuments
+    = MaisonMereAAPLegalInformationDocuments
+
+
+type MaisonMereAAPLegalInformationDocumentsDecision
+    = MaisonMereAAPLegalInformationDocumentsDecision
+
+
 type MaisonMereAAPOnConventionCollective
     = MaisonMereAAPOnConventionCollective
 

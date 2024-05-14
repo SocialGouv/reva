@@ -10,6 +10,7 @@ import Admin.Enum.CertificationStatus
 import Admin.Enum.DossierDeValidationCategoryFilter
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.JuryCategoryFilter
+import Admin.Enum.StatutValidationInformationsJuridiquesMaisonMereAAP
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -526,6 +527,7 @@ type alias OrganismGetMaisonMereAAPsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
     , searchFilter : OptionalArgument String
+    , legalValidationStatus : OptionalArgument Admin.Enum.StatutValidationInformationsJuridiquesMaisonMereAAP.StatutValidationInformationsJuridiquesMaisonMereAAP
     }
 
 
@@ -536,10 +538,10 @@ organism_getMaisonMereAAPs :
 organism_getMaisonMereAAPs fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent, legalValidationStatus = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string, Argument.optional "legalValidationStatus" filledInOptionals____.legalValidationStatus (Encode.enum Admin.Enum.StatutValidationInformationsJuridiquesMaisonMereAAP.toString) ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "organism_getMaisonMereAAPs" optionalArgs____ object____ Basics.identity

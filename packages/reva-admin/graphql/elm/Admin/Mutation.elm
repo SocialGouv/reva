@@ -776,6 +776,26 @@ organism_updateOrganismAccount fillInOptionals____ object____ =
     Object.selectionForCompositeField "organism_updateOrganismAccount" optionalArgs____ object____ Basics.identity
 
 
+type alias OrganismUpdateLegalInformationValidationDecisionOptionalArguments =
+    { data : OptionalArgument Admin.InputObject.UpdateMaisonMereAAPLegalValidationDecisionInput }
+
+
+organism_updateLegalInformationValidationDecision :
+    (OrganismUpdateLegalInformationValidationDecisionOptionalArguments -> OrganismUpdateLegalInformationValidationDecisionOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAP
+    -> SelectionSet decodesTo RootMutation
+organism_updateLegalInformationValidationDecision fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { data = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "data" filledInOptionals____.data Admin.InputObject.encodeUpdateMaisonMereAAPLegalValidationDecisionInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "organism_updateLegalInformationValidationDecision" optionalArgs____ object____ Basics.identity
+
+
 type alias ReferentialUpdateCertificationRequiredArguments =
     { input : Admin.InputObject.UpdateCertificationInput }
 

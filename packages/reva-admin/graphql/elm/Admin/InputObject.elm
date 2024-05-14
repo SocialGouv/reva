@@ -14,6 +14,7 @@ import Admin.Enum.ExamResult
 import Admin.Enum.Gender
 import Admin.Enum.JuryResult
 import Admin.Enum.LegalStatus
+import Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum
 import Admin.Enum.Sort
 import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Interface
@@ -1262,6 +1263,36 @@ encodeJuryInfoInput input____ =
         [ ( "result", Encode.enum Admin.Enum.JuryResult.toString input____.result |> Just ), ( "informationOfResult", Encode.string |> Encode.optional input____.informationOfResult ) ]
 
 
+buildMaisonMereAAPLegalInformationDocumentsDecisionsInput :
+    (MaisonMereAAPLegalInformationDocumentsDecisionsInputOptionalFields -> MaisonMereAAPLegalInformationDocumentsDecisionsInputOptionalFields)
+    -> MaisonMereAAPLegalInformationDocumentsDecisionsInput
+buildMaisonMereAAPLegalInformationDocumentsDecisionsInput fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { decision = Absent }
+    in
+    { decision = optionals____.decision }
+
+
+type alias MaisonMereAAPLegalInformationDocumentsDecisionsInputOptionalFields =
+    { decision : OptionalArgument Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.MaisonMereAAPLegalInformationDocumentsDecisionEnum }
+
+
+{-| Type for the MaisonMereAAPLegalInformationDocumentsDecisionsInput input object.
+-}
+type alias MaisonMereAAPLegalInformationDocumentsDecisionsInput =
+    { decision : OptionalArgument Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.MaisonMereAAPLegalInformationDocumentsDecisionEnum }
+
+
+{-| Encode a MaisonMereAAPLegalInformationDocumentsDecisionsInput into a value that can be used as an argument.
+-}
+encodeMaisonMereAAPLegalInformationDocumentsDecisionsInput : MaisonMereAAPLegalInformationDocumentsDecisionsInput -> Value
+encodeMaisonMereAAPLegalInformationDocumentsDecisionsInput input____ =
+    Encode.maybeObject
+        [ ( "decision", Encode.enum Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.toString |> Encode.optional input____.decision ) ]
+
+
 buildMaisonMereAAPOnDepartmentInput :
     MaisonMereAAPOnDepartmentInputRequiredFields
     -> MaisonMereAAPOnDepartmentInput
@@ -1866,6 +1897,51 @@ encodeUpdateMaisonMereAAPInput : UpdateMaisonMereAAPInput -> Value
 encodeUpdateMaisonMereAAPInput input____ =
     Encode.maybeObject
         [ ( "zoneIntervention", (encodeMaisonMereAAPOnDepartmentInput |> Encode.list) input____.zoneIntervention |> Just ) ]
+
+
+buildUpdateMaisonMereAAPLegalValidationDecisionInput :
+    UpdateMaisonMereAAPLegalValidationDecisionInputRequiredFields
+    -> (UpdateMaisonMereAAPLegalValidationDecisionInputOptionalFields -> UpdateMaisonMereAAPLegalValidationDecisionInputOptionalFields)
+    -> UpdateMaisonMereAAPLegalValidationDecisionInput
+buildUpdateMaisonMereAAPLegalValidationDecisionInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { internalComment = Absent, aapComment = Absent }
+    in
+    { maisonMereAAPId = required____.maisonMereAAPId, decision = required____.decision, internalComment = optionals____.internalComment, aapComment = optionals____.aapComment, aapUpdatedDocumentsAt = required____.aapUpdatedDocumentsAt }
+
+
+type alias UpdateMaisonMereAAPLegalValidationDecisionInputRequiredFields =
+    { maisonMereAAPId : Data.Scalar.Uuid
+    , decision : Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.MaisonMereAAPLegalInformationDocumentsDecisionEnum
+    , aapUpdatedDocumentsAt : Data.Scalar.Timestamp
+    }
+
+
+type alias UpdateMaisonMereAAPLegalValidationDecisionInputOptionalFields =
+    { internalComment : OptionalArgument String
+    , aapComment : OptionalArgument String
+    }
+
+
+{-| Type for the UpdateMaisonMereAAPLegalValidationDecisionInput input object.
+-}
+type alias UpdateMaisonMereAAPLegalValidationDecisionInput =
+    { maisonMereAAPId : Data.Scalar.Uuid
+    , decision : Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.MaisonMereAAPLegalInformationDocumentsDecisionEnum
+    , internalComment : OptionalArgument String
+    , aapComment : OptionalArgument String
+    , aapUpdatedDocumentsAt : Data.Scalar.Timestamp
+    }
+
+
+{-| Encode a UpdateMaisonMereAAPLegalValidationDecisionInput into a value that can be used as an argument.
+-}
+encodeUpdateMaisonMereAAPLegalValidationDecisionInput : UpdateMaisonMereAAPLegalValidationDecisionInput -> Value
+encodeUpdateMaisonMereAAPLegalValidationDecisionInput input____ =
+    Encode.maybeObject
+        [ ( "maisonMereAAPId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.maisonMereAAPId |> Just ), ( "decision", Encode.enum Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum.toString input____.decision |> Just ), ( "internalComment", Encode.string |> Encode.optional input____.internalComment ), ( "aapComment", Encode.string |> Encode.optional input____.aapComment ), ( "aapUpdatedDocumentsAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.aapUpdatedDocumentsAt |> Just ) ]
 
 
 buildUpdateOrganismAccountInput :

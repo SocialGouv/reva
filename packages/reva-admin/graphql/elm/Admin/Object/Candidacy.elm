@@ -4,6 +4,7 @@
 
 module Admin.Object.Candidacy exposing (..)
 
+import Admin.Enum.CandidacyFeasibilityFormat
 import Admin.Enum.CandidateTypology
 import Admin.Enum.FinanceModule
 import Admin.InputObject
@@ -258,6 +259,11 @@ dematerializedFeasibilityFile :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
 dematerializedFeasibilityFile object____ =
     Object.selectionForCompositeField "dematerializedFeasibilityFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+feasibilityFormat : SelectionSet (Maybe Admin.Enum.CandidacyFeasibilityFormat.CandidacyFeasibilityFormat) Admin.Object.Candidacy
+feasibilityFormat =
+    Object.selectionForField "(Maybe Enum.CandidacyFeasibilityFormat.CandidacyFeasibilityFormat)" "feasibilityFormat" [] (Admin.Enum.CandidacyFeasibilityFormat.decoder |> Decode.nullable)
 
 
 activeDossierDeValidation :
