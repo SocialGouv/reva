@@ -78,11 +78,13 @@ export interface TrainingFormValues {
 export interface TrainingFormProps {
   defaultValues?: NullablePartial<TrainingFormValues>;
   onSubmit?(values: TrainingFormValues): void;
+  disabled?: boolean;
 }
 
 export const TrainingForm = ({
   defaultValues,
   onSubmit,
+  disabled,
 }: TrainingFormProps) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -104,6 +106,7 @@ export const TrainingForm = ({
     formState: { errors, isDirty, isSubmitting },
   } = useForm<TrainingFormData>({
     resolver: zodResolver(trainingFormSchema),
+    disabled,
   });
 
   const { fields: basicSkillsFields } = useFieldArray({
@@ -174,6 +177,7 @@ export const TrainingForm = ({
       basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
     });
   });
+
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <h2 className="text-lg">Nombre d'heures</h2>
@@ -225,6 +229,7 @@ export const TrainingForm = ({
       <h2 className="text-lg">Compléments formatifs</h2>
       <div className="grid md:grid-cols-2 gap-6">
         <Checkbox
+          disabled={disabled}
           legend="Formations obligatoires"
           options={mandatoryTrainingsFields.map((t, tIndex) => ({
             label: t.label,
@@ -234,6 +239,7 @@ export const TrainingForm = ({
           }))}
         />
         <Checkbox
+          disabled={disabled}
           className="items-start"
           legend="Savoirs de base"
           options={basicSkillsFields.map((s, sIndex) => ({
@@ -282,6 +288,7 @@ export const TrainingForm = ({
       <br />
       <RadioButtons
         legend="Le candidat / la candidate vise :"
+        disabled={disabled}
         options={[
           {
             label: "La certification dans sa totalité",
@@ -302,7 +309,7 @@ export const TrainingForm = ({
         stateRelatedMessage={errors.certificationScope?.message}
       />
       <br />
-      <Button className="ml-auto" disabled={isSubmitting}>
+      <Button className="ml-auto" disabled={isSubmitting || disabled}>
         Envoyer le parcours
       </Button>
     </form>

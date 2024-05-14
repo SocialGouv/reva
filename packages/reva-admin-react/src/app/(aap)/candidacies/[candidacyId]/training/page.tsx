@@ -5,6 +5,7 @@ import { useTrainingPage } from "./trainingPage.hook";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 const getTypologyLabel = (typology?: string) => {
   switch (typology) {
@@ -80,6 +81,11 @@ const TrainingPage = () => {
                   : null,
             }}
             onSubmit={handleFormSubmit}
+            disabled={isCandidacyStatusEqualOrAbove(
+              candidacy.candidacyStatuses.find((s) => s.isActive)?.status ||
+                "ARCHIVE",
+              "DOSSIER_FAISABILITE_ENVOYE",
+            )}
           />
         </>
       )}
