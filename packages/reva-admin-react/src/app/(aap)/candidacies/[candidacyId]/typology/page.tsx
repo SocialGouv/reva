@@ -12,7 +12,6 @@ import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
 import { useEffect } from "react";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
-import { ADMIN_ELM_URL } from "@/config/config";
 
 const typologyFormSchema = z.object({
   typology: z.enum([
@@ -45,7 +44,6 @@ const TypologyPage = () => {
   const { typology } = useWatch({ control });
 
   const handleCcnChoice = (ccnId: string) => {
-    console.log({ ccnId });
     setValue("ccnId", ccnId);
     handleFormSubmit();
   };
