@@ -98,9 +98,9 @@ export const getAAPsWithZipCode = async ({
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
       SELECT DISTINCT(o.*), (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
-      INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id,
-      active_organism_by_available_certification_and_department ao
+      INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
       ${additionalTablesToJoin}
+      ,active_organism_by_available_certification_and_department ao
       ${whereClause}
       ORDER BY distance_km ASC
       LIMIT ${limit}
