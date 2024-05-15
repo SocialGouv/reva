@@ -67,7 +67,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       href: `/agencies-settings/${organismId}/absence`,
     }),
     getNavItem({
-      text: "Responsable d'agence",
+      text: "Administrateur du compte",
       href: `/agencies-settings/${organismId}/manager`,
     }),
   ];

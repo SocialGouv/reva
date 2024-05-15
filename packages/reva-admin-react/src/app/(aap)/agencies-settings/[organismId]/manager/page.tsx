@@ -72,7 +72,7 @@ const AgencyManagerPage = () => {
 
   return (
     <div className="flex flex-col pb-12 w-full">
-      <h1>Information du responsable d'agence</h1>
+      <h1>Informations de l'administrateur du compte</h1>
 
       {organismQueryStatus === "error" && (
         <Alert
@@ -107,7 +107,7 @@ const AgencyManagerPage = () => {
               />
               {isGestionnaireMaisonMereAAP && (
                 <SmallNotice>
-                  Le responsable d'agence recevra la confirmation pour la
+                  L'administrateur du compte recevra la confirmation pour la
                   validation du compte sur cet email. Il lui sera également
                   nécessaire pour se connecter à la plateforme.
                 </SmallNotice>
