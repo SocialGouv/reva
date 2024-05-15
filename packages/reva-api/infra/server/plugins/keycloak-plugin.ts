@@ -52,34 +52,29 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const [, token] = req.headers.authorization.split("Bearer ");
-      if (!token) {
-        throw new Error("bearer token invalide");
-      }
 
-      const decodedToken = jwt.decode(token) as { azp?: string };
-      if (!decodedToken) {
-        throw new Error("JWT invalide");
-      }
+      if (token) {
+        const decodedToken = jwt.decode(token) as { azp?: string };
+        if (decodedToken?.azp === config.clientId) {
+          //check if request should be handled by plugin instance(we have multiple realms and so multiple plugin instances)
+          try {
+            const userInfo = await keycloak.grantManager.userInfo<
+              string,
+              KeycloakConnectUserInfo
+            >(token);
 
-      if (decodedToken?.azp === config.clientId) {
-        //check if request should be handled by plugin instance(we have multiple realms and so multiple plugin instances)
-        try {
-          const userInfo = await keycloak.grantManager.userInfo<
-            string,
-            KeycloakConnectUserInfo
-          >(token);
-
-          req.auth = {
-            hasRole: (role: KeyCloakUserRole) => {
-              return (
-                userInfo?.realm_access?.roles as KeyCloakUserRole[]
-              )?.includes(role);
-            },
-            token,
-            userInfo,
-          };
-        } catch (e) {
-          logger.error(e);
+            req.auth = {
+              hasRole: (role: KeyCloakUserRole) => {
+                return (
+                  userInfo?.realm_access?.roles as KeyCloakUserRole[]
+                )?.includes(role);
+              },
+              token,
+              userInfo,
+            };
+          } catch (e) {
+            logger.error(e);
+          }
         }
       }
     }
