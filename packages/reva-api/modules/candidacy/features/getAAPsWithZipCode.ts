@@ -34,14 +34,16 @@ type SearchResponse = {
 
 export const getAAPsWithZipCode = async ({
   zip,
-  pmr,
+  certificationId,
   limit,
+  pmr,
   searchText,
   distanceStatus,
 }: {
   zip: string;
-  pmr?: boolean;
+  certificationId: string;
   limit: number;
+  pmr?: boolean;
   searchText?: string;
   distanceStatus?: string;
 }) => {
@@ -49,7 +51,7 @@ export const getAAPsWithZipCode = async ({
   const res = await fetch(query);
   const { features }: SearchResponse = await res.json();
 
-  if (!features?.length) {
+  if (!features?.length || !certificationId) {
     return [];
   }
 
@@ -68,6 +70,8 @@ export const getAAPsWithZipCode = async ({
 
   let additionalTablesToJoin = "";
   let whereClause = `
+  where o.id = ao.organism_id
+  and ao.certification_id=uuid('${certificationId}')
   and o.ll_to_earth IS NOT NULL
   and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
   and (oic."adresse_code_postal" IS NOT NULL or oic."adresse_code_postal" != '')
@@ -94,7 +98,8 @@ export const getAAPsWithZipCode = async ({
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
       SELECT DISTINCT(o.*), (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
-      INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
+      INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id,
+      active_organism_by_available_certification_and_department ao
       ${additionalTablesToJoin}
       ${whereClause}
       ORDER BY distance_km ASC

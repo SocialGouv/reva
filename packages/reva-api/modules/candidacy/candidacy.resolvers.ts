@@ -187,7 +187,17 @@ const unsafeResolvers = {
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: candidacyId },
-        include: { organism: true },
+        include: {
+          organism: true,
+          certificationsAndRegions: {
+            select: {
+              certificationId: true,
+            },
+            where: {
+              isActive: true,
+            },
+          },
+        },
       });
 
       let organismsFound: OrganismCamelCase[];
@@ -199,6 +209,8 @@ const unsafeResolvers = {
           searchFilter?.distanceStatus === "ONSITE_REMOTE")
       ) {
         organismsFound = await getAAPsWithZipCode({
+          certificationId:
+            candidacy?.certificationsAndRegions[0]?.certificationId || "",
           zip: searchFilter.zip,
           pmr: searchFilter.pmr,
           limit: 51,
