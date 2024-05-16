@@ -137,7 +137,7 @@ export const useCertificationAuthorityPageLogic = () => {
     [getReferentialResponse],
   );
   const certifications = useMemo(
-    () => getReferentialResponse?.searchCertificationsForCandidate.rows || [],
+    () => getReferentialResponse?.searchCertificationsForCandidate?.rows || [],
     [getReferentialResponse],
   );
 

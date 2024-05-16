@@ -63,7 +63,8 @@
     }
   }
 
-  .modal-confirm-jury-result {
+  .modal-confirm-jury-result,
+  .modal-confirm-reorientation {
     .fr-modal__header {
       button {
         display: none;

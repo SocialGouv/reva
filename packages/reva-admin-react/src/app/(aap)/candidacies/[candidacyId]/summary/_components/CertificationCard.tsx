@@ -18,14 +18,14 @@ export const CertificationCard = ({
     candidacyDropOut?: { droppedOutAt: number } | null;
   };
 }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
   const certification = candidacy.certification;
   const lastStatus = candidacy.candidacyStatuses.find(
     (s: CandidacyStatusSummary) => s.isActive,
   );
 
   const canUpdateCertification =
-    isAdmin &&
+    (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
     lastStatus &&
     [
       "PRISE_EN_CHARGE",
