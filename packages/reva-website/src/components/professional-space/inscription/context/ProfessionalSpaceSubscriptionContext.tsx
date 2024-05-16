@@ -29,6 +29,11 @@ interface ProfessionalSpaceInfo {
   accountPhoneNumber: string;
   companyWebsite: string;
   hasQualiopiVAE: boolean;
+  delegataire: boolean;
+  attestationURSSAF: File;
+  justificatifIdentiteDirigeant: File;
+  lettreDeDelegation: File;
+  justificatifIdentiteDelegataire: File;
 }
 
 type Step =
@@ -59,7 +64,11 @@ type CompanySiretStepData = Pick<
 
 type AccountInfoStepData = Pick<
   ProfessionalSpaceInfo,
-  "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
+  | "accountFirstname"
+  | "accountLastname"
+  | "accountEmail"
+  | "accountPhoneNumber"
+  | "delegataire"
 >;
 
 type CompanyDocumentsStep = null;

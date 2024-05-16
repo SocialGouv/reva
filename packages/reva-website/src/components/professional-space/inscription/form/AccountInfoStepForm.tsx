@@ -29,6 +29,7 @@ export const AccountInfoStepForm = () => {
               accountLastname: "Doe",
               accountEmail: "john.doe@example.com",
               accountPhoneNumber: "0123456789",
+              delegataire: true,
             })
           }
           type="submit"
