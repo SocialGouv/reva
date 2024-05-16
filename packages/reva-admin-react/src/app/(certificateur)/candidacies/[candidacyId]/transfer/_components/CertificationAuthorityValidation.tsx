@@ -7,7 +7,7 @@ import { z } from "zod";
 import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
 
 const schema = z.object({
-  reason: z.string().min(1, {
+  reason: z.string().trim().min(1, {
     message: "Ce champ est requis",
   }),
 });
@@ -26,7 +26,7 @@ export const CertificationAuthorityValidation = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({ resolver: zodResolver(schema), defaultValues: { reason: "" } });
   return (
     <>
@@ -55,7 +55,7 @@ export const CertificationAuthorityValidation = ({
           >
             Annuler
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !isDirty}>
             Transférer
           </Button>
         </div>

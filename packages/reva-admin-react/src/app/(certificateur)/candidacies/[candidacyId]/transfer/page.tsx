@@ -4,6 +4,7 @@ import {
   CertificationAuthority,
   CertificationAuthorityPaginated,
 } from "@/graphql/generated/graphql";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -23,8 +24,10 @@ export default function TransferCandidacyPage() {
   const {
     certificationAuthorities,
     certificationAuthoritiesStatus,
+    certificationAuthoritiesIsLoading,
     transferCandidacyToAnotherCertificationAuthorityMutation,
     candidacy,
+    candidacyIsLoading,
   } = useTransferCandidacy({ searchFilter });
 
   const updateSearchFilter = (newSearchFilter: string) => {
@@ -57,6 +60,22 @@ export default function TransferCandidacyPage() {
     }
   };
 
+  if (
+    certificationAuthoritiesIsLoading ||
+    candidacyIsLoading ||
+    certificationAuthoritiesStatus !== "success"
+  ) {
+    return null;
+  }
+
+  if (!certificationAuthorities?.rows.length) {
+    return (
+      <Alert
+        title={`Nous n'avons trouvé aucun certificateur disponible pour la certification ${candidacy?.certification?.label ?? ""}.`}
+        severity="info"
+      />
+    );
+  }
   return (
     <div>
       <h1>Transfert de la candidature</h1>
@@ -81,18 +100,16 @@ export default function TransferCandidacyPage() {
             }
           />
         ) : (
-          certificationAuthoritiesStatus === "success" && (
-            <CertificationAuthoritySearchList
-              certificationAuthorities={
-                certificationAuthorities as CertificationAuthorityPaginated
-              }
-              updateSearchFilter={updateSearchFilter}
-              searchFilter={searchFilter}
-              setCertificationAuthoritySelected={
-                setCertificationAuthoritySelected
-              }
-            />
-          )
+          <CertificationAuthoritySearchList
+            certificationAuthorities={
+              certificationAuthorities as CertificationAuthorityPaginated
+            }
+            updateSearchFilter={updateSearchFilter}
+            searchFilter={searchFilter}
+            setCertificationAuthoritySelected={
+              setCertificationAuthoritySelected
+            }
+          />
         )}
       </div>
     </div>

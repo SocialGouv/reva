@@ -92,6 +92,7 @@ export function useTransferCandidacy({
   const {
     data: certificationAuthoritiesData,
     status: certificationAuthoritiesStatus,
+    isLoading: certificationAuthoritiesIsLoading,
   } = useQuery({
     queryKey: [
       "getCertificationAuthoritiesToTransferCandidacy",
@@ -106,7 +107,7 @@ export function useTransferCandidacy({
       }),
   });
 
-  const { data: candidacyData, status: candidacyStatus } = useQuery({
+  const { data: candidacyData, isLoading: candidacyIsLoading } = useQuery({
     queryKey: [candidacyId, "getCandidacyTransferCandidacy"],
     queryFn: () =>
       graphqlClient.request(getCandidacyTransferCandidacy, { candidacyId }),
@@ -120,7 +121,9 @@ export function useTransferCandidacy({
   return {
     certificationAuthorities,
     certificationAuthoritiesStatus,
+    certificationAuthoritiesIsLoading,
     transferCandidacyToAnotherCertificationAuthorityMutation,
     candidacy,
+    candidacyIsLoading,
   };
 }
