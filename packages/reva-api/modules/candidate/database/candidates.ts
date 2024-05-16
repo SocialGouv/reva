@@ -161,6 +161,9 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
 export const getCandidateWithCandidacyFromKeycloakId = async (
   keycloakId: string,
 ) => {
+  if (!keycloakId) {
+    return Left("Identifiant utilisateur invalide");
+  }
   try {
     let candidate = await prismaClient.candidate.findFirst({
       where: {
