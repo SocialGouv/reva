@@ -188,8 +188,7 @@ export const validateSubscriptionRequest = async (
         dateExpirationCertificationQualiopi:
           subscriptionRequest.qualiopiCertificateExpiresAt,
         gestionnaireAccountId: account.id,
-        statutValidationInformationsJuridiquesMaisonMereAAP:
-          "EN_ATTENTE_DE_VERIFICATION",
+        statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR",
       },
       domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
         (o: { domaineId: string }) => o.domaineId,
