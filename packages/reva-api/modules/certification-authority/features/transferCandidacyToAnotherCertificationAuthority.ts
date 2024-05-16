@@ -1,6 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import {
   sendCandidacyTransferToNewCertificationAuthorityEmail,
+  sendCandidacyTransferToPreviousCertificationAuthorityEmail,
   sendCandidacyTransferedToOrganismEmail,
 } from "../emails";
 
@@ -56,43 +57,6 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     (f) => f.isActive,
   );
 
-  const previousCertificationAuthority =
-    candidacyActiveFeasibility?.certificationAuthority;
-
-  const organismEmail =
-    candidacy.organism?.organismInformationsCommerciales?.emailContact ??
-    candidacy.organism?.contactAdministrativeEmail;
-  const organismName =
-    candidacy.organism?.organismInformationsCommerciales?.nom ??
-    (candidacy.organism?.label as string);
-  const previousCertificationAuthorityName =
-    previousCertificationAuthority?.contactFullName ??
-    (previousCertificationAuthority?.label as string);
-
-  const newCertificationAuthorityName =
-    newCertificationAuthority.contactFullName ??
-    newCertificationAuthority.label;
-
-  //SEND MAIL PREVIOUS previousCertificationAuthority
-  if (newCertificationAuthority.contactEmail) {
-    sendCandidacyTransferToNewCertificationAuthorityEmail({
-      email: newCertificationAuthority.contactEmail,
-      previousCertificationAuthorityName,
-      newCertificationAuthorityName,
-      candidateName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
-      transferReason,
-      candidacyId,
-    });
-  }
-  if (organismEmail) {
-    sendCandidacyTransferedToOrganismEmail({
-      email: organismEmail,
-      organismName,
-      candidateName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
-      certificationAuthorityName: newCertificationAuthorityName,
-    });
-  }
-
   await prismaClient.candidacy.update({
     where: {
       id: candidacyId,
@@ -111,6 +75,54 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
       },
     },
   });
+
+  const previousCertificationAuthority =
+    candidacyActiveFeasibility?.certificationAuthority;
+
+  const organismEmail =
+    candidacy.organism?.organismInformationsCommerciales?.emailContact ??
+    candidacy.organism?.contactAdministrativeEmail;
+  const organismName =
+    candidacy.organism?.organismInformationsCommerciales?.nom ??
+    (candidacy.organism?.label as string);
+  const previousCertificationAuthorityName =
+    previousCertificationAuthority?.contactFullName ??
+    (previousCertificationAuthority?.label as string);
+
+  const newCertificationAuthorityName =
+    newCertificationAuthority.contactFullName ??
+    newCertificationAuthority.label;
+
+  const candidateName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
+
+  if (previousCertificationAuthority?.contactEmail) {
+    sendCandidacyTransferToPreviousCertificationAuthorityEmail({
+      email: previousCertificationAuthority.contactEmail,
+      previousCertificationAuthorityName,
+      newCertificationAuthorityName,
+      candidateName,
+    });
+  }
+
+  if (newCertificationAuthority.contactEmail) {
+    sendCandidacyTransferToNewCertificationAuthorityEmail({
+      email: newCertificationAuthority.contactEmail,
+      previousCertificationAuthorityName,
+      newCertificationAuthorityName,
+      candidateName,
+      transferReason,
+      candidacyId,
+    });
+  }
+
+  if (organismEmail) {
+    sendCandidacyTransferedToOrganismEmail({
+      email: organismEmail,
+      organismName,
+      candidateName,
+      certificationAuthorityName: newCertificationAuthorityName,
+    });
+  }
 
   return true;
 };
