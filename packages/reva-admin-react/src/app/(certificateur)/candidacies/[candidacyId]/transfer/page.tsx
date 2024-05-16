@@ -17,7 +17,6 @@ export default function TransferCandidacyPage() {
   const pathname = usePathname();
 
   const [searchFilter, setSearchFilter] = useState("");
-  const [reason, setReason] = useState("");
   const [certificationAuthoritySelected, setCertificationAuthoritySelected] =
     useState<CertificationAuthority | null>(null);
 
@@ -74,14 +73,12 @@ export default function TransferCandidacyPage() {
             setCertificationAuthoritySelected={
               setCertificationAuthoritySelected
             }
-            onTransferCandidacy={() =>
+            onTransferCandidacy={(transferReason: string) =>
               handleTransferCandidacy({
                 certificationAuthorityId: certificationAuthoritySelected.id,
-                transferReason: reason,
+                transferReason,
               })
             }
-            reason={reason}
-            setReason={setReason}
           />
         ) : (
           certificationAuthoritiesStatus === "success" && (
