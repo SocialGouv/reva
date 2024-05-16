@@ -1,5 +1,8 @@
 import { prismaClient } from "../../../prisma/client";
-import { sendCandidacyTransferedToOrganismEmail } from "../emails";
+import {
+  sendCandidacyTransferToNewCertificationAuthorityEmail,
+  sendCandidacyTransferedToOrganismEmail,
+} from "../emails";
 
 export const transferCandidacyToAnotherCertificationAuthority = async ({
   candidacyId,
@@ -53,23 +56,40 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     (f) => f.isActive,
   );
 
-  const _previousCertificationAuthority =
+  const previousCertificationAuthority =
     candidacyActiveFeasibility?.certificationAuthority;
 
-  const AapEmail =
+  const organismEmail =
     candidacy.organism?.organismInformationsCommerciales?.emailContact ??
     candidacy.organism?.contactAdministrativeEmail;
+  const organismName =
+    candidacy.organism?.organismInformationsCommerciales?.nom ??
+    (candidacy.organism?.label as string);
+  const previousCertificationAuthorityName =
+    previousCertificationAuthority?.contactFullName ??
+    (previousCertificationAuthority?.label as string);
+
+  const newCertificationAuthorityName =
+    newCertificationAuthority.contactFullName ??
+    newCertificationAuthority.label;
 
   //SEND MAIL PREVIOUS previousCertificationAuthority
-  //SEND MAIL NEW newCertificationAuthority
-  if (AapEmail) {
-    sendCandidacyTransferedToOrganismEmail({
-      email: AapEmail,
-      organismName:
-        candidacy.organism?.organismInformationsCommerciales?.nom ??
-        (candidacy.organism?.label as string),
+  if (newCertificationAuthority.contactEmail) {
+    sendCandidacyTransferToNewCertificationAuthorityEmail({
+      email: newCertificationAuthority.contactEmail,
+      previousCertificationAuthorityName,
+      newCertificationAuthorityName,
       candidateName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
-      certificationAuthorityName: newCertificationAuthority.label,
+      transferReason,
+      candidacyId,
+    });
+  }
+  if (organismEmail) {
+    sendCandidacyTransferedToOrganismEmail({
+      email: organismEmail,
+      organismName,
+      candidateName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
+      certificationAuthorityName: newCertificationAuthorityName,
     });
   }
 
