@@ -250,21 +250,6 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
   }
 };
 
-export const getCandidateByEmail = async (email: string) => {
-  try {
-    const candidate = await prismaClient.candidate.findFirst({
-      where: {
-        email,
-      },
-      include: candidateIncludes,
-    });
-    return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while retrieving the candidate`);
-  }
-};
-
 export const getCandidateByCandidacyId = async (id: string) => {
   try {
     const candidate = await prismaClient.candidate.findFirst({

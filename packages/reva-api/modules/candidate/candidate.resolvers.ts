@@ -10,15 +10,11 @@ import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
 } from "./candidate.types";
-import {
-  getCandidateByEmail as getCandidateByEmailFromDb,
-  getCandidateWithCandidacyFromKeycloakId,
-} from "./database/candidates";
+import { getCandidateWithCandidacyFromKeycloakId } from "./database/candidates";
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
-import { getCandidateByEmail } from "./features/getCandidateByEmail";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
@@ -77,20 +73,6 @@ const unsafeResolvers = {
       const result = await getCandidateWithCandidacy({
         getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
       })({ keycloakId: context.auth.userInfo?.sub });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
-    candidate_getCandidateByEmail: async (
-      _: any,
-      { email }: { email: string },
-      context: { auth: any },
-    ) => {
-      const result = await getCandidateByEmail({
-        hasRole: context.auth.hasRole,
-        getCandidateByEmail: getCandidateByEmailFromDb,
-      })({ email });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))

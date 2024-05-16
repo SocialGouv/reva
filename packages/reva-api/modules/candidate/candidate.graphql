@@ -52,7 +52,6 @@ type Candidate {
 
 type Query {
   candidate_getCandidateWithCandidacy: Candidate!
-  candidate_getCandidateByEmail(email: String!): Candidate
 }
 
 input CandidateInput {

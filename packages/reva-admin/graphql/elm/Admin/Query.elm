@@ -246,14 +246,6 @@ type alias CandidateGetCandidateByEmailRequiredArguments =
     { email : String }
 
 
-candidate_getCandidateByEmail :
-    CandidateGetCandidateByEmailRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidate
-    -> SelectionSet (Maybe decodesTo) RootQuery
-candidate_getCandidateByEmail requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_getCandidateByEmail" [ Argument.required "email" requiredArgs____.email Encode.string ] object____ (Basics.identity >> Decode.nullable)
-
-
 type alias CertificationAuthorityGetCertificationAuthorityRequiredArguments =
     { id : Data.Scalar.Id }
 
