@@ -18,9 +18,9 @@ export const CompanySiretStepForm = () => {
         currentStep={1}
         stepCount={3}
       />
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-4 justify-between">
         <Button priority="secondary" onClick={goBackToPreviousStep}>
-          Revenir à l'étape 1
+          Retour
         </Button>
         <Button
           onClick={() =>

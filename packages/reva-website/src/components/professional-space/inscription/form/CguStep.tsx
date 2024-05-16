@@ -99,7 +99,7 @@ export const CguStep = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button type="submit" disabled={!isValid}>
-            Passer à l'étape 2
+            Commencer
           </Button>
         </div>
       </form>

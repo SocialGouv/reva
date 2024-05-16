@@ -18,9 +18,9 @@ export const AccountInfoStepForm = () => {
         currentStep={2}
         stepCount={3}
       />
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-4 justify-between">
         <Button priority="secondary" onClick={goBackToPreviousStep}>
-          Revenir à l'étape 2
+          Retour
         </Button>
         <Button
           onClick={() =>
