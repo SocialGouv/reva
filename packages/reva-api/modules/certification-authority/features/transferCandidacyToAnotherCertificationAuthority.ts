@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+import { sendCandidacyTransferedToOrganismEmail } from "../emails";
 
 export const transferCandidacyToAnotherCertificationAuthority = async ({
   candidacyId,
@@ -27,6 +28,7 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
           organismInformationsCommerciales: true,
         },
       },
+      candidate: true,
     },
   });
 
@@ -54,13 +56,22 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
   const _previousCertificationAuthority =
     candidacyActiveFeasibility?.certificationAuthority;
 
-  const _AapEmail =
+  const AapEmail =
     candidacy.organism?.organismInformationsCommerciales?.emailContact ??
     candidacy.organism?.contactAdministrativeEmail;
 
   //SEND MAIL PREVIOUS previousCertificationAuthority
   //SEND MAIL NEW newCertificationAuthority
-  //SEND MAIL AAP
+  if (AapEmail) {
+    sendCandidacyTransferedToOrganismEmail({
+      email: AapEmail,
+      organismName:
+        candidacy.organism?.organismInformationsCommerciales?.nom ??
+        (candidacy.organism?.label as string),
+      candidateName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
+      certificationAuthorityName: newCertificationAuthority.label,
+    });
+  }
 
   await prismaClient.candidacy.update({
     where: {
