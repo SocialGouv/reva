@@ -3,7 +3,6 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fi
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -74,16 +73,9 @@ export const CguStep = () => {
         className="mb-12"
         closable
         description={alertDescription}
-        severity="warning"
+        severity="info"
         title="Aide à la création de compte"
       />
-      <Stepper
-        title="Prendre connaissance des conditions générales d'utilisation de la plateforme France VAE"
-        currentStep={1}
-        stepCount={5}
-        nextTitle="Renseigner les certifications concernées"
-      />
-      <div className="border-t border-gray-300  mb-7" />
 
       <form className="flex flex-col" onSubmit={handleSubmit(submitCguStep)}>
         <fieldset className="flex flex-col  ">
