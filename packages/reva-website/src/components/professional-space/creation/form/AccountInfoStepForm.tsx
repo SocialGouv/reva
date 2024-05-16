@@ -1,4 +1,3 @@
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Notice from "@codegouvfr/react-dsfr/Notice";
@@ -62,7 +61,6 @@ export const AccountInfoStepForm = () => {
           Erreur lors de l'envoi du formulaire: {submissionError}
         </div>
       )}
-      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <legend className="text-xl font-bold text-gray-900 grow mb-4">

@@ -1,5 +1,6 @@
 "use client";
 
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
@@ -113,10 +114,7 @@ const ProfessionalSpaceCreationPage = ({
         <h1 className="mb-12">
           Créez le compte administrateur de votre établissement (direction
           nationale ou régionale)
-          <div className="mt-1 text-xs text-gray-600 font-normal">
-            Sauf mention contraire “optionnel” dans le label, tous les champs
-            sont obligatoires.
-          </div>
+          <FormOptionalFieldsDisclaimer />
         </h1>
         <ProfessionalSpaceCreationProvider>
           <PageContent

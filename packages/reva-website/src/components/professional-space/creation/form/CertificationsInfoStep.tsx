@@ -1,4 +1,3 @@
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import {
   MultiSelect,
   Option as MultiSelectOption,
@@ -175,7 +174,6 @@ export const CertificationsInfoStepForm = ({
         stepCount={5}
       />
       <div className="border-t border-gray-300  mb-7" />
-      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <fieldset className="flex flex-col">

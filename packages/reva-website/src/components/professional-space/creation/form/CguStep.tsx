@@ -1,5 +1,4 @@
 import { Cgu } from "@/components/cgu/Cgu";
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -79,7 +78,6 @@ export const CguStep = () => {
         nextTitle="Renseigner les certifications concernées"
       />
       <div className="border-t border-gray-300  mb-7" />
-      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(submitCguStep)}>
         <fieldset className="flex flex-col  ">
           <legend className="text-xl font-bold text-gray-900 grow mb-8">

@@ -1,4 +1,3 @@
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -74,7 +73,6 @@ export const QualiopiCertificateInfoStepForm = () => {
         nextTitle="Saisir les informations de l'établissement"
       />
       <div className="border-t border-gray-300  mb-7" />
-      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="flex flex-col  ">
           <legend className="text-xl font-bold text-gray-900 grow mb-8">

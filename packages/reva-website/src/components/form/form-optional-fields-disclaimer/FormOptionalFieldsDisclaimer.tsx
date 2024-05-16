@@ -3,7 +3,7 @@ export const FormOptionalFieldsDisclaimer = ({
 }: {
   className?: string;
 }) => (
-  <p className={`text-sm ${className}`}>
+  <p className={`mt-1 text-xs text-gray-600 font-normal ${className}`}>
     Sauf mention contraire “(optionnel)” dans le label, tous les champs sont
     obligatoires.
   </p>
