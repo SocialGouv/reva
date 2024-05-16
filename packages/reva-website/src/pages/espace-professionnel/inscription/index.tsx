@@ -1,6 +1,5 @@
 "use client";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
@@ -39,11 +38,6 @@ const ProfessionalSpaceCreationPage = ({}) => {
         </title>
       </Head>
       <OrganismBackground>
-        <h1 className="mb-12">
-          Créez le compte administrateur de votre établissement (direction
-          nationale ou régionale)
-          <FormOptionalFieldsDisclaimer />
-        </h1>
         <ProfessionalSpaceSubscriptionProvider>
           <PageContent />
         </ProfessionalSpaceSubscriptionProvider>

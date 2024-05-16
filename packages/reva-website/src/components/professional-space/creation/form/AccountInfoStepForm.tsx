@@ -1,3 +1,4 @@
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Notice from "@codegouvfr/react-dsfr/Notice";
@@ -50,6 +51,11 @@ export const AccountInfoStepForm = () => {
 
   return (
     <>
+      <h1 className="mb-12">
+        Créez le compte administrateur de votre établissement (direction
+        nationale ou régionale)
+        <FormOptionalFieldsDisclaimer />
+      </h1>
       <Stepper
         title="Saisir vos informations de contact et de connexion du compte administrateur"
         currentStep={5}

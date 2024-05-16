@@ -1,4 +1,5 @@
 import { Cgu } from "@/components/cgu/Cgu";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -64,6 +65,11 @@ export const CguStep = () => {
 
   return (
     <>
+      <h1 className="mb-12">
+        Création de compte administrateur - Architecte Accompagnateur de
+        Parcours
+        <FormOptionalFieldsDisclaimer />
+      </h1>
       <Alert
         className="mb-12"
         closable
