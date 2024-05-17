@@ -50,29 +50,48 @@ export const CompanyDocumentsStepForm = () => {
   });
 
   const handleFormSubmit = handleSubmit(
-    (data) => {
-      if (!data.attestationURSSAF?.[0]) {
+    ({
+      attestationURSSAF,
+      justificatifIdentiteDirigeant,
+      lettreDeDelegation,
+      justificatifIdentiteDelegataire,
+    }) => {
+      let formValid = true;
+      if (!attestationURSSAF?.[0]) {
         setError("attestationURSSAF", { message: "Ce champ est obligatoire" });
+        formValid = false;
       }
-      if (!data.justificatifIdentiteDirigeant?.[0]) {
+      if (!justificatifIdentiteDirigeant?.[0]) {
         setError("justificatifIdentiteDirigeant", {
           message: "Ce champ est obligatoire",
         });
+        formValid = false;
       }
 
       if (delegataire) {
-        if (!data.lettreDeDelegation?.[0]) {
+        if (!lettreDeDelegation?.[0]) {
           setError("lettreDeDelegation", {
             message: "Ce champ est obligatoire",
           });
+          formValid = false;
         }
-        if (!data.justificatifIdentiteDelegataire?.[0]) {
+        if (!justificatifIdentiteDelegataire?.[0]) {
           setError("justificatifIdentiteDelegataire", {
             message: "Ce champ est obligatoire",
           });
+          formValid = false;
         }
       }
-      console.log(data);
+
+      if (formValid) {
+        submitCompanyDocumentsStep({
+          attestationURSSAF: attestationURSSAF?.[0] as File,
+          justificatifIdentiteDirigeant:
+            justificatifIdentiteDirigeant?.[0] as File,
+          lettreDeDelegation: lettreDeDelegation?.[0],
+          justificatifIdentiteDelegataire: justificatifIdentiteDelegataire?.[0],
+        });
+      }
     },
     (e) => console.log(e),
   );

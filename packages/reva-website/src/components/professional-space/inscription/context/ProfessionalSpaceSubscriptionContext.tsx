@@ -32,8 +32,8 @@ interface ProfessionalSpaceInfo {
   delegataire: boolean;
   attestationURSSAF: File;
   justificatifIdentiteDirigeant: File;
-  lettreDeDelegation: File;
-  justificatifIdentiteDelegataire: File;
+  lettreDeDelegation?: File;
+  justificatifIdentiteDelegataire?: File;
 }
 
 type Step =
@@ -71,7 +71,13 @@ type AccountInfoStepData = Pick<
   | "delegataire"
 >;
 
-type CompanyDocumentsStep = null;
+type CompanyDocumentsStep = Pick<
+  ProfessionalSpaceInfo,
+  | "attestationURSSAF"
+  | "justificatifIdentiteDirigeant"
+  | "lettreDeDelegation"
+  | "justificatifIdentiteDelegataire"
+>;
 
 type ProfessionalSpaceSubscriptionContext =
   ProfessionalSpaceSubscriptionState & {
