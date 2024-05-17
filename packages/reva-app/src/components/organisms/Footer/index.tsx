@@ -31,22 +31,11 @@ export const Footer = () => (
               <a
                 className="fr-footer__content-link"
                 target="_blank"
-                href="https://legifrance.gouv.fr"
-                aria-label="legifrance.gouv.fr nouvelle page"
-                rel="noreferrer"
-              >
-                legifrance.gouv.fr
-              </a>
-            </li>
-            <li className="fr-footer__content-item">
-              <a
-                className="fr-footer__content-link"
-                target="_blank"
-                href="https://gouvernement.fr"
+                href="http://info.gouv.fr/"
                 aria-label="gouvernement.fr nouvelle page"
                 rel="noreferrer"
               >
-                gouvernement.fr
+                info.gouv.fr
               </a>
             </li>
             <li className="fr-footer__content-item">
@@ -58,6 +47,17 @@ export const Footer = () => (
                 rel="noreferrer"
               >
                 service-public.fr
+              </a>
+            </li>
+            <li className="fr-footer__content-item">
+              <a
+                className="fr-footer__content-link"
+                target="_blank"
+                href="https://legifrance.gouv.fr"
+                aria-label="legifrance.gouv.fr nouvelle page"
+                rel="noreferrer"
+              >
+                legifrance.gouv.fr
               </a>
             </li>
             <li className="fr-footer__content-item">

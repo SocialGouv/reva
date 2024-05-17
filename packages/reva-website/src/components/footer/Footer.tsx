@@ -37,20 +37,10 @@ export const Footer = ({ className }: { className?: string }) => {
                 <a
                   className="fr-footer__content-link"
                   target="_blank"
-                  href="https://legifrance.gouv.fr"
-                  aria-label="legifrance.gouv.fr nouvelle page"
-                >
-                  legifrance.gouv.fr
-                </a>
-              </li>
-              <li className="fr-footer__content-item">
-                <a
-                  className="fr-footer__content-link"
-                  target="_blank"
-                  href="https://gouvernement.fr"
+                  href="http://info.gouv.fr/"
                   aria-label="gouvernement.fr nouvelle page"
                 >
-                  gouvernement.fr
+                  info.gouv.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
@@ -61,6 +51,16 @@ export const Footer = ({ className }: { className?: string }) => {
                   aria-label="service-public.fr nouvelle page"
                 >
                   service-public.fr
+                </a>
+              </li>
+              <li className="fr-footer__content-item">
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  href="https://legifrance.gouv.fr"
+                  aria-label="legifrance.gouv.fr nouvelle page"
+                >
+                  legifrance.gouv.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">

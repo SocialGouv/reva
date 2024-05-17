@@ -43,25 +43,14 @@ view context =
                     , ul
                         [ class "fr-footer__content-list" ]
                         [ li
-                            [ class "fr-footer__content-item"
-                            ]
-                            [ a
-                                [ class "fr-footer__content-link"
-                                , target "_blank"
-                                , href "https://legifrance.gouv.fr"
-                                , Accessibility.Aria.label "legifrance.gouv.fr nouvelle page"
-                                ]
-                                [ text "legifrance.gouv.fr" ]
-                            ]
-                        , li
                             [ class "fr-footer__content-item" ]
                             [ a
                                 [ class "fr-footer__content-link"
                                 , target "_blank"
-                                , href "https://gouvernement.fr"
+                                , href "http://info.gouv.fr/"
                                 , Accessibility.Aria.label "gouvernement.fr nouvelle page"
                                 ]
-                                [ text "gouvernement.fr" ]
+                                [ text "info.gouv.fr" ]
                             ]
                         , li
                             [ class "fr-footer__content-item" ]
@@ -72,6 +61,17 @@ view context =
                                 , Accessibility.Aria.label "service-public.fr nouvelle page"
                                 ]
                                 [ text "service-public.fr" ]
+                            ]
+                        , li
+                            [ class "fr-footer__content-item"
+                            ]
+                            [ a
+                                [ class "fr-footer__content-link"
+                                , target "_blank"
+                                , href "https://legifrance.gouv.fr"
+                                , Accessibility.Aria.label "legifrance.gouv.fr nouvelle page"
+                                ]
+                                [ text "legifrance.gouv.fr" ]
                             ]
                         , li
                             [ class "fr-footer__content-item" ]
