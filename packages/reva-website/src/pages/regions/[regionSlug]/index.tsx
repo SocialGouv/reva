@@ -109,7 +109,7 @@ const RegionHomePage = ({
       </div>
       {!!otherArticles.length && (
         <>
-          <h2 className="mt-32 mb-16">Nos actualités</h2>
+          <h2 className="mt-32 mb-16">Les actions de la Région pour la VAE</h2>
           <div className="flex flex-wrap gap-6">
             {otherArticles.map((a) => (
               <Card
