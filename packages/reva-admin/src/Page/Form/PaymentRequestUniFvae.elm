@@ -1,6 +1,6 @@
 module Page.Form.PaymentRequestUniFvae exposing (form)
 
-import Accessibility exposing (Html, div, h3, h4, p, span, text)
+import Accessibility exposing (Html, div, h3, h4, p, span, strong, text)
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)
@@ -39,7 +39,22 @@ form maybeCertification formData ( candidacy, referential ) =
                     False
     in
     { elements =
-        [ ( "stepper"
+        [ ( "disclaimer"
+          , Form.StaticHtml <|
+                View.alert View.Info
+                    [ class "mb-10" ]
+                    ""
+                    [ p []
+                        [ strong []
+                            [ text "Avez-vous obtenu votre accord de prise en charge ?"
+                            ]
+                        , span []
+                            [ text " Si vous n’avez pas obtenu d’accord de prise en charge de la part d’Uniformation, votre demande de paiement ne sera pas traitée pour le moment."
+                            ]
+                        ]
+                    ]
+          )
+        , ( "stepper"
           , Form.StaticHtml <|
                 View.stepper
                     { currentStep = 1
@@ -106,7 +121,7 @@ form maybeCertification formData ( candidacy, referential ) =
                                 (totalCompanionHourCount formData |> displayHours)
                                 (totalCompanionCost formData |> displayEuros)
                       )
-                    , ( "training",  Form.Title2 "Compléments formatifs" )
+                    , ( "training", Form.Title2 "Compléments formatifs" )
                     , ( "trainingHint"
                       , Form.StaticHtml <|
                             View.warningHint "Merci de prendre en compte que les actes formatifs doivent être facturés au tarif réel, plafonné à 25€ de l'heure. Des contrôles aléatoires seront effectués avant tout paiement, veuillez donc conserver et être prêt à présenter les factures acquittées correspondant aux actes formatifs, sur demande d'Uniformation."
