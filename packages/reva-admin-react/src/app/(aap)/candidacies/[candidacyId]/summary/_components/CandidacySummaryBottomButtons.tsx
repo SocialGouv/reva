@@ -20,7 +20,8 @@ export const CandidacySummaryBottomButtons = ({
 
   const showDeleteCandidacyButton = !isCandidacyArchivedAndNotReoriented;
 
-  const showRestoreCandidacyButton = isCandidacyArchivedAndNotReoriented;
+  const showRestoreCandidacyButton =
+    isCandidacyArchivedAndNotReoriented && isAdmin;
 
   const showDropOutCandidacyButton =
     !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented;

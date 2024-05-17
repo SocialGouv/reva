@@ -130,7 +130,7 @@ view context config =
             , if isCandidacyReoriented config.candidacy then
                 text ""
 
-              else if isCandidacyArchived config.candidacy then
+              else if isCandidacyArchived config.candidacy && Api.Token.isAdmin context.token then
                 Button.new
                     { onClick = Nothing, label = "Restaurer la candidature" }
                     |> Button.linkButton
