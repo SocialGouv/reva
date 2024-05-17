@@ -79,8 +79,9 @@ export const getDroppedOutCandidacyMenu = async ({
   const candidacyHasSentFeasibilityRequest = candidacy.candidacyStatuses.find(
     ({ status }) => status === "DOSSIER_FAISABILITE_ENVOYE",
   );
+  const candidacyIsUnireva = candidacy.financeModule === "unireva";
 
-  if (candidacyHasSentFeasibilityRequest) {
+  if (candidacyHasSentFeasibilityRequest || candidacyIsUnireva) {
     const fundingRequestMenuEntry =
       await getFundingRequestMenuEntry(userKeycloakId);
     const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
