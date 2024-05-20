@@ -1,0 +1,175 @@
+import {
+  createAccountProfile,
+  getAccountFromEmail,
+} from "../../account/database/accounts";
+import * as IAM from "../../account/features/keycloak";
+import {
+  createOrganism,
+  getOrganismBySiretAndTypology,
+} from "../../organism/database/organisms";
+import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
+import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../shared/error/functionalError";
+import { logger } from "../../shared/logger";
+
+import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
+
+export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
+  try {
+    const keyCloakAdmin = await getKeycloakAdmin();
+    const getIamAccount = IAM.getAccount(keyCloakAdmin);
+    const createAccountInIAM = IAM.createAccount(keyCloakAdmin);
+
+    //organism check
+    const oldOrganism = (
+      await getOrganismBySiretAndTypology(params.companySiret, "expertFiliere")
+    )
+      .unsafeCoerce()
+      .extractNullable();
+
+    if (oldOrganism) {
+      throw new FunctionalError(
+        FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
+        `Un organisme existe déjà avec le siret ${params.companySiret} pour la typologie expertFiliere`,
+      );
+    }
+
+    //account check
+    const oldAccount = (await getAccountFromEmail(params.accountEmail))
+      .unsafeCoerce()
+      .extractNullable();
+
+    if (oldAccount) {
+      throw new FunctionalError(
+        FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
+        `Un compte existe déjà avec l'email ${params.accountEmail}`,
+      );
+    }
+
+    const oldIamAccount = (
+      await getIamAccount({
+        email: params.accountEmail,
+        username: params.accountEmail,
+      })
+    )
+      .unsafeCoerce()
+      .extractNullable();
+
+    if (oldIamAccount)
+      throw new FunctionalError(
+        FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
+        `Un compte IAM existe déjà avec l'email ${params.accountEmail}`,
+      );
+
+    //organism creation
+    const newOrganism = (
+      await createOrganism({
+        label: params.companyName ?? "",
+        address: params.companyAddress ?? "",
+        contactAdministrativeEmail: params.accountEmail ?? "",
+        contactAdministrativePhone: params.accountPhoneNumber ?? "",
+        website: params.companyWebsite,
+        city: params.companyCity ?? "",
+        zip: params.companyZipCode ?? "",
+        siret: params.companySiret ?? "",
+        legalStatus: params.companyLegalStatus,
+        isActive: true,
+        typology: "expertFiliere",
+        llToEarth: null,
+        domaineIds: [],
+        ccnIds: [],
+        departmentsWithOrganismMethods: [],
+        qualiopiCertificateExpiresAt: new Date(),
+      })
+    ).unsafeCoerce();
+
+    logger.info(
+      `[subscription] Successfuly created organism with siret ${params.companySiret}`,
+    );
+
+    const newKeycloakId = (
+      await createAccountInIAM({
+        email: params.accountEmail ?? "",
+        firstname: params.accountFirstname ?? "",
+        lastname: params.accountLastname ?? "",
+        username: params.accountEmail ?? "",
+        group: "gestionnaire_maison_mere_aap",
+      })
+    ).unsafeCoerce();
+
+    logger.info(
+      `[subscription] Successfuly created IAM account ${newKeycloakId}`,
+    );
+
+    //db account creation
+    const account = (
+      await createAccountProfile({
+        firstname: params.accountFirstname ?? "",
+        lastname: params.accountLastname ?? "",
+        email: params.accountEmail ?? "",
+        keycloakId: newKeycloakId,
+        organismId: newOrganism.id,
+      })
+    ).unsafeCoerce();
+
+    logger.info(
+      `[subscription] Successfuly created Account with organismId ${newOrganism.id}`,
+    );
+
+    const newMaisonMereAAP = await createMaisonMereAAP({
+      maisonMereAAP: {
+        phone: params.accountPhoneNumber ?? "",
+        raisonSociale: params.companyName ?? "",
+        adresse: params.companyAddress ?? "",
+        siteWeb: params.companyWebsite,
+        ville: params.companyCity ?? "",
+        codePostal: params.companyZipCode ?? "",
+        siret: params.companySiret ?? "",
+        statutJuridique: params.companyLegalStatus,
+        typologie: "expertFiliere",
+        dateExpirationCertificationQualiopi: new Date(),
+        gestionnaireAccountId: account.id,
+        statutValidationInformationsJuridiquesMaisonMereAAP:
+          "EN_ATTENTE_DE_VERIFICATION",
+      },
+      domaineIds: [],
+      ccnIds: [],
+      maisonMereAAPOnDepartements: [],
+    });
+
+    await assignMaisonMereAAPToOrganism({
+      organismId: newOrganism.id,
+      maisonMereAAPId: newMaisonMereAAP.id,
+    });
+
+    return "Ok";
+  } catch (e) {
+    if (e instanceof FunctionalError) {
+      throw e;
+    } else {
+      logger.error(e);
+      throw new FunctionalError(
+        FunctionalCodeError.TECHNICAL_ERROR,
+        "Erreur pendant la validation de la demande d'inscription",
+      );
+    }
+  } finally {
+    //every stream must be emptied otherwise the request will hang
+    emptyUploadedFileStream(params.attestationURSSAF);
+    emptyUploadedFileStream(params.justificatifIdentiteDirigeant);
+    emptyUploadedFileStream(params.lettreDeDelegation);
+    emptyUploadedFileStream(params.justificatifIdentiteDelegataire);
+  }
+};
+
+const emptyUploadedFileStream = async (file: GraphqlUploadedFile) => {
+  try {
+    const stream = (await file).createReadStream();
+    stream.on("data", () => null);
+  } catch (_) {
+    //do nothing
+  }
+};

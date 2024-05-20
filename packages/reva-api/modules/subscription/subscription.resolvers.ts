@@ -14,12 +14,7 @@ import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
 import { sendRejectionEmail } from "./mail";
 import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
-import { ReadStream } from "fs";
-
-type GraphqlUploadedFile = Promise<{
-  filename: string;
-  createReadStream(): ReadStream;
-}>;
+import { subscribe } from "./features/subscribe";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -144,39 +139,9 @@ const unsafeResolvers = {
     subscription_subscribe: async (
       _: unknown,
       payload: {
-        subscriptionInput: {
-          attestationURSSAF: GraphqlUploadedFile;
-          justificatifIdentiteDirigeant: GraphqlUploadedFile;
-          lettreDeDelegation: GraphqlUploadedFile;
-          justificatifIdentiteDelegataire: GraphqlUploadedFile;
-        };
+        subscriptionInput: SubscriptionInput;
       },
-    ) => {
-      logger.info({ payload });
-
-      //every file must be read in order
-      const attestationURSSAFStream = (
-        await payload.subscriptionInput.attestationURSSAF
-      ).createReadStream();
-      attestationURSSAFStream.on("data", () => null);
-
-      const justificatifIdentiteDirigeantStream = (
-        await payload.subscriptionInput.justificatifIdentiteDirigeant
-      ).createReadStream();
-      justificatifIdentiteDirigeantStream.on("data", () => null);
-
-      const lettreDeDelegationStream = (
-        await payload.subscriptionInput.lettreDeDelegation
-      )?.createReadStream();
-      lettreDeDelegationStream?.on("data", () => null);
-
-      const justificatifIdentiteDelegataireStream = (
-        await payload.subscriptionInput.justificatifIdentiteDelegataire
-      )?.createReadStream();
-      justificatifIdentiteDelegataireStream?.on("data", () => null);
-
-      return "ok";
-    },
+    ) => subscribe({ params: payload.subscriptionInput }),
   },
 };
 
