@@ -21,6 +21,7 @@ const schema = z
     address: z.string().optional(),
     information: z.string().optional(),
     convocationFile: z.object({ 0: z.instanceof(File).optional() }),
+    dossierValidationUpdatedAt: z.string(),
   })
   .superRefine((data, ctx) => {
     const date = data.date;
@@ -35,6 +36,14 @@ const schema = z
       ctx.addIssue({
         path: ["date"],
         message: "La date doit être inférieure à 2 ans",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+
+    if (isBefore(date, data.dossierValidationUpdatedAt)) {
+      ctx.addIssue({
+        path: ["date"],
+        message: "La date doit être superieure à la date de dépôt du dossier de validation",
         code: z.ZodIssueCode.custom,
       });
     }
@@ -65,6 +74,12 @@ export const DateDeJury = (): JSX.Element => {
       setValue("time", format(new Date(candidacy.jury.dateOfSession), "HH:mm"));
     }
   }, [candidacy?.jury?.dateOfSession, setValue]);
+
+  useEffect(() => {
+    if(candidacy?.activeDossierDeValidation?.updatedAt) {
+      setValue("dossierValidationUpdatedAt", format(new Date(candidacy.activeDossierDeValidation.updatedAt), "yyyy-MM-dd"));
+    }
+  }, [candidacy?.activeDossierDeValidation?.updatedAt, setValue])
 
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
@@ -228,6 +243,7 @@ export const DateDeJury = (): JSX.Element => {
                 defaultValue: jury?.addressOfSession || "",
               }}
             />
+            <input type="hidden" {...register("dossierValidationUpdatedAt")} />
           </div>
           <Input
             label="Information complémentaire liée à la session (Optionnel)"

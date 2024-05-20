@@ -15,6 +15,9 @@ const getJuryByCandidacyIdQuery = graphql(`
         id
         status
       }
+      activeDossierDeValidation {
+        updatedAt
+      }
       certification {
         id
         label

@@ -4,22 +4,57 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { Impersonate } from "@/components/impersonate";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { SmallWarning } from "@/components/small-warning/SmallWarning";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format, parse } from "date-fns";
+import {
+  format,
+  parse,
+  isAfter,
+  isBefore,
+  startOfToday,
+  addMonths,
+} from "date-fns";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const schema = z.object({
-  firstAppointmentOccuredAt: z.string().min(1, "Ce champ est obligatoire"),
-});
+const schema = z
+  .object({
+    firstAppointmentOccuredAt: z.string({
+      required_error:
+        "Cette information est obligatoire pour continuer le parcours. Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée.",
+    }),
+    candidacyCreatedAt: z.string(),
+  })
+  .superRefine(({ firstAppointmentOccuredAt, candidacyCreatedAt }, ctx) => {
+    const today = startOfToday();
+
+    if (
+      isAfter(parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()), addMonths(today, 3))
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["firstAppointmentOccuredAt"],
+        message: "La date de rendez-vous doit être dans les 3 prochains mois",
+      });
+    }
+
+    if (
+      isBefore(parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()), parse(candidacyCreatedAt, "yyyy-MM-dd", new Date()))
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["firstAppointmentOccuredAt"],
+        message:
+          "La date de rendez-vous ne peut pas être inférieure à la date de création de la candidature",
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -27,6 +62,7 @@ const getCandidacyQuery = graphql(`
   query getCandidacyForMeetingsPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       firstAppointmentOccuredAt
+      createdAt
       candidate {
         id
       }
@@ -55,12 +91,13 @@ const MeetingsPage = () => {
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
+    mode: "all",
   });
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const { graphqlClient } = useGraphQlClient();
@@ -97,6 +134,8 @@ const MeetingsPage = () => {
 
   const candidateId = getCandidacyResponse?.getCandidacyById?.candidate?.id;
 
+  const candidacyCreatedAt = getCandidacyResponse?.getCandidacyById?.createdAt;
+
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       await updateCandidacyFirstAppointmentInformations.mutateAsync({
@@ -118,8 +157,11 @@ const MeetingsPage = () => {
       firstAppointmentOccuredAt: firstAppointmentOccuredAt
         ? format(firstAppointmentOccuredAt, "yyyy-MM-dd")
         : undefined,
+      candidacyCreatedAt: candidacyCreatedAt
+        ? format(candidacyCreatedAt, "yyyy-MM-dd")
+        : undefined,
     });
-  }, [reset, firstAppointmentOccuredAt]);
+  }, [reset, firstAppointmentOccuredAt, candidacyCreatedAt]);
 
   useEffect(() => {
     resetForm();
@@ -148,24 +190,24 @@ const MeetingsPage = () => {
             hintText="Date au format 31/12/2022"
             nativeInputProps={{
               type: "date",
+              min:
+                candidacyCreatedAt && format(candidacyCreatedAt, "yyyy-MM-dd"),
+              max: format(
+                new Date().setMonth(new Date().getMonth() + 3),
+                "yyyy-MM-dd",
+              ),
               ...register("firstAppointmentOccuredAt"),
             }}
             state={errors.firstAppointmentOccuredAt ? "error" : "default"}
             stateRelatedMessage={errors.firstAppointmentOccuredAt?.message}
           />
 
-          {isValid ? (
-            <SmallNotice>
-              Le candidat pourra modifier sa candidature jusqu'à cette date,
-              au-delà de laquelle toute modification sera bloquée.
-            </SmallNotice>
-          ) : (
-            <SmallWarning>
-              Cette information est obligatoire pour continuer le parcours. Le
-              candidat pourra modifier sa candidature jusqu'à cette date,
-              au-delà de laquelle toute modification sera bloquée.
-            </SmallWarning>
-          )}
+          <input type="hidden" {...register("candidacyCreatedAt")} />
+
+          <SmallNotice>
+            Le candidat pourra modifier sa candidature jusqu'à cette date,
+            au-delà de laquelle toute modification sera bloquée.
+          </SmallNotice>
           <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
             <Button disabled={isSubmitting}>Enregistrer</Button>
           </div>
