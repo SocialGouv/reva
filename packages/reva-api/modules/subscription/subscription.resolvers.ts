@@ -14,6 +14,12 @@ import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
 import { sendRejectionEmail } from "./mail";
 import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
+import { ReadStream } from "fs";
+
+type GraphqlUploadedFile = Promise<{
+  filename: string;
+  createReadStream(): ReadStream;
+}>;
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -134,6 +140,42 @@ const unsafeResolvers = {
         .map(() => "Ok")
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
+    },
+    subscription_subscribe: async (
+      _: unknown,
+      payload: {
+        subscriptionInput: {
+          attestationURSSAF: GraphqlUploadedFile;
+          justificatifIdentiteDirigeant: GraphqlUploadedFile;
+          lettreDeDelegation: GraphqlUploadedFile;
+          justificatifIdentiteDelegataire: GraphqlUploadedFile;
+        };
+      },
+    ) => {
+      logger.info({ payload });
+
+      //every file must be read in order
+      const attestationURSSAFStream = (
+        await payload.subscriptionInput.attestationURSSAF
+      ).createReadStream();
+      attestationURSSAFStream.on("data", () => null);
+
+      const justificatifIdentiteDirigeantStream = (
+        await payload.subscriptionInput.justificatifIdentiteDirigeant
+      ).createReadStream();
+      justificatifIdentiteDirigeantStream.on("data", () => null);
+
+      const lettreDeDelegationStream = (
+        await payload.subscriptionInput.lettreDeDelegation
+      )?.createReadStream();
+      lettreDeDelegationStream?.on("data", () => null);
+
+      const justificatifIdentiteDelegataireStream = (
+        await payload.subscriptionInput.justificatifIdentiteDelegataire
+      )?.createReadStream();
+      justificatifIdentiteDelegataireStream?.on("data", () => null);
+
+      return "ok";
     },
   },
 };

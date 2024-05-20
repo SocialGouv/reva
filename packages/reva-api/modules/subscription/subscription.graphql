@@ -112,6 +112,27 @@ input SubscriptionRequestInput {
   qualiopiCertificateExpiresAt: Timestamp!
 }
 
+input SubscriptionV2Input {
+  companySiret: String!
+  companyLegalStatus: LegalStatus!
+  companyName: String!
+  companyAddress: String!
+  companyZipCode: String!
+  companyCity: String!
+  managerFirstname: String!
+  managerLastname: String!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  accountPhoneNumber: String!
+  companyWebsite: String!
+  delegataire: Boolean!
+  attestationURSSAF: Upload!
+  justificatifIdentiteDirigeant: Upload!
+  lettreDeDelegation: Upload
+  justificatifIdentiteDelegataire: Upload
+}
+
 type Mutation {
   subscription_createSubscriptionRequest(
     subscriptionRequest: SubscriptionRequestInput!
@@ -121,4 +142,5 @@ type Mutation {
     subscriptionRequestId: ID!
     reason: String!
   ): String
+  subscription_subscribe(subscriptionInput: SubscriptionV2Input!): String!
 }
