@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 declare module "@codegouvfr/react-dsfr/next-pagesdir" {
   interface RegisterLink {
@@ -39,6 +40,7 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster position="top-right" />
       <Component {...pageProps} />
     </QueryClientProvider>
   );
