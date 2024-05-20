@@ -9,10 +9,6 @@ import {
 } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
@@ -34,8 +30,7 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       .extractNullable();
 
     if (oldOrganism) {
-      throw new FunctionalError(
-        FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
+      throw new Error(
         `Un organisme existe déjà avec le siret ${params.companySiret} pour la typologie expertFiliere`,
       );
     }
@@ -46,8 +41,7 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       .extractNullable();
 
     if (oldAccount) {
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
+      throw new Error(
         `Un compte existe déjà avec l'email ${params.accountEmail}`,
       );
     }
@@ -62,8 +56,7 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       .extractNullable();
 
     if (oldIamAccount)
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
+      throw new Error(
         `Un compte IAM existe déjà avec l'email ${params.accountEmail}`,
       );
 
@@ -166,16 +159,6 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
     });
 
     return "Ok";
-  } catch (e) {
-    if (e instanceof FunctionalError) {
-      throw e;
-    } else {
-      logger.error(e);
-      throw new FunctionalError(
-        FunctionalCodeError.TECHNICAL_ERROR,
-        "Erreur pendant la validation de la demande d'inscription",
-      );
-    }
   } finally {
     //every stream must be emptied otherwise the request will hang
     emptyUploadedFileStream(params.attestationURSSAF);
