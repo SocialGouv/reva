@@ -1,6 +1,16 @@
+import { GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
+import { SubscriptionV2Input } from "@/graphql/generated/graphql";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
 import { ReactNode, createContext } from "react";
+import { Client, fetchExchange } from "urql";
+
+const createSubscription = graphql(`
+  mutation createSubscription($subscriptionInput: SubscriptionV2Input!) {
+    subscription_subscribe(subscriptionInput: $subscriptionInput)
+  }
+`);
 
 type LegalStatus =
   | "ASSOCIATION_LOI_1901"
@@ -21,8 +31,8 @@ interface ProfessionalSpaceInfo {
   companyAddress: string;
   companyZipCode: string;
   companyCity: string;
-  presidentFirstname: string;
-  presidentLastname: string;
+  managerFirstname: string;
+  managerLastname: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
@@ -58,8 +68,8 @@ type CompanySiretStepData = Pick<
   | "companyZipCode"
   | "companyCity"
   | "companyWebsite"
-  | "presidentFirstname"
-  | "presidentLastname"
+  | "managerFirstname"
+  | "managerLastname"
 >;
 
 type AccountInfoStepData = Pick<
@@ -158,14 +168,29 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
 
   const submitCompanyDocumentsStep = useCallback(
     async (stepData: CompanyDocumentsStep) => {
-      setState({
+      const newState = {
         currentStep: "companyDocumentsStep",
-        professionalSpaceInfos: state.professionalSpaceInfos,
+        professionalSpaceInfos: {
+          ...state.professionalSpaceInfos,
+          ...stepData,
+        },
+      } as const;
+
+      setState(newState);
+
+      const client = new Client({
+        url: GRAPHQL_API_URL,
+        exchanges: [fetchExchange],
       });
 
-      await router.push("/espace-professionnel/creation/confirmation");
+      const { isCguCheckboxChecked, ...mutationParameters } =
+        newState.professionalSpaceInfos;
+
+      const r = await client.mutation(createSubscription, {
+        subscriptionInput: mutationParameters as SubscriptionV2Input,
+      });
     },
-    [router, state.professionalSpaceInfos],
+    [state.professionalSpaceInfos],
   );
 
   return (

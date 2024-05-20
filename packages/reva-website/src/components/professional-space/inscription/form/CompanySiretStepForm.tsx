@@ -32,8 +32,8 @@ export const CompanySiretStepForm = () => {
               companyCity: "Paris",
               companyLegalStatus: "SAS",
               companyWebsite: "https://example.com",
-              presidentFirstname: "John",
-              presidentLastname: "Doe",
+              managerFirstname: "John",
+              managerLastname: "Doe",
             })
           }
         >
