@@ -12,7 +12,9 @@ const getMandatoryInfo = (organism: Organism) => {
     ic?.adresseNumeroEtNomDeRue &&
     ic?.adresseCodePostal &&
     ic?.adresseVille &&
-    ic?.conformeNormesAccessbilite !== "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"
+    ic?.conformeNormesAccessbilite !==
+      "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" &&
+    organism.organismOnDepartments?.find((od) => od.isOnSite)
   );
   const isRemote = !!(
     ic?.conformeNormesAccessbilite ===

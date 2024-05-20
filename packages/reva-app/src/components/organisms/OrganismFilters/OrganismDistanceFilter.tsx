@@ -59,7 +59,7 @@ export const OrganismDistanceFilter = ({
           options={[
             {
               label:
-                "N'afficher que les sites qui peuvent recevoir du public à mobilité réduite (PMR)",
+                "Afficher uniquement les sites pouvant recevoir des personnes à mobilité réduite (PMR)",
               nativeInputProps: {
                 disabled,
                 onChange: handleChangePmr,
