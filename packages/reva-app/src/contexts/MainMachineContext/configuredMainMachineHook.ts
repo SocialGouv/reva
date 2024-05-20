@@ -129,12 +129,15 @@ export const useConfiguredMainMachine = () => {
               };
             };
             const searchFilter = formatSearchFilter();
+            const isSearchDependentOnDepartment = !searchFilter.zip;
 
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>,
             )({
               candidacyId,
-              departmentId: selectedDepartment?.id,
+              departmentId: isSearchDependentOnDepartment
+                ? selectedDepartment?.id
+                : undefined,
               searchText,
               searchFilter,
             });

@@ -68,9 +68,9 @@ export const getAAPsWithZipCode = async ({
     - Ensures the presence of non-null values for 'll_to_earth', 'adresse_numero_et_nom_de_rue', 'adresse_code_postal', 'adresse_ville'.
   */
 
-  let additionalTablesToJoin = "";
   let whereClause = `
   where o.id = ao.organism_id
+  and od.is_onsite = true
   and ao.certification_id=uuid('${certificationId}')
   and o.ll_to_earth IS NOT NULL
   and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
@@ -79,9 +79,6 @@ export const getAAPsWithZipCode = async ({
   `;
 
   if (distanceStatus === "ONSITE_REMOTE") {
-    additionalTablesToJoin = `
-    INNER JOIN organism_department od ON o.id = od.organism_id
-    `;
     whereClause += ` and od.is_remote = true`;
   }
 
@@ -99,7 +96,7 @@ export const getAAPsWithZipCode = async ({
       SELECT DISTINCT(o.*), (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
       INNER JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
-      ${additionalTablesToJoin}
+      INNER JOIN organism_department od ON o.id = od.organism_id
       ,active_organism_by_available_certification_and_department ao
       ${whereClause}
       ORDER BY distance_km ASC
