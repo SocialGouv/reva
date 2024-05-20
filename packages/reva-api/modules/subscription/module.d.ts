@@ -99,5 +99,6 @@ interface SubscriptionInput {
 
 type GraphqlUploadedFile = Promise<{
   filename: string;
+  mimetype: string;
   createReadStream(): ReadStream;
 }>;

@@ -16,6 +16,9 @@ import {
 import { logger } from "../../shared/logger";
 
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
+import { submitMaisonMereAAPLegalInformationDocuments } from "../../organism/features/submitMaisonMereAAPLegalInformationDocuments";
+import { UploadedFile } from "../../shared/file";
+import { buffer } from "stream/consumers";
 
 export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
   try {
@@ -145,6 +148,23 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       maisonMereAAPId: newMaisonMereAAP.id,
     });
 
+    await submitMaisonMereAAPLegalInformationDocuments({
+      maisonMereAAPId: newMaisonMereAAP.id,
+      managerFirstname: params.managerFirstname,
+      managerLastname: params.managerLastname,
+      delegataire: params.delegataire,
+      attestationURSSAF: await getUploadedFile(params.attestationURSSAF),
+      justificatifIdentiteDirigeant: await getUploadedFile(
+        params.justificatifIdentiteDirigeant,
+      ),
+      lettreDeDelegation: params.lettreDeDelegation
+        ? await getUploadedFile(params.lettreDeDelegation)
+        : undefined,
+      justificatifIdentiteDelegataire: params.justificatifIdentiteDelegataire
+        ? await getUploadedFile(params.justificatifIdentiteDelegataire)
+        : undefined,
+    });
+
     return "Ok";
   } catch (e) {
     if (e instanceof FunctionalError) {
@@ -172,4 +192,16 @@ const emptyUploadedFileStream = async (file: GraphqlUploadedFile) => {
   } catch (_) {
     //do nothing
   }
+};
+
+const getUploadedFile = async (
+  filePromise: GraphqlUploadedFile,
+): Promise<UploadedFile> => {
+  const file = await filePromise;
+  const fileContentBuffer = await buffer(file.createReadStream());
+  return {
+    filename: file.filename,
+    _buf: fileContentBuffer,
+    mimetype: file.mimetype,
+  };
 };
