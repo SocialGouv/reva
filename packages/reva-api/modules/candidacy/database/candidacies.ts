@@ -554,69 +554,6 @@ export const deleteCandidacyFromId = async (id: string) => {
   }
 };
 
-export const updateAppointmentInformations = async (params: {
-  candidacyId: string;
-  appointmentInformations: {
-    firstAppointmentOccuredAt: Date;
-  };
-}) => {
-  try {
-    const candidacy = await prismaClient.candidacy.update({
-      where: {
-        id: params.candidacyId,
-      },
-      data: {
-        firstAppointmentOccuredAt:
-          params.appointmentInformations.firstAppointmentOccuredAt,
-      },
-      include: {
-        ...candidacyIncludes,
-        candidate: true,
-      },
-    });
-
-    const candidaciesOnRegionsAndCertifications =
-      await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-        where: {
-          candidacyId: params.candidacyId,
-          isActive: true,
-        },
-        select: {
-          certification: true,
-          region: true,
-        },
-      });
-
-    return Right({
-      id: candidacy.id,
-      deviceId: candidacy.deviceId,
-      regionId: candidaciesOnRegionsAndCertifications?.region.id,
-      region: candidaciesOnRegionsAndCertifications?.region,
-      department: candidacy.department,
-      certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
-      certification: candidaciesOnRegionsAndCertifications?.certification,
-      organismId: candidacy.organismId,
-      experiences: toDomainExperiences(candidacy.experiences),
-      phone: candidacy.candidate?.phone || null,
-      email: candidacy.candidate?.email || candidacy.email,
-      typology: candidacy.typology,
-      typologyAdditional: candidacy.typologyAdditional,
-      firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
-      appointmentCount: candidacy.appointmentCount,
-      candidacyDropOut: candidacy.candidacyDropOut,
-      candidacyStatuses: candidacy.candidacyStatuses,
-      createdAt: candidacy.createdAt,
-    });
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `Erreur lors de la mise à jour des informations de rendez de la candidature, ${
-        (e as any).message
-      }`,
-    );
-  }
-};
-
 export const updateOrganism = async (params: {
   candidacyId: string;
   organismId: string | null;

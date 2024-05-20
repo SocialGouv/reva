@@ -642,21 +642,18 @@ const unsafeResolvers = {
       payload: any,
       context: GraphqlContext,
     ) => {
-      const result = await updateAppointmentInformations({
-        updateAppointmentInformations:
-          candidacyDb.updateAppointmentInformations,
-      })({
-        candidacyId: payload.candidacyId,
-        appointmentInformations: payload.appointmentInformations,
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_APPOINTMENT_INFO,
-        extraInfo: { ...payload.appointmentInformations },
-        context,
-        result,
-      });
-      if (result.isRight()) {
+      try {
+        const result = await updateAppointmentInformations({
+          candidacyId: payload.candidacyId,
+          appointmentInformations: payload.appointmentInformations,
+        });
+        logCandidacyEvent({
+          candidacyId: payload.candidacyId,
+          eventType: CandidacyBusinessEvent.UPDATED_APPOINTMENT_INFO,
+          extraInfo: { ...payload.appointmentInformations },
+          context,
+          result,
+        });
         await logCandidacyAuditEvent({
           candidacyId: payload.candidacyId,
           eventType: "APPOINTMENT_INFO_UPDATED",
@@ -668,10 +665,12 @@ const unsafeResolvers = {
               payload.appointmentInformations.firstAppointmentOccuredAt,
           },
         });
+        return result
       }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      catch (error) {
+        logger.error(error);
+        return new Error(`Impossible de mettre à jour la date du rendez-vous pédagogique: ${error}`)
+      }
     },
 
     candidacy_takeOver: async (
