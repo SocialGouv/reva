@@ -300,7 +300,6 @@ const MaisonMereAAPPage = () => {
           statutValidationInformationsJuridiquesMaisonMereAAP={
             maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
           }
-          showLegalValidation={showLegalValidation}
         />
         {showLegalValidation &&
           maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
