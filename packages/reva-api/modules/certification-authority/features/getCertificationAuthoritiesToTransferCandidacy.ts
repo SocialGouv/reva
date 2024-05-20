@@ -38,37 +38,29 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
     (feasibility) => feasibility.isActive,
   );
 
+  const whereClause = {
+    label: {
+      contains: searchFilter,
+      mode: "insensitive" as any,
+    },
+    id: {
+      not: candidacyActiveFeasibility?.certificationAuthorityId,
+    },
+    certificationAuthorityOnCertification: {
+      some: {
+        certificationId: candidacyActiveCertification.certificationId,
+      },
+    },
+  };
+
   const certificationAuthoritiesCount =
     await prismaClient.certificationAuthority.count({
-      where: {
-        label: {
-          contains: searchFilter,
-          mode: "insensitive",
-        },
-        id: {
-          not: candidacyActiveFeasibility?.certificationAuthorityId,
-        },
-        certificationAuthorityOnCertification: {
-          some: {
-            certificationId: candidacyActiveCertification.certificationId,
-          },
-        },
-      },
+      where: whereClause,
     });
 
   const certificationAuthorities =
     await prismaClient.certificationAuthority.findMany({
-      where: {
-        label: {
-          contains: searchFilter,
-          mode: "insensitive",
-        },
-        certificationAuthorityOnCertification: {
-          some: {
-            certificationId: candidacyActiveCertification.certificationId,
-          },
-        },
-      },
+      where: whereClause,
       skip: offset,
       take: limit,
     });
