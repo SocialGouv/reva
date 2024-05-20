@@ -1,3 +1,4 @@
+import { graphqlErrorToast } from "@/components/toast/toast";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { SubscriptionV2Input } from "@/graphql/generated/graphql";
@@ -185,12 +186,19 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
 
       const { isCguCheckboxChecked, ...mutationParameters } =
         newState.professionalSpaceInfos;
-
-      const r = await client.mutation(createSubscription, {
-        subscriptionInput: mutationParameters as SubscriptionV2Input,
-      });
+      try {
+        const result = await client.mutation(createSubscription, {
+          subscriptionInput: mutationParameters as SubscriptionV2Input,
+        });
+        if (result.error) {
+          throw new Error(result.error.graphQLErrors[0].message);
+        }
+        router.push("/espace-professionnel/inscription/confirmation");
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
     },
-    [state.professionalSpaceInfos],
+    [router, state.professionalSpaceInfos],
   );
 
   return (

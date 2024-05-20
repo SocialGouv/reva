@@ -157,6 +157,7 @@ export const PICTOGRAMS = {
   success: generateSvg(success),
   system: generateSvg(system),
   technicalError: generateSvg(technicalError),
+  technicalErrorLG: generateSvg(technicalError, { width: 120, height: 120 }),
   warning: generateSvg(warning),
   warningLG: generateSvg(warning, { width: 120, height: 120 }),
 };
