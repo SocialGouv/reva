@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { useAuth } from "@/components/auth/auth";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -29,6 +30,8 @@ const CandidacySummaryPage = () => {
   const { candidacy } = useCandidateSummary(candidacyId);
 
   const { takeOverCandidacy } = useTakeOverCandidacy();
+
+  const { isAdmin } = useAuth();
 
   //mark the candidacy has "taken over" when the AAP opens it
   useEffect(() => {
@@ -226,6 +229,23 @@ const CandidacySummaryPage = () => {
                 <p className="mb-0">Non renseigné</p>
               )}
             </GrayCard>
+            {isAdmin && (
+              <GrayCard>
+                <span className="text-2xl font-bold mb-5">
+                  Son architecte de parcours
+                </span>
+                {candidacy.organism ? (
+                  <>
+                    <p className="mb-0">{candidacy.organism.label}</p>
+                    <p className="mb-0">
+                      {candidacy.organism.contactAdministrativeEmail}
+                    </p>
+                  </>
+                ) : (
+                  <p className="mb-0">Pas encore d'AAP sélectionné</p>
+                )}
+              </GrayCard>
+            )}
             <CandidateExperiencesSectionCard
               candidacyId={candidacyId}
               isEditable={candidacy.feasibilityFormat === "DEMATERIALIZED"}

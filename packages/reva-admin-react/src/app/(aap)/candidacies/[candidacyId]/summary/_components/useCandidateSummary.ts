@@ -12,7 +12,10 @@ const getCandidacyById = graphql(`
       reorientationReason {
         id
       }
-      organismId
+      organism {
+        label
+        contactAdministrativeEmail
+      }
       candidacyStatuses {
         status
         isActive
