@@ -1,6 +1,7 @@
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from "react";
+
 export const FancyUpload = ({
   title,
   description,
@@ -22,14 +23,16 @@ export const FancyUpload = ({
   stateRelatedMessage?: ReactNode;
 }) => (
   <Upload
-    className={`border bg-dsfrGray-contrast p-8 ${className || ""}`}
+    className={`border border-neutral-300 bg-neutral-100 p-8 ${
+      className || ""
+    }`}
     label={
       <>
         <span className="text-2xl font-bold">{title}</span>
         <CallOut
           className="!ml-8 !my-4 !py-0 !bg-transparent"
           classes={{
-            text: "text-sm leading-6 ",
+            text: "!text-sm text-neutral-700 !leading-6 ",
           }}
         >
           {description}

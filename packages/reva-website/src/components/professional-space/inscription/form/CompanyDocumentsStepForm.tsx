@@ -132,11 +132,11 @@ export const CompanyDocumentsStepForm = () => {
                 d’identité en cours de validité ou périmée de moins de 5 ans
                 (recto/verso) ou un passeport en cours de validité.
                 <br />
-                <strong>
+                <span className="font-medium">
                   Veillez à ce que votre photocopie soit lisible, non tronquée,
                   bien cadrée et y apporter la mention manuscrite « Certifiée
                   conforme à l’original », datée et signée par le dirigeant.
-                </strong>
+                </span>
               </>
             }
             hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
