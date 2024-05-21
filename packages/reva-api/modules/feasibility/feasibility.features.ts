@@ -81,6 +81,21 @@ export const createFeasibility = async ({
   userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
+  const statusParcoursConfirme = await prismaClient.candidaciesStatus.findFirst(
+    {
+      where: {
+        candidacyId: candidacyId,
+        status: "PARCOURS_CONFIRME",
+      },
+    },
+  );
+
+  if (!statusParcoursConfirme) {
+    throw new Error(
+      "Le candidat doit confirmer son parcours avant d' envoyer un dossier de faisabilité.",
+    );
+  }
+
   const existingFeasibility = await prismaClient.feasibility.findFirst({
     where: { candidacyId, isActive: true },
   });

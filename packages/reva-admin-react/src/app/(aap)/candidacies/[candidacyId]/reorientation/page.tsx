@@ -9,7 +9,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { CertificationCard } from "./_components/certification-card";
 
@@ -98,6 +98,7 @@ const ReorientationPage = () => {
   const params = useSearchParams();
   const pathname = usePathname();
   const pageParam = params.get("page");
+  const queryClient = useQueryClient();
 
   const currentPage = pageParam ? Number.parseInt(pageParam) : 1;
 
@@ -154,6 +155,8 @@ const ReorientationPage = () => {
         certificationId,
       });
       successToast("La certification a bien été modifiée.");
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+
       const backUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
         ? `/candidacies/${candidacyId}/summary`
         : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
@@ -181,7 +184,7 @@ const ReorientationPage = () => {
         <h1>Changement de certification</h1>
         <p>
           Vous pouvez changer la certification du candidat jusqu'à l’envoi de
-          son dossier de faisabilité
+          son dossier de faisabilité.
         </p>
         <div className="mb-12">
           <label className="text-xs font-bold py-2">

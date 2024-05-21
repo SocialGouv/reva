@@ -9,7 +9,7 @@ import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   format,
   parse,
@@ -35,7 +35,10 @@ const schema = z
     const today = startOfToday();
 
     if (
-      isAfter(parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()), addMonths(today, 3))
+      isAfter(
+        parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()),
+        addMonths(today, 3),
+      )
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -45,7 +48,10 @@ const schema = z
     }
 
     if (
-      isBefore(parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()), parse(candidacyCreatedAt, "yyyy-MM-dd", new Date()))
+      isBefore(
+        parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()),
+        parse(candidacyCreatedAt, "yyyy-MM-dd", new Date()),
+      )
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -101,6 +107,7 @@ const MeetingsPage = () => {
   } = methods;
 
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
     queryKey: ["getCandidacy", candidacyId],
@@ -146,6 +153,7 @@ const MeetingsPage = () => {
           new Date(),
         ),
       });
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
       successToast("Les modifications ont bien été enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
