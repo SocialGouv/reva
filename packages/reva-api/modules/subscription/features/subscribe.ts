@@ -11,16 +11,14 @@ import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMai
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
 import { logger } from "../../shared/logger";
 
-import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import { submitMaisonMereAAPLegalInformationDocuments } from "../../organism/features/submitMaisonMereAAPLegalInformationDocuments";
 import { UploadedFile } from "../../shared/file";
 import { buffer } from "stream/consumers";
 
 export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
   try {
-    const keyCloakAdmin = await getKeycloakAdmin();
-    const getIamAccount = IAM.getAccount(keyCloakAdmin);
-    const createAccountInIAM = IAM.createAccount(keyCloakAdmin);
+    const getIamAccount = IAM.getAccount;
+    const createAccountInIAM = IAM.createAccount;
 
     //organism check
     const oldOrganism = (

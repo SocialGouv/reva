@@ -1,6 +1,4 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
@@ -24,6 +22,7 @@ import {
   sendUnknownUserEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
 
 const unsafeResolvers = {
   Candidate: {
@@ -108,34 +107,15 @@ const unsafeResolvers = {
       params: {
         token: string;
       },
-      {
-        app,
-      }: {
-        app: {
-          keycloak: Keycloak.Keycloak;
-          getKeycloakAdmin: () => KeycloakAdminClient;
-        };
-      },
     ) => {
-      const keycloakAdmin = await app.getKeycloakAdmin();
-
       const result = await candidateAuthentication({
         ...params,
-        keycloakAdmin,
       });
 
       return result;
     },
-    candidate_askForLogin: async (
-      _: unknown,
-      params: { email: string },
-      context: {
-        app: {
-          getKeycloakAdmin: () => KeycloakAdminClient;
-        };
-      },
-    ) => {
-      const keycloakAdmin = await context.app.getKeycloakAdmin();
+    candidate_askForLogin: async (_: unknown, params: { email: string }) => {
+      const keycloakAdmin = await getKeycloakAdmin();
 
       const doesUserExists = async ({ userEmail }: { userEmail: string }) =>
         !!(

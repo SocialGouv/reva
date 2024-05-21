@@ -1,7 +1,5 @@
 import { randomUUID } from "crypto";
 
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import {
   createAccountProfile,
   getAccountFromEmail,
@@ -26,14 +24,13 @@ import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 
 interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
-  keycloakAdmin: KeycloakAdminClient;
 }
 
 export const validateSubscriptionRequest = async (
   params: ValidateSubscriptionRequestParams,
 ) => {
-  const getIamAccount = IAM.getAccount(params.keycloakAdmin);
-  const createAccountInIAM = IAM.createAccount(params.keycloakAdmin);
+  const getIamAccount = IAM.getAccount;
+  const createAccountInIAM = IAM.createAccount;
 
   try {
     //subscription request check

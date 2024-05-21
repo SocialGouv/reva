@@ -1,11 +1,10 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { prismaClient } from "../../../prisma/client";
 import {
   impersonateAccount,
   impersonateCandiate,
 } from "../utils/keycloak.utils";
 import { TokenService } from "../utils/token.service";
+import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
 const { BASE_URL, KEYCLOAK_ADMIN_REALM_REVA, KEYCLOAK_APP_REALM } = process.env;
 
@@ -14,7 +13,6 @@ const baseUrl = BASE_URL || "https://vae.gouv.fr";
 export const getImpersonateUrl = async (
   context: {
     hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {
@@ -38,7 +36,6 @@ export const getImpersonateUrl = async (
 const getImpersonateUrlForAccount = async (
   context: {
     hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {
@@ -61,8 +58,10 @@ const getImpersonateUrlForAccount = async (
     throw new Error(`Compte utilisateur pour l'id ${accountId} non trouvé`);
   }
 
+  const keycloakAdmin = await getKeycloakAdmin();
+
   // Check if account with accountToUpdate.keycloakId exsits
-  const keycloakAccount = await context.keycloakAdmin.users.findOne({
+  const keycloakAccount = await keycloakAdmin.users.findOne({
     id: accountToUpdate.keycloakId,
     realm: KEYCLOAK_ADMIN_REALM_REVA,
   });
@@ -77,7 +76,7 @@ const getImpersonateUrlForAccount = async (
   // If false, check if accountToUpdate is not an admin
   if (context.keycloakId != accountToUpdate.keycloakId) {
     // Get groups of accountToUpdate
-    const groups = await context.keycloakAdmin.users.listGroups({
+    const groups = await keycloakAdmin.users.listGroups({
       id: accountToUpdate.keycloakId,
       realm: KEYCLOAK_ADMIN_REALM_REVA,
     });
@@ -100,7 +99,6 @@ const getImpersonateUrlForAccount = async (
 const getImpersonateUrlForCandidate = async (
   context: {
     hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {
@@ -123,8 +121,10 @@ const getImpersonateUrlForCandidate = async (
     throw new Error(`Compte utilisateur pour l'id ${candidateId} non trouvé`);
   }
 
+  const keycloakAdmin = await getKeycloakAdmin();
+
   // Check if candidate with candidateToUpdate.keycloakId exsits
-  const keycloakAccount = await context.keycloakAdmin.users.findOne({
+  const keycloakAccount = await keycloakAdmin.users.findOne({
     id: candidateToUpdate.keycloakId,
     realm: KEYCLOAK_APP_REALM,
   });

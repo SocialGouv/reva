@@ -1,5 +1,3 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { prismaClient } from "../../../prisma/client";
 import { updateAccountById } from "../../account/features/updateAccount";
 import {
@@ -11,7 +9,6 @@ import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 export const updateOrganismWithMaisonMereAAPById = async (
   context: {
     hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {

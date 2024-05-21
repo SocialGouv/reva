@@ -1,16 +1,15 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
+import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import { prismaClient } from "../../../prisma/client";
 
 export const updateEmailOfCandidacy = async ({
   previousEmail,
   newEmail,
-  keycloakAdmin,
 }: {
   previousEmail: string;
   newEmail: string;
-  keycloakAdmin: KeycloakAdminClient;
 }) => {
+  const keycloakAdmin = await getKeycloakAdmin();
+
   const candidateToUpdate = await prismaClient.candidate.findUnique({
     where: { email: previousEmail },
   });

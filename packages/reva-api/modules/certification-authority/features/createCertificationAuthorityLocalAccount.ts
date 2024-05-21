@@ -1,4 +1,3 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import { Account } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
@@ -13,14 +12,12 @@ export const createCertificationAuthorityLocalAccount = async ({
   departmentIds,
   certificationIds,
   certificationAuthorityKeycloakId,
-  keycloakAdmin,
 }: {
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
   departmentIds: string[];
   certificationIds: string[];
-  keycloakAdmin: KeycloakAdminClient;
   certificationAuthorityKeycloakId: string;
 }) => {
   const certificationAuthorityAccount = await getAccountByKeycloakId({
@@ -54,7 +51,6 @@ export const createCertificationAuthorityLocalAccount = async ({
       lastname: accountLastname,
       email: accountEmail,
       username: accountEmail,
-      keycloakAdmin,
       group: "certification_authority_local_account",
     });
   } catch (error) {

@@ -1,5 +1,3 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCertification } from "../../candidacy/database/candidacies";
 import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
@@ -25,13 +23,7 @@ import {
   getCandidateWithCandidacyFromKeycloakId,
 } from "../database/candidates";
 
-export const candidateAuthentication = async ({
-  token,
-  keycloakAdmin,
-}: {
-  token: string;
-  keycloakAdmin: KeycloakAdminClient;
-}) => {
+export const candidateAuthentication = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(token))
     .ifLeft((e) => {
       throw new FunctionalError(FunctionalCodeError.CANDIDATE_INVALID_TOKEN, e);
@@ -40,9 +32,7 @@ export const candidateAuthentication = async ({
 
   if (candidateAuthenticationInput.action === "registration") {
     const account = (
-      await getCandidateAccountInIAM(keycloakAdmin)(
-        candidateAuthenticationInput.email,
-      )
+      await getCandidateAccountInIAM(candidateAuthenticationInput.email)
     )
       .ifLeft((e) => {
         throw new FunctionalError(
@@ -56,27 +46,23 @@ export const candidateAuthentication = async ({
     if (account) {
       return loginCandidate({
         email: candidateAuthenticationInput.email,
-        keycloakAdmin,
       });
     } else {
       return confirmRegistration({
         candidateRegistrationInput: candidateAuthenticationInput,
-        keycloakAdmin,
       });
     }
   } else if (candidateAuthenticationInput.action === "login") {
     return loginCandidate({
       email: candidateAuthenticationInput.email,
-      keycloakAdmin,
     });
   } else if (candidateAuthenticationInput.action === "confirmEmail") {
     const { previousEmail, newEmail } = candidateAuthenticationInput;
     const candidateUpdated = await updateEmailOfCandidacy({
-      keycloakAdmin,
       previousEmail,
       newEmail,
     });
-    return loginCandidate({ email: candidateUpdated.email, keycloakAdmin });
+    return loginCandidate({ email: candidateUpdated.email });
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
@@ -87,14 +73,12 @@ export const candidateAuthentication = async ({
 
 const confirmRegistration = async ({
   candidateRegistrationInput,
-  keycloakAdmin,
 }: {
   candidateRegistrationInput: CandidateRegistrationInput;
-  keycloakAdmin: KeycloakAdminClient;
 }) => {
   const { certificationId, ...candidate } = candidateRegistrationInput;
   const candidateKeycloakId = (
-    await createCandidateAccountInIAM(keycloakAdmin)({
+    await createCandidateAccountInIAM({
       email: candidate.email,
       firstname: candidate.firstname,
       lastname: candidate.lastname,
@@ -145,7 +129,7 @@ const confirmRegistration = async ({
     ).unsafeCoerce();
   }
 
-  const iamToken = (await generateIAMToken(keycloakAdmin)(candidateKeycloakId))
+  const iamToken = (await generateIAMToken(candidateKeycloakId))
     .map((tokens: { accessToken: string; refreshToken: string }) => ({
       tokens,
       candidate: {
@@ -172,14 +156,8 @@ const confirmRegistration = async ({
   return iamToken;
 };
 
-const loginCandidate = async ({
-  email,
-  keycloakAdmin,
-}: {
-  email: string;
-  keycloakAdmin: KeycloakAdminClient;
-}) => {
-  const account = (await getCandidateAccountInIAM(keycloakAdmin)(email))
+const loginCandidate = async ({ email }: { email: string }) => {
+  const account = (await getCandidateAccountInIAM(email))
     .ifLeft((e) => {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
@@ -209,9 +187,7 @@ const loginCandidate = async ({
     candidacies: unknown[];
   };
 
-  const iamToken = (
-    await generateIAMToken(keycloakAdmin)(candidateWithCandidacy.keycloakId)
-  )
+  const iamToken = (await generateIAMToken(candidateWithCandidacy.keycloakId))
     .map(
       (tokens: {
         accessToken: string;

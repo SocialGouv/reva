@@ -1,4 +1,3 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import { Account } from "@prisma/client";
 
 import { getCertificationAuthorityById } from "../../feasibility/feasibility.features";
@@ -11,7 +10,6 @@ import { createAccountProfile } from "../database/accounts";
 import * as IAM from "./keycloak";
 
 export const createAccount = async (params: {
-  keycloakAdmin: KeycloakAdminClient;
   email: string;
   username: string;
   firstname?: string;
@@ -75,7 +73,7 @@ export const createAccount = async (params: {
 
   //check if account already exist in keycloak and throw an error if that's the case.
   const maybeExistingAccount = (
-    await IAM.getAccount(params.keycloakAdmin)({
+    await IAM.getAccount({
       email: params.email,
       username: params.username,
     })
@@ -89,9 +87,7 @@ export const createAccount = async (params: {
   }
 
   // create the account in keycloak
-  const keycloakId = (
-    await IAM.createAccount(params.keycloakAdmin)(params)
-  ).unsafeCoerce();
+  const keycloakId = (await IAM.createAccount(params)).unsafeCoerce();
 
   //create and return the account in database
   return (

@@ -1,5 +1,4 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import mercurius from "mercurius";
 
 import * as OrganismDb from "../organism/database/organisms";
@@ -95,17 +94,10 @@ const unsafeResolvers = {
       payload: {
         subscriptionRequestId: string;
       },
-      context: {
-        app: {
-          getKeycloakAdmin: () => KeycloakAdminClient;
-        };
-      },
     ) => {
-      const keycloakAdmin = await context.app.getKeycloakAdmin();
       try {
         const result = await domain.validateSubscriptionRequest({
           subscriptionRequestId: payload.subscriptionRequestId,
-          keycloakAdmin,
         });
         return result;
       } catch (e) {

@@ -1,4 +1,3 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Left } from "purify-ts";
@@ -35,7 +34,6 @@ export const resolvers = {
         auth: any;
         app: {
           keycloak: Keycloak.Keycloak;
-          getKeycloakAdmin: () => KeycloakAdminClient;
         };
       },
     ) => {
@@ -52,11 +50,9 @@ export const resolvers = {
           .extract();
       }
 
-      const keycloakAdmin = await context.app.getKeycloakAdmin();
       try {
         return createAccount({
           ...params.account,
-          keycloakAdmin,
         });
       } catch (e) {
         logger.error(e);
@@ -180,12 +176,9 @@ export const resolvers = {
           throw new Error("Utilisateur non autorisé");
         }
 
-        const keycloakAdmin = await context.app.getKeycloakAdmin();
-
         return getImpersonateUrl(
           {
             hasRole: context.auth.hasRole,
-            keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
           params.input,

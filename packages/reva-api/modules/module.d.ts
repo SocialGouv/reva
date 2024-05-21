@@ -31,7 +31,6 @@ interface ContextAuth {
 
 interface ContextApp {
   keycloak: Keycloak.Keycloak;
-  getKeycloakAdmin: () => KeycloakAdminClient;
 }
 
 interface GraphqlContext {

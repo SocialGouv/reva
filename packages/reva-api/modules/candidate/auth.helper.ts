@@ -1,10 +1,10 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { logger } from "../shared/logger";
+import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
 
 export const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -33,27 +33,28 @@ export const getJWTContent = (token: string) => {
     );
 
     return Right(JSON.parse(dataBytes.toString(CryptoJS.enc.Utf8)));
-  } catch (e) {
+  } catch (_) {
     return Left("Error while parsing JWT token");
   }
 };
 
-export const getCandidateAccountInIAM =
-  (keycloakAdmin: KeycloakAdminClient) =>
-  async (email: string): Promise<Either<string, Maybe<any>>> => {
-    try {
-      const [userByEmail] = await keycloakAdmin.users.find({
-        email,
-        exact: true,
-        realm: process.env.KEYCLOAK_APP_REALM,
-      });
+export const getCandidateAccountInIAM = async (
+  email: string,
+): Promise<Either<string, Maybe<any>>> => {
+  try {
+    const keycloakAdmin = await getKeycloakAdmin();
+    const [userByEmail] = await keycloakAdmin.users.find({
+      email,
+      exact: true,
+      realm: process.env.KEYCLOAK_APP_REALM,
+    });
 
-      return Right(Maybe.fromNullable(userByEmail));
-    } catch (e) {
-      logger.error(e);
-      return Left(`An error occured while retrieving ${email} on IAM`);
-    }
-  };
+    return Right(Maybe.fromNullable(userByEmail));
+  } catch (e) {
+    logger.error(e);
+    return Left(`An error occured while retrieving ${email} on IAM`);
+  }
+};
 
 const alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const integers = "0123456789";
@@ -81,85 +82,85 @@ const generatePassword = (length: number, chars: string) => {
   return password;
 };
 
-export const createCandidateAccountInIAM =
-  (keycloakAdmin: KeycloakAdminClient) =>
-  async (account: {
-    email: string;
-    firstname?: string;
-    lastname?: string;
-  }): Promise<Either<string, string>> => {
-    try {
-      const { id } = await keycloakAdmin.users.create({
-        email: account.email,
-        username: "" + CryptoJS.SHA1(account.email),
-        // groups: ['candidate'],
-        emailVerified: true,
-        enabled: true,
-        realm: process.env.KEYCLOAK_APP_REALM,
-      });
+export const createCandidateAccountInIAM = async (account: {
+  email: string;
+  firstname?: string;
+  lastname?: string;
+}): Promise<Either<string, string>> => {
+  try {
+    const keycloakAdmin = await getKeycloakAdmin();
 
-      return Right(id);
-    } catch (e) {
-      logger.error(e);
-      return Left(
-        `An error occured while creating user with ${account.email} on IAM`,
-      );
-    }
-  };
-
-export const generateIAMToken =
-  (keycloakAdmin: KeycloakAdminClient) => async (userId: string) => {
-    const randomPassword = createPassword(20, true, true);
-
-    const user = await keycloakAdmin.users.findOne({
-      id: userId,
-      realm: process.env.KEYCLOAK_APP_REALM as string,
+    const { id } = await keycloakAdmin.users.create({
+      email: account.email,
+      username: "" + CryptoJS.SHA1(account.email),
+      // groups: ['candidate'],
+      emailVerified: true,
+      enabled: true,
+      realm: process.env.KEYCLOAK_APP_REALM,
     });
 
-    if (!user) {
-      return Left(`userId ${userId} not found`);
-    }
+    return Right(id);
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `An error occured while creating user with ${account.email} on IAM`,
+    );
+  }
+};
 
-    try {
-      await keycloakAdmin.users.resetPassword({
-        realm: process.env.KEYCLOAK_APP_REALM,
-        id: userId,
-        credential: {
-          temporary: false,
-          type: "password",
-          value: randomPassword,
-        },
-      });
+export const generateIAMToken = async (userId: string) => {
+  const keycloakAdmin = await getKeycloakAdmin();
+  const randomPassword = createPassword(20, true, true);
 
-      //generate a token for the user
-      const _keycloak = new Keycloak(
-        {},
-        {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
-          serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
-          realm: process.env.KEYCLOAK_APP_REALM as string,
-          credentials: {
-            secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
-          },
+  const user = await keycloakAdmin.users.findOne({
+    id: userId,
+    realm: process.env.KEYCLOAK_APP_REALM as string,
+  });
+
+  if (!user) {
+    return Left(`userId ${userId} not found`);
+  }
+
+  try {
+    await keycloakAdmin.users.resetPassword({
+      realm: process.env.KEYCLOAK_APP_REALM,
+      id: userId,
+      credential: {
+        temporary: false,
+        type: "password",
+        value: randomPassword,
+      },
+    });
+
+    //generate a token for the user
+    const _keycloak = new Keycloak(
+      {},
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
+        serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
+        realm: process.env.KEYCLOAK_APP_REALM as string,
+        credentials: {
+          secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
         },
-      );
-      const grant = await _keycloak.grantManager.obtainDirectly(
-        user.username as string,
-        randomPassword,
-      );
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const refreshToken = grant?.refresh_token?.token;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const accessToken = grant?.access_token?.token;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const idToken = grant?.id_token?.token;
-      return Right({ accessToken, refreshToken, idToken });
-    } catch (e) {
-      return Left(`Error while generating IAM token`);
-    }
-  };
+      },
+    );
+    const grant = await _keycloak.grantManager.obtainDirectly(
+      user.username as string,
+      randomPassword,
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const refreshToken = grant?.refresh_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const accessToken = grant?.access_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const idToken = grant?.id_token?.token;
+    return Right({ accessToken, refreshToken, idToken });
+  } catch (_) {
+    return Left(`Error while generating IAM token`);
+  }
+};

@@ -1,7 +1,5 @@
 import { randomUUID } from "crypto";
 
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { prismaClient } from "../../../prisma/client";
 import { createAccountProfile } from "../../account/database/accounts";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
@@ -26,17 +24,15 @@ interface CreateOrganismWithMaisonMereAAPRequestParams {
 }
 
 export const createOrganismWithMaisonMereAAP = async ({
-  keycloakAdmin,
   keycloakId,
   params,
 }: {
-  keycloakAdmin: KeycloakAdminClient;
   keycloakId: string;
   params: CreateOrganismWithMaisonMereAAPRequestParams;
 }) => {
   const { organismData } = params;
-  const getIamAccount = IAM.getAccount(keycloakAdmin);
-  const createAccountInIAM = IAM.createAccount(keycloakAdmin);
+  const getIamAccount = IAM.getAccount;
+  const createAccountInIAM = IAM.createAccount;
 
   try {
     const accountExist = (

@@ -56,7 +56,10 @@ import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./organism.security";
-import { sendLegalInformationDocumentsApprovalEmail, sendLegalInformationDocumentsUpdateNeededEmail } from "./emails/sendLegalInformationDocumentsDecisionEmail";
+import {
+  sendLegalInformationDocumentsApprovalEmail,
+  sendLegalInformationDocumentsUpdateNeededEmail,
+} from "./emails/sendLegalInformationDocumentsDecisionEmail";
 
 const unsafeResolvers = {
   Account: {
@@ -306,11 +309,9 @@ const unsafeResolvers = {
       if (!context.auth.hasRole("gestion_maison_mere_aap")) {
         throw new Error("Utilisateur non autorisé");
       }
-      const keycloakAdmin = await context.app.getKeycloakAdmin();
       const keycloakId = context.auth.userInfo.sub;
 
       const result = await createOrganismWithMaisonMereAAP({
-        keycloakAdmin,
         params,
         keycloakId,
       });
@@ -331,12 +332,10 @@ const unsafeResolvers = {
             "Not authorized",
           );
         }
-        const keycloakAdmin = await context.app.getKeycloakAdmin();
 
         return updateOrganismWithMaisonMereAAPById(
           {
             hasRole: context.auth.hasRole,
-            keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
           params,

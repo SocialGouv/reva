@@ -104,12 +104,9 @@ export const unsafeResolvers = {
       },
       context: GraphqlContext,
     ) => {
-      const keycloakAdmin = await context.app.getKeycloakAdmin();
-
       return createCertificationAuthorityLocalAccount({
         ...params.input,
         certificationAuthorityKeycloakId: context.auth.userInfo?.sub || "",
-        keycloakAdmin,
       });
     },
 
