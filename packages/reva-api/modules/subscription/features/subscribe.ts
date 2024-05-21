@@ -1,7 +1,4 @@
-import {
-  createAccountProfile,
-  getAccountFromEmail,
-} from "../../account/database/accounts";
+import { getAccountFromEmail } from "../../account/database/accounts";
 import * as IAM from "../../account/features/keycloak";
 import {
   createOrganism,
@@ -14,11 +11,11 @@ import { logger } from "../../shared/logger";
 import { submitMaisonMereAAPLegalInformationDocuments } from "../../organism/features/submitMaisonMereAAPLegalInformationDocuments";
 import { UploadedFile } from "../../shared/file";
 import { buffer } from "stream/consumers";
+import { createAccount } from "../../account/features/createAccount";
 
 export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
   try {
     const getIamAccount = IAM.getAccount;
-    const createAccountInIAM = IAM.createAccount;
 
     //organism check
     const oldOrganism = (
@@ -84,30 +81,14 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       `[subscription] Successfuly created organism with siret ${params.companySiret}`,
     );
 
-    const newKeycloakId = (
-      await createAccountInIAM({
-        email: params.accountEmail ?? "",
-        firstname: params.accountFirstname ?? "",
-        lastname: params.accountLastname ?? "",
-        username: params.accountEmail ?? "",
-        group: "gestionnaire_maison_mere_aap",
-      })
-    ).unsafeCoerce();
-
-    logger.info(
-      `[subscription] Successfuly created IAM account ${newKeycloakId}`,
-    );
-
-    //db account creation
-    const account = (
-      await createAccountProfile({
-        firstname: params.accountFirstname ?? "",
-        lastname: params.accountLastname ?? "",
-        email: params.accountEmail ?? "",
-        keycloakId: newKeycloakId,
-        organismId: newOrganism.id,
-      })
-    ).unsafeCoerce();
+    const account = await createAccount({
+      email: params.accountEmail ?? "",
+      firstname: params.accountFirstname ?? "",
+      lastname: params.accountLastname ?? "",
+      username: params.accountEmail ?? "",
+      group: "gestionnaire_maison_mere_aap",
+      organismId: newOrganism.id,
+    });
 
     logger.info(
       `[subscription] Successfuly created Account with organismId ${newOrganism.id}`,
