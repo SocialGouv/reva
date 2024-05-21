@@ -1,4 +1,5 @@
 import {
+  CandidacyStatusStep,
   CertificationAuthorityLocalAccount,
   CertificationAuthorityLocalAccountOnCertification,
   CertificationAuthorityLocalAccountOnDepartment,
@@ -81,18 +82,29 @@ export const createFeasibility = async ({
   userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
-  const statusParcoursConfirme = await prismaClient.candidaciesStatus.findFirst(
-    {
-      where: {
-        candidacyId: candidacyId,
-        status: "PARCOURS_CONFIRME",
-      },
-    },
-  );
+  const allowedStatues: CandidacyStatusStep[] = [
+    "PARCOURS_CONFIRME",
+    "DOSSIER_FAISABILITE_INCOMPLET",
+  ];
 
-  if (!statusParcoursConfirme) {
+  const lastStatus = await prismaClient.candidaciesStatus.findFirst({
+    where: {
+      candidacyId: candidacyId,
+      isActive: true,
+    },
+    select: {
+      status: true,
+    },
+    orderBy: [{ createdAt: "desc" }],
+  });
+
+  if (!lastStatus) {
+    throw new Error("La candidature n'a aucun statut actif");
+  }
+
+  if (!allowedStatues.includes(lastStatus.status)) {
     throw new Error(
-      "Le candidat doit confirmer son parcours avant d' envoyer un dossier de faisabilité.",
+      `Le statut de la candidature doit être en "PARCOURS_CONFIRME" ou "DOSSIER_FAISABILITE_INCOMPLET" pour envoyer un dossier de faisabilité.`,
     );
   }
 
