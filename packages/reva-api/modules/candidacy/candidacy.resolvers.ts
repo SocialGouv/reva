@@ -665,11 +665,12 @@ const unsafeResolvers = {
               payload.appointmentInformations.firstAppointmentOccuredAt,
           },
         });
-        return result
-      }
-      catch (error) {
+        return result;
+      } catch (error) {
         logger.error(error);
-        return new Error(`Impossible de mettre à jour la date du rendez-vous pédagogique: ${error}`)
+        return new Error(
+          `Impossible de mettre à jour la date du rendez-vous pédagogique: ${error}`,
+        );
       }
     },
 

@@ -16,6 +16,7 @@ import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/refere
 import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
+import { deleteExpiredCandidacies } from "modules/candidacy/features/deleteExpiredCandidacies";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
@@ -150,6 +151,21 @@ CronJob.from({
           "Running send-reminder-to-organism-for-candidate-dv-deadline batch",
         );
         await sendReminderToOrganismForCandidateValidationDeadline();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Delete expired candidacies
+CronJob.from({
+  cronTime: process.env.BACTH_DELETE_EXPIRED_CANDIDACIES || EVERY_DAY_AT_2_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.delete-expired-candidacies",
+      batchCallback: async () => {
+        logger.info("Running batch.delete-expired-candidacies batch");
+        await deleteExpiredCandidacies();
       },
     }),
   start: true,
