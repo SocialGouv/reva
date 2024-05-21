@@ -3,7 +3,7 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { SubscriptionV2Input } from "@/graphql/generated/graphql";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ReactNode, createContext } from "react";
 import { Client, fetchExchange } from "urql";
 
@@ -113,6 +113,10 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
     currentStep: "cguStep",
     professionalSpaceInfos: {},
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [state.currentStep]);
 
   const goBackToPreviousStep = useCallback(() => {
     let newCurrentStep = state.currentStep;
