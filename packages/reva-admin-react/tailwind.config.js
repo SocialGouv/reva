@@ -22,6 +22,15 @@ module.exports = {
           "light-text-mention-grey": "#666666",
           "light-neutral-grey-1000": "#F6F6F6",
         },
+        neutral: {
+          100: "#F6F6F6",
+          200: "#E5E5E5",
+          300: "#DDDDDD",
+          400: "#929292",
+          500: "#666666",
+          700: "#3A3A3A",
+          900: "#161616",
+        },
       },
       listStyleType: {
         square: "square",

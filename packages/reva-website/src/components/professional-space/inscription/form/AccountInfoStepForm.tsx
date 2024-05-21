@@ -27,7 +27,7 @@ export const AccountInfoStepForm = () => {
             L’administrateur du compte France VAE peut paramétrer les filières,
             les agences et les niveaux de parcours depuis son compte.{" "}
           </p>
-          <div className="bg-gray-50 h-[520px] mb-8" />
+          <div className="bg-neutral-50 h-[520px] mb-8" />
           <div className="h-full flex gap-2 items-end justify-end">
             <Button
               onClick={() =>

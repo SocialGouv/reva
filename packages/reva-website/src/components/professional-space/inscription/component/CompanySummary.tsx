@@ -8,7 +8,7 @@ export const CompanySummary = () => {
 
   return (
     <div className="shrink-0 w-1/4">
-      <div className="hidden md:block min-h-[720px] bg-gray-100 p-6 mb-12">
+      <div className="hidden md:block min-h-[720px] bg-neutral-100 p-6 mb-12">
         <h2>Résumé</h2>
         <div className="flex flex-col gap-y-2">
           <Badge severity="success">Siège social</Badge>
