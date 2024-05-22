@@ -356,7 +356,6 @@ const CandidateInformationForm = ({
                   { shouldDirty: true },
                 );
               },
-              maxLength: 18,
             }}
             state={errors.phone ? "error" : "default"}
             stateRelatedMessage={errors.phone?.message}
