@@ -157,6 +157,7 @@ describe("Subscription Request / Validate", () => {
       data: {
         ...organismIperia,
         siret: sameSiret,
+        typology: "expertFiliere",
       },
     });
     const subreq = await prismaClient.subscriptionRequest.create({
@@ -164,7 +165,7 @@ describe("Subscription Request / Validate", () => {
         ...subreqWithDepts,
         companySiret: sameSiret,
         accountEmail: __TEST_IAM_PASS_CHECK__,
-        typology: "experimentation",
+        typology: "expertFiliere",
       },
     });
     const subreqId = subreq.id;

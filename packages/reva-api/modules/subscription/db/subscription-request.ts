@@ -153,7 +153,7 @@ export const existSubscriptionRequestWithTypologyAndSiret = async ({
     const matchCount = await prismaClient.subscriptionRequest.count({
       where: {
         companySiret,
-        typology: typology as OrganismTypology,
+        typology,
         status: "PENDING",
       },
     });

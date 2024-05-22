@@ -821,6 +821,12 @@ enum SubscriptionRequestStatus {
   REJECTED
 }
 
+enum SubscriptionOrganismTypology {
+  generaliste
+  expertFiliere
+  expertBranche
+}
+
 model SubscriptionRequest {
   id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   companyName                               String                                      @map("company_name") @db.VarChar(255)
@@ -833,7 +839,7 @@ model SubscriptionRequest {
   accountLastname                           String                                      @map("account_lastname") @db.VarChar(100)
   accountEmail                              String                                      @map("account_email") @db.VarChar(255)
   accountPhoneNumber                        String                                      @map("account_phone_number") @db.VarChar(50)
-  typology                                  OrganismTypology                            @map("typology")
+  typology                                  SubscriptionOrganismTypology                @map("typology")
   createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
   subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]

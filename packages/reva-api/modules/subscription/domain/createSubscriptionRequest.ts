@@ -58,7 +58,7 @@ export const createSubscriptionRequest = async (
       const eitherHasMatchingOrganism =
         await deps.existOrganismWithTypologyAndSiret({
           siret: params.companySiret,
-          typology: params.typology,
+          typology: params.typology as OrganismTypology,
         });
       if (eitherHasMatchingOrganism.isLeft()) {
         return Left(

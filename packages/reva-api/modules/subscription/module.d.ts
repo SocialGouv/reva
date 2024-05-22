@@ -19,6 +19,11 @@ type OrganismTypology =
 
 type SubscriptionRequestStatus = "PENDING" | "REJECTED";
 
+type SubscriptionOrganismTypology =
+  | "generaliste"
+  | "expertFiliere"
+  | "expertBranche";
+
 interface SubscriptionRequestInput {
   companySiret: string;
   companyLegalStatus: LegalStatus;
@@ -30,7 +35,7 @@ interface SubscriptionRequestInput {
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
-  typology: OrganismTypology;
+  typology: SubscriptionOrganismTypology;
   domaineIds: string[];
   ccnIds: string[];
   onSiteDepartmentsIds: string[];
