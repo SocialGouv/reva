@@ -118,10 +118,13 @@ export const buildApp = async (
 
   app.register(keycloakAdminPlugin);
 
-  app.register(proxy, {
-    upstream: OOS_DOMAIN,
-    prefix: FILE_PREVIEW_ROUTE_PATH,
-  });
+  if (OOS_DOMAIN !== "") {
+    app.register(proxy, {
+      upstream: OOS_DOMAIN,
+      prefix: FILE_PREVIEW_ROUTE_PATH,
+    });
+  }
+  
 
   app.register(MercuriusGQLUpload, { prefix: "/api" });
 
