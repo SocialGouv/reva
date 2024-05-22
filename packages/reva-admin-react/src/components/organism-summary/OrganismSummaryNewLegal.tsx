@@ -104,7 +104,7 @@ export const OrganismSummary = ({
             {accountEmail}
           </Info>
           <Info title="Téléphone">{accountPhoneNumber}</Info>
-          <Info title="Site internet de la structure">
+          <Info title="Site internet de la structure" className="break-words">
             {companyWebsite || "Non spécifié"}
           </Info>
         </div>
@@ -113,16 +113,8 @@ export const OrganismSummary = ({
         <h2>Informations juridiques de la structure</h2>
         <div className="grid md:grid-cols-2">
           <Info title="SIRET de la structure">{companySiret}</Info>
-          <Info
-            title="Forme juridique
-"
-          >
-            {companyLegalStatus}
-          </Info>
-          <Info
-            title="Adresse de la structure
-"
-          >
+          <Info title="Forme juridique">{companyLegalStatus}</Info>
+          <Info title="Adresse de la structure">
             {companyAddress} {companyZipCode} {companyCity}
           </Info>
         </div>
