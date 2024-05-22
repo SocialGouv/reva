@@ -7,6 +7,7 @@ import { canManageJury } from "./features/canManageJury";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { isCandidacyOwner } from "./features/isCandidacyOwner";
 import { scheduleSessionOfJury } from "./features/scheduleSessionOfJury";
+import { prismaClient } from "../../prisma/client";
 
 interface ScheduleSessionOfJuryBody {
   candidacyId: { value: string };
@@ -68,8 +69,16 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
           });
         }
 
+        const file = await prismaClient.file.findUnique({
+          where: { id: fileId },
+        });
+
+        if (!file) {
+          throw new Error("Fichier non trouvé");
+        }
+
         const fileLink = await FileService.getInstance().getDownloadLink({
-          fileKeyPath: `${candidacyId}/${fileId}`,
+          fileKeyPath: file?.path,
         });
 
         if (fileLink) {

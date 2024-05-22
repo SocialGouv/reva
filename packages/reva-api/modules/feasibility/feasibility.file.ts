@@ -56,15 +56,6 @@ export class FeasibilityFile {
     }
   }
 
-  async getDownloadLink(): Promise<string | undefined> {
-    const exists = await FileService.getInstance().exists(this.file);
-    if (exists) {
-      return FileService.getInstance().getDownloadLink(this.file);
-    }
-
-    return undefined;
-  }
-
   async delete(): Promise<void> {
     const exists = await FileService.getInstance().exists(this.file);
     if (exists) {

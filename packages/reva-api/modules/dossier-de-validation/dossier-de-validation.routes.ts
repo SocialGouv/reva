@@ -1,6 +1,5 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
-
 import { canUserManageCandidacy } from "../feasibility/feasibility.features";
 import { FileService, UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
@@ -8,6 +7,7 @@ import { canManageDossierDeValidation } from "./features/canManageDossierDeValid
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getDossierDeValidationOtherFiles } from "./features/getDossierDeValidationOtherFiles";
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
+import { prismaClient } from "../../prisma/client";
 
 interface UploadDossierDeValidationBody {
   candidacyId: { value: string };
@@ -81,8 +81,16 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
           });
         }
 
+        const file = await prismaClient.file.findUnique({
+          where: { id: fileId },
+        });
+
+        if (!file) {
+          throw new Error("Fichier non trouvé");
+        }
+
         const fileLink = await FileService.getInstance().getDownloadLink({
-          fileKeyPath: `${candidacyId}/${fileId}`,
+          fileKeyPath: file?.path,
         });
 
         if (fileLink) {
