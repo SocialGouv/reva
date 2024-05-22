@@ -29,9 +29,7 @@ interface ProfessionalSpaceInfo {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
+ 
   managerFirstname: string;
   managerLastname: string;
   accountFirstname: string;
@@ -65,9 +63,6 @@ type CompanySiretStepData = Pick<
   | "companySiret"
   | "companyLegalStatus"
   | "companyName"
-  | "companyAddress"
-  | "companyZipCode"
-  | "companyCity"
   | "companyWebsite"
   | "managerFirstname"
   | "managerLastname"

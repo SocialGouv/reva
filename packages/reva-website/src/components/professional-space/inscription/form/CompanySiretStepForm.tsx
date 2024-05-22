@@ -27,9 +27,6 @@ export const CompanySiretStepForm = () => {
             submitCompanySiretStep({
               companySiret: "12345678901234",
               companyName: "My Company",
-              companyAddress: "1 rue de la Paix",
-              companyZipCode: "75000",
-              companyCity: "Paris",
               companyLegalStatus: "SAS",
               companyWebsite: "https://example.com",
               managerFirstname: "John",

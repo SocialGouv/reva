@@ -20,9 +20,6 @@ interface ProfessionalSpaceInfo {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
@@ -53,13 +50,7 @@ type QualiopiCertificateInfoStepData = Pick<
 
 type CompanyInfoStepData = Pick<
   ProfessionalSpaceInfo,
-  | "companySiret"
-  | "companyLegalStatus"
-  | "companyName"
-  | "companyAddress"
-  | "companyZipCode"
-  | "companyCity"
-  | "companyWebsite"
+  "companySiret" | "companyLegalStatus" | "companyName" | "companyWebsite"
 >;
 
 type AccountInfoStepData = Pick<

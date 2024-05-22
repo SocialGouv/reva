@@ -84,9 +84,6 @@ interface SubscriptionInput {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
   managerFirstname: string;
   managerLastname: string;
   accountFirstname: string;
