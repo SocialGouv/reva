@@ -36,7 +36,6 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
         <p>Malheureusement, votre dossier a été jugé non recevable par le certificateur. Nous vous invitons à prendre contact avec votre architecte de parcours pour comprendre cette décision et échanger ensemble sur les suites à donner à votre parcours.</p>
         ${commentInfo}
       `,
-      hideFranceVaeLogo: true,
     }),
   );
 

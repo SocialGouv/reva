@@ -46,7 +46,6 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
       <br/>
       <p>L'équipe France VAE.</p>
     `,
-      hideFranceVaeLogo: true,
     }),
   );
 
