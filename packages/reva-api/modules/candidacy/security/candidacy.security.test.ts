@@ -63,7 +63,7 @@ beforeAll(async () => {
       dateExpirationCertificationQualiopi: new Date(),
       statutJuridique: "ASSOCIATION_LOI_1901",
       siret: "1234",
-      typologie: "generaliste",
+      typologie: "expertFiliere",
     },
   });
 
@@ -81,7 +81,7 @@ beforeAll(async () => {
       dateExpirationCertificationQualiopi: new Date(),
       statutJuridique: "ASSOCIATION_LOI_1901",
       siret: "1234",
-      typologie: "generaliste",
+      typologie: "expertFiliere",
     },
   });
 

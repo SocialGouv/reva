@@ -20,7 +20,6 @@ export interface Organism {
 
 export type OrganismTypology =
   | "experimentation"
-  | "generaliste"
   | "expertFiliere"
   | "expertBranche"
   | "expertBrancheEtFiliere";
@@ -39,7 +38,7 @@ type ConformiteNormeAccessibilite =
 // type StatutValidationInformationsJuridiquesMaisonMereAAP =
 // "A_METTRE_A_JOUR" | "EN_ATTENTE_DE_VERIFICATION" | "A_JOUR"
 
-type LegalInformationValidationDecisionType = "VALIDE" | "DEMANDE_DE_PRECISION"
+type LegalInformationValidationDecisionType = "VALIDE" | "DEMANDE_DE_PRECISION";
 
 export interface OrganismInformationsCommerciales {
   id: string;
@@ -116,15 +115,15 @@ export interface UpdateOrganismAccountInput {
 
 export interface UpdateMaisonMereAAPLegalValidationInput {
   maisonMereAAPId: string;
-  decision: LegalInformationValidationDecisionType
-  internalComment?: string
-  aapComment?: string
-  aapUpdatedDocumentsAt: Date
+  decision: LegalInformationValidationDecisionType;
+  internalComment?: string;
+  aapComment?: string;
+  aapUpdatedDocumentsAt: Date;
 }
 
 export type LegalInformationValidationDecisionInput = {
-  decision: 'VALIDE' | "DEMANDE_DE_PRECISION";
+  decision: "VALIDE" | "DEMANDE_DE_PRECISION";
   internalComment: string;
   aapComment: string;
   aapUpdatedDocumentsAt: Date;
-}
+};

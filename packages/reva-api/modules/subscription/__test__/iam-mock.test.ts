@@ -26,7 +26,7 @@ test("validating should fail - IAM.getAccount will always return sth", async () 
     data: {
       ...subreqSampleMin,
       accountEmail: __TEST_IAM_FAIL_CHECK__,
-      typology: "generaliste",
+      typology: "expertFiliere",
     },
   });
   const subreqId = res.id;
@@ -55,7 +55,7 @@ test("validating should pass twice - IAM.createAccount mock test 1/2", async () 
     data: {
       ...subreqSampleMin,
       accountEmail: __TEST_IAM_PASS_CHECK__,
-      typology: "generaliste",
+      typology: "expertFiliere",
     },
   });
   const subreqId = res.id;
@@ -83,7 +83,7 @@ test("validating should pass twice - IAM.createAccount mock test 2/2", async () 
     data: {
       ...subreqSampleMin,
       accountEmail: __TEST_IAM_PASS_CHECK__,
-      typology: "generaliste",
+      typology: "expertFiliere",
     },
   });
   const subreqId = res.id;

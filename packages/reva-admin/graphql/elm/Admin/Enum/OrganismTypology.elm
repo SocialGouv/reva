@@ -9,7 +9,6 @@ import Json.Decode as Decode exposing (Decoder)
 
 type OrganismTypology
     = Experimentation
-    | Generaliste
     | ExpertFiliere
     | ExpertBranche
     | ExpertBrancheEtFiliere
@@ -17,7 +16,7 @@ type OrganismTypology
 
 list : List OrganismTypology
 list =
-    [ Experimentation, Generaliste, ExpertFiliere, ExpertBranche, ExpertBrancheEtFiliere ]
+    [ Experimentation, ExpertFiliere, ExpertBranche, ExpertBrancheEtFiliere ]
 
 
 decoder : Decoder OrganismTypology
@@ -28,9 +27,6 @@ decoder =
                 case string of
                     "experimentation" ->
                         Decode.succeed Experimentation
-
-                    "generaliste" ->
-                        Decode.succeed Generaliste
 
                     "expertFiliere" ->
                         Decode.succeed ExpertFiliere
@@ -53,9 +49,6 @@ toString enum____ =
     case enum____ of
         Experimentation ->
             "experimentation"
-
-        Generaliste ->
-            "generaliste"
 
         ExpertFiliere ->
             "expertFiliere"
@@ -83,9 +76,6 @@ fromString enumString____ =
     case enumString____ of
         "experimentation" ->
             Just Experimentation
-
-        "generaliste" ->
-            Just Generaliste
 
         "expertFiliere" ->
             Just ExpertFiliere

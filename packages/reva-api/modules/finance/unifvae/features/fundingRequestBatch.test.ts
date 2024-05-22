@@ -9,7 +9,7 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
-import { generalisteOrganism } from "../../../../test/fixtures/people-organisms";
+import { expertFiliereOrganism } from "../../../../test/fixtures/people-organisms";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 let regionIdf: Region | null = null,
@@ -27,7 +27,7 @@ const candidateSample = {
 
 beforeAll(async () => {
   aap = await prismaClient.organism.create({
-    data: generalisteOrganism,
+    data: expertFiliereOrganism,
   });
   regionIdf = await prismaClient.region.findUnique({ where: { code: "11" } });
   certif = await prismaClient.certification.findFirst({

@@ -12,7 +12,7 @@ const siret1 = "11001234567890",
   siret2 = "22001234567890";
 
 const subreqSampleFull = Object.assign(
-  { typology: "generaliste" as const },
+  { typology: "expertFiliere" as const },
   {
     ...subreqSampleMin,
     companySiret: siret1,

@@ -19,7 +19,7 @@ describe("Subscription Request / Reject", () => {
     const res = await prismaClient.subscriptionRequest.create({
       data: {
         ...subreqSampleMin,
-        typology: "generaliste",
+        typology: "expertFiliere",
       },
     });
     subreqId = res.id;
@@ -108,7 +108,7 @@ describe("Subscription Request / Reject", () => {
       const subreq = await prismaClient.subscriptionRequest.create({
         data: {
           ...subreqSampleMin,
-          typology: "generaliste",
+          typology: "expertFiliere",
           departmentsWithOrganismMethods: {
             create: subreqOnDepSample,
           },

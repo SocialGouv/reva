@@ -48,17 +48,6 @@ const organismIperia = {
   llToEarth: "(4622585.927620327, 437370.0268140378, 4372806.174258723)",
 };
 
-const generalisteOrganism = {
-  label: "Generaliste organism",
-  siret: "5038235666",
-  address: "4 place Thiers",
-  city: "Bondy",
-  zip: "93140",
-  contactAdministrativeEmail: "generalisteOrganism@example.com",
-  isActive: true,
-  typology: "generaliste" as const,
-};
-
 const expertFiliereOrganism = {
   label: "Expert filiere organism",
   siret: "5038235777",
@@ -126,6 +115,5 @@ export {
   expertBrancheEtFiliereOrganism,
   expertBrancheOrganism,
   expertFiliereOrganism,
-  generalisteOrganism,
   organismIperia,
 };

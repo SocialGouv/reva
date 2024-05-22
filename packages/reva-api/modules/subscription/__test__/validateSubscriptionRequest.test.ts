@@ -63,7 +63,7 @@ describe("Subscription Request / Validate", () => {
 
     subreqWithDepts = {
       ...subreqSampleMin,
-      typology: "generaliste",
+      typology: "expertFiliere",
       departmentsWithOrganismMethods: {
         create: [
           {
@@ -126,7 +126,7 @@ describe("Subscription Request / Validate", () => {
       data: {
         ...subreqSampleMin,
         accountEmail: __TEST_IAM_FAIL_CHECK__,
-        typology: "generaliste",
+        typology: "expertFiliere",
       },
     });
     const subreqId = res.id;
@@ -265,7 +265,7 @@ describe("Subscription Request / Validate", () => {
         data: {
           ...subreqWithDepts,
           accountEmail: __TEST_IAM_PASS_CHECK__,
-          typology: "generaliste",
+          typology: "expertFiliere",
         },
       });
       const subreqId = res.id;
@@ -299,7 +299,7 @@ describe("Subscription Request / Validate", () => {
         city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
         isActive: true,
-        typology: "generaliste",
+        typology: "expertFiliere",
       });
 
       // The subscription should no longer exist and have no remaining relations

@@ -21,6 +21,7 @@ import {
   getSubscriptionRequestById,
 } from "../db/subscription-request";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
+import { prismaClient } from "../../../prisma/client";
 
 interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
@@ -49,11 +50,22 @@ export const validateSubscriptionRequest = async (
       );
     }
 
+    let typology = subscriptionRequest.typology;
+    let domaineIds = subscriptionRequest?.subscriptionRequestOnDomaine?.map(
+      (o: any) => o.domaineId,
+    );
+    if (!typology || typology === "generaliste") {
+      typology = "expertFiliere";
+      domaineIds = (
+        await prismaClient.domaine.findMany({ select: { id: true } })
+      ).map((d) => d.id);
+    }
+
     //organism check
     const oldOrganism = (
       await getOrganismBySiretAndTypology(
         subscriptionRequest.companySiret,
-        subscriptionRequest.typology,
+        typology,
       )
     )
       .unsafeCoerce()
@@ -62,7 +74,7 @@ export const validateSubscriptionRequest = async (
     if (oldOrganism) {
       throw new FunctionalError(
         FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
-        `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret} pour la typologie ${subscriptionRequest.typology}`,
+        `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret} pour la typologie ${typology}`,
       );
     }
 
@@ -118,11 +130,9 @@ export const validateSubscriptionRequest = async (
         siret: subscriptionRequest.companySiret ?? "",
         legalStatus: subscriptionRequest.companyLegalStatus,
         isActive: true,
-        typology: subscriptionRequest.typology ?? "generaliste",
+        typology,
         llToEarth: null,
-        domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
-          (o: any) => o.domaineId,
-        ),
+        domaineIds,
         ccnIds:
           subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
             (o: any) => o.ccnId,
@@ -181,15 +191,13 @@ export const validateSubscriptionRequest = async (
         codePostal: subscriptionRequest.companyZipCode ?? "",
         siret: subscriptionRequest.companySiret ?? "",
         statutJuridique: subscriptionRequest.companyLegalStatus,
-        typologie: subscriptionRequest.typology ?? "generaliste",
+        typologie: typology,
         dateExpirationCertificationQualiopi:
           subscriptionRequest.qualiopiCertificateExpiresAt,
         gestionnaireAccountId: account.id,
         statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR",
       },
-      domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
-        (o: { domaineId: string }) => o.domaineId,
-      ),
+      domaineIds,
       ccnIds:
         subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
           (o: { ccnId: string }) => o.ccnId,

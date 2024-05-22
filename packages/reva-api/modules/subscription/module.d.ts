@@ -11,7 +11,6 @@ type LegalStatus =
   | "NC";
 
 type OrganismTypology =
-  | "generaliste"
   | "experimentation"
   | "expertFiliere"
   | "expertBranche"

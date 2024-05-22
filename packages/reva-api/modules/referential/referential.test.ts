@@ -8,7 +8,6 @@ import {
   expertBrancheEtFiliereOrganism,
   expertBrancheOrganism,
   expertFiliereOrganism,
-  generalisteOrganism,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -70,9 +69,7 @@ async function searchCertificationsForCandidate({
 }
 
 let ain: Department | null, paris: Department | null, loire: Department | null;
-let generaliste: Organism | null,
-  expertFiliere: Organism | null,
-  expertBranche: Organism | null;
+let expertFiliere: Organism | null, expertBranche: Organism | null;
 
 const particulierEmployeurCertifications = [
   "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
@@ -96,9 +93,6 @@ beforeAll(async () => {
       },
     });
 
-  generaliste = await prismaClient.organism.create({
-    data: generalisteOrganism,
-  });
   expertFiliere = await prismaClient.organism.create({
     data: expertFiliereOrganism,
   });
@@ -108,9 +102,6 @@ beforeAll(async () => {
   await prismaClient.organism.create({
     data: expertBrancheEtFiliereOrganism,
   });
-
-  // Généraliste fixtures
-  await attachOrganismToDepartment(generaliste, paris);
 
   // Filière fixtures (also known as Domaine)
   await attachOrganismToDepartment(expertFiliere, paris);
@@ -125,7 +116,6 @@ beforeAll(async () => {
   await attachOrganismToDepartment(expertBranche, paris);
   await attachOrganismToDepartment(expertBranche, loire);
 
-  await attachOrganismToAllDegrees(generaliste);
   await attachOrganismToAllDegrees(expertFiliere);
   await attachOrganismToAllDegrees(expertBranche);
 
@@ -146,19 +136,6 @@ afterAll(async () => {
  * Test search certifications by a candidate
  */
 
-test("should find certifications with keyword électricien available in Paris", async () => {
-  const resp = await searchCertificationsForCandidate({
-    department: paris,
-    searchText: "électricien",
-  });
-  expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
-  expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
-    { label: "BP Electricien" },
-    { label: "CAP Electricien" },
-  ]);
-});
-
 test("should have no certifications available in Ain", async () => {
   const resp = await searchCertificationsForCandidate({ department: ain });
   const obj = resp.json();
@@ -178,16 +155,6 @@ test("should have only certifications of one branche in Loire", async () => {
 /**
  * Test search certifications by an organism for reorientation purpose
  */
-
-test("should have several BTS certifications handle by generaliste in Paris", async () => {
-  const resp = await searchCertificationsForCandidate({
-    organism: generaliste,
-    department: paris,
-    searchText: "BTS",
-  });
-  const obj = resp.json();
-  expect(obj.data.searchCertificationsForCandidate.info.totalRows).toEqual(17);
-});
 
 test("should have only BTS certifications handle by expertFiliere in Paris", async () => {
   const resp = await searchCertificationsForCandidate({

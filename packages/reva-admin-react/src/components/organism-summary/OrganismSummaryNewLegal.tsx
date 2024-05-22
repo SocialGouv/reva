@@ -9,7 +9,6 @@ import {
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 export type Typology =
-  | "generaliste"
   | "expertBranche"
   | "expertFiliere"
   | "expertBrancheEtFiliere";
@@ -20,8 +19,6 @@ const getTypologyLabel = (typology: Typology) => {
       return "Expert branche";
     case "expertFiliere":
       return "Expert filière";
-    case "generaliste":
-      return "Généraliste";
     case "expertBrancheEtFiliere":
       return "Expert branche et filière";
   }

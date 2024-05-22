@@ -163,7 +163,6 @@ type Experience {
 
 enum OrganismTypology {
   experimentation
-  generaliste
   expertFiliere
   expertBranche
   expertBrancheEtFiliere

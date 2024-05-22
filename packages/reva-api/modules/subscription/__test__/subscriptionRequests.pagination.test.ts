@@ -68,7 +68,7 @@ const createManySubscriptionRequests = (nbSubReq: number) => {
       accountEmail: `${randomUUID()}@mail.com`,
       companyName: randomUUID(),
       companySiret: randomUUID(),
-      typology: "generaliste" as const,
+      typology: "expertFiliere" as const,
     });
   }
   return prismaClient.subscriptionRequest.createMany({
