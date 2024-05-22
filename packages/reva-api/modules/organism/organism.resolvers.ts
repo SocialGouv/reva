@@ -281,12 +281,22 @@ const unsafeResolvers = {
         keycloakId: context.auth.userInfo?.sub || "",
       });
 
-      if (account?.organismId !== organismId) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
+      const maisonMereAAP = await getMaisonMereAAPByGestionnaireAccountId({
+        gestionnaireAccountId: account?.id || "",
+      });
+
+      // Pour pouvoir mettre à jour l'agence, il faut remplir au moins une condition parmi :
+      // - Être admin
+      // - Être le gestionnaire de l'agence
+      // - Être le gestionnaire de la maison mere
+      if (
+        !context.auth.hasRole("admin") &&
+        account?.organismId !== organismId &&
+        !maisonMereAAP
+      ) {
+        throw new Error("Utilisateur non autorisé");
       }
+
       return updateFermePourAbsenceOuConges({
         organismId,
         fermePourAbsenceOuConges,
