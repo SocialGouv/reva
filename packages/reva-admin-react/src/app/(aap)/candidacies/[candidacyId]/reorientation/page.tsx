@@ -316,12 +316,12 @@ const NoResult = (): JSX.Element => {
 
       <h3 className="mb-0">Aucun résultat trouvé</h3>
       <p className="text-center">
-        Êtes-vous sûr de dispenser la certification recherchée ?
+        {`Vérifiez l’orthographe ou la certification recherchée. Il s’agit
+        peut-être d’une certification que vous ne dispensez pas.`}
         <br />
         <br />
-        Si le candidat souhaite une certification que vous ne proposez pas, il
-        peut modifier son choix depuis son espace personnel avant son
-        rendez-vous pédagogique.
+        Si le candidat souhaite cette certification, il peut modifier son choix
+        depuis son espace personnel avant son rendez-vous pédagogique.
       </p>
 
       <div className="flex flex-col gap-4 p-8 border-2 border-gray-100 rounded-2xl">
