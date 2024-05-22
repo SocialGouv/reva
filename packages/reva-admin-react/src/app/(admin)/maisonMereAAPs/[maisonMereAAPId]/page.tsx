@@ -46,21 +46,25 @@ const getMaisonMereAAP = graphql(`
           name
           url
           mimeType
+          previewUrl
         }
         justificatifIdentiteDirigeantFile {
           name
           url
           mimeType
+          previewUrl
         }
         lettreDeDelegationFile {
           name
           url
           mimeType
+          previewUrl
         }
         justificatifIdentiteDelegataireFile {
           name
           url
           mimeType
+          previewUrl
         }
       }
       legalInformationDocumentsDecisions {

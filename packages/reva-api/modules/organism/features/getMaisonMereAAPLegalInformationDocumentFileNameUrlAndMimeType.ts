@@ -1,4 +1,4 @@
-import { FileService } from "../..//shared/file";
+import { FileService, OOS_DOMAIN } from "../..//shared/file";
 import { prismaClient } from "../../../prisma/client";
 
 export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
@@ -52,13 +52,16 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
         break;
     }
 
+    const url = await FileService.getInstance().getDownloadLink({
+      fileKeyPath: filePath,
+    })
+
     return filename
       ? {
           name: filename,
           mimeType,
-          url: FileService.getInstance().getDownloadLink({
-            fileKeyPath: filePath,
-          }),
+          url,
+          previewUrl: url?.replace(OOS_DOMAIN, '/preview'),
         }
       : null;
   };

@@ -22,6 +22,7 @@ import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import MercuriusGQLUpload from "mercurius-upload";
 import { organismRoutes } from "../../modules/organism/organism.routes";
+import { FILE_PREVIEW_ROUTE_PATH, OOS_DOMAIN } from "../../modules/shared/file";
 
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
@@ -116,6 +117,11 @@ export const buildApp = async (
   });
 
   app.register(keycloakAdminPlugin);
+
+  app.register(proxy, {
+    upstream: OOS_DOMAIN,
+    prefix: FILE_PREVIEW_ROUTE_PATH,
+  });
 
   app.register(MercuriusGQLUpload, { prefix: "/api" });
 

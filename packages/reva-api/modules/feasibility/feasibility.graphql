@@ -32,6 +32,7 @@ type File {
   url: String!
   name: String!
   mimeType: String!
+  previewUrl: String
 }
 
 type Candidacy {
