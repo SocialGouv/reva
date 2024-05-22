@@ -4,6 +4,9 @@ import {
   OrganismSummary,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
+
+import { Typology as TypologyOrganismSummaryNewLegal } from "@/components/organism-summary/OrganismSummaryNewLegal";
+
 import { OrganismSummary as OrganismSummaryNewLegal } from "@/components/organism-summary/OrganismSummaryNewLegal";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -191,7 +194,9 @@ const MaisonMereAAPPage = () => {
             companyZipCode={maisonMereAAP.codePostal}
             companyCity={maisonMereAAP.ville}
             companyWebsite={maisonMereAAP.siteWeb}
-            companyTypology={maisonMereAAP.typologie as Typology}
+            companyTypology={
+              maisonMereAAP.typologie as TypologyOrganismSummaryNewLegal
+            }
             domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
               (d) => d.domaine.label,
             )}
@@ -214,7 +219,9 @@ const MaisonMereAAPPage = () => {
                 decisionTakenAt: new Date(d.decisionTakenAt),
               }),
             )}
-            statutValidationInformationsJuridiquesMaisonMereAAP={maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP}
+            statutValidationInformationsJuridiquesMaisonMereAAP={
+              maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+            }
           />
         ) : (
           <OrganismSummary
