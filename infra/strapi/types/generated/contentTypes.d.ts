@@ -682,7 +682,7 @@ export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
   info: {
     singularName: "article-d-aide";
     pluralName: "article-d-aides";
-    displayName: "Article d'aide";
+    displayName: "[AIDE] - Article d'aide";
     description: "";
   };
   options: {
@@ -730,7 +730,7 @@ export interface ApiArticleFaqArticleFaq extends Schema.CollectionType {
   info: {
     singularName: "article-faq";
     pluralName: "article-faqs";
-    displayName: "Article FAQ";
+    displayName: "[FAQ] - Article FAQ";
     description: "";
   };
   options: {
@@ -775,7 +775,7 @@ export interface ApiArticleRegionArticleRegion extends Schema.CollectionType {
   info: {
     singularName: "article-region";
     pluralName: "article-regions";
-    displayName: "Article r\u00E9gion";
+    displayName: "[REGION] - Article r\u00E9gion";
     description: "";
   };
   options: {
@@ -823,7 +823,7 @@ export interface ApiRegionRegion extends Schema.CollectionType {
   info: {
     singularName: "region";
     pluralName: "regions";
-    displayName: "R\u00E9gion";
+    displayName: "[REGION] - R\u00E9gion";
     description: "";
   };
   options: {
@@ -864,7 +864,7 @@ export interface ApiSectionDAideSectionDAide extends Schema.CollectionType {
   info: {
     singularName: "section-d-aide";
     pluralName: "section-d-aides";
-    displayName: "Section d'aide";
+    displayName: "[AIDE] - Section d'aide";
     description: "";
   };
   options: {
@@ -901,7 +901,7 @@ export interface ApiSectionFaqSectionFaq extends Schema.CollectionType {
   info: {
     singularName: "section-faq";
     pluralName: "section-faqs";
-    displayName: "Section FAQ";
+    displayName: "[FAQ] - Section FAQ";
     description: "";
   };
   options: {
@@ -974,7 +974,7 @@ export interface ApiSectionFaqSectionFaq extends Schema.CollectionType {
         "vaccine",
         "vehicleRegistration",
         "virus",
-        "warning"
+        "warning",
       ]
     >;
     createdAt: Attribute.DateTime;
@@ -1000,7 +1000,7 @@ export interface ApiSousSectionFaqSousSectionFaq extends Schema.CollectionType {
   info: {
     singularName: "sous-section-faq";
     pluralName: "sous-section-faqs";
-    displayName: "Sous-section FAQ";
+    displayName: "[FAQ] - Sous-section FAQ";
     description: "";
   };
   options: {

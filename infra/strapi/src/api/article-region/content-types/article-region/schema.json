@@ -4,7 +4,7 @@
   "info": {
     "singularName": "article-region",
     "pluralName": "article-regions",
-    "displayName": "Article région",
+    "displayName": "[REGION] - Article région",
     "description": ""
   },
   "options": {
