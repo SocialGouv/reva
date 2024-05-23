@@ -90,70 +90,72 @@ export const AccountInfoStepForm = () => {
               resetForm();
             }}
           >
-            <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <fieldset>
               <legend className="text-xl text-gray-900 mb-6">
                 L’administrateur du compte France VAE peut paramétrer les
                 filières, les agences et les niveaux de parcours depuis son
                 compte.
               </legend>
-              <Checkbox
-                className="col-span-2"
-                options={[
-                  {
-                    label:
-                      "L'administrateur du compte France VAE et le dirigeant de la structure sont deux personnes différentes.",
-                    nativeInputProps: { ...register("delegataire") },
-                  },
-                ]}
-              />
-              <Input
-                label="Nom"
-                state={errors.accountLastname ? "error" : "default"}
-                stateRelatedMessage={errors.accountLastname?.message}
-                disabled={!delegataire}
-                nativeInputProps={{
-                  ...register("accountLastname"),
-                  autoComplete: "family-name",
-                }}
-              />
-              <Input
-                label="Prénom(s)"
-                state={errors.accountFirstname ? "error" : "default"}
-                stateRelatedMessage={errors.accountFirstname?.message}
-                disabled={!delegataire}
-                nativeInputProps={{
-                  ...register("accountFirstname"),
-                  autoComplete: "given-name",
-                }}
-              />
-              <div className="flex flex-col">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                <Checkbox
+                  className="col-span-2"
+                  options={[
+                    {
+                      label:
+                        "L'administrateur du compte France VAE et le dirigeant de la structure sont deux personnes différentes.",
+                      nativeInputProps: { ...register("delegataire") },
+                    },
+                  ]}
+                />
                 <Input
-                  label="Adresse e-mail"
-                  state={errors.accountEmail ? "error" : "default"}
-                  stateRelatedMessage={errors.accountEmail?.message}
+                  label="Nom"
+                  state={errors.accountLastname ? "error" : "default"}
+                  stateRelatedMessage={errors.accountLastname?.message}
+                  disabled={!delegataire}
                   nativeInputProps={{
-                    ...register("accountEmail"),
-                    autoComplete: "email",
-                    type: "email",
-                    spellCheck: "false",
+                    ...register("accountLastname"),
+                    autoComplete: "family-name",
                   }}
                 />
-                <Notice
-                  className="mb-4"
-                  title="Ce mail vous permettra de vous connecter à la plateforme. C’est sur celui-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
+                <Input
+                  label="Prénom(s)"
+                  state={errors.accountFirstname ? "error" : "default"}
+                  stateRelatedMessage={errors.accountFirstname?.message}
+                  disabled={!delegataire}
+                  nativeInputProps={{
+                    ...register("accountFirstname"),
+                    autoComplete: "given-name",
+                  }}
+                />
+                <div className="flex flex-col">
+                  <Input
+                    label="Adresse e-mail"
+                    state={errors.accountEmail ? "error" : "default"}
+                    stateRelatedMessage={errors.accountEmail?.message}
+                    nativeInputProps={{
+                      ...register("accountEmail"),
+                      autoComplete: "email",
+                      type: "email",
+                      spellCheck: "false",
+                    }}
+                  />
+                  <Notice
+                    className="mb-4"
+                    title="Ce mail vous permettra de vous connecter à la plateforme. C’est sur celui-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
+                  />
+                </div>
+                <Input
+                  label="Numéro de téléphone"
+                  state={errors.accountPhoneNumber ? "error" : "default"}
+                  stateRelatedMessage={errors.accountPhoneNumber?.message}
+                  className="self-start"
+                  nativeInputProps={{
+                    ...register("accountPhoneNumber"),
+                    autoComplete: "phone",
+                    type: "phone",
+                  }}
                 />
               </div>
-              <Input
-                label="Numéro de téléphone"
-                state={errors.accountPhoneNumber ? "error" : "default"}
-                stateRelatedMessage={errors.accountPhoneNumber?.message}
-                className="self-start"
-                nativeInputProps={{
-                  ...register("accountPhoneNumber"),
-                  autoComplete: "phone",
-                  type: "phone",
-                }}
-              />
             </fieldset>
             <div className="h-full flex gap-2 items-end justify-end">
               <Button type="reset" priority="tertiary no outline">
