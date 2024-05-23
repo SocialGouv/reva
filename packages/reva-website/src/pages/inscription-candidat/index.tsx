@@ -99,8 +99,8 @@ const OrientationCandidatPage = () => {
           <p className="text-dsfrGray-mentionGrey mb-8">
             Tous les champs sont obligatoires
           </p>
-          <div className="max-w-2xl flex flex-col ml-0 gap-4">
-            <fieldset className="mb-4">
+          <div className="flex flex-col ml-0 gap-4">
+            <fieldset className="mb-4 max-w-lg">
               <CertificateAutocompleteDsfr
                 defaultLabel={defaultAutocompleteLabel}
                 onSubmit={({ label, value }) => {
@@ -129,11 +129,13 @@ const OrientationCandidatPage = () => {
                 <h2 className="text-2xl font-bold mt-4 mb-0">
                   Quel candidat êtes vous ?
                 </h2>
-                <div className="flex flex-col gap-2 lg:flex-row lg:gap-6">
-                  <CandidateTypologySelect
-                    candidateTypology={candidateTypology}
-                    onChange={setCandidateTypology}
-                  />
+                <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
+                  <span className="max-w-lg basis-1/2">
+                    <CandidateTypologySelect
+                      candidateTypology={candidateTypology}
+                      onChange={setCandidateTypology}
+                    />
+                  </span>
                   {invalidTypology && (
                     <Notice
                       data-testid="candidate-typology-error-panel"
