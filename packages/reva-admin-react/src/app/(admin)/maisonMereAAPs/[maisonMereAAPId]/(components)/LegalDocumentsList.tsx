@@ -29,40 +29,40 @@ export default function LegalDocumentsList({
       </p>
       <div className="grid grid-cols-1 gap-8">
         {attestationURSSAFFile?.previewUrl && (
-          <object
+          <iframe
             className="w-full h-[500px]"
             title="Attestation URSSAF"
             name="Attestation URSSAF"
-            data={attestationURSSAFFile.previewUrl}
-            type={attestationURSSAFFile.mimeType}
-          ></object>
+            src={attestationURSSAFFile.previewUrl}
+            // type={attestationURSSAFFile.mimeType}
+          ></iframe>
         )}
         {justificatifIdentiteDirigeantFile?.previewUrl && (
-          <object
+          <iframe
             className="w-full h-[500px]"
             title="Justificatif d'identité du dirigeant"
             name="Justificatif d'identité du dirigeant"
-            data={justificatifIdentiteDirigeantFile.previewUrl}
-            type={justificatifIdentiteDirigeantFile.mimeType}
-          ></object>
+            src={justificatifIdentiteDirigeantFile.previewUrl}
+            // type={justificatifIdentiteDirigeantFile.mimeType}
+          ></iframe>
         )}
         {lettreDeDelegationFile?.previewUrl && (
-          <object
+          <iframe
             className="w-full h-[500px]"
             title="Lettre de delegation"
             name="Lettre de delegation"
-            data={lettreDeDelegationFile.previewUrl}
-            type={lettreDeDelegationFile.mimeType}
-          ></object>
+            src={lettreDeDelegationFile.previewUrl}
+            // type={lettreDeDelegationFile.mimeType}
+          ></iframe>
         )}
         {justificatifIdentiteDelegataireFile?.previewUrl && (
-          <object
+          <iframe
             className="w-full h-[500px]"
             title="Justificatif d'identité du delegataire"
             name="Justificatif d'identité du delegataire"
-            data={justificatifIdentiteDelegataireFile.previewUrl}
-            type={justificatifIdentiteDelegataireFile.mimeType}
-          ></object>
+            src={justificatifIdentiteDelegataireFile.previewUrl}
+            // type={justificatifIdentiteDelegataireFile.mimeType}
+          ></iframe>
         )}
       </div>
     </div>
