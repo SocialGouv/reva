@@ -36,8 +36,8 @@ export const CompanySummary = () => {
   );
 
   const accountFullname = toFullname(
-    professionalSpaceInfos.managerFirstname,
-    professionalSpaceInfos.managerLastname,
+    professionalSpaceInfos.accountLastname,
+    professionalSpaceInfos.accountFirstname,
   );
 
   return (

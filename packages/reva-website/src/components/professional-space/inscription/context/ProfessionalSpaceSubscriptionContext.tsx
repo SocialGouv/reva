@@ -29,7 +29,7 @@ interface ProfessionalSpaceInfo {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
- 
+
   managerFirstname: string;
   managerLastname: string;
   accountFirstname: string;
@@ -147,6 +147,9 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
         professionalSpaceInfos: {
           ...state.professionalSpaceInfos,
           ...stepData,
+          accountLastname: stepData.managerLastname,
+          accountFirstname: stepData.managerFirstname,
+          delegataire: false,
         },
       });
     },

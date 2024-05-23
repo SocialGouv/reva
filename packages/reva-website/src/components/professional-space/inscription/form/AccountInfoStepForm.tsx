@@ -2,11 +2,41 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fi
 import { CompanySummary } from "@/components/professional-space/inscription/component/CompanySummary";
 import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useWatch } from "react-hook-form";
+import * as z from "zod";
 
 export const AccountInfoStepForm = () => {
-  const { goBackToPreviousStep, submitAccountInfoStep } =
-    useProfessionalSpaceSubscriptionContext();
+  const {
+    goBackToPreviousStep,
+    professionalSpaceInfos,
+    submitAccountInfoStep,
+  } = useProfessionalSpaceSubscriptionContext();
+
+  const zodSchema = z.object({
+    accountFirstname: z.string().min(1, "Ce champ est obligatoire"),
+    accountLastname: z.string().min(1, "Ce champ est obligatoire"),
+    accountEmail: z.string().email("L'adresse email est incomplète"),
+    accountPhoneNumber: z.string().min(1, "Ce champ est obligatoire"),
+    delegataire: z.boolean(),
+  });
+
+  type AccountInfoStepFormSchema = z.infer<typeof zodSchema>;
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AccountInfoStepFormSchema>({
+    resolver: zodResolver(zodSchema),
+    defaultValues: { ...professionalSpaceInfos },
+  });
 
   return (
     <>
@@ -23,27 +53,67 @@ export const AccountInfoStepForm = () => {
         <CompanySummary />
         <div className="w-full flex flex-col">
           <h2>Administrateur du compte France VAE</h2>
-          <p className="text-xl">
-            L’administrateur du compte France VAE peut paramétrer les filières,
-            les agences et les niveaux de parcours depuis son compte.{" "}
-          </p>
-          <div className="bg-neutral-50 h-[520px] mb-8" />
-          <div className="h-full flex gap-2 items-end justify-end">
-            <Button
-              onClick={() =>
-                submitAccountInfoStep({
-                  accountFirstname: "John",
-                  accountLastname: "Doe",
-                  accountEmail: "john.doe@example.com",
-                  accountPhoneNumber: "0123456789",
-                  delegataire: false,
-                })
-              }
-              type="submit"
-            >
-              Passer à l'étape 3
-            </Button>
-          </div>
+          <form
+            className="h-full flex flex-col"
+            onSubmit={handleSubmit(submitAccountInfoStep)}
+          >
+            <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+              <legend className="text-xl text-gray-900 mb-6">
+                L’administrateur du compte France VAE peut paramétrer les
+                filières, les agences et les niveaux de parcours depuis son
+                compte.
+              </legend>
+              <Input
+                label="Nom"
+                state={errors.accountLastname ? "error" : "default"}
+                stateRelatedMessage={errors.accountLastname?.message}
+                nativeInputProps={{
+                  ...register("accountLastname"),
+                  autoComplete: "family-name",
+                }}
+              />
+              <Input
+                label="Prénom(s)"
+                state={errors.accountFirstname ? "error" : "default"}
+                stateRelatedMessage={errors.accountFirstname?.message}
+                nativeInputProps={{
+                  ...register("accountFirstname"),
+                  autoComplete: "given-name",
+                }}
+              />
+              <div className="flex flex-col">
+                <Input
+                  label="Adresse e-mail"
+                  state={errors.accountEmail ? "error" : "default"}
+                  stateRelatedMessage={errors.accountEmail?.message}
+                  nativeInputProps={{
+                    ...register("accountEmail"),
+                    autoComplete: "email",
+                    type: "email",
+                    spellCheck: "false",
+                  }}
+                />
+                <Notice
+                  className="mb-4"
+                  title="Ce mail vous permettra de vous connecter à la plateforme. C’est sur celui-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
+                />
+              </div>
+              <Input
+                label="Numéro de téléphone"
+                state={errors.accountPhoneNumber ? "error" : "default"}
+                stateRelatedMessage={errors.accountPhoneNumber?.message}
+                className="self-start"
+                nativeInputProps={{
+                  ...register("accountPhoneNumber"),
+                  autoComplete: "phone",
+                  type: "phone",
+                }}
+              />
+            </fieldset>
+            <div className="h-full flex gap-2 items-end justify-end">
+              <Button type="submit">Passer à l'étape 3</Button>
+            </div>
+          </form>
         </div>
       </div>
     </>
