@@ -4,12 +4,12 @@ import {
   CertificationAuthority,
   CertificationAuthorityPaginated,
 } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   CertificationAuthoritySearchList,
   CertificationAuthorityValidation,
+  EmptyStateCertificationSearch,
   useTransferCandidacy,
 } from "./_components";
 
@@ -68,14 +68,6 @@ export default function TransferCandidacyPage() {
     return null;
   }
 
-  if (!certificationAuthorities?.rows.length) {
-    return (
-      <Alert
-        title={`Nous n'avons trouvé aucun certificateur disponible pour la certification ${candidacy?.certification?.label ?? ""}.`}
-        severity="info"
-      />
-    );
-  }
   return (
     <div>
       <h1>Transfert de la candidature</h1>
@@ -100,16 +92,21 @@ export default function TransferCandidacyPage() {
             }
           />
         ) : (
-          <CertificationAuthoritySearchList
-            certificationAuthorities={
-              certificationAuthorities as CertificationAuthorityPaginated
-            }
-            updateSearchFilter={updateSearchFilter}
-            searchFilter={searchFilter}
-            setCertificationAuthoritySelected={
-              setCertificationAuthoritySelected
-            }
-          />
+          <>
+            <CertificationAuthoritySearchList
+              certificationAuthorities={
+                certificationAuthorities as CertificationAuthorityPaginated
+              }
+              updateSearchFilter={updateSearchFilter}
+              searchFilter={searchFilter}
+              setCertificationAuthoritySelected={
+                setCertificationAuthoritySelected
+              }
+            />
+            {certificationAuthorities?.rows?.length === 0 && (
+              <EmptyStateCertificationSearch searchFilter={searchFilter} />
+            )}
+          </>
         )}
       </div>
     </div>
