@@ -33,6 +33,7 @@ export const AccountInfoStepForm = () => {
     register,
     control,
     handleSubmit,
+    reset,
     setValue,
     formState: { errors },
   } = useForm<AccountInfoStepFormSchema>({
@@ -57,6 +58,15 @@ export const AccountInfoStepForm = () => {
     professionalSpaceInfos.managerFirstname,
   ]);
 
+  const resetForm = () =>
+    reset({
+      accountFirstname: professionalSpaceInfos.accountFirstname,
+      accountLastname: professionalSpaceInfos.accountLastname,
+      accountEmail: "",
+      accountPhoneNumber: "",
+      delegataire: false,
+    });
+
   return (
     <>
       <h1 className="mb-12">
@@ -75,6 +85,10 @@ export const AccountInfoStepForm = () => {
           <form
             className="h-full flex flex-col"
             onSubmit={handleSubmit(submitAccountInfoStep)}
+            onReset={(e) => {
+              e.preventDefault();
+              resetForm();
+            }}
           >
             <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
               <legend className="text-xl text-gray-900 mb-6">
@@ -142,6 +156,9 @@ export const AccountInfoStepForm = () => {
               />
             </fieldset>
             <div className="h-full flex gap-2 items-end justify-end">
+              <Button type="reset" priority="tertiary no outline">
+                Réinitialiser
+              </Button>
               <Button type="submit">Passer à l'étape 3</Button>
             </div>
           </form>
