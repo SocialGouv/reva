@@ -1,4 +1,4 @@
-import { FileService, OOS_DOMAIN } from "../..//shared/file";
+import { FILE_PREVIEW_ROUTE_PATH, FileService, OOS_DOMAIN } from "../..//shared/file";
 import { prismaClient } from "../../../prisma/client";
 
 export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
@@ -61,7 +61,7 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
           name: filename,
           mimeType,
           url,
-          previewUrl: url?.replace(OOS_DOMAIN, '/preview'),
+          previewUrl: url?.replace(OOS_DOMAIN, FILE_PREVIEW_ROUTE_PATH),
         }
       : null;
   };
