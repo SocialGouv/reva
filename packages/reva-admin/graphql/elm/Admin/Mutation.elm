@@ -526,6 +526,20 @@ certification_authority_deleteCertificationAuthorityLocalAccount requiredArgs___
     Object.selectionForCompositeField "certification_authority_deleteCertificationAuthorityLocalAccount" [ Argument.required "certificationAuthorityLocalAccountId" requiredArgs____.certificationAuthorityLocalAccountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
 
 
+type alias CertificationAuthorityTransferCandidacyToAnotherCertificationAuthorityRequiredArguments =
+    { candidacyId : String
+    , certificationAuthorityId : String
+    , transferReason : String
+    }
+
+
+certification_authority_transferCandidacyToAnotherCertificationAuthority :
+    CertificationAuthorityTransferCandidacyToAnotherCertificationAuthorityRequiredArguments
+    -> SelectionSet Bool RootMutation
+certification_authority_transferCandidacyToAnotherCertificationAuthority requiredArgs____ =
+    Object.selectionForField "Bool" "certification_authority_transferCandidacyToAnotherCertificationAuthority" [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string, Argument.required "certificationAuthorityId" requiredArgs____.certificationAuthorityId Encode.string, Argument.required "transferReason" requiredArgs____.transferReason Encode.string ] Decode.bool
+
+
 type alias DematerializedFeasibilityFileCreateOrUpdateCertificationInfoRequiredArguments =
     { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput }
 
@@ -866,3 +880,14 @@ subscription_rejectSubscriptionRequest :
     -> SelectionSet (Maybe String) RootMutation
 subscription_rejectSubscriptionRequest requiredArgs____ =
     Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)
+
+
+type alias SubscriptionSubscribeRequiredArguments =
+    { subscriptionInput : Admin.InputObject.SubscriptionV2Input }
+
+
+subscription_subscribe :
+    SubscriptionSubscribeRequiredArguments
+    -> SelectionSet String RootMutation
+subscription_subscribe requiredArgs____ =
+    Object.selectionForField "String" "subscription_subscribe" [ Argument.required "subscriptionInput" requiredArgs____.subscriptionInput Admin.InputObject.encodeSubscriptionV2Input ] Decode.string

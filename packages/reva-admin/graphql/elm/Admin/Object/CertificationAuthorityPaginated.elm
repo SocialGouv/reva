@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.File exposing (..)
+module Admin.Object.CertificationAuthorityPaginated exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,21 +19,15 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-url : SelectionSet String Admin.Object.File
-url =
-    Object.selectionForField "String" "url" [] Decode.string
+rows :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthorityPaginated
+rows object____ =
+    Object.selectionForCompositeField "rows" [] object____ (Basics.identity >> Decode.list)
 
 
-name : SelectionSet String Admin.Object.File
-name =
-    Object.selectionForField "String" "name" [] Decode.string
-
-
-mimeType : SelectionSet String Admin.Object.File
-mimeType =
-    Object.selectionForField "String" "mimeType" [] Decode.string
-
-
-previewUrl : SelectionSet (Maybe String) Admin.Object.File
-previewUrl =
-    Object.selectionForField "(Maybe String)" "previewUrl" [] (Decode.string |> Decode.nullable)
+info :
+    SelectionSet decodesTo Admin.Object.PaginationInfo
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityPaginated
+info object____ =
+    Object.selectionForCompositeField "info" [] object____ Basics.identity

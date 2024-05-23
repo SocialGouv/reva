@@ -1579,6 +1579,71 @@ encodeSubscriptionRequestOrderByInput input____ =
         [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ), ( "createdAt", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.createdAt ) ]
 
 
+buildSubscriptionV2Input :
+    SubscriptionV2InputRequiredFields
+    -> (SubscriptionV2InputOptionalFields -> SubscriptionV2InputOptionalFields)
+    -> SubscriptionV2Input
+buildSubscriptionV2Input required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { lettreDeDelegation = Absent, justificatifIdentiteDelegataire = Absent }
+    in
+    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, managerFirstname = required____.managerFirstname, managerLastname = required____.managerLastname, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, companyWebsite = required____.companyWebsite, delegataire = required____.delegataire, attestationURSSAF = required____.attestationURSSAF, justificatifIdentiteDirigeant = required____.justificatifIdentiteDirigeant, lettreDeDelegation = optionals____.lettreDeDelegation, justificatifIdentiteDelegataire = optionals____.justificatifIdentiteDelegataire }
+
+
+type alias SubscriptionV2InputRequiredFields =
+    { companySiret : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companyName : String
+    , managerFirstname : String
+    , managerLastname : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    , companyWebsite : String
+    , delegataire : Bool
+    , attestationURSSAF : Data.Scalar.Upload
+    , justificatifIdentiteDirigeant : Data.Scalar.Upload
+    }
+
+
+type alias SubscriptionV2InputOptionalFields =
+    { lettreDeDelegation : OptionalArgument Data.Scalar.Upload
+    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
+    }
+
+
+{-| Type for the SubscriptionV2Input input object.
+-}
+type alias SubscriptionV2Input =
+    { companySiret : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companyName : String
+    , managerFirstname : String
+    , managerLastname : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    , companyWebsite : String
+    , delegataire : Bool
+    , attestationURSSAF : Data.Scalar.Upload
+    , justificatifIdentiteDirigeant : Data.Scalar.Upload
+    , lettreDeDelegation : OptionalArgument Data.Scalar.Upload
+    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
+    }
+
+
+{-| Encode a SubscriptionV2Input into a value that can be used as an argument.
+-}
+encodeSubscriptionV2Input : SubscriptionV2Input -> Value
+encodeSubscriptionV2Input input____ =
+    Encode.maybeObject
+        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "managerFirstname", Encode.string input____.managerFirstname |> Just ), ( "managerLastname", Encode.string input____.managerLastname |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "companyWebsite", Encode.string input____.companyWebsite |> Just ), ( "delegataire", Encode.bool input____.delegataire |> Just ), ( "attestationURSSAF", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.attestationURSSAF |> Just ), ( "justificatifIdentiteDirigeant", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.justificatifIdentiteDirigeant |> Just ), ( "lettreDeDelegation", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.lettreDeDelegation ), ( "justificatifIdentiteDelegataire", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.justificatifIdentiteDelegataire ) ]
+
+
 buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput

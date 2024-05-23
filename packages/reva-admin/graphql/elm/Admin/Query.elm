@@ -13,16 +13,18 @@ import Admin.Enum.JuryCategoryFilter
 import Admin.Enum.StatutValidationInformationsJuridiquesMaisonMereAAP
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
+import Admin.Interface
 import Admin.Object
 import Admin.Scalar
+import Admin.Union
 import Data.Scalar
-import Graphql.Internal.Builder.Argument as Argument
+import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
-import Graphql.Internal.Encode as Encode
-import Graphql.Operation exposing (RootQuery)
+import Graphql.Internal.Encode as Encode exposing (Value)
+import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
-import Json.Decode as Decode
+import Json.Decode as Decode exposing (Decoder)
 
 
 type alias AccountGetAccountsOptionalArguments =
@@ -242,10 +244,6 @@ candidate_getCandidateWithCandidacy object____ =
     Object.selectionForCompositeField "candidate_getCandidateWithCandidacy" [] object____ Basics.identity
 
 
-type alias CandidateGetCandidateByEmailRequiredArguments =
-    { email : String }
-
-
 type alias CertificationAuthorityGetCertificationAuthorityRequiredArguments =
     { id : Data.Scalar.Id }
 
@@ -314,6 +312,34 @@ certification_authority_getCertificationAuthorityLocalAccount :
     -> SelectionSet (Maybe decodesTo) RootQuery
 certification_authority_getCertificationAuthorityLocalAccount requiredArgs____ object____ =
     Object.selectionForCompositeField "certification_authority_getCertificationAuthorityLocalAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias CertificationAuthorityGetCertificationAuthoritiesToTransferCandidacyOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchFilter : OptionalArgument String
+    }
+
+
+type alias CertificationAuthorityGetCertificationAuthoritiesToTransferCandidacyRequiredArguments =
+    { candidacyId : String }
+
+
+certification_authority_getCertificationAuthoritiesToTransferCandidacy :
+    (CertificationAuthorityGetCertificationAuthoritiesToTransferCandidacyOptionalArguments -> CertificationAuthorityGetCertificationAuthoritiesToTransferCandidacyOptionalArguments)
+    -> CertificationAuthorityGetCertificationAuthoritiesToTransferCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityPaginated
+    -> SelectionSet decodesTo RootQuery
+certification_authority_getCertificationAuthoritiesToTransferCandidacy fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "certification_authority_getCertificationAuthoritiesToTransferCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string ]) object____ Basics.identity
 
 
 type alias DossierDeValidationGetDossierDeValidationByIdRequiredArguments =

@@ -97,10 +97,6 @@ type CertificationAuhtorityOrLocalAccountPaginated
     = CertificationAuhtorityOrLocalAccountPaginated
 
 
-type CertificationAuthorityPaginated
-    = CertificationAuthorityPaginated
-
-
 type CertificationAuthority
     = CertificationAuthority
 
@@ -111,6 +107,10 @@ type CertificationAuthorityLocalAccount
 
 type CertificationAuthorityOrLocalAccount
     = CertificationAuthorityOrLocalAccount
+
+
+type CertificationAuthorityPaginated
+    = CertificationAuthorityPaginated
 
 
 type CertificationCompetence
