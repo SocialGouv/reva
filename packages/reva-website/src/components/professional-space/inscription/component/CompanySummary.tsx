@@ -5,14 +5,16 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 const CompanySummaryItem = ({
   title,
   description,
+  descriptionClassName,
 }: {
   title: string;
   description?: string;
+  descriptionClassName?: string;
 }) => {
   return description ? (
     <dl className="text-base text-neutral-900 pl-0 leading-tight">
       <dt className="font-semibold">{title}</dt>
-      <dd className="pl-0">{description}</dd>
+      <dd className={`pl-0 ${descriptionClassName}`}>{description}</dd>
     </dl>
   ) : (
     <></>
@@ -71,6 +73,7 @@ export const CompanySummary = ({ currentStep }: { currentStep: number }) => {
           <CompanySummaryItem
             title="Email"
             description={professionalSpaceInfos.accountEmail}
+            descriptionClassName="truncate"
           />
           <CompanySummaryItem
             title="Téléphone"
