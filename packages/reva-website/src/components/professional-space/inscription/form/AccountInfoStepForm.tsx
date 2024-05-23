@@ -8,6 +8,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 
@@ -32,11 +33,29 @@ export const AccountInfoStepForm = () => {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<AccountInfoStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: { ...professionalSpaceInfos },
   });
+
+  const { delegataire } = useWatch({ control });
+
+  useEffect(() => {
+    if (!delegataire) {
+      setValue("accountLastname", professionalSpaceInfos.managerLastname || "");
+      setValue(
+        "accountFirstname",
+        professionalSpaceInfos.managerFirstname || "",
+      );
+    }
+  }, [
+    delegataire,
+    setValue,
+    professionalSpaceInfos.managerLastname,
+    professionalSpaceInfos.managerFirstname,
+  ]);
 
   return (
     <>
@@ -63,10 +82,21 @@ export const AccountInfoStepForm = () => {
                 filières, les agences et les niveaux de parcours depuis son
                 compte.
               </legend>
+              <Checkbox
+                className="col-span-2"
+                options={[
+                  {
+                    label:
+                      "L'administrateur du compte France VAE et le dirigeant de la structure sont deux personnes différentes.",
+                    nativeInputProps: { ...register("delegataire") },
+                  },
+                ]}
+              />
               <Input
                 label="Nom"
                 state={errors.accountLastname ? "error" : "default"}
                 stateRelatedMessage={errors.accountLastname?.message}
+                disabled={!delegataire}
                 nativeInputProps={{
                   ...register("accountLastname"),
                   autoComplete: "family-name",
@@ -76,6 +106,7 @@ export const AccountInfoStepForm = () => {
                 label="Prénom(s)"
                 state={errors.accountFirstname ? "error" : "default"}
                 stateRelatedMessage={errors.accountFirstname?.message}
+                disabled={!delegataire}
                 nativeInputProps={{
                   ...register("accountFirstname"),
                   autoComplete: "given-name",
