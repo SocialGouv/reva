@@ -190,6 +190,9 @@ export const CompanyDocumentsStepForm = () => {
             </>
           )}
           <div className="h-full flex items-end justify-end gap-2">
+            <Button priority="secondary" onClick={goBackToPreviousStep}>
+              Retour
+            </Button>
             <Button>Envoyer le formulaire</Button>
           </div>
         </form>
