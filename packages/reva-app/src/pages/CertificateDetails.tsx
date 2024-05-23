@@ -19,13 +19,13 @@ export const CertificateDetails = () => {
       <BackButton className="mb-6" />
       <h1
         data-test="certification-label"
-        className="mb-4 text-2xl font-bold text-black"
+        className="mb-1 text-2xl font-bold text-black"
       >
         {selectedCertification.label}
       </h1>
-      <h2 data-test="certification-code-rncp" className="mb-3">
+      <p data-test="certification-code-rncp" className="text-xs mb-3">
         Code RNCP: {selectedCertification.codeRncp}
-      </h2>
+      </p>
       <p>
         <a
           data-test="certification-more-info-link"
