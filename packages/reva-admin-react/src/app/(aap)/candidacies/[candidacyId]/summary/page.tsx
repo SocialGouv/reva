@@ -2,6 +2,7 @@
 import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
+import { useAuth } from "@/components/auth/auth";
 import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
 import {
   BadgeCompleted,
@@ -11,7 +12,6 @@ import {
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { serializeStringToPhoneNumberStructure } from "@/utils";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
@@ -19,7 +19,6 @@ import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { useAuth } from "@/components/auth/auth";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -133,10 +132,7 @@ const CandidacySummaryPage = () => {
                   {candidate.nationality}
                 </dd>
                 <dt className="sr-only">Téléphone</dt>
-                <dd>
-                  {candidate.phone &&
-                    serializeStringToPhoneNumberStructure(candidate.phone)}
-                </dd>
+                <dd>{candidate.phone}</dd>
                 <dt className="sr-only">Adresse email</dt>
                 <dd>{candidate.email}</dd>
                 <dt className="sr-only">Adresse</dt>

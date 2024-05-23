@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
-import { serializeStringToPhoneNumberStructure } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
@@ -79,7 +78,7 @@ const CandidateInformationForm = ({
       street: candidate?.street ?? "",
       city: candidate?.city ?? "",
       zip: candidate?.zip ?? "",
-      phone: serializeStringToPhoneNumberStructure(candidate?.phone ?? ""),
+      phone: candidate?.phone ?? "",
       email: candidate?.email ?? "",
     },
   });
@@ -111,7 +110,7 @@ const CandidateInformationForm = ({
         street: candidate.street ?? "",
         city: candidate.city ?? "",
         zip: candidate.zip ?? "",
-        phone: serializeStringToPhoneNumberStructure(candidate.phone ?? ""),
+        phone: candidate.phone ?? "",
         email: candidate.email ?? "",
       });
     },
@@ -188,9 +187,7 @@ const CandidateInformationForm = ({
           <Select
             label="Civilité"
             className="w-full"
-            nativeSelectProps={{
-              ...register("gender"),
-            }}
+            nativeSelectProps={register("gender")}
             state={errors.gender ? "error" : "default"}
             stateRelatedMessage={errors.gender?.message}
           >
@@ -205,43 +202,33 @@ const CandidateInformationForm = ({
           <Input
             label="Nom de naissance"
             className="w-full"
-            nativeInputProps={{
-              ...register("lastname"),
-            }}
+            nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
           />
           <Input
             label="Nom d'usage (optionnel)"
             className="w-full"
-            nativeInputProps={{
-              ...register("givenName"),
-            }}
+            nativeInputProps={register("givenName")}
           />
         </div>
         <div className="flex gap-6">
           <Input
             label="Prénom principal"
             className="w-full"
-            nativeInputProps={{
-              ...register("firstname"),
-            }}
+            nativeInputProps={register("firstname")}
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
           />
           <Input
             label="Prénom 2 (optionnel)"
             className="w-full"
-            nativeInputProps={{
-              ...register("firstname2"),
-            }}
+            nativeInputProps={register("firstname2")}
           />
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full"
-            nativeInputProps={{
-              ...register("firstname3"),
-            }}
+            nativeInputProps={register("firstname3")}
           />
         </div>
         <div className="flex gap-6">
@@ -258,9 +245,7 @@ const CandidateInformationForm = ({
           <Select
             className="w-full"
             label="Pays de naissance"
-            nativeSelectProps={{
-              ...register("country"),
-            }}
+            nativeSelectProps={register("country")}
             state={errors.country ? "error" : "default"}
             stateRelatedMessage={errors.country?.message}
           >
@@ -276,9 +261,7 @@ const CandidateInformationForm = ({
             className="w-full"
             label="Département de naissance"
             disabled={disabledDepartment}
-            nativeSelectProps={{
-              ...register("birthDepartment"),
-            }}
+            nativeSelectProps={register("birthDepartment")}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
           >
@@ -295,9 +278,7 @@ const CandidateInformationForm = ({
           <Input
             label="Ville de naissance"
             className="w-full"
-            nativeInputProps={{
-              ...register("birthCity"),
-            }}
+            nativeInputProps={register("birthCity")}
             state={errors.birthCity ? "error" : "default"}
             stateRelatedMessage={errors.birthCity?.message}
           />
@@ -306,9 +287,7 @@ const CandidateInformationForm = ({
           <Input
             label="Nationalité"
             className="w-full"
-            nativeInputProps={{
-              ...register("nationality"),
-            }}
+            nativeInputProps={register("nationality")}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
           />
@@ -317,9 +296,7 @@ const CandidateInformationForm = ({
         <Input
           label="Numéro et nom de rue"
           className="w-full"
-          nativeInputProps={{
-            ...register("street"),
-          }}
+          nativeInputProps={register("street")}
           state={errors.street ? "error" : "default"}
           stateRelatedMessage={errors.street?.message}
         />
@@ -327,18 +304,14 @@ const CandidateInformationForm = ({
           <Input
             label="Code postal"
             className="w-full"
-            nativeInputProps={{
-              ...register("zip"),
-            }}
+            nativeInputProps={register("zip")}
             state={errors.zip ? "error" : "default"}
             stateRelatedMessage={errors.zip?.message}
           />
           <Input
             label="Ville"
             className="w-full"
-            nativeInputProps={{
-              ...register("city"),
-            }}
+            nativeInputProps={register("city")}
             state={errors.city ? "error" : "default"}
             stateRelatedMessage={errors.city?.message}
           />
@@ -347,25 +320,14 @@ const CandidateInformationForm = ({
           <Input
             label="Numéro de téléphone"
             className="w-full"
-            nativeInputProps={{
-              ...register("phone"),
-              onChange: (e) => {
-                setValue(
-                  "phone",
-                  serializeStringToPhoneNumberStructure(e.target.value),
-                  { shouldDirty: true },
-                );
-              },
-            }}
+            nativeInputProps={register("phone")}
             state={errors.phone ? "error" : "default"}
             stateRelatedMessage={errors.phone?.message}
           />
           <Input
             label="Email"
             className="w-full"
-            nativeInputProps={{
-              ...register("email"),
-            }}
+            nativeInputProps={register("email")}
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}
           />
