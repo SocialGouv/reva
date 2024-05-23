@@ -26,7 +26,7 @@ function toFullname(firstname?: string, lastname?: string): string | undefined {
   return `${firstname || ""} ${lastname || ""}`.trim();
 }
 
-export const CompanySummary = () => {
+export const CompanySummary = ({ currentStep }: { currentStep: number }) => {
   const { professionalSpaceInfos, goBackToPreviousStep } =
     useProfessionalSpaceSubscriptionContext();
 
@@ -41,8 +41,8 @@ export const CompanySummary = () => {
   );
 
   return (
-    <div className="shrink-0 w-1/4">
-      <div className="hidden md:block min-h-[720px] bg-neutral-100 p-6 mb-12">
+    <div className="flex flex-col justify-between shrink-0 w-1/4">
+      <div className="hidden md:block bg-neutral-100 p-6 mb-12">
         <h2 className="mb-4">Résumé</h2>
         <div className="flex flex-col gap-y-2">
           <Badge severity="success">Siège social</Badge>
@@ -79,7 +79,7 @@ export const CompanySummary = () => {
         </div>
       </div>
       <Button priority="secondary" onClick={goBackToPreviousStep}>
-        Retour
+        {currentStep > 1 ? `Retour à l'étape ${currentStep - 1}` : "Retour"}
       </Button>
     </div>
   );

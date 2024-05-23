@@ -69,7 +69,7 @@ export const AccountInfoStepForm = () => {
         stepCount={3}
       />
       <div className="flex items-stretch gap-x-8">
-        <CompanySummary />
+        <CompanySummary currentStep={2} />
         <div className="w-full flex flex-col">
           <h2>Administrateur du compte France VAE</h2>
           <form

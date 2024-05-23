@@ -109,7 +109,7 @@ export const CompanyDocumentsStepForm = () => {
         stepCount={3}
       />
       <div className="flex gap-x-6 items-stretch">
-        <CompanySummary />
+        <CompanySummary currentStep={3} />
         <form className="flex flex-col gap-8" onSubmit={handleFormSubmit}>
           <FancyUpload
             title="Attestation URSSAF"
