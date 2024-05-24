@@ -9,8 +9,6 @@ import {
 } from "../referential/referential.types";
 
 interface CandidacyAbstract {
-  deviceId: string;
-
   // companionId: string | null;
   experiences: Experience[];
   email: string | null;

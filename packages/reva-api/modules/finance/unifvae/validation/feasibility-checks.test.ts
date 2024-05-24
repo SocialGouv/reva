@@ -14,14 +14,9 @@ let candNoFeasibilty: Candidacy,
 
 describe("FundingRequesUnifvae Feasibility checks", () => {
   beforeAll(async () => {
-    candNoFeasibilty = await prismaClient.candidacy.create({
-      data: {
-        deviceId: "plop1",
-      },
-    });
+    candNoFeasibilty = await prismaClient.candidacy.create({});
     candFeasibiltyValidated = await prismaClient.candidacy.create({
       data: {
-        deviceId: "plop2",
         Feasibility: {
           create: {
             decision: "ADMISSIBLE",
@@ -39,7 +34,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
     });
     candFeasibiltyRejected = await prismaClient.candidacy.create({
       data: {
-        deviceId: "plop3",
         Feasibility: {
           create: {
             decision: "REJECTED",
@@ -57,7 +51,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
     });
     candFeasibiltyPending = await prismaClient.candidacy.create({
       data: {
-        deviceId: "plop4",
         Feasibility: {
           create: {
             decision: "PENDING",

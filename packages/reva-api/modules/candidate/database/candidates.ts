@@ -82,7 +82,6 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
         data: {
           candidacies: {
             create: {
-              deviceId: candidate.email,
               candidacyStatuses: {
                 create: {
                   status: CandidacyStatusStep.PROJET,
@@ -190,7 +189,6 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
         data: {
           candidacies: {
             create: {
-              deviceId: keycloakId,
               candidacyStatuses: {
                 create: {
                   status: CandidacyStatusStep.PROJET,

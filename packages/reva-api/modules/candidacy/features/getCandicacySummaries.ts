@@ -38,7 +38,6 @@ const toDomainCandidacySummary = (
 
   return {
     id: candidacy.id,
-    deviceId: candidacy.deviceId,
     organismId: candidacy.organismId,
     organism: candidacy.organism,
     certificationId: candidacy.certification?.id,

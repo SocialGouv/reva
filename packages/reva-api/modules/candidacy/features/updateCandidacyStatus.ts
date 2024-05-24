@@ -52,7 +52,6 @@ export const updateCandidacyStatus = async (params: {
 
     return {
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,

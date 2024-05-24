@@ -108,7 +108,6 @@ beforeAll(async () => {
 
   candidacyUnifvae = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateEmail,
       email: candidateEmail,
       organismId: organism.id,
       financeModule: "unifvae",
@@ -152,7 +151,6 @@ beforeAll(async () => {
   });
   candidacyUnireva = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateEmail,
       email: candidateEmail,
       organismId: organism.id,
       financeModule: "unireva",
@@ -160,7 +158,6 @@ beforeAll(async () => {
   });
   myCandidacy = await prismaClient.candidacy.create({
     data: {
-      deviceId: myCandidateEmail,
       email: myCandidateEmail,
       organismId: organism.id,
       financeModule: "unifvae",

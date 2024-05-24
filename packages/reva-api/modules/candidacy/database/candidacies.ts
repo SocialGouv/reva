@@ -260,7 +260,6 @@ export const updateCandidacyStatus = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,
@@ -332,7 +331,6 @@ export const archiveCandidacy = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,
@@ -413,7 +411,6 @@ export const unarchiveCandidacy = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,
@@ -507,7 +504,6 @@ export const updateCertification = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,
@@ -586,7 +582,6 @@ export const updateOrganism = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,
@@ -678,7 +673,6 @@ export const updateTrainingInformations = async (params: {
 
     return Right({
       id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       department: newCandidacy.department,

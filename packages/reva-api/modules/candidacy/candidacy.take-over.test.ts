@@ -62,7 +62,6 @@ beforeAll(async () => {
   });
   candidacyProject = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidate1.email,
       email: candidate1.email,
       candidateId: candidate1.id,
       organismId: rightOrganism.id,
@@ -80,7 +79,6 @@ beforeAll(async () => {
   });
   candidacyValidated = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidate1.email,
       email: candidate1.email,
       candidateId: candidate2.id,
       organismId: rightOrganism.id,

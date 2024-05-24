@@ -121,7 +121,6 @@ export const updateAppointmentInformations = async (params: {
 
   return {
     id: updatedCandidacy.id,
-    deviceId: updatedCandidacy.deviceId,
     regionId: candidaciesOnRegionsAndCertifications?.region.id,
     region: candidaciesOnRegionsAndCertifications?.region,
     department: updatedCandidacy.department,

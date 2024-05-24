@@ -103,7 +103,6 @@ enum FinanceModule {
 
 model Candidacy {
   id                                         String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  deviceId                                   String                                  @db.VarChar(255)
   organism                                   Organism?                               @relation(fields: [organismId], references: [id])
   organismId                                 String?                                 @map("organism_id") @db.Uuid
   candidacyStatuses                          CandidaciesStatus[]

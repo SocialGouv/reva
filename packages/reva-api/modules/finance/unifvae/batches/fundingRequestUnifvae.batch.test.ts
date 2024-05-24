@@ -30,7 +30,6 @@ let myCandidacy1: Candidacy, myCandidacy2: Candidacy, myCandidacy3: Candidacy;
 beforeAll(async () => {
   myCandidacy1 = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateEmail1,
       email: candidateEmail1,
       financeModule: "unifvae",
       fundingRequestUnifvae: {
@@ -53,7 +52,6 @@ beforeAll(async () => {
   });
   myCandidacy2 = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateEmail2,
       email: candidateEmail2,
       financeModule: "unifvae",
       fundingRequestUnifvae: {
@@ -76,7 +74,6 @@ beforeAll(async () => {
   });
   myCandidacy3 = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateEmail3,
       email: candidateEmail3,
       financeModule: "unifvae",
       fundingRequestUnifvae: {

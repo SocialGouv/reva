@@ -25,7 +25,6 @@ const blankCandidacy: Candidacy = {
   candidacyStatuses: [],
   createdAt: new Date(),
   department: null,
-  deviceId: "",
   email: null,
   experiences: [],
 };

@@ -63,7 +63,6 @@ const candidacyPriseEnCharge: Candidacy = {
   candidacyStatuses: candidacyStatusesPriseEnCharge,
   createdAt: new Date(),
   department: null,
-  deviceId: "",
   email: null,
   experiences: [],
   reorientationReason: null,

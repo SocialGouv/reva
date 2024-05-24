@@ -35,7 +35,6 @@ beforeAll(async () => {
   });
   candidacy = await prismaClient.candidacy.create({
     data: {
-      deviceId: "jojopipo@mimimi.io",
       certificationsAndRegions: {
         create: [
           {
