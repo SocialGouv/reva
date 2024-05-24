@@ -3,7 +3,6 @@ import {
   ApolloContextValue,
   getApolloContext,
 } from "@apollo/client";
-import { Device } from "@capacitor/device";
 import { Certification, Goal, candidacyStatus } from "interface";
 import { useContext, useMemo } from "react";
 import { getActiveFeaturesForConnectedUser } from "services/featureFlippingServices";
@@ -150,10 +149,8 @@ export const useConfiguredMainMachine = () => {
             ) {
               return Promise.reject("Impossible state");
             }
-            const deviceId = await Device.getId();
 
             await updateCertification(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
               departmentId: context.selectedDepartment?.id || "",
@@ -180,9 +177,7 @@ export const useConfiguredMainMachine = () => {
             if (event.type !== "SUBMIT_GOALS" || !context.candidacyId) {
               return Promise.reject("Impossible state");
             }
-            const deviceId = await Device.getId();
             await saveGoals(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               goals: event.goals
                 .filter((g) => g.checked)
@@ -245,9 +240,7 @@ export const useConfiguredMainMachine = () => {
               return Promise.reject("Impossible state");
             }
 
-            const deviceId = await Device.getId();
             return submitCandidacy(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
             });
           },

@@ -328,7 +328,7 @@ const unsafeResolvers = {
   Mutation: {
     candidacy_submitCandidacy: async (
       _: unknown,
-      payload: { deviceId: string; candidacyId: string },
+      payload: { candidacyId: string },
       context: GraphqlContext,
     ) => {
       const result = await submitCandidacy({

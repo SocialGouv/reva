@@ -27,11 +27,6 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-deviceId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
-deviceId =
-    Object.selectionForField "(Maybe Data.Scalar.Id)" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
-
-
 candidate :
     SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

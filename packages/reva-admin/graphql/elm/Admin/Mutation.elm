@@ -55,9 +55,7 @@ account_updateAccount requiredArgs____ object____ =
 
 
 type alias CandidacySubmitCandidacyRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
-    }
+    { candidacyId : Data.Scalar.Id }
 
 
 candidacy_submitCandidacy :
@@ -65,12 +63,11 @@ candidacy_submitCandidacy :
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet (Maybe decodesTo) RootMutation
 candidacy_submitCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_submitCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_submitCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyUpdateCertificationRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
+    { candidacyId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
     , departmentId : Data.Scalar.Id
     }
@@ -81,7 +78,7 @@ candidacy_updateCertification :
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet (Maybe decodesTo) RootMutation
 candidacy_updateCertification requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateCertification" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_updateCertification" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyUpdateCertificationWithinOrganismScopeRequiredArguments =
@@ -164,8 +161,7 @@ candidacy_removeExperience requiredArgs____ =
 
 
 type alias CandidacyUpdateGoalsRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
+    { candidacyId : Data.Scalar.Id
     , goals : List Admin.InputObject.CandidateGoalInput
     }
 
@@ -174,7 +170,7 @@ candidacy_updateGoals :
     CandidacyUpdateGoalsRequiredArguments
     -> SelectionSet Int RootMutation
 candidacy_updateGoals requiredArgs____ =
-    Object.selectionForField "Int" "candidacy_updateGoals" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "goals" requiredArgs____.goals (Admin.InputObject.encodeCandidateGoalInput |> Encode.list) ] Decode.int
+    Object.selectionForField "Int" "candidacy_updateGoals" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "goals" requiredArgs____.goals (Admin.InputObject.encodeCandidateGoalInput |> Encode.list) ] Decode.int
 
 
 type alias CandidacyUpdateContactRequiredArguments =

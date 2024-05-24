@@ -51,7 +51,6 @@ enum FinanceModule {
 
 type Candidacy {
   id: ID!
-  deviceId: ID
   candidate: Candidate
   certificationId: ID
   regionId: ID
@@ -111,7 +110,6 @@ type CandidacyConventionCollectivePaginated {
 
 type CandidacySummary {
   id: ID!
-  deviceId: ID!
   certificationId: ID
   certification: CertificationSummary
   organismId: ID
@@ -293,7 +291,6 @@ type Query {
 # MUTATIONS
 
 input CandidacyInput {
-  deviceId: ID!
   certificationId: ID!
   regionId: ID!
 }
@@ -357,9 +354,8 @@ input AdmissibilityInputFvae {
 }
 
 type Mutation {
-  candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
+  candidacy_submitCandidacy(candidacyId: ID!): Candidacy
   candidacy_updateCertification(
-    deviceId: ID!
     candidacyId: ID!
     certificationId: ID!
     departmentId: ID!
@@ -378,11 +374,7 @@ type Mutation {
     experience: ExperienceInput
   ): Experience
   candidacy_removeExperience(candidacyId: ID!, experienceId: ID!): Void
-  candidacy_updateGoals(
-    deviceId: ID!
-    candidacyId: ID!
-    goals: [CandidateGoalInput!]!
-  ): Int!
+  candidacy_updateGoals(candidacyId: ID!, goals: [CandidateGoalInput!]!): Int!
   candidacy_updateContact(
     candidateId: ID!
     candidateData: UpdateCandidateInput!

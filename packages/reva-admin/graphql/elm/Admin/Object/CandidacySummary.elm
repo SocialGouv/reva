@@ -24,11 +24,6 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-deviceId : SelectionSet Data.Scalar.Id Admin.Object.CandidacySummary
-deviceId =
-    Object.selectionForField "Data.Scalar.Id" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
-
-
 certificationId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.CandidacySummary
 certificationId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
