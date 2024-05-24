@@ -47,21 +47,6 @@ phone =
     Object.selectionForField "(Maybe String)" "phone" [] (Decode.string |> Decode.nullable)
 
 
-adresse : SelectionSet String Admin.Object.MaisonMereAAP
-adresse =
-    Object.selectionForField "String" "adresse" [] Decode.string
-
-
-codePostal : SelectionSet String Admin.Object.MaisonMereAAP
-codePostal =
-    Object.selectionForField "String" "codePostal" [] Decode.string
-
-
-ville : SelectionSet String Admin.Object.MaisonMereAAP
-ville =
-    Object.selectionForField "String" "ville" [] Decode.string
-
-
 typologie : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.MaisonMereAAP
 typologie =
     Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typologie" [] Admin.Enum.OrganismTypology.decoder

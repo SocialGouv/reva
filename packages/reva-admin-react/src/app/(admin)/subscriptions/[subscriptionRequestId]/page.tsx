@@ -129,9 +129,6 @@ const SubscriptionRequestPage = () => {
           }
           companySiret={subscriptionRequest.companySiret}
           companyLegalStatus={subscriptionRequest.companyLegalStatus}
-          companyAddress={subscriptionRequest.companyAddress}
-          companyZipCode={subscriptionRequest.companyZipCode}
-          companyCity={subscriptionRequest.companyCity}
           companyWebsite={subscriptionRequest.companyWebsite}
           companyTypology={subscriptionRequest.typology}
           ccns={subscriptionRequest?.subscriptionRequestOnConventionCollective?.map(

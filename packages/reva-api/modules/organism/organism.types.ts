@@ -1,9 +1,6 @@
 export interface Organism {
   id: string;
   label: string;
-  address: string;
-  zip: string;
-  city: string;
   siret: string;
   legalStatus?: LegalStatus;
   contactAdministrativeEmail: string;
@@ -59,9 +56,6 @@ export interface MaisonMereAAP {
   raisonSociale: string;
   statutJuridique: LegalStatus;
   siret: string;
-  adresse: string;
-  codePostal: string;
-  ville: string;
   typologie: OrganismTypology;
   siteWeb: string;
   dateExpirationCertificationQualiopi: Date;

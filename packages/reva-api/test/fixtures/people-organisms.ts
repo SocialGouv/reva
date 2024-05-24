@@ -39,9 +39,6 @@ const candidateMPB = {
 const organismIperia = {
   label: "Iperia",
   siret: "5038235679",
-  address: "123 rue tabaga",
-  city: "Paris",
-  zip: "75017",
   contactAdministrativeEmail: "josette@iperia.fr",
   isActive: true,
   typology: "experimentation" as const,
@@ -51,9 +48,6 @@ const organismIperia = {
 const expertFiliereOrganism = {
   label: "Expert filiere organism",
   siret: "5038235777",
-  address: "14 boulevard Ney",
-  city: "Nantes",
-  zip: "44000",
   contactAdministrativeEmail: "expertFiliereOrganism@example.com",
   isActive: true,
   typology: "expertFiliere" as const,
@@ -62,9 +56,6 @@ const expertFiliereOrganism = {
 const expertBrancheOrganism = {
   label: "Expert branch organism",
   siret: "5038235777",
-  address: "14 boulevard Ney",
-  city: "Nantes",
-  zip: "44000",
   contactAdministrativeEmail: "expertBranche@example.com",
   isActive: true,
   typology: "expertBranche" as const,
@@ -73,9 +64,6 @@ const expertBrancheOrganism = {
 const expertBrancheEtFiliereOrganism = {
   label: "Expert branch organism",
   siret: "5038235777",
-  address: "14 boulevard Ney",
-  city: "Nantes",
-  zip: "44000",
   contactAdministrativeEmail: "expertBrancheEtFiliere@example.com",
   isActive: true,
   typology: "expertBrancheEtFiliere" as const,

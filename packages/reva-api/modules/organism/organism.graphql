@@ -14,9 +14,6 @@ enum LegalStatus {
 type Organism {
   id: UUID!
   label: String!
-  address: String!
-  zip: String!
-  city: String!
   contactAdministrativeEmail: String!
   contactAdministrativePhone: String
   website: String
@@ -62,9 +59,6 @@ type MaisonMereAAP {
   statutJuridique: LegalStatus!
   siret: String!
   phone: String
-  adresse: String!
-  codePostal: String!
-  ville: String!
   typologie: OrganismTypology!
   siteWeb: String
   dateExpirationCertificationQualiopi: Timestamp

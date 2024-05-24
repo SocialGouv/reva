@@ -30,21 +30,6 @@ label =
     Object.selectionForField "String" "label" [] Decode.string
 
 
-address : SelectionSet String Admin.Object.Organism
-address =
-    Object.selectionForField "String" "address" [] Decode.string
-
-
-zip : SelectionSet String Admin.Object.Organism
-zip =
-    Object.selectionForField "String" "zip" [] Decode.string
-
-
-city : SelectionSet String Admin.Object.Organism
-city =
-    Object.selectionForField "String" "city" [] Decode.string
-
-
 contactAdministrativeEmail : SelectionSet String Admin.Object.Organism
 contactAdministrativeEmail =
     Object.selectionForField "String" "contactAdministrativeEmail" [] Decode.string

@@ -114,9 +114,6 @@ export const getOrganismBySiretAndTypology = async (
 
 export const createOrganism = async (data: {
   label: string;
-  address: string;
-  zip: string;
-  city: string;
   contactAdministrativeEmail: string;
   contactAdministrativePhone: string;
   website: string;
@@ -285,9 +282,6 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
         select o.id,
                o.label,
                o.legal_status,
-               o.address,
-               o.zip,
-               o.city,
                o.contact_administrative_email,
                o.contact_administrative_phone,
                o.website,

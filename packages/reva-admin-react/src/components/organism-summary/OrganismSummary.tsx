@@ -31,9 +31,6 @@ export const OrganismSummary = ({
   companyQualiopiCertificateExpiresAt,
   companySiret,
   companyLegalStatus,
-  companyAddress,
-  companyZipCode,
-  companyCity,
   companyTypology,
   ccns,
   domaines,
@@ -47,9 +44,6 @@ export const OrganismSummary = ({
   companyQualiopiCertificateExpiresAt: Date;
   companySiret: string;
   companyLegalStatus: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
   companyTypology: Typology;
   ccns?: string[];
   domaines?: string[];
@@ -86,12 +80,6 @@ export const OrganismSummary = ({
 "
           >
             {companyLegalStatus}
-          </Info>
-          <Info
-            title="Adresse de la structure
-"
-          >
-            {companyAddress} {companyZipCode} {companyCity}
           </Info>
         </div>
       </GrayCard>

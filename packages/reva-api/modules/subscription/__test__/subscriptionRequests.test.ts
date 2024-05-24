@@ -72,9 +72,6 @@ test("Should fail to create a subscription request when matching existing organi
       typology: subreqSampleFull.typology,
       contactAdministrativeEmail: subreqSampleFull.accountEmail,
       label: "beautiful SA",
-      address: "123 mean street",
-      city: "boom",
-      zip: "12345",
     },
   });
   const resp = await injectGraphql({

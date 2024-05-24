@@ -30,9 +30,6 @@ const getMaisonMereAAP = graphql(`
       raisonSociale
       dateExpirationCertificationQualiopi
       statutJuridique
-      adresse
-      ville
-      codePostal
       typologie
       siteWeb
       createdAt
@@ -194,9 +191,6 @@ const MaisonMereAAPPage = () => {
             }
             companySiret={maisonMereAAP.siret}
             companyLegalStatus={maisonMereAAP.statutJuridique}
-            companyAddress={maisonMereAAP.adresse}
-            companyZipCode={maisonMereAAP.codePostal}
-            companyCity={maisonMereAAP.ville}
             companyWebsite={maisonMereAAP.siteWeb}
             companyTypology={
               maisonMereAAP.typologie as TypologyOrganismSummaryNewLegal
@@ -239,9 +233,6 @@ const MaisonMereAAPPage = () => {
             }
             companySiret={maisonMereAAP.siret}
             companyLegalStatus={maisonMereAAP.statutJuridique}
-            companyAddress={maisonMereAAP.adresse}
-            companyZipCode={maisonMereAAP.codePostal}
-            companyCity={maisonMereAAP.ville}
             companyWebsite={maisonMereAAP.siteWeb}
             companyTypology={maisonMereAAP.typologie as Typology}
             domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(

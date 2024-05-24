@@ -34,9 +34,6 @@ export interface OrganismSummaryProps {
   companyQualiopiCertificateExpiresAt: Date;
   companySiret: string;
   companyLegalStatus: string;
-  companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
   companyTypology: Typology;
   ccns?: string[];
   domaines?: string[];
@@ -57,9 +54,6 @@ export const OrganismSummary = ({
   companyQualiopiCertificateExpiresAt,
   companySiret,
   companyLegalStatus,
-  companyAddress,
-  companyZipCode,
-  companyCity,
   companyTypology,
   ccns,
   domaines,
@@ -114,9 +108,6 @@ export const OrganismSummary = ({
         <div className="grid md:grid-cols-2">
           <Info title="SIRET de la structure">{companySiret}</Info>
           <Info title="Forme juridique">{companyLegalStatus}</Info>
-          <Info title="Adresse de la structure">
-            {companyAddress} {companyZipCode} {companyCity}
-          </Info>
         </div>
       </GrayCard>
       <GrayCard>

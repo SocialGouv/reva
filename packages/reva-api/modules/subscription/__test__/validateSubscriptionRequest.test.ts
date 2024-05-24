@@ -294,9 +294,6 @@ describe("Subscription Request / Validate", () => {
       expect(organism).toMatchObject({
         label: subreqSampleMin.companyName,
         legalStatus: subreqSampleMin.companyLegalStatus,
-        address: subreqSampleMin.companyAddress,
-        zip: subreqSampleMin.companyZipCode,
-        city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
         isActive: true,
         typology: "expertFiliere",
@@ -365,9 +362,6 @@ describe("Subscription Request / Validate", () => {
       expect(organism).toMatchObject({
         label: subreqSampleMin.companyName,
         legalStatus: subreqSampleMin.companyLegalStatus,
-        address: subreqSampleMin.companyAddress,
-        zip: subreqSampleMin.companyZipCode,
-        city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
         isActive: true,
         typology: "expertBranche",
@@ -441,9 +435,6 @@ describe("Subscription Request / Validate", () => {
       expect(organism).toMatchObject({
         label: subreqSampleMin.companyName,
         legalStatus: subreqSampleMin.companyLegalStatus,
-        address: subreqSampleMin.companyAddress,
-        zip: subreqSampleMin.companyZipCode,
-        city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
         isActive: true,
         typology: "expertFiliere",

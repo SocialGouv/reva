@@ -59,7 +59,6 @@ export const submitCandidacy = async ({
     email: candidate.email as string,
     organismName: organism.label,
     organismEmail: organism.contactAdministrativeEmail,
-    organismAddress: `${organism.address}, ${organism.zip} ${organism.city}`,
   });
   return updatedCandidacy;
 };

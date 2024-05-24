@@ -111,12 +111,9 @@ export const createOrganismWithMaisonMereAAP = async ({
     const newOrganism = (
       await createOrganism({
         label: raisonSociale,
-        address: maisonMereAAP.adresse,
         contactAdministrativeEmail,
         contactAdministrativePhone: contactAdministrativePhone ?? "",
         website: siteWeb ?? "",
-        city: maisonMereAAP.ville,
-        zip: maisonMereAAP.codePostal,
         siret,
         legalStatus: statutJuridique,
         isActive: true,

@@ -17,7 +17,7 @@ async function main() {
         __dirname,
         "referentials",
         "private",
-        "data-certifications.csv"
+        "data-certifications.csv",
       );
       const certificationsFileExists = fs.existsSync(certificationsFilePath);
 
@@ -26,7 +26,7 @@ async function main() {
       }
 
       let promiseChain: Promise<Map<string, string>> = Promise.resolve(
-        new Map()
+        new Map(),
       );
       fs.createReadStream(certificationsFilePath)
         .pipe(csv.parse({ headers: true }))
@@ -37,7 +37,7 @@ async function main() {
             (promiseChain = promiseChain.then(async (certificationMap) => {
               certificationMap.set(row.label.trim(), row.rncp_id.trim());
               return certificationMap;
-            }))
+            })),
         )
         .on("end", (rowCount: number) => {
           promiseChain.then((certificationMap) => {
@@ -62,7 +62,7 @@ async function main() {
         __dirname,
         "referentials",
         "private",
-        "data-organisms.csv"
+        "data-organisms.csv",
       );
       const organismsFileExists = fs.existsSync(organismsFilePath);
 
@@ -82,9 +82,6 @@ async function main() {
                 where: { id: row.id.trim() },
                 update: {
                   label: row.label.trim(),
-                  address: row.address.trim(),
-                  zip: row.zip.trim().replace(" ", ""),
-                  city: row.city.trim(),
                   contactAdministrativeEmail:
                     row.contact_administrative_email.trim(),
                   siret: row.siret.trim().replace(" ", ""),
@@ -92,9 +89,6 @@ async function main() {
                 create: {
                   id: row.id.trim(),
                   label: row.label.trim(),
-                  address: row.address.trim(),
-                  zip: row.zip.trim().replace(" ", ""),
-                  city: row.city.trim(),
                   contactAdministrativeEmail:
                     row.contact_administrative_email.trim(),
                   siret: row.siret.trim().replace(" ", ""),
@@ -102,7 +96,7 @@ async function main() {
                   typology: "experimentation",
                 },
               });
-            }))
+            })),
         )
         .on("end", (rowCount: number) => {
           promiseChain.then(() => resolve("done"));
@@ -121,7 +115,7 @@ async function main() {
         __dirname,
         "referentials",
         "private",
-        "data-organisms-certifications-regions.csv"
+        "data-organisms-certifications-regions.csv",
       );
       const relationshipFileExists = fs.existsSync(relationshipFilePath);
 
@@ -161,7 +155,7 @@ async function main() {
                               label: currentOrganismId,
                             },
                           },
-                        }
+                        },
                       );
 
                     if (!existingResult) {
@@ -204,7 +198,7 @@ async function main() {
                         },
                       });
                     }
-                  })
+                  }),
                 );
               } else {
                 const existingResult =
@@ -263,7 +257,7 @@ async function main() {
                   });
                 }
               }
-            }))
+            })),
         )
         .on("end", (rowCount: number) => {
           promiseChain.then(() => resolve("done"));

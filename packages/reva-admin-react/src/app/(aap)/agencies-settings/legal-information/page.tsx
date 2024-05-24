@@ -63,34 +63,6 @@ const LegalInformationPage = () => {
               </div>
             </fieldset>
           )}
-
-          <fieldset className="flex flex-col gap-4 mb-8">
-            <h2 className="leading-6 font-bold">Adresse de l'établissement</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                className="col-span-2"
-                label="Numéro et nom de rue"
-                nativeInputProps={{
-                  value: maisonMereAAP?.adresse ?? "",
-                }}
-                disabled
-              />
-              <Input
-                label="Code postal"
-                nativeInputProps={{
-                  value: maisonMereAAP?.codePostal ?? "",
-                }}
-                disabled
-              />
-              <Input
-                label="Ville"
-                nativeInputProps={{
-                  value: maisonMereAAP?.ville ?? "",
-                }}
-                disabled
-              />
-            </div>
-          </fieldset>
           {isFeatureActive("LEGAL_INFORMATION_VALIDATION") &&
             isGestionnaireMaisonMereAAP &&
             maisonMereAAP && (

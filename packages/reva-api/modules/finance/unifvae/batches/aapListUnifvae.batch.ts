@@ -82,9 +82,6 @@ export async function generateCsvStream(itemsToSendIds: string[]) {
               SIRET: mmaap.siret,
               Nom: mmaap.raisonSociale,
               email: mmaap.gestionnaire.email,
-              Adresse_NomVoie: mmaap.adresse,
-              Adresse_Ville: mmaap.ville,
-              Adresse_CodePostal: mmaap.codePostal,
             }),
           )
         : this.push(null);

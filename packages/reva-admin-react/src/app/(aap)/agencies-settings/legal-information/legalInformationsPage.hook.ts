@@ -13,9 +13,6 @@ const legalInformationQueries = graphql(`
           siret
           statutJuridique
           siteWeb
-          adresse
-          ville
-          codePostal
           statutValidationInformationsJuridiquesMaisonMereAAP
           legalInformationDocumentsDecisions(
             input: { decision: DEMANDE_DE_PRECISION }

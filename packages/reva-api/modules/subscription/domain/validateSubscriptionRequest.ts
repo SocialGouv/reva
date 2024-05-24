@@ -120,13 +120,10 @@ export const validateSubscriptionRequest = async (
     const newOrganism = (
       await createOrganism({
         label: subscriptionRequest.companyName ?? "",
-        address: subscriptionRequest.companyAddress ?? "",
         contactAdministrativeEmail: subscriptionRequest.accountEmail ?? "",
         contactAdministrativePhone:
           subscriptionRequest.accountPhoneNumber ?? "",
         website: subscriptionRequest.companyWebsite,
-        city: subscriptionRequest.companyCity ?? "",
-        zip: subscriptionRequest.companyZipCode ?? "",
         siret: subscriptionRequest.companySiret ?? "",
         legalStatus: subscriptionRequest.companyLegalStatus,
         isActive: true,
@@ -185,10 +182,7 @@ export const validateSubscriptionRequest = async (
       maisonMereAAP: {
         phone: subscriptionRequest.accountPhoneNumber ?? "",
         raisonSociale: subscriptionRequest.companyName ?? "",
-        adresse: subscriptionRequest.companyAddress ?? "",
         siteWeb: subscriptionRequest.companyWebsite,
-        ville: subscriptionRequest.companyCity ?? "",
-        codePostal: subscriptionRequest.companyZipCode ?? "",
         siret: subscriptionRequest.companySiret ?? "",
         statutJuridique: subscriptionRequest.companyLegalStatus,
         typologie: typology,

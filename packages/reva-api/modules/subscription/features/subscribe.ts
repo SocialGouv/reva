@@ -59,12 +59,9 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
     const newOrganism = (
       await createOrganism({
         label: params.companyName ?? "",
-        address: "",
         contactAdministrativeEmail: params.accountEmail ?? "",
         contactAdministrativePhone: params.accountPhoneNumber ?? "",
         website: params.companyWebsite,
-        city: "",
-        zip: "",
         siret: params.companySiret ?? "",
         legalStatus: params.companyLegalStatus,
         isActive: true,
@@ -98,10 +95,7 @@ export const subscribe = async ({ params }: { params: SubscriptionInput }) => {
       maisonMereAAP: {
         phone: params.accountPhoneNumber ?? "",
         raisonSociale: params.companyName ?? "",
-        adresse: "",
         siteWeb: params.companyWebsite,
-        ville: "",
-        codePostal: "",
         siret: params.companySiret ?? "",
         statutJuridique: params.companyLegalStatus,
         typologie: "expertFiliere",

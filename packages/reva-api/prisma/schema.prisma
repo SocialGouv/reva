@@ -386,9 +386,6 @@ model Organism {
   id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                                  String                                                   @db.VarChar(255)
   legalStatus                                            LegalStatus                                              @default(NC) @map("legal_status")
-  address                                                String
-  zip                                                    String                                                   @db.VarChar(5)
-  city                                                   String                                                   @db.VarChar(255)
   llToEarth                                              String?                                                  @map("ll_to_earth")
   contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
   contactAdministrativePhone                             String?                                                  @map("contact_administrative_phone") @db.VarChar(50)
@@ -1324,9 +1321,6 @@ model MaisonMereAAP {
   statutJuridique                     LegalStatus                           @map("statut_juridique")
   siret                               String                                @map("siret") @db.VarChar(255)
   phone                               String?                               @map("phone") @db.VarChar(50)
-  adresse                             String                                @default("") @map("adresse") @db.VarChar(255)
-  codePostal                          String                                @default("") @map("code_postal") @db.VarChar(5)
-  ville                               String                                @default("") @map("ville") @db.VarChar(100)
   typologie                           OrganismTypology                      @map("typologie")
   maisonMereAAPOnDomaine              MaisonMereAAPOnDomaine[]
   maisonMereAAPOnConventionCollective MaisonMereAAPOnConventionCollective[]
