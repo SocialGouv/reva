@@ -79,14 +79,12 @@ export const OrganismSummary = ({
         DEMANDE DE PRÉCISIONS
       </Badge>
     )}
-    {!!legalInformationDocumentsDecisions.length &&
-      statutValidationInformationsJuridiquesMaisonMereAAP ===
-        "EN_ATTENTE_DE_VERIFICATION" && (
-        <OrganismSummaryLegalInformationDocumentsDecisions
-          decisions={legalInformationDocumentsDecisions}
-          className="mb-8"
-        />
-      )}
+    {!!legalInformationDocumentsDecisions.length && (
+      <OrganismSummaryLegalInformationDocumentsDecisions
+        decisions={legalInformationDocumentsDecisions}
+        className="mb-8"
+      />
+    )}
     <div className="grid grid-cols-2 gap-8">
       <GrayCard>
         <h2>Administrateur du compte France VAE</h2>
