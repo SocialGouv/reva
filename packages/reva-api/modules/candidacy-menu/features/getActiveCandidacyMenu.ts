@@ -106,35 +106,39 @@ export const getActiveCandidacyMenu = async ({
       });
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
-    if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
-      const editableStatus: CandidacyStatusStep[] = [
-        "PARCOURS_CONFIRME",
-        "DOSSIER_FAISABILITE_INCOMPLET",
-      ];
-      if (
-        (editableStatus.includes(activeCandidacyStatus) &&
-          !activeFeasibility) ||
-        activeFeasibility?.decision === "INCOMPLETE"
-      ) {
-        menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
-      } else {
-        menuEntryStatus = "ACTIVE_WITHOUT_HINT";
-      }
+    const editableStatus: CandidacyStatusStep[] = [
+      "PARCOURS_CONFIRME",
+      "DOSSIER_FAISABILITE_INCOMPLET",
+    ];
+    if (
+      (editableStatus.includes(activeCandidacyStatus) &&
+        !activeFeasibility) ||
+      activeFeasibility?.decision === "INCOMPLETE"
+    ) {
+      menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
+    } else if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
+      menuEntryStatus = "ACTIVE_WITHOUT_HINT";
+    } else {
+      menuEntryStatus = "INACTIVE";
+    }
 
-      const url =
+    let url = '#';
+
+    if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
+      url =
         isDematerializedFeasibilityFeatureActive &&
         feasibilityFormat === "DEMATERIALIZED"
           ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
           : buildUrl({ adminType: "Elm", suffix: "feasibility" });
-
-      return showFeasibilityEntry
-        ? {
-            label: "Dossier de faisabilité",
-            url,
-            status: menuEntryStatus,
-          }
-        : undefined;
     }
+
+    return showFeasibilityEntry
+      ? {
+          label: "Dossier de faisabilité",
+          url,
+          status: menuEntryStatus,
+        }
+      : undefined;
   };
 
   const getFundingRequestMenuEntry = (): CandidacyMenuEntry => {
