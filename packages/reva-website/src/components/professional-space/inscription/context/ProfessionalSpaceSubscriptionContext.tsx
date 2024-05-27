@@ -1,15 +1,19 @@
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { SubscriptionV2Input } from "@/graphql/generated/graphql";
+import { CreateSubscriptionRequestV2Input } from "@/graphql/generated/graphql";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ReactNode, createContext } from "react";
 import { Client, fetchExchange } from "urql";
 
-const createSubscription = graphql(`
-  mutation createSubscription($subscriptionInput: SubscriptionV2Input!) {
-    subscription_subscribe(subscriptionInput: $subscriptionInput)
+const createSubscriptionRequestV2 = graphql(`
+  mutation createSubscriptionRequestV2(
+    $createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input!
+  ) {
+    subscription_createSubscriptionRequestV2(
+      createSubscriptionRequestV2Input: $createSubscriptionRequestV2Input
+    )
   }
 `);
 
@@ -189,8 +193,9 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
       const { isCguCheckboxChecked, ...mutationParameters } =
         newState.professionalSpaceInfos;
       try {
-        const result = await client.mutation(createSubscription, {
-          subscriptionInput: mutationParameters as SubscriptionV2Input,
+        const result = await client.mutation(createSubscriptionRequestV2, {
+          createSubscriptionRequestV2Input:
+            mutationParameters as CreateSubscriptionRequestV2Input,
         });
         if (result.error) {
           throw new Error(result.error.graphQLErrors[0].message);
