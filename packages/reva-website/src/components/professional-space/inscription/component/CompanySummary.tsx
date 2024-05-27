@@ -43,7 +43,7 @@ export const CompanySummary = ({ currentStep }: { currentStep: number }) => {
   );
 
   return (
-    <div className="flex flex-col justify-between shrink-0 w-1/4">
+    <div className="flex flex-col justify-between shrink-0 mb-4 md:mb-0 md:w-1/4">
       <div className="hidden md:block bg-neutral-100 p-6 mb-12">
         <h2 className="mb-4">Résumé</h2>
         <div className="flex flex-col gap-y-2">

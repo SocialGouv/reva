@@ -108,7 +108,7 @@ export const CompanyDocumentsStepForm = () => {
         currentStep={3}
         stepCount={3}
       />
-      <div className="flex gap-x-6 items-stretch">
+      <div className="md:flex gap-x-6 items-stretch">
         <CompanySummary currentStep={3} />
         <form className="flex flex-col gap-8" onSubmit={handleFormSubmit}>
           <FancyUpload

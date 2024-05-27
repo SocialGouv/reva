@@ -78,7 +78,7 @@ export const AccountInfoStepForm = () => {
         currentStep={2}
         stepCount={3}
       />
-      <div className="flex items-stretch gap-x-8">
+      <div className="md:flex items-stretch gap-x-8">
         <CompanySummary currentStep={2} />
         <div className="w-full flex flex-col">
           <h2>Administrateur du compte France VAE</h2>
@@ -96,7 +96,7 @@ export const AccountInfoStepForm = () => {
                 filières, les agences et les niveaux de parcours depuis son
                 compte.
               </legend>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+              <div className="mb-6 md:mb-0 md:grid grid-cols-1 md:grid-cols-2 gap-x-8">
                 <Checkbox
                   className="col-span-2"
                   options={[
