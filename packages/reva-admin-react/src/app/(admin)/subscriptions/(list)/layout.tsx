@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const menuItem = (text: string, path: string, currentPathname: string) => ({
-  isActive: currentPathname.startsWith(path),
+  isActive: currentPathname.startsWith(path + "/"),
   linkProps: {
     href: path,
     target: "_self",
@@ -16,19 +16,37 @@ const menuItem = (text: string, path: string, currentPathname: string) => ({
 const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
 
-
   const featureFlipping = useFeatureflipping();
-  const showLegalMenuItems = featureFlipping.isFeatureActive("LEGAL_INFORMATION_VALIDATION")
+  const showLegalMenuItems = featureFlipping.isFeatureActive(
+    "LEGAL_INFORMATION_VALIDATION",
+  );
 
   const items = useMemo(() => {
     if (showLegalMenuItems) {
       return [
-        menuItem("En attente", "/subscriptions/pending", currentPathname),
-        menuItem("Validées (sous l'ancienne méthode)", "/subscriptions/validated", currentPathname),
+        menuItem(
+          "En attente (sous l'ancienne méthode)",
+          "/subscriptions/pending",
+          currentPathname,
+        ),
+        menuItem("En attente", "/subscriptions/pending-v2", currentPathname),
+        menuItem(
+          "Validées (sous l'ancienne méthode)",
+          "/subscriptions/validated",
+          currentPathname,
+        ),
         menuItem("Refusées", "/subscriptions/rejected", currentPathname),
-        menuItem("Pièces jointes à vérifier", "/subscriptions/check-legal-information", currentPathname),
-        menuItem("Validées et mises à jour", "/subscriptions/up-to-date", currentPathname)
-        ]
+        menuItem(
+          "Pièces jointes à vérifier",
+          "/subscriptions/check-legal-information",
+          currentPathname,
+        ),
+        menuItem(
+          "Validées et mises à jour",
+          "/subscriptions/up-to-date",
+          currentPathname,
+        ),
+      ];
     }
     return [
       menuItem("En attente", "/subscriptions/pending", currentPathname),
