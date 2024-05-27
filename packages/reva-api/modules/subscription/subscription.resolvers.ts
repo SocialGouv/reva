@@ -13,7 +13,6 @@ import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
 import { sendRejectionEmail } from "./mail";
 import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
-import { subscribe } from "./features/subscribe";
 import { createSubscriptionRequestV2 } from "./features/createSubscriptionRequestV2";
 
 const unsafeResolvers = {
@@ -129,12 +128,6 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    subscription_subscribe: async (
-      _: unknown,
-      payload: {
-        subscriptionInput: SubscriptionInput;
-      },
-    ) => subscribe({ params: payload.subscriptionInput }),
     subscription_createSubscriptionRequestV2: async (
       _: unknown,
       payload: {

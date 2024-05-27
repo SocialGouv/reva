@@ -79,25 +79,6 @@ interface GetSubscriptionRequestsParams extends FilteredPaginatedListArgs {
   };
 }
 
-interface SubscriptionInput {
-  isCguCheckboxChecked: boolean;
-  companySiret: string;
-  companyLegalStatus: LegalStatus;
-  companyName: string;
-  managerFirstname: string;
-  managerLastname: string;
-  accountFirstname: string;
-  accountLastname: string;
-  accountEmail: string;
-  accountPhoneNumber: string;
-  companyWebsite: string;
-  delegataire: boolean;
-  attestationURSSAF: GraphqlUploadedFile;
-  justificatifIdentiteDirigeant: GraphqlUploadedFile;
-  lettreDeDelegation: GraphqlUploadedFile;
-  justificatifIdentiteDelegataire: GraphqlUploadedFile;
-}
-
 type GraphqlUploadedFile = Promise<{
   filename: string;
   mimetype: string;
