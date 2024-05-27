@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
-import { ADMIN_ELM_URL } from "@/config/config";
 import { useRouter } from "next/navigation";
 
 const PostLoginPage = () => {
@@ -10,7 +9,7 @@ const PostLoginPage = () => {
   if (isCertificationAuthority) {
     router.replace("/candidacies/feasibilities");
   } else {
-    router.replace(ADMIN_ELM_URL + "/candidacies");
+    router.replace("/candidacies");
   }
   return null;
 };

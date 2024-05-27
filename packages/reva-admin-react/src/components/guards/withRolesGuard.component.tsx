@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { ADMIN_ELM_URL } from "@/config/config";
-
 import { useAuth } from "../auth/auth";
 import { useHasRoles } from "../auth/role";
 import { UserRole } from "../auth/types";
@@ -26,7 +24,7 @@ export const RolesGuard = (props: Props): JSX.Element => {
   // Redirect user to default path based on role
   if (!hasRoles(roles)) {
     if (isAdmin || isOrganism || isGestionnaireMaisonMereAAP) {
-      redirect(ADMIN_ELM_URL + "/candidacies");
+      redirect("/candidacies");
     } else if (isAdminCertificationAuthority || isCertificationAuthority) {
       redirect("/candidacies/feasibilities");
     }

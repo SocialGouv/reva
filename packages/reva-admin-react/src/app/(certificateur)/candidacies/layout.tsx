@@ -58,10 +58,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       }),
   });
 
-  const {
-    data: getDossierDeValidationCountByCategoryResponse,
-    status: getDossierDeValidationCountByCategoryStatus,
-  } = useQuery({
+  const { data: getDossierDeValidationCountByCategoryResponse } = useQuery({
     queryKey: ["getDossierDeValidationCountByCategory", searchFilter],
     queryFn: () =>
       graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
