@@ -14,6 +14,7 @@ import { sendRejectionEmail } from "./mail";
 import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
 import { subscribe } from "./features/subscribe";
+import { createSubscriptionRequestV2 } from "./features/createSubscriptionRequestV2";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -134,6 +135,15 @@ const unsafeResolvers = {
         subscriptionInput: SubscriptionInput;
       },
     ) => subscribe({ params: payload.subscriptionInput }),
+    subscription_createSubscriptionRequestV2: async (
+      _: unknown,
+      payload: {
+        createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input;
+      },
+    ) =>
+      createSubscriptionRequestV2({
+        params: payload.createSubscriptionRequestV2Input,
+      }),
   },
 };
 

@@ -103,3 +103,21 @@ type GraphqlUploadedFile = Promise<{
   mimetype: string;
   createReadStream(): ReadStream;
 }>;
+
+interface CreateSubscriptionRequestV2Input {
+  companySiret: string;
+  companyLegalStatus: LegalStatus;
+  companyName: string;
+  managerFirstname: string;
+  managerLastname: string;
+  accountFirstname: string;
+  accountLastname: string;
+  accountEmail: string;
+  accountPhoneNumber: string;
+  companyWebsite: string;
+  delegataire: boolean;
+  attestationURSSAF: GraphqlUploadedFile;
+  justificatifIdentiteDirigeant: GraphqlUploadedFile;
+  lettreDeDelegation?: GraphqlUploadedFile;
+  justificatifIdentiteDelegataire?: GraphqlUploadedFile;
+}
