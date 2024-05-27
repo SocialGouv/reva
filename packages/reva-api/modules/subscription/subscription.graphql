@@ -74,6 +74,26 @@ type SubscriptionRequestsPaginated {
   info: PaginationInfo!
 }
 
+type SubscriptionRequestV2 {
+  id: ID!
+  companySiret: String!
+  companyLegalStatus: LegalStatus!
+  companyName: String!
+  managerFirstname: String!
+  managerLastname: String!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  accountPhoneNumber: String!
+  companyWebsite: String!
+  delegataire: Boolean!
+  createdAt: Timestamp!
+}
+type SubscriptionRequestV2sPaginated {
+  rows: [SubscriptionRequestV2!]!
+  info: PaginationInfo!
+}
+
 type Query {
   subscription_getSubscriptionRequests(
     offset: Int
@@ -84,6 +104,12 @@ type Query {
   subscription_getSubscriptionRequest(
     subscriptionRequestId: ID!
   ): SubscriptionRequest
+  subscription_getSubscriptionRequestV2s(
+    offset: Int
+    limit: Int
+    status: SubscriptionRequestStatus
+    searchFilter: String
+  ): SubscriptionRequestV2sPaginated!
 }
 
 enum SubscriptionOrganismTypology {
