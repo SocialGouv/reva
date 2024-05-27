@@ -1513,7 +1513,7 @@ model MaisonMereAAPLegalInformationDocumentsDecision {
 }
 
 model SubscriptionRequestV2 {
-  id                                    String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                                    String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   companySiret                          String
   companyLegalStatus                    LegalStatus
   companyName                           String
@@ -1525,15 +1525,18 @@ model SubscriptionRequestV2 {
   accountPhoneNumber                    String
   companyWebsite                        String
   delegataire                           Boolean
-  attestationURSSAFFileId               String      @map("attestation_urssaf_file_id") @db.Uuid
-  attestationURSSAFFile                 File        @relation("srv2_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id], map: "srv2_attestation_urssaf_file")
-  justificatifIdentiteDirigeantFileId   String      @map("justificatif_identite_dirigeant_file_id") @db.Uuid
-  justificatifIdentiteDirigeantFile     File        @relation("srv2_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "srv2_justificatif_identite_dirigeant_file")
-  lettreDeDelegationFileId              String?     @map("lettre_de_delegation_file_id") @db.Uuid
-  lettreDeDelegationFile                File?       @relation("srv2_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
-  justificatifIdentiteDelegataireFileId String?     @map("justificatif_identite_delegataire_file_id") @db.Uuid
-  justificatifIdentiteDelegataireFile   File?       @relation("srv2_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "srv2_justificatif_identite_delegataire_file")
-  createdAt                             DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  attestationURSSAFFileId               String                    @map("attestation_urssaf_file_id") @db.Uuid
+  attestationURSSAFFile                 File                      @relation("srv2_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id], map: "srv2_attestation_urssaf_file")
+  justificatifIdentiteDirigeantFileId   String                    @map("justificatif_identite_dirigeant_file_id") @db.Uuid
+  justificatifIdentiteDirigeantFile     File                      @relation("srv2_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "srv2_justificatif_identite_dirigeant_file")
+  lettreDeDelegationFileId              String?                   @map("lettre_de_delegation_file_id") @db.Uuid
+  lettreDeDelegationFile                File?                     @relation("srv2_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
+  justificatifIdentiteDelegataireFileId String?                   @map("justificatif_identite_delegataire_file_id") @db.Uuid
+  justificatifIdentiteDelegataireFile   File?                     @relation("srv2_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "srv2_justificatif_identite_delegataire_file")
+  status                                SubscriptionRequestStatus @default(PENDING)
+  rejectionReason                       String?                   @map("rejection_reason")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("subscription_request_v2")
 }
