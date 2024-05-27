@@ -26,8 +26,7 @@ export const Header = () => {
               {
                 text: "Candidatures",
                 linkProps: {
-                  href: ADMIN_ELM_URL + "/candidacies",
-                  target: "_self",
+                  href: "/candidacies",
                 },
                 isActive: !!currentPathname.match(/\/candidacies\/.*\/logs/),
               },

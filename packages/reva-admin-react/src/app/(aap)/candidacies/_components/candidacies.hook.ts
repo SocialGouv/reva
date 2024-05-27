@@ -1,0 +1,116 @@
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
+import { useQuery } from "@tanstack/react-query";
+
+const getCandidacyByStatusCount = graphql(`
+  query getCandidacyByStatusCount($searchFilter: String) {
+    candidacy_candidacyCountByStatus(searchFilter: $searchFilter) {
+      ACTIVE_HORS_ABANDON
+      DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON
+      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON
+      DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON
+      JURY_HORS_ABANDON
+      JURY_PROGRAMME_HORS_ABANDON
+      JURY_PASSE_HORS_ABANDON
+      DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON
+      DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON
+      VALIDATION_HORS_ABANDON
+      PROJET_HORS_ABANDON
+      ABANDON
+      REORIENTEE
+      ARCHIVE_HORS_ABANDON_HORS_REORIENTATION
+      PARCOURS_CONFIRME_HORS_ABANDON
+      PRISE_EN_CHARGE_HORS_ABANDON
+      PARCOURS_ENVOYE_HORS_ABANDON
+      DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON
+      DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON
+      DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON
+    }
+  }
+`);
+
+const getCandidaciesByStatus = graphql(`
+  query getCandidaciesByStatus(
+    $searchFilter: String
+    $statusFilter: CandidacyStatusFilter
+    $offset: Int
+  ) {
+    getCandidacies(
+      searchFilter: $searchFilter
+      statusFilter: $statusFilter
+      limit: 10
+      offset: $offset
+    ) {
+      rows {
+        id
+        sentAt
+        firstname
+        lastname
+        certification {
+          label
+        }
+        organism {
+          label
+          informationsCommerciales {
+            nom
+          }
+        }
+        department {
+          label
+          code
+        }
+      }
+      info {
+        totalRows
+        totalPages
+        currentPage
+      }
+    }
+  }
+`);
+
+export const useCandidacies = ({
+  searchFilter,
+  statusFilter,
+  currentPage,
+}: {
+  searchFilter: string;
+  statusFilter: CandidacyStatusFilter;
+  currentPage: number;
+}) => {
+  const RECORDS_PER_PAGE = 10;
+  const { graphqlClient } = useGraphQlClient();
+  const offset = (currentPage - 1) * RECORDS_PER_PAGE;
+  const { data: getCandidacyByStatusResponse } = useQuery({
+    queryKey: ["getCandidacyByStatusCount", searchFilter],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyByStatusCount, {
+        searchFilter,
+      }),
+  });
+
+  const { data: getCandidaciesByStatusResponse } = useQuery({
+    queryKey: [
+      "getCandidaciesByStatus",
+      searchFilter,
+      statusFilter,
+      currentPage,
+    ],
+    queryFn: () =>
+      graphqlClient.request(getCandidaciesByStatus, {
+        searchFilter,
+        statusFilter,
+        offset,
+      }),
+  });
+
+  const candidaciesByStatusCount =
+    getCandidacyByStatusResponse?.candidacy_candidacyCountByStatus;
+  const candidaciesByStatus = getCandidaciesByStatusResponse?.getCandidacies;
+
+  return {
+    candidaciesByStatusCount,
+    candidaciesByStatus,
+  };
+};

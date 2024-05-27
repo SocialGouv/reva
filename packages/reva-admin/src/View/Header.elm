@@ -136,7 +136,7 @@ headerMenuModal context activeHeaderLink =
 
         navLinks =
             if Api.Token.isAdmin context.token then
-                [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
+                [ navItemLink "Candidatures" (adminReactUrl "/candidacies") Candidacies
                 , itemLink "Inscriptions" (adminReactUrl "/subscriptions/pending") True False
                 , itemLink "Comptes" (adminReactUrl "/accounts/organisms") True False
                 , itemLink "Certifications" (adminReactUrl "/certifications") True False
