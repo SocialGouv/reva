@@ -28,7 +28,12 @@ export const Header = () => {
                 linkProps: {
                   href: "/candidacies",
                 },
-                isActive: !!currentPathname.match(/\/candidacies\/.*\/logs/),
+                // This isActive flag is set to true only for the AAP tab under candidacies,
+                // excluding specific subpaths like dossiers-de-validation, feasibilities, and juries
+                // which belong to the certification authorities' candidacies.
+                isActive: !!currentPathname.match(
+                  /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries)\/).*/,
+                ),
               },
             ]
           : []),

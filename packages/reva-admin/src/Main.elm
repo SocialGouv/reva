@@ -148,7 +148,7 @@ changeRouteTo context route model =
             let
                 redirectUrl =
                     if Api.Token.isAdmin context.token || Api.Token.isOrganism context.token then
-                        Route.toString model.context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
+                        context.adminReactUrl ++ "/candidacies"
 
                     else if Api.Token.isCertificationAuthority context.token then
                         context.adminReactUrl ++ "/candidacies/feasibilities"
