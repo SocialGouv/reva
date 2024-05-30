@@ -21,6 +21,10 @@ const legalInformationQueries = graphql(`
             aapComment
             decisionTakenAt
           }
+          gestionnaire {
+            firstname
+            lastname
+          }
         }
       }
     }
