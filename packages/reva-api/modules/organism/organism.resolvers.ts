@@ -126,9 +126,6 @@ const unsafeResolvers = {
       }),
   },
   MaisonMereAAPLegalInformationDocuments: {
-    // File: {
-    //   previewUrl: (_file: File) => 'yaaaay',
-    // },
     attestationURSSAFFile: async (
       { maisonMereAAPId }: { maisonMereAAPId: string },
       _: unknown,
