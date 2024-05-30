@@ -1,21 +1,14 @@
-type File = {
-  name: string;
-  url: string;
-  mimeType: string;
-  previewUrl?: string | null;
-};
-
-export default function LegalDocumentsList({
-  attestationURSSAFFile,
-  justificatifIdentiteDirigeantFile,
-  lettreDeDelegationFile,
-  justificatifIdentiteDelegataireFile,
+export const LegalDocumentList = ({
+  attestationURSSAFFileUrl,
+  justificatifIdentiteDirigeantFileUrl,
+  lettreDeDelegationFileUrl,
+  justificatifIdentiteDelegataireFileUrl,
 }: {
-  attestationURSSAFFile?: File | null;
-  justificatifIdentiteDirigeantFile?: File | null;
-  lettreDeDelegationFile?: File | null;
-  justificatifIdentiteDelegataireFile?: File | null;
-}) {
+  attestationURSSAFFileUrl?: string | null;
+  justificatifIdentiteDirigeantFileUrl?: string | null;
+  lettreDeDelegationFileUrl?: string | null;
+  justificatifIdentiteDelegataireFileUrl?: string | null;
+}) => {
   return (
     <div className="mb-8">
       <h3>Pièces jointes à vérifier</h3>
@@ -28,43 +21,39 @@ export default function LegalDocumentsList({
         </a>
       </p>
       <div className="grid grid-cols-1 gap-8">
-        {attestationURSSAFFile?.previewUrl && (
+        {attestationURSSAFFileUrl && (
           <iframe
             className="w-full h-[500px]"
             title="Attestation URSSAF"
             name="Attestation URSSAF"
-            src={attestationURSSAFFile.previewUrl}
-            // type={attestationURSSAFFile.mimeType}
+            src={attestationURSSAFFileUrl}
           ></iframe>
         )}
-        {justificatifIdentiteDirigeantFile?.previewUrl && (
+        {justificatifIdentiteDirigeantFileUrl && (
           <iframe
             className="w-full h-[500px]"
             title="Justificatif d'identité du dirigeant"
             name="Justificatif d'identité du dirigeant"
-            src={justificatifIdentiteDirigeantFile.previewUrl}
-            // type={justificatifIdentiteDirigeantFile.mimeType}
+            src={justificatifIdentiteDirigeantFileUrl}
           ></iframe>
         )}
-        {lettreDeDelegationFile?.previewUrl && (
+        {lettreDeDelegationFileUrl && (
           <iframe
             className="w-full h-[500px]"
             title="Lettre de delegation"
             name="Lettre de delegation"
-            src={lettreDeDelegationFile.previewUrl}
-            // type={lettreDeDelegationFile.mimeType}
+            src={lettreDeDelegationFileUrl}
           ></iframe>
         )}
-        {justificatifIdentiteDelegataireFile?.previewUrl && (
+        {justificatifIdentiteDelegataireFileUrl && (
           <iframe
             className="w-full h-[500px]"
             title="Justificatif d'identité du delegataire"
             name="Justificatif d'identité du delegataire"
-            src={justificatifIdentiteDelegataireFile.previewUrl}
-            // type={justificatifIdentiteDelegataireFile.mimeType}
+            src={justificatifIdentiteDelegataireFileUrl}
           ></iframe>
         )}
       </div>
     </div>
   );
-}
+};

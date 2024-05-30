@@ -16,10 +16,10 @@ import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/Ma
 import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 import { BackButton } from "@/components/back-button/BackButton";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import LegalDocumentList from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/(components)/LegalDocumentsList";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Info } from "@/components/organism-summary/Info";
+import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -40,27 +40,15 @@ const getMaisonMereAAP = graphql(`
         delegataire
         createdAt
         attestationURSSAFFile {
-          name
-          url
-          mimeType
           previewUrl
         }
         justificatifIdentiteDirigeantFile {
-          name
-          url
-          mimeType
           previewUrl
         }
         lettreDeDelegationFile {
-          name
-          url
-          mimeType
           previewUrl
         }
         justificatifIdentiteDelegataireFile {
-          name
-          url
-          mimeType
           previewUrl
         }
       }
@@ -309,20 +297,21 @@ const MaisonMereAAPPage = () => {
           maisonMereAAP.legalInformationDocuments && (
             <>
               <LegalDocumentList
-                attestationURSSAFFile={
+                attestationURSSAFFileUrl={
                   maisonMereAAP.legalInformationDocuments?.attestationURSSAFFile
+                    ?.previewUrl
                 }
-                justificatifIdentiteDirigeantFile={
+                justificatifIdentiteDirigeantFileUrl={
                   maisonMereAAP.legalInformationDocuments
-                    ?.justificatifIdentiteDirigeantFile
+                    ?.justificatifIdentiteDirigeantFile?.previewUrl
                 }
-                lettreDeDelegationFile={
+                lettreDeDelegationFileUrl={
                   maisonMereAAP.legalInformationDocuments
-                    ?.lettreDeDelegationFile
+                    ?.lettreDeDelegationFile?.previewUrl
                 }
-                justificatifIdentiteDelegataireFile={
+                justificatifIdentiteDelegataireFileUrl={
                   maisonMereAAP.legalInformationDocuments
-                    ?.justificatifIdentiteDelegataireFile
+                    ?.justificatifIdentiteDelegataireFile?.previewUrl
                 }
               />
               <hr />
