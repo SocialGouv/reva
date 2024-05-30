@@ -336,7 +336,7 @@ const NoResult = (): JSX.Element => {
           <br />
           <br />
           <a
-            href={`https://metabase.vae.gouv.fr/question/695-liste-des-certifications-disponibles`}
+            href={`https://metabase.vae.gouv.fr/public/dashboard/e5a2b59d-26b2-443b-a874-d4561f1322eb`}
             target="_blank"
             className="fr-link text-2l font-semibold break-words text-black"
           >
