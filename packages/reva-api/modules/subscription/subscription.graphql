@@ -89,6 +89,10 @@ type SubscriptionRequestV2 {
   delegataire: Boolean!
   status: SubscriptionRequestStatus!
   rejectionReason: String
+  attestationURSSAFFile: File!
+  justificatifIdentiteDirigeantFile: File!
+  lettreDeDelegationFile: File
+  justificatifIdentiteDelegataireFile: File
   createdAt: Timestamp!
 }
 type SubscriptionRequestV2sPaginated {

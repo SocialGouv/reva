@@ -16,6 +16,7 @@ import { resolversSecurityMap } from "./security";
 import { createSubscriptionRequestV2 } from "./features/createSubscriptionRequestV2";
 import { getSubscriptionRequestV2s } from "./features/getSubscriptionRequestV2s";
 import { getSubscriptionRequestV2 } from "./features/getSubscriptionRequestV2";
+import { getSubscriptionRequestV2FileNameUrlAndMimeType } from "./features/getSubscriptionRequestV2FileNameUrlAndMimeType";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -23,6 +24,52 @@ const unsafeResolvers = {
       !(await OrganismDb.doesOrganismWithSameLabelExludingThoseInExperimentationExists(
         companyName,
       )),
+  },
+  SubscriptionRequestV2: {
+    attestationURSSAFFile: async (
+      { subscriptionRequestId }: { subscriptionRequestId: string },
+      _: unknown,
+    ) =>
+      getSubscriptionRequestV2FileNameUrlAndMimeType({
+        subscriptionRequestId,
+        fileType: "attestationURSSAFFile",
+      }),
+    justificatifIdentiteDirigeantFile: async (
+      {
+        subscriptionRequestId,
+      }: {
+        subscriptionRequestId: string;
+      },
+      _: unknown,
+    ) =>
+      getSubscriptionRequestV2FileNameUrlAndMimeType({
+        subscriptionRequestId,
+        fileType: "justificatifIdentiteDirigeantFile",
+      }),
+    lettreDeDelegationFile: async (
+      {
+        subscriptionRequestId,
+      }: {
+        subscriptionRequestId: string;
+      },
+      _: unknown,
+    ) =>
+      getSubscriptionRequestV2FileNameUrlAndMimeType({
+        subscriptionRequestId,
+        fileType: "lettreDeDelegationFile",
+      }),
+    justificatifIdentiteDelegataireFile: async (
+      {
+        subscriptionRequestId,
+      }: {
+        subscriptionRequestId: string;
+      },
+      _: unknown,
+    ) =>
+      getSubscriptionRequestV2FileNameUrlAndMimeType({
+        subscriptionRequestId,
+        fileType: "justificatifIdentiteDelegataireFile",
+      }),
   },
   Query: {
     subscription_getSubscriptionRequests: async (
