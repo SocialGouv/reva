@@ -177,4 +177,9 @@ type Mutation {
   subscription_createSubscriptionRequestV2(
     createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input!
   ): String!
+  subscription_validateSubscriptionRequestV2(subscriptionRequestId: ID!): String
+  subscription_rejectSubscriptionRequestV2(
+    subscriptionRequestId: ID!
+    reason: String!
+  ): String
 }

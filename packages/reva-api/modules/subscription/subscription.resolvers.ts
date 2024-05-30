@@ -17,6 +17,8 @@ import { createSubscriptionRequestV2 } from "./features/createSubscriptionReques
 import { getSubscriptionRequestV2s } from "./features/getSubscriptionRequestV2s";
 import { getSubscriptionRequestV2 } from "./features/getSubscriptionRequestV2";
 import { getSubscriptionRequestV2FileNameUrlAndMimeType } from "./features/getSubscriptionRequestV2FileNameUrlAndMimeType";
+import { rejectSubscriptionRequestV2 } from "./features/rejectSubscriptionRequestV2";
+import { validateSubscriptionRequestV2 } from "./features/validateSubscriptionRequestV2";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -27,7 +29,7 @@ const unsafeResolvers = {
   },
   SubscriptionRequestV2: {
     attestationURSSAFFile: async (
-      { subscriptionRequestId }: { subscriptionRequestId: string },
+      { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -35,11 +37,7 @@ const unsafeResolvers = {
         fileType: "attestationURSSAFFile",
       }),
     justificatifIdentiteDirigeantFile: async (
-      {
-        subscriptionRequestId,
-      }: {
-        subscriptionRequestId: string;
-      },
+      { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -47,11 +45,8 @@ const unsafeResolvers = {
         fileType: "justificatifIdentiteDirigeantFile",
       }),
     lettreDeDelegationFile: async (
-      {
-        subscriptionRequestId,
-      }: {
-        subscriptionRequestId: string;
-      },
+      { id: subscriptionRequestId }: { id: string },
+
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -59,11 +54,7 @@ const unsafeResolvers = {
         fileType: "lettreDeDelegationFile",
       }),
     justificatifIdentiteDelegataireFile: async (
-      {
-        subscriptionRequestId,
-      }: {
-        subscriptionRequestId: string;
-      },
+      { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -198,6 +189,28 @@ const unsafeResolvers = {
     ) =>
       createSubscriptionRequestV2({
         params: payload.createSubscriptionRequestV2Input,
+      }),
+    subscription_validateSubscriptionRequestV2: async (
+      _: unknown,
+      {
+        subscriptionRequestId,
+      }: {
+        subscriptionRequestId: string;
+      },
+    ) => validateSubscriptionRequestV2({ subscriptionRequestId }),
+    subscription_rejectSubscriptionRequestV2: async (
+      _: unknown,
+      {
+        subscriptionRequestId,
+        reason,
+      }: {
+        subscriptionRequestId: string;
+        reason: string;
+      },
+    ) =>
+      rejectSubscriptionRequestV2({
+        subscriptionRequestId,
+        reason,
       }),
   },
 };
