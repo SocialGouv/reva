@@ -87,6 +87,8 @@ type SubscriptionRequestV2 {
   accountPhoneNumber: String!
   companyWebsite: String!
   delegataire: Boolean!
+  status: SubscriptionRequestStatus!
+  rejectionReason: String
   createdAt: Timestamp!
 }
 type SubscriptionRequestV2sPaginated {
@@ -110,6 +112,9 @@ type Query {
     status: SubscriptionRequestStatus
     searchFilter: String
   ): SubscriptionRequestV2sPaginated!
+  subscription_getSubscriptionRequestV2(
+    subscriptionRequestId: ID!
+  ): SubscriptionRequestV2
 }
 
 enum SubscriptionOrganismTypology {

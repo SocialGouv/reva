@@ -15,6 +15,7 @@ import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInPr
 import { resolversSecurityMap } from "./security";
 import { createSubscriptionRequestV2 } from "./features/createSubscriptionRequestV2";
 import { getSubscriptionRequestV2s } from "./features/getSubscriptionRequestV2s";
+import { getSubscriptionRequestV2 } from "./features/getSubscriptionRequestV2";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -66,7 +67,7 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    subscription_getSubscriptionRequestV2s: async (
+    subscription_getSubscriptionRequestV2s: (
       _parent: unknown,
       params: {
         limit?: number;
@@ -75,6 +76,10 @@ const unsafeResolvers = {
         searchFilter?: string;
       },
     ) => getSubscriptionRequestV2s(params),
+    subscription_getSubscriptionRequestV2: (
+      _parent: unknown,
+      { subscriptionRequestId }: { subscriptionRequestId: string },
+    ) => getSubscriptionRequestV2({ subscriptionRequestId }),
   },
   Mutation: {
     subscription_createSubscriptionRequest: async (
