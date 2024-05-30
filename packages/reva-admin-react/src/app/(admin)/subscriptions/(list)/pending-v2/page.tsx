@@ -81,7 +81,7 @@ const PendingSubscriptionRequestV2sPage = () => {
                 companyName={r.companyName}
                 createdAtLabel="Date d'envoi de l'inscription"
                 createdAt={new Date(r.createdAt)}
-                href={`/subscriptions-v2/${r.id}`}
+                href={`/subscriptions/v2/${r.id}`}
               />
             )}
           </SearchList>
