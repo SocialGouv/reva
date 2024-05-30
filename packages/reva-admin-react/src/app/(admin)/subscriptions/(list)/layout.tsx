@@ -29,13 +29,18 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
           "/subscriptions/pending",
           currentPathname,
         ),
-        menuItem("En attente", "/subscriptions/pending-v2", currentPathname),
+        menuItem(
+          "Refusées (sous l'ancienne méthode)",
+          "/subscriptions/rejected",
+          currentPathname,
+        ),
         menuItem(
           "Validées (sous l'ancienne méthode)",
           "/subscriptions/validated",
           currentPathname,
         ),
-        menuItem("Refusées", "/subscriptions/rejected", currentPathname),
+        menuItem("En attente", "/subscriptions/pending-v2", currentPathname),
+        menuItem("Refusées", "/subscriptions/rejected-v2", currentPathname),
         menuItem(
           "Pièces jointes à vérifier",
           "/subscriptions/check-legal-information",
