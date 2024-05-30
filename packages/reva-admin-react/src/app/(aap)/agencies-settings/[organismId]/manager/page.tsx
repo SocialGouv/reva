@@ -72,7 +72,7 @@ const AgencyManagerPage = () => {
 
   return (
     <div className="flex flex-col pb-12 w-full">
-      <h1>Informations de l'administrateur du compte</h1>
+      <h1>Administrateur du compte</h1>
 
       {organismQueryStatus === "error" && (
         <Alert

@@ -74,9 +74,9 @@ const AbsencePage = () => {
       {organismQueryStatus === "success" && (
         <>
           <p className="text-xl">
-            Pour ne plus recevoir de candidatures durant une période, vous
-            pouvez choisir de rendre votre structure non visible dans la liste
-            des résultats des Architectes Accompagnateurs de VAE.
+            Vous ne souhaitez plus recevoir de candidatures temporairement ?
+            Vous pouvez rendre votre agence invisible et modifier votre choix à
+            tout moment.
           </p>
           <form
             className="flex flex-col"
@@ -88,7 +88,7 @@ const AbsencePage = () => {
           >
             <fieldset className="mt-8">
               <RadioButtons
-                legend="Rendre la structure visible dans les résultats"
+                legend="Souhaitez-vous rendre visible votre agence dans les résultats ?"
                 options={[
                   {
                     label: "Oui",
