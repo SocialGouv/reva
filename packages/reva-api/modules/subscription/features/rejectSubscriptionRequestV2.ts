@@ -4,9 +4,11 @@ import { sendRejectionEmail } from "../mail";
 export const rejectSubscriptionRequestV2 = async ({
   subscriptionRequestId,
   reason,
+  internalComment,
 }: {
   subscriptionRequestId: string;
   reason: string;
+  internalComment?: string;
 }) => {
   const subscriptionRequest =
     await prismaClient.subscriptionRequestV2.findUnique({
@@ -19,7 +21,7 @@ export const rejectSubscriptionRequestV2 = async ({
 
   await prismaClient.subscriptionRequestV2.update({
     where: { id: subscriptionRequestId },
-    data: { status: "REJECTED", rejectionReason: reason },
+    data: { status: "REJECTED", rejectionReason: reason, internalComment },
   });
 
   await sendRejectionEmail({

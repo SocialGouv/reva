@@ -211,14 +211,17 @@ const unsafeResolvers = {
       {
         subscriptionRequestId,
         reason,
+        internalComment,
       }: {
         subscriptionRequestId: string;
         reason: string;
+        internalComment?: string;
       },
     ) =>
       rejectSubscriptionRequestV2({
         subscriptionRequestId,
         reason,
+        internalComment,
       }),
   },
 };

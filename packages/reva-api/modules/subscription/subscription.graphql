@@ -183,5 +183,6 @@ type Mutation {
   subscription_rejectSubscriptionRequestV2(
     subscriptionRequestId: ID!
     reason: String!
+    internalComment: String
   ): String
 }

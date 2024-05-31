@@ -147,6 +147,7 @@ const SubscriptionRequestPage = () => {
         )}
         {subscriptionRequest.status === "PENDING" && (
           <SubscriptionRequestForm
+            className="mt-8"
             subscriptionRequestId={subscriptionRequestId}
           />
         )}
