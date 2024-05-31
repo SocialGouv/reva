@@ -7,6 +7,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -33,6 +34,7 @@ export const CompanySiretStepForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     watch,
   } = useForm<CompanySiretStepFormSchema>({
@@ -47,6 +49,11 @@ export const CompanySiretStepForm = () => {
 
   const isSiretLengthValid =
     companySiret != undefined && companySiret?.length >= 14;
+
+  useEffect(() => {
+    setValue("companyName", etablissement?.raisonSociale || "");
+    setValue("companyLegalStatus", etablissement?.formeJuridique || "");
+  }, [etablissement, setValue]);
 
   const handleFormSubmit = (data: CompanySiretStepFormSchema) => {
     submitCompanySiretStep(data as any);
@@ -122,11 +129,11 @@ const getEtablissementQuery = graphql(`
   query getEtablissement($siret: ID!) {
     getEtablissement(siret: $siret) {
       siret
-      siege_social
-      raison_sociale
-      forme_juridique
-      date_fermeture
-      qualiopi_status
+      siegeSocial
+      raisonSociale
+      formeJuridique
+      dateFermeture
+      qualiopiStatus
     }
   }
 `);

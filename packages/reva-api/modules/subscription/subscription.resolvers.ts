@@ -19,7 +19,7 @@ import { getSubscriptionRequestV2 } from "./features/getSubscriptionRequestV2";
 import { getSubscriptionRequestV2FileNameUrlAndMimeType } from "./features/getSubscriptionRequestV2FileNameUrlAndMimeType";
 import { rejectSubscriptionRequestV2 } from "./features/rejectSubscriptionRequestV2";
 import { validateSubscriptionRequestV2 } from "./features/validateSubscriptionRequestV2";
-import { EntrepriseReferential } from "../referential/entreprise";
+import { findEtablissement } from "../referential/features/entreprise";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -66,7 +66,7 @@ const unsafeResolvers = {
       { companySiret }: { companySiret: string },
       _: unknown,
     ) =>
-      EntrepriseReferential.getInstance().findEtablissement({
+      findEtablissement({
         siret: companySiret,
       }),
   },

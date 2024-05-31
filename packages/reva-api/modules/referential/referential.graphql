@@ -134,11 +134,11 @@ type Country {
 
 type Etablissement {
   siret: ID!
-  siege_social: Boolean!
-  date_fermeture: Timestamp
-  raison_sociale: String!
-  forme_juridique: String!
-  qualiopi_status: Boolean
+  siegeSocial: Boolean!
+  dateFermeture: Timestamp
+  raisonSociale: String!
+  formeJuridique: String!
+  qualiopiStatus: Boolean
 }
 
 type Query {

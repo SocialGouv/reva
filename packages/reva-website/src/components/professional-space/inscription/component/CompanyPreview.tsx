@@ -46,26 +46,26 @@ export const CompanyPreview = (props: Props) => {
         {etablissment &&
           (() => {
             const {
-              siege_social,
-              raison_sociale,
-              forme_juridique,
-              qualiopi_status,
-              date_fermeture,
+              siegeSocial,
+              raisonSociale,
+              formeJuridique,
+              qualiopiStatus,
+              dateFermeture,
             } = etablissment;
 
             return (
               <>
                 <div className="flex flex-row gap-2">
-                  {siege_social ? (
+                  {siegeSocial ? (
                     <Badge severity="success">Siège social</Badge>
                   ) : (
                     <Badge severity="error">Établissement secondaire</Badge>
                   )}
-                  {!date_fermeture ? (
+                  {!dateFermeture ? (
                     <Badge severity="success">En activité</Badge>
                   ) : (
                     (() => {
-                      const date = date_fermeture! as Date;
+                      const date = dateFermeture! as Date;
                       return (
                         <Badge severity="error">
                           Fermé le{" "}
@@ -74,12 +74,12 @@ export const CompanyPreview = (props: Props) => {
                       );
                     })()
                   )}
-                  {qualiopi_status != undefined && (
+                  {qualiopiStatus != undefined && (
                     <>
-                      {qualiopi_status && (
+                      {qualiopiStatus && (
                         <Badge severity="success">Qualiopi VAE Actif</Badge>
                       )}
-                      {!qualiopi_status && (
+                      {!qualiopiStatus && (
                         <Badge severity="warning">Qualiopi VAE Inactif</Badge>
                       )}
                     </>
@@ -88,11 +88,11 @@ export const CompanyPreview = (props: Props) => {
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <CompanySummaryItem
                     title="Raison sociale"
-                    description={raison_sociale}
+                    description={raisonSociale}
                   />
                   <CompanySummaryItem
                     title="Nature juridique"
-                    description={forme_juridique}
+                    description={formeJuridique}
                   />
                 </div>
               </>
@@ -101,26 +101,25 @@ export const CompanyPreview = (props: Props) => {
       </div>
       {etablissment &&
         (() => {
-          const { siege_social, qualiopi_status, date_fermeture } =
-            etablissment;
+          const { siegeSocial, qualiopiStatus, dateFermeture } = etablissment;
 
           return (
             <>
-              {!siege_social && (
+              {!siegeSocial && (
                 <Alert
                   severity="error"
                   title="Vous avez renseigné un établissement secondaire"
                   description="Il est obligatoire d’enregistrer en premier lieu le siège social pour pouvoir créer un compte."
                 />
               )}
-              {date_fermeture && (
+              {dateFermeture && (
                 <Alert
                   severity="error"
                   title="Vous avez renseigné un établissement inactif"
                   description="À notre connaissance, cet établissement n’est plus en activité. Veillez à enregistrer un établissement actif."
                 />
               )}
-              {qualiopi_status == false && (
+              {qualiopiStatus == false && (
                 <Alert
                   severity="error"
                   title="Votre Qualiopi VAE est inactif"

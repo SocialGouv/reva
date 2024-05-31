@@ -29,7 +29,7 @@ import {
   UpdateCompetenceBlocsInput,
 } from "./referential.types";
 import { RNCPReferential } from "./rncp";
-import { EntrepriseReferential } from "./entreprise";
+import { findEtablissement, findQualiopiStatus } from "./features/entreprise";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -59,8 +59,8 @@ const unsafeReferentialResolvers = {
       getRegionById({ id: regionId }),
   },
   Etablissement: {
-    qualiopi_status: ({ siret }: { siret: string }) =>
-      EntrepriseReferential.getInstance().findQualiopiStatus({ siret }),
+    qualiopiStatus: ({ siret }: { siret: string }) =>
+      findQualiopiStatus({ siret }),
   },
   Query: {
     getReferential: async (_: any, _payload: any) => {
@@ -105,7 +105,7 @@ const unsafeReferentialResolvers = {
       RNCPReferential.getInstance().findOneByRncp(rncp),
     getCountries: () => prismaClient.country.findMany(),
     getEtablissement: (_: unknown, { siret }: { siret: string }) =>
-      EntrepriseReferential.getInstance().findEtablissement({ siret }),
+      findEtablissement({ siret }),
   },
   Mutation: {
     referential_updateCertification: (

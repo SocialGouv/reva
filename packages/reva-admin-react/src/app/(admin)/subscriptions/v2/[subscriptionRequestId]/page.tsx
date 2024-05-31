@@ -42,9 +42,9 @@ const getSubscriptionRequestV2 = graphql(`
       }
       createdAt
       etablissement {
-        siege_social
-        date_fermeture
-        qualiopi_status
+        siegeSocial
+        dateFermeture
+        qualiopiStatus
       }
     }
   }
@@ -89,13 +89,13 @@ const SubscriptionRequestPage = () => {
           {etablissement ? (
             <CompanyBadges
               className="md:col-span-3 mb-2 -mt-2"
-              siegeSocial={etablissement.siege_social}
+              siegeSocial={etablissement.siegeSocial}
               dateFermeture={
-                etablissement.date_fermeture
-                  ? new Date(etablissement.date_fermeture)
+                etablissement.dateFermeture
+                  ? new Date(etablissement.dateFermeture)
                   : null
               }
-              qualiopiStatus={!!etablissement.qualiopi_status}
+              qualiopiStatus={!!etablissement.qualiopiStatus}
             />
           ) : (
             <Alert
