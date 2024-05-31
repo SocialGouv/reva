@@ -21,13 +21,6 @@ const CompanySummaryItem = ({
   );
 };
 
-function toFullname(firstname?: string, lastname?: string): string | undefined {
-  if (!firstname && !lastname) {
-    return undefined;
-  }
-  return `${firstname || ""} ${lastname || ""}`.trim();
-}
-
 interface Props {
   siret: string;
   etablissment?: Etablissement | null;
@@ -43,9 +36,9 @@ export const CompanyPreview = (props: Props) => {
 
         {!etablissment && (
           <Alert
-            description="Erreur : les données INSEE de l’organisation, nécessaires pour valider le rattachement, sont indisponibles ou inexistantes. Merci de réessayer ultérieurement."
             severity="error"
             title=""
+            description="Erreur : les données INSEE de l’organisation, nécessaires pour valider le rattachement, sont indisponibles ou inexistantes. Merci de réessayer ultérieurement."
             className="mb-5"
           />
         )}
@@ -106,6 +99,37 @@ export const CompanyPreview = (props: Props) => {
             );
           })()}
       </div>
+      {etablissment &&
+        (() => {
+          const { siege_social, qualiopi_status, date_fermeture } =
+            etablissment;
+
+          return (
+            <>
+              {!siege_social && (
+                <Alert
+                  severity="error"
+                  title="Vous avez renseigné un établissement secondaire"
+                  description="Il est obligatoire d’enregistrer en premier lieu le siège social pour pouvoir créer un compte."
+                />
+              )}
+              {date_fermeture && (
+                <Alert
+                  severity="error"
+                  title="Vous avez renseigné un établissement inactif"
+                  description="À notre connaissance, cet établissement n’est plus en activité. Veillez à enregistrer un établissement actif."
+                />
+              )}
+              {qualiopi_status == false && (
+                <Alert
+                  severity="error"
+                  title="Votre Qualiopi VAE est inactif"
+                  description="Sans Qualiopi VAE actif, vous ne pouvez pas créer de compte AAP sur notre plateforme."
+                />
+              )}
+            </>
+          );
+        })()}
     </div>
   );
 };

@@ -33,7 +33,6 @@ export const CompanySiretStepForm = () => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
     watch,
   } = useForm<CompanySiretStepFormSchema>({
@@ -49,19 +48,8 @@ export const CompanySiretStepForm = () => {
   const isSiretLengthValid =
     companySiret != undefined && companySiret?.length >= 14;
 
-  console.log("etablissement", etablissement);
-
   const handleFormSubmit = (data: CompanySiretStepFormSchema) => {
-    console.log(data);
-
-    // submitCompanySiretStep({
-    //   companySiret: "12345678901234",
-    //   companyName: "My Company",
-    //   companyLegalStatus: "SAS",
-    //   companyWebsite: "https://example.com",
-    //   managerFirstname: "John",
-    //   managerLastname: "Doe",
-    // })
+    submitCompanySiretStep(data as any);
   };
 
   return (
@@ -147,7 +135,7 @@ const useEtablissement = (siret?: string) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { isLoading, isError, data, error, isFetching } = useQuery({
-    queryKey: ["siret"],
+    queryKey: [siret],
     queryFn: () =>
       graphqlClient.request(getEtablissementQuery, { siret: siret! }),
     enabled: siret != undefined && siret?.length >= 14,
