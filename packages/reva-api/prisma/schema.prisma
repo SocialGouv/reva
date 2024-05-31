@@ -1535,8 +1535,8 @@ model SubscriptionRequestV2 {
   justificatifIdentiteDelegataireFile   File?                     @relation("srv2_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "srv2_justificatif_identite_delegataire_file")
   status                                SubscriptionRequestStatus @default(PENDING)
   rejectionReason                       String?                   @map("rejection_reason")
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  internalComment                       String?                   @map("internal_comment")
+  createdAt                             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("subscription_request_v2")
 }

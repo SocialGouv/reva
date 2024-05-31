@@ -89,6 +89,7 @@ type SubscriptionRequestV2 {
   delegataire: Boolean!
   status: SubscriptionRequestStatus!
   rejectionReason: String
+  internalComment: String
   attestationURSSAFFile: File!
   justificatifIdentiteDirigeantFile: File!
   lettreDeDelegationFile: File
