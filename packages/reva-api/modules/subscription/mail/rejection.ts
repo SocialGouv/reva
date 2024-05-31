@@ -15,7 +15,7 @@ export const sendRejectionEmail = async ({
   const htmlContent = mjml2html(
     template({
       headline: "Bonjour,",
-      message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte         Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
+      message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
         <p>Après avoir examiné votre dossier, nous avons identifié certaines erreurs qui nécessitent votre attention :</p>
         <ul>${reason
           .split("\n")
@@ -49,6 +49,6 @@ export const sendRejectionEmail = async ({
   return sendGenericEmailPurifyJS({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Votre inscription France VAE a été invalidée",
+    subject: "Nous n’avons pas pu valider votre référencement...",
   });
 };
