@@ -94,6 +94,7 @@ type SubscriptionRequestV2 {
   lettreDeDelegationFile: File
   justificatifIdentiteDelegataireFile: File
   createdAt: Timestamp!
+  etablissement: Etablissement
 }
 type SubscriptionRequestV2sPaginated {
   rows: [SubscriptionRequestV2!]!
