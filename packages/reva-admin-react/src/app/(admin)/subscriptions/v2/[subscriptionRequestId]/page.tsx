@@ -4,6 +4,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { graphql } from "@/graphql/generated";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
@@ -39,6 +41,11 @@ const getSubscriptionRequestV2 = graphql(`
         url
       }
       createdAt
+      etablissement {
+        siege_social
+        date_fermeture
+        qualiopi_status
+      }
     }
   }
 `);
@@ -60,6 +67,8 @@ const SubscriptionRequestPage = () => {
   const subscriptionRequest =
     getSubscriptionRequestResponse?.subscription_getSubscriptionRequestV2;
 
+  const etablissement = subscriptionRequest?.etablissement;
+
   if (!subscriptionRequest) {
     return <></>;
   }
@@ -73,10 +82,30 @@ const SubscriptionRequestPage = () => {
           Inscription envoyée le{" "}
           {format(subscriptionRequest.createdAt, "dd/MM/yyyy")}
         </p>
-        <div className="grid grid-cols-3 bg-neutral-100 p-6 gap-6 mb-8">
-          <h2 className="col-span-3 mb-0 ">
+        <div className="grid grid-cols-1 md:grid-cols-3 bg-neutral-100 p-6 gap-6 mb-8">
+          <h2 className="md:col-span-3 mb-0 ">
             Informations liées au SIRET {subscriptionRequest.companySiret}
           </h2>
+          {etablissement ? (
+            <CompanyBadges
+              className="md:col-span-3 mb-2 -mt-2"
+              siegeSocial={etablissement.siege_social}
+              dateFermeture={
+                etablissement.date_fermeture
+                  ? new Date(etablissement.date_fermeture)
+                  : null
+              }
+              qualiopiStatus={!!etablissement.qualiopi_status}
+            />
+          ) : (
+            <Alert
+              className="md:col-span-3 mb-2 -mt-2"
+              severity="error"
+              small
+              title="Informations entreprise indisponibles"
+              description=""
+            />
+          )}
           <Info title="Raison sociale">{subscriptionRequest.companyName}</Info>
           <Info title="Nature juridique">
             {subscriptionRequest.companyLegalStatus}
@@ -139,4 +168,33 @@ const Info = ({
     <dd className="font-bold">{title}</dd>
     <dt className="break-words">{children}</dt>
   </span>
+);
+
+const CompanyBadges = ({
+  siegeSocial,
+  dateFermeture,
+  qualiopiStatus,
+  className,
+}: {
+  siegeSocial: boolean;
+  dateFermeture?: Date | null;
+  qualiopiStatus: boolean;
+  className?: string;
+}) => (
+  <div className={`flex flex-col md:flex-row gap-2 ${className || ""}`}>
+    {siegeSocial ? (
+      <Badge severity="success">Siège social</Badge>
+    ) : (
+      <Badge severity="error">Établissement secondaire</Badge>
+    )}
+    {!dateFermeture ? (
+      <Badge severity="success">En activité</Badge>
+    ) : (
+      <Badge severity="error">
+        Fermé le {format(dateFermeture, "dd/MM/yyyy")}
+      </Badge>
+    )}
+    {qualiopiStatus && <Badge severity="success">Qualiopi VAE Actif</Badge>}
+    {!qualiopiStatus && <Badge severity="warning">Qualiopi VAE Inactif</Badge>}
+  </div>
 );
