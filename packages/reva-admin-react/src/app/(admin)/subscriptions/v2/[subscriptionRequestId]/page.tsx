@@ -99,7 +99,7 @@ const SubscriptionRequestPage = () => {
             />
           ) : (
             <Alert
-              className="md:col-span-3 mb-2 -mt-2"
+              className="md:col-span-3 mb-2 -mt-2 mr-auto"
               severity="error"
               small
               title="Informations entreprise indisponibles"
