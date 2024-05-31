@@ -4,11 +4,11 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { DossierDeValidationCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
 import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
-import { format } from "date-fns";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -100,7 +100,7 @@ const DossiersDeValidationPage = () => {
   const categoryLabel = useMemo(() => {
     switch (category) {
       case "PENDING":
-        return "Dossiers de validation en attente";
+        return "Dossiers de validation reçus / jurys à programmer";
       case "INCOMPLETE":
         return "Dossiers de validation signalés";
       default:

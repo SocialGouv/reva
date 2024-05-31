@@ -6,11 +6,12 @@ export const getWhereClauseFromDossierDeValidationStatusFilter = (
   statusFilter?: DossierDeValidationStatusFilter,
 ) => {
   let whereClause: Prisma.DossierDeValidationWhereInput = { isActive: true };
-  const excludeArchivedAndDroppedOutCandidacy: Prisma.DossierDeValidationWhereInput =
+  const excludeArchivedAndDroppedOutCandidacyAndActiveJury: Prisma.DossierDeValidationWhereInput =
     {
       candidacy: {
         candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
         candidacyDropOut: { is: null },
+        Jury: { none: { isActive: true } },
       },
     };
   switch (statusFilter) {
@@ -18,7 +19,7 @@ export const getWhereClauseFromDossierDeValidationStatusFilter = (
     case "ALL":
       whereClause = {
         ...whereClause,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeArchivedAndDroppedOutCandidacyAndActiveJury,
       };
       break;
     case "PENDING":
@@ -26,7 +27,7 @@ export const getWhereClauseFromDossierDeValidationStatusFilter = (
       whereClause = {
         ...whereClause,
         decision: statusFilter,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeArchivedAndDroppedOutCandidacyAndActiveJury,
       };
       break;
   }

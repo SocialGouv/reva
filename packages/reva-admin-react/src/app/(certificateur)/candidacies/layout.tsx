@@ -160,7 +160,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       defaultMenuItem: true,
     }),
     menuItem({
-      text: `Dossiers reçus (${dossierDeValidationCountByCategory?.PENDING})`,
+      text: `Dossiers reçus / jurys à programmer (${dossierDeValidationCountByCategory?.PENDING})`,
       path: "/candidacies/dossiers-de-validation",
       category: "PENDING",
     }),
