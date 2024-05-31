@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const config: CodegenConfig = {
+  overwrite: true,
   schema: [
     "../reva-api/modules/generated-graphql-schema.graphql",
     process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL + "/graphql" ||
@@ -16,8 +17,13 @@ const config: CodegenConfig = {
   generates: {
     "./src/graphql/generated/": {
       preset: "client",
+      plugins: [],
+      config: {
+        enumsAsTypes: true,
+      },
     },
   },
+  config: { scalars: { Timestamp: "Date" } },
 };
 
 export default config;

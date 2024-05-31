@@ -132,6 +132,15 @@ type Country {
   label: String!
 }
 
+type Etablissement {
+  siret: ID!
+  siege_social: Boolean!
+  date_fermeture: Timestamp
+  raison_sociale: String!
+  forme_juridique: String!
+  qualiopi_status: Boolean
+}
+
 type Query {
   getReferential: Referential!
   searchCertificationsForCandidate(
@@ -161,6 +170,7 @@ type Query {
   getCertificationAuthorityTags: [String!]!
   getFCCertification(rncp: ID!): FCCertification
   getCountries: [Country!]!
+  getEtablissement(siret: ID!): Etablissement
 }
 
 input UpdateCertificationInput {

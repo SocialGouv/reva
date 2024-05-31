@@ -77,15 +77,9 @@ export class RNCPReferential {
     certifications: RNCPCertification[];
   }> {
     try {
-      const queryParams = Object.keys(params || {}).reduce((acc, key) => {
-        const value = params?.[key as keyof FindParams];
-        if (value != undefined) {
-          return `${acc}&${key}=${value}`;
-        }
-        return acc;
-      }, "");
+      const queryParams = new URLSearchParams(params || {});
 
-      const url = `${URL}?REPERTOIRE=RNCP${queryParams}`;
+      const url = `${URL}?REPERTOIRE=RNCP&${queryParams.toString()}`;
       const response = await fetch(url, {
         headers: {
           "X-Gravitee-Api-Key": this.apiKey,
