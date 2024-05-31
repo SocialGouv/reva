@@ -28,6 +28,7 @@ const getSubscriptionRequestV2 = graphql(`
       companySiret
       companyLegalStatus
       rejectionReason
+      internalComment
       attestationURSSAFFile {
         url
       }
@@ -138,12 +139,20 @@ const SubscriptionRequestPage = () => {
           }
         />
         {subscriptionRequest.status === "REJECTED" && (
-          <>
-            <h3>Motif du refus</h3>
-            <pre className="whitespace-normal">
-              {subscriptionRequest.rejectionReason}
-            </pre>
-          </>
+          <div className="flex flex-col gap-6 mt-8">
+            <div>
+              <h3>Commentaire à destination de l'AAP</h3>
+              <pre className="whitespace-normal">
+                {subscriptionRequest.rejectionReason}
+              </pre>
+            </div>
+            <div>
+              <h3>Description interne</h3>
+              <pre className="whitespace-normal">
+                {subscriptionRequest.internalComment}
+              </pre>
+            </div>
+          </div>
         )}
         {subscriptionRequest.status === "PENDING" && (
           <SubscriptionRequestForm
