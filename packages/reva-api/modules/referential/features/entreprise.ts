@@ -8,12 +8,18 @@ export type EtablissemntFindParams = {
   siret: string;
 };
 
+export type FormeJuridique = {
+  code: string;
+  libelle: string;
+  legalStatus: LegalStatus;
+};
+
 export type Etablissement = {
   siret: string;
   siegeSocial: boolean;
   dateFermeture: Date | null;
   raisonSociale: string;
-  formeJuridique: string;
+  formeJuridique: FormeJuridique;
 };
 
 export async function findEtablissement(
@@ -126,7 +132,11 @@ function mapDataToEtablissement(data: any): Etablissement | null {
         data.unite_legale?.forme_juridique?.code == "1000"
           ? `${data.unite_legale?.personne_physique_attributs?.prenom_usuel || data.unite_legale?.personne_physique_attributs?.prenom_1 || ""} ${data.unite_legale?.personne_physique_attributs?.nom_usage || data.unite_legale?.personne_physique_attributs?.nom_naissance || ""}`
           : data.unite_legale?.personne_morale_attributs?.raison_sociale,
-      formeJuridique: data.unite_legale?.forme_juridique?.libelle || "",
+      formeJuridique: {
+        code: data.unite_legale?.forme_juridique?.code || "",
+        libelle: data.unite_legale?.forme_juridique?.libelle || "",
+        legalStatus: getLegalStatus(data.unite_legale?.forme_juridique?.code),
+      },
     };
 
     return etablissement;
@@ -136,4 +146,27 @@ function mapDataToEtablissement(data: any): Etablissement | null {
   }
 
   return null;
+}
+
+function getLegalStatus(code?: string): LegalStatus {
+  if (code == "1000") {
+    return "EI"; // OR "EIRL"
+  } else if (code?.startsWith("54")) {
+    return "SARL"; // OR "EURL"
+  } else if (code?.startsWith("57")) {
+    return "SAS"; // OR "SASU"
+  } else if (code?.startsWith("55") || code?.startsWith("56")) {
+    return "SA";
+  } else if (code?.startsWith("92")) {
+    return "ASSOCIATION_LOI_1901";
+  } else if (
+    code?.startsWith("71") ||
+    code?.startsWith("72") ||
+    code?.startsWith("73") ||
+    code?.startsWith("74")
+  ) {
+    return "ETABLISSEMENT_PUBLIC";
+  }
+
+  return "NC";
 }

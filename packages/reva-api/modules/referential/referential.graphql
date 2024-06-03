@@ -132,12 +132,31 @@ type Country {
   label: String!
 }
 
+enum LegalStatus {
+  EI
+  EURL
+  SARL
+  SAS
+  SASU
+  SA
+  EIRL
+  ASSOCIATION_LOI_1901
+  ETABLISSEMENT_PUBLIC
+  NC
+}
+
+type FormeJuridique {
+  code: ID!
+  libelle: String!
+  legalStatus: LegalStatus!
+}
+
 type Etablissement {
   siret: ID!
   siegeSocial: Boolean!
   dateFermeture: Timestamp
   raisonSociale: String!
-  formeJuridique: String!
+  formeJuridique: FormeJuridique!
   qualiopiStatus: Boolean
 }
 

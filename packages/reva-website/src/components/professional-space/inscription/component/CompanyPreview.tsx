@@ -92,7 +92,7 @@ export const CompanyPreview = (props: Props) => {
                   />
                   <CompanySummaryItem
                     title="Nature juridique"
-                    description={formeJuridique}
+                    description={formeJuridique.libelle}
                   />
                 </div>
               </>

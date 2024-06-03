@@ -2,6 +2,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fi
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { graphql } from "@/graphql/generated";
+import { LegalStatus } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
@@ -13,9 +14,24 @@ import * as z from "zod";
 
 import { CompanyPreview } from "../component/CompanyPreview";
 
+const legalStatuses = [
+  "ASSOCIATION_LOI_1901",
+  "EI",
+  "EIRL",
+  "ETABLISSEMENT_PUBLIC",
+  "EURL",
+  "SA",
+  "SARL",
+  "SAS",
+  "SASU",
+  "NC",
+] as const;
+
 const zodSchema = z.object({
   companySiret: z.string().length(14, "doit comporter 14 chiffres"),
-  companyLegalStatus: z.string().min(1, "obligatoire"),
+  companyLegalStatus: z.enum(legalStatuses, {
+    required_error: "obligatoire",
+  }),
   companyName: z.string().min(1, "obligatoire"),
   companyWebsite: z.union([z.literal(""), z.string().url()]),
   managerFirstname: z.string().min(1, "obligatoire"),
@@ -52,7 +68,10 @@ export const CompanySiretStepForm = () => {
 
   useEffect(() => {
     setValue("companyName", etablissement?.raisonSociale || "");
-    setValue("companyLegalStatus", etablissement?.formeJuridique || "");
+    setValue(
+      "companyLegalStatus",
+      etablissement?.formeJuridique.legalStatus || "NC",
+    );
   }, [etablissement, setValue]);
 
   const handleFormSubmit = (data: CompanySiretStepFormSchema) => {
@@ -131,7 +150,11 @@ const getEtablissementQuery = graphql(`
       siret
       siegeSocial
       raisonSociale
-      formeJuridique
+      formeJuridique {
+        code
+        libelle
+        legalStatus
+      }
       dateFermeture
       qualiopiStatus
     }
