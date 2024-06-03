@@ -222,7 +222,7 @@ const CertificationsPage = () => {
             />
           </fieldset>
 
-          <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
+          <div className="md:col-span-2 ml-auto flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
             <Button priority="secondary" type="reset">
               Réinitialiser
             </Button>
