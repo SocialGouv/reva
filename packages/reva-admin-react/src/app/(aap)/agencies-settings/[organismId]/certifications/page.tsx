@@ -3,15 +3,21 @@ import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCertificationsPage } from "./certificationsPage.hook";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const schema = z.object({
   managedDegrees: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
+  conventionCollectives: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
+  domaines: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
 });
@@ -21,12 +27,16 @@ type FormData = z.infer<typeof schema>;
 const CertificationsPage = () => {
   const {
     organismId,
-    organismTypology,
     degrees,
-    degreesStatus,
-    managedDegrees,
-    managedDegreesStatus,
-    refetchmanagedDegrees,
+    conventionCollectives,
+    domaines,
+    referentialStatus,
+    organismManagedDegrees,
+    organismConventionCollectives,
+    organismDomaines,
+    organismTypology,
+    organismStatus,
+    refetchOrganism,
     createOrUpdatemanagedDegrees,
   } = useCertificationsPage();
 
@@ -45,6 +55,16 @@ const CertificationsPage = () => {
     name: "managedDegrees",
   });
 
+  const { fields: domainesFields } = useFieldArray({
+    control,
+    name: "domaines",
+  });
+
+  const { fields: conventionCollectivesFields } = useFieldArray({
+    control,
+    name: "conventionCollectives",
+  });
+
   const resetForm = useCallback(
     () =>
       reset({
@@ -53,10 +73,28 @@ const CertificationsPage = () => {
           .map((d) => ({
             id: d.id,
             label: d.longLabel,
-            checked: !!managedDegrees.find((md) => md.id === d.id),
+            checked: !!organismManagedDegrees.find((omd) => omd.id === d.id),
           })),
+        conventionCollectives: conventionCollectives.map((c) => ({
+          id: c.id,
+          label: c.label,
+          checked: !!organismConventionCollectives.find((oc) => oc.id === c.id),
+        })),
+        domaines: domaines.map((d) => ({
+          id: d.id,
+          label: d.label,
+          checked: !!organismDomaines.find((od) => od.id === d.id),
+        })),
       }),
-    [managedDegrees, degrees, reset],
+    [
+      reset,
+      degrees,
+      conventionCollectives,
+      domaines,
+      organismManagedDegrees,
+      organismConventionCollectives,
+      organismDomaines,
+    ],
   );
 
   useEffect(resetForm, [resetForm]);
@@ -69,55 +107,23 @@ const CertificationsPage = () => {
         .map((md) => md.id),
     });
     successToast("modifications enregistrées");
-    await refetchmanagedDegrees();
+    await refetchOrganism();
   });
 
   return (
     <div className="flex flex-col flex-1">
       <h1>Gestion des certifications</h1>
-      <h2>Typologie</h2>
-      <Input
-        label={
-          <span className="text-black">
-            Typologie d'Architecte Accompagnateur de Parcours
-          </span>
-        }
-        hintText={
-          <span className="text-dsfr-light-text-mention-grey">
-            Les certifications vous sont rattachées en fonction de la typologie
-            sélectionnée.
-          </span>
-        }
-        nativeInputProps={{
-          value: organismTypology,
-        }}
-        disabled
-      />
-      <h2>Niveaux de diplômes couverts par votre structure</h2>
-      <Alert
-        severity="info"
-        title=""
-        description={
-          <>
-            <p>
-              Vous pouvez choisir les niveaux de certification pour lesquels
-              vous souhaitez accompagner les démarches VAE correspondant à votre
-              typologie AAP.
-            </p>
-            <p>
-              Votre structure ne sera visible comme structure d'accompagnement
-              que pour les niveaux de certification que vous avez sélectionnés.
-            </p>
-            <p>
-              Il est à noter que vous devez continuer les accompagnements déjà
-              en cours.
-            </p>
-          </>
-        }
-      />
 
-      {degreesStatus === "error" ||
-        (managedDegreesStatus === "error" && (
+      <p>
+        Sélectionnez les filières et les niveaux de certifications que vous
+        couvrez (du niveau 3 à 8).
+        <br />
+        Vous apparaîtrez dans les résultats de recherche pour les filières et
+        niveaux de certification sélectionnés.
+      </p>
+
+      {referentialStatus === "error" ||
+        (organismStatus === "error" && (
           <Alert
             className="my-6"
             severity="error"
@@ -133,9 +139,9 @@ const CertificationsPage = () => {
         />
       )}
 
-      {degreesStatus && managedDegreesStatus === "success" && (
+      {referentialStatus && organismStatus === "success" && (
         <form
-          className="flex flex-col mt-6"
+          className="grid grid-cols-1 md:grid-cols-2 mt-6"
           onSubmit={handleFormSubmit}
           onReset={(e) => {
             e.preventDefault();
@@ -143,8 +149,63 @@ const CertificationsPage = () => {
           }}
         >
           <fieldset className="flex flex-col gap-4">
+            <legend className="text-3xl font-bold mb-4">
+              {organismTypology === "expertFiliere" && "Filières"}
+              {organismTypology === "expertBranche" && "Branches"}
+              {organismTypology === "expertBrancheEtFiliere" &&
+                "Filières et branches"}
+            </legend>
+            {(organismTypology === "expertFiliere" ||
+              organismTypology === "expertBrancheEtFiliere") && (
+              <Checkbox
+                legend={
+                  <p className="text-sm">
+                    Quelles sont les filières que vous couvrez ?
+                  </p>
+                }
+                options={domainesFields.map((d, dIndex) => ({
+                  label: d.label,
+                  nativeInputProps: {
+                    ...register(`domaines.${dIndex}.checked`),
+                  },
+                }))}
+              />
+            )}
+            {(organismTypology === "expertBranche" ||
+              organismTypology === "expertBrancheEtFiliere") && (
+              <div className="flex flex-col">
+                <Checkbox
+                  legend={
+                    <p className="text-sm">
+                      Quelles sont les branches que vous couvrez ?
+                    </p>
+                  }
+                  disabled
+                  options={conventionCollectivesFields.map((c, cIndex) => ({
+                    label: c.label,
+                    nativeInputProps: {
+                      ...register(`conventionCollectives.${cIndex}.checked`),
+                    },
+                  }))}
+                />
+                <SmallNotice>
+                  Vous souhaitez modifier vos branches ? <br />
+                  Adressez-vous directement au support à support@vae.gouv.fr.
+                </SmallNotice>
+              </div>
+            )}
+          </fieldset>
+
+          <fieldset className="flex flex-col gap-4">
+            <legend className="text-3xl font-bold mb-4">
+              Niveaux de certification
+            </legend>
             <Checkbox
-              legend=""
+              legend={
+                <p className="text-sm">
+                  Quels sont les niveaux de certifications que vous couvrez ?{" "}
+                </p>
+              }
               options={managedDegreesFields.map((md, mdIndex) => ({
                 label: md.label,
                 nativeInputProps: {

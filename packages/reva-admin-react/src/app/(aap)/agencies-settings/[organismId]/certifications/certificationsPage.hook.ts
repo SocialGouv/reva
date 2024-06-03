@@ -4,8 +4,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
-const managedDegreesQuery = graphql(`
-  query getOrganismAndManagedDegreesForCertificationsPage($organismId: ID!) {
+const organismQuery = graphql(`
+  query getOrganismForCertificationsPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
       typology
@@ -15,16 +15,32 @@ const managedDegreesQuery = graphql(`
           label
         }
       }
+      domaines {
+        id
+        label
+      }
+      conventionCollectives {
+        id
+        label
+      }
     }
   }
 `);
 
-const degreesQuery = graphql(`
-  query getNiveauxDiplomes {
+const referentialQuery = graphql(`
+  query getReferencialForCertificationsPage {
     getDegrees {
       id
       longLabel
       level
+    }
+    getDomaines {
+      id
+      label
+    }
+    getConventionCollectives {
+      id
+      label
     }
   }
 `);
@@ -43,32 +59,35 @@ export const useCertificationsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { organismId } = useParams<{ organismId: string }>();
 
-  const { data: degreesResponse, status: degreesStatus } = useQuery({
-    queryKey: ["niveauxDiplomes"],
-    queryFn: () => graphqlClient.request(degreesQuery),
+  const { data: referentialResponse, status: referentialStatus } = useQuery({
+    queryKey: ["referential"],
+    queryFn: () => graphqlClient.request(referentialQuery),
   });
 
-  const degrees = useMemo(
-    () => degreesResponse?.getDegrees || [],
-    [degreesResponse?.getDegrees],
-  );
+  const degrees = referentialResponse?.getDegrees || [];
+  const conventionCollectives =
+    referentialResponse?.getConventionCollectives || [];
+  const domaines = referentialResponse?.getDomaines || [];
 
   const {
-    data: managedDegreesResponse,
-    status: managedDegreesStatus,
-    refetch: refetchmanagedDegrees,
+    data: organismResponse,
+    status: organismStatus,
+    refetch: refetchOrganism,
   } = useQuery({
-    queryKey: ["managedDegrees"],
-    queryFn: () => graphqlClient.request(managedDegreesQuery, { organismId }),
+    queryKey: [organismId, "organism"],
+    queryFn: () => graphqlClient.request(organismQuery, { organismId }),
   });
 
-  const managedDegrees = useMemo(
-    () =>
-      (managedDegreesResponse?.organism_getOrganism?.managedDegrees || []).map(
-        (ndg) => ndg?.degree,
-      ),
-    [managedDegreesResponse?.organism_getOrganism?.managedDegrees],
+  const organism = organismResponse?.organism_getOrganism;
+
+  const organismManagedDegrees = useMemo(
+    () => (organism?.managedDegrees || []).map((ndg) => ndg?.degree),
+    [organism?.managedDegrees],
   );
+
+  const organismDomaines = organism?.domaines || [];
+  const organismConventionCollectives = organism?.conventionCollectives || [];
+  const organismTypology = organism?.typology;
 
   const createOrUpdatemanagedDegrees = useMutation({
     mutationFn: ({
@@ -85,12 +104,16 @@ export const useCertificationsPage = () => {
 
   return {
     organismId,
-    organismTypology: managedDegreesResponse?.organism_getOrganism?.typology,
     degrees,
-    degreesStatus,
-    managedDegrees,
-    managedDegreesStatus,
-    refetchmanagedDegrees,
+    domaines,
+    conventionCollectives,
+    referentialStatus,
+    organismManagedDegrees,
+    organismDomaines,
+    organismConventionCollectives,
+    organismTypology,
+    organismStatus,
+    refetchOrganism,
     createOrUpdatemanagedDegrees,
   };
 };
