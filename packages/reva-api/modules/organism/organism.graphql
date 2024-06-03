@@ -221,9 +221,10 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   accountId: UUID
 }
 
-input CreateOrUpdateOrganismOnDegreesInput {
+input UpdateOrganismDegreesAndDomainesInput {
   organismId: ID!
   degreeIds: [ID!]!
+  domaineIds: [ID!]!
 }
 
 type MaisonMereAAPsPaginated {
@@ -273,9 +274,9 @@ type Mutation {
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
   ): String!
 
-  organism_createOrUpdateOrganismOnDegrees(
-    data: CreateOrUpdateOrganismOnDegreesInput!
-  ): [OrganismOnDegree!]!
+  organism_updateOrganismDegreesAndDomaines(
+    data: UpdateOrganismDegreesAndDomainesInput!
+  ): Organism
 
   organism_updateOrganismInterventionZone(
     data: UpdateOrganismInterventionZoneInput

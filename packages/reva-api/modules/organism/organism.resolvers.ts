@@ -23,7 +23,7 @@ import {
 } from "./features/adminUpdateMaisonMereAAP";
 import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
-import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrganismOnDegrees";
+import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountByOrganismId } from "./features/getAccountByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
@@ -365,15 +365,16 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    organism_createOrUpdateOrganismOnDegrees: async (
+    organism_updateOrganismDegreesAndDomaines: async (
       _parent: unknown,
       params: {
-        data: { organismId: string; degreeIds: string[] };
+        data: { organismId: string; degreeIds: string[]; domaineIds: string[] };
       },
     ) =>
-      createOrUpdateOrganismOnDegrees({
+      updateOrganismDegreesAndDomaines({
         organismId: params.data.organismId,
         degreeIds: params.data.degreeIds,
+        domaineIds: params.data.domaineIds,
       }),
     organism_updateOrganismInterventionZone: async (
       _parent: unknown,

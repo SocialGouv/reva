@@ -11,13 +11,13 @@ import { useCertificationsPage } from "./certificationsPage.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const schema = z.object({
-  managedDegrees: z
+  organismDegrees: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
-  conventionCollectives: z
+  organismConventionCollectives: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
-  domaines: z
+  organismDomaines: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
 });
@@ -37,7 +37,7 @@ const CertificationsPage = () => {
     organismTypology,
     organismStatus,
     refetchOrganism,
-    createOrUpdatemanagedDegrees,
+    updateOrganismDegreesAndDomaines,
   } = useCertificationsPage();
 
   const {
@@ -50,37 +50,37 @@ const CertificationsPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const { fields: managedDegreesFields } = useFieldArray({
+  const { fields: organismDegreesFields } = useFieldArray({
     control,
-    name: "managedDegrees",
+    name: "organismDegrees",
   });
 
-  const { fields: domainesFields } = useFieldArray({
+  const { fields: organismDomainesFields } = useFieldArray({
     control,
-    name: "domaines",
+    name: "organismDomaines",
   });
 
-  const { fields: conventionCollectivesFields } = useFieldArray({
+  const { fields: organismConventionCollectivesFields } = useFieldArray({
     control,
-    name: "conventionCollectives",
+    name: "organismConventionCollectives",
   });
 
   const resetForm = useCallback(
     () =>
       reset({
-        managedDegrees: degrees
+        organismDegrees: degrees
           .filter((d) => d.level > 2)
           .map((d) => ({
             id: d.id,
             label: d.longLabel,
             checked: !!organismManagedDegrees.find((omd) => omd.id === d.id),
           })),
-        conventionCollectives: conventionCollectives.map((c) => ({
+        organismConventionCollectives: conventionCollectives.map((c) => ({
           id: c.id,
           label: c.label,
           checked: !!organismConventionCollectives.find((oc) => oc.id === c.id),
         })),
-        domaines: domaines.map((d) => ({
+        organismDomaines: domaines.map((d) => ({
           id: d.id,
           label: d.label,
           checked: !!organismDomaines.find((od) => od.id === d.id),
@@ -100,11 +100,14 @@ const CertificationsPage = () => {
   useEffect(resetForm, [resetForm]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    await createOrUpdatemanagedDegrees.mutateAsync({
+    await updateOrganismDegreesAndDomaines.mutateAsync({
       organismId,
-      managedDegreesIds: data.managedDegrees
-        .filter((md) => md.checked)
-        .map((md) => md.id),
+      degreeIds: data.organismDegrees
+        .filter((od) => od.checked)
+        .map((od) => od.id),
+      domaineIds: data.organismDomaines
+        .filter((od) => od.checked)
+        .map((od) => od.id),
     });
     successToast("modifications enregistrées");
     await refetchOrganism();
@@ -131,7 +134,7 @@ const CertificationsPage = () => {
           />
         ))}
 
-      {createOrUpdatemanagedDegrees.status === "error" && (
+      {updateOrganismDegreesAndDomaines.status === "error" && (
         <Alert
           className="my-6"
           severity="error"
@@ -163,10 +166,10 @@ const CertificationsPage = () => {
                     Quelles sont les filières que vous couvrez ?
                   </p>
                 }
-                options={domainesFields.map((d, dIndex) => ({
-                  label: d.label,
+                options={organismDomainesFields.map((od, odIndex) => ({
+                  label: od.label,
                   nativeInputProps: {
-                    ...register(`domaines.${dIndex}.checked`),
+                    ...register(`organismDomaines.${odIndex}.checked`),
                   },
                 }))}
               />
@@ -181,12 +184,16 @@ const CertificationsPage = () => {
                     </p>
                   }
                   disabled
-                  options={conventionCollectivesFields.map((c, cIndex) => ({
-                    label: c.label,
-                    nativeInputProps: {
-                      ...register(`conventionCollectives.${cIndex}.checked`),
-                    },
-                  }))}
+                  options={organismConventionCollectivesFields.map(
+                    (oc, ocIndex) => ({
+                      label: oc.label,
+                      nativeInputProps: {
+                        ...register(
+                          `organismConventionCollectives.${ocIndex}.checked`,
+                        ),
+                      },
+                    }),
+                  )}
                 />
                 <SmallNotice>
                   Vous souhaitez modifier vos branches ? <br />
@@ -206,10 +213,10 @@ const CertificationsPage = () => {
                   Quels sont les niveaux de certifications que vous couvrez ?{" "}
                 </p>
               }
-              options={managedDegreesFields.map((md, mdIndex) => ({
-                label: md.label,
+              options={organismDegreesFields.map((od, odIndex) => ({
+                label: od.label,
                 nativeInputProps: {
-                  ...register(`managedDegrees.${mdIndex}.checked`),
+                  ...register(`organismDegrees.${odIndex}.checked`),
                 },
               }))}
             />

@@ -45,11 +45,11 @@ const referentialQuery = graphql(`
   }
 `);
 
-const createOrUpdatemanagedDegreesMutation = graphql(`
+const updateOrganismDegreesAndDomainesMutation = graphql(`
   mutation organism_createOrUpdateOrganismOnDegrees(
-    $data: CreateOrUpdateOrganismOnDegreesInput!
+    $data: UpdateOrganismDegreesAndDomainesInput!
   ) {
-    organism_createOrUpdateOrganismOnDegrees(data: $data) {
+    organism_updateOrganismDegreesAndDomaines(data: $data) {
       id
     }
   }
@@ -89,16 +89,22 @@ export const useCertificationsPage = () => {
   const organismConventionCollectives = organism?.conventionCollectives || [];
   const organismTypology = organism?.typology;
 
-  const createOrUpdatemanagedDegrees = useMutation({
+  const updateOrganismDegreesAndDomaines = useMutation({
     mutationFn: ({
       organismId,
-      managedDegreesIds,
+      degreeIds,
+      domaineIds,
     }: {
       organismId: string;
-      managedDegreesIds: string[];
+      degreeIds: string[];
+      domaineIds: string[];
     }) =>
-      graphqlClient.request(createOrUpdatemanagedDegreesMutation, {
-        data: { organismId, degreeIds: managedDegreesIds },
+      graphqlClient.request(updateOrganismDegreesAndDomainesMutation, {
+        data: {
+          organismId,
+          degreeIds,
+          domaineIds,
+        },
       }),
   });
 
@@ -114,6 +120,6 @@ export const useCertificationsPage = () => {
     organismTypology,
     organismStatus,
     refetchOrganism,
-    createOrUpdatemanagedDegrees,
+    updateOrganismDegreesAndDomaines,
   };
 };
