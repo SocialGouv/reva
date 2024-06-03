@@ -60,6 +60,8 @@ import {
   sendLegalInformationDocumentsApprovalEmail,
   sendLegalInformationDocumentsUpdateNeededEmail,
 } from "./emails/sendLegalInformationDocumentsDecisionEmail";
+import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
+import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
 
 const unsafeResolvers = {
   Account: {
@@ -83,6 +85,14 @@ const unsafeResolvers = {
       findOrganismOnDegreeByOrganismId({ organismId: organism.id }),
     organismOnAccount: ({ id: organismId }: Organism) =>
       getAccountByOrganismId({
+        organismId,
+      }),
+    domaines: ({ id: organismId }: Organism) =>
+      getOrganismDomainesByOrganismId({
+        organismId,
+      }),
+    conventionCollectives: ({ id: organismId }: Organism) =>
+      getOrganismCcnsByOrganismId({
         organismId,
       }),
   },

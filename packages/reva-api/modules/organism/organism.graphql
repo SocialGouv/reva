@@ -25,6 +25,8 @@ type Organism {
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
   organismOnAccount: Account
+  domaines: [Domaine!]!
+  conventionCollectives: [ConventionCollective!]!
   llToEarth: String
   distanceKm: Float
 }
