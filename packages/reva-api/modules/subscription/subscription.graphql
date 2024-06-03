@@ -159,7 +159,7 @@ input CreateSubscriptionRequestV2Input {
   accountLastname: String!
   accountEmail: String!
   accountPhoneNumber: String!
-  companyWebsite: String!
+  companyWebsite: String
   delegataire: Boolean!
   attestationURSSAF: Upload!
   justificatifIdentiteDirigeant: Upload!
