@@ -74,15 +74,11 @@ export const CompanyPreview = (props: Props) => {
                       );
                     })()
                   )}
-                  {qualiopiStatus != undefined && (
-                    <>
-                      {qualiopiStatus && (
-                        <Badge severity="success">Qualiopi VAE Actif</Badge>
-                      )}
-                      {!qualiopiStatus && (
-                        <Badge severity="warning">Qualiopi VAE Inactif</Badge>
-                      )}
-                    </>
+                  {qualiopiStatus && (
+                    <Badge severity="success">Qualiopi VAE Actif</Badge>
+                  )}
+                  {!qualiopiStatus && (
+                    <Badge severity="warning">Qualiopi VAE Inactif</Badge>
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-6">
