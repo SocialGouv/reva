@@ -124,141 +124,121 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               className="mb-6"
               severity="warning"
               title={
-                <div className="flex flex-col items-start gap-2 font-normal">
-                  <h2 className="font-bold text-xl">Attention</h2>
-                  <p>Seuls quelques diplômes sont actuellement éligibles : </p>
-                  <a
-                    className="fr-link"
-                    href="https://airtable.com/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
-                  >
-                    Voir tous les diplômes actuellement disponibles via France
-                    VAE
-                  </a>
-                  <p>
-                    Les salariés ayant un contrat de travail de droit public,
-                    les retraités et les étudiants{" "}
-                    <strong>
-                      ne peuvent pas bénéficier du financement d’un parcours
-                      France VAE à date.
-                    </strong>
-                  </p>
-                  <a
-                    className="fr-link"
-                    href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
-                    target="_blank"
-                    rel="noreferrer"
-                    title="En cas de question, contactez un Point Relais Conseil - nouvelle fenêtre"
-                  >
-                    En cas de question, contactez un Point Relais Conseil
-                  </a>
-                </div>
+                <p className="font-normal">
+                  Le dépôt de nouvelles candidatures est temporairement
+                  indisponible. Nous vous remercions de votre patience et nous
+                  excusons pour tout désagrément.
+                </p>
               }
             />
-            <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
-              Bienvenue <span aria-hidden="true">🤝</span>,
-            </h1>
+            {hasCandidacy && (
+              <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
+                Bienvenue <span aria-hidden="true">🤝</span>,
+              </h1>
+            )}
           </>
         )}
-        <form onSubmit={onSubmit} className="flex flex-col">
-          <fieldset>
-            <legend>
-              <h2 className="mt-6 mb-2">
-                {hasCandidacy
-                  ? "Modifiez vos informations"
-                  : "Créer votre compte"}
-              </h2>
-            </legend>
+        {hasCandidacy && (
+          <form onSubmit={onSubmit} className="flex flex-col">
+            <fieldset>
+              <legend>
+                <h2 className="mt-6 mb-2">
+                  {hasCandidacy
+                    ? "Modifiez vos informations"
+                    : "Créer votre compte"}
+                </h2>
+              </legend>
 
-            {state.context.error &&
-              state.context.error !== INVALID_REGISTRATION_TOKEN_ERROR && (
-                <ErrorAlertFromState />
-              )}
-            <FormOptionalFieldsDisclaimer
-              className="mb-4"
-              label="Tous les champs sont obligatoires."
-            />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <Input
-                label="Prénom"
-                nativeInputProps={{
-                  name: "firstname",
-                  ref: firstnameRef,
-                  required: true,
-                  autoComplete: "given-name",
-                  defaultValue: editedContact?.firstname || "",
-                }}
+              {state.context.error &&
+                state.context.error !== INVALID_REGISTRATION_TOKEN_ERROR && (
+                  <ErrorAlertFromState />
+                )}
+              <FormOptionalFieldsDisclaimer
+                className="mb-4"
+                label="Tous les champs sont obligatoires."
               />
-              <Input
-                label="Nom"
-                nativeInputProps={{
-                  name: "lastname",
-                  ref: lastnameRef,
-                  required: true,
-                  autoComplete: "family-name",
-                  defaultValue: editedContact?.lastname || "",
-                }}
-              />
-              <Input
-                className="sm:pt-6"
-                label="Téléphone"
-                nativeInputProps={{
-                  name: "phone",
-                  ref: phoneRef,
-                  minLength: 10,
-                  required: true,
-                  type: "tel",
-                  autoComplete: "tel",
-                  defaultValue: editedContact?.phone || "",
-                }}
-              />
-              <Input
-                label="Email"
-                hintText="Format attendu : nom@domaine.fr"
-                nativeInputProps={{
-                  name: "email",
-                  ref: emailRef,
-                  required: true,
-                  type: "email",
-                  autoComplete: "email",
-                  spellCheck: "false",
-                  defaultValue: editedContact?.email || "",
-                }}
-              />
-            </div>
-            {!hasCandidacy && (
-              <Select
-                className="my-4"
-                data-test="certificates-select-department"
-                label="Département"
-                hint="Sélectionnez votre département de résidence"
-                nativeSelectProps={{
-                  name: "department",
-                  defaultValue: "",
-                  required: true,
-                  ref: departementRef,
-                }}
-              >
-                <option value="" disabled={true} hidden={true}>
-                  Votre département
-                </option>
-                {selectsOptionsDepartments.map((d) => (
-                  <option key={d.value} value={d.value}>
-                    {d.label}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <Input
+                  label="Prénom"
+                  nativeInputProps={{
+                    name: "firstname",
+                    ref: firstnameRef,
+                    required: true,
+                    autoComplete: "given-name",
+                    defaultValue: editedContact?.firstname || "",
+                  }}
+                />
+                <Input
+                  label="Nom"
+                  nativeInputProps={{
+                    name: "lastname",
+                    ref: lastnameRef,
+                    required: true,
+                    autoComplete: "family-name",
+                    defaultValue: editedContact?.lastname || "",
+                  }}
+                />
+                <Input
+                  className="sm:pt-6"
+                  label="Téléphone"
+                  nativeInputProps={{
+                    name: "phone",
+                    ref: phoneRef,
+                    minLength: 10,
+                    required: true,
+                    type: "tel",
+                    autoComplete: "tel",
+                    defaultValue: editedContact?.phone || "",
+                  }}
+                />
+                <Input
+                  label="Email"
+                  hintText="Format attendu : nom@domaine.fr"
+                  nativeInputProps={{
+                    name: "email",
+                    ref: emailRef,
+                    required: true,
+                    type: "email",
+                    autoComplete: "email",
+                    spellCheck: "false",
+                    defaultValue: editedContact?.email || "",
+                  }}
+                />
+              </div>
+              {!hasCandidacy && (
+                <Select
+                  className="my-4"
+                  data-test="certificates-select-department"
+                  label="Département"
+                  hint="Sélectionnez votre département de résidence"
+                  nativeSelectProps={{
+                    name: "department",
+                    defaultValue: "",
+                    required: true,
+                    ref: departementRef,
+                  }}
+                >
+                  <option value="" disabled={true} hidden={true}>
+                    Votre département
                   </option>
-                ))}
-              </Select>
-            )}
-          </fieldset>
-          <Button
-            data-test={`project-contact-${editedContact ? "save" : "add"}`}
-            className="my-6 self-end w-full sm:w-auto flex justify-center"
-          >
-            {hasCandidacy ? "Modifiez les informations" : "Créer votre compte"}
-          </Button>
-        </form>
+                  {selectsOptionsDepartments.map((d) => (
+                    <option key={d.value} value={d.value}>
+                      {d.label}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            </fieldset>
+            <Button
+              data-test={`project-contact-${editedContact ? "save" : "add"}`}
+              className="my-6 self-end w-full sm:w-auto flex justify-center"
+            >
+              {hasCandidacy
+                ? "Modifiez les informations"
+                : "Créer votre compte"}
+            </Button>
+          </form>
+        )}
         {!hasCandidacy && (
           <div className="border-t border-gray-200 pt-6">
             <button

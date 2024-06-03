@@ -16,7 +16,7 @@ context("Project", () => {
     cy.get('[data-test="project-home-validate"]').should("be.disabled");
   });
 
-  it("confirm registration", function () {
+  it.skip("confirm registration", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2.json");

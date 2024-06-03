@@ -23,15 +23,27 @@ export const ProjectSubmissionTimelineElement = () => {
         status === "readonly" ? (
           <span data-test="project-submitted-label">Statut : envoyée</span>
         ) : (
-          <Button
-            data-test="project-home-validate"
-            disabled={status === "disabled"}
-            nativeButtonProps={{
-              onClick: () => mainService.send("VALIDATE_PROJECT"),
-            }}
-          >
-            Envoyez votre candidature
-          </Button>
+          <>
+            {status === "active" && (
+              <div className="flex items-center mb-4 max-w-xl">
+                <span className="fr-icon fr-icon-warning-fill text-red-500 mr-2" />
+                <p className="text-sm mb-0">
+                  Le dépôt de nouvelles candidatures est temporairement
+                  indisponible. Nous vous remercions de votre patience et nous
+                  excusons pour tout désagrément.
+                </p>
+              </div>
+            )}
+            <Button
+              data-test="project-home-validate"
+              disabled={true}
+              nativeButtonProps={{
+                onClick: () => mainService.send("VALIDATE_PROJECT"),
+              }}
+            >
+              Envoyez votre candidature
+            </Button>
+          </>
         )
       }
     </TimelineElement>
