@@ -36,7 +36,6 @@ export interface OrganismSummaryProps {
   companyLegalStatus: string;
   companyTypology: Typology;
   ccns?: string[];
-  domaines?: string[];
   createdAt?: Date;
   companyManagerFirstname?: string;
   companyManagerLastname?: string;
@@ -56,7 +55,6 @@ export const OrganismSummary = ({
   companyLegalStatus,
   companyTypology,
   ccns,
-  domaines,
   createdAt,
   companyManagerFirstname,
   companyManagerLastname,
@@ -127,17 +125,6 @@ export const OrganismSummary = ({
         <h2>Typologie</h2>
         <div className="grid md:grid-cols-2">
           <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
-          {!!domaines?.length && (
-            <Info title="Filière(s)">
-              <ul className="ml-4">
-                {domaines?.map((d) => (
-                  <li className="list-disc" key={d}>
-                    {d}
-                  </li>
-                ))}
-              </ul>
-            </Info>
-          )}
           {!!ccns?.length && (
             <Info title="Conventions collectives">
               <ul className="ml-4">

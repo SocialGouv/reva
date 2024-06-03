@@ -69,11 +69,6 @@ const getMaisonMereAAP = graphql(`
           code
         }
       }
-      maisonMereAAPOnDomaines {
-        domaine {
-          label
-        }
-      }
       maisonMereAAPOnConventionCollectives {
         ccn {
           label
@@ -183,9 +178,6 @@ const MaisonMereAAPPage = () => {
             companyTypology={
               maisonMereAAP.typologie as TypologyOrganismSummaryNewLegal
             }
-            domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
-              (d) => d.domaine.label,
-            )}
             ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
               (c) => c.ccn.label,
             )}
@@ -223,9 +215,6 @@ const MaisonMereAAPPage = () => {
             companyLegalStatus={maisonMereAAP.statutJuridique}
             companyWebsite={maisonMereAAP.siteWeb}
             companyTypology={maisonMereAAP.typologie as Typology}
-            domaines={maisonMereAAP.maisonMereAAPOnDomaines.map(
-              (d) => d.domaine.label,
-            )}
             ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
               (c) => c.ccn.label,
             )}

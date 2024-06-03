@@ -11,7 +11,6 @@ import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloak
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
-import { getDomaineById } from "../referential/features/getDomaineById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -32,7 +31,6 @@ import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMer
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMereAAPOnConventionCollectives";
-import { getMaisonMereAAPOnDomaines } from "./features/getMaisonMereAAPOnDomaines";
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
@@ -103,8 +101,6 @@ const unsafeResolvers = {
   MaisonMereAAP: {
     maisonMereAAPOnDepartements: ({ id }: { id: string }) =>
       getMaisonMereAAPOnDepartments({ maisonMereAAPId: id }),
-    maisonMereAAPOnDomaines: ({ id }: { id: string }) =>
-      getMaisonMereAAPOnDomaines({ maisonMereAAPId: id }),
     maisonMereAAPOnConventionCollectives: ({ id }: { id: string }) =>
       getMaisonMereAAPOnConventionCollectives({ maisonMereAAPId: id }),
     organisms: ({ id: maisonMereAAPId }: { id: string }) =>
@@ -180,10 +176,6 @@ const unsafeResolvers = {
         maisonMereAAPId,
         fileType: "justificatifIdentiteDelegataireFile",
       }),
-  },
-  MaisonMereAAPOnDomaine: {
-    domaine: ({ domaineId }: { domaineId: string }) =>
-      getDomaineById({ domaineId }),
   },
   MaisonMereAAPOnConventionCollective: {
     ccn: ({ ccnId }: { ccnId: string }) =>
