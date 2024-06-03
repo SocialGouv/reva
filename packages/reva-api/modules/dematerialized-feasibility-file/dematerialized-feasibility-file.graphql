@@ -8,12 +8,19 @@ type DematerializedFeasibilityFile {
   certificationPartComplete: Boolean!
   competenceBlocsPartCompletion: CompetenceBlocsPartCompletion!
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
+  prerequisitesPartComplete: Boolean!
 }
 
 enum CompetenceBlocsPartCompletion {
   TO_COMPLETE
   COMPLETED
   IN_PROGRESS
+}
+
+enum PrerequisiteState {
+  ACQUIRED
+  IN_PROGRESS
+  RECOMMENDED
 }
 
 enum CandidacyFeasibilityFormat {

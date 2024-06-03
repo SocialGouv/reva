@@ -2,13 +2,14 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export const FormButtons = ({
   backUrl,
-  formState: { isDirty, isSubmitting },
+  formState: { isDirty, isSubmitting, canSubmit = true },
   className,
 }: {
   backUrl?: string;
   formState: {
     isDirty: boolean;
     isSubmitting: boolean;
+    canSubmit?: boolean;
   };
   className?: string;
 }) => {
@@ -25,7 +26,7 @@ export const FormButtons = ({
         <Button type="reset" priority="tertiary no outline" disabled={!isDirty}>
           Réinitialiser
         </Button>
-        <Button type="submit" disabled={isSubmitting || !isDirty}>
+        <Button type="submit" disabled={isSubmitting || !isDirty || !canSubmit}>
           Enregistrer
         </Button>
       </div>

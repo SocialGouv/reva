@@ -71,6 +71,17 @@ const AapFeasibilityPage = () => {
               ))}
             </ul>
           </CandidacySectionCard>
+          <DefaultCandidacySectionCard
+            title="Pré-requis"
+            titleIconClass="fr-icon-checkbox-circle-fill"
+            status={
+              dematerializedFeasibilityFile?.prerequisitesPartComplete
+                ? "COMPLETED"
+                : "TO_COMPLETE"
+            }
+            isEditable
+            buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
+          />
         </ul>
       )}
     </div>

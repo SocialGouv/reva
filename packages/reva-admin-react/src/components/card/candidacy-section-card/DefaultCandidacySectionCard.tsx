@@ -34,7 +34,7 @@ export const DefaultCandidacySectionCard = ({
         badge={
           status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />
         }
-        hasButton={true}
+        hasButton
         buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
         buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
         buttonOnClick={() => router.push(buttonOnClickHref)}
