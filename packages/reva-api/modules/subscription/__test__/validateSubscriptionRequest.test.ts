@@ -28,7 +28,6 @@ describe("Subscription Request / Validate", () => {
     await prismaClient.account.updateMany({ data: { organismId: null } });
     await prismaClient.organism.deleteMany();
     await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
-    await prismaClient.maisonMereAAPOnDomaine.deleteMany();
     await prismaClient.maisonMereAAPOnDepartement.deleteMany();
     await prismaClient.maisonMereAAP.deleteMany();
     await prismaClient.account.deleteMany();
@@ -438,11 +437,7 @@ describe("Subscription Request / Validate", () => {
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
         isActive: true,
         typology: "expertFiliere",
-        organismOnDomaine: [
-          {
-            domaineId: domaineGdId,
-          },
-        ],
+        organismOnDomaine: [],
       });
 
       // The subscription should no longer exist and have no remaining relations

@@ -15,7 +15,6 @@ afterEach(async () => {
   await prismaClient.account.updateMany({ data: { organismId: null } });
   await prismaClient.organism.deleteMany();
   await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
-  await prismaClient.maisonMereAAPOnDomaine.deleteMany();
   await prismaClient.maisonMereAAPOnDepartement.deleteMany();
   await prismaClient.maisonMereAAP.deleteMany();
   await prismaClient.account.deleteMany();

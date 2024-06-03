@@ -17,7 +17,6 @@ import { getInformationsCommercialesByEmailContact } from "./getInformationsComm
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
-import { getMaisonMereOnDomaineByMaisonMereId } from "./getMaisonMereOnDomaineByMaisonMereId";
 
 interface CreateOrganismWithMaisonMereAAPRequestParams {
   organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
@@ -144,24 +143,6 @@ export const createOrganismWithMaisonMereAAP = async ({
         id: randomUUID(),
       },
     });
-
-    if (
-      typologie === "expertBrancheEtFiliere" ||
-      typologie === "expertFiliere"
-    ) {
-      const maisonMereOnDomaine = await getMaisonMereOnDomaineByMaisonMereId({
-        maisonMereAAPId: maisonMereAAP.id,
-      });
-
-      if (maisonMereOnDomaine.length) {
-        await prismaClient.organismOnDomaine.createMany({
-          data: maisonMereOnDomaine.map((maisonMere) => ({
-            domaineId: maisonMere.domaineId,
-            organismId: newOrganism.id,
-          })),
-        });
-      }
-    }
 
     if (
       typologie === "expertBrancheEtFiliere" ||

@@ -898,7 +898,6 @@ model Domaine {
   subscriptionRequestOnDomaine SubscriptionRequestOnDomaine[]
   organismOnDomaine            OrganismOnDomaine[]
   certificationOnDomaine       CertificationOnDomaine[]
-  maisonMereAAPOnDomaine       MaisonMereAAPOnDomaine[]
 
   @@map("domaine")
 }
@@ -1325,7 +1324,6 @@ model MaisonMereAAP {
   siret                               String                                @map("siret") @db.VarChar(255)
   phone                               String?                               @map("phone") @db.VarChar(50)
   typologie                           OrganismTypology                      @map("typologie")
-  maisonMereAAPOnDomaine              MaisonMereAAPOnDomaine[]
   maisonMereAAPOnConventionCollective MaisonMereAAPOnConventionCollective[]
   maisonMereAAPOnDepartement          MaisonMereAAPOnDepartement[]
   siteWeb                             String?                               @map("site_web") @db.VarChar(255)
@@ -1373,12 +1371,10 @@ model MaisonMereAAPOnDepartement {
 }
 
 model MaisonMereAAPOnDomaine {
-  domaine         Domaine       @relation(fields: [domaineId], references: [id])
-  domaineId       String        @map("domaine_id") @db.Uuid
-  maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
-  maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
-  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+  domaineId       String    @map("domaine_id") @db.Uuid
+  maisonMereAAPId String    @map("maison_mere_aap_id") @db.Uuid
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@id([domaineId, maisonMereAAPId])
   @@map("maison_mere_aap_on_domaine")
@@ -1388,7 +1384,6 @@ model CandidacyConventionCollective {
   id        String      @id @db.Uuid
   idcc      String      @unique @map("idcc") @db.VarChar(10)
   label     String      @db.Text
-  //
   Candidacy Candidacy[]
 
   @@map("candidacy_convention_collective")

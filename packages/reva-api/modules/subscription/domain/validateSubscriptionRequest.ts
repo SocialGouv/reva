@@ -21,7 +21,6 @@ import {
   getSubscriptionRequestById,
 } from "../db/subscription-request";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
-import { prismaClient } from "../../../prisma/client";
 
 interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
@@ -51,14 +50,8 @@ export const validateSubscriptionRequest = async (
     }
 
     let typology = subscriptionRequest.typology;
-    let domaineIds = subscriptionRequest?.subscriptionRequestOnDomaine?.map(
-      (o: any) => o.domaineId,
-    );
     if (!typology || typology === "generaliste") {
       typology = "expertFiliere";
-      domaineIds = (
-        await prismaClient.domaine.findMany({ select: { id: true } })
-      ).map((d) => d.id);
     }
 
     //organism check
@@ -129,7 +122,6 @@ export const validateSubscriptionRequest = async (
         isActive: true,
         typology,
         llToEarth: null,
-        domaineIds,
         ccnIds:
           subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
             (o: any) => o.ccnId,
@@ -191,7 +183,6 @@ export const validateSubscriptionRequest = async (
         gestionnaireAccountId: account.id,
         statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR",
       },
-      domaineIds,
       ccnIds:
         subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
           (o: { ccnId: string }) => o.ccnId,

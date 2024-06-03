@@ -127,7 +127,6 @@ export const validateSubscriptionRequestV2 = async ({
       gestionnaireAccountId: account.id,
       statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
     },
-    domaineIds: [],
     ccnIds: [],
     maisonMereAAPOnDepartements: [],
   });
