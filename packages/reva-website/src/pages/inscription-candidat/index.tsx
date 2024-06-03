@@ -16,6 +16,7 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
 import { isUUID } from "@/utils";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
 import Head from "next/head";
@@ -86,7 +87,7 @@ const OrientationCandidatPage = () => {
   const invalidTypology =
     candidateTypology === "SALARIE_PUBLIC" || candidateTypology === "AUTRE";
 
-  const validTypology = candidateTypology && !invalidTypology;
+  const validTypology = false;
 
   return (
     <MainLayout>
@@ -166,6 +167,27 @@ const OrientationCandidatPage = () => {
                             association de transition professionnelle (AT Pro).
                           </a>
                         </span>
+                      }
+                    />
+                  )}
+                  {candidateTypology && !invalidTypology && (
+                    <Alert
+                      severity="warning"
+                      data-testid="candidate-typology-error-panel"
+                      className="basis-1/2"
+                      title={
+                        <div className="flex flex-col items-start gap-2 font-normal">
+                          <h2 className="font-bold text-xl">
+                            Maintenance en cours
+                          </h2>
+                          <p>
+                            En raison d'une maintenance en cours sur notre site,
+                            le dépôt de nouvelles candidatures est
+                            temporairement indisponible. Nous vous remercions de
+                            votre patience et nous excusons pour tout
+                            désagrément.
+                          </p>
+                        </div>
                       }
                     />
                   )}

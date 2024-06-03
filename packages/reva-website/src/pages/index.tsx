@@ -27,7 +27,7 @@ const HomePage = () => {
         />
       </Head>
       <BackGroundUnions />
-      <Notice title="Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement." />
+      <Notice title="En raison d'une maintenance en cours sur notre site, le dépôt de nouvelles candidatures est temporairement indisponible. Nous vous remercions de votre patience et nous excusons pour tout désagrément." />
       <HomeContainer>
         <FaitesValiderVosCompetencesParUnDiplome />
         <QuiPeutFaireUneVAE />
