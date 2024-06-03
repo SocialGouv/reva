@@ -1437,6 +1437,8 @@ model DematerializedFeasibilityFile {
   option                          String?                           @map("option")
   dffCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
   certificationPartComplete       Boolean                           @default(false) @map("certification_part_complete")
+  prerequisitesPartComplete       Boolean                           @default(false) @map("prerequisites_part_complete")
+  prerequisites                   DFFPrerequisite[]
   competenceBlocsPartCompletion   CompetenceBlocsPartCompletionEnum @default(TO_COMPLETE) @map("competence_blocs_part_completion")
 
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
@@ -1465,6 +1467,20 @@ model DFFCertificationCompetenceDetails {
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("dff_certification_competence_details")
+}
+
+enum PrerequisiteState {
+  ACQUIRED
+  IN_PROGRESS
+  RECOMMENDED
+}
+
+model DFFPrerequisite {
+  id                              String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                           String                         @db.Text
+  state                           PrerequisiteState
+  DematerializedFeasibilityFile   DematerializedFeasibilityFile? @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFileId String?                        @db.Uuid
 }
 
 model MaisonMereAAPLegalInformationDocuments {
