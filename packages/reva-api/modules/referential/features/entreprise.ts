@@ -166,6 +166,10 @@ function getLegalStatus(code?: string): LegalStatus {
     code?.startsWith("74")
   ) {
     return "ETABLISSEMENT_PUBLIC";
+  } else if (code == "9300") {
+    return "FONDATION";
+  } else if (code) {
+    return "AUTRE";
   }
 
   return "NC";

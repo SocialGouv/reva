@@ -8,6 +8,8 @@ type LegalStatus =
   | "EIRL"
   | "ASSOCIATION_LOI_1901"
   | "ETABLISSEMENT_PUBLIC"
+  | "FONDATION"
+  | "AUTRE"
   | "NC";
 
 type OrganismTypology =

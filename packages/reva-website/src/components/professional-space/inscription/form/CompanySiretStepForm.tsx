@@ -24,6 +24,8 @@ const legalStatuses = [
   "SARL",
   "SAS",
   "SASU",
+  "FONDATION",
+  "AUTRE",
   "NC",
 ] as const;
 

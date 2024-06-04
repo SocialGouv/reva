@@ -18,6 +18,9 @@ const legalStatuses = [
   "SARL",
   "SAS",
   "SASU",
+  "FONDATION",
+  "AUTRE",
+  "NC",
 ] as const;
 
 const legalStatusLabel = (legalStatus: typeof legalStatuses[number]) => {

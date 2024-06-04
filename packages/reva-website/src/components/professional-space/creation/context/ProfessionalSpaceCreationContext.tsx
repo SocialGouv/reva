@@ -5,15 +5,18 @@ import { useCallback, useContext, useState } from "react";
 import { ReactNode, createContext } from "react";
 
 type LegalStatus =
-  | "ASSOCIATION_LOI_1901"
   | "EI"
-  | "EIRL"
-  | "ETABLISSEMENT_PUBLIC"
   | "EURL"
   | "SARL"
   | "SAS"
   | "SASU"
-  | "SA";
+  | "SA"
+  | "EIRL"
+  | "ASSOCIATION_LOI_1901"
+  | "ETABLISSEMENT_PUBLIC"
+  | "FONDATION"
+  | "AUTRE"
+  | "NC";
 
 interface ProfessionalSpaceInfo {
   cguAcceptance: boolean;
