@@ -23,18 +23,18 @@ const CompanySummaryItem = ({
 
 interface Props {
   siret: string;
-  etablissment?: Etablissement | null;
+  etablissement?: Etablissement | null;
 }
 
 export const CompanyPreview = (props: Props) => {
-  const { siret, etablissment } = props;
+  const { siret, etablissement } = props;
 
   return (
     <div className="flex flex-col justify-between">
-      <div className="hidden md:block bg-neutral-100 p-6 mb-5">
+      <div className="md:block bg-neutral-100 p-6 mb-5">
         <h2 className="mb-4">Informations liées au SIRET - {siret}</h2>
 
-        {!etablissment && (
+        {!etablissement && (
           <Alert
             severity="error"
             title=""
@@ -43,7 +43,7 @@ export const CompanyPreview = (props: Props) => {
           />
         )}
 
-        {etablissment &&
+        {etablissement &&
           (() => {
             const {
               siegeSocial,
@@ -51,11 +51,11 @@ export const CompanyPreview = (props: Props) => {
               formeJuridique,
               qualiopiStatus,
               dateFermeture,
-            } = etablissment;
+            } = etablissement;
 
             return (
               <>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-col md:flex-row gap-2">
                   {siegeSocial ? (
                     <Badge severity="success">Siège social</Badge>
                   ) : (
@@ -81,7 +81,7 @@ export const CompanyPreview = (props: Props) => {
                     <Badge severity="warning">Qualiopi VAE Inactif</Badge>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-4 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                   <CompanySummaryItem
                     title="Raison sociale"
                     description={raisonSociale}

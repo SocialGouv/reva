@@ -7,6 +7,7 @@ import {
   OrganismSummaryLegalInformationDocumentsDecisions,
 } from "./OrganismSummaryLegalInformationDocumentsDecisions";
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
+import { CompanyPreview } from "../company-preview";
 
 export type Typology =
   | "expertBranche"
@@ -50,7 +51,6 @@ export const OrganismSummary = ({
   accountEmail,
   accountPhoneNumber,
   companyWebsite,
-  companyQualiopiCertificateExpiresAt,
   companySiret,
   companyLegalStatus,
   companyTypology,
@@ -63,6 +63,7 @@ export const OrganismSummary = ({
 }: OrganismSummaryProps) => (
   <>
     <h1>{companyName}</h1>
+
     {createdAt && (
       <p>AAP inscrit depuis le {format(createdAt, "dd/MM/yyyy")}</p>
     )}
@@ -83,47 +84,25 @@ export const OrganismSummary = ({
         className="mb-8"
       />
     )}
+
     <div className="grid grid-cols-2 gap-8">
-      <GrayCard>
-        <h2>Administrateur du compte France VAE</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="Nom">
-            {accountFirstname} {accountLastname}
-          </Info>
-          <Info title="Adresse email" className="break-words">
-            {accountEmail}
-          </Info>
-          <Info title="Téléphone">{accountPhoneNumber}</Info>
-          <Info title="Site internet de la structure" className="break-words">
-            {companyWebsite || "Non spécifié"}
-          </Info>
-        </div>
-      </GrayCard>
-      <GrayCard>
-        <h2>Informations juridiques de la structure</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="SIRET de la structure">{companySiret}</Info>
-          <Info title="Forme juridique">{companyLegalStatus}</Info>
-        </div>
-      </GrayCard>
-      <GrayCard>
-        <h2>Dirigeant</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="Prénom">{companyManagerFirstname}</Info>
-          <Info title="Nom">{companyManagerLastname}</Info>
-        </div>
-      </GrayCard>
-      <GrayCard>
-        <h2>Qualiopi</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="Date d'expiration">
-            {format(companyQualiopiCertificateExpiresAt, "dd/MM/yyyy")}
-          </Info>
-        </div>
-      </GrayCard>
+      <CompanyPreview
+        className="col-span-2"
+        companySiret={companySiret}
+        companyName={companyName}
+        companyLegalStatus={companyLegalStatus}
+        companyWebsite={companyWebsite}
+        managerFirstname={companyManagerFirstname}
+        managerLastname={companyManagerLastname}
+        accountEmail={accountEmail}
+        accountPhoneNumber={accountPhoneNumber}
+        accountFirstname={accountFirstname}
+        accountLastname={accountLastname}
+      />
+
       <GrayCard className="col-span-2">
         <h2>Typologie</h2>
-        <div className="grid md:grid-cols-2">
+        <div className="grid col-span-2">
           <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
           {!!ccns?.length && (
             <Info title="Conventions collectives">

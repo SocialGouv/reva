@@ -107,8 +107,11 @@ export const CompanySiretStepForm = () => {
         stepCount={3}
       />
 
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="grid grid-cols-2 gap-4">
+      <form
+        className="flex flex-col gap-8 md:gap-0"
+        onSubmit={handleSubmit(handleFormSubmit)}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Numéro SIRET du siège social"
             hintText="14 chiffres"
@@ -127,7 +130,7 @@ export const CompanySiretStepForm = () => {
         </div>
 
         {isSiretLengthValid && !isLoading && !isFetching && (
-          <CompanyPreview siret={companySiret} etablissment={etablissement} />
+          <CompanyPreview siret={companySiret} etablissement={etablissement} />
         )}
 
         {etablissement &&
@@ -166,7 +169,7 @@ export const CompanySiretStepForm = () => {
             );
           })()}
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Nom du (de la) dirigeant(e)"
             state={errors.managerFirstname ? "error" : "default"}

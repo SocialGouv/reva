@@ -183,12 +183,10 @@ const MaisonMereAAPPage = () => {
             )}
             createdAt={new Date(maisonMereAAP.createdAt)}
             companyManagerFirstname={
-              maisonMereAAP.legalInformationDocuments?.managerFirstname ??
-              "Non renseigné"
+              maisonMereAAP.legalInformationDocuments?.managerFirstname
             }
             companyManagerLastname={
-              maisonMereAAP.legalInformationDocuments?.managerLastname ??
-              "Non renseigné"
+              maisonMereAAP.legalInformationDocuments?.managerLastname
             }
             legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
               (d) => ({
