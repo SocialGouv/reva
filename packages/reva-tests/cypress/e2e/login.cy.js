@@ -21,6 +21,7 @@ context("Login", () => {
   it("access login page from contact page", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
 
     cy.auth();

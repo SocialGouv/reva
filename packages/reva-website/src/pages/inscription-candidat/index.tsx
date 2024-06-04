@@ -10,12 +10,14 @@ import {
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
 import { isUUID } from "@/utils";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
 import Head from "next/head";
@@ -45,6 +47,13 @@ const askForRegistrationMutation = graphql(`
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId, searchText } = router.query;
+
+  const { isFeatureActive, status: featureFlippingServiceStatus } =
+    useFeatureflipping();
+
+  const candidacyCreationDisabled = isFeatureActive(
+    "CANDIDACY_CREATION_DISABLED",
+  );
 
   const [candidateTypology, setCandidateTypology] = useState<
     CandidateTypology | undefined
@@ -87,6 +96,10 @@ const OrientationCandidatPage = () => {
     candidateTypology === "SALARIE_PUBLIC" || candidateTypology === "AUTRE";
 
   const validTypology = candidateTypology && !invalidTypology;
+
+  if (featureFlippingServiceStatus === "LOADING") {
+    return null;
+  }
 
   return (
     <MainLayout>
@@ -169,6 +182,20 @@ const OrientationCandidatPage = () => {
                       }
                     />
                   )}
+                  {validTypology && candidacyCreationDisabled && (
+                    <Alert
+                      severity="warning"
+                      data-testid="candidate-typology-error-panel"
+                      className="basis-1/2"
+                      title={
+                        <p className="font-normal">
+                          Le dépôt de nouvelles candidatures est temporairement
+                          indisponible. Nous vous remercions de votre patience
+                          et nous excusons pour tout désagrément.
+                        </p>
+                      }
+                    />
+                  )}
                 </div>
               </>
             )}
@@ -180,7 +207,7 @@ const OrientationCandidatPage = () => {
             )}
 
             {!certification && <WouldYouLikeToKnowMorePanel />}
-            {validTypology && (
+            {validTypology && !candidacyCreationDisabled && (
               <>
                 <h2 className="text-2xl font-bold mt-8 mb-0">
                   Créez votre compte

@@ -1,3 +1,4 @@
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import AccompagnementDemarche from "@/components/home-page/AccompagnementDemarche";
 import Articles from "@/components/home-page/Articles";
 import BackGroundUnions from "@/components/home-page/BackGroundUnions";
@@ -17,6 +18,16 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 );
 
 const HomePage = () => {
+  const { isFeatureActive, status: featureFlippingServiceStatus } =
+    useFeatureflipping();
+
+  const candidacyCreationDisabled = isFeatureActive(
+    "CANDIDACY_CREATION_DISABLED",
+  );
+
+  if (featureFlippingServiceStatus === "LOADING") {
+    return null;
+  }
   return (
     <MainLayout className="relative">
       <Head>
@@ -27,7 +38,13 @@ const HomePage = () => {
         />
       </Head>
       <BackGroundUnions />
-      <Notice title="Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement." />
+      <Notice
+        title={
+          candidacyCreationDisabled
+            ? "Le dépôt de nouvelles candidatures est temporairement indisponible. Nous vous remercions de votre patience et nous excusons pour tout désagrément."
+            : "Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
+        }
+      />
       <HomeContainer>
         <FaitesValiderVosCompetencesParUnDiplome />
         <QuiPeutFaireUneVAE />
