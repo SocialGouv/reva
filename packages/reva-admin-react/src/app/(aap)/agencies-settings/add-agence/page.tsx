@@ -123,24 +123,93 @@ const AddAgencePage = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col items-center justify-center p-8">
+      <div className="w-full flex flex-col">
+        <h1 className="mb-12">Ajout d’une agence</h1>
         <FormProvider {...methods}>
           <form
+            className="flex flex-col gap-8"
             onSubmit={handleFormSubmit}
             onReset={(e) => {
               e.preventDefault();
               handleReset();
             }}
           >
-            <div className="flex flex-col gap-16 mb-6">
+            <div className="flex flex-col gap-8">
+              <fieldset className="flex flex-col gap-4 mb-4">
+                <legend className="text-3xl font-bold mb-4">
+                  Informations affichées au candidat
+                </legend>
+                <p>
+                  Ces informations seront affichées aux candidats dans leurs
+                  résultats de recherche et dans le message récapitulant leur
+                  candidature. Si vous ne les enregistrez pas, nous afficherons
+                  les informations juridiques et administrateur par défaut.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                  <div>
+                    <Input
+                      className="!mb-4"
+                      label={<div className="mb-8">Nom commercial</div>}
+                      nativeInputProps={{ ...register("nom") }}
+                      state={errors.nom ? "error" : "default"}
+                      stateRelatedMessage={errors.nom?.message?.toString()}
+                    />
+                  </div>
+
+                  <div>
+                    <Input
+                      className="!mb-4"
+                      label="Site internet de l'établissement"
+                      hintText="(optionnel)"
+                      nativeInputProps={{ ...register("siteInternet") }}
+                      state={errors.siteInternet ? "error" : "default"}
+                      stateRelatedMessage={errors.siteInternet?.message?.toString()}
+                    />
+                    <SmallNotice>
+                      Ajouter le lien de votre établissement peut permettre à
+                      celui-ci de se démarquer lorsque le candidat choisira son
+                      organisme accompagnateur.
+                    </SmallNotice>
+                  </div>
+
+                  <div>
+                    <Input
+                      className="!mb-4"
+                      label="Téléphone"
+                      nativeInputProps={{ ...register("telephone") }}
+                      state={errors.telephone ? "error" : "default"}
+                      stateRelatedMessage={errors.telephone?.message?.toString()}
+                    />
+                    <SmallNotice>
+                      Ce numéro de téléphone sera également envoyé aux candidats
+                      dans le message récapitulant leur inscription.
+                    </SmallNotice>
+                  </div>
+
+                  <div>
+                    <Input
+                      className="!mb-4"
+                      label="E-mail de contact"
+                      nativeInputProps={{ ...register("emailContact") }}
+                      state={errors.emailContact ? "error" : "default"}
+                      stateRelatedMessage={errors.emailContact?.message?.toString()}
+                    />
+                    <SmallNotice>
+                      Cet e-mail sera également envoyé aux candidats dans le
+                      message récapitulant leur inscription.
+                    </SmallNotice>
+                  </div>
+                </div>
+              </fieldset>
               <fieldset className="flex flex-col gap-4 w-full">
-                <legend className="text-2xl font-bold mb-4">
+                <legend className="text-3xl font-bold mb-4">
                   Adresse de l'agence
                 </legend>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                   <Input
                     className="!mb-4"
-                    label="Numéro et nom de rue"
+                    label={<div className="mb-8">Numéro et nom de rue</div>}
                     nativeInputProps={{
                       ...register("adresseNumeroEtNomDeRue"),
                     }}
@@ -150,7 +219,8 @@ const AddAgencePage = () => {
 
                   <Input
                     className="!mb-4"
-                    label="Informations complémentaires (optionnel)"
+                    label="Informations complémentaires"
+                    hintText="(optionnel)"
                     nativeInputProps={{
                       ...register("adresseInformationsComplementaires"),
                     }}
@@ -177,111 +247,44 @@ const AddAgencePage = () => {
                     stateRelatedMessage={errors.adresseVille?.message?.toString()}
                   />
                 </div>
-              </fieldset>
-
-              <fieldset className="flex flex-col gap-4">
-                <legend className="text-2xl font-bold mb-4">
-                  Informations commerciales de l'agence affichées aux candidats
-                </legend>
-                <Alert
-                  severity="info"
-                  className="mb-4"
-                  title=""
-                  description="Les informations suivantes seront affichées aux candidats dans les résultats de recherche d'un AAP et dans le message récapitulant leur candidature. "
-                />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                  <div>
-                    <Input
-                      className="!mb-4"
-                      label="Nom commercial"
-                      nativeInputProps={{ ...register("nom") }}
-                      state={errors.nom ? "error" : "default"}
-                      stateRelatedMessage={errors.nom?.message?.toString()}
-                    />
-                  </div>
-
-                  <div>
-                    <Input
-                      className="!mb-4"
-                      label="Téléphone"
-                      nativeInputProps={{ ...register("telephone") }}
-                      state={errors.telephone ? "error" : "default"}
-                      stateRelatedMessage={errors.telephone?.message?.toString()}
-                    />
-                    <SmallNotice>
-                      Ce numéro de téléphone sera également envoyé aux candidats
-                      dans le message récapitulant leur inscription.
-                    </SmallNotice>
-                  </div>
-
-                  <div>
-                    <Input
-                      className="!mb-4"
-                      label="Site internet de l'établissement (optionnel)"
-                      nativeInputProps={{ ...register("siteInternet") }}
-                      state={errors.siteInternet ? "error" : "default"}
-                      stateRelatedMessage={errors.siteInternet?.message?.toString()}
-                    />
-                    <SmallNotice>
-                      Ajouter le lien de votre établissement peut permettre à
-                      celui-ci de se démarquer lorsque le candidat choisira son
-                      organisme accompagnateur.
-                    </SmallNotice>
-                  </div>
-
-                  <div>
-                    <Input
-                      className="!mb-4"
-                      label="E-mail de contact"
-                      nativeInputProps={{ ...register("emailContact") }}
-                      state={errors.emailContact ? "error" : "default"}
-                      stateRelatedMessage={errors.emailContact?.message?.toString()}
-                    />
-                    <SmallNotice>
-                      Cet e-mail sera également envoyé aux candidats dans le
-                      message récapitulant leur inscription.
-                    </SmallNotice>
-                  </div>
+                <div className="w-full">
+                  <RadioButtons
+                    className="m-0 p-0"
+                    legend="Votre établissement est-il conforme aux normes d'accessibilité et peut recevoir du public à mobilité réduite (PMR) ?"
+                    options={[
+                      {
+                        label: "Oui",
+                        nativeInputProps: {
+                          value: "CONFORME",
+                          ...register("conformeNormesAccessbilite"),
+                        },
+                      },
+                      {
+                        label: "Non",
+                        nativeInputProps: {
+                          value: "NON_CONFORME",
+                          ...register("conformeNormesAccessbilite"),
+                        },
+                      },
+                      {
+                        label: "Cet établissement ne reçoit pas de public",
+                        nativeInputProps: {
+                          value: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
+                          ...register("conformeNormesAccessbilite"),
+                        },
+                      },
+                    ]}
+                    state={
+                      errors.conformeNormesAccessbilite ? "error" : "default"
+                    }
+                    stateRelatedMessage={"Veuillez sélectionner une option"}
+                  />
                 </div>
               </fieldset>
 
               <div className="w-full">
-                <RadioButtons
-                  className="m-0 p-0"
-                  legend="Votre établissement est-il conforme aux normes d'accessibilité et peut recevoir du public à mobilité réduite (PMR) ?"
-                  options={[
-                    {
-                      label: "Oui",
-                      nativeInputProps: {
-                        value: "CONFORME",
-                        ...register("conformeNormesAccessbilite"),
-                      },
-                    },
-                    {
-                      label: "Non",
-                      nativeInputProps: {
-                        value: "NON_CONFORME",
-                        ...register("conformeNormesAccessbilite"),
-                      },
-                    },
-                    {
-                      label: "Cet établissement ne reçoit pas de public",
-                      nativeInputProps: {
-                        value: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
-                        ...register("conformeNormesAccessbilite"),
-                      },
-                    },
-                  ]}
-                  state={
-                    errors.conformeNormesAccessbilite ? "error" : "default"
-                  }
-                  stateRelatedMessage={"Veuillez sélectionner une option"}
-                />
-              </div>
-
-              <div className="w-full">
                 <fieldset>
-                  <legend className="text-2xl font-bold mb-4">
+                  <legend className="text-3xl font-bold mb-4">
                     Zone d'intervention
                   </legend>
                   <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-x-8">
@@ -304,8 +307,8 @@ const AddAgencePage = () => {
               </div>
 
               <fieldset className="flex flex-col gap-4 w-full">
-                <legend className="text-2xl font-bold mb-4">
-                  Informations du responsable d'agence
+                <legend className="text-3xl font-bold mb-4">
+                  Administrateur du compte de l’agence
                 </legend>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                   <Input
@@ -326,7 +329,7 @@ const AddAgencePage = () => {
                       autoComplete: "given-name",
                     }}
                   />
-                  <div>
+                  <div className="col-span-2">
                     <Input
                       label="Adresse email"
                       state={errors.email ? "error" : "default"}
