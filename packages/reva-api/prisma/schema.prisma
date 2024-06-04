@@ -98,7 +98,7 @@ model CertificationCompetence {
 enum FinanceModule {
   unireva // XP: Uniformation / Reva
   unifvae // GIP: Uniformation / France VAE
-  hors_plateforme // Financement hors plateforme (cpf ...)
+  hors_plateforme // Financement hors plateforme
 }
 
 model Candidacy {
