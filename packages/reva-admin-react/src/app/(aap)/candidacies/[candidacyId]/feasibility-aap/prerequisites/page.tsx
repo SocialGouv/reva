@@ -131,7 +131,7 @@ export default function PrerequisitesPage() {
               />
             ))}
             <div
-              className="flex cursor-pointer gap-2 text-blue-900 items-center"
+              className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
               onClick={() => {
                 setValue(
                   "prerequisites",
