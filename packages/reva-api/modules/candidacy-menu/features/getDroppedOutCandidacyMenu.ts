@@ -34,7 +34,11 @@ export const getDroppedOutCandidacyMenu = async ({
 
   const getFundingRequestMenuEntry = async (
     userKeycloakId?: string,
-  ): Promise<CandidacyMenuEntry> => {
+  ): Promise<CandidacyMenuEntry | undefined> => {
+    if (candidacy.financeModule === "hors_plateforme") {
+      return undefined;
+    }
+
     const isReactFundingPageActive = await isFeatureActiveForUser({
       userKeycloakId,
       feature: "REACT_FUNDING_PAGE",
@@ -58,7 +62,11 @@ export const getDroppedOutCandidacyMenu = async ({
     };
   };
 
-  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry => {
+  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+    if (candidacy.financeModule === "hors_plateforme") {
+      return undefined;
+    }
+
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
     if (isStatusEqualOrAbove("DEMANDE_FINANCEMENT_ENVOYE")) {
@@ -84,11 +92,14 @@ export const getDroppedOutCandidacyMenu = async ({
   if (candidacyHasSentFeasibilityRequest || candidacyIsUnireva) {
     const fundingRequestMenuEntry =
       await getFundingRequestMenuEntry(userKeycloakId);
-    const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
+    if (fundingRequestMenuEntry) {
+      droppedOutCandidacyMenu.push(fundingRequestMenuEntry);
+    }
 
-    droppedOutCandidacyMenu.push(
-      ...[fundingRequestMenuEntry, paymentRequestMenuEntry],
-    );
+    const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
+    if (paymentRequestMenuEntry) {
+      droppedOutCandidacyMenu.push(paymentRequestMenuEntry);
+    }
   }
 
   return droppedOutCandidacyMenu;

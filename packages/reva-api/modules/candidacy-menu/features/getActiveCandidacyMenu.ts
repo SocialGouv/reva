@@ -141,7 +141,12 @@ export const getActiveCandidacyMenu = async ({
       : undefined;
   };
 
-  const getFundingRequestMenuEntry = (): CandidacyMenuEntry => {
+  const getFundingRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+    //pas de page de demande de financemnt si le financement de la candidature est "hors plateforme"
+    if (candidacy.financeModule === "hors_plateforme") {
+      return;
+    }
+
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
     if (candidacy.financeModule === "unireva") {
@@ -201,7 +206,13 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry => {
+  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+    //pas de page de demande de paiement si le financement de la candidature est "hors plateforme"
+
+    if (candidacy.financeModule === "hors_plateforme") {
+      return undefined;
+    }
+
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
 
     const minimumStatusForPaymentRequest: CandidacyStatusStep =
