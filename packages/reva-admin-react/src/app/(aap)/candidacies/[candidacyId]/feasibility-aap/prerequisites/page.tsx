@@ -36,6 +36,8 @@ export default function PrerequisitesPage() {
     register,
     watch,
     setValue,
+    setError,
+    clearErrors,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
     reset,
@@ -54,6 +56,12 @@ export default function PrerequisitesPage() {
     formIsValid;
 
   const handleFormSubmit = handleSubmit(async (data) => {
+    if (!data.hasNoPrerequisites && !data.prerequisites.length) {
+      setError("hasNoPrerequisites", {
+        message: "Vous devez cocher la case si aucun pré-requis n'est requis",
+      });
+      return;
+    }
     try {
       console.log("data", data);
       successToast("Modifications enregistrées");
@@ -83,6 +91,8 @@ export default function PrerequisitesPage() {
       >
         <Checkbox
           className="my-8"
+          state={errors.hasNoPrerequisites ? "error" : "default"}
+          stateRelatedMessage={errors.hasNoPrerequisites?.message}
           options={[
             {
               label: "Il n'y a pas de pré-requis pour cette certification.",
@@ -90,9 +100,12 @@ export default function PrerequisitesPage() {
                 ...register("hasNoPrerequisites"),
                 onChange: (e) => {
                   if (e.target.checked) {
-                    setValue("prerequisites", []);
+                    clearErrors();
+                    setValue("prerequisites", [], { shouldDirty: true });
                   }
-                  setValue("hasNoPrerequisites", e.target.checked);
+                  setValue("hasNoPrerequisites", e.target.checked, {
+                    shouldDirty: true,
+                  });
                 },
               },
             },
