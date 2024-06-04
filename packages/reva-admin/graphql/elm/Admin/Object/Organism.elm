@@ -108,6 +108,20 @@ organismOnAccount object____ =
     Object.selectionForCompositeField "organismOnAccount" [] object____ (Basics.identity >> Decode.nullable)
 
 
+domaines :
+    SelectionSet decodesTo Admin.Object.Domaine
+    -> SelectionSet (List decodesTo) Admin.Object.Organism
+domaines object____ =
+    Object.selectionForCompositeField "domaines" [] object____ (Basics.identity >> Decode.list)
+
+
+conventionCollectives :
+    SelectionSet decodesTo Admin.Object.ConventionCollective
+    -> SelectionSet (List decodesTo) Admin.Object.Organism
+conventionCollectives object____ =
+    Object.selectionForCompositeField "conventionCollectives" [] object____ (Basics.identity >> Decode.list)
+
+
 llToEarth : SelectionSet (Maybe String) Admin.Object.Organism
 llToEarth =
     Object.selectionForField "(Maybe String)" "llToEarth" [] (Decode.string |> Decode.nullable)

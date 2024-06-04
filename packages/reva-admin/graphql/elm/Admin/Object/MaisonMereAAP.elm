@@ -88,13 +88,6 @@ maisonMereAAPOnDepartements object____ =
     Object.selectionForCompositeField "maisonMereAAPOnDepartements" [] object____ (Basics.identity >> Decode.list)
 
 
-maisonMereAAPOnDomaines :
-    SelectionSet decodesTo Admin.Object.MaisonMereAAPOnDomaine
-    -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP
-maisonMereAAPOnDomaines object____ =
-    Object.selectionForCompositeField "maisonMereAAPOnDomaines" [] object____ (Basics.identity >> Decode.list)
-
-
 maisonMereAAPOnConventionCollectives :
     SelectionSet decodesTo Admin.Object.MaisonMereAAPOnConventionCollective
     -> SelectionSet (List decodesTo) Admin.Object.MaisonMereAAP

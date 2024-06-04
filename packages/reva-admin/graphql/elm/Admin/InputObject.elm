@@ -646,35 +646,6 @@ encodeCreateOrUpdateInformationsCommercialesInput input____ =
         [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.organismId |> Just ), ( "nom", Encode.string |> Encode.optional input____.nom ), ( "telephone", Encode.string |> Encode.optional input____.telephone ), ( "siteInternet", Encode.string |> Encode.optional input____.siteInternet ), ( "emailContact", Encode.string |> Encode.optional input____.emailContact ), ( "adresseNumeroEtNomDeRue", Encode.string |> Encode.optional input____.adresseNumeroEtNomDeRue ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "adresseCodePostal", Encode.string |> Encode.optional input____.adresseCodePostal ), ( "adresseVille", Encode.string |> Encode.optional input____.adresseVille ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString |> Encode.optional input____.conformeNormesAccessbilite ) ]
 
 
-buildCreateOrUpdateOrganismOnDegreesInput :
-    CreateOrUpdateOrganismOnDegreesInputRequiredFields
-    -> CreateOrUpdateOrganismOnDegreesInput
-buildCreateOrUpdateOrganismOnDegreesInput required____ =
-    { organismId = required____.organismId, degreeIds = required____.degreeIds }
-
-
-type alias CreateOrUpdateOrganismOnDegreesInputRequiredFields =
-    { organismId : Data.Scalar.Id
-    , degreeIds : List Data.Scalar.Id
-    }
-
-
-{-| Type for the CreateOrUpdateOrganismOnDegreesInput input object.
--}
-type alias CreateOrUpdateOrganismOnDegreesInput =
-    { organismId : Data.Scalar.Id
-    , degreeIds : List Data.Scalar.Id
-    }
-
-
-{-| Encode a CreateOrUpdateOrganismOnDegreesInput into a value that can be used as an argument.
--}
-encodeCreateOrUpdateOrganismOnDegreesInput : CreateOrUpdateOrganismOnDegreesInput -> Value
-encodeCreateOrUpdateOrganismOnDegreesInput input____ =
-    Encode.maybeObject
-        [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.organismId |> Just ), ( "degreeIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.degreeIds |> Just ) ]
-
-
 buildCreateOrUpdateOrganismWithMaisonMereAAPInput :
     CreateOrUpdateOrganismWithMaisonMereAAPInputRequiredFields
     -> (CreateOrUpdateOrganismWithMaisonMereAAPInputOptionalFields -> CreateOrUpdateOrganismWithMaisonMereAAPInputOptionalFields)
@@ -736,6 +707,71 @@ encodeCreateOrUpdateOrganismWithMaisonMereAAPInput : CreateOrUpdateOrganismWithM
 encodeCreateOrUpdateOrganismWithMaisonMereAAPInput input____ =
     Encode.maybeObject
         [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ), ( "accountId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.accountId ) ]
+
+
+buildCreateSubscriptionRequestV2Input :
+    CreateSubscriptionRequestV2InputRequiredFields
+    -> (CreateSubscriptionRequestV2InputOptionalFields -> CreateSubscriptionRequestV2InputOptionalFields)
+    -> CreateSubscriptionRequestV2Input
+buildCreateSubscriptionRequestV2Input required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { companyWebsite = Absent, lettreDeDelegation = Absent, justificatifIdentiteDelegataire = Absent }
+    in
+    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, managerFirstname = required____.managerFirstname, managerLastname = required____.managerLastname, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, companyWebsite = optionals____.companyWebsite, delegataire = required____.delegataire, attestationURSSAF = required____.attestationURSSAF, justificatifIdentiteDirigeant = required____.justificatifIdentiteDirigeant, lettreDeDelegation = optionals____.lettreDeDelegation, justificatifIdentiteDelegataire = optionals____.justificatifIdentiteDelegataire }
+
+
+type alias CreateSubscriptionRequestV2InputRequiredFields =
+    { companySiret : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companyName : String
+    , managerFirstname : String
+    , managerLastname : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    , delegataire : Bool
+    , attestationURSSAF : Data.Scalar.Upload
+    , justificatifIdentiteDirigeant : Data.Scalar.Upload
+    }
+
+
+type alias CreateSubscriptionRequestV2InputOptionalFields =
+    { companyWebsite : OptionalArgument String
+    , lettreDeDelegation : OptionalArgument Data.Scalar.Upload
+    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
+    }
+
+
+{-| Type for the CreateSubscriptionRequestV2Input input object.
+-}
+type alias CreateSubscriptionRequestV2Input =
+    { companySiret : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companyName : String
+    , managerFirstname : String
+    , managerLastname : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    , companyWebsite : OptionalArgument String
+    , delegataire : Bool
+    , attestationURSSAF : Data.Scalar.Upload
+    , justificatifIdentiteDirigeant : Data.Scalar.Upload
+    , lettreDeDelegation : OptionalArgument Data.Scalar.Upload
+    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
+    }
+
+
+{-| Encode a CreateSubscriptionRequestV2Input into a value that can be used as an argument.
+-}
+encodeCreateSubscriptionRequestV2Input : CreateSubscriptionRequestV2Input -> Value
+encodeCreateSubscriptionRequestV2Input input____ =
+    Encode.maybeObject
+        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "managerFirstname", Encode.string input____.managerFirstname |> Just ), ( "managerLastname", Encode.string input____.managerLastname |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ), ( "delegataire", Encode.bool input____.delegataire |> Just ), ( "attestationURSSAF", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.attestationURSSAF |> Just ), ( "justificatifIdentiteDirigeant", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.justificatifIdentiteDirigeant |> Just ), ( "lettreDeDelegation", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.lettreDeDelegation ), ( "justificatifIdentiteDelegataire", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.justificatifIdentiteDelegataire ) ]
 
 
 buildDematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput :
@@ -1577,71 +1613,6 @@ encodeSubscriptionRequestOrderByInput input____ =
         [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ), ( "createdAt", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.createdAt ) ]
 
 
-buildSubscriptionV2Input :
-    SubscriptionV2InputRequiredFields
-    -> (SubscriptionV2InputOptionalFields -> SubscriptionV2InputOptionalFields)
-    -> SubscriptionV2Input
-buildSubscriptionV2Input required____ fillOptionals____ =
-    let
-        optionals____ =
-            fillOptionals____
-                { lettreDeDelegation = Absent, justificatifIdentiteDelegataire = Absent }
-    in
-    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, managerFirstname = required____.managerFirstname, managerLastname = required____.managerLastname, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, companyWebsite = required____.companyWebsite, delegataire = required____.delegataire, attestationURSSAF = required____.attestationURSSAF, justificatifIdentiteDirigeant = required____.justificatifIdentiteDirigeant, lettreDeDelegation = optionals____.lettreDeDelegation, justificatifIdentiteDelegataire = optionals____.justificatifIdentiteDelegataire }
-
-
-type alias SubscriptionV2InputRequiredFields =
-    { companySiret : String
-    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
-    , companyName : String
-    , managerFirstname : String
-    , managerLastname : String
-    , accountFirstname : String
-    , accountLastname : String
-    , accountEmail : String
-    , accountPhoneNumber : String
-    , companyWebsite : String
-    , delegataire : Bool
-    , attestationURSSAF : Data.Scalar.Upload
-    , justificatifIdentiteDirigeant : Data.Scalar.Upload
-    }
-
-
-type alias SubscriptionV2InputOptionalFields =
-    { lettreDeDelegation : OptionalArgument Data.Scalar.Upload
-    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
-    }
-
-
-{-| Type for the SubscriptionV2Input input object.
--}
-type alias SubscriptionV2Input =
-    { companySiret : String
-    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
-    , companyName : String
-    , managerFirstname : String
-    , managerLastname : String
-    , accountFirstname : String
-    , accountLastname : String
-    , accountEmail : String
-    , accountPhoneNumber : String
-    , companyWebsite : String
-    , delegataire : Bool
-    , attestationURSSAF : Data.Scalar.Upload
-    , justificatifIdentiteDirigeant : Data.Scalar.Upload
-    , lettreDeDelegation : OptionalArgument Data.Scalar.Upload
-    , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
-    }
-
-
-{-| Encode a SubscriptionV2Input into a value that can be used as an argument.
--}
-encodeSubscriptionV2Input : SubscriptionV2Input -> Value
-encodeSubscriptionV2Input input____ =
-    Encode.maybeObject
-        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "managerFirstname", Encode.string input____.managerFirstname |> Just ), ( "managerLastname", Encode.string input____.managerLastname |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "companyWebsite", Encode.string input____.companyWebsite |> Just ), ( "delegataire", Encode.bool input____.delegataire |> Just ), ( "attestationURSSAF", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.attestationURSSAF |> Just ), ( "justificatifIdentiteDirigeant", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.justificatifIdentiteDirigeant |> Just ), ( "lettreDeDelegation", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.lettreDeDelegation ), ( "justificatifIdentiteDelegataire", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.justificatifIdentiteDelegataire ) ]
-
-
 buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput
@@ -2038,6 +2009,37 @@ encodeUpdateOrganismAccountInput : UpdateOrganismAccountInput -> Value
 encodeUpdateOrganismAccountInput input____ =
     Encode.maybeObject
         [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.organismId |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ) ]
+
+
+buildUpdateOrganismDegreesAndDomainesInput :
+    UpdateOrganismDegreesAndDomainesInputRequiredFields
+    -> UpdateOrganismDegreesAndDomainesInput
+buildUpdateOrganismDegreesAndDomainesInput required____ =
+    { organismId = required____.organismId, degreeIds = required____.degreeIds, domaineIds = required____.domaineIds }
+
+
+type alias UpdateOrganismDegreesAndDomainesInputRequiredFields =
+    { organismId : Data.Scalar.Id
+    , degreeIds : List Data.Scalar.Id
+    , domaineIds : List Data.Scalar.Id
+    }
+
+
+{-| Type for the UpdateOrganismDegreesAndDomainesInput input object.
+-}
+type alias UpdateOrganismDegreesAndDomainesInput =
+    { organismId : Data.Scalar.Id
+    , degreeIds : List Data.Scalar.Id
+    , domaineIds : List Data.Scalar.Id
+    }
+
+
+{-| Encode a UpdateOrganismDegreesAndDomainesInput into a value that can be used as an argument.
+-}
+encodeUpdateOrganismDegreesAndDomainesInput : UpdateOrganismDegreesAndDomainesInput -> Value
+encodeUpdateOrganismDegreesAndDomainesInput input____ =
+    Encode.maybeObject
+        [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.organismId |> Just ), ( "degreeIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.degreeIds |> Just ), ( "domaineIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.domaineIds |> Just ) ]
 
 
 buildUpdateOrganismInput :

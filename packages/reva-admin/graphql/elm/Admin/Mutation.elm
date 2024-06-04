@@ -734,16 +734,16 @@ organism_createOrganismWithMaisonMereAAP requiredArgs____ =
     Object.selectionForField "String" "organism_createOrganismWithMaisonMereAAP" [ Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrUpdateOrganismWithMaisonMereAAPInput ] Decode.string
 
 
-type alias OrganismCreateOrUpdateOrganismOnDegreesRequiredArguments =
-    { data : Admin.InputObject.CreateOrUpdateOrganismOnDegreesInput }
+type alias OrganismUpdateOrganismDegreesAndDomainesRequiredArguments =
+    { data : Admin.InputObject.UpdateOrganismDegreesAndDomainesInput }
 
 
-organism_createOrUpdateOrganismOnDegrees :
-    OrganismCreateOrUpdateOrganismOnDegreesRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.OrganismOnDegree
-    -> SelectionSet (List decodesTo) RootMutation
-organism_createOrUpdateOrganismOnDegrees requiredArgs____ object____ =
-    Object.selectionForCompositeField "organism_createOrUpdateOrganismOnDegrees" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateOrUpdateOrganismOnDegreesInput ] object____ (Basics.identity >> Decode.list)
+organism_updateOrganismDegreesAndDomaines :
+    OrganismUpdateOrganismDegreesAndDomainesRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (Maybe decodesTo) RootMutation
+organism_updateOrganismDegreesAndDomaines requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_updateOrganismDegreesAndDomaines" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeUpdateOrganismDegreesAndDomainesInput ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias OrganismUpdateOrganismInterventionZoneOptionalArguments =
@@ -878,12 +878,49 @@ subscription_rejectSubscriptionRequest requiredArgs____ =
     Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)
 
 
-type alias SubscriptionSubscribeRequiredArguments =
-    { subscriptionInput : Admin.InputObject.SubscriptionV2Input }
+type alias SubscriptionCreateSubscriptionRequestV2RequiredArguments =
+    { createSubscriptionRequestV2Input : Admin.InputObject.CreateSubscriptionRequestV2Input }
 
 
-subscription_subscribe :
-    SubscriptionSubscribeRequiredArguments
+subscription_createSubscriptionRequestV2 :
+    SubscriptionCreateSubscriptionRequestV2RequiredArguments
     -> SelectionSet String RootMutation
-subscription_subscribe requiredArgs____ =
-    Object.selectionForField "String" "subscription_subscribe" [ Argument.required "subscriptionInput" requiredArgs____.subscriptionInput Admin.InputObject.encodeSubscriptionV2Input ] Decode.string
+subscription_createSubscriptionRequestV2 requiredArgs____ =
+    Object.selectionForField "String" "subscription_createSubscriptionRequestV2" [ Argument.required "createSubscriptionRequestV2Input" requiredArgs____.createSubscriptionRequestV2Input Admin.InputObject.encodeCreateSubscriptionRequestV2Input ] Decode.string
+
+
+type alias SubscriptionValidateSubscriptionRequestV2RequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id }
+
+
+subscription_validateSubscriptionRequestV2 :
+    SubscriptionValidateSubscriptionRequestV2RequiredArguments
+    -> SelectionSet (Maybe String) RootMutation
+subscription_validateSubscriptionRequestV2 requiredArgs____ =
+    Object.selectionForField "(Maybe String)" "subscription_validateSubscriptionRequestV2" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
+
+
+type alias SubscriptionRejectSubscriptionRequestV2OptionalArguments =
+    { internalComment : OptionalArgument String }
+
+
+type alias SubscriptionRejectSubscriptionRequestV2RequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id
+    , reason : String
+    }
+
+
+subscription_rejectSubscriptionRequestV2 :
+    (SubscriptionRejectSubscriptionRequestV2OptionalArguments -> SubscriptionRejectSubscriptionRequestV2OptionalArguments)
+    -> SubscriptionRejectSubscriptionRequestV2RequiredArguments
+    -> SelectionSet (Maybe String) RootMutation
+subscription_rejectSubscriptionRequestV2 fillInOptionals____ requiredArgs____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { internalComment = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "internalComment" filledInOptionals____.internalComment Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequestV2" (optionalArgs____ ++ [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ]) (Decode.string |> Decode.nullable)

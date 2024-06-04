@@ -2,8 +2,9 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.MaisonMereAAPOnDomaine exposing (..)
+module Admin.Object.FormeJuridique exposing (..)
 
+import Admin.Enum.LegalStatus
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -19,8 +20,16 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-domaine :
-    SelectionSet decodesTo Admin.Object.Domaine
-    -> SelectionSet decodesTo Admin.Object.MaisonMereAAPOnDomaine
-domaine object____ =
-    Object.selectionForCompositeField "domaine" [] object____ Basics.identity
+code : SelectionSet Data.Scalar.Id Admin.Object.FormeJuridique
+code =
+    Object.selectionForField "Data.Scalar.Id" "code" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+
+
+libelle : SelectionSet String Admin.Object.FormeJuridique
+libelle =
+    Object.selectionForField "String" "libelle" [] Decode.string
+
+
+legalStatus : SelectionSet Admin.Enum.LegalStatus.LegalStatus Admin.Object.FormeJuridique
+legalStatus =
+    Object.selectionForField "Enum.LegalStatus.LegalStatus" "legalStatus" [] Admin.Enum.LegalStatus.decoder

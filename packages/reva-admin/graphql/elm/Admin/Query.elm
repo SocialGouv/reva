@@ -731,6 +731,18 @@ getCountries object____ =
     Object.selectionForCompositeField "getCountries" [] object____ (Basics.identity >> Decode.list)
 
 
+type alias GetEtablissementRequiredArguments =
+    { siret : Data.Scalar.Id }
+
+
+getEtablissement :
+    GetEtablissementRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Etablissement
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getEtablissement requiredArgs____ object____ =
+    Object.selectionForCompositeField "getEtablissement" [ Argument.required "siret" requiredArgs____.siret (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
@@ -765,3 +777,39 @@ subscription_getSubscriptionRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias SubscriptionGetSubscriptionRequestV2sOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , status : OptionalArgument Admin.Enum.SubscriptionRequestStatus.SubscriptionRequestStatus
+    , searchFilter : OptionalArgument String
+    }
+
+
+subscription_getSubscriptionRequestV2s :
+    (SubscriptionGetSubscriptionRequestV2sOptionalArguments -> SubscriptionGetSubscriptionRequestV2sOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestV2sPaginated
+    -> SelectionSet decodesTo RootQuery
+subscription_getSubscriptionRequestV2s fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, status = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "status" filledInOptionals____.status (Encode.enum Admin.Enum.SubscriptionRequestStatus.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "subscription_getSubscriptionRequestV2s" optionalArgs____ object____ Basics.identity
+
+
+type alias SubscriptionGetSubscriptionRequestV2RequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id }
+
+
+subscription_getSubscriptionRequestV2 :
+    SubscriptionGetSubscriptionRequestV2RequiredArguments
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestV2
+    -> SelectionSet (Maybe decodesTo) RootQuery
+subscription_getSubscriptionRequestV2 requiredArgs____ object____ =
+    Object.selectionForCompositeField "subscription_getSubscriptionRequestV2" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)

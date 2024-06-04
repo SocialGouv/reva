@@ -177,6 +177,10 @@ type DropOutReason
     = DropOutReason
 
 
+type Etablissement
+    = Etablissement
+
+
 type ExamInfo
     = ExamInfo
 
@@ -207,6 +211,10 @@ type FeasibilityPage
 
 type File
     = File
+
+
+type FormeJuridique
+    = FormeJuridique
 
 
 type FundingRequest
@@ -255,10 +263,6 @@ type MaisonMereAAPOnConventionCollective
 
 type MaisonMereAAPOnDepartment
     = MaisonMereAAPOnDepartment
-
-
-type MaisonMereAAPOnDomaine
-    = MaisonMereAAPOnDomaine
 
 
 type MaisonMereAAPsPaginated
@@ -323,6 +327,14 @@ type SubscriptionRequestOnDomaine
 
 type SubscriptionRequestSummary
     = SubscriptionRequestSummary
+
+
+type SubscriptionRequestV2
+    = SubscriptionRequestV2
+
+
+type SubscriptionRequestV2sPaginated
+    = SubscriptionRequestV2sPaginated
 
 
 type SubscriptionRequestsPaginated
