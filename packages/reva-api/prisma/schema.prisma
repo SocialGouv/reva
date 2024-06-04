@@ -98,7 +98,6 @@ model CertificationCompetence {
 enum FinanceModule {
   unireva // XP: Uniformation / Reva
   unifvae // GIP: Uniformation / France VAE
-  rsmfvae // GIP: RSM / France VAE (next step...)
 }
 
 model Candidacy {
