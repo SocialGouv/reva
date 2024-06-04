@@ -88,21 +88,27 @@ export const OrganismSummary = ({
     <div className="grid grid-cols-2 gap-8">
       <CompanyPreview
         className="col-span-2"
-        companySiret={companySiret}
-        companyName={companyName}
-        companyLegalStatus={companyLegalStatus}
-        companyWebsite={companyWebsite}
-        managerFirstname={companyManagerFirstname}
-        managerLastname={companyManagerLastname}
-        accountEmail={accountEmail}
-        accountPhoneNumber={accountPhoneNumber}
-        accountFirstname={accountFirstname}
-        accountLastname={accountLastname}
+        company={{
+          companySiret,
+          companyName,
+          companyLegalStatus,
+          companyWebsite,
+        }}
+        manager={{
+          managerFirstname: companyManagerFirstname,
+          managerLastname: companyManagerFirstname,
+        }}
+        account={{
+          accountEmail,
+          accountPhoneNumber,
+          accountFirstname,
+          accountLastname,
+        }}
       />
 
       <GrayCard className="col-span-2">
         <h2>Typologie</h2>
-        <div className="grid col-span-2">
+        <div className="grid md:grid-cols-2">
           <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
           {!!ccns?.length && (
             <Info title="Conventions collectives">

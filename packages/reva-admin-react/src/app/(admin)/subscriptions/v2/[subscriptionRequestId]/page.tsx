@@ -76,7 +76,12 @@ const SubscriptionRequestPage = () => {
           {format(subscriptionRequest.createdAt, "dd/MM/yyyy")}
         </p>
 
-        <CompanyPreview className="mb-8" {...subscriptionRequest} />
+        <CompanyPreview
+          className="mb-8"
+          company={subscriptionRequest}
+          manager={subscriptionRequest}
+          account={subscriptionRequest}
+        />
 
         <LegalDocumentList
           attestationURSSAFFileUrl={

@@ -4,43 +4,51 @@ import { useEtablissement } from "./CompanyPreview.hook";
 import { format } from "date-fns";
 import { GrayCard } from "../card/gray-card/GrayCard";
 
-interface Props {
-  className?: string;
+interface CompanyProps {
   companySiret: string;
   companyName: string;
   companyLegalStatus: string;
   companyWebsite?: string | null;
+}
+
+interface ManagerProps {
   managerFirstname?: string;
   managerLastname?: string;
+}
+
+interface AccountProps {
   accountEmail: string;
   accountPhoneNumber: string;
   accountFirstname: string;
   accountLastname: string;
 }
 
+interface Props {
+  className?: string;
+  company: CompanyProps;
+  manager?: ManagerProps;
+  account?: AccountProps;
+}
+
 export const CompanyPreview = (props: Props) => {
   const {
     className,
-    companySiret,
-    companyName,
-    companyLegalStatus,
-    companyWebsite,
-    managerFirstname,
-    managerLastname,
-    accountEmail,
-    accountPhoneNumber,
-    accountFirstname,
-    accountLastname,
+    company,
+
+    manager,
+
+    account,
   } = props;
 
-  const { etablissement, isFetching, isLoading } =
-    useEtablissement(companySiret);
+  const { etablissement, isFetching, isLoading } = useEtablissement(
+    company.companySiret,
+  );
 
   return (
     <div className={`${className || ""}`}>
-      <GrayCard className="col-span-2 mb-8">
+      <GrayCard className="col-span-2">
         <h2 className="col-span-3">
-          Informations liées au SIRET {companySiret}
+          Informations liées au SIRET {company.companySiret}
         </h2>
 
         {!isLoading && !isFetching && !etablissement && (
@@ -64,32 +72,37 @@ export const CompanyPreview = (props: Props) => {
             qualiopiStatus={!!etablissement.qualiopiStatus}
           />
         )}
-        <div className="grid md:grid-cols-3">
-          <Info title="Raison sociale">{companyName}</Info>
-          <Info title="Nature juridique">{companyLegalStatus}</Info>
-          <Info title="Dirigeant">
-            {!managerFirstname && !managerLastname
-              ? "Non renseigné"
-              : `${managerFirstname} ${managerLastname}`}
-          </Info>
+        <div className={`grid md:grid-cols-${manager ? 3 : 2}`}>
+          <Info title="Raison sociale">{company.companyName}</Info>
+          <Info title="Nature juridique">{company.companyLegalStatus}</Info>
+
+          {manager && (
+            <Info title="Dirigeant">
+              {!manager.managerFirstname && !manager.managerLastname
+                ? "Non renseigné"
+                : `${manager.managerFirstname} ${manager.managerLastname}`}
+            </Info>
+          )}
         </div>
       </GrayCard>
 
-      <GrayCard className="col-span-2">
-        <h2>Administrateur du compte France VAE</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="Nom">
-            {accountFirstname} {accountLastname}
-          </Info>
-          <Info title="Adresse email" className="break-words">
-            {accountEmail}
-          </Info>
-          <Info title="Téléphone">{accountPhoneNumber}</Info>
-          <Info title="Site internet de la structure" className="break-words">
-            {companyWebsite || "Non spécifié"}
-          </Info>
-        </div>
-      </GrayCard>
+      {account && (
+        <GrayCard className="mt-8 col-span-2">
+          <h2>Administrateur du compte France VAE</h2>
+          <div className="grid md:grid-cols-2">
+            <Info title="Nom">
+              {account.accountFirstname} {account.accountLastname}
+            </Info>
+            <Info title="Adresse email" className="break-words">
+              {account.accountEmail}
+            </Info>
+            <Info title="Téléphone">{account.accountPhoneNumber}</Info>
+            <Info title="Site internet de la structure" className="break-words">
+              {company.companyWebsite || "Non spécifié"}
+            </Info>
+          </div>
+        </GrayCard>
+      )}
     </div>
   );
 };

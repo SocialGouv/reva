@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Info } from "./Info";
+import { CompanyPreview } from "../company-preview";
 
 export type Typology =
   | "generaliste"
@@ -71,18 +72,17 @@ export const OrganismSummary = ({
           </Info>
         </div>
       </GrayCard>
-      <GrayCard>
-        <h2>Informations juridiques de la structure</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="SIRET de la structure">{companySiret}</Info>
-          <Info
-            title="Forme juridique
-"
-          >
-            {companyLegalStatus}
-          </Info>
-        </div>
-      </GrayCard>
+
+      <CompanyPreview
+        className="col-span-2"
+        company={{
+          companySiret,
+          companyName,
+          companyLegalStatus,
+          companyWebsite,
+        }}
+      />
+
       <GrayCard>
         <h2>Typologie</h2>
         <div className="grid md:grid-cols-2">
