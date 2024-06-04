@@ -57,8 +57,11 @@ export const SubscriptionRequestForm = ({
   });
 
   const rejectSubscriptionRequest = useMutation({
-    mutationFn: (params: { subscriptionRequestId: string; reason: string }) =>
-      graphqlClient.request(rejectSubscriptionRequestMutation, params),
+    mutationFn: (params: {
+      subscriptionRequestId: string;
+      reason: string;
+      internalComment?: string;
+    }) => graphqlClient.request(rejectSubscriptionRequestMutation, params),
   });
 
   const methods = useForm<FormData>({
@@ -86,6 +89,7 @@ export const SubscriptionRequestForm = ({
         await rejectSubscriptionRequest.mutateAsync({
           subscriptionRequestId,
           reason: formData.rejectionReason,
+          internalComment: formData.internalComment,
         });
       }
       router.push("/subscriptions/pending");
