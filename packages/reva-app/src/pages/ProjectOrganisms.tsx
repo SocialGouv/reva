@@ -45,9 +45,13 @@ const Organisms: FC<PropsOrganisms> = ({
   };
 
   return (
-    <div className="md:columns-2 space-y-4 gap-4 max-w-3xl">
-      {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
-      {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
+    <div className="flex flex-row gap-4 max-w-3xl">
+      <div className="md:columns-1 w-[50%] space-y-4">
+        {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
+      </div>
+      <div className="md:columns-1 w-[50%] space-y-4">
+        {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
+      </div>
     </div>
   );
 };
