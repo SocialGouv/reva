@@ -1,4 +1,4 @@
-import { FeasibilityStatus } from "@prisma/client";
+import { CandidacyStatusStep, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
@@ -52,15 +52,20 @@ export const sendDossierDeValidation = async ({
     throw new Error("Le dossier de faisabilité n'est pas recevable");
   }
 
-  if (
-    !["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].includes(
-      candidacy.candidacyStatuses?.[0]?.status,
-    )
-  ) {
+  const validStatuses: CandidacyStatusStep[] =
+    candidacy.financeModule === "hors_plateforme"
+      ? [
+          "DOSSIER_FAISABILITE_RECEVABLE",
+          "DOSSIER_FAISABILITE_NON_RECEVABLE",
+          "DOSSIER_DE_VALIDATION_SIGNALE",
+        ]
+      : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
+  if (!validStatuses.includes(candidacy.candidacyStatuses?.[0]?.status)) {
     throw new Error(
       "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_DE_VALIDATION_SIGNALE ",
     );
   }
+
   const dossierDeValidationFileId = uuidV4();
   await uploadFile({
     candidacyId,
