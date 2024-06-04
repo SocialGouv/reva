@@ -98,6 +98,7 @@ model CertificationCompetence {
 enum FinanceModule {
   unireva // XP: Uniformation / Reva
   unifvae // GIP: Uniformation / France VAE
+  hors_plateforme // Financement hors plateforme (cpf ...)
 }
 
 model Candidacy {
@@ -131,7 +132,7 @@ model Candidacy {
   reorientationReasonId                      String?                                 @map("reorientation_reason_id") @db.Uuid
   createdAt                                  DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                  DateTime?                               @map("updated_at") @db.Timestamptz(6)
-  financeModule                              FinanceModule                           @default(unifvae) @map("finance_module")
+  financeModule                              FinanceModule                           @default(hors_plateforme) @map("finance_module")
   FundingRequest                             FundingRequest[]
   paymentRequest                             PaymentRequest?
   fundingRequestUnifvae                      FundingRequestUnifvae[]
