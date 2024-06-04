@@ -9,6 +9,18 @@ type DematerializedFeasibilityFile {
   competenceBlocsPartCompletion: CompetenceBlocsPartCompletion!
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
+  prerequisites: [Prerequisite]!
+}
+
+type Prerequisite {
+  id: ID!
+  label: String!
+  state: PrerequisiteState!
+}
+input PrerequisiteInput {
+  id: ID
+  label: String!
+  state: PrerequisiteState!
 }
 
 enum CompetenceBlocsPartCompletion {
@@ -59,9 +71,20 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsI
   competenceIdAndTexts: [CompetenceIdAndText!]!
 }
 
+input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
+  candidacyId: ID!
+  prerequisites: [PrerequisiteInput]!
+}
+
 input CompetenceIdAndText {
   competenceId: ID!
   text: String!
+}
+
+type Query {
+  dematerialized_feasibility_file_getByCandidacyId(
+    candidacyId: ID!
+  ): DematerializedFeasibilityFile
 }
 
 type Mutation {
@@ -71,5 +94,9 @@ type Mutation {
 
   dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdatePrerequisites(
+    input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput!
   ): DematerializedFeasibilityFile!
 }

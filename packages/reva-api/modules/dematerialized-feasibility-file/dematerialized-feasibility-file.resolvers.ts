@@ -6,12 +6,15 @@ import { resolversSecurityMap } from "./dematerialized-feasibility-file.security
 import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
+  DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
 } from "./dematerialized-feasibility-file.types";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
+import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
+import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -34,6 +37,8 @@ export const unsafeResolvers = {
       getCertificationCompetenceDetailsByDFFId({
         dematerializedFeasibilityFileId,
       }),
+    prerequisites: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
+      getPrerequisitesByDFFId({ dematerializedFeasibilityFileId }),
   },
   CertificationCompetenceDetails: {
     certificationCompetence: ({
@@ -45,6 +50,12 @@ export const unsafeResolvers = {
   Candidacy: {
     dematerializedFeasibilityFile: ({ id: candidacyId }: { id: string }) =>
       getDematerializedFeasibilityFileByCandidacyId({ candidacyId }),
+  },
+  Query: {
+    dematerialized_feasibility_file_getByCandidacyId: (
+      _parent: unknown,
+      params: { candidacyId: string },
+    ) => getDematerializedFeasibilityFileByCandidacyId(params),
   },
   Mutation: {
     dematerialized_feasibility_file_createOrUpdateCertificationInfo: (
@@ -63,6 +74,12 @@ export const unsafeResolvers = {
         createOrUpdateCertificationCompetenceDetails({
           ...params.input,
         }),
+    dematerialized_feasibility_file_createOrUpdatePrerequisites: (
+      _parent: unknown,
+      params: {
+        input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput;
+      },
+    ) => createOrUpdatePrerequisites({ ...params.input }),
   },
 };
 

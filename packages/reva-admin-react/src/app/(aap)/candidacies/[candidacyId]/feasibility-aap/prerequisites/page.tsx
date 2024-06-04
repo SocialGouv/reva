@@ -2,36 +2,54 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import type { PrerequisiteInput as PrerequisiteInputType } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import Input from "@codegouvfr/react-dsfr/Input";
-import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
-import { UseFormRegister, useForm } from "react-hook-form";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { PrerequisiteInput } from "./_components/PrerequisiteInput";
+import { usePrerequisites } from "./_components/prerequisites.hook";
 
 const schema = z.object({
   hasNoPrerequisites: z.boolean(),
   prerequisites: z.array(
     z.object({
+      id: z.string().optional(),
       label: z.string().min(1, "Ce champ est obligatoire"),
       state: z.enum(["ACQUIRED", "IN_PROGRESS", "RECOMMENDED"]).optional(),
     }),
   ),
 });
 
-type FormData = z.infer<typeof schema>;
-
-const defaultValues: FormData = {
-  hasNoPrerequisites: false,
-  prerequisites: [{ label: "", state: undefined }],
-};
+export type PrerequisitesFormData = z.infer<typeof schema>;
 
 export default function PrerequisitesPage() {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+  const router = useRouter();
+  const {
+    prerequisites: candidacyPrerequisites,
+    prerequisitesPartComplete,
+    createOrUpdatePrerequisitesMutation,
+    isLoadingPrerequisites,
+  } = usePrerequisites();
+  const defaultValues: PrerequisitesFormData = useMemo(() => {
+    if (prerequisitesPartComplete) {
+      return {
+        hasNoPrerequisites: !candidacyPrerequisites?.length,
+        prerequisites:
+          (candidacyPrerequisites as PrerequisitesFormData["prerequisites"]) ??
+          [],
+      };
+    }
+    return {
+      hasNoPrerequisites: false,
+      prerequisites: [{ label: "", state: undefined }],
+    };
+  }, [candidacyPrerequisites, prerequisitesPartComplete]);
   const {
     register,
     watch,
@@ -41,14 +59,13 @@ export default function PrerequisitesPage() {
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
     reset,
-  } = useForm<FormData>({
+  } = useForm<PrerequisitesFormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
   const hasNoPrerequisites = watch("hasNoPrerequisites");
   const prerequisites = watch("prerequisites");
   const undefinedPrerequisites = prerequisites.some((p) => !p.state);
-
   const formIsValid = !undefinedPrerequisites || hasNoPrerequisites;
   const canSubmit =
     (isDirty ||
@@ -63,16 +80,41 @@ export default function PrerequisitesPage() {
       return;
     }
     try {
-      console.log("data", data);
+      await createOrUpdatePrerequisitesMutation({
+        candidacyId,
+        prerequisites: data.prerequisites as PrerequisiteInputType[],
+      });
       successToast("Modifications enregistrées");
+      router.push(`/candidacies/${candidacyId}/feasibility-aap`);
     } catch (e) {
       graphqlErrorToast(e);
     }
   });
 
-  const resetForm = useCallback(() => reset(defaultValues), [reset]);
+  const resetForm = useCallback(
+    () => reset(defaultValues),
+    [reset, defaultValues],
+  );
 
   useEffect(resetForm, [resetForm]);
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      clearErrors();
+      setValue("prerequisites", [], { shouldDirty: true });
+    } else {
+      setValue("prerequisites", [{ label: "", state: undefined }], {
+        shouldDirty: true,
+      });
+    }
+    setValue("hasNoPrerequisites", e.target.checked, {
+      shouldDirty: true,
+    });
+  };
+
+  if (isLoadingPrerequisites) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col">
@@ -98,15 +140,7 @@ export default function PrerequisitesPage() {
               label: "Il n'y a pas de pré-requis pour cette certification.",
               nativeInputProps: {
                 ...register("hasNoPrerequisites"),
-                onChange: (e) => {
-                  if (e.target.checked) {
-                    clearErrors();
-                    setValue("prerequisites", [], { shouldDirty: true });
-                  }
-                  setValue("hasNoPrerequisites", e.target.checked, {
-                    shouldDirty: true,
-                  });
-                },
+                onChange: handleCheckboxChange,
               },
             },
           ]}
@@ -122,6 +156,7 @@ export default function PrerequisitesPage() {
                   setValue(
                     "prerequisites",
                     prerequisites.filter((_, i) => i !== index),
+                    { shouldDirty: true },
                   );
                 }}
                 errorLabel={errors.prerequisites?.[index]?.label?.message}
@@ -157,70 +192,3 @@ export default function PrerequisitesPage() {
     </div>
   );
 }
-
-const PrerequisiteInput = ({
-  register,
-  index,
-  onDelete,
-  errorLabel,
-  errorState,
-}: {
-  register: UseFormRegister<FormData>;
-  index: number;
-  onDelete: () => void;
-  errorLabel?: string;
-  errorState?: string;
-}) => {
-  return (
-    <div>
-      <Input
-        label="Intitulé du pré-requis :"
-        nativeTextAreaProps={register(`prerequisites.${index}.label`)}
-        state={errorLabel ? "error" : "default"}
-        stateRelatedMessage={errorLabel}
-        textArea
-      />
-      <div className="flex justify-between my-4">
-        <RadioButtons
-          className="m-0"
-          orientation="horizontal"
-          state={errorState ? "error" : "default"}
-          stateRelatedMessage={errorState}
-          options={[
-            {
-              label: "Acquis",
-              nativeInputProps: {
-                value: "ACQUIRED",
-                ...register(`prerequisites.${index}.state`),
-              },
-            },
-            {
-              label: "En cours d'obtention",
-
-              nativeInputProps: {
-                value: "IN_PROGRESS",
-                ...register(`prerequisites.${index}.state`),
-              },
-            },
-            {
-              label: "À préconiser",
-              nativeInputProps: {
-                value: "RECOMMENDED",
-                ...register(`prerequisites.${index}.state`),
-              },
-            },
-          ]}
-          small
-        />
-        <div
-          className="flex gap-2 cursor-pointer text-blue-900 items-center"
-          onClick={onDelete}
-        >
-          <span className="fr-icon-delete-bin-line fr-icon--sm" />
-          <span className="text-sm font-medium">Supprimer</span>
-        </div>
-      </div>
-      <hr className="my-4" />
-    </div>
-  );
-};

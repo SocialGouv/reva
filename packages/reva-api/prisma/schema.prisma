@@ -1481,6 +1481,8 @@ model DFFPrerequisite {
   state                           PrerequisiteState
   DematerializedFeasibilityFile   DematerializedFeasibilityFile? @relation(fields: [dematerializedFeasibilityFileId], references: [id])
   dematerializedFeasibilityFileId String?                        @db.Uuid
+
+  @@map("dff_prerequisite")
 }
 
 model MaisonMereAAPLegalInformationDocuments {
