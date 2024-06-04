@@ -2,13 +2,13 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fi
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { graphql } from "@/graphql/generated";
-import { LegalStatus } from "@/graphql/generated/graphql";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -74,7 +74,22 @@ export const CompanySiretStepForm = () => {
     );
   }, [etablissement, setValue]);
 
+  const [etablissementError, setEtablissementError] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEtablissementError(false);
+  }, [companySiret]);
+
   const handleFormSubmit = (data: CompanySiretStepFormSchema) => {
+    if (etablissement) {
+      const { siegeSocial, qualiopiStatus, dateFermeture } = etablissement;
+
+      if (!siegeSocial || !!dateFermeture || !qualiopiStatus) {
+        setEtablissementError(true);
+        return;
+      }
+    }
+
     submitCompanySiretStep(data as any);
   };
 
@@ -112,6 +127,42 @@ export const CompanySiretStepForm = () => {
         {isSiretLengthValid && !isLoading && !isFetching && (
           <CompanyPreview siret={companySiret} etablissment={etablissement} />
         )}
+
+        {etablissement &&
+          etablissementError &&
+          (() => {
+            const { siegeSocial, qualiopiStatus, dateFermeture } =
+              etablissement;
+
+            const className =
+              !siegeSocial || !!dateFermeture || !qualiopiStatus ? "mb-4" : "";
+
+            return (
+              <div className={className}>
+                {!siegeSocial && (
+                  <Alert
+                    severity="error"
+                    title="Vous avez renseigné un établissement secondaire"
+                    description="Il est obligatoire d’enregistrer en premier lieu le siège social pour pouvoir créer un compte."
+                  />
+                )}
+                {dateFermeture && (
+                  <Alert
+                    severity="error"
+                    title="Vous avez renseigné un établissement inactif"
+                    description="À notre connaissance, cet établissement n’est plus en activité. Veillez à enregistrer un établissement actif."
+                  />
+                )}
+                {!qualiopiStatus && (
+                  <Alert
+                    severity="error"
+                    title="Votre Qualiopi VAE est inactif"
+                    description="Sans Qualiopi VAE actif, vous ne pouvez pas créer de compte AAP sur notre plateforme."
+                  />
+                )}
+              </div>
+            );
+          })()}
 
         <div className="grid grid-cols-2 gap-4">
           <Input

@@ -95,36 +95,6 @@ export const CompanyPreview = (props: Props) => {
             );
           })()}
       </div>
-      {etablissment &&
-        (() => {
-          const { siegeSocial, qualiopiStatus, dateFermeture } = etablissment;
-
-          return (
-            <>
-              {!siegeSocial && (
-                <Alert
-                  severity="error"
-                  title="Vous avez renseigné un établissement secondaire"
-                  description="Il est obligatoire d’enregistrer en premier lieu le siège social pour pouvoir créer un compte."
-                />
-              )}
-              {dateFermeture && (
-                <Alert
-                  severity="error"
-                  title="Vous avez renseigné un établissement inactif"
-                  description="À notre connaissance, cet établissement n’est plus en activité. Veillez à enregistrer un établissement actif."
-                />
-              )}
-              {qualiopiStatus == false && (
-                <Alert
-                  severity="error"
-                  title="Votre Qualiopi VAE est inactif"
-                  description="Sans Qualiopi VAE actif, vous ne pouvez pas créer de compte AAP sur notre plateforme."
-                />
-              )}
-            </>
-          );
-        })()}
     </div>
   );
 };
