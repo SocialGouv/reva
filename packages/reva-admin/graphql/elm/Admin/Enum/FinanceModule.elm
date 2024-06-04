@@ -10,11 +10,12 @@ import Json.Decode as Decode exposing (Decoder)
 type FinanceModule
     = Unireva
     | Unifvae
+    | Hors_plateforme
 
 
 list : List FinanceModule
 list =
-    [ Unireva, Unifvae ]
+    [ Unireva, Unifvae, Hors_plateforme ]
 
 
 decoder : Decoder FinanceModule
@@ -28,6 +29,9 @@ decoder =
 
                     "unifvae" ->
                         Decode.succeed Unifvae
+
+                    "hors_plateforme" ->
+                        Decode.succeed Hors_plateforme
 
                     _ ->
                         Decode.fail ("Invalid FinanceModule type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -44,6 +48,9 @@ toString enum____ =
 
         Unifvae ->
             "unifvae"
+
+        Hors_plateforme ->
+            "hors_plateforme"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -65,6 +72,9 @@ fromString enumString____ =
 
         "unifvae" ->
             Just Unifvae
+
+        "hors_plateforme" ->
+            Just Hors_plateforme
 
         _ ->
             Nothing

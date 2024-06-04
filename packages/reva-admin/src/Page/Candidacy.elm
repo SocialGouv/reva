@@ -257,6 +257,9 @@ view context model =
                                 FinanceModule.Unifvae ->
                                     viewForm "payment"
 
+                                FinanceModule.Hors_plateforme ->
+                                    div [] []
+
                         _ ->
                             div [] []
 

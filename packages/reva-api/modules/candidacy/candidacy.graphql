@@ -45,6 +45,7 @@ enum CandidacyStatusStep {
 enum FinanceModule {
   unireva
   unifvae
+  hors_plateforme
 }
 
 # QUERY
