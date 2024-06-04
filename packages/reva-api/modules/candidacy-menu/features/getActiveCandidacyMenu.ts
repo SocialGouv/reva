@@ -111,8 +111,7 @@ export const getActiveCandidacyMenu = async ({
       "DOSSIER_FAISABILITE_INCOMPLET",
     ];
     if (
-      (editableStatus.includes(activeCandidacyStatus) &&
-        !activeFeasibility) ||
+      (editableStatus.includes(activeCandidacyStatus) && !activeFeasibility) ||
       activeFeasibility?.decision === "INCOMPLETE"
     ) {
       menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
@@ -122,7 +121,7 @@ export const getActiveCandidacyMenu = async ({
       menuEntryStatus = "INACTIVE";
     }
 
-    let url = '#';
+    let url = "#";
 
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
       url =
@@ -183,10 +182,14 @@ export const getActiveCandidacyMenu = async ({
     let url = "#";
 
     if (activeFeasibility?.decision === "ADMISSIBLE") {
-      const editableStatus: CandidacyStatusStep[] = [
-        "DEMANDE_FINANCEMENT_ENVOYE",
-        "DOSSIER_DE_VALIDATION_SIGNALE",
-      ];
+      const editableStatus: CandidacyStatusStep[] =
+        candidacy.financeModule === "hors_plateforme"
+          ? [
+              "DOSSIER_FAISABILITE_RECEVABLE",
+              "DOSSIER_FAISABILITE_NON_RECEVABLE",
+              "DOSSIER_DE_VALIDATION_SIGNALE",
+            ]
+          : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
 
       menuEntryStatus = editableStatus.includes(activeCandidacyStatus)
         ? "ACTIVE_WITH_EDIT_HINT"
@@ -238,15 +241,22 @@ export const getActiveCandidacyMenu = async ({
   };
 
   const getJuryMenuEntry = (): CandidacyMenuEntry => {
-    const newJuryMenu = candidacy.financeModule == "unifvae";
+    const showNewJuryMenu =
+      candidacy.financeModule == "unifvae" ||
+      candidacy.financeModule === "hors_plateforme";
+
+    const minumumStatusToShowJuryMenu =
+      candidacy.financeModule === "hors_plateforme"
+        ? "DOSSIER_FAISABILITE_RECEVABLE"
+        : "DEMANDE_FINANCEMENT_ENVOYE";
 
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
-      "DEMANDE_FINANCEMENT_ENVOYE",
+      minumumStatusToShowJuryMenu,
     )
       ? "ACTIVE_WITHOUT_HINT"
       : "INACTIVE";
 
-    return newJuryMenu
+    return showNewJuryMenu
       ? {
           label: "Jury",
           url: buildUrl({ adminType: "React", suffix: "jury-aap" }),
