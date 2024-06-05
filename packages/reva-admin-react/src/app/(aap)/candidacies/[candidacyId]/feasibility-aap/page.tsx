@@ -10,6 +10,7 @@ import { CompetenceBlocsPartCompletion } from "@/graphql/generated/graphql";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
+import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -71,17 +72,7 @@ const AapFeasibilityPage = () => {
               ))}
             </ul>
           </CandidacySectionCard>
-          <DefaultCandidacySectionCard
-            title="Pré-requis"
-            titleIconClass="fr-icon-checkbox-circle-fill"
-            status={
-              dematerializedFeasibilityFile?.prerequisitesPartComplete
-                ? "COMPLETED"
-                : "TO_COMPLETE"
-            }
-            isEditable
-            buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
-          />
+          <PrerequisitesCard />
         </ul>
       )}
     </div>
