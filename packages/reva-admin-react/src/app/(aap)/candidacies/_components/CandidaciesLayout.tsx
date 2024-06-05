@@ -11,12 +11,24 @@ const CandidacyLayoutSideMenu = ({
 }: {
   candidaciesByStatusCount: CandidacyCountByStatus;
 }) => {
-  const hrefSideMenu = (status: CandidacyStatusFilter) =>
-    `/candidacies?status=${status}&page=1`;
   const searchParams = useSearchParams();
+  const candidacyStatus = searchParams.get("status");
+  const searchFilter = searchParams.get("search") || "";
+
+  const hrefSideMenu = (status: CandidacyStatusFilter) => {
+    const params = new URLSearchParams();
+    params.set("page", "1");
+    params.set("status", status);
+
+    if (searchFilter) {
+      params.set("search", searchFilter);
+    }
+
+    return `/candidacies?${params.toString()}`;
+  };
 
   const isActive = (status: CandidacyStatusFilter) =>
-    searchParams.get("status") === status;
+    candidacyStatus === status;
 
   return (
     <nav

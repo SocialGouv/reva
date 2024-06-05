@@ -3,8 +3,7 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const RECORDS_PER_PAGE = 10;
 const getCcnsQuery = graphql(`
@@ -38,13 +37,11 @@ export const CcnSearchList = ({
   onCcnButtonClick?(id: string): void;
 }) => {
   const { graphqlClient } = useGraphQlClient();
-  const [searchFilter, setSearchFilter] = useState("");
-  const router = useRouter();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const pageParam = params.get("page");
 
-  const currentPage = pageParam ? Number.parseInt(pageParam) : 1;
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
 
   const { data: getCCnsResponse, status: getCCnsQueryStatus } = useQuery({
     queryKey: ["getCcns", searchFilter, currentPage],
@@ -55,17 +52,11 @@ export const CcnSearchList = ({
       }),
   });
 
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(pathname);
-  };
-
   return (
     getCCnsQueryStatus === "success" && (
       <SearchList
         searchFilter={searchFilter}
         searchResultsPage={getCCnsResponse.candidacy_getCandidacyCcns}
-        updateSearchFilter={updateSearchFilter}
       >
         {(ccn) => (
           <li key={ccn.id} className="flex flex-col border-b pb-4">

@@ -1,11 +1,11 @@
 "use client";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const menuItem = (text: string, path: string, currentPathname: string) => ({
-  isActive: currentPathname.startsWith(path + "/"),
+  isActive: path.startsWith(currentPathname),
   linkProps: {
     href: path,
     target: "_self",
@@ -15,6 +15,23 @@ const menuItem = (text: string, path: string, currentPathname: string) => ({
 
 const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
+
+  const searchParams = useSearchParams();
+  const searchFilter = searchParams.get("search") || "";
+
+  const hrefSideMenu = useCallback(
+    (subPath: string) => {
+      const params = new URLSearchParams();
+      params.set("page", "1");
+
+      if (searchFilter) {
+        params.set("search", searchFilter);
+      }
+
+      return `/subscriptions/${subPath}/?${params.toString()}`;
+    },
+    [searchFilter],
+  );
 
   const featureFlipping = useFeatureflipping();
   const showLegalMenuItems = featureFlipping.isFeatureActive(
@@ -26,39 +43,39 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
       return [
         menuItem(
           "En attente (sous l'ancienne méthode)",
-          "/subscriptions/pending",
+          hrefSideMenu("pending"),
           currentPathname,
         ),
         menuItem(
           "Refusées (sous l'ancienne méthode)",
-          "/subscriptions/rejected",
+          hrefSideMenu("rejected"),
           currentPathname,
         ),
         menuItem(
           "Validées (sous l'ancienne méthode)",
-          "/subscriptions/validated",
+          hrefSideMenu("validated"),
           currentPathname,
         ),
-        menuItem("En attente", "/subscriptions/pending-v2", currentPathname),
-        menuItem("Refusées", "/subscriptions/rejected-v2", currentPathname),
+        menuItem("En attente", hrefSideMenu("pending-v2"), currentPathname),
+        menuItem("Refusées", hrefSideMenu("rejected-v2"), currentPathname),
         menuItem(
           "Pièces jointes à vérifier",
-          "/subscriptions/check-legal-information",
+          hrefSideMenu("check-legal-information"),
           currentPathname,
         ),
         menuItem(
           "Validées et mises à jour",
-          "/subscriptions/up-to-date",
+          hrefSideMenu("up-to-date"),
           currentPathname,
         ),
       ];
     }
     return [
-      menuItem("En attente", "/subscriptions/pending", currentPathname),
-      menuItem("Validées", "/subscriptions/validated", currentPathname),
-      menuItem("Refusées", "/subscriptions/rejected", currentPathname),
+      menuItem("En attente", hrefSideMenu("pending"), currentPathname),
+      menuItem("Validées", hrefSideMenu("validated"), currentPathname),
+      menuItem("Refusées", hrefSideMenu("rejected"), currentPathname),
     ];
-  }, [showLegalMenuItems, currentPathname]);
+  }, [showLegalMenuItems, currentPathname, hrefSideMenu]);
 
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">

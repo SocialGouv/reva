@@ -6,8 +6,7 @@ import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const getCertificationAuthorities = graphql(`
   query getCertificationAuthorities($offset: Int, $searchFilter: String) {
@@ -36,17 +35,11 @@ const RECORDS_PER_PAGE = 10;
 
 const CertificationAuthoritiesListPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const [searchFilter, setSearchFilter] = useState("");
-  const pathname = usePathname();
-  const params = useSearchParams();
-  const page = params.get("page");
-  const currentPage = page ? Number.parseInt(page) : 1;
-  const router = useRouter();
 
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(pathname);
-  };
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
 
   const {
     data: getCertificationAuthoritiesResponse,
@@ -71,7 +64,6 @@ const CertificationAuthoritiesListPage = () => {
             title="Certificateurs"
             searchFilter={searchFilter}
             searchResultsPage={certificationAuthorityPage}
-            updateSearchFilter={updateSearchFilter}
           >
             {(c) => (
               <GrayCard key={c.id} className="gap-4">

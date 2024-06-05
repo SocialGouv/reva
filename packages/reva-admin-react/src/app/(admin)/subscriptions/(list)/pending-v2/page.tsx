@@ -4,8 +4,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const getPendingSubscriptionRequestV2s = graphql(`
   query getPendingSubscriptionRequestV2s($offset: Int, $searchFilter: String) {
@@ -33,17 +32,11 @@ const RECORDS_PER_PAGE = 10;
 
 const PendingSubscriptionRequestV2sPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const [searchFilter, setSearchFilter] = useState("");
-  const router = useRouter();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const page = params.get("page");
-  const currentPage = page ? Number.parseInt(page) : 1;
 
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(pathname);
-  };
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
 
   const {
     data: getPendingSubscriptionRequestsResponse,
@@ -73,7 +66,6 @@ const PendingSubscriptionRequestV2sPage = () => {
             title="Inscriptions en attente"
             searchFilter={searchFilter}
             searchResultsPage={subscriptionRequestPage}
-            updateSearchFilter={updateSearchFilter}
           >
             {(r) => (
               <SubscriptionRequestCard

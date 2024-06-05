@@ -13,12 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { CertificationCard } from "./_components/certification-card";
 
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 const modal = createModal({
@@ -93,19 +88,14 @@ const ReorientationPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-  const [searchFilter, setSearchFilter] = useState("");
   const router = useRouter();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const pageParam = params.get("page");
+
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
+
   const queryClient = useQueryClient();
-
-  const currentPage = pageParam ? Number.parseInt(pageParam) : 1;
-
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(pathname);
-  };
 
   const { data: getCandidacyResponse } = useQuery({
     queryKey: ["getCandidacy", candidacyId],
@@ -205,7 +195,6 @@ const ReorientationPage = () => {
               )}
               searchFilter={searchFilter}
               searchResultsPage={certificationPage}
-              updateSearchFilter={updateSearchFilter}
             >
               {(c) => (
                 <div

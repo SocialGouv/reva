@@ -6,7 +6,7 @@ import {
   CandidacySummary,
 } from "@/graphql/generated/graphql";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   CandidaciesLayout,
   CandidacyCard,
@@ -14,13 +14,14 @@ import {
 } from "./_components";
 
 export default function CandidaciesPage() {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
+  const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
   const status = searchParams.get("status");
-  const [searchFilter, setSearchFilter] = useState("");
 
   const params = useMemo(
     () => new URLSearchParams(searchParams),
@@ -40,6 +41,7 @@ export default function CandidaciesPage() {
     if (!page) {
       params.set("page", "1");
     }
+
     replace(`${pathname}?${params.toString()}`);
   }, [status, params, pathname, replace, page]);
 
@@ -57,11 +59,13 @@ export default function CandidaciesPage() {
       {candidaciesByStatus && (
         <SearchList
           searchFilter={searchFilter}
-          updateSearchFilter={setSearchFilter}
           searchResultsPage={candidaciesByStatus}
         >
           {(candidacy) => (
-            <CandidacyCard candidacy={candidacy as CandidacySummary} />
+            <CandidacyCard
+              key={candidacy.id}
+              candidacy={candidacy as CandidacySummary}
+            />
           )}
         </SearchList>
       )}

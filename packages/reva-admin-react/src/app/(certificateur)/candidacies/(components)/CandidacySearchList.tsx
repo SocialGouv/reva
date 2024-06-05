@@ -18,7 +18,6 @@ type CandidacySearchResult<T> = T & {
 export const CandidacySearchList = <T,>({
   title,
   searchFilter,
-  updateSearchFilter,
   searchResultsPage,
   searchResultLink,
   children,
@@ -31,7 +30,6 @@ export const CandidacySearchList = <T,>({
       title={title}
       searchFilter={searchFilter}
       searchResultsPage={searchResultsPage}
-      updateSearchFilter={updateSearchFilter}
     >
       {(r) => (
         <WhiteCard key={r.id} className="grid grid-cols-2 gap-2">

@@ -8,12 +8,10 @@ import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
 
 export const CertificationAuthoritySearchList = ({
   certificationAuthorities,
-  updateSearchFilter,
   searchFilter,
   setCertificationAuthoritySelected,
 }: {
   certificationAuthorities: CertificationAuthorityPaginated;
-  updateSearchFilter: (searchFilter: string) => void;
   searchFilter: string;
   setCertificationAuthoritySelected: (
     certificationAuthority: CertificationAuthority,
@@ -24,7 +22,6 @@ export const CertificationAuthoritySearchList = ({
       searchResultsPage={
         certificationAuthorities as CertificationAuthorityPaginated
       }
-      updateSearchFilter={updateSearchFilter}
       searchFilter={searchFilter}
       childrenContainerClassName="grid grid-cols-2 gap-5"
     >

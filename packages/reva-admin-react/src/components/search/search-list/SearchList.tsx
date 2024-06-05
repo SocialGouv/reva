@@ -2,6 +2,7 @@ import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 type SearchResultsPage<T> = {
   info: { totalRows: number; totalPages: number; currentPage: number };
@@ -13,7 +14,6 @@ export interface SearchListProps<T> {
   hint?: ({ totalRows }: { totalRows: number }) => ReactNode;
   searchFilter: string;
   searchResultsPage: SearchResultsPage<T>;
-  updateSearchFilter: (searchFilter: string) => void;
   children?: (searchResult: T) => ReactNode;
   childrenContainerClassName?: string;
 }
@@ -24,7 +24,6 @@ export const SearchList = <T,>({
   searchFilter,
   children,
   searchResultsPage,
-  updateSearchFilter,
   childrenContainerClassName,
 }: SearchListProps<T>) => {
   const pathname = usePathname();
@@ -41,6 +40,8 @@ export const SearchList = <T,>({
     return params;
   }, [searchParams]);
 
+  const router = useRouter();
+
   return (
     <div className="flex flex-col">
       {title && (
@@ -55,7 +56,20 @@ export const SearchList = <T,>({
         className="mb-6"
         searchFilter={searchFilter}
         resultCount={searchResultsPage.info.totalRows}
-        onSearchFilterChange={updateSearchFilter}
+        onSearchFilterChange={(filter) => {
+          const queryParams = new URLSearchParams(searchParams);
+          if (filter && queryParams.get("page")) {
+            queryParams.set("page", "1");
+            queryParams.set("search", filter);
+          } else if (filter) {
+            queryParams.set("search", filter);
+          } else {
+            queryParams.delete("search");
+          }
+
+          const path = `${pathname}?${queryParams.toString()}`;
+          router.push(path);
+        }}
       />
       <ul
         className={`flex flex-col gap-5 my-0 pl-0 ${childrenContainerClassName}`}

@@ -1,12 +1,10 @@
 "use client";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
-import { useSearchFilterFeasibilitiesStore } from "./(components)/useSearchFilterFeasibilitiesStore";
 
 const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory($searchFilter: String) {
@@ -44,11 +42,12 @@ const getJuryCountByCategoryQuery = graphql(`
 `);
 
 const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
-  const { searchFilter } = useSearchFilterFeasibilitiesStore();
   const currentPathname = usePathname();
   const searchParams = useSearchParams();
+
+  const searchFilter = searchParams.get("search") || "";
+
   const { graphqlClient } = useGraphQlClient();
-  const { isFeatureActive } = useFeatureflipping();
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: ["getFeasibilityCountByCategory", searchFilter],
@@ -74,6 +73,18 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       }),
   });
 
+  const hrefSideMenu = (path: string, category: string) => {
+    const params = new URLSearchParams();
+    params.set("page", "1");
+    params.set("CATEGORY", category);
+
+    if (searchFilter) {
+      params.set("search", searchFilter);
+    }
+
+    return `${path}/?${params.toString()}`;
+  };
+
   const menuItem = ({
     text,
     path,
@@ -90,7 +101,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         searchParams.get("CATEGORY") === category) ||
       (!searchParams.get("CATEGORY") && defaultMenuItem),
     linkProps: {
-      href: `${path}?CATEGORY=${category}`,
+      href: hrefSideMenu(path, category),
       target: "_self",
     },
     text,
@@ -115,38 +126,38 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const feasibilityItems = [
     menuItem({
-      text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL})`,
+      text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL || 0})`,
       path: "/candidacies/feasibilities",
       category: "ALL",
       defaultMenuItem: true,
     }),
     menuItem({
-      text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING})`,
+      text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING || 0})`,
       path: "/candidacies/feasibilities",
       category: "PENDING",
     }),
     menuItem({
-      text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE})`,
+      text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE || 0})`,
       path: "/candidacies/feasibilities",
       category: "ADMISSIBLE",
     }),
     menuItem({
-      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED})`,
+      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
       path: "/candidacies/feasibilities",
       category: "REJECTED",
     }),
     menuItem({
-      text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE})`,
+      text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE || 0})`,
       path: "/candidacies/feasibilities",
       category: "INCOMPLETE",
     }),
     menuItem({
-      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED})`,
+      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
       path: "/candidacies/feasibilities",
       category: "ARCHIVED",
     }),
     menuItem({
-      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT})`,
+      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
       path: "/candidacies/feasibilities",
       category: "DROPPED_OUT",
     }),
@@ -154,18 +165,18 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const dossierDeValidationItems = [
     menuItem({
-      text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL})`,
+      text: `Tous les dossiers actifs (${dossierDeValidationCountByCategory?.ALL || 0})`,
       path: "/candidacies/dossiers-de-validation",
       category: "ALL",
       defaultMenuItem: true,
     }),
     menuItem({
-      text: `Dossiers reçus / jurys à programmer (${dossierDeValidationCountByCategory?.PENDING})`,
+      text: `Dossiers reçus / jurys à programmer (${dossierDeValidationCountByCategory?.PENDING || 0})`,
       path: "/candidacies/dossiers-de-validation",
       category: "PENDING",
     }),
     menuItem({
-      text: `Dossiers signalés (${dossierDeValidationCountByCategory?.INCOMPLETE})`,
+      text: `Dossiers signalés (${dossierDeValidationCountByCategory?.INCOMPLETE || 0})`,
       path: "/candidacies/dossiers-de-validation",
       category: "INCOMPLETE",
     }),
@@ -173,12 +184,17 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const juryItems = [
     menuItem({
-      text: `Programmés (${juryCountByCategory?.SCHEDULED})`,
+      text: `Tous`,
+      path: "/candidacies/juries",
+      category: "ALL",
+    }),
+    menuItem({
+      text: `Programmés (${juryCountByCategory?.SCHEDULED || 0})`,
       path: "/candidacies/juries",
       category: "SCHEDULED",
     }),
     menuItem({
-      text: `Passés (${juryCountByCategory?.PASSED})`,
+      text: `Passés (${juryCountByCategory?.PASSED || 0})`,
       path: "/candidacies/juries",
       category: "PASSED",
     }),
@@ -188,7 +204,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     {
       items: feasibilityItems,
       text: "Dossiers de faisabilité",
-      expandedByDefault: !!currentPathname.match(/feasibilities$/),
+      expandedByDefault: currentPathname.startsWith(
+        "/candidacies/feasibilities",
+      ),
     },
     {
       items: dossierDeValidationItems,
@@ -197,17 +215,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         "/candidacies/dossiers-de-validation",
       ),
     },
-    ...(isFeatureActive("JURY")
-      ? [
-          {
-            items: juryItems,
-            text: "Jury",
-            expandedByDefault: currentPathname.startsWith(
-              "/candidacies/juries",
-            ),
-          },
-        ]
-      : []),
+    {
+      items: juryItems,
+      text: "Jury",
+      expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
+    },
   ];
 
   return (

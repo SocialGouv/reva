@@ -5,9 +5,8 @@ import { graphql } from "@/graphql/generated";
 import { JuryCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
-import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
 import { format } from "date-fns";
 
 const RECORDS_PER_PAGE = 10;
@@ -54,19 +53,28 @@ const getJuriesQuery = graphql(`
 
 const JuriesPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { searchFilter, setSearchFilter } = useSearchFilterFeasibilitiesStore();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const page = params.get("page");
-  const category = params.get("CATEGORY");
-  const currentPage = page ? Number.parseInt(page) : 1;
-  const { isAdmin } = useAuth();
 
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(`${pathname}?CATEGORY=${category || "ALL"}`);
-  };
+  const currentPathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
+
+  const category = searchParams.get("CATEGORY");
+
+  const { replace } = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("CATEGORY", category || "ALL");
+    params.set("page", page || "1");
+
+    if (!page || !category) {
+      replace(`${currentPathname}?${params.toString()}`);
+    }
+  }, [replace, page, category, currentPathname]);
+
+  const { isAdmin } = useAuth();
 
   const { data: getJuriesResponse } = useQuery({
     queryKey: ["getJuries", searchFilter, currentPage, category],
@@ -100,7 +108,6 @@ const JuriesPage = () => {
         <CandidacySearchList
           title={categoryLabel}
           searchFilter={searchFilter}
-          updateSearchFilter={updateSearchFilter}
           searchResultsPage={juryPage}
           searchResultLink={(candidacyId) => `/candidacies/${candidacyId}/jury`}
         >

@@ -4,7 +4,7 @@ import {
   CertificationAuthority,
   CertificationAuthorityPaginated,
 } from "@/graphql/generated/graphql";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   CertificationAuthoritySearchList,
@@ -15,9 +15,10 @@ import {
 
 export default function TransferCandidacyPage() {
   const router = useRouter();
-  const pathname = usePathname();
 
-  const [searchFilter, setSearchFilter] = useState("");
+  const searchParams = useSearchParams();
+  const searchFilter = searchParams.get("search") || "";
+
   const [certificationAuthoritySelected, setCertificationAuthoritySelected] =
     useState<CertificationAuthority | null>(null);
 
@@ -29,11 +30,6 @@ export default function TransferCandidacyPage() {
     candidacy,
     candidacyIsLoading,
   } = useTransferCandidacy({ searchFilter });
-
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(pathname);
-  };
 
   const handleTransferCandidacy = async ({
     certificationAuthorityId,
@@ -97,7 +93,6 @@ export default function TransferCandidacyPage() {
               certificationAuthorities={
                 certificationAuthorities as CertificationAuthorityPaginated
               }
-              updateSearchFilter={updateSearchFilter}
               searchFilter={searchFilter}
               setCertificationAuthoritySelected={
                 setCertificationAuthoritySelected

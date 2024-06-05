@@ -5,8 +5,7 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { CertificationStatus } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -43,30 +42,23 @@ const getCertificationsQuery = graphql(`
 const RECORDS_PER_PAGE = 10;
 const CertificationListPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const [searchFilter, setSearchFilter] = useState("");
-  const router = useRouter();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const pageParam = params.get("page");
-  const statusParam = params.get("status");
 
-  const currentPage = pageParam ? Number.parseInt(pageParam) : 1;
-
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(`${pathname}${statusParam ? `?status=${statusParam}` : ""}`);
-  };
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
+  const status = searchParams.get("status");
 
   const {
     data: getCertificationsResponse,
     status: getCertificationsQueryStatus,
   } = useQuery({
-    queryKey: ["getCertifications", searchFilter, currentPage, statusParam],
+    queryKey: ["getCertifications", searchFilter, currentPage, status],
     queryFn: () =>
       graphqlClient.request(getCertificationsQuery, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
-        status: statusParam as CertificationStatus,
+        status: status as CertificationStatus,
       }),
   });
 
@@ -79,15 +71,14 @@ const CertificationListPage = () => {
         {getCertificationsQueryStatus === "success" && (
           <SearchList
             title={`Certifications ${
-              statusParam
-                ? statusParam === "AVAILABLE"
+              status
+                ? status === "AVAILABLE"
                   ? "disponibles"
                   : "inactives"
                 : ""
             }`}
             searchFilter={searchFilter}
             searchResultsPage={certificationPage}
-            updateSearchFilter={updateSearchFilter}
           >
             {(c) => (
               <WhiteCard key={c.id} className="gap-2">

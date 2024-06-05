@@ -6,9 +6,8 @@ import { DossierDeValidationCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
-import { useSearchFilterFeasibilitiesStore } from "../(components)/useSearchFilterFeasibilitiesStore";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -67,19 +66,28 @@ const getDossiersDeValidationQuery = graphql(`
 
 const DossiersDeValidationPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { searchFilter, setSearchFilter } = useSearchFilterFeasibilitiesStore();
-  const params = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const page = params.get("page");
-  const category = params.get("CATEGORY");
-  const currentPage = page ? Number.parseInt(page) : 1;
-  const { isAdmin } = useAuth();
 
-  const updateSearchFilter = (newSearchFilter: string) => {
-    setSearchFilter(newSearchFilter);
-    router.push(`${pathname}?CATEGORY=${category || "ALL"}`);
-  };
+  const currentPathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
+
+  const category = searchParams.get("CATEGORY");
+
+  const { replace } = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("CATEGORY", category || "ALL");
+    params.set("page", page || "1");
+
+    if (!page || !category) {
+      replace(`${currentPathname}?${params.toString()}`);
+    }
+  }, [replace, page, category, currentPathname]);
+
+  const { isAdmin } = useAuth();
 
   const { data: getDossiersDeValidationResponse } = useQuery({
     queryKey: ["getDossiersDeValidation", searchFilter, currentPage, category],
@@ -114,7 +122,6 @@ const DossiersDeValidationPage = () => {
         <CandidacySearchList
           title={categoryLabel}
           searchFilter={searchFilter}
-          updateSearchFilter={updateSearchFilter}
           searchResultsPage={dossierDeValidationPage}
           searchResultLink={(candidacyId) =>
             `/candidacies/${candidacyId}/dossier-de-validation`
