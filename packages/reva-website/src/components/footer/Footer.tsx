@@ -99,7 +99,7 @@ export const Footer = ({ className }: { className?: string }) => {
             <li className="fr-footer__bottom-item">
               <Link
                 className="fr-footer__bottom-link"
-                href="/espace-professionnel/creation/"
+                href="/espace-professionnel/cgu/"
               >
                 CGU structures professionnelles
               </Link>
