@@ -411,6 +411,7 @@ model Organism {
 
   fermePourAbsenceOuConges Boolean            @default(false) @map("ferme_pour_absence_ou_conges")
   managedDegrees           OrganismOnDegree[]
+  isOnSite                 Boolean            @default(false) @map("is_onsite")
 
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
