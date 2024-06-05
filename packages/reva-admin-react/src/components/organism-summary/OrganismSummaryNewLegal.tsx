@@ -96,7 +96,7 @@ export const OrganismSummary = ({
         }}
         manager={{
           managerFirstname: companyManagerFirstname,
-          managerLastname: companyManagerFirstname,
+          managerLastname: companyManagerLastname,
         }}
         account={{
           accountEmail,
