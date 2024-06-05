@@ -59,7 +59,6 @@ export const PrerequisitesCard = () => {
               </ul>
             </Accordion>
           )}
-          <hr className="mt-6" />
         </div>
       )}
     </DefaultCandidacySectionCard>
