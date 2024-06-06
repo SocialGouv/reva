@@ -4,11 +4,10 @@ import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const informationsCommercialesQuery = graphql(`
-  query getOrganismInformationsCommercialesForCommercialInformationPage(
-    $organismId: ID!
-  ) {
+const getOrganismQuery = graphql(`
+  query getOrganismForModalitesAccompagnementPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
+      id
       informationsCommerciales {
         id
         nom
@@ -21,21 +20,50 @@ const informationsCommercialesQuery = graphql(`
         adresseVille
         conformeNormesAccessbilite
       }
+      organismOnDepartments {
+        id
+        departmentId
+        isRemote
+        isOnSite
+      }
+      maisonMereAAP {
+        maisonMereAAPOnDepartements {
+          estADistance
+          estSurPlace
+          departement {
+            id
+            code
+            label
+            region {
+              id
+              code
+              label
+            }
+          }
+        }
+      }
     }
   }
 `);
 
-const createOrUpdateInformationsCommercialesMutation = graphql(`
-  mutation createOrUpdateInformationsCommercialesMutation(
-    $informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
-  ) {
-    organism_createOrUpdateInformationsCommerciales(
-      informationsCommerciales: $informationsCommerciales
+const createOrUpdateInformationsCommercialesAndInterventionZoneMutation =
+  graphql(`
+    mutation createOrUpdateInformationsCommercialesAndInterventionZoneMutation(
+      $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
+      $updateInterventionZoneInput: UpdateOrganismInterventionZoneInput!
     ) {
-      id
+      organism_createOrUpdateInformationsCommerciales(
+        informationsCommerciales: $createOrUpdateInformationsCommercialesInput
+      ) {
+        id
+      }
+      organism_updateOrganismInterventionZone(
+        data: $updateInterventionZoneInput
+      ) {
+        id
+      }
     }
-  }
-`);
+  `);
 
 export const useModalitesAccompagnementPage = () => {
   const { graphqlClient } = useGraphQlClient();
@@ -43,34 +71,56 @@ export const useModalitesAccompagnementPage = () => {
   const { organismId } = useParams<{ organismId: string }>();
 
   const {
-    data: informationsCommercialesResponse,
-    status: informationsCommercialesStatus,
-    refetch: refetchInformationsCommerciales,
+    data: getOrganismResponse,
+    status: getOrganismStatus,
+    refetch: refetchOrganism,
   } = useQuery({
-    queryKey: ["informationsCommerciales"],
+    queryKey: [organismId, "organism"],
     queryFn: () =>
-      graphqlClient.request(informationsCommercialesQuery, { organismId }),
-  });
-
-  const informationsCommerciales =
-    informationsCommercialesResponse?.organism_getOrganism
-      ?.informationsCommerciales;
-
-  const createOrUpdateInformationsCommerciales = useMutation({
-    mutationFn: (informationsCommerciales: {
-      organismId: string;
-      nom: string;
-    }) =>
-      graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
-        informationsCommerciales,
+      graphqlClient.request(getOrganismQuery, {
+        organismId,
       }),
   });
 
+  const organism = getOrganismResponse?.organism_getOrganism;
+  const maisonMereAAP =
+    getOrganismResponse?.organism_getOrganism?.maisonMereAAP;
+
+  const createOrUpdateInformationsCommercialesAndInterventionZone = useMutation(
+    {
+      mutationFn: ({
+        organismId,
+        informationsCommerciales,
+        interventionZone,
+      }: {
+        organismId: string;
+        informationsCommerciales: {
+          nom: string;
+        };
+        interventionZone: {
+          departmentId: string;
+          isOnSite: boolean;
+          isRemote: boolean;
+        }[];
+      }) =>
+        graphqlClient.request(
+          createOrUpdateInformationsCommercialesAndInterventionZoneMutation,
+          {
+            createOrUpdateInformationsCommercialesInput: {
+              organismId,
+              ...informationsCommerciales,
+            },
+            updateInterventionZoneInput: { organismId, interventionZone },
+          },
+        ),
+    },
+  );
+
   return {
-    informationsCommerciales,
-    organismId,
-    informationsCommercialesStatus,
-    refetchInformationsCommerciales,
-    createOrUpdateInformationsCommerciales,
+    organism,
+    maisonMereAAP,
+    getOrganismStatus,
+    refetchOrganism,
+    createOrUpdateInformationsCommercialesAndInterventionZone,
   };
 };
