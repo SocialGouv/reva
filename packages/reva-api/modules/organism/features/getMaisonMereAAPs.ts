@@ -44,7 +44,23 @@ export const getMaisonMereAAPs = async ({
         ],
       },
     };
-    const filters = [containsFilter("raisonSociale"), filtersAccount];
+
+    const filtersLegalInformation = {
+      maisonMereAAPLegalInformationDocuments: {
+        some: {
+          OR: [
+            containsFilter("managerFirstname"),
+            containsFilter("managerLastname"),
+          ],
+        },
+      },
+    };
+
+    const filters = [
+      containsFilter("raisonSociale"),
+      filtersAccount,
+      filtersLegalInformation,
+    ];
 
     queryMaisonMereAAPs.where = {
       ...queryMaisonMereAAPs.where,
@@ -80,9 +96,7 @@ export const getMaisonMereAAPs = async ({
   }
 
   const maisonMereAAPs =
-    await prismaClient.maisonMereAAP.findMany(
-      queryMaisonMereAAPs
-    );
+    await prismaClient.maisonMereAAP.findMany(queryMaisonMereAAPs);
   const count = await prismaClient.maisonMereAAP.count(queryCount);
   return {
     rows: maisonMereAAPs,
