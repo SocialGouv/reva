@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -29,6 +30,7 @@ const agenciesInfoForConnectedUserQuery = graphql(`
 const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
   const { isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   const { graphqlClient } = useGraphQlClient();
 
@@ -50,14 +52,23 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const getOrganismNavItems = ({ organismId }: { organismId: string }) => [
-    getNavItem({
-      text: "Informations commerciales",
-      href: `/agencies-settings/${organismId}/commercial-information`,
-    }),
-    getNavItem({
-      text: "Zone d'intervention",
-      href: `/agencies-settings/${organismId}/intervention-zone`,
-    }),
+    ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+      ? [
+          getNavItem({
+            text: "Modalités d'accompagnent",
+            href: `/agencies-settings/${organismId}/modalites-accompagnement`,
+          }),
+        ]
+      : [
+          getNavItem({
+            text: "Informations commerciales",
+            href: `/agencies-settings/${organismId}/commercial-information`,
+          }),
+          getNavItem({
+            text: "Zone d'intervention",
+            href: `/agencies-settings/${organismId}/intervention-zone`,
+          }),
+        ]),
     getNavItem({
       text: "Certifications",
       href: `/agencies-settings/${organismId}/certifications`,
