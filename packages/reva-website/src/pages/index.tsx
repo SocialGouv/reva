@@ -41,7 +41,7 @@ const HomePage = () => {
       <Notice
         title={
           candidacyCreationDisabled
-            ? "Le dépôt de nouvelles candidatures est temporairement indisponible. Nous vous remercions de votre patience et nous excusons pour tout désagrément."
+            ? "Nous vous informons qu'il sera à nouveau possible de déposer une candidature sur la plateforme France VAE à partir du vendredi 14 Juin. Nous nous excusons pour l'interruption de notre service et vous remercions pour votre compréhension."
             : "Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
         }
       />
