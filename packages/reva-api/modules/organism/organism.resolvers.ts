@@ -60,6 +60,7 @@ import {
 } from "./emails/sendLegalInformationDocumentsDecisionEmail";
 import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
+import { updateOrganismOnSiteStatus } from "./features/updateOrganismOnSiteStatus";
 
 const unsafeResolvers = {
   Account: {
@@ -474,6 +475,27 @@ const unsafeResolvers = {
       }
 
       return decision;
+    },
+    organism_updateOrganismOnSiteStatus: async (
+      _parent: unknown,
+      params: {
+        organismId: string;
+        isOnSite: boolean;
+      },
+      context: GraphqlContext,
+    ) => {
+      if (
+        context.auth.userInfo?.sub == undefined ||
+        !(await isUserGestionnaireMaisonMereAAPOfOrganism({
+          userRoles: context.auth.userInfo.realm_access?.roles || [],
+          organismId: params.organismId,
+          userKeycloakId: context.auth.userInfo.sub,
+        }))
+      ) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      return updateOrganismOnSiteStatus(params);
     },
   },
   Query: {

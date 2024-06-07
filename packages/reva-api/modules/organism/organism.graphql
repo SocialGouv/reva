@@ -31,6 +31,7 @@ type Organism {
   conventionCollectives: [ConventionCollective!]!
   llToEarth: String
   distanceKm: Float
+  isOnSite: Boolean!
 }
 
 type OrganismOnDegree {
@@ -283,4 +284,8 @@ type Mutation {
   organism_updateLegalInformationValidationDecision(
     data: UpdateMaisonMereAAPLegalValidationDecisionInput
   ): MaisonMereAAP!
+  organism_updateOrganismOnSiteStatus(
+    organismId: String!
+    isOnSite: Boolean!
+  ): Organism!
 }
