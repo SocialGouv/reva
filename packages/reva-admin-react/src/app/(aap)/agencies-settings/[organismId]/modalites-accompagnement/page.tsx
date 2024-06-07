@@ -12,6 +12,7 @@ import { useModalitesAccompagnementPage } from "./modalitesAccompagnement.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { ZoneIntervention } from "../../_components/zone-intervention/ZoneIntervention";
 import { useZoneInterventionAAP } from "../../_components/zone-intervention/zoneInterventionAAP.hook";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 
 const schema = z.object({
   nom: z.string().optional().default(""),
@@ -26,6 +27,7 @@ const schema = z.object({
     ])
     .optional()
     .default(""),
+  isOnSite: z.boolean(),
   adresseNumeroEtNomDeRue: z.string().optional().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
@@ -81,6 +83,7 @@ const ModalitesAccompagnementPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: { zoneInterventionDistanciel: [] },
   });
 
   const { getZonesIntervention, mergeZonesIntervention } =
@@ -107,24 +110,24 @@ const ModalitesAccompagnementPage = () => {
 
   const handleReset = useCallback(() => {
     reset({
-      zoneInterventionDistanciel: zonesIntervention.remote,
-    });
-  }, [reset, zonesIntervention]);
+      ...organism?.informationsCommerciales,
+      isOnSite: organism?.isOnSite,
+      zoneInterventionDistanciel: zonesIntervention.remote || [],
+    } as FormData);
+  }, [organism, reset, zonesIntervention.remote]);
 
-  useEffect(
-    () =>
-      reset({
-        ...organism?.informationsCommerciales,
-        zoneInterventionDistanciel: zonesIntervention.remote,
-      } as FormData),
-    [organism, reset, zonesIntervention.remote],
-  );
+  useEffect(() => handleReset(), [handleReset]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    const { zoneInterventionDistanciel, ...informationsCommerciales } = data;
+    const {
+      zoneInterventionDistanciel,
+      isOnSite,
+      ...informationsCommerciales
+    } = data;
     await createOrUpdateInformationsCommercialesAndInterventionZone.mutateAsync(
       {
         organismId: organism?.id,
+        isOnSite,
         informationsCommerciales,
         interventionZone: mergeZonesIntervention({
           onSiteZone: [],
@@ -152,10 +155,7 @@ const ModalitesAccompagnementPage = () => {
             onSubmit={handleFormSubmit}
             onReset={(e) => {
               e.preventDefault();
-              reset({
-                ...organism?.informationsCommerciales,
-                zoneInterventionDistanciel: zonesIntervention.remote,
-              } as FormData);
+              handleReset();
             }}
           >
             <h2>Informations affichées au candidat</h2>
@@ -231,6 +231,15 @@ const ModalitesAccompagnementPage = () => {
               <fieldset className="flex flex-col md:pr-6">
                 <legend className="text-2xl font-bold mb-4">Présentiel</legend>
                 <div className="flex flex-col">
+                  <Checkbox
+                    className="col-span-2 mt-4 mb-0"
+                    options={[
+                      {
+                        label: "L'accompagnement se fait sur site",
+                        nativeInputProps: { ...register("isOnSite") },
+                      },
+                    ]}
+                  />
                   <Input
                     label="Numéro et nom de rue"
                     nativeInputProps={{
@@ -283,7 +292,9 @@ const ModalitesAccompagnementPage = () => {
                 </div>
               </fieldset>
               <fieldset className="flex flex-col md:pl-6 md:border-l">
-                <legend className="text-2xl font-bold mb-4">Distanciel</legend>
+                <legend className="text-2xl font-bold mb-4 md:mb-[68px]">
+                  Distanciel
+                </legend>
                 <ZoneIntervention
                   type="REMOTE"
                   zoneIntervention={

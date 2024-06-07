@@ -8,6 +8,7 @@ const getOrganismQuery = graphql(`
   query getOrganismForModalitesAccompagnementPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
+      isOnSite
       informationsCommerciales {
         id
         nom
@@ -51,6 +52,8 @@ const createOrUpdateInformationsCommercialesAndInterventionZoneMutation =
     mutation createOrUpdateInformationsCommercialesAndInterventionZoneMutation(
       $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
       $updateInterventionZoneInput: UpdateOrganismInterventionZoneInput!
+      $organismId: String!
+      $isOnSite: Boolean!
     ) {
       organism_createOrUpdateInformationsCommerciales(
         informationsCommerciales: $createOrUpdateInformationsCommercialesInput
@@ -59,6 +62,12 @@ const createOrUpdateInformationsCommercialesAndInterventionZoneMutation =
       }
       organism_updateOrganismInterventionZone(
         data: $updateInterventionZoneInput
+      ) {
+        id
+      }
+      organism_updateOrganismOnSiteStatus(
+        organismId: $organismId
+        isOnSite: $isOnSite
       ) {
         id
       }
@@ -92,8 +101,10 @@ export const useModalitesAccompagnementPage = () => {
         organismId,
         informationsCommerciales,
         interventionZone,
+        isOnSite,
       }: {
         organismId: string;
+        isOnSite: boolean;
         informationsCommerciales: {
           nom: string;
         };
@@ -106,6 +117,8 @@ export const useModalitesAccompagnementPage = () => {
         graphqlClient.request(
           createOrUpdateInformationsCommercialesAndInterventionZoneMutation,
           {
+            organismId,
+            isOnSite,
             createOrUpdateInformationsCommercialesInput: {
               organismId,
               ...informationsCommerciales,
