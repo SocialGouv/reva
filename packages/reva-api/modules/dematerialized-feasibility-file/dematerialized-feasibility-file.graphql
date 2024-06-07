@@ -10,6 +10,9 @@ type DematerializedFeasibilityFile {
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
   prerequisites: [Prerequisite]!
+  decision: DFFileDecision!
+  decisionComment: String
+  decisionSentAt: Timestamp
 }
 
 type Prerequisite {
@@ -76,6 +79,17 @@ input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   prerequisites: [PrerequisiteInput]!
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
+  candidacyId: ID!
+  decision: DFFileDecision!
+  decisionComment: String!
+}
+
+enum DFFileDecision {
+  ACCEPTED
+  REJECTED
+}
+
 input CompetenceIdAndText {
   competenceId: ID!
   text: String!
@@ -98,5 +112,9 @@ type Mutation {
 
   dematerialized_feasibility_file_createOrUpdatePrerequisites(
     input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdateDecision(
+    input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
   ): DematerializedFeasibilityFile!
 }

@@ -41,7 +41,6 @@ export const PrerequisiteInput = ({
             },
             {
               label: "En cours d'obtention",
-
               nativeInputProps: {
                 value: "IN_PROGRESS",
                 ...register(`prerequisites.${index}.state`),

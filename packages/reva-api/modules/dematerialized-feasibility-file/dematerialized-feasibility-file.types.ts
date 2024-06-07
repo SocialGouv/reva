@@ -20,3 +20,11 @@ export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
 }
 
 export type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
+
+export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
+  candidacyId: string;
+  decision: DFFileDecision;
+  decisionComment: string;
+}
+
+export type DFFileDecision = "ACCEPTED" | "REJECTED";

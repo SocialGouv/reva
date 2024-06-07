@@ -11,6 +11,7 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
+import { DecisionCard } from "./_components/DecisionCard";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -73,6 +74,7 @@ const AapFeasibilityPage = () => {
             </ul>
           </CandidacySectionCard>
           <PrerequisitesCard />
+          <DecisionCard />
         </ul>
       )}
     </div>

@@ -1432,6 +1432,11 @@ enum CompetenceBlocsPartCompletionEnum {
   IN_PROGRESS
 }
 
+enum DFFDecision {
+  ACCEPTED
+  REJECTED
+}
+
 model DematerializedFeasibilityFile {
   id                              String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacyId                     String                            @map("candidacy_id") @db.Uuid
@@ -1444,6 +1449,9 @@ model DematerializedFeasibilityFile {
   prerequisitesPartComplete       Boolean                           @default(false) @map("prerequisites_part_complete")
   prerequisites                   DFFPrerequisite[]
   competenceBlocsPartCompletion   CompetenceBlocsPartCompletionEnum @default(TO_COMPLETE) @map("competence_blocs_part_completion")
+  decision                        DFFDecision?
+  decisionComment                 String?                           @map("decision_comment")
+  decisionSentAt                  DateTime?                         @map("decision_sent_at") @db.Timestamptz(6)
 
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 

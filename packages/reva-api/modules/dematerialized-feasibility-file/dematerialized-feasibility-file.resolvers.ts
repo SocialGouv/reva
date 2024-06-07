@@ -6,10 +6,12 @@ import { resolversSecurityMap } from "./dematerialized-feasibility-file.security
 import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
+  DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
 } from "./dematerialized-feasibility-file.types";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
+import { createOrUpdateDecision } from "./features/createOrUpdateDecision";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
@@ -80,6 +82,13 @@ export const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput;
       },
     ) => createOrUpdatePrerequisites({ ...params.input }),
+
+    dematerialized_feasibility_file_createOrUpdateDecision: (
+      _parent: unknown,
+      params: {
+        input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
+      },
+    ) => createOrUpdateDecision(params.input),
   },
 };
 

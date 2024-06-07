@@ -27,7 +27,10 @@ export const usePrerequisitesCard = () => {
   }>();
 
   const { data, isLoading: isLoadingPrerequisites } = useQuery({
-    queryKey: [candidacyId, "dematerializedFeasibilityFileByCandidacyId"],
+    queryKey: [
+      candidacyId,
+      "dematerializedFeasibilityWithPrerequisitesByCandidacyId",
+    ],
     queryFn: () =>
       graphqlClient.request(
         dematerializedFeasibilityFilePrerequisitesByCandidacyId,
