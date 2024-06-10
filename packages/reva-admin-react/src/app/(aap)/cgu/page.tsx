@@ -7,12 +7,19 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { IgnoreCguModalContent } from "@/app/(aap)/cgu/_components/IgnoreCguModalContent";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),
 });
 
 type CguFormSchema = z.infer<typeof zodSchema>;
+
+const modalIgnoreCgu = createModal({
+  id: "modal-ignore-cgu",
+  isOpenedByDefault: false,
+});
 
 export default function CguPage() {
   const {
@@ -58,10 +65,7 @@ export default function CguPage() {
           />
         </fieldset>
         <div className="flex gap-x-2 justify-end">
-          <Button
-            priority="tertiary no outline"
-            linkProps={{ href: "/candidacies" }}
-          >
+          <Button priority="tertiary no outline" onClick={modalIgnoreCgu.open}>
             Ignorer les nouvelles CGU
           </Button>
           <Button type="submit" disabled={!isValid}>
@@ -69,6 +73,22 @@ export default function CguPage() {
           </Button>
         </div>
       </form>
+      <modalIgnoreCgu.Component
+        size="large"
+        iconId="fr-icon-arrow-right-line"
+        title=" Que se passe-t-il si vous ignorez les nouvelles CGU ?"
+        buttons={[
+          {
+            children: "Relire les CGU",
+          },
+          {
+            linkProps: { href: "/candidacies" },
+            children: "J'ignore les CGU",
+          },
+        ]}
+      >
+        <IgnoreCguModalContent />
+      </modalIgnoreCgu.Component>
     </div>
   );
 }
