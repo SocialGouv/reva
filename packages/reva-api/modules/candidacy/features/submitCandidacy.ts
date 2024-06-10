@@ -9,6 +9,8 @@ import { getCandidacyById } from "./getCandidacyById";
 import { getCandidateById } from "./getCandidateById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
+import { getCandidacyCertification } from "./getCandidacyCertification";
+import { prismaClient } from "../../../prisma/client";
 
 export const submitCandidacy = async ({
   candidacyId,
@@ -41,6 +43,19 @@ export const submitCandidacy = async ({
       `Impossible de trouver le candidat ${candidacy.candidateId}`,
     );
   }
+
+  const certification = await getCandidacyCertification({ candidacyId });
+
+  if (!certification) {
+    throw new Error(
+      `Impossible de trouver la certification pour la candidature ${candidacyId}`,
+    );
+  }
+
+  await prismaClient.candidacy.update({
+    where: { id: candidacyId },
+    data: { financeModule: certification.financeModule },
+  });
 
   const updatedCandidacy = await updateCandidacyStatus({
     candidacyId,

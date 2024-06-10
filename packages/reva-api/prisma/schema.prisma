@@ -60,6 +60,7 @@ model Certification {
   nextVersion                                            Certification?                                           @relation("replacement")
   competenceBlocs                                        CertificationCompetenceBloc[]
   feasibilityFormat                                      FeasibilityFormat                                        @default(UPLOADED_PDF) @map("feasibility_format")
+  financeModule                                          FinanceModule                                            @default(hors_plateforme) @map("finance_module")
 
   @@index([typeDiplomeId])
   @@map("certification")
