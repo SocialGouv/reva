@@ -6,6 +6,7 @@ import {
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
+
 // import { LegalValidationStatus } from "../organism.types";
 
 const buildContainsFilterClause =
@@ -24,8 +25,13 @@ export const getMaisonMereAAPs = async ({
   searchFilter?: string;
   legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
 }): Promise<PaginatedListResult<MaisonMereAAP>> => {
+  const orderBy: Prisma.MaisonMereAAPOrderByWithRelationInput[] =
+    legalValidationStatus === "EN_ATTENTE_DE_VERIFICATION"
+      ? [{ maisonMereAAPLegalInformationDocuments: { createdAt: "desc" } }]
+      : [{ createdAt: "desc" }];
+
   const queryMaisonMereAAPs: Prisma.MaisonMereAAPFindManyArgs = {
-    orderBy: [{ createdAt: "desc" }],
+    orderBy,
     take: limit,
     skip: offset,
   };
@@ -47,12 +53,10 @@ export const getMaisonMereAAPs = async ({
 
     const filtersLegalInformation = {
       maisonMereAAPLegalInformationDocuments: {
-        some: {
-          OR: [
-            containsFilter("managerFirstname"),
-            containsFilter("managerLastname"),
-          ],
-        },
+        OR: [
+          containsFilter("managerFirstname"),
+          containsFilter("managerLastname"),
+        ],
       },
     };
 
