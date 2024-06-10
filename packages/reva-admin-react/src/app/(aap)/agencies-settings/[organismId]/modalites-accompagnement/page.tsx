@@ -69,7 +69,7 @@ type FormData = z.infer<typeof schema>;
 const ModalitesAccompagnementPage = () => {
   const {
     organism,
-    maisonMereAAP,
+    departments,
     getOrganismStatus,
     refetchOrganism,
     createOrUpdateInformationsCommercialesAndInterventionZone,
@@ -93,14 +93,14 @@ const ModalitesAccompagnementPage = () => {
     () =>
       getZonesIntervention({
         maisonMereAAPOnDepartements:
-          maisonMereAAP?.maisonMereAAPOnDepartements || [],
+          departments.map((d) => ({
+            departement: d,
+            estADistance: true,
+            estSurPlace: false,
+          })) || [],
         organismOnDepartments: organism?.organismOnDepartments || [],
       }),
-    [
-      getZonesIntervention,
-      maisonMereAAP?.maisonMereAAPOnDepartements,
-      organism?.organismOnDepartments,
-    ],
+    [getZonesIntervention, departments, organism?.organismOnDepartments],
   );
 
   const remoteInterventionZoneController = useController({

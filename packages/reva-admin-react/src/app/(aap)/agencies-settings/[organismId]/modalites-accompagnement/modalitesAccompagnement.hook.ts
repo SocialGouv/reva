@@ -27,21 +27,15 @@ const getOrganismQuery = graphql(`
         isRemote
         isOnSite
       }
-      maisonMereAAP {
-        maisonMereAAPOnDepartements {
-          estADistance
-          estSurPlace
-          departement {
-            id
-            code
-            label
-            region {
-              id
-              code
-              label
-            }
-          }
-        }
+    }
+    getDepartments {
+      id
+      code
+      label
+      region {
+        id
+        code
+        label
       }
     }
   }
@@ -92,8 +86,7 @@ export const useModalitesAccompagnementPage = () => {
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
-  const maisonMereAAP =
-    getOrganismResponse?.organism_getOrganism?.maisonMereAAP;
+  const departments = getOrganismResponse?.getDepartments || [];
 
   const createOrUpdateInformationsCommercialesAndInterventionZone = useMutation(
     {
@@ -131,7 +124,7 @@ export const useModalitesAccompagnementPage = () => {
 
   return {
     organism,
-    maisonMereAAP,
+    departments,
     getOrganismStatus,
     refetchOrganism,
     createOrUpdateInformationsCommercialesAndInterventionZone,
