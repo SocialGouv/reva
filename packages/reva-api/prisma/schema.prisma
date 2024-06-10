@@ -1338,7 +1338,7 @@ model MaisonMereAAP {
   updatedAt                                           DateTime?                                           @map("updated_at") @db.Timestamptz(6)
   organismes                                          Organism[]
   statutValidationInformationsJuridiquesMaisonMereAAP StatutValidationInformationsJuridiquesMaisonMereAAP @default(A_METTRE_A_JOUR) @map("statut_validation_informations_juridiques_maison_mere_aap")
-  maisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments[]
+  maisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments?
   maisonMereAAPLegalInformationDocumentsDecision      MaisonMereAAPLegalInformationDocumentsDecision[]
 
   @@index([typologie])
