@@ -3,7 +3,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useActor } from "@xstate/react";
 import { BackToHomeButton } from "components/molecules/BackToHomeButton/BackToHomeButton";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
-import { ReactNode, useReducer } from "react";
+import { ChangeEvent, ReactNode, useReducer } from "react";
 import { Interpreter } from "xstate";
 
 import { Page } from "../components/organisms/Page";
@@ -86,6 +86,7 @@ export const TrainingProgramSummary = ({
       otherTraining,
     },
     isCertificationPartial,
+    candidacyFinanceModule,
   } = state.context;
 
   return (
@@ -196,22 +197,26 @@ export const TrainingProgramSummary = ({
                 }),
             },
           },
-          {
-            label:
-              "J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours",
-            nativeInputProps: {
-              disabled: isTrainingConfirmed,
-              defaultChecked: isTrainingConfirmed,
-              onChange: (e) =>
-                pageDispatch({
-                  type: "changeCondition",
-                  payload: {
-                    condition: "conditionThree",
-                    checked: e.target.checked,
+          ...(candidacyFinanceModule !== "hors_plateforme"
+            ? [
+                {
+                  label:
+                    "J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours",
+                  nativeInputProps: {
+                    disabled: isTrainingConfirmed,
+                    defaultChecked: isTrainingConfirmed,
+                    onChange: (e: ChangeEvent<HTMLInputElement>) =>
+                      pageDispatch({
+                        type: "changeCondition",
+                        payload: {
+                          condition: "conditionThree",
+                          checked: e.target.checked,
+                        },
+                      }),
                   },
-                }),
-            },
-          },
+                },
+              ]
+            : []),
           {
             label:
               "J’accepte que les résultats de mon étude personnalisée ainsi que les résultats de ma session de jury me soient transmis ainsi qu’à mon accompagnateur.",

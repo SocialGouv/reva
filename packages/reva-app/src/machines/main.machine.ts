@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/react";
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import {
+  CandidacyFinanceModule,
   Certification,
   Contact,
   Department,
@@ -91,6 +92,7 @@ export interface MainContext {
   feasibility?: Feasibility;
   dossierDeValidation?: DossierDeValidation;
   jury?: Jury;
+  candidacyFinanceModule: CandidacyFinanceModule;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -289,6 +291,7 @@ export const mainMachine =
           feasibility: undefined,
           dossierDeValidation: undefined,
           jury: undefined,
+          candidacyFinanceModule: "hors_plateforme",
         },
         initial: "loadDepartments",
         id: "mainMachine",
@@ -1132,6 +1135,7 @@ export const mainMachine =
               dossierDeValidation:
                 event.data.candidacy?.activeDossierDeValidation,
               jury: event.data.candidacy?.jury,
+              candidacyFinanceModule: event.data.candidacy?.financeModule,
             };
           }),
           navigateHome,

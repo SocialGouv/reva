@@ -188,3 +188,5 @@ export type Page<T> = {
     pageLength: number;
   };
 };
+
+export type CandidacyFinanceModule = "unireva" | "unifvae" | "hors_plateforme";

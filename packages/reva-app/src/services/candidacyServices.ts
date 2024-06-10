@@ -329,7 +329,9 @@ const CANDIDACY_SELECTION = `
           name
           url
         }
-      }`;
+      }
+      financeModule
+      `;
 
 const CONFIRM_REGISTRATION = gql`
   mutation candidate_login($token: String!) {
