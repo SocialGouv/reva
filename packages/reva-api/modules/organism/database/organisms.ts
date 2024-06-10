@@ -126,6 +126,7 @@ export const createOrganism = async (data: {
   qualiopiCertificateExpiresAt: Date;
   departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
   llToEarth: string | null;
+  isOnSite?: boolean;
 }): Promise<Either<string, domain.Organism>> => {
   try {
     const degrees = await getDegrees();

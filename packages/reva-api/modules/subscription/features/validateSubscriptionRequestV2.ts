@@ -95,6 +95,7 @@ export const validateSubscriptionRequestV2 = async ({
       ccnIds: [],
       departmentsWithOrganismMethods: [],
       qualiopiCertificateExpiresAt: new Date(),
+      isOnSite: true, //default agency is on site
     })
   ).unsafeCoerce();
 
