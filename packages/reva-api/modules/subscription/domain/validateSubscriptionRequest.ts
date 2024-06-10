@@ -130,6 +130,7 @@ export const validateSubscriptionRequest = async (
           subscriptionRequest.departmentsWithOrganismMethods ?? [],
         qualiopiCertificateExpiresAt:
           subscriptionRequest.qualiopiCertificateExpiresAt,
+        isHeadAgency: true, // default agency is the head agency
       })
     ).unsafeCoerce();
 

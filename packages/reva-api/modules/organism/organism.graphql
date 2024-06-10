@@ -32,6 +32,7 @@ type Organism {
   llToEarth: String
   distanceKm: Float
   isOnSite: Boolean!
+  isHeadAgency: Boolean!
 }
 
 type OrganismOnDegree {

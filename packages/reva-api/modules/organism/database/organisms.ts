@@ -127,6 +127,7 @@ export const createOrganism = async (data: {
   departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
   llToEarth: string | null;
   isOnSite?: boolean;
+  isHeadAgency?: boolean;
 }): Promise<Either<string, domain.Organism>> => {
   try {
     const degrees = await getDegrees();
