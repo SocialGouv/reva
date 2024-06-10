@@ -191,6 +191,7 @@ const CandidacyLayoutSideMenu = ({
       className="fr-sidemenu bg-white md:h-full w-full md:max-w-[450px] mb-2 flex-shrink-0"
     >
       <SideMenu
+        className="md:min-h-[900px]"
         align="left"
         burgerMenuButtonText="Candidatures"
         items={sideMenuItems}
