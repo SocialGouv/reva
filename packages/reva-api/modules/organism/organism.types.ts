@@ -89,6 +89,22 @@ export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   accountId?: string;
 }
 
+export interface CreateAgencyInput {
+  nom: string;
+  address: string;
+  adresseInformationsComplementaires?: string;
+  zip: string;
+  city: string;
+  contactAdministrativeEmail: string;
+  contactAdministrativePhone?: string;
+  website?: string;
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite;
+  firstname: string;
+  lastname: string;
+  email: string;
+  accountId?: string;
+}
+
 export interface UpdateOrganismInterventionZoneInput {
   organismId: string;
   interventionZone: InterventionZoneInput[];
