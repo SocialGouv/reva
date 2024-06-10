@@ -140,7 +140,9 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             {
               isActive: false,
               linkProps: {
-                href: "/agencies-settings/add-agence/",
+                href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+                  ? "/agencies-settings/add-agency/"
+                  : "/agencies-settings/add-agence/",
                 target: "_self",
               },
               text: (
