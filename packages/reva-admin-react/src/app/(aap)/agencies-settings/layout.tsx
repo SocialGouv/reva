@@ -17,6 +17,7 @@ const agenciesInfoForConnectedUserQuery = graphql(`
       maisonMereAAP {
         organisms {
           id
+          isHeadAgency
           label
           informationsCommerciales {
             nom
@@ -112,18 +113,17 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           items: [
             ...agencies
               .sort((a, b) => {
-                if (a.id === organismId) return -1;
+                if (a.isHeadAgency) return -1;
                 const aName = a.informationsCommerciales?.nom || a.label;
                 const bName = b.informationsCommerciales?.nom || b.label;
                 return aName.localeCompare(bName);
               })
               .map((a) => {
-                const isMaisonMereAAPAgency = a.id === organismId;
                 return {
                   text: `${a.informationsCommerciales?.nom || a.label} ${
-                    isMaisonMereAAPAgency ? "(Agence administratrice)" : ""
+                    a.isHeadAgency ? "(Agence administratrice)" : ""
                   }`,
-                  expandedByDefault: isMaisonMereAAPAgency,
+                  expandedByDefault: a.isHeadAgency,
                   linkProps: {
                     href: "#",
                     className: `fr-sidemenu__btn bg-transparent font-bold ${
