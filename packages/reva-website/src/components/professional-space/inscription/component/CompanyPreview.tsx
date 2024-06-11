@@ -65,11 +65,20 @@ export const CompanyPreview = (props: Props) => {
                     <Badge severity="success">En activité</Badge>
                   ) : (
                     (() => {
-                      const date = dateFermeture! as Date;
+                      const date = new Date(dateFermeture);
+                      let day: string | number = date.getDate() + 1;
+                      if (day < 10) {
+                        day = `0${day}`;
+                      }
+
+                      let month: string | number = date.getMonth() + 1;
+                      if (month < 10) {
+                        month = `0${month}`;
+                      }
+
                       return (
                         <Badge severity="error">
-                          Fermé le{" "}
-                          {`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}
+                          Fermé le {`${day}/${month}/${date.getFullYear()}`}
                         </Badge>
                       );
                     })()
