@@ -50,7 +50,10 @@ export interface Candidacy extends CandidacyAbstract {
   createdAt: Date;
   ccnId?: string | null;
   conventionCollective?: CandidacyConventionCollective | null;
+  financeModule: FinanceModule;
 }
+
+export type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";
 
 export interface CandidacyStatus {
   id: string;

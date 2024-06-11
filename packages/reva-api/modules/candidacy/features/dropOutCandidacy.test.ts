@@ -27,6 +27,7 @@ const blankCandidacy: Candidacy = {
   department: null,
   email: null,
   experiences: [],
+  financeModule: "unifvae",
 };
 
 const candidacy1: Candidacy = {

@@ -275,6 +275,7 @@ export const updateCandidacyStatus = async (params: {
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
     });
   } catch (e) {
     logger.error(e);
@@ -346,6 +347,7 @@ export const archiveCandidacy = async (params: {
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
     });
   } catch (e) {
     logger.error(e);
@@ -426,6 +428,7 @@ export const unarchiveCandidacy = async (params: {
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
     });
   } catch (e) {
     logger.error(e);
@@ -685,6 +688,7 @@ export const updateTrainingInformations = async (params: {
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
     });
   } catch (e) {
     logger.error(e);

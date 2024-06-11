@@ -67,6 +67,7 @@ export const updateCandidacyStatus = async (params: {
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
     } as domain.Candidacy;
   } catch (e) {
     logger.error(e);

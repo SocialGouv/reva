@@ -54,6 +54,7 @@ const toDomainCandidacySummary = (
     department: candidacy.department,
     createdAt: candidacy.createdAt,
     sentAt,
+    financeModule: candidacy.financeModule,
   };
 };
 

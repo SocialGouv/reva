@@ -124,6 +124,7 @@ type CandidacySummary {
   lastStatus: CandidacyStatus!
   createdAt: Timestamp!
   sentAt: Timestamp
+  financeModule: FinanceModule!
 }
 
 type CandidacySummaryFilterInfo {

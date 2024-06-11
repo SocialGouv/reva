@@ -66,6 +66,7 @@ const candidacyPriseEnCharge: Candidacy = {
   email: null,
   experiences: [],
   reorientationReason: null,
+  financeModule: "unifvae",
 };
 
 const candidacyWithReorientationReason: Candidacy = {
