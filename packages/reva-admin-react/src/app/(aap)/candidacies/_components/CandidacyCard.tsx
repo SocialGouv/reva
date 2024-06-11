@@ -1,37 +1,47 @@
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
-import { CandidacySummary } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Link from "next/link";
 
 export const CandidacyCard = ({
-  candidacy,
+  candidacyId,
+  certificationLabel,
+  candidateFirstname,
+  candidateLastname,
+  candidacySentAt,
+  departmentLabel,
+  departmentCode,
+  organismLabel,
 }: {
-  candidacy: CandidacySummary;
+  candidacyId: string;
+  candidateFirstname?: string;
+  candidateLastname?: string;
+  certificationLabel?: string;
+  candidacySentAt?: Date;
+  departmentLabel?: string;
+  departmentCode?: string;
+  organismLabel?: string;
 }) => {
   return (
-    <WhiteCard key={candidacy.id}>
-      <h3 className="mb-2 text-lg">{candidacy.certification?.label}</h3>
+    <WhiteCard key={candidacyId}>
+      <h3 className="mb-2 text-lg">{certificationLabel}</h3>
       <div className="mb-2 flex gap-x-12 text-lg">
         <span>
-          {candidacy.firstname} {candidacy.lastname}
+          {candidateFirstname} {candidateLastname}
         </span>
         <span>
-          {candidacy.department?.label} ({candidacy.department?.code})
+          {departmentLabel} ({departmentCode})
         </span>
       </div>
 
-      {!!candidacy.sentAt && (
+      {!!candidacySentAt && (
         <p className="mb-2 text-lg">
-          Envoyée le {format(candidacy.sentAt as number, "dd MMMM yyyy")}
+          Envoyée le {format(candidacySentAt, "dd MMMM yyyy")}
         </p>
       )}
       <div className="flex justify-between items-end">
-        <p className="m-0 text-neutral-500">
-          {candidacy.organism?.informationsCommerciales?.nom ??
-            candidacy.organism?.label}
-        </p>
-        <Link href={`/candidacies/${candidacy.id}/summary`}>
+        <p className="m-0 text-neutral-500">{organismLabel}</p>
+        <Link href={`/candidacies/${candidacyId}/summary`}>
           <Button>Accéder à la candidature</Button>
         </Link>
       </div>

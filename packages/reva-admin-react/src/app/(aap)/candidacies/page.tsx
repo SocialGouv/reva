@@ -3,7 +3,6 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 import {
   CandidacyCountByStatus,
   CandidacyStatusFilter,
-  CandidacySummary,
 } from "@/graphql/generated/graphql";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
@@ -64,7 +63,19 @@ export default function CandidaciesPage() {
           {(candidacy) => (
             <CandidacyCard
               key={candidacy.id}
-              candidacy={candidacy as CandidacySummary}
+              candidacyId={candidacy.id}
+              candidateFirstname={candidacy.firstname || ""}
+              candidateLastname={candidacy.lastname || ""}
+              certificationLabel={candidacy?.certification?.label}
+              departmentCode={candidacy.department?.code}
+              departmentLabel={candidacy.department?.label}
+              organismLabel={
+                candidacy.organism?.informationsCommerciales?.nom ||
+                candidacy.organism?.label
+              }
+              candidacySentAt={
+                candidacy.sentAt ? new Date(candidacy.sentAt) : undefined
+              }
             />
           )}
         </SearchList>
