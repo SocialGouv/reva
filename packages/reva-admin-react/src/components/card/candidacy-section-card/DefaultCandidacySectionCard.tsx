@@ -16,6 +16,7 @@ export const DefaultCandidacySectionCard = ({
   isEditable = false,
   buttonOnClickHref,
   children,
+  CustomBadge,
 }: {
   title: string;
   titleIconClass?: string;
@@ -23,6 +24,7 @@ export const DefaultCandidacySectionCard = ({
   isEditable?: boolean;
   buttonOnClickHref: string;
   children?: ReactNode;
+  CustomBadge?: ReactNode;
 }) => {
   const router = useRouter();
 
@@ -32,7 +34,8 @@ export const DefaultCandidacySectionCard = ({
         title={title}
         titleIconClass={titleIconClass}
         badge={
-          status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />
+          CustomBadge ||
+          (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />)
         }
         hasButton
         buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}

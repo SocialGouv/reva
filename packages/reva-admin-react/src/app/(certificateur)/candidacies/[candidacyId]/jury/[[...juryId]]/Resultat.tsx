@@ -1,18 +1,19 @@
 "use client";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, isAfter, startOfDay } from "date-fns";
-import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format, isAfter, startOfDay } from "date-fns";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { JuryResult } from "@/graphql/generated/graphql";
 import { errorToast } from "@/components/toast/toast";
+import { JuryResult } from "@/graphql/generated/graphql";
 
 import { useJuryPageLogic } from "./juryPageLogic";
+import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 
 const modal = createModal({
   id: "confirm-result",
@@ -228,13 +229,3 @@ export const Resultat = (): JSX.Element => {
     </div>
   );
 };
-
-const CustomErrorBadge = ({ label }: { label: string }): JSX.Element => (
-  <div>
-    <div
-      className={`text-[#6E445A] bg-[#FEE7FC] inline-flex items-center gap-1 rounded px-1 h-6`}
-    >
-      <label className={`text-sm font-bold`}>{label.toUpperCase()}</label>
-    </div>
-  </div>
-);
