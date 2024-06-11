@@ -76,6 +76,7 @@ export default function CandidaciesPage() {
               candidacySentAt={
                 candidacy.sentAt ? new Date(candidacy.sentAt) : undefined
               }
+              fundable={candidacy.financeModule !== "hors_plateforme"}
             />
           )}
         </SearchList>

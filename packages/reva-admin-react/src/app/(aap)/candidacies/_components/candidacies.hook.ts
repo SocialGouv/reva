@@ -60,6 +60,7 @@ const getCandidaciesByStatus = graphql(`
           label
           code
         }
+        financeModule
       }
       info {
         totalRows
