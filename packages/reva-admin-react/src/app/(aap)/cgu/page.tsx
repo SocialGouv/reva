@@ -9,6 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { IgnoreCguModalContent } from "@/app/(aap)/cgu/_components/IgnoreCguModalContent";
+import { useAppCgu } from "./page.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),
@@ -32,9 +35,21 @@ export default function CguPage() {
 
   const router = useRouter();
 
+  const { acceptMaisonMereCgu } = useAppCgu();
+
+  const queryClient = useQueryClient();
+
   const submitCgu = async () => {
-    // Submit CGU version and date
-    router.push("/candidacies");
+    try {
+      await acceptMaisonMereCgu.mutateAsync();
+      queryClient.invalidateQueries({
+        queryKey: ["getMaisonMereCGUQuery"],
+      });
+
+      router.push("/candidacies");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   };
 
   return (

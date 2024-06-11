@@ -59,6 +59,11 @@ type MaisonMereAAPLegalInformationDocumentsDecision {
   decisionTakenAt: Timestamp!
 }
 
+type MaisonMereAAPCGU {
+  version: Int
+  acceptedAt: Timestamp
+}
+
 type MaisonMereAAP {
   id: UUID!
   raisonSociale: String!
@@ -78,6 +83,7 @@ type MaisonMereAAP {
   ): [MaisonMereAAPLegalInformationDocumentsDecision!]!
   createdAt: Timestamp!
   legalInformationDocuments: MaisonMereAAPLegalInformationDocuments
+  cgu: MaisonMereAAPCGU!
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -307,4 +313,5 @@ type Mutation {
   ): Organism!
 
   organism_createAgency(data: CreateAgencyInput!): String!
+  organism_acceptCgu: Boolean!
 }

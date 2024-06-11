@@ -63,6 +63,7 @@ import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesB
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
 import { updateOrganismOnSiteStatus } from "./features/updateOrganismOnSiteStatus";
 import { createAgency } from "./features/createAgency";
+import { acceptCgu } from "./features/acceptCgu";
 
 const unsafeResolvers = {
   Account: {
@@ -133,6 +134,16 @@ const unsafeResolvers = {
       getMaisonMereAAPLegalInformationDocuments({
         maisonMereAAPId,
       }),
+    cgu: ({
+      cguVersion,
+      cguAcceptedAt,
+    }: {
+      cguVersion: number;
+      cguAcceptedAt?: Date;
+    }) => ({
+      version: cguVersion,
+      acceptedAt: cguAcceptedAt,
+    }),
   },
   MaisonMereAAPLegalInformationDocuments: {
     attestationURSSAFFile: async (
@@ -383,6 +394,28 @@ const unsafeResolvers = {
           },
           params,
         );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    organism_acceptCgu: async (
+      _parent: unknown,
+      _: any,
+      context: GraphqlContext,
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized",
+          );
+        }
+
+        return acceptCgu({
+          hasRole: context.auth.hasRole,
+          keycloakId: context.auth.userInfo?.sub,
+        });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

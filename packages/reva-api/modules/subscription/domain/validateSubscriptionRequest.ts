@@ -183,6 +183,8 @@ export const validateSubscriptionRequest = async (
           subscriptionRequest.qualiopiCertificateExpiresAt,
         gestionnaireAccountId: account.id,
         statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR",
+        cguVersion: null,
+        cguAcceptedAt: null,
       },
       ccnIds:
         subscriptionRequest.subscriptionRequestOnConventionCollective?.map(

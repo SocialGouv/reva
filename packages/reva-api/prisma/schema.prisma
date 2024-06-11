@@ -1333,6 +1333,8 @@ model MaisonMereAAP {
   maisonMereAAPOnDepartement          MaisonMereAAPOnDepartement[]
   siteWeb                             String?                               @map("site_web") @db.VarChar(255)
   dateExpirationCertificationQualiopi DateTime                              @map("date_expiration_certification_qualiopi")
+  cguVersion                          Int?                                  @map("cgu_version")
+  cguAcceptedAt                       DateTime?                             @map("cgu_accepted_at")
 
   gestionnaire                                        Account                                             @relation(fields: [gestionnaireAccountId], references: [id])
   gestionnaireAccountId                               String                                              @map("gestionnaire_account_id") @db.Uuid

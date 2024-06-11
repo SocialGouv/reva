@@ -128,6 +128,8 @@ export const validateSubscriptionRequestV2 = async ({
       dateExpirationCertificationQualiopi: new Date(),
       gestionnaireAccountId: account.id,
       statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
+      cguVersion: null,
+      cguAcceptedAt: null,
     },
     ccnIds: [],
     maisonMereAAPOnDepartements: [],

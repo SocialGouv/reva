@@ -51,6 +51,11 @@ export interface OrganismInformationsCommerciales {
   conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
 }
 
+export interface MaisonMereAAPCGU {
+  version?: number;
+  acceptedAt?: Date;
+}
+
 export interface MaisonMereAAP {
   id: string;
   raisonSociale: string;
@@ -60,6 +65,7 @@ export interface MaisonMereAAP {
   siteWeb: string;
   dateExpirationCertificationQualiopi: Date;
   gestionnaireAccountId: string;
+  cgu: MaisonMereAAPCGU;
 }
 
 export interface MaisonMereAAPOnDepartement {

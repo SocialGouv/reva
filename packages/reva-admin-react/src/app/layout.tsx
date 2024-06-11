@@ -29,6 +29,7 @@ import {
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import Script from "next/script";
+import { AapCgu } from "@/components/aap-cgu";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -106,6 +107,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
         ]}
       />
       <Header />
+      {authenticated && isGestionnaireMaisonMereAAP && <AapCgu />}
       <main
         role="main"
         id="content"

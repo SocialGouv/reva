@@ -24,4 +24,6 @@ export const resolversSecurityMap = {
     ],
 
   "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
+
+  "Mutation.organism_acceptCgu": [hasRole(["gestion_maison_mere_aap"])],
 };
