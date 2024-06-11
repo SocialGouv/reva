@@ -297,6 +297,10 @@ type PaymentRequestUnifvae
     = PaymentRequestUnifvae
 
 
+type Prerequisite
+    = Prerequisite
+
+
 type RamdomOrganisms
     = RamdomOrganisms
 

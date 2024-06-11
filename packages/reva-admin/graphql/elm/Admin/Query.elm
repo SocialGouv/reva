@@ -342,6 +342,18 @@ certification_authority_getCertificationAuthoritiesToTransferCandidacy fillInOpt
     Object.selectionForCompositeField "certification_authority_getCertificationAuthoritiesToTransferCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId Encode.string ]) object____ Basics.identity
 
 
+type alias DematerializedFeasibilityFileGetByCandidacyIdRequiredArguments =
+    { candidacyId : Data.Scalar.Id }
+
+
+dematerialized_feasibility_file_getByCandidacyId :
+    DematerializedFeasibilityFileGetByCandidacyIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet (Maybe decodesTo) RootQuery
+dematerialized_feasibility_file_getByCandidacyId requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_getByCandidacyId" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias DossierDeValidationGetDossierDeValidationByIdRequiredArguments =
     { dossierDeValidationId : Data.Scalar.Id }
 

@@ -130,3 +130,13 @@ llToEarth =
 distanceKm : SelectionSet (Maybe Float) Admin.Object.Organism
 distanceKm =
     Object.selectionForField "(Maybe Float)" "distanceKm" [] (Decode.float |> Decode.nullable)
+
+
+isOnSite : SelectionSet Bool Admin.Object.Organism
+isOnSite =
+    Object.selectionForField "Bool" "isOnSite" [] Decode.bool
+
+
+isHeadAgency : SelectionSet Bool Admin.Object.Organism
+isHeadAgency =
+    Object.selectionForField "Bool" "isHeadAgency" [] Decode.bool

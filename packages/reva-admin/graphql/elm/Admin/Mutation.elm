@@ -560,6 +560,30 @@ dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails req
     Object.selectionForCompositeField "dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput ] object____ Basics.identity
 
 
+type alias DematerializedFeasibilityFileCreateOrUpdatePrerequisitesRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput }
+
+
+dematerialized_feasibility_file_createOrUpdatePrerequisites :
+    DematerializedFeasibilityFileCreateOrUpdatePrerequisitesRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet decodesTo RootMutation
+dematerialized_feasibility_file_createOrUpdatePrerequisites requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_createOrUpdatePrerequisites" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput ] object____ Basics.identity
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateDecisionRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateDecisionInput }
+
+
+dematerialized_feasibility_file_createOrUpdateDecision :
+    DematerializedFeasibilityFileCreateOrUpdateDecisionRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet decodesTo RootMutation
+dematerialized_feasibility_file_createOrUpdateDecision requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_createOrUpdateDecision" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput ] object____ Basics.identity
+
+
 type alias DossierDeValidationSignalProblemRequiredArguments =
     { dossierDeValidationId : Data.Scalar.Id
     , decisionComment : String
@@ -804,6 +828,31 @@ organism_updateLegalInformationValidationDecision fillInOptionals____ object____
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "organism_updateLegalInformationValidationDecision" optionalArgs____ object____ Basics.identity
+
+
+type alias OrganismUpdateOrganismOnSiteStatusRequiredArguments =
+    { organismId : String
+    , isOnSite : Bool
+    }
+
+
+organism_updateOrganismOnSiteStatus :
+    OrganismUpdateOrganismOnSiteStatusRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo RootMutation
+organism_updateOrganismOnSiteStatus requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_updateOrganismOnSiteStatus" [ Argument.required "organismId" requiredArgs____.organismId Encode.string, Argument.required "isOnSite" requiredArgs____.isOnSite Encode.bool ] object____ Basics.identity
+
+
+type alias OrganismCreateAgencyRequiredArguments =
+    { data : Admin.InputObject.CreateAgencyInput }
+
+
+organism_createAgency :
+    OrganismCreateAgencyRequiredArguments
+    -> SelectionSet String RootMutation
+organism_createAgency requiredArgs____ =
+    Object.selectionForField "String" "organism_createAgency" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateAgencyInput ] Decode.string
 
 
 type alias ReferentialUpdateCertificationRequiredArguments =

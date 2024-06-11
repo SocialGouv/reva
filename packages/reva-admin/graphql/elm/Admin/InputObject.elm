@@ -8,6 +8,7 @@ import Admin.Enum.AccountGroup
 import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CertificationCompletion
 import Admin.Enum.ConformiteNormeAccessibilite
+import Admin.Enum.DFFileDecision
 import Admin.Enum.DistanceStatus
 import Admin.Enum.Duration
 import Admin.Enum.ExamResult
@@ -15,6 +16,7 @@ import Admin.Enum.Gender
 import Admin.Enum.JuryResult
 import Admin.Enum.LegalStatus
 import Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum
+import Admin.Enum.PrerequisiteState
 import Admin.Enum.Sort
 import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Interface
@@ -557,6 +559,67 @@ encodeCompetenceInput input____ =
         [ ( "id", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.optional input____.id ), ( "index", Encode.int input____.index |> Just ), ( "label", Encode.string input____.label |> Just ) ]
 
 
+buildCreateAgencyInput :
+    CreateAgencyInputRequiredFields
+    -> (CreateAgencyInputOptionalFields -> CreateAgencyInputOptionalFields)
+    -> CreateAgencyInput
+buildCreateAgencyInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { adresseInformationsComplementaires = Absent, website = Absent, accountId = Absent }
+    in
+    { nom = required____.nom, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, firstname = required____.firstname, lastname = required____.lastname, email = required____.email, accountId = optionals____.accountId }
+
+
+type alias CreateAgencyInputRequiredFields =
+    { nom : String
+    , address : String
+    , zip : String
+    , city : String
+    , contactAdministrativeEmail : String
+    , contactAdministrativePhone : String
+    , conformeNormesAccessbilite : Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    , firstname : String
+    , lastname : String
+    , email : String
+    }
+
+
+type alias CreateAgencyInputOptionalFields =
+    { adresseInformationsComplementaires : OptionalArgument String
+    , website : OptionalArgument String
+    , accountId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Type for the CreateAgencyInput input object.
+-}
+type alias CreateAgencyInput =
+    { nom : String
+    , address : String
+    , adresseInformationsComplementaires : OptionalArgument String
+    , zip : String
+    , city : String
+    , contactAdministrativeEmail : String
+    , contactAdministrativePhone : String
+    , website : OptionalArgument String
+    , conformeNormesAccessbilite : Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    , firstname : String
+    , lastname : String
+    , email : String
+    , accountId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Encode a CreateAgencyInput into a value that can be used as an argument.
+-}
+encodeCreateAgencyInput : CreateAgencyInput -> Value
+encodeCreateAgencyInput input____ =
+    Encode.maybeObject
+        [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ), ( "accountId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.accountId ) ]
+
+
 buildCreateCertificationAuthorityLocalAccountInput :
     CreateCertificationAuthorityLocalAccountInputRequiredFields
     -> CreateCertificationAuthorityLocalAccountInput
@@ -852,6 +915,66 @@ encodeDematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput : Demate
 encodeDematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput input____ =
     Encode.maybeObject
         [ ( "candidacyId", Encode.string input____.candidacyId |> Just ), ( "firstForeignLanguage", Encode.string |> Encode.optional input____.firstForeignLanguage ), ( "secondForeignLanguage", Encode.string |> Encode.optional input____.secondForeignLanguage ), ( "option", Encode.string |> Encode.optional input____.option ), ( "blocDeCompetencesIds", (Encode.string |> Encode.list) input____.blocDeCompetencesIds |> Just ), ( "completion", Encode.enum Admin.Enum.CertificationCompletion.toString input____.completion |> Just ) ]
+
+
+buildDematerializedFeasibilityFileCreateOrUpdateDecisionInput :
+    DematerializedFeasibilityFileCreateOrUpdateDecisionInputRequiredFields
+    -> DematerializedFeasibilityFileCreateOrUpdateDecisionInput
+buildDematerializedFeasibilityFileCreateOrUpdateDecisionInput required____ =
+    { candidacyId = required____.candidacyId, decision = required____.decision, decisionComment = required____.decisionComment }
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInputRequiredFields =
+    { candidacyId : Data.Scalar.Id
+    , decision : Admin.Enum.DFFileDecision.DFFileDecision
+    , decisionComment : String
+    }
+
+
+{-| Type for the DematerializedFeasibilityFileCreateOrUpdateDecisionInput input object.
+-}
+type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInput =
+    { candidacyId : Data.Scalar.Id
+    , decision : Admin.Enum.DFFileDecision.DFFileDecision
+    , decisionComment : String
+    }
+
+
+{-| Encode a DematerializedFeasibilityFileCreateOrUpdateDecisionInput into a value that can be used as an argument.
+-}
+encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput : DematerializedFeasibilityFileCreateOrUpdateDecisionInput -> Value
+encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput input____ =
+    Encode.maybeObject
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "decision", Encode.enum Admin.Enum.DFFileDecision.toString input____.decision |> Just ), ( "decisionComment", Encode.string input____.decisionComment |> Just ) ]
+
+
+buildDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput :
+    DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInputRequiredFields
+    -> DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput
+buildDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput required____ =
+    { candidacyId = required____.candidacyId, prerequisites = required____.prerequisites }
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInputRequiredFields =
+    { candidacyId : Data.Scalar.Id
+    , prerequisites : List (Maybe PrerequisiteInput)
+    }
+
+
+{-| Type for the DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput input object.
+-}
+type alias DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput =
+    { candidacyId : Data.Scalar.Id
+    , prerequisites : List (Maybe PrerequisiteInput)
+    }
+
+
+{-| Encode a DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput into a value that can be used as an argument.
+-}
+encodeDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput : DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput -> Value
+encodeDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput input____ =
+    Encode.maybeObject
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "prerequisites", (encodePrerequisiteInput |> Encode.maybe |> Encode.list) input____.prerequisites |> Just ) ]
 
 
 buildDepartmentWithOrganismMethodsInput :
@@ -1470,6 +1593,46 @@ encodePaymentRequestUnifvaeInput : PaymentRequestUnifvaeInput -> Value
 encodePaymentRequestUnifvaeInput input____ =
     Encode.maybeObject
         [ ( "individualEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualEffectiveHourCount |> Just ), ( "individualEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualEffectiveCost |> Just ), ( "collectiveEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveEffectiveHourCount |> Just ), ( "collectiveEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveEffectiveCost |> Just ), ( "mandatoryTrainingsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsEffectiveCost |> Just ), ( "basicSkillsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsEffectiveCost |> Just ), ( "certificateSkillsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsEffectiveCost |> Just ), ( "otherTrainingEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingEffectiveHourCount |> Just ), ( "otherTrainingEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingEffectiveCost |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
+
+
+buildPrerequisiteInput :
+    PrerequisiteInputRequiredFields
+    -> (PrerequisiteInputOptionalFields -> PrerequisiteInputOptionalFields)
+    -> PrerequisiteInput
+buildPrerequisiteInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { id = Absent }
+    in
+    { id = optionals____.id, label = required____.label, state = required____.state }
+
+
+type alias PrerequisiteInputRequiredFields =
+    { label : String
+    , state : Admin.Enum.PrerequisiteState.PrerequisiteState
+    }
+
+
+type alias PrerequisiteInputOptionalFields =
+    { id : OptionalArgument Data.Scalar.Id }
+
+
+{-| Type for the PrerequisiteInput input object.
+-}
+type alias PrerequisiteInput =
+    { id : OptionalArgument Data.Scalar.Id
+    , label : String
+    , state : Admin.Enum.PrerequisiteState.PrerequisiteState
+    }
+
+
+{-| Encode a PrerequisiteInput into a value that can be used as an argument.
+-}
+encodePrerequisiteInput : PrerequisiteInput -> Value
+encodePrerequisiteInput input____ =
+    Encode.maybeObject
+        [ ( "id", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.optional input____.id ), ( "label", Encode.string input____.label |> Just ), ( "state", Encode.enum Admin.Enum.PrerequisiteState.toString input____.state |> Just ) ]
 
 
 buildSearchOrganismFilter :

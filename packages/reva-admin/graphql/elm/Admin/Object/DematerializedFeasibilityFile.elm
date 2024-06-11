@@ -5,6 +5,7 @@
 module Admin.Object.DematerializedFeasibilityFile exposing (..)
 
 import Admin.Enum.CompetenceBlocsPartCompletion
+import Admin.Enum.DFFileDecision
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -80,3 +81,30 @@ certificationCompetenceDetails :
     -> SelectionSet (List decodesTo) Admin.Object.DematerializedFeasibilityFile
 certificationCompetenceDetails object____ =
     Object.selectionForCompositeField "certificationCompetenceDetails" [] object____ (Basics.identity >> Decode.list)
+
+
+prerequisitesPartComplete : SelectionSet Bool Admin.Object.DematerializedFeasibilityFile
+prerequisitesPartComplete =
+    Object.selectionForField "Bool" "prerequisitesPartComplete" [] Decode.bool
+
+
+prerequisites :
+    SelectionSet decodesTo Admin.Object.Prerequisite
+    -> SelectionSet (List (Maybe decodesTo)) Admin.Object.DematerializedFeasibilityFile
+prerequisites object____ =
+    Object.selectionForCompositeField "prerequisites" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+
+
+decision : SelectionSet Admin.Enum.DFFileDecision.DFFileDecision Admin.Object.DematerializedFeasibilityFile
+decision =
+    Object.selectionForField "Enum.DFFileDecision.DFFileDecision" "decision" [] Admin.Enum.DFFileDecision.decoder
+
+
+decisionComment : SelectionSet (Maybe String) Admin.Object.DematerializedFeasibilityFile
+decisionComment =
+    Object.selectionForField "(Maybe String)" "decisionComment" [] (Decode.string |> Decode.nullable)
+
+
+decisionSentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DematerializedFeasibilityFile
+decisionSentAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "decisionSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)

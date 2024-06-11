@@ -17,12 +17,14 @@ type LegalStatus
     | Eirl
     | AssociationLoi1901
     | EtablissementPublic
+    | Fondation
+    | Autre
     | Nc
 
 
 list : List LegalStatus
 list =
-    [ Ei, Eurl, Sarl, Sas, Sasu, Sa, Eirl, AssociationLoi1901, EtablissementPublic, Nc ]
+    [ Ei, Eurl, Sarl, Sas, Sasu, Sa, Eirl, AssociationLoi1901, EtablissementPublic, Fondation, Autre, Nc ]
 
 
 decoder : Decoder LegalStatus
@@ -57,6 +59,12 @@ decoder =
 
                     "ETABLISSEMENT_PUBLIC" ->
                         Decode.succeed EtablissementPublic
+
+                    "FONDATION" ->
+                        Decode.succeed Fondation
+
+                    "AUTRE" ->
+                        Decode.succeed Autre
 
                     "NC" ->
                         Decode.succeed Nc
@@ -97,6 +105,12 @@ toString enum____ =
 
         EtablissementPublic ->
             "ETABLISSEMENT_PUBLIC"
+
+        Fondation ->
+            "FONDATION"
+
+        Autre ->
+            "AUTRE"
 
         Nc ->
             "NC"
@@ -142,6 +156,12 @@ fromString enumString____ =
 
         "ETABLISSEMENT_PUBLIC" ->
             Just EtablissementPublic
+
+        "FONDATION" ->
+            Just Fondation
+
+        "AUTRE" ->
+            Just Autre
 
         "NC" ->
             Just Nc
