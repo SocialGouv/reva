@@ -64,6 +64,7 @@ import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganis
 import { updateOrganismOnSiteStatus } from "./features/updateOrganismOnSiteStatus";
 import { createAgency } from "./features/createAgency";
 import { acceptCgu } from "./features/acceptCgu";
+import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 
 const unsafeResolvers = {
   Account: {
@@ -134,7 +135,7 @@ const unsafeResolvers = {
       getMaisonMereAAPLegalInformationDocuments({
         maisonMereAAPId,
       }),
-    cgu: ({
+    cgu: async ({
       cguVersion,
       cguAcceptedAt,
     }: {
@@ -143,6 +144,7 @@ const unsafeResolvers = {
     }) => ({
       version: cguVersion,
       acceptedAt: cguAcceptedAt,
+      currentVersion: (await getLastProfessionalCgu())?.version,
     }),
   },
   MaisonMereAAPLegalInformationDocuments: {

@@ -24,7 +24,7 @@ export const AapCgu = (): JSX.Element | null => {
   if (
     !isFeatureAapCguActive ||
     isCguPathname ||
-    (cgu?.version != undefined && cgu.version == 1)
+    cgu?.version == cgu?.currentVersion
   ) {
     return null;
   }

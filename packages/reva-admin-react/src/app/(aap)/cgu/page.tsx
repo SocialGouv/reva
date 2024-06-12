@@ -28,7 +28,7 @@ export default function CguPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm<CguFormSchema>({
     resolver: zodResolver(zodSchema),
   });
@@ -45,7 +45,6 @@ export default function CguPage() {
       queryClient.invalidateQueries({
         queryKey: ["getMaisonMereCGUQuery"],
       });
-
       router.push("/candidacies");
     } catch (e) {
       graphqlErrorToast(e);
@@ -80,7 +79,11 @@ export default function CguPage() {
           />
         </fieldset>
         <div className="flex gap-x-2 justify-end">
-          <Button priority="tertiary no outline" onClick={modalIgnoreCgu.open}>
+          <Button
+            type="button"
+            priority="tertiary no outline"
+            onClick={modalIgnoreCgu.open}
+          >
             Ignorer les nouvelles CGU
           </Button>
           <Button type="submit" disabled={!isValid}>

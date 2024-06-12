@@ -12,6 +12,7 @@ const getMaisonMereCGUQuery = graphql(`
         cgu {
           version
           acceptedAt
+          currentVersion
         }
       }
     }

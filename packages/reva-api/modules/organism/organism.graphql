@@ -62,6 +62,7 @@ type MaisonMereAAPLegalInformationDocumentsDecision {
 type MaisonMereAAPCGU {
   version: Int
   acceptedAt: Timestamp
+  currentVersion: Int
 }
 
 type MaisonMereAAP {
