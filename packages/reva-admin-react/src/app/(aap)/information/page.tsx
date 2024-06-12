@@ -6,48 +6,72 @@ export default function InformationPage() {
   return (
     <>
       <div className="[&_p]:text-xl [&_p]:leading-relaxed">
-        <h1>Page d'information</h1>
-        <p>Lorem ipsum dolor sit amet,</p>
+        <h1>Nouveau mode de financement des parcours VAE</h1>
         <p>
-          Consectetur adipiscing elit. Integer quam elit, lacinia sed
-          consectetur a, pharetra sed metus. Suspendisse ultrices quis enim ut
-          cursus. Ut volutpat, est id aliquet tempor, purus sapien rhoncus
-          neque.
+          Le financement des parcours VAE évolue, les CGU également. Nous vous
+          invitons à lire avec attention les informations suivantes, à lire
+          attentivement les CGU et le cahier des charges et, à{" "}
+          <a href="https://vae.gouv.fr/nous-contacter/">nous consulter</a> si
+          vous avez besoin de précisions.
         </p>
         <hr className="mt-12 mb-6" />
       </div>
-      <div className="[&_p]:text-lg">
-        <h2>1 - Lorem ipsum</h2>
-        <p>
-          Donec quis sem mollis, posuere nisi tristique, fermentum nisl. Cras
-          porta metus vel lacus congue, a ullamcorper elit porta. Curabitur
-          porta tempus tellus a posuere. Vivamus laoreet sed nibh at tincidunt.
-        </p>
-        <ul className="text-lg">
-          <li>sed augue ante</li>
-          <li>consectetur molestie blandit vel</li>
-          <li>ullamcorper id nunc</li>
+      <div className="[&_p]:text-lg [&_h3]:text-xl [&_li]:my-3">
+        <h2>1 – Financement France VAE ou financement de droit commun ?</h2>
+        <ul className="text-lg [&_ul]:list-[revert]">
+          <li>
+            La certification visée par le candidat relève des priorités fixées
+            par l’Etat :
+            <ul>
+              <li>
+                Le parcours du candidat est éligible au financement France VAE.
+                Les demandes de prise en charge financière et les demandes de
+                paiement se font dans votre espace professionnel.
+              </li>
+              <li>
+                Vous reconnaîtrez les certifications concernées grâce au label “
+                <strong>finançable France VAE</strong>” visibles sur les
+                candidatures dans votre espace professionnelle.
+              </li>
+            </ul>
+          </li>
+          <li>
+            La certification visée par le candidat relève des filières non
+            prioritaires :
+            <ul>
+              <li>
+                Le parcours du candidat relève des financements de droit commun
+                (CPF, OPCO, Région, entreprises, France Travail…). Il vous
+                appartient d’explorer avec le candidat les différents
+                dispositifs de financement auxquels il peut prétendre et de
+                l’accompagner sur les démarches à conduire. Les fonctionnalités
+                “demande de prise en charge financière” et “demande de paiement”
+                ne seront donc pas disponibles pour les parcours concernant ces
+                certifications.
+              </li>
+              <li>
+                Vous reconnaîtrez les certifications concernées grâce au label
+                “finançable droit commun” visibles sur les candidatures dans
+                votre espace professionnelle.
+              </li>
+            </ul>
+          </li>
         </ul>
+        <h2>2 – Conséquences pour les candidatures</h2>
+        <h3>Les candidatures en cours</h3>
         <p>
-          Maecenas at sem diam. Quisque laoreet turpis quis ligula venenatis,
-          vitae dapibus tellus sodales. Praesent vulputate quam ante, sed
-          condimentum diam dignissim et.
+          Que vous acceptiez ou non les nouvelles CGU, vous pourrez néanmoins
+          poursuivre l’accompagnement des vos candidatures en cours.
         </p>
-        <h2>2 - Lorem ipsum</h2>
+        <h3>Les nouvelles candidatures</h3>
         <p>
-          <strong>Amet odio finibus vestibulum et vitae diam</strong>
-        </p>
-        <p>
-          Sed pharetra, turpis eget accumsan iaculis, massa risus eleifend odio,
-          eget ultricies turpis tellus sit amet ipsum. Curabitur augue arcu,
-          semper eu augue id.
+          Les nouvelles dispositions en matière de financement et CGU sont
+          applicables à toute nouvelle candidature.
         </p>
         <p>
-          <strong>Congue velit a justo</strong>
-        </p>
-        <p>
-          Mauris vitae odio et magna varius aliquet sit amet id mauris. Nullam
-          porta nunc hendrerit, faucibus libero at, aliquet mauris.
+          Il conviendra donc que vous soyez attentif à repérer précocement le
+          besoin en financement des nouvelles candidatures afin de rester un
+          élément clé de la sécurisation des parcours des candidats.
         </p>
         <hr className="mt-12 mb-6" />
       </div>
