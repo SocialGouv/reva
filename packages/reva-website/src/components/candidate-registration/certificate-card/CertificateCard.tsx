@@ -2,12 +2,14 @@ export const CertificateCard = ({
   label,
   rncpCode,
   certificateType,
+  className,
 }: {
   label: string;
   rncpCode: string;
   certificateType: string;
+  className?: string;
 }) => (
-  <div className="flex flex-col">
+  <div className={`flex flex-col ${className || ""}`}>
     <h2 className="text-dsfrGray-labelGrey text-xs font-bold uppercase mb-2">
       Diplôme sélectionné
     </h2>
