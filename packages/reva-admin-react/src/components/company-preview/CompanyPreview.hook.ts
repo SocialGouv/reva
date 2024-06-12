@@ -5,7 +5,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 const getEtablissementQuery = graphql(`
   query getEtablissement($siret: ID!) {
-    getEtablissement(siret: $siret) {
+    getEtablissementAsAdmin(siret: $siret) {
       siret
       siegeSocial
       raisonSociale
@@ -31,7 +31,7 @@ export const useEtablissement = (siret?: string) => {
   });
 
   return {
-    etablissement: data?.getEtablissement,
+    etablissement: data?.getEtablissementAsAdmin,
     isLoading,
     isError,
     error,

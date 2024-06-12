@@ -73,7 +73,7 @@ export const CompanyPreview = (props: Props) => {
           />
         )}
         <div className={`grid md:grid-cols-${manager ? 3 : 2}`}>
-          <Info title="Raison sociale">{company.companyName}</Info>
+          <Info title="Raison sociale">{etablissement?.raisonSociale}</Info>
           <Info title="Nature juridique">{company.companyLegalStatus}</Info>
 
           {manager && (

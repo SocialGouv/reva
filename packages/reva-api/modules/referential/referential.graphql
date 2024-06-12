@@ -199,6 +199,7 @@ type Query {
   getFCCertification(rncp: ID!): FCCertification
   getCountries: [Country!]!
   getEtablissement(siret: ID!): Etablissement
+  getEtablissementAsAdmin(siret: ID!): Etablissement
 }
 
 input UpdateCertificationInput {

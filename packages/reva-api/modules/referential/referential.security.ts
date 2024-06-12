@@ -11,4 +11,6 @@ export const referentialResolversSecurityMap = {
   "Mutation.referential_updateCompetenceBlocsByCertificationId": [
     hasRole(["admin"]),
   ],
+
+  "Query.getEtablissementAsAdmin": [hasRole(["admin"])],
 };

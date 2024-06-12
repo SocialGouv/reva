@@ -22,7 +22,11 @@ export type Etablissement = {
   formeJuridique: FormeJuridique;
 };
 
-export async function findEtablissement(
+// export type EtablissementNonDiffusible && Etablissement  = {
+
+// };
+
+export async function findEtablissementDiffusible(
   params: EtablissemntFindParams,
 ): Promise<Etablissement | null> {
   try {
@@ -36,6 +40,44 @@ export async function findEtablissement(
     }
 
     const url = `${URL}/insee/sirene/etablissements/diffusibles/${params.siret}?${getParameters().toString()}`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${ENTREPRISE_GOUV_API_TOKEN}`,
+      },
+    });
+
+    const data = (await response.json()) as {
+      data: any;
+    };
+
+    const etablissement: Etablissement | null = data?.data
+      ? mapDataToEtablissement(data.data)
+      : null;
+
+    return etablissement;
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+  }
+
+  return null;
+}
+
+export async function findEtablissement(
+  params: EtablissemntFindParams,
+): Promise<Etablissement | null> {
+  try {
+    const ENTREPRISE_GOUV_API_TOKEN = process.env.ENTREPRISE_GOUV_API_TOKEN;
+    if (!ENTREPRISE_GOUV_API_TOKEN) {
+      const error = `"ENTREPRISE_GOUV_API_TOKEN" has not been set`;
+      console.error(error);
+      logger.error(error);
+
+      throw new Error(error);
+    }
+
+    const url = `${URL}/insee/sirene/etablissements/${params.siret}?${getParameters().toString()}`;
 
     const response = await fetch(url, {
       headers: {
