@@ -19,6 +19,7 @@ import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { z } from "zod";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 
 const errorNumber = "Veuillez saisir une valeur numérique.";
 
@@ -83,6 +84,8 @@ const FundingPage = () => {
   const candidacySummaryUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
     ? `/candidacies/${candidacyId}/summary`
     : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
+
+  const fundingRequestDisabled = isFeatureActive("FUNDING_REQUEST_DISABLED");
 
   const {
     candidacy,
@@ -193,7 +196,39 @@ const FundingPage = () => {
     router.push(candidacySummaryUrl);
   }
 
-  return (
+  return fundingRequestDisabled ? (
+    <div className="flex flex-col w-full p-1 md:p-2">
+      <h1>Demande de prise en charge</h1>
+      <Alert
+        severity="info"
+        title="Suspension temporaire de l'accès aux demandes de financement"
+        description={
+          <span>
+            <p>
+              L'accès aux demandes de financement est actuellement suspendu.
+              Cette suspension demeure en vigueur jusqu'à la réouverture du
+              service pour les nouvelles candidatures et la validation des
+              Conditions Générales d'Utilisation (CGU) par les Architectes
+              Accompagnateurs de parcours.
+            </p>
+            <p>
+              Nous prévoyons que les nouvelles CGU seront disponibles dans les
+              prochains jours.
+            </p>
+            <p>
+              Nous vous remercions de votre compréhension et de votre patience
+              pendant cette période de transition.
+            </p>
+            <p>
+              Nous vous invitons à consulter régulièrement notre site pour les
+              mises à jour et pour soumettre vos demandes dès la reprise du
+              service.
+            </p>
+          </span>
+        }
+      />
+    </div>
+  ) : (
     <div className="flex flex-col w-full p-1 md:p-2">
       <div>
         <h1>Demande de prise en charge</h1>
