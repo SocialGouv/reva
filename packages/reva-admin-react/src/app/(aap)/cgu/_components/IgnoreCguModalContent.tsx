@@ -1,20 +1,22 @@
 export const IgnoreCguModalContent = () => (
   <>
-    <p>
-      <strong>
-        Et harum quidem rerum facilis est et expedita distinctio :
-      </strong>
-    </p>
-    <ul className="mb-4">
-      <li>In cursus ornare vulputate. Nullam in enim orci.</li>
+    <ul className="mb-4 [&_li]:my-2">
       <li>
-        Phasellus convallis sem leo, placerat sollicitudin velit aliquam quis
+        Votre établissement restera non visible et n’apparaîtra pas dans les
+        recherches des candidats
       </li>
-      <li>Praesent convallis aliquam neque ut aliquam</li>
+      <li>
+        Vous pourrez toutefois continuer l’accompagnement des candidatures en
+        cours dans votre espace professionnel
+      </li>
+      <li>
+        Si vous souhaitez réapparaître dans les résultats, il faudra accepter
+        les nouvelles CGU (accessibles depuis le bandeau en haut de votre écran)
+      </li>
     </ul>
     <p>
-      Prenez le temps de réfléchir à votre décision. Et si vous souhaitez
-      échanger, écrivez-nous à{" "}
+      Si vous avez besoin de précisions pour prendre cette décision, n'hésitez
+      pas à contacter le service support :{" "}
       <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.
     </p>
   </>
