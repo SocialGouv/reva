@@ -9,6 +9,7 @@ export interface Certification {
   activityArea?: string;
   accessibleJobType?: string;
   status: "AVAILABLE" | "SOON" | "INACTIVE";
+  financeModule: FinanceModule;
 }
 
 export interface Contact {
@@ -189,4 +190,4 @@ export type Page<T> = {
   };
 };
 
-export type CandidacyFinanceModule = "unireva" | "unifvae" | "hors_plateforme";
+export type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";

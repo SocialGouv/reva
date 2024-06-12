@@ -15,6 +15,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Surveillant - visiteur de nuit en secteur social et médico-social",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "2",
@@ -23,6 +24,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Services aux personnes et aux territoires",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "3",
@@ -31,6 +33,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Agent de service médico-social",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "4",
@@ -39,6 +42,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Aide-Soignant",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "5",
@@ -47,6 +51,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Employé familial",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "6",
@@ -55,6 +60,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Assistant de vie aux familles",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "7",
@@ -63,6 +69,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Assistant de vie dépendance",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "8",
@@ -71,6 +78,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Diplôme d'État d'accompagnant éducatif et social",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "9",
@@ -79,6 +87,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Conducteur-e accompagnateur-e de personnes à mobilité réduite",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "10",
@@ -87,6 +96,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Responsable coordonnateur service au domicile",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "11",
@@ -95,6 +105,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Assistant maternel / garde d'enfants",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "12",
@@ -103,6 +114,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Assistant familial",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "13",
@@ -111,6 +123,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsum,
     label: "Auxiliaire de puériculture",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "14",
@@ -119,6 +132,7 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsumLong,
     label: "Technicien de l'intervention sociale et familiale",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
   {
     id: "15",
@@ -128,5 +142,6 @@ export const certificateFixtures: Certification[] = [
     label:
       "Certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale",
     status: "AVAILABLE",
+    financeModule: "unifvae",
   },
 ];

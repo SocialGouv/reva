@@ -263,6 +263,7 @@ const CANDIDACY_SELECTION = `
         label
         summary
         status
+        financeModule
       }
       isCertificationPartial
       experiences {

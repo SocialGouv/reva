@@ -2,7 +2,6 @@ import * as Sentry from "@sentry/react";
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import {
-  CandidacyFinanceModule,
   Certification,
   Contact,
   Department,
@@ -10,6 +9,7 @@ import {
   Experience,
   Experiences,
   Feasibility,
+  FinanceModule,
   Goal,
   Jury,
   Organism,
@@ -92,7 +92,7 @@ export interface MainContext {
   feasibility?: Feasibility;
   dossierDeValidation?: DossierDeValidation;
   jury?: Jury;
-  candidacyFinanceModule: CandidacyFinanceModule;
+  candidacyFinanceModule: FinanceModule;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
