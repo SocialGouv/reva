@@ -18,22 +18,26 @@ export const sendFeasibilityIncompleteMailToAAP = async ({
 }) => {
   const commentInfo = comment
     ? `
-      <p>Voici les éléments qu'il a indiqués comme manquants :</p>
-      <br/>
+      <p>Commentaire du certificateur :</p>
       <p><em>${formatFreeText(comment || "")}</em></p>
-      <br/>`
+      `
     : "";
 
   const htmlContent = mjml2html(
     templateMail({
       content: `
-      <p>Bonjour,</p>
-      <p>Un dossier transmis par vos soins a été noté comme incomplet par le certificateur.</p>
-     ${commentInfo}
-      <p>Nous vous invitons à le compléter et à le renvoyer au certificateur dans les meilleurs délais.</p>
-        `,
+        <p>Bonjour,</p>
+        <p>L’un des dossiers que vous avez transmis est considéré comme incomplet par le certificateur.</p>
+       ${commentInfo}
+      `,
       labelCTA: "Accéder au dossier",
       url: feasibilityUrl,
+      bottomLine: `
+        <p>Nous vous invitons à renvoyer l'intégralité des pièces nécessaires au traitement de la recevabilité. N’oubliez pas d’y joindre les éléments manquants relevés par le certificateur.</p>
+        <p>Pour toute aide ou question, écrivez-nous à <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a></p>
+        <p>Cordialement,</p>
+        <p>L’équipe France VAE</p>
+      `,
     }),
   );
 
