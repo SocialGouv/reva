@@ -32,7 +32,7 @@ export const createSubscriptionRequestV2 = async ({
 
     if (oldAccount) {
       throw new Error(
-        `Cette adresse mail est déjà associée à un compte. Utilisez une autre adresse mail si vous souhaitez créer une nouvelle agence`,
+        `Une erreur est survenue, contactez votre administrateur ou support@france.vae.fr`,
       );
     }
 
@@ -47,7 +47,7 @@ export const createSubscriptionRequestV2 = async ({
 
     if (oldIamAccount)
       throw new Error(
-        `Cette adresse mail est déjà associée à un compte. Utilisez une autre adresse mail si vous souhaitez créer une nouvelle agence`,
+        `Une erreur est survenue, contactez votre administrateur ou support@france.vae.fr`,
       );
 
     const attestationURSSAFFile = await getUploadedFile(
