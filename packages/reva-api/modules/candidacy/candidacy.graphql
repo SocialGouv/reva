@@ -42,12 +42,6 @@ enum CandidacyStatusStep {
   DEMANDE_PAIEMENT_ENVOYEE
 }
 
-enum FinanceModule {
-  unireva
-  unifvae
-  hors_plateforme
-}
-
 # QUERY
 
 type Candidacy {

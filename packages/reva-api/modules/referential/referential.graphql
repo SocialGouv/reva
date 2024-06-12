@@ -91,6 +91,13 @@ type Certification {
   availableAt: Timestamp!
   expiresAt: Timestamp!
   competenceBlocs: [CertificationCompetenceBloc!]!
+  financeModule: FinanceModule!
+}
+
+enum FinanceModule {
+  unireva
+  unifvae
+  hors_plateforme
 }
 
 type CertificationCompetenceBloc {
