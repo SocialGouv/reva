@@ -27,7 +27,7 @@ const HomePage = () => {
   );
 
   const hasFinancementHorsPlateforme = isFeatureActive(
-    "WEBSITE_FINANCEMENT_HORS_PLATEFORME",
+    "FINANCEMENT_HORS_PLATEFORME",
   );
 
   if (featureFlippingServiceStatus === "LOADING") {
