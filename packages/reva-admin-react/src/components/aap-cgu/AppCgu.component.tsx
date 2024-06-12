@@ -34,11 +34,14 @@ export const AapCgu = (): JSX.Element | null => {
       isClosable
       title={
         <>
-          Votre utilisation de la plateforme est limitée. Vous pouvez accéder à
-          vos candidatures en cours mais n’apparaissez plus dans les recherches
-          des futurs candidats. Si vous souhaitez recevoir de nouvelles
-          candidatures, vous devez accepter nos{" "}
-          <Link href="/information">Conditions Générales d’Utilisation</Link>.
+          Votre accès à la plateforme est actuellement restreint. Vous pouvez
+          consulter vos candidatures en cours, mais votre profil n'apparaît plus
+          dans les recherches des nouveaux candidats. Pour recevoir de nouvelles
+          candidatures, veuillez accepter les{" "}
+          <Link href="/information">
+            Conditions Générales d'Utilisation (CGU)
+          </Link>
+          .
         </>
       }
     />
