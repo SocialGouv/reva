@@ -7,6 +7,8 @@ import { SearchOrganismFilter } from "../../candidacy/candidacy.types";
 import { getDegrees } from "../../referential/features/getDegrees";
 import { logger } from "../../shared/logger";
 import * as domain from "../organism.types";
+import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
+import { getLastProfessionalCgu } from "../features/getLastProfessionalCgu";
 
 export const getAAPOrganisms = async (params: {
   candidacyId: string;
@@ -280,6 +282,19 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
         `;
     }
 
+    const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))
+      ?.isActive;
+    if (isCGUAcceptanceRequired) {
+      try {
+        const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
+        if (CGU_AAP_VERSION != undefined) {
+          whereClause += ` and mm."cgu_version" = '${CGU_AAP_VERSION}' `;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     const queryResults = `
         select o.id,
                o.label,
@@ -291,7 +306,8 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
                ao.organism_id
         from organism o
                  left join organism_informations_commerciales as oic on oic.organism_id = o.id
-                 inner join organism_department as od on od.organism_id = o.id,
+                 inner join organism_department as od on od.organism_id = o.id
+                 inner join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id,
              active_organism_by_available_certification_and_department ao
             ${whereClause}
         order by Random() limit ${limit}`;
@@ -306,7 +322,8 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
         select count(distinct (o.id))
         from organism o
                  left join organism_informations_commerciales as oic on oic.organism_id = o.id
-                 inner join organism_department as od on od.organism_id = o.id,
+                 inner join organism_department as od on od.organism_id = o.id
+                 inner join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id,
              active_organism_by_available_certification_and_department ao
             ${whereClause}`;
 
