@@ -101,17 +101,44 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
   const { maisonMereAAPId } = params;
 
   try {
+    const maisonMereAAPLegalInformationDocuments =
+      await prismaClient.maisonMereAAPLegalInformationDocuments.findUnique({
+        where: { maisonMereAAPId },
+        select: {
+          managerFirstname: true,
+          managerLastname: true,
+        },
+      });
+
+    let maisonMereAAPData: (typeof params)["maisonMereAAPData"] & {
+      managerFirstname?: string;
+      managerLastname?: string;
+    } = { ...params.maisonMereAAPData };
+
+    if (
+      maisonMereAAPData.statutValidationInformationsJuridiquesMaisonMereAAP ===
+      "A_JOUR"
+    ) {
+      maisonMereAAPData = {
+        ...maisonMereAAPData,
+        managerFirstname:
+          maisonMereAAPLegalInformationDocuments?.managerFirstname,
+        managerLastname:
+          maisonMereAAPLegalInformationDocuments?.managerLastname,
+      };
+    }
+
     const maisonMereAAP = await prismaClient.maisonMereAAP.update({
       where: { id: maisonMereAAPId },
-      data: params.maisonMereAAPData,
+      data: maisonMereAAPData,
       include: {
         gestionnaire: true,
       },
     });
 
     if (
-      params.maisonMereAAPData
-        .statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
+      maisonMereAAPData.statutValidationInformationsJuridiquesMaisonMereAAP ===
+      "A_JOUR"
     ) {
       await deleteOldMaisonMereAAPLegalInformationDocuments({
         maisonMereAAPId,

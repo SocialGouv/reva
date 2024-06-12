@@ -130,6 +130,8 @@ export const validateSubscriptionRequestV2 = async ({
       statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
       cguVersion: null,
       cguAcceptedAt: null,
+      managerFirstname: subscriptionRequest.managerFirstname,
+      managerLastname: subscriptionRequest.managerLastname,
     },
     ccnIds: [],
     maisonMereAAPOnDepartements: [],

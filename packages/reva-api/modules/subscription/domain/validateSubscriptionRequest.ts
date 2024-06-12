@@ -185,6 +185,8 @@ export const validateSubscriptionRequest = async (
         statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR",
         cguVersion: null,
         cguAcceptedAt: null,
+        managerFirstname: null,
+        managerLastname: null,
       },
       ccnIds:
         subscriptionRequest.subscriptionRequestOnConventionCollective?.map(

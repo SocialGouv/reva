@@ -34,6 +34,8 @@ const getMaisonMereAAP = graphql(`
       siteWeb
       createdAt
       statutValidationInformationsJuridiquesMaisonMereAAP
+      managerFirstname
+      managerLastname
       legalInformationDocuments {
         managerFirstname
         managerLastname
@@ -183,10 +185,16 @@ const MaisonMereAAPPage = () => {
             )}
             createdAt={new Date(maisonMereAAP.createdAt)}
             companyManagerFirstname={
-              maisonMereAAP.legalInformationDocuments?.managerFirstname
+              maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ==
+              "A_JOUR"
+                ? maisonMereAAP.managerFirstname || undefined
+                : maisonMereAAP.legalInformationDocuments?.managerFirstname
             }
             companyManagerLastname={
-              maisonMereAAP.legalInformationDocuments?.managerLastname
+              maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ==
+              "A_JOUR"
+                ? maisonMereAAP.managerLastname || undefined
+                : maisonMereAAP.legalInformationDocuments?.managerLastname
             }
             legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
               (d) => ({

@@ -84,6 +84,8 @@ type MaisonMereAAP {
   createdAt: Timestamp!
   legalInformationDocuments: MaisonMereAAPLegalInformationDocuments
   cgu: MaisonMereAAPCGU!
+  managerFirstname: String
+  managerLastname: String
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
