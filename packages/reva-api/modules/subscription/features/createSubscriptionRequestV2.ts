@@ -1,5 +1,3 @@
-import { getAccountFromEmail } from "../../account/database/accounts";
-import * as IAM from "../../account/features/keycloak";
 import { getOrganismBySiretAndTypology } from "../../organism/database/organisms";
 import { FileService, UploadedFile } from "../../shared/file";
 import { buffer } from "stream/consumers";
@@ -24,31 +22,6 @@ export const createSubscriptionRequestV2 = async ({
         `Ce SIRET est déjà associé à un compte. Si nécessaire, contactez votre administrateur ou support@france.vae.fr`,
       );
     }
-
-    //account check
-    const oldAccount = (await getAccountFromEmail(params.accountEmail))
-      .unsafeCoerce()
-      .extractNullable();
-
-    if (oldAccount) {
-      throw new Error(
-        `Une erreur est survenue, contactez votre administrateur ou support@france.vae.fr`,
-      );
-    }
-
-    const oldIamAccount = (
-      await IAM.getAccount({
-        email: params.accountEmail,
-        username: params.accountEmail,
-      })
-    )
-      .unsafeCoerce()
-      .extractNullable();
-
-    if (oldIamAccount)
-      throw new Error(
-        `Une erreur est survenue, contactez votre administrateur ou support@france.vae.fr`,
-      );
 
     const attestationURSSAFFile = await getUploadedFile(
       params.attestationURSSAF,
