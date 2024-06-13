@@ -61,6 +61,8 @@ model Certification {
   competenceBlocs                                        CertificationCompetenceBloc[]
   feasibilityFormat                                      FeasibilityFormat                                        @default(UPLOADED_PDF) @map("feasibility_format")
   financeModule                                          FinanceModule                                            @default(hors_plateforme) @map("finance_module")
+  AvailableCertification                                 AvailableCertification?
+  ActiveOrganismByAvailableCertification                 ActiveOrganismByAvailableCertification[]
 
   @@index([typeDiplomeId])
   @@map("certification")
@@ -410,10 +412,11 @@ model Organism {
   maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
   maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
 
-  fermePourAbsenceOuConges Boolean            @default(false) @map("ferme_pour_absence_ou_conges")
-  managedDegrees           OrganismOnDegree[]
-  isOnSite                 Boolean            @default(false) @map("is_onsite")
-  isHeadAgency             Boolean            @default(false) @map("is_head_agency")
+  fermePourAbsenceOuConges               Boolean                                  @default(false) @map("ferme_pour_absence_ou_conges")
+  managedDegrees                         OrganismOnDegree[]
+  isOnSite                               Boolean                                  @default(false) @map("is_onsite")
+  isHeadAgency                           Boolean                                  @default(false) @map("is_head_agency")
+  ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
 
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
@@ -894,6 +897,26 @@ view ActiveOrganismsByAvailableCertificationsAndDepartments {
 
   @@unique([organismId, certificationId, departmentId])
   @@map("active_organism_by_available_certification_and_department")
+}
+
+view AvailableCertification {
+  certification                 Certification            @relation(fields: [certificationId], references: [id])
+  certificationId               String                   @map("certification_id") @db.Uuid
+  certification_searchable_text Unsupported("tsvector")?
+
+  @@unique([certificationId])
+  @@map("available_certification")
+}
+
+view ActiveOrganismByAvailableCertification {
+  organism                      Organism                 @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  certification                 Certification            @relation(fields: [certificationId], references: [id])
+  organismId                    String                   @map("organism_id") @db.Uuid
+  certificationId               String                   @map("certification_id") @db.Uuid
+  certification_searchable_text Unsupported("tsvector")?
+
+  @@unique([organismId, certificationId])
+  @@map("active_organism_by_available_certification")
 }
 
 model Domaine {
