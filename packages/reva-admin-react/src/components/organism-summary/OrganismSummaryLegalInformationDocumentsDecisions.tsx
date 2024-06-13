@@ -9,14 +9,17 @@ export interface OrganismSummaryLegalInformationDocumentsDecisionProps {
   aapUpdatedDocumentsAt: Date;
   decisionTakenAt: Date;
 }
+
 export const OrganismSummaryLegalInformationDocumentsDecisions = ({
+  label,
   decisions,
   className,
 }: {
+  label: string;
   decisions: OrganismSummaryLegalInformationDocumentsDecisionProps[];
   className?: string;
 }) => (
-  <Accordion label="Décisions précédentes" className={`${className || ""}`}>
+  <Accordion label={label} className={`${className || ""}`}>
     <div className="flex flex-col">
       {decisions.map((d) => (
         <OrganismSummaryLegalInformationDocumentsDecision

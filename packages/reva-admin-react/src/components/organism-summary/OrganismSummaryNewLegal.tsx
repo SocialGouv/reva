@@ -63,28 +63,40 @@ export const OrganismSummary = ({
 }: OrganismSummaryProps) => (
   <>
     <h1>{companyName}</h1>
-
-    {createdAt && (
-      <p>AAP inscrit depuis le {format(createdAt, "dd/MM/yyyy")}</p>
-    )}
-    {statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR" && (
-      <Badge className="mb-8" severity="success">
-        À JOUR
-      </Badge>
-    )}
-    {statutValidationInformationsJuridiquesMaisonMereAAP ===
-      "A_METTRE_A_JOUR" && (
-      <Badge className="mb-8" severity="warning">
-        DEMANDE DE PRÉCISIONS
-      </Badge>
-    )}
+    <div className="mb-4">
+      {statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR" && (
+        <Badge severity="success">À jour</Badge>
+      )}
+      {statutValidationInformationsJuridiquesMaisonMereAAP ===
+        "A_METTRE_A_JOUR" && (
+        <Badge severity="warning">Demande de précisions</Badge>
+      )}
+    </div>
+    <ul>
+      {createdAt && (
+        <li>Inscription envoyée le {format(createdAt, "dd/MM/yyyy")}</li>
+      )}
+      {legalInformationDocumentsDecisions.length > 0 && (
+        <li>
+          Dernière décision envoyée le{" "}
+          {format(
+            legalInformationDocumentsDecisions.slice(-1)[0].decisionTakenAt,
+            "dd/MM/yyyy",
+          )}
+        </li>
+      )}
+    </ul>
     {!!legalInformationDocumentsDecisions.length && (
       <OrganismSummaryLegalInformationDocumentsDecisions
+        label={
+          statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
+            ? "Historique des décisions"
+            : "Décisions précédentes"
+        }
         decisions={legalInformationDocumentsDecisions}
         className="mb-8"
       />
     )}
-
     <div className="grid grid-cols-2 gap-8">
       <CompanyPreview
         className="col-span-2"
