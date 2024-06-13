@@ -25,6 +25,7 @@ import { updateCertification } from "./features/updateCertification";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
+  CertificationStatus,
   UpdateCertificationInput,
   UpdateCompetenceBlocsInput,
 } from "./referential.types";
@@ -34,6 +35,8 @@ import {
   findEtablissementDiffusible,
   findQualiopiStatus,
 } from "./features/entreprise";
+import { searchCertificationsForCandidateV2 } from "./features/searchCertificationsForCandidateV2";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -74,15 +77,24 @@ const unsafeReferentialResolvers = {
         goals: goals,
       };
     },
-    searchCertificationsForCandidate: (_: any, payload: any) =>
-      searchCertificationsForCandidate({
-        offset: payload.offset,
-        limit: payload.limit,
-        departmentId: payload.departmentId,
-        organismId: payload.organismId,
-        searchText: payload.searchText,
-        status: payload.status,
-      }),
+    searchCertificationsForCandidate: async (
+      _: any,
+      payload: {
+        offset?: number;
+        limit?: number;
+        departmentId?: string;
+        organismId?: string;
+        searchText?: string;
+        status: CertificationStatus;
+      },
+      context: GraphqlContext,
+    ) =>
+      (await isFeatureActiveForUser({
+        userKeycloakId: context.auth.userInfo?.sub || "",
+        feature: "AAP_INTERVENTION_ZONE_UPDATE",
+      }))
+        ? searchCertificationsForCandidateV2(payload)
+        : searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
       searchCertificationsForAdmin({
         offset: payload.offset,

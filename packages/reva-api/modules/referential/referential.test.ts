@@ -51,7 +51,7 @@ async function searchCertificationsForCandidate({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: "whatever",
+      keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
     }),
     payload: {
       requestType: "query",
