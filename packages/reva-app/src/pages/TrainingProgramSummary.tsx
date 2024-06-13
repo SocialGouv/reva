@@ -27,6 +27,7 @@ interface PageState {
   conditionThreeChecked: boolean;
   conditionFourChecked: boolean;
   allConditionsChecked: boolean;
+  candidacyFundedByFranceVae: boolean;
 }
 
 const pageReducer = (state: PageState, action: PageAction) => {
@@ -47,11 +48,14 @@ const pageReducer = (state: PageState, action: PageAction) => {
           newState.conditionFourChecked = action.payload.checked;
           break;
       }
-      newState.allConditionsChecked =
-        newState.conditionOneChecked &&
-        newState.conditionTwoChecked &&
-        newState.conditionThreeChecked &&
-        newState.conditionFourChecked;
+      newState.allConditionsChecked = newState.candidacyFundedByFranceVae
+        ? newState.conditionOneChecked &&
+          newState.conditionTwoChecked &&
+          newState.conditionThreeChecked &&
+          newState.conditionFourChecked
+        : newState.conditionOneChecked &&
+          newState.conditionTwoChecked &&
+          newState.conditionFourChecked;
     }
   }
   return newState;
@@ -65,29 +69,29 @@ export const TrainingProgramSummary = ({
   const [state, send] = useActor(mainService);
   const isTrainingConfirmed = state.context.isTrainingProgramConfirmed;
 
+  const { trainingProgram, isCertificationPartial, candidacyFinanceModule } =
+    state.context;
+
   const [pageState, pageDispatch] = useReducer(pageReducer, {
     conditionOneChecked: false,
     conditionTwoChecked: false,
     conditionThreeChecked: false,
     conditionFourChecked: false,
     allConditionsChecked: false,
+    candidacyFundedByFranceVae: candidacyFinanceModule !== "hors_plateforme",
   });
 
-  if (!state.context.trainingProgram) return <></>;
+  if (!trainingProgram) return <></>;
 
   const {
-    trainingProgram: {
-      additionalHourCount,
-      basicSkills,
-      certificateSkills,
-      collectiveHourCount,
-      individualHourCount,
-      mandatoryTrainings,
-      otherTraining,
-    },
-    isCertificationPartial,
-    candidacyFinanceModule,
-  } = state.context;
+    additionalHourCount,
+    basicSkills,
+    certificateSkills,
+    collectiveHourCount,
+    individualHourCount,
+    mandatoryTrainings,
+    otherTraining,
+  } = trainingProgram;
 
   return (
     <Page title="Votre parcours" className="max-w-2xl">
