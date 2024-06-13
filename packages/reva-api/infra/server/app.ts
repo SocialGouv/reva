@@ -1,28 +1,28 @@
-import path from "path";
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
+import { setDefaultOptions } from "date-fns";
+import { fr } from "date-fns/locale";
 import fastify, {
   FastifyInstance,
   FastifyPluginAsync,
   FastifyPluginOptions,
   FastifyServerOptions,
 } from "fastify";
+import MercuriusGQLUpload from "mercurius-upload";
+import path from "path";
 import { accountRoute } from "../../modules/account/account.routes";
-import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
-import { juryRoute } from "../../modules/jury/jury.routes";
+import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import paymentRequestFvaeFileUploadAndConfirmationRoute from "../../modules/finance/unifvae/finance.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
+import { juryRoute } from "../../modules/jury/jury.routes";
+import { organismRoutes } from "../../modules/organism/organism.routes";
+import { FILE_PREVIEW_ROUTE_PATH, OOS_DOMAIN } from "../../modules/shared/file";
 import { logger } from "../../modules/shared/logger";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
-import { setDefaultOptions } from "date-fns";
-import { fr } from "date-fns/locale";
-import MercuriusGQLUpload from "mercurius-upload";
-import { organismRoutes } from "../../modules/organism/organism.routes";
-import { FILE_PREVIEW_ROUTE_PATH, OOS_DOMAIN } from "../../modules/shared/file";
 
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
@@ -118,7 +118,7 @@ export const buildApp = async (
 
   app.register(keycloakAdminPlugin);
 
-  app.register(MercuriusGQLUpload, { prefix: "/api" });
+  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000 });
 
   app.register(mercuriusGraphQL, {
     prefix: "/api",
