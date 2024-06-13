@@ -1,12 +1,14 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Info } from "./Info";
 import { formatDate } from "date-fns";
+import { MaisonMereAapLegalInformationDocumentsDecisionEnum } from "@/graphql/generated/graphql";
 
 export interface OrganismSummaryLegalInformationDocumentsDecisionProps {
   id: string;
   internalComment: string;
   aapComment: string;
   aapUpdatedDocumentsAt: Date;
+  decision: MaisonMereAapLegalInformationDocumentsDecisionEnum;
   decisionTakenAt: Date;
 }
 

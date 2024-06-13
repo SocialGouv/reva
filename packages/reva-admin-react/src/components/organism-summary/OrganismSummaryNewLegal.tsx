@@ -78,9 +78,11 @@ export const OrganismSummary = ({
       )}
       {legalInformationDocumentsDecisions.length > 0 && (
         <li>
-          Dernière décision envoyée le{" "}
+          {legalInformationDocumentsDecisions[0].decision == "VALIDE"
+            ? "Mise à jour validée le "
+            : "Demande de précision envoyée le "}
           {format(
-            legalInformationDocumentsDecisions.slice(-1)[0].decisionTakenAt,
+            legalInformationDocumentsDecisions[0].decisionTakenAt,
             "dd/MM/yyyy",
           )}
         </li>

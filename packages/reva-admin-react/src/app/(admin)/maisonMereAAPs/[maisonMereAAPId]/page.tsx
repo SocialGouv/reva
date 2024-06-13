@@ -60,6 +60,7 @@ const getMaisonMereAAP = graphql(`
         internalComment
         aapComment
         aapUpdatedDocumentsAt
+        decision
         decisionTakenAt
       }
       maisonMereAAPOnDepartements {
