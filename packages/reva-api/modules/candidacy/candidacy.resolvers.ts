@@ -159,20 +159,6 @@ const unsafeResolvers = {
 
       return result.extract();
     },
-    getOrganismsForCandidacy: async (
-      _: unknown,
-      params: { candidacyId: string },
-    ) => {
-      const result = await getActiveOrganismsForCandidacyWithNewTypologies({
-        getActiveOrganismForCertificationAndDepartment:
-          organismDb.getActiveOrganismForCertificationAndDepartment,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId: params.candidacyId });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
     getRandomOrganismsForCandidacy: async (
       _: unknown,
       {

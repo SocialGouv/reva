@@ -266,7 +266,6 @@ type Query {
     searchFilter: String
   ): CandidacySummaryPage!
   getTrainings: [Training!]!
-  getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
   getRandomOrganismsForCandidacy(
     candidacyId: UUID!
     searchText: String
