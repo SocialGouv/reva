@@ -1,5 +1,9 @@
-import { FILE_PREVIEW_ROUTE_PATH, FileService, OOS_DOMAIN } from "../..//shared/file";
 import { prismaClient } from "../../../prisma/client";
+import {
+  FILE_PREVIEW_ROUTE_PATH,
+  OOS_DOMAIN,
+  getDownloadLink,
+} from "../..//shared/file";
 
 export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
   async ({
@@ -52,9 +56,7 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
         break;
     }
 
-    const url = await FileService.getInstance().getDownloadLink({
-      fileKeyPath: filePath,
-    })
+    const url = await getDownloadLink(filePath);
 
     return filename
       ? {

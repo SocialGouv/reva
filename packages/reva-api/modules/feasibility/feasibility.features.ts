@@ -21,7 +21,7 @@ import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
-import { UploadedFile } from "../shared/file";
+import { UploadedFile, deleteFile } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
@@ -639,7 +639,7 @@ const deleteFeasibilityIDFile = async (feasibilityId: string) => {
       candidacyId: feasibility.candidacyId,
     });
 
-    await file.delete();
+    await deleteFile(file.keyPath);
   }
 };
 

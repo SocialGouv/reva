@@ -7,167 +7,160 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
+import { buffer } from "stream/consumers";
 import { logger } from "../logger";
-import { FileInterface } from "./file.interface";
+import { FileInterface, UploadedFile } from "./file.interface";
 
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
-export interface FileServiceInterface {
-  uploadFile(file: FileInterface, data: Buffer): Promise<void>;
-  deleteFile(file: FileInterface): Promise<void>;
-  getUploadLink(file: FileInterface): Promise<string | undefined>;
-  getDownloadLink(file: FileInterface): Promise<string | undefined>;
-  exists(file: FileInterface): Promise<boolean>;
-}
-
-export class FileService implements FileServiceInterface {
-  private static instance: FileService;
-
-  private readonly client: S3Client;
-
-  public static getInstance(): FileService {
-    if (!FileService.instance) {
-      FileService.instance = new FileService();
-    }
-
-    return FileService.instance;
+const createS3Client = () => {
+  if (
+    !process.env.OUTSCALE_ACCESS_KEY_ID ||
+    !process.env.OUTSCALE_SECRET_ACCESS_KEY ||
+    !process.env.OUTSCALE_BUCKET_NAME ||
+    !process.env.OUTSCALE_BUCKET_REGION ||
+    !process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT
+  ) {
+    throw new Error("Environment variables for S3 configuration are missing");
   }
 
-  private constructor() {
-    try {
-      if (process.env.OUTSCALE_ACCESS_KEY_ID === undefined) {
-        throw new Error("OUTSCALE_ACCESS_KEY_ID name is missing");
-      }
+  return new S3Client({
+    endpoint: process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT,
+    region: process.env.OUTSCALE_BUCKET_REGION,
+    credentials: {
+      accessKeyId: process.env.OUTSCALE_ACCESS_KEY_ID,
+      secretAccessKey: process.env.OUTSCALE_SECRET_ACCESS_KEY,
+    },
+  });
+};
+const client = createS3Client();
 
-      if (process.env.OUTSCALE_SECRET_ACCESS_KEY === undefined) {
-        throw new Error("OUTSCALE_SECRET_ACCESS_KEY name is missing");
-      }
+export const getUploadLink = async (
+  fileKeyPath: string,
+): Promise<string | undefined> => getSignedUrlForUpload(fileKeyPath);
 
-      if (process.env.OUTSCALE_BUCKET_NAME === undefined) {
-        throw new Error("OUTSCALE_BUCKET_NAME name is missing");
-      }
+export const getDownloadLink = async (
+  fileKeyPath: string,
+): Promise<string | undefined> => getSignedUrlForDownload(fileKeyPath);
 
-      if (process.env.OUTSCALE_BUCKET_REGION === undefined) {
-        throw new Error("OUTSCALE_BUCKET_REGION name is missing");
-      }
-
-      if (process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT === undefined) {
-        throw new Error("OUTSCALE_OBJECT_STORAGE_ENDPOINT name is missing");
-      }
-
-      this.client = new S3Client({
-        endpoint: process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT,
-        region: process.env.OUTSCALE_BUCKET_REGION,
-        credentials: {
-          accessKeyId: process.env.OUTSCALE_ACCESS_KEY_ID,
-          secretAccessKey: process.env.OUTSCALE_SECRET_ACCESS_KEY,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
-
-      throw new Error("Failed to init S3 Service Provider");
-    }
-  }
-
-  async getUploadLink(file: FileInterface): Promise<string | undefined> {
-    const link = this.getSignedUrlForUpload(file.fileKeyPath);
-    return link;
-  }
-
-  async getDownloadLink(file: FileInterface): Promise<string | undefined> {
-    const link = this.getSignedUrlForDownload(file.fileKeyPath);
-    return link;
-  }
-
-  async exists(file: FileInterface): Promise<boolean> {
-    if (!process.env.OUTSCALE_BUCKET_NAME) {
-      throw new Error("Bucket name is missing");
-    }
-
-    try {
-      const command = new GetObjectAclCommand({
-        Bucket: process.env.OUTSCALE_BUCKET_NAME,
-        Key: file.fileKeyPath,
-      });
-      const result = await this.client.send(command);
-      return result?.$metadata?.httpStatusCode == 200 ? true : false;
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
-    }
-
+export const fileExists = async (file: FileInterface): Promise<boolean> => {
+  try {
+    const command = new GetObjectAclCommand({
+      Bucket: process.env.OUTSCALE_BUCKET_NAME,
+      Key: file.fileKeyPath,
+    });
+    const result = await client.send(command);
+    return result?.$metadata?.httpStatusCode === 200;
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
     return false;
   }
+};
 
-  public async uploadFile(file: FileInterface, data: Buffer): Promise<void> {
+export const uploadFile = async (
+  file: FileInterface,
+  data: Buffer,
+): Promise<void> => {
+  const command = new PutObjectCommand({
+    Bucket: process.env.OUTSCALE_BUCKET_NAME,
+    Key: file.fileKeyPath,
+    Body: data,
+    ContentType: file.fileType,
+  });
+
+  try {
+    await client.send(command);
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+  }
+};
+
+export const deleteFile = async (fileKeyPath: string): Promise<void> => {
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.OUTSCALE_BUCKET_NAME,
+    Key: fileKeyPath,
+  });
+
+  try {
+    await client.send(command);
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+  }
+};
+
+export const getSignedUrlForUpload = async (
+  fileKeyPath: string,
+): Promise<string | undefined> => {
+  try {
     const command = new PutObjectCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
-      Key: file.fileKeyPath,
-      Body: data,
-      ContentType: file.fileType,
+      Key: fileKeyPath,
     });
-
-    try {
-      await this.client.send(command);
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
-    }
+    return await getSignedUrl(client, command, {
+      expiresIn: SIGNED_URL_EXPIRE_SECONDS,
+    });
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+    return undefined;
   }
+};
 
-  public async deleteFile(file: FileInterface): Promise<void> {
-    const command = new DeleteObjectCommand({
+export const getSignedUrlForDownload = async (
+  fileKeyPath: string,
+): Promise<string | undefined> => {
+  try {
+    const command = new GetObjectCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
-      Key: file.fileKeyPath,
+      Key: fileKeyPath,
     });
-
-    try {
-      await this.client.send(command);
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
-    }
-  }
-
-  private async getSignedUrlForUpload(
-    fileKeyPath: string,
-  ): Promise<string | undefined> {
-    try {
-      const command = new PutObjectCommand({
-        Bucket: process.env.OUTSCALE_BUCKET_NAME,
-        Key: fileKeyPath,
-      });
-      const url = await getSignedUrl(this.client, command, {
-        expiresIn: SIGNED_URL_EXPIRE_SECONDS,
-      });
-      return url;
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
-    }
-
+    return await getSignedUrl(client, command, {
+      expiresIn: SIGNED_URL_EXPIRE_SECONDS,
+    });
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
     return undefined;
   }
+};
 
-  private async getSignedUrlForDownload(
-    fileKeyPath: string,
-  ): Promise<string | undefined> {
-    try {
-      const command = new GetObjectCommand({
-        Bucket: process.env.OUTSCALE_BUCKET_NAME,
-        Key: fileKeyPath,
-      });
-      const url = await getSignedUrl(this.client, command, {
-        expiresIn: SIGNED_URL_EXPIRE_SECONDS,
-      });
-      return url;
-    } catch (error) {
-      console.error(error);
-      logger.error(error);
+export const getUploadedFile = async (
+  filePromise: GraphqlUploadedFile,
+): Promise<UploadedFile> => {
+  const file = await filePromise;
+  const fileContentBuffer = await buffer(file.createReadStream());
+  return {
+    filename: file.filename,
+    _buf: fileContentBuffer,
+    mimetype: file.mimetype,
+  };
+};
+
+export const emptyUploadedFileStream = async (file?: GraphqlUploadedFile) => {
+  try {
+    if (file) {
+      const stream = (await file).createReadStream();
+      stream.on("data", () => null);
     }
-
-    return undefined;
+  } catch (_) {
+    //do nothing
   }
-}
+};
+
+export const uploadFileToS3 = ({
+  filePath,
+  file,
+}: {
+  filePath: string;
+  file: UploadedFile;
+}) =>
+  uploadFile(
+    {
+      fileKeyPath: filePath,
+      fileType: file.mimetype,
+    },
+    file._buf,
+  );

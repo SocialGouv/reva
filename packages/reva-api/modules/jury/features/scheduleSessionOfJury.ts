@@ -3,7 +3,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { FileService, UploadedFile } from "../../shared/file";
+import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import {
   sendJuryScheduledAAPEmail,
   sendJuryScheduledCandidateEmail,
@@ -102,9 +102,9 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   const convocationFileId = uuidV4();
   if (convocationFile) {
-    await uploadFile({
-      candidacyId,
-      fileUuid: convocationFileId,
+    const filePath = `${candidacyId}/${convocationFileId}`;
+    await uploadFileToS3({
+      filePath,
       file: convocationFile,
     });
   }
@@ -167,20 +167,3 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   return jury;
 };
-
-const uploadFile = ({
-  candidacyId,
-  fileUuid,
-  file,
-}: {
-  candidacyId: string;
-  fileUuid: string;
-  file: UploadedFile;
-}) =>
-  FileService.getInstance().uploadFile(
-    {
-      fileKeyPath: `${candidacyId}/${fileUuid}`,
-      fileType: file.mimetype,
-    },
-    file._buf,
-  );

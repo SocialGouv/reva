@@ -1,6 +1,6 @@
-import { FileService, UploadedFile } from "../../shared/file";
-import { prismaClient } from "../../../prisma/client";
 import { v4 as uuidV4 } from "uuid";
+import { prismaClient } from "../../../prisma/client";
+import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";
 
 export const submitMaisonMereAAPLegalInformationDocuments = async (params: {
@@ -60,9 +60,10 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
 
   for (const [file, fileId] of filesAndIds) {
     if (file) {
-      await uploadFile({
+      const filePath = getFilePath({ maisonMereAAPId, fileId });
+      await uploadFileToS3({
+        filePath,
         file,
-        filePath: getFilePath({ maisonMereAAPId, fileId }),
       });
     }
   }
@@ -140,18 +141,3 @@ const getFilePath = ({
   maisonMereAAPId: string;
   fileId: string;
 }) => `maisonMereAAP/${maisonMereAAPId}/legal_information_documents/${fileId}`;
-
-const uploadFile = ({
-  filePath,
-  file,
-}: {
-  filePath: string;
-  file: UploadedFile;
-}) =>
-  FileService.getInstance().uploadFile(
-    {
-      fileKeyPath: filePath,
-      fileType: file.mimetype,
-    },
-    file._buf,
-  );

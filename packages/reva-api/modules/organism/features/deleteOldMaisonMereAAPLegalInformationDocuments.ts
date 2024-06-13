@@ -1,25 +1,22 @@
-import { FileService } from "../../shared/file";
-import { prismaClient } from "../../../prisma/client";
 import { File } from "@prisma/client";
-
-const deleteFile = ({ filePath }: { filePath: string }) =>
-  FileService.getInstance().deleteFile({ fileKeyPath: filePath });
-
+import { prismaClient } from "../../../prisma/client";
+import { deleteFile } from "../../shared/file";
 
 export const deleteOldMaisonMereAAPLegalInformationDocuments = async ({
   maisonMereAAPId,
 }: {
   maisonMereAAPId: string;
 }) => {
-  const oldDocuments = await prismaClient.maisonMereAAPLegalInformationDocuments.findUnique({
-    where: { maisonMereAAPId },
-    include: {
-      justificatifIdentiteDelegataireFile: true,
-      attestationURSSAFFile: true,
-      justificatifIdentiteDirigeantFile: true,
-      lettreDeDelegationFile: true,
-    },
-  });
+  const oldDocuments =
+    await prismaClient.maisonMereAAPLegalInformationDocuments.findUnique({
+      where: { maisonMereAAPId },
+      include: {
+        justificatifIdentiteDelegataireFile: true,
+        attestationURSSAFFile: true,
+        justificatifIdentiteDirigeantFile: true,
+        lettreDeDelegationFile: true,
+      },
+    });
 
   const files = [
     oldDocuments?.attestationURSSAFFile,
@@ -29,7 +26,7 @@ export const deleteOldMaisonMereAAPLegalInformationDocuments = async ({
   ].filter((d) => !!d) as File[];
 
   for (const file of files) {
-    await deleteFile({ filePath: file.path });
+    await deleteFile(file.path);
   }
 
   await prismaClient.maisonMereAAPLegalInformationDocuments.delete({

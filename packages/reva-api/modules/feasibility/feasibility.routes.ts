@@ -1,7 +1,8 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { FileService, UploadedFile } from "../shared/file";
+import { prismaClient } from "../../prisma/client";
+import { UploadedFile, getDownloadLink } from "../shared/file";
 import { logger } from "../shared/logger";
 import {
   canDownloadFeasibilityFiles,
@@ -10,7 +11,6 @@ import {
   getActiveFeasibilityByCandidacyid,
   handleFeasibilityDecision,
 } from "./feasibility.features";
-import { prismaClient } from "../../prisma/client";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };
@@ -88,9 +88,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           throw new Error("Fichier non trouvé");
         }
 
-        const fileLink = await FileService.getInstance().getDownloadLink({
-          fileKeyPath: file?.path,
-        });
+        const fileLink = await getDownloadLink(file?.path);
 
         if (fileLink) {
           reply

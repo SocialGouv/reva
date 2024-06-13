@@ -6,7 +6,7 @@ import { getAccountById } from "../../account/features/getAccount";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
-import { FileService, UploadedFile } from "../../shared/file";
+import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";
 
@@ -67,9 +67,9 @@ export const sendDossierDeValidation = async ({
   }
 
   const dossierDeValidationFileId = uuidV4();
-  await uploadFile({
-    candidacyId,
-    fileUuid: dossierDeValidationFileId,
+  const filePath = `${candidacyId}/${dossierDeValidationFileId}`;
+  await uploadFileToS3({
+    filePath,
     file: dossierDeValidationFile,
   });
 
@@ -79,9 +79,9 @@ export const sendDossierDeValidation = async ({
   }[] = dossierDeValidationOtherFiles.map((f) => ({ id: uuidV4(), file: f }));
 
   for (const d of dossierDeValidationOtherFilesWithIds) {
-    await uploadFile({
-      candidacyId,
-      fileUuid: d.id,
+    const filePath = `${candidacyId}/${d.id}`;
+    await uploadFileToS3({
+      filePath,
       file: d.file,
     });
   }
@@ -178,20 +178,3 @@ export const sendDossierDeValidation = async ({
 
   return dossierDeValidation;
 };
-
-const uploadFile = ({
-  candidacyId,
-  fileUuid,
-  file,
-}: {
-  candidacyId: string;
-  fileUuid: string;
-  file: UploadedFile;
-}) =>
-  FileService.getInstance().uploadFile(
-    {
-      fileKeyPath: `${candidacyId}/${fileUuid}`,
-      fileType: file.mimetype,
-    },
-    file._buf,
-  );

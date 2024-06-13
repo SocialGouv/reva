@@ -1,4 +1,7 @@
+import { File } from "@prisma/client";
+import { prismaClient } from "../../../prisma/client";
 import { getAccountFromEmail } from "../../account/database/accounts";
+import { createAccount } from "../../account/features/createAccount";
 import * as IAM from "../../account/features/keycloak";
 import {
   createOrganism,
@@ -6,11 +9,8 @@ import {
 } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
+import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
-import { createAccount } from "../../account/features/createAccount";
-import { prismaClient } from "../../../prisma/client";
-import { FileService } from "../../shared/file";
-import { File } from "@prisma/client";
 
 export const validateSubscriptionRequestV2 = async ({
   subscriptionRequestId,
@@ -160,7 +160,7 @@ export const validateSubscriptionRequestV2 = async ({
 
 const deleteFiles = async ({ files }: { files: File[] }) => {
   for (const file of files) {
-    await FileService.getInstance().deleteFile({ fileKeyPath: file.path });
+    await deleteFile(file.path);
   }
 
   await prismaClient.file.deleteMany({

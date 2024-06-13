@@ -1,8 +1,11 @@
-import { getOrganismBySiretAndTypology } from "../../organism/database/organisms";
-import { FileService, UploadedFile } from "../../shared/file";
-import { buffer } from "stream/consumers";
 import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../prisma/client";
+import { getOrganismBySiretAndTypology } from "../../organism/database/organisms";
+import {
+  emptyUploadedFileStream,
+  getUploadedFile,
+  uploadFileToS3,
+} from "../../shared/file";
 
 export const createSubscriptionRequestV2 = async ({
   params,
@@ -139,29 +142,6 @@ export const createSubscriptionRequestV2 = async ({
   }
 };
 
-const emptyUploadedFileStream = async (file?: GraphqlUploadedFile) => {
-  try {
-    if (file) {
-      const stream = (await file).createReadStream();
-      stream.on("data", () => null);
-    }
-  } catch (_) {
-    //do nothing
-  }
-};
-
-const getUploadedFile = async (
-  filePromise: GraphqlUploadedFile,
-): Promise<UploadedFile> => {
-  const file = await filePromise;
-  const fileContentBuffer = await buffer(file.createReadStream());
-  return {
-    filename: file.filename,
-    _buf: fileContentBuffer,
-    mimetype: file.mimetype,
-  };
-};
-
 const getFilePath = ({
   subscriptionRequestId,
   fileId,
@@ -170,18 +150,3 @@ const getFilePath = ({
   fileId: string;
 }) =>
   `subscriptions/${subscriptionRequestId}/legal_information_documents/${fileId}`;
-
-const uploadFileToS3 = ({
-  filePath,
-  file,
-}: {
-  filePath: string;
-  file: UploadedFile;
-}) =>
-  FileService.getInstance().uploadFile(
-    {
-      fileKeyPath: filePath,
-      fileType: file.mimetype,
-    },
-    file._buf,
-  );

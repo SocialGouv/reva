@@ -1,6 +1,12 @@
 import { v4 } from "uuid";
 
-import { FileInterface, FileService, UploadedFile } from "../shared/file";
+import {
+  FileInterface,
+  UploadedFile,
+  deleteFile,
+  fileExists,
+  uploadFile,
+} from "../shared/file";
 
 interface FeasibilityFileData {
   candidacyId: string;
@@ -42,24 +48,17 @@ export class FeasibilityFile {
       throw new Error('"fileToUpload" has not been set');
     }
 
-    await FileService.getInstance().uploadFile(
+    await uploadFile(
       { ...this.file, fileType: this.fileToUpload.mimetype },
       this.fileToUpload._buf,
     );
 
-    const exists = await FileService.getInstance().exists(this.file);
+    const exists = await fileExists(this.file);
     if (!exists && retry < 3) {
       await wait(1000);
       await this.uploadWithRetry(retry + 1);
     } else if (!exists) {
       throw new Error(`Failed to upload ${this.fileToUpload.filename}`);
-    }
-  }
-
-  async delete(): Promise<void> {
-    const exists = await FileService.getInstance().exists(this.file);
-    if (exists) {
-      await FileService.getInstance().deleteFile(this.file);
     }
   }
 }
@@ -78,7 +77,7 @@ export async function uploadFeasibilityFiles(
   }
 
   for (const file of files) {
-    file.delete();
+    await deleteFile(file.keyPath);
   }
 
   return false;
