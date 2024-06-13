@@ -748,7 +748,7 @@ export const validateFeasibility = async ({
       sendFeasibilityDecisionTakenToAAPEmail({
         email:
           updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacyId}/feasibility`,
+        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
       });
     }
 
@@ -863,7 +863,7 @@ export const rejectFeasibility = async ({
       sendFeasibilityDecisionTakenToAAPEmail({
         email:
           updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
+        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
       });
     }
 
@@ -940,7 +940,7 @@ export const markFeasibilityAsIncomplete = async ({
       sendFeasibilityIncompleteMailToAAP({
         email:
           updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
+        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
         comment,
       });
     }

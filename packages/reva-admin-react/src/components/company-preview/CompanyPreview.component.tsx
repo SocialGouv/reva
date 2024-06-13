@@ -1,6 +1,6 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { useEtablissement } from "./CompanyPreview.hook";
+import { useEtablissement } from "./CompanyPreview.hooks";
 import { format } from "date-fns";
 import { GrayCard } from "../card/gray-card/GrayCard";
 

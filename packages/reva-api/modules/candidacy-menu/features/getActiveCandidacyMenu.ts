@@ -128,7 +128,7 @@ export const getActiveCandidacyMenu = async ({
         isDematerializedFeasibilityFeatureActive &&
         feasibilityFormat === "DEMATERIALIZED"
           ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
-          : buildUrl({ adminType: "Elm", suffix: "feasibility" });
+          : buildUrl({ adminType: "React", suffix: "feasibility-aap/pdf" });
     }
 
     return showFeasibilityEntry

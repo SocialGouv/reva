@@ -2,7 +2,6 @@
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { Impersonate } from "@/components/impersonate";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
@@ -180,7 +179,6 @@ const MeetingsPage = () => {
       <CandidacyBackButton candidacyId={candidacyId} />
       <div className="flex flex-row justify-between">
         <h1>Rendez-vous pédagogique</h1>
-        <Impersonate candidateId={candidateId} />
       </div>
       <FormOptionalFieldsDisclaimer />
       {getCandidacyStatus === "success" && (
