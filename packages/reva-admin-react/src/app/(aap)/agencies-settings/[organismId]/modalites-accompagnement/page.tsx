@@ -111,7 +111,7 @@ const ModalitesAccompagnementPage = () => {
   const handleReset = useCallback(() => {
     reset({
       ...organism?.informationsCommerciales,
-      isOnSite: organism?.isOnSite,
+      isOnSite: organism?.isHeadAgency ? organism?.isOnSite : true, //All agencies are on site except the head one which can either be on site or not
       zoneInterventionDistanciel: zonesIntervention.remote || [],
     } as FormData);
   }, [organism, reset, zonesIntervention.remote]);
@@ -227,19 +227,21 @@ const ModalitesAccompagnementPage = () => {
                 </SmallNotice>
               </div>
             </fieldset>
-            <div className="grid grid-cols-1 md:grid-cols-2 mt-8 gap-y-4">
-              <fieldset className="flex flex-col md:pr-6">
+            <div className="flex flex-col md:flex-row mt-8 gap-y-4">
+              <fieldset className="flex flex-col md:pr-6 md:basis-1/2 flex-grow">
                 <legend className="text-2xl font-bold mb-4">Présentiel</legend>
                 <div className="flex flex-col">
-                  <Checkbox
-                    className="col-span-2 mt-4 mb-0"
-                    options={[
-                      {
-                        label: "L'accompagnement se fait sur site",
-                        nativeInputProps: { ...register("isOnSite") },
-                      },
-                    ]}
-                  />
+                  {organism?.isHeadAgency && (
+                    <Checkbox
+                      className="col-span-2 mt-4 mb-0"
+                      options={[
+                        {
+                          label: "L'accompagnement se fait sur site",
+                          nativeInputProps: { ...register("isOnSite") },
+                        },
+                      ]}
+                    />
+                  )}
                   <Input
                     label="Numéro et nom de rue"
                     nativeInputProps={{
@@ -291,18 +293,20 @@ const ModalitesAccompagnementPage = () => {
                   />
                 </div>
               </fieldset>
-              <fieldset className="flex flex-col md:pl-6 md:border-l">
-                <legend className="text-2xl font-bold mb-4 md:mb-[68px]">
-                  Distanciel
-                </legend>
-                <ZoneIntervention
-                  type="REMOTE"
-                  zoneIntervention={
-                    remoteInterventionZoneController.field.value
-                  }
-                  onChange={remoteInterventionZoneController.field.onChange}
-                />
-              </fieldset>
+              {organism?.isHeadAgency && (
+                <fieldset className="flex flex-col md:pl-6 md:border-l md:basis-1/2">
+                  <legend className="text-2xl font-bold mb-4 md:mb-[68px]">
+                    Distanciel
+                  </legend>
+                  <ZoneIntervention
+                    type="REMOTE"
+                    zoneIntervention={
+                      remoteInterventionZoneController.field.value
+                    }
+                    onChange={remoteInterventionZoneController.field.onChange}
+                  />
+                </fieldset>
+              )}
             </div>
             <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
               <Button priority="secondary" type="reset">

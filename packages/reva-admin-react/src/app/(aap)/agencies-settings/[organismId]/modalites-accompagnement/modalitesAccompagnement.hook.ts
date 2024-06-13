@@ -9,6 +9,7 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       isOnSite
+      isHeadAgency
       informationsCommerciales {
         id
         nom
