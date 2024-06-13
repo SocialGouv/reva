@@ -1230,6 +1230,7 @@ model File {
   linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequestV2 SubscriptionRequestV2[]                  @relation("srv2_justificatif_identite_dirigeant_file")
   linkedAsLettreDeDelegationFileInSubscriptionRequestV2                         SubscriptionRequestV2[]                  @relation("srv2_lettre_de_delegation_file")
   linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequestV2            SubscriptionRequestV2[]                  @relation("srv2_justificatif_identite_delegataire_file")
+  linkedAsDFFFile                                                               DFFFile?                                 @relation("dff_file")
 
   @@map("file")
 }
@@ -1461,15 +1462,36 @@ model DematerializedFeasibilityFile {
   dffCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
   certificationPartComplete       Boolean                           @default(false) @map("certification_part_complete")
   prerequisitesPartComplete       Boolean                           @default(false) @map("prerequisites_part_complete")
+  attachmentsPartComplete         Boolean                           @default(false) @map("attachments_part_complete")
   prerequisites                   DFFPrerequisite[]
   competenceBlocsPartCompletion   CompetenceBlocsPartCompletionEnum @default(TO_COMPLETE) @map("competence_blocs_part_completion")
   decision                        DFFDecision?
   decisionComment                 String?                           @map("decision_comment")
   decisionSentAt                  DateTime?                         @map("decision_sent_at") @db.Timestamptz(6)
+  dffFiles                        DFFFile[]
 
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("dematerialized_feasibility_file")
+}
+
+model DFFFile {
+  id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fileId                          String                        @unique @map("file_id") @db.Uuid
+  file                            File                          @relation("dff_file", fields: [fileId], references: [id])
+  type                            DFFFileType
+  createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
+
+  @@map("dff_file")
+}
+
+enum DFFFileType {
+  ID_CARD
+  EQUIVALENCE_OR_EXEMPTION_PROOF
+  TRAINING_CERTIFICATE
+  OTHER
 }
 
 model DFFCertificationCompetenceBloc {

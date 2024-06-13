@@ -6,6 +6,7 @@ type DematerializedFeasibilityFile {
   option: String
   blocsDeCompetences(blocDeCompetencesId: ID): [CertificationCompetenceBloc!]!
   certificationPartComplete: Boolean!
+  attachmentsPartComplete: Boolean!
   competenceBlocsPartCompletion: CompetenceBlocsPartCompletion!
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
@@ -95,6 +96,14 @@ input CompetenceIdAndText {
   text: String!
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
+  candidacyId: ID!
+  idCard: Upload!
+  equivalanceOrExemptionProof: Upload
+  trainingCertificate: Upload
+  otherAttachments: [Upload]
+}
+
 type Query {
   dematerialized_feasibility_file_getByCandidacyId(
     candidacyId: ID!
@@ -117,4 +126,8 @@ type Mutation {
   dematerialized_feasibility_file_createOrUpdateDecision(
     input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
   ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdateAttachments(
+    input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput!
+  ): String!
 }

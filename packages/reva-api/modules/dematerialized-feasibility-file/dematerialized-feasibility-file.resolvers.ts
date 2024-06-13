@@ -4,11 +4,13 @@ import { getCertificationCompetenceById } from "../referential/features/getCerti
 import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
+  DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
   DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
 } from "./dematerialized-feasibility-file.types";
+import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { createOrUpdateDecision } from "./features/createOrUpdateDecision";
@@ -89,6 +91,14 @@ export const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
       },
     ) => createOrUpdateDecision(params.input),
+    dematerialized_feasibility_file_createOrUpdateAttachments: (
+      _parent: unknown,
+      {
+        input,
+      }: {
+        input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput;
+      },
+    ) => createOrUpdateAttachments(input),
   },
 };
 
