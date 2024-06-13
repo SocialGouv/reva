@@ -285,13 +285,9 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))
       ?.isActive;
     if (isCGUAcceptanceRequired) {
-      try {
-        const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
-        if (CGU_AAP_VERSION != undefined) {
-          whereClause += ` and mm."cgu_version" = '${CGU_AAP_VERSION}' `;
-        }
-      } catch (error) {
-        console.error(error);
+      const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
+      if (CGU_AAP_VERSION != undefined) {
+        whereClause += ` and mm."cgu_version" = '${CGU_AAP_VERSION}' `;
       }
     }
 

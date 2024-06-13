@@ -144,7 +144,7 @@ const unsafeResolvers = {
     }) => ({
       version: cguVersion,
       acceptedAt: cguAcceptedAt,
-      currentVersion: (await getLastProfessionalCgu())?.version,
+      isLatestVersion: (await getLastProfessionalCgu())?.version == cguVersion,
     }),
   },
   MaisonMereAAPLegalInformationDocuments: {

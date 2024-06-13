@@ -21,11 +21,7 @@ export const AapCgu = (): JSX.Element | null => {
     getMaisonMereCGU.data?.account_getAccountForConnectedUser?.maisonMereAAP
       ?.cgu;
 
-  if (
-    !isFeatureAapCguActive ||
-    isCguPathname ||
-    cgu?.version == cgu?.currentVersion
-  ) {
+  if (!isFeatureAapCguActive || isCguPathname || cgu?.isLatestVersion) {
     return null;
   }
 
