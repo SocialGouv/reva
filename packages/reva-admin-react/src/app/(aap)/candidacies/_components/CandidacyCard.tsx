@@ -3,6 +3,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export const CandidacyCard = ({
   candidacyId,
@@ -25,15 +26,19 @@ export const CandidacyCard = ({
   organismLabel?: string;
   fundable: boolean;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+
   return (
     <WhiteCard key={candidacyId}>
-      <div className="flex flex-col gap-2">
-        <Badge severity={fundable ? "info" : "new"} className="ml-auto">
-          {fundable ? "finançable france vae" : "finançable droit commun"}
-        </Badge>
+      {isFeatureActive("FINANCEMENT_HORS_PLATEFORME") && (
+        <div className="flex flex-col gap-2">
+          <Badge severity={fundable ? "info" : "new"} className="ml-auto">
+            {fundable ? "finançable france vae" : "finançable droit commun"}
+          </Badge>
 
-        <h3 className="mb-2 text-lg">{certificationLabel}</h3>
-      </div>
+          <h3 className="mb-2 text-lg">{certificationLabel}</h3>
+        </div>
+      )}
       <div className="mb-2 flex gap-x-12 text-lg">
         <span>
           {candidateFirstname} {candidateLastname}
