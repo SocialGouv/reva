@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import { DecisionCard } from "./_components/DecisionCard";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { AttachmentsCard } from "./_components/AttachmentsCard";
+import { CandidateValidationCard } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/CandidateValidationCard";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -77,6 +78,7 @@ const AapFeasibilityPage = () => {
           <PrerequisitesCard />
           <DecisionCard />
           <AttachmentsCard />
+          <CandidateValidationCard />
         </ul>
       )}
     </div>

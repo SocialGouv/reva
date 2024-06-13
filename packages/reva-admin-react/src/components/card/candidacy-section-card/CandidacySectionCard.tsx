@@ -21,6 +21,7 @@ interface CandidacySectionCardProps {
   title: string;
   titleIconClass?: string;
   badge?: ReactNode;
+  disabled?: boolean;
 }
 
 const CandidacySectionCard = ({
@@ -32,21 +33,26 @@ const CandidacySectionCard = ({
   buttonTitle,
   buttonPriority,
   badge,
+  disabled = false,
 }: CandidacySectionCardProps & HasButton) => {
   return (
     <GrayCard>
       <div className="flex justify-between items-center w-full mb-5">
         <div className="flex items-center gap-4">
-          <h4 className="mb-0">
+          <h4 className={`mb-0 ${disabled ? "text-neutral-400" : ""}`}>
             {titleIconClass && (
               <span className={`fr-icon fr-icon--lg ${titleIconClass} mr-2`} />
             )}
             {title}
           </h4>
-          {badge}
+          {!disabled && badge}
         </div>
         {hasButton && (
-          <Button onClick={buttonOnClick} priority={buttonPriority}>
+          <Button
+            onClick={buttonOnClick}
+            priority={buttonPriority}
+            disabled={disabled}
+          >
             {buttonTitle}
           </Button>
         )}
