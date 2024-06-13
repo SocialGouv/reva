@@ -72,6 +72,8 @@ import {
   sendTrainingEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -170,71 +172,86 @@ const unsafeResolvers = {
         searchFilter: SearchOrganismFilter;
         searchText?: string;
       },
+      context: GraphqlContext,
     ) => {
-      const candidacy = await prismaClient.candidacy.findUnique({
-        where: { id: candidacyId },
-        include: {
-          organism: true,
-          certificationsAndRegions: {
-            select: {
-              certificationId: true,
-            },
-            where: {
-              isActive: true,
-            },
-          },
-        },
-      });
-
-      let organismsFound: OrganismCamelCase[];
-
       if (
-        searchFilter.zip &&
-        searchFilter.zip.length === 5 &&
-        (searchFilter?.distanceStatus === "ONSITE" ||
-          searchFilter?.distanceStatus === "ONSITE_REMOTE")
+        await isFeatureActiveForUser({
+          userKeycloakId: context.auth.userInfo?.sub || "",
+          feature: "AAP_INTERVENTION_ZONE_UPDATE",
+        })
       ) {
-        organismsFound = await getAAPsWithZipCode({
-          certificationId:
-            candidacy?.certificationsAndRegions[0]?.certificationId || "",
-          zip: searchFilter.zip,
-          pmr: searchFilter.pmr,
-          limit: 51,
+        return searchOrganismsForCandidacy({
+          candidacyId,
+          searchFilter,
           searchText,
-          distanceStatus: searchFilter.distanceStatus,
         });
       } else {
-        const result = await getRandomOrganismsForCandidacyWithNewTypologies({
-          getRandomActiveOrganismForCertificationAndDepartment:
-            organismDb.getRandomActiveOrganismForCertificationAndDepartment,
-          getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        })({ candidacyId, searchText, searchFilter, limit: 51 });
+        const candidacy = await prismaClient.candidacy.findUnique({
+          where: { id: candidacyId },
+          include: {
+            organism: true,
+            certificationsAndRegions: {
+              select: {
+                certificationId: true,
+              },
+              where: {
+                isActive: true,
+              },
+            },
+          },
+        });
 
-        result.mapLeft(
-          (error) => new mercurius.ErrorWithProps(error.message, error),
-        );
+        let organismsFound: OrganismCamelCase[];
 
-        if (result.isLeft()) {
-          return result.mapLeft(
+        if (
+          searchFilter.zip &&
+          searchFilter.zip.length === 5 &&
+          (searchFilter?.distanceStatus === "ONSITE" ||
+            searchFilter?.distanceStatus === "ONSITE_REMOTE")
+        ) {
+          organismsFound = await getAAPsWithZipCode({
+            certificationId:
+              candidacy?.certificationsAndRegions[0]?.certificationId || "",
+            zip: searchFilter.zip,
+            pmr: searchFilter.pmr,
+            limit: 51,
+            searchText,
+            distanceStatus: searchFilter.distanceStatus,
+          });
+        } else {
+          const result = await getRandomOrganismsForCandidacyWithNewTypologies({
+            getRandomActiveOrganismForCertificationAndDepartment:
+              organismDb.getRandomActiveOrganismForCertificationAndDepartment,
+            getCandidacyFromId: candidacyDb.getCandidacyFromId,
+          })({ candidacyId, searchText, searchFilter, limit: 51 });
+
+          result.mapLeft(
             (error) => new mercurius.ErrorWithProps(error.message, error),
           );
+
+          if (result.isLeft()) {
+            return result.mapLeft(
+              (error) => new mercurius.ErrorWithProps(error.message, error),
+            );
+          }
+
+          const data = result.extract() as {
+            rows: Organism[];
+            totalRows: number;
+          };
+
+          organismsFound = data.rows
+            .filter((c) => c.id !== candidacy?.organism?.id)
+            .slice(0, 50);
         }
 
-        const data = result.extract() as {
-          rows: Organism[];
-          totalRows: number;
+        return {
+          totalRows: organismsFound?.length ?? 0,
+          rows: organismsFound,
         };
-
-        organismsFound = data.rows
-          .filter((c) => c.id !== candidacy?.organism?.id)
-          .slice(0, 50);
       }
-
-      return {
-        totalRows: organismsFound?.length ?? 0,
-        rows: organismsFound,
-      };
     },
+
     getBasicSkills: async () => {
       const result = await getBasicSkills({
         getBasicSkills: basicSkillDb.getBasicSkills,
