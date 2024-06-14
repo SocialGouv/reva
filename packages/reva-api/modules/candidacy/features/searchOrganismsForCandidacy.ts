@@ -128,6 +128,7 @@ const getRandomActiveOrganismForCertification = async ({
                  o.contact_administrative_phone,
                  o.website,
                  o.siret,
+                 o.is_onsite as "isOnSite",
                  ao.organism_id
             ${fromClause}
             ${whereClause}
@@ -232,7 +233,7 @@ const getAAPsWithZipCode = async ({
   }
 
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
-      SELECT DISTINCT(o.*), (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
+      SELECT DISTINCT(o.*),o.is_onsite as "isOnSite", (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id

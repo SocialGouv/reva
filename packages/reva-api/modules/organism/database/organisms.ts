@@ -299,6 +299,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
                o.contact_administrative_phone,
                o.website,
                o.siret,
+               o.is_onsite as "isOnSite",
                ao.organism_id
         from organism o
                  left join organism_informations_commerciales as oic on oic.organism_id = o.id

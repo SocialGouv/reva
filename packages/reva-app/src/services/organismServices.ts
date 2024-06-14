@@ -19,6 +19,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
         contactAdministrativePhone
         website
         distanceKm
+        isOnSite
         organismOnDepartments(departmentId: $departmentId) {
           id
           departmentId

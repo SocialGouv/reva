@@ -80,6 +80,7 @@ export interface Organism {
   organismOnDepartments?: OrganismOnDepartment[];
   informationsCommerciales?: OrganismInformationsCommerciales;
   distanceKm?: number;
+  isOnSite: boolean;
 }
 
 export interface OrganismInformationsCommerciales {
