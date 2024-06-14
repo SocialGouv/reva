@@ -100,7 +100,6 @@ export const buildApp = async (
         "auth-server-url":
           process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
-        // realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
       } as any,
     });
   }
@@ -112,7 +111,6 @@ export const buildApp = async (
       "auth-server-url":
         process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
       realm: process.env.KEYCLOAK_APP_REALM || "reva-app",
-      // realmPublicKey: process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || "",
     } as any,
   });
 
