@@ -21,7 +21,7 @@ const createS3Client = () => {
     !process.env.OUTSCALE_BUCKET_REGION ||
     !process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT
   ) {
-    throw new Error("Environment variables for S3 configuration are missing");
+    return undefined;
   }
 
   return new S3Client({
@@ -33,7 +33,7 @@ const createS3Client = () => {
     },
   });
 };
-const client = process.env.NODE_ENV === "test" ? undefined : createS3Client();
+const client = createS3Client?.();
 
 export const getUploadLink = async (
   fileKeyPath: string,
