@@ -20,9 +20,9 @@ export const isCandidacyCompanion = [
   whenHasRole("manage_candidacy", isCandidacyOwner),
 ];
 
-export const defaultSecurity = [forbidden()];
+export const defaultSecurity = [forbidden];
 
-export const isAnyone = [allowed()];
+export const isAnyone = [allowed];
 
 export const isAdmin = [hasRole(["admin"])];
 

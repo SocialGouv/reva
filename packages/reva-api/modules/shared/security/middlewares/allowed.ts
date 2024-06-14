@@ -1,7 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
 export const allowed =
-  () =>
   (next: IFieldResolver<unknown>) =>
   (
     root: any,
