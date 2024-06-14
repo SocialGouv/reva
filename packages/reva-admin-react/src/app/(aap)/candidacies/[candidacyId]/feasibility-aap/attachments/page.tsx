@@ -3,14 +3,12 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { GRAPHQL_API_URL } from "@/config/config";
+import { useUrqlClient } from "@/components/urql-client";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
-import router from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { Client, fetchExchange } from "urql";
 import { z } from "zod";
 
 const createOrUpdateAttachments = graphql(`
@@ -51,6 +49,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function AttachmentsPage() {
   const { candidacyId } = useParams() satisfies { candidacyId: string };
+  const urqlClient = useUrqlClient();
+  const router = useRouter();
   const defaultValues = useMemo(
     () => ({
       idCard: undefined,
@@ -77,12 +77,8 @@ export default function AttachmentsPage() {
       trainingCertificate: data.trainingCertificate?.[0],
     };
 
-    const client = new Client({
-      url: GRAPHQL_API_URL,
-      exchanges: [fetchExchange],
-    });
     try {
-      const result = await client.mutation(createOrUpdateAttachments, {
+      const result = await urqlClient.mutation(createOrUpdateAttachments, {
         input,
       });
       if (result.error) {

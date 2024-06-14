@@ -65,7 +65,7 @@ export const createOrUpdateAttachments = async ({
       await Promise.all(
         existingFiles.map(({ file: { path } }) => deleteFile(path)),
       );
-      await prismaClient.dematerializedFeasibilityFile.deleteMany({
+      await prismaClient.dFFFile.deleteMany({
         where: {
           id: {
             in: existingFiles.map(({ id }) => id),
@@ -132,8 +132,6 @@ export const createOrUpdateAttachments = async ({
       }
     }
 
-    console.log("fileAndIds", fileAndIds);
-
     for (const { file, filePath } of fileAndIds) {
       await uploadFileToS3({
         file,
@@ -141,29 +139,28 @@ export const createOrUpdateAttachments = async ({
       });
     }
 
-    await prismaClient.dematerializedFeasibilityFile.createMany({
-      data: fileAndIds.map(({ filePath, dffFileType, mimeType, name }) => ({
+    await prismaClient.dematerializedFeasibilityFile.update({
+      where: {
         id: dffWithAttachments.id,
-        candidacyId,
+      },
+      data: {
         attachmentsPartComplete: true,
         dffFiles: {
-          file: {
-            path: filePath,
-            type: mimeType,
-            name,
-          },
-          type: dffFileType,
-          dematerializedFeasibilityFileId: dffWithAttachments.id,
+          create: fileAndIds.map(
+            ({ filePath, mimeType, name, dffFileType }) => ({
+              type: dffFileType,
+              file: {
+                create: {
+                  path: filePath,
+                  mimeType,
+                  name,
+                },
+              },
+            }),
+          ),
         },
-      })),
+      },
     });
-
-    const dffUpdated =
-      await getDematerializedFeasibilityFileWithAttachmentsByCandidacyId({
-        candidacyId,
-      });
-
-    console.log("dffUpdated", dffUpdated);
 
     return "Ok";
   } finally {
