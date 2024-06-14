@@ -118,7 +118,7 @@ export const buildApp = async (
 
   app.register(keycloakAdminPlugin);
 
-  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000 });
+  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000000 });
 
   app.register(mercuriusGraphQL, {
     prefix: "/api",
