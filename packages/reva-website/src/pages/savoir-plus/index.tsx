@@ -1,6 +1,5 @@
 "use client";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
@@ -157,7 +156,6 @@ const HelpArticle = ({
 );
 
 const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
-  const { isFeatureActive } = useFeatureflipping();
   return (
     <>
       <Head>
@@ -179,17 +177,9 @@ const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
               Trouvez des réponses à vos questions à propos de votre VAE.
             </h2>
             <div className="flex gap-4">
-              {isFeatureActive("FAQ_SITE_INSTITUTIONNEL") ? (
-                <Button size="small" linkProps={{ href: "/faq" }}>
-                  Questions fréquentes
-                </Button>
-              ) : (
-                <Button size="small">
-                  <a href="https://reva.crisp.help/fr/category/candidat-rhr5rx/">
-                    Foire aux questions
-                  </a>
-                </Button>
-              )}
+              <Button size="small" linkProps={{ href: "/faq" }}>
+                Questions fréquentes
+              </Button>
               <Button priority="secondary" size="small">
                 <a href="https://vae.gouv.fr/nous-contacter/">Nous contacter</a>
               </Button>

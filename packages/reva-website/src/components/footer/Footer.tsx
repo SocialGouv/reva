@@ -1,9 +1,7 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import Image from "next/image";
 import Link from "next/link";
 
 export const Footer = ({ className }: { className?: string }) => {
-  const { isFeatureActive } = useFeatureflipping();
   return (
     <footer className={`fr-footer ${className}`} role="contentinfo" id="footer">
       <div className="fr-container">
@@ -139,25 +137,14 @@ export const Footer = ({ className }: { className?: string }) => {
               </Link>
             </li>
             <li className="fr-footer__bottom-item">
-              {isFeatureActive("FAQ_SITE_INSTITUTIONNEL") ? (
-                <Link
-                  className="fr-footer__bottom-link"
-                  target="_blank"
-                  title="Questions fréquentes"
-                  href="/faq"
-                >
-                  Questions fréquentes
-                </Link>
-              ) : (
-                <Link
-                  className="fr-footer__bottom-link"
-                  target="_blank"
-                  title="Questions fréquentes - nouvelle fenêtre"
-                  href="https://reva.crisp.help/fr/category/candidat-rhr5rx/"
-                >
-                  Questions fréquentes
-                </Link>
-              )}
+              <Link
+                className="fr-footer__bottom-link"
+                target="_blank"
+                title="Questions fréquentes"
+                href="/faq"
+              >
+                Questions fréquentes
+              </Link>
             </li>
           </ul>
           <div className="fr-footer__bottom-copy">
