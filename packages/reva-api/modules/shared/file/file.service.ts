@@ -33,7 +33,7 @@ const createS3Client = () => {
     },
   });
 };
-const client = createS3Client();
+const client = process.env.NODE_ENV === "test" ? undefined : createS3Client();
 
 export const getUploadLink = async (
   fileKeyPath: string,
@@ -49,7 +49,7 @@ export const fileExists = async (file: FileInterface): Promise<boolean> => {
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: file.fileKeyPath,
     });
-    const result = await client.send(command);
+    const result = await client?.send(command);
     return result?.$metadata?.httpStatusCode === 200;
   } catch (error) {
     console.error(error);
@@ -70,7 +70,7 @@ export const uploadFile = async (
   });
 
   try {
-    await client.send(command);
+    await client?.send(command);
   } catch (error) {
     console.error(error);
     logger.error(error);
@@ -84,7 +84,7 @@ export const deleteFile = async (fileKeyPath: string): Promise<void> => {
   });
 
   try {
-    await client.send(command);
+    await client?.send(command);
   } catch (error) {
     console.error(error);
     logger.error(error);
@@ -99,6 +99,7 @@ export const getSignedUrlForUpload = async (
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: fileKeyPath,
     });
+    if (!client) return;
     return await getSignedUrl(client, command, {
       expiresIn: SIGNED_URL_EXPIRE_SECONDS,
     });
@@ -117,6 +118,7 @@ export const getSignedUrlForDownload = async (
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: fileKeyPath,
     });
+    if (!client) return;
     return await getSignedUrl(client, command, {
       expiresIn: SIGNED_URL_EXPIRE_SECONDS,
     });
