@@ -1,3 +1,17 @@
+type Feature {
+  key: String!
+  label: String!
+  isActive: Boolean!
+}
+
 type Query {
   activeFeaturesForConnectedUser: [String!]!
+  featureFlipping_getFeatures: [Feature!]!
+}
+
+type Mutation {
+  featureFlipping_toggleFeature(
+    featureKey: String!
+    isActive: Boolean!
+  ): Feature!
 }

@@ -1,6 +1,12 @@
-import { activeFeaturesForConnectedUser } from "./feature-flipping.features";
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import {
+  activeFeaturesForConnectedUser,
+  getFeatures,
+  toggleFeature,
+} from "./feature-flipping.features";
+import { featureFlippingResolversSecurityMap } from "./feature-filipping.security";
 
-export const featureFlippingResolvers = {
+const unsafeResolvers = {
   Query: {
     activeFeaturesForConnectedUser: (
       _parent: unknown,
@@ -10,5 +16,21 @@ export const featureFlippingResolvers = {
       activeFeaturesForConnectedUser({
         userKeycloakId: context.auth.userInfo?.sub,
       }),
+
+    featureFlipping_getFeatures: getFeatures,
+  },
+  Mutation: {
+    featureFlipping_toggleFeature: (
+      _parent: unknown,
+      params: {
+        featureKey: string;
+        isActive: boolean;
+      },
+    ) => toggleFeature(params),
   },
 };
+
+export const featureFlippingResolvers = composeResolvers(
+  unsafeResolvers,
+  featureFlippingResolversSecurityMap,
+);

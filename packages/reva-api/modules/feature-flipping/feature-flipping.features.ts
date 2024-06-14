@@ -45,3 +45,18 @@ export const isFeatureActiveForUser = async ({
 
   return activeFeatures.includes(feature);
 };
+
+export const getFeatures = () =>
+  prismaClient.feature.findMany({ orderBy: { createdAt: "desc" } });
+
+export const toggleFeature = ({
+  featureKey,
+  isActive,
+}: {
+  featureKey: string;
+  isActive: boolean;
+}) =>
+  prismaClient.feature.update({
+    where: { key: featureKey },
+    data: { isActive },
+  });
