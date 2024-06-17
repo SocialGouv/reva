@@ -415,6 +415,7 @@ model Organism {
   fermePourAbsenceOuConges               Boolean                                  @default(false) @map("ferme_pour_absence_ou_conges")
   managedDegrees                         OrganismOnDegree[]
   isOnSite                               Boolean                                  @default(false) @map("is_onsite")
+  isRemote                               Boolean                                  @default(false) @map("is_remote")
   isHeadAgency                           Boolean                                  @default(false) @map("is_head_agency")
   ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
   OrganismOnRemoteZone                   OrganismOnRemoteZone[]

@@ -10,6 +10,7 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       isOnSite
+      isRemote
       remoteZones
       isHeadAgency
       informationsCommerciales {
@@ -34,6 +35,7 @@ const createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation =
       $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
       $organismId: String!
       $isOnSite: Boolean!
+      $isRemote: Boolean!
       $remoteZones: [RemoteZone!]!
     ) {
       organism_createOrUpdateInformationsCommerciales(
@@ -44,6 +46,7 @@ const createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation =
       organism_updateOrganismOnSiteAndRemoteStatus(
         organismId: $organismId
         isOnSite: $isOnSite
+        isRemote: $isRemote
         remoteZones: $remoteZones
       ) {
         id
@@ -77,10 +80,12 @@ export const useModalitesAccompagnementPage = () => {
         organismId,
         informationsCommerciales,
         isOnSite,
+        isRemote,
         remoteZones,
       }: {
         organismId: string;
         isOnSite: boolean;
+        isRemote: boolean;
         remoteZones: RemoteZone[];
         informationsCommerciales: {
           nom: string;
@@ -91,6 +96,7 @@ export const useModalitesAccompagnementPage = () => {
           {
             organismId,
             isOnSite,
+            isRemote,
             remoteZones,
             createOrUpdateInformationsCommercialesInput: {
               organismId,

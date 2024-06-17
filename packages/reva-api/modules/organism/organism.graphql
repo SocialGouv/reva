@@ -41,6 +41,7 @@ type Organism {
   llToEarth: String
   distanceKm: Float
   isOnSite: Boolean!
+  isRemote: Boolean!
   remoteZones: [RemoteZone!]!
   isHeadAgency: Boolean!
 }
@@ -323,6 +324,7 @@ type Mutation {
   organism_updateOrganismOnSiteAndRemoteStatus(
     organismId: String!
     isOnSite: Boolean!
+    isRemote: Boolean!
     remoteZones: [RemoteZone!]!
   ): Organism!
 

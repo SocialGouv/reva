@@ -554,6 +554,7 @@ const unsafeResolvers = {
       params: {
         organismId: string;
         isOnSite: boolean;
+        isRemote: boolean;
         remoteZones: RemoteZone[];
       },
       context: GraphqlContext,

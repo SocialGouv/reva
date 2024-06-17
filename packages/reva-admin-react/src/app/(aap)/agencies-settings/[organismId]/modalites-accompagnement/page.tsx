@@ -77,7 +77,7 @@ const ModalitesAccompagnementPage = () => {
       isRemoteLaReunion: organism?.remoteZones?.includes("LA_REUNION"),
       isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
       isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
-      isRemote: !!organism?.remoteZones?.length,
+      isRemote: organism?.isRemote,
     } as FormData);
   }, [organism, reset]);
 
@@ -124,6 +124,7 @@ const ModalitesAccompagnementPage = () => {
         {
           organismId: organism?.id,
           isOnSite,
+          isRemote,
           remoteZones,
           informationsCommerciales,
         },
