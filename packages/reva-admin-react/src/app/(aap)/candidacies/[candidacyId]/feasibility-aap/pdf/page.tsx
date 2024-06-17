@@ -33,10 +33,9 @@ const AapFeasibilityPage = () => {
             <h3 className="mb-0 text-xl font-normal">{certification?.label}</h3>
           </div>
 
-          {!feasibility ||
-            (feasibility.decision == "INCOMPLETE" && (
-              <SendFeasibilityForm candidacyId={candidacyId} />
-            ))}
+          {(!feasibility || feasibility.decision == "INCOMPLETE") && (
+            <SendFeasibilityForm candidacyId={candidacyId} />
+          )}
 
           {feasibility && feasibility.decision != "INCOMPLETE" && (
             <FeasibiltyStatus candidacyId={candidacyId} />
