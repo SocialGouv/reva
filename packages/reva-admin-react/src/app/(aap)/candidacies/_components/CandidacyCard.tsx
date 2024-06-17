@@ -30,15 +30,14 @@ export const CandidacyCard = ({
 
   return (
     <WhiteCard key={candidacyId}>
-      {isFeatureActive("FINANCEMENT_HORS_PLATEFORME") && (
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        {isFeatureActive("FINANCEMENT_HORS_PLATEFORME") && (
           <Badge severity={fundable ? "info" : "new"} className="ml-auto">
             {fundable ? "finançable france vae" : "finançable droit commun"}
           </Badge>
-
-          <h3 className="mb-2 text-lg">{certificationLabel}</h3>
-        </div>
-      )}
+        )}
+        <h3 className="mb-2 text-lg">{certificationLabel}</h3>
+      </div>
       <div className="mb-2 flex gap-x-12 text-lg">
         <span>
           {candidateFirstname} {candidateLastname}
