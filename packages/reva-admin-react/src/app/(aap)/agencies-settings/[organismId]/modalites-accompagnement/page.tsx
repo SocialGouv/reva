@@ -14,7 +14,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { RemoteZone } from "@/graphql/generated/graphql";
 
 const schema = z.object({
-  nom: z.string().optional().default(""),
+  nom: z.string().min(1, "Ce champ est obligatoire"),
   telephone: z.string().optional().default(""),
   siteInternet: z.string().optional().default(""),
   emailContact: z
@@ -168,20 +168,14 @@ const ModalitesAccompagnementPage = () => {
               <div>
                 <Input
                   label="Nom commercial"
-                  hintText="(optionnel)"
+                  state={errors.nom ? "error" : "default"}
+                  stateRelatedMessage={errors.nom?.message}
                   nativeInputProps={{ ...register("nom") }}
                 />
-                <SmallNotice>
-                  <span className="text-xs">
-                    Si vous ne renseignez pas ce champ, votre raison sociale
-                    sera affichée aux candidats par défaut.
-                  </span>
-                </SmallNotice>
               </div>
               <div>
                 <Input
-                  label="Site internet de l'établissement"
-                  hintText="(optionnel)"
+                  label="Site internet de l'établissement (optionnel)"
                   nativeInputProps={{
                     ...register("siteInternet"),
                   }}
@@ -195,8 +189,7 @@ const ModalitesAccompagnementPage = () => {
               </div>
               <div>
                 <Input
-                  label="Téléphone"
-                  hintText="(optionnel)"
+                  label="Téléphone (optionnel)"
                   nativeInputProps={{
                     ...register("telephone"),
                   }}
@@ -210,8 +203,7 @@ const ModalitesAccompagnementPage = () => {
               </div>
               <div>
                 <Input
-                  label="E-mail de contact"
-                  hintText="(optionnel)"
+                  label="E-mail de contact (optionnel)"
                   state={errors.emailContact ? "error" : "default"}
                   stateRelatedMessage={errors.emailContact?.message}
                   nativeInputProps={{

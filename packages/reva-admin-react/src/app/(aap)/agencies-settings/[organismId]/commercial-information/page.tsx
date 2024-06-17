@@ -12,7 +12,7 @@ import * as z from "zod";
 import { useCommercialInformationPage } from "./commercialInformationPage.hook";
 
 const schema = z.object({
-  nom: z.string().optional().default(""),
+  nom: z.string().min(1, "Ce champ est obligatoire"),
   telephone: z.string().optional().default(""),
   siteInternet: z.string().optional().default(""),
   emailContact: z
@@ -107,13 +107,11 @@ const CommercialInformationPage = () => {
               <div>
                 <Input
                   className="!mb-4"
-                  label="Nom commercial (optionnel)"
+                  label="Nom commercial"
+                  state={errors.nom ? "error" : "default"}
+                  stateRelatedMessage={errors.nom?.message}
                   nativeInputProps={{ ...register("nom") }}
                 />
-                <SmallNotice>
-                  Si vous ne renseignez pas ce champ, votre raison sociale sera
-                  affichée aux candidats par défaut.
-                </SmallNotice>
               </div>
               <div>
                 <Input
