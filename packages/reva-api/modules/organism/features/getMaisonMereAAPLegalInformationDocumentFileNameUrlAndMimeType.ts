@@ -58,12 +58,17 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
 
     const url = await getDownloadLink(filePath);
 
+    const previewPath =
+      process.env.APP_ENV === "production" || process.env.APP_ENV === "staging"
+        ? FILE_PREVIEW_ROUTE_PATH
+        : `/admin2${FILE_PREVIEW_ROUTE_PATH}`;
+
     return filename
       ? {
           name: filename,
           mimeType,
           url,
-          previewUrl: url?.replace(OOS_DOMAIN, FILE_PREVIEW_ROUTE_PATH),
+          previewUrl: url?.replace(OOS_DOMAIN, previewPath),
         }
       : null;
   };

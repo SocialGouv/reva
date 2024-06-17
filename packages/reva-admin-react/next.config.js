@@ -16,6 +16,14 @@ const nextConfig = {
     });
     return config;
   },
+  rewrites: async () => {
+    return [
+      {
+        source: "/api/preview/:path*",
+        destination: "http://localhost:8080/api/preview/:path*",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
