@@ -15,7 +15,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
       </p>
       <br />
       <a
-        href="https://airtable.com/appQT21E7Sy70YfSB/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+        href="https://metabase.vae.gouv.fr/public/dashboard/e5a2b59d-26b2-443b-a874-d4561f1322eb"
         title="Voir tous les diplômes actuellement - nouvelle fenêtre"
         target="_blank"
       >
