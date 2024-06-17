@@ -111,7 +111,6 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
 
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <FancyUpload
-          className="upload-file"
           title="Joindre le dossier de faisabilité"
           description="Le dossier doit être complet et signé par vous-même et le candidat. Pensez à vérifier que vous avez tout saisi avant l’envoi."
           hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
@@ -123,7 +122,6 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           stateRelatedMessage={errors.feasibilityFile?.[0]?.message}
         />
         <FancyUpload
-          className="upload-file"
           title="Joindre la pièce d’identité (carte identité, passeport, carte de séjour)"
           description="Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce sera demandée au candidat pour justifier de son identité lors du passage devant jury et la délivrance éventuelle du diplôme."
           hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
@@ -134,7 +132,6 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           stateRelatedMessage={errors.idFile?.[0]?.message}
         />
         <FancyUpload
-          className="upload-file"
           title="Joindre une autre pièce (optionnel)"
           description="Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
           hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
@@ -146,7 +143,6 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           stateRelatedMessage={errors.documentaryProofFile?.[0]?.message}
         />
         <FancyUpload
-          className="upload-file"
           title="Joindre une autre pièce (optionnel)"
           description="Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée."
           hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"

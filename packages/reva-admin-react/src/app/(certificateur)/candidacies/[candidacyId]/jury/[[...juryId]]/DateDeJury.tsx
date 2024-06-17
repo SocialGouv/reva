@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { add, endOfDay, format, isAfter, isBefore, startOfDay } from "date-fns";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
-import { add, endOfDay, format, isAfter, isBefore, startOfDay } from "date-fns";
+
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
 import { errorToast } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +44,8 @@ const schema = z
     if (isBefore(date, data.dossierValidationUpdatedAt)) {
       ctx.addIssue({
         path: ["date"],
-        message: "La date doit être superieure à la date de dépôt du dossier de validation",
+        message:
+          "La date doit être superieure à la date de dépôt du dossier de validation",
         code: z.ZodIssueCode.custom,
       });
     }
@@ -76,10 +78,16 @@ export const DateDeJury = (): JSX.Element => {
   }, [candidacy?.jury?.dateOfSession, setValue]);
 
   useEffect(() => {
-    if(candidacy?.activeDossierDeValidation?.updatedAt) {
-      setValue("dossierValidationUpdatedAt", format(new Date(candidacy.activeDossierDeValidation.updatedAt), "yyyy-MM-dd"));
+    if (candidacy?.activeDossierDeValidation?.updatedAt) {
+      setValue(
+        "dossierValidationUpdatedAt",
+        format(
+          new Date(candidacy.activeDossierDeValidation.updatedAt),
+          "yyyy-MM-dd",
+        ),
+      );
     }
-  }, [candidacy?.activeDossierDeValidation?.updatedAt, setValue])
+  }, [candidacy?.activeDossierDeValidation?.updatedAt, setValue]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
@@ -252,13 +260,15 @@ export const DateDeJury = (): JSX.Element => {
               defaultValue: jury?.informationOfSession || "",
             }}
           />
-          <Upload
-            className="upload-file"
-            label="Joindre la convocation officielle (optionnel)"
+          <FancyUpload
+            title="Joindre la convocation officielle (optionnel)"
+            description=""
             hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
             nativeInputProps={{
               ...register("convocationFile"),
             }}
+            state={errors.convocationFile ? "error" : "default"}
+            stateRelatedMessage={errors.convocationFile?.[0]?.message}
           />
 
           <div className="flex flex-row items-end justify-end mt-8 gap-4">
