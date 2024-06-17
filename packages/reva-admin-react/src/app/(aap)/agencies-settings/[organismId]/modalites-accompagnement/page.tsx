@@ -6,7 +6,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 import { useModalitesAccompagnementPage } from "./modalitesAccompagnement.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
@@ -130,6 +130,8 @@ const ModalitesAccompagnementPage = () => {
     }
   });
 
+  const { isOnSite } = useWatch({ control });
+
   return (
     <div className="flex flex-col">
       <h1>Modalités d'acompagnement</h1>
@@ -235,18 +237,21 @@ const ModalitesAccompagnementPage = () => {
                   )}
                   <Input
                     label="Numéro et nom de rue"
+                    disabled={!isOnSite}
                     nativeInputProps={{
                       ...register("adresseNumeroEtNomDeRue"),
                     }}
                   />
                   <Input
                     label="Informations complémentaires"
+                    disabled={!isOnSite}
                     nativeInputProps={{
                       ...register("adresseInformationsComplementaires"),
                     }}
                   />
                   <Input
                     label="Code Postal"
+                    disabled={!isOnSite}
                     nativeInputProps={{
                       ...register("adresseCodePostal"),
                     }}
@@ -255,6 +260,7 @@ const ModalitesAccompagnementPage = () => {
                   />
                   <Input
                     label="Ville"
+                    disabled={!isOnSite}
                     nativeInputProps={{
                       ...register("adresseVille"),
                     }}
@@ -263,6 +269,7 @@ const ModalitesAccompagnementPage = () => {
 
                 <div className="mt-8">
                   <RadioButtons
+                    disabled={!isOnSite}
                     legend="Votre établissement est-il conforme aux normes d'accessibilité et peut
             recevoir du public à mobilité réduite (PMR) ?"
                     options={[
