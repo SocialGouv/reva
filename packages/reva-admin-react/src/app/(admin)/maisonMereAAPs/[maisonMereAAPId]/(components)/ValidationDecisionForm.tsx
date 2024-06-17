@@ -28,7 +28,7 @@ export default function ValidationDecisionForm({
   } = useForm<ValidationDecisionFormData>({
     resolver: zodResolver(validationDecisionFormSchema),
     defaultValues: {
-      decision: "DEMANDE_DE_PRECISION",
+      decision: undefined,
       aapComment: "",
       internalComment: "",
     },
