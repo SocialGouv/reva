@@ -3,7 +3,8 @@ import { prismaClient } from "../../../prisma/client";
 import { SearchOrganismFilter } from "../candidacy.types";
 import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 import { camelCase, mapKeys } from "lodash";
-import { Organism } from "../../organism/organism.types";
+import { Organism, RemoteZone } from "../../organism/organism.types";
+import { getDepartmentById } from "../../referential/features/getDepartmentById";
 
 export const searchOrganismsForCandidacy = async ({
   candidacyId,
@@ -101,7 +102,11 @@ const getRandomActiveOrganismForCertification = async ({
     searchFilter.distanceStatus === "REMOTE" ||
     searchFilter.distanceStatus === "ONSITE_REMOTE"
   ) {
-    fromClause += ` join organism_department as od on (od.is_remote='true' and od.organism_id = o.id and od.department_id = uuid('${departmentId}'))`;
+    const candidacyDepartmentRemoteZone = await getRemoteZoneFromDepartment({
+      departmentId,
+    });
+    whereClause += " and o.is_remote=true";
+    fromClause += ` join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`;
   }
   if (
     searchFilter.distanceStatus === "ONSITE" ||
@@ -211,7 +216,7 @@ const getAAPsWithZipCode = async ({
   `;
 
   if (distanceStatus === "ONSITE_REMOTE") {
-    whereClause += ` and od.is_remote = true`;
+    whereClause += ` and o.is_remote = true`;
   }
 
   if (searchText) {
@@ -238,7 +243,6 @@ const getAAPsWithZipCode = async ({
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
        JOIN active_organism_by_available_certification ao on ao.organism_id=o.id
-       LEFT JOIN organism_department od on od.organism_id=o.id
       ${whereClause}
       ORDER BY distance_km ASC
       LIMIT ${limit}
@@ -251,4 +255,26 @@ const getAAPsWithZipCode = async ({
   return organisms.map(
     (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
   ) as unknown as Organism[];
+};
+
+const getRemoteZoneFromDepartment = async ({
+  departmentId,
+}: {
+  departmentId: string;
+}): Promise<RemoteZone> => {
+  const departement = await getDepartmentById({ id: departmentId });
+  switch (departement?.code) {
+    case "971":
+      return "GUADELOUPE";
+    case "972":
+      return "MARTINIQUE";
+    case "973":
+      return "GUYANE";
+    case "974":
+      return "LA_REUNION";
+    case "975":
+      return "MAYOTTE";
+    default:
+      return "FRANCE_METROPOLITAINE";
+  }
 };
