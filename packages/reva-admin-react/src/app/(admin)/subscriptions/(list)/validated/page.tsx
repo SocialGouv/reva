@@ -12,6 +12,7 @@ const getValidatedSubscriptionRequests = graphql(`
       limit: 10
       offset: $offset
       searchFilter: $searchFilter
+      legalValidationStatus: A_METTRE_A_JOUR
     ) {
       rows {
         id
