@@ -13,6 +13,15 @@ enum LegalStatus {
   NC
 }
 
+enum RemoteZone {
+  FRANCE_METROPOLITAINE
+  GUADELOUPE
+  GUYANE
+  MARTINIQUE
+  MAYOTTE
+  LA_REUNION
+}
+
 type Organism {
   id: UUID!
   label: String!
@@ -32,6 +41,7 @@ type Organism {
   llToEarth: String
   distanceKm: Float
   isOnSite: Boolean!
+  remoteZones: [RemoteZone!]!
   isHeadAgency: Boolean!
 }
 

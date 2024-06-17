@@ -65,6 +65,7 @@ import { updateOrganismOnSiteStatus } from "./features/updateOrganismOnSiteStatu
 import { createAgency } from "./features/createAgency";
 import { acceptCgu } from "./features/acceptCgu";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
+import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 
 const unsafeResolvers = {
   Account: {
@@ -98,6 +99,12 @@ const unsafeResolvers = {
       getOrganismCcnsByOrganismId({
         organismId,
       }),
+    remoteZones: async ({ id: organismId }: Organism) =>
+      (
+        await getRemoteZonesByOrganismId({
+          organismId,
+        })
+      ).map((r) => r.remoteZone),
   },
   OrganismOnDegree: {
     degree: (organismOnDegree: { degreeId: string }) =>

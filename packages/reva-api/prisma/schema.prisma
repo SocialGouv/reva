@@ -417,10 +417,31 @@ model Organism {
   isOnSite                               Boolean                                  @default(false) @map("is_onsite")
   isHeadAgency                           Boolean                                  @default(false) @map("is_head_agency")
   ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
+  OrganismOnRemoteZone                   OrganismOnRemoteZone[]
 
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
   @@map("organism")
+}
+
+enum RemoteZone {
+  FRANCE_METROPOLITAINE
+  GUADELOUPE
+  GUYANE
+  MARTINIQUE
+  MAYOTTE
+  LA_REUNION
+}
+
+model OrganismOnRemoteZone {
+  id         String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism   Organism   @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId String     @map("organism_id") @db.Uuid
+  remoteZone RemoteZone @map("remote_zone")
+
+  @@unique([organismId, remoteZone])
+  @@index([remoteZone])
+  @@map("organism_on_remote_zone")
 }
 
 model OrganismOnDegree {
