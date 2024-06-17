@@ -81,6 +81,7 @@ export interface Organism {
   informationsCommerciales?: OrganismInformationsCommerciales;
   distanceKm?: number;
   isOnSite: boolean;
+  isRemote: boolean;
 }
 
 export interface OrganismInformationsCommerciales {

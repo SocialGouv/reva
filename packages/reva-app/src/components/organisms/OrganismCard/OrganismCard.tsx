@@ -22,11 +22,13 @@ const getMandatoryInfo = (
           "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" &&
         organism.organismOnDepartments?.find((od) => od.isOnSite)
       );
-  const isRemote = !!(
-    ic?.conformeNormesAccessbilite ===
-      "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" ||
-    organism.organismOnDepartments?.find((od) => od.isRemote)
-  );
+  const isRemote = isAAPInterventionZoneUpdateFeatureActive
+    ? organism.isRemote
+    : !!(
+        ic?.conformeNormesAccessbilite ===
+          "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" ||
+        organism.organismOnDepartments?.find((od) => od.isRemote)
+      );
   return {
     label: ic?.nom || organism.label,
     website: ic?.siteInternet || organism.website,

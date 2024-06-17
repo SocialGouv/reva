@@ -134,6 +134,7 @@ const getRandomActiveOrganismForCertification = async ({
                  o.website,
                  o.siret,
                  o.is_onsite as "isOnSite",
+                 o.is_remote,
                  ao.organism_id
             ${fromClause}
             ${whereClause}
