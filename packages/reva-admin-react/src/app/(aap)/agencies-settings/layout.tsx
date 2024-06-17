@@ -114,6 +114,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             ...agencies
               .sort((a, b) => {
                 if (a.isHeadAgency) return -1;
+                if (b.isHeadAgency) return 1;
                 const aName = a.informationsCommerciales?.nom || a.label;
                 const bName = b.informationsCommerciales?.nom || b.label;
                 return aName.localeCompare(bName);
