@@ -28,10 +28,23 @@ export const Header = (props: { className?: string }) => {
     },
     {
       isActive: !!asPath.match(/\/savoir-plus/)?.length,
-      linkProps: {
-        href: "/savoir-plus",
-      },
       text: "Espace d'informations",
+      menuLinks: [
+        {
+          linkProps: {
+            href: "/savoir-plus",
+          },
+          isActive: !!asPath.match(/\/savoir-plus\/?$/)?.length,
+          text: "Nos articles sur la VAE",
+        },
+        {
+          linkProps: {
+            href: "/savoir-plus/articles/reglementation-vae/",
+          },
+          isActive: !!asPath.match(/\/reglementation-vae/)?.length,
+          text: "Règlementation",
+        }
+      ]
     },
 
     {
