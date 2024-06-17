@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 import {
-  FILE_PREVIEW_ROUTE_PATH,
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   OOS_DOMAIN,
   getDownloadLink,
 } from "../../shared/file";
@@ -27,7 +27,10 @@ export const getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls =
             name: dffAttachment.file.name,
             mimeType: dffAttachment.file.mimeType,
             url,
-            previewUrl: url?.replace(OOS_DOMAIN, FILE_PREVIEW_ROUTE_PATH),
+            previewUrl: url?.replace(
+              OOS_DOMAIN,
+              FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+            ),
           },
         };
       },

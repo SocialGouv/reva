@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 import {
-  FILE_PREVIEW_ROUTE_PATH,
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   OOS_DOMAIN,
   getDownloadLink,
 } from "../../shared/file";
@@ -56,7 +56,7 @@ export const getSubscriptionRequestV2FileNameUrlAndMimeType = async ({
 
   const url = (await getDownloadLink(filePath))?.replace(
     OOS_DOMAIN,
-    FILE_PREVIEW_ROUTE_PATH,
+    FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   );
 
   return filename
