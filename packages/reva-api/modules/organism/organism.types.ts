@@ -143,3 +143,11 @@ export type LegalInformationValidationDecisionInput = {
   aapComment: string;
   aapUpdatedDocumentsAt: Date;
 };
+
+export type RemoteZone =
+  | "FRANCE_METROPOLITAINE"
+  | "GUADELOUPE"
+  | "GUYANE"
+  | "MARTINIQUE"
+  | "MAYOTTE"
+  | "LA_REUNION";

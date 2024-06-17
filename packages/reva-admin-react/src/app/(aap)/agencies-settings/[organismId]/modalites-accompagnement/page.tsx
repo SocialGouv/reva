@@ -1,18 +1,17 @@
 "use client";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useModalitesAccompagnementPage } from "./modalitesAccompagnement.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { ZoneIntervention } from "../../_components/zone-intervention/ZoneIntervention";
-import { useZoneInterventionAAP } from "../../_components/zone-intervention/zoneInterventionAAP.hook";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { RemoteZone } from "@/graphql/generated/graphql";
 
 const schema = z.object({
   nom: z.string().optional().default(""),
@@ -28,6 +27,12 @@ const schema = z.object({
     .optional()
     .default(""),
   isOnSite: z.boolean(),
+  isRemoteFranceMetropolitaine: z.boolean(),
+  isRemoteGuadeloupe: z.boolean(),
+  isRemoteGuyane: z.boolean(),
+  isRemoteMartinique: z.boolean(),
+  isRemoteMayotte: z.boolean(),
+  isRemoteLaReunion: z.boolean(),
   adresseNumeroEtNomDeRue: z.string().optional().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
@@ -37,31 +42,6 @@ const schema = z.object({
   conformeNormesAccessbilite: z
     .enum(["CONFORME", "NON_CONFORME", "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"])
     .nullable(),
-  zoneInterventionDistanciel: z
-    .array(
-      z
-        .object({
-          id: z.string(),
-          label: z.string(),
-          selected: z.boolean(),
-          children: z
-            .array(
-              z.object({
-                id: z.string(),
-                label: z.string(),
-                selected: z.boolean(),
-              }),
-            )
-            .default([]),
-        })
-        .default({
-          id: "",
-          label: "",
-          selected: false,
-          children: [],
-        }),
-    )
-    .default([]),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -69,10 +49,9 @@ type FormData = z.infer<typeof schema>;
 const ModalitesAccompagnementPage = () => {
   const {
     organism,
-    departments,
     getOrganismStatus,
     refetchOrganism,
-    createOrUpdateInformationsCommercialesAndInterventionZone,
+    createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses,
   } = useModalitesAccompagnementPage();
 
   const {
@@ -83,60 +62,72 @@ const ModalitesAccompagnementPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { zoneInterventionDistanciel: [] },
-  });
-
-  const { getZonesIntervention, mergeZonesIntervention } =
-    useZoneInterventionAAP();
-
-  const zonesIntervention = useMemo(
-    () =>
-      getZonesIntervention({
-        maisonMereAAPOnDepartements:
-          departments.map((d) => ({
-            departement: d,
-            estADistance: true,
-            estSurPlace: false,
-          })) || [],
-        organismOnDepartments: organism?.organismOnDepartments || [],
-      }),
-    [getZonesIntervention, departments, organism?.organismOnDepartments],
-  );
-
-  const remoteInterventionZoneController = useController({
-    name: "zoneInterventionDistanciel",
-    control,
   });
 
   const handleReset = useCallback(() => {
     reset({
       ...organism?.informationsCommerciales,
       isOnSite: organism?.isHeadAgency ? organism?.isOnSite : true, //All agencies are on site except the head one which can either be on site or not
-      zoneInterventionDistanciel: zonesIntervention.remote || [],
+      isRemoteFranceMetropolitaine: organism?.remoteZones?.includes(
+        "FRANCE_METROPOLITAINE",
+      ),
+      isRemoteGuadeloupe: organism?.remoteZones?.includes("GUADELOUPE"),
+      isRemoteGuyane: organism?.remoteZones?.includes("GUYANE"),
+      isRemoteLaReunion: organism?.remoteZones?.includes("LA_REUNION"),
+      isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
+      isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
     } as FormData);
-  }, [organism, reset, zonesIntervention.remote]);
+  }, [organism, reset]);
 
   useEffect(() => handleReset(), [handleReset]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    const {
-      zoneInterventionDistanciel,
-      isOnSite,
-      ...informationsCommerciales
-    } = data;
-    await createOrUpdateInformationsCommercialesAndInterventionZone.mutateAsync(
-      {
-        organismId: organism?.id,
+    try {
+      const {
         isOnSite,
-        informationsCommerciales,
-        interventionZone: mergeZonesIntervention({
-          onSiteZone: [],
-          remoteZone: zoneInterventionDistanciel,
-        }),
-      },
-    );
-    successToast("modifications enregistrées");
-    await refetchOrganism();
+        isRemoteFranceMetropolitaine,
+        isRemoteGuadeloupe,
+        isRemoteGuyane,
+        isRemoteLaReunion,
+        isRemoteMartinique,
+        isRemoteMayotte,
+        ...informationsCommerciales
+      } = data;
+
+      const remoteZones: RemoteZone[] = [];
+
+      if (isRemoteFranceMetropolitaine) {
+        remoteZones.push("FRANCE_METROPOLITAINE");
+      }
+      if (isRemoteGuadeloupe) {
+        remoteZones.push("GUADELOUPE");
+      }
+      if (isRemoteGuyane) {
+        remoteZones.push("GUYANE");
+      }
+      if (isRemoteLaReunion) {
+        remoteZones.push("LA_REUNION");
+      }
+      if (isRemoteMartinique) {
+        remoteZones.push("MARTINIQUE");
+      }
+      if (isRemoteMayotte) {
+        remoteZones.push("MAYOTTE");
+      }
+
+      await createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses.mutateAsync(
+        {
+          organismId: organism?.id,
+          isOnSite,
+          remoteZones,
+          informationsCommerciales,
+        },
+      );
+      successToast("modifications enregistrées");
+      await refetchOrganism();
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   });
 
   return (
@@ -298,12 +289,45 @@ const ModalitesAccompagnementPage = () => {
                   <legend className="text-2xl font-bold mb-4 md:mb-[68px]">
                     Distanciel
                   </legend>
-                  <ZoneIntervention
-                    type="REMOTE"
-                    zoneIntervention={
-                      remoteInterventionZoneController.field.value
-                    }
-                    onChange={remoteInterventionZoneController.field.onChange}
+                  <Checkbox
+                    options={[
+                      {
+                        label: "France métropolitaine",
+                        nativeInputProps: {
+                          ...register("isRemoteFranceMetropolitaine"),
+                        },
+                      },
+                      {
+                        label: "Guadeloupe",
+                        nativeInputProps: {
+                          ...register("isRemoteGuadeloupe"),
+                        },
+                      },
+                      {
+                        label: "Guyane",
+                        nativeInputProps: {
+                          ...register("isRemoteGuyane"),
+                        },
+                      },
+                      {
+                        label: "La Réunion",
+                        nativeInputProps: {
+                          ...register("isRemoteLaReunion"),
+                        },
+                      },
+                      {
+                        label: "Martinique",
+                        nativeInputProps: {
+                          ...register("isRemoteMartinique"),
+                        },
+                      },
+                      {
+                        label: "Mayotte",
+                        nativeInputProps: {
+                          ...register("isRemoteMayotte"),
+                        },
+                      },
+                    ]}
                   />
                 </fieldset>
               )}

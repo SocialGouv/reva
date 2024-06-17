@@ -1,5 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { RemoteZone } from "@/graphql/generated/graphql";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -9,6 +10,7 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       isOnSite
+      remoteZones
       isHeadAgency
       informationsCommerciales {
         id
@@ -22,47 +24,27 @@ const getOrganismQuery = graphql(`
         adresseVille
         conformeNormesAccessbilite
       }
-      organismOnDepartments {
-        id
-        departmentId
-        isRemote
-        isOnSite
-      }
-    }
-    getDepartments {
-      id
-      code
-      label
-      region {
-        id
-        code
-        label
-      }
     }
   }
 `);
 
-const createOrUpdateInformationsCommercialesAndInterventionZoneMutation =
+const createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation =
   graphql(`
-    mutation createOrUpdateInformationsCommercialesAndInterventionZoneMutation(
+    mutation createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation(
       $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
-      $updateInterventionZoneInput: UpdateOrganismInterventionZoneInput!
       $organismId: String!
       $isOnSite: Boolean!
+      $remoteZones: [RemoteZone!]!
     ) {
       organism_createOrUpdateInformationsCommerciales(
         informationsCommerciales: $createOrUpdateInformationsCommercialesInput
       ) {
         id
       }
-      organism_updateOrganismInterventionZone(
-        data: $updateInterventionZoneInput
-      ) {
-        id
-      }
-      organism_updateOrganismOnSiteStatus(
+      organism_updateOrganismOnSiteAndRemoteStatus(
         organismId: $organismId
         isOnSite: $isOnSite
+        remoteZones: $remoteZones
       ) {
         id
       }
@@ -88,50 +70,43 @@ export const useModalitesAccompagnementPage = () => {
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
-  const departments = getOrganismResponse?.getDepartments || [];
 
-  const createOrUpdateInformationsCommercialesAndInterventionZone = useMutation(
-    {
+  const createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses =
+    useMutation({
       mutationFn: ({
         organismId,
         informationsCommerciales,
-        interventionZone,
         isOnSite,
+        remoteZones,
       }: {
         organismId: string;
         isOnSite: boolean;
+        remoteZones: RemoteZone[];
         informationsCommerciales: {
           nom: string;
         };
-        interventionZone: {
-          departmentId: string;
-          isOnSite: boolean;
-          isRemote: boolean;
-        }[];
       }) =>
         graphqlClient.request(
-          createOrUpdateInformationsCommercialesAndInterventionZoneMutation,
+          createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation,
           {
             organismId,
             isOnSite,
+            remoteZones,
             createOrUpdateInformationsCommercialesInput: {
               organismId,
               ...informationsCommerciales,
             },
-            updateInterventionZoneInput: { organismId, interventionZone },
           },
         ),
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["organisms"] });
-        },
-    },
-  );
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["organisms"] });
+      },
+    });
 
   return {
     organism,
-    departments,
     getOrganismStatus,
     refetchOrganism,
-    createOrUpdateInformationsCommercialesAndInterventionZone,
+    createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses,
   };
 };

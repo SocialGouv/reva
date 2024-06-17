@@ -45,6 +45,7 @@ import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWi
 import {
   CreateAgencyInput,
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
+  RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
@@ -61,7 +62,7 @@ import {
 } from "./emails/sendLegalInformationDocumentsDecisionEmail";
 import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
-import { updateOrganismOnSiteStatus } from "./features/updateOrganismOnSiteStatus";
+import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
 import { createAgency } from "./features/createAgency";
 import { acceptCgu } from "./features/acceptCgu";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
@@ -548,11 +549,12 @@ const unsafeResolvers = {
 
       return decision;
     },
-    organism_updateOrganismOnSiteStatus: async (
+    organism_updateOrganismOnSiteAndRemoteStatus: async (
       _parent: unknown,
       params: {
         organismId: string;
         isOnSite: boolean;
+        remoteZones: RemoteZone[];
       },
       context: GraphqlContext,
     ) => {
@@ -567,7 +569,7 @@ const unsafeResolvers = {
         throw new Error("Utilisateur non autorisé");
       }
 
-      return updateOrganismOnSiteStatus(params);
+      return updateOrganismOnSiteAndRemoteStatus(params);
     },
   },
   Query: {

@@ -320,9 +320,10 @@ type Mutation {
   organism_updateLegalInformationValidationDecision(
     data: UpdateMaisonMereAAPLegalValidationDecisionInput
   ): MaisonMereAAP!
-  organism_updateOrganismOnSiteStatus(
+  organism_updateOrganismOnSiteAndRemoteStatus(
     organismId: String!
     isOnSite: Boolean!
+    remoteZones: [RemoteZone!]!
   ): Organism!
 
   organism_createAgency(data: CreateAgencyInput!): String!
