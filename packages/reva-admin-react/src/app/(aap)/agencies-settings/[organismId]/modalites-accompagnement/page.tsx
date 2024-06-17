@@ -27,6 +27,7 @@ const schema = z.object({
     .optional()
     .default(""),
   isOnSite: z.boolean(),
+  isRemote: z.boolean(),
   isRemoteFranceMetropolitaine: z.boolean(),
   isRemoteGuadeloupe: z.boolean(),
   isRemoteGuyane: z.boolean(),
@@ -76,6 +77,7 @@ const ModalitesAccompagnementPage = () => {
       isRemoteLaReunion: organism?.remoteZones?.includes("LA_REUNION"),
       isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
       isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
+      isRemote: !!organism?.remoteZones?.length,
     } as FormData);
   }, [organism, reset]);
 
@@ -85,6 +87,7 @@ const ModalitesAccompagnementPage = () => {
     try {
       const {
         isOnSite,
+        isRemote,
         isRemoteFranceMetropolitaine,
         isRemoteGuadeloupe,
         isRemoteGuyane,
@@ -96,23 +99,25 @@ const ModalitesAccompagnementPage = () => {
 
       const remoteZones: RemoteZone[] = [];
 
-      if (isRemoteFranceMetropolitaine) {
-        remoteZones.push("FRANCE_METROPOLITAINE");
-      }
-      if (isRemoteGuadeloupe) {
-        remoteZones.push("GUADELOUPE");
-      }
-      if (isRemoteGuyane) {
-        remoteZones.push("GUYANE");
-      }
-      if (isRemoteLaReunion) {
-        remoteZones.push("LA_REUNION");
-      }
-      if (isRemoteMartinique) {
-        remoteZones.push("MARTINIQUE");
-      }
-      if (isRemoteMayotte) {
-        remoteZones.push("MAYOTTE");
+      if (isRemote) {
+        if (isRemoteFranceMetropolitaine) {
+          remoteZones.push("FRANCE_METROPOLITAINE");
+        }
+        if (isRemoteGuadeloupe) {
+          remoteZones.push("GUADELOUPE");
+        }
+        if (isRemoteGuyane) {
+          remoteZones.push("GUYANE");
+        }
+        if (isRemoteLaReunion) {
+          remoteZones.push("LA_REUNION");
+        }
+        if (isRemoteMartinique) {
+          remoteZones.push("MARTINIQUE");
+        }
+        if (isRemoteMayotte) {
+          remoteZones.push("MAYOTTE");
+        }
       }
 
       await createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses.mutateAsync(
@@ -130,7 +135,7 @@ const ModalitesAccompagnementPage = () => {
     }
   });
 
-  const { isOnSite } = useWatch({ control });
+  const { isOnSite, isRemote } = useWatch({ control });
 
   return (
     <div className="flex flex-col">
@@ -226,7 +231,7 @@ const ModalitesAccompagnementPage = () => {
                 <div className="flex flex-col">
                   {organism?.isHeadAgency && (
                     <Checkbox
-                      className="col-span-2 mt-4 mb-0"
+                      className="col-span-2 mt-4"
                       options={[
                         {
                           label: "L'accompagnement se fait sur site",
@@ -293,10 +298,23 @@ const ModalitesAccompagnementPage = () => {
               </fieldset>
               {organism?.isHeadAgency && (
                 <fieldset className="flex flex-col md:pl-6 md:border-l md:basis-1/2">
-                  <legend className="text-2xl font-bold mb-4 md:mb-[68px]">
+                  <legend className="text-2xl font-bold mb-4">
                     Distanciel
                   </legend>
+                  {organism?.isHeadAgency && (
+                    <Checkbox
+                      className="col-span-2 mt-4"
+                      options={[
+                        {
+                          label: "L'accompagnement se fait à distance",
+                          nativeInputProps: { ...register("isRemote") },
+                        },
+                      ]}
+                    />
+                  )}
                   <Checkbox
+                    disabled={!isRemote}
+                    legend="Quels zones seront couvertes en distanciel ?"
                     options={[
                       {
                         label: "France métropolitaine",
@@ -316,12 +334,7 @@ const ModalitesAccompagnementPage = () => {
                           ...register("isRemoteGuyane"),
                         },
                       },
-                      {
-                        label: "La Réunion",
-                        nativeInputProps: {
-                          ...register("isRemoteLaReunion"),
-                        },
-                      },
+
                       {
                         label: "Martinique",
                         nativeInputProps: {
@@ -332,6 +345,12 @@ const ModalitesAccompagnementPage = () => {
                         label: "Mayotte",
                         nativeInputProps: {
                           ...register("isRemoteMayotte"),
+                        },
+                      },
+                      {
+                        label: "La Réunion",
+                        nativeInputProps: {
+                          ...register("isRemoteLaReunion"),
                         },
                       },
                     ]}
