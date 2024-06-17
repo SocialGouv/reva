@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const informationsCommercialesQuery = graphql(`
@@ -38,6 +38,7 @@ const createOrUpdateInformationsCommercialesMutation = graphql(`
 `);
 
 export const useCommercialInformationPage = () => {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
 
   const { organismId } = useParams<{ organismId: string }>();
@@ -64,6 +65,9 @@ export const useCommercialInformationPage = () => {
       graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
         informationsCommerciales,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["organisms"] });
+    },
   });
 
   return {
