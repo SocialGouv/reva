@@ -4,20 +4,15 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
-import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-const createOrUpdateAttachments = graphql(`
-  mutation createOrUpdateAttachments(
-    $input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput!
-  ) {
-    dematerialized_feasibility_file_createOrUpdateAttachments(input: $input)
-  }
-`);
+import {
+  createOrUpdateAttachments,
+  useAttachments,
+} from "./_components/attachments.hook";
 
 const schema = z
   .object({
@@ -51,6 +46,8 @@ export default function AttachmentsPage() {
   const { candidacyId } = useParams() satisfies { candidacyId: string };
   const urqlClient = useUrqlClient();
   const router = useRouter();
+  const { attachments } = useAttachments();
+
   const defaultValues = useMemo(
     () => ({
       idCard: undefined,
@@ -126,6 +123,18 @@ export default function AttachmentsPage() {
             state={errors.idCard ? "error" : "default"}
             stateRelatedMessage={errors.idCard?.[0]?.message}
           />
+          {attachments?.find((attachment) => attachment?.type === "ID_CARD")
+            ?.file && (
+            <iframe
+              className="w-full h-[500px]"
+              title="Pièce d'identité"
+              name="Pièce d'identité"
+              src={
+                attachments.find((attachment) => attachment?.type === "ID_CARD")
+                  ?.file.previewUrl || ""
+              }
+            />
+          )}
           <FancyUpload
             className="col-span-2"
             title="Justificatif d'équivalence ou de dispense (optionnel)"
@@ -140,6 +149,22 @@ export default function AttachmentsPage() {
               errors.equivalanceOrExemptionProof?.[0]?.message
             }
           />
+          {attachments?.find(
+            (attachment) =>
+              attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
+          )?.file && (
+            <iframe
+              className="w-full h-[500px]"
+              title="Justificatif d'équivalence ou de dispense"
+              name="Justificatif d'équivalence ou de dispense"
+              src={
+                attachments.find(
+                  (attachment) =>
+                    attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
+                )?.file.previewUrl || ""
+              }
+            />
+          )}
           <FancyUpload
             className="col-span-2"
             title="Attestation ou certificat de formation (optionnel)"
@@ -152,6 +177,20 @@ export default function AttachmentsPage() {
             state={errors.trainingCertificate ? "error" : "default"}
             stateRelatedMessage={errors.trainingCertificate?.[0]?.message}
           />
+          {attachments?.find(
+            (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
+          )?.file && (
+            <iframe
+              className="w-full h-[500px]"
+              title="Attestation ou certificat de formation"
+              name="Attestation ou certificat de formation"
+              src={
+                attachments.find(
+                  (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
+                )?.file.previewUrl || ""
+              }
+            />
+          )}
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}

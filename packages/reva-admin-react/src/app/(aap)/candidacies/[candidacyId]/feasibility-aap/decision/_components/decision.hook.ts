@@ -24,7 +24,10 @@ export const useDecision = () => {
     ) => graphqlClient.request(createOrUpdateDecision, { input }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [candidacyId],
+        queryKey: [
+          candidacyId,
+          "dematerializedFeasibilityFileWithDecisionByCandidacyId",
+        ],
       });
     },
   });

@@ -18,6 +18,7 @@ import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisi
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
+import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 
 export const unsafeResolvers = {
@@ -43,6 +44,10 @@ export const unsafeResolvers = {
       }),
     prerequisites: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
       getPrerequisitesByDFFId({ dematerializedFeasibilityFileId }),
+    attachments: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
+      getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls({
+        dematerializedFeasibilityFileId,
+      }),
   },
   CertificationCompetenceDetails: {
     certificationCompetence: ({
