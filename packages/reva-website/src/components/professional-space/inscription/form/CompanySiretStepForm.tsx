@@ -102,7 +102,7 @@ export const CompanySiretStepForm = () => {
         <FormOptionalFieldsDisclaimer />
       </h1>
       <Stepper
-        title="Insérez votre numéro SIRET ainsi que les nom et prénom(s) du ou de la dirigean(e)."
+        title="Insérez votre numéro SIRET ainsi que les nom et prénom(s) du ou de la dirigeant(e)."
         currentStep={1}
         stepCount={3}
       />
