@@ -1253,7 +1253,7 @@ model File {
   linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequestV2 SubscriptionRequestV2[]                  @relation("srv2_justificatif_identite_dirigeant_file")
   linkedAsLettreDeDelegationFileInSubscriptionRequestV2                         SubscriptionRequestV2[]                  @relation("srv2_lettre_de_delegation_file")
   linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequestV2            SubscriptionRequestV2[]                  @relation("srv2_justificatif_identite_delegataire_file")
-  linkedAsDFFFile                                                               DFFFile?                                 @relation("dff_file")
+  linkedAsDFFAttachment                                                         DFFAttachment?                           @relation("dff_attachment")
 
   @@map("file")
 }
@@ -1491,26 +1491,26 @@ model DematerializedFeasibilityFile {
   decision                        DFFDecision?
   decisionComment                 String?                           @map("decision_comment")
   decisionSentAt                  DateTime?                         @map("decision_sent_at") @db.Timestamptz(6)
-  dffFiles                        DFFFile[]
+  attachments                     DFFAttachment[]
 
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("dematerialized_feasibility_file")
 }
 
-model DFFFile {
+model DFFAttachment {
   id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   fileId                          String                        @unique @map("file_id") @db.Uuid
-  file                            File                          @relation("dff_file", fields: [fileId], references: [id])
-  type                            DFFFileType
+  file                            File                          @relation("dff_attachment", fields: [fileId], references: [id])
+  type                            DFFAttachmentType
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
   dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
   dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
 
-  @@map("dff_file")
+  @@map("dff_attachment")
 }
 
-enum DFFFileType {
+enum DFFAttachmentType {
   ID_CARD
   EQUIVALENCE_OR_EXEMPTION_PROOF
   TRAINING_CERTIFICATE

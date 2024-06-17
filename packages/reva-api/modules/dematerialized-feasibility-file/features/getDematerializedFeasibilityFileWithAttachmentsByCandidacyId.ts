@@ -8,6 +8,6 @@ export const getDematerializedFeasibilityFileWithAttachmentsByCandidacyId = ({
   prismaClient.dematerializedFeasibilityFile.findFirst({
     where: { candidacyId },
     include: {
-      dffFiles: { include: { file: true } },
+      attachments: { include: { file: true } },
     },
   });

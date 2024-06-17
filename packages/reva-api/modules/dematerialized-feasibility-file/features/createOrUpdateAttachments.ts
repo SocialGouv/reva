@@ -32,7 +32,7 @@ export const createOrUpdateAttachments = async ({
       );
     }
 
-    const attachments = dffWithAttachments.dffFiles;
+    const attachments = dffWithAttachments.attachments;
 
     const existingIdCardFile = attachments.find(
       (attachment) => attachment.type === "ID_CARD",
@@ -65,7 +65,7 @@ export const createOrUpdateAttachments = async ({
       await Promise.all(
         existingFiles.map(({ file: { path } }) => deleteFile(path)),
       );
-      await prismaClient.dFFFile.deleteMany({
+      await prismaClient.dFFAttachment.deleteMany({
         where: {
           id: {
             in: existingFiles.map(({ id }) => id),
@@ -145,7 +145,7 @@ export const createOrUpdateAttachments = async ({
       },
       data: {
         attachmentsPartComplete: true,
-        dffFiles: {
+        attachments: {
           create: fileAndIds.map(
             ({ filePath, mimeType, name, dffFileType }) => ({
               type: dffFileType,
