@@ -92,7 +92,7 @@ const getRandomActiveOrganismForCertification = async ({
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id
    left join organism_informations_commerciales as oic on oic.organism_id = o.id`;
 
-  let whereClause = `where ao.certification_id=uuid('${certificationId}')`;
+  let whereClause = `where ao.certification_id=uuid('${certificationId}') and (o.is_remote or o.is_onsite)`;
 
   if (searchText) {
     whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
