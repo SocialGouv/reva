@@ -16,9 +16,9 @@ import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./
 export const createOrUpdateAttachments = async ({
   candidacyId,
   idCard,
-  equivalanceOrExemptionProof,
+  equivalenceOrExemptionProof,
   trainingCertificate,
-  otherAttachments,
+  additionalFiles,
 }: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput) => {
   try {
     const dffWithAttachments =
@@ -37,22 +37,22 @@ export const createOrUpdateAttachments = async ({
     const existingIdCardFile = attachments.find(
       (attachment) => attachment.type === "ID_CARD",
     );
-    const existingEquivalanceOrExemptionProofFile = attachments.find(
+    const existingEquivalenceOrExemptionProofFile = attachments.find(
       (attachment) => attachment.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
     );
     const existingTrainingCertificateFile = attachments.find(
       (attachment) => attachment.type === "TRAINING_CERTIFICATE",
     );
     const existingOtherAttachmentsFiles = attachments.filter(
-      (attachment) => attachment.type === "OTHER",
+      (attachment) => attachment.type === "ADDITIONAL",
     );
 
     const existingFiles = [];
     if (existingIdCardFile) {
       existingFiles.push(existingIdCardFile);
     }
-    if (existingEquivalanceOrExemptionProofFile) {
-      existingFiles.push(existingEquivalanceOrExemptionProofFile);
+    if (existingEquivalenceOrExemptionProofFile) {
+      existingFiles.push(existingEquivalenceOrExemptionProofFile);
     }
     if (existingTrainingCertificateFile) {
       existingFiles.push(existingTrainingCertificateFile);
@@ -76,8 +76,8 @@ export const createOrUpdateAttachments = async ({
 
     const idCardFile = await getUploadedFile(idCard);
 
-    const equivalanceOrExemptionProofFile = equivalanceOrExemptionProof
-      ? await getUploadedFile(equivalanceOrExemptionProof)
+    const equivalenceOrExemptionProofFile = equivalenceOrExemptionProof
+      ? await getUploadedFile(equivalenceOrExemptionProof)
       : undefined;
     const trainingCertificateFile = trainingCertificate
       ? await getUploadedFile(trainingCertificate)
@@ -99,13 +99,13 @@ export const createOrUpdateAttachments = async ({
       },
     ];
 
-    if (equivalanceOrExemptionProofFile) {
+    if (equivalenceOrExemptionProofFile) {
       fileAndIds.push({
-        file: equivalanceOrExemptionProofFile,
+        file: equivalenceOrExemptionProofFile,
         filePath: getFilePath({ candidacyId, fileId: uuidV4() }),
         dffFileType: "EQUIVALENCE_OR_EXEMPTION_PROOF",
-        mimeType: equivalanceOrExemptionProofFile.mimetype,
-        name: equivalanceOrExemptionProofFile.filename,
+        mimeType: equivalenceOrExemptionProofFile.mimetype,
+        name: equivalenceOrExemptionProofFile.filename,
       });
     }
 
@@ -119,13 +119,13 @@ export const createOrUpdateAttachments = async ({
       });
     }
 
-    if (otherAttachments?.length) {
-      for (const attachment of otherAttachments) {
+    if (additionalFiles?.length) {
+      for (const attachment of additionalFiles) {
         const file = await getUploadedFile(attachment);
         fileAndIds.push({
           file,
           filePath: getFilePath({ candidacyId, fileId: uuidV4() }),
-          dffFileType: "OTHER",
+          dffFileType: "ADDITIONAL",
           mimeType: file.mimetype,
           name: file.filename,
         });
@@ -166,9 +166,9 @@ export const createOrUpdateAttachments = async ({
   } finally {
     //every stream must be emptied otherwise the request will hang
     emptyUploadedFileStream(idCard);
-    emptyUploadedFileStream(equivalanceOrExemptionProof);
+    emptyUploadedFileStream(equivalenceOrExemptionProof);
     emptyUploadedFileStream(trainingCertificate);
-    otherAttachments?.forEach((attachment) => {
+    additionalFiles?.forEach((attachment) => {
       emptyUploadedFileStream(attachment);
     });
   }

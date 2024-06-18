@@ -30,15 +30,15 @@ export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
 export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   candidacyId: string;
   idCard: GraphqlUploadedFile;
-  equivalanceOrExemptionProof?: GraphqlUploadedFile;
+  equivalenceOrExemptionProof?: GraphqlUploadedFile;
   trainingCertificate?: GraphqlUploadedFile;
-  otherAttachments?: GraphqlUploadedFile[];
+  additionalFiles?: GraphqlUploadedFile[];
 }
 
 export type DematerializedFeasibilityFileType =
   | "ID_CARD"
   | "EQUIVALENCE_OR_EXEMPTION_PROOF"
   | "TRAINING_CERTIFICATE"
-  | "OTHER";
+  | "ADDITIONAL";
 
 export type DFFileDecision = "ACCEPTED" | "REJECTED";

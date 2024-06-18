@@ -70,7 +70,7 @@ enum DFFAttachmentType {
   ID_CARD
   EQUIVALENCE_OR_EXEMPTION_PROOF
   TRAINING_CERTIFICATE
-  OTHER
+  ADDITIONAL
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
@@ -113,9 +113,9 @@ input CompetenceIdAndText {
 input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   candidacyId: ID!
   idCard: Upload!
-  equivalanceOrExemptionProof: Upload
+  equivalenceOrExemptionProof: Upload
   trainingCertificate: Upload
-  otherAttachments: [Upload]
+  additionalFiles: [Upload]
 }
 
 type Query {

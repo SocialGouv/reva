@@ -1536,7 +1536,7 @@ enum DFFAttachmentType {
   ID_CARD
   EQUIVALENCE_OR_EXEMPTION_PROOF
   TRAINING_CERTIFICATE
-  OTHER
+  ADDITIONAL
 }
 
 model DFFCertificationCompetenceBloc {

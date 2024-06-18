@@ -4,22 +4,38 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
+import { File as FileType } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { object, z } from "zod";
 import {
   createOrUpdateAttachments,
   useAttachments,
 } from "./_components/attachments.hook";
+
+// Utility function to convert custom file object to File
+function createFileFromCustomObject(file: FileType) {
+  return new File([file.url], file.name, { type: file.mimeType });
+}
+
+// Function to create a FileList-like object
+function createFileList(files: FileType[]) {
+  const dataTransfer = new DataTransfer();
+  files.forEach((file) => {
+    const fileObject = createFileFromCustomObject(file);
+    dataTransfer.items.add(fileObject);
+  });
+  return dataTransfer.files;
+}
 
 const schema = z
   .object({
     idCard: z.object({
       0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
     }),
-    equivalanceOrExemptionProof: z
+    equivalenceOrExemptionProof: z
       .object({
         0: z.undefined().or(z.instanceof(File)),
       })
@@ -29,6 +45,11 @@ const schema = z
         0: z.undefined().or(z.instanceof(File)),
       })
       .optional(),
+    additionalFiles: z.array(
+      object({
+        0: z.undefined().or(z.instanceof(File)),
+      }),
+    ),
   })
   .superRefine(({ idCard }, { addIssue }) => {
     if (!idCard?.[0]) {
@@ -48,13 +69,49 @@ export default function AttachmentsPage() {
   const router = useRouter();
   const { attachments } = useAttachments();
 
+  const idCard = attachments?.find(
+    (attachment) => attachment?.type === "ID_CARD",
+  )?.file;
+  const equivalenceOrExemptionProof = attachments?.find(
+    (attachment) => attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
+  )?.file;
+  const trainingCertificate = attachments?.find(
+    (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
+  )?.file;
+  const additionalFiles = useMemo(
+    () =>
+      attachments
+        ? attachments
+            ?.filter((attachment) => attachment?.type === "ADDITIONAL")
+            ?.map((attachment) =>
+              attachment
+                ? { 0: createFileFromCustomObject(attachment.file) }
+                : undefined,
+            )
+        : [],
+
+    [attachments],
+  );
+  const [additionalFilesState, setAdditionalFilesState] =
+    useState<({ 0: File } | undefined)[]>(additionalFiles);
+
   const defaultValues = useMemo(
     () => ({
-      idCard: undefined,
-      equivalanceOrExemptionProof: undefined,
-      trainingCertificate: undefined,
+      idCard: idCard ? { 0: createFileFromCustomObject(idCard) } : undefined,
+      equivalenceOrExemptionProof: equivalenceOrExemptionProof
+        ? { 0: createFileFromCustomObject(equivalenceOrExemptionProof) }
+        : undefined,
+      trainingCertificate: trainingCertificate
+        ? { 0: createFileFromCustomObject(trainingCertificate) }
+        : undefined,
+      additionalFiles: additionalFilesState,
     }),
-    [],
+    [
+      idCard,
+      equivalenceOrExemptionProof,
+      trainingCertificate,
+      additionalFilesState,
+    ],
   );
   const {
     register,
@@ -67,11 +124,18 @@ export default function AttachmentsPage() {
   });
 
   const handleFormSubmit = async (data: FormData) => {
+    const idCard = data.idCard?.[0];
+    const equivalenceOrExemptionProof = data.equivalenceOrExemptionProof?.[0];
+    const trainingCertificate = data.trainingCertificate?.[0];
+    const additionalFiles = data.additionalFiles
+      .filter((file) => Boolean(file?.[0]))
+      .map((file) => file[0]);
     const input = {
       candidacyId,
-      idCard: data.idCard[0],
-      equivalanceOrExemptionProof: data.equivalanceOrExemptionProof?.[0],
-      trainingCertificate: data.trainingCertificate?.[0],
+      idCard,
+      equivalenceOrExemptionProof,
+      trainingCertificate,
+      additionalFiles,
     };
 
     try {
@@ -115,82 +179,64 @@ export default function AttachmentsPage() {
             className="col-span-2"
             title="Pièce d'identité"
             description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
-            hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             nativeInputProps={{
               ...register("idCard"),
-              accept: ".pdf",
+              accept: ".pdf, .jpg, .jpeg, .png",
             }}
             state={errors.idCard ? "error" : "default"}
             stateRelatedMessage={errors.idCard?.[0]?.message}
           />
-          {attachments?.find((attachment) => attachment?.type === "ID_CARD")
-            ?.file && (
-            <iframe
-              className="w-full h-[500px]"
-              title="Pièce d'identité"
-              name="Pièce d'identité"
-              src={
-                attachments.find((attachment) => attachment?.type === "ID_CARD")
-                  ?.file.previewUrl || ""
-              }
-            />
-          )}
           <FancyUpload
             className="col-span-2"
             title="Justificatif d'équivalence ou de dispense (optionnel)"
             description="Copie du ou des justificatifs ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
-            hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             nativeInputProps={{
-              ...register("equivalanceOrExemptionProof"),
-              accept: ".pdf",
+              ...register("equivalenceOrExemptionProof"),
+              accept: ".pdf, .jpg, .jpeg, .png",
             }}
-            state={errors.equivalanceOrExemptionProof ? "error" : "default"}
+            state={errors.equivalenceOrExemptionProof ? "error" : "default"}
             stateRelatedMessage={
-              errors.equivalanceOrExemptionProof?.[0]?.message
+              errors.equivalenceOrExemptionProof?.[0]?.message
             }
           />
-          {attachments?.find(
-            (attachment) =>
-              attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
-          )?.file && (
-            <iframe
-              className="w-full h-[500px]"
-              title="Justificatif d'équivalence ou de dispense"
-              name="Justificatif d'équivalence ou de dispense"
-              src={
-                attachments.find(
-                  (attachment) =>
-                    attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
-                )?.file.previewUrl || ""
-              }
-            />
-          )}
           <FancyUpload
             className="col-span-2"
             title="Attestation ou certificat de formation (optionnel)"
             description="Attestation ou certificat de suivi de formation justifiant du pré-requis demandé par la certification visée."
-            hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
+            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             nativeInputProps={{
               ...register("trainingCertificate"),
-              accept: ".pdf",
+              accept: ".pdf, .jpg, .jpeg, .png",
             }}
             state={errors.trainingCertificate ? "error" : "default"}
             stateRelatedMessage={errors.trainingCertificate?.[0]?.message}
           />
-          {attachments?.find(
-            (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
-          )?.file && (
-            <iframe
-              className="w-full h-[500px]"
-              title="Attestation ou certificat de formation"
-              name="Attestation ou certificat de formation"
-              src={
-                attachments.find(
-                  (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
-                )?.file.previewUrl || ""
-              }
+          {additionalFilesState.map((_, index) => (
+            <FancyUpload
+              className="col-span-2"
+              title="Pièce jointe supplémentaire"
+              description=""
+              hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
+              nativeInputProps={{
+                ...register(`additionalFiles.${index}`),
+                accept: ".pdf, .jpg, .jpeg, .png",
+              }}
+              state={errors.additionalFiles?.[index] ? "error" : "default"}
+              stateRelatedMessage={errors.additionalFiles?.[index]?.message}
+              key={index}
             />
-          )}
+          ))}
+          <div
+            className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
+            onClick={() => {
+              setAdditionalFilesState((prev) => [...prev, undefined]);
+            }}
+          >
+            <span className="fr-icon-add-line fr-icon--sm" />
+            <span className="text-sm">Ajouter un pré-requis</span>
+          </div>
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
