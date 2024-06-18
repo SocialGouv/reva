@@ -63,7 +63,7 @@ const getCandidacyQuery = graphql(`
   }
 `);
 
-export const useHooks = (candidacyId: string) => {
+export const useAapFeasibility = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidacy = useQuery({

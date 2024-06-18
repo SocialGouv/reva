@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 
-import { useHooks } from "./page.hooks";
+import { useAapFeasibility } from "./AapFeasibilityPage.hooks";
 import { SendFeasibilityForm } from "./_components/SendFeasibilityForm";
 import { FeasibiltyStatus } from "./_components/FeasibiltyStatus";
 
@@ -13,7 +13,7 @@ const AapFeasibilityPage = () => {
     candidacyId: string;
   }>();
 
-  const { candidacy } = useHooks(candidacyId);
+  const { candidacy } = useAapFeasibility(candidacyId);
 
   const candidate = candidacy.data?.getCandidacyById?.candidate;
   const certification = candidacy.data?.getCandidacyById?.certification;

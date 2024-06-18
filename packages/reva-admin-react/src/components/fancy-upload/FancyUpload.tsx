@@ -72,7 +72,7 @@ export const FancyUpload = ({
       />
       {mappedFiles.map((file) => (
         <FancyPreview
-          key={Date.now()}
+          key={file.name}
           title={title}
           name={file.name}
           src={URL.createObjectURL(file)}

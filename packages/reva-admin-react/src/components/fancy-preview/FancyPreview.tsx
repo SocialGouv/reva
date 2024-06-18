@@ -11,10 +11,14 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
 
   const [display, setDisplay] = useState<boolean>(false);
 
+  const backgroundColor = display
+    ? "bg-[#E3E3FD]"
+    : "bg-dsfr-light-neutral-grey-1000";
+
   return (
-    <div className="flex flex-col gap-4 mt-4">
+    <div className="flex flex-col gap-4">
       <div
-        className="flex flex-row items-center justify-between px-4 py-3 border-gray-200 border-y cursor-pointer bg-[#E3E3FD]"
+        className={`flex flex-row items-center justify-between px-4 py-3 border-gray-200 border-x border-b cursor-pointer ${backgroundColor}`}
         onClick={() => setDisplay(!display)}
       >
         <label className="text-blue-800 font-medium cursor-pointer">
