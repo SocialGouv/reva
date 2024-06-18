@@ -176,9 +176,7 @@ const DeclarationAccessibilitePage = () => {
           <li>
             Parcours espace pro / valider une candidature (jusqu’à la
             transmission des pièces justificatives) -{" "}
-            <a href="https://vae.gouv.fr/espace-professionnel/creation/">
-              https://vae.gouv.fr/espace-professionnel/creation/
-            </a>
+            <a href="https://vae.gouv.fr/admin/">https://vae.gouv.fr/admin/</a>
           </li>
         </ul>
         <h2 className="mt-8">RETOUR D’INFORMATION ET CONTACT</h2>
