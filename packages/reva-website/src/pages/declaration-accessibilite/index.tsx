@@ -168,12 +168,6 @@ const DeclarationAccessibilitePage = () => {
             <a href="https://vae.gouv.fr/app/">https://vae.gouv.fr/app/</a>
           </li>
           <li>
-            Parcours espace pro / Création de compte -{" "}
-            <a href="https://vae.gouv.fr/espace-professionnel/creation/">
-              https://vae.gouv.fr/espace-professionnel/creation/
-            </a>
-          </li>
-          <li>
             Parcours espace pro / valider une candidature (jusqu’à la
             transmission des pièces justificatives) -{" "}
             <a href="https://vae.gouv.fr/admin/">https://vae.gouv.fr/admin/</a>

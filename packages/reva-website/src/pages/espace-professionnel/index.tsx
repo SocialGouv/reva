@@ -17,7 +17,7 @@ const ArrowRight = () => (
 );
 
 interface SuiviCandidatProps {
-  isAAPSubsritpionSuspended?: boolean;
+  isAAPSubscriptionSuspended?: boolean;
 }
 
 const SuiviCandidat = (props: SuiviCandidatProps) => (
@@ -44,9 +44,9 @@ const SuiviCandidat = (props: SuiviCandidatProps) => (
         priority="primary"
         className="justify-center !w-full  lg:!w-fit"
         linkProps={{
-          href: props.isAAPSubsritpionSuspended
-            ? "/espace-professionnel/creation-suspendue"
-            : "/espace-professionnel/creation",
+          href: props.isAAPSubscriptionSuspended
+            ? "/espace-professionnel/creation-suspendue/"
+            : "/espace-professionnel/inscription/",
         }}
         size="large"
       >
@@ -169,7 +169,7 @@ const EngagementAAP = () => (
 );
 
 interface TypologiesAAPProps {
-  isAAPSubsritpionSuspended?: boolean;
+  isAAPSubscriptionSuspended?: boolean;
 }
 
 const TypologiesAAP = (props: TypologiesAAPProps) => (
@@ -246,9 +246,9 @@ const TypologiesAAP = (props: TypologiesAAPProps) => (
           priority="secondary"
           className="justify-center !w-full  lg:!w-fit"
           linkProps={{
-            href: props.isAAPSubsritpionSuspended
-              ? "/espace-professionnel/creation-suspendue"
-              : "/espace-professionnel/creation",
+            href: props.isAAPSubscriptionSuspended
+              ? "/espace-professionnel/creation-suspendue/"
+              : "/espace-professionnel/inscription/",
           }}
           size="large"
         >
@@ -303,7 +303,7 @@ const NotreEquipeVousAccompagne = () => (
 const ProfessionalSpaceHomePage = () => {
   const { isFeatureActive } = useFeatureflipping();
 
-  const isAAPSubsritpionSuspended = isFeatureActive(
+  const isAAPSubscriptionSuspended = isFeatureActive(
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 
@@ -319,10 +319,10 @@ const ProfessionalSpaceHomePage = () => {
         />
       </Head>
 
-      <SuiviCandidat isAAPSubsritpionSuspended={isAAPSubsritpionSuspended} />
+      <SuiviCandidat isAAPSubscriptionSuspended={isAAPSubscriptionSuspended} />
       <InterfaceProfessionnels />
       <EngagementAAP />
-      <TypologiesAAP isAAPSubsritpionSuspended={isAAPSubsritpionSuspended} />
+      <TypologiesAAP isAAPSubscriptionSuspended={isAAPSubscriptionSuspended} />
       <NotreEquipeVousAccompagne />
     </MainLayout>
   );
