@@ -10,6 +10,7 @@ import {
   DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
 } from "./dematerialized-feasibility-file.types";
+import { checkIsDFFCompletedById } from "./features/checkIsDFFCompletedById";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
@@ -48,6 +49,8 @@ export const unsafeResolvers = {
       getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls({
         dematerializedFeasibilityFileId,
       }),
+    isComplete: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
+      checkIsDFFCompletedById({ dematerializedFeasibilityFileId }),
   },
   CertificationCompetenceDetails: {
     certificationCompetence: ({

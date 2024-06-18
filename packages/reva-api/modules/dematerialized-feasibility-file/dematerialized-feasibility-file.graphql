@@ -1,6 +1,7 @@
 type DematerializedFeasibilityFile {
   id: ID!
   candidacyId: ID!
+  isComplete: Boolean!
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
