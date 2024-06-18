@@ -3,7 +3,12 @@ import {
   DetailedHTMLProps,
   InputHTMLAttributes,
   useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
 } from "react";
+import { v4 } from "uuid";
 
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
@@ -18,6 +23,7 @@ export const FancyUpload = ({
   nativeInputProps,
   state,
   stateRelatedMessage,
+  defaultFile,
 }: {
   title: string;
   description: ReactNode;
@@ -29,17 +35,50 @@ export const FancyUpload = ({
   >;
   state?: "error" | "success" | "default";
   stateRelatedMessage?: ReactNode;
+  defaultFile?: { name: string; url: string; mimeType: string };
 }) => {
-  const [files, setFiles] = useState<FileList | null>();
+  const [filePreview, setFilePreview] = useState<File | null>(null);
+  const urlPreview = useMemo(
+    () => (filePreview ? URL.createObjectURL(filePreview) : null),
+    [filePreview],
+  );
 
-  const mappedFiles: File[] = [];
+  const refInputId = useRef<string>(v4());
 
-  if (files) {
-    for (let index = 0; index < files.length; index++) {
-      const file = files[index];
-      mappedFiles.push(file);
+  const downloadFiles = useCallback(async () => {
+    if (!defaultFile) return;
+
+    try {
+      const dataTransfer = new DataTransfer();
+
+      const { name, mimeType, url } = defaultFile;
+      const response = await fetch(url);
+      const data = await response.blob();
+
+      const file = new File([data], name, {
+        type: mimeType,
+      });
+
+      dataTransfer.items.add(file);
+
+      const inputElement = document.getElementById(refInputId.current);
+      if (inputElement) {
+        const input = inputElement as HTMLInputElement;
+        input.files = dataTransfer.files;
+
+        const event = new Event("change", { bubbles: true });
+        input.dispatchEvent(event);
+      }
+
+      setFilePreview(file);
+    } catch (error) {
+      console.error(error);
     }
-  }
+  }, [defaultFile]);
+
+  useEffect(() => {
+    downloadFiles();
+  }, [downloadFiles]);
 
   return (
     <div className={`${className || ""}`}>
@@ -60,9 +99,19 @@ export const FancyUpload = ({
         }
         hint={hint}
         nativeInputProps={{
+          id: refInputId.current,
           ...nativeInputProps,
           onChange: (e) => {
-            setFiles(e.target.files);
+            if (e.target.files) {
+              const mappedFiles: File[] = [];
+              for (let index = 0; index < e.target.files.length; index++) {
+                const file = e.target.files[index];
+                mappedFiles.push(file);
+              }
+              setFilePreview(mappedFiles[0]);
+            } else {
+              setFilePreview(null);
+            }
 
             nativeInputProps?.onChange?.(e);
           },
@@ -70,14 +119,9 @@ export const FancyUpload = ({
         state={state}
         stateRelatedMessage={stateRelatedMessage}
       />
-      {mappedFiles.map((file) => (
-        <FancyPreview
-          key={file.name}
-          title={title}
-          name={file.name}
-          src={URL.createObjectURL(file)}
-        />
-      ))}
+      {filePreview && urlPreview && (
+        <FancyPreview title={title} name={filePreview.name} src={urlPreview} />
+      )}
     </div>
   );
 };
