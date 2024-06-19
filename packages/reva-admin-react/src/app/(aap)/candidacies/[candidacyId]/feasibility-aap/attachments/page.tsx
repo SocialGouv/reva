@@ -148,6 +148,56 @@ export default function AttachmentsPage() {
     resetForm();
   }, [resetForm]);
 
+  const idCardDefaultFile = useMemo(
+    () =>
+      idCard?.previewUrl
+        ? {
+            name: idCard.name,
+            mimeType: idCard.mimeType,
+            url: idCard.previewUrl,
+          }
+        : undefined,
+    [idCard],
+  );
+
+  const equivalenceOrExemptionProofDefaultFile = useMemo(
+    () =>
+      equivalenceOrExemptionProof?.previewUrl
+        ? {
+            name: equivalenceOrExemptionProof.name,
+            mimeType: equivalenceOrExemptionProof.mimeType,
+            url: equivalenceOrExemptionProof.previewUrl,
+          }
+        : undefined,
+    [equivalenceOrExemptionProof],
+  );
+
+  const trainingCertificateDefaultFile = useMemo(
+    () =>
+      trainingCertificate?.previewUrl
+        ? {
+            name: trainingCertificate.name,
+            mimeType: trainingCertificate.mimeType,
+            url: trainingCertificate.previewUrl,
+          }
+        : undefined,
+    [trainingCertificate],
+  );
+
+  const additionalFilesDefaultFile = useMemo(
+    () =>
+      additionalFiles.map((_, index) =>
+        additionalFiles[index]?.previewUrl
+          ? {
+              name: additionalFiles[index]!.name,
+              mimeType: additionalFiles[index]!.mimeType,
+              url: additionalFiles[index]!.previewUrl as string,
+            }
+          : undefined,
+      ),
+    [additionalFiles],
+  );
+
   return (
     <div className="flex flex-col">
       <h1>Pièces jointes</h1>
@@ -170,15 +220,7 @@ export default function AttachmentsPage() {
             title="Pièce d'identité"
             description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={
-              idCard?.previewUrl
-                ? {
-                    name: idCard.name,
-                    mimeType: idCard.mimeType,
-                    url: idCard.previewUrl,
-                  }
-                : undefined
-            }
+            defaultFile={idCardDefaultFile}
             nativeInputProps={{
               required: true,
               ...register("idCard"),
@@ -192,15 +234,7 @@ export default function AttachmentsPage() {
             title="Justificatif d'équivalence ou de dispense (optionnel)"
             description="Copie du ou des justificatifs ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={
-              equivalenceOrExemptionProof?.previewUrl
-                ? {
-                    name: equivalenceOrExemptionProof.name,
-                    mimeType: equivalenceOrExemptionProof.mimeType,
-                    url: equivalenceOrExemptionProof.previewUrl,
-                  }
-                : undefined
-            }
+            defaultFile={equivalenceOrExemptionProofDefaultFile}
             nativeInputProps={{
               ...register("equivalenceOrExemptionProof"),
               accept: ".pdf, .jpg, .jpeg, .png",
@@ -215,15 +249,7 @@ export default function AttachmentsPage() {
             title="Attestation ou certificat de formation (optionnel)"
             description="Attestation ou certificat de suivi de formation justifiant du pré-requis demandé par la certification visée."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={
-              trainingCertificate?.previewUrl
-                ? {
-                    name: trainingCertificate.name,
-                    mimeType: trainingCertificate.mimeType,
-                    url: trainingCertificate.previewUrl,
-                  }
-                : undefined
-            }
+            defaultFile={trainingCertificateDefaultFile}
             nativeInputProps={{
               ...register("trainingCertificate"),
               accept: ".pdf, .jpg, .jpeg, .png",
@@ -242,15 +268,7 @@ export default function AttachmentsPage() {
                   additionalFiles.filter((_, _index) => _index != index),
                 );
               }}
-              defaultFile={
-                additionalFiles[index]?.previewUrl
-                  ? {
-                      name: additionalFiles[index]!.name,
-                      mimeType: additionalFiles[index]!.mimeType,
-                      url: additionalFiles[index]!.previewUrl!,
-                    }
-                  : undefined
-              }
+              defaultFile={additionalFilesDefaultFile[index]}
               nativeInputProps={{
                 ...register(`additionalFiles.${index}`),
                 accept: ".pdf, .jpg, .jpeg, .png",
