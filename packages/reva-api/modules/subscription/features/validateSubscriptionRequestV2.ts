@@ -61,7 +61,7 @@ export const validateSubscriptionRequestV2 = async ({
 
   if (oldAccount) {
     throw new Error(
-      `Un compte existe déjà avec l'email ${subscriptionRequest.accountEmail}`,
+      `Cette adresse mail est déjà associée à un compte. Utilisez une adresse mail différente pour créer un nouveau compte.`,
     );
   }
 
@@ -76,7 +76,7 @@ export const validateSubscriptionRequestV2 = async ({
 
   if (oldIamAccount)
     throw new Error(
-      `Un compte utilisateur existe déjà avec l'email ${subscriptionRequest.accountEmail}`,
+      `Cette adresse mail est déjà associée à un compte. Utilisez une adresse mail différente pour créer un nouveau compte.`,
     );
 
   //organism creation
