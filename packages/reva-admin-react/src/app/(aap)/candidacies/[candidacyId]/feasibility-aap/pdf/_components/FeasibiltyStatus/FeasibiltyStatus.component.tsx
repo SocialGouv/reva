@@ -16,10 +16,8 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
 
   const { candidacy } = useHooks(candidacyId);
 
-  const certificationAuthority =
-    candidacy.data?.getCandidacyById?.certificationAuthorities?.[0];
-
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
+  const certificationAuthority = feasibility?.certificationAuthority;
 
   const feasibilityFile = feasibility?.feasibilityFile;
   const IDFile = feasibility?.IDFile;

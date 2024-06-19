@@ -74,7 +74,7 @@ export type FeasibilityInputType = {
   certificateOfAttendanceFile?: File;
 };
 
-export const useHooks = (candidacyId: string) => {
+export const useSendFeasibilityForm = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
   const { accessToken } = useKeycloakContext();
   const queryClient = useQueryClient();

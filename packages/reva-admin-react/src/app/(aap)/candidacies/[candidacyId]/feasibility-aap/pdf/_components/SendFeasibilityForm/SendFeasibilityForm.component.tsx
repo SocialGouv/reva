@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -7,12 +8,13 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import Select from "@codegouvfr/react-dsfr/Select";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
 
-import { useHooks } from "./SendFeasibilityForm.hooks";
+import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 
 const schema = z.object({
   feasibilityFile: z.object({ 0: z.instanceof(File) }),
@@ -33,11 +35,28 @@ interface Props {
 export const SendFeasibilityForm = (props: Props): JSX.Element => {
   const { candidacyId } = props;
 
-  const { candidacy, sendFeasibility } = useHooks(candidacyId);
+  const { candidacy, sendFeasibility } = useSendFeasibilityForm(candidacyId);
 
-  const certificationAuthority =
-    candidacy.data?.getCandidacyById?.certificationAuthorities?.[0];
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
+
+  const certificationAuthorities = useMemo(
+    () => candidacy.data?.getCandidacyById?.certificationAuthorities || [],
+    [candidacy.data?.getCandidacyById?.certificationAuthorities],
+  );
+
+  const [certificationAuthorityId, setCertificationAuthorityId] = useState<
+    string | undefined
+  >();
+
+  const certificationAuthority = certificationAuthorities.find(
+    (c) => c.id == certificationAuthorityId,
+  );
+
+  useEffect(() => {
+    if (certificationAuthorities.length == 1) {
+      setCertificationAuthorityId(certificationAuthorities[0].id);
+    }
+  }, [certificationAuthorities]);
 
   const {
     register,
@@ -160,7 +179,7 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           stateRelatedMessage={errors.certificateOfAttendanceFile?.[0]?.message}
         />
 
-        {certificationAuthority && (
+        {certificationAuthorities.length == 1 && certificationAuthority && (
           <fieldset>
             <h4>Autorité de certification</h4>
             <GrayCard className="gap-4">
@@ -169,6 +188,33 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
               <p className="mb-0">{certificationAuthority.contactEmail}</p>
             </GrayCard>
           </fieldset>
+        )}
+
+        {certificationAuthorities.length > 1 && (
+          <Select
+            label={
+              <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
+                SÉLECTIONNEZ L'AUTORITÉ DE CERTIFICATION
+              </label>
+            }
+            nativeSelectProps={{
+              onChange: (event) =>
+                setCertificationAuthorityId(event.target.value),
+              value: certificationAuthorityId || "",
+              required: true,
+            }}
+          >
+            <>
+              <option disabled hidden value="">
+                Sélectionner
+              </option>
+              {certificationAuthorities.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </>
+          </Select>
         )}
 
         {feasibility?.history && feasibility.history.length > 0 && (
