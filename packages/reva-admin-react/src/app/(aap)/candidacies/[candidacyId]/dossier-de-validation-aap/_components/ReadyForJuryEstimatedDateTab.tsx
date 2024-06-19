@@ -30,7 +30,7 @@ export const ReadyForJuryEstimatedDateTab = ({
     resolver: zodResolver(readyForJuryEstimatedAtSchema),
     defaultValues: {
       readyForJuryEstimatedAt: format(
-        new Date(readyForJuryEstimatedAt || ""),
+        new Date(readyForJuryEstimatedAt || 0),
         "yyyy-MM-dd",
       ),
     },
@@ -39,7 +39,7 @@ export const ReadyForJuryEstimatedDateTab = ({
   const handleReset = useCallback(() => {
     reset({
       readyForJuryEstimatedAt: format(
-        new Date(readyForJuryEstimatedAt || ""),
+        new Date(readyForJuryEstimatedAt || 0),
         "yyyy-MM-dd",
       ),
     });

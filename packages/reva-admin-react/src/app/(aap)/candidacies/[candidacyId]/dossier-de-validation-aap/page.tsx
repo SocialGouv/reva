@@ -11,28 +11,26 @@ import {
   graphqlErrorToast,
   errorToast,
 } from "@/components/toast/toast";
-import {
-  ReadyForJuryEstimatedAtSchemaFormData,
-  ReadyForJuryEstimatedDateTab,
-} from "./_components/ReadyForJuryEstimatedDateTab";
-import {
-  DossierDeValidationFormData,
-  DossierDeValidationTab,
-} from "./_components/DossierDeValidationTab";
-import { REST_API_URL } from "@/config/config";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { ReadyForJuryEstimatedAtSchemaFormData } from "./_components/ReadyForJuryEstimatedDateTab";
+import { ReadyForJuryEstimatedAtAndDossierDeValidationTabs } from "./_components/ReadyForJuryEstimatedAtAndDossierDeValidationTabs";
+import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
+import { DossierDeValidationFormData } from "./_components/DossierDeValidationTab";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();
-  const { accessToken } = useKeycloakContext();
+
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
 
-  const { candidacy, getCandidacyStatus, setReadyForJuryEstimatedAt } =
-    useAapDossierDeValidationPage();
+  const {
+    candidacy,
+    getCandidacyStatus,
+    setReadyForJuryEstimatedAt,
+    sendDossierDeValidation,
+  } = useAapDossierDeValidationPage();
 
-  const updateReadyForJuryEstimatedAt = async ({
+  const handleReadyForJuryEstimatedAtFormSubmit = async ({
     readyForJuryEstimatedAt,
   }: ReadyForJuryEstimatedAtSchemaFormData) => {
     try {
@@ -48,75 +46,44 @@ const AapDossierDeValidationPage = () => {
       graphqlErrorToast(e);
     }
   };
-
-  const sendDossierDeValidation = async (data: DossierDeValidationFormData) => {
-    const formData = new FormData();
-
-    formData.append("candidacyId", candidacyId);
-
-    if (data.dossierDeValidationFile?.[0]) {
-      formData.append(
-        "dossierDeValidationFile",
-        data.dossierDeValidationFile?.[0],
-      );
-    }
-
-    data.dossierDeValidationOtherFiles.forEach(
-      (f) => f?.[0] && formData.append("dossierDeValidationOtherFiles", f?.[0]),
-    );
-
-    const result = await fetch(
-      `${REST_API_URL}/dossier-de-validation/upload-dossier-de-validation`,
-      {
-        method: "post",
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-        body: formData,
-      },
-    );
-    if (result.ok) {
+  const handleDossierDeValidationFormSubmit = async (
+    data: DossierDeValidationFormData,
+  ) => {
+    try {
+      await sendDossierDeValidation(data);
       successToast("Modifications enregistrées");
       router.push(`/candidacies/${candidacyId}/summary`);
-    } else {
-      errorToast(await result.text());
+    } catch (e) {
+      errorToast((e as Error).message);
     }
   };
 
+  const dossierDeValidation = candidacy?.activeDossierDeValidation;
   return (
     <div className="flex flex-col gap-6">
       <CandidacyBackButton candidacyId={candidacyId} />
       <h1 className="mb-0">Dossier de validation</h1>
 
-      {getCandidacyStatus === "success" && (
-        <Tabs
-          tabs={[
-            {
-              label: "Date prévisionnelle",
-              isDefault: !candidacy?.readyForJuryEstimatedAt,
-              content: (
-                <ReadyForJuryEstimatedDateTab
-                  readyForJuryEstimatedAt={
-                    candidacy?.readyForJuryEstimatedAt || undefined
-                  }
-                  onFormSubmit={updateReadyForJuryEstimatedAt}
-                />
-              ),
-            },
-            {
-              label: "Dossier",
-              isDefault: !!candidacy?.readyForJuryEstimatedAt,
-              content: (
-                <DossierDeValidationTab
-                  onFormSubmit={sendDossierDeValidation}
-                />
-              ),
-            },
-          ]}
+      {getCandidacyStatus === "success" && dossierDeValidation ? (
+        <ReadOnlyDossierDeValidationView
+          dossierDeValidationSentAt={
+            new Date(dossierDeValidation.dossierDeValidationSentAt)
+          }
+          dossierDeValidationFile={dossierDeValidation.dossierDeValidationFile}
+          dossierDeValidationOtherFiles={
+            dossierDeValidation.dossierDeValidationOtherFiles
+          }
+        />
+      ) : (
+        <ReadyForJuryEstimatedAtAndDossierDeValidationTabs
+          readyForJuryEstimatedAt={candidacy?.readyForJuryEstimatedAt}
+          onReadyForJuryEstimatedAtFormSubmit={
+            handleReadyForJuryEstimatedAtFormSubmit
+          }
+          onDossierDeValidationFormSubmit={handleDossierDeValidationFormSubmit}
         />
       )}
     </div>
   );
 };
-
 export default AapDossierDeValidationPage;
