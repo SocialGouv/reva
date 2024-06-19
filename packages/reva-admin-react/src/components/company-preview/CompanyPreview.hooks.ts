@@ -18,7 +18,6 @@ const getEtablissementQuery = graphql(`
         mandatairesSociaux {
           type
           nom
-          prenom
           fonction
         }
         formeJuridique

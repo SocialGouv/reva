@@ -168,7 +168,6 @@ type FormeJuridique {
 type MandataireSocial {
   type: PersonneType!
   nom: String!
-  prenom: String!
   fonction: String!
 }
 
