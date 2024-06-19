@@ -28,7 +28,7 @@ export const getDroppedOutCandidacyMenu = async ({
 
   const getDropOutMenuEntry = (): CandidacyMenuEntry => ({
     label: "Abandon du candidat confirmé",
-    url: buildUrl({ adminType: "Elm", suffix: "drop-out" }),
+    url: buildUrl({ adminType: "React", suffix: "drop-out" }),
     status: "ACTIVE_WITHOUT_HINT",
   });
 

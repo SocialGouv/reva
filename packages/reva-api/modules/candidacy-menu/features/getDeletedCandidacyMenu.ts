@@ -16,7 +16,7 @@ export const getDeletedCandidacyMenu = async ({
       candidacy.candidacyStatuses[0].createdAt,
       "d MMMM yyyy",
     )}`,
-    url: buildUrl({ adminType: "Elm", suffix: "archive" }),
+    url: buildUrl({ adminType: "React", suffix: "archive" }),
     status: "ACTIVE_WITHOUT_HINT",
   });
 
