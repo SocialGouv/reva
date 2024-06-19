@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 
 export const SmallNotice = ({
-  className,
+  className = "",
   children,
 }: {
-  className: string;
+  className?: string;
   children: ReactNode;
 }) => (
   <div
