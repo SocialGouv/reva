@@ -168,7 +168,7 @@ type FormeJuridique {
 type MandataireSocial {
   type: PersonneType!
   nom: String!
-  fonction: String!
+  fonction: String
 }
 
 type Kbis {

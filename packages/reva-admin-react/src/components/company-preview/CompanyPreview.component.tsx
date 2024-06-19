@@ -135,7 +135,9 @@ export const CompanyPreview = (props: Props) => {
                       )}
                       {mandataire.nom}
                     </Info>
-                    <Info title="Fonction">{mandataire.fonction}</Info>
+                    {mandataire.fonction && (
+                      <Info title="Fonction">{mandataire.fonction}</Info>
+                    )}
                   </div>
                 </li>
               ))}
