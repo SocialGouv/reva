@@ -119,10 +119,22 @@ export const CompanyPreview = (props: Props) => {
             </h3>
             <ul>
               {etablissement.kbis.mandatairesSociaux.map((mandataire) => (
-                <li key={`${mandataire.nom}${mandataire.prenom}`}>
-                  <div className="grid md:grid-cols-3">
-                    <Info title="Nom">{mandataire.nom}</Info>
-                    <Info title="Prénom">{mandataire.prenom}</Info>
+                <li key={`${mandataire.nom}`}>
+                  <div className="grid md:grid-cols-2">
+                    <Info title="Nom">
+                      {mandataire.type == "PERSONNE_PHYSIQUE" ? (
+                        <>
+                          <span className="fr-icon--sm fr-icon-user-fill mr-2"></span>
+                          <span className="sr-only">Personne physique</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="fr-icon--sm fr-icon-building-fill mr-2"></span>
+                          <span className="sr-only">Personne morale</span>
+                        </>
+                      )}
+                      {mandataire.nom}
+                    </Info>
                     <Info title="Fonction">{mandataire.fonction}</Info>
                   </div>
                 </li>

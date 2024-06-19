@@ -19,7 +19,6 @@ type PersonneType = "PERSONNE_PHYSIQUE" | "PERSONNE_MORALE";
 export type MandataireSocial = {
   type: PersonneType;
   nom: string;
-  prenom: string;
   fonction: string;
 };
 
@@ -111,9 +110,7 @@ export async function findKbis(
       data: any;
     };
 
-    const kbis: Kbis | null = data?.data ? mapDataToKbis(data.data) : null;
-
-    return kbis;
+    return data?.data ? mapDataToKbis(data.data) : null;
   } catch (error) {
     console.error(error);
     logger.error(error);
@@ -208,15 +205,21 @@ function mapDataToPersonneType(personne: string): PersonneType {
   throw new Error("Le type de personne retournée par l'API est inconnu");
 }
 
+function mapDataToMandataire(data: any): MandataireSocial {
+  const type = mapDataToPersonneType(data.type);
+
+  const nom =
+    type == "PERSONNE_PHYSIQUE"
+      ? `${data.prenom} ${data.nom}`
+      : `${data.raison_sociale} (${data.numero_identification})`;
+
+  return { type, nom, fonction: data.fonction };
+}
+
 function mapDataToKbis(data: any): Kbis | null {
   try {
     const kbis: Kbis = {
-      mandatairesSociaux: data.mandataires_sociaux.map((mandataire: any) => ({
-        type: mapDataToPersonneType(mandataire.type),
-        nom: mandataire.nom,
-        prenom: mandataire.prenom,
-        fonction: mandataire.fonction,
-      })),
+      mandatairesSociaux: data.mandataires_sociaux.map(mapDataToMandataire),
       formeJuridique: data.personne_morale?.forme_juridique?.valeur,
     };
 
