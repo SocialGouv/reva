@@ -8,7 +8,7 @@ import { graphql } from "@/graphql/generated";
 import { isValid } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { errorToast } from "@/components/toast/toast";
+import { graphqlErrorToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 
 const validateSubscriptionRequestMutation = graphql(`
@@ -85,7 +85,7 @@ export const SubscriptionRequestForm = ({
       router.push("/subscriptions/pending");
     } catch (e) {
       console.log(e);
-      errorToast("Une erreur est survenue");
+      graphqlErrorToast(e);
     }
   });
 
