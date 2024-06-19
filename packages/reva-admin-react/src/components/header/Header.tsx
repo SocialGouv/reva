@@ -101,7 +101,7 @@ export const Header = () => {
                     /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)/,
                   ) ||
                   currentPathname.match(
-                    /\/candidacies\/(?!.*feasibility-aap).*\/(feasibility)|(dossier-de-validation)|(jury)/,
+                    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)/,
                   )
                 ),
               },

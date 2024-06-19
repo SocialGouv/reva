@@ -1,28 +1,30 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse } from "date-fns";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { useCallback } from "react";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-
-const readyForJuryEstimatedAtSchema = z.object({
-  readyForJuryEstimatedAt: z.string(),
-});
-
-type ReadyForJuryEstimatedAtSchemaFormData = z.infer<
-  typeof readyForJuryEstimatedAtSchema
->;
+import { parse } from "date-fns";
+import {
+  successToast,
+  graphqlErrorToast,
+  errorToast,
+} from "@/components/toast/toast";
+import {
+  ReadyForJuryEstimatedAtSchemaFormData,
+  ReadyForJuryEstimatedDateTab,
+} from "./_components/ReadyForJuryEstimatedDateTab";
+import {
+  DossierDeValidationFormData,
+  DossierDeValidationTab,
+} from "./_components/DossierDeValidationTab";
+import { REST_API_URL } from "@/config/config";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 const AapDossierDeValidationPage = () => {
+  const router = useRouter();
+  const { accessToken } = useKeycloakContext();
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -44,6 +46,40 @@ const AapDossierDeValidationPage = () => {
       successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
+    }
+  };
+
+  const sendDossierDeValidation = async (data: DossierDeValidationFormData) => {
+    const formData = new FormData();
+
+    formData.append("candidacyId", candidacyId);
+
+    if (data.dossierDeValidationFile?.[0]) {
+      formData.append(
+        "dossierDeValidationFile",
+        data.dossierDeValidationFile?.[0],
+      );
+    }
+
+    data.dossierDeValidationOtherFiles.forEach(
+      (f) => f?.[0] && formData.append("dossierDeValidationOtherFiles", f?.[0]),
+    );
+
+    const result = await fetch(
+      `${REST_API_URL}/dossier-de-validation/upload-dossier-de-validation`,
+      {
+        method: "post",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      },
+    );
+    if (result.ok) {
+      successToast("Modifications enregistrées");
+      router.push(`/candidacies/${candidacyId}/summary`);
+    } else {
+      errorToast(await result.text());
     }
   };
 
@@ -70,90 +106,17 @@ const AapDossierDeValidationPage = () => {
             {
               label: "Dossier",
               isDefault: !!candidacy?.readyForJuryEstimatedAt,
-              content: <DossierDeValidationTab />,
+              content: (
+                <DossierDeValidationTab
+                  onFormSubmit={sendDossierDeValidation}
+                />
+              ),
             },
           ]}
         />
       )}
     </div>
   );
-};
-
-const ReadyForJuryEstimatedDateTab = ({
-  readyForJuryEstimatedAt,
-  onFormSubmit,
-}: {
-  readyForJuryEstimatedAt?: number;
-  onFormSubmit: (data: ReadyForJuryEstimatedAtSchemaFormData) => Promise<void>;
-}) => {
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { isDirty, isSubmitting },
-  } = useForm<ReadyForJuryEstimatedAtSchemaFormData>({
-    resolver: zodResolver(readyForJuryEstimatedAtSchema),
-    defaultValues: {
-      readyForJuryEstimatedAt: format(
-        new Date(readyForJuryEstimatedAt || ""),
-        "yyyy-MM-dd",
-      ),
-    },
-  });
-
-  const handleReset = useCallback(() => {
-    reset({
-      readyForJuryEstimatedAt: format(
-        new Date(readyForJuryEstimatedAt || ""),
-        "yyyy-MM-dd",
-      ),
-    });
-  }, [readyForJuryEstimatedAt, reset]);
-
-  const handleFormSubmit = handleSubmit(onFormSubmit);
-
-  return (
-    <form
-      className="flex flex-col overflow-auto"
-      onSubmit={handleFormSubmit}
-      onReset={(e) => {
-        e.preventDefault();
-        handleReset();
-      }}
-    >
-      <p>
-        Sauf mention contraire “(optionnel)” dans le label, tous les champs sont
-        obligatoires.
-      </p>
-      <p>La date prévisionnelle correspond :</p>
-      <ul className="mt-0">
-        <li>
-          à la date à laquelle le candidat aura finalisé son dossier de
-          validation pour les certifications du Ministère du Travail et des
-          Branches Professionnelles
-        </li>
-        <li>
-          à la date de dépôt du dossier de validation pour les autres
-          certifications
-        </li>
-      </ul>
-      <br />
-      <Input
-        className="max-w-xs"
-        label="Date prévisonnelle"
-        hintText="Date au format 31/12/2022"
-        nativeInputProps={{
-          type: "date",
-          ...register("readyForJuryEstimatedAt"),
-        }}
-      />
-      <FormButtons formState={{ isDirty, isSubmitting }} />
-    </form>
-  );
-};
-
-const DossierDeValidationTab = () => {
-  return <div className="flex flex-col flex-1 mb-2 overflow-auto"></div>;
 };
 
 export default AapDossierDeValidationPage;
