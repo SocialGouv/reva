@@ -61,7 +61,7 @@ export const validateSubscriptionRequestV2 = async ({
 
   if (oldAccount) {
     throw new Error(
-      `Cette adresse mail est déjà associée à un compte. Utilisez une adresse mail différente pour créer un nouveau compte.`,
+      `Cette adresse mail est déjà associée à un compte. L'AAP doit utiliser une adresse mail différente pour créer un compte.`,
     );
   }
 
@@ -76,7 +76,7 @@ export const validateSubscriptionRequestV2 = async ({
 
   if (oldIamAccount)
     throw new Error(
-      `Cette adresse mail est déjà associée à un compte. Utilisez une adresse mail différente pour créer un nouveau compte.`,
+      `Cette adresse mail est déjà associée à un compte. L'AAP doit utiliser une adresse mail différente pour créer un compte.`,
     );
 
   //organism creation
