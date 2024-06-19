@@ -20,6 +20,7 @@ import { getSubscriptionRequestV2FileNameUrlAndMimeType } from "./features/getSu
 import { rejectSubscriptionRequestV2 } from "./features/rejectSubscriptionRequestV2";
 import { validateSubscriptionRequestV2 } from "./features/validateSubscriptionRequestV2";
 import { findEtablissement } from "../referential/features/entreprise";
+import { getSubscriptionCountByStatus } from "./features/getSubscriptionCountByStatus";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -47,7 +48,6 @@ const unsafeResolvers = {
       }),
     lettreDeDelegationFile: async (
       { id: subscriptionRequestId }: { id: string },
-
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -126,6 +126,10 @@ const unsafeResolvers = {
       _parent: unknown,
       { subscriptionRequestId }: { subscriptionRequestId: string },
     ) => getSubscriptionRequestV2({ subscriptionRequestId }),
+    subscription_getSubscriptionCountByStatus: (
+      _parent: unknown,
+      { searchFilter }: { searchFilter?: string },
+    ) => getSubscriptionCountByStatus({ searchFilter }),
   },
   Mutation: {
     subscription_createSubscriptionRequest: async (

@@ -104,6 +104,13 @@ type SubscriptionRequestV2sPaginated {
   info: PaginationInfo!
 }
 
+type SubscriptionCountByStatus {
+  PENDING_SUBSCRIPTION: Int!
+  REJECTED_SUBSCRIPTION: Int!
+  PENDING_LEGAL_VERIFICATION: Int!
+  UP_TO_DATE: Int!
+}
+
 type Query {
   subscription_getSubscriptionRequests(
     offset: Int
@@ -123,6 +130,9 @@ type Query {
   subscription_getSubscriptionRequestV2(
     subscriptionRequestId: ID!
   ): SubscriptionRequestV2
+  subscription_getSubscriptionCountByStatus(
+    searchFilter: String
+  ): SubscriptionCountByStatus!
 }
 
 enum SubscriptionOrganismTypology {
