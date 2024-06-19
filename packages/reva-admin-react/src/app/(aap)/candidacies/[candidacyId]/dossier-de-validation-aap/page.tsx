@@ -11,10 +11,15 @@ import {
   graphqlErrorToast,
   errorToast,
 } from "@/components/toast/toast";
-import { ReadyForJuryEstimatedAtSchemaFormData } from "./_components/ReadyForJuryEstimatedDateTab";
-import { ReadyForJuryEstimatedAtAndDossierDeValidationTabs } from "./_components/ReadyForJuryEstimatedAtAndDossierDeValidationTabs";
+import {
+  ReadyForJuryEstimatedAtSchemaFormData,
+  ReadyForJuryEstimatedDateTab,
+} from "./_components/ReadyForJuryEstimatedDateTab";
 import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
-import { DossierDeValidationFormData } from "./_components/DossierDeValidationTab";
+import {
+  DossierDeValidationFormData,
+  DossierDeValidationTab,
+} from "./_components/DossierDeValidationTab";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();
@@ -25,6 +30,8 @@ const AapDossierDeValidationPage = () => {
 
   const {
     candidacy,
+    dossierDeValidation,
+    dossierDeValidationProblems,
     getCandidacyStatus,
     setReadyForJuryEstimatedAt,
     sendDossierDeValidation,
@@ -58,13 +65,16 @@ const AapDossierDeValidationPage = () => {
     }
   };
 
-  const dossierDeValidation = candidacy?.activeDossierDeValidation;
+  const dossierDeValidationActiveAndNotIncomplete =
+    dossierDeValidation?.decision !== "INCOMPLETE";
   return (
     <div className="flex flex-col gap-6">
       <CandidacyBackButton candidacyId={candidacyId} />
       <h1 className="mb-0">Dossier de validation</h1>
 
-      {getCandidacyStatus === "success" && dossierDeValidation ? (
+      {getCandidacyStatus === "success" &&
+      dossierDeValidation &&
+      dossierDeValidationActiveAndNotIncomplete ? (
         <ReadOnlyDossierDeValidationView
           dossierDeValidationSentAt={
             new Date(dossierDeValidation.dossierDeValidationSentAt)
@@ -75,12 +85,39 @@ const AapDossierDeValidationPage = () => {
           }
         />
       ) : (
-        <ReadyForJuryEstimatedAtAndDossierDeValidationTabs
-          readyForJuryEstimatedAt={candidacy?.readyForJuryEstimatedAt}
-          onReadyForJuryEstimatedAtFormSubmit={
-            handleReadyForJuryEstimatedAtFormSubmit
-          }
-          onDossierDeValidationFormSubmit={handleDossierDeValidationFormSubmit}
+        <Tabs
+          tabs={[
+            {
+              label: "Date prévisionnelle",
+              isDefault: !candidacy?.readyForJuryEstimatedAt,
+              content: (
+                <ReadyForJuryEstimatedDateTab
+                  readyForJuryEstimatedAt={
+                    candidacy?.readyForJuryEstimatedAt || undefined
+                  }
+                  onFormSubmit={handleReadyForJuryEstimatedAtFormSubmit}
+                />
+              ),
+            },
+            {
+              label: "Dossier",
+              isDefault: !!candidacy?.readyForJuryEstimatedAt,
+              content: (
+                <DossierDeValidationTab
+                  dossierDeValidationIncomplete={
+                    dossierDeValidation?.decision === "INCOMPLETE"
+                  }
+                  dossierDeValidationSentAt={
+                    dossierDeValidation?.dossierDeValidationSentAt
+                      ? new Date(dossierDeValidation?.dossierDeValidationSentAt)
+                      : undefined
+                  }
+                  dossierDeValidationProblems={dossierDeValidationProblems}
+                  onFormSubmit={handleDossierDeValidationFormSubmit}
+                />
+              ),
+            },
+          ]}
         />
       )}
     </div>

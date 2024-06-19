@@ -1,7 +1,10 @@
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { useCallback } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
@@ -28,8 +31,17 @@ export type DossierDeValidationFormData = z.infer<
 >;
 
 export const DossierDeValidationTab = ({
+  dossierDeValidationIncomplete,
+  dossierDeValidationSentAt,
+  dossierDeValidationProblems,
   onFormSubmit,
 }: {
+  dossierDeValidationIncomplete?: boolean;
+  dossierDeValidationSentAt?: Date;
+  dossierDeValidationProblems: {
+    decisionSentAt: Date;
+    decisionComment: string;
+  }[];
   onFormSubmit: (data: DossierDeValidationFormData) => Promise<void>;
 }) => {
   const {
@@ -76,6 +88,34 @@ export const DossierDeValidationTab = ({
         supplémentaires peuvent être ajoutées selon les attendus du
         certificateur (ex : attestation de premiers secours).
       </p>
+      {dossierDeValidationIncomplete && (
+        <>
+          <Alert
+            severity="error"
+            title="Dossier de validation signalé par le certificateur"
+            description="Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous. Merci de retourner rapidement un dossier valide."
+          />
+          <p className="mt-8">
+            <strong>
+              Dossier envoyé le :{" "}
+              {format(dossierDeValidationSentAt || 0, "dd/MM/yyyy")}
+            </strong>
+          </p>
+          <ul className="flex flex-col gap-6 mb-6">
+            {dossierDeValidationProblems.map((p, i) => (
+              <GrayCard key={i}>
+                <dt className="font-bold text-xl">Dossier signalé :</dt>
+                <dd>
+                  Dossier signalé le {format(p.decisionSentAt, "dd/MM/yyyy")}
+                </dd>
+                <br />
+                <dt className="font-bold text-xl">Motif du signalement :</dt>
+                <dd>{p.decisionComment}</dd>
+              </GrayCard>
+            ))}
+          </ul>
+        </>
+      )}
       <hr />
       <div className="flex flex-col gap-6 mb-12">
         <FancyUpload
