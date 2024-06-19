@@ -1,3 +1,4 @@
+"use client";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Button } from "@codegouvfr/react-dsfr/Button";
