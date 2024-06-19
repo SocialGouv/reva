@@ -14,6 +14,20 @@ export type FormeJuridique = {
   legalStatus: LegalStatus;
 };
 
+type PersonneType = "PERSONNE_PHYSIQUE" | "PERSONNE_MORALE";
+
+export type MandataireSocial = {
+  type: PersonneType;
+  nom: string;
+  prenom: string;
+  fonction: string;
+};
+
+export type Kbis = {
+  mandatairesSociaux: MandataireSocial[];
+  formeJuridique: string;
+};
+
 export type Etablissement = {
   siret: string;
   siegeSocial: boolean;
@@ -22,30 +36,26 @@ export type Etablissement = {
   formeJuridique: FormeJuridique;
 };
 
-// export type EtablissementNonDiffusible && Etablissement  = {
+function headers() {
+  const token = process.env.ENTREPRISE_GOUV_API_TOKEN;
+  if (!token) {
+    const error = `"ENTREPRISE_GOUV_API_TOKEN" has not been set`;
+    console.error(error);
+    logger.error(error);
 
-// };
+    throw new Error(error);
+  }
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
 
 export async function findEtablissementDiffusible(
   params: EtablissemntFindParams,
 ): Promise<Etablissement | null> {
   try {
-    const ENTREPRISE_GOUV_API_TOKEN = process.env.ENTREPRISE_GOUV_API_TOKEN;
-    if (!ENTREPRISE_GOUV_API_TOKEN) {
-      const error = `"ENTREPRISE_GOUV_API_TOKEN" has not been set`;
-      console.error(error);
-      logger.error(error);
-
-      throw new Error(error);
-    }
-
     const url = `${URL}/insee/sirene/etablissements/diffusibles/${params.siret}?${getParameters().toString()}`;
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${ENTREPRISE_GOUV_API_TOKEN}`,
-      },
-    });
+    const response = await fetch(url, { headers: headers() });
 
     const data = (await response.json()) as {
       data: any;
@@ -68,22 +78,9 @@ export async function findEtablissement(
   params: EtablissemntFindParams,
 ): Promise<Etablissement | null> {
   try {
-    const ENTREPRISE_GOUV_API_TOKEN = process.env.ENTREPRISE_GOUV_API_TOKEN;
-    if (!ENTREPRISE_GOUV_API_TOKEN) {
-      const error = `"ENTREPRISE_GOUV_API_TOKEN" has not been set`;
-      console.error(error);
-      logger.error(error);
-
-      throw new Error(error);
-    }
-
     const url = `${URL}/insee/sirene/etablissements/${params.siret}?${getParameters().toString()}`;
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${ENTREPRISE_GOUV_API_TOKEN}`,
-      },
-    });
+    const response = await fetch(url, { headers: headers() });
 
     const data = (await response.json()) as {
       data: any;
@@ -102,26 +99,35 @@ export async function findEtablissement(
   return null;
 }
 
+export async function findKbis(
+  params: EtablissemntFindParams,
+): Promise<Kbis | null> {
+  try {
+    const siren = params.siret.slice(0, 9);
+    const url = `${URL}/infogreffe/rcs/unites_legales/${siren}/extrait_kbis?${getParameters().toString()}`;
+    const response = await fetch(url, { headers: headers() });
+
+    const data = (await response.json()) as {
+      data: any;
+    };
+
+    const kbis: Kbis | null = data?.data ? mapDataToKbis(data.data) : null;
+
+    return kbis;
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+  }
+
+  return null;
+}
+
 export async function findQualiopiStatus(
   params: EtablissemntFindParams,
 ): Promise<boolean | null> {
   try {
-    const ENTREPRISE_GOUV_API_TOKEN = process.env.ENTREPRISE_GOUV_API_TOKEN;
-    if (!ENTREPRISE_GOUV_API_TOKEN) {
-      const error = `"ENTREPRISE_GOUV_API_TOKEN" has not been set`;
-      console.error(error);
-      logger.error(error);
-
-      throw new Error(error);
-    }
-
     const url = `${URL}/carif_oref/etablissements/${params.siret}/certifications_qualiopi_france_competences?${getParameters().toString()}`;
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${ENTREPRISE_GOUV_API_TOKEN}`,
-      },
-    });
+    const response = await fetch(url, { headers: headers() });
 
     const data = (await response.json()) as {
       data: any;
@@ -182,6 +188,39 @@ function mapDataToEtablissement(data: any): Etablissement | null {
     };
 
     return etablissement;
+  } catch (error) {
+    console.error(error);
+    logger.error(error);
+  }
+
+  return null;
+}
+
+function mapDataToPersonneType(personne: string): PersonneType {
+  if (personne == "personne_physique") {
+    return "PERSONNE_PHYSIQUE";
+  }
+
+  if (personne == "personne_morale") {
+    return "PERSONNE_MORALE";
+  }
+
+  throw new Error("Le type de personne retournée par l'API est inconnu");
+}
+
+function mapDataToKbis(data: any): Kbis | null {
+  try {
+    const kbis: Kbis = {
+      mandatairesSociaux: data.mandataires_sociaux.map((mandataire: any) => ({
+        type: mapDataToPersonneType(mandataire.type),
+        nom: mandataire.nom,
+        prenom: mandataire.prenom,
+        fonction: mandataire.fonction,
+      })),
+      formeJuridique: data.personne_morale?.forme_juridique?.valeur,
+    };
+
+    return kbis;
   } catch (error) {
     console.error(error);
     logger.error(error);

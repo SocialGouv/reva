@@ -33,6 +33,7 @@ import { RNCPReferential } from "./rncp";
 import {
   findEtablissement,
   findEtablissementDiffusible,
+  findKbis,
   findQualiopiStatus,
 } from "./features/entreprise";
 import { searchCertificationsForCandidateV2 } from "./features/searchCertificationsForCandidateV2";
@@ -65,9 +66,14 @@ const unsafeReferentialResolvers = {
     region: ({ regionId }: { regionId: string }) =>
       getRegionById({ id: regionId }),
   },
+  EtablissementDiffusible: {
+    qualiopiStatus: ({ siret }: { siret: string }) =>
+      findQualiopiStatus({ siret }),
+  },
   Etablissement: {
     qualiopiStatus: ({ siret }: { siret: string }) =>
       findQualiopiStatus({ siret }),
+    kbis: ({ siret }: { siret: string }) => findKbis({ siret }),
   },
   Query: {
     getReferential: async (_: any, _payload: any) => {

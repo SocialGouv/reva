@@ -3,6 +3,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useEtablissement } from "./CompanyPreview.hooks";
 import { format } from "date-fns";
 import { GrayCard } from "../card/gray-card/GrayCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 interface CompanyProps {
   companySiret: string;
@@ -60,6 +61,15 @@ export const CompanyPreview = (props: Props) => {
             description=""
           />
         )}
+
+        {isLoading && (
+          <>
+            <div className="bg-neutral-200 rounded animate-pulse h-8 w-1/2"></div>
+            <div className="bg-neutral-200 rounded animate-pulse h-24 w-full my-4"></div>
+            <div className="bg-neutral-200 rounded animate-pulse h-6 w-1/3"></div>
+          </>
+        )}
+
         {etablissement && (
           <CompanyBadges
             className="col-span-3 mb-4"
@@ -72,18 +82,54 @@ export const CompanyPreview = (props: Props) => {
             qualiopiStatus={!!etablissement.qualiopiStatus}
           />
         )}
-        <div className={`grid md:grid-cols-${manager ? 3 : 2}`}>
-          <Info title="Raison sociale">{etablissement?.raisonSociale}</Info>
-          <Info title="Nature juridique">{company.companyLegalStatus}</Info>
 
-          {manager && (
-            <Info title="Dirigeant">
-              {!manager.managerFirstname && !manager.managerLastname
-                ? "Non renseigné"
-                : `${manager.managerFirstname} ${manager.managerLastname}`}
+        {!isLoading && (
+          <div className={`grid md:grid-cols-${manager ? 3 : 2}`}>
+            <Info title="Forme juridique">{company.companyLegalStatus}</Info>
+            <Info title="Raison sociale">{etablissement?.raisonSociale}</Info>
+            {manager && (
+              <Info title="Dirigeant saisi à l'inscription">
+                {!manager.managerFirstname && !manager.managerLastname
+                  ? "Non renseigné"
+                  : `${manager.managerFirstname} ${manager.managerLastname}`}
+              </Info>
+            )}
+            {etablissement && !etablissement?.kbis && (
+              <SmallNotice className="mt-4">
+                Cet établissement ne dispose pas de Kbis.
+              </SmallNotice>
+            )}
+          </div>
+        )}
+
+        {etablissement?.kbis?.formeJuridique && (
+          <div className={`grid md:grid-cols-2`}>
+            <Info title="Forme juridique précisée sur le Kbis">
+              {etablissement.kbis?.formeJuridique}
             </Info>
-          )}
-        </div>
+          </div>
+        )}
+
+        {etablissement?.kbis?.mandatairesSociaux && (
+          <div className="border-t border-neutral-300 mt-6 pt-8">
+            <h3>
+              {etablissement?.kbis?.mandatairesSociaux.length == 1
+                ? "Mandataire social unique"
+                : "Mandataires sociaux"}
+            </h3>
+            <ul>
+              {etablissement.kbis.mandatairesSociaux.map((mandataire) => (
+                <li key={`${mandataire.nom}${mandataire.prenom}`}>
+                  <div className="grid md:grid-cols-3">
+                    <Info title="Nom">{mandataire.nom}</Info>
+                    <Info title="Prénom">{mandataire.prenom}</Info>
+                    <Info title="Fonction">{mandataire.fonction}</Info>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </GrayCard>
 
       {account && (
