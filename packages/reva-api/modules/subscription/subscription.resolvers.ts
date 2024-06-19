@@ -47,7 +47,6 @@ const unsafeResolvers = {
       }),
     lettreDeDelegationFile: async (
       { id: subscriptionRequestId }: { id: string },
-
       _: unknown,
     ) =>
       getSubscriptionRequestV2FileNameUrlAndMimeType({
@@ -126,6 +125,10 @@ const unsafeResolvers = {
       _parent: unknown,
       { subscriptionRequestId }: { subscriptionRequestId: string },
     ) => getSubscriptionRequestV2({ subscriptionRequestId }),
+    subscription_getSubscriptionCountByStatus: (
+      _parent: unknown,
+      { searchFilter }: { searchFilter?: string },
+    ) => getSubscriptionCountByStatus({ searchFilter }),
   },
   Mutation: {
     subscription_createSubscriptionRequest: async (
