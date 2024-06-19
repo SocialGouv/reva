@@ -237,6 +237,11 @@ export default function AttachmentsPage() {
               title="Pièce jointe supplémentaire"
               description=""
               hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
+              onClickDelete={() => {
+                setAdditionalFiles(
+                  additionalFiles.filter((_, _index) => _index != index),
+                );
+              }}
               defaultFile={
                 additionalFiles[index]?.previewUrl
                   ? {
@@ -262,7 +267,7 @@ export default function AttachmentsPage() {
             }}
           >
             <span className="fr-icon-add-line fr-icon--sm" />
-            <span className="text-sm">Ajouter un pré-requis</span>
+            <span className="text-sm">Ajouter une pièce jointe</span>
           </div>
         </div>
         <FormButtons

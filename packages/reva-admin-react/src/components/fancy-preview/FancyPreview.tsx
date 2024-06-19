@@ -25,7 +25,7 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
           {display ? "Masquer la pièce jointe" : "Voir la pièce jointe"}
         </label>
         <span
-          className="fr-icon-eye-off-fill text-blue-800"
+          className={`text-blue-800 ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
           aria-hidden="true"
         />
       </div>

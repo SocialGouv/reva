@@ -24,6 +24,7 @@ export const FancyUpload = ({
   state,
   stateRelatedMessage,
   defaultFile,
+  onClickDelete,
 }: {
   title: string;
   description: ReactNode;
@@ -36,6 +37,7 @@ export const FancyUpload = ({
   state?: "error" | "success" | "default";
   stateRelatedMessage?: ReactNode;
   defaultFile?: { name: string; url: string; mimeType: string };
+  onClickDelete?: () => void;
 }) => {
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const urlPreview = useMemo(
@@ -81,12 +83,35 @@ export const FancyUpload = ({
   }, [downloadFiles]);
 
   return (
-    <div className={`${className || ""}`}>
+    <div className={`relative ${className || ""}`}>
       <Upload
         className={`border bg-dsfr-light-neutral-grey-1000 p-8`}
         label={
-          <>
-            <span className="text-2xl font-bold">{title}</span>
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <div className="flex flex-row justify-between">
+              <span className="text-2xl font-bold">{title}</span>
+
+              {onClickDelete && (
+                <div
+                  className="flex flex-row items-center gap-2 text-sm font-medium text-dsfr-blue-france-sun-113 cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    onClickDelete();
+                  }}
+                >
+                  Supprimer
+                  <span className="fr-icon-delete-line" />
+                </div>
+              )}
+            </div>
+
             <CallOut
               className="ml-8 my-4 py-0 bg-transparent"
               classes={{
@@ -95,7 +120,7 @@ export const FancyUpload = ({
             >
               {description}
             </CallOut>
-          </>
+          </div>
         }
         hint={hint}
         nativeInputProps={{
@@ -119,6 +144,7 @@ export const FancyUpload = ({
         state={state}
         stateRelatedMessage={stateRelatedMessage}
       />
+
       {filePreview && urlPreview && (
         <FancyPreview title={title} name={filePreview.name} src={urlPreview} />
       )}
