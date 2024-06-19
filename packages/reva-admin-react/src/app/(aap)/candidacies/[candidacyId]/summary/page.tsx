@@ -32,7 +32,7 @@ const CandidacySummaryPage = () => {
 
   const { isAdmin } = useAuth();
 
-  //mark the candidacy has "taken over" when the AAP opens it
+  //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
     if (candidacy) {
       const candidacyActiveStatus = candidacy.candidacyStatuses.find(
@@ -256,11 +256,7 @@ const CandidacySummaryPage = () => {
           </ul>
           <CandidacySummaryBottomButtons
             candidacyId={candidacyId}
-            isCandidacyReoriented={!!candidacy.reorientationReason}
-            isCandidacyArchived={candidacy.candidacyStatuses.some(
-              (s) => s.isActive && s.status === "ARCHIVE",
-            )}
-            isCandidacyDroppedOut={!!candidacy.candidacyDropOut}
+            candidacy={candidacy}
           />
         </>
       )}
