@@ -87,7 +87,13 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
 
       const textError = await response.text();
       if (textError) {
-        errorToast(textError);
+        if (response.status == 413) {
+          errorToast(
+            "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieur à 20 Mo.",
+          );
+        } else {
+          errorToast(textError);
+        }
       }
     } catch (error) {
       graphqlErrorToast(error);
