@@ -15,6 +15,7 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
 
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
+import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
 
 const schema = z.object({
   feasibilityFile: z.object({ 0: z.instanceof(File) }),
@@ -215,6 +216,16 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
               ))}
             </>
           </Select>
+        )}
+
+        {certificationAuthority && (
+          <CertificationAuthorityLocalAccounts
+            certificationAuthorityId={certificationAuthority.id}
+            certificationId={
+              candidacy.data?.getCandidacyById?.certification?.id
+            }
+            departmentId={candidacy.data?.getCandidacyById?.department?.id}
+          />
         )}
 
         {feasibility?.history && feasibility.history.length > 0 && (

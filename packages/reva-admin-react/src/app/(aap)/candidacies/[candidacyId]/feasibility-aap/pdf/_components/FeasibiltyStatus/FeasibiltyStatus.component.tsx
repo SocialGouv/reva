@@ -1,11 +1,14 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 
-import { useHooks } from "./FeasibiltyStatus.hooks";
 import {
   FeasibilityDecisionHistory,
   FeasibilityDecisionInfo,
 } from "@/components/feasibility-decison-history";
+
+import { useHooks } from "./FeasibiltyStatus.hooks";
+
+import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
 
 interface Props {
   candidacyId: string;
@@ -79,13 +82,21 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
       )}
 
       {certificationAuthority && (
-        <fieldset>
+        <>
           <GrayCard className="gap-4">
             <h6 className="mb-0">{certificationAuthority.label}</h6>
             <p className="mb-0">{certificationAuthority.contactFullName}</p>
             <p className="mb-0">{certificationAuthority.contactEmail}</p>
           </GrayCard>
-        </fieldset>
+
+          <CertificationAuthorityLocalAccounts
+            certificationAuthorityId={certificationAuthority.id}
+            certificationId={
+              candidacy.data?.getCandidacyById?.certification?.id
+            }
+            departmentId={candidacy.data?.getCandidacyById?.department?.id}
+          />
+        </>
       )}
 
       {feasibility?.history && feasibility.history.length > 0 && (
