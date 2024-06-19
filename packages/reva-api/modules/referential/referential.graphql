@@ -154,10 +154,36 @@ enum LegalStatus {
   NC
 }
 
+enum PersonneType {
+  PERSONNE_PHYSIQUE
+  PERSONNE_MORALE
+}
+
 type FormeJuridique {
   code: ID!
   libelle: String!
   legalStatus: LegalStatus!
+}
+
+type MandataireSocial {
+  type: PersonneType!
+  nom: String!
+  prenom: String!
+  fonction: String!
+}
+
+type Kbis {
+  mandatairesSociaux: [MandataireSocial!]!
+  formeJuridique: String!
+}
+
+type EtablissementDiffusible {
+  siret: ID!
+  siegeSocial: Boolean!
+  dateFermeture: Timestamp
+  raisonSociale: String!
+  formeJuridique: FormeJuridique!
+  qualiopiStatus: Boolean
 }
 
 type Etablissement {
@@ -166,6 +192,7 @@ type Etablissement {
   dateFermeture: Timestamp
   raisonSociale: String!
   formeJuridique: FormeJuridique!
+  kbis: Kbis
   qualiopiStatus: Boolean
 }
 
@@ -198,7 +225,7 @@ type Query {
   getCertificationAuthorityTags: [String!]!
   getFCCertification(rncp: ID!): FCCertification
   getCountries: [Country!]!
-  getEtablissement(siret: ID!): Etablissement
+  getEtablissement(siret: ID!): EtablissementDiffusible
   getEtablissementAsAdmin(siret: ID!): Etablissement
 }
 

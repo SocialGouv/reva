@@ -14,6 +14,15 @@ const getEtablissementQuery = graphql(`
         libelle
         legalStatus
       }
+      kbis {
+        mandatairesSociaux {
+          type
+          nom
+          prenom
+          fonction
+        }
+        formeJuridique
+      }
       dateFermeture
       qualiopiStatus
     }

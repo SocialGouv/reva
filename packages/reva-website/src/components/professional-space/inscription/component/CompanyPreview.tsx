@@ -1,4 +1,4 @@
-import { Etablissement } from "@/graphql/generated/graphql";
+import { EtablissementDiffusible } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
@@ -23,7 +23,7 @@ const CompanySummaryItem = ({
 
 interface Props {
   siret: string;
-  etablissement?: Etablissement | null;
+  etablissement?: EtablissementDiffusible | null;
 }
 
 export const CompanyPreview = (props: Props) => {
