@@ -27,7 +27,7 @@ export const FancyUpload = ({
   onClickDelete,
 }: {
   title: string;
-  description: ReactNode;
+  description?: ReactNode;
   hint?: string;
   className?: string;
   nativeInputProps?: DetailedHTMLProps<
@@ -112,14 +112,16 @@ export const FancyUpload = ({
               )}
             </div>
 
-            <CallOut
-              className="ml-8 my-4 py-0 bg-transparent"
-              classes={{
-                text: "text-sm leading-6 ",
-              }}
-            >
-              {description}
-            </CallOut>
+            {description && (
+              <CallOut
+                className="ml-8 my-4 py-0 bg-transparent"
+                classes={{
+                  text: "text-sm leading-6 ",
+                }}
+              >
+                {description}
+              </CallOut>
+            )}
           </div>
         }
         hint={hint}
