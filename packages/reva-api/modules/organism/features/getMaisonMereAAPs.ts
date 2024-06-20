@@ -7,12 +7,36 @@ import {
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 
-// import { LegalValidationStatus } from "../organism.types";
-
-const buildContainsFilterClause =
-  (searchFilter: string) => (field: string) => ({
+export const buildMaisonMereFilters = (searchFilter: string) => {
+  const containsFilter = (field: string) => ({
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
+
+  const filtersAccount = {
+    gestionnaire: {
+      OR: [
+        containsFilter("firstname"),
+        containsFilter("lastname"),
+        containsFilter("email"),
+      ],
+    },
+  };
+
+  const filtersLegalInformation = {
+    maisonMereAAPLegalInformationDocuments: {
+      OR: [
+        containsFilter("managerFirstname"),
+        containsFilter("managerLastname"),
+      ],
+    },
+  };
+
+  return [
+    containsFilter("raisonSociale"),
+    filtersAccount,
+    filtersLegalInformation,
+  ];
+};
 
 export const getMaisonMereAAPs = async ({
   limit = 10,
@@ -39,32 +63,7 @@ export const getMaisonMereAAPs = async ({
   const queryCount: Prisma.MaisonMereAAPCountArgs = {};
 
   if (searchFilter) {
-    const containsFilter = buildContainsFilterClause(searchFilter);
-
-    const filtersAccount = {
-      gestionnaire: {
-        OR: [
-          containsFilter("firstname"),
-          containsFilter("lastname"),
-          containsFilter("email"),
-        ],
-      },
-    };
-
-    const filtersLegalInformation = {
-      maisonMereAAPLegalInformationDocuments: {
-        OR: [
-          containsFilter("managerFirstname"),
-          containsFilter("managerLastname"),
-        ],
-      },
-    };
-
-    const filters = [
-      containsFilter("raisonSociale"),
-      filtersAccount,
-      filtersLegalInformation,
-    ];
+    const filters = buildMaisonMereFilters(searchFilter);
 
     queryMaisonMereAAPs.where = {
       ...queryMaisonMereAAPs.where,
