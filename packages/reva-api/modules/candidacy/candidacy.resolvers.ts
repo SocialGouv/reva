@@ -215,7 +215,6 @@ const unsafeResolvers = {
             pmr: searchFilter.pmr,
             limit: 51,
             searchText,
-            distanceStatus: searchFilter.distanceStatus,
           });
         } else {
           const result = await getRandomOrganismsForCandidacyWithNewTypologies({

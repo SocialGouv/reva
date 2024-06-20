@@ -48,7 +48,6 @@ export const searchOrganismsForCandidacy = async ({
       pmr: searchFilter.pmr,
       limit: 51,
       searchText,
-      distanceStatus: searchFilter.distanceStatus,
     });
   } else {
     if (!candidacy.departmentId) {
@@ -158,14 +157,12 @@ const getAAPsWithZipCode = async ({
   limit,
   pmr,
   searchText,
-  distanceStatus,
 }: {
   zip: string;
   certificationId: string;
   limit: number;
   pmr?: boolean;
   searchText?: string;
-  distanceStatus?: string;
 }) => {
   const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
   const res = await fetch(query);
