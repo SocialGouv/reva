@@ -196,10 +196,8 @@ export const getActiveCandidacyMenu = async ({
         : "ACTIVE_WITHOUT_HINT";
 
       url = buildUrl({
-        adminType: "Elm",
-        suffix: candidacy.readyForJuryEstimatedAt
-          ? "dossier-de-validation"
-          : "ready-for-jury-estimated-date",
+        adminType: "React",
+        suffix: "dossier-de-validation-aap",
       });
     }
     return {
