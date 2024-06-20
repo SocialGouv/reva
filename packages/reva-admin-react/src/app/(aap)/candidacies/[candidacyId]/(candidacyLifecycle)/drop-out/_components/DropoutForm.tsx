@@ -1,7 +1,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ActiveDropoutReasons, useDropout } from "./useDropout";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -35,7 +35,7 @@ export const DropoutForm = ({
     reValidateMode: "onChange",
   });
 
-  const dropOutReasonId = form.watch("dropOutReasonId");
+  const dropOutReasonId = useWatch({ control: form.control, name: "dropOutReasonId" });
 
   return (
     <>
