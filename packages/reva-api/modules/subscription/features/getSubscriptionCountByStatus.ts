@@ -4,6 +4,8 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+import { buildMaisonMereFilters } from "../../organism/features/getMaisonMereAAPs";
+import { buildSubscriptionFilters } from "./getSubscriptionRequestV2s";
 
 type SubscriptionStatusFilter =
   | "PENDING_SUBSCRIPTION"
@@ -20,6 +22,7 @@ export const getSubscriptionCountByStatus = async ({
     prismaClient.subscriptionRequestV2.count({
       where: {
         status,
+        ...(searchFilter && { OR: buildSubscriptionFilters(searchFilter) }),
       },
     });
 
@@ -33,6 +36,7 @@ export const getSubscriptionCountByStatus = async ({
             statutValidationInformationsJuridiquesMaisonMereAAP: status,
           },
         ],
+        ...(searchFilter && { OR: buildMaisonMereFilters(searchFilter) }),
       },
     });
 

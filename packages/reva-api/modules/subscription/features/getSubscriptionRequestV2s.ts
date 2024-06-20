@@ -2,10 +2,18 @@ import { Prisma, SubscriptionRequestV2 } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 
-const buildContainsFilterClause =
-  (searchFilter: string) => (field: keyof SubscriptionRequestV2) => ({
+export const buildSubscriptionFilters = (searchFilter: string) => {
+  const containsFilter = (field: keyof SubscriptionRequestV2) => ({
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
+
+  return [
+    containsFilter("accountLastname"),
+    containsFilter("accountFirstname"),
+    containsFilter("accountEmail"),
+    containsFilter("companyName"),
+  ];
+};
 
 export const getSubscriptionRequestV2s = async ({
   limit,
@@ -35,14 +43,7 @@ export const getSubscriptionRequestV2s = async ({
   };
 
   if (searchFilter && searchFilter.length > 0) {
-    const containsFilter = buildContainsFilterClause(searchFilter);
-
-    const filters = [
-      containsFilter("accountLastname"),
-      containsFilter("accountFirstname"),
-      containsFilter("accountEmail"),
-      containsFilter("companyName"),
-    ];
+    const filters = buildSubscriptionFilters(searchFilter);
 
     querySubscriptionRequestV2s.where = {
       ...querySubscriptionRequestV2s.where,
