@@ -108,7 +108,8 @@ type SubscriptionCountByStatus {
   PENDING_SUBSCRIPTION: Int!
   REJECTED_SUBSCRIPTION: Int!
   PENDING_LEGAL_VERIFICATION: Int!
-  UP_TO_DATE: Int!
+  NEED_LEGAL_VERIFICATION: Int!
+  APPROVED: Int!
 }
 
 type Query {

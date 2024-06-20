@@ -38,11 +38,13 @@ export const getSubscriptionCountByStatus = async ({
     PENDING_SUBSCRIPTION,
     REJECTED_SUBSCRIPTION,
     PENDING_LEGAL_VERIFICATION,
-    UP_TO_DATE,
+    NEED_LEGAL_VERIFICATION,
+    APPROVED,
   ] = await Promise.all([
     querySubscriptionCount("PENDING"),
     querySubscriptionCount("REJECTED"),
     queryMaisonMereCount("EN_ATTENTE_DE_VERIFICATION"),
+    queryMaisonMereCount("A_METTRE_A_JOUR"),
     queryMaisonMereCount("A_JOUR"),
   ]);
 
@@ -50,6 +52,7 @@ export const getSubscriptionCountByStatus = async ({
     PENDING_SUBSCRIPTION,
     REJECTED_SUBSCRIPTION,
     PENDING_LEGAL_VERIFICATION,
-    UP_TO_DATE,
+    NEED_LEGAL_VERIFICATION,
+    APPROVED,
   };
 };

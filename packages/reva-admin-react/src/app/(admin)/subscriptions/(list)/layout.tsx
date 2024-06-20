@@ -31,7 +31,8 @@ const getSubscriptionCountByStatus = graphql(`
       PENDING_SUBSCRIPTION
       REJECTED_SUBSCRIPTION
       PENDING_LEGAL_VERIFICATION
-      UP_TO_DATE
+      NEED_LEGAL_VERIFICATION
+      APPROVED
     }
   }
 `);
@@ -80,43 +81,44 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
     if (showLegalMenuItems) {
       return [
         menuItem(
-          "En attente (sous l'ancienne méthode)",
+          "Anciennes inscriptions à vérifier",
           hrefSideMenu("pending"),
           currentPathname,
         ),
         menuItem(
-          "Refusées (sous l'ancienne méthode)",
+          "Anciennes inscriptions refusées",
           hrefSideMenu("rejected"),
           currentPathname,
         ),
         menuItem(
-          "Validées (sous l'ancienne méthode)",
-          hrefSideMenu("validated"),
-          currentPathname,
-        ),
-        menuItem(
-          "En attente",
-          hrefSideMenu("pending-v2"),
-          currentPathname,
-          subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
-        ),
-        menuItem(
-          "Refusées",
+          "Inscriptions refusées",
           hrefSideMenu("rejected-v2"),
           currentPathname,
           subscriptionCountByStatus?.REJECTED_SUBSCRIPTION,
         ),
         menuItem(
-          "Pièces jointes à vérifier",
+          "Inscriptions à vérifier",
+          hrefSideMenu("pending-v2"),
+          currentPathname,
+          subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
+        ),
+        menuItem(
+          "Maisons-mères à vérifier",
           hrefSideMenu("check-legal-information"),
           currentPathname,
           subscriptionCountByStatus?.PENDING_LEGAL_VERIFICATION,
         ),
         menuItem(
-          "Validées et mises à jour",
+          "Maisons-mères non actualisées",
+          hrefSideMenu("validated"),
+          currentPathname,
+          subscriptionCountByStatus?.NEED_LEGAL_VERIFICATION,
+        ),
+        menuItem(
+          "Maisons-mères vérifiées",
           hrefSideMenu("up-to-date"),
           currentPathname,
-          subscriptionCountByStatus?.UP_TO_DATE,
+          subscriptionCountByStatus?.APPROVED,
         ),
       ];
     }
@@ -135,7 +137,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
       <SideMenu
-        className="flex-shrink-0 flex-grow-0 md:basis-[330px]"
+        className="flex-shrink-0 flex-grow-0 md:basis-[372px]"
         align="left"
         burgerMenuButtonText="Inscriptions"
         sticky
