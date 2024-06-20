@@ -1,5 +1,3 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-
 import { useCertificationAuthorityLocalAccounts } from "./CertificationAuthorityLocalAccounts.hooks";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
@@ -51,14 +49,30 @@ export const CertificationAuthorityLocalAccounts = (
   return (
     <div>
       {<h4>Autorité de certification: comptes locaux</h4>}
-      {localAccounts.map((localAccount) => (
-        <GrayCard key={localAccount.id} className="gap-2">
-          <p className="mb-0">
-            {localAccount.account.firstname} {localAccount.account.lastname}
-          </p>
-          <p className="mb-0">{localAccount.account.email}</p>
-        </GrayCard>
-      ))}
+      <div className="grid grid-cols-2 gap-2">
+        {localAccounts.map((localAccount) => (
+          <div
+            key={localAccount.id}
+            className="border border-dsfrGray-200 p-6 flex flex-col gap-y-4"
+          >
+            <p className="mb-0 flex flex-row items-center font-bold text-lg">
+              {localAccount.account.firstname} {localAccount.account.lastname}
+            </p>
+            <p className="mb-0 flex flex-row items-center">
+              <span
+                className="fr-icon-mail-line fr-icon--sm mr-2"
+                aria-hidden="true"
+              />
+              <a
+                className="hover:underline bg-none"
+                href={`mailto:${localAccount.account.email}`}
+              >
+                {localAccount.account.email}
+              </a>
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
