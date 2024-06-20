@@ -10,13 +10,11 @@ module Page.Candidacy exposing
 
 import Accessibility exposing (h1, h4)
 import Admin.Enum.CandidacyStatusStep as Step
-import Admin.Enum.DossierDeValidationDecision as DossierDeValidationDecision
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Archive
 import Api.Form.CancelDropOut
-import Api.Form.DossierDeValidation
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
@@ -24,25 +22,20 @@ import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
 import Api.Form.PaymentUploadsUniReva
-import Api.Form.ReadyForJuryEstimatedDate
 import Api.Form.Unarchive
 import Api.Referential
 import Api.Token
-import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, candidacyIdToString)
 import Data.Context exposing (Context)
-import Data.DossierDeValidation
 import Data.Feasibility
 import Data.Form.Archive
 import Data.Form.CancelDropOut
-import Data.Form.DossierDeValidation
 import Data.Form.DropOut
 import Data.Form.Feasibility
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
-import Data.Form.ReadyForJuryEstimatedDate
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, h2, p, text)
@@ -52,7 +45,6 @@ import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Archive
 import Page.Form.CancelDropOut
-import Page.Form.DossierDeValidation
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
@@ -60,7 +52,6 @@ import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
-import Page.Form.ReadyForJuryEstimatedDate
 import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -70,7 +61,6 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Candidate
-import View.Date as Date
 import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
 import View.Tabs
@@ -201,18 +191,6 @@ view context model =
                 _ ->
                     div [ class "h-[800px]" ] []
 
-        readyForJuryEstimatedDate candidacyId isActive =
-            { label = "Date prévisionnelle"
-            , href = candidacyLink candidacyId ReadyForJuryEstimatedDate
-            , isActive = isActive
-            }
-
-        dossierValidationTab candidacyId isActive =
-            { label = "Dépôt du dossier"
-            , href = candidacyLink candidacyId DossierDeValidation
-            , isActive = isActive
-            }
-
         juryDateTab candidacyId isActive =
             { label = "Date de jury"
             , href = candidacyLink candidacyId JuryDate
@@ -274,39 +252,6 @@ view context model =
 
                 Admissibility ->
                     viewForm "admissibility"
-
-                ReadyForJuryEstimatedDate ->
-                    displayWithCandidacy <|
-                        \candidacy ->
-                            viewFormWithTabs "readyForJuryEstimatedDate"
-                                "Dossier de validation"
-                                [ readyForJuryEstimatedDate candidacy.id True
-                                , dossierValidationTab candidacy.id False
-                                ]
-
-                DossierDeValidation ->
-                    displayWithCandidacy <|
-                        \candidacy ->
-                            let
-                                viewDossierDeValidationForm =
-                                    viewFormWithTabs "readyForJuryEstimatedDate"
-                                        "Dossier de validation"
-                                        [ readyForJuryEstimatedDate candidacy.id False
-                                        , dossierValidationTab candidacy.id True
-                                        ]
-                            in
-                            case candidacy.activeDossierDeValidation of
-                                Just dossierDeValidation ->
-                                    case dossierDeValidation.decision of
-                                        DossierDeValidationDecision.Pending ->
-                                            viewMain context "dossier-de-validation-sent" <|
-                                                viewDossierDeValidationSent context candidacy dossierDeValidation
-
-                                        _ ->
-                                            viewDossierDeValidationForm
-
-                                Nothing ->
-                                    viewDossierDeValidationForm
 
                 ExamInfo ->
                     viewForm "examInfo"
@@ -421,29 +366,6 @@ viewFeasibilitySent context candidacy feasibility =
                 , View.summaryBlockWithItems (List.map View.Feasibility.Decision.view feasibility.history)
                 ]
         ]
-    ]
-
-
-viewDossierDeValidationSent : Context -> Candidacy -> Data.DossierDeValidation.DossierDeValidation -> List (Html msg)
-viewDossierDeValidationSent context candidacy dossierDeValidation =
-    let
-        dossierDeValidationFileNameAndUrl =
-            ( dossierDeValidation.dossierDeValidationFile.name, dossierDeValidation.dossierDeValidationFile.url )
-    in
-    [ h1 [] [ text "Dossier de validation" ]
-    , div
-        [ class "flex flex-col gap-y-8 mb-6" ]
-        ([ View.alert View.Success
-            [ class "my-8" ]
-            "Dossier de validation envoyé"
-            [ p [] [ text "Le dossier de validation a été envoyé. Retrouvez ci-dessous les documents qui le composent." ]
-            ]
-         , p [] [ text ("Dossier envoyé le : " ++ Date.toSmallFormat dossierDeValidation.dossierDeValidationSentAt) ]
-         , h4 [ class "text-[18px] mb-0" ] [ text "Contenu du dossier" ]
-         , viewFileLink context (Tuple.first dossierDeValidationFileNameAndUrl) (Tuple.second dossierDeValidationFileNameAndUrl)
-         ]
-            ++ List.map (\d -> viewFileLink context d.name d.url) dossierDeValidation.dossierDeValidationOtherFiles
-        )
     ]
 
 
@@ -617,39 +539,6 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = redirectToProfile
                         , onValidate = Data.Form.CancelDropOut.validate
                         , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.ReadyForJuryEstimatedDate, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.ReadyForJuryEstimatedDate.form
-                        , onLoad = Just <| Api.Form.ReadyForJuryEstimatedDate.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.ReadyForJuryEstimatedDate.set tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.ReadyForJuryEstimatedDate.validate
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.DossierDeValidation, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.DossierDeValidation.form
-                        , onLoad = Nothing
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.DossierDeValidation.submit tab.candidacyId context.restApiEndpoint
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.DossierDeValidation.validate
-                        , status =
-                            Form.Editable
                         }
                         model.form
             in

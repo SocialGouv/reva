@@ -15,8 +15,6 @@ type Value
     | Unarchive
     | DropOut
     | CancelDropOut
-    | ReadyForJuryEstimatedDate
-    | DossierDeValidation
     | PaymentRequest
     | PaymentRequestConfirmation
     | PaymentUploads
