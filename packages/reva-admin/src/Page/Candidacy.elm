@@ -9,45 +9,32 @@ module Page.Candidacy exposing
     )
 
 import Accessibility exposing (h1, h4)
-import Admin.Enum.CandidacyStatusStep as Step
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
-import Api.Form.Archive
-import Api.Form.CancelDropOut
-import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
 import Api.Form.PaymentUploadsUniReva
-import Api.Form.Unarchive
 import Api.Referential
 import Api.Token
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, candidacyIdToString)
 import Data.Context exposing (Context)
-import Data.Form.Archive
-import Data.Form.CancelDropOut
-import Data.Form.DropOut
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
-import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, name)
 import Page.Form as Form
 import Page.Form.Admissibility
-import Page.Form.Archive
-import Page.Form.CancelDropOut
-import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
 import Page.Form.PaymentUploadsUniReva
-import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -373,82 +360,6 @@ updateTab context tab ( model, cmd ) =
                 pushUrl <| candidacyTab Profile
     in
     case ( tab.value, model.selected ) of
-        ( View.Candidacy.Tab.Archive, Success candidacy ) ->
-            let
-                formStatus =
-                    if Candidacy.lastStatus candidacy.statuses == Step.Archive then
-                        Form.ReadOnly
-
-                    else
-                        Form.Editable
-
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Archive.form formStatus
-                        , onLoad = Just <| Api.Form.Archive.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Archive.archive tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.Archive.validate
-                        , status = formStatus
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.Unarchive, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Unarchive.form
-                        , onLoad = Just <| Api.Form.Unarchive.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Unarchive.unarchive tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.Unarchive.validate
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.DropOut, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.DropOut.form
-                        , onLoad = Just <| Api.Form.DropOut.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.DropOut.dropOut tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.DropOut.validate
-                        , status =
-                            if candidacy.dropOutDate /= Nothing then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.CancelDropOut, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.CancelDropOut.form
-                        , onLoad = Just <| Api.Form.CancelDropOut.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.CancelDropOut.cancelDropOut tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = Data.Form.CancelDropOut.validate
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
         ( View.Candidacy.Tab.PaymentRequest, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
