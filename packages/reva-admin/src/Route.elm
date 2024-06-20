@@ -83,7 +83,6 @@ parser baseUrl =
                 , subLevel "candidacies" "jury" |> candidacyTab Tab.JuryDate
                 , subLevel "candidacies" "jury" </> s "date" |> candidacyTab Tab.JuryDate
                 , subLevel "candidacies" "jury" </> s "result" |> candidacyTab Tab.JuryResult
-                , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
                 ]
 
 
@@ -180,6 +179,3 @@ tabToString topLevel subLevel tab =
 
         Tab.JuryResult ->
             default [ "jury", "result" ]
-
-        Tab.Feasibility ->
-            default [ "feasibility" ]

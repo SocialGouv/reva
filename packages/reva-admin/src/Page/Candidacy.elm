@@ -17,7 +17,6 @@ import Api.Form.Archive
 import Api.Form.CancelDropOut
 import Api.Form.DropOut
 import Api.Form.ExamInfo
-import Api.Form.Feasibility
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
@@ -28,26 +27,22 @@ import Api.Token
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, candidacyIdToString)
 import Data.Context exposing (Context)
-import Data.Feasibility
 import Data.Form.Archive
 import Data.Form.CancelDropOut
 import Data.Form.DropOut
-import Data.Form.Feasibility
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, h2, p, text)
-import Html.Attributes exposing (alt, attribute, class, name)
-import Html.Attributes.Extra exposing (role)
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class, name)
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Archive
 import Page.Form.CancelDropOut
 import Page.Form.DropOut
 import Page.Form.ExamInfo
-import Page.Form.Feasibility
 import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
@@ -60,9 +55,6 @@ import View
 import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
-import View.Candidate
-import View.Feasibility.Decision
-import View.FileLink exposing (viewFileLink)
 import View.Tabs
 
 
@@ -275,98 +267,11 @@ view context model =
                                 , juryResultTab candidacy.id True
                                 ]
                                 []
-
-                Feasibility ->
-                    case model.selected of
-                        Success candidacy ->
-                            case candidacy.feasibility of
-                                Just feasibility ->
-                                    case feasibility.decision of
-                                        Data.Feasibility.Incomplete _ ->
-                                            viewForm "feasibility"
-
-                                        _ ->
-                                            viewMain context "feasibility-sent" <|
-                                                viewFeasibilitySent context candidacy feasibility
-
-                                Nothing ->
-                                    viewForm "feasibility"
-
-                        _ ->
-                            viewForm "feasibility"
     in
     View.layout context
         "Accéder aux étapes du parcours"
         (NavigationSteps.view model.selected)
         [ content ]
-
-
-viewFeasibilitySent : Context -> Candidacy -> Data.Feasibility.Feasibility -> List (Html msg)
-viewFeasibilitySent context candidacy feasibility =
-    let
-        feasibilityFileNameAndUrl =
-            ( feasibility.file.name, feasibility.file.url )
-
-        iDFileNameAndUrl =
-            case feasibility.iDFile of
-                Just iDFile ->
-                    ( iDFile.name, iDFile.url )
-
-                Nothing ->
-                    ( "", "" )
-
-        documentaryProofFileNameAndUrl =
-            case feasibility.documentaryProofFile of
-                Just documentaryProofFile ->
-                    ( documentaryProofFile.name, documentaryProofFile.url )
-
-                Nothing ->
-                    ( "", "" )
-
-        certificateOfAttendancefFileNameAndUrl =
-            case feasibility.certificateOfAttendanceFile of
-                Just certificateOfAttendanceFile ->
-                    ( certificateOfAttendanceFile.name, certificateOfAttendanceFile.url )
-
-                Nothing ->
-                    ( "", "" )
-
-        subTitle s =
-            h2
-                [ class "text-2xl mb-3" ]
-                [ text s ]
-    in
-    [ h1 [] [ text "Dossier de faisabilité" ]
-    , div
-        [ class "flex flex-col gap-y-8 mb-10" ]
-        [ View.Candidate.viewWithCertification
-            (candidacy.certification |> Maybe.map .label)
-            candidacy.candidate
-        , div []
-            [ subTitle "Décision prise concernant ce dossier"
-            , div [ class "bg-neutral-100 text-lg px-8 pt-6 pb-8 w-full" ] [ View.Feasibility.Decision.view feasibility ]
-            ]
-        , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
-        , viewFileLink context (Tuple.first iDFileNameAndUrl) (Tuple.second iDFileNameAndUrl)
-        , viewFileLink context (Tuple.first documentaryProofFileNameAndUrl) (Tuple.second documentaryProofFileNameAndUrl)
-        , viewFileLink context (Tuple.first certificateOfAttendancefFileNameAndUrl) (Tuple.second certificateOfAttendancefFileNameAndUrl)
-        , feasibility.certificationAuthority
-            |> Maybe.map View.Candidate.viewCertificationAuthority
-            |> Maybe.withDefault (text "")
-        , if List.length feasibility.history == 0 then
-            text ""
-
-          else
-            div []
-                [ if List.length feasibility.history == 1 then
-                    subTitle "Décision précédente"
-
-                  else
-                    subTitle "Décisions précédentes"
-                , View.summaryBlockWithItems (List.map View.Feasibility.Decision.view feasibility.history)
-                ]
-        ]
-    ]
 
 
 viewCandidacyPanel : Context -> Model -> Html Msg
@@ -644,27 +549,6 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = redirectToProfile
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.Feasibility, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Feasibility.form
-                        , onLoad = Nothing
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Feasibility.submit tab.candidacyId candidacy.certificationAuthorities context.restApiEndpoint
-                        , onRedirect = pushUrl <| candidacyTab Feasibility
-                        , onValidate = Data.Form.Feasibility.validateSubmittedFiles
-                        , status =
-                            if (candidacy.feasibility /= Nothing && not (Candidacy.isStatusEqual candidacy Step.DossierFaisabiliteIncomplet)) || List.isEmpty candidacy.certificationAuthorities then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
                         }
                         model.form
             in

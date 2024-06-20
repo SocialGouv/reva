@@ -21,6 +21,5 @@ type Value
     | Profile
     | FundingRequest
     | ExamInfo
-    | Feasibility
     | JuryDate
     | JuryResult
