@@ -206,8 +206,7 @@ const unsafeResolvers = {
         if (
           searchFilter.zip &&
           searchFilter.zip.length === 5 &&
-          (searchFilter?.distanceStatus === "ONSITE" ||
-            searchFilter?.distanceStatus === "ONSITE_REMOTE")
+          searchFilter?.distanceStatus === "ONSITE"
         ) {
           organismsFound = await getAAPsWithZipCode({
             certificationId:

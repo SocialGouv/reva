@@ -244,7 +244,6 @@ enum CandidacyStatusFilter {
 enum DistanceStatus {
   ONSITE
   REMOTE
-  ONSITE_REMOTE
 }
 
 input SearchOrganismFilter {

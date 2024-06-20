@@ -259,16 +259,10 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
     }
 
-    if (
-      searchFilter.distanceStatus === "REMOTE" ||
-      searchFilter.distanceStatus === "ONSITE_REMOTE"
-    ) {
+    if (searchFilter.distanceStatus === "REMOTE") {
       whereClause += ` and od.is_remote = true`;
     }
-    if (
-      searchFilter.distanceStatus === "ONSITE" ||
-      searchFilter.distanceStatus === "ONSITE_REMOTE"
-    ) {
+    if (searchFilter.distanceStatus === "ONSITE") {
       whereClause += `
         and od.is_onsite = true
         and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')

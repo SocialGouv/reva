@@ -100,13 +100,6 @@ export const useConfiguredMainMachine = () => {
               );
 
             const formatSearchFilter = () => {
-              if (organismSearchOnsite && organismSearchRemote) {
-                return {
-                  distanceStatus: "ONSITE_REMOTE",
-                  pmr,
-                  zip,
-                };
-              }
               if (organismSearchOnsite) {
                 return {
                   distanceStatus: "ONSITE",

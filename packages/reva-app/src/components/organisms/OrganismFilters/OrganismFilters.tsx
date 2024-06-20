@@ -52,6 +52,7 @@ export const OrganismFilters = ({
             onSearch({
               ...filters,
               organismSearchOnsite: !organismSearchOnsite,
+              organismSearchRemote: false,
             });
           }}
           className="p-2"
@@ -70,6 +71,7 @@ export const OrganismFilters = ({
           onClick={() => {
             onSearch({
               ...filters,
+              organismSearchOnsite: false,
               organismSearchRemote: !organismSearchRemote,
             });
           }}

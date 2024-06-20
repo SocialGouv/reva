@@ -80,10 +80,6 @@ export const getAAPsWithZipCode = async ({
   and (oic."adresse_ville" IS NOT NULL or oic."adresse_ville" != '')
   `;
 
-  if (distanceStatus === "ONSITE_REMOTE") {
-    whereClause += ` and od.is_remote = true`;
-  }
-
   if (searchText) {
     whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
   }

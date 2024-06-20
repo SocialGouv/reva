@@ -39,8 +39,7 @@ export const searchOrganismsForCandidacy = async ({
   if (
     searchFilter.zip &&
     searchFilter.zip.length === 5 &&
-    (searchFilter?.distanceStatus === "ONSITE" ||
-      searchFilter?.distanceStatus === "ONSITE_REMOTE")
+    searchFilter?.distanceStatus === "ONSITE"
   ) {
     organismsFound = await getAAPsWithZipCode({
       certificationId:
@@ -98,20 +97,14 @@ const getRandomActiveOrganismForCertification = async ({
     whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
   }
 
-  if (
-    searchFilter.distanceStatus === "REMOTE" ||
-    searchFilter.distanceStatus === "ONSITE_REMOTE"
-  ) {
+  if (searchFilter.distanceStatus === "REMOTE") {
     const candidacyDepartmentRemoteZone = await getRemoteZoneFromDepartment({
       departmentId,
     });
     whereClause += " and o.is_remote=true";
     fromClause += ` join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`;
   }
-  if (
-    searchFilter.distanceStatus === "ONSITE" ||
-    searchFilter.distanceStatus === "ONSITE_REMOTE"
-  ) {
+  if (searchFilter.distanceStatus === "ONSITE") {
     whereClause += `
           and o.is_onsite = true
           `;
@@ -215,10 +208,6 @@ const getAAPsWithZipCode = async ({
   and (oic."adresse_code_postal" IS NOT NULL or oic."adresse_code_postal" != '')
   and (oic."adresse_ville" IS NOT NULL or oic."adresse_ville" != '')
   `;
-
-  if (distanceStatus === "ONSITE_REMOTE") {
-    whereClause += ` and o.is_remote = true`;
-  }
 
   if (searchText) {
     whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
