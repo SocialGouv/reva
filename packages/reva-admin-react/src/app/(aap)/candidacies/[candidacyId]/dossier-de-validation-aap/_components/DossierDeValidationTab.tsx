@@ -104,13 +104,15 @@ export const DossierDeValidationTab = ({
           <ul className="flex flex-col gap-6 mb-6">
             {dossierDeValidationProblems.map((p, i) => (
               <GrayCard key={i}>
-                <dt className="font-bold text-xl">Dossier signalé :</dt>
-                <dd>
-                  Dossier signalé le {format(p.decisionSentAt, "dd/MM/yyyy")}
-                </dd>
-                <br />
-                <dt className="font-bold text-xl">Motif du signalement :</dt>
-                <dd>{p.decisionComment}</dd>
+                <dl>
+                  <dt className="font-bold text-xl">Dossier signalé :</dt>
+                  <dd>
+                    Dossier signalé le {format(p.decisionSentAt, "dd/MM/yyyy")}
+                  </dd>
+                  <br />
+                  <dt className="font-bold text-xl">Motif du signalement :</dt>
+                  <dd>{p.decisionComment}</dd>
+                </dl>
               </GrayCard>
             ))}
           </ul>
