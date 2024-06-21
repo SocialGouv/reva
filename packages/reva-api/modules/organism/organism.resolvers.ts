@@ -561,11 +561,16 @@ const unsafeResolvers = {
     ) => {
       if (
         context.auth.userInfo?.sub == undefined ||
-        !(await isUserGestionnaireMaisonMereAAPOfOrganism({
+        (!(await isUserGestionnaireMaisonMereAAPOfOrganism({
           userRoles: context.auth.userInfo.realm_access?.roles || [],
           organismId: params.organismId,
           userKeycloakId: context.auth.userInfo.sub,
-        }))
+        })) &&
+          !isUserOwnerOfOrganism({
+            organismId: params.organismId,
+            userKeycloakId: context.auth.userInfo.sub,
+            userRoles: context.auth.userInfo.realm_access?.roles || [],
+          }))
       ) {
         throw new Error("Utilisateur non autorisé");
       }
