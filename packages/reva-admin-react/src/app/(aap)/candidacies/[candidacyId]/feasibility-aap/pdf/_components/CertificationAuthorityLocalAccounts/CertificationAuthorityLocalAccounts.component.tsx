@@ -1,3 +1,4 @@
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useCertificationAuthorityLocalAccounts } from "./CertificationAuthorityLocalAccounts.hooks";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
@@ -12,12 +13,11 @@ export const CertificationAuthorityLocalAccounts = (
 ): JSX.Element | null => {
   const { certificationAuthorityId, certificationId, departmentId } = props;
 
-  const { certificationAuthority } = useCertificationAuthorityLocalAccounts(
-    certificationAuthorityId,
-  );
+  const { certificationAuthority: certificationAuthorityQuery } =
+    useCertificationAuthorityLocalAccounts(certificationAuthorityId);
 
   let localAccounts =
-    certificationAuthority.data
+    certificationAuthorityQuery.data
       ?.certification_authority_getCertificationAuthority
       ?.certificationAuthorityLocalAccounts || [];
 
@@ -42,13 +42,34 @@ export const CertificationAuthorityLocalAccounts = (
     "DF_DISPLAY_LOCAL_ACCOUNTS_OF_CERTIFICATION_AUTHORITY",
   );
 
-  if (!isActive || localAccounts.length == 0) {
+  if (
+    !isActive ||
+    certificationAuthorityQuery.isLoading ||
+    certificationAuthorityQuery.isFetching
+  ) {
     return null;
+  }
+
+  const certificationAuthority =
+    certificationAuthorityQuery.data
+      ?.certification_authority_getCertificationAuthority;
+
+  if (certificationAuthority && localAccounts.length == 0) {
+    return (
+      <div>
+        <h4>Contact certificateur</h4>
+        <GrayCard className="gap-4">
+          <h6 className="mb-0">{certificationAuthority.label}</h6>
+          <p className="mb-0">{certificationAuthority.contactFullName}</p>
+          <p className="mb-0">{certificationAuthority.contactEmail}</p>
+        </GrayCard>
+      </div>
+    );
   }
 
   return (
     <div>
-      {<h4>Autorité de certification: comptes locaux</h4>}
+      <h4>Contact(s) certificateur</h4>
       <div className="grid grid-cols-2 gap-2">
         {localAccounts.map((localAccount) => (
           <div

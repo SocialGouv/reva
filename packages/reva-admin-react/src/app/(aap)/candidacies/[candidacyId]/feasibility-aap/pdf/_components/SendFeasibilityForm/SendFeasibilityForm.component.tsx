@@ -180,17 +180,6 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           stateRelatedMessage={errors.certificateOfAttendanceFile?.[0]?.message}
         />
 
-        {certificationAuthorities.length == 1 && certificationAuthority && (
-          <fieldset>
-            <h4>Autorité de certification</h4>
-            <GrayCard className="gap-4">
-              <h6 className="mb-0">{certificationAuthority.label}</h6>
-              <p className="mb-0">{certificationAuthority.contactFullName}</p>
-              <p className="mb-0">{certificationAuthority.contactEmail}</p>
-            </GrayCard>
-          </fieldset>
-        )}
-
         {certificationAuthorities.length > 1 && (
           <Select
             label={

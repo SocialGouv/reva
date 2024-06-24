@@ -8,6 +8,9 @@ const getCertificationAuthorityQuery = graphql(`
       id: $certificationAuthorityId
     ) {
       id
+      label
+      contactFullName
+      contactEmail
       certificationAuthorityLocalAccounts {
         id
         account {

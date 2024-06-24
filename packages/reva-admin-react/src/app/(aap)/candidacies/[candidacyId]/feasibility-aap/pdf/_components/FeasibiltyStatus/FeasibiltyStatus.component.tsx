@@ -83,12 +83,6 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
 
       {certificationAuthority && (
         <>
-          <GrayCard className="gap-4">
-            <h6 className="mb-0">{certificationAuthority.label}</h6>
-            <p className="mb-0">{certificationAuthority.contactFullName}</p>
-            <p className="mb-0">{certificationAuthority.contactEmail}</p>
-          </GrayCard>
-
           <CertificationAuthorityLocalAccounts
             certificationAuthorityId={certificationAuthority.id}
             certificationId={
