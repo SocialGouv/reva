@@ -16,8 +16,8 @@ const dematerializedFeasibilityFileDffSummaryByCandidacyId = graphql(`
         }
         text
       }
-      decision
-      decisionComment
+      aapDecision
+      aapDecisionComment
       prerequisites {
         label
         state

@@ -3,10 +3,10 @@ import { DematerializedFeasibilityFileCreateOrUpdateDecisionInput } from "../dem
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "./getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId";
 
-export const createOrUpdateDecision = async ({
+export const createOrUpdateAapDecision = async ({
   candidacyId,
-  decision,
-  decisionComment,
+  aapDecision,
+  aapDecisionComment,
 }: DematerializedFeasibilityFileCreateOrUpdateDecisionInput) => {
   const dFF =
     await getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId({
@@ -22,9 +22,9 @@ export const createOrUpdateDecision = async ({
       id: dFF.id,
     },
     data: {
-      decision,
-      decisionComment,
-      decisionSentAt: new Date(),
+      aapDecision,
+      aapDecisionComment,
+      aapDecisionSentAt: new Date(),
     },
   });
 

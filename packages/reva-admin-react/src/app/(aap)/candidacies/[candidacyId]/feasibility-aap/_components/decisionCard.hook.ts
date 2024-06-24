@@ -8,9 +8,9 @@ const dematerializedFeasibilityFileDecisionByCandidacyId = graphql(`
     dematerialized_feasibility_file_getByCandidacyId(
       candidacyId: $candidacyId
     ) {
-      decision
-      decisionComment
-      decisionSentAt
+      aapDecision
+      aapDecisionComment
+      aapDecisionSentAt
     }
   }
 `);
@@ -35,9 +35,9 @@ export const useDecisionCard = () => {
       ),
   });
   const decision =
-    data?.dematerialized_feasibility_file_getByCandidacyId?.decision;
+    data?.dematerialized_feasibility_file_getByCandidacyId?.aapDecision;
   const decisionComment =
-    data?.dematerialized_feasibility_file_getByCandidacyId?.decisionComment;
+    data?.dematerialized_feasibility_file_getByCandidacyId?.aapDecisionComment;
 
   return {
     decision,

@@ -60,8 +60,8 @@ export default function DecisionPage() {
     try {
       await createOrUpdateDecisionMutation({
         candidacyId,
-        decision: data.decision as DfFileDecision,
-        decisionComment: data.decisionComment,
+        aapDecision: data.decision as DfFileDecision,
+        aapDecisionComment: data.decisionComment,
       });
       successToast("Avis enregistré");
       router.push(`/candidacies/${candidacyId}/feasibility-aap`);

@@ -26,8 +26,8 @@ export default function DffSummary() {
     option,
     firstForeignLanguage,
     secondForeignLanguage,
-    decision,
-    decisionComment,
+    aapDecision,
+    aapDecisionComment,
     attachments,
     prerequisites,
   } = dematerializedFeasibilityFile;
@@ -68,7 +68,10 @@ export default function DffSummary() {
         collectiveHourCount={collectiveHourCount}
       />
       <GoalsSection goals={goals} />
-      <DecisionSection decision={decision} decisionComment={decisionComment} />
+      <DecisionSection
+        decision={aapDecision}
+        decisionComment={aapDecisionComment}
+      />
       <AttachmentsSection attachments={attachments as DffAttachment[]} />
     </div>
   );

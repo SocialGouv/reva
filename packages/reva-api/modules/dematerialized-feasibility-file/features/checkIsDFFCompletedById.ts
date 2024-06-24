@@ -18,7 +18,7 @@ export const checkIsDFFCompletedById = async ({
     certificationPartComplete,
     competenceBlocsPartCompletion,
     prerequisitesPartComplete,
-    decision,
+    aapDecision,
   } = dematerializedFeasibilityFile;
 
   return (
@@ -26,6 +26,6 @@ export const checkIsDFFCompletedById = async ({
     certificationPartComplete &&
     competenceBlocsPartCompletion === "COMPLETED" &&
     prerequisitesPartComplete &&
-    !!decision
+    !!aapDecision
   );
 };

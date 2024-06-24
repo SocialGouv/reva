@@ -1510,9 +1510,9 @@ model DematerializedFeasibilityFile {
   attachmentsPartComplete           Boolean                             @default(false) @map("attachments_part_complete")
   prerequisites                     DFFPrerequisite[]
   competenceBlocsPartCompletion     CompetenceBlocsPartCompletionEnum   @default(TO_COMPLETE) @map("competence_blocs_part_completion")
-  appDecision                       DFFDecision?                        @map("app_decision")
-  appDecisionComment                String?                             @map("app_decision_comment")
-  appDecisionSentAt                 DateTime?                           @map("app_decision_sent_at") @db.Timestamptz(6)
+  aapDecision                       DFFDecision?                        @map("aap_decision")
+  aapDecisionComment                String?                             @map("aap_decision_comment")
+  aapDecisionSentAt                 DateTime?                           @map("aap_decision_sent_at") @db.Timestamptz(6)
   attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)

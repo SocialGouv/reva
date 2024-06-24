@@ -23,8 +23,8 @@ export type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
 
 export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
   candidacyId: string;
-  decision: DFFileDecision;
-  decisionComment: string;
+  aapDecision: DFFileDecision;
+  aapDecisionComment: string;
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
@@ -41,4 +41,4 @@ export type DematerializedFeasibilityFileType =
   | "TRAINING_CERTIFICATE"
   | "ADDITIONAL";
 
-export type DFFileDecision = "ACCEPTED" | "REJECTED";
+export type DFFileDecision = "FAVORABLE" | "UNFAVORABLE";

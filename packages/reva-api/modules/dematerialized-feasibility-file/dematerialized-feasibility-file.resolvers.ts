@@ -11,10 +11,10 @@ import {
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
 } from "./dematerialized-feasibility-file.types";
 import { checkIsDFFCompletedById } from "./features/checkIsDFFCompletedById";
+import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
-import { createOrUpdateDecision } from "./features/createOrUpdateDecision";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
@@ -102,7 +102,7 @@ export const unsafeResolvers = {
       params: {
         input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
       },
-    ) => createOrUpdateDecision(params.input),
+    ) => createOrUpdateAapDecision(params.input),
     dematerialized_feasibility_file_createOrUpdateAttachments: (
       _parent: unknown,
       {

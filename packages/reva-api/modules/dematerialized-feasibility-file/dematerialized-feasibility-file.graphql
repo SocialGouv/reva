@@ -12,9 +12,9 @@ type DematerializedFeasibilityFile {
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
   prerequisites: [Prerequisite]!
-  decision: DFFileDecision!
-  decisionComment: String
-  decisionSentAt: Timestamp
+  aapDecision: DFFileDecision
+  aapDecisionComment: String
+  aapDecisionSentAt: Timestamp
   attachments: [DFFAttachment]!
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp
@@ -99,13 +99,13 @@ input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
 
 input DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
   candidacyId: ID!
-  decision: DFFileDecision!
-  decisionComment: String!
+  aapDecision: DFFileDecision!
+  aapDecisionComment: String!
 }
 
 enum DFFileDecision {
-  ACCEPTED
-  REJECTED
+  FAVORABLE
+  UNFAVORABLE
 }
 
 input CompetenceIdAndText {
