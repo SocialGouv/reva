@@ -2,9 +2,12 @@
 import {
   Candidacy,
   Candidate,
+  DematerializedFeasibilityFile,
   DffAttachment,
   Prerequisite,
 } from "@/graphql/generated/graphql";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { format } from "date-fns";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateSection from "./_components/CandidateSection";
 import CertificationSection from "./_components/CertificationSection";
@@ -12,15 +15,17 @@ import DecisionSection from "./_components/DecisionSection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
-import { useDffSummary } from "./_components/dffSummary.hook";
 
-export default function DffSummary() {
-  const { candidate, candidacy, dematerializedFeasibilityFile } =
-    useDffSummary();
-
+export default function DffSummary({
+  dematerializedFeasibilityFile,
+}: {
+  dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
+}) {
   if (!dematerializedFeasibilityFile) {
     return null;
   }
+
+  const { candidacy } = dematerializedFeasibilityFile;
 
   const {
     option,
@@ -30,6 +35,7 @@ export default function DffSummary() {
     aapDecisionComment,
     attachments,
     prerequisites,
+    sentToCandidateAt,
   } = dematerializedFeasibilityFile;
   const {
     experiences,
@@ -45,13 +51,23 @@ export default function DffSummary() {
   return (
     <div className="flex flex-col">
       <h1>Dossier de faisabilité</h1>
-      <p className="text-xl mb-12">
-        Vérifiez que toutes les informations soient correctes et envoyez le
-        dossier de faisabilité au candidat. Il devra vous fournir une
-        déclaration sur l'honneur pour valider ce dossier.
-      </p>
 
-      <CandidateSection candidate={candidate as Candidate} />
+      {sentToCandidateAt ? (
+        <Alert
+          description={`Dossier envoyé au certificateur le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
+          severity="success"
+          title=""
+          className="mb-12"
+        />
+      ) : (
+        <p className="text-xl mb-12">
+          Vérifiez que toutes les informations soient correctes et envoyez le
+          dossier de faisabilité au candidat. Il devra vous fournir une
+          déclaration sur l'honneur pour valider ce dossier.
+        </p>
+      )}
+
+      <CandidateSection candidate={candidacy?.candidate as Candidate} />
       <CertificationSection
         option={option}
         firstForeignLanguage={firstForeignLanguage}

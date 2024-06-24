@@ -19,6 +19,103 @@ const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
       candidacyId: $candidacyId
     ) {
       id
+      sentToCandidateAt
+      certificationCompetenceDetails {
+        certificationCompetence {
+          label
+        }
+        text
+      }
+      aapDecision
+      aapDecisionComment
+      prerequisites {
+        label
+        state
+      }
+      firstForeignLanguage
+      secondForeignLanguage
+      option
+      candidacy {
+        individualHourCount
+        collectiveHourCount
+        additionalHourCount
+        basicSkills {
+          label
+          id
+        }
+        mandatoryTrainings {
+          label
+          id
+        }
+        certification {
+          label
+          codeRncp
+          level
+          degree {
+            longLabel
+            level
+          }
+          competenceBlocs {
+            code
+            label
+            isOptional
+            FCCompetences
+            competences {
+              label
+            }
+          }
+        }
+        goals {
+          label
+          isActive
+        }
+        experiences {
+          title
+          startedAt
+          duration
+          description
+        }
+        certificateSkills
+        candidate {
+          highestDegree {
+            level
+            longLabel
+          }
+          niveauDeFormationLePlusEleve {
+            level
+          }
+          firstname
+          firstname2
+          firstname3
+          lastname
+          email
+          givenName
+          birthdate
+          birthCity
+          birthDepartment {
+            label
+            code
+            region {
+              code
+              label
+            }
+          }
+          nationality
+          gender
+          phone
+          city
+          street
+          zip
+        }
+      }
+      attachments {
+        type
+        file {
+          name
+          previewUrl
+          mimeType
+        }
+      }
     }
   }
 `);
@@ -29,20 +126,19 @@ export const useSendFileCandidate = () => {
     candidacyId: string;
   }>();
 
-  const { data: getCandidacyByIdResponse, status: getCandidacyByIdStatus } =
-    useQuery({
-      queryKey: [
-        candidacyId,
-        "dematerializedFeasibilityFileSendFileCandidateByCandidacyId",
-      ],
-      queryFn: () =>
-        graphqlClient.request(
-          dematerializedFeasibilityFileSendFileCandidateByCandidacyId,
-          {
-            candidacyId,
-          },
-        ),
-    });
+  const { data: getCandidacyByIdResponse } = useQuery({
+    queryKey: [
+      candidacyId,
+      "dematerializedFeasibilityFileSendFileCandidateByCandidacyId",
+    ],
+    queryFn: () =>
+      graphqlClient.request(
+        dematerializedFeasibilityFileSendFileCandidateByCandidacyId,
+        {
+          candidacyId,
+        },
+      ),
+  });
 
   const { mutateAsync: sendToCandidateMutation } = useMutation({
     mutationFn: (dematerializedFeasibilityFileId: string) =>
@@ -57,5 +153,6 @@ export const useSendFileCandidate = () => {
   return {
     dematerializedFeasibilityFileId,
     sendToCandidateMutation,
+    dematerializedFeasibilityFile,
   };
 };

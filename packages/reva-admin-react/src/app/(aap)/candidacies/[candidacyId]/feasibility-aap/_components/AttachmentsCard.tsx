@@ -1,10 +1,12 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { useParams } from "next/navigation";
-import { useAttachmentsCard } from "./attachmentsCard.hook";
 
-export const AttachmentsCard = () => {
+export const AttachmentsCard = ({
+  attachmentsPartComplete,
+}: {
+  attachmentsPartComplete?: boolean;
+}) => {
   const { candidacyId } = useParams();
-  const { attachmentsPartComplete } = useAttachmentsCard();
   return (
     <DefaultCandidacySectionCard
       title="Pièces jointes"

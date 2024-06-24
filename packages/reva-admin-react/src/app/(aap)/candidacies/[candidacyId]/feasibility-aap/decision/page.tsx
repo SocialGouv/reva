@@ -2,7 +2,6 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { DfFileDecision } from "@/graphql/generated/graphql";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,20 +9,19 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useDecisionCard } from "../_components/decisionCard.hook";
 import { useDecision } from "./_components/decision.hook";
 
 const schema = z
   .object({
-    decision: z.enum(["FAVORABLE", "UNFAVORABLE"], {
+    aapDecision: z.enum(["FAVORABLE", "UNFAVORABLE"], {
       invalid_type_error: "Veuillez sélectionner un avis",
     }),
-    decisionComment: z.string().min(1, {
+    aapDecisionComment: z.string().min(1, {
       message: "Veuillez saisir un commentaire",
     }),
   })
-  .superRefine(({ decision }, ctx) => {
-    if (!decision) {
+  .superRefine(({ aapDecision }, ctx) => {
+    if (!aapDecision) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Veuillez sélectionner un avis",
@@ -37,14 +35,14 @@ type DecisionForm = z.infer<typeof schema>;
 export default function DecisionPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
-  const { decision, decisionComment } = useDecisionCard();
-  const { createOrUpdateDecisionMutation } = useDecision();
+  const { createOrUpdateDecisionMutation, aapDecision, aapDecisionComment } =
+    useDecision();
   const defaultValues = useMemo(
     () => ({
-      decision: decision as DecisionForm["decision"],
-      decisionComment: decisionComment ?? "",
+      aapDecision: aapDecision as DecisionForm["aapDecision"],
+      aapDecisionComment: aapDecisionComment ?? "",
     }),
-    [decision, decisionComment],
+    [aapDecision, aapDecisionComment],
   );
   const {
     register,
@@ -56,12 +54,15 @@ export default function DecisionPage() {
     resolver: zodResolver(schema),
   });
 
-  const handleFormSubmit = async (data: DecisionForm) => {
+  const handleFormSubmit = async ({
+    aapDecision,
+    aapDecisionComment,
+  }: DecisionForm) => {
     try {
       await createOrUpdateDecisionMutation({
         candidacyId,
-        aapDecision: data.decision as DfFileDecision,
-        aapDecisionComment: data.decisionComment,
+        aapDecision,
+        aapDecisionComment,
       });
       successToast("Avis enregistré");
       router.push(`/candidacies/${candidacyId}/feasibility-aap`);
@@ -98,21 +99,21 @@ export default function DecisionPage() {
           <RadioButtons
             className="mb-6"
             name="decision"
-            state={errors.decision ? "error" : "default"}
-            stateRelatedMessage={errors.decision?.message}
+            state={errors.aapDecision ? "error" : "default"}
+            stateRelatedMessage={errors.aapDecision?.message}
             options={[
               {
                 label: "Favorable",
                 nativeInputProps: {
                   value: "FAVORABLE",
-                  ...register("decision"),
+                  ...register("aapDecision"),
                 },
               },
               {
                 label: "Non favorable",
                 nativeInputProps: {
                   value: "UNFAVORABLE",
-                  ...register("decision"),
+                  ...register("aapDecision"),
                 },
               },
             ]}
@@ -127,9 +128,9 @@ export default function DecisionPage() {
             textArea
             label=""
             hideLabel
-            nativeTextAreaProps={register("decisionComment")}
-            state={errors.decisionComment ? "error" : "default"}
-            stateRelatedMessage={errors.decisionComment?.message}
+            nativeTextAreaProps={register("aapDecisionComment")}
+            state={errors.aapDecisionComment ? "error" : "default"}
+            stateRelatedMessage={errors.aapDecisionComment?.message}
           />
         </div>
         <FormButtons

@@ -15,12 +15,20 @@ const getCandidacyById = graphql(`
         sentToCandidateAt
         certificationPartComplete
         competenceBlocsPartCompletion
+        attachmentsPartComplete
         prerequisitesPartComplete
+        prerequisites {
+          id
+          label
+          state
+        }
         blocsDeCompetences {
           id
           code
           label
         }
+        aapDecision
+        aapDecisionComment
       }
     }
   }

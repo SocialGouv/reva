@@ -1,12 +1,17 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { Prerequisite } from "@/graphql/generated/graphql";
 import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
-import { usePrerequisitesCard } from "./prerequisitesCard.hook";
-export const PrerequisitesCard = () => {
+export const PrerequisitesCard = ({
+  prerequisites,
+  prerequisitesPartComplete,
+}: {
+  prerequisites?: Prerequisite[] | null;
+  prerequisitesPartComplete?: boolean | null;
+}) => {
   const { candidacyId } = useParams();
-  const { prerequisites, prerequisitesPartComplete } = usePrerequisitesCard();
 
   const prequisitesByStatus = useMemo(() => {
     return {

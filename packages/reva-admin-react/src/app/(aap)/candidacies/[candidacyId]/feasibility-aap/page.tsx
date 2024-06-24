@@ -7,7 +7,11 @@ import {
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import { CompetenceBlocsPartCompletion } from "@/graphql/generated/graphql";
+import {
+  CompetenceBlocsPartCompletion,
+  DfFileDecision,
+  Prerequisite,
+} from "@/graphql/generated/graphql";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
@@ -77,15 +81,41 @@ const AapFeasibilityPage = () => {
               ))}
             </ul>
           </CandidacySectionCard>
-          <PrerequisitesCard />
-          <DecisionCard />
-          <AttachmentsCard />
+          <PrerequisitesCard
+            prerequisites={
+              dematerializedFeasibilityFile?.prerequisites as Prerequisite[]
+            }
+            prerequisitesPartComplete={
+              dematerializedFeasibilityFile?.prerequisitesPartComplete
+            }
+          />
+          <DecisionCard
+            aapDecision={
+              dematerializedFeasibilityFile?.aapDecision as DfFileDecision | null
+            }
+            aapDecisionComment={
+              dematerializedFeasibilityFile?.aapDecisionComment as string | null
+            }
+          />
+          <AttachmentsCard
+            attachmentsPartComplete={
+              dematerializedFeasibilityFile?.attachmentsPartComplete
+            }
+          />
           <hr />
 
           <h2>Récapitulatif et envoi du dossier au candidat</h2>
 
-          <SendFileCandidateSection />
-          <CandidateValidationCard />
+          <SendFileCandidateSection
+            sentToCandidateAt={
+              dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
+            }
+          />
+          <CandidateValidationCard
+            sentToCandidateAt={
+              dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
+            }
+          />
         </ul>
       )}
     </div>

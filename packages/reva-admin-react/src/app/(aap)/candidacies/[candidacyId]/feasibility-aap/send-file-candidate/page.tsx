@@ -4,11 +4,15 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams, useRouter } from "next/navigation";
 import DffSummary from "../_components/DffSummary/DffSummary";
 import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
+import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
 
 export default function SendFileCandidatePage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
-  const { sendToCandidateMutation, dematerializedFeasibilityFileId } =
-    useSendFileCandidate();
+  const {
+    sendToCandidateMutation,
+    dematerializedFeasibilityFileId,
+    dematerializedFeasibilityFile,
+  } = useSendFileCandidate();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
 
@@ -26,7 +30,11 @@ export default function SendFileCandidatePage() {
 
   return (
     <div>
-      <DffSummary />
+      <DffSummary
+        dematerializedFeasibilityFile={
+          dematerializedFeasibilityFile as DematerializedFeasibilityFile
+        }
+      />
 
       <div className="flex justify-between">
         <Button

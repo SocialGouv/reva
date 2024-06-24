@@ -3,23 +3,28 @@ import {
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { DfFileDecision } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useParams } from "next/navigation";
-import { useDecisionCard } from "./decisionCard.hook";
 
-export const DecisionCard = () => {
+export const DecisionCard = ({
+  aapDecision,
+  aapDecisionComment,
+}: {
+  aapDecision: DfFileDecision | null;
+  aapDecisionComment: string | null;
+}) => {
   const { candidacyId } = useParams();
-  const { decision, decisionComment } = useDecisionCard();
 
   const DecisionBadge = () => {
-    if (decision === "FAVORABLE") {
+    if (aapDecision === "FAVORABLE") {
       return (
         <Badge severity="success" noIcon>
           Favorable
         </Badge>
       );
     }
-    if (decision === "UNFAVORABLE") {
+    if (aapDecision === "UNFAVORABLE") {
       return <CustomErrorBadge label="Non favorable" />;
     }
 
@@ -30,12 +35,12 @@ export const DecisionCard = () => {
     <DefaultCandidacySectionCard
       title="Avis sur la faisabilité"
       titleIconClass="fr-icon-thumb-up-fill"
-      status={decision ? "COMPLETED" : "TO_COMPLETE"}
+      status={aapDecision ? "COMPLETED" : "TO_COMPLETE"}
       isEditable
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/decision`}
       CustomBadge={<DecisionBadge />}
     >
-      {decisionComment && <p className="md:pl-10">“{decisionComment}”</p>}
+      {aapDecisionComment && <p className="md:pl-10">“{aapDecisionComment}”</p>}
     </DefaultCandidacySectionCard>
   );
 };
