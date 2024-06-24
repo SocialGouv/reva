@@ -109,7 +109,7 @@ const ModalitesAccompagnementPage = () => {
 
   return (
     <div className="flex flex-col">
-      <h1>Modalités d'acompagnement</h1>
+      <h1>Modalités d'accompagnement</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
         Renseignez les informations qui seront partagées aux candidats puis
@@ -189,7 +189,9 @@ const ModalitesAccompagnementPage = () => {
             </fieldset>
             <div className="flex flex-col md:flex-row mt-8 gap-y-4">
               <fieldset className="flex flex-col md:pr-6 md:basis-1/2 flex-grow">
-                <legend className="text-2xl font-bold mb-4">Présentiel</legend>
+                <legend className="text-2xl font-bold mb-4">
+                  Adresse de l’agence
+                </legend>
                 <div className="flex flex-col">
                   {organism?.isHeadAgency && (
                     <Checkbox
