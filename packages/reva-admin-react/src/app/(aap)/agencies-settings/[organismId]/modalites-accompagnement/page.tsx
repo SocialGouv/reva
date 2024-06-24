@@ -7,45 +7,14 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import * as z from "zod";
 import { useModalitesAccompagnementPage } from "./modalitesAccompagnement.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { RemoteZone } from "@/graphql/generated/graphql";
-
-const schema = z.object({
-  nom: z.string().min(1, "Ce champ est obligatoire"),
-  telephone: z.string().optional().default(""),
-  siteInternet: z.string().optional().default(""),
-  emailContact: z
-    .union([
-      z
-        .string()
-        .length(0, "Le champ doit être vide ou contenir une adresse email"),
-      z.string().email("Le champ doit être vide ou contenir une adresse email"),
-    ])
-    .optional()
-    .default(""),
-  isOnSite: z.boolean(),
-  isRemote: z.boolean(),
-  isRemoteFranceMetropolitaine: z.boolean(),
-  isRemoteGuadeloupe: z.boolean(),
-  isRemoteGuyane: z.boolean(),
-  isRemoteMartinique: z.boolean(),
-  isRemoteMayotte: z.boolean(),
-  isRemoteLaReunion: z.boolean(),
-  adresseNumeroEtNomDeRue: z.string().optional().default(""),
-  adresseInformationsComplementaires: z.string().optional().default(""),
-  adresseCodePostal: z
-    .string()
-    .regex(/^(\d{5}|)$/, "Ce champ doit être vide ou contenir un code postal"),
-  adresseVille: z.string().optional().default(""),
-  conformeNormesAccessbilite: z
-    .enum(["CONFORME", "NON_CONFORME", "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"])
-    .nullable(),
-});
-
-type FormData = z.infer<typeof schema>;
+import {
+  ModalitesAccompagnementFormData,
+  modalitesAccompagnementFormSchema,
+} from "./modalitesAccompagnementFormSchema";
 
 const ModalitesAccompagnementPage = () => {
   const {
@@ -61,8 +30,8 @@ const ModalitesAccompagnementPage = () => {
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  } = useForm<ModalitesAccompagnementFormData>({
+    resolver: zodResolver(modalitesAccompagnementFormSchema),
   });
 
   const handleReset = useCallback(() => {
@@ -78,7 +47,7 @@ const ModalitesAccompagnementPage = () => {
       isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
       isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
       isRemote: organism?.isRemote,
-    } as FormData);
+    } as ModalitesAccompagnementFormData);
   }, [organism, reset]);
 
   useEffect(() => handleReset(), [handleReset]);
@@ -239,6 +208,10 @@ const ModalitesAccompagnementPage = () => {
                     nativeInputProps={{
                       ...register("adresseNumeroEtNomDeRue"),
                     }}
+                    state={errors.adresseNumeroEtNomDeRue ? "error" : "default"}
+                    stateRelatedMessage={
+                      errors.adresseNumeroEtNomDeRue?.message
+                    }
                   />
                   <Input
                     label="Informations complémentaires"
@@ -247,6 +220,14 @@ const ModalitesAccompagnementPage = () => {
                       ...register("adresseInformationsComplementaires"),
                       autoComplete: "off",
                     }}
+                    state={
+                      errors.adresseInformationsComplementaires
+                        ? "error"
+                        : "default"
+                    }
+                    stateRelatedMessage={
+                      errors.adresseInformationsComplementaires?.message
+                    }
                   />
                   <Input
                     label="Code Postal"
@@ -263,6 +244,8 @@ const ModalitesAccompagnementPage = () => {
                     nativeInputProps={{
                       ...register("adresseVille"),
                     }}
+                    state={errors.adresseVille ? "error" : "default"}
+                    stateRelatedMessage={errors.adresseVille?.message}
                   />
                 </div>
 
@@ -304,6 +287,8 @@ const ModalitesAccompagnementPage = () => {
                           nativeInputProps: { ...register("isRemote") },
                         },
                       ]}
+                      state={errors.isRemote ? "error" : "default"}
+                      stateRelatedMessage={errors.isRemote?.message}
                     />
                   )}
                   <Checkbox
