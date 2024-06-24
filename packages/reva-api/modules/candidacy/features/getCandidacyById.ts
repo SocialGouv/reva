@@ -1,12 +1,23 @@
-import { Candidacy } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
-export const getCandidacyById = ({
+type CandidacyInclude = Prisma.CandidacyInclude;
+type CandidacyReturnType<T extends CandidacyInclude> =
+  Promise<Prisma.CandidacyGetPayload<{ include: T }> | null>;
+
+export const getCandidacyById = async function getCandidacyById<
+  SelectedIncludes extends CandidacyInclude,
+>({
   candidacyId,
+  includes,
 }: {
   candidacyId: string;
-}): Promise<Candidacy | null> =>
-  prismaClient.candidacy.findUnique({
+  includes?: SelectedIncludes;
+}): CandidacyReturnType<SelectedIncludes> {
+  const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
+    include: includes,
   });
+  return candidacy as Awaited<CandidacyReturnType<SelectedIncludes>>;
+};

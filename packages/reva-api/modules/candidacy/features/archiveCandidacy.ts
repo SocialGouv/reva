@@ -1,104 +1,116 @@
-import { ReorientationReason } from "@prisma/client";
-import { Either, EitherAsync, Left, Maybe } from "purify-ts";
-
-import { Role } from "../../account/account.types";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
-
-interface ArchiveCandidacyDeps {
-  getCandidacyFromId: (
-    candidacyId: string,
-  ) => Promise<Either<string, Candidacy>>;
-  getReorientationReasonById: (params: {
-    reorientationReasonId: string;
-  }) => Promise<ReorientationReason | null>;
-  hasRole: (role: Role) => boolean;
-  archiveCandidacy: (params: {
-    candidacyId: string;
-    reorientationReasonId: string | null;
-  }) => Promise<Either<string, Candidacy>>;
-}
+import { getCandidacyById } from "./getCandidacyById";
+import { getReorientationReasonById } from "../../referential/features/getReorientationReasonById";
+import { prismaClient } from "../../../prisma/client";
+import { candidacyIncludes } from "../database/candidacies";
+import { toDomainExperiences } from "../database/experiences";
+import { logger } from "../../shared/logger";
 
 interface ArchiveCandidacyParams {
   candidacyId: string;
   reorientationReasonId: string | null;
 }
-
-export const archiveCandidacy =
-  (deps: ArchiveCandidacyDeps) => (params: ArchiveCandidacyParams) => {
-    const hasRequiredRole =
-      deps.hasRole("manage_candidacy") || deps.hasRole("admin") || true;
-
-    if (!hasRequiredRole) {
-      return EitherAsync.liftEither(
-        Left(`Vous n'êtes pas autorisé à archiver cette candidature.`),
-      ).mapLeft(
-        (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error),
-      );
-    }
-
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`,
-        ),
-    );
-
-    const checkIfCandidacyIsNotArchived = (candidacy: Candidacy) => {
-      const isArchived = Boolean(
-        candidacy.candidacyStatuses.find(
-          (status) => status.status === "ARCHIVE" && status.isActive,
-        ),
-      );
-      return Promise.resolve(
-        Maybe.fromFalsy(!isArchived).toEither(
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED,
-            `La candidature est déjà archivée`,
-          ),
-        ),
-      );
-    };
-
-    const checkIfReorientationReasonExists = EitherAsync.fromPromise(
-      async () => {
-        const r = await deps.getReorientationReasonById({
-          reorientationReasonId: params.reorientationReasonId || "",
-        });
-        return Maybe.fromNullable(r).toEither(
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON,
-            `La raison de réorientation n'est pas valide`,
-          ),
-        );
+export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
+  let candidacy;
+  try {
+    candidacy = await getCandidacyById({
+      candidacyId: params.candidacyId,
+      includes: {
+        candidacyStatuses: true,
       },
+    });
+  } catch (error) {
+    throw new Error(
+      `La candidature ${params.candidacyId} n'a pas pu être récupérée: ${error}`,
     );
+  }
 
-    const archiveCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.archiveCandidacy(params),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-          `Erreur lors de l'archivage de la candidature ${params.candidacyId}`,
-        ),
-    );
+  if (!candidacy) {
+    throw new Error(`La candidature ${params.candidacyId} n'existe pas`);
+  }
 
-    if (params.reorientationReasonId) {
-      return checkIfCandidacyExists
-        .chain(checkIfCandidacyIsNotArchived)
-        .chain(() => checkIfReorientationReasonExists)
-        .chain(() => archiveCandidacyResult);
-    } else {
-      return checkIfCandidacyExists
-        .chain(checkIfCandidacyIsNotArchived)
-        .chain(() => archiveCandidacyResult);
+  const isArchived = Boolean(
+    candidacy?.candidacyStatuses.find(
+      (status) => status.status === "ARCHIVE" && status.isActive,
+    ),
+  );
+
+  if (isArchived) {
+    throw new Error("La candidature est déjà archivée");
+  }
+
+  if (params.reorientationReasonId) {
+    const r = await getReorientationReasonById({
+      reorientationReasonId: params.reorientationReasonId || "",
+    });
+    if (!r) {
+      throw new Error("La raison de réorientation n'est pas valide");
     }
-  };
+  }
+
+  try {
+    const [, newCandidacy, certificationAndRegion] =
+      await prismaClient.$transaction([
+        prismaClient.candidaciesStatus.updateMany({
+          where: {
+            candidacyId: params.candidacyId,
+          },
+          data: {
+            isActive: false,
+          },
+        }),
+        prismaClient.candidacy.update({
+          where: {
+            id: params.candidacyId,
+          },
+          data: {
+            candidacyStatuses: {
+              create: {
+                status: "ARCHIVE",
+                isActive: true,
+              },
+            },
+            reorientationReasonId: params.reorientationReasonId,
+          },
+          include: {
+            ...candidacyIncludes,
+            candidate: true,
+          },
+        }),
+        prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+          where: {
+            candidacyId: params.candidacyId,
+            isActive: true,
+          },
+          include: {
+            certification: true,
+            region: true,
+          },
+        }),
+      ]);
+
+    return {
+      id: newCandidacy.id,
+      regionId: certificationAndRegion?.region.id,
+      region: certificationAndRegion?.region,
+      department: newCandidacy.department,
+      certificationId: certificationAndRegion?.certificationId,
+      certification: {
+        ...certificationAndRegion?.certification,
+        codeRncp: certificationAndRegion?.certification.rncpId,
+      },
+      organismId: newCandidacy.organismId,
+      experiences: toDomainExperiences(newCandidacy.experiences),
+      phone: newCandidacy.candidate?.phone || null,
+      email: newCandidacy.candidate?.email || newCandidacy.email,
+      candidacyStatuses: newCandidacy.candidacyStatuses,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
+      createdAt: newCandidacy.createdAt,
+      financeModule: newCandidacy.financeModule,
+    };
+  } catch (e) {
+    logger.error(e);
+    throw new Error(
+      `Erreur lors de l'archivage de la candidature ${params.candidacyId}`,
+    );
+  }
+};

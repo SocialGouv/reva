@@ -10,7 +10,6 @@ import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.fea
 import * as organismDb from "../organism/database/organisms";
 import { Organism as OrganismCamelCase } from "../organism/organism.types";
 import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
-import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -585,43 +584,31 @@ const unsafeResolvers = {
       payload: any,
       context: GraphqlContext,
     ) => {
-      const result = await archiveCandidacy({
-        archiveCandidacy: candidacyDb.archiveCandidacy,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        getReorientationReasonById,
-        hasRole: context.auth.hasRole,
-      })({
+      const candidacy = await archiveCandidacy({
         candidacyId: payload.candidacyId,
         reorientationReasonId: payload.reorientationReasonId,
       });
 
-      const candidacy = result.isRight() ? result.extract() : undefined;
-      if (candidacy?.id) {
-        sendCandidacyArchivedEmailToCertificateur(candidacy.id);
-      }
+      sendCandidacyArchivedEmailToCertificateur(candidacy.id);
 
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         context,
-        result,
+        result: candidacy,
         eventType: CandidacyBusinessEvent.ARCHIVED_CANDIDACY,
         extraInfo: {
           reorientationReasonId: payload.reorientationReasonId,
         },
       });
 
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_ARCHIVED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_ARCHIVED",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+      return candidacy;
     },
     candidacy_unarchiveById: async (
       _: unknown,
