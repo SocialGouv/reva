@@ -1493,8 +1493,8 @@ enum CompetenceBlocsPartCompletionEnum {
 }
 
 enum DFFDecision {
-  ACCEPTED
-  REJECTED
+  FAVORABLE
+  UNFAVORABLE
 }
 
 model DematerializedFeasibilityFile {
@@ -1510,9 +1510,9 @@ model DematerializedFeasibilityFile {
   attachmentsPartComplete           Boolean                             @default(false) @map("attachments_part_complete")
   prerequisites                     DFFPrerequisite[]
   competenceBlocsPartCompletion     CompetenceBlocsPartCompletionEnum   @default(TO_COMPLETE) @map("competence_blocs_part_completion")
-  decision                          DFFDecision?
-  decisionComment                   String?                             @map("decision_comment")
-  decisionSentAt                    DateTime?                           @map("decision_sent_at") @db.Timestamptz(6)
+  appDecision                       DFFDecision?                        @map("app_decision")
+  appDecisionComment                String?                             @map("app_decision_comment")
+  appDecisionSentAt                 DateTime?                           @map("app_decision_sent_at") @db.Timestamptz(6)
   attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
