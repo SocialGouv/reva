@@ -15,7 +15,7 @@ import { useDecision } from "./_components/decision.hook";
 
 const schema = z
   .object({
-    decision: z.enum(["ACCEPTED", "REJECTED"], {
+    decision: z.enum(["FAVORABLE", "UNFAVORABLE"], {
       invalid_type_error: "Veuillez sélectionner un avis",
     }),
     decisionComment: z.string().min(1, {
@@ -104,14 +104,14 @@ export default function DecisionPage() {
               {
                 label: "Favorable",
                 nativeInputProps: {
-                  value: "ACCEPTED",
+                  value: "FAVORABLE",
                   ...register("decision"),
                 },
               },
               {
                 label: "Non favorable",
                 nativeInputProps: {
-                  value: "REJECTED",
+                  value: "UNFAVORABLE",
                   ...register("decision"),
                 },
               },

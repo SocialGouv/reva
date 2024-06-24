@@ -6,11 +6,11 @@ export default function DecisionSection({
   decision,
   decisionComment,
 }: {
-  decision: DfFileDecision;
+  decision?: DfFileDecision | null;
   decisionComment?: string | null;
 }) {
   const DecisionBadge = () => {
-    if (decision === "ACCEPTED") {
+    if (decision === "FAVORABLE") {
       return (
         <Badge severity="success" noIcon>
           Favorable
@@ -19,6 +19,10 @@ export default function DecisionSection({
     }
     return <CustomErrorBadge label="Non favorable" />;
   };
+
+  if (!decision) {
+    return null;
+  }
 
   return (
     <div>
