@@ -4,6 +4,10 @@ import { prismaClient } from "../../../prisma/client";
 import { candidacyIncludes } from "../database/candidacies";
 import { toDomainExperiences } from "../database/experiences";
 import { logger } from "../../shared/logger";
+import {
+  FunctionalCodeError,
+  // FunctionalError,
+} from "../../shared/error/functionalError";
 
 interface ArchiveCandidacyParams {
   candidacyId: string;
@@ -20,12 +24,14 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
     });
   } catch (error) {
     throw new Error(
-      `La candidature ${params.candidacyId} n'a pas pu être récupérée: ${error}`,
+      `${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} La candidature ${params.candidacyId} n'a pas pu être récupérée: ${error}`,
     );
   }
 
   if (!candidacy) {
-    throw new Error(`La candidature ${params.candidacyId} n'existe pas`);
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} La candidature ${params.candidacyId} n'existe pas`,
+    );
   }
 
   const isArchived = Boolean(
@@ -35,7 +41,9 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   );
 
   if (isArchived) {
-    throw new Error("La candidature est déjà archivée");
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED} La candidature est déjà archivée`,
+    );
   }
 
   if (params.reorientationReasonId) {
@@ -43,7 +51,9 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
       reorientationReasonId: params.reorientationReasonId || "",
     });
     if (!r) {
-      throw new Error("La raison de réorientation n'est pas valide");
+      throw new Error(
+        `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON  }"La raison de réorientation n'est pas valide`,
+      );
     }
   }
 
@@ -98,6 +108,7 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
         ...certificationAndRegion?.certification,
         codeRncp: certificationAndRegion?.certification.rncpId,
       },
+      reorientationReasonId: newCandidacy.reorientationReasonId,
       organismId: newCandidacy.organismId,
       experiences: toDomainExperiences(newCandidacy.experiences),
       phone: newCandidacy.candidate?.phone || null,
