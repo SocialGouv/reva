@@ -164,155 +164,167 @@ const PaymentRequestUniFvaeInvoicePage = () => {
               </Info>
               <Info title="Forfait">300€ net</Info>
             </dl>
-            <Alert
-              severity="info"
-              title={
-                <p className="font-normal">
-                  Les montants remplis sont tous net de TVA.
-                </p>
-              }
-            />
-            <fieldset className="mt-12">
-              <legend className="mb-6 font-medium">
-                Accompagnement (optionnel)
-              </legend>
-              <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
-                <TableRow>
-                  <p>Individuel</p>
-                  <HourInput
-                    name="individualEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput name="individualEffectiveCost" control={control} />
-                </TableRow>
-                <TableRow>
-                  <p>collectif</p>
-                  <HourInput
-                    name="collectiveEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput name="collectiveEffectiveCost" control={control} />
-                </TableRow>
-                <TableRow>
-                  <p>Sous-total des accompagnements</p>
-                  <p>{supportHourCountTotal} h</p>
-                  <p>{supportEffectiveCostTotal.toFixed(2)} €</p>
-                </TableRow>
-              </div>
-            </fieldset>
-            <fieldset className="mt-12">
-              <legend className="mb-6 font-medium">
-                Compléments formatifs
-              </legend>
-              <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
-                <p className="px-6 pt-6 flex text-xs text-dsfr-orange-500">
-                  <span
-                    className="fr-icon-warning-fill fr-icon--sm mr-1"
-                    aria-hidden
-                  />
-                  Merci de prendre en compte que les actes formatifs doivent
-                  être facturés au tarif réel, plafonné à 25€ de l'heure. Des
-                  contrôles aléatoires seront effectués avant tout paiement,
-                  veuillez donc conserver et être prêt à présenter les factures
-                  acquittées correspondant aux actes formatifs, sur demande
-                  d'Uniformation.
-                </p>
-                <TableRow>
-                  <div className="flex flex-col">
-                    <p className="mb-2">Formation obligatoire</p>
-                    <div className="flex flex-wrap gap-3">
-                      {candidacy.mandatoryTrainings.map((mt) => (
-                        <Tag key={mt.id} small>
-                          {mt.label}
-                        </Tag>
-                      ))}
-                    </div>
-                    {!candidacy.mandatoryTrainings.length && (
-                      <p className="text-sm text-gray-500 italic">
-                        Aucun élément séléctionné
-                      </p>
-                    )}
+            {candidacy?.feasibility?.decision === "ADMISSIBLE" && (
+              <>
+                <Alert
+                  severity="info"
+                  title={
+                    <p className="font-normal">
+                      Les montants remplis sont tous net de TVA.
+                    </p>
+                  }
+                />
+
+                <fieldset className="mt-12">
+                  <legend className="mb-6 font-medium">
+                    Accompagnement (optionnel)
+                  </legend>
+                  <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
+                    <TableRow>
+                      <p>Individuel</p>
+                      <HourInput
+                        name="individualEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="individualEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <p>collectif</p>
+                      <HourInput
+                        name="collectiveEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="collectiveEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <p>Sous-total des accompagnements</p>
+                      <p>{supportHourCountTotal} h</p>
+                      <p>{supportEffectiveCostTotal.toFixed(2)} €</p>
+                    </TableRow>
                   </div>
-                  <HourInput
-                    name="mandatoryTrainingsEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput
-                    name="mandatoryTrainingsEffectiveCost"
-                    control={control}
-                  />
-                </TableRow>
-                <TableRow>
-                  <div className="flex flex-col">
-                    <p className="mb-2">Savoir de base</p>
-                    <div className="flex flex-wrap gap-3">
-                      {candidacy.basicSkills.map((bs) => (
-                        <Tag key={bs.id} small>
-                          {bs.label}
-                        </Tag>
-                      ))}
-                    </div>
-                    {!candidacy.basicSkills.length && (
-                      <p className="text-sm text-gray-500 italic">
-                        Aucun élément séléctionné
-                      </p>
-                    )}
+                </fieldset>
+                <fieldset className="mt-12">
+                  <legend className="mb-6 font-medium">
+                    Compléments formatifs
+                  </legend>
+                  <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
+                    <p className="px-6 pt-6 flex text-xs text-dsfr-orange-500">
+                      <span
+                        className="fr-icon-warning-fill fr-icon--sm mr-1"
+                        aria-hidden
+                      />
+                      Merci de prendre en compte que les actes formatifs doivent
+                      être facturés au tarif réel, plafonné à 25€ de l'heure.
+                      Des contrôles aléatoires seront effectués avant tout
+                      paiement, veuillez donc conserver et être prêt à présenter
+                      les factures acquittées correspondant aux actes formatifs,
+                      sur demande d'Uniformation.
+                    </p>
+                    <TableRow>
+                      <div className="flex flex-col">
+                        <p className="mb-2">Formation obligatoire</p>
+                        <div className="flex flex-wrap gap-3">
+                          {candidacy.mandatoryTrainings.map((mt) => (
+                            <Tag key={mt.id} small>
+                              {mt.label}
+                            </Tag>
+                          ))}
+                        </div>
+                        {!candidacy.mandatoryTrainings.length && (
+                          <p className="text-sm text-gray-500 italic">
+                            Aucun élément séléctionné
+                          </p>
+                        )}
+                      </div>
+                      <HourInput
+                        name="mandatoryTrainingsEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="mandatoryTrainingsEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <div className="flex flex-col">
+                        <p className="mb-2">Savoir de base</p>
+                        <div className="flex flex-wrap gap-3">
+                          {candidacy.basicSkills.map((bs) => (
+                            <Tag key={bs.id} small>
+                              {bs.label}
+                            </Tag>
+                          ))}
+                        </div>
+                        {!candidacy.basicSkills.length && (
+                          <p className="text-sm text-gray-500 italic">
+                            Aucun élément séléctionné
+                          </p>
+                        )}
+                      </div>
+                      <HourInput
+                        name="basicSkillsEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="basicSkillsEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <div className="flex flex-col">
+                        <p className="mb-2">Bloc de compétences</p>
+                        <pre className="text-sm text-gray-500 italic">
+                          {candidacy.certificateSkills || "Non précisé"}
+                        </pre>
+                      </div>
+                      <HourInput
+                        name="certificateSkillsEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="certificateSkillsEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <div className="flex flex-col">
+                        <p className="mb-2">Autres</p>
+                        <pre className="text-sm text-gray-500 italic">
+                          {candidacy.otherTraining || "Non précisé"}
+                        </pre>
+                      </div>
+                      <HourInput
+                        name="otherTrainingEffectiveHourCount"
+                        control={control}
+                      />
+                      <CostInput
+                        name="otherTrainingEffectiveCost"
+                        control={control}
+                      />
+                    </TableRow>
+                    <TableRow>
+                      <p>Sous-total des compléments formatifs</p>
+                      <p>{trainingHourCountTotal} h</p>
+                      <p>{trainingCostTotal.toFixed(2)} €</p>
+                    </TableRow>
                   </div>
-                  <HourInput
-                    name="basicSkillsEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput
-                    name="basicSkillsEffectiveCost"
-                    control={control}
-                  />
-                </TableRow>
+                </fieldset>
                 <TableRow>
-                  <div className="flex flex-col">
-                    <p className="mb-2">Bloc de compétences</p>
-                    <pre className="text-sm text-gray-500 italic">
-                      {candidacy.certificateSkills || "Non précisé"}
-                    </pre>
-                  </div>
-                  <HourInput
-                    name="certificateSkillsEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput
-                    name="certificateSkillsEffectiveCost"
-                    control={control}
-                  />
+                  <p className="font-bold">Total</p>
+                  <p>{supportHourCountTotal + trainingHourCountTotal} h</p>
+                  <p>
+                    {(supportEffectiveCostTotal + trainingCostTotal).toFixed(2)}{" "}
+                    €
+                  </p>
                 </TableRow>
-                <TableRow>
-                  <div className="flex flex-col">
-                    <p className="mb-2">Autres</p>
-                    <pre className="text-sm text-gray-500 italic">
-                      {candidacy.otherTraining || "Non précisé"}
-                    </pre>
-                  </div>
-                  <HourInput
-                    name="otherTrainingEffectiveHourCount"
-                    control={control}
-                  />
-                  <CostInput
-                    name="otherTrainingEffectiveCost"
-                    control={control}
-                  />
-                </TableRow>
-                <TableRow>
-                  <p>Sous-total des compléments formatifs</p>
-                  <p>{trainingHourCountTotal} h</p>
-                  <p>{trainingCostTotal.toFixed(2)} €</p>
-                </TableRow>
-              </div>
-            </fieldset>
-            <TableRow>
-              <p className="font-bold">Total</p>
-              <p>{supportHourCountTotal + trainingHourCountTotal} h</p>
-              <p>
-                {(supportEffectiveCostTotal + trainingCostTotal).toFixed(2)} €
-              </p>
-            </TableRow>
+              </>
+            )}
           </Section>
         </div>
       )}

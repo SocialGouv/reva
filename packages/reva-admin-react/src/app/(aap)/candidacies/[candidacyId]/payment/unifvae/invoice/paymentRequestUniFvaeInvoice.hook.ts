@@ -30,6 +30,9 @@ const getCandidacyQuery = graphql(`
       }
       certificateSkills
       otherTraining
+      feasibility {
+        decision
+      }
     }
   }
 `);
