@@ -36,6 +36,7 @@ const AapFeasibilityPage = () => {
           <DefaultCandidacySectionCard
             title="Descriptif de la certification"
             titleIconClass="fr-icon-award-fill"
+            isEditable
             status={
               dematerializedFeasibilityFile?.certificationPartComplete
                 ? "COMPLETED"
