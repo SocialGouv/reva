@@ -3,6 +3,7 @@ import mercurius from "mercurius";
 import { Right } from "purify-ts";
 
 import { prismaClient } from "../../prisma/client";
+import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
 import { generateJwt } from "./auth.helper";
 import {
   CandidateProfileUpdateInput,
@@ -22,7 +23,7 @@ import {
   sendUnknownUserEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
+import { getHighestDegreeByCandidateId } from "./features/getHighestDegreeByCandidateId";
 
 const unsafeResolvers = {
   Candidate: {
@@ -62,6 +63,8 @@ const unsafeResolvers = {
       niveauDeFormationLePlusEleveDegreeId: string;
     }) =>
       getNiveauDeFormationLePlusEleve({ niveauDeFormationLePlusEleveDegreeId }),
+    highestDegree: async ({ candidateId }: { candidateId: string }) =>
+      getHighestDegreeByCandidateId({ candidateId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: async (

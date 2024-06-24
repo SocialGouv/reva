@@ -12,6 +12,7 @@ const getCandidacyById = graphql(`
       }
       dematerializedFeasibilityFile {
         isComplete
+        sentToCandidateAt
         certificationPartComplete
         competenceBlocsPartCompletion
         prerequisitesPartComplete

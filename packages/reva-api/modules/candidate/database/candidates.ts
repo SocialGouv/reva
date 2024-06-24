@@ -58,16 +58,6 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
       },
     });
 
-    // Update existing candidacy with this id
-    const update = await prismaClient.candidacy.updateMany({
-      data: {
-        candidateId: createdCandidate.id,
-      },
-      where: {
-        email: candidate.email.trim(),
-      },
-    });
-
     // Check if an existing candidacy is active
     const candidacy = await prismaClient.candidacy.findFirst({
       where: {

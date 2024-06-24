@@ -23,4 +23,6 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_createOrUpdateAttachments":
     isAdminOrCandidacyCompanion,
+  "Mutation.dematerialized_feasibility_file_sendToCandidate":
+    isAdminOrCandidacyCompanion,
 };

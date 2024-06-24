@@ -16,6 +16,8 @@ type DematerializedFeasibilityFile {
   decisionComment: String
   decisionSentAt: Timestamp
   attachments: [DFFAttachment]!
+  candidacy: Candidacy!
+  sentToCandidateAt: Timestamp
 }
 
 type Prerequisite {
@@ -144,5 +146,9 @@ type Mutation {
 
   dematerialized_feasibility_file_createOrUpdateAttachments(
     input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput!
+  ): String!
+
+  dematerialized_feasibility_file_sendToCandidate(
+    dematerializedFeasibilityFileId: ID!
   ): String!
 }

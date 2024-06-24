@@ -3,9 +3,9 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const dematerializedFeasibilityFileCandidatValidationCardByCandidacyId =
-  graphql(`
-    query dematerializedFeasibilityFileCandidatValidationCardByCandidacyId(
+const dematerializedFeasibilityFileSendFileCandidateCardByCandidacyId = graphql(
+  `
+    query dematerializedFeasibilityFileSendFileCandidateCardByCandidacyId(
       $candidacyId: ID!
     ) {
       dematerialized_feasibility_file_getByCandidacyId(
@@ -14,9 +14,10 @@ const dematerializedFeasibilityFileCandidatValidationCardByCandidacyId =
         sentToCandidateAt
       }
     }
-  `);
+  `,
+);
 
-export const useCandidateValidationCard = () => {
+export const useSendFileCandidateSection = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -25,11 +26,11 @@ export const useCandidateValidationCard = () => {
   const { data } = useQuery({
     queryKey: [
       candidacyId,
-      "dematerializedFeasibilityFileCandidatValidationCardByCandidacyId",
+      "dematerializedFeasibilityFileSendFileCandidateCardByCandidacyId",
     ],
     queryFn: () =>
       graphqlClient.request(
-        dematerializedFeasibilityFileCandidatValidationCardByCandidacyId,
+        dematerializedFeasibilityFileSendFileCandidateCardByCandidacyId,
         {
           candidacyId,
         },

@@ -17,10 +17,12 @@ import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertif
 import { createOrUpdateDecision } from "./features/createOrUpdateDecision";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
+import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
+import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -51,6 +53,8 @@ export const unsafeResolvers = {
       }),
     isComplete: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
       checkIsDFFCompletedById({ dematerializedFeasibilityFileId }),
+    candidacy: ({ candidacyId }: { candidacyId: string }) =>
+      getCandidacyWithCandidateByCandidacyId({ candidacyId }),
   },
   CertificationCompetenceDetails: {
     certificationCompetence: ({
@@ -107,6 +111,12 @@ export const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput;
       },
     ) => createOrUpdateAttachments(input),
+    dematerialized_feasibility_file_sendToCandidate: (
+      _parent: unknown,
+      {
+        dematerializedFeasibilityFileId,
+      }: { dematerializedFeasibilityFileId: string },
+    ) => updateSentToCandidateAtNow({ dematerializedFeasibilityFileId }),
   },
 };
 

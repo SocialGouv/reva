@@ -1,0 +1,105 @@
+import { Certification, Prerequisite } from "@/graphql/generated/graphql";
+import { fr } from "@codegouvfr/react-dsfr";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useMemo } from "react";
+
+export default function CertificationSection({
+  option,
+  firstForeignLanguage,
+  secondForeignLanguage,
+  certification,
+  prerequisites,
+}: {
+  option?: string | null;
+  firstForeignLanguage?: string | null;
+  secondForeignLanguage?: string | null;
+  certification?: Certification | null;
+  prerequisites?: Prerequisite[] | null;
+}) {
+  const prequisitesByStatus = useMemo(() => {
+    return {
+      acquired: prerequisites?.filter(
+        (prerequisite) => prerequisite?.state === "ACQUIRED",
+      ),
+      inProgress: prerequisites?.filter(
+        (prerequisite) => prerequisite?.state === "IN_PROGRESS",
+      ),
+      recommended: prerequisites?.filter(
+        (prerequisite) => prerequisite?.state === "RECOMMENDED",
+      ),
+    };
+  }, [prerequisites]);
+
+  return (
+    <div>
+      <div className="flex">
+        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
+        <h2>Certification visée</h2>
+      </div>
+      <h4 className="mb-2">{certification?.label}</h4>
+      <p className="text-sm text-dsfr-light-text-mention-grey">
+        RNCP {certification?.codeRncp}
+      </p>
+      {!!option && (
+        <>
+          <p>Option ou parcours:</p>
+          <p>{option}</p>
+        </>
+      )}
+      <div className="flex gap-2">
+        <p className="mb-0">{firstForeignLanguage}</p>
+        <p className="mb-0">{secondForeignLanguage}</p>
+      </div>
+      <CallOut>
+        <p>Un ou plusieurs bloc(s) de compétences visé(s)</p>
+      </CallOut>
+
+      <h5 className="mb-0">Blocs de compétences</h5>
+
+      <div className={`${fr.cx("fr-accordions-group")} mb-8 mt-4`}>
+        {certification?.competenceBlocs?.map((bloc) => (
+          <Accordion label={`${bloc.code} - ${bloc.label}`} key={bloc.id}>
+            {bloc.competences?.map((competence) => (
+              <>
+                <p key={competence?.id}>{competence?.label}</p>
+                <p>{competence?.id}</p>
+              </>
+            ))}
+            <p></p>
+          </Accordion>
+        ))}
+      </div>
+      <h5 className="mb-0">Prérequis obligatoires</h5>
+      <div className={`mb-8 mt-4 ${fr.cx("fr-accordions-group")}`}>
+        {!!prequisitesByStatus?.acquired?.length && (
+          <Accordion label="Acquis">
+            <ul>
+              {prequisitesByStatus?.acquired?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+        {!!prequisitesByStatus?.inProgress?.length && (
+          <Accordion label="En cours">
+            <ul>
+              {prequisitesByStatus?.inProgress?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+        {!!prequisitesByStatus?.recommended?.length && (
+          <Accordion label="Préconisés">
+            <ul>
+              {prequisitesByStatus?.recommended?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+      </div>
+    </div>
+  );
+}

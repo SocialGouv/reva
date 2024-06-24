@@ -5,28 +5,23 @@ import { useCandidateValidationCard } from "./candidateValidationCard.hook";
 
 export const CandidateValidationCard = () => {
   const { candidacyId } = useParams();
-  const { isDematerializedFeasibilityFileComplete } =
+  const { isDematerializedFeasibilityFileHasBeenSent } =
     useCandidateValidationCard();
-  const completed = false;
   return (
-    <div>
-      <hr />
-      <h2>Récapitulatif et envoi du dossier au candidat</h2>
-      <DefaultCandidacySectionCard
-        title="Validation du candidat"
-        titleIconClass="fr-icon-success-fill"
-        status={completed ? "COMPLETED" : "TO_COMPLETE"}
-        isEditable
-        disabled={!isDematerializedFeasibilityFileComplete}
-        buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/candidate-validation`}
-      >
-        {!isDematerializedFeasibilityFileComplete && (
-          <SmallNotice>
-            Vous devez remplir tous les éléments du dossier de faisabilité avant
-            de l'envoyer au candidat pour validation.
-          </SmallNotice>
-        )}
-      </DefaultCandidacySectionCard>
-    </div>
+    <DefaultCandidacySectionCard
+      title="Validation du candidat"
+      titleIconClass="fr-icon-success-fill"
+      status={"TO_COMPLETE"}
+      isEditable
+      disabled={!isDematerializedFeasibilityFileHasBeenSent}
+      buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/candidate-validation`}
+    >
+      {!isDematerializedFeasibilityFileHasBeenSent && (
+        <SmallNotice>
+          Vous devez remplir tous les éléments du dossier de faisabilité avant
+          de l'envoyer au candidat pour validation.
+        </SmallNotice>
+      )}
+    </DefaultCandidacySectionCard>
   );
 };

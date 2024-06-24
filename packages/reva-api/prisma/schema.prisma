@@ -1498,24 +1498,24 @@ enum DFFDecision {
 }
 
 model DematerializedFeasibilityFile {
-  id                              String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacyId                     String                            @map("candidacy_id") @db.Uuid
-  candidacy                       Candidacy                         @relation(fields: [candidacyId], references: [id])
-  firstForeignLanguage            String?                           @map("first_foreign_language")
-  secondForeignLanguage           String?                           @map("second_foreign_language")
-  option                          String?                           @map("option")
-  dffCertificationCompetenceBlocs DFFCertificationCompetenceBloc[]
-  certificationPartComplete       Boolean                           @default(false) @map("certification_part_complete")
-  prerequisitesPartComplete       Boolean                           @default(false) @map("prerequisites_part_complete")
-  attachmentsPartComplete         Boolean                           @default(false) @map("attachments_part_complete")
-  prerequisites                   DFFPrerequisite[]
-  competenceBlocsPartCompletion   CompetenceBlocsPartCompletionEnum @default(TO_COMPLETE) @map("competence_blocs_part_completion")
-  decision                        DFFDecision?
-  decisionComment                 String?                           @map("decision_comment")
-  decisionSentAt                  DateTime?                         @map("decision_sent_at") @db.Timestamptz(6)
-  attachments                     DFFAttachment[]
-
+  id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                       String                              @map("candidacy_id") @db.Uuid
+  candidacy                         Candidacy                           @relation(fields: [candidacyId], references: [id])
+  firstForeignLanguage              String?                             @map("first_foreign_language")
+  secondForeignLanguage             String?                             @map("second_foreign_language")
+  option                            String?                             @map("option")
+  dffCertificationCompetenceBlocs   DFFCertificationCompetenceBloc[]
+  certificationPartComplete         Boolean                             @default(false) @map("certification_part_complete")
+  prerequisitesPartComplete         Boolean                             @default(false) @map("prerequisites_part_complete")
+  attachmentsPartComplete           Boolean                             @default(false) @map("attachments_part_complete")
+  prerequisites                     DFFPrerequisite[]
+  competenceBlocsPartCompletion     CompetenceBlocsPartCompletionEnum   @default(TO_COMPLETE) @map("competence_blocs_part_completion")
+  decision                          DFFDecision?
+  decisionComment                   String?                             @map("decision_comment")
+  decisionSentAt                    DateTime?                           @map("decision_sent_at") @db.Timestamptz(6)
+  attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
+  sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
 
   @@map("dematerialized_feasibility_file")
 }

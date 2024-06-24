@@ -1,4 +1,5 @@
 "use client";
+import { CandidateValidationCard } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/CandidateValidationCard";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
 import {
@@ -10,10 +11,10 @@ import { CompetenceBlocsPartCompletion } from "@/graphql/generated/graphql";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
+import { AttachmentsCard } from "./_components/AttachmentsCard";
 import { DecisionCard } from "./_components/DecisionCard";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
-import { AttachmentsCard } from "./_components/AttachmentsCard";
-import { CandidateValidationCard } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/CandidateValidationCard";
+import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -78,6 +79,11 @@ const AapFeasibilityPage = () => {
           <PrerequisitesCard />
           <DecisionCard />
           <AttachmentsCard />
+          <hr />
+
+          <h2>Récapitulatif et envoi du dossier au candidat</h2>
+
+          <SendFileCandidateSection />
           <CandidateValidationCard />
         </ul>
       )}

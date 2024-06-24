@@ -6,6 +6,7 @@ import { prismaClient } from "../../prisma/client";
 import { Role } from "../account/account.types";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { generateJwt } from "../candidate/auth.helper";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import * as organismDb from "../organism/database/organisms";
 import { Organism as OrganismCamelCase } from "../organism/organism.types";
 import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
@@ -38,15 +39,21 @@ import { getAAPsWithZipCode } from "./features/getAAPsWithZipCode";
 import { getAdmissibility } from "./features/getAdmissibility";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getBasicSkills } from "./features/getBasicSkills";
+import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
 import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
+import { getCandidacyWithActiveCertificationByCandidacyId } from "./features/getCandidacyWithActiveCertificationByCandidacyId";
+import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
+import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
+import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getOrganismsForCandidacy";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "./features/getTrainings";
+import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
@@ -72,8 +79,6 @@ import {
   sendTrainingEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -121,6 +126,16 @@ const unsafeResolvers = {
     },
     goals: async ({ id: candidacyId }: Candidacy) =>
       getCandidacyGoals({ candidacyId }),
+    experiences: async ({ id: candidacyId }: Candidacy) =>
+      getExperiencesByCandidacyId({ candidacyId }),
+    certification: async ({ id: candidacyId }: Candidacy) =>
+      getCandidacyWithActiveCertificationByCandidacyId(candidacyId),
+    basicSkills: async ({ id: candidacyId }: Candidacy) =>
+      getBasicSkillsByCandidacyId({ candidacyId }),
+    mandatoryTrainings: async ({ id: candidacyId }: Candidacy) =>
+      getMandatoryTrainingsByCandidacyId({ candidacyId }),
+    candidate: async ({ id: candidacyId }: Candidacy) =>
+      getCandidateByCandidacyId({ candidacyId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) => {
