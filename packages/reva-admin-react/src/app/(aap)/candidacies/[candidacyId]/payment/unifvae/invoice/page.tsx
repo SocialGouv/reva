@@ -11,6 +11,7 @@ import { z } from "zod";
 import { Control, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const paymentRequestUniFvaeSchema = z.object({
   invoiceNumber: z.string(),
@@ -217,7 +218,21 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   d'Uniformation.
                 </p>
                 <TableRow>
-                  <p>Formation obligatoire</p>
+                  <div className="flex flex-col">
+                    <p className="mb-2">Formation obligatoire</p>
+                    <div className="flex flex-wrap gap-3">
+                      {candidacy.mandatoryTrainings.map((mt) => (
+                        <Tag key={mt.id} small>
+                          {mt.label}
+                        </Tag>
+                      ))}
+                    </div>
+                    {!candidacy.mandatoryTrainings.length && (
+                      <p className="text-sm text-gray-500 italic">
+                        Aucun élément séléctionné
+                      </p>
+                    )}
+                  </div>
                   <HourInput
                     name="mandatoryTrainingsEffectiveHourCount"
                     control={control}
@@ -228,7 +243,21 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   />
                 </TableRow>
                 <TableRow>
-                  <p>Formation obligatoire</p>
+                  <div className="flex flex-col">
+                    <p className="mb-2">Savoir de base</p>
+                    <div className="flex flex-wrap gap-3">
+                      {candidacy.basicSkills.map((bs) => (
+                        <Tag key={bs.id} small>
+                          {bs.label}
+                        </Tag>
+                      ))}
+                    </div>
+                    {!candidacy.basicSkills.length && (
+                      <p className="text-sm text-gray-500 italic">
+                        Aucun élément séléctionné
+                      </p>
+                    )}
+                  </div>
                   <HourInput
                     name="basicSkillsEffectiveHourCount"
                     control={control}
@@ -239,7 +268,12 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   />
                 </TableRow>
                 <TableRow>
-                  <p>Formation obligatoire</p>
+                  <div className="flex flex-col">
+                    <p className="mb-2">Bloc de compétences</p>
+                    <pre className="text-sm text-gray-500 italic">
+                      {candidacy.certificateSkills || "Non précisé"}
+                    </pre>
+                  </div>
                   <HourInput
                     name="certificateSkillsEffectiveHourCount"
                     control={control}
@@ -250,7 +284,12 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   />
                 </TableRow>
                 <TableRow>
-                  <p>Formation obligatoire</p>
+                  <div className="flex flex-col">
+                    <p className="mb-2">Autres</p>
+                    <pre className="text-sm text-gray-500 italic">
+                      {candidacy.otherTraining || "Non précisé"}
+                    </pre>
+                  </div>
                   <HourInput
                     name="otherTrainingEffectiveHourCount"
                     control={control}

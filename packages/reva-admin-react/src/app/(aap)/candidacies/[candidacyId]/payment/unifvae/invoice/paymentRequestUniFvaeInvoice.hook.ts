@@ -20,6 +20,16 @@ const getCandidacyQuery = graphql(`
       fundingRequestUnifvae {
         numAction
       }
+      mandatoryTrainings {
+        id
+        label
+      }
+      basicSkills {
+        id
+        label
+      }
+      certificateSkills
+      otherTraining
     }
   }
 `);
