@@ -45,7 +45,9 @@ export default function CandidateSection({
         <span>
           {bornLabel} {givenName ? ` : ${givenName}` : ""}
         </span>
-        <span>le : {format(birthdate as any as Date, "dd/MM/yyyy")} à</span>
+        {birthdate && (
+          <span>le : {format(birthdate as any as Date, "dd/MM/yyyy")} à</span>
+        )}
         <span>
           {`${birthCity ?? ""}, ${birthDepartment?.label ?? ""} (${birthDepartment?.code ?? ""})`}
         </span>
