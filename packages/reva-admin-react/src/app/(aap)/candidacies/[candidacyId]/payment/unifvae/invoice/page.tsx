@@ -83,6 +83,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     formState,
     formState: { errors },
     handleSubmit,
+    setError,
+    setFocus,
   } = useForm<PaymentRequestUniFvaeFormData>({
     resolver: zodResolver(paymentRequestUniFvaeSchema),
     defaultValues,
@@ -131,7 +133,30 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       });
       successToast("Modifications enregistrées");
     } catch (e) {
-      graphqlErrorToast(e);
+      if (e instanceof Error && e.message.startsWith("input.")) {
+        const [, name, message] =
+          ((
+            e as unknown as { response: { errors: { message: string }[] } }
+          ).response.errors[0].message.match(/input\.([^:]*): (.*)/) as [
+            unknown,
+            string,
+            string,
+          ]) || [];
+
+        const fieldName = name
+          .replace("Cost", "EffectiveCost")
+          .replace(
+            "Hours",
+            "EffectiveHours",
+          ) as keyof PaymentRequestUniFvaeFormData;
+
+        setError(fieldName, {
+          message,
+        });
+        setFocus(fieldName);
+      } else {
+        graphqlErrorToast(e);
+      }
     }
   });
 
