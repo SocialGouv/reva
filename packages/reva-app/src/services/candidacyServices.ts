@@ -313,7 +313,7 @@ const CANDIDACY_SELECTION = `
       }
       dematerializedFeasibilityFile {
         id
-        isComplete
+        sentToCandidateAt
         firstForeignLanguage
         secondForeignLanguage
         certificationPartComplete

@@ -154,7 +154,7 @@ export interface FeasibilityPdf {
 
 export interface FeasibilityDemat {
   id: string;
-  isComplete: boolean;
+  sentToCandidateAt: Date;
   firstForeignLanguage?: string;
   secondForeignLanguage?: string;
   certificationPartComplete: boolean;

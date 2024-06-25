@@ -51,7 +51,8 @@ export const FeasibilityDematTimelineElement = () => {
                 data-test="vérifier-votre-dossier-de-faisabilité"
                 priority="primary"
                 disabled={
-                  !feasibility.isComplete || !!feasibility.swornStatementFileId
+                  !feasibility.sentToCandidateAt ||
+                  !!feasibility.swornStatementFileId
                 }
                 nativeButtonProps={{
                   onClick: () => {
