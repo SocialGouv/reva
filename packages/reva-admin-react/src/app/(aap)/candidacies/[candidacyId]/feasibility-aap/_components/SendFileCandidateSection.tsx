@@ -1,16 +1,20 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export const SendFileCandidateSection = ({
   sentToCandidateAt,
+  isComplete,
 }: {
   sentToCandidateAt?: Date | null;
+  isComplete?: boolean;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const router = useRouter();
 
   return (
     <div>
@@ -24,10 +28,13 @@ export const SendFileCandidateSection = ({
       )}
       <div className="flex justify-end">
         <Button
-          linkProps={{
-            href: `/candidacies/${candidacyId}/feasibility-aap/send-file-candidate`,
-          }}
+          disabled={!isComplete}
           priority={sentToCandidateAt ? "secondary" : "primary"}
+          onClick={() => {
+            router.push(
+              `/candidacies/${candidacyId}/feasibility-aap/send-file-candidate`,
+            );
+          }}
         >
           {sentToCandidateAt ? "Voir le dossier" : "Vérifier et envoyer"}
         </Button>
