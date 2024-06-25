@@ -1,5 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { Gender } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -66,6 +67,18 @@ const createOrUpdatePaymentRequestUnifvaeMutation = graphql(`
     }
   }
 `);
+
+const getGender = (gender?: Gender | null) => {
+  switch (gender) {
+    case "man":
+      return "Homme";
+    case "woman":
+      return "Femme";
+    default:
+      return "Non précisé";
+  }
+};
+
 export const usePaymentRequestUniFvaeInvoicePage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{ candidacyId: string }>();
@@ -106,5 +119,10 @@ export const usePaymentRequestUniFvaeInvoicePage = () => {
 
   const candidacy = getCandidacyResponse?.getCandidacyById;
 
-  return { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUnifvae };
+  return {
+    candidacy,
+    getCandidacyStatus,
+    createOrUpdatePaymentRequestUnifvae,
+    getGender,
+  };
 };

@@ -3,45 +3,36 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { usePaymentRequestUniFvaeInvoicePage } from "./paymentRequestUniFvaeInvoice.hook";
-import { Gender } from "@/graphql/generated/graphql";
-import { ReactNode, useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useParams } from "next/navigation";
-import { z } from "zod";
-import { Control, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-const paymentRequestUniFvaeSchema = z.object({
-  invoiceNumber: z.string().min(1, "Ce champ est obligatoire"),
-  individualEffectiveHourCount: z.number().default(0),
-  individualEffectiveCost: z.number().default(0),
-  collectiveEffectiveHourCount: z.number().default(0),
-  collectiveEffectiveCost: z.number().default(0),
-  mandatoryTrainingsEffectiveHourCount: z.number().default(0),
-  mandatoryTrainingsEffectiveCost: z.number().default(0),
-  basicSkillsEffectiveHourCount: z.number().default(0),
-  basicSkillsEffectiveCost: z.number().default(0),
-  certificateSkillsEffectiveHourCount: z.number().default(0),
-  certificateSkillsEffectiveCost: z.number().default(0),
-  otherTrainingEffectiveHourCount: z.number().default(0),
-  otherTrainingEffectiveCost: z.number().default(0),
-});
-
-export type PaymentRequestUniFvaeFormData = z.infer<
-  typeof paymentRequestUniFvaeSchema
->;
+import { CostInput } from "./_components/form/CostInput";
+import { HourInput } from "./_components/form/HourInput";
+import { Info } from "./_components/form/Info";
+import { Section } from "./_components/form/Section";
+import { TableRow } from "./_components/form/TableRow";
+import {
+  PaymentRequestUniFvaeFormData,
+  paymentRequestUniFvaeSchema,
+} from "./paymentRequestUnifvaeInvoiceFormSchema";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
 
-  const { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUnifvae } =
-    usePaymentRequestUniFvaeInvoicePage();
+  const {
+    candidacy,
+    getCandidacyStatus,
+    createOrUpdatePaymentRequestUnifvae,
+    getGender,
+  } = usePaymentRequestUniFvaeInvoicePage();
 
   const defaultValues = useMemo(
     () => ({
@@ -424,84 +415,3 @@ const PaymentRequestUniFvaeInvoicePage = () => {
 };
 
 export default PaymentRequestUniFvaeInvoicePage;
-
-const getGender = (gender?: Gender | null) => {
-  switch (gender) {
-    case "man":
-      return "Homme";
-    case "woman":
-      return "Femme";
-    default:
-      return "Non précisé";
-  }
-};
-
-const Info = ({ title, children }: { title: string; children?: ReactNode }) => (
-  <div className="flex flex-col">
-    <dt className="text-xs font-bold uppercase mb-2">{title}</dt>
-    <dd>{children}</dd>
-  </div>
-);
-
-const Section = ({
-  title,
-  children,
-}: {
-  title: string;
-  children?: ReactNode;
-}) => (
-  <section className="flex flex-col pb-6">
-    <h2 className="text-xl mb-4">{title}</h2>
-    {children}
-  </section>
-);
-
-const HourInput = ({
-  control,
-  name,
-}: {
-  control: Control<PaymentRequestUniFvaeFormData>;
-  name: keyof PaymentRequestUniFvaeFormData;
-}) => (
-  <Input
-    label="NOMBRE D'HEURES"
-    hintText="Exemple: saisir 2.5 pour 2H30"
-    nativeInputProps={{
-      type: "number",
-      step: "0.5",
-      min: 0,
-      inputMode: "decimal",
-      ...control.register(name, { valueAsNumber: true }),
-    }}
-    state={control.getFieldState(name).error ? "error" : "default"}
-    stateRelatedMessage={control.getFieldState(name)?.error?.message}
-  />
-);
-
-const CostInput = ({
-  control,
-  name,
-}: {
-  control: Control<PaymentRequestUniFvaeFormData>;
-  name: keyof PaymentRequestUniFvaeFormData;
-}) => (
-  <Input
-    label="COÛT HORAIRE"
-    hintText="Un décimal supérieur ou égal à 0"
-    nativeInputProps={{
-      type: "number",
-      step: "0.01",
-      min: 0,
-      inputMode: "decimal",
-      ...control.register(name, { valueAsNumber: true }),
-    }}
-    state={control.getFieldState(name).error ? "error" : "default"}
-    stateRelatedMessage={control.getFieldState(name)?.error?.message}
-  />
-);
-
-const TableRow = ({ children }: { children?: ReactNode }) => (
-  <div className="flex gap-6 *:basis-1/3 px-6 py-6 [&:not(:last-child)]:border-b last:pb-2">
-    {children}
-  </div>
-);
