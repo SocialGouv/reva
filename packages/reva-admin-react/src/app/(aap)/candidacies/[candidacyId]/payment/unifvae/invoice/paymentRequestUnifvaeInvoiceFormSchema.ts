@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const paymentRequestUniFvaeSchema = z.object({
+export const paymentRequestUniFvaeInvoiceSchema = z.object({
   invoiceNumber: z.string().min(1, "Ce champ est obligatoire"),
   individualEffectiveHourCount: z.number().default(0),
   individualEffectiveCost: z.number().default(0),
@@ -16,6 +16,6 @@ export const paymentRequestUniFvaeSchema = z.object({
   otherTrainingEffectiveCost: z.number().default(0),
 });
 
-export type PaymentRequestUniFvaeFormData = z.infer<
-  typeof paymentRequestUniFvaeSchema
+export type PaymentRequestUniFvaeInvoiceFormData = z.infer<
+  typeof paymentRequestUniFvaeInvoiceSchema
 >;

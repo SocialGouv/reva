@@ -18,8 +18,8 @@ import { Info } from "./_components/form/Info";
 import { Section } from "./_components/form/Section";
 import { TableRow } from "./_components/form/TableRow";
 import {
-  PaymentRequestUniFvaeFormData,
-  paymentRequestUniFvaeSchema,
+  PaymentRequestUniFvaeInvoiceFormData,
+  paymentRequestUniFvaeInvoiceSchema,
 } from "./paymentRequestUnifvaeInvoiceFormSchema";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
@@ -76,8 +76,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     handleSubmit,
     setError,
     setFocus,
-  } = useForm<PaymentRequestUniFvaeFormData>({
-    resolver: zodResolver(paymentRequestUniFvaeSchema),
+  } = useForm<PaymentRequestUniFvaeInvoiceFormData>({
+    resolver: zodResolver(paymentRequestUniFvaeInvoiceSchema),
     defaultValues,
   });
 
@@ -139,7 +139,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           .replace(
             "Hours",
             "EffectiveHours",
-          ) as keyof PaymentRequestUniFvaeFormData;
+          ) as keyof PaymentRequestUniFvaeInvoiceFormData;
 
         setError(fieldName, {
           message,

@@ -1,13 +1,13 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Control } from "react-hook-form";
-import { PaymentRequestUniFvaeFormData } from "../../paymentRequestUnifvaeInvoiceFormSchema";
+import { PaymentRequestUniFvaeInvoiceFormData } from "../../paymentRequestUnifvaeInvoiceFormSchema";
 
 export const HourInput = ({
   control,
   name,
 }: {
-  control: Control<PaymentRequestUniFvaeFormData>;
-  name: keyof PaymentRequestUniFvaeFormData;
+  control: Control<PaymentRequestUniFvaeInvoiceFormData>;
+  name: keyof PaymentRequestUniFvaeInvoiceFormData;
 }) => (
   <Input
     label="NOMBRE D'HEURES"
