@@ -5,10 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 
 export const SendFileCandidateSection = ({
   sentToCandidateAt,
-  isComplete,
+  isReadyToBeSentToCandidate,
 }: {
   sentToCandidateAt?: Date | null;
-  isComplete?: boolean;
+  isReadyToBeSentToCandidate?: boolean;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -28,7 +28,7 @@ export const SendFileCandidateSection = ({
       )}
       <div className="flex justify-end">
         <Button
-          disabled={!isComplete}
+          disabled={!isReadyToBeSentToCandidate}
           priority={sentToCandidateAt ? "secondary" : "primary"}
           onClick={() => {
             router.push(

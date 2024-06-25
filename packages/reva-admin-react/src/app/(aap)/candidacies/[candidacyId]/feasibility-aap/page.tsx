@@ -110,7 +110,9 @@ const AapFeasibilityPage = () => {
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
-            isComplete={dematerializedFeasibilityFile?.isComplete}
+            isReadyToBeSentToCandidate={
+              dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
+            }
           />
           <CandidateValidationCard
             sentToCandidateAt={

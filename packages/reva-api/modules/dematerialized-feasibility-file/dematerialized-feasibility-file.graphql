@@ -1,7 +1,6 @@
 type DematerializedFeasibilityFile {
   id: ID!
   candidacyId: ID!
-  isComplete: Boolean!
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
@@ -19,6 +18,8 @@ type DematerializedFeasibilityFile {
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp
   swornStatementFileId: ID
+  isReadyToBeSentToCandidate: Boolean!
+  isReadyToBeSentToCertificationAuthority: Boolean!
 }
 
 type Prerequisite {

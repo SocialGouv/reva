@@ -1,5 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
+import { DematerializedFeasibilityFile } from "@prisma/client";
 import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
 import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
@@ -11,7 +12,7 @@ import {
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
   DematerializedFeasibilityFileSubmitSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
-import { checkIsDFFCompletedById } from "./features/checkIsDFFCompletedById";
+import { checkIsDFFReadyToBeSentToCandidateById } from "./features/checkIsDFFReadyToBeSentToCandidateById";
 import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
@@ -23,8 +24,9 @@ import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertific
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
-import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
 import { submitSwornStatement } from "./features/submitSwornStatement";
+import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
+import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -53,8 +55,18 @@ export const unsafeResolvers = {
       getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls({
         dematerializedFeasibilityFileId,
       }),
-    isComplete: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
-      checkIsDFFCompletedById({ dematerializedFeasibilityFileId }),
+    isReadyToBeSentToCandidate: (
+      dematerializedFeasibilityFile: DematerializedFeasibilityFile,
+    ) =>
+      checkIsDFFReadyToBeSentToCandidateById({
+        dematerializedFeasibilityFile,
+      }),
+    isReadyToBeSentToCertificationAuthority: (
+      dematerializedFeasibilityFile: DematerializedFeasibilityFile,
+    ) =>
+      checkIsDFFReadyToBeSentToCertificationAuthorityById({
+        dematerializedFeasibilityFile,
+      }),
     candidacy: ({ candidacyId }: { candidacyId: string }) =>
       getCandidacyWithCandidateByCandidacyId({ candidacyId }),
   },

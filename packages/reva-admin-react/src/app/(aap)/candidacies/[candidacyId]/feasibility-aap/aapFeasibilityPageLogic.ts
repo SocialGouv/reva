@@ -11,7 +11,8 @@ const getCandidacyById = graphql(`
         codeRncp
       }
       dematerializedFeasibilityFile {
-        isComplete
+        isReadyToBeSentToCandidate
+        isReadyToBeSentToCertificationAuthority
         sentToCandidateAt
         certificationPartComplete
         competenceBlocsPartCompletion
