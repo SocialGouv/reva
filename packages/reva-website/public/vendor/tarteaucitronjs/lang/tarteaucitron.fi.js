@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Hei! Tämä sivusto antaa sinun valita ja hallita kolmansien osapuolten asettamia evästeitä.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "acceptAll": "OK, hyväksy kaikki",
     "personalize": "Personoi",
     "close": "Sulje",
+    "closeBanner": "Piilota evästebanneri",
 
     "privacyUrl": "Tietosuoja",
 
@@ -53,7 +55,7 @@ tarteaucitron.lang = {
     },
     "analytic": {
         "title": "Yleisön mittaaminen",
-        "details": "Les services de mesure d'audience permettent de générer des statistiques de fréquentation utiles à l'amélioration du site."
+        "details": "Yleisömittauspalveluja käytetään kävijätilastojen tuottamiseen, joista on hyötyä sivuston parantamisessa."
     },
     "social": {
         "title": "Sosiaaliset verkostot",
@@ -82,7 +84,15 @@ tarteaucitron.lang = {
         "title": "Muut",
         "details": "Palvelut web-sisältöjen näyttämiseen."
     },
+
+    "google": {
+        "title": "Erityinen suostumus Googlen palveluille",
+        "details": "Google voi käyttää tietojasi yleisön mittaamiseen, mainosvaikutusten arviointiin tai tarjotakseen sinulle personoituja mainoksia."
+    },
     
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+    "mandatoryTitle": "Tarpeelliset evästeet",
+    "mandatoryText": "Tämä sivusto käyttää evästeitä, jotka ovat välttämättömiä sen asianmukaisen toiminnan kannalta. Niitä ei voi poistaa käytöstä.",
+
+    "save": "Tallenna",
+    "ourpartners": "Kumppanimme"
 };
