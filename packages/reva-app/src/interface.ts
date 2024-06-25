@@ -131,20 +131,36 @@ export interface File {
   url: string;
 }
 
-export enum FeasibilityDecision {
+export enum FeasibilityPdfDecision {
   PENDING = "PENDING",
   REJECTED = "REJECTED",
   ADMISSIBLE = "ADMISSIBLE",
   INCOMPLETE = "INCOMPLETE",
 }
 
-export interface Feasibility {
+export enum FeasibilityFormat {
+  UPLOADED_PDF = "UPLOADED_PDF",
+  DEMATERIALIZED = "DEMATERIALIZED",
+}
+
+export interface FeasibilityPdf {
   id: string;
   feasibilityFileSentAt: Date;
-  decision: FeasibilityDecision;
+  decision: FeasibilityPdfDecision;
   decisionComment?: string;
   decisionSentAt?: Date;
   decisionFile?: File;
+}
+
+export interface FeasibilityDemat {
+  id: string;
+  isComplete: boolean;
+  firstForeignLanguage?: string;
+  secondForeignLanguage?: string;
+  certificationPartComplete: boolean;
+  attachmentsPartComplete: boolean;
+  prerequisitesPartComplete: boolean;
+  swornStatementFileId?: string;
 }
 
 export enum DossierDeValidationDecision {

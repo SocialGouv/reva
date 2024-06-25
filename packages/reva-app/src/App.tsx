@@ -1,5 +1,6 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { CertificateDetails } from "pages/CertificateDetails";
+import { FeasibilityDematSubmission } from "pages/FeasibilityDematSubmission";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect, useRef } from "react";
 
@@ -143,6 +144,12 @@ function App() {
     </ScrollTopWrapper>
   );
 
+  const feasibilityDematSubmissionPage = () => (
+    <ScrollTopWrapper>
+      <FeasibilityDematSubmission />
+    </ScrollTopWrapper>
+  );
+
   const pageContent = (
     <>
       {["loadingCertifications", "searchResults", "searchResultsError"].some(
@@ -181,6 +188,9 @@ function App() {
           />
         </ScrollTopWrapper>
       )}
+
+      {state.matches("feasibilityDematSubmission") &&
+        feasibilityDematSubmissionPage()}
 
       {state.matches("projectHome") || state.matches("trainingProgramConfirmed")
         ? projectHomePage({

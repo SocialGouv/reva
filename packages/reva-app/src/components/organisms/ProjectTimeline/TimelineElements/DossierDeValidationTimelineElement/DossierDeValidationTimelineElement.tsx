@@ -1,11 +1,11 @@
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
-import { DossierDeValidationDecision, FeasibilityDecision } from "interface";
+import { DossierDeValidationDecision, FeasibilityPdfDecision } from "interface";
 
 export const DossierDeValidationTimelineElement = () => {
   const { state } = useMainMachineContext();
 
-  const { dossierDeValidation, feasibility } = state.context;
+  const { dossierDeValidation, feasibilityPdf: feasibility } = state.context;
 
   const PENDING =
     dossierDeValidation?.decision === DossierDeValidationDecision.PENDING;
@@ -23,7 +23,7 @@ export const DossierDeValidationTimelineElement = () => {
     : "fr-icon-information-fill";
 
   const FEASIBILITY_ADMISSIBLE =
-    feasibility?.decision === FeasibilityDecision.ADMISSIBLE;
+    feasibility?.decision === FeasibilityPdfDecision.ADMISSIBLE;
 
   return (
     <TimelineElement

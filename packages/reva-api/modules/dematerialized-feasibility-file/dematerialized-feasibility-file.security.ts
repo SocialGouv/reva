@@ -1,3 +1,9 @@
+import { isCandidateOwnerOfCandidacy } from "../candidacy/security/isCandidateOwnerOfCandidacy.security";
+import {
+  hasRole,
+  isCandidacyOwner,
+  whenHasRole,
+} from "../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
@@ -25,4 +31,9 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_sendToCandidate":
     isAdminOrCandidacyCompanion,
+  "Mutation.dematerialized_feasibility_file_submitSwornStatement": [
+    hasRole(["admin", "manage_candidacy", "candidate"]),
+    whenHasRole("manage_candidacy", isCandidacyOwner),
+    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+  ],
 };

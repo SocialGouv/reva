@@ -299,6 +299,7 @@ const CANDIDACY_SELECTION = `
       mandatoryTrainings {
         label
       }
+      feasibilityFormat
       feasibility {
         id
         feasibilityFileSentAt
@@ -309,6 +310,16 @@ const CANDIDACY_SELECTION = `
           name
           url
         }
+      }
+      dematerializedFeasibilityFile {
+        id
+        isComplete
+        firstForeignLanguage
+        secondForeignLanguage
+        certificationPartComplete
+        attachmentsPartComplete
+        prerequisitesPartComplete
+        swornStatementFileId
       }
       activeDossierDeValidation {
         id
@@ -333,6 +344,14 @@ const CANDIDACY_SELECTION = `
       }
       financeModule
       `;
+
+const GET_CANDIDACY_BY_ID = gql`
+  query getCandidacyById($id: ID!) {
+    getCandidacyById(id: $id) {
+      ${CANDIDACY_SELECTION}
+    }
+  }
+`;
 
 const CONFIRM_REGISTRATION = gql`
   mutation candidate_login($token: String!) {
@@ -513,4 +532,35 @@ export const confirmTrainingForm =
     client.mutate({
       mutation: CONFIRM_TRAINING_FORM,
       variables: { candidacyId },
+    });
+
+const SUBMIT_SWORN_STATEMENT = gql`
+  mutation dematerialized_feasibility_file_submitSwornStatement(
+    $candidacyId: ID!
+    $swornStatement: Upload!
+  ) {
+    dematerialized_feasibility_file_submitSwornStatement(
+      input: { candidacyId: $candidacyId, swornStatement: $swornStatement }
+    ) {
+      id
+    }
+  }
+`;
+
+export const submitSwornStatement =
+  (client: ApolloClient<object>) =>
+  ({
+    candidacyId,
+    swornStatement,
+  }: {
+    candidacyId: string;
+    swornStatement: File;
+  }) =>
+    client.mutate({
+      mutation: SUBMIT_SWORN_STATEMENT,
+      variables: { candidacyId, swornStatement },
+      awaitRefetchQueries: true,
+      refetchQueries: [
+        { query: GET_CANDIDACY_BY_ID, variables: { id: candidacyId } },
+      ],
     });

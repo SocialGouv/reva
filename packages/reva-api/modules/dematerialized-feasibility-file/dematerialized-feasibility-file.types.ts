@@ -35,6 +35,11 @@ export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   additionalFiles?: GraphqlUploadedFile[];
 }
 
+export interface DematerializedFeasibilityFileSubmitSwornStatementInput {
+  candidacyId: string;
+  swornStatement: GraphqlUploadedFile;
+}
+
 export type DematerializedFeasibilityFileType =
   | "ID_CARD"
   | "EQUIVALENCE_OR_EXEMPTION_PROOF"

@@ -8,7 +8,9 @@ import {
   DossierDeValidation,
   Experience,
   Experiences,
-  Feasibility,
+  FeasibilityDemat,
+  FeasibilityFormat,
+  FeasibilityPdf,
   FinanceModule,
   Goal,
   Jury,
@@ -35,6 +37,7 @@ const projectOrganism = "projectOrganism";
 const projectDroppedOut = "projectDroppedOut";
 const trainingProgramSummary = "trainingProgramSummary";
 const trainingProgramConfirmed = "trainingProgramConfirmed";
+const feasibilityDematSubmission = "feasibilityDematSubmission";
 const projectSubmissionConfirmation = "projectSubmissionConfirmation";
 const error = "error";
 
@@ -54,6 +57,7 @@ export type State =
   | typeof projectDroppedOut
   | typeof trainingProgramSummary
   | typeof trainingProgramConfirmed
+  | typeof feasibilityDematSubmission
   | typeof projectSubmissionConfirmation;
 
 export const INVALID_REGISTRATION_TOKEN_ERROR =
@@ -89,7 +93,9 @@ export interface MainContext {
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
   firstAppointmentOccuredAt?: Date;
-  feasibility?: Feasibility;
+  feasibilityFormat?: FeasibilityFormat;
+  feasibilityPdf?: FeasibilityPdf;
+  feasibilityDemat?: FeasibilityDemat;
   dossierDeValidation?: DossierDeValidation;
   jury?: Jury;
   candidacyFinanceModule: FinanceModule;
@@ -156,6 +162,7 @@ export type MainEvent =
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" }
   | { type: "OPEN_TRAINING_PROGRAM_SUMMARY" }
+  | { type: "OPEN_FEASIBILITY_DEMAT_SUBMISSION" }
   | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
@@ -200,6 +207,7 @@ export type MainState =
         | typeof projectContactConfirmation
         | typeof projectExperience
         | typeof projectOrganism
+        | typeof feasibilityDematSubmission
         | typeof error;
 
       context: MainContext & {
@@ -288,7 +296,9 @@ export const mainMachine =
           isCertificationPartial: false,
           isTrainingProgramConfirmed: false,
           certificationSearchText: "",
-          feasibility: undefined,
+          feasibilityFormat: undefined,
+          feasibilityPdf: undefined,
+          feasibilityDemat: undefined,
           dossierDeValidation: undefined,
           jury: undefined,
           candidacyFinanceModule: "hors_plateforme",
@@ -301,6 +311,9 @@ export const mainMachine =
           },
           UPDATE_CONTACT: {
             target: "projectContact",
+          },
+          OPEN_FEASIBILITY_DEMAT_SUBMISSION: {
+            target: "feasibilityDematSubmission",
           },
         },
         states: {
@@ -496,6 +509,18 @@ export const mainMachine =
                   target: "searchResults",
                 },
               ],
+            },
+          },
+          feasibilityDematSubmission: {
+            initial: "idle",
+            states: {
+              idle: {
+                on: {
+                  BACK: {
+                    target: "#mainMachine.projectHome",
+                  },
+                },
+              },
             },
           },
           submissionHome: {},
@@ -1013,6 +1038,9 @@ export const mainMachine =
               OPEN_TRAINING_PROGRAM_SUMMARY: {
                 target: "trainingProgramSummary",
               },
+              OPEN_FEASIBILITY_DEMAT_SUBMISSION: {
+                target: "feasibilityDematSubmission",
+              },
               EDIT_EXPERIENCE: {
                 actions: assign({
                   certification: (context, _event) => context.certification,
@@ -1131,7 +1159,10 @@ export const mainMachine =
                   event.data.candidacy?.candidacyStatus,
                   event.data.candidacy?.candidacyStatuses,
                 ),
-              feasibility: event.data.candidacy?.feasibility,
+              feasibilityFormat: event.data.candidacy?.feasibilityFormat,
+              feasibilityPdf: event.data.candidacy?.feasibility,
+              feasibilityDemat:
+                event.data.candidacy?.dematerializedFeasibilityFile,
               dossierDeValidation:
                 event.data.candidacy?.activeDossierDeValidation,
               jury: event.data.candidacy?.jury,

@@ -77,6 +77,30 @@ export const uploadFile = async (
   }
 };
 
+function wait(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+const uploadWithRetry = async (
+  file: FileInterface,
+  data: Buffer,
+  retry = 0,
+) => {
+  await uploadFile(file, data);
+
+  const exists = await fileExists(file);
+  if (!exists && retry < 3) {
+    await wait(1000);
+    await uploadWithRetry(file, data, retry + 1);
+  } else if (!exists) {
+    throw new Error(
+      `Une erreur est survenue lors de l'envoi de(s) fichier(s). Veuillez réessayer.`,
+    );
+  }
+};
+
 export const deleteFile = async (fileKeyPath: string): Promise<void> => {
   const command = new DeleteObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
@@ -159,10 +183,41 @@ export const uploadFileToS3 = ({
   filePath: string;
   file: UploadedFile;
 }) =>
-  uploadFile(
+  uploadWithRetry(
     {
       fileKeyPath: filePath,
       fileType: file.mimetype,
     },
     file._buf,
   );
+
+export const uploadFilesToS3 = async (
+  files: {
+    filePath: string;
+    file: UploadedFile;
+  }[],
+) => {
+  try {
+    for (const data of files) {
+      await uploadWithRetry(
+        {
+          fileKeyPath: data.filePath,
+          fileType: data.file.mimetype,
+        },
+        data.file._buf,
+      );
+    }
+
+    return;
+  } catch (error) {
+    console.error(error);
+  }
+
+  for (const data of files) {
+    await deleteFile(data.filePath);
+  }
+
+  throw new Error(
+    `Une erreur est survenue lors de l'envoi de(s) fichier(s). Veuillez réessayer.`,
+  );
+};

@@ -18,6 +18,7 @@ type DematerializedFeasibilityFile {
   attachments: [DFFAttachment]!
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp
+  swornStatementFileId: ID
 }
 
 type Prerequisite {
@@ -121,6 +122,11 @@ input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   additionalFiles: [Upload]
 }
 
+input DematerializedFeasibilityFileSubmitSwornStatementInput {
+  candidacyId: ID!
+  swornStatement: Upload!
+}
+
 type Query {
   dematerialized_feasibility_file_getByCandidacyId(
     candidacyId: ID!
@@ -151,4 +157,8 @@ type Mutation {
   dematerialized_feasibility_file_sendToCandidate(
     dematerializedFeasibilityFileId: ID!
   ): String!
+
+  dematerialized_feasibility_file_submitSwornStatement(
+    input: DematerializedFeasibilityFileSubmitSwornStatementInput!
+  ): DematerializedFeasibilityFile!
 }

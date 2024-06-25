@@ -9,6 +9,7 @@ import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
   DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
+  DematerializedFeasibilityFileSubmitSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
 import { checkIsDFFCompletedById } from "./features/checkIsDFFCompletedById";
 import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
@@ -23,6 +24,7 @@ import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDem
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
+import { submitSwornStatement } from "./features/submitSwornStatement";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -111,12 +113,20 @@ export const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput;
       },
     ) => createOrUpdateAttachments(input),
+
     dematerialized_feasibility_file_sendToCandidate: (
       _parent: unknown,
       {
         dematerializedFeasibilityFileId,
       }: { dematerializedFeasibilityFileId: string },
     ) => updateSentToCandidateAtNow({ dematerializedFeasibilityFileId }),
+
+    dematerialized_feasibility_file_submitSwornStatement: (
+      _parent: unknown,
+      params: {
+        input: DematerializedFeasibilityFileSubmitSwornStatementInput;
+      },
+    ) => submitSwornStatement(params.input),
   },
 };
 

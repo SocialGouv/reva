@@ -24,7 +24,7 @@ export const canAccessCandidacy = async ({
   }
 
   //user is candidate
-  if (roles.length === 0) {
+  if (roles.length === 0 || roles.indexOf("candidate") != -1) {
     const candidate = await prismaClient.candidate.findFirst({
       where: { keycloakId },
     });

@@ -1,17 +1,18 @@
 import { Timeline } from "components/molecules/Timeline/Timeline";
 import { FeasibilityAppointmentTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/FeasibilityAppointmentTimelineElement/FeasibilityAppointmentTimelineElement";
-import { FeasibilityTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/FeasibilityTimelineElement/FeasibilityTimelineElement";
+import { FeasibilityPdfTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/FeasibilityPdfTimelineElement/FeasibilityPdfTimelineElement";
 import { ProjectEndedTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
 import { TrainingProgramTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { isBefore } from "date-fns";
-import { FeasibilityDecision } from "interface";
+import { FeasibilityFormat, FeasibilityPdfDecision } from "interface";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
 import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
 import { ExperiencesTimelineElement } from "./TimelineElements/ExperiencesTimelineElement/ExperiencesTimelineElement";
+import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
 import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/GoalsTimelineElement";
 import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
 import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
@@ -25,8 +26,8 @@ export const ProjectTimeline = ({
 }) => {
   const { state } = useMainMachineContext();
 
-  const { feasibility, jury } = state.context;
-  const REJECTED = feasibility?.decision === FeasibilityDecision.REJECTED;
+  const { feasibilityFormat, feasibilityPdf, jury } = state.context;
+  const REJECTED = feasibilityPdf?.decision === FeasibilityPdfDecision.REJECTED;
 
   return (
     <Timeline className={className} data-test={dataTest}>
@@ -38,7 +39,11 @@ export const ProjectTimeline = ({
       <ProjectSubmissionTimelineElement />
       <FeasibilityAppointmentTimelineElement />
       <TrainingProgramTimelineElement />
-      <FeasibilityTimelineElement />
+      {feasibilityFormat === FeasibilityFormat.UPLOADED_PDF ? (
+        <FeasibilityPdfTimelineElement />
+      ) : (
+        <FeasibilityDematTimelineElement />
+      )}
       {!REJECTED && (
         <>
           <DossierDeValidationTimelineElement />

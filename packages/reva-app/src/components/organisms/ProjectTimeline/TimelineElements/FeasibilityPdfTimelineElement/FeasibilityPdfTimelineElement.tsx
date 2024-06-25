@@ -2,17 +2,19 @@ import { AuthenticatedLink } from "components/atoms/AuthenticatedLink/Authentica
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { format } from "date-fns";
-import { FeasibilityDecision } from "interface";
+import { FeasibilityPdfDecision } from "interface";
 
-export const FeasibilityTimelineElement = () => {
+export const FeasibilityPdfTimelineElement = () => {
   const { state } = useMainMachineContext();
 
-  const { feasibility } = state.context;
+  const { feasibilityPdf: feasibility } = state.context;
 
-  const PENDING = feasibility?.decision === FeasibilityDecision.PENDING;
-  const INCOMPLETE = feasibility?.decision === FeasibilityDecision.INCOMPLETE;
-  const ADMISSIBLE = feasibility?.decision === FeasibilityDecision.ADMISSIBLE;
-  const REJECTED = feasibility?.decision === FeasibilityDecision.REJECTED;
+  const PENDING = feasibility?.decision === FeasibilityPdfDecision.PENDING;
+  const INCOMPLETE =
+    feasibility?.decision === FeasibilityPdfDecision.INCOMPLETE;
+  const ADMISSIBLE =
+    feasibility?.decision === FeasibilityPdfDecision.ADMISSIBLE;
+  const REJECTED = feasibility?.decision === FeasibilityPdfDecision.REJECTED;
 
   let text = `Si le dossier de faisabilité est jugé recevable par le certificateur, alors vous pourrez démarrer l'étape du Dossier de validation, avec l'accompagnement et les éventuelles formations prévues au moment de la Définition du parcours pédagogique.`;
 
