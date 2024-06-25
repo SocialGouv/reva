@@ -112,8 +112,9 @@ const ModalitesAccompagnementPage = () => {
       <h1>Modalités d'accompagnement</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
-        Renseignez les informations qui seront partagées aux candidats puis
-        paramétrez vos modalités d’accompagnement (présentiel ou distanciel).
+        Renseignez vos informations et modalités d’accompagnement (présentiel ou
+        distanciel). Les candidats auront accès à ces éléments lors de leurs
+        recherches.
       </p>
 
       {getOrganismStatus === "success" && (
@@ -128,10 +129,9 @@ const ModalitesAccompagnementPage = () => {
           >
             <h2>Informations affichées au candidat</h2>
             <p>
-              Ces informations seront affichées aux candidats dans leurs
-              résultats de recherche et dans le message récapitulant leur
-              candidature. Si vous ne les enregistrez pas, nous afficherons les
-              informations juridiques et administrateur par défaut.
+              Les candidats auront accès à ces informations lors de leurs
+              recherches. Elles apparaîtront également dans le mail
+              récapitulatif de leur candidature.
             </p>
             <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
               <div>
@@ -166,7 +166,7 @@ const ModalitesAccompagnementPage = () => {
                 <SmallNotice>
                   <span className="text-xs">
                     Ce numéro de téléphone sera également envoyé aux candidats
-                    dans le message récapitulant leur inscription.
+                    dans le récapitulatif de leur candidature.
                   </span>
                 </SmallNotice>
               </div>
@@ -181,8 +181,8 @@ const ModalitesAccompagnementPage = () => {
                 />
                 <SmallNotice>
                   <span className="text-xs">
-                    Cet e-mail sera également envoyé aux candidats dans le
-                    message récapitulant leur inscription.
+                    Cet e-mail sera également envoyé aux candidats dans le le
+                    récapitulatif de leur candidature.
                   </span>
                 </SmallNotice>
               </div>
@@ -295,7 +295,7 @@ const ModalitesAccompagnementPage = () => {
                   )}
                   <Checkbox
                     disabled={!isRemote}
-                    legend="Quels zones seront couvertes en distanciel ?"
+                    legend="Quelles zones seront couvertes en distanciel ?"
                     options={[
                       {
                         label: "France métropolitaine",

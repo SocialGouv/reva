@@ -99,10 +99,9 @@ const AddAgencyPage = () => {
                   Informations affichées au candidat
                 </legend>
                 <p>
-                  Ces informations seront affichées aux candidats dans leurs
-                  résultats de recherche et dans le message récapitulant leur
-                  candidature. Si vous ne les enregistrez pas, nous afficherons
-                  les informations juridiques et administrateur par défaut.
+                  Les candidats auront accès à ces informations lors de leurs
+                  recherches. Elles apparaîtront également dans le mail
+                  récapitulatif de leur candidature.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
@@ -142,7 +141,7 @@ const AddAgencyPage = () => {
                     />
                     <SmallNotice>
                       Ce numéro de téléphone sera également envoyé aux candidats
-                      dans le message récapitulant leur inscription.
+                      dans le récapitulatif de leur candidature.
                     </SmallNotice>
                   </div>
 
@@ -155,8 +154,8 @@ const AddAgencyPage = () => {
                       stateRelatedMessage={errors.emailContact?.message?.toString()}
                     />
                     <SmallNotice>
-                      Cet e-mail sera également envoyé aux candidats dans le
-                      message récapitulant leur inscription.
+                      Cet e-mail sera également envoyé aux candidats dans le le
+                      récapitulatif de leur candidature.
                     </SmallNotice>
                   </div>
                 </div>
@@ -182,6 +181,7 @@ const AddAgencyPage = () => {
                     hintText="(optionnel)"
                     nativeInputProps={{
                       ...register("adresseInformationsComplementaires"),
+                      autoComplete: "off",
                     }}
                     state={
                       errors.adresseInformationsComplementaires

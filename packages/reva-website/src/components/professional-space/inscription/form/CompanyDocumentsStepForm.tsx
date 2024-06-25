@@ -133,9 +133,11 @@ export const CompanyDocumentsStepForm = () => {
                 (recto/verso) ou un passeport en cours de validité.
                 <br />
                 <span className="font-medium">
-                  Veillez à ce que votre photocopie soit lisible, non tronquée,
-                  bien cadrée et y apporter la mention manuscrite « Certifiée
-                  conforme à l’original », datée et signée par le dirigeant.
+                  Veillez à ce que la photocopie soit lisible, non tronquée,
+                  bien cadrée et qu’y soient apposés, par le dirigeant lui-même,
+                  la mention manuscrite “J’atteste que je suis à l’origine de la
+                  fourniture du présent justificatif d’identité”, ses nom et
+                  prénom, la date du jour ainsi qu’une signature.
                 </span>
               </>
             }
@@ -165,8 +167,8 @@ export const CompanyDocumentsStepForm = () => {
                 title="Copie du justificatif d'identité du délégataire"
                 description={
                   <>
-                    La pièce d’identité peut être une carte nationale d’identité
-                    en cours de validité ou périmée de moins de 5 ans
+                    Le justificatif d'identité peut être une carte nationale
+                    d’identité en cours de validité ou périmée de moins de 5 ans
                     (recto/verso) ou un passeport en cours de validité.
                     <br />
                     <strong>

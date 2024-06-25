@@ -210,7 +210,8 @@ const CertificationsPage = () => {
             <Checkbox
               legend={
                 <p className="text-sm">
-                  Quels sont les niveaux de certifications que vous couvrez ?{" "}
+                  Quels sont les niveaux de certification couverts sur vos
+                  filières sélectionnées ?
                 </p>
               }
               options={organismDegreesFields.map((od, odIndex) => ({

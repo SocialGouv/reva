@@ -91,10 +91,12 @@ const NeedUpdateStatusBlock = ({
           ))}
         </div>
       )}
-      <Badge severity="warning" className="mb-8">À mettre à jour</Badge>
+      <Badge severity="warning" className="mb-8">
+        À mettre à jour
+      </Badge>
       <br />
       <p>
-        Pour s'assurer de la conformité des inscriptions, nous vérifions les
+        Pour nous assurer de la conformité des inscriptions, nous vérifions les
         documents administratifs et légaux de chaque organisme d'accompagnement.
       </p>
       <p>Voici les documents en version numérique que vous devez préparer :</p>
@@ -108,8 +110,10 @@ const NeedUpdateStatusBlock = ({
           attestation de vigilance, attestation fiscale.
         </li>
         <li>
-          Une copie du justificatif d'identité du dirigeant "certifiée conforme
-          à l'original” signée par lui-même
+          Une copie du justificatif d’identité du dirigeant faisant apparaître
+          son nom et prénom, ainsi que la mention suivante : «J’atteste avoir
+          fourni le présent justificatif d’identité.» Il devra également dater
+          et signer le justificatif.
         </li>
       </ul>
       <br />
