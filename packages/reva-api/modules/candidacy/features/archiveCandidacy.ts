@@ -47,12 +47,18 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   }
 
   if (params.reorientationReasonId) {
-    const r = await getReorientationReasonById({
-      reorientationReasonId: params.reorientationReasonId || "",
-    });
-    if (!r) {
+    try {
+      const r = await getReorientationReasonById({
+        reorientationReasonId: params.reorientationReasonId || "",
+      });
+      if (!r) {
+        throw new Error(
+          `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide`,
+        );
+      } 
+    } catch (error) {
       throw new Error(
-        `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON  }"La raison de réorientation n'est pas valide`,
+        `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide: ${error}`,
       );
     }
   }
