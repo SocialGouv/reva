@@ -1,10 +1,10 @@
 "use client";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams, useRouter } from "next/navigation";
 import DffSummary from "../_components/DffSummary/DffSummary";
 import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
-import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
 
 export default function SendFileCandidatePage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
@@ -43,7 +43,12 @@ export default function SendFileCandidatePage() {
         >
           Retour
         </Button>
-        <Button onClick={handleSendFile}>Envoyer au candidat</Button>
+        <Button
+          onClick={handleSendFile}
+          disabled={!!dematerializedFeasibilityFile?.sentToCandidateAt}
+        >
+          Envoyer au candidat
+        </Button>
       </div>
     </div>
   );
