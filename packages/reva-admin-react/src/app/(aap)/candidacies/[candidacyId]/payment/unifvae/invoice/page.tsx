@@ -21,6 +21,7 @@ import {
   PaymentRequestUniFvaeInvoiceFormData,
   paymentRequestUniFvaeInvoiceSchema,
 } from "./paymentRequestUnifvaeInvoiceFormSchema";
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -69,6 +70,17 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     [candidacy],
   );
 
+  const activeCandidacyStatus = candidacy?.candidacyStatuses?.find(
+    (c) => c.isActive,
+  )?.status;
+
+  const paymentRequestAlreadySent =
+    activeCandidacyStatus &&
+    isCandidacyStatusEqualOrAbove(
+      activeCandidacyStatus,
+      "DEMANDE_PAIEMENT_ENVOYEE",
+    );
+
   const {
     register,
     control,
@@ -81,6 +93,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
   } = useForm<PaymentRequestUniFvaeInvoiceFormData>({
     resolver: zodResolver(paymentRequestUniFvaeInvoiceSchema),
     defaultValues,
+    disabled: paymentRequestAlreadySent,
   });
 
   const {
@@ -410,12 +423,14 @@ const PaymentRequestUniFvaeInvoicePage = () => {
               </>
             )}
           </Section>
-          <FormButtons
-            formState={{
-              isDirty: true,
-              isSubmitting: formState.isSubmitting,
-            }}
-          />
+          {!paymentRequestAlreadySent && (
+            <FormButtons
+              formState={{
+                isDirty: true,
+                isSubmitting: formState.isSubmitting,
+              }}
+            />
+          )}
         </form>
       )}
     </div>
