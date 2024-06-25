@@ -3,7 +3,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { useCallback, useEffect } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
@@ -11,6 +11,9 @@ import { z } from "zod";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { Section } from "../_components/form/Section";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { REST_API_URL } from "@/config/config";
+import { successToast, errorToast } from "@/components/toast/toast";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 const paymentRequestUniFvaeUploadSchema = z.object({
   invoiceFile: z.object({
@@ -49,6 +52,8 @@ const PaymentRequestUniFvaeUploadPage = () => {
     candidacyId: string;
   }>();
 
+  const { accessToken } = useKeycloakContext();
+  const router = useRouter();
   const {
     register,
     reset,
@@ -61,9 +66,33 @@ const PaymentRequestUniFvaeUploadPage = () => {
 
   const handleFormSubmit = handleSubmit(
     async (data) => {
-      console.log({ data });
+      const formData = new FormData();
+
+      formData.append("candidacyId", candidacyId);
+      formData.append("invoice", data.invoiceFile?.[0]);
+      formData.append(
+        "certificateOfAttendance",
+        data.certificateOfAttendanceFile?.[0],
+      );
+
+      const result = await fetch(
+        `${REST_API_URL}/payment-request-unifvae/confirmation`,
+        {
+          method: "post",
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+          body: formData,
+        },
+      );
+      if (result.ok) {
+        successToast("Demande de paiement envoyée");
+        router.push(`/candidacies/${candidacyId}/summary`);
+      } else {
+        errorToast(await result.text());
+      }
     },
-    (e) => console.log(e),
+    (e) => console.log({ e }),
   );
 
   const handleReset = useCallback(() => {
