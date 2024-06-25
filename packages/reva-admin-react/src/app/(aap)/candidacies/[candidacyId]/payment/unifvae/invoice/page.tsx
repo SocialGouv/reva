@@ -4,7 +4,7 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { usePaymentRequestUniFvaeInvoicePage } from "./paymentRequestUniFvaeInvoice.hook";
 import { Gender } from "@/graphql/generated/graphql";
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useEffect, useMemo } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useParams } from "next/navigation";
 import { z } from "zod";
@@ -12,21 +12,23 @@ import { Control, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const paymentRequestUniFvaeSchema = z.object({
-  invoiceNumber: z.string(),
-  individualEffectiveHourCount: z.number(),
-  individualEffectiveCost: z.number(),
-  collectiveEffectiveHourCount: z.number(),
-  collectiveEffectiveCost: z.number(),
-  mandatoryTrainingsEffectiveHourCount: z.number(),
-  mandatoryTrainingsEffectiveCost: z.number(),
-  basicSkillsEffectiveHourCount: z.number(),
-  basicSkillsEffectiveCost: z.number(),
-  certificateSkillsEffectiveHourCount: z.number(),
-  certificateSkillsEffectiveCost: z.number(),
-  otherTrainingEffectiveHourCount: z.number(),
-  otherTrainingEffectiveCost: z.number(),
+  invoiceNumber: z.string().min(1, "Ce champ est obligatoire"),
+  individualEffectiveHourCount: z.number().default(0),
+  individualEffectiveCost: z.number().default(0),
+  collectiveEffectiveHourCount: z.number().default(0),
+  collectiveEffectiveCost: z.number().default(0),
+  mandatoryTrainingsEffectiveHourCount: z.number().default(0),
+  mandatoryTrainingsEffectiveCost: z.number().default(0),
+  basicSkillsEffectiveHourCount: z.number().default(0),
+  basicSkillsEffectiveCost: z.number().default(0),
+  certificateSkillsEffectiveHourCount: z.number().default(0),
+  certificateSkillsEffectiveCost: z.number().default(0),
+  otherTrainingEffectiveHourCount: z.number().default(0),
+  otherTrainingEffectiveCost: z.number().default(0),
 });
 
 export type PaymentRequestUniFvaeFormData = z.infer<
@@ -38,15 +40,52 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     candidacyId: string;
   }>();
 
-  const { candidacy, getCandidacyStatus } =
+  const { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUnifvae } =
     usePaymentRequestUniFvaeInvoicePage();
+
+  const defaultValues = useMemo(
+    () => ({
+      invoiceNumber: candidacy?.paymentRequestUnifvae?.invoiceNumber,
+      individualEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae?.individualEffectiveHourCount || 0,
+      individualEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.individualEffectiveCost || 0,
+      collectiveEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae?.collectiveEffectiveHourCount || 0,
+      collectiveEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.collectiveEffectiveCost || 0,
+      mandatoryTrainingsEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae
+          ?.mandatoryTrainingsEffectiveHourCount || 0,
+      mandatoryTrainingsEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.mandatoryTrainingsEffectiveCost || 0,
+      basicSkillsEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae?.basicSkillsEffectiveHourCount || 0,
+      basicSkillsEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.basicSkillsEffectiveCost || 0,
+      certificateSkillsEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae?.certificateSkillsEffectiveHourCount ||
+        0,
+      certificateSkillsEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.certificateSkillsEffectiveCost || 0,
+      otherTrainingEffectiveHourCount:
+        candidacy?.paymentRequestUnifvae?.otherTrainingEffectiveHourCount || 0,
+      otherTrainingEffectiveCost:
+        candidacy?.paymentRequestUnifvae?.otherTrainingEffectiveCost || 0,
+    }),
+    [candidacy],
+  );
 
   const {
     register,
     control,
+    reset,
+    formState,
     formState: { errors },
+    handleSubmit,
   } = useForm<PaymentRequestUniFvaeFormData>({
     resolver: zodResolver(paymentRequestUniFvaeSchema),
+    defaultValues,
   });
 
   const {
@@ -85,6 +124,25 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       (certificateSkillsEffectiveCost || 0) +
     (otherTrainingEffectiveHourCount || 0) * (otherTrainingEffectiveCost || 0);
 
+  const handleFormSubmit = handleSubmit(async (data) => {
+    try {
+      await createOrUpdatePaymentRequestUnifvae.mutateAsync({
+        paymentRequest: data,
+      });
+      successToast("Modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  });
+
+  const handleReset = useCallback(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
+  useEffect(() => {
+    handleReset();
+  }, [handleReset]);
+
   return (
     <div className="flex flex-col w-full p-1 md:p-2">
       <CandidacyBackButton candidacyId={candidacyId} />
@@ -114,7 +172,14 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       />
       <hr />
       {getCandidacyStatus === "success" && candidacy && (
-        <div className="flex flex-col">
+        <form
+          className="flex flex-col"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            handleReset();
+          }}
+        >
           <Section title="1. Informations du candidat">
             <dl className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Info title="Nom">{candidacy.candidate?.lastname}</Info>
@@ -326,7 +391,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
               </>
             )}
           </Section>
-        </div>
+          <FormButtons formState={formState} />
+        </form>
       )}
     </div>
   );

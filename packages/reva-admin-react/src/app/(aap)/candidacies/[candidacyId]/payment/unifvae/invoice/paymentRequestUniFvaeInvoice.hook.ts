@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyQuery = graphql(`
@@ -33,10 +33,39 @@ const getCandidacyQuery = graphql(`
       feasibility {
         decision
       }
+      paymentRequestUnifvae {
+        id
+        invoiceNumber
+        individualEffectiveHourCount
+        individualEffectiveCost
+        collectiveEffectiveHourCount
+        collectiveEffectiveCost
+        mandatoryTrainingsEffectiveHourCount
+        mandatoryTrainingsEffectiveCost
+        basicSkillsEffectiveHourCount
+        basicSkillsEffectiveCost
+        certificateSkillsEffectiveHourCount
+        certificateSkillsEffectiveCost
+        otherTrainingEffectiveHourCount
+        otherTrainingEffectiveCost
+      }
     }
   }
 `);
 
+const createOrUpdatePaymentRequestUnifvaeMutation = graphql(`
+  mutation createOrUpdatePaymentRequestUnifvaeMutation(
+    $candidacyId: UUID!
+    $paymentRequest: PaymentRequestUnifvaeInput!
+  ) {
+    candidacy_createOrUpdatePaymentRequestUnifvae(
+      candidacyId: $candidacyId
+      paymentRequest: $paymentRequest
+    ) {
+      id
+    }
+  }
+`);
 export const usePaymentRequestUniFvaeInvoicePage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{ candidacyId: string }>();
@@ -49,7 +78,33 @@ export const usePaymentRequestUniFvaeInvoicePage = () => {
       }),
   });
 
+  const createOrUpdatePaymentRequestUnifvae = useMutation({
+    mutationFn: ({
+      paymentRequest,
+    }: {
+      paymentRequest: {
+        invoiceNumber: string;
+        individualEffectiveHourCount: number;
+        individualEffectiveCost: number;
+        collectiveEffectiveHourCount: number;
+        collectiveEffectiveCost: number;
+        mandatoryTrainingsEffectiveHourCount: number;
+        mandatoryTrainingsEffectiveCost: number;
+        basicSkillsEffectiveHourCount: number;
+        basicSkillsEffectiveCost: number;
+        certificateSkillsEffectiveHourCount: number;
+        certificateSkillsEffectiveCost: number;
+        otherTrainingEffectiveHourCount: number;
+        otherTrainingEffectiveCost: number;
+      };
+    }) =>
+      graphqlClient.request(createOrUpdatePaymentRequestUnifvaeMutation, {
+        candidacyId,
+        paymentRequest,
+      }),
+  });
+
   const candidacy = getCandidacyResponse?.getCandidacyById;
 
-  return { candidacy, getCandidacyStatus };
+  return { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUnifvae };
 };
