@@ -43,13 +43,21 @@ export default function CertificationSection({
       </p>
       {!!option && (
         <>
-          <p>Option ou parcours:</p>
-          <p>{option}</p>
+          <p className="mb-0">Option ou parcours:</p>
+          <p className="font-medium">{option}</p>
         </>
       )}
-      <div className="flex gap-2">
-        <p className="mb-0">{firstForeignLanguage}</p>
-        <p className="mb-0">{secondForeignLanguage}</p>
+      <div className="flex gap-2 mb-4">
+        <div className="flex flex-col flex-1">
+          <p className="mb-0">Langue vivante 1 :</p>
+          <p className="mb-0 font-medium">{firstForeignLanguage}</p>
+        </div>
+        {secondForeignLanguage && (
+          <div className="flex flex-col flex-1">
+            <p className="mb-0">Langue vivante 2 :</p>
+            <p className="mb-0 font-medium">{secondForeignLanguage}</p>
+          </div>
+        )}
       </div>
       <CallOut>
         <p>Un ou plusieurs bloc(s) de compétences visé(s)</p>
