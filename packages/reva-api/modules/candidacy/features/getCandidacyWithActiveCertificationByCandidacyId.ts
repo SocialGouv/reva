@@ -25,5 +25,5 @@ export const getCandidacyWithActiveCertificationByCandidacyId = async (
       },
     },
   });
-  return res?.certificationsAndRegions[0].certification;
+  return res?.certificationsAndRegions?.[0]?.certification;
 };
