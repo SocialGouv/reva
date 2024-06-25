@@ -161,6 +161,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
         <FormButtons
           formState={formState}
           backUrl={`/candidacies/${candidacyId}/payment/unifvae/invoice/`}
+          submitButtonLabel="Envoyer la demande de paiement"
         />
       </form>
     </div>

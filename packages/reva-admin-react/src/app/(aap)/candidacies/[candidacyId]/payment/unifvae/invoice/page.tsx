@@ -5,7 +5,7 @@ import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { usePaymentRequestUniFvaeInvoicePage } from "./paymentRequestUniFvaeInvoice.hook";
 import { useCallback, useEffect, useMemo } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -26,6 +26,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const router = useRouter();
 
   const {
     candidacy,
@@ -123,6 +125,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
         paymentRequest: data,
       });
       successToast("Modifications enregistrées");
+      router.push(`/candidacies/${candidacyId}/payment/unifvae/upload`);
     } catch (e) {
       if (e instanceof Error && e.message.startsWith("input.")) {
         const [, name, message] =
@@ -407,7 +410,12 @@ const PaymentRequestUniFvaeInvoicePage = () => {
               </>
             )}
           </Section>
-          <FormButtons formState={formState} />
+          <FormButtons
+            formState={{
+              isDirty: true,
+              isSubmitting: formState.isSubmitting,
+            }}
+          />
         </form>
       )}
     </div>
