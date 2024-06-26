@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { z } from "zod";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { Section } from "../_components/form/Section";
+import { Section } from "../../_components/form/Section";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { REST_API_URL } from "@/config/config";
 import { successToast, errorToast } from "@/components/toast/toast";
