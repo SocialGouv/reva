@@ -254,12 +254,18 @@ export const addUploadedFileAndConfirmPayment = async ({
   candidacyId,
   invoiceFile,
   certificateOfAttendanceFile,
+  contractorInvoice1,
+  contractorInvoice2,
+  contractorInvoice3,
   userKeycloakId,
   userEmail,
   userRoles,
 }: {
   candidacyId: string;
   invoiceFile: UploadedFile;
+  contractorInvoice1?: UploadedFile;
+  contractorInvoice2?: UploadedFile;
+  contractorInvoice3?: UploadedFile;
   certificateOfAttendanceFile: UploadedFile;
   userKeycloakId?: string;
   userEmail: string;
@@ -268,6 +274,9 @@ export const addUploadedFileAndConfirmPayment = async ({
   await addUploadedFileToPaymentRequestUnifvae({
     candidacyId,
     invoiceFile,
+    contractorInvoice1,
+    contractorInvoice2,
+    contractorInvoice3,
     certificateOfAttendanceFile,
   });
   await confirmPaymentRequestUnifvae({
@@ -394,9 +403,15 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
   candidacyId,
   invoiceFile,
   certificateOfAttendanceFile,
+  contractorInvoice1,
+  contractorInvoice2,
+  contractorInvoice3,
 }: {
   candidacyId: string;
   invoiceFile: UploadedFile;
+  contractorInvoice1?: UploadedFile;
+  contractorInvoice2?: UploadedFile;
+  contractorInvoice3?: UploadedFile;
   certificateOfAttendanceFile: UploadedFile;
 }) => {
   const paymentRequest = await prismaClient.paymentRequestUnifvae.findFirst({
@@ -433,6 +448,42 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
         description: `Feuille de présence pour paymentRequestId ${paymentRequest.id} (${certificateOfAttendanceFile.filename} - ${certificateOfAttendanceFile.mimetype})`,
         fileContent: certificateOfAttendanceFile._buf,
       },
+      ...(contractorInvoice1
+        ? [
+            {
+              destinationFileName: `presta1_${
+                fundingRequest.numAction
+              }.${getFilenameExtension(contractorInvoice1.filename)}`,
+              destinationPath: "import",
+              description: `Facture préstataire 1 pour paymentRequestId ${paymentRequest.id} (${contractorInvoice1.filename} - ${contractorInvoice1.mimetype})`,
+              fileContent: contractorInvoice1._buf,
+            },
+          ]
+        : []),
+      ...(contractorInvoice2
+        ? [
+            {
+              destinationFileName: `presta2_${
+                fundingRequest.numAction
+              }.${getFilenameExtension(contractorInvoice2.filename)}`,
+              destinationPath: "import",
+              description: `Facture préstataire 2 pour paymentRequestId ${paymentRequest.id} (${contractorInvoice2.filename} - ${contractorInvoice2.mimetype})`,
+              fileContent: contractorInvoice2._buf,
+            },
+          ]
+        : []),
+      ...(contractorInvoice3
+        ? [
+            {
+              destinationFileName: `presta3_${
+                fundingRequest.numAction
+              }.${getFilenameExtension(contractorInvoice3.filename)}`,
+              destinationPath: "import",
+              description: `Facture préstataire 3 pour paymentRequestId ${paymentRequest.id} (${contractorInvoice3.filename} - ${contractorInvoice3.mimetype})`,
+              fileContent: contractorInvoice3._buf,
+            },
+          ]
+        : []),
     ],
   });
 };

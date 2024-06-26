@@ -9,6 +9,9 @@ interface PaymentRequestProofBody {
   candidacyId: { value: string };
   invoice: UploadedFile;
   certificateOfAttendance: UploadedFile;
+  contractorInvoice1?: UploadedFile;
+  contractorInvoice2?: UploadedFile;
+  contractorInvoice3?: UploadedFile;
 }
 
 const uploadRoute: FastifyPluginAsync = async (server) => {
@@ -42,6 +45,9 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
           },
           invoice: { type: "object" },
           appointment: { type: "object" },
+          contractorInvoice1: { type: "object" },
+          contractorInvoice2: { type: "object" },
+          contractorInvoice3: { type: "object" },
         },
         required: ["candidacyId"],
       },
@@ -50,6 +56,9 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
       const candidacyId = request.body.candidacyId.value;
       const certificateOfAttendanceFile = request.body.certificateOfAttendance;
       const invoiceFile = request.body.invoice;
+      const contractorInvoice1 = request.body.contractorInvoice1;
+      const contractorInvoice2 = request.body.contractorInvoice2;
+      const contractorInvoice3 = request.body.contractorInvoice3;
 
       const auhtorization = await canManageCandidacy({
         hasRole: request.auth.hasRole,
@@ -65,7 +74,10 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
 
       if (
         !hasValidMimeType(certificateOfAttendanceFile) ||
-        !hasValidMimeType(invoiceFile)
+        !hasValidMimeType(invoiceFile) ||
+        !hasValidMimeType(contractorInvoice1) ||
+        !hasValidMimeType(contractorInvoice2) ||
+        !hasValidMimeType(contractorInvoice3)
       ) {
         return reply
           .status(400)
@@ -77,7 +89,12 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
       if (
         certificateOfAttendanceFile._buf?.byteLength >
           maxUploadFileSizeInBytes ||
-        invoiceFile._buf?.byteLength > maxUploadFileSizeInBytes
+        invoiceFile._buf?.byteLength > maxUploadFileSizeInBytes ||
+        (contractorInvoice1?._buf?.byteLength || -1) >
+          maxUploadFileSizeInBytes ||
+        (contractorInvoice2?._buf?.byteLength || -1) >
+          maxUploadFileSizeInBytes ||
+        (contractorInvoice3?._buf?.byteLength || -1) > maxUploadFileSizeInBytes
       ) {
         return reply
           .status(400)
@@ -91,6 +108,9 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
       await addUploadedFileAndConfirmPayment({
         candidacyId,
         invoiceFile,
+        contractorInvoice1,
+        contractorInvoice2,
+        contractorInvoice3,
         certificateOfAttendanceFile,
         userKeycloakId: request.auth?.userInfo?.sub,
         userEmail: request.auth?.userInfo?.email,
@@ -101,8 +121,8 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
     },
   });
 
-  const hasValidMimeType = (file: UploadedFile): boolean =>
-    validMimeTypeList.includes(file.mimetype);
+  const hasValidMimeType = (file?: UploadedFile): boolean =>
+    file ? validMimeTypeList.includes(file.mimetype) : true;
 };
 
 export default uploadRoute;
