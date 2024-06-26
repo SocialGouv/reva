@@ -1,4 +1,3 @@
-import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -43,8 +42,8 @@ export const Header = (props: { className?: string }) => {
           },
           isActive: !!asPath.match(/\/reglementation-vae/)?.length,
           text: "Règlementation",
-        }
-      ]
+        },
+      ],
     },
 
     {
@@ -107,13 +106,6 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/admin",
             className: "fr-link--icon-right",
-            onClick: () =>
-              push([
-                "trackEvent",
-                "En-tête",
-                "Click sur 'Connexion professionnel'",
-                "Click sur 'Connexion professionnel'",
-              ]),
           },
           text: "Connexion professionnel",
         },
@@ -122,13 +114,6 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/app/login",
             className: "fr-link--icon-right",
-            onClick: () =>
-              push([
-                "trackEvent",
-                "En-tête",
-                "Click sur 'Connexion candidat'",
-                "Click sur 'Connexion candidat'",
-              ]),
           },
           text: "Connexion candidat",
         },

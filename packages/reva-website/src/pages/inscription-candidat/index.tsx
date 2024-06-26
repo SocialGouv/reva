@@ -1,4 +1,3 @@
-import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import {
   CandidateRegistrationForm,
   CandidateRegistrationFormSchema,
@@ -123,7 +122,6 @@ const OrientationCandidatPage = () => {
                 defaultLabel={defaultAutocompleteLabel}
                 onSubmit={({ label, value }) => {
                   const certificationId = isUUID(value) ? value : null;
-                  push(["trackEvent", "website-diplome", "recherche", label]);
                   router.push({
                     pathname: "/inscription-candidat",
                     query: { certificationId, searchText: label },
