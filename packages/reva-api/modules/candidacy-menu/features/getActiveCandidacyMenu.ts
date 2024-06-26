@@ -288,7 +288,7 @@ export const getActiveCandidacyMenu = async ({
     }),
     getFundingRequestMenuEntry(),
     getDossierDeValidationMenuEntry(),
-    getPaymentRequestMenuEntry(),
+    await getPaymentRequestMenuEntry(),
     getJuryMenuEntry(),
   ].filter((e) => e) as CandidacyMenuEntry[];
 };

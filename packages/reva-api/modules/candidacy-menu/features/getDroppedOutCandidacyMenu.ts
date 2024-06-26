@@ -62,16 +62,18 @@ export const getDroppedOutCandidacyMenu = async ({
     };
   };
 
-  const isPaymentRequestUnifvaeReactFeatureActive =
-    await isFeatureActiveForUser({
-      userKeycloakId,
-      feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
-    });
-
-  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+  const getPaymentRequestMenuEntry = async (): Promise<
+    CandidacyMenuEntry | undefined
+  > => {
     if (candidacy.financeModule === "hors_plateforme") {
       return undefined;
     }
+
+    const isPaymentRequestUnifvaeReactFeatureActive =
+      await isFeatureActiveForUser({
+        userKeycloakId,
+        feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
+      });
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
@@ -104,7 +106,7 @@ export const getDroppedOutCandidacyMenu = async ({
       droppedOutCandidacyMenu.push(fundingRequestMenuEntry);
     }
 
-    const paymentRequestMenuEntry = getPaymentRequestMenuEntry();
+    const paymentRequestMenuEntry = await getPaymentRequestMenuEntry();
     if (paymentRequestMenuEntry) {
       droppedOutCandidacyMenu.push(paymentRequestMenuEntry);
     }
