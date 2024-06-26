@@ -1,4 +1,3 @@
-import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { isUUID } from "@/utils";
 import Image from "next/image";
@@ -32,7 +31,6 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
         <CertificateAutocompleteDsfr
           onSubmit={({ label, value }) => {
             const certificationId = isUUID(value) ? value : null;
-            push(["trackEvent", "website-diplome", "recherche", label]);
             router.push({
               pathname: "inscription-candidat",
               query: {
