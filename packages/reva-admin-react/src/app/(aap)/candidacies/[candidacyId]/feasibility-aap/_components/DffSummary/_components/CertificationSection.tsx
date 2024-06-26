@@ -1,5 +1,4 @@
 import { Certification, Prerequisite } from "@/graphql/generated/graphql";
-import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
@@ -83,9 +82,9 @@ export default function CertificationSection({
         ))}
       </div>
       <h5 className="mb-0">Prérequis obligatoires</h5>
-      <div className={`mb-8 mt-4 ${fr.cx("fr-accordions-group")}`}>
+      <div className="mb-8 mt-4">
         {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Acquis">
+          <Accordion label="Acquis" defaultExpanded>
             <ul>
               {prequisitesByStatus?.acquired?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -94,7 +93,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion label="En cours">
+          <Accordion label="En cours" defaultExpanded>
             <ul>
               {prequisitesByStatus?.inProgress?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -103,7 +102,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion label="Préconisés">
+          <Accordion label="Préconisés" defaultExpanded>
             <ul>
               {prequisitesByStatus?.recommended?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
