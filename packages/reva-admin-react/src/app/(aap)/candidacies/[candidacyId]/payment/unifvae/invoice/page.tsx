@@ -20,7 +20,7 @@ import { TableRow } from "./_components/form/TableRow";
 import {
   PaymentRequestUniFvaeInvoiceFormData,
   paymentRequestUniFvaeInvoiceSchema,
-} from "./paymentRequestUnifvaeInvoiceFormSchema";
+} from "./paymentRequestUniFvaeInvoiceFormSchema";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
