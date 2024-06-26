@@ -7,10 +7,4 @@ export const STRAPI_BASE_URL =
 
 export const STRAPI_GRAPHQL_API_URL = STRAPI_BASE_URL + "/graphql";
 
-export const MATOMO = {
-  URL: process.env.NEXT_PUBLIC_MATOMO_URL,
-  SITE_ID: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
-  CONTAINER_NAME: process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME,
-};
-
 export const FeatureFlags = {};

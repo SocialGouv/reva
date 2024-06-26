@@ -1,4 +1,3 @@
-import { TarteAuCitronWrapper } from "@/components/analytics/tarteaucitron/TarteAuCitronWrapper";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
@@ -10,7 +9,6 @@ export const MainLayout = (props: {
 }) => {
   return (
     <>
-      <TarteAuCitronWrapper />
       <div className="min-h-screen flex flex-col">
         <SkipLinks
           links={[
