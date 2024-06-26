@@ -145,7 +145,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
               ...register("certificateOfAttendanceFile"),
               accept: ".pdf",
             }}
-            state={errors.invoiceFile ? "error" : "default"}
+            state={errors.certificateOfAttendanceFile ? "error" : "default"}
             stateRelatedMessage={
               errors.certificateOfAttendanceFile?.[0]?.message
             }
