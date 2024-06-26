@@ -10,7 +10,7 @@ export const HourInput = ({
   name: keyof PaymentRequestUniFvaeInvoiceFormData;
 }) => (
   <Input
-    label="NOMBRE D'HEURES"
+    label="Nombre d'heures"
     hintText="Exemple: saisir 2.5 pour 2H30"
     nativeInputProps={{
       type: "number",

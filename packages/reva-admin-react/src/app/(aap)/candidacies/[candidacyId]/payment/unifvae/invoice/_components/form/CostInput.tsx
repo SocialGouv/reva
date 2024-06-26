@@ -10,7 +10,7 @@ export const CostInput = ({
   name: keyof PaymentRequestUniFvaeInvoiceFormData;
 }) => (
   <Input
-    label="COÛT HORAIRE"
+    label="Coût Horaire"
     hintText="Un décimal supérieur ou égal à 0"
     nativeInputProps={{
       type: "number",
