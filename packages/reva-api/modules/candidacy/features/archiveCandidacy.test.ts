@@ -49,35 +49,6 @@ const candidacyStatusesArchive = [
   },
 ];
 
-// const candidacyPriseEnCharge = {
-//   id: "c1",
-//   candidacyStatuses: candidacyStatusesPriseEnCharge,
-//   createdAt: new Date(),
-//   department: null,
-//   email: null,
-//   experiences: [],
-//   reorientationReason: null,
-//   financeModule: "unifvae",
-// };
-
-// const candidacyWithReorientationReason: Candidacy = {
-//   ...candidacyPriseEnCharge,
-//   id: "c2",
-//   reorientationReason: {
-//     id: "RaisonReorientationId1",
-//     label: "Droit commun",
-//     createdAt: new Date(),
-//     updatedAt: null,
-//     disabled: false,
-//   },
-// };
-
-// const candidacyArchived = {
-//   ...candidacyPriseEnCharge,
-//   id: "c3",
-//   candidacyStatuses: candidacyStatusesArchive,
-// };
-
 let organism: Organism,
   candidate: Candidate,
   candidacyPriseEnCharge: Candidacy,
