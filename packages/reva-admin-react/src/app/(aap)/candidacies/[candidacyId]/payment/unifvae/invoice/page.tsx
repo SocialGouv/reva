@@ -289,7 +289,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       />
                     </TableRow>
                     <TableRow>
-                      <p>collectif</p>
+                      <p>Collectif</p>
                       <HourInput
                         name="collectiveEffectiveHourCount"
                         control={control}
@@ -299,7 +299,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                         control={control}
                       />
                     </TableRow>
-                    <TableRow>
+                    <TableRow className="font-medium">
                       <p>Sous-total des accompagnements</p>
                       <p>{supportHourCountTotal} h</p>
                       <p>{supportEffectiveCostTotal.toFixed(2)} €</p>
@@ -405,7 +405,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                         control={control}
                       />
                     </TableRow>
-                    <TableRow>
+                    <TableRow className="font-medium">
                       <p>Sous-total des compléments formatifs</p>
                       <p>{trainingHourCountTotal} h</p>
                       <p>{trainingCostTotal.toFixed(2)} €</p>
