@@ -153,8 +153,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
         const fieldName = name
           .replace("Cost", "EffectiveCost")
           .replace(
-            "Hours",
-            "EffectiveHours",
+            "Hour",
+            "EffectiveHour",
           ) as keyof PaymentRequestUniFvaeInvoiceFormData;
 
         setError(fieldName, {
