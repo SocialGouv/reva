@@ -1,13 +1,12 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Control } from "react-hook-form";
-import { PaymentRequestUniFvaeInvoiceFormData } from "../../paymentRequestUnifvaeInvoiceFormSchema";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 
-export const CostInput = ({
+export const CostInput = <T extends FieldValues = FieldValues>({
   control,
   name,
 }: {
-  control: Control<PaymentRequestUniFvaeInvoiceFormData>;
-  name: keyof PaymentRequestUniFvaeInvoiceFormData;
+  control: Control<T>;
+  name: FieldPath<T>;
 }) => (
   <Input
     label="Coût Horaire"
