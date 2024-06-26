@@ -23,6 +23,22 @@ const paymentRequestUniFvaeUploadSchema = z.object({
   certificateOfAttendanceFile: z.object({
     0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
   }),
+  contractorInvoice1File: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
+  contractorInvoice2File: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
+
+  contractorInvoice3File: z
+    .object({
+      0: z.undefined().or(z.instanceof(File)),
+    })
+    .optional(),
 
   confirmation1Checked: z.literal(true, {
     errorMap: () => ({
@@ -74,6 +90,15 @@ const PaymentRequestUniFvaeUploadPage = () => {
         "certificateOfAttendance",
         data.certificateOfAttendanceFile?.[0],
       );
+
+      data.contractorInvoice1File?.[0] &&
+        formData.append("contractorInvoice1", data.contractorInvoice1File?.[0]);
+
+      data.contractorInvoice2File?.[0] &&
+        formData.append("contractorInvoice2", data.contractorInvoice2File?.[0]);
+
+      data.contractorInvoice3File?.[0] &&
+        formData.append("contractorInvoice3", data.contractorInvoice3File?.[0]);
 
       const result = await fetch(
         `${REST_API_URL}/payment-request-unifvae/confirmation`,
@@ -149,6 +174,39 @@ const PaymentRequestUniFvaeUploadPage = () => {
             stateRelatedMessage={
               errors.certificateOfAttendanceFile?.[0]?.message
             }
+          />
+          <FancyUpload
+            title="Joindre la ou les factures(s) acquittées des actes formatifs réalisés chez des prestataires autres que l'AAP (optionnel)"
+            description="Déposez ici la facture acquittée du prestataire (hors AAP) auprès duquel le candidat a suivi sa formation. Les éléments affichés dans cette facture doivent correspondre avec l’assiduité du candidat"
+            hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+            nativeInputProps={{
+              ...register("contractorInvoice1File"),
+              accept: ".pdf",
+            }}
+            state={errors.contractorInvoice1File ? "error" : "default"}
+            stateRelatedMessage={errors.contractorInvoice1File?.[0]?.message}
+          />
+          <FancyUpload
+            title="Joindre la ou les factures(s) acquittées des actes formatifs réalisés chez des prestataires autres que l'AAP (optionnel)"
+            description="Déposez ici la facture acquittée du prestataire (hors AAP) auprès duquel le candidat a suivi sa formation. Les éléments affichés dans cette facture doivent correspondre avec l’assiduité du candidat"
+            hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+            nativeInputProps={{
+              ...register("contractorInvoice2File"),
+              accept: ".pdf",
+            }}
+            state={errors.contractorInvoice2File ? "error" : "default"}
+            stateRelatedMessage={errors.contractorInvoice2File?.[0]?.message}
+          />
+          <FancyUpload
+            title="Joindre la ou les factures(s) acquittées des actes formatifs réalisés chez des prestataires autres que l'AAP (optionnel)"
+            description="Déposez ici la facture acquittée du prestataire (hors AAP) auprès duquel le candidat a suivi sa formation. Les éléments affichés dans cette facture doivent correspondre avec l’assiduité du candidat"
+            hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+            nativeInputProps={{
+              ...register("contractorInvoice3File"),
+              accept: ".pdf",
+            }}
+            state={errors.contractorInvoice3File ? "error" : "default"}
+            stateRelatedMessage={errors.contractorInvoice3File?.[0]?.message}
           />
         </Section>
         <Section title="2 - Confirmation">
