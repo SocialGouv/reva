@@ -62,6 +62,12 @@ export const getDroppedOutCandidacyMenu = async ({
     };
   };
 
+  const isPaymentRequestUnifvaeReactFeatureActive =
+    await isFeatureActiveForUser({
+      userKeycloakId,
+      feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
+    });
+
   const getPaymentRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
     if (candidacy.financeModule === "hors_plateforme") {
       return undefined;
@@ -78,7 +84,9 @@ export const getDroppedOutCandidacyMenu = async ({
 
     return {
       label: "Demande de paiement",
-      url: buildUrl({ adminType: "Elm", suffix: "payment" }),
+      url: isPaymentRequestUnifvaeReactFeatureActive
+        ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
+        : buildUrl({ adminType: "Elm", suffix: "payment" }),
       status: menuEntryStatus,
     };
   };

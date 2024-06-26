@@ -207,12 +207,20 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getPaymentRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+  const getPaymentRequestMenuEntry = async (): Promise<
+    CandidacyMenuEntry | undefined
+  > => {
     //pas de page de demande de paiement si le financement de la candidature est "hors plateforme"
 
     if (candidacy.financeModule === "hors_plateforme") {
       return undefined;
     }
+
+    const isPaymentRequestUnifvaeReactFeatureActive =
+      await isFeatureActiveForUser({
+        userKeycloakId,
+        feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
+      });
 
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
 
@@ -233,7 +241,9 @@ export const getActiveCandidacyMenu = async ({
 
     return {
       label: "Demande de paiement",
-      url: buildUrl({ adminType: "Elm", suffix: "payment" }),
+      url: isPaymentRequestUnifvaeReactFeatureActive
+        ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
+        : buildUrl({ adminType: "Elm", suffix: "payment" }),
       status: menuEntryStatus,
     };
   };
