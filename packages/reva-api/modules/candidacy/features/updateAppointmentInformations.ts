@@ -1,7 +1,7 @@
 import { type Experience } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import * as domain from "../candidacy.types";
-import { isAfter, addMonths, isBefore, startOfToday } from "date-fns";
+import { isAfter, addMonths, isBefore, startOfToday, startOfDay } from "date-fns";
 
 export const candidacyIncludes = {
   experiences: true,
@@ -84,8 +84,8 @@ export const updateAppointmentInformations = async (params: {
 
   if (
     isBefore(
-      params.appointmentInformations.firstAppointmentOccuredAt,
-      candidacy.createdAt,
+      startOfDay(params.appointmentInformations.firstAppointmentOccuredAt),
+      startOfDay(candidacy.createdAt),
     )
   ) {
     throw new Error(
