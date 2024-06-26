@@ -1,5 +1,4 @@
 import { Experience } from "@/graphql/generated/graphql";
-import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { format } from "date-fns";
 
@@ -23,11 +22,12 @@ export default function ExperiencesSection({
         <h2 className="mb-0">Expériences professionnelles</h2>
       </div>
       {experiences.length > 0 && (
-        <div className={`mt-4 ${fr.cx("fr-accordions-group")}`}>
+        <div className="mt-4">
           {experiences.map((experience, index) => (
             <Accordion
               label={`Expérience ${index + 1} - ${experience?.title}`}
               key={experience?.id}
+              defaultExpanded
             >
               <p>Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}</p>
               <p>Expérience {durationLabel[experience?.duration]}</p>
