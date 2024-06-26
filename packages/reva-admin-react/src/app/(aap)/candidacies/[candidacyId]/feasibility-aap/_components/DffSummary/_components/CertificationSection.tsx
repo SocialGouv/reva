@@ -65,9 +65,13 @@ export default function CertificationSection({
 
       <h5 className="mb-0">Blocs de compétences</h5>
 
-      <div className={`${fr.cx("fr-accordions-group")} mb-8 mt-4`}>
+      <div className="mb-8 mt-4">
         {certification?.competenceBlocs?.map((bloc) => (
-          <Accordion label={`${bloc.code} - ${bloc.label}`} key={bloc.id}>
+          <Accordion
+            label={`${bloc.code} - ${bloc.label}`}
+            key={bloc.id}
+            defaultExpanded
+          >
             {bloc.competences?.map((competence) => (
               <>
                 <p key={competence?.id}>{competence?.label}</p>
