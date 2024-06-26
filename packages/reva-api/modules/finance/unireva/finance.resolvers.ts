@@ -20,6 +20,7 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpd
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
+import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -38,6 +39,8 @@ const unsafeResolvers = {
         .map((v) => v.extractNullable())
         .extract();
     },
+    fundingRequest: ({ id: candidacyId }: Candidacy) =>
+      getFundingRequestByCandidacyId({ candidacyId }),
   },
   Query: {
     candidate_getFundingRequest: async (

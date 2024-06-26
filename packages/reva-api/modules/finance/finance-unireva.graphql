@@ -1,5 +1,6 @@
 extend type Candidacy {
   paymentRequest: PaymentRequest
+  fundingRequest: FundingRequest
 }
 
 type PaymentRequest {
