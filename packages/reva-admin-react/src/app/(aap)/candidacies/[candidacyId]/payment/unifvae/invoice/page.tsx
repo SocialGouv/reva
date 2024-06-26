@@ -282,6 +282,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="individualEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="individualEffectiveCost"
@@ -293,6 +294,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="collectiveEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="collectiveEffectiveCost"
@@ -342,6 +344,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="mandatoryTrainingsEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="mandatoryTrainingsEffectiveCost"
@@ -367,6 +370,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="basicSkillsEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="basicSkillsEffectiveCost"
@@ -383,6 +387,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="certificateSkillsEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="certificateSkillsEffectiveCost"
@@ -399,6 +404,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                       <HourInput
                         name="otherTrainingEffectiveHourCount"
                         control={control}
+                        allowHalfHours
                       />
                       <CostInput
                         name="otherTrainingEffectiveCost"
