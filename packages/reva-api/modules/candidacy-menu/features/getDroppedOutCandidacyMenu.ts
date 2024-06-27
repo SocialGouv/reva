@@ -84,11 +84,14 @@ export const getDroppedOutCandidacyMenu = async ({
           : "ACTIVE_WITHOUT_HINT";
     }
 
+    const isCandidacyUniFvae = candidacy.financeModule === "unifvae";
+
     return {
       label: "Demande de paiement",
-      url: isPaymentRequestUnifvaeReactFeatureActive
-        ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
-        : buildUrl({ adminType: "Elm", suffix: "payment" }),
+      url:
+        isPaymentRequestUnifvaeReactFeatureActive && isCandidacyUniFvae
+          ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
+          : buildUrl({ adminType: "Elm", suffix: "payment" }),
       status: menuEntryStatus,
     };
   };
