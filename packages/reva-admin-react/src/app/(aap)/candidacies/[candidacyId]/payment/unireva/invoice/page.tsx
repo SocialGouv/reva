@@ -20,6 +20,7 @@ import {
   paymentRequestUniRevaInvoiceSchema,
 } from "./paymentRequestUniRevaInvoiceFormSchema";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
+import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
 
 const PaymentRequestUniRevaInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -99,71 +100,18 @@ const PaymentRequestUniRevaInvoicePage = () => {
     disabled: paymentRequestAlreadySent,
   });
 
+  const formValues = useWatch({ control });
+
   const {
-    individualEffectiveHourCount,
-    individualEffectiveCost,
-    collectiveEffectiveHourCount,
-    collectiveEffectiveCost,
-    mandatoryTrainingsEffectiveHourCount,
-    mandatoryTrainingsEffectiveCost,
-    basicSkillsEffectiveHourCount,
-    basicSkillsEffectiveCost,
-    certificateSkillsEffectiveHourCount,
-    certificateSkillsEffectiveCost,
-    otherTrainingEffectiveHourCount,
-    otherTrainingEffectiveCost,
-    diagnosisEffectiveHourCount,
-    diagnosisEffectiveCost,
-    postExamEffectiveHourCount,
-    postExamEffectiveCost,
-    examEffectiveHourCount,
-    examEffectiveCost,
-  } = useWatch({ control });
-
-  const meetingHourCountTotal =
-    (diagnosisEffectiveHourCount || 0) + (postExamEffectiveHourCount || 0);
-
-  const meetingCostTotal =
-    (diagnosisEffectiveHourCount || 0) * (diagnosisEffectiveCost || 0) +
-    (postExamEffectiveHourCount || 0) * (postExamEffectiveCost || 0);
-
-  const supportHourCountTotal =
-    (individualEffectiveHourCount || 0) + (collectiveEffectiveHourCount || 0);
-
-  const supportEffectiveCostTotal =
-    (individualEffectiveHourCount || 0) * (individualEffectiveCost || 0) +
-    (collectiveEffectiveHourCount || 0) * (collectiveEffectiveCost || 0);
-
-  const trainingHourCountTotal =
-    (mandatoryTrainingsEffectiveHourCount || 0) +
-    (basicSkillsEffectiveHourCount || 0) +
-    (certificateSkillsEffectiveHourCount || 0) +
-    (otherTrainingEffectiveHourCount || 0);
-
-  const trainingCostTotal =
-    (mandatoryTrainingsEffectiveHourCount || 0) *
-      (mandatoryTrainingsEffectiveCost || 0) +
-    (basicSkillsEffectiveHourCount || 0) * (basicSkillsEffectiveCost || 0) +
-    (certificateSkillsEffectiveHourCount || 0) *
-      (certificateSkillsEffectiveCost || 0) +
-    (otherTrainingEffectiveHourCount || 0) * (otherTrainingEffectiveCost || 0);
-
-  const juryHourCountTotal = examEffectiveHourCount || 0;
-
-  const juryCostTotal =
-    (examEffectiveHourCount || 0) * (examEffectiveCost || 0);
-
-  const totalHourCount =
-    meetingHourCountTotal +
-    supportHourCountTotal +
-    trainingHourCountTotal +
-    juryHourCountTotal;
-
-  const totalCost =
-    meetingCostTotal +
-    supportEffectiveCostTotal +
-    trainingCostTotal +
-    juryCostTotal;
+    trainingHourCountTotal,
+    trainingCostTotal,
+    meetingHourCountTotal,
+    meetingCostTotal,
+    supportEffectiveCostTotal,
+    supportHourCountTotal,
+    totalHourCount,
+    totalCost,
+  } = costsAndHoursTotal(formValues);
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -216,7 +164,7 @@ const PaymentRequestUniRevaInvoicePage = () => {
       <Stepper
         title="Renseignez les heures d’accompagnement"
         currentStep={1}
-        stepCount={2}
+        stepCount={3}
         nextTitle="Déposez les pièces justificicatives"
       />
       <hr />

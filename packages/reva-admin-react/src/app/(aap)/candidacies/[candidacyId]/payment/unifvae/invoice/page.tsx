@@ -14,7 +14,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CostInput } from "../../_components/form/CostInput";
 import { HourInput } from "../../_components/form/HourInput";
-import { Info } from "./_components/form/Info";
+import { Info } from "../../_components/form/Info";
 import { Section } from "../../_components/form/Section";
 import { TableRow } from "../../_components/form/TableRow";
 import {

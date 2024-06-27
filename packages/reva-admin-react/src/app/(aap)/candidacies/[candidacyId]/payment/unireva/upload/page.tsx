@@ -85,8 +85,9 @@ const PaymentRequestUniRevaUploadPage = () => {
       <FormOptionalFieldsDisclaimer />
       <Stepper
         title="Déposez les pièces justificicatives"
+        nextTitle="Confirmation"
         currentStep={2}
-        stepCount={2}
+        stepCount={3}
       />
       <hr />
       <form
