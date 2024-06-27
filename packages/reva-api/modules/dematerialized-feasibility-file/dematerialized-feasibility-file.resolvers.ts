@@ -10,7 +10,7 @@ import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
   DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
-  DematerializedFeasibilityFileSubmitSwornStatementInput,
+  DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
 import { checkIsDFFReadyToBeSentToCandidateById } from "./features/checkIsDFFReadyToBeSentToCandidateById";
 import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
@@ -25,7 +25,7 @@ import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertific
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
-import { submitSwornStatement } from "./features/submitSwornStatement";
+import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 
@@ -142,12 +142,12 @@ export const unsafeResolvers = {
       }: { dematerializedFeasibilityFileId: string },
     ) => updateSentToCandidateAtNow({ dematerializedFeasibilityFileId }),
 
-    dematerialized_feasibility_file_submitSwornStatement: (
+    dematerialized_feasibility_file_createOrUpdateSwornStatement: (
       _parent: unknown,
       params: {
-        input: DematerializedFeasibilityFileSubmitSwornStatementInput;
+        input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
       },
-    ) => submitSwornStatement(params.input),
+    ) => createOrUpdateSwornStatement(params.input),
   },
 };
 

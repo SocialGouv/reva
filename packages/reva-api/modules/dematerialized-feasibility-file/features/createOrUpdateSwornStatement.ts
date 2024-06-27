@@ -2,28 +2,41 @@ import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../prisma/client";
 import {
   UploadedFile,
+  deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
   uploadFilesToS3,
 } from "../../shared/file";
-import { DematerializedFeasibilityFileSubmitSwornStatementInput } from "../dematerialized-feasibility-file.types";
+import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
-import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 
-export const submitSwornStatement = async ({
+export const createOrUpdateSwornStatement = async ({
   candidacyId,
   swornStatement,
-}: DematerializedFeasibilityFileSubmitSwornStatementInput) => {
+}: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput) => {
   try {
-    const dffWithAttachments =
-      await getDematerializedFeasibilityFileWithAttachmentsByCandidacyId({
-        candidacyId,
-      });
+    const dff = await getDematerializedFeasibilityFileByCandidacyId({
+      candidacyId,
+    });
 
-    if (!dffWithAttachments) {
+    if (!dff) {
       throw new Error(
         `Aucun Dossier de faisabilité trouvé pour la candidature ${candidacyId}.`,
       );
+    }
+
+    const existingSwornStatementFileId = dff.swornStatementFileId;
+    if (existingSwornStatementFileId) {
+      const existingSwornStatementFile = await prismaClient.file.findUnique({
+        where: { id: existingSwornStatementFileId },
+      });
+
+      if (existingSwornStatementFile) {
+        await deleteFile(existingSwornStatementFile.path);
+        await prismaClient.file.delete({
+          where: { id: existingSwornStatementFileId },
+        });
+      }
     }
 
     const swornStatementFile = await getUploadedFile(swornStatement);
@@ -47,7 +60,7 @@ export const submitSwornStatement = async ({
 
     await prismaClient.dematerializedFeasibilityFile.update({
       where: {
-        id: dffWithAttachments.id,
+        id: dff.id,
       },
       data: {
         attachmentsPartComplete: true,

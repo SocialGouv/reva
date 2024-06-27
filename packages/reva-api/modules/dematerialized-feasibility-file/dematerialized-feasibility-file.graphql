@@ -124,7 +124,7 @@ input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   additionalFiles: [Upload]
 }
 
-input DematerializedFeasibilityFileSubmitSwornStatementInput {
+input DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
   candidacyId: ID!
   swornStatement: Upload!
 }
@@ -160,7 +160,7 @@ type Mutation {
     dematerializedFeasibilityFileId: ID!
   ): String!
 
-  dematerialized_feasibility_file_submitSwornStatement(
-    input: DematerializedFeasibilityFileSubmitSwornStatementInput!
+  dematerialized_feasibility_file_createOrUpdateSwornStatement(
+    input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput!
   ): DematerializedFeasibilityFile!
 }

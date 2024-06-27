@@ -3,11 +3,13 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-export const submitSwornStatement = graphql(`
-  mutation submitSwornStatement(
-    $input: DematerializedFeasibilityFileSubmitSwornStatementInput!
+export const createOrUpdateSwornStatement = graphql(`
+  mutation createOrUpdateSwornStatement(
+    $input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput!
   ) {
-    dematerialized_feasibility_file_submitSwornStatement(input: $input) {
+    dematerialized_feasibility_file_createOrUpdateSwornStatement(
+      input: $input
+    ) {
       id
     }
   }

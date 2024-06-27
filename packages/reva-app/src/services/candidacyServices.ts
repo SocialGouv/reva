@@ -341,6 +341,12 @@ const CANDIDACY_SELECTION = `
             label
           }
         }
+        swornStatementFile {
+          name
+          previewUrl
+          url
+          mimeType
+        }
         candidacy {
           individualHourCount
           collectiveHourCount
@@ -629,12 +635,12 @@ export const confirmTrainingForm =
       variables: { candidacyId },
     });
 
-const SUBMIT_SWORN_STATEMENT = gql`
-  mutation dematerialized_feasibility_file_submitSwornStatement(
+const CREATE_OR_UPDATE_SWORN_STATEMENT = gql`
+  mutation dematerialized_feasibility_file_createOrUpdateSwornStatement(
     $candidacyId: ID!
     $swornStatement: Upload!
   ) {
-    dematerialized_feasibility_file_submitSwornStatement(
+    dematerialized_feasibility_file_createOrUpdateSwornStatement(
       input: { candidacyId: $candidacyId, swornStatement: $swornStatement }
     ) {
       id
@@ -642,7 +648,7 @@ const SUBMIT_SWORN_STATEMENT = gql`
   }
 `;
 
-export const submitSwornStatement =
+export const createOrUpdateSwornStatement =
   (client: ApolloClient<object>) =>
   ({
     candidacyId,
@@ -652,7 +658,7 @@ export const submitSwornStatement =
     swornStatement: File;
   }) =>
     client.mutate({
-      mutation: SUBMIT_SWORN_STATEMENT,
+      mutation: CREATE_OR_UPDATE_SWORN_STATEMENT,
       variables: { candidacyId, swornStatement },
       awaitRefetchQueries: true,
       refetchQueries: [

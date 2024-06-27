@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
-  submitSwornStatement,
+  createOrUpdateSwornStatement,
   useSwornStatement,
 } from "./_components/swornStatement.hook";
 
@@ -77,7 +77,7 @@ export default function SwornStatementPage() {
     };
 
     try {
-      const result = await urqlClient.mutation(submitSwornStatement, {
+      const result = await urqlClient.mutation(createOrUpdateSwornStatement, {
         input,
       });
       if (result.error) {

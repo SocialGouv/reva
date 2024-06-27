@@ -35,7 +35,7 @@ export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
   additionalFiles?: GraphqlUploadedFile[];
 }
 
-export interface DematerializedFeasibilityFileSubmitSwornStatementInput {
+export interface DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
   candidacyId: string;
   swornStatement: GraphqlUploadedFile;
 }

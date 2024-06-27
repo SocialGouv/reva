@@ -10,8 +10,8 @@ import { FancyUpload } from "components/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "components/organisms/DffSummary/DffSummary";
 import { Page } from "components/organisms/Page";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
-import { useContext, useState } from "react";
-import { submitSwornStatement } from "services/candidacyServices";
+import { useContext, useMemo, useState } from "react";
+import { createOrUpdateSwornStatement } from "services/candidacyServices";
 
 export const FeasibilityDematSubmission = () => {
   const { state, mainService } = useMainMachineContext();
@@ -28,7 +28,7 @@ export const FeasibilityDematSubmission = () => {
   const onSubmit = async () => {
     if (candidacyId && swornStatementFile) {
       try {
-        await submitSwornStatement(client as ApolloClient<object>)({
+        await createOrUpdateSwornStatement(client as ApolloClient<object>)({
           candidacyId: candidacyId,
           swornStatement: swornStatementFile,
         });
@@ -39,6 +39,18 @@ export const FeasibilityDematSubmission = () => {
       mainService.send("BACK");
     }
   };
+
+  const remoteSwornStatementFile = useMemo(
+    () =>
+      feasibilityDemat?.swornStatementFile?.previewUrl
+        ? {
+            name: feasibilityDemat.swornStatementFile.name,
+            url: feasibilityDemat.swornStatementFile.previewUrl,
+            mimeType: feasibilityDemat.swornStatementFile.mimeType,
+          }
+        : undefined,
+    [feasibilityDemat?.swornStatementFile],
+  );
 
   if (!feasibilityDemat) {
     return null;
@@ -95,10 +107,12 @@ export const FeasibilityDematSubmission = () => {
         <FancyUpload
           title="Joindre l’attestation sur l’honneur complétée et signée"
           hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
+          defaultFile={remoteSwornStatementFile}
           nativeInputProps={{
             onChange: (e) => {
               setSwornStatementFile(e.target.files?.[0]);
             },
+            accept: ".pdf, .jpg, .jpeg, .png",
           }}
         />
 
