@@ -13,6 +13,7 @@ import {
   DematerializedFeasibilityFileSubmitSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
 import { checkIsDFFReadyToBeSentToCandidateById } from "./features/checkIsDFFReadyToBeSentToCandidateById";
+import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
 import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
@@ -26,7 +27,7 @@ import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { submitSwornStatement } from "./features/submitSwornStatement";
 import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
-import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
+import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -69,6 +70,14 @@ export const unsafeResolvers = {
       }),
     candidacy: ({ candidacyId }: { candidacyId: string }) =>
       getCandidacyWithCandidateByCandidacyId({ candidacyId }),
+    swornStatementFile: ({
+      swornStatementFileId,
+    }: {
+      swornStatementFileId: string;
+    }) =>
+      getSwornStatementFileWithFileNameAndUrlById({
+        swornStatementFileId,
+      }),
   },
   CertificationCompetenceDetails: {
     certificationCompetence: ({

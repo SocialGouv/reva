@@ -1517,7 +1517,6 @@ model DematerializedFeasibilityFile {
   attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
-  //
   swornStatementFileId              String?                             @unique @map("sworn_statement_file_id") @db.Uuid
   swornStatementFile                File?                               @relation("sworn_statement_file", fields: [swornStatementFileId], references: [id])
 
