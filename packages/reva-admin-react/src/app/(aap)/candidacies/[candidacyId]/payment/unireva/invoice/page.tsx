@@ -11,8 +11,6 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { CostInput } from "../../_components/form/CostInput";
-import { HourInput } from "../../_components/form/HourInput";
 import { Section } from "../../_components/form/Section";
 import { TableRow } from "../../_components/form/TableRow";
 import {
@@ -21,6 +19,8 @@ import {
 } from "./paymentRequestUniRevaInvoiceFormSchema";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
+import { CostWithEstimateInput } from "./_components/CostWithEstimateInput";
+import { HourWithEstimateInput } from "./_components/HourWithEstimateInput";
 
 const PaymentRequestUniRevaInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -194,19 +194,30 @@ const PaymentRequestUniRevaInvoicePage = () => {
               <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
                 <TableRow>
                   <p>Entretien(s) de faisabilité</p>
-                  <HourInput
+
+                  <HourWithEstimateInput
                     name="diagnosisEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.diagnosisHourCount}
                   />
-                  <CostInput name="diagnosisEffectiveCost" control={control} />
+                  <CostWithEstimateInput
+                    name="diagnosisEffectiveCost"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.diagnosisCost}
+                  />
                 </TableRow>
                 <TableRow>
                   <p>Entretien post jury</p>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="postExamEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.postExamHourCount}
                   />
-                  <CostInput name="postExamEffectiveCost" control={control} />
+                  <CostWithEstimateInput
+                    name="postExamEffectiveCost"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.postExamCost}
+                  />
                 </TableRow>
                 <TableRow className="font-medium">
                   <p>Sous-total des entretiens</p>
@@ -220,19 +231,29 @@ const PaymentRequestUniRevaInvoicePage = () => {
               <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
                 <TableRow>
                   <p>Individuel</p>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="individualEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.individualHourCount}
                   />
-                  <CostInput name="individualEffectiveCost" control={control} />
+                  <CostWithEstimateInput
+                    name="individualEffectiveCost"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.individualCost}
+                  />
                 </TableRow>
                 <TableRow>
                   <p>Collectif</p>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="collectiveEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.collectiveHourCount}
                   />
-                  <CostInput name="collectiveEffectiveCost" control={control} />
+                  <CostWithEstimateInput
+                    name="collectiveEffectiveCost"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.collectiveCost}
+                  />
                 </TableRow>
                 <TableRow className="font-medium">
                   <p>Sous-total des accompagnements</p>
@@ -262,13 +283,17 @@ const PaymentRequestUniRevaInvoicePage = () => {
                       </p>
                     )}
                   </div>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="mandatoryTrainingsEffectiveHourCount"
                     control={control}
+                    estimate={
+                      candidacy.fundingRequest?.mandatoryTrainingsHourCount
+                    }
                   />
-                  <CostInput
+                  <CostWithEstimateInput
                     name="mandatoryTrainingsEffectiveCost"
                     control={control}
+                    estimate={candidacy.fundingRequest?.mandatoryTrainingsCost}
                   />
                 </TableRow>
                 <TableRow>
@@ -287,13 +312,15 @@ const PaymentRequestUniRevaInvoicePage = () => {
                       </p>
                     )}
                   </div>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="basicSkillsEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.basicSkillsHourCount}
                   />
-                  <CostInput
+                  <CostWithEstimateInput
                     name="basicSkillsEffectiveCost"
                     control={control}
+                    estimate={candidacy.fundingRequest?.basicSkillsCost}
                   />
                 </TableRow>
                 <TableRow>
@@ -303,13 +330,17 @@ const PaymentRequestUniRevaInvoicePage = () => {
                       {candidacy.certificateSkills || "Non précisé"}
                     </pre>
                   </div>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="certificateSkillsEffectiveHourCount"
                     control={control}
+                    estimate={
+                      candidacy.fundingRequest?.certificateSkillsHourCount
+                    }
                   />
-                  <CostInput
+                  <CostWithEstimateInput
                     name="certificateSkillsEffectiveCost"
                     control={control}
+                    estimate={candidacy.fundingRequest?.certificateSkillsCost}
                   />
                 </TableRow>
                 <TableRow>
@@ -319,13 +350,15 @@ const PaymentRequestUniRevaInvoicePage = () => {
                       {candidacy.otherTraining || "Non précisé"}
                     </pre>
                   </div>
-                  <HourInput
+                  <HourWithEstimateInput
                     name="otherTrainingEffectiveHourCount"
                     control={control}
+                    estimate={candidacy.fundingRequest?.otherTrainingHourCount}
                   />
-                  <CostInput
+                  <CostWithEstimateInput
                     name="otherTrainingEffectiveCost"
                     control={control}
+                    estimate={candidacy.fundingRequest?.otherTrainingCost}
                   />
                 </TableRow>
                 <TableRow className="font-medium">
@@ -340,8 +373,16 @@ const PaymentRequestUniRevaInvoicePage = () => {
               <div className="flex flex-col flew-wrap w-full border-[1px] border-default-grey rounded-lg">
                 <TableRow>
                   <p>Jury</p>
-                  <HourInput name="examEffectiveHourCount" control={control} />
-                  <CostInput name="examEffectiveCost" control={control} />
+                  <HourWithEstimateInput
+                    name="examEffectiveHourCount"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.examHourCount}
+                  />
+                  <CostWithEstimateInput
+                    name="examEffectiveCost"
+                    control={control}
+                    estimate={candidacy.fundingRequest?.examCost}
+                  />
                 </TableRow>
               </div>
             </fieldset>
