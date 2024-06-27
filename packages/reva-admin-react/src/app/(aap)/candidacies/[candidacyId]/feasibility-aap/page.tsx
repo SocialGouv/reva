@@ -1,5 +1,4 @@
 "use client";
-import { CandidateValidationCard } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/CandidateValidationCard";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
 import {
@@ -19,6 +18,7 @@ import { AttachmentsCard } from "./_components/AttachmentsCard";
 import { DecisionCard } from "./_components/DecisionCard";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
+import { SwornStatementCard } from "./_components/SwornStatementCard";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -114,7 +114,7 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
             }
           />
-          <CandidateValidationCard
+          <SwornStatementCard
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }

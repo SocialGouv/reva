@@ -18,6 +18,7 @@ type DematerializedFeasibilityFile {
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp
   swornStatementFileId: ID
+  swornStatementFile: File
   isReadyToBeSentToCandidate: Boolean!
   isReadyToBeSentToCertificationAuthority: Boolean!
 }

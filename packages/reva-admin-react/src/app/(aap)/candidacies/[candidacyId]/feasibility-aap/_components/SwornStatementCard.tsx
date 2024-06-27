@@ -2,7 +2,7 @@ import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useParams } from "next/navigation";
 
-export const CandidateValidationCard = ({
+export const SwornStatementCard = ({
   sentToCandidateAt,
 }: {
   sentToCandidateAt?: Date | null;
@@ -16,7 +16,7 @@ export const CandidateValidationCard = ({
       status={"TO_COMPLETE"}
       isEditable
       disabled={!sentToCandidateAt}
-      buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/candidate-validation`}
+      buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}
     >
       {!sentToCandidateAt && (
         <SmallNotice>

@@ -7,8 +7,8 @@ import {
   uploadFilesToS3,
 } from "../../shared/file";
 import { DematerializedFeasibilityFileSubmitSwornStatementInput } from "../dematerialized-feasibility-file.types";
-import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
+import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 
 export const submitSwornStatement = async ({
   candidacyId,

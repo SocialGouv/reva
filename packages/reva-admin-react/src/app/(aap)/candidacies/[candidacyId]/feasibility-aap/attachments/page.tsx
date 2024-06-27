@@ -4,6 +4,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
+import { File as GQLFile } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,7 +14,6 @@ import {
   createOrUpdateAttachments,
   useAttachments,
 } from "./_components/attachments.hook";
-import { File as GQLFile } from "@/graphql/generated/graphql";
 
 const schema = z
   .object({
