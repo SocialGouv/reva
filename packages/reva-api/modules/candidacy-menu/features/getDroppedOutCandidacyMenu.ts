@@ -69,12 +69,6 @@ export const getDroppedOutCandidacyMenu = async ({
       return undefined;
     }
 
-    const isPaymentRequestUnifvaeReactFeatureActive =
-      await isFeatureActiveForUser({
-        userKeycloakId,
-        feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
-      });
-
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
     if (isStatusEqualOrAbove("DEMANDE_FINANCEMENT_ENVOYE")) {
@@ -84,14 +78,35 @@ export const getDroppedOutCandidacyMenu = async ({
           : "ACTIVE_WITHOUT_HINT";
     }
 
-    const isCandidacyUniFvae = candidacy.financeModule === "unifvae";
+    const isCandidacyUniReva = candidacy.financeModule === "unireva";
+
+    const isPaymentRequestUnifvaeReactFeatureActive =
+      await isFeatureActiveForUser({
+        userKeycloakId,
+        feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
+      });
+
+    const isPaymentRequestUnirevaReactFeatureActive =
+      await isFeatureActiveForUser({
+        userKeycloakId,
+        feature: "PAYMENT_REQUEST_UNIREVA_REACT",
+      });
+
+    let paymentPageUrl = null;
+
+    if (isCandidacyUniReva) {
+      paymentPageUrl = isPaymentRequestUnirevaReactFeatureActive
+        ? buildUrl({ adminType: "React", suffix: "payment/unireva/invoice" })
+        : buildUrl({ adminType: "Elm", suffix: "payment" });
+    } else {
+      paymentPageUrl = isPaymentRequestUnifvaeReactFeatureActive
+        ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
+        : buildUrl({ adminType: "Elm", suffix: "payment" });
+    }
 
     return {
       label: "Demande de paiement",
-      url:
-        isPaymentRequestUnifvaeReactFeatureActive && isCandidacyUniFvae
-          ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
-          : buildUrl({ adminType: "Elm", suffix: "payment" }),
+      url: paymentPageUrl,
       status: menuEntryStatus,
     };
   };
