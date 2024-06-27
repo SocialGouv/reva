@@ -86,12 +86,12 @@
     "xstate": "^4.30.6"
   },
   "scripts": {
+    "predev": "only-include-used-icons && graphql-codegen --config codegen.ts",
     "dev": "node scripts/start.js",
     "build": "node scripts/build.js && cp -R ./build ../reva-api/dist/app",
     "test": "node scripts/test.js",
     "lint-staged": "lint-staged",
     "postinstall": "copy-dsfr-to-public",
-    "predev": "only-include-used-icons",
     "prebuild": "only-include-used-icons && npm run graphql:generate",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch"
