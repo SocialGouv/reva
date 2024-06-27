@@ -3,8 +3,14 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { CreateSubscriptionRequestV2Input } from "@/graphql/generated/graphql";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { ReactNode, createContext } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Client, fetchExchange } from "urql";
 
 const createSubscriptionRequestV2 = graphql(`
@@ -135,7 +141,6 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
 
   const submitCguStep = useCallback(
     (stepData: CguStepData) => {
-      console.log(stepData);
       setState({
         currentStep: "companySiretStep",
         professionalSpaceInfos: {

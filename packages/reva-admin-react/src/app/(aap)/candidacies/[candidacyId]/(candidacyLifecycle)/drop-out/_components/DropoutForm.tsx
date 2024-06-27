@@ -1,13 +1,13 @@
+import { graphqlErrorToast } from "@/components/toast/toast";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { ActiveDropoutReasons, useDropout } from "./useDropout";
-import { useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import Select from "@codegouvfr/react-dsfr/Select";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+import { ActiveDropoutReasons, useDropout } from "./useDropout";
 
 const schema = z.object({
   otherReasonContent: z.string().optional(),
@@ -35,24 +35,29 @@ export const DropoutForm = ({
     reValidateMode: "onChange",
   });
 
-  const dropOutReasonId = useWatch({ control: form.control, name: "dropOutReasonId" });
+  const dropOutReasonId = useWatch({
+    control: form.control,
+    name: "dropOutReasonId",
+  });
 
   return (
     <>
-      <form className="flex flex-col gap-y-2 mt-6" onSubmit={form.handleSubmit(async (data) => {
-        console.log(data);
-        try {
-          await dropoutCandidacyById.mutateAsync({
-            dropoutReasonId: data.dropOutReasonId,
-            otherReasonContent: data.otherReasonContent,
-            droppedOutAt: Date.now(),
-          });
-          router.push(`/candidacies/${candidacyId}/summary`);
-        } catch (error) {
-          console.error(error);
-          graphqlErrorToast(error);
-        }
-      })}>
+      <form
+        className="flex flex-col gap-y-2 mt-6"
+        onSubmit={form.handleSubmit(async (data) => {
+          try {
+            await dropoutCandidacyById.mutateAsync({
+              dropoutReasonId: data.dropOutReasonId,
+              otherReasonContent: data.otherReasonContent,
+              droppedOutAt: Date.now(),
+            });
+            router.push(`/candidacies/${candidacyId}/summary`);
+          } catch (error) {
+            console.error(error);
+            graphqlErrorToast(error);
+          }
+        })}
+      >
         <Select
           state={form.formState.errors.dropOutReasonId ? "error" : "default"}
           stateRelatedMessage={form.formState.errors.dropOutReasonId?.message}
