@@ -118,6 +118,9 @@ const AapFeasibilityPage = () => {
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
+            swornStatementFileId={
+              dematerializedFeasibilityFile?.swornStatementFileId
+            }
           />
         </ul>
       )}

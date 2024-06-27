@@ -4,8 +4,10 @@ import { useParams } from "next/navigation";
 
 export const SwornStatementCard = ({
   sentToCandidateAt,
+  swornStatementFileId,
 }: {
   sentToCandidateAt?: Date | null;
+  swornStatementFileId?: string | null;
 }) => {
   const { candidacyId } = useParams();
 
@@ -13,7 +15,7 @@ export const SwornStatementCard = ({
     <DefaultCandidacySectionCard
       title="Validation du candidat"
       titleIconClass="fr-icon-success-fill"
-      status={"TO_COMPLETE"}
+      status={swornStatementFileId ? "COMPLETED" : "TO_COMPLETE"}
       isEditable
       disabled={!sentToCandidateAt}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}
