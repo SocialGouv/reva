@@ -20,12 +20,6 @@ const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
     ) {
       id
       sentToCandidateAt
-      certificationCompetenceDetails {
-        certificationCompetence {
-          label
-        }
-        text
-      }
       aapDecision
       aapDecisionComment
       prerequisites {
@@ -35,6 +29,24 @@ const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
       firstForeignLanguage
       secondForeignLanguage
       option
+      blocsDeCompetences {
+        id
+        code
+        label
+        isOptional
+        FCCompetences
+        competences {
+          id
+          label
+        }
+      }
+      certificationCompetenceDetails {
+        text
+        certificationCompetence {
+          id
+          label
+        }
+      }
       candidacy {
         individualHourCount
         collectiveHourCount
@@ -55,21 +67,14 @@ const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
             longLabel
             level
           }
-          competenceBlocs {
-            code
-            label
-            isOptional
-            FCCompetences
-            competences {
-              label
-            }
-          }
         }
         goals {
+          id
           label
           isActive
         }
         experiences {
+          id
           title
           startedAt
           duration

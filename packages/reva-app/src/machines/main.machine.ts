@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/react";
+import { DematerializedFeasibilityFile } from "graphql/generated/graphql";
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import {
@@ -8,7 +9,6 @@ import {
   DossierDeValidation,
   Experience,
   Experiences,
-  FeasibilityDemat,
   FeasibilityFormat,
   FeasibilityPdf,
   FinanceModule,
@@ -95,7 +95,7 @@ export interface MainContext {
   firstAppointmentOccuredAt?: Date;
   feasibilityFormat?: FeasibilityFormat;
   feasibilityPdf?: FeasibilityPdf;
-  feasibilityDemat?: FeasibilityDemat;
+  feasibilityDemat?: DematerializedFeasibilityFile;
   dossierDeValidation?: DossierDeValidation;
   jury?: Jury;
   candidacyFinanceModule: FinanceModule;

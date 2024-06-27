@@ -6,7 +6,7 @@ import {
   CertificationCompetenceBloc,
   CertificationCompetenceDetails,
   Prerequisite,
-} from "@/graphql/generated/graphql";
+} from "graphql/generated/graphql";
 import { useMemo } from "react";
 
 export default function CertificationSection({

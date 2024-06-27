@@ -1,31 +1,29 @@
-"use client";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { format } from "date-fns";
 import {
-  Candidacy,
   Candidate,
   DematerializedFeasibilityFile,
   DffAttachment,
   Prerequisite,
-} from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { format } from "date-fns";
-import AttachmentsSection from "./_components/AttachmentsSection";
-import CandidateSection from "./_components/CandidateSection";
-import CertificationSection from "./_components/CertificationSection";
-import DecisionSection from "./_components/DecisionSection";
-import ExperiencesSection from "./_components/ExperiencesSection";
-import GoalsSection from "./_components/GoalsSection";
-import ParcoursSection from "./_components/ParcoursSection";
+} from "graphql/generated/graphql";
 
-export default function DffSummary({
-  dematerializedFeasibilityFile,
-}: {
-  dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
-}) {
-  if (!dematerializedFeasibilityFile) {
-    return null;
-  }
+import AttachmentsSection from "./components/AttachmentsSection";
+import CandidateSection from "./components/CandidateSection";
+import CertificationSection from "./components/CertificationSection";
+import DecisionSection from "./components/DecisionSection";
+import ExperiencesSection from "./components/ExperiencesSection";
+import GoalsSection from "./components/GoalsSection";
+import ParcoursSection from "./components/ParcoursSection";
+
+interface Props {
+  dematerializedFeasibilityFile: DematerializedFeasibilityFile;
+}
+
+export function DffSummary(props: Props) {
+  const { dematerializedFeasibilityFile } = props;
 
   const { candidacy } = dematerializedFeasibilityFile;
+  const { candidate } = candidacy;
 
   const {
     option,
@@ -48,7 +46,7 @@ export default function DffSummary({
     additionalHourCount,
     individualHourCount,
     collectiveHourCount,
-  } = candidacy as Candidacy;
+  } = candidacy;
 
   return (
     <div className="flex flex-col">
@@ -56,7 +54,10 @@ export default function DffSummary({
 
       {sentToCandidateAt ? (
         <Alert
-          description={`Dossier envoyé au certificateur le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
+          description={`Dossier envoyé au certificateur le ${format(
+            sentToCandidateAt,
+            "dd/MM/yyyy",
+          )}`}
           severity="success"
           title=""
           className="mb-12"
@@ -69,7 +70,7 @@ export default function DffSummary({
         </p>
       )}
 
-      <CandidateSection candidate={candidacy?.candidate as Candidate} />
+      <CandidateSection candidate={candidate as Candidate} />
       <CertificationSection
         option={option}
         firstForeignLanguage={firstForeignLanguage}

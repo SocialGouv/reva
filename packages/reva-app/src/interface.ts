@@ -152,17 +152,6 @@ export interface FeasibilityPdf {
   decisionFile?: File;
 }
 
-export interface FeasibilityDemat {
-  id: string;
-  sentToCandidateAt: Date;
-  firstForeignLanguage?: string;
-  secondForeignLanguage?: string;
-  certificationPartComplete: boolean;
-  attachmentsPartComplete: boolean;
-  prerequisitesPartComplete: boolean;
-  swornStatementFileId?: string;
-}
-
 export enum DossierDeValidationDecision {
   PENDING = "PENDING",
   INCOMPLETE = "INCOMPLETE",

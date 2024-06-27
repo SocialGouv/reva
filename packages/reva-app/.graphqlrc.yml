@@ -1,0 +1,4 @@
+# .graphqlrc.yml
+# config for the vscode graphql plugin (https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
+schema: "../reva-api/modules/generated-graphql-schema.graphql"
+documents: "src/**/*.{graphql,js,ts,jsx,tsx}"

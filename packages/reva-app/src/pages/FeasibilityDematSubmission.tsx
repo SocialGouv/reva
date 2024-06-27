@@ -7,6 +7,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { FancyUpload } from "components/atoms/FancyUpload/FancyUpload";
+import { DffSummary } from "components/organisms/DffSummary/DffSummary";
 import { Page } from "components/organisms/Page";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { useContext, useState } from "react";
@@ -14,7 +15,7 @@ import { submitSwornStatement } from "services/candidacyServices";
 
 export const FeasibilityDematSubmission = () => {
   const { state, mainService } = useMainMachineContext();
-  const { candidacyId, organism } = state.context;
+  const { candidacyId, organism, feasibilityDemat } = state.context;
 
   const [swornStatementFile, setSwornStatementFile] = useState<
     File | undefined
@@ -39,9 +40,15 @@ export const FeasibilityDematSubmission = () => {
     }
   };
 
+  if (!feasibilityDemat) {
+    return null;
+  }
+
   return (
     <Page title="Dossier de faisabilité">
       <h1 className="mt-6">Dossier de faisabilité</h1>
+
+      <DffSummary dematerializedFeasibilityFile={feasibilityDemat} />
 
       <form
         className="flex flex-col gap-12"
@@ -66,7 +73,7 @@ export const FeasibilityDematSubmission = () => {
               label="Attestation_sur_l_honneur_modèle"
               linkProps={{
                 title: "Attestation_sur_l_honneur_modèle",
-                href: "",
+                href: "https://www.notion.so/fabnummas/Attestation-sur-l-honneur-du-candidat-pour-transmission-DF-parcours-sans-yousign-92e08c5625f54c269e969e6c5a00319f?pvs=4",
               }}
             />
           </div>

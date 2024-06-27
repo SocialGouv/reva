@@ -314,12 +314,107 @@ const CANDIDACY_SELECTION = `
       dematerializedFeasibilityFile {
         id
         sentToCandidateAt
+        aapDecision
+        aapDecisionComment
+        prerequisites {
+          label
+          state
+        }
         firstForeignLanguage
         secondForeignLanguage
-        certificationPartComplete
-        attachmentsPartComplete
-        prerequisitesPartComplete
-        swornStatementFileId
+        option
+        blocsDeCompetences {
+          id
+          code
+          label
+          isOptional
+          FCCompetences
+          competences {
+            id
+            label
+          }
+        }
+        certificationCompetenceDetails {
+          text
+          certificationCompetence {
+            id
+            label
+          }
+        }
+        candidacy {
+          individualHourCount
+          collectiveHourCount
+          additionalHourCount
+          basicSkills {
+            label
+            id
+          }
+          mandatoryTrainings {
+            label
+            id
+          }
+          certification {
+            label
+            codeRncp
+            level
+            degree {
+              longLabel
+              level
+            }
+          }
+          goals {
+            id
+            label
+            isActive
+          }
+          experiences {
+            id
+            title
+            startedAt
+            duration
+            description
+          }
+          certificateSkills
+          candidate {
+            highestDegree {
+              level
+              longLabel
+            }
+            niveauDeFormationLePlusEleve {
+              level
+            }
+            firstname
+            firstname2
+            firstname3
+            lastname
+            email
+            givenName
+            birthdate
+            birthCity
+            birthDepartment {
+              label
+              code
+              region {
+                code
+                label
+              }
+            }
+            nationality
+            gender
+            phone
+            city
+            street
+            zip
+          }
+        }
+        attachments {
+          type
+          file {
+            name
+            previewUrl
+            mimeType
+          }
+        }
       }
       activeDossierDeValidation {
         id
