@@ -15,6 +15,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Info } from "../../_components/form/Info";
 import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const paymentRequestUniRevaConfirmationSchema = z.object({
   payementRequestConfirmation: z.literal(true, {
@@ -35,6 +36,8 @@ const PaymentRequestUniRevaConfirmationPage = () => {
 
   const router = useRouter();
 
+  const queryClient = useQueryClient();
+
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();
 
@@ -52,6 +55,7 @@ const PaymentRequestUniRevaConfirmationPage = () => {
     async () => {
       try {
         await confirmPaymentRequestUniReva.mutateAsync();
+        queryClient.invalidateQueries({ queryKey: [candidacyId] });
         successToast("Modifications enregistrées");
         router.push(`/candidacies/${candidacyId}/summary`);
       } catch (e) {

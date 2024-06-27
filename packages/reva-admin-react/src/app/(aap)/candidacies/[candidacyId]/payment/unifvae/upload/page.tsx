@@ -14,6 +14,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { REST_API_URL } from "@/config/config";
 import { successToast, errorToast } from "@/components/toast/toast";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 const paymentRequestUniFvaeUploadSchema = z.object({
   invoiceFile: z.object({
@@ -68,6 +69,8 @@ const PaymentRequestUniFvaeUploadPage = () => {
     candidacyId: string;
   }>();
 
+  const queryClient = useQueryClient();
+
   const { accessToken } = useKeycloakContext();
   const router = useRouter();
   const {
@@ -112,6 +115,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
       );
       if (result.ok) {
         successToast("Demande de paiement envoyée");
+        queryClient.invalidateQueries({ queryKey: [candidacyId] });
         router.push(`/candidacies/${candidacyId}/summary`);
       } else {
         errorToast(await result.text());
