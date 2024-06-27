@@ -63,7 +63,7 @@ const RejectedSubscriptionRequestV2sPage = () => {
         </p>
         {getRejectedSubscriptionRequestsStatus === "success" && (
           <SearchList
-            title="Inscriptions en attente"
+            title="Inscriptions refusées"
             searchFilter={searchFilter}
             searchResultsPage={subscriptionRequestPage}
           >

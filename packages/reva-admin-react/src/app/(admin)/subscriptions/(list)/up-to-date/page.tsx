@@ -68,7 +68,7 @@ const ValidatedSubscriptionRequestsPage = () => {
         {getLegalVerificationPendingSubscriptionRequestsStatus ===
           "success" && (
           <SearchList
-            title="Inscriptions validées"
+            title="Maisons-mères vérifiées"
             searchFilter={searchFilter}
             searchResultsPage={subscriptionRequestPage}
           >

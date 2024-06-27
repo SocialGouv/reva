@@ -63,7 +63,7 @@ const PendingSubscriptionRequestV2sPage = () => {
         </p>
         {getPendingSubscriptionRequestsStatus === "success" && (
           <SearchList
-            title="Inscriptions en attente"
+            title="Inscriptions à vérifier"
             searchFilter={searchFilter}
             searchResultsPage={subscriptionRequestPage}
           >

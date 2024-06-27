@@ -62,7 +62,7 @@ const ValidatedSubscriptionRequestsPage = () => {
         </p>
         {getValidatedSubscriptionRequestsStatus === "success" && (
           <SearchList
-            title="Inscriptions validées"
+            title="Maisons-mères non actualisées"
             searchFilter={searchFilter}
             searchResultsPage={subscriptionRequestPage}
           >
