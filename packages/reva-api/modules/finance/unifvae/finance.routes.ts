@@ -9,9 +9,7 @@ interface PaymentRequestProofBody {
   candidacyId: { value: string };
   invoice: UploadedFile;
   certificateOfAttendance: UploadedFile;
-  contractorInvoice1?: UploadedFile;
-  contractorInvoice2?: UploadedFile;
-  contractorInvoice3?: UploadedFile;
+  contractorInvoices?: UploadedFile[];
 }
 
 const uploadRoute: FastifyPluginAsync = async (server) => {
@@ -45,9 +43,15 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
           },
           invoice: { type: "object" },
           appointment: { type: "object" },
-          contractorInvoice1: { type: "object" },
-          contractorInvoice2: { type: "object" },
-          contractorInvoice3: { type: "object" },
+          contractorInvoices: {
+            oneOf: [
+              { type: "object" },
+              {
+                type: "array",
+                items: { type: "object" },
+              },
+            ],
+          },
         },
         required: ["candidacyId"],
       },
@@ -56,9 +60,13 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
       const candidacyId = request.body.candidacyId.value;
       const certificateOfAttendanceFile = request.body.certificateOfAttendance;
       const invoiceFile = request.body.invoice;
-      const contractorInvoice1 = request.body.contractorInvoice1;
-      const contractorInvoice2 = request.body.contractorInvoice2;
-      const contractorInvoice3 = request.body.contractorInvoice3;
+
+      let contractorInvoiceFiles: UploadedFile[] = [];
+      if (Array.isArray(request.body.contractorInvoices)) {
+        contractorInvoiceFiles = [...request.body.contractorInvoices];
+      } else if (request.body.contractorInvoices) {
+        contractorInvoiceFiles = [request.body.contractorInvoices];
+      }
 
       const auhtorization = await canManageCandidacy({
         hasRole: request.auth.hasRole,
@@ -72,45 +80,33 @@ const uploadRoute: FastifyPluginAsync = async (server) => {
         });
       }
 
-      if (
-        !hasValidMimeType(certificateOfAttendanceFile) ||
-        !hasValidMimeType(invoiceFile) ||
-        !hasValidMimeType(contractorInvoice1) ||
-        !hasValidMimeType(contractorInvoice2) ||
-        !hasValidMimeType(contractorInvoice3)
-      ) {
-        return reply
-          .status(400)
-          .send(
-            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
-          );
-      }
-
-      if (
-        certificateOfAttendanceFile._buf?.byteLength >
-          maxUploadFileSizeInBytes ||
-        invoiceFile._buf?.byteLength > maxUploadFileSizeInBytes ||
-        (contractorInvoice1?._buf?.byteLength || -1) >
-          maxUploadFileSizeInBytes ||
-        (contractorInvoice2?._buf?.byteLength || -1) >
-          maxUploadFileSizeInBytes ||
-        (contractorInvoice3?._buf?.byteLength || -1) > maxUploadFileSizeInBytes
-      ) {
-        return reply
-          .status(400)
-          .send(
-            `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
-              maxUploadFileSizeInBytes / 1024 / 1024,
-            )} Mo.`,
-          );
-      }
+      [
+        certificateOfAttendanceFile,
+        invoiceFile,
+        ...(contractorInvoiceFiles || []),
+      ].forEach((f) => {
+        if (!hasValidMimeType(f)) {
+          return reply
+            .status(400)
+            .send(
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
+            );
+        }
+        if (f._buf.byteLength > maxUploadFileSizeInBytes) {
+          return reply
+            .status(400)
+            .send(
+              `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
+                maxUploadFileSizeInBytes / 1024 / 1024,
+              )} Mo.`,
+            );
+        }
+      });
 
       await addUploadedFileAndConfirmPayment({
         candidacyId,
         invoiceFile,
-        contractorInvoice1,
-        contractorInvoice2,
-        contractorInvoice3,
+        contractorInvoiceFiles,
         certificateOfAttendanceFile,
         userKeycloakId: request.auth?.userInfo?.sub,
         userEmail: request.auth?.userInfo?.email,
