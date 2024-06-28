@@ -139,10 +139,13 @@ export const DossierDeValidationTab = ({
               ...register(`dossierDeValidationOtherFiles.${i}`, {
                 onChange: (e) => {
                   if (e.target.value) {
-                    insertDossierDeValidationOtherFiles(
-                      dossierDeValidationOtherFilesFields.length,
-                      [{}],
-                    );
+                    //if the file input has a value and it was the last empty one we add another empty file input
+                    if (i == dossierDeValidationOtherFilesFields.length - 1) {
+                      insertDossierDeValidationOtherFiles(
+                        dossierDeValidationOtherFilesFields.length,
+                        [{}],
+                      );
+                    }
                   } else {
                     removeDossierDeValidationOtherFiles(i);
                   }
