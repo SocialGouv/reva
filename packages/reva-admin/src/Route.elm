@@ -36,7 +36,6 @@ type Route
     | Login
     | Logout
     | NotFound
-    | SiteMap
 
 
 emptyCandidacyFilters : CandidacyFilters
@@ -67,7 +66,6 @@ parser baseUrl =
                 [ top |> map Home
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
-                , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
@@ -118,9 +116,6 @@ toString baseUrl route =
 
         NotFound ->
             topLevel [ "not-found" ] []
-
-        SiteMap ->
-            topLevel [ "plan-du-site" ] []
 
         Candidacies filters ->
             topLevel [ "candidacies" ]

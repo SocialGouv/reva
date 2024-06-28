@@ -15,7 +15,6 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacy as Candidacy
 import Page.Loading
 import Page.Search.Candidacies as Candidacies exposing (Model)
-import Page.SiteMap as SiteMap
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Task
@@ -52,7 +51,6 @@ type Page
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
-    | SiteMap
 
 
 type Msg
@@ -129,9 +127,6 @@ viewPage model =
         LoggingOut ->
             Page.Loading.view model.context
 
-        SiteMap ->
-            SiteMap.view model.context
-
 
 
 -- UPDATE
@@ -185,9 +180,6 @@ changeRouteTo context route model =
 
         ( Route.NotFound, _ ) ->
             noChange
-
-        ( Route.SiteMap, _ ) ->
-            ( { model | page = SiteMap }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
