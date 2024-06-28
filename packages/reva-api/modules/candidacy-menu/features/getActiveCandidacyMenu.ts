@@ -290,7 +290,7 @@ export const getActiveCandidacyMenu = async ({
         }
       : {
           label: "Jury",
-          url: buildUrl({ adminType: "Elm", suffix: "examInfo" }),
+          url: buildUrl({ adminType: "React", suffix: "exam-info" }),
           status: menuEntryStatus,
         };
   };
