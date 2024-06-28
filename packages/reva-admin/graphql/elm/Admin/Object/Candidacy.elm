@@ -303,12 +303,6 @@ paymentRequest object____ =
     Object.selectionForCompositeField "paymentRequest" [] object____ (Basics.identity >> Decode.nullable)
 
 
-examInfo :
-    SelectionSet decodesTo Admin.Object.ExamInfo
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-examInfo object____ =
-    Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
-
 
 jury :
     SelectionSet decodesTo Admin.Object.Jury

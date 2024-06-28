@@ -20,6 +20,5 @@ type Value
     | PaymentUploads
     | Profile
     | FundingRequest
-    | ExamInfo
     | JuryDate
     | JuryResult

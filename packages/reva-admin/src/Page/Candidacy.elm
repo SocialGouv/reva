@@ -8,11 +8,10 @@ module Page.Candidacy exposing
     , view
     )
 
-import Accessibility exposing (h1, h4)
+import Accessibility exposing (h1)
 import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
-import Api.Form.ExamInfo
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
@@ -30,7 +29,6 @@ import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, name)
 import Page.Form as Form
 import Page.Form.Admissibility
-import Page.Form.ExamInfo
 import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsAndConfirmationUniFvae
@@ -142,16 +140,6 @@ view context model =
                 , View.Tabs.view tabs activeTabContent
                 ]
 
-        viewFormWithTabs name title tabs =
-            let
-                remoteReferential =
-                    RemoteData.map2 Tuple.pair model.selected model.state.referential
-            in
-            viewWithTabs name
-                title
-                tabs
-                [ Form.view remoteReferential model.form |> Html.map GotFormMsg ]
-
         viewForm name =
             viewArticle
                 name
@@ -231,9 +219,6 @@ view context model =
 
                 Admissibility ->
                     viewForm "admissibility"
-
-                ExamInfo ->
-                    viewForm "examInfo"
 
                 JuryDate ->
                     displayWithCandidacy <|
@@ -469,21 +454,6 @@ updateTab context tab ( model, cmd ) =
             initCandidacy context tab.candidacyId ( newModel, cmd )
                 |> withTakeOver context tab.candidacyId
 
-        ( View.Candidacy.Tab.ExamInfo, Success _ ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.ExamInfo.form
-                        , onLoad = Just <| Api.Form.ExamInfo.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.ExamInfo.update tab.candidacyId
-                        , onRedirect = redirectToProfile
-                        , onValidate = \_ _ -> Ok ()
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
         ( _, NotAsked ) ->
             initCandidacy context tab.candidacyId ( newModel, cmd )

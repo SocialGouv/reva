@@ -77,7 +77,6 @@ parser baseUrl =
                 , subLevel "candidacies" "payment" |> candidacyTab Tab.PaymentRequest
                 , subLevel "candidacies" "payment" </> s "confirmation" |> candidacyTab Tab.PaymentRequestConfirmation
                 , subLevel "candidacies" "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
-                , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
                 , subLevel "candidacies" "jury" |> candidacyTab Tab.JuryDate
                 , subLevel "candidacies" "jury" </> s "date" |> candidacyTab Tab.JuryDate
                 , subLevel "candidacies" "jury" </> s "result" |> candidacyTab Tab.JuryResult
@@ -165,9 +164,6 @@ tabToString topLevel subLevel tab =
 
         Tab.Admissibility ->
             default [ "admissibility" ]
-
-        Tab.ExamInfo ->
-            default [ "examInfo" ]
 
         Tab.JuryDate ->
             default [ "jury", "date" ]
