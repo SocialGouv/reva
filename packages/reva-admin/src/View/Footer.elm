@@ -2,12 +2,13 @@ module View.Footer exposing (..)
 
 import Accessibility exposing (a, div, footer, li, p, text, ul)
 import Accessibility.Aria
+import Data.Context exposing (Context)
 import Html.Attributes exposing (alt, attribute, class, height, href, id, target, width)
 import Route
 import View
 
 
-view : { a | baseUrl : String } -> Accessibility.Html msg
+view : Context -> Accessibility.Html msg
 view context =
     footer
         [ class "fr-footer"
@@ -95,9 +96,8 @@ view context =
                         ]
                         [ a
                             [ class "fr-footer__bottom-link"
-                            , target "_parent"
-                            , Route.href context.baseUrl <|
-                                Route.SiteMap
+                            , target "_self"
+                            , href <| context.adminReactUrl ++ "/plan-du-site"
                             ]
                             [ text "Plan du site" ]
                         ]
