@@ -43,7 +43,7 @@ export const Header = () => {
               {
                 text: "Paramètres",
                 linkProps: {
-                  href: "/agencies-settings",
+                  href: "/agencies-settings/legal-information",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/agencies-settings"),
