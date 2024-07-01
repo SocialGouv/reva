@@ -7,10 +7,10 @@ type CandidacyReturnType<T extends CandidacyInclude> =
   Promise<Prisma.CandidacyGetPayload<{ include: T }> | null>;
 
 export const getCandidacyById = async function getCandidacyById<
-  SelectedIncludes extends CandidacyInclude,
+  SelectedIncludes extends CandidacyInclude = Record<string, never>,
 >({
   candidacyId,
-  includes,
+  includes = {} as SelectedIncludes,
 }: {
   candidacyId: string;
   includes?: SelectedIncludes;
