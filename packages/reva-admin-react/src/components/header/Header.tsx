@@ -55,7 +55,7 @@ export const Header = () => {
               {
                 text: "Inscriptions",
                 linkProps: {
-                  href: "/subscriptions/pending",
+                  href: "/subscriptions/pending-v2",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/subscriptions"),

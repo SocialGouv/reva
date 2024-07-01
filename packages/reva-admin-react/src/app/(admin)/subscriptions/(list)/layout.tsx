@@ -81,14 +81,10 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
     if (showLegalMenuItems) {
       return [
         menuItem(
-          "Anciennes inscriptions à vérifier",
-          hrefSideMenu("pending"),
+          "Inscriptions à vérifier",
+          hrefSideMenu("pending-v2"),
           currentPathname,
-        ),
-        menuItem(
-          "Anciennes inscriptions refusées",
-          hrefSideMenu("rejected"),
-          currentPathname,
+          subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
         ),
         menuItem(
           "Inscriptions refusées",
@@ -96,26 +92,21 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
           currentPathname,
           subscriptionCountByStatus?.REJECTED_SUBSCRIPTION,
         ),
+
         menuItem(
-          "Inscriptions à vérifier",
-          hrefSideMenu("pending-v2"),
-          currentPathname,
-          subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
-        ),
-        menuItem(
-          "Maisons-mères à vérifier",
+          "Comptes administrateur à vérifier",
           hrefSideMenu("check-legal-information"),
           currentPathname,
           subscriptionCountByStatus?.PENDING_LEGAL_VERIFICATION,
         ),
         menuItem(
-          "Maisons-mères non actualisées",
+          "Comptes administrateur incomplets",
           hrefSideMenu("validated"),
           currentPathname,
           subscriptionCountByStatus?.NEED_LEGAL_VERIFICATION,
         ),
         menuItem(
-          "Maisons-mères vérifiées",
+          "Comptes administrateur vérifiés",
           hrefSideMenu("up-to-date"),
           currentPathname,
           subscriptionCountByStatus?.APPROVED,
@@ -137,12 +128,11 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
       <SideMenu
-        className="flex-shrink-0 flex-grow-0 md:basis-[372px]"
+        className="flex-shrink-0 flex-grow-0 md:basis-[420px]"
         align="left"
         burgerMenuButtonText="Inscriptions"
         sticky
         fullHeight
-        title="Inscriptions"
         items={items}
       />
       <div className="mt-3 w-full">{children}</div>

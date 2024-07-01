@@ -55,7 +55,7 @@ const ValidatedSubscriptionRequestsPage = () => {
     subscriptionRequestPage &&
     getValidatedSubscriptionRequestsStatus === "success" && (
       <SearchList
-        title="Maisons-mères non actualisées"
+        title="Comptes administrateur incomplets"
         searchFilter={searchFilter}
         searchResultsPage={subscriptionRequestPage}
       >
