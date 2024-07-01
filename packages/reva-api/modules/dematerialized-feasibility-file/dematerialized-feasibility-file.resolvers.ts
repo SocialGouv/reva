@@ -19,15 +19,16 @@ import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments"
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
+import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
-import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
-import { updateSentToCandidateAtNow } from "./features/updateSentToCandidateAt";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
+import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
+import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -140,7 +141,7 @@ export const unsafeResolvers = {
       {
         dematerializedFeasibilityFileId,
       }: { dematerializedFeasibilityFileId: string },
-    ) => updateSentToCandidateAtNow({ dematerializedFeasibilityFileId }),
+    ) => sendDFFToCandidate({ dematerializedFeasibilityFileId }),
 
     dematerialized_feasibility_file_createOrUpdateSwornStatement: (
       _parent: unknown,
@@ -148,6 +149,14 @@ export const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
       },
     ) => createOrUpdateSwornStatement(params.input),
+
+    dematerialized_feasibility_file_sendToCertificationAuthority: (
+      _parent: unknown,
+      params: {
+        dematerializedFeasibilityFileId: string;
+        certificationAuthorityId: string;
+      },
+    ) => sendDFFToCertificationAuthority(params),
   },
 };
 

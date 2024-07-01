@@ -31,6 +31,8 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_sendToCandidate":
     isAdminOrCandidacyCompanion,
+  "Mutation.dematerialized_feasibility_file_sendToCertificationAuthority":
+    isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_createOrUpdateSwornStatement": [
     hasRole(["admin", "manage_candidacy", "candidate"]),
     whenHasRole("manage_candidacy", isCandidacyOwner),

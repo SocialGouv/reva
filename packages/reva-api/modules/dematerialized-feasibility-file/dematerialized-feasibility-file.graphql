@@ -17,6 +17,7 @@ type DematerializedFeasibilityFile {
   attachments: [DFFAttachment]!
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp
+  sentToCertificationAuthorityAt: Timestamp
   swornStatementFileId: ID
   swornStatementFile: File
   isReadyToBeSentToCandidate: Boolean!
@@ -158,6 +159,11 @@ type Mutation {
 
   dematerialized_feasibility_file_sendToCandidate(
     dematerializedFeasibilityFileId: ID!
+  ): String!
+
+  dematerialized_feasibility_file_sendToCertificationAuthority(
+    dematerializedFeasibilityFileId: ID!
+    certificationAuthorityId: ID!
   ): String!
 
   dematerialized_feasibility_file_createOrUpdateSwornStatement(
