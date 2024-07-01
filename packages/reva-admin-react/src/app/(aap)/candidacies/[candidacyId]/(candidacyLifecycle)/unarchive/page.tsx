@@ -34,7 +34,7 @@ const CandidacyUnarchiveComponent = ({
 };
 
 const CandidacyUnarchivePage = () => {
-  const { candidacy, candidacyId } = useUnarchive({});
+  const { candidacy } = useUnarchive({});
 
   if (!candidacy) {
     return null;
