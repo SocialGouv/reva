@@ -16,7 +16,7 @@ const HasBeenSentComponent = ({
   <>
     {sentToCandidateAt ? (
       <Alert
-        description={`Dossier envoyé au certificateur le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
+        description={`Dossier envoyé au candidat le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
         severity="success"
         title=""
         className="mb-12"
