@@ -1080,6 +1080,7 @@ model CertificationAuthority {
   certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
   DossierDeValidation                   DossierDeValidation[]
   Jury                                  Jury[]
+  DematerializedFeasibilityFile         DematerializedFeasibilityFile[]
 
   @@map("certification_authority")
 }
@@ -1517,8 +1518,11 @@ model DematerializedFeasibilityFile {
   attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
+  sentToCertificationAuthorityAt    DateTime?                           @map("sent_to_certification_authority_at") @db.Timestamptz(6)
   swornStatementFileId              String?                             @unique @map("sworn_statement_file_id") @db.Uuid
   swornStatementFile                File?                               @relation("sworn_statement_file", fields: [swornStatementFileId], references: [id])
+  certificationAuthority            CertificationAuthority?             @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId          String?                             @map("certification_authority_id") @db.Uuid
 
   @@map("dematerialized_feasibility_file")
 }
