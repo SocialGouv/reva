@@ -616,29 +616,21 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await unarchiveCandidacy({
-        unarchiveCandidacy: candidacyDb.unarchiveCandidacy,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        hasRole: context.auth.hasRole,
-      })({
         candidacyId: payload.candidacyId,
       });
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         context,
         result,
         eventType: CandidacyBusinessEvent.UNARCHIVED_CANDIDACY,
       });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_UNARCHIVED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_UNARCHIVED",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+      return result;
     },
     candidacy_updateAppointmentInformations: async (
       _: unknown,

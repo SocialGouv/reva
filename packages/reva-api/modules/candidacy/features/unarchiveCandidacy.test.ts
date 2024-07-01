@@ -1,82 +1,46 @@
-import { sub } from "date-fns";
-import { Either, Maybe, Right } from "purify-ts";
-
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+  Candidate,
+  Candidacy,
+  Organism,
+  ReorientationReason,
+  Department,
+} from "@prisma/client";
+import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
+import { prismaClient } from "../../../prisma/client";
+import {
+  organismIperia,
+  candidateJPL,
+} from "../../../test/fixtures/people-organisms";
+import { sub } from "date-fns";
+
+const reorientationReasonTable = [
+  { label: "Droit commun" },
+  {
+    label: "Architecte de parcours neutre",
+  },
+  {
+    label: "Une autre certification de France VAE",
+  },
+];
 
 const recentDate = new Date();
 const oldDate = sub(recentDate, { days: 10 });
-
-const addCreatedDateAndId = (s: any) => ({
-  createdAt: oldDate,
-  id: "123",
-  ...s,
-});
-
-const candidacyStatusesPriseEnCharge = [
-  {
-    status: "PROJET",
-    isActive: false,
-  },
-  {
-    status: "PRISE_EN_CHARGE",
-    isActive: true,
-  },
-].map(addCreatedDateAndId);
 
 const candidacyStatusesArchive = [
   {
     status: "PROJET",
     isActive: false,
+    createdAt: oldDate,
   },
   {
     status: "PRISE_EN_CHARGE",
     isActive: false,
-    createdAt: recentDate,
   },
   {
     status: "ARCHIVE",
     isActive: true,
   },
-].map(addCreatedDateAndId);
-
-const candidacyPriseEnCharge: Candidacy = {
-  id: "c1",
-  candidacyStatuses: candidacyStatusesPriseEnCharge,
-  createdAt: new Date(),
-  department: null,
-  email: null,
-  experiences: [],
-  reorientationReason: null,
-  financeModule: "unifvae",
-};
-
-const candidacyArchived: Candidacy = {
-  ...candidacyPriseEnCharge,
-  id: "c3",
-  candidacyStatuses: candidacyStatusesArchive,
-};
-
-const candidacyReoriented: Candidacy = {
-  ...candidacyArchived,
-  id: "c4",
-  reorientationReason: {
-    id: "r1",
-    label: "well",
-    createdAt: new Date(),
-    updatedAt: null,
-    disabled: false,
-  },
-};
-
-const candidacyTable: Candidacy[] = [
-  candidacyPriseEnCharge,
-  candidacyArchived,
-  candidacyReoriented,
 ];
 
 const unarchivedCandidacyStatuses = [
@@ -85,68 +49,112 @@ const unarchivedCandidacyStatuses = [
     isActive: false,
   })),
   {
-    id: "123",
     status: "PRISE_EN_CHARGE",
     isActive: true,
-    createdAt: recentDate,
   },
 ];
 
-const getCandidacyById = (id: string): Either<string, Candidacy> =>
-  Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
-    "not found",
-  );
+let organism: Organism,
+  candidate: Candidate,
+  candidacyPriseEnCharge: Candidacy,
+  candidacyWithReorientationReason: Candidacy,
+  candidacyArchived: Candidacy,
+  reorientationReason: ReorientationReason,
+  parisDepartment: Department;
 
-const unarchiveWithRightRole = unarchiveCandidacy({
-  getCandidacyFromId: (id) => Promise.resolve(getCandidacyById(id)),
-  hasRole: () => true,
-  unarchiveCandidacy: ({ candidacyId }) => {
-    const candidacy = getCandidacyById(candidacyId).extract() as Candidacy;
-    return Promise.resolve(
-      Right({
-        ...candidacy,
-        candidacyStatuses: unarchivedCandidacyStatuses,
-      }),
-    );
-  },
+beforeAll(async () => {
+  reorientationReason = (await prismaClient.reorientationReason.findUnique({
+    where: {
+      label: reorientationReasonTable[1].label,
+    },
+  })) as ReorientationReason;
+
+  parisDepartment = (await prismaClient.department.findFirst({
+    where: { code: "75" },
+  })) as Department;
+  organism = await prismaClient.organism.create({ data: organismIperia });
+
+  candidate = await prismaClient.candidate.create({
+    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
+  });
+
+  candidacyPriseEnCharge = await prismaClient.candidacy.create({
+    data: {
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+      candidacyStatuses: {
+        create: unarchivedCandidacyStatuses,
+      },
+    },
+  });
+
+  candidacyWithReorientationReason = await prismaClient.candidacy.create({
+    data: {
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+      candidacyStatuses: {
+        create: candidacyStatusesArchive,
+      },
+      reorientationReasonId: reorientationReason?.id,
+    },
+  });
+
+  candidacyArchived = await prismaClient.candidacy.create({
+    data: {
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+      candidacyStatuses: {
+        create: candidacyStatusesArchive,
+      },
+    },
+  });
+});
+
+afterAll(async () => {
+  await prismaClient.candidacy.delete({ where: { id: candidacyArchived.id } });
+  await prismaClient.candidacy.delete({
+    where: { id: candidacyWithReorientationReason.id },
+  });
+  await prismaClient.candidacy.delete({
+    where: { id: candidacyPriseEnCharge.id },
+  });
+  await prismaClient.candidate.delete({ where: { id: candidate.id } });
+  await prismaClient.organism.delete({ where: { id: organism.id } });
 });
 
 describe("unarchive candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
-    const result = await unarchiveWithRightRole({
-      candidacyId: "badId",
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-    );
+    await expect(async () => {
+      await unarchiveCandidacy({
+        candidacyId: "badId",
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_NOT_ARCHIVED", async () => {
-    const result = await unarchiveWithRightRole({
-      candidacyId: candidacyPriseEnCharge.id,
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-    );
+    await expect(async () => {
+      await unarchiveCandidacy({
+        candidacyId: candidacyPriseEnCharge.id,
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED);
   });
 
   test("should fail with CANDIDACY_IS_REORIENTATION", async () => {
-    const result = await unarchiveWithRightRole({
-      candidacyId: candidacyReoriented.id,
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_IS_REORIENTATION,
-    );
+    await expect(async () => {
+      await unarchiveCandidacy({
+        candidacyId: candidacyWithReorientationReason.id,
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACY_IS_REORIENTATION);
   });
 
   test("should return an unarchived candidacy", async () => {
-    const result = await unarchiveWithRightRole({
+    const candidacy = await unarchiveCandidacy({
       candidacyId: candidacyArchived.id,
     });
-    expect(result.isRight()).toBe(true);
-    const candidacy = result.extract() as Candidacy;
-    expect(candidacy.candidacyStatuses).toEqual(unarchivedCandidacyStatuses);
+    expect(candidacy.candidacyStatuses).toMatchObject(
+      unarchivedCandidacyStatuses,
+    );
   });
 });
