@@ -172,16 +172,16 @@ export const CompanySiretStepForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Nom du (de la) dirigeant(e)"
-            state={errors.managerFirstname ? "error" : "default"}
-            stateRelatedMessage={errors.managerFirstname?.message}
-            nativeInputProps={{ ...register("managerFirstname") }}
+            state={errors.managerLastname ? "error" : "default"}
+            stateRelatedMessage={errors.managerLastname?.message}
+            nativeInputProps={{ ...register("managerLastname") }}
           />
 
           <Input
             label="Prénom(s) du (de la) dirigeant(e)"
-            state={errors.managerLastname ? "error" : "default"}
-            stateRelatedMessage={errors.managerLastname?.message}
-            nativeInputProps={{ ...register("managerLastname") }}
+            state={errors.managerFirstname ? "error" : "default"}
+            stateRelatedMessage={errors.managerFirstname?.message}
+            nativeInputProps={{ ...register("managerFirstname") }}
           />
         </div>
 
