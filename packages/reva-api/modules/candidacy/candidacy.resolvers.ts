@@ -9,7 +9,6 @@ import { generateJwt } from "../candidate/auth.helper";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import * as organismDb from "../organism/database/organisms";
 import { Organism as OrganismCamelCase } from "../organism/organism.types";
-import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -837,18 +836,13 @@ const unsafeResolvers = {
         ? new Date(payload.dropOut.droppedOutAt)
         : new Date();
 
-      const result = await dropOutCandidacy({
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        getDropOutReasonById,
-        dropOutCandidacy: candidacyDb.dropOutCandidacy,
-      })({
+      const candidacy = await dropOutCandidacy({
         candidacyId: payload.candidacyId,
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
       });
 
-      const candidacy = result.isRight() ? result.extract() : undefined;
       if (candidacy?.email) {
         sendCandidacyDropOutEmailToCandidate(candidacy.email);
       }
@@ -857,25 +851,22 @@ const unsafeResolvers = {
         sendCandidacyDropOutEmailToCertificateur(candidacy.id);
       }
 
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.DROPPED_OUT_CANDIDACY,
         extraInfo: { ...payload.dropOut },
         context,
-        result,
+        result: candidacy,
       });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_DROPPED_OUT",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROPPED_OUT",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+      return candidacy;
     },
     candidacy_cancelDropOutById: async (
       _: unknown,

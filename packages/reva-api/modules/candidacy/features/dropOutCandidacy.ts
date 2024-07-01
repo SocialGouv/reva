@@ -1,23 +1,8 @@
-import { Either, EitherAsync, Maybe } from "purify-ts";
-
-import { DropOutReason } from "../../referential/referential.types";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
-
-interface DropOutCandidacyDeps {
-  getCandidacyFromId: (
-    candidacyId: string,
-  ) => Promise<Either<string, Candidacy>>;
-  getDropOutReasonById: (params: {
-    dropOutReasonId: string;
-  }) => Promise<DropOutReason | null>;
-  dropOutCandidacy: (
-    params: DropOutCandidacyParams,
-  ) => Promise<Either<string, Candidacy>>;
-}
+import { FunctionalCodeError } from "../../shared/error/functionalError";
+import { getCandidacyById } from "./getCandidacyById";
+import { logger } from "../../shared/logger";
+import { getDropOutReasonById } from "../../referential/features/getDropOutReasonById";
+import { prismaClient } from "../../../prisma/client";
 
 interface DropOutCandidacyParams {
   candidacyId: string;
@@ -26,54 +11,83 @@ interface DropOutCandidacyParams {
   otherReasonContent?: string;
 }
 
-export const dropOutCandidacy =
-  (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`,
-        ),
-    );
-
-    const checkIfCandidacyIsNotAbandonned = (candidacy: Candidacy) => {
-      const hasDropOut = Boolean(candidacy.candidacyDropOut);
-      return Promise.resolve(
-        Maybe.fromFalsy(!hasDropOut).toEither(
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
-            `La candidature est déjà abandonnée`,
-          ),
-        ),
-      );
-    };
-
-    const checkIfDropOutReasonExists = EitherAsync.fromPromise(async () => {
-      const r = await deps.getDropOutReasonById({
-        dropOutReasonId: params.dropOutReasonId || "",
-      });
-      return Maybe.fromNullable(r).toEither(
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
-          `La raison d'abandon n'est pas valide`,
-        ),
-      );
+export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
+  let candidacy;
+  try {
+    candidacy = await getCandidacyById({
+      candidacyId: params.candidacyId,
+      includes: {
+        candidate: true,
+        candidacyStatuses: {
+          where: {
+            isActive: true,
+          },
+        },
+        department: true,
+        experiences: true,
+        goals: true,
+        candidacyDropOut: {
+          include: {
+            dropOutReason: true,
+          },
+        },
+      },
     });
-
-    const dropOutCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.dropOutCandidacy(params),
-    ).mapLeft(
-      (error: string) =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
-          error,
-        ),
+  } catch (error) {
+    logger.error(error);
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} La candidature ${params.candidacyId} n'a pas pu être récupérée: ${error}`,
     );
+  }
+  if (!candidacy) {
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} La candidature ${params.candidacyId} n'existe pas`,
+    );
+  }
 
-    return checkIfCandidacyExists
-      .chain(checkIfCandidacyIsNotAbandonned)
-      .chain(() => checkIfDropOutReasonExists)
-      .chain(() => dropOutCandidacyResult);
-  };
+  candidacy.email = candidacy.candidate?.email || candidacy.email;
+  const candidacyStatus = candidacy.candidacyStatuses[0].status;
+
+  const hasDropOut = Boolean(candidacy.candidacyDropOut);
+
+  if (hasDropOut) {
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT} La candidature est déjà abandonnée`,
+    );
+  }
+
+  let dropoutReason;
+  try {
+    dropoutReason = await getDropOutReasonById({
+      dropOutReasonId: params.dropOutReasonId || "",
+    });
+    if (!dropoutReason) {
+      throw new Error(
+        `${FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON} La raison d'abandon n'est pas valide`,
+      );
+    }
+  } catch (error) {
+    logger.error(error);
+    throw new Error(
+      `${FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON} La raison d'abandon ${params.dropOutReasonId} n'a pas pu être sélectionnée: ${error}`,
+    );
+  }
+
+  try {
+    await prismaClient.candidacyDropOut.create({
+      data: {
+        candidacyId: params.candidacyId,
+        droppedOutAt: params.droppedOutAt,
+        status: candidacyStatus,
+        dropOutReasonId: params.dropOutReasonId,
+        otherReasonContent: params.otherReasonContent || null,
+      },
+    });
+    return candidacy;
+  } catch (e) {
+    logger.error(e);
+    throw new Error(
+      `error on drop out candidacy ${params.candidacyId}: ${(e as Error).message}`,
+    );
+  }
+};

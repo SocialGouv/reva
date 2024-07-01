@@ -1,134 +1,103 @@
-import { DropOutReason } from "@prisma/client";
-import { Either, Maybe, Right } from "purify-ts";
+import { Candidacy } from "@prisma/client";
+import { prismaClient } from "../../../prisma/client";
 
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { dropOutCandidacy } from "./dropOutCandidacy";
+import { candidateJPL } from "../../../test/fixtures/people-organisms";
 
-const withTemporalInfo = (obj: any) => ({
-  ...obj,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-});
+let parisDepartment,
+  candidate,
+  normalCandidacy: Candidacy,
+  droppedoutCandidacy: Candidacy,
+  dropoutReason;
 
-const dropOutReasonTable: DropOutReason[] = [
-  withTemporalInfo({ id: "RaisonAbandonId1", label: "Raison d'abandon 1" }),
-  withTemporalInfo({ id: "RaisonAbandonId2", label: "Raison d'abandon 2" }),
-  withTemporalInfo({ id: "RaisonAbandonId3", label: "Raison d'abandon 3" }),
-];
+beforeAll(async () => {
+  parisDepartment = await prismaClient.department.findFirst({
+    where: { code: "75" },
+  });
 
-const blankCandidacy: Candidacy = {
-  id: "",
-  candidacyStatuses: [],
-  createdAt: new Date(),
-  department: null,
-  email: null,
-  experiences: [],
-  financeModule: "unifvae",
-};
+  candidate = await prismaClient.candidate.create({
+    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
+  });
 
-const candidacy1: Candidacy = {
-  ...blankCandidacy,
-  id: "abc123",
-  candidacyStatuses: [
-    { createdAt: new Date(), id: "123", status: "COOL", isActive: true },
-  ],
-  createdAt: new Date(),
-};
+  dropoutReason = await prismaClient.dropOutReason.findFirst({
+    where: { isActive: true },
+  });
 
-const candidacy2: Candidacy = {
-  ...blankCandidacy,
-  id: "def345",
-  candidacyStatuses: [
-    { createdAt: new Date(), id: "124", status: "COOL", isActive: true },
-  ],
-  candidacyDropOut: {
-    dropOutReason: { id: "abc123", label: "got cold" },
-    status: "PARCOURS_ENVOYE",
-    droppedOutAt: new Date(),
-  },
-  createdAt: new Date(),
-};
+  normalCandidacy = await prismaClient.candidacy.create({
+    data: {
+      candidateId: candidate.id,
+      email: candidate.email,
+      candidacyStatuses: {
+        create: [{ status: "PROJET", isActive: true }],
+      },
+    },
+  });
 
-const candidacyTable: Candidacy[] = [candidacy1, candidacy2];
+  droppedoutCandidacy = await prismaClient.candidacy.create({
+    data: {
+      candidateId: candidate.id,
+      email: candidate.email,
+      candidacyStatuses: {
+        create: [{ status: "PROJET", isActive: true }],
+      },
+    },
+  });
 
-const getCandidacyById = (id: string): Either<string, Candidacy> =>
-  Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
-    "not found",
-  );
-const getDropOutReasonById = (id: string): DropOutReason | null =>
-  dropOutReasonTable.find((r) => r.id === id) || null;
-
-const dropOutReasonWithRightRole = dropOutCandidacy({
-  getCandidacyFromId: (id) => Promise.resolve(getCandidacyById(id)),
-  getDropOutReasonById: ({ dropOutReasonId }) =>
-    Promise.resolve(getDropOutReasonById(dropOutReasonId)),
-  dropOutCandidacy: (params) =>
-    Promise.resolve(
-      Right({
-        ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
-        candidacyStatuses: [
-          { id: "laal123", createdAt: new Date(), status: "", isActive: true },
-        ],
-        candidacyDropOut: {
-          droppedOutAt: new Date(),
-          dropOutReason: { id: params.dropOutReasonId, label: "" },
-          status: "PRISE_EN_CHARGE",
-          otherReasonContent: null,
-        },
-      }),
-    ),
+  await prismaClient.candidacyDropOut.create({
+    data: {
+      candidacyId: droppedoutCandidacy.id,
+      droppedOutAt: new Date(),
+      status: "PARCOURS_ENVOYE",
+      dropOutReasonId: dropoutReason!.id,
+    },
+  });
 });
 
 describe("drop out candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
-    const result = await dropOutReasonWithRightRole({
-      candidacyId: "wr0ng1d",
-      droppedOutAt: new Date(),
-      dropOutReasonId: dropOutReasonTable[0].id,
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-    );
+    await expect(async () => {
+      await dropOutCandidacy({
+        candidacyId: "wr0ng1d",
+        droppedOutAt: new Date(),
+        dropOutReasonId: dropoutReason!.id,
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_ALREADY_DROPPED_OUT", async () => {
-    const result = await dropOutReasonWithRightRole({
-      candidacyId: candidacy2.id,
-      droppedOutAt: new Date(),
-      dropOutReasonId: dropOutReasonTable[0].id,
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
-    );
+    await expect(async () => {
+      await dropOutCandidacy({
+        candidacyId: droppedoutCandidacy.id,
+        droppedOutAt: new Date(),
+        dropOutReasonId: dropoutReason!.id,
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT);
   });
   test("should fail with CANDIDACY_INVALID_DROP_OUT_REASON error code", async () => {
-    const result = await dropOutReasonWithRightRole({
-      candidacyId: candidacy1.id,
-      droppedOutAt: new Date(),
-      dropOutReasonId: "wr0ng1d",
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect((result.extract() as FunctionalError).code).toEqual(
-      FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
-    );
+    await expect(async () => {
+      await dropOutCandidacy({
+        candidacyId: normalCandidacy.id,
+        droppedOutAt: new Date(),
+        dropOutReasonId: "wr0ng1d",
+      });
+    }).rejects.toThrow(FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON);
   });
 
   test("should return candidacy with drop out reason", async () => {
-    const result = await dropOutReasonWithRightRole({
-      candidacyId: candidacy1.id,
+    const candidacy = await dropOutCandidacy({
+      candidacyId: normalCandidacy.id,
       droppedOutAt: new Date(),
-      dropOutReasonId: dropOutReasonTable[1].id,
+      dropOutReasonId: dropoutReason!.id,
     });
-    expect(result.isRight()).toBe(true);
-    const candidacy = result.extract() as Candidacy;
-    expect(candidacy.candidacyDropOut).not.toBeNull();
-    expect(candidacy.candidacyDropOut?.dropOutReason.id).toEqual(
-      dropOutReasonTable[1].id,
-    );
+    const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
+      where: {
+        candidacyId: candidacy.id,
+      },
+      include: {
+        dropOutReason: true,
+      },
+    });
+    expect(candidacyDropOut).not.toBeNull();
+    expect(candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason!.id);
   });
 });
