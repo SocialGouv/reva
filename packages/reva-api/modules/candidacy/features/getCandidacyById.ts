@@ -2,12 +2,12 @@ import { Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
-type CandidacyInclude = Prisma.CandidacyInclude;
+type CandidacyInclude = Prisma.CandidacyInclude | undefined;
 type CandidacyReturnType<T extends CandidacyInclude> =
   Promise<Prisma.CandidacyGetPayload<{ include: T }> | null>;
 
 export const getCandidacyById = async function getCandidacyById<
-  SelectedIncludes extends CandidacyInclude = Record<string, never>,
+  SelectedIncludes extends CandidacyInclude,
 >({
   candidacyId,
   includes = {} as SelectedIncludes,
