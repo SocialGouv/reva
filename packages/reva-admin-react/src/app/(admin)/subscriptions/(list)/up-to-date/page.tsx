@@ -57,33 +57,23 @@ const ValidatedSubscriptionRequestsPage = () => {
   const subscriptionRequestPage =
     getLegalVerificationPendingSubscriptionRequestsResponse?.organism_getMaisonMereAAPs;
   return (
-    subscriptionRequestPage && (
-      <div className="flex flex-col">
-        <h1>Espace pro administrateur</h1>
-        <p>
-          En tant qu'administrateur des conseillers, vous avez la possibilité
-          d'ajouter ou d'accepter de nouveaux architecte de parcours ou
-          certificateur.
-        </p>
-        {getLegalVerificationPendingSubscriptionRequestsStatus ===
-          "success" && (
-          <SearchList
-            title="Maisons-mères vérifiées"
-            searchFilter={searchFilter}
-            searchResultsPage={subscriptionRequestPage}
-          >
-            {(r) => (
-              <SubscriptionRequestCard
-                key={r.id}
-                companyName={r.raisonSociale}
-                createdAtLabel="Date de validation de l'inscription"
-                createdAt={new Date(r.createdAt)}
-                href={`/maisonMereAAPs/${r.id}`}
-              />
-            )}
-          </SearchList>
+    subscriptionRequestPage &&
+    getLegalVerificationPendingSubscriptionRequestsStatus === "success" && (
+      <SearchList
+        title="Maisons-mères vérifiées"
+        searchFilter={searchFilter}
+        searchResultsPage={subscriptionRequestPage}
+      >
+        {(r) => (
+          <SubscriptionRequestCard
+            key={r.id}
+            companyName={r.raisonSociale}
+            createdAtLabel="Date de validation de l'inscription"
+            createdAt={new Date(r.createdAt)}
+            href={`/maisonMereAAPs/${r.id}`}
+          />
         )}
-      </div>
+      </SearchList>
     )
   );
 };

@@ -145,7 +145,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
         title="Inscriptions"
         items={items}
       />
-      <div className="mt-3">{children}</div>
+      <div className="mt-3 w-full">{children}</div>
     </div>
   );
 };

@@ -53,32 +53,23 @@ const RejectedSubscriptionRequestV2sPage = () => {
   const subscriptionRequestPage =
     getRejectedSubscriptionRequestsResponse?.subscription_getSubscriptionRequestV2s;
   return (
-    subscriptionRequestPage && (
-      <div className="flex flex-col">
-        <h1>Espace pro administrateur</h1>
-        <p>
-          En tant qu'administrateur des conseillers, vous avez la possibilité
-          d'ajouter ou d'accepter de nouveaux architecte de parcours ou
-          certificateur.
-        </p>
-        {getRejectedSubscriptionRequestsStatus === "success" && (
-          <SearchList
-            title="Inscriptions refusées"
-            searchFilter={searchFilter}
-            searchResultsPage={subscriptionRequestPage}
-          >
-            {(r) => (
-              <SubscriptionRequestCard
-                key={r.id}
-                companyName={r.companyName}
-                createdAtLabel="Date d'envoi de l'inscription"
-                createdAt={new Date(r.createdAt)}
-                href={`/subscriptions/v2/${r.id}`}
-              />
-            )}
-          </SearchList>
+    subscriptionRequestPage &&
+    getRejectedSubscriptionRequestsStatus === "success" && (
+      <SearchList
+        title="Inscriptions refusées"
+        searchFilter={searchFilter}
+        searchResultsPage={subscriptionRequestPage}
+      >
+        {(r) => (
+          <SubscriptionRequestCard
+            key={r.id}
+            companyName={r.companyName}
+            createdAtLabel="Date d'envoi de l'inscription"
+            createdAt={new Date(r.createdAt)}
+            href={`/subscriptions/v2/${r.id}`}
+          />
         )}
-      </div>
+      </SearchList>
     )
   );
 };
