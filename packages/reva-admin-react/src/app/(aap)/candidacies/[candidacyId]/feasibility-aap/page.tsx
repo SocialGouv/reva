@@ -68,12 +68,19 @@ const AapFeasibilityPage = () => {
           >
             <ul className="list-none flex flex-col gap-2">
               {dematerializedFeasibilityFile?.blocsDeCompetences?.map((bc) => (
-                <li key={bc.id} className="flex flex-grow items-center">
-                  <span>{bc.code ? `${bc.code} - ${bc.label}` : bc.label}</span>
+                <li
+                  key={bc.certificationCompetenceBloc.id}
+                  className="flex flex-grow items-center"
+                >
+                  <span>
+                    {bc.certificationCompetenceBloc.code
+                      ? `${bc.certificationCompetenceBloc.code} - ${bc.certificationCompetenceBloc.label}`
+                      : bc.certificationCompetenceBloc.label}
+                  </span>
                   <Button
                     className="ml-auto"
                     linkProps={{
-                      href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.id}`,
+                      href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.certificationCompetenceBloc.id}`,
                     }}
                   >
                     Compléter

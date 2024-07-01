@@ -4,7 +4,9 @@ type DematerializedFeasibilityFile {
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
-  blocsDeCompetences(blocDeCompetencesId: ID): [CertificationCompetenceBloc!]!
+  blocsDeCompetences(
+    blocDeCompetencesId: ID
+  ): [DFFCertificationCompetenceBloc!]!
   certificationPartComplete: Boolean!
   attachmentsPartComplete: Boolean!
   competenceBlocsPartCompletion: CompetenceBlocsPartCompletion!
@@ -22,6 +24,10 @@ type DematerializedFeasibilityFile {
   swornStatementFile: File
   isReadyToBeSentToCandidate: Boolean!
   isReadyToBeSentToCertificationAuthority: Boolean!
+}
+type DFFCertificationCompetenceBloc {
+  complete: Boolean!
+  certificationCompetenceBloc: CertificationCompetenceBloc!
 }
 
 type Prerequisite {

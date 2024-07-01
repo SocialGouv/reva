@@ -26,9 +26,11 @@ const getCandidacyById = graphql(`
           state
         }
         blocsDeCompetences {
-          id
-          code
-          label
+          certificationCompetenceBloc {
+            id
+            code
+            label
+          }
         }
         aapDecision
         aapDecisionComment

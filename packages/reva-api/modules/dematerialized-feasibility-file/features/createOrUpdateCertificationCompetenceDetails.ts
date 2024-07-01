@@ -27,6 +27,16 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
     })),
   });
 
+  await prismaClient.dFFCertificationCompetenceBloc.update({
+    where: {
+      dematerializedFeasibilityFileId_certificationCompetenceBlocId: {
+        dematerializedFeasibilityFileId,
+        certificationCompetenceBlocId: competenceBlocId,
+      },
+    },
+    data: { complete: true },
+  });
+
   await updateCompetenceBlocsPartCompletion({
     dematerializedFeasibilityFileId,
   });

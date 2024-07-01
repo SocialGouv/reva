@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getCompetenceBlocsById = async ({
+export const getCompetenceBlocById = async ({
   competenceBlocId,
 }: {
   competenceBlocId: string;

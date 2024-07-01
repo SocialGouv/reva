@@ -41,14 +41,16 @@ const dematerializedFeasibilityFileSendFileCertificationAuthorityByCandidacyId =
         secondForeignLanguage
         option
         blocsDeCompetences {
-          id
-          code
-          label
-          isOptional
-          FCCompetences
-          competences {
+          certificationCompetenceBloc {
             id
+            code
             label
+            isOptional
+            FCCompetences
+            competences {
+              id
+              label
+            }
           }
         }
         certificationCompetenceDetails {

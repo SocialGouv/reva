@@ -1553,6 +1553,7 @@ model DFFCertificationCompetenceBloc {
   certificationCompetenceBlocId   String                        @map("certification_competence_bloc_id") @db.Uuid
   certificationCompetenceBloc     CertificationCompetenceBloc   @relation(fields: [certificationCompetenceBlocId], references: [id])
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  complete                        Boolean                       @default(false)
 
   @@unique([dematerializedFeasibilityFileId, certificationCompetenceBlocId])
   @@map("dff_certification_competence_bloc")

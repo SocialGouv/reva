@@ -2,7 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { DematerializedFeasibilityFile } from "@prisma/client";
 import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
-import { getCompetenceBlocsById } from "../referential/features/getCompetenceBlocsById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
@@ -20,7 +19,6 @@ import { createOrUpdateCertificationCompetenceDetails } from "./features/createO
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
-import { getBlocsDeCompetencesByDFFId } from "./features/getBlocsDeCompetencesByDFFId";
 import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
@@ -29,6 +27,9 @@ import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
 import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
+import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
+import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
+import { getCompetenceBlocById } from "../referential/features/getCompetenceBlocById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -41,8 +42,17 @@ export const unsafeResolvers = {
       { blocDeCompetencesId }: { blocDeCompetencesId?: string },
     ) =>
       blocDeCompetencesId
-        ? [getCompetenceBlocsById({ competenceBlocId: blocDeCompetencesId })]
-        : getBlocsDeCompetencesByDFFId({ dematerializedFeasibilityFileId }),
+        ? [
+            getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId(
+              {
+                dematerializedFeasibilityFileId,
+                certificationCompetenceBlocId: blocDeCompetencesId,
+              },
+            ),
+          ]
+        : getDFFCertificationCompetenceBlocsByDFFId({
+            dematerializedFeasibilityFileId,
+          }),
     certificationCompetenceDetails: ({
       id: dematerializedFeasibilityFileId,
     }: {
@@ -78,6 +88,16 @@ export const unsafeResolvers = {
     }) =>
       getSwornStatementFileWithFileNameAndUrlById({
         swornStatementFileId,
+      }),
+  },
+  DFFCertificationCompetenceBloc: {
+    certificationCompetenceBloc: ({
+      certificationCompetenceBlocId,
+    }: {
+      certificationCompetenceBlocId: string;
+    }) =>
+      getCompetenceBlocById({
+        competenceBlocId: certificationCompetenceBlocId,
       }),
   },
   CertificationCompetenceDetails: {

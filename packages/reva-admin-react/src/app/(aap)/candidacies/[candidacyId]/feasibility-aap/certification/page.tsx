@@ -50,7 +50,7 @@ const CertificationPage = () => {
         competenceBlocId: b.id,
         label: b.code ? `${b.code} - ${b.label}` : b.label,
         checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
-          (bc) => bc.id === b.id,
+          (bc) => bc.certificationCompetenceBloc.id === b.id,
         ),
       })),
     }),

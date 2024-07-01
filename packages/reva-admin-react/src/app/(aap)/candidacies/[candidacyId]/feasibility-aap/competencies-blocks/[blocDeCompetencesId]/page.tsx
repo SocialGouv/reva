@@ -40,12 +40,14 @@ const getBlocDeCompetencesQuery = graphql(`
           text
         }
         blocsDeCompetences(blocDeCompetencesId: $blocDeCompetencesId) {
-          id
-          code
-          label
-          competences {
+          certificationCompetenceBloc {
             id
+            code
             label
+            competences {
+              id
+              label
+            }
           }
         }
       }
@@ -54,7 +56,7 @@ const getBlocDeCompetencesQuery = graphql(`
 `);
 
 const createOrUpdateCompetenceDetailsMutation = graphql(`
-  mutation createOrUpdateCompetenceDetailsMutaion(
+  mutation createOrUpdateCompetenceDetailsMutation(
     $input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
   ) {
     dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
@@ -97,7 +99,8 @@ const CompetenciesBlockPage = () => {
     getBlocDeCompetencesResponse?.getCandidacyById
       ?.dematerializedFeasibilityFile;
 
-  const block = dematerializedFile?.blocsDeCompetences?.[0];
+  const block =
+    dematerializedFile?.blocsDeCompetences?.[0]?.certificationCompetenceBloc;
 
   const competencesFromBlock = block?.competences;
 

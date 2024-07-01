@@ -65,7 +65,9 @@ export default function DffSummary({
           secondForeignLanguage={secondForeignLanguage}
           certification={certification}
           prerequisites={prerequisites as Prerequisite[]}
-          blocsDeCompetences={blocsDeCompetences}
+          blocsDeCompetences={blocsDeCompetences.map(
+            (bc) => bc.certificationCompetenceBloc,
+          )}
           certificationCompetenceDetails={certificationCompetenceDetails}
         />
         <ExperiencesSection experiences={experiences} />

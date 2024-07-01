@@ -21,7 +21,9 @@ const getCandidacyById = graphql(`
         secondForeignLanguage
         option
         blocsDeCompetences {
-          id
+          certificationCompetenceBloc {
+            id
+          }
         }
       }
     }

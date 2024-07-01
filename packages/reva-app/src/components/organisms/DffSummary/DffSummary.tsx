@@ -77,7 +77,9 @@ export function DffSummary(props: Props) {
         secondForeignLanguage={secondForeignLanguage}
         certification={certification}
         prerequisites={prerequisites as Prerequisite[]}
-        blocsDeCompetences={blocsDeCompetences}
+        blocsDeCompetences={blocsDeCompetences.map(
+          (b) => b.certificationCompetenceBloc,
+        )}
         certificationCompetenceDetails={certificationCompetenceDetails}
       />
       <ExperiencesSection experiences={experiences} />
