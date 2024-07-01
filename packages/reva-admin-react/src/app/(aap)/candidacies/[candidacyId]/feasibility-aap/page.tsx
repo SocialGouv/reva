@@ -70,7 +70,7 @@ const AapFeasibilityPage = () => {
               {dematerializedFeasibilityFile?.blocsDeCompetences?.map((bc) => (
                 <li
                   key={bc.certificationCompetenceBloc.id}
-                  className="flex flex-grow items-center"
+                  className="grid grid-cols-[1fr_120px] items-center"
                 >
                   <span>
                     {bc.certificationCompetenceBloc.code
@@ -78,12 +78,14 @@ const AapFeasibilityPage = () => {
                       : bc.certificationCompetenceBloc.label}
                   </span>
                   <Button
-                    className="ml-auto"
+                    className="w-full"
                     linkProps={{
                       href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.certificationCompetenceBloc.id}`,
                     }}
                   >
-                    Compléter
+                    <span className="mx-auto">
+                      {bc.complete ? "Modifier" : "Compléter"}
+                    </span>
                   </Button>
                 </li>
               ))}

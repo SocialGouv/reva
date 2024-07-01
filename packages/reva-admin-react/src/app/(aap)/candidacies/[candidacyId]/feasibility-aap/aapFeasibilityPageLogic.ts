@@ -26,6 +26,7 @@ const getCandidacyById = graphql(`
           state
         }
         blocsDeCompetences {
+          complete
           certificationCompetenceBloc {
             id
             code
