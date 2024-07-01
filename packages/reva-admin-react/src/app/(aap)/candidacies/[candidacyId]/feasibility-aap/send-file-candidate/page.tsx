@@ -1,10 +1,35 @@
 "use client";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import DffSummary from "../_components/DffSummary/DffSummary";
 import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
+
+const HasBeenSentComponent = ({
+  sentToCandidateAt,
+}: {
+  sentToCandidateAt: Date;
+}) => (
+  <>
+    {sentToCandidateAt ? (
+      <Alert
+        description={`Dossier envoyé au certificateur le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
+        severity="success"
+        title=""
+        className="mb-12"
+      />
+    ) : (
+      <p className="text-xl mb-12">
+        Vérifiez que toutes les informations soient correctes et envoyez le
+        dossier de faisabilité au candidat. Il devra vous fournir une
+        déclaration sur l'honneur pour valider ce dossier.
+      </p>
+    )}
+  </>
+);
 
 export default function SendFileCandidatePage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
@@ -21,7 +46,7 @@ export default function SendFileCandidatePage() {
       if (!dematerializedFeasibilityFileId) return;
 
       await sendToCandidateMutation(dematerializedFeasibilityFileId);
-      successToast("Le dossier a été envoyé au candidat");
+      successToast("Le dossier de faisabilité a été envoyé au candidat");
       router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
@@ -29,10 +54,17 @@ export default function SendFileCandidatePage() {
   };
 
   return (
-    <div>
+    <>
       <DffSummary
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
+        }
+        HasBeenSentComponent={
+          <HasBeenSentComponent
+            sentToCandidateAt={
+              dematerializedFeasibilityFile?.sentToCandidateAt as any as Date
+            }
+          />
         }
       />
 
@@ -50,6 +82,6 @@ export default function SendFileCandidatePage() {
           Envoyer au candidat
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -6,8 +6,6 @@ import {
   DffAttachment,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { format } from "date-fns";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateSection from "./_components/CandidateSection";
 import CertificationSection from "./_components/CertificationSection";
@@ -18,8 +16,10 @@ import ParcoursSection from "./_components/ParcoursSection";
 
 export default function DffSummary({
   dematerializedFeasibilityFile,
+  HasBeenSentComponent,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
+  HasBeenSentComponent?: React.ReactNode;
 }) {
   if (!dematerializedFeasibilityFile) {
     return null;
@@ -38,6 +38,7 @@ export default function DffSummary({
     sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
+    swornStatementFile,
   } = dematerializedFeasibilityFile;
   const {
     experiences,
@@ -54,45 +55,37 @@ export default function DffSummary({
     <div className="flex flex-col">
       <h1>Dossier de faisabilité</h1>
 
-      {sentToCandidateAt ? (
-        <Alert
-          description={`Dossier envoyé au certificateur le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
-          severity="success"
-          title=""
-          className="mb-12"
-        />
-      ) : (
-        <p className="text-xl mb-12">
-          Vérifiez que toutes les informations soient correctes et envoyez le
-          dossier de faisabilité au candidat. Il devra vous fournir une
-          déclaration sur l'honneur pour valider ce dossier.
-        </p>
-      )}
+      {HasBeenSentComponent}
 
-      <CandidateSection candidate={candidacy?.candidate as Candidate} />
-      <CertificationSection
-        option={option}
-        firstForeignLanguage={firstForeignLanguage}
-        secondForeignLanguage={secondForeignLanguage}
-        certification={certification}
-        prerequisites={prerequisites as Prerequisite[]}
-        blocsDeCompetences={blocsDeCompetences}
-        certificationCompetenceDetails={certificationCompetenceDetails}
-      />
-      <ExperiencesSection experiences={experiences} />
-      <ParcoursSection
-        basicSkills={basicSkills}
-        mandatoryTrainings={mandatoryTrainings}
-        additionalHourCount={additionalHourCount}
-        individualHourCount={individualHourCount}
-        collectiveHourCount={collectiveHourCount}
-      />
-      <GoalsSection goals={goals} />
-      <DecisionSection
-        decision={aapDecision}
-        decisionComment={aapDecisionComment}
-      />
-      <AttachmentsSection attachments={attachments as DffAttachment[]} />
+      <div className="flex flex-col gap-3">
+        <CandidateSection candidate={candidacy?.candidate as Candidate} />
+        <CertificationSection
+          option={option}
+          firstForeignLanguage={firstForeignLanguage}
+          secondForeignLanguage={secondForeignLanguage}
+          certification={certification}
+          prerequisites={prerequisites as Prerequisite[]}
+          blocsDeCompetences={blocsDeCompetences}
+          certificationCompetenceDetails={certificationCompetenceDetails}
+        />
+        <ExperiencesSection experiences={experiences} />
+        <ParcoursSection
+          basicSkills={basicSkills}
+          mandatoryTrainings={mandatoryTrainings}
+          additionalHourCount={additionalHourCount}
+          individualHourCount={individualHourCount}
+          collectiveHourCount={collectiveHourCount}
+        />
+        <GoalsSection goals={goals} />
+        <DecisionSection
+          decision={aapDecision}
+          decisionComment={aapDecisionComment}
+        />
+        <AttachmentsSection
+          attachments={attachments as DffAttachment[]}
+          swornStatementFile={swornStatementFile}
+        />
+      </div>
     </div>
   );
 }

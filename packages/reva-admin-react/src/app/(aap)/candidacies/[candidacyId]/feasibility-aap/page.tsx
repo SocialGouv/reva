@@ -18,6 +18,7 @@ import { AttachmentsCard } from "./_components/AttachmentsCard";
 import { DecisionCard } from "./_components/DecisionCard";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
+import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
 
 const AapFeasibilityPage = () => {
@@ -120,6 +121,17 @@ const AapFeasibilityPage = () => {
             }
             swornStatementFileId={
               dematerializedFeasibilityFile?.swornStatementFileId
+            }
+          />
+
+          <hr className="pb-0.5" />
+
+          <SendFileCertificationAuthoritySection
+            sentToCertificationAuthorityAt={
+              dematerializedFeasibilityFile?.sentToCertificationAuthorityAt as Date | null
+            }
+            isReadyToBeSentToCertificationAuthority={
+              dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
           />
         </ul>

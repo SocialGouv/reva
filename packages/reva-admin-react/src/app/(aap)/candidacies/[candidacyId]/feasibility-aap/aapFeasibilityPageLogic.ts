@@ -15,6 +15,7 @@ const getCandidacyById = graphql(`
         isReadyToBeSentToCandidate
         isReadyToBeSentToCertificationAuthority
         sentToCandidateAt
+        sentToCertificationAuthorityAt
         certificationPartComplete
         competenceBlocsPartCompletion
         attachmentsPartComplete
