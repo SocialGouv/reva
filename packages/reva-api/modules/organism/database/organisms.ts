@@ -221,21 +221,6 @@ export const getReferentOrganismFromCandidacyId = async (
   }
 };
 
-export const existOrganismWithTypologyAndSiret = async ({
-  typology,
-  siret,
-}: Pick<Prisma.OrganismWhereInput, "siret" | "typology">) => {
-  try {
-    const matchCount = await prismaClient.organism.count({
-      where: { siret, typology: typology as OrganismTypology },
-    });
-    return Right(matchCount > 0);
-  } catch (e) {
-    logger.error(e);
-    return Left(`Error while counting organisms matching criteria`);
-  }
-};
-
 export const getRandomActiveOrganismForCertificationAndDepartment = async ({
   certificationId,
   departmentId,

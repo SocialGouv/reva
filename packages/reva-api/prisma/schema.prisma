@@ -325,7 +325,6 @@ model Department {
   availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   OrganismsOnDepartments                                 OrganismsOnDepartments[]
-  SubscriptionRequestsOnDepartments                      SubscriptionRequestsOnDepartments[]
   certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
   maisonMereAAPOnDepartement                             MaisonMereAAPOnDepartement[]
   certificationAuthorityLocalAccountOnDepartment         CertificationAuthorityLocalAccountOnDepartment[]
@@ -847,49 +846,6 @@ enum SubscriptionRequestStatus {
   REJECTED
 }
 
-enum SubscriptionOrganismTypology {
-  generaliste
-  expertFiliere
-  expertBranche
-}
-
-model SubscriptionRequest {
-  id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  companyName                               String                                      @map("company_name") @db.VarChar(255)
-  companyLegalStatus                        LegalStatus                                 @map("company_legal_status")
-  companySiret                              String                                      @map("company_siret") @db.VarChar(255)
-  companyAddress                            String                                      @default("") @map("company_address") @db.VarChar(255)
-  companyZipCode                            String                                      @default("") @map("company_zipcode") @db.VarChar(5)
-  companyCity                               String                                      @default("") @map("company_city") @db.VarChar(100)
-  accountFirstname                          String                                      @map("account_firstname") @db.VarChar(100)
-  accountLastname                           String                                      @map("account_lastname") @db.VarChar(100)
-  accountEmail                              String                                      @map("account_email") @db.VarChar(255)
-  accountPhoneNumber                        String                                      @map("account_phone_number") @db.VarChar(50)
-  typology                                  SubscriptionOrganismTypology                @map("typology")
-  createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
-  subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
-  subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
-  departmentsWithOrganismMethods            SubscriptionRequestsOnDepartments[]
-  companyWebsite                            String?                                     @map("company_website") @db.VarChar(255)
-  qualiopiCertificateExpiresAt              DateTime                                    @map("qualiopi_certificate_expires_at")
-  status                                    SubscriptionRequestStatus                   @default(PENDING)
-  rejectionReason                           String?                                     @map("rejection_reason")
-
-  @@map("subscription_request")
-}
-
-model SubscriptionRequestsOnDepartments {
-  id                    String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  department            Department          @relation(fields: [departmentId], references: [id])
-  departmentId          String              @map("department_id") @db.Uuid
-  isOnSite              Boolean             @default(false) @map("is_onsite")
-  isRemote              Boolean             @default(false) @map("is_remote")
-  subscriptionRequestId String              @map("subscription_request_id") @db.Uuid
-  SubscriptionRequest   SubscriptionRequest @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
-
-  @@map("subscription_request_department")
-}
-
 enum OrganismTypology {
   experimentation
   expertFiliere
@@ -942,26 +898,13 @@ view ActiveOrganismByAvailableCertification {
 }
 
 model Domaine {
-  id                           String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                        String                         @db.VarChar(255)
-  code                         String                         @unique @db.VarChar(3)
-  subscriptionRequestOnDomaine SubscriptionRequestOnDomaine[]
-  organismOnDomaine            OrganismOnDomaine[]
-  certificationOnDomaine       CertificationOnDomaine[]
+  id                     String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                  String                   @db.VarChar(255)
+  code                   String                   @unique @db.VarChar(3)
+  organismOnDomaine      OrganismOnDomaine[]
+  certificationOnDomaine CertificationOnDomaine[]
 
   @@map("domaine")
-}
-
-model SubscriptionRequestOnDomaine {
-  domaine               Domaine             @relation(fields: [domaineId], references: [id])
-  domaineId             String              @map("domaine_id") @db.Uuid
-  subscriptionRequest   SubscriptionRequest @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
-  subscriptionRequestId String              @map("subscription_request_id") @db.Uuid
-  createdAt             DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime?           @map("updated_at") @db.Timestamptz(6)
-
-  @@id([domaineId, subscriptionRequestId])
-  @@map("subscription_request_on_domaine")
 }
 
 model OrganismOnDomaine {
@@ -990,13 +933,12 @@ model CertificationOnDomaine {
 }
 
 model ConventionCollective {
-  id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                     String                                      @db.VarChar(255)
-  code                                      String                                      @unique @map("ccid") @db.VarChar(10)
-  subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
-  organismOnConventionCollective            OrganismOnConventionCollective[]
-  certificationOnConventionCollective       CertificationOnConventionCollective[]
-  maisonMereAAPOnConventionCollective       MaisonMereAAPOnConventionCollective[]
+  id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                               String                                @db.VarChar(255)
+  code                                String                                @unique @map("ccid") @db.VarChar(10)
+  organismOnConventionCollective      OrganismOnConventionCollective[]
+  certificationOnConventionCollective CertificationOnConventionCollective[]
+  maisonMereAAPOnConventionCollective MaisonMereAAPOnConventionCollective[]
 
   @@map("convention_collective")
 }
@@ -1024,18 +966,6 @@ model CertificationOnConventionCollective {
 
   @@unique([ccnId, certificationId])
   @@map("certification_on_ccn")
-}
-
-model SubscriptionRequestOnConventionCollective {
-  ccn                   ConventionCollective @relation(fields: [ccnId], references: [id])
-  ccnId                 String               @map("ccn_id") @db.Uuid
-  subscriptionRequest   SubscriptionRequest  @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
-  subscriptionRequestId String               @map("subscription_request_id") @db.Uuid
-  createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime?            @map("updated_at") @db.Timestamptz(6)
-
-  @@id([ccnId, subscriptionRequestId])
-  @@map("subscription_request_on_ccn")
 }
 
 enum ExamResult {

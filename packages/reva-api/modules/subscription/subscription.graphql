@@ -18,64 +18,6 @@ enum SubscriptionRequestStatus {
   REJECTED
 }
 
-type SubscriptionRequest {
-  id: ID!
-  companySiret: String!
-  companyLegalStatus: LegalStatus!
-  companyName: String!
-  companyAddress: String!
-  companyZipCode: String!
-  companyCity: String!
-  accountFirstname: String!
-  accountLastname: String!
-  accountEmail: String!
-  accountPhoneNumber: String!
-  typology: SubscriptionOrganismTypology!
-  subscriptionRequestOnDomaine: [SubscriptionRequestOnDomaine!]!
-  subscriptionRequestOnConventionCollective: [SubscriptionRequestOnConventionCollective!]!
-  departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
-  companyWebsite: String
-  qualiopiCertificateExpiresAt: Timestamp!
-  status: SubscriptionRequestStatus!
-  rejectionReason: String
-  isCompanyNameUnique: Boolean!
-}
-
-type SubscriptionRequestOnDomaine {
-  domaine: Domaine!
-}
-
-type SubscriptionRequestOnConventionCollective {
-  ccn: ConventionCollective!
-}
-
-type DepartmentWithOrganismMethods {
-  department: Department!
-  isOnSite: Boolean!
-  isRemote: Boolean!
-}
-
-type SubscriptionRequestSummary {
-  id: ID!
-  accountLastname: String!
-  accountFirstname: String!
-  accountEmail: String!
-  companyName: String!
-  companyAddress: String!
-  createdAt: Timestamp!
-}
-
-input SubscriptionRequestOrderByInput {
-  companyName: Sort
-  accountLastname: Sort
-  createdAt: Sort
-}
-
-type SubscriptionRequestsPaginated {
-  rows: [SubscriptionRequestSummary!]!
-  info: PaginationInfo!
-}
-
 type SubscriptionRequestV2 {
   id: ID!
   companySiret: String!
@@ -113,15 +55,6 @@ type SubscriptionCountByStatus {
 }
 
 type Query {
-  subscription_getSubscriptionRequests(
-    offset: Int
-    limit: Int
-    status: SubscriptionRequestStatus
-    searchFilter: String
-  ): SubscriptionRequestsPaginated!
-  subscription_getSubscriptionRequest(
-    subscriptionRequestId: ID!
-  ): SubscriptionRequest
   subscription_getSubscriptionRequestV2s(
     offset: Int
     limit: Int
@@ -134,32 +67,6 @@ type Query {
   subscription_getSubscriptionCountByStatus(
     searchFilter: String
   ): SubscriptionCountByStatus!
-}
-
-enum SubscriptionOrganismTypology {
-  generaliste
-  expertFiliere
-  expertBranche
-}
-
-input SubscriptionRequestInput {
-  companySiret: String!
-  companyLegalStatus: LegalStatus!
-  companyName: String!
-  companyAddress: String!
-  companyZipCode: String!
-  companyCity: String!
-  accountFirstname: String!
-  accountLastname: String!
-  accountEmail: String!
-  accountPhoneNumber: String!
-  typology: SubscriptionOrganismTypology!
-  domaineIds: [String!]
-  ccnIds: [String!]
-  onSiteDepartmentsIds: [ID!]!
-  remoteDepartmentsIds: [ID!]!
-  companyWebsite: String
-  qualiopiCertificateExpiresAt: Timestamp!
 }
 
 input CreateSubscriptionRequestV2Input {
@@ -181,14 +88,6 @@ input CreateSubscriptionRequestV2Input {
 }
 
 type Mutation {
-  subscription_createSubscriptionRequest(
-    subscriptionRequest: SubscriptionRequestInput!
-  ): SubscriptionRequest!
-  subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
-  subscription_rejectSubscriptionRequest(
-    subscriptionRequestId: ID!
-    reason: String!
-  ): String
   subscription_createSubscriptionRequestV2(
     createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input!
   ): String!
