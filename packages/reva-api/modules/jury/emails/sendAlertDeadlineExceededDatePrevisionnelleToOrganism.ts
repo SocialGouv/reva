@@ -4,10 +4,10 @@ import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendAlertDeadlineExceededDatePrevisionnelleToOrganism = ({
   email,
-  candadicyId,
+  candidacyId,
 }: {
   email: string;
-  candadicyId: string;
+  candidacyId: string;
 }) => {
   const htmlContent = (url: string) =>
     mjml2html(
@@ -28,7 +28,7 @@ export const sendAlertDeadlineExceededDatePrevisionnelleToOrganism = ({
     to: { email },
     app: "admin",
     htmlContent,
-    customUrl: `/candidacies/${candadicyId}`,
+    customUrl: `/candidacies/${candidacyId}`,
     subject:
       "Dépassement du délai de saisie de la date prévisionnelle de passage devant le jury",
   });
