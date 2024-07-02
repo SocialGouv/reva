@@ -1,10 +1,15 @@
 import { format } from "date-fns";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Info } from "./Info";
+import {
+  OrganismSummaryLegalInformationDocumentsDecisionProps,
+  OrganismSummaryLegalInformationDocumentsDecisions,
+} from "./OrganismSummaryLegalInformationDocumentsDecisions";
+import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 import { CompanyPreview } from "../company-preview";
 
 export type Typology =
-  | "generaliste"
   | "expertBranche"
   | "expertFiliere"
   | "expertBrancheEtFiliere";
@@ -15,27 +20,12 @@ const getTypologyLabel = (typology: Typology) => {
       return "Expert branche";
     case "expertFiliere":
       return "Expert filière";
-    case "generaliste":
-      return "Généraliste";
     case "expertBrancheEtFiliere":
       return "Expert branche et filière";
   }
 };
 
-export const OrganismSummary = ({
-  companyName,
-  accountFirstname,
-  accountLastname,
-  accountEmail,
-  accountPhoneNumber,
-  companyWebsite,
-  companyQualiopiCertificateExpiresAt,
-  companySiret,
-  companyLegalStatus,
-  companyTypology,
-  ccns,
-  domaines,
-}: {
+export interface OrganismSummaryProps {
   companyName: string;
   accountFirstname: string;
   accountLastname: string;
@@ -47,32 +37,69 @@ export const OrganismSummary = ({
   companyLegalStatus: string;
   companyTypology: Typology;
   ccns?: string[];
-  domaines?: string[];
-}) => (
+  createdAt?: Date;
+  companyManagerFirstname?: string;
+  companyManagerLastname?: string;
+  legalInformationDocumentsDecisions: OrganismSummaryLegalInformationDocumentsDecisionProps[];
+  statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
+}
+
+export const OrganismSummary = ({
+  companyName,
+  accountFirstname,
+  accountLastname,
+  accountEmail,
+  accountPhoneNumber,
+  companyWebsite,
+  companySiret,
+  companyLegalStatus,
+  companyTypology,
+  ccns,
+  createdAt,
+  companyManagerFirstname,
+  companyManagerLastname,
+  legalInformationDocumentsDecisions,
+  statutValidationInformationsJuridiquesMaisonMereAAP,
+}: OrganismSummaryProps) => (
   <>
     <h1>{companyName}</h1>
-    <div className="flex flex-col gap-8">
-      <GrayCard>
-        <h2>Informations générales</h2>
-        <div className="grid md:grid-cols-2">
-          <Info title="Nom de l'architecte de parcours">
-            {accountFirstname} {accountLastname}
-          </Info>
-          <Info title="Adresse email de l'architecte de parcours">
-            {accountEmail}
-          </Info>
-          <Info title="Téléphone de l'architecte de parcours">
-            {accountPhoneNumber}
-          </Info>
-          <Info title="Site internet de la structure">
-            {companyWebsite || "Non spécifié"}
-          </Info>
-          <Info title="Date d'expiration de la certification Qualiopi VAE">
-            {format(companyQualiopiCertificateExpiresAt, "dd/MM/yyyy")}
-          </Info>
-        </div>
-      </GrayCard>
-
+    <div className="mb-4">
+      {statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR" && (
+        <Badge severity="success">À jour</Badge>
+      )}
+      {statutValidationInformationsJuridiquesMaisonMereAAP ===
+        "A_METTRE_A_JOUR" && (
+        <Badge severity="warning">Demande de précisions</Badge>
+      )}
+    </div>
+    <ul>
+      {createdAt && (
+        <li>Inscription envoyée le {format(createdAt, "dd/MM/yyyy")}</li>
+      )}
+      {legalInformationDocumentsDecisions.length > 0 && (
+        <li>
+          {legalInformationDocumentsDecisions[0].decision == "VALIDE"
+            ? "Mise à jour validée le "
+            : "Demande de précision envoyée le "}
+          {format(
+            legalInformationDocumentsDecisions[0].decisionTakenAt,
+            "dd/MM/yyyy",
+          )}
+        </li>
+      )}
+    </ul>
+    {!!legalInformationDocumentsDecisions.length && (
+      <OrganismSummaryLegalInformationDocumentsDecisions
+        label={
+          statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR"
+            ? "Historique des décisions"
+            : "Décisions précédentes"
+        }
+        decisions={legalInformationDocumentsDecisions}
+        className="mb-8"
+      />
+    )}
+    <div className="grid grid-cols-2 gap-8">
       <CompanyPreview
         className="col-span-2"
         company={{
@@ -81,23 +108,22 @@ export const OrganismSummary = ({
           companyLegalStatus,
           companyWebsite,
         }}
+        manager={{
+          managerFirstname: companyManagerFirstname,
+          managerLastname: companyManagerLastname,
+        }}
+        account={{
+          accountEmail,
+          accountPhoneNumber,
+          accountFirstname,
+          accountLastname,
+        }}
       />
 
-      <GrayCard>
+      <GrayCard className="col-span-2">
         <h2>Typologie</h2>
         <div className="grid md:grid-cols-2">
           <Info title="Typologie">{getTypologyLabel(companyTypology)}</Info>
-          {!!domaines?.length && (
-            <Info title="Filière(s)">
-              <ul className="ml-4">
-                {domaines?.map((d) => (
-                  <li className="list-disc" key={d}>
-                    {d}
-                  </li>
-                ))}
-              </ul>
-            </Info>
-          )}
           {!!ccns?.length && (
             <Info title="Conventions collectives">
               <ul className="ml-4">

@@ -2,7 +2,6 @@
 import { ReactNode, useCallback, useMemo } from "react";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -72,58 +71,42 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
     [searchFilter],
   );
 
-  const featureFlipping = useFeatureflipping();
-  const showLegalMenuItems = featureFlipping.isFeatureActive(
-    "LEGAL_INFORMATION_VALIDATION",
+  const items = useMemo(
+    () => [
+      menuItem(
+        "Inscriptions à vérifier",
+        hrefSideMenu("pending"),
+        currentPathname,
+        subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
+      ),
+      menuItem(
+        "Inscriptions refusées",
+        hrefSideMenu("rejected"),
+        currentPathname,
+        subscriptionCountByStatus?.REJECTED_SUBSCRIPTION,
+      ),
+
+      menuItem(
+        "Comptes administrateur à vérifier",
+        hrefSideMenu("check-legal-information"),
+        currentPathname,
+        subscriptionCountByStatus?.PENDING_LEGAL_VERIFICATION,
+      ),
+      menuItem(
+        "Comptes administrateur incomplets",
+        hrefSideMenu("validated"),
+        currentPathname,
+        subscriptionCountByStatus?.NEED_LEGAL_VERIFICATION,
+      ),
+      menuItem(
+        "Comptes administrateur vérifiés",
+        hrefSideMenu("up-to-date"),
+        currentPathname,
+        subscriptionCountByStatus?.APPROVED,
+      ),
+    ],
+    [subscriptionCountByStatus, currentPathname, hrefSideMenu],
   );
-
-  const items = useMemo(() => {
-    if (showLegalMenuItems) {
-      return [
-        menuItem(
-          "Inscriptions à vérifier",
-          hrefSideMenu("pending"),
-          currentPathname,
-          subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
-        ),
-        menuItem(
-          "Inscriptions refusées",
-          hrefSideMenu("rejected"),
-          currentPathname,
-          subscriptionCountByStatus?.REJECTED_SUBSCRIPTION,
-        ),
-
-        menuItem(
-          "Comptes administrateur à vérifier",
-          hrefSideMenu("check-legal-information"),
-          currentPathname,
-          subscriptionCountByStatus?.PENDING_LEGAL_VERIFICATION,
-        ),
-        menuItem(
-          "Comptes administrateur incomplets",
-          hrefSideMenu("validated"),
-          currentPathname,
-          subscriptionCountByStatus?.NEED_LEGAL_VERIFICATION,
-        ),
-        menuItem(
-          "Comptes administrateur vérifiés",
-          hrefSideMenu("up-to-date"),
-          currentPathname,
-          subscriptionCountByStatus?.APPROVED,
-        ),
-      ];
-    }
-    return [
-      menuItem("En attente", hrefSideMenu("pending"), currentPathname),
-      menuItem("Validées", hrefSideMenu("validated"), currentPathname),
-      menuItem("Refusées", hrefSideMenu("rejected"), currentPathname),
-    ];
-  }, [
-    showLegalMenuItems,
-    subscriptionCountByStatus,
-    currentPathname,
-    hrefSideMenu,
-  ]);
 
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">

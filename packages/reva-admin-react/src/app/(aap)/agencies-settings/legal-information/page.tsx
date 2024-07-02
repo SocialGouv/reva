@@ -2,7 +2,6 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useLegalInformationsPage } from "./legalInformationsPage.hook";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useAuth } from "@/components/auth/auth";
 import { LegalInformationUpdateBlock } from "@/app/(aap)/agencies-settings/legal-information/_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
@@ -10,7 +9,6 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 const LegalInformationPage = () => {
   const { maisonMereAAP, legalInformationsStatus } = useLegalInformationsPage();
   const { isGestionnaireMaisonMereAAP } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
   return (
     <div className="flex flex-col w-full">
       <h1>Informations juridiques</h1>
@@ -80,22 +78,20 @@ const LegalInformationPage = () => {
               </GrayCard>
             </>
           )}
-          {isFeatureActive("LEGAL_INFORMATION_VALIDATION") &&
-            isGestionnaireMaisonMereAAP &&
-            maisonMereAAP && (
-              <LegalInformationUpdateBlock
-                maisonMereAAPId={maisonMereAAP.id}
-                statutValidationInformationsJuridiquesMaisonMereAAP={
-                  maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
-                }
-                decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
-                  (d) => ({
-                    ...d,
-                    decisionTakenAt: new Date(d.decisionTakenAt),
-                  }),
-                )}
-              />
-            )}
+          {isGestionnaireMaisonMereAAP && maisonMereAAP && (
+            <LegalInformationUpdateBlock
+              maisonMereAAPId={maisonMereAAP.id}
+              statutValidationInformationsJuridiquesMaisonMereAAP={
+                maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+              }
+              decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
+                (d) => ({
+                  ...d,
+                  decisionTakenAt: new Date(d.decisionTakenAt),
+                }),
+              )}
+            />
+          )}
         </>
       )}
     </div>
