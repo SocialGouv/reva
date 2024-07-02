@@ -53,7 +53,7 @@ export default function AttachmentsPage() {
   const urqlClient = useUrqlClient();
   const router = useRouter();
   const { attachments } = useAttachments();
-
+  const MAX_ADDITIONAL_FILES = 2;
   const [idCard, setIdCard] = useState<GQLFile | undefined>();
   const [equivalenceOrExemptionProof, setEquivalenceOrExemptionProof] =
     useState<GQLFile | undefined>();
@@ -278,15 +278,17 @@ export default function AttachmentsPage() {
               key={index}
             />
           ))}
-          <div
-            className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
-            onClick={() => {
-              setAdditionalFiles((prev) => [...prev, undefined]);
-            }}
-          >
-            <span className="fr-icon-add-line fr-icon--sm" />
-            <span className="text-sm">Ajouter une pièce jointe</span>
-          </div>
+          {additionalFiles?.length < MAX_ADDITIONAL_FILES && (
+            <div
+              className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
+              onClick={() => {
+                setAdditionalFiles((prev) => [...prev, undefined]);
+              }}
+            >
+              <span className="fr-icon-add-line fr-icon--sm" />
+              <span className="text-sm">Ajouter une pièce jointe</span>
+            </div>
+          )}
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
