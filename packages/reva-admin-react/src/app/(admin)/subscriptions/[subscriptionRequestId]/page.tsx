@@ -1,21 +1,17 @@
 "use client";
-import { SubscriptionRequestForm } from "@/app/(admin)/subscriptions/[subscriptionRequestId]/SubscriptionRequestForm";
+import { CompanyPreview } from "@/components/company-preview";
+import { SubscriptionRequestForm } from "./SubscriptionRequestForm";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
+import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { graphql } from "@/graphql/generated";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import {
-  selectedDepartmentsToTreeSelectItems,
-  sortRegionsByAlphabeticalOrderAndDOM,
-} from "@/utils";
-import { ZoneInterventionReadOnly } from "@/app/(admin)/subscriptions/[subscriptionRequestId]/ZoneInterventionReadOnly";
-import { BackButton } from "@/components/back-button/BackButton";
 
-const getSubscriptionRequest = graphql(`
-  query getSubscriptionRequest($subscriptionRequestId: ID!) {
-    subscription_getSubscriptionRequest(
+const getSubscriptionRequestV2 = graphql(`
+  query getSubscriptionRequestV2($subscriptionRequestId: ID!) {
+    subscription_getSubscriptionRequestV2(
       subscriptionRequestId: $subscriptionRequestId
     ) {
       id
@@ -24,51 +20,27 @@ const getSubscriptionRequest = graphql(`
       accountFirstname
       accountLastname
       accountPhoneNumber
-      qualiopiCertificateExpiresAt
       accountEmail
+      managerFirstname
+      managerLastname
       companyWebsite
       companySiret
       companyLegalStatus
-      companyAddress
-      companyZipCode
-      companyCity
-      typology
       rejectionReason
-      isCompanyNameUnique
-      departmentsWithOrganismMethods {
-        department {
-          id
-          code
-          label
-        }
-        isOnSite
-        isRemote
+      internalComment
+      attestationURSSAFFile {
+        url
       }
-      subscriptionRequestOnConventionCollective {
-        ccn {
-          label
-        }
+      justificatifIdentiteDirigeantFile {
+        url
       }
-      subscriptionRequestOnDomaine {
-        domaine {
-          label
-        }
+      lettreDeDelegationFile {
+        url
       }
-    }
-  }
-`);
-
-const getRegions = graphql(`
-  query getRegions {
-    getRegions {
-      id
-      label
-      code
-      departments {
-        id
-        label
-        code
+      justificatifIdentiteDelegataireFile {
+        url
       }
+      createdAt
     }
   }
 `);
@@ -82,90 +54,68 @@ const SubscriptionRequestPage = () => {
   const { data: getSubscriptionRequestResponse } = useQuery({
     queryKey: ["getSubscriptionRequest", subscriptionRequestId],
     queryFn: () =>
-      graphqlClient.request(getSubscriptionRequest, {
+      graphqlClient.request(getSubscriptionRequestV2, {
         subscriptionRequestId,
       }),
   });
 
-  const { data: getRegionsResponse } = useQuery({
-    queryKey: ["getRegionsResponse"],
-    queryFn: () => graphqlClient.request(getRegions),
-  });
-
   const subscriptionRequest =
-    getSubscriptionRequestResponse?.subscription_getSubscriptionRequest;
-
-  const unsortedRegions = getRegionsResponse?.getRegions || [];
-  const regions = sortRegionsByAlphabeticalOrderAndDOM(unsortedRegions);
+    getSubscriptionRequestResponse?.subscription_getSubscriptionRequestV2;
 
   if (!subscriptionRequest) {
     return <></>;
   }
 
-  const selectedOnSiteDepartments =
-    subscriptionRequest.departmentsWithOrganismMethods
-      .filter((d) => d.isOnSite)
-      .map((d) => d.department);
-
-  const selectedRemoteDepartments =
-    subscriptionRequest.departmentsWithOrganismMethods
-      .filter((d) => d.isRemote)
-      .map((d) => d.department);
-
   return (
     subscriptionRequest && (
       <div className="flex flex-col flex-1 px-8 py-4">
-        <BackButton href="/subscriptions/pending">
-          Toutes les inscriptions
-        </BackButton>
-        <OrganismSummary
-          companyName={subscriptionRequest.companyName}
-          accountFirstname={subscriptionRequest.accountFirstname}
-          accountLastname={subscriptionRequest.accountLastname}
-          accountEmail={subscriptionRequest.accountEmail}
-          accountPhoneNumber={subscriptionRequest.accountPhoneNumber}
-          companyQualiopiCertificateExpiresAt={
-            new Date(subscriptionRequest.qualiopiCertificateExpiresAt || "")
+        <h1>{subscriptionRequest.companyName}</h1>
+        <FormOptionalFieldsDisclaimer />
+        <p>
+          Inscription envoyée le{" "}
+          {format(subscriptionRequest.createdAt, "dd/MM/yyyy")}
+        </p>
+
+        <CompanyPreview
+          className="mb-8"
+          company={subscriptionRequest}
+          manager={subscriptionRequest}
+          account={subscriptionRequest}
+        />
+
+        <LegalDocumentList
+          attestationURSSAFFileUrl={
+            subscriptionRequest.attestationURSSAFFile.url
           }
-          companySiret={subscriptionRequest.companySiret}
-          companyLegalStatus={subscriptionRequest.companyLegalStatus}
-          companyWebsite={subscriptionRequest.companyWebsite}
-          companyTypology={subscriptionRequest.typology}
-          ccns={subscriptionRequest?.subscriptionRequestOnConventionCollective?.map(
-            (s) => s.ccn.label,
-          )}
-          domaines={subscriptionRequest?.subscriptionRequestOnDomaine?.map(
-            (s) => s.domaine.label,
-          )}
+          justificatifIdentiteDirigeantFileUrl={
+            subscriptionRequest.justificatifIdentiteDirigeantFile.url
+          }
+          lettreDeDelegationFileUrl={
+            subscriptionRequest.lettreDeDelegationFile?.url
+          }
+          justificatifIdentiteDelegataireFileUrl={
+            subscriptionRequest.justificatifIdentiteDelegataireFile?.url
+          }
         />
-
-        <ZoneInterventionReadOnly
-          onSiteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedOnSiteDepartments),
-          )}
-          remoteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
-          )}
-        />
-
-        {!subscriptionRequest.isCompanyNameUnique && (
-          <Alert
-            className="mb-6"
-            title=""
-            severity="warning"
-            description="Une structure portant la même raison sociale existe déjà."
-          />
-        )}
         {subscriptionRequest.status === "REJECTED" && (
-          <>
-            <h3>Motif du refus</h3>
-            <pre className="whitespace-normal">
-              {subscriptionRequest.rejectionReason}
-            </pre>
-          </>
+          <div className="flex flex-col gap-6 mt-8">
+            <div>
+              <h3>Commentaire à destination de l'AAP</h3>
+              <pre className="whitespace-normal">
+                {subscriptionRequest.rejectionReason}
+              </pre>
+            </div>
+            <div>
+              <h3>Description interne</h3>
+              <pre className="whitespace-normal">
+                {subscriptionRequest.internalComment}
+              </pre>
+            </div>
+          </div>
         )}
         {subscriptionRequest.status === "PENDING" && (
           <SubscriptionRequestForm
+            className="mt-8"
             subscriptionRequestId={subscriptionRequestId}
           />
         )}

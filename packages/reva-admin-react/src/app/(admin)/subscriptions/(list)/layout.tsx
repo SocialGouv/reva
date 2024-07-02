@@ -82,13 +82,13 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
       return [
         menuItem(
           "Inscriptions à vérifier",
-          hrefSideMenu("pending-v2"),
+          hrefSideMenu("pending"),
           currentPathname,
           subscriptionCountByStatus?.PENDING_SUBSCRIPTION,
         ),
         menuItem(
           "Inscriptions refusées",
-          hrefSideMenu("rejected-v2"),
+          hrefSideMenu("rejected"),
           currentPathname,
           subscriptionCountByStatus?.REJECTED_SUBSCRIPTION,
         ),

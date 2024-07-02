@@ -6,9 +6,9 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-const getPendingSubscriptionRequests = graphql(`
-  query getPendingSubscriptionRequests($offset: Int, $searchFilter: String) {
-    subscription_getSubscriptionRequests(
+const getPendingSubscriptionRequestV2s = graphql(`
+  query getPendingSubscriptionRequestV2s($offset: Int, $searchFilter: String) {
+    subscription_getSubscriptionRequestV2s(
       status: PENDING
       limit: 10
       offset: $offset
@@ -30,7 +30,7 @@ const getPendingSubscriptionRequests = graphql(`
 
 const RECORDS_PER_PAGE = 10;
 
-const PendingSubscriptionRequestsPage = () => {
+const PendingSubscriptionRequestV2sPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const searchParams = useSearchParams();
@@ -44,43 +44,35 @@ const PendingSubscriptionRequestsPage = () => {
   } = useQuery({
     queryKey: ["getPendingSubscriptionRequests", searchFilter, currentPage],
     queryFn: () =>
-      graphqlClient.request(getPendingSubscriptionRequests, {
+      graphqlClient.request(getPendingSubscriptionRequestV2s, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
       }),
   });
 
   const subscriptionRequestPage =
-    getPendingSubscriptionRequestsResponse?.subscription_getSubscriptionRequests;
+    getPendingSubscriptionRequestsResponse?.subscription_getSubscriptionRequestV2s;
+
   return (
-    subscriptionRequestPage && (
-      <div className="flex flex-col">
-        <h1>Espace pro administrateur</h1>
-        <p>
-          En tant qu'administrateur des conseillers, vous avez la possibilité
-          d'ajouter ou d'accepter de nouveaux architecte de parcours ou
-          certificateur.
-        </p>
-        {getPendingSubscriptionRequestsStatus === "success" && (
-          <SearchList
-            title="Anciennes inscriptions à vérifier"
-            searchFilter={searchFilter}
-            searchResultsPage={subscriptionRequestPage}
-          >
-            {(r) => (
-              <SubscriptionRequestCard
-                key={r.id}
-                companyName={r.companyName}
-                createdAtLabel="Date d'envoi de l'inscription"
-                createdAt={new Date(r.createdAt)}
-                href={`/subscriptions/${r.id}`}
-              />
-            )}
-          </SearchList>
+    subscriptionRequestPage &&
+    getPendingSubscriptionRequestsStatus === "success" && (
+      <SearchList
+        title="Inscriptions à vérifier"
+        searchFilter={searchFilter}
+        searchResultsPage={subscriptionRequestPage}
+      >
+        {(r) => (
+          <SubscriptionRequestCard
+            key={r.id}
+            companyName={r.companyName}
+            createdAtLabel="Date d'envoi de l'inscription"
+            createdAt={new Date(r.createdAt)}
+            href={`/subscriptions/${r.id}`}
+          />
         )}
-      </div>
+      </SearchList>
     )
   );
 };
 
-export default PendingSubscriptionRequestsPage;
+export default PendingSubscriptionRequestV2sPage;

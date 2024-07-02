@@ -6,9 +6,9 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-const getRejectedSubscriptionRequests = graphql(`
-  query getRejectedSubscriptionRequests($offset: Int, $searchFilter: String) {
-    subscription_getSubscriptionRequests(
+const getRejectedSubscriptionRequestV2s = graphql(`
+  query getRejectedSubscriptionRequestV2s($offset: Int, $searchFilter: String) {
+    subscription_getSubscriptionRequestV2s(
       status: REJECTED
       limit: 10
       offset: $offset
@@ -29,7 +29,8 @@ const getRejectedSubscriptionRequests = graphql(`
 `);
 
 const RECORDS_PER_PAGE = 10;
-const RejectedSubscriptionRequestsPage = () => {
+
+const RejectedSubscriptionRequestV2sPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const searchParams = useSearchParams();
@@ -43,43 +44,34 @@ const RejectedSubscriptionRequestsPage = () => {
   } = useQuery({
     queryKey: ["getRejectedSubscriptionRequests", searchFilter, currentPage],
     queryFn: () =>
-      graphqlClient.request(getRejectedSubscriptionRequests, {
+      graphqlClient.request(getRejectedSubscriptionRequestV2s, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
       }),
   });
 
   const subscriptionRequestPage =
-    getRejectedSubscriptionRequestsResponse?.subscription_getSubscriptionRequests;
+    getRejectedSubscriptionRequestsResponse?.subscription_getSubscriptionRequestV2s;
   return (
-    subscriptionRequestPage && (
-      <div className="flex flex-col">
-        <h1>Espace pro administrateur</h1>
-        <p>
-          En tant qu'administrateur des conseillers, vous avez la possibilité
-          d'ajouter ou d'accepter de nouveaux architecte de parcours ou
-          certificateur.
-        </p>
-        {getRejectedSubscriptionRequestsStatus === "success" && (
-          <SearchList
-            title="Anciennes inscriptions refusées"
-            searchFilter={searchFilter}
-            searchResultsPage={subscriptionRequestPage}
-          >
-            {(r) => (
-              <SubscriptionRequestCard
-                key={r.id}
-                companyName={r.companyName}
-                createdAtLabel="Date d'envoi de l'inscription"
-                createdAt={new Date(r.createdAt)}
-                href={`/subscriptions/${r.id}`}
-              />
-            )}
-          </SearchList>
+    subscriptionRequestPage &&
+    getRejectedSubscriptionRequestsStatus === "success" && (
+      <SearchList
+        title="Inscriptions refusées"
+        searchFilter={searchFilter}
+        searchResultsPage={subscriptionRequestPage}
+      >
+        {(r) => (
+          <SubscriptionRequestCard
+            key={r.id}
+            companyName={r.companyName}
+            createdAtLabel="Date d'envoi de l'inscription"
+            createdAt={new Date(r.createdAt)}
+            href={`/subscriptions/${r.id}`}
+          />
         )}
-      </div>
+      </SearchList>
     )
   );
 };
 
-export default RejectedSubscriptionRequestsPage;
+export default RejectedSubscriptionRequestV2sPage;
