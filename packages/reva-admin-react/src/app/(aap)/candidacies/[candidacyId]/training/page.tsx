@@ -67,6 +67,9 @@ const TrainingPage = () => {
           </div>
           <hr />
           <TrainingForm
+            showCertificationCompletionFields={
+              candidacy.feasibilityFormat === "UPLOADED_PDF"
+            }
             defaultValues={{
               individualHourCount: candidacy.individualHourCount,
               collectiveHourCount: candidacy.collectiveHourCount,

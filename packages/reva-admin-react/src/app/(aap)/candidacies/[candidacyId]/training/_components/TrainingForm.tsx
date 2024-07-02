@@ -79,12 +79,14 @@ export interface TrainingFormProps {
   defaultValues?: NullablePartial<TrainingFormValues>;
   onSubmit?(values: TrainingFormValues): void;
   disabled?: boolean;
+  showCertificationCompletionFields?: boolean;
 }
 
 export const TrainingForm = ({
   defaultValues,
   onSubmit,
   disabled,
+  showCertificationCompletionFields,
 }: TrainingFormProps) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -286,28 +288,30 @@ export const TrainingForm = ({
         />
       </div>
       <br />
-      <RadioButtons
-        legend="Le candidat / la candidate vise :"
-        disabled={disabled}
-        options={[
-          {
-            label: "La certification dans sa totalité",
-            nativeInputProps: {
-              ...register("certificationScope"),
-              value: "COMPLETE",
+      {showCertificationCompletionFields && (
+        <RadioButtons
+          legend="Le candidat / la candidate vise :"
+          disabled={disabled}
+          options={[
+            {
+              label: "La certification dans sa totalité",
+              nativeInputProps: {
+                ...register("certificationScope"),
+                value: "COMPLETE",
+              },
             },
-          },
-          {
-            label: "Un ou plusieurs bloc(s) de compétences",
-            nativeInputProps: {
-              ...register("certificationScope"),
-              value: "PARTIAL",
+            {
+              label: "Un ou plusieurs bloc(s) de compétences",
+              nativeInputProps: {
+                ...register("certificationScope"),
+                value: "PARTIAL",
+              },
             },
-          },
-        ]}
-        state={errors.certificationScope ? "error" : "default"}
-        stateRelatedMessage={errors.certificationScope?.message}
-      />
+          ]}
+          state={errors.certificationScope ? "error" : "default"}
+          stateRelatedMessage={errors.certificationScope?.message}
+        />
+      )}
       <br />
       <Button className="ml-auto" disabled={isSubmitting || disabled}>
         Envoyer le parcours

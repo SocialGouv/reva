@@ -26,6 +26,7 @@ const getCandidacyById = graphql(`
         status
         isActive
       }
+      feasibilityFormat
     }
   }
 `);
