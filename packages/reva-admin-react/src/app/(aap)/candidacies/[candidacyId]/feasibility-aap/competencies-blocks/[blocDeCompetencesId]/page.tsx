@@ -18,7 +18,7 @@ const schema = z.object({
     .object({
       competenceId: z.string(),
       label: z.string(),
-      text: z.string().min(1, "Ce champ est obligatoire"),
+      text: z.string().min(1, "Merci de remplir ce champ"),
     })
     .array(),
 });

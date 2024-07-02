@@ -9,8 +9,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
-  codeRncp: z.string().min(1, "Ce champ est obligatoire"),
-  label: z.string().min(1, "Ce champ est obligatoire"),
+  codeRncp: z.string().min(1, "Merci de remplir ce champ"),
+  label: z.string().min(1, "Merci de remplir ce champ"),
   expiresAt: z.string(),
   availableAt: z.string(),
   typeDiplomeId: z.string(),

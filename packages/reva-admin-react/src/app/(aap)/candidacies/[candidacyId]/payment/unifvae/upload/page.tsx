@@ -18,11 +18,11 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const paymentRequestUniFvaeUploadSchema = z.object({
   invoiceFile: z.object({
-    0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
 
   certificateOfAttendanceFile: z.object({
-    0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
   contractorInvoiceFiles: z
     .object({

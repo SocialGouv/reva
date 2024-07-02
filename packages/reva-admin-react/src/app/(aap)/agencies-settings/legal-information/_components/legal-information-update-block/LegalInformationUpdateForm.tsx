@@ -12,13 +12,13 @@ import { z } from "zod";
 
 const schema = z
   .object({
-    managerFirstname: z.string().min(1, "Ce champ est obligatoire."),
-    managerLastname: z.string().min(1, "Ce champ est obligatoire."),
+    managerFirstname: z.string().min(1, "Merci de remplir ce champ."),
+    managerLastname: z.string().min(1, "Merci de remplir ce champ."),
     attestationURSSAF: z.object({
-      0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+      0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),
     justificatifIdentiteDirigeant: z.object({
-      0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+      0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),
 
     delegataire: z.boolean(),
@@ -42,14 +42,14 @@ const schema = z
         if (!lettreDeDelegation?.[0]) {
           addIssue({
             path: ["lettreDeDelegation[0]"],
-            message: "Ce champ est obligatoire",
+            message: "Merci de remplir ce champ",
             code: z.ZodIssueCode.custom,
           });
         }
         if (!justificatifIdentiteDelegataire?.[0]) {
           addIssue({
             path: ["justificatifIdentiteDelegataire[0]"],
-            message: "Ce champ est obligatoire",
+            message: "Merci de remplir ce champ",
             code: z.ZodIssueCode.custom,
           });
         }

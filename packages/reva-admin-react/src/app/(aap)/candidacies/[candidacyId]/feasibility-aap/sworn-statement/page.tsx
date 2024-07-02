@@ -18,14 +18,14 @@ import {
 const schema = z
   .object({
     swornStatement: z.object({
-      0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+      0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),
   })
   .superRefine(({ swornStatement }, { addIssue }) => {
     if (!swornStatement?.[0]) {
       addIssue({
         path: ["idCard"],
-        message: "Ce champ est obligatoire",
+        message: "Merci de remplir ce champ",
         code: z.ZodIssueCode.custom,
       });
     }

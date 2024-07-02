@@ -17,7 +17,7 @@ const schema = z.object({
   prerequisites: z.array(
     z.object({
       id: z.string().optional(),
-      label: z.string().min(1, "Ce champ est obligatoire"),
+      label: z.string().min(1, "Merci de remplir ce champ"),
       state: z.enum(["ACQUIRED", "IN_PROGRESS", "RECOMMENDED"]).optional(),
     }),
   ),

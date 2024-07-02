@@ -16,11 +16,11 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 const paymentRequestUniRevaUploadSchema = z.object({
   invoiceFile: z.object({
-    0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
 
   appointmentFile: z.object({
-    0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
 });
 

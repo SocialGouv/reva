@@ -20,7 +20,7 @@ const schema = z
       ["unknownAdmissibility", "alreadyAdmissible", "notAlreadyAdmissible"],
       {
         errorMap: (issue, ctx) => {
-          return { message: "Ce champ est obligatoire" };
+          return { message: "Merci de remplir ce champ" };
         },
       },
     ),
@@ -31,7 +31,7 @@ const schema = z
       data.admissibilityStatus === "notAlreadyAdmissible" ||
       data.expiresAt !== "",
     {
-      message: "Ce champ est obligatoire",
+      message: "Merci de remplir ce champ",
       path: ["expiresAt"],
     },
   );

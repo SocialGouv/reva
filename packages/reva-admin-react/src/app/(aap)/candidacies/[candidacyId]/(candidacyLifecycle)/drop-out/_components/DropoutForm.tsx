@@ -11,10 +11,10 @@ import { ActiveDropoutReasons, useDropout } from "./useDropout";
 
 const schema = z.object({
   otherReasonContent: z.string().optional(),
-  dropOutReasonId: z.string().min(1, "Ce champ est obligatoire"),
+  dropOutReasonId: z.string().min(1, "Merci de remplir ce champ"),
   hasConfirmedWrittenConsent: z
     .boolean()
-    .refine((val) => val, "Ce champ est obligatoire"),
+    .refine((val) => val, "Merci de remplir ce champ"),
 });
 
 export const DropoutForm = ({

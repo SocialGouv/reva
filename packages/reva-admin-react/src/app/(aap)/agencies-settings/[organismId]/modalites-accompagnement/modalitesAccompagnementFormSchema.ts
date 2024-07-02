@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const modalitesAccompagnementFormSchema = z
   .object({
-    nom: z.string().min(1, "Ce champ est obligatoire"),
+    nom: z.string().min(1, "Merci de remplir ce champ"),
     telephone: z.string().optional().default(""),
     siteInternet: z.string().optional().default(""),
     emailContact: z
@@ -69,7 +69,7 @@ export const modalitesAccompagnementFormSchema = z
         if (!fieldValue) {
           addIssue({
             path: [fieldName],
-            message: "Ce champ est obligatoire",
+            message: "Merci de remplir ce champ",
             code: z.ZodIssueCode.custom,
           });
         }

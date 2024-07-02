@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
-  decisionComment: z.string().min(1, "Ce champ est obligatoire"),
+  decisionComment: z.string().min(1, "Merci de remplir ce champ"),
 });
 
 export type DossierDeValidationProblemFormData = z.infer<typeof schema>;

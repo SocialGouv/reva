@@ -12,7 +12,7 @@ import * as z from "zod";
 import { useCommercialInformationPage } from "./commercialInformationPage.hook";
 
 const schema = z.object({
-  nom: z.string().min(1, "Ce champ est obligatoire"),
+  nom: z.string().min(1, "Merci de remplir ce champ"),
   telephone: z.string().optional().default(""),
   siteInternet: z.string().optional().default(""),
   emailContact: z

@@ -16,7 +16,7 @@ const dossierDeValidationSchema = z.object({
     }),
   }),
   dossierDeValidationFile: z.object({
-    0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
 
   dossierDeValidationOtherFiles: z

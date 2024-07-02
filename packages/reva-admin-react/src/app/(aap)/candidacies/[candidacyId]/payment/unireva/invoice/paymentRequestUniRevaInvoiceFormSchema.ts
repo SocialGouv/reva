@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const paymentRequestUniRevaInvoiceSchema = z.object({
-  invoiceNumber: z.string().min(1, "Ce champ est obligatoire"),
+  invoiceNumber: z.string().min(1, "Merci de remplir ce champ"),
   individualEffectiveHourCount: z.number().default(0),
   individualEffectiveCost: z.number().default(0),
   collectiveEffectiveHourCount: z.number().default(0),

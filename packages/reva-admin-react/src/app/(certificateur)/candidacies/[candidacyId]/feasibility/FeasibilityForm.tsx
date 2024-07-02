@@ -12,7 +12,7 @@ const schema = z
   .object({
     decision: z.enum(["Admissible", "Rejected", "Incomplete"], {
       errorMap: () => {
-        return { message: "Ce champ est obligatoire" };
+        return { message: "Merci de remplir ce champ" };
       },
     }),
     comment: z.string(),
@@ -26,7 +26,7 @@ const schema = z
         minimum: 1,
         type: "string",
         inclusive: true,
-        message: "Ce champ est obligatoire",
+        message: "Merci de remplir ce champ",
       });
     }
   });

@@ -31,9 +31,9 @@ const durationToString: {
 };
 
 export const schema = z.object({
-  title: z.string().min(1, "Ce champ est obligatoire"),
+  title: z.string().min(1, "Merci de remplir ce champ"),
   description: z.string(),
-  startedAt: z.string().min(1, "Ce champ est obligatoire"),
+  startedAt: z.string().min(1, "Merci de remplir ce champ"),
   duration: z.enum(durationValues),
 });
 

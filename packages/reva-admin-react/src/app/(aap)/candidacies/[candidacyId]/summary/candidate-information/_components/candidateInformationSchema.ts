@@ -3,7 +3,7 @@ import { deserializeStringToPhoneNumberStructure } from "@/utils";
 import { isBefore, sub } from "date-fns";
 import { z } from "zod";
 
-const defaultErrorMessage = "Ce champ est obligatoire";
+const defaultErrorMessage = "Merci de remplir ce champ";
 
 export const candidateInformationSchema = z
   .object({
@@ -79,7 +79,7 @@ export const candidateInformationSchema = z
     if (data.countryIsFrance && !data.birthDepartment?.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Ce champ est obligatoire",
+        message: "Merci de remplir ce champ",
         path: ["birthDepartment"],
       });
     }

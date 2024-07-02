@@ -9,11 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const schema = z.object({
-  highestDegreeId: z.string().min(1, "Ce champ est obligatoire"),
+  highestDegreeId: z.string().min(1, "Merci de remplir ce champ"),
   highestDegreeLabel: z.string(),
   niveauDeFormationLePlusEleveDegreeId: z
     .string()
-    .min(1, "Ce champ est obligatoire"),
+    .min(1, "Merci de remplir ce champ"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -134,7 +134,9 @@ export const useCandidateProfilePageLogic = () => {
         !highestDegreeLevel ||
         (highestDegreeLevel > 1 && !highestDegreeLabel)
       ) {
-        setError("highestDegreeLabel", { message: "Ce champ est obligatoire" });
+        setError("highestDegreeLabel", {
+          message: "Merci de remplir ce champ",
+        });
       } else {
         await updateCandidateProfile.mutateAsync({
           candidateId: candidate?.id,

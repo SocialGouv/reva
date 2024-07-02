@@ -20,10 +20,10 @@ export const AccountInfoStepForm = () => {
   } = useProfessionalSpaceSubscriptionContext();
 
   const zodSchema = z.object({
-    accountFirstname: z.string().min(1, "Ce champ est obligatoire"),
-    accountLastname: z.string().min(1, "Ce champ est obligatoire"),
+    accountFirstname: z.string().min(1, "Merci de remplir ce champ"),
+    accountLastname: z.string().min(1, "Merci de remplir ce champ"),
     accountEmail: z.string().email("L'adresse email est incomplète"),
-    accountPhoneNumber: z.string().min(1, "Ce champ est obligatoire"),
+    accountPhoneNumber: z.string().min(1, "Merci de remplir ce champ"),
     delegataire: z.boolean(),
   });
 

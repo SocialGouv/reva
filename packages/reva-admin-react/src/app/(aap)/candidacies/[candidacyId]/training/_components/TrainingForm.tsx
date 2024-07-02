@@ -57,7 +57,7 @@ const trainingFormSchema = z.object({
   otherTraining: z.string(),
   certificationScope: z.enum(["PARTIAL", "COMPLETE"], {
     errorMap: () => ({
-      message: "Ce champ est obligatoire",
+      message: "Merci de remplir ce champ",
     }),
   }),
 });

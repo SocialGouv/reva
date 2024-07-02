@@ -18,7 +18,7 @@ import {
 const schema = z
   .object({
     idCard: z.object({
-      0: z.instanceof(File, { message: "Ce champ est obligatoire" }),
+      0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),
     equivalenceOrExemptionProof: z
       .object({
@@ -40,7 +40,7 @@ const schema = z
     if (!idCard?.[0]) {
       addIssue({
         path: ["idCard"],
-        message: "Ce champ est obligatoire",
+        message: "Merci de remplir ce champ",
         code: z.ZodIssueCode.custom,
       });
     }

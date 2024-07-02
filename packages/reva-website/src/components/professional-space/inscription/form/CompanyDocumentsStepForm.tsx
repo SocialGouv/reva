@@ -59,12 +59,12 @@ export const CompanyDocumentsStepForm = () => {
     }) => {
       let formValid = true;
       if (!attestationURSSAF?.[0]) {
-        setError("attestationURSSAF", { message: "Ce champ est obligatoire" });
+        setError("attestationURSSAF", { message: "Merci de remplir ce champ" });
         formValid = false;
       }
       if (!justificatifIdentiteDirigeant?.[0]) {
         setError("justificatifIdentiteDirigeant", {
-          message: "Ce champ est obligatoire",
+          message: "Merci de remplir ce champ",
         });
         formValid = false;
       }
@@ -72,13 +72,13 @@ export const CompanyDocumentsStepForm = () => {
       if (delegataire) {
         if (!lettreDeDelegation?.[0]) {
           setError("lettreDeDelegation", {
-            message: "Ce champ est obligatoire",
+            message: "Merci de remplir ce champ",
           });
           formValid = false;
         }
         if (!justificatifIdentiteDelegataire?.[0]) {
           setError("justificatifIdentiteDelegataire", {
-            message: "Ce champ est obligatoire",
+            message: "Merci de remplir ce champ",
           });
           formValid = false;
         }

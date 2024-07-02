@@ -17,7 +17,7 @@ const schema = z.object({
   firstForeignLanguage: z.string(),
   secondForeignlanguage: z.string(),
   completion: z.enum(["PARTIAL", "COMPLETE"], {
-    invalid_type_error: "Ce champ est obligatoire",
+    invalid_type_error: "Merci de remplir ce champ",
   }),
   competenceBlocs: z.any().array(),
 });
