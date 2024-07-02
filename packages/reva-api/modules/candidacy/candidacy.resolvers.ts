@@ -876,24 +876,19 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await cancelDropOutCandidacy({
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        cancelDropOutCandidacy: candidacyDb.cancelDropOutCandidacy,
-      })({
         candidacyId: payload.candidacyId,
       });
 
       // Save candidacyDropOut as AuditEvent
       const accountId = context.auth.userInfo?.sub;
 
-      const candidacyDropOut = result.isRight()
-        ? result.extract().candidacyDropOut
-        : undefined;
+      const candidacyDropOut = result.candidacyDropOut;
 
       if (accountId && candidacyDropOut) {
         await cancelDropOutCandidacyEvent(accountId, candidacyDropOut);
       }
 
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.CANCELED_DROPPED_OUT_CANDIDACY,
         extraInfo: { candidacyDropOut },
@@ -901,19 +896,15 @@ const unsafeResolvers = {
         result,
       });
 
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_DROP_OUT_CANCELED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROP_OUT_CANCELED",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
 
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
     candidacy_updateAdmissibility: async (
       _: unknown,

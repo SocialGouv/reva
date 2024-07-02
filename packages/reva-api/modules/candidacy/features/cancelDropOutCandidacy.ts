@@ -1,60 +1,64 @@
-import { Either, EitherAsync, Maybe } from "purify-ts";
-
+import { logger } from "../../shared/logger";
+import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
-  FunctionalError,
 } from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
-
-interface CancelDropOutCandidacyDeps {
-  getCandidacyFromId: (
-    candidacyId: string,
-  ) => Promise<Either<string, Candidacy>>;
-  cancelDropOutCandidacy: (
-    params: CancelDropOutCandidacyParams,
-  ) => Promise<Either<string, Candidacy>>;
-}
+import { getCandidacyById } from "./getCandidacyById";
 
 interface CancelDropOutCandidacyParams {
   candidacyId: string;
 }
 
 export const cancelDropOutCandidacy =
-  (deps: CancelDropOutCandidacyDeps) =>
-  (params: CancelDropOutCandidacyParams) => {
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`,
-        ),
-    );
+  async (params: CancelDropOutCandidacyParams) => {
+    let candidacy;
+    try {
+      candidacy = await getCandidacyById({
+        candidacyId: params.candidacyId,
+        includes: {
+          candidacyStatuses: {
+            where: {
+              isActive: true,
+            },
+          },
+          department: true,
+          experiences: true,
+          goals: true,
+          candidacyDropOut: true,
+        }
+      });
+    } catch (e) {
+      throw new Error(`${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} ${e}`);
+    }
 
-    const checkIfCandidacyIsAbandonned = (candidacy: Candidacy) => {
-      const hasDropOut = Boolean(candidacy.candidacyDropOut);
-      return Promise.resolve(
-        Maybe.fromFalsy(hasDropOut).toEither(
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_NOT_DROPPED_OUT,
-            `La candidature n'est pas abandonnée`,
-          ),
-        ),
+    if(!candidacy) {
+      throw new Error(
+        `${FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST} La candidature ${params.candidacyId} n'existe pas`,
       );
-    };
+    }
 
-    const cancelDropOutCandidacyResult = EitherAsync.fromPromise(() =>
-      deps.cancelDropOutCandidacy(params),
-    ).mapLeft(
-      (error: string) =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
-          error,
-        ),
-    );
+    const hasDropOut = Boolean(candidacy.candidacyDropOut);
+    if (!hasDropOut) {
+      throw new Error(
+        `${FunctionalCodeError.CANDIDACY_NOT_DROPPED_OUT} La candidature n'est pas abandonnée`,
+      );
+    }
 
-    return checkIfCandidacyExists
-      .chain(checkIfCandidacyIsAbandonned)
-      .chain(() => cancelDropOutCandidacyResult);
+    try {
+      const candidacyDropOut = await prismaClient.candidacyDropOut.delete({
+        where: {
+          candidacyId: params.candidacyId,
+        },
+        include: {
+          dropOutReason: true,
+        },
+      });
+      return {
+        ...candidacy,
+        candidacyDropOut,
+      };
+    } catch (e) {
+      logger.error(e);
+      throw new Error(`${FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED} ${e}`);
+    }
   };
