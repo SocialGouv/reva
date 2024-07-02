@@ -54,7 +54,7 @@ beforeAll(async () => {
   });
 });
 
-describe("drop out candidacy", () => {
+describe("cancel drop out candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
     await expect(async () => {
       await cancelDropOutCandidacy({
