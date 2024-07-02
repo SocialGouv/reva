@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+import { sendDFFNotificationToCertificationAuthorityEmail } from "../emails";
 
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,
@@ -15,6 +16,18 @@ export const sendDFFToCertificationAuthority = async ({
       certificationAuthorityId,
     },
   });
+
+  const dff = await prismaClient.dematerializedFeasibilityFile.findUnique({
+    where: { id: dematerializedFeasibilityFileId },
+    include: { certificationAuthority: true },
+  });
+
+  if (dff?.certificationAuthority?.contactEmail) {
+    await sendDFFNotificationToCertificationAuthorityEmail({
+      email: dff.certificationAuthority.contactEmail,
+      candidacyId: dff.candidacyId,
+    });
+  }
 
   return "Ok";
 };
