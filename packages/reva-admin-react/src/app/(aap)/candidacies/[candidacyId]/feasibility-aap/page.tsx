@@ -79,6 +79,7 @@ const AapFeasibilityPage = () => {
                   </span>
                   <Button
                     className="w-full"
+                    priority={bc.complete ? "secondary" : "primary"}
                     linkProps={{
                       href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.certificationCompetenceBloc.id}`,
                     }}
