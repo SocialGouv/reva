@@ -259,7 +259,7 @@ const getRemoteZoneFromDepartment = async ({
       return "GUYANE";
     case "974":
       return "LA_REUNION";
-    case "975":
+    case "976":
       return "MAYOTTE";
     default:
       return "FRANCE_METROPOLITAINE";
