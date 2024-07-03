@@ -5,7 +5,7 @@ import {
 
 import { prismaClient } from "../../../prisma/client";
 import { buildMaisonMereFilters } from "../../organism/features/getMaisonMereAAPs";
-import { buildSubscriptionFilters } from "./getSubscriptionRequestV2s";
+import { buildSubscriptionFilters } from "./getSubscriptionRequests";
 
 export const getSubscriptionCountByStatus = async ({
   searchFilter,
@@ -13,7 +13,7 @@ export const getSubscriptionCountByStatus = async ({
   searchFilter?: string;
 }) => {
   const querySubscriptionCount = (status: SubscriptionRequestStatus) =>
-    prismaClient.subscriptionRequestV2.count({
+    prismaClient.subscriptionRequest.count({
       where: {
         status,
         ...(searchFilter && { OR: buildSubscriptionFilters(searchFilter) }),

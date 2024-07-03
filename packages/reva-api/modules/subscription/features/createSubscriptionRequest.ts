@@ -7,10 +7,10 @@ import {
   uploadFileToS3,
 } from "../../shared/file";
 
-export const createSubscriptionRequestV2 = async ({
+export const createSubscriptionRequest = async ({
   params,
 }: {
-  params: CreateSubscriptionRequestV2Input;
+  params: CreateSubscriptionRequestInput;
 }) => {
   try {
     //organism check
@@ -77,7 +77,7 @@ export const createSubscriptionRequestV2 = async ({
       ...paramsWithoutFiles
     } = params;
 
-    await prismaClient.subscriptionRequestV2.create({
+    await prismaClient.subscriptionRequest.create({
       data: {
         id: subscriptionRequestId,
         ...paramsWithoutFiles,

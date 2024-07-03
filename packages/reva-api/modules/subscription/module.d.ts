@@ -87,7 +87,7 @@ type GraphqlUploadedFile = Promise<{
   createReadStream(): ReadStream;
 }>;
 
-interface CreateSubscriptionRequestV2Input {
+interface CreateSubscriptionRequestInput {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;

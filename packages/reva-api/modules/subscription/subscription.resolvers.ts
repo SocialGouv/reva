@@ -1,22 +1,22 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { resolversSecurityMap } from "./security";
-import { createSubscriptionRequestV2 } from "./features/createSubscriptionRequestV2";
-import { getSubscriptionRequestV2s } from "./features/getSubscriptionRequestV2s";
-import { getSubscriptionRequestV2 } from "./features/getSubscriptionRequestV2";
-import { getSubscriptionRequestV2FileNameUrlAndMimeType } from "./features/getSubscriptionRequestV2FileNameUrlAndMimeType";
-import { rejectSubscriptionRequestV2 } from "./features/rejectSubscriptionRequestV2";
-import { validateSubscriptionRequestV2 } from "./features/validateSubscriptionRequestV2";
+import { createSubscriptionRequest } from "./features/createSubscriptionRequest";
+import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
+import { getSubscriptionRequest } from "./features/getSubscriptionRequest";
+import { getSubscriptionRequestFileNameUrlAndMimeType } from "./features/getSubscriptionRequestFileNameUrlAndMimeType";
+import { rejectSubscriptionRequest } from "./features/rejectSubscriptionRequest";
+import { validateSubscriptionRequest } from "./features/validateSubscriptionRequest";
 import { findEtablissement } from "../referential/features/entreprise";
 import { getSubscriptionCountByStatus } from "./features/getSubscriptionCountByStatus";
 
 const unsafeResolvers = {
-  SubscriptionRequestV2: {
+  SubscriptionRequest: {
     attestationURSSAFFile: async (
       { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
-      getSubscriptionRequestV2FileNameUrlAndMimeType({
+      getSubscriptionRequestFileNameUrlAndMimeType({
         subscriptionRequestId,
         fileType: "attestationURSSAFFile",
       }),
@@ -24,7 +24,7 @@ const unsafeResolvers = {
       { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
-      getSubscriptionRequestV2FileNameUrlAndMimeType({
+      getSubscriptionRequestFileNameUrlAndMimeType({
         subscriptionRequestId,
         fileType: "justificatifIdentiteDirigeantFile",
       }),
@@ -32,7 +32,7 @@ const unsafeResolvers = {
       { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
-      getSubscriptionRequestV2FileNameUrlAndMimeType({
+      getSubscriptionRequestFileNameUrlAndMimeType({
         subscriptionRequestId,
         fileType: "lettreDeDelegationFile",
       }),
@@ -40,7 +40,7 @@ const unsafeResolvers = {
       { id: subscriptionRequestId }: { id: string },
       _: unknown,
     ) =>
-      getSubscriptionRequestV2FileNameUrlAndMimeType({
+      getSubscriptionRequestFileNameUrlAndMimeType({
         subscriptionRequestId,
         fileType: "justificatifIdentiteDelegataireFile",
       }),
@@ -53,7 +53,7 @@ const unsafeResolvers = {
       }),
   },
   Query: {
-    subscription_getSubscriptionRequestV2s: (
+    subscription_getSubscriptionRequests: (
       _parent: unknown,
       params: {
         limit?: number;
@@ -61,35 +61,35 @@ const unsafeResolvers = {
         status?: SubscriptionRequestStatus;
         searchFilter?: string;
       },
-    ) => getSubscriptionRequestV2s(params),
-    subscription_getSubscriptionRequestV2: (
+    ) => getSubscriptionRequests(params),
+    subscription_getSubscriptionRequest: (
       _parent: unknown,
       { subscriptionRequestId }: { subscriptionRequestId: string },
-    ) => getSubscriptionRequestV2({ subscriptionRequestId }),
+    ) => getSubscriptionRequest({ subscriptionRequestId }),
     subscription_getSubscriptionCountByStatus: (
       _parent: unknown,
       { searchFilter }: { searchFilter?: string },
     ) => getSubscriptionCountByStatus({ searchFilter }),
   },
   Mutation: {
-    subscription_createSubscriptionRequestV2: async (
+    subscription_createSubscriptionRequest: async (
       _: unknown,
       payload: {
-        createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input;
+        createSubscriptionRequestInput: CreateSubscriptionRequestInput;
       },
     ) =>
-      createSubscriptionRequestV2({
-        params: payload.createSubscriptionRequestV2Input,
+      createSubscriptionRequest({
+        params: payload.createSubscriptionRequestInput,
       }),
-    subscription_validateSubscriptionRequestV2: async (
+    subscription_validateSubscriptionRequest: async (
       _: unknown,
       {
         subscriptionRequestId,
       }: {
         subscriptionRequestId: string;
       },
-    ) => validateSubscriptionRequestV2({ subscriptionRequestId }),
-    subscription_rejectSubscriptionRequestV2: async (
+    ) => validateSubscriptionRequest({ subscriptionRequestId }),
+    subscription_rejectSubscriptionRequest: async (
       _: unknown,
       {
         subscriptionRequestId,
@@ -101,7 +101,7 @@ const unsafeResolvers = {
         internalComment?: string;
       },
     ) =>
-      rejectSubscriptionRequestV2({
+      rejectSubscriptionRequest({
         subscriptionRequestId,
         reason,
         internalComment,

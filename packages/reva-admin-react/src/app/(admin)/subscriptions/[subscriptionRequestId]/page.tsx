@@ -9,9 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 
-const getSubscriptionRequestV2 = graphql(`
-  query getSubscriptionRequestV2($subscriptionRequestId: ID!) {
-    subscription_getSubscriptionRequestV2(
+const getSubscriptionRequest = graphql(`
+  query getSubscriptionRequest($subscriptionRequestId: ID!) {
+    subscription_getSubscriptionRequest(
       subscriptionRequestId: $subscriptionRequestId
     ) {
       id
@@ -54,13 +54,13 @@ const SubscriptionRequestPage = () => {
   const { data: getSubscriptionRequestResponse } = useQuery({
     queryKey: ["getSubscriptionRequest", subscriptionRequestId],
     queryFn: () =>
-      graphqlClient.request(getSubscriptionRequestV2, {
+      graphqlClient.request(getSubscriptionRequest, {
         subscriptionRequestId,
       }),
   });
 
   const subscriptionRequest =
-    getSubscriptionRequestResponse?.subscription_getSubscriptionRequestV2;
+    getSubscriptionRequestResponse?.subscription_getSubscriptionRequest;
 
   if (!subscriptionRequest) {
     return <></>;

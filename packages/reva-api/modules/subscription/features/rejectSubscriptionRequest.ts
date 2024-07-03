@@ -1,7 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import { sendRejectionEmail } from "../mail";
 
-export const rejectSubscriptionRequestV2 = async ({
+export const rejectSubscriptionRequest = async ({
   subscriptionRequestId,
   reason,
   internalComment,
@@ -10,16 +10,17 @@ export const rejectSubscriptionRequestV2 = async ({
   reason: string;
   internalComment?: string;
 }) => {
-  const subscriptionRequest =
-    await prismaClient.subscriptionRequestV2.findUnique({
+  const subscriptionRequest = await prismaClient.subscriptionRequest.findUnique(
+    {
       where: { id: subscriptionRequestId },
-    });
+    },
+  );
 
   if (!subscriptionRequest) {
     throw new Error("Demande d'inscription non trouvée");
   }
 
-  await prismaClient.subscriptionRequestV2.update({
+  await prismaClient.subscriptionRequest.update({
     where: { id: subscriptionRequestId },
     data: { status: "REJECTED", rejectionReason: reason, internalComment },
   });

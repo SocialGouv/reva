@@ -18,7 +18,7 @@ enum SubscriptionRequestStatus {
   REJECTED
 }
 
-type SubscriptionRequestV2 {
+type SubscriptionRequest {
   id: ID!
   companySiret: String!
   companyLegalStatus: LegalStatus!
@@ -41,8 +41,8 @@ type SubscriptionRequestV2 {
   createdAt: Timestamp!
   etablissement: Etablissement
 }
-type SubscriptionRequestV2sPaginated {
-  rows: [SubscriptionRequestV2!]!
+type SubscriptionRequestsPaginated {
+  rows: [SubscriptionRequest!]!
   info: PaginationInfo!
 }
 
@@ -55,21 +55,21 @@ type SubscriptionCountByStatus {
 }
 
 type Query {
-  subscription_getSubscriptionRequestV2s(
+  subscription_getSubscriptionRequests(
     offset: Int
     limit: Int
     status: SubscriptionRequestStatus
     searchFilter: String
-  ): SubscriptionRequestV2sPaginated!
-  subscription_getSubscriptionRequestV2(
+  ): SubscriptionRequestsPaginated!
+  subscription_getSubscriptionRequest(
     subscriptionRequestId: ID!
-  ): SubscriptionRequestV2
+  ): SubscriptionRequest
   subscription_getSubscriptionCountByStatus(
     searchFilter: String
   ): SubscriptionCountByStatus!
 }
 
-input CreateSubscriptionRequestV2Input {
+input CreateSubscriptionRequestInput {
   companySiret: String!
   companyLegalStatus: LegalStatus!
   companyName: String!
@@ -88,11 +88,11 @@ input CreateSubscriptionRequestV2Input {
 }
 
 type Mutation {
-  subscription_createSubscriptionRequestV2(
-    createSubscriptionRequestV2Input: CreateSubscriptionRequestV2Input!
+  subscription_createSubscriptionRequest(
+    createSubscriptionRequestInput: CreateSubscriptionRequestInput!
   ): String!
-  subscription_validateSubscriptionRequestV2(subscriptionRequestId: ID!): String
-  subscription_rejectSubscriptionRequestV2(
+  subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
+  subscription_rejectSubscriptionRequest(
     subscriptionRequestId: ID!
     reason: String!
     internalComment: String

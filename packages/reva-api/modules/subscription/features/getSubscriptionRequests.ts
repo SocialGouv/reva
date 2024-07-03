@@ -1,9 +1,9 @@
-import { Prisma, SubscriptionRequestV2 } from "@prisma/client";
+import { Prisma, SubscriptionRequest } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 
 export const buildSubscriptionFilters = (searchFilter: string) => {
-  const containsFilter = (field: keyof SubscriptionRequestV2) => ({
+  const containsFilter = (field: keyof SubscriptionRequest) => ({
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
 
@@ -15,7 +15,7 @@ export const buildSubscriptionFilters = (searchFilter: string) => {
   ];
 };
 
-export const getSubscriptionRequestV2s = async ({
+export const getSubscriptionRequests = async ({
   limit,
   offset,
   status,
@@ -25,18 +25,17 @@ export const getSubscriptionRequestV2s = async ({
   offset?: number;
   status?: SubscriptionRequestStatus;
   searchFilter?: string;
-}): Promise<PaginatedListResult<SubscriptionRequestV2>> => {
-  const querySubscriptionRequestV2s: Prisma.SubscriptionRequestV2FindManyArgs =
-    {
-      where: {
-        status,
-      },
-      orderBy: [{ createdAt: "desc" }],
-      take: limit,
-      skip: offset,
-    };
+}): Promise<PaginatedListResult<SubscriptionRequest>> => {
+  const querySubscriptionRequests: Prisma.SubscriptionRequestFindManyArgs = {
+    where: {
+      status,
+    },
+    orderBy: [{ createdAt: "desc" }],
+    take: limit,
+    skip: offset,
+  };
 
-  const queryCount: Prisma.SubscriptionRequestV2CountArgs = {
+  const queryCount: Prisma.SubscriptionRequestCountArgs = {
     where: {
       status,
     },
@@ -45,8 +44,8 @@ export const getSubscriptionRequestV2s = async ({
   if (searchFilter && searchFilter.length > 0) {
     const filters = buildSubscriptionFilters(searchFilter);
 
-    querySubscriptionRequestV2s.where = {
-      ...querySubscriptionRequestV2s.where,
+    querySubscriptionRequests.where = {
+      ...querySubscriptionRequests.where,
       OR: filters,
     };
 
@@ -56,14 +55,13 @@ export const getSubscriptionRequestV2s = async ({
     };
   }
 
-  const subscriptionRequestV2s =
-    await prismaClient.subscriptionRequestV2.findMany(
-      querySubscriptionRequestV2s,
-    );
-  const count = await prismaClient.subscriptionRequestV2.count(queryCount);
+  const subscriptionRequests = await prismaClient.subscriptionRequest.findMany(
+    querySubscriptionRequests,
+  );
+  const count = await prismaClient.subscriptionRequest.count(queryCount);
 
   return {
-    rows: subscriptionRequestV2s,
+    rows: subscriptionRequests,
     info: processPaginationInfo({
       totalRows: count,
       limit: 10,

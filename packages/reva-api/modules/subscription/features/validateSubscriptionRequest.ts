@@ -12,13 +12,13 @@ import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 
-export const validateSubscriptionRequestV2 = async ({
+export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
 }: {
   subscriptionRequestId: string;
 }) => {
-  const subscriptionRequest =
-    await prismaClient.subscriptionRequestV2.findUnique({
+  const subscriptionRequest = await prismaClient.subscriptionRequest.findUnique(
+    {
       where: {
         id: subscriptionRequestId,
       },
@@ -28,7 +28,8 @@ export const validateSubscriptionRequestV2 = async ({
         justificatifIdentiteDirigeantFile: true,
         lettreDeDelegationFile: true,
       },
-    });
+    },
+  );
 
   if (!subscriptionRequest) {
     throw new Error("Demande d'inscription non trouvée");
@@ -142,7 +143,7 @@ export const validateSubscriptionRequestV2 = async ({
     maisonMereAAPId: newMaisonMereAAP.id,
   });
 
-  await prismaClient.subscriptionRequestV2.delete({
+  await prismaClient.subscriptionRequest.delete({
     where: { id: subscriptionRequestId },
   });
 

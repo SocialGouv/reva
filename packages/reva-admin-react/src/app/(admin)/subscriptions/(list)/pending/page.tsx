@@ -6,9 +6,9 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-const getPendingSubscriptionRequestV2s = graphql(`
-  query getPendingSubscriptionRequestV2s($offset: Int, $searchFilter: String) {
-    subscription_getSubscriptionRequestV2s(
+const getPendingSubscriptionRequests = graphql(`
+  query getPendingSubscriptionRequests($offset: Int, $searchFilter: String) {
+    subscription_getSubscriptionRequests(
       status: PENDING
       limit: 10
       offset: $offset
@@ -44,14 +44,14 @@ const PendingSubscriptionRequestsPage = () => {
   } = useQuery({
     queryKey: ["getPendingSubscriptionRequests", searchFilter, currentPage],
     queryFn: () =>
-      graphqlClient.request(getPendingSubscriptionRequestV2s, {
+      graphqlClient.request(getPendingSubscriptionRequests, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
       }),
   });
 
   const subscriptionRequestPage =
-    getPendingSubscriptionRequestsResponse?.subscription_getSubscriptionRequestV2s;
+    getPendingSubscriptionRequestsResponse?.subscription_getSubscriptionRequests;
 
   return (
     subscriptionRequestPage &&

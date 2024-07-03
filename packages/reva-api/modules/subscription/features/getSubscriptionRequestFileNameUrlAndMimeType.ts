@@ -5,7 +5,7 @@ import {
   getDownloadLink,
 } from "../../shared/file";
 
-export const getSubscriptionRequestV2FileNameUrlAndMimeType = async ({
+export const getSubscriptionRequestFileNameUrlAndMimeType = async ({
   subscriptionRequestId,
   fileType,
 }: {
@@ -16,7 +16,7 @@ export const getSubscriptionRequestV2FileNameUrlAndMimeType = async ({
     | "lettreDeDelegationFile"
     | "justificatifIdentiteDelegataireFile";
 }) => {
-  const sr = await prismaClient.subscriptionRequestV2.findUnique({
+  const sr = await prismaClient.subscriptionRequest.findUnique({
     where: { id: subscriptionRequestId },
     include: {
       attestationURSSAFFile: true,

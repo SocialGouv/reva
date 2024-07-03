@@ -1,10 +1,10 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getSubscriptionRequestV2 = ({
+export const getSubscriptionRequest = ({
   subscriptionRequestId,
 }: {
   subscriptionRequestId: string;
 }) =>
-  prismaClient.subscriptionRequestV2.findUnique({
+  prismaClient.subscriptionRequest.findUnique({
     where: { id: subscriptionRequestId },
   });

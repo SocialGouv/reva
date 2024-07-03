@@ -6,9 +6,9 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-const getRejectedSubscriptionRequestV2s = graphql(`
-  query getRejectedSubscriptionRequestV2s($offset: Int, $searchFilter: String) {
-    subscription_getSubscriptionRequestV2s(
+const getRejectedSubscriptionRequests = graphql(`
+  query getRejectedSubscriptionRequests($offset: Int, $searchFilter: String) {
+    subscription_getSubscriptionRequests(
       status: REJECTED
       limit: 10
       offset: $offset
@@ -44,14 +44,14 @@ const RejectedSubscriptionRequestsPage = () => {
   } = useQuery({
     queryKey: ["getRejectedSubscriptionRequests", searchFilter, currentPage],
     queryFn: () =>
-      graphqlClient.request(getRejectedSubscriptionRequestV2s, {
+      graphqlClient.request(getRejectedSubscriptionRequests, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
       }),
   });
 
   const subscriptionRequestPage =
-    getRejectedSubscriptionRequestsResponse?.subscription_getSubscriptionRequestV2s;
+    getRejectedSubscriptionRequestsResponse?.subscription_getSubscriptionRequests;
   return (
     subscriptionRequestPage &&
     getRejectedSubscriptionRequestsStatus === "success" && (

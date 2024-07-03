@@ -13,20 +13,20 @@ import { useRouter } from "next/navigation";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const validateSubscriptionRequestMutation = graphql(`
-  mutation validateSubscriptionRequestV2($subscriptionRequestId: ID!) {
-    subscription_validateSubscriptionRequestV2(
+  mutation validateSubscriptionRequest($subscriptionRequestId: ID!) {
+    subscription_validateSubscriptionRequest(
       subscriptionRequestId: $subscriptionRequestId
     )
   }
 `);
 
 const rejectSubscriptionRequestMutation = graphql(`
-  mutation rejectSubscriptionRequestV2(
+  mutation rejectSubscriptionRequest(
     $subscriptionRequestId: ID!
     $reason: String!
     $internalComment: String
   ) {
-    subscription_rejectSubscriptionRequestV2(
+    subscription_rejectSubscriptionRequest(
       subscriptionRequestId: $subscriptionRequestId
       reason: $reason
       internalComment: $internalComment
