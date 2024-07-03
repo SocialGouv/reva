@@ -25,11 +25,9 @@ interface filters {
 
 export const OrganismFilters = ({
   onSearch,
-  filterDistanceIsActive,
   filters,
 }: {
   onSearch: (filters: filters) => void;
-  filterDistanceIsActive: boolean;
   filters: filters;
 }) => {
   const [zip, setZip] = useState("");
@@ -110,27 +108,25 @@ export const OrganismFilters = ({
             visio-conférence.
           </p>
         </modalDistanceInfo.Component>
-        {filterDistanceIsActive && (
-          <OrganismDistanceFilter
-            disabled={!searchHasOnSiteSelected}
-            onChangeSearchZip={(zip) => {
-              onSearch({
-                ...filters,
-                organismSearchZip: zip,
-              });
-            }}
-            onChangeSearchPmr={(pmr) => {
-              onSearch({
-                ...filters,
-                organismSearchPmr: pmr,
-              });
-            }}
-            zip={zip}
-            setZip={setZip}
-            pmr={pmr}
-            setPmr={setPmr}
-          />
-        )}
+        <OrganismDistanceFilter
+          disabled={!searchHasOnSiteSelected}
+          onChangeSearchZip={(zip) => {
+            onSearch({
+              ...filters,
+              organismSearchZip: zip,
+            });
+          }}
+          onChangeSearchPmr={(pmr) => {
+            onSearch({
+              ...filters,
+              organismSearchPmr: pmr,
+            });
+          }}
+          zip={zip}
+          setZip={setZip}
+          pmr={pmr}
+          setPmr={setPmr}
+        />
         <hr />
         <div className="flex justify-center">
           <Button

@@ -75,7 +75,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organismSearchText,
     organismSearchOnsite,
     organismSearchRemote,
-    activeFeatures,
     organismSearchZip,
     organismSearchPmr,
   } = xstate.context;
@@ -158,9 +157,6 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                 organismSearchZip,
                 organismSearchPmr,
               }}
-              filterDistanceIsActive={activeFeatures.includes(
-                "CANDIDATE_APP_FILTER_DISTANCE",
-              )}
             />
           </div>
           <div className="lg:w-2/3">
