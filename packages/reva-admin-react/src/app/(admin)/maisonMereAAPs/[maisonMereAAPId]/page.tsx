@@ -187,7 +187,6 @@ const MaisonMereAAPPage = () => {
             maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
           }
         />
-        )
         <GrayCard className="mt-8">
           <h3>Agences</h3>
           <ol className="grid grid-cols-1 md:grid-cols-2">
