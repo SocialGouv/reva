@@ -59,11 +59,8 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
       "Dossier de validation",
       `/candidacies/${candidacyId}/dossier-de-validation`,
     ),
+    menuItem("Jury", `/candidacies/${candidacyId}/jury`),
   ];
-
-  if (isFeatureActive("JURY")) {
-    items.push(menuItem("Jury", `/candidacies/${candidacyId}/jury`));
-  }
 
   if (
     isFeatureActive("CERTIFICATEUR_TRANSFER_CANDIDACY") &&
