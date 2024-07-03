@@ -76,6 +76,7 @@ export default function CertificationSection({
         {blocsDeCompetences.map((certificationCompetenceBloc) => (
           <CertificationCompetenceAccordion
             key={certificationCompetenceBloc.id}
+            defaultExpanded
             competenceBloc={certificationCompetenceBloc}
             competenceDetails={certificationCompetenceDetails}
           />

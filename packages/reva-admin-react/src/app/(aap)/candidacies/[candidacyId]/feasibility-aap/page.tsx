@@ -20,6 +20,7 @@ import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
+import { CertificationCompetenceAccordion } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/_components/CertificationCompetenceAccordion";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -66,30 +67,34 @@ const AapFeasibilityPage = () => {
               />
             }
           >
-            <ul className="list-none flex flex-col gap-2">
-              {dematerializedFeasibilityFile?.blocsDeCompetences?.map((bc) => (
-                <li
-                  key={bc.certificationCompetenceBloc.id}
-                  className="grid grid-cols-[1fr_120px] items-center"
-                >
-                  <span>
-                    {bc.certificationCompetenceBloc.code
-                      ? `${bc.certificationCompetenceBloc.code} - ${bc.certificationCompetenceBloc.label}`
-                      : bc.certificationCompetenceBloc.label}
-                  </span>
-                  <Button
-                    className="w-full"
-                    priority={bc.complete ? "secondary" : "primary"}
-                    linkProps={{
-                      href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bc.certificationCompetenceBloc.id}`,
-                    }}
+            <ul className="list-none flex flex-col">
+              {dematerializedFeasibilityFile?.blocsDeCompetences?.map(
+                (bloc) => (
+                  <li
+                    key={bloc.certificationCompetenceBloc.id}
+                    className="flex justify-between items-start pb-0 gap-6"
                   >
-                    <span className="mx-auto">
-                      {bc.complete ? "Modifier" : "Compléter"}
-                    </span>
-                  </Button>
-                </li>
-              ))}
+                    <CertificationCompetenceAccordion
+                      key={bloc.certificationCompetenceBloc.id}
+                      competenceBloc={bloc.certificationCompetenceBloc}
+                      competenceDetails={
+                        dematerializedFeasibilityFile?.certificationCompetenceDetails
+                      }
+                    />
+                    <Button
+                      className="w-[120px] mt-4 flex-none"
+                      priority={bloc.complete ? "secondary" : "primary"}
+                      linkProps={{
+                        href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
+                      }}
+                    >
+                      <span className="mx-auto">
+                        {bloc.complete ? "Modifier" : "Compléter"}
+                      </span>
+                    </Button>
+                  </li>
+                ),
+              )}
             </ul>
           </CandidacySectionCard>
           <PrerequisitesCard

@@ -31,6 +31,17 @@ const getCandidacyById = graphql(`
             id
             code
             label
+            competences {
+              id
+              label
+            }
+          }
+        }
+        certificationCompetenceDetails {
+          text
+          certificationCompetence {
+            id
+            label
           }
         }
         aapDecision

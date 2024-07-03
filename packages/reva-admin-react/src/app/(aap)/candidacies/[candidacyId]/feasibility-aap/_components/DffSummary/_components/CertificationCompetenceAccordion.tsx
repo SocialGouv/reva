@@ -22,15 +22,18 @@ const getTextFromCompetence = ({
 export const CertificationCompetenceAccordion = ({
   competenceBloc,
   competenceDetails,
+  defaultExpanded = false,
 }: {
   competenceBloc: CertificationCompetenceBloc;
   competenceDetails: CertificationCompetenceDetails[];
+  defaultExpanded?: boolean;
 }) => {
+  const label = competenceBloc.code
+    ? `${competenceBloc.code} - ${competenceBloc.label}`
+    : competenceBloc.label;
+
   return (
-    <Accordion
-      label={`${competenceBloc.code} - ${competenceBloc.label}`}
-      defaultExpanded
-    >
+    <Accordion label={label} defaultExpanded={defaultExpanded}>
       {competenceBloc.competences.map((competence) => (
         <p key={competence.id}>
           <span className="font-bold">{competence.label} :</span>
