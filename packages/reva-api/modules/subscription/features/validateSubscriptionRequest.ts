@@ -11,6 +11,7 @@ import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMai
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
+import { getDepartments } from "../../referential/features/getDepartments";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
@@ -118,6 +119,8 @@ export const validateSubscriptionRequest = async ({
     `[subscription] Successfuly created Account with organismId ${newOrganism.id}`,
   );
 
+  const allDepartements = await getDepartments();
+
   const newMaisonMereAAP = await createMaisonMereAAP({
     maisonMereAAP: {
       phone: subscriptionRequest.accountPhoneNumber ?? "",
@@ -135,7 +138,11 @@ export const validateSubscriptionRequest = async ({
       managerLastname: subscriptionRequest.managerLastname,
     },
     ccnIds: [],
-    maisonMereAAPOnDepartements: [],
+    maisonMereAAPOnDepartements: allDepartements.map((d) => ({
+      departementId: d.id,
+      estADistance: true,
+      estSurPlace: true,
+    })),
   });
 
   await assignMaisonMereAAPToOrganism({

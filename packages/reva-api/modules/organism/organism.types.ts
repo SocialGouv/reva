@@ -70,7 +70,7 @@ export interface MaisonMereAAP {
 
 export interface MaisonMereAAPOnDepartement {
   departementId: string;
-  estSurplace: boolean;
+  estSurPlace: boolean;
   estADistance: boolean;
 }
 
