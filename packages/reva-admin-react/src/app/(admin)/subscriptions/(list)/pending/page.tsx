@@ -30,7 +30,7 @@ const getPendingSubscriptionRequestV2s = graphql(`
 
 const RECORDS_PER_PAGE = 10;
 
-const PendingSubscriptionRequestV2sPage = () => {
+const PendingSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const searchParams = useSearchParams();
@@ -75,4 +75,4 @@ const PendingSubscriptionRequestV2sPage = () => {
   );
 };
 
-export default PendingSubscriptionRequestV2sPage;
+export default PendingSubscriptionRequestsPage;

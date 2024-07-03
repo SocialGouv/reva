@@ -30,7 +30,7 @@ const getRejectedSubscriptionRequestV2s = graphql(`
 
 const RECORDS_PER_PAGE = 10;
 
-const RejectedSubscriptionRequestV2sPage = () => {
+const RejectedSubscriptionRequestsPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const searchParams = useSearchParams();
@@ -74,4 +74,4 @@ const RejectedSubscriptionRequestV2sPage = () => {
   );
 };
 
-export default RejectedSubscriptionRequestV2sPage;
+export default RejectedSubscriptionRequestsPage;
