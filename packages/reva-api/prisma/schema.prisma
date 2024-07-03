@@ -1202,10 +1202,10 @@ model File {
   linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFile                      MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_dirigeant_file")
   linkedAsLettreDeDelegationFile                                              MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_lettre_de_delegation_file")
   linkedAsJustificatifIdentiteDelegataireFile                                 MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_delegataire_file")
-  linkedAsMaisonMereAAPAttestationUrssafFileInSubscriptionRequest             SubscriptionRequest[]                    @relation("srv2_attestation_urssaf_file")
-  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequest SubscriptionRequest[]                    @relation("srv2_justificatif_identite_dirigeant_file")
-  linkedAsLettreDeDelegationFileInSubscriptionRequest                         SubscriptionRequest[]                    @relation("srv2_lettre_de_delegation_file")
-  linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequest            SubscriptionRequest[]                    @relation("srv2_justificatif_identite_delegataire_file")
+  linkedAsMaisonMereAAPAttestationUrssafFileInSubscriptionRequest             SubscriptionRequest[]                    @relation("sr_attestation_urssaf_file")
+  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequest SubscriptionRequest[]                    @relation("sr_justificatif_identite_dirigeant_file")
+  linkedAsLettreDeDelegationFileInSubscriptionRequest                         SubscriptionRequest[]                    @relation("sr_lettre_de_delegation_file")
+  linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequest            SubscriptionRequest[]                    @relation("sr_justificatif_identite_delegataire_file")
   linkedAsDFFAttachment                                                       DFFAttachment?                           @relation("dff_attachment")
   linkedAsSwornStatementFile                                                  DematerializedFeasibilityFile?           @relation("sworn_statement_file")
 
@@ -1570,17 +1570,17 @@ model SubscriptionRequest {
   companyWebsite                        String
   delegataire                           Boolean
   attestationURSSAFFileId               String                    @map("attestation_urssaf_file_id") @db.Uuid
-  attestationURSSAFFile                 File                      @relation("srv2_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id], map: "srv2_attestation_urssaf_file")
+  attestationURSSAFFile                 File                      @relation("sr_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id], map: "sr_attestation_urssaf_file")
   justificatifIdentiteDirigeantFileId   String                    @map("justificatif_identite_dirigeant_file_id") @db.Uuid
-  justificatifIdentiteDirigeantFile     File                      @relation("srv2_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "srv2_justificatif_identite_dirigeant_file")
+  justificatifIdentiteDirigeantFile     File                      @relation("sr_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "sr_justificatif_identite_dirigeant_file")
   lettreDeDelegationFileId              String?                   @map("lettre_de_delegation_file_id") @db.Uuid
-  lettreDeDelegationFile                File?                     @relation("srv2_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
+  lettreDeDelegationFile                File?                     @relation("sr_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id], map: "sr_lettre_de_delegation_file")
   justificatifIdentiteDelegataireFileId String?                   @map("justificatif_identite_delegataire_file_id") @db.Uuid
-  justificatifIdentiteDelegataireFile   File?                     @relation("srv2_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "srv2_justificatif_identite_delegataire_file")
+  justificatifIdentiteDelegataireFile   File?                     @relation("sr_justificatif_identite_delegataire_file", fields: [justificatifIdentiteDelegataireFileId], references: [id], map: "sr_justificatif_identite_delegataire_file")
   status                                SubscriptionRequestStatus @default(PENDING)
   rejectionReason                       String?                   @map("rejection_reason")
   internalComment                       String?                   @map("internal_comment")
   createdAt                             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  @@map("subscription_request_v2")
+  @@map("subscription_request")
 }
