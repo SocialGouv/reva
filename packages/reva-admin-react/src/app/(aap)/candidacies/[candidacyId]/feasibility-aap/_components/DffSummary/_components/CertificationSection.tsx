@@ -1,13 +1,13 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useMemo } from "react";
 import {
   Certification,
-  CertificationCompetence,
-  CertificationCompetenceBloc,
   CertificationCompetenceDetails,
+  CertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import { useMemo } from "react";
+import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
 
 export default function CertificationSection({
   option,
@@ -39,17 +39,6 @@ export default function CertificationSection({
       ),
     };
   }, [prerequisites]);
-
-  const getTextFromCompetence = (
-    competence: CertificationCompetence,
-  ): string => {
-    const text =
-      certificationCompetenceDetails.find(
-        (detail) => detail.certificationCompetence.id === competence.id,
-      )?.text || "";
-
-    return text;
-  };
 
   return (
     <div>
@@ -84,20 +73,12 @@ export default function CertificationSection({
       <h5 className="mb-0">Blocs de compétences</h5>
 
       <div className="mb-8 mt-4">
-        {blocsDeCompetences.map((bloc) => (
-          <Accordion
-            key={bloc.id}
-            label={`${bloc.code} - ${bloc.label}`}
-            defaultExpanded
-          >
-            {bloc.competences.map((competence) => (
-              <p key={competence.id}>
-                <span className="font-bold">{competence.label}</span>
-                <br />
-                <span>{getTextFromCompetence(competence)}</span>
-              </p>
-            ))}
-          </Accordion>
+        {blocsDeCompetences.map((certificationCompetenceBloc) => (
+          <CertificationCompetenceAccordion
+            key={certificationCompetenceBloc.id}
+            competenceBloc={certificationCompetenceBloc}
+            competenceDetails={certificationCompetenceDetails}
+          />
         ))}
       </div>
       <h5 className="mb-0">Prérequis obligatoires</h5>
