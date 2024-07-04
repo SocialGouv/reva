@@ -196,7 +196,7 @@ const FundingPage = () => {
     router.push(candidacySummaryUrl);
   }
 
-  return fundingRequestDisabled ? (
+  return !isReadOnly && fundingRequestDisabled ? (
     <div className="flex flex-col w-full p-1 md:p-2">
       <h1>Demande de prise en charge</h1>
       <Alert
