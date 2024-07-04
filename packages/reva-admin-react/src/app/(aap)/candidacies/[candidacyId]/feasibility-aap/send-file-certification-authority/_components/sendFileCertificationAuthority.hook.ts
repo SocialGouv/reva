@@ -55,6 +55,7 @@ const dematerializedFeasibilityFileSendFileCertificationAuthorityByCandidacyId =
         }
         certificationCompetenceDetails {
           text
+          state
           certificationCompetence {
             id
             label

@@ -44,6 +44,7 @@ const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
       }
       certificationCompetenceDetails {
         text
+        state
         certificationCompetence {
           id
           label
