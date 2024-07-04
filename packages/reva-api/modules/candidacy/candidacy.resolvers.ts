@@ -45,10 +45,8 @@ import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus"
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
 import { getCandidacyWithActiveCertificationByCandidacyId } from "./features/getCandidacyWithActiveCertificationByCandidacyId";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
-import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
-import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getOrganismsForCandidacy";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "./features/getTrainings";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
@@ -269,34 +267,6 @@ const unsafeResolvers = {
       })();
 
       return result.extract();
-    },
-    getCompanionsForCandidacy: async (
-      _: unknown,
-      params: { candidacyId: string },
-    ) => {
-      const candidacy = await prismaClient.candidacy.findUnique({
-        where: { id: params.candidacyId },
-        include: { organism: true },
-      });
-      if (candidacy) {
-        //companion organisms are fetched differently if the candidacy organism typology is "experimentation" or not
-        const result = await (candidacy.organism?.typology === "experimentation"
-          ? getCompanionsForCandidacy({
-              getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
-            })({ candidacyId: params.candidacyId })
-          : getActiveOrganismsForCandidacyWithNewTypologies({
-              getActiveOrganismForCertificationAndDepartment:
-                organismDb.getActiveOrganismForCertificationAndDepartment,
-              getCandidacyFromId: candidacyDb.getCandidacyFromId,
-            })({ candidacyId: params.candidacyId }));
-
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error),
-          )
-          .extract();
-      }
-      return [];
     },
     candidacy_candidacyCountByStatus: (
       _: unknown,

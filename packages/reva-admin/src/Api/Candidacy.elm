@@ -145,9 +145,6 @@ selection id =
         candidacyRequiredArgs =
             Query.GetCandidacyByIdRequiredArguments (Id id)
 
-        getCompanionsRequiredArg =
-            Query.GetCompanionsForCandidacyRequiredArguments (Uuid id)
-
         getCandidacyMenuRequiredArg =
             Query.CandidacyMenuGetCandidacyMenuRequiredArguments (Id id)
 
@@ -158,7 +155,6 @@ selection id =
         candidacySelectionWithoutCompanionsAndCandidacyMenu =
             SelectionSet.succeed Data.Candidacy.Candidacy
                 |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
-                |> with (SelectionSet.succeed [])
                 |> with (Admin.Object.Candidacy.candidate candidateSelection)
                 |> with (SelectionSet.map (Maybe.map (\(Id certificationId) -> certificationId)) Admin.Object.Candidacy.certificationId)
                 |> with (Admin.Object.Candidacy.organism Organism.selection)
@@ -184,12 +180,11 @@ selection id =
                 |> with (SelectionSet.succeed (Data.Candidacy.CandidacyMenu [] [] []))
     in
     SelectionSet.succeed
-        (\maybeCandidacy companions candidacyMenu ->
+        (\maybeCandidacy candidacyMenu ->
             maybeCandidacy
-                |> Maybe.map (\candidacy -> { candidacy | availableCompanions = companions, candidacyMenu = candidacyMenu })
+                |> Maybe.map (\candidacy -> { candidacy | candidacyMenu = candidacyMenu })
         )
         |> with (Query.getCandidacyById candidacyRequiredArgs candidacySelectionWithoutCompanionsAndCandidacyMenu)
-        |> with (Query.getCompanionsForCandidacy getCompanionsRequiredArg Organism.selection)
         |> with (Query.candidacyMenu_getCandidacyMenu getCandidacyMenuRequiredArg getCandidacyMenuSelection)
 
 

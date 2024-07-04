@@ -19,11 +19,6 @@ keys =
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
 form maybeCertification formData ( candidacy, referential ) =
     let
-        availableCompanions : List ( String, String )
-        availableCompanions =
-            candidacy.availableCompanions
-                |> Data.Form.Helper.toIdList
-
         estimatedCostElement : Form.Element
         estimatedCostElement =
             Form.Number "Coût horaire prévu"
@@ -85,10 +80,6 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.postExamHourCount, hourCountElement )
         , ( keys.postExamCost, costElement )
         , ( "companion", Form.Title2 "Accompagnement" )
-        , ( keys.companionId
-          , Form.ReadOnlyElement <|
-                Form.Select "Accompagnateur choisi par le candidat" availableCompanions
-          )
         , ( "individual", Form.TitleInlined "Individuel" )
         , ( "individualReview"
           , Form.ReadOnlyElements

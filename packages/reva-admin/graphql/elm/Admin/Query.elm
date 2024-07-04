@@ -151,18 +151,6 @@ getRandomOrganismsForCandidacy fillInOptionals____ requiredArgs____ object____ =
     Object.selectionForCompositeField "getRandomOrganismsForCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ Basics.identity
 
 
-type alias GetCompanionsForCandidacyRequiredArguments =
-    { candidacyId : Data.Scalar.Uuid }
-
-
-getCompanionsForCandidacy :
-    GetCompanionsForCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Organism
-    -> SelectionSet (List decodesTo) RootQuery
-getCompanionsForCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCompanionsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
-
-
 getBasicSkills :
     SelectionSet decodesTo Admin.Object.BasicSkill
     -> SelectionSet (List decodesTo) RootQuery

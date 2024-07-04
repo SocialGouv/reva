@@ -84,7 +84,6 @@ type alias CandidacyExperience =
 
 type alias Candidacy =
     { id : CandidacyId
-    , availableCompanions : List Organism
     , candidate : Maybe Candidate
     , certificationId : Maybe String
     , organism : Maybe Organism

@@ -270,7 +270,6 @@ type Query {
     searchText: String
     searchFilter: SearchOrganismFilter
   ): RamdomOrganisms!
-  getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
   candidacy_candidacyCountByStatus(
     searchFilter: String
