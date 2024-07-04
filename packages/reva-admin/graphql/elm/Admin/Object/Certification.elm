@@ -5,6 +5,7 @@
 module Admin.Object.Certification exposing (..)
 
 import Admin.Enum.CertificationStatus
+import Admin.Enum.FinanceModule
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -125,3 +126,8 @@ competenceBlocs :
     -> SelectionSet (List decodesTo) Admin.Object.Certification
 competenceBlocs object____ =
     Object.selectionForCompositeField "competenceBlocs" [] object____ (Basics.identity >> Decode.list)
+
+
+financeModule : SelectionSet Admin.Enum.FinanceModule.FinanceModule Admin.Object.Certification
+financeModule =
+    Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder

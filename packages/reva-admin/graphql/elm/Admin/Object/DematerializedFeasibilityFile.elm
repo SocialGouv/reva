@@ -52,7 +52,7 @@ type alias BlocsDeCompetencesOptionalArguments =
 
 blocsDeCompetences :
     (BlocsDeCompetencesOptionalArguments -> BlocsDeCompetencesOptionalArguments)
-    -> SelectionSet decodesTo Admin.Object.CertificationCompetenceBloc
+    -> SelectionSet decodesTo Admin.Object.DFFCertificationCompetenceBloc
     -> SelectionSet (List decodesTo) Admin.Object.DematerializedFeasibilityFile
 blocsDeCompetences fillInOptionals____ object____ =
     let
@@ -69,6 +69,11 @@ blocsDeCompetences fillInOptionals____ object____ =
 certificationPartComplete : SelectionSet Bool Admin.Object.DematerializedFeasibilityFile
 certificationPartComplete =
     Object.selectionForField "Bool" "certificationPartComplete" [] Decode.bool
+
+
+attachmentsPartComplete : SelectionSet Bool Admin.Object.DematerializedFeasibilityFile
+attachmentsPartComplete =
+    Object.selectionForField "Bool" "attachmentsPartComplete" [] Decode.bool
 
 
 competenceBlocsPartCompletion : SelectionSet Admin.Enum.CompetenceBlocsPartCompletion.CompetenceBlocsPartCompletion Admin.Object.DematerializedFeasibilityFile
@@ -95,16 +100,62 @@ prerequisites object____ =
     Object.selectionForCompositeField "prerequisites" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
 
 
-decision : SelectionSet Admin.Enum.DFFileDecision.DFFileDecision Admin.Object.DematerializedFeasibilityFile
-decision =
-    Object.selectionForField "Enum.DFFileDecision.DFFileDecision" "decision" [] Admin.Enum.DFFileDecision.decoder
+aapDecision : SelectionSet (Maybe Admin.Enum.DFFileDecision.DFFileDecision) Admin.Object.DematerializedFeasibilityFile
+aapDecision =
+    Object.selectionForField "(Maybe Enum.DFFileDecision.DFFileDecision)" "aapDecision" [] (Admin.Enum.DFFileDecision.decoder |> Decode.nullable)
 
 
-decisionComment : SelectionSet (Maybe String) Admin.Object.DematerializedFeasibilityFile
-decisionComment =
-    Object.selectionForField "(Maybe String)" "decisionComment" [] (Decode.string |> Decode.nullable)
+aapDecisionComment : SelectionSet (Maybe String) Admin.Object.DematerializedFeasibilityFile
+aapDecisionComment =
+    Object.selectionForField "(Maybe String)" "aapDecisionComment" [] (Decode.string |> Decode.nullable)
 
 
-decisionSentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DematerializedFeasibilityFile
-decisionSentAt =
-    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "decisionSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+aapDecisionSentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DematerializedFeasibilityFile
+aapDecisionSentAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "aapDecisionSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+attachments :
+    SelectionSet decodesTo Admin.Object.DFFAttachment
+    -> SelectionSet (List (Maybe decodesTo)) Admin.Object.DematerializedFeasibilityFile
+attachments object____ =
+    Object.selectionForCompositeField "attachments" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+
+
+candidacy :
+    SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+candidacy object____ =
+    Object.selectionForCompositeField "candidacy" [] object____ Basics.identity
+
+
+sentToCandidateAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DematerializedFeasibilityFile
+sentToCandidateAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "sentToCandidateAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+sentToCertificationAuthorityAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.DematerializedFeasibilityFile
+sentToCertificationAuthorityAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "sentToCertificationAuthorityAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+swornStatementFileId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.DematerializedFeasibilityFile
+swornStatementFileId =
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "swornStatementFileId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
+
+
+swornStatementFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.DematerializedFeasibilityFile
+swornStatementFile object____ =
+    Object.selectionForCompositeField "swornStatementFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+isReadyToBeSentToCandidate : SelectionSet Bool Admin.Object.DematerializedFeasibilityFile
+isReadyToBeSentToCandidate =
+    Object.selectionForField "Bool" "isReadyToBeSentToCandidate" [] Decode.bool
+
+
+isReadyToBeSentToCertificationAuthority : SelectionSet Bool Admin.Object.DematerializedFeasibilityFile
+isReadyToBeSentToCertificationAuthority =
+    Object.selectionForField "Bool" "isReadyToBeSentToCertificationAuthority" [] Decode.bool

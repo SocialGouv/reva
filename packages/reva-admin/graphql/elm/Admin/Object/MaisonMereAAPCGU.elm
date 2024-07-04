@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.DepartmentWithOrganismMethods exposing (..)
+module Admin.Object.MaisonMereAAPCGU exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,18 +19,16 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-department :
-    SelectionSet decodesTo Admin.Object.Department
-    -> SelectionSet decodesTo Admin.Object.DepartmentWithOrganismMethods
-department object____ =
-    Object.selectionForCompositeField "department" [] object____ Basics.identity
+version : SelectionSet (Maybe Int) Admin.Object.MaisonMereAAPCGU
+version =
+    Object.selectionForField "(Maybe Int)" "version" [] (Decode.int |> Decode.nullable)
 
 
-isOnSite : SelectionSet Bool Admin.Object.DepartmentWithOrganismMethods
-isOnSite =
-    Object.selectionForField "Bool" "isOnSite" [] Decode.bool
+acceptedAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.MaisonMereAAPCGU
+acceptedAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "acceptedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
-isRemote : SelectionSet Bool Admin.Object.DepartmentWithOrganismMethods
-isRemote =
-    Object.selectionForField "Bool" "isRemote" [] Decode.bool
+isLatestVersion : SelectionSet Bool Admin.Object.MaisonMereAAPCGU
+isLatestVersion =
+    Object.selectionForField "Bool" "isLatestVersion" [] Decode.bool

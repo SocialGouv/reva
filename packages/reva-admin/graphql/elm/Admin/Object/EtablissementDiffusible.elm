@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.Etablissement exposing (..)
+module Admin.Object.EtablissementDiffusible exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,40 +19,33 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-siret : SelectionSet Data.Scalar.Id Admin.Object.Etablissement
+siret : SelectionSet Data.Scalar.Id Admin.Object.EtablissementDiffusible
 siret =
     Object.selectionForField "Data.Scalar.Id" "siret" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-siegeSocial : SelectionSet Bool Admin.Object.Etablissement
+siegeSocial : SelectionSet Bool Admin.Object.EtablissementDiffusible
 siegeSocial =
     Object.selectionForField "Bool" "siegeSocial" [] Decode.bool
 
 
-dateFermeture : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Etablissement
+dateFermeture : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.EtablissementDiffusible
 dateFermeture =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "dateFermeture" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
-raisonSociale : SelectionSet String Admin.Object.Etablissement
+raisonSociale : SelectionSet String Admin.Object.EtablissementDiffusible
 raisonSociale =
     Object.selectionForField "String" "raisonSociale" [] Decode.string
 
 
 formeJuridique :
     SelectionSet decodesTo Admin.Object.FormeJuridique
-    -> SelectionSet decodesTo Admin.Object.Etablissement
+    -> SelectionSet decodesTo Admin.Object.EtablissementDiffusible
 formeJuridique object____ =
     Object.selectionForCompositeField "formeJuridique" [] object____ Basics.identity
 
 
-kbis :
-    SelectionSet decodesTo Admin.Object.Kbis
-    -> SelectionSet (Maybe decodesTo) Admin.Object.Etablissement
-kbis object____ =
-    Object.selectionForCompositeField "kbis" [] object____ (Basics.identity >> Decode.nullable)
-
-
-qualiopiStatus : SelectionSet (Maybe Bool) Admin.Object.Etablissement
+qualiopiStatus : SelectionSet (Maybe Bool) Admin.Object.EtablissementDiffusible
 qualiopiStatus =
     Object.selectionForField "(Maybe Bool)" "qualiopiStatus" [] (Decode.bool |> Decode.nullable)

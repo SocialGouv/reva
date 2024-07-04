@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.SubscriptionRequestOnConventionCollective exposing (..)
+module Admin.Object.Feature exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,8 +19,16 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-ccn :
-    SelectionSet decodesTo Admin.Object.ConventionCollective
-    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestOnConventionCollective
-ccn object____ =
-    Object.selectionForCompositeField "ccn" [] object____ Basics.identity
+key : SelectionSet String Admin.Object.Feature
+key =
+    Object.selectionForField "String" "key" [] Decode.string
+
+
+label : SelectionSet String Admin.Object.Feature
+label =
+    Object.selectionForField "String" "label" [] Decode.string
+
+
+isActive : SelectionSet Bool Admin.Object.Feature
+isActive =
+    Object.selectionForField "Bool" "isActive" [] Decode.bool

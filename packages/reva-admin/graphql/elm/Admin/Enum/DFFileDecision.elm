@@ -8,13 +8,13 @@ import Json.Decode as Decode exposing (Decoder)
 
 
 type DFFileDecision
-    = Accepted
-    | Rejected
+    = Favorable
+    | Unfavorable
 
 
 list : List DFFileDecision
 list =
-    [ Accepted, Rejected ]
+    [ Favorable, Unfavorable ]
 
 
 decoder : Decoder DFFileDecision
@@ -23,11 +23,11 @@ decoder =
         |> Decode.andThen
             (\string ->
                 case string of
-                    "ACCEPTED" ->
-                        Decode.succeed Accepted
+                    "FAVORABLE" ->
+                        Decode.succeed Favorable
 
-                    "REJECTED" ->
-                        Decode.succeed Rejected
+                    "UNFAVORABLE" ->
+                        Decode.succeed Unfavorable
 
                     _ ->
                         Decode.fail ("Invalid DFFileDecision type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -39,11 +39,11 @@ decoder =
 toString : DFFileDecision -> String
 toString enum____ =
     case enum____ of
-        Accepted ->
-            "ACCEPTED"
+        Favorable ->
+            "FAVORABLE"
 
-        Rejected ->
-            "REJECTED"
+        Unfavorable ->
+            "UNFAVORABLE"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -60,11 +60,11 @@ This can be useful for generating Strings to use for <select> menus to check whi
 fromString : String -> Maybe DFFileDecision
 fromString enumString____ =
     case enumString____ of
-        "ACCEPTED" ->
-            Just Accepted
+        "FAVORABLE" ->
+            Just Favorable
 
-        "REJECTED" ->
-            Just Rejected
+        "UNFAVORABLE" ->
+            Just Unfavorable
 
         _ ->
             Nothing

@@ -141,6 +141,14 @@ type Country
     = Country
 
 
+type DFFAttachment
+    = DFFAttachment
+
+
+type DFFCertificationCompetenceBloc
+    = DFFCertificationCompetenceBloc
+
+
 type Degree
     = Degree
 
@@ -151,10 +159,6 @@ type DematerializedFeasibilityFile
 
 type Department
     = Department
-
-
-type DepartmentWithOrganismMethods
-    = DepartmentWithOrganismMethods
 
 
 type Domaine
@@ -179,6 +183,10 @@ type DropOutReason
 
 type Etablissement
     = Etablissement
+
+
+type EtablissementDiffusible
+    = EtablissementDiffusible
 
 
 type ExamInfo
@@ -207,6 +215,10 @@ type FeasibilityHistory
 
 type FeasibilityPage
     = FeasibilityPage
+
+
+type Feature
+    = Feature
 
 
 type File
@@ -245,8 +257,16 @@ type JuryPage
     = JuryPage
 
 
+type Kbis
+    = Kbis
+
+
 type MaisonMereAAP
     = MaisonMereAAP
+
+
+type MaisonMereAAPCGU
+    = MaisonMereAAPCGU
 
 
 type MaisonMereAAPLegalInformationDocuments
@@ -267,6 +287,10 @@ type MaisonMereAAPOnDepartment
 
 type MaisonMereAAPsPaginated
     = MaisonMereAAPsPaginated
+
+
+type MandataireSocial
+    = MandataireSocial
 
 
 type Organism
@@ -317,28 +341,12 @@ type ReorientationReason
     = ReorientationReason
 
 
+type SubscriptionCountByStatus
+    = SubscriptionCountByStatus
+
+
 type SubscriptionRequest
     = SubscriptionRequest
-
-
-type SubscriptionRequestOnConventionCollective
-    = SubscriptionRequestOnConventionCollective
-
-
-type SubscriptionRequestOnDomaine
-    = SubscriptionRequestOnDomaine
-
-
-type SubscriptionRequestSummary
-    = SubscriptionRequestSummary
-
-
-type SubscriptionRequestV2
-    = SubscriptionRequestV2
-
-
-type SubscriptionRequestV2sPaginated
-    = SubscriptionRequestV2sPaginated
 
 
 type SubscriptionRequestsPaginated

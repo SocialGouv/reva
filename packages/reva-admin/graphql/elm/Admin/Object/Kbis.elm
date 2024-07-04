@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.SubscriptionRequestOnDomaine exposing (..)
+module Admin.Object.Kbis exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,8 +19,13 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-domaine :
-    SelectionSet decodesTo Admin.Object.Domaine
-    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestOnDomaine
-domaine object____ =
-    Object.selectionForCompositeField "domaine" [] object____ Basics.identity
+mandatairesSociaux :
+    SelectionSet decodesTo Admin.Object.MandataireSocial
+    -> SelectionSet (List decodesTo) Admin.Object.Kbis
+mandatairesSociaux object____ =
+    Object.selectionForCompositeField "mandatairesSociaux" [] object____ (Basics.identity >> Decode.list)
+
+
+formeJuridique : SelectionSet String Admin.Object.Kbis
+formeJuridique =
+    Object.selectionForField "String" "formeJuridique" [] Decode.string

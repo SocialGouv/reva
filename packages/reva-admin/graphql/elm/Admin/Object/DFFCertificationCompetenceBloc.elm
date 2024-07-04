@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.SubscriptionRequestV2sPaginated exposing (..)
+module Admin.Object.DFFCertificationCompetenceBloc exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,15 +19,13 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-rows :
-    SelectionSet decodesTo Admin.Object.SubscriptionRequestV2
-    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequestV2sPaginated
-rows object____ =
-    Object.selectionForCompositeField "rows" [] object____ (Basics.identity >> Decode.list)
+complete : SelectionSet Bool Admin.Object.DFFCertificationCompetenceBloc
+complete =
+    Object.selectionForField "Bool" "complete" [] Decode.bool
 
 
-info :
-    SelectionSet decodesTo Admin.Object.PaginationInfo
-    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestV2sPaginated
-info object____ =
-    Object.selectionForCompositeField "info" [] object____ Basics.identity
+certificationCompetenceBloc :
+    SelectionSet decodesTo Admin.Object.CertificationCompetenceBloc
+    -> SelectionSet decodesTo Admin.Object.DFFCertificationCompetenceBloc
+certificationCompetenceBloc object____ =
+    Object.selectionForCompositeField "certificationCompetenceBloc" [] object____ Basics.identity

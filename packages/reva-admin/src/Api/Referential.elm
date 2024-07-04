@@ -1,18 +1,12 @@
 module Api.Referential exposing
-    ( conventionCollectiveSelection
-    , departmentSelection
-    , departmentWithOrganismMethodsSelection
-    , domainSelection
+    ( departmentSelection
     , get
     , reorientationReasonSelection
     )
 
 import Admin.Object
 import Admin.Object.BasicSkill
-import Admin.Object.ConventionCollective
 import Admin.Object.Department
-import Admin.Object.DepartmentWithOrganismMethods
-import Admin.Object.Domaine
 import Admin.Object.DropOutReason
 import Admin.Object.Goal
 import Admin.Object.Referential
@@ -109,27 +103,3 @@ departmentSelection =
         |> with Admin.Object.Department.id
         |> with Admin.Object.Department.code
         |> with Admin.Object.Department.label
-
-
-departmentWithOrganismMethodsSelection : SelectionSet Data.Referential.DepartmentWithOrganismMethods Admin.Object.DepartmentWithOrganismMethods
-departmentWithOrganismMethodsSelection =
-    SelectionSet.succeed Data.Referential.DepartmentWithOrganismMethods
-        |> with (Admin.Object.DepartmentWithOrganismMethods.department departmentSelection)
-        |> with Admin.Object.DepartmentWithOrganismMethods.isOnSite
-        |> with Admin.Object.DepartmentWithOrganismMethods.isRemote
-
-
-domainSelection : SelectionSet Data.Referential.Domain Admin.Object.Domaine
-domainSelection =
-    SelectionSet.succeed Data.Referential.Domain
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Domaine.id)
-        |> with Admin.Object.Domaine.code
-        |> with Admin.Object.Domaine.label
-
-
-conventionCollectiveSelection : SelectionSet Data.Referential.ConventionCollective Admin.Object.ConventionCollective
-conventionCollectiveSelection =
-    SelectionSet.succeed Data.Referential.ConventionCollective
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.ConventionCollective.id)
-        |> with Admin.Object.ConventionCollective.code
-        |> with Admin.Object.ConventionCollective.label

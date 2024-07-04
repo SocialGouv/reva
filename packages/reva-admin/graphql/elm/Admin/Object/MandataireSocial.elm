@@ -2,8 +2,9 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.SubscriptionRequestsPaginated exposing (..)
+module Admin.Object.MandataireSocial exposing (..)
 
+import Admin.Enum.PersonneType
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -19,15 +20,16 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-rows :
-    SelectionSet decodesTo Admin.Object.SubscriptionRequest
-    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequestsPaginated
-rows object____ =
-    Object.selectionForCompositeField "rows" [] object____ (Basics.identity >> Decode.list)
+type_ : SelectionSet Admin.Enum.PersonneType.PersonneType Admin.Object.MandataireSocial
+type_ =
+    Object.selectionForField "Enum.PersonneType.PersonneType" "type" [] Admin.Enum.PersonneType.decoder
 
 
-info :
-    SelectionSet decodesTo Admin.Object.PaginationInfo
-    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestsPaginated
-info object____ =
-    Object.selectionForCompositeField "info" [] object____ Basics.identity
+nom : SelectionSet String Admin.Object.MandataireSocial
+nom =
+    Object.selectionForField "String" "nom" [] Decode.string
+
+
+fonction : SelectionSet (Maybe String) Admin.Object.MandataireSocial
+fonction =
+    Object.selectionForField "(Maybe String)" "fonction" [] (Decode.string |> Decode.nullable)

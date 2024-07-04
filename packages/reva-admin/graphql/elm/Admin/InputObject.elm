@@ -17,8 +17,6 @@ import Admin.Enum.JuryResult
 import Admin.Enum.LegalStatus
 import Admin.Enum.MaisonMereAAPLegalInformationDocumentsDecisionEnum
 import Admin.Enum.PrerequisiteState
-import Admin.Enum.Sort
-import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
@@ -772,11 +770,11 @@ encodeCreateOrUpdateOrganismWithMaisonMereAAPInput input____ =
         [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ), ( "accountId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.accountId ) ]
 
 
-buildCreateSubscriptionRequestV2Input :
-    CreateSubscriptionRequestV2InputRequiredFields
-    -> (CreateSubscriptionRequestV2InputOptionalFields -> CreateSubscriptionRequestV2InputOptionalFields)
-    -> CreateSubscriptionRequestV2Input
-buildCreateSubscriptionRequestV2Input required____ fillOptionals____ =
+buildCreateSubscriptionRequestInput :
+    CreateSubscriptionRequestInputRequiredFields
+    -> (CreateSubscriptionRequestInputOptionalFields -> CreateSubscriptionRequestInputOptionalFields)
+    -> CreateSubscriptionRequestInput
+buildCreateSubscriptionRequestInput required____ fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
@@ -785,7 +783,7 @@ buildCreateSubscriptionRequestV2Input required____ fillOptionals____ =
     { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, managerFirstname = required____.managerFirstname, managerLastname = required____.managerLastname, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, companyWebsite = optionals____.companyWebsite, delegataire = required____.delegataire, attestationURSSAF = required____.attestationURSSAF, justificatifIdentiteDirigeant = required____.justificatifIdentiteDirigeant, lettreDeDelegation = optionals____.lettreDeDelegation, justificatifIdentiteDelegataire = optionals____.justificatifIdentiteDelegataire }
 
 
-type alias CreateSubscriptionRequestV2InputRequiredFields =
+type alias CreateSubscriptionRequestInputRequiredFields =
     { companySiret : String
     , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
     , companyName : String
@@ -801,16 +799,16 @@ type alias CreateSubscriptionRequestV2InputRequiredFields =
     }
 
 
-type alias CreateSubscriptionRequestV2InputOptionalFields =
+type alias CreateSubscriptionRequestInputOptionalFields =
     { companyWebsite : OptionalArgument String
     , lettreDeDelegation : OptionalArgument Data.Scalar.Upload
     , justificatifIdentiteDelegataire : OptionalArgument Data.Scalar.Upload
     }
 
 
-{-| Type for the CreateSubscriptionRequestV2Input input object.
+{-| Type for the CreateSubscriptionRequestInput input object.
 -}
-type alias CreateSubscriptionRequestV2Input =
+type alias CreateSubscriptionRequestInput =
     { companySiret : String
     , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
     , companyName : String
@@ -829,12 +827,57 @@ type alias CreateSubscriptionRequestV2Input =
     }
 
 
-{-| Encode a CreateSubscriptionRequestV2Input into a value that can be used as an argument.
+{-| Encode a CreateSubscriptionRequestInput into a value that can be used as an argument.
 -}
-encodeCreateSubscriptionRequestV2Input : CreateSubscriptionRequestV2Input -> Value
-encodeCreateSubscriptionRequestV2Input input____ =
+encodeCreateSubscriptionRequestInput : CreateSubscriptionRequestInput -> Value
+encodeCreateSubscriptionRequestInput input____ =
     Encode.maybeObject
         [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "managerFirstname", Encode.string input____.managerFirstname |> Just ), ( "managerLastname", Encode.string input____.managerLastname |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ), ( "delegataire", Encode.bool input____.delegataire |> Just ), ( "attestationURSSAF", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.attestationURSSAF |> Just ), ( "justificatifIdentiteDirigeant", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.justificatifIdentiteDirigeant |> Just ), ( "lettreDeDelegation", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.lettreDeDelegation ), ( "justificatifIdentiteDelegataire", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.justificatifIdentiteDelegataire ) ]
+
+
+buildDematerializedFeasibilityFileCreateOrUpdateAttachmentsInput :
+    DematerializedFeasibilityFileCreateOrUpdateAttachmentsInputRequiredFields
+    -> (DematerializedFeasibilityFileCreateOrUpdateAttachmentsInputOptionalFields -> DematerializedFeasibilityFileCreateOrUpdateAttachmentsInputOptionalFields)
+    -> DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput
+buildDematerializedFeasibilityFileCreateOrUpdateAttachmentsInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { equivalenceOrExemptionProof = Absent, trainingCertificate = Absent, additionalFiles = Absent }
+    in
+    { candidacyId = required____.candidacyId, idCard = required____.idCard, equivalenceOrExemptionProof = optionals____.equivalenceOrExemptionProof, trainingCertificate = optionals____.trainingCertificate, additionalFiles = optionals____.additionalFiles }
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateAttachmentsInputRequiredFields =
+    { candidacyId : Data.Scalar.Id
+    , idCard : Data.Scalar.Upload
+    }
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateAttachmentsInputOptionalFields =
+    { equivalenceOrExemptionProof : OptionalArgument Data.Scalar.Upload
+    , trainingCertificate : OptionalArgument Data.Scalar.Upload
+    , additionalFiles : OptionalArgument (List (Maybe Data.Scalar.Upload))
+    }
+
+
+{-| Type for the DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput input object.
+-}
+type alias DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput =
+    { candidacyId : Data.Scalar.Id
+    , idCard : Data.Scalar.Upload
+    , equivalenceOrExemptionProof : OptionalArgument Data.Scalar.Upload
+    , trainingCertificate : OptionalArgument Data.Scalar.Upload
+    , additionalFiles : OptionalArgument (List (Maybe Data.Scalar.Upload))
+    }
+
+
+{-| Encode a DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput into a value that can be used as an argument.
+-}
+encodeDematerializedFeasibilityFileCreateOrUpdateAttachmentsInput : DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput -> Value
+encodeDematerializedFeasibilityFileCreateOrUpdateAttachmentsInput input____ =
+    Encode.maybeObject
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "idCard", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.idCard |> Just ), ( "equivalenceOrExemptionProof", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.equivalenceOrExemptionProof ), ( "trainingCertificate", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.optional input____.trainingCertificate ), ( "additionalFiles", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) |> Encode.maybe |> Encode.list) |> Encode.optional input____.additionalFiles ) ]
 
 
 buildDematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput :
@@ -921,13 +964,13 @@ buildDematerializedFeasibilityFileCreateOrUpdateDecisionInput :
     DematerializedFeasibilityFileCreateOrUpdateDecisionInputRequiredFields
     -> DematerializedFeasibilityFileCreateOrUpdateDecisionInput
 buildDematerializedFeasibilityFileCreateOrUpdateDecisionInput required____ =
-    { candidacyId = required____.candidacyId, decision = required____.decision, decisionComment = required____.decisionComment }
+    { candidacyId = required____.candidacyId, aapDecision = required____.aapDecision, aapDecisionComment = required____.aapDecisionComment }
 
 
 type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInputRequiredFields =
     { candidacyId : Data.Scalar.Id
-    , decision : Admin.Enum.DFFileDecision.DFFileDecision
-    , decisionComment : String
+    , aapDecision : Admin.Enum.DFFileDecision.DFFileDecision
+    , aapDecisionComment : String
     }
 
 
@@ -935,8 +978,8 @@ type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInputRequiredField
 -}
 type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInput =
     { candidacyId : Data.Scalar.Id
-    , decision : Admin.Enum.DFFileDecision.DFFileDecision
-    , decisionComment : String
+    , aapDecision : Admin.Enum.DFFileDecision.DFFileDecision
+    , aapDecisionComment : String
     }
 
 
@@ -945,7 +988,7 @@ type alias DematerializedFeasibilityFileCreateOrUpdateDecisionInput =
 encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput : DematerializedFeasibilityFileCreateOrUpdateDecisionInput -> Value
 encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput input____ =
     Encode.maybeObject
-        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "decision", Encode.enum Admin.Enum.DFFileDecision.toString input____.decision |> Just ), ( "decisionComment", Encode.string input____.decisionComment |> Just ) ]
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "aapDecision", Encode.enum Admin.Enum.DFFileDecision.toString input____.aapDecision |> Just ), ( "aapDecisionComment", Encode.string input____.aapDecisionComment |> Just ) ]
 
 
 buildDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput :
@@ -975,6 +1018,35 @@ encodeDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput : Dematerial
 encodeDematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput input____ =
     Encode.maybeObject
         [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "prerequisites", (encodePrerequisiteInput |> Encode.maybe |> Encode.list) input____.prerequisites |> Just ) ]
+
+
+buildDematerializedFeasibilityFileCreateOrUpdateSwornStatementInput :
+    DematerializedFeasibilityFileCreateOrUpdateSwornStatementInputRequiredFields
+    -> DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput
+buildDematerializedFeasibilityFileCreateOrUpdateSwornStatementInput required____ =
+    { candidacyId = required____.candidacyId, swornStatement = required____.swornStatement }
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateSwornStatementInputRequiredFields =
+    { candidacyId : Data.Scalar.Id
+    , swornStatement : Data.Scalar.Upload
+    }
+
+
+{-| Type for the DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput input object.
+-}
+type alias DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput =
+    { candidacyId : Data.Scalar.Id
+    , swornStatement : Data.Scalar.Upload
+    }
+
+
+{-| Encode a DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput into a value that can be used as an argument.
+-}
+encodeDematerializedFeasibilityFileCreateOrUpdateSwornStatementInput : DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput -> Value
+encodeDematerializedFeasibilityFileCreateOrUpdateSwornStatementInput input____ =
+    Encode.maybeObject
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "swornStatement", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUpload) input____.swornStatement |> Just ) ]
 
 
 buildDepartmentWithOrganismMethodsInput :
@@ -1669,111 +1741,6 @@ encodeSearchOrganismFilter : SearchOrganismFilter -> Value
 encodeSearchOrganismFilter input____ =
     Encode.maybeObject
         [ ( "distanceStatus", Encode.enum Admin.Enum.DistanceStatus.toString |> Encode.optional input____.distanceStatus ), ( "pmr", Encode.bool |> Encode.optional input____.pmr ), ( "zip", Encode.string |> Encode.optional input____.zip ) ]
-
-
-buildSubscriptionRequestInput :
-    SubscriptionRequestInputRequiredFields
-    -> (SubscriptionRequestInputOptionalFields -> SubscriptionRequestInputOptionalFields)
-    -> SubscriptionRequestInput
-buildSubscriptionRequestInput required____ fillOptionals____ =
-    let
-        optionals____ =
-            fillOptionals____
-                { domaineIds = Absent, ccnIds = Absent, companyWebsite = Absent }
-    in
-    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, companyAddress = required____.companyAddress, companyZipCode = required____.companyZipCode, companyCity = required____.companyCity, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, typology = required____.typology, domaineIds = optionals____.domaineIds, ccnIds = optionals____.ccnIds, onSiteDepartmentsIds = required____.onSiteDepartmentsIds, remoteDepartmentsIds = required____.remoteDepartmentsIds, companyWebsite = optionals____.companyWebsite, qualiopiCertificateExpiresAt = required____.qualiopiCertificateExpiresAt }
-
-
-type alias SubscriptionRequestInputRequiredFields =
-    { companySiret : String
-    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
-    , companyName : String
-    , companyAddress : String
-    , companyZipCode : String
-    , companyCity : String
-    , accountFirstname : String
-    , accountLastname : String
-    , accountEmail : String
-    , accountPhoneNumber : String
-    , typology : Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology
-    , onSiteDepartmentsIds : List Data.Scalar.Id
-    , remoteDepartmentsIds : List Data.Scalar.Id
-    , qualiopiCertificateExpiresAt : Data.Scalar.Timestamp
-    }
-
-
-type alias SubscriptionRequestInputOptionalFields =
-    { domaineIds : OptionalArgument (List String)
-    , ccnIds : OptionalArgument (List String)
-    , companyWebsite : OptionalArgument String
-    }
-
-
-{-| Type for the SubscriptionRequestInput input object.
--}
-type alias SubscriptionRequestInput =
-    { companySiret : String
-    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
-    , companyName : String
-    , companyAddress : String
-    , companyZipCode : String
-    , companyCity : String
-    , accountFirstname : String
-    , accountLastname : String
-    , accountEmail : String
-    , accountPhoneNumber : String
-    , typology : Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology
-    , domaineIds : OptionalArgument (List String)
-    , ccnIds : OptionalArgument (List String)
-    , onSiteDepartmentsIds : List Data.Scalar.Id
-    , remoteDepartmentsIds : List Data.Scalar.Id
-    , companyWebsite : OptionalArgument String
-    , qualiopiCertificateExpiresAt : Data.Scalar.Timestamp
-    }
-
-
-{-| Encode a SubscriptionRequestInput into a value that can be used as an argument.
--}
-encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
-encodeSubscriptionRequestInput input____ =
-    Encode.maybeObject
-        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "typology", Encode.enum Admin.Enum.SubscriptionOrganismTypology.toString input____.typology |> Just ), ( "domaineIds", (Encode.string |> Encode.list) |> Encode.optional input____.domaineIds ), ( "ccnIds", (Encode.string |> Encode.list) |> Encode.optional input____.ccnIds ), ( "onSiteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.onSiteDepartmentsIds |> Just ), ( "remoteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.remoteDepartmentsIds |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ), ( "qualiopiCertificateExpiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.qualiopiCertificateExpiresAt |> Just ) ]
-
-
-buildSubscriptionRequestOrderByInput :
-    (SubscriptionRequestOrderByInputOptionalFields -> SubscriptionRequestOrderByInputOptionalFields)
-    -> SubscriptionRequestOrderByInput
-buildSubscriptionRequestOrderByInput fillOptionals____ =
-    let
-        optionals____ =
-            fillOptionals____
-                { companyName = Absent, accountLastname = Absent, createdAt = Absent }
-    in
-    { companyName = optionals____.companyName, accountLastname = optionals____.accountLastname, createdAt = optionals____.createdAt }
-
-
-type alias SubscriptionRequestOrderByInputOptionalFields =
-    { companyName : OptionalArgument Admin.Enum.Sort.Sort
-    , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
-    , createdAt : OptionalArgument Admin.Enum.Sort.Sort
-    }
-
-
-{-| Type for the SubscriptionRequestOrderByInput input object.
--}
-type alias SubscriptionRequestOrderByInput =
-    { companyName : OptionalArgument Admin.Enum.Sort.Sort
-    , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
-    , createdAt : OptionalArgument Admin.Enum.Sort.Sort
-    }
-
-
-{-| Encode a SubscriptionRequestOrderByInput into a value that can be used as an argument.
--}
-encodeSubscriptionRequestOrderByInput : SubscriptionRequestOrderByInput -> Value
-encodeSubscriptionRequestOrderByInput input____ =
-    Encode.maybeObject
-        [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ), ( "createdAt", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.createdAt ) ]
 
 
 buildTrainingInput :

@@ -125,3 +125,20 @@ legalInformationDocuments :
     -> SelectionSet (Maybe decodesTo) Admin.Object.MaisonMereAAP
 legalInformationDocuments object____ =
     Object.selectionForCompositeField "legalInformationDocuments" [] object____ (Basics.identity >> Decode.nullable)
+
+
+cgu :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAPCGU
+    -> SelectionSet decodesTo Admin.Object.MaisonMereAAP
+cgu object____ =
+    Object.selectionForCompositeField "cgu" [] object____ Basics.identity
+
+
+managerFirstname : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
+managerFirstname =
+    Object.selectionForField "(Maybe String)" "managerFirstname" [] (Decode.string |> Decode.nullable)
+
+
+managerLastname : SelectionSet (Maybe String) Admin.Object.MaisonMereAAP
+managerLastname =
+    Object.selectionForField "(Maybe String)" "managerLastname" [] (Decode.string |> Decode.nullable)

@@ -4,6 +4,7 @@
 
 module Admin.Object.CandidacySummary exposing (..)
 
+import Admin.Enum.FinanceModule
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -95,3 +96,8 @@ createdAt =
 sentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.CandidacySummary
 sentAt =
     Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "sentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
+
+
+financeModule : SelectionSet Admin.Enum.FinanceModule.FinanceModule Admin.Object.CandidacySummary
+financeModule =
+    Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder

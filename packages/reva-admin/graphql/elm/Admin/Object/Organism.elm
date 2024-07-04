@@ -5,6 +5,7 @@
 module Admin.Object.Organism exposing (..)
 
 import Admin.Enum.OrganismTypology
+import Admin.Enum.RemoteZone
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -135,6 +136,16 @@ distanceKm =
 isOnSite : SelectionSet Bool Admin.Object.Organism
 isOnSite =
     Object.selectionForField "Bool" "isOnSite" [] Decode.bool
+
+
+isRemote : SelectionSet Bool Admin.Object.Organism
+isRemote =
+    Object.selectionForField "Bool" "isRemote" [] Decode.bool
+
+
+remoteZones : SelectionSet (List Admin.Enum.RemoteZone.RemoteZone) Admin.Object.Organism
+remoteZones =
+    Object.selectionForField "(List Enum.RemoteZone.RemoteZone)" "remoteZones" [] (Admin.Enum.RemoteZone.decoder |> Decode.list)
 
 
 isHeadAgency : SelectionSet Bool Admin.Object.Organism

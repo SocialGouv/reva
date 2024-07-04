@@ -2,48 +2,48 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Enum.DistanceStatus exposing (..)
+module Admin.Enum.PersonneType exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type DistanceStatus
-    = Onsite
-    | Remote
+type PersonneType
+    = PersonnePhysique
+    | PersonneMorale
 
 
-list : List DistanceStatus
+list : List PersonneType
 list =
-    [ Onsite, Remote ]
+    [ PersonnePhysique, PersonneMorale ]
 
 
-decoder : Decoder DistanceStatus
+decoder : Decoder PersonneType
 decoder =
     Decode.string
         |> Decode.andThen
             (\string ->
                 case string of
-                    "ONSITE" ->
-                        Decode.succeed Onsite
+                    "PERSONNE_PHYSIQUE" ->
+                        Decode.succeed PersonnePhysique
 
-                    "REMOTE" ->
-                        Decode.succeed Remote
+                    "PERSONNE_MORALE" ->
+                        Decode.succeed PersonneMorale
 
                     _ ->
-                        Decode.fail ("Invalid DistanceStatus type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
+                        Decode.fail ("Invalid PersonneType type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
             )
 
 
 {-| Convert from the union type representing the Enum to a string that the GraphQL server will recognize.
 -}
-toString : DistanceStatus -> String
+toString : PersonneType -> String
 toString enum____ =
     case enum____ of
-        Onsite ->
-            "ONSITE"
+        PersonnePhysique ->
+            "PERSONNE_PHYSIQUE"
 
-        Remote ->
-            "REMOTE"
+        PersonneMorale ->
+            "PERSONNE_MORALE"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -57,14 +57,14 @@ This is the inverse of the Enum `toString` function. So you can call `toString` 
 This can be useful for generating Strings to use for <select> menus to check which item was selected.
 
 -}
-fromString : String -> Maybe DistanceStatus
+fromString : String -> Maybe PersonneType
 fromString enumString____ =
     case enumString____ of
-        "ONSITE" ->
-            Just Onsite
+        "PERSONNE_PHYSIQUE" ->
+            Just PersonnePhysique
 
-        "REMOTE" ->
-            Just Remote
+        "PERSONNE_MORALE" ->
+            Just PersonneMorale
 
         _ ->
             Nothing

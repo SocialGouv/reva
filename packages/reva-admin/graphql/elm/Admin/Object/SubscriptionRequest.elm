@@ -5,7 +5,6 @@
 module Admin.Object.SubscriptionRequest exposing (..)
 
 import Admin.Enum.LegalStatus
-import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -42,19 +41,14 @@ companyName =
     Object.selectionForField "String" "companyName" [] Decode.string
 
 
-companyAddress : SelectionSet String Admin.Object.SubscriptionRequest
-companyAddress =
-    Object.selectionForField "String" "companyAddress" [] Decode.string
+managerFirstname : SelectionSet String Admin.Object.SubscriptionRequest
+managerFirstname =
+    Object.selectionForField "String" "managerFirstname" [] Decode.string
 
 
-companyZipCode : SelectionSet String Admin.Object.SubscriptionRequest
-companyZipCode =
-    Object.selectionForField "String" "companyZipCode" [] Decode.string
-
-
-companyCity : SelectionSet String Admin.Object.SubscriptionRequest
-companyCity =
-    Object.selectionForField "String" "companyCity" [] Decode.string
+managerLastname : SelectionSet String Admin.Object.SubscriptionRequest
+managerLastname =
+    Object.selectionForField "String" "managerLastname" [] Decode.string
 
 
 accountFirstname : SelectionSet String Admin.Object.SubscriptionRequest
@@ -77,40 +71,14 @@ accountPhoneNumber =
     Object.selectionForField "String" "accountPhoneNumber" [] Decode.string
 
 
-typology : SelectionSet Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology Admin.Object.SubscriptionRequest
-typology =
-    Object.selectionForField "Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology" "typology" [] Admin.Enum.SubscriptionOrganismTypology.decoder
-
-
-subscriptionRequestOnDomaine :
-    SelectionSet decodesTo Admin.Object.SubscriptionRequestOnDomaine
-    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
-subscriptionRequestOnDomaine object____ =
-    Object.selectionForCompositeField "subscriptionRequestOnDomaine" [] object____ (Basics.identity >> Decode.list)
-
-
-subscriptionRequestOnConventionCollective :
-    SelectionSet decodesTo Admin.Object.SubscriptionRequestOnConventionCollective
-    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
-subscriptionRequestOnConventionCollective object____ =
-    Object.selectionForCompositeField "subscriptionRequestOnConventionCollective" [] object____ (Basics.identity >> Decode.list)
-
-
-departmentsWithOrganismMethods :
-    SelectionSet decodesTo Admin.Object.DepartmentWithOrganismMethods
-    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
-departmentsWithOrganismMethods object____ =
-    Object.selectionForCompositeField "departmentsWithOrganismMethods" [] object____ (Basics.identity >> Decode.list)
-
-
-companyWebsite : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyWebsite : SelectionSet String Admin.Object.SubscriptionRequest
 companyWebsite =
-    Object.selectionForField "(Maybe String)" "companyWebsite" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "companyWebsite" [] Decode.string
 
 
-qualiopiCertificateExpiresAt : SelectionSet Data.Scalar.Timestamp Admin.Object.SubscriptionRequest
-qualiopiCertificateExpiresAt =
-    Object.selectionForField "Data.Scalar.Timestamp" "qualiopiCertificateExpiresAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+delegataire : SelectionSet Bool Admin.Object.SubscriptionRequest
+delegataire =
+    Object.selectionForField "Bool" "delegataire" [] Decode.bool
 
 
 status : SelectionSet Admin.Enum.SubscriptionRequestStatus.SubscriptionRequestStatus Admin.Object.SubscriptionRequest
@@ -123,6 +91,46 @@ rejectionReason =
     Object.selectionForField "(Maybe String)" "rejectionReason" [] (Decode.string |> Decode.nullable)
 
 
-isCompanyNameUnique : SelectionSet Bool Admin.Object.SubscriptionRequest
-isCompanyNameUnique =
-    Object.selectionForField "Bool" "isCompanyNameUnique" [] Decode.bool
+internalComment : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+internalComment =
+    Object.selectionForField "(Maybe String)" "internalComment" [] (Decode.string |> Decode.nullable)
+
+
+attestationURSSAFFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequest
+attestationURSSAFFile object____ =
+    Object.selectionForCompositeField "attestationURSSAFFile" [] object____ Basics.identity
+
+
+justificatifIdentiteDirigeantFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequest
+justificatifIdentiteDirigeantFile object____ =
+    Object.selectionForCompositeField "justificatifIdentiteDirigeantFile" [] object____ Basics.identity
+
+
+lettreDeDelegationFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.SubscriptionRequest
+lettreDeDelegationFile object____ =
+    Object.selectionForCompositeField "lettreDeDelegationFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+justificatifIdentiteDelegataireFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.SubscriptionRequest
+justificatifIdentiteDelegataireFile object____ =
+    Object.selectionForCompositeField "justificatifIdentiteDelegataireFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.SubscriptionRequest
+createdAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+etablissement :
+    SelectionSet decodesTo Admin.Object.Etablissement
+    -> SelectionSet (Maybe decodesTo) Admin.Object.SubscriptionRequest
+etablissement object____ =
+    Object.selectionForCompositeField "etablissement" [] object____ (Basics.identity >> Decode.nullable)

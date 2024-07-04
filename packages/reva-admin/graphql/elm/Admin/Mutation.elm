@@ -5,6 +5,7 @@
 module Admin.Mutation exposing (..)
 
 import Admin.Enum.CandidateTypology
+import Admin.Enum.RemoteZone
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -584,6 +585,53 @@ dematerialized_feasibility_file_createOrUpdateDecision requiredArgs____ object__
     Object.selectionForCompositeField "dematerialized_feasibility_file_createOrUpdateDecision" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateDecisionInput ] object____ Basics.identity
 
 
+type alias DematerializedFeasibilityFileCreateOrUpdateAttachmentsRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput }
+
+
+dematerialized_feasibility_file_createOrUpdateAttachments :
+    DematerializedFeasibilityFileCreateOrUpdateAttachmentsRequiredArguments
+    -> SelectionSet String RootMutation
+dematerialized_feasibility_file_createOrUpdateAttachments requiredArgs____ =
+    Object.selectionForField "String" "dematerialized_feasibility_file_createOrUpdateAttachments" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateAttachmentsInput ] Decode.string
+
+
+type alias DematerializedFeasibilityFileSendToCandidateRequiredArguments =
+    { dematerializedFeasibilityFileId : Data.Scalar.Id }
+
+
+dematerialized_feasibility_file_sendToCandidate :
+    DematerializedFeasibilityFileSendToCandidateRequiredArguments
+    -> SelectionSet String RootMutation
+dematerialized_feasibility_file_sendToCandidate requiredArgs____ =
+    Object.selectionForField "String" "dematerialized_feasibility_file_sendToCandidate" [ Argument.required "dematerializedFeasibilityFileId" requiredArgs____.dematerializedFeasibilityFileId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] Decode.string
+
+
+type alias DematerializedFeasibilityFileSendToCertificationAuthorityRequiredArguments =
+    { dematerializedFeasibilityFileId : Data.Scalar.Id
+    , certificationAuthorityId : Data.Scalar.Id
+    }
+
+
+dematerialized_feasibility_file_sendToCertificationAuthority :
+    DematerializedFeasibilityFileSendToCertificationAuthorityRequiredArguments
+    -> SelectionSet String RootMutation
+dematerialized_feasibility_file_sendToCertificationAuthority requiredArgs____ =
+    Object.selectionForField "String" "dematerialized_feasibility_file_sendToCertificationAuthority" [ Argument.required "dematerializedFeasibilityFileId" requiredArgs____.dematerializedFeasibilityFileId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationAuthorityId" requiredArgs____.certificationAuthorityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] Decode.string
+
+
+type alias DematerializedFeasibilityFileCreateOrUpdateSwornStatementRequiredArguments =
+    { input : Admin.InputObject.DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput }
+
+
+dematerialized_feasibility_file_createOrUpdateSwornStatement :
+    DematerializedFeasibilityFileCreateOrUpdateSwornStatementRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.DematerializedFeasibilityFile
+    -> SelectionSet decodesTo RootMutation
+dematerialized_feasibility_file_createOrUpdateSwornStatement requiredArgs____ object____ =
+    Object.selectionForCompositeField "dematerialized_feasibility_file_createOrUpdateSwornStatement" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeDematerializedFeasibilityFileCreateOrUpdateSwornStatementInput ] object____ Basics.identity
+
+
 type alias DossierDeValidationSignalProblemRequiredArguments =
     { dossierDeValidationId : Data.Scalar.Id
     , decisionComment : String
@@ -596,6 +644,20 @@ dossierDeValidation_signalProblem :
     -> SelectionSet decodesTo RootMutation
 dossierDeValidation_signalProblem requiredArgs____ object____ =
     Object.selectionForCompositeField "dossierDeValidation_signalProblem" [ Argument.required "dossierDeValidationId" requiredArgs____.dossierDeValidationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "decisionComment" requiredArgs____.decisionComment Encode.string ] object____ Basics.identity
+
+
+type alias FeatureFlippingToggleFeatureRequiredArguments =
+    { featureKey : String
+    , isActive : Bool
+    }
+
+
+featureFlipping_toggleFeature :
+    FeatureFlippingToggleFeatureRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Feature
+    -> SelectionSet decodesTo RootMutation
+featureFlipping_toggleFeature requiredArgs____ object____ =
+    Object.selectionForCompositeField "featureFlipping_toggleFeature" [ Argument.required "featureKey" requiredArgs____.featureKey Encode.string, Argument.required "isActive" requiredArgs____.isActive Encode.bool ] object____ Basics.identity
 
 
 type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
@@ -830,18 +892,20 @@ organism_updateLegalInformationValidationDecision fillInOptionals____ object____
     Object.selectionForCompositeField "organism_updateLegalInformationValidationDecision" optionalArgs____ object____ Basics.identity
 
 
-type alias OrganismUpdateOrganismOnSiteStatusRequiredArguments =
+type alias OrganismUpdateOrganismOnSiteAndRemoteStatusRequiredArguments =
     { organismId : String
     , isOnSite : Bool
+    , isRemote : Bool
+    , remoteZones : List Admin.Enum.RemoteZone.RemoteZone
     }
 
 
-organism_updateOrganismOnSiteStatus :
-    OrganismUpdateOrganismOnSiteStatusRequiredArguments
+organism_updateOrganismOnSiteAndRemoteStatus :
+    OrganismUpdateOrganismOnSiteAndRemoteStatusRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Organism
     -> SelectionSet decodesTo RootMutation
-organism_updateOrganismOnSiteStatus requiredArgs____ object____ =
-    Object.selectionForCompositeField "organism_updateOrganismOnSiteStatus" [ Argument.required "organismId" requiredArgs____.organismId Encode.string, Argument.required "isOnSite" requiredArgs____.isOnSite Encode.bool ] object____ Basics.identity
+organism_updateOrganismOnSiteAndRemoteStatus requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_updateOrganismOnSiteAndRemoteStatus" [ Argument.required "organismId" requiredArgs____.organismId Encode.string, Argument.required "isOnSite" requiredArgs____.isOnSite Encode.bool, Argument.required "isRemote" requiredArgs____.isRemote Encode.bool, Argument.required "remoteZones" requiredArgs____.remoteZones (Encode.enum Admin.Enum.RemoteZone.toString |> Encode.list) ] object____ Basics.identity
 
 
 type alias OrganismCreateAgencyRequiredArguments =
@@ -853,6 +917,11 @@ organism_createAgency :
     -> SelectionSet String RootMutation
 organism_createAgency requiredArgs____ =
     Object.selectionForField "String" "organism_createAgency" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateAgencyInput ] Decode.string
+
+
+organism_acceptCgu : SelectionSet Bool RootMutation
+organism_acceptCgu =
+    Object.selectionForField "Bool" "organism_acceptCgu" [] Decode.bool
 
 
 type alias ReferentialUpdateCertificationRequiredArguments =
@@ -892,15 +961,14 @@ referential_updateCompetenceBlocsByCertificationId requiredArgs____ object____ =
 
 
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
-    { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
+    { createSubscriptionRequestInput : Admin.InputObject.CreateSubscriptionRequestInput }
 
 
 subscription_createSubscriptionRequest :
     SubscriptionCreateSubscriptionRequestRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.SubscriptionRequest
-    -> SelectionSet decodesTo RootMutation
-subscription_createSubscriptionRequest requiredArgs____ object____ =
-    Object.selectionForCompositeField "subscription_createSubscriptionRequest" [ Argument.required "subscriptionRequest" requiredArgs____.subscriptionRequest Admin.InputObject.encodeSubscriptionRequestInput ] object____ Basics.identity
+    -> SelectionSet String RootMutation
+subscription_createSubscriptionRequest requiredArgs____ =
+    Object.selectionForField "String" "subscription_createSubscriptionRequest" [ Argument.required "createSubscriptionRequestInput" requiredArgs____.createSubscriptionRequestInput Admin.InputObject.encodeCreateSubscriptionRequestInput ] Decode.string
 
 
 type alias SubscriptionValidateSubscriptionRequestRequiredArguments =
@@ -914,6 +982,10 @@ subscription_validateSubscriptionRequest requiredArgs____ =
     Object.selectionForField "(Maybe String)" "subscription_validateSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
 
 
+type alias SubscriptionRejectSubscriptionRequestOptionalArguments =
+    { internalComment : OptionalArgument String }
+
+
 type alias SubscriptionRejectSubscriptionRequestRequiredArguments =
     { subscriptionRequestId : Data.Scalar.Id
     , reason : String
@@ -921,49 +993,10 @@ type alias SubscriptionRejectSubscriptionRequestRequiredArguments =
 
 
 subscription_rejectSubscriptionRequest :
-    SubscriptionRejectSubscriptionRequestRequiredArguments
+    (SubscriptionRejectSubscriptionRequestOptionalArguments -> SubscriptionRejectSubscriptionRequestOptionalArguments)
+    -> SubscriptionRejectSubscriptionRequestRequiredArguments
     -> SelectionSet (Maybe String) RootMutation
-subscription_rejectSubscriptionRequest requiredArgs____ =
-    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)
-
-
-type alias SubscriptionCreateSubscriptionRequestV2RequiredArguments =
-    { createSubscriptionRequestV2Input : Admin.InputObject.CreateSubscriptionRequestV2Input }
-
-
-subscription_createSubscriptionRequestV2 :
-    SubscriptionCreateSubscriptionRequestV2RequiredArguments
-    -> SelectionSet String RootMutation
-subscription_createSubscriptionRequestV2 requiredArgs____ =
-    Object.selectionForField "String" "subscription_createSubscriptionRequestV2" [ Argument.required "createSubscriptionRequestV2Input" requiredArgs____.createSubscriptionRequestV2Input Admin.InputObject.encodeCreateSubscriptionRequestV2Input ] Decode.string
-
-
-type alias SubscriptionValidateSubscriptionRequestV2RequiredArguments =
-    { subscriptionRequestId : Data.Scalar.Id }
-
-
-subscription_validateSubscriptionRequestV2 :
-    SubscriptionValidateSubscriptionRequestV2RequiredArguments
-    -> SelectionSet (Maybe String) RootMutation
-subscription_validateSubscriptionRequestV2 requiredArgs____ =
-    Object.selectionForField "(Maybe String)" "subscription_validateSubscriptionRequestV2" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
-
-
-type alias SubscriptionRejectSubscriptionRequestV2OptionalArguments =
-    { internalComment : OptionalArgument String }
-
-
-type alias SubscriptionRejectSubscriptionRequestV2RequiredArguments =
-    { subscriptionRequestId : Data.Scalar.Id
-    , reason : String
-    }
-
-
-subscription_rejectSubscriptionRequestV2 :
-    (SubscriptionRejectSubscriptionRequestV2OptionalArguments -> SubscriptionRejectSubscriptionRequestV2OptionalArguments)
-    -> SubscriptionRejectSubscriptionRequestV2RequiredArguments
-    -> SelectionSet (Maybe String) RootMutation
-subscription_rejectSubscriptionRequestV2 fillInOptionals____ requiredArgs____ =
+subscription_rejectSubscriptionRequest fillInOptionals____ requiredArgs____ =
     let
         filledInOptionals____ =
             fillInOptionals____ { internalComment = Absent }
@@ -972,4 +1005,4 @@ subscription_rejectSubscriptionRequestV2 fillInOptionals____ requiredArgs____ =
             [ Argument.optional "internalComment" filledInOptionals____.internalComment Encode.string ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequestV2" (optionalArgs____ ++ [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ]) (Decode.string |> Decode.nullable)
+    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" (optionalArgs____ ++ [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ]) (Decode.string |> Decode.nullable)
