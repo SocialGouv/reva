@@ -62,10 +62,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     menuItem("Jury", `/candidacies/${candidacyId}/jury`),
   ];
 
-  if (
-    isFeatureActive("CERTIFICATEUR_TRANSFER_CANDIDACY") &&
-    !juryDateOfSession
-  ) {
+  if (!juryDateOfSession) {
     items.push(
       menuItem(
         <Button size="small" priority="secondary" className="m-auto my-3">
