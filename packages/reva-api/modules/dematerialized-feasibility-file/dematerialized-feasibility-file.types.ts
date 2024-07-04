@@ -11,8 +11,14 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompete
   candidacyId: string;
   dematerializedFeasibilityFileId: string;
   competenceBlocId: string;
-  competenceIdAndTexts: { competenceId: string; text: string }[];
+  competenceDetails: {
+    competenceId: string;
+    text: string;
+    state: CompetenceDetailState;
+  }[];
 }
+
+export type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
 
 export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   candidacyId: string;

@@ -1489,14 +1489,21 @@ model DFFCertificationCompetenceBloc {
   @@map("dff_certification_competence_bloc")
 }
 
+enum DFFCertificationCompetenceDetailsState {
+  YES
+  NO
+  PARTIALLY
+}
+
 model DFFCertificationCompetenceDetails {
-  id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
-  dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
-  certificationCompetenceId       String                        @map("certification_competence_id") @db.Uuid
-  certificationCompetence         CertificationCompetence       @relation(fields: [certificationCompetenceId], references: [id])
+  id                              String                                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile          @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFileId String                                 @map("dematerialized_feasibility_file_id") @db.Uuid
+  certificationCompetenceId       String                                 @map("certification_competence_id") @db.Uuid
+  certificationCompetence         CertificationCompetence                @relation(fields: [certificationCompetenceId], references: [id])
   text                            String
-  createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt                       DateTime                               @default(now()) @map("created_at") @db.Timestamptz(6)
+  state                           DFFCertificationCompetenceDetailsState @default(YES)
 
   @@map("dff_certification_competence_details")
 }

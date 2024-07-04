@@ -6,7 +6,7 @@ import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPart
 export const createOrUpdateCertificationCompetenceDetails = async ({
   dematerializedFeasibilityFileId,
   competenceBlocId,
-  competenceIdAndTexts,
+  competenceDetails,
 }: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput) => {
   if (!dematerializedFeasibilityFileId) {
     throw new Error("Dossier de faisabilité non trouvé");
@@ -20,10 +20,11 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
   });
 
   await prismaClient.dFFCertificationCompetenceDetails.createMany({
-    data: competenceIdAndTexts.map((c) => ({
+    data: competenceDetails.map((c) => ({
       dematerializedFeasibilityFileId,
       certificationCompetenceId: c.competenceId,
       text: c.text,
+      state: c.state,
     })),
   });
 

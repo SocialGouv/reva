@@ -38,6 +38,7 @@ const getCandidacyById = graphql(`
           }
         }
         certificationCompetenceDetails {
+          state
           text
           certificationCompetence {
             id

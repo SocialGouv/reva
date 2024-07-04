@@ -25,6 +25,13 @@ type DematerializedFeasibilityFile {
   isReadyToBeSentToCandidate: Boolean!
   isReadyToBeSentToCertificationAuthority: Boolean!
 }
+
+enum DFFCertificationCompetenceDetailsState {
+  YES
+  NO
+  PARTIALLY
+}
+
 type DFFCertificationCompetenceBloc {
   complete: Boolean!
   certificationCompetenceBloc: CertificationCompetenceBloc!
@@ -61,6 +68,7 @@ enum CandidacyFeasibilityFormat {
 type CertificationCompetenceDetails {
   certificationCompetence: CertificationCompetence!
   text: String!
+  state: DFFCertificationCompetenceDetailsState!
 }
 
 type Candidacy {
@@ -99,7 +107,7 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsI
   candidacyId: ID!
   dematerializedFeasibilityFileId: ID!
   competenceBlocId: ID!
-  competenceIdAndTexts: [CompetenceIdAndText!]!
+  competenceDetails: [competenceDetails!]!
 }
 
 input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
@@ -118,9 +126,10 @@ enum DFFileDecision {
   UNFAVORABLE
 }
 
-input CompetenceIdAndText {
+input competenceDetails {
   competenceId: ID!
   text: String!
+  state: DFFCertificationCompetenceDetailsState!
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {

@@ -4,8 +4,9 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-import { CompetenceIdAndText } from "@/graphql/generated/graphql";
+import { CompetenceDetails } from "@/graphql/generated/graphql";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -19,6 +20,7 @@ const schema = z.object({
       competenceId: z.string(),
       label: z.string(),
       text: z.string().min(1, "Merci de remplir ce champ"),
+      state: z.enum(["YES", "NO", "PARTIALLY"]),
     })
     .array(),
 });
@@ -34,6 +36,7 @@ const getBlocDeCompetencesQuery = graphql(`
       dematerializedFeasibilityFile {
         id
         certificationCompetenceDetails {
+          state
           certificationCompetence {
             id
           }
@@ -88,7 +91,7 @@ const CompetenciesBlockPage = () => {
       candidacyId: string;
       dematerializedFeasibilityFileId: string;
       competenceBlocId: string;
-      competenceIdAndTexts: CompetenceIdAndText[];
+      competenceDetails: CompetenceDetails[];
     }) =>
       graphqlClient.request(createOrUpdateCompetenceDetailsMutation, {
         input,
@@ -112,6 +115,9 @@ const CompetenciesBlockPage = () => {
         text: dematerializedFile?.certificationCompetenceDetails.find(
           (ccd) => ccd.certificationCompetence.id === c.id,
         )?.text,
+        state: dematerializedFile?.certificationCompetenceDetails.find(
+          (ccd) => ccd.certificationCompetence.id === c.id,
+        )?.state,
       })),
     }),
     [competencesFromBlock, dematerializedFile?.certificationCompetenceDetails],
@@ -141,15 +147,17 @@ const CompetenciesBlockPage = () => {
   useEffect(resetForm, [resetForm]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
+    const competenceDetails = data.competences.map((c) => ({
+      competenceId: c.competenceId,
+      text: c.text,
+      state: c.state,
+    }));
     try {
       await createOrUpdateCompetenceDetails.mutateAsync({
         candidacyId,
         dematerializedFeasibilityFileId: dematerializedFile?.id || "",
         competenceBlocId: blocDeCompetencesId,
-        competenceIdAndTexts: data.competences.map((c) => ({
-          competenceId: c.competenceId,
-          text: c.text,
-        })),
+        competenceDetails,
       });
       successToast("Modifications enregistrées");
     } catch (e) {
@@ -177,19 +185,47 @@ const CompetenciesBlockPage = () => {
             }}
           >
             {competencesFields?.map((c, i) => (
-              <Input
-                key={c.id}
-                textArea
-                label={c.label}
-                classes={{ nativeInputOrTextArea: "!min-h-[88px]" }}
-                nativeTextAreaProps={{
-                  ...register(`competences.${i}.text`),
-                }}
-                stateRelatedMessage={
-                  errors?.competences?.[i]?.text?.message as string
-                }
-                state={errors?.competences?.[i]?.text ? "error" : "default"}
-              />
+              <>
+                <Input
+                  key={c.id}
+                  textArea
+                  label={c.label}
+                  classes={{ nativeInputOrTextArea: "!min-h-[88px]" }}
+                  nativeTextAreaProps={{
+                    ...register(`competences.${i}.text`),
+                  }}
+                  stateRelatedMessage={
+                    errors?.competences?.[i]?.text?.message as string
+                  }
+                  state={errors?.competences?.[i]?.text ? "error" : "default"}
+                />
+                <RadioButtons
+                  orientation="horizontal"
+                  options={[
+                    {
+                      label: "Oui",
+                      nativeInputProps: {
+                        ...register(`competences.${i}.state`),
+                        value: "YES",
+                      },
+                    },
+                    {
+                      label: "Non",
+                      nativeInputProps: {
+                        ...register(`competences.${i}.state`),
+                        value: "NO",
+                      },
+                    },
+                    {
+                      label: "Partiellement",
+                      nativeInputProps: {
+                        ...register(`competences.${i}.state`),
+                        value: "PARTIALLY",
+                      },
+                    },
+                  ]}
+                />
+              </>
             ))}
             <FormButtons
               backUrl={`/candidacies/${candidacyId}/feasibility-aap`}

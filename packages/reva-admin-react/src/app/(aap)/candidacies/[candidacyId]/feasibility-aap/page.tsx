@@ -1,26 +1,20 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
+import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import {
-  BadgeCompleted,
-  BadgeToComplete,
-  DefaultCandidacySectionCard,
-} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import {
-  CompetenceBlocsPartCompletion,
+  CertificationCompetenceDetails,
   DfFileDecision,
+  DffCertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 import { AttachmentsCard } from "./_components/AttachmentsCard";
+import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { DecisionCard } from "./_components/DecisionCard";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
-import { CertificationCompetenceAccordion } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/_components/CertificationCompetenceAccordion";
 
 const AapFeasibilityPage = () => {
   const { candidacyId } = useParams<{
@@ -55,48 +49,17 @@ const AapFeasibilityPage = () => {
               RNCP {certification?.codeRncp}
             </p>
           </DefaultCandidacySectionCard>
-          <CandidacySectionCard
-            title="Blocs de compétences"
-            titleIconClass="fr-icon-survey-fill"
-            badge={
-              <CompetencesSectionBadge
-                completion={
-                  dematerializedFeasibilityFile?.competenceBlocsPartCompletion ||
-                  "TO_COMPLETE"
-                }
-              />
+          <CompetenciesBlocksSection
+            blocsDeCompetences={
+              dematerializedFeasibilityFile?.blocsDeCompetences as DffCertificationCompetenceBloc[]
             }
-          >
-            <ul className="list-none flex flex-col">
-              {dematerializedFeasibilityFile?.blocsDeCompetences?.map(
-                (bloc) => (
-                  <li
-                    key={bloc.certificationCompetenceBloc.id}
-                    className="flex justify-between items-start pb-0 gap-6"
-                  >
-                    <CertificationCompetenceAccordion
-                      key={bloc.certificationCompetenceBloc.id}
-                      competenceBloc={bloc.certificationCompetenceBloc}
-                      competenceDetails={
-                        dematerializedFeasibilityFile?.certificationCompetenceDetails
-                      }
-                    />
-                    <Button
-                      className="w-[120px] mt-4 flex-none"
-                      priority={bloc.complete ? "secondary" : "primary"}
-                      linkProps={{
-                        href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
-                      }}
-                    >
-                      <span className="mx-auto">
-                        {bloc.complete ? "Modifier" : "Compléter"}
-                      </span>
-                    </Button>
-                  </li>
-                ),
-              )}
-            </ul>
-          </CandidacySectionCard>
+            certificationCompetenceDetails={
+              dematerializedFeasibilityFile?.certificationCompetenceDetails as CertificationCompetenceDetails[]
+            }
+            competenceBlocsPartCompletion={
+              dematerializedFeasibilityFile?.competenceBlocsPartCompletion
+            }
+          />
           <PrerequisitesCard
             prerequisites={
               dematerializedFeasibilityFile?.prerequisites as Prerequisite[]
@@ -156,18 +119,3 @@ const AapFeasibilityPage = () => {
 };
 
 export default AapFeasibilityPage;
-
-const CompetencesSectionBadge = ({
-  completion,
-}: {
-  completion: CompetenceBlocsPartCompletion;
-}) => {
-  switch (completion) {
-    case "COMPLETED":
-      return <BadgeCompleted />;
-    case "IN_PROGRESS":
-      return <Badge severity="info">En cours</Badge>;
-    default:
-      return <BadgeToComplete />;
-  }
-};
