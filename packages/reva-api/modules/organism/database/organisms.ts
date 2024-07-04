@@ -1,4 +1,4 @@
-import { Organism, Prisma } from "@prisma/client";
+import { Organism } from "@prisma/client";
 import { camelCase, mapKeys } from "lodash";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
@@ -108,24 +108,6 @@ export const createOrganism = async (data: {
   }
 };
 
-export const getReferentOrganismFromCandidacyId = async (
-  candidacyId: string,
-) => {
-  try {
-    const candidacy = await prismaClient.candidacy.findUnique({
-      where: { id: candidacyId },
-      include: { organism: true },
-    });
-    // return Right(candidacy?.organism);
-    return Right(Maybe.fromNullable(candidacy?.organism));
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`,
-    );
-  }
-};
-
 export const getRandomActiveOrganismForCertificationAndDepartment = async ({
   certificationId,
   departmentId,
@@ -220,10 +202,3 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     return Left(`error while retreiving organism`);
   }
 };
-
-export const doesOrganismWithSameLabelExludingThoseInExperimentationExists =
-  async (label: string) =>
-    !!(await prismaClient.organism.findFirst({
-      select: { id: true },
-      where: { typology: { not: "experimentation" }, label },
-    }));

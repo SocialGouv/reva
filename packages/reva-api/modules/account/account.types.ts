@@ -2,11 +2,6 @@ export type Group = "reva" | "organism";
 
 export type Role = "admin" | "manage_candidacy" | "gestion_maison_mere_aap";
 
-export interface IAMAccount {
-  id: string;
-  email: string;
-}
-
 export interface Account {
   id: string;
   keycloakId: string;

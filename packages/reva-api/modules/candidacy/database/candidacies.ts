@@ -186,34 +186,6 @@ export const existsCandidacyWithActiveStatus = async (params: {
   }
 };
 
-export const existsCandidacyWithActiveStatuses = async (params: {
-  candidacyId: string;
-  statuses: CandidacyStatusStep[];
-}) => {
-  try {
-    const candidaciesCount = await prismaClient.candidacy.count({
-      where: {
-        id: params.candidacyId,
-        candidacyStatuses: {
-          some: {
-            status: {
-              in: params.statuses,
-            },
-            isActive: true,
-          },
-        },
-      },
-    });
-
-    return candidaciesCount === 1;
-  } catch (e) {
-    logger.error(e);
-    throw new Error(
-      `error while retrieving the candidacy with id ${params.candidacyId}`,
-    );
-  }
-};
-
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;
