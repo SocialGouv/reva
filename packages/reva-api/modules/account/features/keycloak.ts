@@ -44,6 +44,7 @@ export const createAccount = async (account: {
   username: string;
   firstname?: string;
   lastname?: string;
+  maisonMereAAPRaisonSociale?: string;
   group:
     | "admin"
     | "organism"
@@ -78,6 +79,7 @@ export const createAccount = async (account: {
 
     payload.attributes = {
       user_profile_type: userProfileType,
+      nom_maison_mere_aap: account.maisonMereAAPRaisonSociale,
     };
 
     const { id } = await keycloakAdmin.users.create(payload);

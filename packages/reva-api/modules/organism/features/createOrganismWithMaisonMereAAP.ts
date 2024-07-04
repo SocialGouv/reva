@@ -168,6 +168,7 @@ export const createOrganismWithMaisonMereAAP = async ({
         lastname,
         username: email,
         group: "organism",
+        maisonMereAAPRaisonSociale: raisonSociale,
       })
     ).unsafeCoerce();
 

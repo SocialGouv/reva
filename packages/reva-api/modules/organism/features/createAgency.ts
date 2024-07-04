@@ -163,6 +163,7 @@ export const createAgency = async ({
         lastname,
         username: email,
         group: "organism",
+        maisonMereAAPRaisonSociale: raisonSociale,
       })
     ).unsafeCoerce();
 
