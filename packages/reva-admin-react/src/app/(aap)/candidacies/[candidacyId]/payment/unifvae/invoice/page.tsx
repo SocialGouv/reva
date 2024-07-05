@@ -111,6 +111,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     otherTrainingEffectiveCost,
   } = useWatch({ control });
 
+  const feasibilityPackageCostTotal = 300;
+
   const supportHourCountTotal =
     (individualEffectiveHourCount || 0) + (collectiveEffectiveHourCount || 0);
 
@@ -422,7 +424,11 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   <p className="font-bold">Total</p>
                   <p>{supportHourCountTotal + trainingHourCountTotal} h</p>
                   <p>
-                    {(supportEffectiveCostTotal + trainingCostTotal).toFixed(2)}{" "}
+                    {(
+                      feasibilityPackageCostTotal +
+                      supportEffectiveCostTotal +
+                      trainingCostTotal
+                    ).toFixed(2)}{" "}
                     €
                   </p>
                 </TableRow>
