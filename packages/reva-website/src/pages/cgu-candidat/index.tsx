@@ -29,9 +29,8 @@ const CguPage = () => (
       </p>
       <p>
         L’étendue du dispositif a vocation à évoluer. A ce jour, le périmètre de
-        la certification est limité à certaines certifications des secteurs «
-        santé, soin, dépendance », “métallurgie”, “grande distribution” et
-        “sport”.
+        la certification est limité à certaines certifications du secteur «
+        santé, soin, dépendance ».
       </p>
 
       <h2>Article 2 – Définitions</h2>
