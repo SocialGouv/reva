@@ -1,7 +1,4 @@
-import { Either, Left, Maybe, Right } from "purify-ts";
-
 import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
 import { Account } from ".prisma/client";
 
 export const createAccountProfile = async (params: {
@@ -11,37 +8,21 @@ export const createAccountProfile = async (params: {
   organismId?: string;
   keycloakId: string;
   certificationAuthorityId?: string;
-}): Promise<Either<string, Account>> => {
-  try {
-    const account = await prismaClient.account.create({
-      data: {
-        keycloakId: params.keycloakId,
-        email: params.email,
-        firstname: params.firstname,
-        lastname: params.lastname,
-        organismId: params.organismId,
-        certificationAuthorityId: params.certificationAuthorityId,
-      },
-    });
+}): Promise<Account> =>
+  prismaClient.account.create({
+    data: {
+      keycloakId: params.keycloakId,
+      email: params.email,
+      firstname: params.firstname,
+      lastname: params.lastname,
+      organismId: params.organismId,
+      certificationAuthorityId: params.certificationAuthorityId,
+    },
+  });
 
-    return Right(account);
-  } catch (e) {
-    logger.error(e);
-    return Left("error while creating account");
-  }
-};
-
-export const getAccountFromEmail = async (email: string) => {
-  try {
-    const account = await prismaClient.account.findUnique({
-      where: {
-        email,
-      },
-    });
-    return Right(Maybe.fromNullable(account));
-  } catch (e: unknown) {
-    const errorMessage = `Error while retrieving account from email - ${e}`;
-    logger.error(errorMessage);
-    return Left(errorMessage);
-  }
-};
+export const getAccountFromEmail = async (email: string) =>
+  prismaClient.account.findUnique({
+    where: {
+      email,
+    },
+  });

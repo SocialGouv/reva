@@ -88,12 +88,10 @@ export const createAccount = async (params: {
   const keycloakId = await IAM.createAccount(params);
 
   //create and return the account in database
-  return (
-    await createAccountProfile({
-      ...params,
-      firstname: params.firstname || "",
-      lastname: params.lastname || "",
-      keycloakId,
-    })
-  ).unsafeCoerce();
+  return await createAccountProfile({
+    ...params,
+    firstname: params.firstname || "",
+    lastname: params.lastname || "",
+    keycloakId,
+  });
 };

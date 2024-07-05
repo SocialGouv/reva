@@ -55,11 +55,9 @@ export const validateSubscriptionRequest = async ({
   }
 
   //account check
-  const oldAccount = (
-    await getAccountFromEmail(subscriptionRequest.accountEmail)
-  )
-    .unsafeCoerce()
-    .extractNullable();
+  const oldAccount = await getAccountFromEmail(
+    subscriptionRequest.accountEmail,
+  );
 
   if (oldAccount) {
     throw new Error(
