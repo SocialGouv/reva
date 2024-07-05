@@ -4,7 +4,6 @@ import { authorizationHeaderForUser } from "../../../test/helpers/authorization-
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import * as IAM from "../../account/features/keycloak";
 import { prismaClient } from "../../../prisma/client";
-import { Either, Maybe, Nothing } from "purify-ts";
 import { Prisma } from "@prisma/client";
 
 const subRequest = {
@@ -52,15 +51,13 @@ beforeEach(async () => {
 });
 
 test("It should validate a correct subscription request", async () => {
-  jest.spyOn(IAM, "getAccount").mockImplementation(() => {
-    return Promise.resolve(Either.of<string, Maybe<unknown>>(Nothing));
-  });
+  jest.spyOn(IAM, "getAccount").mockImplementation(() => Promise.resolve(null));
 
-  jest.spyOn(IAM, "createAccount").mockImplementation(() => {
-    return Promise.resolve(
-      Either.of<string, string>("ab3c88f8-87d0-4757-a5bd-f26ace8d2baf"),
+  jest
+    .spyOn(IAM, "createAccount")
+    .mockImplementation(() =>
+      Promise.resolve("ab3c88f8-87d0-4757-a5bd-f26ace8d2baf"),
     );
-  });
 
   await prismaClient.subscriptionRequest.create({
     data: subRequest,
@@ -122,13 +119,11 @@ test("It should validate a correct subscription request", async () => {
 
 test("It should fail to validate the subscription request if a keycloak account with the same email already exists", async () => {
   const existingKeycloakAccountId = "d11ca98b-7ff3-4d73-aea0-d8e329980d32";
-  jest.spyOn(IAM, "getAccount").mockImplementation(() => {
-    return Promise.resolve(
-      Either.of<string, Maybe<{ id: string }>>(
-        Maybe.of({ id: existingKeycloakAccountId }),
-      ),
+  jest
+    .spyOn(IAM, "getAccount")
+    .mockImplementation(() =>
+      Promise.resolve({ id: existingKeycloakAccountId }),
     );
-  });
 
   await prismaClient.subscriptionRequest.create({
     data: subRequest,

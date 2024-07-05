@@ -67,14 +67,10 @@ export const validateSubscriptionRequest = async ({
     );
   }
 
-  const oldIamAccount = (
-    await getIamAccount({
-      email: subscriptionRequest.accountEmail,
-      username: subscriptionRequest.accountEmail,
-    })
-  )
-    .unsafeCoerce()
-    .extractNullable();
+  const oldIamAccount = await getIamAccount({
+    email: subscriptionRequest.accountEmail,
+    username: subscriptionRequest.accountEmail,
+  });
 
   if (oldIamAccount)
     throw new Error(

@@ -29,14 +29,10 @@ export const createAgency = async ({
   const createAccountInIAM = IAM.createAccount;
 
   try {
-    const accountExist = (
-      await getIamAccount({
-        email: params.email,
-        username: params.email,
-      })
-    )
-      .unsafeCoerce()
-      .extractNullable();
+    const accountExist = !!(await getIamAccount({
+      email: params.email,
+      username: params.email,
+    }));
 
     if (accountExist) {
       throw new FunctionalError(
@@ -156,16 +152,14 @@ export const createAgency = async ({
     }
 
     //iam account creation
-    const newKeycloakId = (
-      await createAccountInIAM({
-        email,
-        firstname,
-        lastname,
-        username: email,
-        group: "organism",
-        maisonMereAAPRaisonSociale: raisonSociale,
-      })
-    ).unsafeCoerce();
+    const newKeycloakId = await createAccountInIAM({
+      email,
+      firstname,
+      lastname,
+      username: email,
+      group: "organism",
+      maisonMereAAPRaisonSociale: raisonSociale,
+    });
 
     logger.info(
       `[validateorganismData] Successfuly created IAM account ${newKeycloakId}`,

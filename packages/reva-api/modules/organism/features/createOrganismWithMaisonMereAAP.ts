@@ -34,14 +34,10 @@ export const createOrganismWithMaisonMereAAP = async ({
   const createAccountInIAM = IAM.createAccount;
 
   try {
-    const accountExist = (
-      await getIamAccount({
-        email: organismData.email,
-        username: organismData.email,
-      })
-    )
-      .unsafeCoerce()
-      .extractNullable();
+    const accountExist = !!(await getIamAccount({
+      email: organismData.email,
+      username: organismData.email,
+    }));
 
     if (accountExist) {
       throw new FunctionalError(
@@ -161,16 +157,14 @@ export const createOrganismWithMaisonMereAAP = async ({
     }
 
     //iam account creation
-    const newKeycloakId = (
-      await createAccountInIAM({
-        email,
-        firstname,
-        lastname,
-        username: email,
-        group: "organism",
-        maisonMereAAPRaisonSociale: raisonSociale,
-      })
-    ).unsafeCoerce();
+    const newKeycloakId = await createAccountInIAM({
+      email,
+      firstname,
+      lastname,
+      username: email,
+      group: "organism",
+      maisonMereAAPRaisonSociale: raisonSociale,
+    });
 
     logger.info(
       `[validateorganismData] Successfuly created IAM account ${newKeycloakId}`,

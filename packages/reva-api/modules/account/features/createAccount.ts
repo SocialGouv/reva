@@ -72,14 +72,12 @@ export const createAccount = async (params: {
   }
 
   //check if account already exist in keycloak and throw an error if that's the case.
-  const maybeExistingAccount = (
-    await IAM.getAccount({
-      email: params.email,
-      username: params.username,
-    })
-  ).unsafeCoerce();
+  const maybeExistingAccount = await IAM.getAccount({
+    email: params.email,
+    username: params.username,
+  });
 
-  if (maybeExistingAccount.isJust()) {
+  if (maybeExistingAccount !== null) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
       `Un compte existe déjà pour cet email`,
@@ -87,7 +85,7 @@ export const createAccount = async (params: {
   }
 
   // create the account in keycloak
-  const keycloakId = (await IAM.createAccount(params)).unsafeCoerce();
+  const keycloakId = await IAM.createAccount(params);
 
   //create and return the account in database
   return (
