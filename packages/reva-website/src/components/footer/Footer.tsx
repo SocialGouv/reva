@@ -89,7 +89,7 @@ export const Footer = ({ className }: { className?: string }) => {
                 Accessibilité : partiellement conforme
               </Link>
             </li>
-            <li className="fr-footer__bottom-item">
+            {/* <li className="fr-footer__bottom-item">
               <Link className="fr-footer__bottom-link" href="/cgu-candidat/">
                 CGU candidat
               </Link>
@@ -101,7 +101,7 @@ export const Footer = ({ className }: { className?: string }) => {
               >
                 CGU structures professionnelles
               </Link>
-            </li>
+            </li> */}
             <li className="fr-footer__bottom-item">
               <Link
                 className="fr-footer__bottom-link"
