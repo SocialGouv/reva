@@ -1,8 +1,7 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 
-const CguPage = () => {
-  return null;
+const CguPage = () => (
   <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden font-light">
     <Head>
       <title>Conditions générales d'utilisation - France VAE</title>
@@ -366,6 +365,6 @@ const CguPage = () => {
       <p>Vous pouvez avoir accès à un versionnage des CGU ici :</p>
       <p>Dernière version des CGU : 07/05/2024</p>
     </div>
-  </MainLayout>;
-};
+  </MainLayout>
+);
 export default CguPage;

@@ -3,8 +3,7 @@ import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBack
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 
-const CguProPage = () => {
-  return null;
+const CguProPage = () => (
   <MainLayout>
     <Head>
       <title>
@@ -19,7 +18,7 @@ const CguProPage = () => {
       </h1>
       <Cgu />
     </OrganismBackground>
-  </MainLayout>;
-};
+  </MainLayout>
+);
 
 export default CguProPage;
