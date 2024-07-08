@@ -95,7 +95,6 @@ enum DFFAttachmentType {
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
-  candidacyId: String!
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
@@ -104,19 +103,16 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
-  candidacyId: ID!
   dematerializedFeasibilityFileId: ID!
   competenceBlocId: ID!
   competenceDetails: [competenceDetails!]!
 }
 
 input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
-  candidacyId: ID!
   prerequisites: [PrerequisiteInput]!
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
-  candidacyId: ID!
   aapDecision: DFFileDecision!
   aapDecisionComment: String!
 }
@@ -133,7 +129,6 @@ input competenceDetails {
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
-  candidacyId: ID!
   idCard: Upload!
   equivalenceOrExemptionProof: Upload
   trainingCertificate: Upload
@@ -141,7 +136,6 @@ input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
-  candidacyId: ID!
   swornStatement: Upload!
 }
 
@@ -153,35 +147,43 @@ type Query {
 
 type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationInfo(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdatePrerequisites(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdateDecision(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdateAttachments(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput!
   ): String!
 
   dematerialized_feasibility_file_sendToCandidate(
+    candidacyId: ID!
     dematerializedFeasibilityFileId: ID!
   ): String!
 
   dematerialized_feasibility_file_sendToCertificationAuthority(
+    candidacyId: ID!
     dematerializedFeasibilityFileId: ID!
     certificationAuthorityId: ID!
   ): String!
 
   dematerialized_feasibility_file_createOrUpdateSwornStatement(
+    candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput!
   ): DematerializedFeasibilityFile!
 }

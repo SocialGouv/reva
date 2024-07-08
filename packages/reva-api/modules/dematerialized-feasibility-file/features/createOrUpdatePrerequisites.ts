@@ -5,8 +5,11 @@ import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "
 
 export const createOrUpdatePrerequisites = async ({
   candidacyId,
-  prerequisites,
-}: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput) => {
+  input: { prerequisites },
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput;
+  candidacyId: string;
+}) => {
   const dFF =
     await getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId({
       candidacyId,

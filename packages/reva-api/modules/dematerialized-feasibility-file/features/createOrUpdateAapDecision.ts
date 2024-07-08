@@ -5,9 +5,11 @@ import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "
 
 export const createOrUpdateAapDecision = async ({
   candidacyId,
-  aapDecision,
-  aapDecisionComment,
-}: DematerializedFeasibilityFileCreateOrUpdateDecisionInput) => {
+  input: { aapDecision, aapDecisionComment },
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
+  candidacyId: string;
+}) => {
   const dFF =
     await getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId({
       candidacyId,

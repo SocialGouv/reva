@@ -7,8 +7,12 @@ import { useParams } from "next/navigation";
 const createOrUpdateDecision = graphql(`
   mutation createOrUpdateDecision(
     $input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
+    $candidacyId: ID!
   ) {
-    dematerialized_feasibility_file_createOrUpdateDecision(input: $input) {
+    dematerialized_feasibility_file_createOrUpdateDecision(
+      input: $input
+      candidacyId: $candidacyId
+    ) {
       id
     }
   }
@@ -33,7 +37,11 @@ export const useDecision = () => {
   const { mutateAsync: createOrUpdateDecisionMutation } = useMutation({
     mutationFn: (
       input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
-    ) => graphqlClient.request(createOrUpdateDecision, { input }),
+    ) =>
+      graphqlClient.request(createOrUpdateDecision, {
+        input,
+        candidacyId,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [

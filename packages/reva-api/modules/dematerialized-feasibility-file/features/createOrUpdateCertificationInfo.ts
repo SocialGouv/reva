@@ -5,16 +5,18 @@ import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPart
 
 export const createOrUpdateCertificationInfo = async ({
   input,
+  candidacyId,
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
+  candidacyId: string;
 }) => {
   const currentFile =
     await prismaClient.dematerializedFeasibilityFile.findFirst({
-      where: { candidacyId: input.candidacyId },
+      where: { candidacyId },
     });
 
   const data = {
-    candidacyId: input.candidacyId,
+    candidacyId,
     firstForeignLanguage: input.firstForeignLanguage,
     secondForeignLanguage: input.secondForeignLanguage,
     option: input.option,
@@ -63,7 +65,7 @@ export const createOrUpdateCertificationInfo = async ({
   }
 
   await updateCandidacyCertificationCompletion({
-    candidacyId: input.candidacyId,
+    candidacyId,
     completion: input.completion,
   });
 

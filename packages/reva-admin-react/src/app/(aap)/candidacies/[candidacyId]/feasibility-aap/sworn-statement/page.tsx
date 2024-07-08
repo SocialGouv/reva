@@ -72,13 +72,13 @@ export default function SwornStatementPage() {
     const swornStatement = data.swornStatement?.[0];
 
     const input = {
-      candidacyId,
       swornStatement,
     };
 
     try {
       const result = await urqlClient.mutation(createOrUpdateSwornStatement, {
         input,
+        candidacyId,
       });
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);

@@ -61,8 +61,10 @@ const getBlocDeCompetencesQuery = graphql(`
 const createOrUpdateCompetenceDetailsMutation = graphql(`
   mutation createOrUpdateCompetenceDetailsMutation(
     $input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
+    $candidacyId: ID!
   ) {
     dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+      candidacyId: $candidacyId
       input: $input
     ) {
       id
@@ -88,12 +90,12 @@ const CompetenciesBlockPage = () => {
 
   const createOrUpdateCompetenceDetails = useMutation({
     mutationFn: (input: {
-      candidacyId: string;
       dematerializedFeasibilityFileId: string;
       competenceBlocId: string;
       competenceDetails: CompetenceDetails[];
     }) =>
       graphqlClient.request(createOrUpdateCompetenceDetailsMutation, {
+        candidacyId,
         input,
       }),
   });
@@ -154,7 +156,6 @@ const CompetenciesBlockPage = () => {
     }));
     try {
       await createOrUpdateCompetenceDetails.mutateAsync({
-        candidacyId,
         dematerializedFeasibilityFileId: dematerializedFile?.id || "",
         competenceBlocId: blocDeCompetencesId,
         competenceDetails,

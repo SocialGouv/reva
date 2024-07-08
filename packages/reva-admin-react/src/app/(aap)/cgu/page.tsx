@@ -1,17 +1,17 @@
 "use client";
 
 import { Cgu } from "@/app/(aap)/cgu/_components/Cgu";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { IgnoreCguModalContent } from "@/app/(aap)/cgu/_components/IgnoreCguModalContent";
-import { useAppCgu } from "./page.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useAppCgu } from "./page.hooks";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),

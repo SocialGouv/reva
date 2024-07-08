@@ -7,10 +7,12 @@ const sendToCertificationAuthority = graphql(`
   mutation sendToCertificationAuthority(
     $dematerializedFeasibilityFileId: ID!
     $certificationAuthorityId: ID!
+    $candidacyId: ID!
   ) {
     dematerialized_feasibility_file_sendToCertificationAuthority(
       dematerializedFeasibilityFileId: $dematerializedFeasibilityFileId
       certificationAuthorityId: $certificationAuthorityId
+      candidacyId: $candidacyId
     )
   }
 `);
@@ -177,6 +179,7 @@ export const useSendFileCertificationAuthority = () => {
       graphqlClient.request(sendToCertificationAuthority, {
         dematerializedFeasibilityFileId,
         certificationAuthorityId,
+        candidacyId,
       }),
   });
 

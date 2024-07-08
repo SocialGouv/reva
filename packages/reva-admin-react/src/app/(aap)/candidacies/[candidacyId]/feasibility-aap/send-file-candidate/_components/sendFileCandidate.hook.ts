@@ -4,9 +4,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const sendToCandidate = graphql(`
-  mutation sendToCandidate($dematerializedFeasibilityFileId: ID!) {
+  mutation sendToCandidate(
+    $dematerializedFeasibilityFileId: ID!
+    $candidacyId: ID!
+  ) {
     dematerialized_feasibility_file_sendToCandidate(
       dematerializedFeasibilityFileId: $dematerializedFeasibilityFileId
+      candidacyId: $candidacyId
     )
   }
 `);
@@ -152,6 +156,7 @@ export const useSendFileCandidate = () => {
     mutationFn: (dematerializedFeasibilityFileId: string) =>
       graphqlClient.request(sendToCandidate, {
         dematerializedFeasibilityFileId,
+        candidacyId,
       }),
   });
 

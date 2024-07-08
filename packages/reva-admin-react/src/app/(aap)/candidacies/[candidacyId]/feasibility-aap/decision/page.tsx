@@ -60,7 +60,6 @@ export default function DecisionPage() {
   }: DecisionForm) => {
     try {
       await createOrUpdateDecisionMutation({
-        candidacyId,
         aapDecision,
         aapDecisionComment,
       });

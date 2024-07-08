@@ -22,8 +22,12 @@ const dematerializedFeasibilityFileByCandidacyId = graphql(`
 const createOrUpdatePrerequisites = graphql(`
   mutation createOrUpdatePrerequisites(
     $input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput!
+    $candidacyId: ID!
   ) {
-    dematerialized_feasibility_file_createOrUpdatePrerequisites(input: $input) {
+    dematerialized_feasibility_file_createOrUpdatePrerequisites(
+      input: $input
+      candidacyId: $candidacyId
+    ) {
       id
     }
   }
@@ -49,7 +53,11 @@ export const usePrerequisites = () => {
   const { mutateAsync: createOrUpdatePrerequisitesMutation } = useMutation({
     mutationFn: (
       input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
-    ) => graphqlClient.request(createOrUpdatePrerequisites, { input }),
+    ) =>
+      graphqlClient.request(createOrUpdatePrerequisites, {
+        input,
+        candidacyId,
+      }),
   });
 
   const prerequisites =

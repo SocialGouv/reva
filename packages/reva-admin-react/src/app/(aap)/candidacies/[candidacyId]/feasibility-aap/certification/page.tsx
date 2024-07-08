@@ -93,7 +93,6 @@ const CertificationPage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       await updateFeasibilityCertification.mutateAsync({
-        candidacyId,
         option: data.option,
         firstForeignLanguage: data.firstForeignLanguage,
         secondForeignLanguage: data.secondForeignlanguage,

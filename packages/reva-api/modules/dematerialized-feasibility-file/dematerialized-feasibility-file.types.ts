@@ -1,5 +1,4 @@
 export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
-  candidacyId: string;
   firstForeignLanguage?: string;
   secondForeignLanguage?: string;
   option?: string;
@@ -8,7 +7,6 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInp
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
-  candidacyId: string;
   dematerializedFeasibilityFileId: string;
   competenceBlocId: string;
   competenceDetails: {
@@ -21,20 +19,17 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompete
 export type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
 
 export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
-  candidacyId: string;
   prerequisites: { id?: string; label: string; state: PrerequisiteState }[];
 }
 
 export type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
 
 export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
-  candidacyId: string;
   aapDecision: DFFileDecision;
   aapDecisionComment: string;
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
-  candidacyId: string;
   idCard: GraphqlUploadedFile;
   equivalenceOrExemptionProof?: GraphqlUploadedFile;
   trainingCertificate?: GraphqlUploadedFile;
@@ -42,7 +37,6 @@ export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
-  candidacyId: string;
   swornStatement: GraphqlUploadedFile;
 }
 

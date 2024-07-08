@@ -15,11 +15,16 @@ import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./
 
 export const createOrUpdateAttachments = async ({
   candidacyId,
-  idCard,
-  equivalenceOrExemptionProof,
-  trainingCertificate,
-  additionalFiles,
-}: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput) => {
+  input: {
+    idCard,
+    equivalenceOrExemptionProof,
+    trainingCertificate,
+    additionalFiles,
+  },
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput;
+  candidacyId: string;
+}) => {
   try {
     const dffWithAttachments =
       await getDematerializedFeasibilityFileWithAttachmentsByCandidacyId({

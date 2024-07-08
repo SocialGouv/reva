@@ -11,9 +11,12 @@ import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 
 export const createOrUpdateSwornStatement = async ({
+  input: { swornStatement },
   candidacyId,
-  swornStatement,
-}: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput) => {
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
+  candidacyId: string;
+}) => {
   try {
     const dff = await getDematerializedFeasibilityFileByCandidacyId({
       candidacyId,

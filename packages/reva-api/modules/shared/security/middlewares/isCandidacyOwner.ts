@@ -15,6 +15,9 @@ export const isCandidacyOwner =
   ) => {
     log("isCandidacyOwner");
     const candidacyId = args.candidacyId ?? "";
+    if (!candidacyId) {
+      throw new Error("Candidacy ID is required in isCandidacyOwner");
+    }
     const keycloakId = context.auth.userInfo?.sub ?? "";
 
     const authorized = await canManageCandidacy({

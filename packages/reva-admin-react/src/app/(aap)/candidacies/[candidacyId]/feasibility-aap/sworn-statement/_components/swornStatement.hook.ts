@@ -6,9 +6,11 @@ import { useParams } from "next/navigation";
 export const createOrUpdateSwornStatement = graphql(`
   mutation createOrUpdateSwornStatement(
     $input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput!
+    $candidacyId: ID!
   ) {
     dematerialized_feasibility_file_createOrUpdateSwornStatement(
       input: $input
+      candidacyId: $candidacyId
     ) {
       id
     }

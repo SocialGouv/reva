@@ -118,7 +118,6 @@ export default function AttachmentsPage() {
       .filter((file) => Boolean(file?.[0]))
       .map((file) => file[0]);
     const input = {
-      candidacyId,
       idCard,
       equivalenceOrExemptionProof,
       trainingCertificate,
@@ -128,6 +127,7 @@ export default function AttachmentsPage() {
     try {
       const result = await urqlClient.mutation(createOrUpdateAttachments, {
         input,
+        candidacyId,
       });
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);

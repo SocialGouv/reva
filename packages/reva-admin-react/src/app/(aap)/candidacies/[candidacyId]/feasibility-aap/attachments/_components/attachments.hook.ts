@@ -6,8 +6,12 @@ import { useParams } from "next/navigation";
 export const createOrUpdateAttachments = graphql(`
   mutation createOrUpdateAttachments(
     $input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput!
+    $candidacyId: ID!
   ) {
-    dematerialized_feasibility_file_createOrUpdateAttachments(input: $input)
+    dematerialized_feasibility_file_createOrUpdateAttachments(
+      input: $input
+      candidacyId: $candidacyId
+    )
   }
 `);
 

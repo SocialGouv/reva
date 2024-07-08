@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { DematerializedFeasibilityFile } from "@prisma/client";
 import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
+import { getCompetenceBlocById } from "../referential/features/getCompetenceBlocById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
@@ -21,15 +22,14 @@ import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisi
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
+import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
+import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
 import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
-import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
-import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
-import { getCompetenceBlocById } from "../referential/features/getCompetenceBlocById";
 
 export const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -123,13 +123,15 @@ export const unsafeResolvers = {
     dematerialized_feasibility_file_createOrUpdateCertificationInfo: (
       _parent: unknown,
       params: {
+        candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
       },
-    ) => createOrUpdateCertificationInfo({ input: params.input }),
+    ) => createOrUpdateCertificationInfo(params),
     dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails:
       (
         _parent: unknown,
         params: {
+          candidacyId: string;
           input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput;
         },
       ) =>
@@ -139,42 +141,45 @@ export const unsafeResolvers = {
     dematerialized_feasibility_file_createOrUpdatePrerequisites: (
       _parent: unknown,
       params: {
+        candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput;
       },
-    ) => createOrUpdatePrerequisites({ ...params.input }),
+    ) => createOrUpdatePrerequisites(params),
 
     dematerialized_feasibility_file_createOrUpdateDecision: (
       _parent: unknown,
       params: {
+        candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
       },
-    ) => createOrUpdateAapDecision(params.input),
+    ) => createOrUpdateAapDecision(params),
     dematerialized_feasibility_file_createOrUpdateAttachments: (
       _parent: unknown,
-      {
-        input,
-      }: {
+      params: {
+        candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput;
       },
-    ) => createOrUpdateAttachments(input),
+    ) => createOrUpdateAttachments(params),
 
     dematerialized_feasibility_file_sendToCandidate: (
       _parent: unknown,
       {
         dematerializedFeasibilityFileId,
-      }: { dematerializedFeasibilityFileId: string },
+      }: { candidacyId: string; dematerializedFeasibilityFileId: string },
     ) => sendDFFToCandidate({ dematerializedFeasibilityFileId }),
 
     dematerialized_feasibility_file_createOrUpdateSwornStatement: (
       _parent: unknown,
       params: {
+        candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
       },
-    ) => createOrUpdateSwornStatement(params.input),
+    ) => createOrUpdateSwornStatement(params),
 
     dematerialized_feasibility_file_sendToCertificationAuthority: (
       _parent: unknown,
       params: {
+        candidacyId: string;
         dematerializedFeasibilityFileId: string;
         certificationAuthorityId: string;
       },

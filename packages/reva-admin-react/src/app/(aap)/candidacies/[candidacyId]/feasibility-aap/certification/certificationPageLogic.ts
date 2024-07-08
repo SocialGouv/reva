@@ -32,10 +32,12 @@ const getCandidacyById = graphql(`
 
 const updateFeasibilityCertificationMutation = graphql(`
   mutation updateFeasibilityCertificationMutation(
+    $candidacyId: ID!
     $input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
   ) {
     dematerialized_feasibility_file_createOrUpdateCertificationInfo(
       input: $input
+      candidacyId: $candidacyId
     ) {
       id
     }
@@ -61,7 +63,6 @@ export const useCertificationPageLogic = () => {
 
   const updateFeasibilityCertification = useMutation({
     mutationFn: (input: {
-      candidacyId: string;
       option?: string;
       firstForeignLanguage?: string;
       secondForeignLanguage?: string;
@@ -70,6 +71,7 @@ export const useCertificationPageLogic = () => {
     }) =>
       graphqlClient.request(updateFeasibilityCertificationMutation, {
         input,
+        candidacyId,
       }),
   });
 

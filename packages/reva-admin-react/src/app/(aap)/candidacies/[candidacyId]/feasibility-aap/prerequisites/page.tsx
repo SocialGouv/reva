@@ -81,7 +81,6 @@ export default function PrerequisitesPage() {
     }
     try {
       await createOrUpdatePrerequisitesMutation({
-        candidacyId,
         prerequisites: data.prerequisites as PrerequisiteInputType[],
       });
       successToast("Modifications enregistrées");
