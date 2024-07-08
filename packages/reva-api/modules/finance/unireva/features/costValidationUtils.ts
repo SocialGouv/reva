@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-export interface HoursAndCosts {
+interface HoursAndCosts {
   diagnosisHourCount: number;
   diagnosisCost: Decimal;
   postExamHourCount: number;

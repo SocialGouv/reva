@@ -16,13 +16,13 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompete
   }[];
 }
 
-export type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
+type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
 
 export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   prerequisites: { id?: string; label: string; state: PrerequisiteState }[];
 }
 
-export type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
+type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
 
 export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
   aapDecision: DFFileDecision;
@@ -46,4 +46,4 @@ export type DematerializedFeasibilityFileType =
   | "TRAINING_CERTIFICATE"
   | "ADDITIONAL";
 
-export type DFFileDecision = "FAVORABLE" | "UNFAVORABLE";
+type DFFileDecision = "FAVORABLE" | "UNFAVORABLE";

@@ -62,7 +62,7 @@ export const batchAapListUnifvae = async (batchKey: string) => {
   }
 };
 
-export async function generateCsvStream(itemsToSendIds: string[]) {
+async function generateCsvStream(itemsToSendIds: string[]) {
   const RECORDS_PER_FETCH = 10;
   let skip = 0;
   const stream = new Readable({

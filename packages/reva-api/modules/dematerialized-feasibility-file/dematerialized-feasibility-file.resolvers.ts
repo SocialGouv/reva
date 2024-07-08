@@ -31,7 +31,7 @@ import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSworn
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
 import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
 
-export const unsafeResolvers = {
+const unsafeResolvers = {
   DematerializedFeasibilityFile: {
     blocsDeCompetences: (
       {

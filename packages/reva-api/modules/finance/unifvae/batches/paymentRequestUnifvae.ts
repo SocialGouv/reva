@@ -69,7 +69,7 @@ export const batchPaymentRequestUnifvae = async (batchKey: string) => {
   }
 };
 
-export async function generatePaymentRequestUnifvaeBatchCsvStream(
+async function generatePaymentRequestUnifvaeBatchCsvStream(
   itemsToSendIds: string[],
 ) {
   const RECORDS_PER_FETCH = 10;

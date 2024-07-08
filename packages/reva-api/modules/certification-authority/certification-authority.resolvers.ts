@@ -25,7 +25,7 @@ import { updateCertificationAuthorityById } from "./features/updateCertification
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 
-export const unsafeResolvers = {
+const unsafeResolvers = {
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>
       getDepartmentsByCertificationAuthorityId({

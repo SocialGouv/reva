@@ -91,7 +91,7 @@ export const createOrUpdatePaymentRequestForCandidacy =
       );
   };
 
-export const validatePaymentRequest = (
+const validatePaymentRequest = (
   candidate: Candidate,
   pr: PaymentRequest,
   fr: FundingRequest | null,

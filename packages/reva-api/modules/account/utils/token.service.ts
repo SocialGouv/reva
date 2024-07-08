@@ -3,12 +3,13 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const TOKEN_LIFETIME_IN_SECONDS = 60;
 
-export type Payload = {
+type Payload = {
   [key: string]: string;
 };
 
 interface TokenServiceInterface {
   getToken(payload: Payload, lifetime?: number): string;
+
   getPayload(token: string): Payload | undefined;
 }
 

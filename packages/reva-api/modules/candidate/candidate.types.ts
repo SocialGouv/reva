@@ -37,7 +37,7 @@ export interface CandidateLoginInput {
   action: "login";
 }
 
-export interface CandidateConfirmEmailInput {
+interface CandidateConfirmEmailInput {
   previousEmail: string;
   newEmail: string;
   action: "confirmEmail";

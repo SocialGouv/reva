@@ -54,7 +54,7 @@ export const impersonateCandiate = async (
   return undefined;
 };
 
-export const impersonate = async (
+const impersonate = async (
   keycloakId: string,
   realm: string,
 ): Promise<

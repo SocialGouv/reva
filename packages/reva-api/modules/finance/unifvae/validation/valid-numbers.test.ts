@@ -16,7 +16,7 @@ const fundingRequestBase = {
   otherTrainingCost: new Decimal(1),
 };
 
-export const fundingRequestFullCertOkHours = {
+const fundingRequestFullCertOkHours = {
   ...fundingRequestBase,
   isPartialCertification: false,
   basicSkillsHourCount: new Decimal(1),

@@ -26,8 +26,6 @@ export const isAnyone = [allowed];
 
 export const isAdmin = [hasRole(["admin"])];
 
-export const isCertificationAuthority = [hasRole(["manage_feasibility"])];
-
 export const isAdminOrCertificationAuthority = [
   hasRole(["admin", "manage_feasibility"]),
 ];

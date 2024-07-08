@@ -74,7 +74,7 @@ const toDomainCandidacySummaries = (
   return candidacies.map(toDomainCandidacySummary);
 };
 
-export const getCandidaciesFromDb = async ({
+const getCandidaciesFromDb = async ({
   limit,
   offset,
   organismAccountKeycloakId,

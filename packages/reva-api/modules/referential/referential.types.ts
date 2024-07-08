@@ -17,7 +17,7 @@ export const CertificationStatus = {
 };
 
 export type CertificationStatus =
-  typeof CertificationStatus[keyof typeof CertificationStatus];
+  (typeof CertificationStatus)[keyof typeof CertificationStatus];
 
 export interface Certification {
   id: string;
@@ -83,13 +83,13 @@ export interface UpdateCertificationInput {
   expiresAt: Date;
 }
 
-export interface CompetenceInput {
+interface CompetenceInput {
   id?: string;
   index: number;
   label: string;
 }
 
-export interface CompetenceBlocInput {
+interface CompetenceBlocInput {
   id?: string;
   label: string;
   isOptional?: boolean;

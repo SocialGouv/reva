@@ -643,7 +643,7 @@ const deleteFeasibilityIDFile = async (feasibilityId: string) => {
   }
 };
 
-export const validateFeasibility = async ({
+const validateFeasibility = async ({
   feasibilityId,
   comment,
   hasRole,
@@ -768,7 +768,7 @@ export const validateFeasibility = async ({
   }
 };
 
-export const rejectFeasibility = async ({
+const rejectFeasibility = async ({
   feasibilityId,
   comment,
   hasRole,
@@ -883,7 +883,7 @@ export const rejectFeasibility = async ({
   }
 };
 
-export const markFeasibilityAsIncomplete = async ({
+const markFeasibilityAsIncomplete = async ({
   feasibilityId,
   comment,
   hasRole,
@@ -984,7 +984,7 @@ export const canDownloadFeasibilityFiles = async ({
   );
 };
 
-export const isCandidacyOwner = async (
+const isCandidacyOwner = async (
   keycloakId: string,
   candidacyId: string,
 ): Promise<boolean> => {
@@ -1005,7 +1005,7 @@ export const isCandidacyOwner = async (
   return true;
 };
 
-export const canManageFeasibility = async ({
+const canManageFeasibility = async ({
   hasRole,
   feasibility,
   keycloakId,

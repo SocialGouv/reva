@@ -5,13 +5,13 @@ export interface ExamInfo {
   actualExamDate: Date | null;
 }
 
-export type ExamResult =
+type ExamResult =
   | "SUCCESS"
   | "PARTIAL_SUCCESS"
   | "PARTIAL_CERTIFICATION_SUCCESS"
   | "FAILURE";
 
-export type JuryResult =
+type JuryResult =
   | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
   | "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION"
   | "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION"

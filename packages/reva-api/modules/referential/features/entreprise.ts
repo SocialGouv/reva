@@ -4,11 +4,11 @@ import { logger } from "../../shared/logger";
 
 const URL = "https://entreprise.api.gouv.fr/v3";
 
-export type EtablissemntFindParams = {
+type EtablissemntFindParams = {
   siret: string;
 };
 
-export type FormeJuridique = {
+type FormeJuridique = {
   code: string;
   libelle: string;
   legalStatus: LegalStatus;
@@ -16,18 +16,18 @@ export type FormeJuridique = {
 
 type PersonneType = "PERSONNE_PHYSIQUE" | "PERSONNE_MORALE";
 
-export type MandataireSocial = {
+type MandataireSocial = {
   type: PersonneType;
   nom: string;
   fonction: string;
 };
 
-export type Kbis = {
+type Kbis = {
   mandatairesSociaux: MandataireSocial[];
   formeJuridique: string;
 };
 
-export type Etablissement = {
+type Etablissement = {
   siret: string;
   siegeSocial: boolean;
   dateFermeture: Date | null;
