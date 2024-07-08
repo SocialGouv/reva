@@ -18,8 +18,12 @@ import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
 
 const schema = z.object({
-  feasibilityFile: z.object({ 0: z.instanceof(File) }),
-  idFile: z.object({ 0: z.instanceof(File) }),
+  feasibilityFile: z.object({
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+  }),
+  idFile: z.object({
+    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+  }),
   documentaryProofFile: z.object({ 0: z.instanceof(File).optional() }),
   certificateOfAttendanceFile: z.object({ 0: z.instanceof(File).optional() }),
   requirements: z
