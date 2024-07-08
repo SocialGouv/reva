@@ -23,8 +23,9 @@ const CommentFinancerVotreParcours = () => (
       <div className="py-6 flex flex-col gap-14">
         <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
         <p className="my-0 text-lg">
-          France VAE prend en charge l'<b>ensemble des frais de parcours</b>*
-          pour les candidats passant par la plateforme{" "}
+          Un financement peut être sollicité auprès de France VAE pour l'
+          <b>ensemble des frais de parcours</b>* pour les candidats passant par
+          la plateforme{" "}
           <Link href="https://vae.gouv.fr/" target="_blank">
             vae.gouv.fr
           </Link>
