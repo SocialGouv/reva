@@ -84,11 +84,13 @@ export const unsafeResolvers = {
     swornStatementFile: ({
       swornStatementFileId,
     }: {
-      swornStatementFileId: string;
+      swornStatementFileId?: string;
     }) =>
-      getSwornStatementFileWithFileNameAndUrlById({
-        swornStatementFileId,
-      }),
+      swornStatementFileId
+        ? getSwornStatementFileWithFileNameAndUrlById({
+            swornStatementFileId,
+          })
+        : null,
   },
   DFFCertificationCompetenceBloc: {
     certificationCompetenceBloc: ({
