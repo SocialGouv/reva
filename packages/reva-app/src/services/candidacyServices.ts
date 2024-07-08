@@ -643,7 +643,8 @@ const CREATE_OR_UPDATE_SWORN_STATEMENT = gql`
     $swornStatement: Upload!
   ) {
     dematerialized_feasibility_file_createOrUpdateSwornStatement(
-      input: { candidacyId: $candidacyId, swornStatement: $swornStatement }
+      candidacyId: $candidacyId
+      input: { swornStatement: $swornStatement }
     ) {
       id
     }

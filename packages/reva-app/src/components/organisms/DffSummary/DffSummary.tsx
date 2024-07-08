@@ -50,8 +50,6 @@ export function DffSummary(props: Props) {
 
   return (
     <div className="flex flex-col">
-      <h1>Dossier de faisabilité</h1>
-
       {sentToCandidateAt ? (
         <Alert
           description={`Dossier envoyé au certificateur le ${format(

@@ -1,11 +1,11 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import {
   CertificationCompetence,
   CertificationCompetenceBloc,
   CertificationCompetenceDetails,
   DffCertificationCompetenceDetailsState,
-} from "@/graphql/generated/graphql";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Badge from "@codegouvfr/react-dsfr/Badge";
+} from "graphql/generated/graphql";
 
 const getTextFromCompetence = ({
   competence,
