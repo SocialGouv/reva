@@ -48,7 +48,7 @@ import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId"
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
-import { getTrainings } from "./features/getTrainings";
+import { getTrainings, Training } from "./features/getTrainings";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
@@ -75,6 +75,7 @@ import {
   sendTrainingEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { Either } from "purify-ts";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -166,7 +167,7 @@ const unsafeResolvers = {
       }
     },
     getTrainings: async () => {
-      const result = await getTrainings({
+      const result: Either<FunctionalError, Training[]> = await getTrainings({
         getTrainings: trainingDb.getTrainings,
       })();
 
