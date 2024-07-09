@@ -70,19 +70,6 @@ export interface UpdateCertificationInput {
   expiresAt: Date;
 }
 
-export interface UpdateCertificationInput {
-  certificationId: string;
-  label: string;
-  level: number;
-  codeRncp: string;
-  typeDiplomeId: string;
-  certificationAuthorityTag: string;
-  domaineIds: string[];
-  conventionCollectiveIds: string[];
-  availableAt: Date;
-  expiresAt: Date;
-}
-
 interface CompetenceInput {
   id?: string;
   index: number;
