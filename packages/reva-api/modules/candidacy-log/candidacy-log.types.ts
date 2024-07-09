@@ -93,5 +93,3 @@ export type CandidacyLog = {
   createdAt: Date;
   userProfile: CandidacyLogUserProfile;
 } & CandidacyLogEventTypeAndDetails;
-
-export type CandidacyEventType = CandidacyLog["eventType"];
