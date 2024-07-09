@@ -56,8 +56,8 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
       ? [
           getNavItem({
-            text: "Modalités d'accompagnement",
-            href: `/agencies-settings/${organismId}/modalites-accompagnement`,
+            text: "Informations générales",
+            href: `/agencies-settings/${organismId}/informations-generales`,
           }),
         ]
       : [

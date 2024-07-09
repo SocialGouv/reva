@@ -7,22 +7,22 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useModalitesAccompagnementPage } from "./modalitesAccompagnement.hook";
+import { useInformationsGeneralesPage } from "./informationsGenerales.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { RemoteZone } from "@/graphql/generated/graphql";
 import {
-  ModalitesAccompagnementFormData,
-  modalitesAccompagnementFormSchema,
-} from "./modalitesAccompagnementFormSchema";
+  InformationsGeneralesFormData,
+  informationsGeneralesFormSchema,
+} from "./informationsGeneralesFormSchema";
 
-const ModalitesAccompagnementPage = () => {
+const InformationsGeneralesPage = () => {
   const {
     organism,
     getOrganismStatus,
     refetchOrganism,
     createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatuses,
-  } = useModalitesAccompagnementPage();
+  } = useInformationsGeneralesPage();
 
   const {
     register,
@@ -30,8 +30,8 @@ const ModalitesAccompagnementPage = () => {
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<ModalitesAccompagnementFormData>({
-    resolver: zodResolver(modalitesAccompagnementFormSchema),
+  } = useForm<InformationsGeneralesFormData>({
+    resolver: zodResolver(informationsGeneralesFormSchema),
   });
 
   const handleReset = useCallback(() => {
@@ -47,7 +47,7 @@ const ModalitesAccompagnementPage = () => {
       isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
       isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
       isRemote: organism?.isRemote,
-    } as ModalitesAccompagnementFormData);
+    } as InformationsGeneralesFormData);
   }, [organism, reset]);
 
   useEffect(() => handleReset(), [handleReset]);
@@ -109,7 +109,7 @@ const ModalitesAccompagnementPage = () => {
 
   return (
     <div className="flex flex-col">
-      <h1>Modalités d'accompagnement</h1>
+      <h1>Informations générales</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
         Renseignez vos informations et modalités d’accompagnement (présentiel ou
@@ -352,4 +352,4 @@ const ModalitesAccompagnementPage = () => {
   );
 };
 
-export default ModalitesAccompagnementPage;
+export default InformationsGeneralesPage;

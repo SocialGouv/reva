@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const modalitesAccompagnementFormSchema = z
+export const informationsGeneralesFormSchema = z
   .object({
     nom: z.string().min(1, "Merci de remplir ce champ"),
     telephone: z.string().optional().default(""),
@@ -116,6 +116,6 @@ export const modalitesAccompagnementFormSchema = z
     },
   );
 
-export type ModalitesAccompagnementFormData = z.infer<
-  typeof modalitesAccompagnementFormSchema
+export type InformationsGeneralesFormData = z.infer<
+  typeof informationsGeneralesFormSchema
 >;

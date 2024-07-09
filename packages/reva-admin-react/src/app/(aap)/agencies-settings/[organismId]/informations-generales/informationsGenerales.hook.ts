@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getOrganismQuery = graphql(`
-  query getOrganismForModalitesAccompagnementPage($organismId: ID!) {
+  query getOrganismForInformationsGeneralesPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
       isOnSite
@@ -54,7 +54,7 @@ const createOrUpdateInformationsCommercialesAndOnSiteAndRemoteStatusesMutation =
     }
   `);
 
-export const useModalitesAccompagnementPage = () => {
+export const useInformationsGeneralesPage = () => {
   const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
 
