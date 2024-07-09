@@ -11,7 +11,6 @@ const getOrganismQuery = graphql(`
       id
       isRemote
       remoteZones
-      isHeadAgency
       informationsCommerciales {
         id
         nom

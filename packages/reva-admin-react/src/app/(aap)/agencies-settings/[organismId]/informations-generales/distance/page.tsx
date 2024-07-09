@@ -15,7 +15,7 @@ import {
   informationsGeneralesRemoteFormSchema,
 } from "./informationsGeneralesRemoteFormSchema";
 
-const InformationsGeneralesPage = () => {
+const InformationsGeneralesRemotePage = () => {
   const {
     organism,
     getOrganismStatus,
@@ -232,4 +232,4 @@ const InformationsGeneralesPage = () => {
   );
 };
 
-export default InformationsGeneralesPage;
+export default InformationsGeneralesRemotePage;
