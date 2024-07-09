@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { sendAlertDeadlineExceededDVToOrganism } from "../../dossier-de-validation/emails";
 import { logger } from "../../shared/logger";
 
+// eslint-disable-next-line import/no-unused-modules
 export const sendReminderToOrganismForCandidateJuryDeadline = async () => {
   const today = startOfDay(new Date());
   const twoMonthsAgo = endOfDay(sub(today, { months: 2 })).toISOString();
