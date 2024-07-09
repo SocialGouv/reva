@@ -13,6 +13,7 @@ const agenciesInfoForConnectedUserQuery = graphql(`
     account_getAccountForConnectedUser {
       organism {
         id
+        isHeadAgency
       }
       maisonMereAAP {
         organisms {
@@ -52,12 +53,18 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     isActive: !!currentPathname.match(new RegExp(`^${href}.*$`)),
   });
 
-  const getOrganismNavItems = ({ organismId }: { organismId: string }) => [
+  const getOrganismNavItems = ({
+    organismId,
+    organismType,
+  }: {
+    organismId: string;
+    organismType: "REMOTE" | "ONSITE";
+  }) => [
     ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
       ? [
           getNavItem({
             text: "Informations générales",
-            href: `/agencies-settings/${organismId}/informations-generales`,
+            href: `/agencies-settings/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
           }),
         ]
       : [
@@ -101,6 +108,10 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
         ?.maisonMereAAP?.organisms || [];
 
+    const organism =
+      agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
+        ?.organism;
+
     if (isGestionnaireMaisonMereAAP) {
       items = [
         {
@@ -135,6 +146,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
                   },
                   items: getOrganismNavItems({
                     organismId: a.id,
+                    organismType: a.isHeadAgency ? "REMOTE" : "ONSITE",
                   }),
                 };
               }),
@@ -158,6 +170,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     } else if (isOrganism) {
       items = getOrganismNavItems({
         organismId,
+        organismType: organism?.isHeadAgency ? "REMOTE" : "ONSITE",
       });
     }
     return items;
