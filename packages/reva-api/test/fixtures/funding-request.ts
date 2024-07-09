@@ -4,7 +4,6 @@ import { Gender } from "../../modules/candidate/candidate.types";
 
 const dummyUuid = "123456789abc-1234-1234-12345678-1234";
 
-export const candidacyId = dummyUuid;
 const zero = new Decimal(0);
 
 const candidateInfo = {

@@ -1,4 +1,4 @@
-import { Candidacy, Gender } from "@prisma/client";
+import { Gender } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
 import { generateFundingRequestUnifvaeBatchCsvStream } from "./fundingRequestUnifvae";
@@ -25,10 +25,9 @@ const fundingRequestSample = {
   otherTraining: "",
   certificateSkills: "",
 };
-let myCandidacy1: Candidacy, myCandidacy2: Candidacy, myCandidacy3: Candidacy;
 
 beforeAll(async () => {
-  myCandidacy1 = await prismaClient.candidacy.create({
+  prismaClient.candidacy.create({
     data: {
       email: candidateEmail1,
       financeModule: "unifvae",
@@ -50,7 +49,7 @@ beforeAll(async () => {
       },
     },
   });
-  myCandidacy2 = await prismaClient.candidacy.create({
+  await prismaClient.candidacy.create({
     data: {
       email: candidateEmail2,
       financeModule: "unifvae",
@@ -72,7 +71,7 @@ beforeAll(async () => {
       },
     },
   });
-  myCandidacy3 = await prismaClient.candidacy.create({
+  await prismaClient.candidacy.create({
     data: {
       email: candidateEmail3,
       financeModule: "unifvae",
