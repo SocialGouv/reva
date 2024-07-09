@@ -27,7 +27,7 @@ const fundingRequestSample = {
 };
 
 beforeAll(async () => {
-  prismaClient.candidacy.create({
+  await prismaClient.candidacy.create({
     data: {
       email: candidateEmail1,
       financeModule: "unifvae",
