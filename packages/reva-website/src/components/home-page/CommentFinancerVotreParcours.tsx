@@ -43,7 +43,7 @@ const CommentFinancerVotreParcours = () => (
         <div className="flex gap-2">
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-blue.svg')]"
-            label="*Les frais administratifs et de jury"
+            label="*Les frais administratifs"
           />
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-pink.svg')]"
