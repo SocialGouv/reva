@@ -23,7 +23,7 @@
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
     "lint-staged": "lint-staged",
-    "lint-all": "prettier --write \"{domain,infra,modules}/**/*.{ts,md}\""
+    "lint-all": "prettier --write \"{infra,modules}/**/*.{ts,md}\""
   },
   "prisma": {
     "seed": "npx tsx prisma/seed/seed.ts"
@@ -83,7 +83,7 @@
     }
   },
   "lint-staged": {
-    "domain/**/*.{ts,md}": [
+    "modules/**/*.{ts,md}": [
       "prettier --write"
     ],
     "infra/**/*.{ts,md}": [
