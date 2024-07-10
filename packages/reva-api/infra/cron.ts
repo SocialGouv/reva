@@ -78,7 +78,7 @@ const aapListUnifvae = CronJob.from({
   timeZone: "Europe/Paris",
 });
 
-export async function runBatchIfActive({
+async function runBatchIfActive({
   batchKey,
   batchCallback,
 }: {

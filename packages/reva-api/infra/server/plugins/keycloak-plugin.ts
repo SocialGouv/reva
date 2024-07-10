@@ -15,7 +15,7 @@ declare module "fastify" {
   }
 }
 
-export interface KeycloakConnectUserInfo {
+interface KeycloakConnectUserInfo {
   realm_access?: {
     roles: KeyCloakUserRole[];
   };
