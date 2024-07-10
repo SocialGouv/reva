@@ -1,5 +1,6 @@
 dist
 .env
+.eslintcache
 .DS_Store
 .elm-pages
 elm-stuff
