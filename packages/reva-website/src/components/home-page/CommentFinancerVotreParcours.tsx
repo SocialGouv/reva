@@ -52,8 +52,8 @@ const CommentFinancerVotreParcours = () => (
         </div>
       </div>
       <p className="block lg:hidden my-0 text-lg">
-        *Les frais d'accompagnement, administratifs, de jury et les actions de
-        formations complémentaires de courte durée
+        *Les frais d'accompagnement, administratifs et les actions de formations
+        complémentaires de courte durée
       </p>
     </div>
   </section>
