@@ -27,6 +27,7 @@ import keycloakPlugin from "./plugins/keycloak-plugin";
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
+const CANDIDAT_ROUTE_PATH = "/candidat";
 
 type BuilAppOptions = FastifyServerOptions & {
   keycloakPluginMock?: FastifyPluginAsync<FastifyPluginOptions>;
@@ -83,6 +84,11 @@ export const buildApp = async (
     app.register(proxy, {
       upstream: "http://localhost:3003/admin2",
       prefix: ADMIN_REACT_ROUTE_PATH,
+    });
+
+    app.register(proxy, {
+      upstream: "http://localhost:3004/candidat",
+      prefix: CANDIDAT_ROUTE_PATH,
     });
 
     app.register(cors, {

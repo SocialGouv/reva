@@ -1,33 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/** The following styles must be imported in this specific order.
+    To work around the https://github.com/vercel/next.js/issues/16630 issue,
+    we use inlined imports via postcss and cascade layers to control ordering.
+    1-  Reset the styles for browser consistency with the tailwind base
+    2 - Add DSFR icon styles (it has to come before DSFR default styles)
+    3 - Set default DSFR styles to html tags
+    4 - Add Tailwind utilities and other classes that, coming last, can override DSFR styles
+**/
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer tw_base, dsfr_icons, dsfr, tw_components_utils;
+
+@import "@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css"
+  layer(dsfr_icons);
+@import "@codegouvfr/react-dsfr/dsfr/dsfr.min.css" layer(dsfr);
+
+@layer tw_base {
+  @tailwind base;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer tw_components_utils {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@layer components {
+  .bg-candidate {
+    background-image: url("../../public/bg-candidate.svg");
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-color: white;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+dl,
+dt,
+dd {
+  --xl-block: 0;
+  --ul-start: 0;
+  --li-bottom: 0;
 }

@@ -3,24 +3,42 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "predev": "only-include-used-icons && npm run graphql:generate",
+    "dev": "next dev -p 3004",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "graphql:generate": "graphql-codegen --config codegen.ts",
+    "graphql:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
+    "@codegouvfr/react-dsfr": "^1.9.21",
+    "@tanstack/react-query": "^5.49.2",
+    "@urql/exchange-auth": "^2.2.0",
+    "date-fns": "^3.6.0",
+    "graphql": "^16.9.0",
+    "graphql-request": "^7.1.0",
+    "keycloak-js": "^24.0.3",
+    "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.4"
+    "urql": "^4.1.0",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "4.2.5",
+    "@parcel/watcher": "^2.4.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.19",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4"
+    "eslint-config-next": "14.2.4",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8",
+    "prettier": "^3.3.2",
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.2.2"
   }
 }
