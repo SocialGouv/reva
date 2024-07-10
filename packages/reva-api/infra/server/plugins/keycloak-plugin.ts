@@ -15,7 +15,10 @@ declare module "fastify" {
   }
 }
 
-interface KeycloakConnectUserInfo {
+// Without this rule disabled here, we would have a compilation error
+// on buildGqlContext (infra/server/mercurius.ts)
+// eslint-disable-next-line import/no-unused-modules
+export interface KeycloakConnectUserInfo {
   realm_access?: {
     roles: KeyCloakUserRole[];
   };
