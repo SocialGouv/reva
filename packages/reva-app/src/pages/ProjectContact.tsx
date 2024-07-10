@@ -176,7 +176,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
                       </p>
                       <a
                         className="fr-link"
-                        href="https://airtable.com/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
+                        href="https://metabase.vae.gouv.fr/public/dashboard/e5a2b59d-26b2-443b-a874-d4561f1322eb"
                         target="_blank"
                         rel="noreferrer"
                         title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
