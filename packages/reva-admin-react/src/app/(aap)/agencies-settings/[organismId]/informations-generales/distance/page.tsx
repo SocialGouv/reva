@@ -108,7 +108,7 @@ const InformationsGeneralesRemotePage = () => {
       <p>
         Renseignez les informations qui seront affichées dans les résultats de
         recherche des candidats puis sélectionnez les zones où se dérouleront
-        vos accompagnements à remote.{" "}
+        vos accompagnements à distance.
       </p>
 
       {getOrganismStatus === "success" && (
@@ -125,7 +125,8 @@ const InformationsGeneralesRemotePage = () => {
               className="col-span-2 mb-4"
               options={[
                 {
-                  label: "Je ne souhaite pas faire d’accompagnement à remote.",
+                  label:
+                    "Je ne souhaite pas faire d’accompagnement à distance.",
                   nativeInputProps: { ...register("isNotRemote") },
                 },
               ]}
