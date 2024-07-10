@@ -23,6 +23,12 @@ const agenciesInfoForConnectedUserQuery = graphql(`
           informationsCommerciales {
             nom
           }
+          organismOnAccount {
+            id
+            email
+            firstname
+            lastname
+          }
         }
       }
     }
@@ -113,59 +119,85 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         ?.organism;
 
     if (isGestionnaireMaisonMereAAP) {
-      items = [
-        {
-          text: "Agences",
-          expandedByDefault: true,
-          linkProps: {
-            href: "#",
-            className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
-          },
-          items: [
-            ...agencies
-              .sort((a, b) => {
-                if (a.isHeadAgency) return -1;
-                if (b.isHeadAgency) return 1;
-                const aName = a.informationsCommerciales?.nom || a.label;
-                const bName = b.informationsCommerciales?.nom || b.label;
-                return aName.localeCompare(bName);
-              })
-              .map((a) => {
-                return {
-                  text: `${a.informationsCommerciales?.nom || a.label} ${
-                    a.isHeadAgency ? "(Agence administratrice)" : ""
-                  }`,
-                  expandedByDefault: a.isHeadAgency,
-                  linkProps: {
-                    href: "#",
-                    className: `fr-sidemenu__btn bg-transparent font-bold ${
-                      isOrgansismSelected({ organismId: a.id })
-                        ? selectedItemStyle
-                        : ""
-                    } `,
-                  },
-                  items: getOrganismNavItems({
-                    organismId: a.id,
-                    organismType: a.isHeadAgency ? "REMOTE" : "ONSITE",
-                  }),
-                };
-              }),
-            {
-              isActive: false,
-              linkProps: {
-                href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
-                  ? "/agencies-settings/add-agency/"
-                  : "/agencies-settings/add-agence/",
-                target: "_self",
-              },
-              text: (
-                <Button size="small" priority="secondary">
-                  Ajouter une agence
-                </Button>
-              ),
-            },
-          ],
+      const agenciesMenu = {
+        text: "Agences",
+        expandedByDefault: true,
+        linkProps: {
+          href: "#",
+          className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
         },
+        items: [
+          ...agencies
+            .sort((a, b) => {
+              if (a.isHeadAgency) return -1;
+              if (b.isHeadAgency) return 1;
+              const aName = a.informationsCommerciales?.nom || a.label;
+              const bName = b.informationsCommerciales?.nom || b.label;
+              return aName.localeCompare(bName);
+            })
+            .map((a) => {
+              return {
+                text: `${a.informationsCommerciales?.nom || a.label} ${
+                  a.isHeadAgency ? "(Agence administratrice)" : ""
+                }`,
+                expandedByDefault: a.isHeadAgency,
+                linkProps: {
+                  href: "#",
+                  className: `fr-sidemenu__btn bg-transparent font-bold ${
+                    isOrgansismSelected({ organismId: a.id })
+                      ? selectedItemStyle
+                      : ""
+                  } `,
+                },
+                items: getOrganismNavItems({
+                  organismId: a.id,
+                  organismType: a.isHeadAgency ? "REMOTE" : "ONSITE",
+                }),
+              };
+            }),
+          {
+            isActive: false,
+            linkProps: {
+              href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+                ? "/agencies-settings/add-agency/"
+                : "/agencies-settings/add-agence/",
+              target: "_self",
+            },
+            text: (
+              <Button size="small" priority="secondary">
+                Ajouter une agence
+              </Button>
+            ),
+          },
+        ],
+      };
+
+      const userAccountsMenu = {
+        text: "Comptes collaborateurs",
+        expandedByDefault: true,
+        linkProps: {
+          href: "#",
+          className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
+        },
+        items: [
+          ...agencies
+            .map((a) => a.organismOnAccount)
+            .map((o) => {
+              return {
+                text: `${o?.firstname}  ${o?.lastname}`,
+                linkProps: {
+                  href: "#",
+                },
+              };
+            }),
+        ],
+      };
+
+      items = [
+        agenciesMenu,
+        ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+          ? [userAccountsMenu]
+          : []),
       ];
     } else if (isOrganism) {
       items = getOrganismNavItems({
