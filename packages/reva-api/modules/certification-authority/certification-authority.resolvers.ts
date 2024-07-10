@@ -40,16 +40,10 @@ const unsafeResolvers = {
     certificationAuthority: (
       parent: CertificationAuthorityLocalAccount,
       _: unknown,
-      context: GraphqlContext,
     ) =>
-      getCertificationAuthorityById(
-        {
-          hasRole: context.auth.hasRole,
-        },
-        {
-          id: parent.certificationAuthorityId,
-        },
-      ),
+      getCertificationAuthorityById({
+        id: parent.certificationAuthorityId,
+      }),
   },
   Certification: {
     certificationAuthorities: ({
@@ -197,12 +191,7 @@ const unsafeResolvers = {
           );
         }
 
-        return getCertificationAuthorityById(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params,
-        );
+        return getCertificationAuthorityById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

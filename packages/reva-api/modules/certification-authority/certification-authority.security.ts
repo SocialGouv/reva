@@ -2,6 +2,7 @@ import {
   defaultSecurity,
   isAdmin,
   isAdminOrCertificationAuthority,
+  isAdminOrManager,
   isAnyone,
 } from "../shared/security/presets";
 
@@ -9,7 +10,7 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
   "Query.*": defaultSecurity, // forbidden
 
-  "Query.certification_authority_getCertificationAuthority": isAnyone, //security handled in resolver
+  "Query.certification_authority_getCertificationAuthority": isAdminOrManager,
   "Query.certification_authority_getCertificationAuthorities": isAdmin,
   "Query.certification_authority_searchCertificationAuthoritiesAndLocalAccounts":
     isAdmin,

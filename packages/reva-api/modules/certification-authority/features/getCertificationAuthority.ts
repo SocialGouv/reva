@@ -1,19 +1,9 @@
 import { prismaClient } from "../../../prisma/client";
 import { CertificationAuthority } from "../certification-authority.types";
 
-export const getCertificationAuthorityById = async (
-  context: {
-    hasRole: (role: string) => boolean;
-  },
-  params: {
-    id: string;
-  },
-): Promise<CertificationAuthority> => {
-  const { hasRole } = context;
-  if (!hasRole("admin")) {
-    throw new Error("Utilisateur non autorisé");
-  }
-
+export const getCertificationAuthorityById = async (params: {
+  id: string;
+}): Promise<CertificationAuthority> => {
   const { id } = params;
 
   const certificationAuthority =
