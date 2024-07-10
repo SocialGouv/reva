@@ -130,6 +130,7 @@ export const validateSubscriptionRequest = async ({
       cguAcceptedAt: null,
       managerFirstname: subscriptionRequest.managerFirstname,
       managerLastname: subscriptionRequest.managerLastname,
+      showAccountSetup: true,
     },
     ccnIds: [],
     maisonMereAAPOnDepartements: allDepartements.map((d) => ({

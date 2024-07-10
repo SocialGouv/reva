@@ -98,6 +98,7 @@ type MaisonMereAAP {
   cgu: MaisonMereAAPCGU!
   managerFirstname: String
   managerLastname: String
+  showAccountSetup: Boolean
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -285,6 +286,11 @@ input UpdateOrganismAccountInput {
   accountEmail: String!
 }
 
+input UpdateMaisonMereAccountSetupInput {
+  maisonMereAAPId: ID!
+  showAccountSetup: Boolean!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -330,4 +336,5 @@ type Mutation {
 
   organism_createAgency(data: CreateAgencyInput!): String!
   organism_acceptCgu: Boolean!
+  organism_updateMaisonMereAccountSetup(data: UpdateMaisonMereAccountSetupInput!): MaisonMereAAP
 }

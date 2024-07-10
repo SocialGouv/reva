@@ -1323,6 +1323,7 @@ model MaisonMereAAP {
   cguAcceptedAt                       DateTime?                             @map("cgu_accepted_at")
   managerFirstname                    String?                               @map("manager_firstname")
   managerLastname                     String?                               @map("manager_lastname")
+  showAccountSetup                    Boolean                               @default(false) @map("show_account_setup")
 
   gestionnaire                                        Account                                             @relation(fields: [gestionnaireAccountId], references: [id])
   gestionnaireAccountId                               String                                              @map("gestionnaire_account_id") @db.Uuid

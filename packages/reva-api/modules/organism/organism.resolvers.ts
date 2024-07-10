@@ -67,6 +67,7 @@ import { createAgency } from "./features/createAgency";
 import { acceptCgu } from "./features/acceptCgu";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
+import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
 
 const unsafeResolvers = {
   Account: {
@@ -577,6 +578,29 @@ const unsafeResolvers = {
 
       return updateOrganismOnSiteAndRemoteStatus(params);
     },
+    organism_updateMaisonMereAccountSetup: async (
+      _parent: unknown,
+      params: {
+        data: {
+          maisonMereAAPId: string;
+          showAccountSetup: boolean;
+        };
+      },
+      context: GraphqlContext,
+    ) => {
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      const isGestionaire = context.auth.hasRole("gestion_maison_mere_aap")
+      const isAdmin = context.auth.hasRole("admin")
+
+      if (!isGestionaire && !isAdmin) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
+      return updateMaisonMereAccountSetup(params.data);
+    }
   },
   Query: {
     organism_getOrganism: async (
