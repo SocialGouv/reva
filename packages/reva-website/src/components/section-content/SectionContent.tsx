@@ -6,14 +6,6 @@ export const SectionHeader = ({ children }: { children: React.ReactNode }) => (
   </h1>
 );
 
-export const SectionSubHeader = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => <p className={`font-bold lg:text-2xl ${className}`}>{children}</p>;
-
 export const SectionParagraph = ({
   className,
   children,
@@ -28,16 +20,6 @@ export const SectionParagraph = ({
   >
     {children}
   </p>
-);
-
-export const SubSectionHeader = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <h2 className={`text-white text-2xl mt-3 ${className || ""}`}>{children}</h2>
 );
 
 export const Hexagon = ({ className }: { className: string }) => (
