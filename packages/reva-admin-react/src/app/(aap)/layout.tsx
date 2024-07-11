@@ -15,14 +15,6 @@ const accountWithMaisonMereQuery = graphql(`
       maisonMereAAP {
         showAccountSetup
         id
-        organisms {
-          id
-          isHeadAgency
-          label
-          informationsCommerciales {
-            nom
-          }
-        }
       }
     }
   }
