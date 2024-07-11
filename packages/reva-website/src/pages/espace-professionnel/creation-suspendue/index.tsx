@@ -1,6 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { SectionParagraph } from "@/components/section-content/SectionContent";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import Image from "next/image";
 

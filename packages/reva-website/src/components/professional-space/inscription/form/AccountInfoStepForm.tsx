@@ -5,7 +5,6 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Notice from "@codegouvfr/react-dsfr/Notice";
-import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";

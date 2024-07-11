@@ -2,10 +2,7 @@ import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBack
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import { Hexagon } from "@/components/section-content/SectionContent";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
-import Image from "next/image";
 import * as React from "react";
 
 const ProfessionalSpaceInscriptionConfirmationPage = () => {

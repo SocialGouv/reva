@@ -4,9 +4,7 @@ import {
   Hexagon,
   SectionHeader,
   SectionParagraph,
-  SectionSubHeader,
 } from "@/components/section-content/SectionContent";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
