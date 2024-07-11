@@ -6,7 +6,7 @@
     "predev": "only-include-used-icons && npm run graphql:generate",
     "dev": "next dev -p 3004",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3004",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch"

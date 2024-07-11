@@ -40,9 +40,11 @@ export const OrganismCard = ({
         website={mandatoryInfo.website ?? undefined}
       />
       <div className="flex flex-col gap-y-3">
-        <OrganismCardInformationsCommerciales
-          informationsCommerciales={organism.informationsCommerciales}
-        />
+        {organism.informationsCommerciales && (
+          <OrganismCardInformationsCommerciales
+            informationsCommerciales={organism.informationsCommerciales}
+          />
+        )}
         <OrganismCardDescription
           email={mandatoryInfo.email}
           phone={mandatoryInfo.phone ?? null}
