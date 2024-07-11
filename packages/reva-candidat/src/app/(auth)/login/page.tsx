@@ -10,6 +10,8 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
+import { Loader } from "@/components/legacy/atoms/Icons";
+
 import { useLogin } from "./login.hooks";
 
 export default function Login() {
@@ -38,16 +40,16 @@ export default function Login() {
 
   const loginWithToken = useCallback(
     async (token: string) => {
-      if (login.isPending) return;
-
       try {
         const response = await login.mutateAsync({ token });
         if (response) {
           resetKeycloakInstance(response.candidate_login.tokens);
         }
-      } catch (error) {}
+      } catch (error) {
+        router.push("/login");
+      }
     },
-    [login, resetKeycloakInstance],
+    [login, resetKeycloakInstance, router],
   );
 
   useEffect(() => {
@@ -60,6 +62,20 @@ export default function Login() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (token) {
+    return (
+      <PageLayout
+        data-test="project-home-loading"
+        className="flex-1 flex flex-col items-center justify-center"
+      >
+        <h2>Connexion en cours</h2>
+        <div className="w-8">
+          <Loader />
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Connexion" data-test="login-home">

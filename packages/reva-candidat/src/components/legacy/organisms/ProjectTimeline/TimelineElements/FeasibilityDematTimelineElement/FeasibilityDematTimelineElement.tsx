@@ -5,16 +5,12 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const FeasibilityDematTimelineElement = () => {
   const router = useRouter();
 
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacy } = useCandidacy();
 
   const { dematerializedFeasibilityFile: feasibility } = candidacy;
 

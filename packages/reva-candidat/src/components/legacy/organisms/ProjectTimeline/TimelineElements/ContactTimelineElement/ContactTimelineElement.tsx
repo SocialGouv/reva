@@ -3,16 +3,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const ContactTimelineElement = () => {
   const router = useRouter();
 
-  const { candidate } = useCandidateWithCandidacy();
-
-  if (!candidate) {
-    return null;
-  }
+  const { candidate } = useCandidacy();
 
   return (
     <TimelineElement title="Vos informations de contact" status="editable">

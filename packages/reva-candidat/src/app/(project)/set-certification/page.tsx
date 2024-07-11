@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import {
   redirect,
   usePathname,
@@ -13,7 +13,8 @@ import { Notice } from "@codegouvfr/react-dsfr/Notice";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import {
@@ -25,12 +26,10 @@ import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { Results } from "@/components/legacy/organisms/Results";
 import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 import { useSetCertification } from "./set-certification.hooks";
 
 export default function SetCertification() {
-  const { isFeatureActive } = useFeatureflipping();
+  const { isFeatureActive } = useFeatureFlipping();
 
   const financementHorsPlateformeFeatureActive = isFeatureActive(
     "FINANCEMENT_HORS_PLATEFORME",
@@ -54,16 +53,11 @@ export default function SetCertification() {
     return params;
   }, [searchParams]);
 
-  const { canEditCandidacy, candidate, candidacy, refetch } =
-    useCandidateWithCandidacy();
+  const { canEditCandidacy, candidate, refetch } = useCandidacy();
 
-  const [department, setDepartment] = useState<DepartmentType | undefined>();
-
-  useEffect(() => {
-    if (candidate) {
-      setDepartment(candidate.department);
-    }
-  }, [candidate]);
+  const [department, setDepartment] = useState<DepartmentType | undefined>(
+    candidate.department,
+  );
 
   const { searchCertificationsForCandidate, updateCertification } =
     useSetCertification({
@@ -76,9 +70,7 @@ export default function SetCertification() {
     string | undefined
   >();
 
-  if (!candidate) {
-    return null;
-  } else if (candidacy && !canEditCandidacy) {
+  if (!canEditCandidacy) {
     redirect("/");
   }
 

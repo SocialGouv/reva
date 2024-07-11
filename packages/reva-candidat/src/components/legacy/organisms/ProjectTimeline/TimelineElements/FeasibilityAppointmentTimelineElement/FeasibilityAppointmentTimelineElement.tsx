@@ -5,14 +5,10 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const FeasibilityAppointmentTimelineElement = () => {
-  const { candidacyStatus, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacyStatus, candidacy } = useCandidacy();
 
   let status: TimeLineElementStatus = "active";
   if (candidacyStatus == "PROJET") {

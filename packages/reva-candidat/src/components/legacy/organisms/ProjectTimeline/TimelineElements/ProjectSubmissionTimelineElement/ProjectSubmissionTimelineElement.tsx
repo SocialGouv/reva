@@ -6,24 +6,20 @@ import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const ProjectSubmissionTimelineElement = () => {
   const router = useRouter();
 
-  const { isFeatureActive } = useFeatureflipping();
-
-  const { candidacyAlreadySubmitted, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { isFeatureActive } = useFeatureFlipping();
 
   const candidacyCreationDisabled = isFeatureActive(
     "CANDIDACY_CREATION_DISABLED",
   );
+
+  const { candidacyAlreadySubmitted, candidacy } = useCandidacy();
 
   const { organism } = candidacy;
 

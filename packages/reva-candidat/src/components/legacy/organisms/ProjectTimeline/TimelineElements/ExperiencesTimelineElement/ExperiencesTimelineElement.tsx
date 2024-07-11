@@ -1,4 +1,4 @@
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
@@ -9,16 +9,12 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const ExperiencesTimelineElement = () => {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { canEditCandidacy, candidacy } = useCandidacy();
 
   const { goals, experiences } = candidacy;
 

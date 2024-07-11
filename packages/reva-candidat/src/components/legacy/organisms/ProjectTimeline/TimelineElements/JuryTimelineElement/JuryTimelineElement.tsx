@@ -6,14 +6,10 @@ import { JuryResult } from "@/graphql/generated/graphql";
 import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/AuthenticatedLink";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const JuryTimelineElement = () => {
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacy } = useCandidacy();
 
   const { jury, activeDossierDeValidation: dossierDeValidation } = candidacy;
 

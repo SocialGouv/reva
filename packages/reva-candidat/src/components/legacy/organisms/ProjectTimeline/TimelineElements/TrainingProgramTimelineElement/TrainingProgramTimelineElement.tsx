@@ -7,16 +7,12 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const TrainingProgramTimelineElement = () => {
   const router = useRouter();
 
-  const { candidacyStatus, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacyStatus } = useCandidacy();
 
   let status: TimeLineElementStatus = "readonly";
   if (candidacyStatus == "PARCOURS_ENVOYE") {

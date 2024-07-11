@@ -1,13 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { isBefore } from "date-fns";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
+import { PageLayout } from "@/layouts/page.layout";
+
+import { useKeycloakContext } from "../auth/keycloakContext";
+
+import { Loader } from "../legacy/atoms/Icons";
+
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacy {
     candidate_getCandidateWithCandidacy {
+      id
       firstname
       firstname2
       firstname3
@@ -188,7 +198,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   }
 `);
 
-export const useCandidateWithCandidacy = () => {
+const useCandidateWithCandidacy = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidateWithCandidacy = useQuery({
@@ -196,14 +206,73 @@ export const useCandidateWithCandidacy = () => {
     queryFn: () => graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY),
   });
 
-  const refetch = candidateWithCandidacy.refetch;
+  return {
+    candidateWithCandidacy,
+  };
+};
 
-  const candidate =
-    candidateWithCandidacy.data?.candidate_getCandidateWithCandidacy;
+const UNAUTHENTICATED_PATHS = [
+  "/registration-confirmation",
+  "/registration",
+  "/login-confirmation",
+  "/login",
+  "/logout-confirmation",
+];
 
-  const candidacy = candidate?.candidacy;
+export const CandidacyProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { authenticated } = useKeycloakContext();
+  const { candidateWithCandidacy } = useCandidateWithCandidacy();
 
-  const candidacyStatus = candidacy?.candidacyStatuses.find(
+  const isAuthenticatedPath =
+    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) == -1;
+
+  useEffect(() => {
+    if (authenticated && !isAuthenticatedPath) {
+      router.push("/");
+    } else if (!authenticated && isAuthenticatedPath) {
+      router.push("/login");
+    }
+  }, [authenticated, isAuthenticatedPath, router]);
+
+  if (
+    (authenticated && !isAuthenticatedPath) ||
+    (!authenticated && isAuthenticatedPath) ||
+    (authenticated && isAuthenticatedPath && !candidateWithCandidacy.data)
+  ) {
+    return (
+      <PageLayout
+        data-test="project-home-loading"
+        className="flex-1 flex flex-col items-center justify-center"
+      >
+        <div className="w-8">
+          <Loader />
+        </div>
+      </PageLayout>
+    );
+  }
+
+  return children;
+};
+
+export const useCandidacy = () => {
+  const {
+    candidateWithCandidacy: { data, refetch },
+  } = useCandidateWithCandidacy();
+
+  const candidate = data?.candidate_getCandidateWithCandidacy;
+  if (!candidate) {
+    throw new Error(`useCandidacy must be used within a CandidacyProvider`);
+  }
+
+  const candidacy = candidate.candidacy;
+
+  const candidacyStatus = candidacy.candidacyStatuses.find(
     (status) => status.isActive,
   )?.status;
 
@@ -226,9 +295,9 @@ export const useCandidateWithCandidacy = () => {
     refetch,
     candidate,
     candidacy,
-    candidacyStatus,
+    isTrainingConfirmed,
     canEditCandidacy,
     candidacyAlreadySubmitted,
-    isTrainingConfirmed,
+    candidacyStatus,
   };
 };

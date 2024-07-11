@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -13,56 +13,42 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 import { useUpdateExperience } from "./update-experience.hooks";
+
+const durationOptions: { label: string; value: Duration }[] = [
+  { label: "Moins d'un an", value: "lessThanOneYear" },
+  { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
+  { label: "Plus de 3 ans", value: "moreThanThreeYears" },
+  { label: "Plus de 5 ans", value: "moreThanFiveYears" },
+  { label: "Plus de 10 ans", value: "moreThanTenYears" },
+];
 
 export default function UpdateExperience() {
   const router = useRouter();
   const params = useParams<{ experienceId: string }>();
+
   const { experienceId } = params;
 
-  const { canEditCandidacy, candidacy, refetch } = useCandidateWithCandidacy();
+  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
+
   const { updateExperience } = useUpdateExperience();
 
-  const [title, setTitle] = useState<string>("");
-  const [startedAt, setStartedAt] = useState<number>(
-    new Date("2020-01-31").getTime(),
+  const experience = candidacy.experiences.find(
+    (experience) => experience.id == experienceId,
   );
 
-  const durationOptions: { label: string; value: Duration }[] = [
-    { label: "Moins d'un an", value: "lessThanOneYear" },
-    { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
-    { label: "Plus de 3 ans", value: "moreThanThreeYears" },
-    { label: "Plus de 5 ans", value: "moreThanFiveYears" },
-    { label: "Plus de 10 ans", value: "moreThanTenYears" },
-  ];
-
-  const [duration, setDuration] = useState<Duration | undefined>();
-  const [description, setDescription] = useState<string>("");
-
-  const experience = useMemo(() => {
-    const experience = candidacy?.experiences.find(
-      (experience) => experience.id == experienceId,
-    );
-
-    return experience;
-  }, [candidacy?.experiences, experienceId]);
-
-  useEffect(() => {
-    if (experience) {
-      if (experience) {
-        setTitle(experience.title);
-        setStartedAt(experience.startedAt);
-        setDuration(experience.duration);
-        setDescription(experience.description);
-      }
-    }
-  }, [experience]);
-
-  if (!candidacy) {
-    return null;
-  }
+  const [title, setTitle] = useState<string>(experience?.title || "");
+  const [startedAt, setStartedAt] = useState<number>(
+    experience?.startedAt || new Date("2020-01-31").getTime(),
+  );
+  const [duration, setDuration] = useState<Duration | undefined>(
+    experience?.duration,
+  );
+  const [description, setDescription] = useState<string>(
+    experience?.description || "",
+  );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

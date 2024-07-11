@@ -5,14 +5,10 @@ import { PageLayout } from "@/layouts/page.layout";
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/ProjectTimeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export default function Home() {
-  const { candidate } = useCandidateWithCandidacy();
-
-  if (!candidate) {
-    return null;
-  }
+  const { candidate } = useCandidacy();
 
   return (
     <PageLayout data-test={`project-home-ready`}>

@@ -1,3 +1,5 @@
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
+
 import { Timeline } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -14,8 +16,6 @@ import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/Jury
 import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 export const ProjectTimeline = ({
   className,
   "data-test": dataTest,
@@ -23,11 +23,7 @@ export const ProjectTimeline = ({
   className?: string;
   "data-test"?: string;
 }) => {
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return;
-  }
+  const { candidacy } = useCandidacy();
 
   const { feasibilityFormat, feasibility, jury } = candidacy;
   const REJECTED = feasibility?.decision == "REJECTED";

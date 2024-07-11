@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useReducer } from "react";
+import { ChangeEvent, useReducer } from "react";
 import { useRouter } from "next/navigation";
 
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -8,9 +8,8 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 import { useValidateTraining } from "./validate-training.hooks";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 type PageAction = {
   type: "changeCondition";
@@ -19,8 +18,7 @@ type PageAction = {
       | "conditionOne"
       | "conditionTwo"
       | "conditionThree"
-      | "conditionFour"
-      | "candidacyFundedByFranceVae";
+      | "conditionFour";
     checked: boolean;
   };
 };
@@ -51,9 +49,6 @@ const pageReducer = (state: PageState, action: PageAction) => {
         case "conditionFour":
           newState.conditionFourChecked = action.payload.checked;
           break;
-        case "candidacyFundedByFranceVae":
-          newState.candidacyFundedByFranceVae = action.payload.checked;
-          break;
       }
       newState.allConditionsChecked = newState.candidacyFundedByFranceVae
         ? newState.conditionOneChecked &&
@@ -71,8 +66,8 @@ const pageReducer = (state: PageState, action: PageAction) => {
 export default function ValidateTraining() {
   const router = useRouter();
 
-  const { candidacy, refetch, isTrainingConfirmed } =
-    useCandidateWithCandidacy();
+  const { candidacy, refetch, isTrainingConfirmed } = useCandidacy();
+
   const { confirmTrainingForm } = useValidateTraining();
 
   const [pageState, pageDispatch] = useReducer(pageReducer, {
@@ -81,22 +76,8 @@ export default function ValidateTraining() {
     conditionThreeChecked: false,
     conditionFourChecked: false,
     allConditionsChecked: false,
-    candidacyFundedByFranceVae: false,
+    candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
   });
-
-  useEffect(() => {
-    pageDispatch({
-      type: "changeCondition",
-      payload: {
-        condition: "candidacyFundedByFranceVae",
-        checked: candidacy?.financeModule !== "hors_plateforme",
-      },
-    });
-  }, [candidacy?.financeModule]);
-
-  if (!candidacy) {
-    return null;
-  }
 
   const {
     additionalHourCount,

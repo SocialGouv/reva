@@ -1,13 +1,9 @@
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const DossierDeValidationTimelineElement = () => {
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacy } = useCandidacy();
 
   const { activeDossierDeValidation: dossierDeValidation, feasibility } =
     candidacy;

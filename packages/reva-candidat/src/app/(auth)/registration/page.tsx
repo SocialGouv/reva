@@ -9,7 +9,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { SelectDepartment } from "@/components/select-department/SelectDepartment.component";
@@ -17,7 +17,7 @@ import { SelectDepartment } from "@/components/select-department/SelectDepartmen
 import { useRegistration } from "./registration.hooks";
 
 export default function Registration() {
-  const { isFeatureActive } = useFeatureflipping();
+  const { isFeatureActive } = useFeatureFlipping();
 
   const isCandidacyCreationDisabled = isFeatureActive(
     "CANDIDACY_CREATION_DISABLED",

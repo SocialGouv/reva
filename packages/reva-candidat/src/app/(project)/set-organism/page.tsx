@@ -9,11 +9,11 @@ import { Organism } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
+
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
-
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
 
 import { useSetOrganism } from "./set-organism.hooks";
 
@@ -28,8 +28,7 @@ interface State {
 export default function SetOrganism() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidate, candidacy, refetch } =
-    useCandidateWithCandidacy();
+  const { canEditCandidacy, candidate, candidacy, refetch } = useCandidacy();
 
   const [organismSearchText, setOrganismSearchText] = useState<string>("");
   const [organismSearchOnsite, setOrganismSearchOnsite] =
@@ -42,7 +41,7 @@ export default function SetOrganism() {
   const [organismSearchPmr, setOrganismSearchPmr] = useState<boolean>(false);
 
   const { getRandomOrganismsForCandidacy, selectOrganism } = useSetOrganism({
-    candidacyId: candidate?.candidacy.id || "",
+    candidacyId: candidacy.id || "",
     departmentId: candidate?.department.id || "",
     searchText: organismSearchText,
     searchFilter: {
@@ -65,6 +64,10 @@ export default function SetOrganism() {
     hasMore: false,
   });
 
+  if (!canEditCandidacy) {
+    redirect("/");
+  }
+
   const { offset: stateOffset } = state;
 
   const loadOrganisms = useCallback(
@@ -83,12 +86,6 @@ export default function SetOrganism() {
   useEffect(() => {
     loadOrganisms(RECORDS_PER_PAGE);
   }, [loadOrganisms]);
-
-  if (!candidate) {
-    return null;
-  } else if (candidacy && !canEditCandidacy) {
-    redirect("/");
-  }
 
   const submitOrganism = async (organismId: string) => {
     try {

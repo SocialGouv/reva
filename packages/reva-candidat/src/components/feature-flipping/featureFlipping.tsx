@@ -33,7 +33,7 @@ const useFeatureFlippingStore = create<{
     get().activeFeatures.includes(featureName),
 }));
 
-export const useFeatureflipping = () => {
+export const useFeatureFlipping = () => {
   const { activeFeatures, isFeatureActive, init } = useFeatureFlippingStore();
   const { graphqlClient } = useGraphQlClient();
   const { authenticated } = useKeycloakContext();

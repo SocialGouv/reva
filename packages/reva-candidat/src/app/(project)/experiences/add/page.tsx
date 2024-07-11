@@ -11,16 +11,25 @@ import { Duration } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
+
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 import { useAddExperience } from "./add-experience.hooks";
+
+const durationOptions: { label: string; value: Duration }[] = [
+  { label: "Moins d'un an", value: "lessThanOneYear" },
+  { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
+  { label: "Plus de 3 ans", value: "moreThanThreeYears" },
+  { label: "Plus de 5 ans", value: "moreThanFiveYears" },
+  { label: "Plus de 10 ans", value: "moreThanTenYears" },
+];
 
 export default function AddExperience() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy, refetch } = useCandidateWithCandidacy();
+  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
+
   const { addExperience } = useAddExperience();
 
   const [title, setTitle] = useState<string>("");
@@ -28,20 +37,8 @@ export default function AddExperience() {
     new Date("2020-01-31").getTime(),
   );
 
-  const durationOptions: { label: string; value: Duration }[] = [
-    { label: "Moins d'un an", value: "lessThanOneYear" },
-    { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
-    { label: "Plus de 3 ans", value: "moreThanThreeYears" },
-    { label: "Plus de 5 ans", value: "moreThanFiveYears" },
-    { label: "Plus de 10 ans", value: "moreThanTenYears" },
-  ];
-
   const [duration, setDuration] = useState<Duration | undefined>();
   const [description, setDescription] = useState<string>("");
-
-  if (!candidacy) {
-    return null;
-  }
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

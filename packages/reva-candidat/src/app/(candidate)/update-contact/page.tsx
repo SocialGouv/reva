@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -12,9 +12,8 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 import { useUpdateContact } from "./update-contact.hooks";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 const modalUpdateEmail = createModal({
   id: "project-update-email",
@@ -24,7 +23,7 @@ const modalUpdateEmail = createModal({
 export default function UpdateContact() {
   const router = useRouter();
 
-  const { candidate, refetch } = useCandidateWithCandidacy();
+  const { candidate, refetch } = useCandidacy();
 
   const { updateContact } = useUpdateContact();
 
@@ -36,21 +35,10 @@ export default function UpdateContact() {
     },
   });
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    setFirstname(candidate?.firstname || "");
-    setLastname(candidate?.lastname || "");
-    setPhone(candidate?.phone || "");
-    setEmail(candidate?.email || "");
-  }, [candidate]);
-
-  if (!candidate) {
-    return null;
-  }
+  const [firstname, setFirstname] = useState(candidate.firstname);
+  const [lastname, setLastname] = useState(candidate.lastname);
+  const [phone, setPhone] = useState(candidate.phone);
+  const [email, setEmail] = useState(candidate.email);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

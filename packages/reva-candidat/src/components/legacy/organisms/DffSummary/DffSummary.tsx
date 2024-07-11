@@ -1,11 +1,16 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { redirect } from "next/navigation";
 import { format } from "date-fns";
+
+import Alert from "@codegouvfr/react-dsfr/Alert";
+
 import {
   Candidate,
   Certification,
   CertificationCompetenceDetails,
   Prerequisite,
 } from "@/graphql/generated/graphql";
+
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 import CandidateSection from "./components/CandidateSection";
 import CertificationSection from "./components/CertificationSection";
@@ -14,19 +19,13 @@ import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 export function DffSummary() {
-  const { candidate, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return;
-  }
+  const { candidate, candidacy } = useCandidacy();
 
   const { dematerializedFeasibilityFile } = candidacy;
 
   if (!dematerializedFeasibilityFile) {
-    return;
+    redirect("/");
   }
 
   const {
@@ -35,12 +34,12 @@ export function DffSummary() {
     secondForeignLanguage,
     aapDecision,
     aapDecisionComment,
-    attachments,
     prerequisites,
     sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
-    swornStatementFile,
+    // swornStatementFile,
+    // attachments,
   } = dematerializedFeasibilityFile;
 
   const {

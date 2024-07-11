@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -10,28 +10,22 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
-
 import { useSetGoals } from "./set-goals.hooks";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export default function SetGoals() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy, refetch } = useCandidateWithCandidacy();
+  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
   const { getGoals, updateGoals } = useSetGoals();
+
   const goals = getGoals.data?.getReferential.goals || [];
 
-  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>([]);
+  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>(
+    candidacy.goals.map((goal) => goal.id),
+  );
 
-  useEffect(() => {
-    if (candidacy?.goals) {
-      setSelectedGoalIds(candidacy.goals.map((goal) => goal.id));
-    }
-  }, [candidacy?.goals]);
-
-  if (!candidacy) {
-    return null;
-  } else if (candidacy && !canEditCandidacy) {
+  if (!canEditCandidacy) {
     redirect("/");
   }
 

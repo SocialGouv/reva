@@ -6,7 +6,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 
@@ -14,12 +14,11 @@ export default function SubmitCandidacy() {
   const router = useRouter();
 
   const { canEditCandidacy, candidacy, refetch, candidacyAlreadySubmitted } =
-    useCandidateWithCandidacy();
+    useCandidacy();
+
   const { submitCandidacy } = useSubmitCandidacy();
 
-  if (!candidacy) {
-    return null;
-  } else if (candidacy && !canEditCandidacy) {
+  if (!canEditCandidacy) {
     redirect("/");
   }
 

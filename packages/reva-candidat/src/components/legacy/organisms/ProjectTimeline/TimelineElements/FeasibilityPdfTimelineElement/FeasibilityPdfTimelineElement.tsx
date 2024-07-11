@@ -4,14 +4,10 @@ import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/A
 
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const FeasibilityPdfTimelineElement = () => {
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacy } = useCandidacy();
 
   const { feasibility } = candidacy;
 

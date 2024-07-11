@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
@@ -9,7 +9,7 @@ import Download from "@codegouvfr/react-dsfr/Download";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
@@ -19,7 +19,7 @@ import { useValidateFeasibility } from "./validate-feasibility.hooks";
 export default function ValidateFeasibility() {
   const router = useRouter();
 
-  const { candidacy, refetch } = useCandidateWithCandidacy();
+  const { candidacy, refetch } = useCandidacy();
 
   const { createOrUpdateSwornStatement } = useValidateFeasibility();
 
@@ -27,8 +27,8 @@ export default function ValidateFeasibility() {
     File | undefined
   >();
 
-  const dematerializedFeasibilityFile =
-    candidacy?.dematerializedFeasibilityFile;
+  const { organism, dematerializedFeasibilityFile } = candidacy;
+
   const remoteSwornStatementFile = useMemo(
     () =>
       dematerializedFeasibilityFile?.swornStatementFile?.previewUrl
@@ -41,13 +41,8 @@ export default function ValidateFeasibility() {
     [dematerializedFeasibilityFile],
   );
 
-  if (!candidacy) {
-    return null;
-  }
-
-  const { organism } = candidacy;
   if (!dematerializedFeasibilityFile) {
-    return null;
+    redirect("/");
   }
 
   const onSubmit = async () => {

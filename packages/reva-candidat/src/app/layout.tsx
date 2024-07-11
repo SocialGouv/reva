@@ -17,16 +17,18 @@ import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 
-import {
-  KeycloakProvider,
-  useKeycloakContext,
-} from "@/components/auth/keycloakContext";
+import { KeycloakProvider } from "@/components/auth/keycloakContext";
+import { CandidacyProvider } from "@/components/candidacy/candidacyContext";
 
 const queryClient = new QueryClient();
 
 setDefaultOptions({ locale: fr });
 
-export default function RootLayout({ children }: { children: JSX.Element }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html {...getHtmlAttributes({ defaultColorScheme })}>
       <head>
@@ -39,7 +41,9 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
         <DsfrProvider>
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
-              <LayoutContent>{children}</LayoutContent>
+              <LayoutContent>
+                <CandidacyProvider>{children}</CandidacyProvider>
+              </LayoutContent>
             </QueryClientProvider>
           </KeycloakProvider>
         </DsfrProvider>
@@ -48,30 +52,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   );
 }
 
-const UNAUTHENTICATED_PATHS = [
-  "/registration-confirmation",
-  "/registration",
-  "/login-confirmation",
-  "/login",
-  "/logout-confirmation",
-];
-
-const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { authenticated } = useKeycloakContext();
-
-  const isUnauthenticatedPath =
-    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) != -1;
-
-  useEffect(() => {
-    if (authenticated && isUnauthenticatedPath) {
-      router.push("/");
-    } else if (!authenticated && !isUnauthenticatedPath) {
-      router.push("/login");
-    }
-  }, [authenticated, isUnauthenticatedPath, router]);
-
+const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks

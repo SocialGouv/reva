@@ -7,16 +7,12 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const GoalsTimelineElement = () => {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { canEditCandidacy, candidacy } = useCandidacy();
 
   const { certification, goals } = candidacy;
 

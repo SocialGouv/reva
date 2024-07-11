@@ -1,13 +1,9 @@
 import Image from "next/image";
 
-import { useCandidateWithCandidacy } from "@/hooks/useCandidateWithCandidacy";
+import { useCandidacy } from "@/components/candidacy/candidacyContext";
 
 export const ProjectEndedTimelineElement = () => {
-  const { candidacy } = useCandidateWithCandidacy();
-
-  if (!candidacy) {
-    return null;
-  }
+  const { candidacy } = useCandidacy();
 
   const { jury } = candidacy;
 
