@@ -94,8 +94,43 @@ const adminAccount1 = {
   email: "mimi@yolo.fr",
 };
 
+const gestionaMaisonMereAapAccount1  = {
+  id: randomUUID(),
+  keycloakId: randomUUID(),
+  firstname: "Peter",
+  lastname: "Griffin",
+  email: "peter@yolo.fr",
+};
+
+const gestionaMaisonMereAapAccount2  = {
+  id: randomUUID(),
+  keycloakId: randomUUID(),
+  firstname: "Marge",
+  lastname: "Simpson",
+  email: "marge@yolo.fr",
+};
+
+const maisonMereAAP1 = {
+  phone: "0612345678",
+  raisonSociale: "Maison Mere Organism Iperia",
+  siteWeb: "https://www.iperia.fr",
+  siret: "5038235679",
+  statutJuridique: "ASSOCIATION_LOI_1901" as const,
+  typologie: "expertFiliere" as const,
+  dateExpirationCertificationQualiopi: new Date(),
+  // gestionnaireAccountId: account.id,
+  statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR" as const,
+  cguVersion: null,
+  cguAcceptedAt: null,
+  managerFirstname: "Josette",
+  managerLastname: "Ledru",
+  showAccountSetup: true,
+}
+
 export {
   adminAccount1,
+  gestionaMaisonMereAapAccount1,
+  gestionaMaisonMereAapAccount2,
   archiIperia1,
   archiIperia2,
   candidateJPL,
@@ -104,4 +139,5 @@ export {
   expertBrancheOrganism,
   expertFiliereOrganism,
   organismIperia,
+  maisonMereAAP1,
 };
