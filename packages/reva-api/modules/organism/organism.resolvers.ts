@@ -24,7 +24,7 @@ import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMa
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
-import { getAccountByOrganismId } from "./features/getAccountByOrganismId";
+import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getLLToEarthFromZip } from "./features/getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
@@ -91,8 +91,8 @@ const unsafeResolvers = {
     },
     managedDegrees: (organism: Organism) =>
       findOrganismOnDegreeByOrganismId({ organismId: organism.id }),
-    organismOnAccount: ({ id: organismId }: Organism) =>
-      getAccountByOrganismId({
+    accounts: ({ id: organismId }: Organism) =>
+      getAccountsByOrganismId({
         organismId,
       }),
     domaines: ({ id: organismId }: Organism) =>

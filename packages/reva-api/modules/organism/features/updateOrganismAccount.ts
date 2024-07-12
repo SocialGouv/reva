@@ -1,13 +1,16 @@
+import { getAccountsByOrganismIdAndEmail } from "../../account/features/getAccountByOrganismIdAndEmail";
 import { updateAccountById } from "../../account/features/updateAccount";
 import { UpdateOrganismAccountInput } from "../organism.types";
-import { getAccountByOrganismId } from "./getAccountByOrganismId";
 
 export const updateOrganismAccount = async ({
   params: { organismId, accountEmail, accountFirstname, accountLastname },
 }: {
   params: UpdateOrganismAccountInput;
 }) => {
-  const account = await getAccountByOrganismId({ organismId });
+  const account = await getAccountsByOrganismIdAndEmail({
+    organismId,
+    email: accountEmail,
+  });
 
   if (!account) {
     throw Error("Compte utilisateur non trouvé");

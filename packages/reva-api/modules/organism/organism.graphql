@@ -35,7 +35,7 @@ type Organism {
   informationsCommerciales: OrganismInformationsCommerciales
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
-  organismOnAccount: Account
+  accounts: [Account!]!
   domaines: [Domaine!]!
   conventionCollectives: [ConventionCollective!]!
   llToEarth: String

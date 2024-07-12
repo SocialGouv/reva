@@ -23,7 +23,7 @@ const agenciesInfoForConnectedUserQuery = graphql(`
           informationsCommerciales {
             nom
           }
-          organismOnAccount {
+          accounts {
             id
             email
             firstname
@@ -181,10 +181,10 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         },
         items: [
           ...agencies
-            .map((a) => a.organismOnAccount)
-            .map((o) => {
+            .flatMap((agency) => agency.accounts)
+            .map((a) => {
               return {
-                text: `${o?.firstname}  ${o?.lastname}`,
+                text: `${a?.firstname}  ${a?.lastname}`,
                 linkProps: {
                   href: "#",
                 },

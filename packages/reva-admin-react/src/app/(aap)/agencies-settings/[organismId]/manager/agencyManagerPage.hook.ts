@@ -8,7 +8,7 @@ const organismQuery = graphql(`
   query getOrganismForAgencyManagerPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
-      organismOnAccount {
+      accounts {
         id
         firstname
         lastname
@@ -49,7 +49,7 @@ export const useAgencyManagerPage = () => {
       }),
   });
 
-  const account = organismResponse?.organism_getOrganism?.organismOnAccount;
+  const account = organismResponse?.organism_getOrganism?.accounts?.[0];
 
   return {
     account,
