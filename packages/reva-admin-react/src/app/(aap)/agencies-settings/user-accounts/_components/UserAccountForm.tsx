@@ -32,16 +32,20 @@ export type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
 
 export const UserAccountForm = ({
   onSubmit,
+  defaultValues,
   remoteAgency,
   onSiteAgencies,
+  emailFieldDisabled,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
   onSiteAgencies: { id: string; label: string }[];
+  defaultValues?: UserAccountFormData;
+  emailFieldDisabled?: boolean;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       modalitesAccompagnement: "REMOTE",
       organismId: remoteAgency.id,
     },
@@ -116,6 +120,7 @@ export const UserAccountForm = ({
             label="Adresse email"
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message?.toString()}
+            disabled={emailFieldDisabled}
             nativeInputProps={{
               ...register("email"),
               autoComplete: "email",
