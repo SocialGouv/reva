@@ -9,7 +9,7 @@ import Download from "@codegouvfr/react-dsfr/Download";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";

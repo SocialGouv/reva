@@ -2,7 +2,7 @@ import { graphql } from "@/graphql/generated";
 import { create } from "zustand";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { GraphQLClient } from "graphql-request";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useEffect } from "react";
 
 const activeFeaturesQuery = graphql(`

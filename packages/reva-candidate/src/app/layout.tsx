@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
@@ -17,8 +14,9 @@ import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 
-import { KeycloakProvider } from "@/components/auth/keycloakContext";
-import { CandidacyProvider } from "@/components/candidacy/candidacyContext";
+import { KeycloakProvider } from "@/components/auth/keycloak.context";
+import { AuthGuard } from "@/components/auth/auth.guard";
+import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +40,15 @@ export default function RootLayout({
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
               <LayoutContent>
-                <CandidacyProvider>{children}</CandidacyProvider>
+                <AuthGuard>
+                  {({ authenticated }) =>
+                    authenticated ? (
+                      <CandidacyGuard>{children}</CandidacyGuard>
+                    ) : (
+                      children
+                    )
+                  }
+                </AuthGuard>
               </LayoutContent>
             </QueryClientProvider>
           </KeycloakProvider>

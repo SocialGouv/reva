@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const ContactTimelineElement = () => {
   const router = useRouter();

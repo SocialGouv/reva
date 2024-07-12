@@ -2,7 +2,7 @@
 
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();

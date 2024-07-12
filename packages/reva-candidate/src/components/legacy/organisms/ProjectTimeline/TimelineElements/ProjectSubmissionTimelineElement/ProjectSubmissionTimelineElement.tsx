@@ -8,7 +8,7 @@ import {
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const ProjectSubmissionTimelineElement = () => {
   const router = useRouter();

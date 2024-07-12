@@ -9,7 +9,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 type PageAction = {
   type: "changeCondition";

@@ -1,4 +1,4 @@
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { Timeline } from "@/components/legacy/molecules/Timeline/Timeline";
 

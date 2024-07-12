@@ -6,7 +6,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 

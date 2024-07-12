@@ -9,7 +9,7 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const ExperiencesTimelineElement = () => {
   const router = useRouter();

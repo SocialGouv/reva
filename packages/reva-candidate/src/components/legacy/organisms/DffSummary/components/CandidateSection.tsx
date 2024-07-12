@@ -45,9 +45,7 @@ export default function CandidateSection({
       </div>
       <p className="mb-2 flex gap-4">
         <span>{givenName ? `${bornLabel} : ${givenName},` : ""}</span>
-        {birthdate && (
-          <span>le : {format(birthdate as any as Date, "dd/MM/yyyy")}</span>
-        )}
+        {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
         <span>
           à {birthCity ? `${birthCity},` : ""}{" "}
           {birthDepartment

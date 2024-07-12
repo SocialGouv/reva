@@ -5,7 +5,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const FeasibilityDematTimelineElement = () => {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { graphql } from "@/graphql/generated";
 
-import { useUrqlClient } from "@/components/urql-client";
+import { useUrqlClient } from "@/components/graphql/urql-client/UrqlClient";
 
 const CREATE_OR_UPDATE_SWORN_STATEMENT = graphql(`
   mutation dematerialized_feasibility_file_createOrUpdateSwornStatement(

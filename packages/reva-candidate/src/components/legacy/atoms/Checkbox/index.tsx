@@ -31,7 +31,6 @@ export const Checkbox = ({
   toggle,
   theme = "light",
   className = "",
-  ...props
 }: CheckboxProps) => {
   const labelName = `label-${name}`;
   return (

@@ -9,7 +9,7 @@ import { Organism } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";

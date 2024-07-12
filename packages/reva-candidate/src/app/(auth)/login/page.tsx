@@ -1,28 +1,21 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
-
-import { Loader } from "@/components/legacy/atoms/Icons";
-
 import { useLogin } from "./login.hooks";
 
 export default function Login() {
   const router = useRouter();
 
-  const params = useSearchParams();
-  const token = params.get("token");
-
   const [email, setEmail] = useState<string>("");
 
-  const { askForLogin, login } = useLogin();
+  const { askForLogin } = useLogin();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,47 +28,6 @@ export default function Login() {
       }
     } catch (error) {}
   };
-
-  const { resetKeycloakInstance } = useKeycloakContext();
-
-  const loginWithToken = useCallback(
-    async (token: string) => {
-      try {
-        const response = await login.mutateAsync({ token });
-        if (response) {
-          resetKeycloakInstance(response.candidate_login.tokens);
-        }
-      } catch (error) {
-        router.push("/login");
-      }
-    },
-    [login, resetKeycloakInstance, router],
-  );
-
-  useEffect(() => {
-    if (token) {
-      loginWithToken(token);
-    }
-
-    // This page is loaded from link with token value
-    // It must pass on useEffect only on first render
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (token) {
-    return (
-      <PageLayout
-        data-test="project-home-loading"
-        className="flex-1 flex flex-col items-center justify-center"
-      >
-        <h2>Connexion en cours</h2>
-        <div className="w-8">
-          <Loader />
-        </div>
-      </PageLayout>
-    );
-  }
 
   return (
     <PageLayout title="Connexion" data-test="login-home">
@@ -93,7 +45,7 @@ export default function Login() {
 
       <form onSubmit={onSubmit} className="mb-6 max-w-xl">
         <Input
-          disabled={askForLogin.isPending || login.isPending}
+          disabled={askForLogin.isPending}
           hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{
             id: "email",
@@ -106,7 +58,7 @@ export default function Login() {
           }}
           label="Email"
         />
-        <Button data-test="login-home-submit" disabled={login.isPending}>
+        <Button data-test="login-home-submit" disabled={askForLogin.isPending}>
           Me connecter
         </Button>
       </form>

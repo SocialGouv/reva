@@ -13,9 +13,7 @@ export const getTokens = (): Tokens | undefined => {
       const tokens = JSON.parse(tokensData);
       return tokens;
     }
-  } catch (error) {
-    // console.error(error);
-  }
+  } catch (error) {}
 
   return undefined;
 };
@@ -23,15 +21,11 @@ export const getTokens = (): Tokens | undefined => {
 export const saveTokens = (tokens: Tokens): void => {
   try {
     localStorage.setItem(storageKey, JSON.stringify(tokens));
-  } catch (error) {
-    // console.error(error);
-  }
+  } catch (error) {}
 };
 
 export const removeTokens = (): void => {
   try {
     localStorage.removeItem(storageKey);
-  } catch (error) {
-    // console.error(error);
-  }
+  } catch (error) {}
 };

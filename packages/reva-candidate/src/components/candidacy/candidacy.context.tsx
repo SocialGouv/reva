@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { isBefore } from "date-fns";
 
 import { useQuery } from "@tanstack/react-query";
@@ -9,8 +7,6 @@ import { graphql } from "@/graphql/generated";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { PageLayout } from "@/layouts/page.layout";
-
-import { useKeycloakContext } from "../auth/keycloakContext";
 
 import { Loader } from "../legacy/atoms/Icons";
 
@@ -211,43 +207,13 @@ const useCandidateWithCandidacy = () => {
   };
 };
 
-const UNAUTHENTICATED_PATHS = [
-  "/registration-confirmation",
-  "/registration",
-  "/login-confirmation",
-  "/login",
-  "/logout-confirmation",
-];
-
-export const CandidacyProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { authenticated } = useKeycloakContext();
+export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const { candidateWithCandidacy } = useCandidateWithCandidacy();
 
-  const isAuthenticatedPath =
-    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) == -1;
-
-  useEffect(() => {
-    if (authenticated && !isAuthenticatedPath) {
-      router.push("/");
-    } else if (!authenticated && isAuthenticatedPath) {
-      router.push("/login");
-    }
-  }, [authenticated, isAuthenticatedPath, router]);
-
-  if (
-    (authenticated && !isAuthenticatedPath) ||
-    (!authenticated && isAuthenticatedPath) ||
-    (authenticated && isAuthenticatedPath && !candidateWithCandidacy.data)
-  ) {
+  if (!candidateWithCandidacy.data) {
     return (
       <PageLayout
-        data-test="project-home-loading"
+        data-test="project-candidacy-loading"
         className="flex-1 flex flex-col items-center justify-center"
       >
         <div className="w-8">

@@ -13,7 +13,7 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { useUpdateExperience } from "./update-experience.hooks";
 

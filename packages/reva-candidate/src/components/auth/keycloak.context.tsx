@@ -7,12 +7,7 @@ import {
   KEYCLOAK_URL,
 } from "@/config/config";
 
-import {
-  Tokens,
-  getTokens,
-  removeTokens,
-  saveTokens,
-} from "./keycloakContext.utils";
+import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 
 type KeycloakUser = {
   id: string;
@@ -125,14 +120,14 @@ const getKeycloakInstance = (): Keycloak => {
   return keycloakInstance!;
 };
 
-type ParamsInitKeycloak = {
+type InitKeycloakParams = {
   keycloakInstance: Keycloak;
   onInit: (authenticated: boolean) => void;
   tokens?: Tokens;
   onUpdateTokens?: (tokens: Tokens) => void;
 };
 
-const initKeycloak = async (params: ParamsInitKeycloak) => {
+const initKeycloak = async (params: InitKeycloakParams) => {
   const { keycloakInstance, onInit, tokens, onUpdateTokens } = params;
 
   let config: KeycloakInitOptions = {
@@ -193,7 +188,7 @@ const initKeycloak = async (params: ParamsInitKeycloak) => {
     }
 
     onInit(authenticated);
-  } catch (e: any) {
+  } catch (e) {
     console.log("Error keycloak", e);
   }
 };

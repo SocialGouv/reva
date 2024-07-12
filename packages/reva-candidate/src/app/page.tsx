@@ -5,7 +5,7 @@ import { PageLayout } from "@/layouts/page.layout";
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/ProjectTimeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export default function Home() {
   const { candidate } = useCandidacy();

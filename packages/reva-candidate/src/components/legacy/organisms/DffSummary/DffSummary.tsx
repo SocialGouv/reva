@@ -10,7 +10,7 @@ import {
   Prerequisite,
 } from "@/graphql/generated/graphql";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import CandidateSection from "./components/CandidateSection";
 import CertificationSection from "./components/CertificationSection";

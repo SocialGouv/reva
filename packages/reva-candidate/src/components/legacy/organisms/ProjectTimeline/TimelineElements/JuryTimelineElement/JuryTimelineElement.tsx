@@ -6,7 +6,7 @@ import { JuryResult } from "@/graphql/generated/graphql";
 import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/AuthenticatedLink";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const JuryTimelineElement = () => {
   const { candidacy } = useCandidacy();

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export const ProjectEndedTimelineElement = () => {
   const { candidacy } = useCandidacy();

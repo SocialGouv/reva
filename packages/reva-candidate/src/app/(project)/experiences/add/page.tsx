@@ -11,7 +11,7 @@ import { Duration } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 

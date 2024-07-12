@@ -10,18 +10,6 @@ const CANDIDATE_ASK_FOR_LOGIN = graphql(`
   }
 `);
 
-const CANDIDATE_LOGIN = graphql(`
-  mutation candidate_login($token: String!) {
-    candidate_login(token: $token) {
-      tokens {
-        accessToken
-        refreshToken
-        idToken
-      }
-    }
-  }
-`);
-
 export const useLogin = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -31,11 +19,5 @@ export const useLogin = () => {
       graphqlClient.request(CANDIDATE_ASK_FOR_LOGIN, { email }),
   });
 
-  const login = useMutation({
-    mutationKey: ["candidate_login"],
-    mutationFn: ({ token }: { token: string }) =>
-      graphqlClient.request(CANDIDATE_LOGIN, { token }),
-  });
-
-  return { askForLogin, login };
+  return { askForLogin };
 };

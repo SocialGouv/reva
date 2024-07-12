@@ -14,7 +14,7 @@ import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import {

@@ -59,12 +59,12 @@ export const Button = ({
   const modeClass = primary
     ? "font-medium bg-blue-600 text-white"
     : locked === true || loading === true
-    ? "font-normal bg-white text-gray-600 border border-[#A1A0BA]"
-    : className !== ""
-    ? className
-    : "font-medium bg-slate-900 text-white";
+      ? "font-normal bg-white text-gray-600 border border-[#A1A0BA]"
+      : className !== ""
+        ? className
+        : "font-medium bg-slate-900 text-white";
 
-  let sizeClasses = {
+  const sizeClasses = {
     tiny: "text-sm pb-1 px-4 h-[25px]",
     small: "text-sm px-8 h-[35px]",
     medium: "text-base w-[190px] h-[45px]",

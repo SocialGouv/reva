@@ -13,7 +13,7 @@ import { PageLayout } from "@/layouts/page.layout";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import { useUpdateContact } from "./update-contact.hooks";
-import { useCandidacy } from "@/components/candidacy/candidacyContext";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 const modalUpdateEmail = createModal({
   id: "project-update-email",
