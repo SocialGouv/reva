@@ -77,7 +77,7 @@ export const createAccount = async (params: {
     username: params.username,
   });
 
-  if (maybeExistingAccount !== null) {
+  if (maybeExistingAccount) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
       `Un compte existe déjà pour cet email`,
