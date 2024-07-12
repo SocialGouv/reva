@@ -190,6 +190,18 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
                 },
               };
             }),
+          {
+            isActive: false,
+            linkProps: {
+              href: "/agencies-settings/user-accounts/add-user-account/",
+              target: "_self",
+            },
+            text: (
+              <Button size="small" priority="secondary">
+                Ajouter un compte
+              </Button>
+            ),
+          },
         ],
       };
 
