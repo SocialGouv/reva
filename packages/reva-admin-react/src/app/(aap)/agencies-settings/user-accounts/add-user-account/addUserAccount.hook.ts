@@ -48,7 +48,7 @@ export const useAddUserAccountPage = () => {
           agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP?.id,
         data,
       }),
-    mutationKey: ["organisms"],
+    mutationKey: ["organisms", "agencies-settings-add-user-account-page"],
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["organisms"] }),
   });
 

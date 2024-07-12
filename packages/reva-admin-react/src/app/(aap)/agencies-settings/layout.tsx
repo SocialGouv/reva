@@ -42,8 +42,11 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
 
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: agenciesInfoForConnectedUserResponse } = useQuery({
-    queryKey: ["organisms"],
+  const {
+    data: agenciesInfoForConnectedUserResponse,
+    status: agenciesInfoForConnectedUserStatus,
+  } = useQuery({
+    queryKey: ["organisms", "agencies-settings-layout-page"],
     queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
   });
 
@@ -230,24 +233,26 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     return items;
   };
   return (
-    <div className="flex flex-col md:flex-row w-full">
-      <SideMenu
-        className="flex-shrink-0 md:w-[330px] mt-2 md:-mt-7"
-        align="left"
-        classes={{ inner: "h-full" }}
-        burgerMenuButtonText="Paramètres"
-        title=""
-        fullHeight
-        items={[
-          getNavItem({
-            text: "Informations juridiques",
-            href: "/agencies-settings/legal-information",
-          }),
-          ...getNavItems(),
-        ]}
-      />
-      {children}
-    </div>
+    agenciesInfoForConnectedUserStatus === "success" && (
+      <div className="flex flex-col md:flex-row w-full">
+        <SideMenu
+          className="flex-shrink-0 md:w-[330px] mt-2 md:-mt-7"
+          align="left"
+          classes={{ inner: "h-full" }}
+          burgerMenuButtonText="Paramètres"
+          title=""
+          fullHeight
+          items={[
+            getNavItem({
+              text: "Informations juridiques",
+              href: "/agencies-settings/legal-information",
+            }),
+            ...getNavItems(),
+          ]}
+        />
+        {children}
+      </div>
+    )
   );
 };
 
