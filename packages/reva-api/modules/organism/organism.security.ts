@@ -30,4 +30,8 @@ export const resolversSecurityMap = {
     hasRole(["admin", "gestion_maison_mere_aap"]),
     whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
   ],
+  "Mutation.organism_createAccount": [
+    hasRole(["admin", "gestion_maison_mere_aap"]),
+    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+  ],
 };

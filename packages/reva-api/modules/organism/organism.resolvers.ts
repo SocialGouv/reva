@@ -45,6 +45,7 @@ import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWi
 import {
   CreateAgencyInput,
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
+  CreateOrganismAccountInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateOrganismAccountInput,
@@ -68,6 +69,7 @@ import { acceptCgu } from "./features/acceptCgu";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
+import { createOrganismAccount } from "./features/createOrganismAccount";
 
 const unsafeResolvers = {
   Account: {
@@ -476,6 +478,14 @@ const unsafeResolvers = {
 
       return updateOrganismInterventionZone({ params: params.data });
     },
+    organism_createAccount: async (
+      _parent: unknown,
+      {
+        data,
+      }: {
+        data: CreateOrganismAccountInput;
+      },
+    ) => createOrganismAccount(data),
     organism_updateOrganismAccount: async (
       _parent: unknown,
       params: {
@@ -592,15 +602,15 @@ const unsafeResolvers = {
         throw new Error("Utilisateur non autorisé");
       }
 
-      const isGestionaire = context.auth.hasRole("gestion_maison_mere_aap")
-      const isAdmin = context.auth.hasRole("admin")
+      const isGestionaire = context.auth.hasRole("gestion_maison_mere_aap");
+      const isAdmin = context.auth.hasRole("admin");
 
       if (!isGestionaire && !isAdmin) {
         throw new Error("Utilisateur non autorisé");
       }
 
       return updateMaisonMereAccountSetup(params.data);
-    }
+    },
   },
   Query: {
     organism_getOrganism: async (

@@ -121,7 +121,12 @@ export interface InterventionZoneInput {
   isOnSite: boolean;
   isRemote: boolean;
 }
-
+export interface CreateOrganismAccountInput {
+  organismId: string;
+  accountFirstname: string;
+  accountLastname: string;
+  accountEmail: string;
+}
 export interface UpdateOrganismAccountInput {
   organismId: string;
   accountFirstname: string;
