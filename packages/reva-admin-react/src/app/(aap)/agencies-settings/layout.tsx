@@ -106,6 +106,11 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
+    const isUserAccountSelected = ({ accountId }: { accountId: string }) => {
+      const href = `/agencies-settings/user-accounts/${accountId}`;
+      return !!currentPathname.match(new RegExp(`^${href}.*$`));
+    };
+
     let items: SideMenuProps.Item[] = [];
     const organismId =
       agenciesInfoForConnectedUserResponse?.account_getAccountForConnectedUser
@@ -186,7 +191,12 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
               return {
                 text: `${a?.firstname}  ${a?.lastname}`,
                 linkProps: {
-                  href: "#",
+                  href: `/agencies-settings/user-accounts/${a.id}/`,
+                  className: `fr-sidemenu__btn bg-transparent font-bold ${
+                    isUserAccountSelected({ accountId: a.id })
+                      ? selectedItemStyle
+                      : ""
+                  } `,
                 },
               };
             }),
