@@ -120,7 +120,9 @@ export const sendDossierDeValidation = async ({
         },
       },
       certificationAuthority: {
-        connect: { id: candidacy.Feasibility[0].certificationAuthorityId },
+        connect: {
+          id: candidacy.Feasibility[0].certificationAuthorityId || "",
+        },
       },
     },
     include: {

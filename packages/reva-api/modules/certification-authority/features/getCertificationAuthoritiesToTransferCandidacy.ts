@@ -44,7 +44,7 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
       mode: "insensitive" as any,
     },
     id: {
-      not: candidacyActiveFeasibility?.certificationAuthorityId,
+      not: candidacyActiveFeasibility?.certificationAuthorityId || "",
     },
     certificationAuthorityOnCertification: {
       some: {

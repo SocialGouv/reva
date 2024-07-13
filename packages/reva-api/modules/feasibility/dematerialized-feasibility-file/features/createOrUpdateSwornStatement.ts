@@ -1,12 +1,12 @@
 import { v4 as uuidV4 } from "uuid";
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "../../../../prisma/client";
 import {
   UploadedFile,
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
   uploadFilesToS3,
-} from "../../shared/file";
+} from "../../../shared/file";
 import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 

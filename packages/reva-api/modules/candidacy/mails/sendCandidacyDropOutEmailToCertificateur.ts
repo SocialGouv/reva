@@ -21,7 +21,6 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
   }
 
   const {
-    certificationAuthority: { contactEmail },
     candidacy: { candidate },
   } = feasibility;
 
@@ -30,6 +29,8 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
     `${candidate?.firstname || ""}${
       candidate?.lastname ? ` ${candidate?.lastname}` : ""
     }`;
+
+  const contactEmail = feasibility.certificationAuthority?.contactEmail;
 
   if (!contactEmail || !candidateFullName) {
     return;

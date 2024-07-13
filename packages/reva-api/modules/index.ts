@@ -13,6 +13,7 @@ import {
 } from "graphql-scalars";
 import mercurius, { MercuriusOptions } from "mercurius";
 
+import { GraphQLUpload } from "graphql-upload-minimal";
 import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
 import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
@@ -22,9 +23,9 @@ import * as candidacy from "./candidacy/candidacy.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
-import { dematerializedFeasibilityFileResolvers } from "./dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
 import { dossierDeValidationLoaders } from "./dossier-de-validation/dossier-de-validation.loaders";
 import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
+import { dematerializedFeasibilityFileResolvers } from "./feasibility/dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
@@ -39,7 +40,7 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
-import { GraphQLUpload } from "graphql-upload-minimal";
+import { feasibilityUploadedPdfResolvers } from "./feasibility/feasibility-uploaded-pdf/feasibility-uploaded-pdf.resolvers";
 
 // Resolvers
 
@@ -54,7 +55,6 @@ const resolvers = mergeResolvers([
   candidateResolvers,
   financeResolvers,
   subscriptionRequestResolvers,
-  feasibilityResolvers,
   financeUnifvaeResolvers,
   organismResolvers,
   certificationAuthorityResolvers,
@@ -65,6 +65,7 @@ const resolvers = mergeResolvers([
   candidacyLogResolvers,
   candidacyMenuResolvers,
   dematerializedFeasibilityFileResolvers,
+  feasibilityUploadedPdfResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

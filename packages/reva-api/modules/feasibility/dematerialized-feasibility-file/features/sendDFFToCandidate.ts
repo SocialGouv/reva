@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "../../../../prisma/client";
 import { sendDFFNotificationToCandidateEmail } from "../emails";
 
 export const sendDFFToCandidate = async ({
@@ -14,12 +14,16 @@ export const sendDFFToCandidate = async ({
 
   const dff = await prismaClient.dematerializedFeasibilityFile.findUnique({
     where: { id: dematerializedFeasibilityFileId },
-    include: { candidacy: { include: { candidate: true } } },
+    include: {
+      feasibility: {
+        include: { candidacy: { include: { candidate: true } } },
+      },
+    },
   });
 
-  if (dff?.candidacy?.candidate?.email) {
+  if (dff?.feasibility?.candidacy?.candidate?.email) {
     await sendDFFNotificationToCandidateEmail({
-      email: dff.candidacy.candidate.email,
+      email: dff.feasibility.candidacy.candidate.email,
     });
   }
 

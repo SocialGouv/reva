@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "../../../../prisma/client";
 
 export const getDematerializedFeasibilityFileWithAttachmentsByCandidacyId = ({
   candidacyId,
@@ -6,7 +6,7 @@ export const getDematerializedFeasibilityFileWithAttachmentsByCandidacyId = ({
   candidacyId: string;
 }) =>
   prismaClient.dematerializedFeasibilityFile.findFirst({
-    where: { candidacyId },
+    where: { feasibility: { candidacyId, isActive: true } },
     include: {
       attachments: { include: { file: true } },
     },

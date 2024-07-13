@@ -1,13 +1,13 @@
-import { isCandidateOwnerOfCandidacy } from "../candidacy/security/isCandidateOwnerOfCandidacy.security";
+import { isCandidateOwnerOfCandidacy } from "../../candidacy/security/isCandidateOwnerOfCandidacy.security";
 import {
   hasRole,
   isCandidacyOwner,
   whenHasRole,
-} from "../shared/security/middlewares";
+} from "../../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
-} from "../shared/security/presets";
+} from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut

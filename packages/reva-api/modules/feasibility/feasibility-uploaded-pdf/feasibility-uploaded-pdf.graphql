@@ -1,0 +1,6 @@
+type FeasibilityUploadedPdf {
+  feasibilityFile: File!
+  IDFile: File
+  documentaryProofFile: File
+  certificateOfAttendanceFile: File
+}

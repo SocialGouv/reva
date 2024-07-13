@@ -169,42 +169,46 @@ export const createFeasibility = async ({
       candidacy: { connect: { id: candidacyId } },
       certificationAuthority: { connect: { id: certificationAuthorityId } },
       feasibilityFileSentAt: new Date(),
-      feasibilityFile: {
+      feasibilityUploadedPdf: {
         create: {
-          id: feasibilityFileInstance.id,
-          mimeType: feasibilityFile.mimetype,
-          name: feasibilityFile.filename,
-          path: `${candidacyId}/${feasibilityFileInstance.id}`,
+          feasibilityFile: {
+            create: {
+              id: feasibilityFileInstance.id,
+              mimeType: feasibilityFile.mimetype,
+              name: feasibilityFile.filename,
+              path: `${candidacyId}/${feasibilityFileInstance.id}`,
+            },
+          },
+          IDFile: {
+            create: {
+              id: IDFileInstance.id,
+              mimeType: IDFile.mimetype,
+              name: IDFile.filename,
+              path: `${candidacyId}/${IDFileInstance.id}`,
+            },
+          },
+          documentaryProofFile: documentaryProofFile
+            ? {
+                create: {
+                  id: documentaryProofFileInstance?.id,
+                  mimeType: documentaryProofFile.mimetype,
+                  name: documentaryProofFile.filename,
+                  path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
+                },
+              }
+            : undefined,
+          certificateOfAttendanceFile: certificateOfAttendanceFile
+            ? {
+                create: {
+                  id: certificateOfAttendanceFileInstance?.id,
+                  mimeType: certificateOfAttendanceFile.mimetype,
+                  name: certificateOfAttendanceFile.filename,
+                  path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
+                },
+              }
+            : undefined,
         },
       },
-      IDFile: {
-        create: {
-          id: IDFileInstance.id,
-          mimeType: IDFile.mimetype,
-          name: IDFile.filename,
-          path: `${candidacyId}/${IDFileInstance.id}`,
-        },
-      },
-      documentaryProofFile: documentaryProofFile
-        ? {
-            create: {
-              id: documentaryProofFileInstance?.id,
-              mimeType: documentaryProofFile.mimetype,
-              name: documentaryProofFile.filename,
-              path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
-            },
-          }
-        : undefined,
-      certificateOfAttendanceFile: certificateOfAttendanceFile
-        ? {
-            create: {
-              id: certificateOfAttendanceFileInstance?.id,
-              mimeType: certificateOfAttendanceFile.mimetype,
-              name: certificateOfAttendanceFile.filename,
-              path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
-            },
-          }
-        : undefined,
     },
   });
 
@@ -281,7 +285,7 @@ export const getActiveFeasibilityByCandidacyid = ({
 }) =>
   prismaClient.feasibility.findFirst({
     where: { candidacyId, isActive: true },
-    include: { certificationAuthority: true },
+    include: { certificationAuthority: true, feasibilityUploadedPdf: true },
   });
 
 export const getFileNameAndUrl = async ({
@@ -625,17 +629,20 @@ export const getFeasibilityById = async ({
 const deleteFeasibilityIDFile = async (feasibilityId: string) => {
   const feasibility = await prismaClient.feasibility.findUnique({
     where: { id: feasibilityId },
+    include: {
+      feasibilityUploadedPdf: true,
+    },
   });
 
-  if (feasibility?.IDFileId) {
+  if (feasibility?.feasibilityUploadedPdf?.IDFileId) {
     await prismaClient.file.delete({
       where: {
-        id: feasibility.IDFileId,
+        id: feasibility.feasibilityUploadedPdf?.IDFileId,
       },
     });
 
     const file = new FeasibilityFile({
-      fileId: feasibility.IDFileId,
+      fileId: feasibility.feasibilityUploadedPdf?.IDFileId,
       candidacyId: feasibility.candidacyId,
     });
 
@@ -739,7 +746,7 @@ const validateFeasibility = async ({
       certifName: activeCertificationAndRegion.certification.label,
       comment,
       certificationAuthorityLabel:
-        updatedFeasibility.certificationAuthority.label ||
+        updatedFeasibility.certificationAuthority?.label ||
         "certificateur inconnu",
       infoFile,
     });
@@ -854,7 +861,7 @@ const rejectFeasibility = async ({
       email: updatedFeasibility.candidacy.candidate?.email as string,
       comment,
       certificationAuthorityLabel:
-        updatedFeasibility.certificationAuthority.label ||
+        updatedFeasibility.certificationAuthority?.label ||
         "certificateur inconnu",
       infoFile,
     });

@@ -1,6 +1,5 @@
 import mjml2html from "mjml";
-
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import { sendGenericEmail, templateMail } from "../../../shared/email";
 
 export const sendDFFNotificationToCandidateEmail = ({
   email,

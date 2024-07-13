@@ -66,12 +66,14 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
+        const feasibilityUploadedPdf = feasibility?.feasibilityUploadedPdf;
+
         if (
           ![
-            feasibility?.feasibilityFileId,
-            feasibility?.IDFileId,
-            feasibility?.documentaryProofFileId,
-            feasibility?.certificateOfAttendanceFileId,
+            feasibilityUploadedPdf?.feasibilityFileId,
+            feasibilityUploadedPdf?.IDFileId,
+            feasibilityUploadedPdf?.documentaryProofFileId,
+            feasibilityUploadedPdf?.certificateOfAttendanceFileId,
             feasibility?.decisionFileId,
           ].includes(fileId)
         ) {

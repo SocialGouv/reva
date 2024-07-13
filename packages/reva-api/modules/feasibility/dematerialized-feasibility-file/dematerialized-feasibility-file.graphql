@@ -15,7 +15,6 @@ type DematerializedFeasibilityFile {
   prerequisites: [Prerequisite]!
   aapDecision: DFFileDecision
   aapDecisionComment: String
-  aapDecisionSentAt: Timestamp
   attachments: [DFFAttachment]!
   candidacy: Candidacy!
   sentToCandidateAt: Timestamp

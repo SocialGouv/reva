@@ -133,7 +133,9 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
           }
         : undefined,
       certificationAuthority: {
-        connect: { id: candidacy.Feasibility[0].certificationAuthorityId },
+        connect: {
+          id: candidacy.Feasibility[0].certificationAuthorityId || "",
+        },
       },
     },
     include: {

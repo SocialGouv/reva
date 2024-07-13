@@ -1,8 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { DematerializedFeasibilityFile } from "@prisma/client";
-import { getCertificationCompetenceById } from "../referential/features/getCertificationCompetenceById";
-import { getCompetenceBlocById } from "../referential/features/getCompetenceBlocById";
+
+import { getCertificationCompetenceById } from "../../referential/features/getCertificationCompetenceById";
+import { getCompetenceBlocById } from "../../referential/features/getCompetenceBlocById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
@@ -24,7 +25,6 @@ import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyB
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
-import { getDematerializedFeasibilityFileByCandidacyId } from "./features/getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
@@ -108,16 +108,6 @@ const unsafeResolvers = {
     }: {
       certificationCompetenceId: string;
     }) => getCertificationCompetenceById({ certificationCompetenceId }),
-  },
-  Candidacy: {
-    dematerializedFeasibilityFile: ({ id: candidacyId }: { id: string }) =>
-      getDematerializedFeasibilityFileByCandidacyId({ candidacyId }),
-  },
-  Query: {
-    dematerialized_feasibility_file_getByCandidacyId: (
-      _parent: unknown,
-      params: { candidacyId: string },
-    ) => getDematerializedFeasibilityFileByCandidacyId(params),
   },
   Mutation: {
     dematerialized_feasibility_file_createOrUpdateCertificationInfo: (

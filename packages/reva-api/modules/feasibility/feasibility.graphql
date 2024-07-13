@@ -5,20 +5,23 @@ enum FeasibilityDecision {
   INCOMPLETE
 }
 
+enum FeasibilityFormat {
+  UPLOADED_PDF
+  DEMATERIALIZED
+}
+
 type Feasibility {
   id: ID!
   certificationAuthority: CertificationAuthority
   feasibilityFileSentAt: Timestamp!
-  feasibilityFile: File!
-  IDFile: File
-  documentaryProofFile: File
-  certificateOfAttendanceFile: File
   candidacy: Candidacy!
   decision: FeasibilityDecision!
   decisionComment: String
   decisionSentAt: Timestamp
   decisionFile: File
   history: [FeasibilityHistory!]!
+  dematerializedFeasibilityFile: DematerializedFeasibilityFile
+  feasibilityUploadedPdf: FeasibilityUploadedPdf
 }
 
 type FeasibilityHistory {
