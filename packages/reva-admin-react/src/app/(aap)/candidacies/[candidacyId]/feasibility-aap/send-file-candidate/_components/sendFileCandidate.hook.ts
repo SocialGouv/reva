@@ -15,122 +15,123 @@ const sendToCandidate = graphql(`
   }
 `);
 
-const dematerializedFeasibilityFileSendFileCandidateByCandidacyId = graphql(`
-  query dematerializedFeasibilityFileSendFileCandidateByCandidacyId(
-    $candidacyId: ID!
-  ) {
-    dematerialized_feasibility_file_getByCandidacyId(
-      candidacyId: $candidacyId
+const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId =
+  graphql(`
+    query feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId(
+      $candidacyId: ID!
     ) {
-      id
-      sentToCandidateAt
-      aapDecision
-      aapDecisionComment
-      prerequisites {
-        label
-        state
-      }
-      firstForeignLanguage
-      secondForeignLanguage
-      option
-      blocsDeCompetences {
-        certificationCompetenceBloc {
+      feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        dematerializedFeasibilityFile {
           id
-          code
-          label
-          isOptional
-          FCCompetences
-          competences {
-            id
+          sentToCandidateAt
+          aapDecision
+          aapDecisionComment
+          prerequisites {
             label
+            state
           }
-        }
-      }
-      certificationCompetenceDetails {
-        text
-        state
-        certificationCompetence {
-          id
-          label
-        }
-      }
-      candidacy {
-        individualHourCount
-        collectiveHourCount
-        additionalHourCount
-        basicSkills {
-          label
-          id
-        }
-        mandatoryTrainings {
-          label
-          id
-        }
-        certification {
-          label
-          codeRncp
-          level
-          degree {
-            longLabel
-            level
-          }
-        }
-        goals {
-          id
-          label
-          isActive
-        }
-        experiences {
-          id
-          title
-          startedAt
-          duration
-          description
-        }
-        certificateSkills
-        candidate {
-          highestDegree {
-            level
-            longLabel
-          }
-          niveauDeFormationLePlusEleve {
-            level
-          }
-          firstname
-          firstname2
-          firstname3
-          lastname
-          email
-          givenName
-          birthdate
-          birthCity
-          birthDepartment {
-            label
-            code
-            region {
+          firstForeignLanguage
+          secondForeignLanguage
+          option
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              id
               code
+              label
+              isOptional
+              FCCompetences
+              competences {
+                id
+                label
+              }
+            }
+          }
+          certificationCompetenceDetails {
+            text
+            state
+            certificationCompetence {
+              id
               label
             }
           }
-          nationality
-          gender
-          phone
-          city
-          street
-          zip
+          attachments {
+            type
+            file {
+              name
+              previewUrl
+              mimeType
+            }
+          }
         }
-      }
-      attachments {
-        type
-        file {
-          name
-          previewUrl
-          mimeType
+        candidacy {
+          individualHourCount
+          collectiveHourCount
+          additionalHourCount
+          basicSkills {
+            label
+            id
+          }
+          mandatoryTrainings {
+            label
+            id
+          }
+          certification {
+            label
+            codeRncp
+            level
+            degree {
+              longLabel
+              level
+            }
+          }
+          goals {
+            id
+            label
+            isActive
+          }
+          experiences {
+            id
+            title
+            startedAt
+            duration
+            description
+          }
+          certificateSkills
+          candidate {
+            highestDegree {
+              level
+              longLabel
+            }
+            niveauDeFormationLePlusEleve {
+              level
+            }
+            firstname
+            firstname2
+            firstname3
+            lastname
+            email
+            givenName
+            birthdate
+            birthCity
+            birthDepartment {
+              label
+              code
+              region {
+                code
+                label
+              }
+            }
+            nationality
+            gender
+            phone
+            city
+            street
+            zip
+          }
         }
       }
     }
-  }
-`);
+  `);
 
 export const useSendFileCandidate = () => {
   const { graphqlClient } = useGraphQlClient();
@@ -145,7 +146,7 @@ export const useSendFileCandidate = () => {
     ],
     queryFn: () =>
       graphqlClient.request(
-        dematerializedFeasibilityFileSendFileCandidateByCandidacyId,
+        feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId,
         {
           candidacyId,
         },
@@ -160,8 +161,10 @@ export const useSendFileCandidate = () => {
       }),
   });
 
+  const feasibility =
+    getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
   const dematerializedFeasibilityFile =
-    getCandidacyByIdResponse?.dematerialized_feasibility_file_getByCandidacyId;
+    feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
   return {
     dematerializedFeasibilityFileId,

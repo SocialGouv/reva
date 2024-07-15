@@ -5,8 +5,8 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const getCandidacyWithFeasibilityQuery = graphql(`
-  query getCandidacyWithFeasibilityQuery($candidacyId: ID!) {
+const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
+  query getCandidacyWithFeasibilityUploadedPdfQuery($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       certification {
         label
@@ -37,28 +37,31 @@ const getCandidacyWithFeasibilityQuery = graphql(`
           decisionComment
           decisionSentAt
         }
-        IDFile {
-          url
-          name
-        }
-        feasibilityFile {
-          url
-          name
-        }
-        documentaryProofFile {
-          url
-          name
-        }
-        certificateOfAttendanceFile {
-          url
-          name
+        feasibilityUploadedPdf {
+          IDFile {
+            url
+            name
+          }
+          feasibilityFile {
+            url
+            name
+          }
+          documentaryProofFile {
+            url
+            name
+          }
+          certificateOfAttendanceFile {
+            url
+            name
+          }
         }
       }
+      feasibilityFormat
     }
   }
 `);
 
-export const useFeasibilityPageLogic = () => {
+export const useFeasibilityUploadedPdf = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -68,7 +71,7 @@ export const useFeasibilityPageLogic = () => {
   const { data: getFeasibilityResponse } = useQuery({
     queryKey: ["getCandidacyWithFeasibilityQuery", candidacyId],
     queryFn: () =>
-      graphqlClient.request(getCandidacyWithFeasibilityQuery, {
+      graphqlClient.request(getCandidacyWithFeasibilityUploadedPdfQuery, {
         candidacyId,
       }),
   });

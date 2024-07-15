@@ -285,7 +285,11 @@ export const getActiveFeasibilityByCandidacyid = ({
 }) =>
   prismaClient.feasibility.findFirst({
     where: { candidacyId, isActive: true },
-    include: { certificationAuthority: true, feasibilityUploadedPdf: true },
+    include: {
+      certificationAuthority: true,
+      feasibilityUploadedPdf: true,
+      dematerializedFeasibilityFile: true,
+    },
   });
 
 export const getFileNameAndUrl = async ({

@@ -15,26 +15,27 @@ export const createOrUpdateAttachments = graphql(`
   }
 `);
 
-const dematerializedFeasibilityFileWithAttachmentsByCandidacyId = graphql(`
-  query dematerializedFeasibilityFileWithAttachmentsByCandidacyId(
-    $candidacyId: ID!
-  ) {
-    dematerialized_feasibility_file_getByCandidacyId(
-      candidacyId: $candidacyId
+const feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId =
+  graphql(`
+    query feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId(
+      $candidacyId: ID!
     ) {
-      attachments {
-        type
-        file {
-          name
-          previewUrl
-          url
-          mimeType
-          __typename
+      feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        dematerializedFeasibilityFile {
+          attachments {
+            type
+            file {
+              name
+              previewUrl
+              url
+              mimeType
+              __typename
+            }
+          }
         }
       }
     }
-  }
-`);
+  `);
 
 export const useAttachments = () => {
   const { graphqlClient } = useGraphQlClient();
@@ -50,16 +51,16 @@ export const useAttachments = () => {
       ],
       queryFn: () =>
         graphqlClient.request(
-          dematerializedFeasibilityFileWithAttachmentsByCandidacyId,
+          feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId,
           {
             candidacyId,
           },
         ),
     });
 
-  const candidacy =
-    getCandidacyByIdResponse?.dematerialized_feasibility_file_getByCandidacyId;
-  const attachments = candidacy?.attachments;
+  const feasibility =
+    getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
+  const attachments = feasibility?.dematerializedFeasibilityFile?.attachments;
   return {
     attachments,
     queryStatus: getCandidacyByIdStatus,

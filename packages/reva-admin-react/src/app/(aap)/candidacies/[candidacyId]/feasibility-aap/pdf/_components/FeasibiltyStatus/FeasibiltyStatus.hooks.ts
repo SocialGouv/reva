@@ -40,21 +40,23 @@ const getCandidacyQuery = graphql(`
           contactFullName
           contactEmail
         }
-        feasibilityFile {
-          name
-          url
-        }
-        IDFile {
-          name
-          url
-        }
-        documentaryProofFile {
-          name
-          url
-        }
-        certificateOfAttendanceFile {
-          name
-          url
+        feasibilityUploadedPdf {
+          feasibilityFile {
+            name
+            url
+          }
+          IDFile {
+            name
+            url
+          }
+          documentaryProofFile {
+            name
+            url
+          }
+          certificateOfAttendanceFile {
+            name
+            url
+          }
         }
         history {
           id

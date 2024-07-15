@@ -32,7 +32,7 @@ const getBlocDeCompetencesQuery = graphql(`
     $candidacyId: ID!
     $blocDeCompetencesId: ID!
   ) {
-    getCandidacyById(id: $candidacyId) {
+    feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       dematerializedFeasibilityFile {
         id
         certificationCompetenceDetails {
@@ -101,7 +101,7 @@ const CompetenciesBlockPage = () => {
   });
 
   const dematerializedFile =
-    getBlocDeCompetencesResponse?.getCandidacyById
+    getBlocDeCompetencesResponse?.feasibility_getActiveFeasibilityByCandidacyId
       ?.dematerializedFeasibilityFile;
 
   const block =

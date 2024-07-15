@@ -30,13 +30,13 @@ export default function SendFileCertificationAuthorityPage() {
   const {
     dematerializedFeasibilityFile,
     sendToCertificationAuthorityMutation,
+    candidacy,
   } = useSendFileCertificationAuthority();
 
   const handleSendFile = async () => {
     if (
       !dematerializedFeasibilityFile ||
-      !dematerializedFeasibilityFile.candidacy?.certification
-        ?.certificationAuthorities[0]
+      !candidacy?.certification?.certificationAuthorities[0]
     ) {
       return;
     }
@@ -45,8 +45,7 @@ export default function SendFileCertificationAuthorityPage() {
       await sendToCertificationAuthorityMutation({
         dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
         certificationAuthorityId:
-          dematerializedFeasibilityFile.candidacy.certification
-            .certificationAuthorities[0].id,
+          candidacy.certification.certificationAuthorities[0].id,
       });
       successToast("Le dossier de faisabilité a été envoyé au certificateur");
       router.push(feasibilitySummaryUrl);
@@ -73,8 +72,7 @@ export default function SendFileCertificationAuthorityPage() {
       />
       <CertificationAuthoritySection
         certificationAuthorityLabel={
-          dematerializedFeasibilityFile?.candidacy?.certification
-            ?.certificationAuthorities[0]?.label
+          candidacy?.certification?.certificationAuthorities[0]?.label
         }
       />
 

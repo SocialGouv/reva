@@ -10,43 +10,45 @@ const getCandidacyById = graphql(`
         label
         codeRncp
       }
-      dematerializedFeasibilityFile {
-        swornStatementFileId
-        isReadyToBeSentToCandidate
-        isReadyToBeSentToCertificationAuthority
-        sentToCandidateAt
-        sentToCertificationAuthorityAt
-        certificationPartComplete
-        competenceBlocsPartCompletion
-        attachmentsPartComplete
-        prerequisitesPartComplete
-        prerequisites {
-          id
-          label
-          state
-        }
-        blocsDeCompetences {
-          complete
-          certificationCompetenceBloc {
+      feasibility {
+        dematerializedFeasibilityFile {
+          swornStatementFileId
+          isReadyToBeSentToCandidate
+          isReadyToBeSentToCertificationAuthority
+          sentToCandidateAt
+          sentToCertificationAuthorityAt
+          certificationPartComplete
+          competenceBlocsPartCompletion
+          attachmentsPartComplete
+          prerequisitesPartComplete
+          prerequisites {
             id
-            code
             label
-            competences {
+            state
+          }
+          blocsDeCompetences {
+            complete
+            certificationCompetenceBloc {
+              id
+              code
+              label
+              competences {
+                id
+                label
+              }
+            }
+          }
+          certificationCompetenceDetails {
+            state
+            text
+            certificationCompetence {
               id
               label
             }
           }
+          aapDecision
+          aapDecisionComment
         }
-        certificationCompetenceDetails {
-          state
-          text
-          certificationCompetence {
-            id
-            label
-          }
-        }
-        aapDecision
-        aapDecisionComment
       }
     }
   }
@@ -70,7 +72,7 @@ export const useAapFeasibilityPageLogic = () => {
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
   const dematerializedFeasibilityFile =
-    candidacy?.dematerializedFeasibilityFile;
+    candidacy?.feasibility?.dematerializedFeasibilityFile;
   return {
     certification,
     dematerializedFeasibilityFile,

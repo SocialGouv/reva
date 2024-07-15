@@ -18,17 +18,19 @@ const createOrUpdateDecision = graphql(`
   }
 `);
 
-const dematerializedFeasibilityFileDecisionByCandidacyId = graphql(`
-  query dematerializedFeasibilityFileDecisionByCandidacyId($candidacyId: ID!) {
-    dematerialized_feasibility_file_getByCandidacyId(
-      candidacyId: $candidacyId
+const feasibilityWithDematerializedFeasibilityFileDecisionByCandidacyId =
+  graphql(`
+    query feasibilityWithDematerializedFeasibilityFileDecisionByCandidacyId(
+      $candidacyId: ID!
     ) {
-      aapDecision
-      aapDecisionComment
-      aapDecisionSentAt
+      feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        dematerializedFeasibilityFile {
+          aapDecision
+          aapDecisionComment
+        }
+      }
     }
-  }
-`);
+  `);
 
 export const useDecision = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
@@ -59,16 +61,18 @@ export const useDecision = () => {
     ],
     queryFn: () =>
       graphqlClient.request(
-        dematerializedFeasibilityFileDecisionByCandidacyId,
+        feasibilityWithDematerializedFeasibilityFileDecisionByCandidacyId,
         {
           candidacyId,
         },
       ),
   });
   const aapDecision =
-    data?.dematerialized_feasibility_file_getByCandidacyId?.aapDecision;
+    data?.feasibility_getActiveFeasibilityByCandidacyId
+      ?.dematerializedFeasibilityFile?.aapDecision;
   const aapDecisionComment =
-    data?.dematerialized_feasibility_file_getByCandidacyId?.aapDecisionComment;
+    data?.feasibility_getActiveFeasibilityByCandidacyId
+      ?.dematerializedFeasibilityFile?.aapDecisionComment;
 
   return {
     createOrUpdateDecisionMutation,

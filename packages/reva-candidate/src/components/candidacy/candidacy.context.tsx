@@ -109,18 +109,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         }
         otherTraining
         isCertificationPartial
-        feasibilityFormat
-        feasibility {
-          id
-          feasibilityFileSentAt
-          decision
-          decisionComment
-          decisionSentAt
-          decisionFile {
-            name
-            url
-          }
-        }
         activeDossierDeValidation {
           id
           decision
@@ -142,50 +130,63 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             url
           }
         }
-        dematerializedFeasibilityFile {
+        feasibilityFormat
+        feasibility {
           id
-          sentToCandidateAt
-          aapDecision
-          aapDecisionComment
-          prerequisites {
-            label
-            state
+          feasibilityFileSentAt
+          decision
+          decisionComment
+          decisionSentAt
+          decisionFile {
+            name
+            url
           }
-          firstForeignLanguage
-          secondForeignLanguage
-          option
-          blocsDeCompetences {
-            certificationCompetenceBloc {
-              id
-              code
+
+          dematerializedFeasibilityFile {
+            id
+            sentToCandidateAt
+            aapDecision
+            aapDecisionComment
+            prerequisites {
               label
-              isOptional
-              FCCompetences
-              competences {
+              state
+            }
+            firstForeignLanguage
+            secondForeignLanguage
+            option
+            blocsDeCompetences {
+              certificationCompetenceBloc {
+                id
+                code
+                label
+                isOptional
+                FCCompetences
+                competences {
+                  id
+                  label
+                }
+              }
+            }
+            certificationCompetenceDetails {
+              text
+              certificationCompetence {
                 id
                 label
               }
             }
-          }
-          certificationCompetenceDetails {
-            text
-            certificationCompetence {
-              id
-              label
-            }
-          }
-          swornStatementFile {
-            name
-            previewUrl
-            url
-            mimeType
-          }
-          attachments {
-            type
-            file {
+            swornStatementFile {
               name
               previewUrl
+              url
               mimeType
+            }
+            attachments {
+              type
+              file {
+                name
+                previewUrl
+                mimeType
+              }
             }
           }
         }

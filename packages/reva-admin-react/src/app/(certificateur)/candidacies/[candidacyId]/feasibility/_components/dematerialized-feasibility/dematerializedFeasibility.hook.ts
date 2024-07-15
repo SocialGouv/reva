@@ -1,21 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-
-const sendToCertificationAuthority = graphql(`
-  mutation sendToCertificationAuthority(
-    $dematerializedFeasibilityFileId: ID!
-    $certificationAuthorityId: ID!
-    $candidacyId: ID!
-  ) {
-    dematerialized_feasibility_file_sendToCertificationAuthority(
-      dematerializedFeasibilityFileId: $dematerializedFeasibilityFileId
-      certificationAuthorityId: $certificationAuthorityId
-      candidacyId: $candidacyId
-    )
-  }
-`);
 
 const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
   query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
@@ -145,7 +131,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
   }
 `);
 
-export const useSendFileCertificationAuthority = () => {
+export const useDematerializedFeasibility = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -162,32 +148,14 @@ export const useSendFileCertificationAuthority = () => {
       }),
   });
 
-  const { mutateAsync: sendToCertificationAuthorityMutation } = useMutation({
-    mutationFn: ({
-      dematerializedFeasibilityFileId,
-      certificationAuthorityId,
-    }: {
-      dematerializedFeasibilityFileId: string;
-      certificationAuthorityId: string;
-    }) =>
-      graphqlClient.request(sendToCertificationAuthority, {
-        dematerializedFeasibilityFileId,
-        certificationAuthorityId,
-        candidacyId,
-      }),
-  });
-
   const feasibility =
     getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
-  const candidacy = feasibility?.candidacy;
   const dematerializedFeasibilityFile =
     feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
 
   return {
     dematerializedFeasibilityFileId,
-    candidacy,
-    sendToCertificationAuthorityMutation,
     dematerializedFeasibilityFile,
   };
 };

@@ -4,16 +4,18 @@ import { DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput } from "@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const dematerializedFeasibilityFileByCandidacyId = graphql(`
-  query dematerializedFeasibilityFileByCandidacyId($candidacyId: ID!) {
-    dematerialized_feasibility_file_getByCandidacyId(
-      candidacyId: $candidacyId
-    ) {
-      prerequisitesPartComplete
-      prerequisites {
-        id
-        label
-        state
+const feasibilityWithDematerializedFeasibilityFileByCandidacyId = graphql(`
+  query feasibilityWithDematerializedFeasibilityFileByCandidacyId(
+    $candidacyId: ID!
+  ) {
+    feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+      dematerializedFeasibilityFile {
+        prerequisitesPartComplete
+        prerequisites {
+          id
+          label
+          state
+        }
       }
     }
   }
@@ -45,9 +47,12 @@ export const usePrerequisites = () => {
       "dematerializedFeasibilityFileWithPrerequisitesByCandidacyId",
     ],
     queryFn: () =>
-      graphqlClient.request(dematerializedFeasibilityFileByCandidacyId, {
-        candidacyId,
-      }),
+      graphqlClient.request(
+        feasibilityWithDematerializedFeasibilityFileByCandidacyId,
+        {
+          candidacyId,
+        },
+      ),
   });
 
   const { mutateAsync: createOrUpdatePrerequisitesMutation } = useMutation({
@@ -61,10 +66,11 @@ export const usePrerequisites = () => {
   });
 
   const prerequisites =
-    data?.dematerialized_feasibility_file_getByCandidacyId?.prerequisites;
+    data?.feasibility_getActiveFeasibilityByCandidacyId
+      ?.dematerializedFeasibilityFile?.prerequisites;
   const prerequisitesPartComplete =
-    data?.dematerialized_feasibility_file_getByCandidacyId
-      ?.prerequisitesPartComplete;
+    data?.feasibility_getActiveFeasibilityByCandidacyId
+      ?.dematerializedFeasibilityFile?.prerequisitesPartComplete;
 
   return {
     prerequisites,

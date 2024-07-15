@@ -1,5 +1,5 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 import {
   FeasibilityDecisionHistory,
@@ -22,10 +22,11 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
   const certificationAuthority = feasibility?.certificationAuthority;
 
-  const feasibilityFile = feasibility?.feasibilityFile;
-  const IDFile = feasibility?.IDFile;
-  const documentaryProofFile = feasibility?.documentaryProofFile;
-  const certificateOfAttendanceFile = feasibility?.certificateOfAttendanceFile;
+  const uploadedPdf = feasibility?.feasibilityUploadedPdf;
+  const feasibilityFile = uploadedPdf?.feasibilityFile;
+  const IDFile = uploadedPdf?.IDFile;
+  const documentaryProofFile = uploadedPdf?.documentaryProofFile;
+  const certificateOfAttendanceFile = uploadedPdf?.certificateOfAttendanceFile;
 
   return (
     <div className="flex flex-col gap-6">

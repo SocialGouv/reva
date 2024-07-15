@@ -35,7 +35,6 @@ export default function DffSummary({
     aapDecisionComment,
     attachments,
     prerequisites,
-    sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
     swornStatementFile,

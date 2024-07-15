@@ -1,8 +1,8 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { REST_API_URL } from "@/config/config";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { REST_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyForFeasibility($candidacyId: ID!) {
@@ -42,21 +42,23 @@ const getCandidacyQuery = graphql(`
           contactFullName
           contactEmail
         }
-        feasibilityFile {
-          name
-          url
-        }
-        IDFile {
-          name
-          url
-        }
-        documentaryProofFile {
-          name
-          url
-        }
-        certificateOfAttendanceFile {
-          name
-          url
+        feasibilityUploadedPdf {
+          feasibilityFile {
+            name
+            url
+          }
+          IDFile {
+            name
+            url
+          }
+          documentaryProofFile {
+            name
+            url
+          }
+          certificateOfAttendanceFile {
+            name
+            url
+          }
         }
         history {
           id

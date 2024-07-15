@@ -17,23 +17,24 @@ export const createOrUpdateSwornStatement = graphql(`
   }
 `);
 
-const dematerializedFeasibilityFileWithSwornStatementByCandidacyId = graphql(`
-  query dematerializedFeasibilityFileWithSwornStatementByCandidacyId(
-    $candidacyId: ID!
-  ) {
-    dematerialized_feasibility_file_getByCandidacyId(
-      candidacyId: $candidacyId
+const feasibilityWithDematerializedFeasibilityFileWithSwornStatementByCandidacyId =
+  graphql(`
+    query feasibilityWithDematerializedFeasibilityFileWithSwornStatementByCandidacyId(
+      $candidacyId: ID!
     ) {
-      swornStatementFile {
-        name
-        previewUrl
-        url
-        mimeType
-        __typename
+      feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        dematerializedFeasibilityFile {
+          swornStatementFile {
+            name
+            previewUrl
+            url
+            mimeType
+            __typename
+          }
+        }
       }
     }
-  }
-`);
+  `);
 
 export const useSwornStatement = () => {
   const { graphqlClient } = useGraphQlClient();
@@ -49,7 +50,7 @@ export const useSwornStatement = () => {
       ],
       queryFn: () =>
         graphqlClient.request(
-          dematerializedFeasibilityFileWithSwornStatementByCandidacyId,
+          feasibilityWithDematerializedFeasibilityFileWithSwornStatementByCandidacyId,
           {
             candidacyId,
           },
@@ -57,8 +58,9 @@ export const useSwornStatement = () => {
     });
 
   const candidacy =
-    getCandidacyByIdResponse?.dematerialized_feasibility_file_getByCandidacyId;
-  const swornStatementFile = candidacy?.swornStatementFile;
+    getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
+  const swornStatementFile =
+    candidacy?.dematerializedFeasibilityFile?.swornStatementFile;
   return {
     swornStatementFile,
     queryStatus: getCandidacyByIdStatus,

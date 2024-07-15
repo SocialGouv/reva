@@ -16,13 +16,15 @@ const getCandidacyById = graphql(`
           label
         }
       }
-      dematerializedFeasibilityFile {
-        firstForeignLanguage
-        secondForeignLanguage
-        option
-        blocsDeCompetences {
-          certificationCompetenceBloc {
-            id
+      feasibility {
+        dematerializedFeasibilityFile {
+          firstForeignLanguage
+          secondForeignLanguage
+          option
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              id
+            }
           }
         }
       }
@@ -78,7 +80,7 @@ export const useCertificationPageLogic = () => {
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
   const dematerializedFeasibilityFile =
-    candidacy?.dematerializedFeasibilityFile;
+    candidacy?.feasibility?.dematerializedFeasibilityFile;
   return {
     candidacy,
     certification,

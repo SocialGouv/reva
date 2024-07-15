@@ -14,9 +14,6 @@ export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
   "Query.*": defaultSecurity,
 
-  "Query.dematerialized_feasibility_file_getByCandidacyId":
-    isAdminOrCandidacyCompanion,
-
   "Mutation.*": defaultSecurity,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationInfo":

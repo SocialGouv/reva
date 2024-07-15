@@ -58,21 +58,10 @@ enum PrerequisiteState {
   IN_PROGRESS
   RECOMMENDED
 }
-
-enum CandidacyFeasibilityFormat {
-  UPLOADED_PDF
-  DEMATERIALIZED
-}
-
 type CertificationCompetenceDetails {
   certificationCompetence: CertificationCompetence!
   text: String!
   state: DFFCertificationCompetenceDetailsState!
-}
-
-type Candidacy {
-  dematerializedFeasibilityFile: DematerializedFeasibilityFile
-  feasibilityFormat: CandidacyFeasibilityFormat
 }
 
 type DFFAttachment {
@@ -136,12 +125,6 @@ input DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
 
 input DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
   swornStatement: Upload!
-}
-
-type Query {
-  dematerialized_feasibility_file_getByCandidacyId(
-    candidacyId: ID!
-  ): DematerializedFeasibilityFile
 }
 
 type Mutation {

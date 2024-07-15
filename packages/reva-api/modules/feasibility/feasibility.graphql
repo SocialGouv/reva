@@ -22,6 +22,7 @@ type Feasibility {
   history: [FeasibilityHistory!]!
   dematerializedFeasibilityFile: DematerializedFeasibilityFile
   feasibilityUploadedPdf: FeasibilityUploadedPdf
+  feasibilityFormat: FeasibilityFormat!
 }
 
 type FeasibilityHistory {
@@ -77,4 +78,5 @@ type Query {
     searchFilter: String
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
+  feasibility_getActiveFeasibilityByCandidacyId(candidacyId: ID!): Feasibility
 }

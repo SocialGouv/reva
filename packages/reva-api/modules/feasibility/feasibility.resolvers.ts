@@ -1,3 +1,4 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   getActiveFeasibilities,
   getActiveFeasibilityByCandidacyid,
@@ -6,10 +7,11 @@ import {
   getFeasibilityById,
   getFileNameAndUrl,
 } from "./feasibility.features";
+import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 
-export const feasibilityResolvers = {
+const unsafeResolvers = {
   Candidacy: {
     certificationAuthorities: (parent: {
       certificationId: string;
@@ -63,5 +65,14 @@ export const feasibilityResolvers = {
         hasRole: context.auth.hasRole,
         keycloakId: context.auth?.userInfo?.sub,
       }),
+    feasibility_getActiveFeasibilityByCandidacyId: (
+      _parent: unknown,
+      params: { candidacyId: string },
+    ) => getActiveFeasibilityByCandidacyid({ candidacyId: params.candidacyId }),
   },
 };
+
+export const feasibilityResolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap,
+);
