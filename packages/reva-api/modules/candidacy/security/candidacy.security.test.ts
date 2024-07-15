@@ -161,7 +161,11 @@ beforeAll(async () => {
   feasibility = await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
-      feasibilityFileId: feasibilityFile.id,
+      feasibilityUploadedPdf: {
+        create: {
+          feasibilityFileId: feasibilityFile.id,
+        },
+      },
       certificationAuthorityId: certificationAuthority.id,
     },
   });

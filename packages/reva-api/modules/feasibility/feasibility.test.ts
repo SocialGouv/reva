@@ -161,7 +161,11 @@ async function createFeasibility(account: Account) {
   return await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
-      feasibilityFileId: feasibilityFile.id,
+      feasibilityUploadedPdf: {
+        create: {
+          feasibilityFileId: feasibilityFile.id,
+        },
+      },
       certificationAuthorityId: account.certificationAuthorityId ?? "",
     },
   });
