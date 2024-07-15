@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { UpdateOrganimsAccountAndOrganismInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getAgenciesInfoQuery = graphql(`
   query getAgenciesInfoForUpdateUserAccountPage {
@@ -30,16 +31,42 @@ const getAgenciesInfoQuery = graphql(`
   }
 `);
 
+const updateUserAccountMutation = graphql(`
+  mutation updateUserAccountForUpdateUserAccountPage(
+    $maisonMereAAPId: ID!
+    $data: UpdateOrganimsAccountAndOrganismInput!
+  ) {
+    organism_updateAccountAndOrganism(
+      maisonMereAAPId: $maisonMereAAPId
+      data: $data
+    ) {
+      id
+    }
+  }
+`);
+
 export const useUpdateUserAccountPage = ({
   userAccountId,
 }: {
   userAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
-  const { data: agenciesInfo } = useQuery({
+  const { data: agenciesInfo, status: agenciesInfoStatus } = useQuery({
     queryKey: ["organisms"],
     queryFn: () => graphqlClient.request(getAgenciesInfoQuery),
+  });
+
+  const updateUserAccount = useMutation({
+    mutationFn: (data: UpdateOrganimsAccountAndOrganismInput) =>
+      graphqlClient.request(updateUserAccountMutation, {
+        maisonMereAAPId:
+          agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP?.id,
+        data,
+      }),
+    mutationKey: ["organisms", "agencies-settings-add-user-account-page"],
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["organisms"] }),
   });
 
   const agencies =
@@ -53,5 +80,11 @@ export const useUpdateUserAccountPage = ({
     .flatMap((a) => a.accounts)
     .find((a) => a.id === userAccountId);
 
-  return { headAgency, nonHeadAgencies, userAccount };
+  return {
+    headAgency,
+    nonHeadAgencies,
+    userAccount,
+    agenciesInfoStatus,
+    updateUserAccount,
+  };
 };

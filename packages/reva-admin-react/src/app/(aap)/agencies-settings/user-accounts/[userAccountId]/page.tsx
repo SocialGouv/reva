@@ -1,18 +1,44 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
-import { UserAccountForm } from "../_components/UserAccountForm";
+import {
+  UserAccountForm,
+  UserAccountFormData,
+} from "../_components/UserAccountForm";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const UpdateUserAccountPage = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();
-  const { userAccount, headAgency, nonHeadAgencies } = useUpdateUserAccountPage(
-    { userAccountId },
-  );
+  const router = useRouter();
+  const {
+    userAccount,
+    headAgency,
+    nonHeadAgencies,
+    agenciesInfoStatus,
+    updateUserAccount,
+  } = useUpdateUserAccountPage({ userAccountId });
 
-  const handleFormSubmit = async () => {};
+  const handleFormSubmit = async (data: UserAccountFormData) => {
+    try {
+      await updateUserAccount.mutateAsync({
+        accountId: userAccountId,
+        accountEmail: data.email,
+        accountFirstname: data.firstname,
+        accountLastname: data.lastname,
+        organismId: data.organismId,
+      });
+      successToast("Modification enregistrées");
+      router.push("/agencies-settings/legal-information");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
+  if (agenciesInfoStatus !== "success") {
+    return null;
+  }
   return (
     <div className="w-full flex flex-col">
       <h1 className="mb-12">
