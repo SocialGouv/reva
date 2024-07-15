@@ -127,6 +127,14 @@ export interface CreateOrganismAccountInput {
   accountLastname: string;
   accountEmail: string;
 }
+
+export interface UpdateOrganimsAccountAndOrganismInput {
+  organismId: string;
+  accountId: string;
+  accountFirstname: string;
+  accountLastname: string;
+  accountEmail: string;
+}
 export interface UpdateOrganismAccountInput {
   organismId: string;
   accountFirstname: string;

@@ -48,6 +48,7 @@ import {
   CreateOrganismAccountInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
+  UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
   UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
@@ -70,6 +71,7 @@ import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
 import { createOrganismAccount } from "./features/createOrganismAccount";
+import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 
 const unsafeResolvers = {
   Account: {
@@ -486,6 +488,14 @@ const unsafeResolvers = {
         data: CreateOrganismAccountInput;
       },
     ) => createOrganismAccount(data),
+    organism_updateAccountAndOrganism: async (
+      _parent: unknown,
+      {
+        data,
+      }: {
+        data: UpdateOrganimsAccountAndOrganismInput;
+      },
+    ) => updateOrganismAccountAndOrganism(data),
     organism_updateOrganismAccount: async (
       _parent: unknown,
       params: {
