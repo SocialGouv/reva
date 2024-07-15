@@ -4,6 +4,7 @@ import { useAccountSetup } from "./accountSetup.hook";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 export default function AccountSetup({
   maisonMereAAPId,
@@ -44,7 +45,8 @@ export default function AccountSetup({
                 router.push(
                   `/agencies-settings/${headAgencyId}/informations-generales/distance`,
                 );
-              }
+              },
+              onError: graphqlErrorToast,
             });
           }}
         >
