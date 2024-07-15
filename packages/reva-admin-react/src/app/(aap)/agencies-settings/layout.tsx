@@ -190,6 +190,11 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         items: [
           ...agencies
             .flatMap((agency) => agency.accounts)
+            .sort((a, b) =>
+              `${a.firstname} ${a.lastname}`.localeCompare(
+                `${b.firstname} ${b.lastname}`,
+              ),
+            )
             .map((a) => {
               return {
                 text: `${a?.firstname}  ${a?.lastname}`,
