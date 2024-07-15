@@ -64,8 +64,13 @@ export const UserAccountForm = ({
   const handleFormSubmit = handleSubmit(onSubmit);
 
   const handleReset = useCallback(() => {
-    reset();
-  }, [reset]);
+    reset(
+      defaultValues || {
+        modalitesAccompagnement: "REMOTE",
+        organismId: remoteAgency.id,
+      },
+    );
+  }, [defaultValues, remoteAgency.id, reset]);
 
   useEffect(() => {
     handleReset();
