@@ -87,10 +87,10 @@ ALTER TABLE "feasibility_uploaded_pdf" ADD CONSTRAINT "feasibility_uploaded_pdf_
 ALTER TABLE "feasibility_uploaded_pdf" ADD CONSTRAINT "feasibility_uploaded_pdf_certificate_of_attendance_file_id_fkey" FOREIGN KEY ("certificate_of_attendance_file_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "feasibility_uploaded_pdf" ADD CONSTRAINT "feasibility_uploaded_pdf_feasibility_id_fkey" FOREIGN KEY ("feasibility_id") REFERENCES "feasibility"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "feasibility_uploaded_pdf" ADD CONSTRAINT "feasibility_uploaded_pdf_feasibility_id_fkey" FOREIGN KEY ("feasibility_id") REFERENCES "feasibility"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "dematerialized_feasibility_file" ADD CONSTRAINT "dematerialized_feasibility_file_feasibility_id_fkey" FOREIGN KEY ("feasibility_id") REFERENCES "feasibility"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "dematerialized_feasibility_file" ADD CONSTRAINT "dematerialized_feasibility_file_feasibility_id_fkey" FOREIGN KEY ("feasibility_id") REFERENCES "feasibility"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AlterTable
 ALTER TABLE "feasibility" 
