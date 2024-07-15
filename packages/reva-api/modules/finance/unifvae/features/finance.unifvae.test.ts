@@ -134,11 +134,15 @@ beforeAll(async () => {
         create: {
           decision: "ADMISSIBLE",
           certificationAuthority: { create: { label: "dummy" } },
-          feasibilityFile: {
+          feasibilityUploadedPdf: {
             create: {
-              name: "dummyFile.ext",
-              mimeType: "kikoo/lol",
-              path: "dummyFile.ext",
+              feasibilityFile: {
+                create: {
+                  name: "dummyFile.ext",
+                  mimeType: "kikoo/lol",
+                  path: "dummyFile.ext",
+                },
+              },
             },
           },
         },
