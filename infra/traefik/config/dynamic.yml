@@ -52,6 +52,13 @@ http:
         - removeHeader
         - add-security-headers
 
+    app-candidate-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/candidat`)"
+      service: app-candidate-staging
+      middlewares:
+        - removeHeader
+        - add-security-headers
+
     api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
       service: api-staging
@@ -240,6 +247,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/app/"
+
+    app-candidate-staging:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging-candidate.osc-fr1.scalingo.io/candidat/"
 
     api-staging:
       loadBalancer:
