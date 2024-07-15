@@ -1,18 +1,6 @@
 import { z } from "zod";
 
 export const agencyFormSchema = z.object({
-  firstname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  lastname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  email: z
-    .string()
-    .email("Le champ doit contenir une adresse email")
-    .default(""),
   adresseNumeroEtNomDeRue: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")

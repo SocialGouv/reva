@@ -1,9 +1,6 @@
 import { randomUUID } from "crypto";
 
 import { prismaClient } from "../../../prisma/client";
-import { createAccountProfile } from "../../account/database/accounts";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
-import * as IAM from "../../account/features/keycloak";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -17,6 +14,7 @@ import { getInformationsCommercialesByEmailContact } from "./getInformationsComm
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
+import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 
 export const createAgency = async ({
   keycloakId,
@@ -25,22 +23,7 @@ export const createAgency = async ({
   keycloakId: string;
   params: CreateAgencyInput;
 }) => {
-  const getIamAccount = IAM.getAccount;
-  const createAccountInIAM = IAM.createAccount;
-
   try {
-    const accountExist = !!(await getIamAccount({
-      email: params.email,
-      username: params.email,
-    }));
-
-    if (accountExist) {
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-        `Un compte IAM existe déjà pour l'email ${params.email}`,
-      );
-    }
-
     const account = await getAccountByKeycloakId({
       keycloakId,
     });
@@ -63,9 +46,6 @@ export const createAgency = async ({
       );
     }
     const {
-      firstname,
-      lastname,
-      email,
       contactAdministrativeEmail,
       contactAdministrativePhone,
       adresseInformationsComplementaires,
@@ -150,29 +130,6 @@ export const createAgency = async ({
         })),
       });
     }
-
-    //iam account creation
-    const newKeycloakId = await createAccountInIAM({
-      email,
-      firstname,
-      lastname,
-      username: email,
-      group: "organism",
-      maisonMereAAPRaisonSociale: raisonSociale,
-    });
-
-    logger.info(
-      `[validateorganismData] Successfuly created IAM account ${newKeycloakId}`,
-    );
-
-    //db account creation
-    await createAccountProfile({
-      firstname: params.firstname,
-      lastname: params.lastname,
-      email: params.email,
-      keycloakId: newKeycloakId,
-      organismId: newOrganism.id,
-    });
 
     logger.info(
       `[validateorganismData] Successfuly created AP with organismId ${newOrganism.id}`,

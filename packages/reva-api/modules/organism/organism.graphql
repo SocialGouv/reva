@@ -251,10 +251,6 @@ input CreateAgencyInput {
   contactAdministrativePhone: String!
   website: String
   conformeNormesAccessbilite: ConformiteNormeAccessibilite!
-  firstname: String!
-  lastname: String!
-  email: String!
-  accountId: UUID
 }
 
 input UpdateOrganismDegreesAndDomainesInput {

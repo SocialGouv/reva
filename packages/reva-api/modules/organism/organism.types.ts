@@ -105,10 +105,6 @@ export interface CreateAgencyInput {
   contactAdministrativePhone?: string;
   website?: string;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite;
-  firstname: string;
-  lastname: string;
-  email: string;
-  accountId?: string;
 }
 
 export interface UpdateOrganismInterventionZoneInput {
