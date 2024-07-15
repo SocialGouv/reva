@@ -11,9 +11,9 @@ export const FeasibilityDecisionHistory = (props: Props) => {
 
   return (
     <div>
-      <h5 className="text-2xl font-bold mb-2">
+      <h4>
         {history.length === 1 ? "Décision précédente" : "Décisions précédentes"}
-      </h5>
+      </h4>
 
       <div className="gap-8">
         {history.map((previousFeasibility) => (

@@ -30,7 +30,7 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h5 className="mb-2">Décision prise concernant ce dossier</h5>
+        <h4>Décision prise concernant ce dossier</h4>
         {feasibility?.decision == "PENDING" && (
           <GrayCard className="gap-4 italic">En attente</GrayCard>
         )}

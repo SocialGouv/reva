@@ -10,6 +10,8 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Select from "@codegouvfr/react-dsfr/Select";
 
+import { FeasibilityHistory } from "@/graphql/generated/graphql";
+
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
@@ -120,6 +122,19 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
     }
   });
 
+  let feasibiltyHistory: FeasibilityHistory[] = feasibility?.history || [];
+  if (feasibility?.decision == "INCOMPLETE") {
+    feasibiltyHistory = [
+      {
+        id: feasibility.id,
+        decision: feasibility.decision,
+        decisionComment: feasibility.decisionComment,
+        decisionSentAt: feasibility.decisionSentAt,
+      },
+      ...feasibiltyHistory,
+    ];
+  }
+
   return (
     <>
       <h5 className="mb-0">Pièces jointes</h5>
@@ -217,8 +232,8 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           />
         )}
 
-        {feasibility?.history && feasibility.history.length > 0 && (
-          <FeasibilityDecisionHistory history={feasibility?.history} />
+        {feasibiltyHistory.length > 0 && (
+          <FeasibilityDecisionHistory history={feasibiltyHistory} />
         )}
 
         <fieldset>
