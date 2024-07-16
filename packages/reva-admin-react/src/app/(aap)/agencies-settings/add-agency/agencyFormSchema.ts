@@ -31,6 +31,12 @@ export const agencyFormSchema = z.object({
     "NON_CONFORME",
     "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
   ]),
+  organismDegrees: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
+  organismDomaines: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
 });
 
 export type AgencyFormData = z.infer<typeof agencyFormSchema>;

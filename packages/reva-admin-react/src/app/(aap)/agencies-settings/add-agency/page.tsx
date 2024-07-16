@@ -4,32 +4,42 @@ import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useCallback, useEffect } from "react";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { AgencyFormData, agencyFormSchema } from "./agencyFormSchema";
 import { useAgencyPage } from "./addAgencyPage.hook";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 
 const AddAgencyPage = () => {
-  const [isSubmittingModal, setIsSubmittingModal] = useState(false);
   const router = useRouter();
 
-  const { createAgency } = useAgencyPage();
+  const { degrees, domaines, createAgency } = useAgencyPage();
 
   const methods = useForm<AgencyFormData>({
     resolver: zodResolver(agencyFormSchema),
+    defaultValues: { organismDegrees: [], organismDomaines: [] },
   });
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = methods;
+
+  const { fields: organismDegreesFields } = useFieldArray({
+    control,
+    name: "organismDegrees",
+  });
+
+  const { fields: organismDomainesFields } = useFieldArray({
+    control,
+    name: "organismDomaines",
+  });
 
   const handleFormSubmit = handleSubmit(async (data) => {
     const organismData = {
@@ -55,8 +65,21 @@ const AddAgencyPage = () => {
   });
 
   const handleReset = useCallback(() => {
-    reset();
-  }, [reset]);
+    reset({
+      organismDegrees: degrees
+        .filter((d) => d.level > 2)
+        .map((d) => ({
+          id: d.id,
+          label: d.longLabel,
+          checked: false,
+        })),
+      organismDomaines: domaines.map((d) => ({
+        id: d.id,
+        label: d.label,
+        checked: false,
+      })),
+    });
+  }, [degrees, domaines, reset]);
 
   useEffect(() => {
     handleReset();
@@ -213,6 +236,58 @@ const AddAgencyPage = () => {
                     }
                     stateRelatedMessage={"Veuillez sélectionner une option"}
                   />
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend className="text-3xl font-bold mb-4">
+                  Filières, branches et niveaux
+                </legend>
+                <p>
+                  Sélectionnez les filières et les niveaux de certification que
+                  vous couvrez (du niveau 3 à 8).
+                  <br />
+                  Vous apparaîtrez dans les résultats de recherche pour les
+                  filières et niveaux de certification sélectionnés.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 mt-10">
+                  <fieldset className="flex flex-col gap-4">
+                    <legend className="text-3xl font-bold mb-4">
+                      Filières
+                    </legend>
+                    <Checkbox
+                      legend={
+                        <p className="text-sm">
+                          Quelles sont les filières que vous couvrez ?
+                        </p>
+                      }
+                      options={organismDomainesFields.map((od, odIndex) => ({
+                        label: od.label,
+                        nativeInputProps: {
+                          ...register(`organismDomaines.${odIndex}.checked`),
+                        },
+                      }))}
+                    />
+                  </fieldset>
+
+                  <fieldset className="flex flex-col gap-4">
+                    <legend className="text-3xl font-bold mb-4">
+                      Niveaux de certification
+                    </legend>
+                    <Checkbox
+                      legend={
+                        <p className="text-sm">
+                          Quels sont les niveaux de certification couverts sur
+                          vos filières sélectionnées ?
+                        </p>
+                      }
+                      options={organismDegreesFields.map((od, odIndex) => ({
+                        label: od.label,
+                        nativeInputProps: {
+                          ...register(`organismDegrees.${odIndex}.checked`),
+                        },
+                      }))}
+                    />
+                  </fieldset>
                 </div>
               </fieldset>
             </div>
