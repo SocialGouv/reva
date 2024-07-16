@@ -153,7 +153,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
             },
             text: (
               <Button size="small" priority="secondary">
-                Ajouter une agence
+                Ajouter un lieu d'accueil
               </Button>
             ),
           },
