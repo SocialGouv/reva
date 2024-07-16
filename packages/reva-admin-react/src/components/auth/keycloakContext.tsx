@@ -112,7 +112,7 @@ export const KeycloakProvider = ({
             setTimeoutRefreshToken();
           } else {
             keycloakInstance.login({
-              redirectUri: window.location.origin,
+              redirectUri: window.location.href,
             });
           }
 
