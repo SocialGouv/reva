@@ -1,6 +1,7 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 import {
+  Candidacy,
   Candidate,
   DematerializedFeasibilityFile,
   DffAttachment,
@@ -17,12 +18,12 @@ import ParcoursSection from "./components/ParcoursSection";
 
 interface Props {
   dematerializedFeasibilityFile: DematerializedFeasibilityFile;
+  candidacy: Candidacy;
 }
 
 export function DffSummary(props: Props) {
-  const { dematerializedFeasibilityFile } = props;
+  const { dematerializedFeasibilityFile, candidacy } = props;
 
-  const { candidacy } = dematerializedFeasibilityFile;
   const { candidate } = candidacy;
 
   const {

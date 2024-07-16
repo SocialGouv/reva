@@ -15,7 +15,7 @@ import { createOrUpdateSwornStatement } from "services/candidacyServices";
 
 export const FeasibilityDematSubmission = () => {
   const { state, mainService } = useMainMachineContext();
-  const { candidacyId, organism, feasibilityDemat } = state.context;
+  const { candidacyId, organism, feasibilityDemat, candidacy } = state.context;
 
   const [swornStatementFile, setSwornStatementFile] = useState<
     File | undefined
@@ -52,7 +52,7 @@ export const FeasibilityDematSubmission = () => {
     [feasibilityDemat?.swornStatementFile],
   );
 
-  if (!feasibilityDemat) {
+  if (!feasibilityDemat || !candidacy) {
     return null;
   }
 
@@ -60,7 +60,10 @@ export const FeasibilityDematSubmission = () => {
     <Page title="Dossier de faisabilité">
       <h1 className="mt-6">Dossier de faisabilité</h1>
 
-      <DffSummary dematerializedFeasibilityFile={feasibilityDemat} />
+      <DffSummary
+        dematerializedFeasibilityFile={feasibilityDemat}
+        candidacy={candidacy}
+      />
 
       <form
         className="flex flex-col gap-12"

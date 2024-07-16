@@ -6,10 +6,11 @@ import { format } from "date-fns";
 export const FeasibilityDematTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
-  const { feasibilityDemat: feasibility } = state.context;
+  const { feasibilityDemat } = state.context;
 
-  const PENDING_AAP = feasibility && !feasibility.sentToCandidateAt;
-  const PENDING_CANDIDATE = feasibility && feasibility.sentToCandidateAt;
+  const PENDING_AAP = feasibilityDemat && !feasibilityDemat.sentToCandidateAt;
+  const PENDING_CANDIDATE =
+    feasibilityDemat && feasibilityDemat.sentToCandidateAt;
 
   const INCOMPLETE = false;
   const ADMISSIBLE = false;
@@ -39,7 +40,7 @@ export const FeasibilityDematTimelineElement = () => {
       <>
         <span>
           Vous avez reçu votre dossier de faisabilité{" "}
-          {format(feasibility.sentToCandidateAt!, "dd/MM/yyyy")}. Votre
+          {format(feasibilityDemat.sentToCandidateAt!, "dd/MM/yyyy")}. Votre
           accompagnateur est en train d'y apporter quelques modifications. Vous
           recevrez prochainement la nouvelle version de votre dossier.
         </span>
@@ -60,7 +61,7 @@ export const FeasibilityDematTimelineElement = () => {
           : "disabled"
       }
       description={
-        !!feasibility ? (
+        !!feasibilityDemat ? (
           <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
             Le dossier constitué à cette étape vous permettra d’accéder à votre
             accompagnement VAE.
@@ -69,7 +70,7 @@ export const FeasibilityDematTimelineElement = () => {
       }
     >
       {() =>
-        !!feasibility && (
+        !!feasibilityDemat && (
           <>
             <div className="flex text-dsfrGray-500">
               <span className={`fr-icon ${icon} mr-2 self-center mb-6`} />
@@ -81,14 +82,14 @@ export const FeasibilityDematTimelineElement = () => {
               <Button
                 data-test="vérifier-votre-dossier-de-faisabilité"
                 priority="primary"
-                disabled={!feasibility.sentToCandidateAt}
+                disabled={!feasibilityDemat.sentToCandidateAt}
                 nativeButtonProps={{
                   onClick: () => {
                     mainService.send("OPEN_FEASIBILITY_DEMAT_SUBMISSION");
                   },
                 }}
               >
-                {feasibility.swornStatementFileId
+                {feasibilityDemat.swornStatementFileId
                   ? "Consultez"
                   : "Vérifiez votre dossier"}
               </Button>

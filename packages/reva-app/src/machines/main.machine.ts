@@ -1,5 +1,8 @@
 import * as Sentry from "@sentry/react";
-import { DematerializedFeasibilityFile } from "graphql/generated/graphql";
+import {
+  Candidacy,
+  DematerializedFeasibilityFile,
+} from "graphql/generated/graphql";
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import {
@@ -70,6 +73,7 @@ export interface MainContext {
   activeFeatures: string[];
   candidacyId?: string;
   certificationPage: Page<Certification>;
+  candidacy?: Candidacy;
   candidacyCreatedAt?: Date;
   candidacyStatus: candidacyStatus;
   contact?: Contact;
@@ -279,6 +283,7 @@ export const mainMachine =
           },
           firstAppointmentOccuredAt: undefined,
           currentCertificationPageNumber: 1,
+          candidacy: undefined,
           candidacyStatus: "CANDIDATURE_VIDE",
           showStatusBar: false,
           experiences: { rest: [] },
@@ -1128,6 +1133,7 @@ export const mainMachine =
 
             return {
               activeFeatures: event.data.activeFeatures,
+              candidacy: event.data.candidacy,
               candidacyId: event.data.candidacy.id,
               candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
               candidacyStatus: event.data.candidacy.candidacyStatus,
