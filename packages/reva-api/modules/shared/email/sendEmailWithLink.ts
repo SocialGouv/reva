@@ -34,7 +34,7 @@ export const sendEmailWithLink = async ({
   const actionPath =
     isRevaCandidateActive &&
     (action == "registration" || action == "confirmEmail")
-      ? "login"
+      ? "api/login"
       : action;
 
   const baseUrl = `${process.env.BASE_URL}/${appPath}`;
