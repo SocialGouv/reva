@@ -105,6 +105,8 @@ export interface CreateAgencyInput {
   contactAdministrativePhone?: string;
   website?: string;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite;
+  degreeIds: string[];
+  domaineIds: string[];
 }
 
 export interface UpdateOrganismInterventionZoneInput {

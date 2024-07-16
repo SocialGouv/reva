@@ -251,6 +251,8 @@ input CreateAgencyInput {
   contactAdministrativePhone: String!
   website: String
   conformeNormesAccessbilite: ConformiteNormeAccessibilite!
+  degreeIds: [ID!]!
+  domaineIds: [ID!]!
 }
 
 input UpdateOrganismDegreesAndDomainesInput {

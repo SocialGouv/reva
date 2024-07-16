@@ -53,6 +53,10 @@ const AddAgencyPage = () => {
       contactAdministrativePhone: data.telephone,
       website: data.siteInternet,
       conformeNormesAccessbilite: data.conformeNormesAccessbilite,
+      domaineIds: data.organismDomaines
+        .filter((d) => d.checked)
+        .map((d) => d.id),
+      degreeIds: data.organismDegrees.filter((d) => d.checked).map((d) => d.id),
     };
 
     try {
