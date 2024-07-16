@@ -1,5 +1,3 @@
-"use client";
-
 import { BackToHomeButton } from "@/components/legacy/molecules/BackToHomeButton/BackToHomeButton";
 import { ReactNode } from "react";
 
