@@ -26,7 +26,7 @@ export const sendEmailWithLinkPurifyJS = async ({
   const actionPath =
     isRevaCandidateActive &&
     (action == "registration" || action == "confirmEmail")
-      ? "login"
+      ? "api/login"
       : action;
 
   const url = `${process.env.BASE_URL}/${appPath}/${actionPath}${

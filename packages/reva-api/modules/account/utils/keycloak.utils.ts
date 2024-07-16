@@ -52,7 +52,7 @@ export const impersonateCandiate = async (
 
     return {
       headers: data.headers,
-      redirect: `${baseUrl}/${isRevaCandidateActive ? "candidat" : "app"}`,
+      redirect: `${baseUrl}/${isRevaCandidateActive ? "candidat/api" : "app"}`,
     };
   }
 
