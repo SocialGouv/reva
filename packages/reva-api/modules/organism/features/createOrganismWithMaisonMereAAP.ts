@@ -17,6 +17,7 @@ import { getInformationsCommercialesByEmailContact } from "./getInformationsComm
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
+import { getDegrees } from "../../referential/features/getDegrees";
 
 interface CreateOrganismWithMaisonMereAAPRequestParams {
   organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
@@ -102,6 +103,8 @@ export const createOrganismWithMaisonMereAAP = async ({
       zip: organismData.zip,
     });
 
+    const degrees = await getDegrees();
+
     //organism creation
     const newOrganism = (
       await createOrganism({
@@ -116,6 +119,7 @@ export const createOrganismWithMaisonMereAAP = async ({
         departmentsWithOrganismMethods,
         qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
         llToEarth,
+        degreeIds: degrees.map((d) => d.id),
       })
     ).unsafeCoerce();
 

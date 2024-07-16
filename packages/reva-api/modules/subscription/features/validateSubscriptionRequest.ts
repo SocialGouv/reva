@@ -12,6 +12,7 @@ import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 import { getDepartments } from "../../referential/features/getDepartments";
+import { getDegrees } from "../../referential/features/getDegrees";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
@@ -75,6 +76,8 @@ export const validateSubscriptionRequest = async ({
       `Cette adresse mail est déjà associée à un compte. L'AAP doit utiliser une adresse mail différente pour créer un compte.`,
     );
 
+  const degrees = await getDegrees();
+
   //organism creation
   const newOrganism = (
     await createOrganism({
@@ -89,6 +92,7 @@ export const validateSubscriptionRequest = async ({
       llToEarth: null,
       domaineIds: [],
       ccnIds: [],
+      degreeIds: degrees.map((d) => d.id),
       departmentsWithOrganismMethods: [],
       qualiopiCertificateExpiresAt: new Date(),
       isOnSite: false, //default agency is not on site since we don't have an address

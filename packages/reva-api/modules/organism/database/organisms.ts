@@ -4,7 +4,6 @@ import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
 import { SearchOrganismFilter } from "../../candidacy/candidacy.types";
-import { getDegrees } from "../../referential/features/getDegrees";
 import { logger } from "../../shared/logger";
 import * as domain from "../organism.types";
 import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
@@ -56,6 +55,7 @@ export const createOrganism = async (data: {
   typology: OrganismTypology;
   ccnIds?: string[];
   domaineIds?: string[];
+  degreeIds?: string[];
   qualiopiCertificateExpiresAt: Date;
   departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
   llToEarth: string | null;
@@ -63,9 +63,13 @@ export const createOrganism = async (data: {
   isHeadAgency?: boolean;
 }): Promise<Either<string, domain.Organism>> => {
   try {
-    const degrees = await getDegrees();
-    const { domaineIds, ccnIds, departmentsWithOrganismMethods, ...otherData } =
-      data;
+    const {
+      domaineIds,
+      degreeIds,
+      ccnIds,
+      departmentsWithOrganismMethods,
+      ...otherData
+    } = data;
     const organism = await prismaClient.organism.create({
       data: {
         ...otherData,
@@ -85,6 +89,14 @@ export const createOrganism = async (data: {
               })) || [],
           },
         },
+        managedDegrees: {
+          createMany: {
+            data:
+              degreeIds?.map((degreeId) => ({
+                degreeId,
+              })) || [],
+          },
+        },
         departmentsWithOrganismMethods: {
           createMany: {
             data: departmentsWithOrganismMethods?.map((d) => ({
@@ -92,11 +104,6 @@ export const createOrganism = async (data: {
               isOnSite: d.isOnSite,
               isRemote: d.isRemote,
             })),
-          },
-        },
-        managedDegrees: {
-          createMany: {
-            data: degrees.map((d) => ({ degreeId: d.id })),
           },
         },
       },

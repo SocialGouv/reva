@@ -15,6 +15,7 @@ import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+import { getDegrees } from "../../referential/features/getDegrees";
 
 export const createAgency = async ({
   keycloakId,
@@ -76,6 +77,8 @@ export const createAgency = async ({
       zip: params.zip,
     });
 
+    const degrees = await getDegrees();
+
     //organism creation
     const newOrganism = (
       await createOrganism({
@@ -91,6 +94,8 @@ export const createAgency = async ({
         qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
         llToEarth,
         isOnSite: true,
+        domaineIds,
+        degreeIds: degrees.map((d) => d.id),
       })
     ).unsafeCoerce();
 
