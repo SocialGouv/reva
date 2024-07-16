@@ -1,3 +1,5 @@
+import { setCookie, deleteCookie, getCookie } from 'cookies-next';
+
 const storageKey = "tokens";
 
 export interface Tokens {
@@ -8,7 +10,7 @@ export interface Tokens {
 
 export const getTokens = (): Tokens | undefined => {
   try {
-    const tokensData = localStorage.getItem(storageKey);
+    const tokensData = getCookie(storageKey);
     if (tokensData) {
       const tokens = JSON.parse(tokensData);
       return tokens;
@@ -20,12 +22,12 @@ export const getTokens = (): Tokens | undefined => {
 
 export const saveTokens = (tokens: Tokens): void => {
   try {
-    localStorage.setItem(storageKey, JSON.stringify(tokens));
+    setCookie(storageKey, JSON.stringify(tokens));
   } catch (error) {}
 };
 
 export const removeTokens = (): void => {
   try {
-    localStorage.removeItem(storageKey);
+    deleteCookie(storageKey);
   } catch (error) {}
 };
