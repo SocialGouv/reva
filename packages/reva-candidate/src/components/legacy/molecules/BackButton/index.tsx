@@ -34,8 +34,8 @@ export const BackButton = (
   props: Omit<BasicBackButtonProps, "children"> & { label: string },
 ) => {
   return (
-    <BasicBackButton {...props}>
-      <Link href="/">{props.label}</Link>
+    <BasicBackButton className="p-0 pl-4" {...props}>
+      <Link href="/" className="w-full h-full block px-4 py-2 pl-0">{props.label}</Link>
     </BasicBackButton>
   );
 };

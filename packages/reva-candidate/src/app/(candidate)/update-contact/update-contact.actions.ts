@@ -39,7 +39,7 @@ export const updateContact = async (formData: FormData) => {
     candidateData,
   });
 
-  revalidatePath("/update-contact");
+  revalidatePath("/");
 
   return updateContact.candidacy_updateContact;
 };
