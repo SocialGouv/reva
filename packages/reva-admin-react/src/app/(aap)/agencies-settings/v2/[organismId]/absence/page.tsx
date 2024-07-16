@@ -59,7 +59,7 @@ const AbsencePage = () => {
     <div className="flex flex-col">
       <h1>
         {`Visibilité ${
-          organism.isHeadAgency ? "de la structure" : "Visdu lieu d’accueil"
+          organism.isHeadAgency ? "de la structure" : "du lieu d’accueil"
         }`}
       </h1>
 
