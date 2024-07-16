@@ -25,7 +25,7 @@ export const sendEmailWithLinkPurifyJS = async ({
   const appPath = isRevaCandidateActive && app == "app" ? "candidat" : app;
   const actionPath =
     isRevaCandidateActive &&
-    (action == "registration" || action == "confirmEmail")
+    (action == "registration" || action == "confirmEmail" || action == "login")
       ? "api/login"
       : action;
 
