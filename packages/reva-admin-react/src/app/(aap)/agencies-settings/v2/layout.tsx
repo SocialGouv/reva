@@ -109,31 +109,40 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         ?.organism;
 
     if (isGestionnaireMaisonMereAAP) {
-      const agenciesMenu = {
-        text: "Agences",
+      const headAgency = agencies.find((a) => a.isHeadAgency);
+      const remoteMenu = {
+        text: "Accompagnement à distance",
+        expandedByDefault: false,
+        linkProps: {
+          href: "#",
+          className: "fr-sidemenu__btn bg-transparent font-bold",
+        },
+        items: getOrganismNavItems({
+          organismId: headAgency?.id || "",
+          organismType: "REMOTE",
+        }),
+      };
+      const onSiteMenu = {
+        text: "Accompagnement en présentiel",
         expandedByDefault: true,
         linkProps: {
           href: "#",
-          className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
+          className: "fr-sidemenu__btn bg-transparent font-bold",
         },
         items: [
           ...agencies
+            .filter((a) => !a.isHeadAgency)
             .sort((a, b) => {
-              if (a.isHeadAgency) return -1;
-              if (b.isHeadAgency) return 1;
               const aName = a.informationsCommerciales?.nom || a.label;
               const bName = b.informationsCommerciales?.nom || b.label;
               return aName.localeCompare(bName);
             })
             .map((a) => {
               return {
-                text: `${a.informationsCommerciales?.nom || a.label} ${
-                  a.isHeadAgency ? "(Agence administratrice)" : ""
-                }`,
-                expandedByDefault: a.isHeadAgency,
+                text: `${a.informationsCommerciales?.nom || a.label}`,
                 linkProps: {
                   href: "#",
-                  className: `fr-sidemenu__btn bg-transparent font-bold ${
+                  className: `fr-sidemenu__btn bg-transparent ${
                     isOrgansismSelected({ organismId: a.id })
                       ? selectedItemStyle
                       : ""
@@ -141,7 +150,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
                 },
                 items: getOrganismNavItems({
                   organismId: a.id,
-                  organismType: a.isHeadAgency ? "REMOTE" : "ONSITE",
+                  organismType: "ONSITE",
                 }),
               };
             }),
@@ -165,7 +174,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         expandedByDefault: true,
         linkProps: {
           href: "#",
-          className: "fr-sidemenu__btn bg-transparent text-xl font-bold",
+          className: "fr-sidemenu__btn bg-transparent font-bold",
         },
         items: [
           ...agencies
@@ -180,7 +189,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
                 text: `${a?.firstname}  ${a?.lastname}`,
                 linkProps: {
                   href: `/agencies-settings/v2/user-accounts/${a.id}/`,
-                  className: `fr-sidemenu__btn bg-transparent font-bold ${
+                  className: `fr-sidemenu__btn bg-transparent ${
                     isUserAccountSelected({ accountId: a.id })
                       ? selectedItemStyle
                       : ""
@@ -203,7 +212,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         ],
       };
 
-      items = [agenciesMenu, userAccountsMenu];
+      items = [remoteMenu, onSiteMenu, userAccountsMenu];
     } else if (isOrganism) {
       items = getOrganismNavItems({
         organismId,
