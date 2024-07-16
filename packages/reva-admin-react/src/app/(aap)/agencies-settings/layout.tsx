@@ -50,6 +50,10 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
   });
 
+  const aapInterventionZoneUpdateFeatureActive = isFeatureActive(
+    "AAP_INTERVENTION_ZONE_UPDATE",
+  );
+
   const getNavItem = ({
     text,
     href,
@@ -69,7 +73,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     organismId: string;
     organismType: "REMOTE" | "ONSITE";
   }) => [
-    ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+    ...(aapInterventionZoneUpdateFeatureActive
       ? [
           getNavItem({
             text: "Informations générales",
@@ -94,10 +98,14 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       text: "Absences et fermetures",
       href: `/agencies-settings/${organismId}/absence`,
     }),
-    getNavItem({
-      text: "Administrateur du compte",
-      href: `/agencies-settings/${organismId}/manager`,
-    }),
+    ...(aapInterventionZoneUpdateFeatureActive
+      ? []
+      : [
+          getNavItem({
+            text: "Administrateur du compte",
+            href: `/agencies-settings/${organismId}/manager`,
+          }),
+        ]),
   ];
 
   const getNavItems = () => {
@@ -166,7 +174,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+              href: aapInterventionZoneUpdateFeatureActive
                 ? "/agencies-settings/add-agency/"
                 : "/agencies-settings/add-agence/",
               target: "_self",
@@ -225,9 +233,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
 
       items = [
         agenciesMenu,
-        ...(isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
-          ? [userAccountsMenu]
-          : []),
+        ...(aapInterventionZoneUpdateFeatureActive ? [userAccountsMenu] : []),
       ];
     } else if (isOrganism) {
       items = getOrganismNavItems({
