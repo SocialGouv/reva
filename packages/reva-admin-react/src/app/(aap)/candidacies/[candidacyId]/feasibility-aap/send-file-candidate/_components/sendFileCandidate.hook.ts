@@ -166,8 +166,10 @@ export const useSendFileCandidate = () => {
   const dematerializedFeasibilityFile =
     feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
+  const candidacy = feasibility?.candidacy;
   return {
     dematerializedFeasibilityFileId,
+    candidacy,
     sendToCandidateMutation,
     dematerializedFeasibilityFile,
   };

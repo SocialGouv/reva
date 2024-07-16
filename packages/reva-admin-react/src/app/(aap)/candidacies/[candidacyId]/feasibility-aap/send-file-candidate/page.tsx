@@ -1,6 +1,9 @@
 "use client";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  DematerializedFeasibilityFile,
+} from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -37,6 +40,7 @@ export default function SendFileCandidatePage() {
     sendToCandidateMutation,
     dematerializedFeasibilityFileId,
     dematerializedFeasibilityFile,
+    candidacy,
   } = useSendFileCandidate();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
@@ -59,6 +63,7 @@ export default function SendFileCandidatePage() {
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
+        candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
           <HasBeenSentComponent
             sentToCandidateAt={

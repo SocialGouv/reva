@@ -21,8 +21,12 @@ const AapFeasibilityPage = () => {
     candidacyId: string;
   }>();
 
-  const { certification, dematerializedFeasibilityFile, queryStatus } =
-    useAapFeasibilityPageLogic();
+  const {
+    certification,
+    dematerializedFeasibilityFile,
+    queryStatus,
+    feasibilityFileSentAt,
+  } = useAapFeasibilityPageLogic();
 
   return (
     <div className="flex flex-col">
@@ -106,7 +110,7 @@ const AapFeasibilityPage = () => {
 
           <SendFileCertificationAuthoritySection
             sentToCertificationAuthorityAt={
-              dematerializedFeasibilityFile?.sentToCertificationAuthorityAt as Date | null
+              feasibilityFileSentAt as any as Date | null
             }
             isReadyToBeSentToCertificationAuthority={
               dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority

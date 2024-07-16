@@ -37,9 +37,7 @@ ALTER TABLE "dematerialized_feasibility_file" ALTER COLUMN "feasibility_id" SET 
 
 -- AlterTable
 ALTER TABLE "feasibility" 
-ADD COLUMN     "dematerialized_feasibility_file_id" UUID,
-ADD COLUMN     "feasibility_format" "FeasibilityFormat" NOT NULL DEFAULT 'UPLOADED_PDF',
-ADD COLUMN     "feasibility_uploaded_pdf_id" UUID;
+ADD COLUMN     "feasibility_format" "FeasibilityFormat" NOT NULL DEFAULT 'UPLOADED_PDF';
 
 -- CreateTable
 CREATE TABLE "feasibility_uploaded_pdf" (
@@ -99,18 +97,6 @@ DROP COLUMN "certificate_of_attendance_file_id",
 DROP COLUMN "documentary_proof_file_id",
 DROP COLUMN "feasibility_file_id";
 
-UPDATE "feasibility" f
-SET "dematerialized_feasibility_file_id" = df."id"
-FROM "dematerialized_feasibility_file" df
-WHERE f."id" = df."feasibility_id" AND f."dematerialized_feasibility_file_id" IS NULL;
-
-UPDATE "feasibility" f
-SET "feasibility_uploaded_pdf_id" = fup."id"
-FROM "feasibility_uploaded_pdf" fup
-WHERE f."id" = fup."feasibility_id" AND f."feasibility_uploaded_pdf_id" IS NULL;
-
-UPDATE "feasibility" SET "feasibility_format" = 'UPLOADED_PDF' WHERE "feasibility_uploaded_pdf_id" IS NOT NULL;
-UPDATE "feasibility" SET "feasibility_format" = 'DEMATERIALIZED' WHERE "dematerialized_feasibility_file_id" IS NOT NULL;
 
 -- AlterTable
 ALTER TABLE "feasibility" ALTER COLUMN "feasibility_format" SET NOT NULL;

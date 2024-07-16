@@ -1,6 +1,9 @@
 import DffSummary from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/DffSummary";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  DematerializedFeasibilityFile,
+} from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +30,8 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export const DematerializedFeasibility = () => {
-  const { dematerializedFeasibilityFile } = useDematerializedFeasibility();
+  const { dematerializedFeasibilityFile, candidacy } =
+    useDematerializedFeasibility();
 
   const resetFiles = useCallback(() => {}, []);
 
@@ -58,6 +62,7 @@ export const DematerializedFeasibility = () => {
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
+        candidacy={candidacy as Candidacy}
       />
 
       <AAPSection />

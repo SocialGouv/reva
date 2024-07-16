@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
@@ -11,8 +11,8 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
-import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
+import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
 
@@ -27,7 +27,9 @@ export default function ValidateFeasibility() {
     File | undefined
   >();
 
-  const { organism, dematerializedFeasibilityFile } = candidacy;
+  const { organism, feasibility } = candidacy;
+  const dematerializedFeasibilityFile =
+    feasibility?.dematerializedFeasibilityFile;
 
   const remoteSwornStatementFile = useMemo(
     () =>

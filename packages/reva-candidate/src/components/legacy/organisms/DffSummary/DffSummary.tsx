@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import { format } from "date-fns";
+import { redirect } from "next/navigation";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
 
@@ -22,7 +22,9 @@ import ParcoursSection from "./components/ParcoursSection";
 export function DffSummary() {
   const { candidate, candidacy } = useCandidacy();
 
-  const { dematerializedFeasibilityFile } = candidacy;
+  const { feasibility } = candidacy;
+  const dematerializedFeasibilityFile =
+    feasibility?.dematerializedFeasibilityFile;
 
   if (!dematerializedFeasibilityFile) {
     redirect("/");

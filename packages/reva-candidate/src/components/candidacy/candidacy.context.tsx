@@ -141,7 +141,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             name
             url
           }
-
           dematerializedFeasibilityFile {
             id
             sentToCandidateAt

@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 
@@ -12,10 +12,16 @@ export const FeasibilityDematTimelineElement = () => {
 
   const { candidacy } = useCandidacy();
 
-  const { dematerializedFeasibilityFile: feasibility } = candidacy;
+  const { feasibility } = candidacy;
+  const dematerializedFeasibilityFile =
+    feasibility?.dematerializedFeasibilityFile;
 
-  const PENDING_AAP = feasibility && !feasibility.sentToCandidateAt;
-  const PENDING_CANDIDATE = feasibility && feasibility.sentToCandidateAt;
+  const PENDING_AAP =
+    dematerializedFeasibilityFile &&
+    !dematerializedFeasibilityFile.sentToCandidateAt;
+  const PENDING_CANDIDATE =
+    dematerializedFeasibilityFile &&
+    dematerializedFeasibilityFile.sentToCandidateAt;
 
   const INCOMPLETE = false;
   const ADMISSIBLE = false;
@@ -45,9 +51,13 @@ export const FeasibilityDematTimelineElement = () => {
       <>
         <span>
           Vous avez reçu votre dossier de faisabilité{" "}
-          {format(feasibility.sentToCandidateAt!, "dd/MM/yyyy")}. Votre
-          accompagnateur est en train d’y apporter quelques modifications. Vous
-          recevrez prochainement la nouvelle version de votre dossier.
+          {format(
+            dematerializedFeasibilityFile.sentToCandidateAt!,
+            "dd/MM/yyyy",
+          )}
+          . Votre accompagnateur est en train d’y apporter quelques
+          modifications. Vous recevrez prochainement la nouvelle version de
+          votre dossier.
         </span>
       </>
     );
@@ -66,7 +76,7 @@ export const FeasibilityDematTimelineElement = () => {
             : "disabled"
       }
       description={
-        !!feasibility ? (
+        !!dematerializedFeasibilityFile ? (
           <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
             Le dossier constitué à cette étape vous permettra d’accéder à votre
             accompagnement VAE.
@@ -74,7 +84,7 @@ export const FeasibilityDematTimelineElement = () => {
         ) : undefined
       }
     >
-      {!!feasibility && (
+      {!!dematerializedFeasibilityFile && (
         <>
           <div className="flex text-dsfrGray-500">
             <span className={`fr-icon ${icon} mr-2 self-center mb-6`} />
@@ -86,14 +96,14 @@ export const FeasibilityDematTimelineElement = () => {
             <Button
               data-test="vérifier-votre-dossier-de-faisabilité"
               priority="primary"
-              disabled={!feasibility.sentToCandidateAt}
+              disabled={!dematerializedFeasibilityFile.sentToCandidateAt}
               nativeButtonProps={{
                 onClick: () => {
                   router.push("/validate-feasibility");
                 },
               }}
             >
-              {feasibility.swornStatementFile
+              {dematerializedFeasibilityFile.swornStatementFile
                 ? "Consultez"
                 : "Vérifiez votre dossier"}
             </Button>

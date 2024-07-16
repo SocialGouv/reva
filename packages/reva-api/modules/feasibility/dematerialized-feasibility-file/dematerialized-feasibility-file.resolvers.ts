@@ -21,7 +21,6 @@ import { createOrUpdateCertificationCompetenceDetails } from "./features/createO
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
-import { getCandidacyWithCandidateByCandidacyId } from "./features/getCandidacyByDematerializedFeasibilityId";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
@@ -79,8 +78,6 @@ const unsafeResolvers = {
       checkIsDFFReadyToBeSentToCertificationAuthorityById({
         dematerializedFeasibilityFile,
       }),
-    candidacy: ({ candidacyId }: { candidacyId: string }) =>
-      getCandidacyWithCandidateByCandidacyId({ candidacyId }),
     swornStatementFile: ({
       swornStatementFileId,
     }: {

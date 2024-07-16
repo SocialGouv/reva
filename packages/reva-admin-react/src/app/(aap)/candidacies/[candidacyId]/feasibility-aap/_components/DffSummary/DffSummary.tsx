@@ -16,16 +16,16 @@ import ParcoursSection from "./_components/ParcoursSection";
 
 export default function DffSummary({
   dematerializedFeasibilityFile,
+  candidacy,
   HasBeenSentComponent,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
+  candidacy: Candidacy;
   HasBeenSentComponent?: React.ReactNode;
 }) {
-  if (!dematerializedFeasibilityFile) {
+  if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
   }
-
-  const { candidacy } = dematerializedFeasibilityFile;
 
   const {
     option,

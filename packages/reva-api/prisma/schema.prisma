@@ -1091,25 +1091,23 @@ enum FeasibilityStatus {
 }
 
 model Feasibility {
-  id                              String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                       Candidacy                      @relation(fields: [candidacyId], references: [id])
-  candidacyId                     String                         @map("candidacy_id") @db.Uuid
-  certificationAuthority          CertificationAuthority?        @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId        String?                        @map("certification_authority_id") @db.Uuid
-  feasibilityFileSentAt           DateTime?                      @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  decision                        FeasibilityStatus              @default(PENDING)
-  decisionComment                 String?                        @map("decision_comment")
-  decisionSentAt                  DateTime?                      @map("decision_sent_at") @db.Timestamptz(6)
-  decisionFileId                  String?                        @map("decision_file_id") @db.Uuid
-  decisionFile                    File?                          @relation("decision_file", fields: [decisionFileId], references: [id])
-  isActive                        Boolean                        @default(true) @map("is_active")
-  createdAt                       DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                       DateTime?                      @updatedAt @map("updated_at") @db.Timestamptz(6)
-  feasibilityFormat               FeasibilityFormat              @default(UPLOADED_PDF) @map("feasibility_format")
-  feasibilityUploadedPdf          FeasibilityUploadedPdf?
-  feasibilityUploadedPdfId        String?                        @map("feasibility_uploaded_pdf_id") @db.Uuid
-  dematerializedFeasibilityFile   DematerializedFeasibilityFile?
-  dematerializedFeasibilityFileId String?                        @map("dematerialized_feasibility_file_id") @db.Uuid
+  id                            String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                     Candidacy                      @relation(fields: [candidacyId], references: [id])
+  candidacyId                   String                         @map("candidacy_id") @db.Uuid
+  certificationAuthority        CertificationAuthority?        @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId      String?                        @map("certification_authority_id") @db.Uuid
+  feasibilityFileSentAt         DateTime?                      @map("feasibility_file_sent_at") @db.Timestamptz(6)
+  decision                      FeasibilityStatus              @default(PENDING)
+  decisionComment               String?                        @map("decision_comment")
+  decisionSentAt                DateTime?                      @map("decision_sent_at") @db.Timestamptz(6)
+  decisionFileId                String?                        @map("decision_file_id") @db.Uuid
+  decisionFile                  File?                          @relation("decision_file", fields: [decisionFileId], references: [id])
+  isActive                      Boolean                        @default(true) @map("is_active")
+  createdAt                     DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime?                      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  feasibilityFormat             FeasibilityFormat              @default(UPLOADED_PDF) @map("feasibility_format")
+  feasibilityUploadedPdf        FeasibilityUploadedPdf?
+  dematerializedFeasibilityFile DematerializedFeasibilityFile?
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])

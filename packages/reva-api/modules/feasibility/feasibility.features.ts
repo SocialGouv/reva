@@ -169,6 +169,7 @@ export const createFeasibility = async ({
       candidacy: { connect: { id: candidacyId } },
       certificationAuthority: { connect: { id: certificationAuthorityId } },
       feasibilityFileSentAt: new Date(),
+      feasibilityFormat: "UPLOADED_PDF",
       feasibilityUploadedPdf: {
         create: {
           feasibilityFile: {

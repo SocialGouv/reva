@@ -1,6 +1,9 @@
 "use client";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { DematerializedFeasibilityFile } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  DematerializedFeasibilityFile,
+} from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -31,6 +34,7 @@ export default function SendFileCertificationAuthorityPage() {
     dematerializedFeasibilityFile,
     sendToCertificationAuthorityMutation,
     candidacy,
+    feasibilityFileSentAt,
   } = useSendFileCertificationAuthority();
 
   const handleSendFile = async () => {
@@ -60,11 +64,12 @@ export default function SendFileCertificationAuthorityPage() {
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
+        candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
-          dematerializedFeasibilityFile?.sentToCertificationAuthorityAt && (
+          feasibilityFileSentAt && (
             <HasBeenSentComponent
               sentToCertificationAuthorityAt={
-                dematerializedFeasibilityFile?.sentToCertificationAuthorityAt as any as Date
+                feasibilityFileSentAt as any as Date
               }
             />
           )
@@ -83,12 +88,7 @@ export default function SendFileCertificationAuthorityPage() {
         >
           Retour
         </Button>
-        <Button
-          onClick={handleSendFile}
-          disabled={
-            !!dematerializedFeasibilityFile?.sentToCertificationAuthorityAt
-          }
-        >
+        <Button onClick={handleSendFile} disabled={!!feasibilityFileSentAt}>
           Envoyer au certificateur
         </Button>
       </div>

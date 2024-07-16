@@ -1,6 +1,5 @@
 type DematerializedFeasibilityFile {
   id: ID!
-  candidacyId: ID!
   firstForeignLanguage: String
   secondForeignLanguage: String
   option: String
@@ -16,9 +15,7 @@ type DematerializedFeasibilityFile {
   aapDecision: DFFileDecision
   aapDecisionComment: String
   attachments: [DFFAttachment]!
-  candidacy: Candidacy!
   sentToCandidateAt: Timestamp
-  sentToCertificationAuthorityAt: Timestamp
   swornStatementFileId: ID
   swornStatementFile: File
   isReadyToBeSentToCandidate: Boolean!

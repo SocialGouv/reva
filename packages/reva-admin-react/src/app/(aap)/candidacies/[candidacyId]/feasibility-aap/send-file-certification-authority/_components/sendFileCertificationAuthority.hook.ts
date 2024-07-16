@@ -17,133 +17,137 @@ const sendToCertificationAuthority = graphql(`
   }
 `);
 
-const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
-  query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
-    feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
-      dematerializedFeasibilityFile {
-        id
-        swornStatementFile {
-          name
-          previewUrl
-          mimeType
-        }
-        sentToCandidateAt
-        sentToCertificationAuthorityAt
-        aapDecision
-        aapDecisionComment
-        prerequisites {
-          label
-          state
-        }
-        firstForeignLanguage
-        secondForeignLanguage
-        option
-        blocsDeCompetences {
-          certificationCompetenceBloc {
-            id
-            code
-            label
-            isOptional
-            FCCompetences
-            competences {
-              id
-              label
-            }
-          }
-        }
-        certificationCompetenceDetails {
-          text
-          state
-          certificationCompetence {
-            id
-            label
-          }
-        }
-        attachments {
-          type
-          file {
+const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
+  `
+    query getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId(
+      $candidacyId: ID!
+    ) {
+      feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        feasibilityFileSentAt
+        dematerializedFeasibilityFile {
+          id
+          swornStatementFile {
             name
             previewUrl
             mimeType
           }
-        }
-      }
-      candidacy {
-        certificationAuthorities {
-          label
-        }
-        individualHourCount
-        collectiveHourCount
-        additionalHourCount
-        basicSkills {
-          label
-          id
-        }
-        mandatoryTrainings {
-          label
-          id
-        }
-        certification {
-          certificationAuthorities {
-            id
+          sentToCandidateAt
+          aapDecision
+          aapDecisionComment
+          prerequisites {
             label
+            state
           }
-          label
-          codeRncp
-          level
-          degree {
-            longLabel
-            level
-          }
-        }
-        goals {
-          id
-          label
-          isActive
-        }
-        experiences {
-          id
-          title
-          startedAt
-          duration
-          description
-        }
-        certificateSkills
-        candidate {
-          highestDegree {
-            level
-            longLabel
-          }
-          niveauDeFormationLePlusEleve {
-            level
-          }
-          firstname
-          firstname2
-          firstname3
-          lastname
-          email
-          givenName
-          birthdate
-          birthCity
-          birthDepartment {
-            label
-            code
-            region {
+          firstForeignLanguage
+          secondForeignLanguage
+          option
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              id
               code
+              label
+              isOptional
+              FCCompetences
+              competences {
+                id
+                label
+              }
+            }
+          }
+          certificationCompetenceDetails {
+            text
+            state
+            certificationCompetence {
+              id
               label
             }
           }
-          nationality
-          gender
-          phone
-          city
-          street
-          zip
+          attachments {
+            type
+            file {
+              name
+              previewUrl
+              mimeType
+            }
+          }
+        }
+        candidacy {
+          certificationAuthorities {
+            label
+          }
+          individualHourCount
+          collectiveHourCount
+          additionalHourCount
+          basicSkills {
+            label
+            id
+          }
+          mandatoryTrainings {
+            label
+            id
+          }
+          certification {
+            certificationAuthorities {
+              id
+              label
+            }
+            label
+            codeRncp
+            level
+            degree {
+              longLabel
+              level
+            }
+          }
+          goals {
+            id
+            label
+            isActive
+          }
+          experiences {
+            id
+            title
+            startedAt
+            duration
+            description
+          }
+          certificateSkills
+          candidate {
+            highestDegree {
+              level
+              longLabel
+            }
+            niveauDeFormationLePlusEleve {
+              level
+            }
+            firstname
+            firstname2
+            firstname3
+            lastname
+            email
+            givenName
+            birthdate
+            birthCity
+            birthDepartment {
+              label
+              code
+              region {
+                code
+                label
+              }
+            }
+            nationality
+            gender
+            phone
+            city
+            street
+            zip
+          }
         }
       }
     }
-  }
-`);
+  `,
+);
 
 export const useSendFileCertificationAuthority = () => {
   const { graphqlClient } = useGraphQlClient();
@@ -157,9 +161,12 @@ export const useSendFileCertificationAuthority = () => {
       "dematerializedFeasibilityFileSendFileCertificationAuthorityByCandidacyId",
     ],
     queryFn: () =>
-      graphqlClient.request(feasibilityGetActiveFeasibilityByCandidacyId, {
-        candidacyId,
-      }),
+      graphqlClient.request(
+        getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId,
+        {
+          candidacyId,
+        },
+      ),
   });
 
   const { mutateAsync: sendToCertificationAuthorityMutation } = useMutation({
@@ -183,11 +190,13 @@ export const useSendFileCertificationAuthority = () => {
   const dematerializedFeasibilityFile =
     feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
+  const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
 
   return {
     dematerializedFeasibilityFileId,
     candidacy,
     sendToCertificationAuthorityMutation,
     dematerializedFeasibilityFile,
+    feasibilityFileSentAt,
   };
 };

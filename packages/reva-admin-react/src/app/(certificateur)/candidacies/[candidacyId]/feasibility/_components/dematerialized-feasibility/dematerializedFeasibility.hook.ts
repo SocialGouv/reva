@@ -14,7 +14,6 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           mimeType
         }
         sentToCandidateAt
-        sentToCertificationAuthorityAt
         aapDecision
         aapDecisionComment
         prerequisites {
@@ -153,9 +152,11 @@ export const useDematerializedFeasibility = () => {
   const dematerializedFeasibilityFile =
     feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
+  const candidacy = feasibility?.candidacy;
 
   return {
     dematerializedFeasibilityFileId,
     dematerializedFeasibilityFile,
+    candidacy,
   };
 };

@@ -67,8 +67,8 @@ const unsafeResolvers = {
       }),
     feasibility_getActiveFeasibilityByCandidacyId: (
       _parent: unknown,
-      params: { candidacyId: string },
-    ) => getActiveFeasibilityByCandidacyid({ candidacyId: params.candidacyId }),
+      { candidacyId }: { candidacyId: string },
+    ) => getActiveFeasibilityByCandidacyid({ candidacyId }),
   },
 };
 
