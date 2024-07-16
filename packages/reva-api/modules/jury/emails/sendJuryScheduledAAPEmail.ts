@@ -37,6 +37,6 @@ export const sendJuryScheduledAAPEmail = async ({
     to: { email },
     htmlContent,
     subject: "Convocation de passage en jury pour un de vos candidats",
-    customUrl: `${baseUrl}/admin/candidacies/${candidacyId}/jury/date`,
+    customUrl: `${baseUrl}/admin2/candidacies/${candidacyId}/jury-aap`,
   });
 };

@@ -24,7 +24,7 @@ export const sendJuryResultAAPEmail = async ({
       <p>Nous vous informons que, suite à son passage devant un jury VAE, les résultats de votre candidat ${candidateFullName} ont été renseignés par le certificateur. Ils sont dès à présent consultables depuis votre Espace professionnel sous la rubrique “Jury”.</p>
     `,
       labelCTA: "Accéder aux informations jury",
-      url: `${baseUrl}/admin/candidacies/${candidacyId}/jury/result`,
+      url: `${baseUrl}/admin2/candidacies/${candidacyId}/jury-aap`,
     }),
   );
 
