@@ -4,10 +4,10 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
-import { format } from "date-fns";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -117,11 +117,14 @@ const RejectedSubscriptionRequestsPage = () => {
             `/candidacies/${candidacyId}/feasibility`
           }
         >
-          {(r) => (
-            <p className="text-lg col-span-2 mb-0">
-              Dossier envoyé le {format(r?.feasibilityFileSentAt, "d MMM yyyy")}
-            </p>
-          )}
+          {(r) =>
+            r.feasibilityFileSentAt && (
+              <p className="text-lg col-span-2 mb-0">
+                Dossier envoyé le{" "}
+                {format(r.feasibilityFileSentAt as any as Date, "d MMM yyyy")}
+              </p>
+            )
+          }
         </CandidacySearchList>
       </div>
     )
