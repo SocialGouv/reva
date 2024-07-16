@@ -13,7 +13,7 @@ enum FeasibilityFormat {
 type Feasibility {
   id: ID!
   certificationAuthority: CertificationAuthority
-  feasibilityFileSentAt: Timestamp!
+  feasibilityFileSentAt: Timestamp
   candidacy: Candidacy!
   decision: FeasibilityDecision!
   decisionComment: String
