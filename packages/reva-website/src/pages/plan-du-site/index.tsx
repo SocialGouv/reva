@@ -49,7 +49,7 @@ const SiteMapPage = () => {
               </Link>
             </li>
             <li>
-              <Link href="/admin">Connexion professionnel</Link>
+              <Link href="/admin2">Connexion professionnel</Link>
             </li>
           </ul>
         </li>
