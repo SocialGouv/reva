@@ -32,7 +32,7 @@ export const sendDFFToCertificationAuthority = async ({
       where: { candidacyId, isActive: true },
       data: {
         certificationAuthorityId,
-        decisionSentAt: now,
+        feasibilityFileSentAt: now,
       },
     }),
   ]);
