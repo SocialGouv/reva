@@ -111,7 +111,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     otherTrainingEffectiveCost,
   } = useWatch({ control });
 
-  const feasibilityPackageCostTotal = 300;
+  const feasibilityPackageCostTotal = 200;
 
   const supportHourCountTotal =
     (individualEffectiveHourCount || 0) + (collectiveEffectiveHourCount || 0);
@@ -261,7 +261,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   totalité.
                 </p>
               </Info>
-              <Info title="Forfait">300€ net</Info>
+              <Info title="Forfait">200€ net</Info>
             </dl>
             {candidacy?.feasibility?.decision === "ADMISSIBLE" && (
               <>

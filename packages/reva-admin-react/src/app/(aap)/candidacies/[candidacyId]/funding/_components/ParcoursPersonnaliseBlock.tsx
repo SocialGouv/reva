@@ -16,7 +16,7 @@ export const ParcoursPersonnaliseBlock = ({
     watch,
     formState: { errors },
   } = useFormContext();
-  const forfaitCost = 300;
+  const forfaitCost = 200;
   const individualHourCount = watch("individualHourCount") || 0;
   const individualCost = watch("individualCost") || 0;
   const collectiveHourCount = watch("collectiveHourCount") || 0;
