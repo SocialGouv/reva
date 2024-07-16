@@ -1,5 +1,5 @@
 import Select from "@codegouvfr/react-dsfr/Select";
-import { useSelectDepartment } from "./SelectDepartment.hooks";
+import { getDepartments } from "./SelectDepartment.loaders";
 
 export type DepartmentType = {
   id: string;
@@ -11,15 +11,15 @@ interface Props {
   required?: boolean;
   departmentId?: string;
   hint?: string;
-  onSelectDepartment: (department?: DepartmentType) => void;
+  // onSelectDepartment: (department?: DepartmentType) => void;
 }
 
-export const SelectDepartment = (props: Props): JSX.Element => {
-  const { hint, required, departmentId, onSelectDepartment } = props;
+export const SelectDepartment = async (props: Props) => {
+  const { hint, required } = props;
 
-  const { departments } = useSelectDepartment();
+  const departments = await getDepartments();
 
-  const selectsOptionsDepartments = departments.data?.getDepartments || [];
+  const selectsOptionsDepartments = departments || [];
 
   return (
     <Select
@@ -29,14 +29,13 @@ export const SelectDepartment = (props: Props): JSX.Element => {
       hint={hint}
       nativeSelectProps={{
         name: "department",
-        value: departmentId || "",
         required,
-        onChange: (e) => {
-          const department = selectsOptionsDepartments.find(
-            (d) => d.id == e.target.value,
-          );
-          onSelectDepartment(department);
-        },
+        // onChange: (e) => {
+        //   const department = selectsOptionsDepartments.find(
+        //     (d) => d.id == e.target.value,
+        //   );
+        //   onSelectDepartment(department);
+        // },
       }}
     >
       <option value="" disabled hidden>
