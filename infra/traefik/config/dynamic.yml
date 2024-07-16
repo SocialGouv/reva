@@ -31,13 +31,6 @@ http:
         - removeHeader
         - add-security-headers
 
-    espace-pro-staging:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
-      service: espace-pro-staging
-      middlewares:
-        - removeHeader
-        - add-security-headers
-
     espace-pro-react-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-staging
