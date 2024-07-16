@@ -10,6 +10,8 @@ const SiteMapPage = () => {
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 
+  const isRevaCandidateActive = isFeatureActive("REVA_CANDIDATE");
+
   return (
     <MainLayout className="fr-container pt-10 items-start gap-5">
       <Head>
@@ -24,7 +26,11 @@ const SiteMapPage = () => {
           <Link href="/">Espace candidat</Link>
           <ul>
             <li>
-              <Link href="/app/login">Connexion candidat</Link>
+              <Link
+                href={`/${isRevaCandidateActive ? "candidat" : "app"}/login`}
+              >
+                Connexion candidat
+              </Link>
             </li>
           </ul>
         </li>

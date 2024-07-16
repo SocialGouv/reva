@@ -2,6 +2,8 @@ import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
   const [isClient, setIsClient] = useState(false);
@@ -79,6 +81,9 @@ export const Header = (props: { className?: string }) => {
     },
   ];
 
+  const { isFeatureActive } = useFeatureflipping();
+  const isRevaCandidateActive = isFeatureActive("REVA_CANDIDATE");
+
   return (
     <DsfrHeader
       className={props.className}
@@ -112,7 +117,7 @@ export const Header = (props: { className?: string }) => {
         {
           iconId: "fr-icon-account-circle-fill",
           linkProps: {
-            href: "/app/login",
+            href: `/${isRevaCandidateActive ? "candidat" : "app"}/login`,
             className: "fr-link--icon-right",
           },
           text: "Connexion candidat",

@@ -2,6 +2,7 @@ import { Right } from "purify-ts";
 
 import { logger } from "../logger";
 import { sendGenericEmailPurifyJS } from ".";
+import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 
 export const sendEmailWithLinkPurifyJS = async ({
   email,
@@ -18,7 +19,17 @@ export const sendEmailWithLinkPurifyJS = async ({
   htmlContent: (url: string) => { html: string };
   subject?: string;
 }) => {
-  const url = `${process.env.BASE_URL}/${app}/${action}${
+  const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
+    ?.isActive;
+
+  const appPath = isRevaCandidateActive && app == "app" ? "candidat" : app;
+  const actionPath =
+    isRevaCandidateActive &&
+    (action == "registration" || action == "confirmEmail")
+      ? "login"
+      : action;
+
+  const url = `${process.env.BASE_URL}/${appPath}/${actionPath}${
     token ? `?token=${token}` : ""
   }`;
   const emailContent = htmlContent(url);
