@@ -74,6 +74,11 @@ const LegalInformationPage = () => {
                     <br />
                     {maisonMereAAP.gestionnaire.lastname}
                   </p>
+                  <p>
+                    <span className="font-bold">Email : </span>
+                    <br />
+                    {maisonMereAAP.gestionnaire.email}
+                  </p>
                 </div>
               </GrayCard>
             </>

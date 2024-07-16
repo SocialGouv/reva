@@ -24,6 +24,7 @@ const legalInformationQueries = graphql(`
           gestionnaire {
             firstname
             lastname
+            email
           }
         }
       }
