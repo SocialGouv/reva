@@ -54,7 +54,7 @@ export const useUpdateUserAccountPage = ({
   const queryClient = useQueryClient();
 
   const { data: agenciesInfo, status: agenciesInfoStatus } = useQuery({
-    queryKey: ["organisms"],
+    queryKey: ["organisms", "updateUserAccount"],
     queryFn: () => graphqlClient.request(getAgenciesInfoQuery),
   });
 
