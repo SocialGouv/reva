@@ -77,7 +77,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       href: `/agencies-settings/v2/${organismId}/certifications`,
     }),
     getNavItem({
-      text: "Absences et fermetures",
+      text: "Visibilité dans les recherches",
       href: `/agencies-settings/v2/${organismId}/absence`,
     }),
   ];

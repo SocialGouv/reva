@@ -5,10 +5,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const organismQuery = graphql(`
-  query getOrganismForAbsencePage($organismId: ID!) {
+  query getOrganismForAbsencePageV2($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
       fermePourAbsenceOuConges
+      isHeadAgency
     }
   }
 `);
