@@ -109,7 +109,7 @@ export const Header = (props: { className?: string }) => {
         {
           iconId: "fr-icon-briefcase-fill",
           linkProps: {
-            href: "/admin",
+            href: "/admin2",
             className: "fr-link--icon-right",
           },
           text: "Connexion professionnel",
