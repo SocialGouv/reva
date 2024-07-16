@@ -1,5 +1,4 @@
-import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 type Color = "dark" | "light";
@@ -7,15 +6,13 @@ type Color = "dark" | "light";
 export interface BasicBackButtonProps {
   color?: Color;
   className?: string;
-  onClick: () => void;
-  label?: string;
+  children?: React.ReactNode;
 }
 
 export const BasicBackButton = ({
   className = "",
   color = "dark",
-  onClick,
-  label,
+  children,
 }: BasicBackButtonProps) => {
   const colorClass = color === "dark" ? "text-dsfrBlue-500" : "text-white";
   const hoverBgClass = color === "dark" ? "" : "hover:!bg-slate-800";
@@ -24,18 +21,21 @@ export const BasicBackButton = ({
     <Button
       data-test="button-back"
       iconId="fr-icon-arrow-go-back-fill"
-      onClick={onClick}
       priority="tertiary"
       title="Revenir"
       className={`${className} ${colorClass} ${hoverBgClass}`}
     >
-      {label}
+      {children}
     </Button>
   );
 };
 
-export const BackButton = (props: Omit<BasicBackButtonProps, "onClick">) => {
-  const router = useRouter();
-
-  return <BasicBackButton {...props} onClick={() => router.push("/")} />;
+export const BackButton = (
+  props: Omit<BasicBackButtonProps, "children"> & { label: string },
+) => {
+  return (
+    <BasicBackButton {...props}>
+      <Link href="/">{props.label}</Link>
+    </BasicBackButton>
+  );
 };
