@@ -1,5 +1,3 @@
-"use client";
-
 import { PageLayout } from "@/layouts/page.layout";
 
 export default function LoginConfirmation() {
