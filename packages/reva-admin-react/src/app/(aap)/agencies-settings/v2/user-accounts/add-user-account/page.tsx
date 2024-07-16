@@ -23,7 +23,7 @@ const AddUserAccountPage = () => {
         organismId: data.organismId,
       });
       successToast("Modification enregistrées");
-      router.push("/agencies-settings/legal-information");
+      router.push("/agencies-settings/v2/legal-information");
     } catch (e) {
       graphqlErrorToast(e);
     }

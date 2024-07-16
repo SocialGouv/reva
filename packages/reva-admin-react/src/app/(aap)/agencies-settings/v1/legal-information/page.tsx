@@ -3,7 +3,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useLegalInformationsPage } from "./legalInformationsPage.hook";
 import { useAuth } from "@/components/auth/auth";
-import { LegalInformationUpdateBlock } from "@/app/(aap)/agencies-settings/legal-information/_components/legal-information-update-block/LegalInformationUpdateBlock";
+import { LegalInformationUpdateBlock } from "@/app/(aap)/agencies-settings/v1/legal-information/_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const LegalInformationPage = () => {

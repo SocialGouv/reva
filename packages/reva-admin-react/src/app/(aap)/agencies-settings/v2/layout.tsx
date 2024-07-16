@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -9,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 const agenciesInfoForConnectedUserQuery = graphql(`
-  query getAgenciesInfoForConnectedUser {
+  query getAgenciesInfoForConnectedUserV2 {
     account_getAccountForConnectedUser {
       organism {
         id
@@ -38,7 +37,6 @@ const agenciesInfoForConnectedUserQuery = graphql(`
 const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
   const { isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
 
   const { graphqlClient } = useGraphQlClient();
 
@@ -46,13 +44,9 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     data: agenciesInfoForConnectedUserResponse,
     status: agenciesInfoForConnectedUserStatus,
   } = useQuery({
-    queryKey: ["organisms", "agencies-settings-layout-page"],
+    queryKey: ["organisms", "agencies-settings-layout-page-v2"],
     queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
   });
-
-  const aapInterventionZoneUpdateFeatureActive = isFeatureActive(
-    "AAP_INTERVENTION_ZONE_UPDATE",
-  );
 
   const getNavItem = ({
     text,
@@ -73,39 +67,19 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     organismId: string;
     organismType: "REMOTE" | "ONSITE";
   }) => [
-    ...(aapInterventionZoneUpdateFeatureActive
-      ? [
-          getNavItem({
-            text: "Informations générales",
-            href: `/agencies-settings/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
-          }),
-        ]
-      : [
-          getNavItem({
-            text: "Informations commerciales",
-            href: `/agencies-settings/${organismId}/commercial-information`,
-          }),
-          getNavItem({
-            text: "Zone d'intervention",
-            href: `/agencies-settings/${organismId}/intervention-zone`,
-          }),
-        ]),
+    getNavItem({
+      text: "Informations générales",
+      href: `/agencies-settings/v2/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
+    }),
+
     getNavItem({
       text: "Certifications",
-      href: `/agencies-settings/${organismId}/certifications`,
+      href: `/agencies-settings/v2/${organismId}/certifications`,
     }),
     getNavItem({
       text: "Absences et fermetures",
-      href: `/agencies-settings/${organismId}/absence`,
+      href: `/agencies-settings/v2/${organismId}/absence`,
     }),
-    ...(aapInterventionZoneUpdateFeatureActive
-      ? []
-      : [
-          getNavItem({
-            text: "Administrateur du compte",
-            href: `/agencies-settings/${organismId}/manager`,
-          }),
-        ]),
   ];
 
   const getNavItems = () => {
@@ -113,12 +87,12 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       "before:content-[''] before:absolute before:top-[0.75rem] before:bottom-[0.75rem] before:bg-dsfr-blue-france-sun-113 before:w-[2px] before:left-0 text-dsfr-blue-france-sun-113";
 
     const isOrgansismSelected = ({ organismId }: { organismId: string }) => {
-      const href = `/agencies-settings/${organismId}`;
+      const href = `/agencies-settings/v2/${organismId}`;
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
     const isUserAccountSelected = ({ accountId }: { accountId: string }) => {
-      const href = `/agencies-settings/user-accounts/${accountId}`;
+      const href = `/agencies-settings/v2/user-accounts/${accountId}`;
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
@@ -174,9 +148,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: aapInterventionZoneUpdateFeatureActive
-                ? "/agencies-settings/add-agency/"
-                : "/agencies-settings/add-agence/",
+              href: "/agencies-settings/v2/add-agency/",
               target: "_self",
             },
             text: (
@@ -207,7 +179,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
               return {
                 text: `${a?.firstname}  ${a?.lastname}`,
                 linkProps: {
-                  href: `/agencies-settings/user-accounts/${a.id}/`,
+                  href: `/agencies-settings/v2/user-accounts/${a.id}/`,
                   className: `fr-sidemenu__btn bg-transparent font-bold ${
                     isUserAccountSelected({ accountId: a.id })
                       ? selectedItemStyle
@@ -219,7 +191,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: "/agencies-settings/user-accounts/add-user-account/",
+              href: "/agencies-settings/v2/user-accounts/add-user-account/",
               target: "_self",
             },
             text: (
@@ -231,10 +203,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
         ],
       };
 
-      items = [
-        agenciesMenu,
-        ...(aapInterventionZoneUpdateFeatureActive ? [userAccountsMenu] : []),
-      ];
+      items = [agenciesMenu, userAccountsMenu];
     } else if (isOrganism) {
       items = getOrganismNavItems({
         organismId,
@@ -256,7 +225,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           items={[
             getNavItem({
               text: "Informations juridiques",
-              href: "/agencies-settings/legal-information",
+              href: "/agencies-settings/v2/legal-information",
             }),
             ...getNavItems(),
           ]}

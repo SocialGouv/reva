@@ -1,7 +1,7 @@
 "use client";
 
-import { ZoneIntervention } from "@/app/(aap)/agencies-settings/_components/zone-intervention/ZoneIntervention";
-import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/_components/zone-intervention/zoneInterventionAAP.hook";
+import { ZoneIntervention } from "@/app/(aap)/agencies-settings/v1/_components/zone-intervention/ZoneIntervention";
+import { useZoneInterventionAAP } from "@/app/(aap)/agencies-settings/v1/_components/zone-intervention/zoneInterventionAAP.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";

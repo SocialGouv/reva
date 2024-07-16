@@ -4,9 +4,12 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 export const Header = () => {
   const currentPathname = usePathname();
+  const { isFeatureActive } = useFeatureflipping();
+
   const {
     isAdmin,
     isOrganism,
@@ -43,7 +46,9 @@ export const Header = () => {
               {
                 text: "Paramètres",
                 linkProps: {
-                  href: "/agencies-settings/legal-information",
+                  href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+                    ? "/agencies-settings/v2/legal-information"
+                    : "/agencies-settings/v1/legal-information",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/agencies-settings"),

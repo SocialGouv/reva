@@ -21,39 +21,61 @@ export default function AccountSetup({
     <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto">
       <div className="col-span-2">
         <h1 className="">Bienvenue sur votre compte administrateur</h1>
-        <p className="text-lg">Pour recevoir vos premières candidatures, commencez par paramétrer votre compte. </p>
+        <p className="text-lg">
+          Pour recevoir vos premières candidatures, commencez par paramétrer
+          votre compte.{" "}
+        </p>
         <ul className="text-lg ml-4 mb-8">
-            <li>Définissez vos modalités d’accompagnement (présentiel ou à distance)</li>
-            <li>Sélectionnez vos filières et vos niveaux de certification</li>
-            <li>Ajoutez des lieux d’accueil et gérez leur visibilité dans les recherches</li>
+          <li>
+            Définissez vos modalités d’accompagnement (présentiel ou à distance)
+          </li>
+          <li>Sélectionnez vos filières et vos niveaux de certification</li>
+          <li>
+            Ajoutez des lieux d’accueil et gérez leur visibilité dans les
+            recherches
+          </li>
         </ul>
-        <p className="text-sm">💡 Quand vous ajoutez un nouveau lieu d’accueil, pensez à utiliser une nouvelle adresse mail. Sinon, vous rencontrerez des difficultés pour vous connecter.</p>
+        <p className="text-sm">
+          💡 Quand vous ajoutez un nouveau lieu d’accueil, pensez à utiliser une
+          nouvelle adresse mail. Sinon, vous rencontrerez des difficultés pour
+          vous connecter.
+        </p>
         <Button
           disabled={updateAccount.isPending}
           className="mt-4"
           onClick={() => {
-            updateAccount.mutate({
-              showAccountSetup: false,
-              maisonMereAAPId: maisonMereAAPId,
-            }, {
-              onSuccess: () => {
-                // Needed to avoid race condition - Otherwise, candidacy list will render immediately, and because
-                // it performs a router.replace, it will highjack the router.push() below
-                setTimeout(() => {
-                  queryClient.invalidateQueries({ queryKey: ["organisms"] });
-                }, 100);
-                router.push(
-                  `/agencies-settings/${headAgencyId}/informations-generales/distance`,
-                );
+            updateAccount.mutate(
+              {
+                showAccountSetup: false,
+                maisonMereAAPId: maisonMereAAPId,
               },
-              onError: graphqlErrorToast,
-            });
+              {
+                onSuccess: () => {
+                  // Needed to avoid race condition - Otherwise, candidacy list will render immediately, and because
+                  // it performs a router.replace, it will highjack the router.push() below
+                  setTimeout(() => {
+                    queryClient.invalidateQueries({ queryKey: ["organisms"] });
+                  }, 100);
+                  router.push(
+                    `/agencies-settings/v2/${headAgencyId}/informations-generales/distance`,
+                  );
+                },
+                onError: graphqlErrorToast,
+              },
+            );
           }}
         >
           Paramétrer mon compte
         </Button>
       </div>
-      <div className="m-auto"><Image src="/admin2/components/account-setup.svg" alt="AAP logo" width={282} height={319} /></div>
+      <div className="m-auto">
+        <Image
+          src="/admin2/components/account-setup.svg"
+          alt="AAP logo"
+          width={282}
+          height={319}
+        />
+      </div>
     </div>
   );
 }
