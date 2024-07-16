@@ -69,16 +69,16 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   }) => [
     getNavItem({
       text: "Informations générales",
-      href: `/agencies-settings/v2/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
+      href: `/agencies-settings/v2/organisms/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
     }),
 
     getNavItem({
       text: "Filières, branches et niveaux",
-      href: `/agencies-settings/v2/${organismId}/certifications`,
+      href: `/agencies-settings/v2/organisms/${organismId}/certifications`,
     }),
     getNavItem({
       text: "Visibilité dans les recherches",
-      href: `/agencies-settings/v2/${organismId}/absence`,
+      href: `/agencies-settings/v2/organisms/${organismId}/absence`,
     }),
   ];
 
@@ -87,7 +87,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       "before:content-[''] before:absolute before:top-[0.75rem] before:bottom-[0.75rem] before:bg-dsfr-blue-france-sun-113 before:w-[2px] before:left-0 text-dsfr-blue-france-sun-113";
 
     const isOrgansismSelected = ({ organismId }: { organismId: string }) => {
-      const href = `/agencies-settings/v2/${organismId}`;
+      const href = `/agencies-settings/v2/organisms/${organismId}`;
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
@@ -157,7 +157,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: "/agencies-settings/v2/add-agency/",
+              href: "/agencies-settings/v2/organisms/add-agency/",
               target: "_self",
             },
             text: (
