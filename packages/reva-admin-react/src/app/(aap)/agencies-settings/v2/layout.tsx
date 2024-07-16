@@ -73,7 +73,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     }),
 
     getNavItem({
-      text: "Certifications",
+      text: "Filières, branches et niveaux",
       href: `/agencies-settings/v2/${organismId}/certifications`,
     }),
     getNavItem({

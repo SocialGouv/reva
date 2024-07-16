@@ -115,7 +115,7 @@ const CertificationsPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <h1>Gestion des certifications</h1>
+      <h1>Filières, branches et niveaux</h1>
 
       <p>
         Sélectionnez les filières et les niveaux de certifications que vous
