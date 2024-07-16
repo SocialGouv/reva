@@ -1,56 +1,20 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import Button from "@codegouvfr/react-dsfr/Button";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { SelectDepartment } from "@/components/select-department/SelectDepartment.component";
+import SubmitButton from "@/components/forms/SubmitButton";
 
-import { useRegistration } from "./registration.hooks";
+import { isFeatureActive } from "@/utils/getActiveFeatures";
+import Link from "next/link";
+import { registerCandidate } from "./registration.actions";
 
-export default function Registration() {
-  const { isFeatureActive } = useFeatureFlipping();
-
-  const isCandidacyCreationDisabled = isFeatureActive(
+export default async function Registration() {
+  const isCandidacyCreationDisabled = await isFeatureActive(
     "CANDIDACY_CREATION_DISABLED",
   );
-
-  const router = useRouter();
-
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [departmentId, setDepartmentId] = useState<string | undefined>();
-
-  const { askForRegistration } = useRegistration();
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const response = await askForRegistration.mutateAsync({
-        firstname,
-        lastname,
-        phone,
-        email,
-        departmentId: departmentId!,
-      });
-
-      if (response) {
-        router.push("/registration-confirmation");
-      }
-    } catch (error) {}
-  };
 
   return (
     <PageLayout className="max-w-4xl" title="Création de compte">
@@ -111,7 +75,7 @@ export default function Registration() {
             Bienvenue <span aria-hidden="true">🤝</span>,
           </h1>
 
-          <form onSubmit={onSubmit} className="flex flex-col">
+          <form action={registerCandidate} className="flex flex-col">
             <fieldset>
               <legend>
                 <h2 className="mt-6 mb-2">Créer votre compte</h2>
@@ -129,10 +93,6 @@ export default function Registration() {
                     name: "firstname",
                     required: true,
                     autoComplete: "given-name",
-                    value: firstname,
-                    onChange: (e) => {
-                      setFirstname(e.target.value);
-                    },
                   }}
                 />
                 <Input
@@ -141,10 +101,6 @@ export default function Registration() {
                     name: "lastname",
                     required: true,
                     autoComplete: "family-name",
-                    value: lastname,
-                    onChange: (e) => {
-                      setLastname(e.target.value);
-                    },
                   }}
                 />
                 <Input
@@ -156,10 +112,6 @@ export default function Registration() {
                     required: true,
                     type: "tel",
                     autoComplete: "tel",
-                    value: phone,
-                    onChange: (e) => {
-                      setPhone(e.target.value);
-                    },
                   }}
                 />
                 <Input
@@ -171,10 +123,6 @@ export default function Registration() {
                     type: "email",
                     autoComplete: "email",
                     spellCheck: "false",
-                    value: email,
-                    onChange: (e) => {
-                      setEmail(e.target.value);
-                    },
                   }}
                 />
               </div>
@@ -182,32 +130,18 @@ export default function Registration() {
               <SelectDepartment
                 required
                 hint="Sélectionnez votre département de résidence"
-                departmentId={departmentId}
-                onSelectDepartment={(department) => {
-                  setDepartmentId(department?.id);
-                }}
               />
             </fieldset>
-
-            <Button
-              disabled={askForRegistration.isPending}
-              data-test={`project-contact-add`}
+            <SubmitButton
               className="my-6 self-end w-full sm:w-auto flex justify-center"
-            >
-              Créer votre compte
-            </Button>
+              label="Créer votre compte"
+            />
           </form>
 
           <div className="border-t border-gray-200 pt-6">
-            <button
-              data-test="project-contact-login"
-              onClick={() => {
-                router.push("/login");
-              }}
-              className="text-gray-500 underline"
-            >
+            <Link className="text-gray-500" href="/login">
               J’ai déjà un compte
-            </button>
+            </Link>
           </div>
         </>
       )}
