@@ -9,6 +9,8 @@ import {
 
 import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 
+const ACCESS_TOKEN_EXPIRATION_IN_SECONDS = 60;
+
 type KeycloakUser = {
   id: string;
   email: string | null;
@@ -64,6 +66,11 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
       onUpdateTokens: (tokens) => {
         saveTokens(tokens);
         setTokens(tokens);
+      },
+      onLogout: () => {
+        removeTokens();
+        setTokens(undefined);
+        setAuthenticated(false);
       },
     });
   }, [keycloakInstance]);
@@ -125,10 +132,11 @@ type InitKeycloakParams = {
   onInit: (authenticated: boolean) => void;
   tokens?: Tokens;
   onUpdateTokens?: (tokens: Tokens) => void;
+  onLogout?: () => void;
 };
 
 const initKeycloak = async (params: InitKeycloakParams) => {
-  const { keycloakInstance, onInit, tokens, onUpdateTokens } = params;
+  const { keycloakInstance, onInit, tokens, onUpdateTokens, onLogout } = params;
 
   let config: KeycloakInitOptions = {
     enableLogging: process.env.NODE_ENV !== "production",
@@ -167,14 +175,23 @@ const initKeycloak = async (params: InitKeycloakParams) => {
         onUpdateTokens?.(tokens);
       }
     };
+    keycloakInstance.onAuthRefreshError = async () => {
+      console.log("Auth refresh error");
+
+      onLogout?.();
+    };
     keycloakInstance.onTokenExpired = async () => {
       console.log("Token expired");
 
-      await keycloakInstance.updateToken(5);
+      try {
+        await keycloakInstance.updateToken(ACCESS_TOKEN_EXPIRATION_IN_SECONDS);
+      } catch (error) {
+        console.log("error", error);
+      }
     };
 
     if (authenticated) {
-      await keycloakInstance.updateToken(60000);
+      await keycloakInstance.updateToken(ACCESS_TOKEN_EXPIRATION_IN_SECONDS);
 
       const { token, refreshToken, idToken } = keycloakInstance;
       if (token && refreshToken && idToken) {
