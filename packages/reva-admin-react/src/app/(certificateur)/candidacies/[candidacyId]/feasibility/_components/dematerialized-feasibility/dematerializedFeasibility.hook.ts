@@ -54,6 +54,15 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         }
       }
       candidacy {
+        organism {
+          label
+          informationsCommerciales {
+            telephone
+            emailContact
+            adresseCodePostal
+            adresseVille
+          }
+        }
         certificationAuthorities {
           label
         }
