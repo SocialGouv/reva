@@ -157,12 +157,12 @@ const AddAgencyPage = () => {
               />
 
               <Input
+                className="col-span-2"
                 label="Ville"
                 nativeInputProps={{ ...register("adresseVille") }}
                 state={errors.adresseVille ? "error" : "default"}
                 stateRelatedMessage={errors.adresseVille?.message?.toString()}
               />
-              <span />
 
               <Input
                 label="Téléphone"
