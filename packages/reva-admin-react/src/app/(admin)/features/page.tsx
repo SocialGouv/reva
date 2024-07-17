@@ -30,6 +30,7 @@ const FeaturesPage = () => {
           <Checkbox
             options={features.map((f) => ({
               label: f.label,
+              hintText: f.key,
               nativeInputProps: {
                 value: f.key,
                 defaultChecked: f.isActive,
