@@ -19,7 +19,7 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import {
   DepartmentType,
-  // SelectDepartment,
+  SelectDepartment,
 } from "@/components/select-department/SelectDepartment.component";
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
@@ -117,13 +117,13 @@ export default function SetCertification() {
             label="Sélectionnez le diplôme que vous voulez valider"
           />
 
-          {/* <SelectDepartment
+          <SelectDepartment
             required
             departmentId={department?.id}
             onSelectDepartment={(department) => {
               setDepartment(department);
             }}
-          /> */}
+          />
 
           <SearchBar
             label="Rechercher un diplôme"
