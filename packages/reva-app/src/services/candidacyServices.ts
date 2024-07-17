@@ -245,208 +245,142 @@ export const submitCandidacy =
   };
 
 const CANDIDACY_SELECTION = `
+  id
+  organism {
+    id
+    label
+    contactAdministrativeEmail
+    informationsCommerciales {
+      nom
+      telephone
+      emailContact
+    }
+  }
+  createdAt
+  certification {
+    id
+    codeRncp
+    label
+    summary
+    status
+    financeModule
+  }
+  isCertificationPartial
+  experiences {
+    id
+    title
+    startedAt
+    duration
+    description
+  }
+  goals {
+    id
+  }
+  candidacyStatuses {
+    status
+    isActive
+  }
+  department {
+    id
+  }
+  candidacyDropOut {
+    droppedOutAt
+  }
+  appointmentCount
+  firstAppointmentOccuredAt
+  certificateSkills
+  otherTraining
+  individualHourCount
+  collectiveHourCount
+  additionalHourCount
+  basicSkills {
+    label
+  }
+  mandatoryTrainings {
+    label
+  }
+  feasibilityFormat
+  feasibility {
+    id
+    feasibilityFileSentAt
+    decision
+    decisionComment
+    decisionSentAt
+    decisionFile {
+      name
+      url
+    }
+    dematerializedFeasibilityFile {
       id
-      organism {
-        id
+      sentToCandidateAt
+      aapDecision
+      aapDecisionComment
+      prerequisites {
         label
-        contactAdministrativeEmail
-        informationsCommerciales {
-          nom
-          telephone
-          emailContact
-        }
+        state
       }
-      createdAt
-      certification {
-        id
-        codeRncp
-        label
-        summary
-        status
-        financeModule
-      }
-      isCertificationPartial
-      experiences {
-        id
-        title
-        startedAt
-        duration
-        description
-      }
-      goals {
-        id
-      }
-      candidacyStatuses {
-        status
-        isActive
-      }
-      department {
-        id
-      }
-      candidacyDropOut {
-        droppedOutAt
-      }
-      appointmentCount
-      firstAppointmentOccuredAt
-      certificateSkills
-      otherTraining
-      individualHourCount
-      collectiveHourCount
-      additionalHourCount
-      basicSkills {
-        label
-      }
-      mandatoryTrainings {
-        label
-      }
-      feasibilityFormat
-      feasibility {
-        id
-        feasibilityFileSentAt
-        decision
-        decisionComment
-        decisionSentAt
-        decisionFile {
-          name
-          url
-        }
-      }
-      dematerializedFeasibilityFile {
-        id
-        sentToCandidateAt
-        aapDecision
-        aapDecisionComment
-        prerequisites {
+      firstForeignLanguage
+      secondForeignLanguage
+      option
+      blocsDeCompetences {
+        certificationCompetenceBloc {
+          id
+          code
           label
-          state
-        }
-        firstForeignLanguage
-        secondForeignLanguage
-        option
-        blocsDeCompetences {
-          certificationCompetenceBloc {
-            id
-            code
-            label
-            isOptional
-            FCCompetences
-            competences {
-              id
-              label
-            }
-          }
-        }
-        certificationCompetenceDetails {
-          text
-          certificationCompetence {
+          isOptional
+          FCCompetences
+          competences {
             id
             label
           }
         }
-        swornStatementFile {
+      }
+      certificationCompetenceDetails {
+        text
+        certificationCompetence {
+          id
+          label
+        }
+      }
+      swornStatementFile {
+        name
+        previewUrl
+        url
+        mimeType
+      }
+      attachments {
+        type
+        file {
           name
           previewUrl
-          url
           mimeType
         }
-        candidacy {
-          individualHourCount
-          collectiveHourCount
-          additionalHourCount
-          basicSkills {
-            label
-            id
-          }
-          mandatoryTrainings {
-            label
-            id
-          }
-          certification {
-            label
-            codeRncp
-            level
-            degree {
-              longLabel
-              level
-            }
-          }
-          goals {
-            id
-            label
-            isActive
-          }
-          experiences {
-            id
-            title
-            startedAt
-            duration
-            description
-          }
-          certificateSkills
-          candidate {
-            highestDegree {
-              level
-              longLabel
-            }
-            niveauDeFormationLePlusEleve {
-              level
-            }
-            firstname
-            firstname2
-            firstname3
-            lastname
-            email
-            givenName
-            birthdate
-            birthCity
-            birthDepartment {
-              label
-              code
-              region {
-                code
-                label
-              }
-            }
-            nationality
-            gender
-            phone
-            city
-            street
-            zip
-          }
-        }
-        attachments {
-          type
-          file {
-            name
-            previewUrl
-            mimeType
-          }
-        }
       }
-      activeDossierDeValidation {
-        id
-        decision
-        decisionComment
-        decisionSentAt
-      }
-      jury {
-        id
-        dateOfSession
-        timeOfSession
-        timeSpecified
-        addressOfSession
-        informationOfSession
-        result
-        dateOfResult
-        informationOfResult
-        convocationFile {
-          name
-          url
-        }
-      }
-      financeModule
-      `;
+    }
+  }
+  activeDossierDeValidation {
+    id
+    decision
+    decisionComment
+    decisionSentAt
+  }
+  jury {
+    id
+    dateOfSession
+    timeOfSession
+    timeSpecified
+    addressOfSession
+    informationOfSession
+    result
+    dateOfResult
+    informationOfResult
+    convocationFile {
+      name
+      url
+    }
+  }
+  financeModule
+`;
 
 const GET_CANDIDACY_BY_ID = gql`
   query getCandidacyById($id: ID!) {

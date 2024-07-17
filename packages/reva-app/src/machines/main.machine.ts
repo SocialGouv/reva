@@ -1168,7 +1168,8 @@ export const mainMachine =
               feasibilityFormat: event.data.candidacy?.feasibilityFormat,
               feasibilityPdf: event.data.candidacy?.feasibility,
               feasibilityDemat:
-                event.data.candidacy?.dematerializedFeasibilityFile,
+                event.data.candidacy?.feasibility
+                  ?.dematerializedFeasibilityFile,
               dossierDeValidation:
                 event.data.candidacy?.activeDossierDeValidation,
               jury: event.data.candidacy?.jury,
