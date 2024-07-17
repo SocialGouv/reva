@@ -1,104 +1,61 @@
-"use client";
-
-import { FormEvent, useMemo, useState } from "react";
-import {
-  redirect,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
-
 import { PageLayout } from "@/layouts/page.layout";
-
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
+import { isFeatureActive } from "@/utils/getActiveFeatures";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-import {
-  DepartmentType,
-  SelectDepartment,
-} from "@/components/select-department/SelectDepartment.component";
 import { Pagination } from "@/components/pagination/Pagination";
-import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { Results } from "@/components/legacy/organisms/Results";
-import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
+import { getCandidacy } from "@/app/home.loaders";
+import { searchCertifications } from "./set-certification.loaders";
+import CertificationSearchBar from "./(components)/CertificationSearchBar";
+import CertificationResultCard from "./(components)/CertificationResultCard";
+import SelectCertificationDepartment from "./(components)/SelectCertificationDepartment";
+import { getDepartments } from "@/components/select-department/SelectDepartment.loaders";
+import { updateCertification } from "./set-certification.actions";
+import SubmitButton from "@/components/forms/SubmitButton";
 
-import { useSetCertification } from "./set-certification.hooks";
-
-export default function SetCertification() {
-  const { isFeatureActive } = useFeatureFlipping();
-
-  const financementHorsPlateformeFeatureActive = isFeatureActive(
-    "FINANCEMENT_HORS_PLATEFORME",
-  );
-
-  const router = useRouter();
-
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-  const searchFilter = searchParams.get("search") || "";
+export default async function SetCertification({
+  searchParams,
+}: {
+  searchParams: Record<string, string>;
+}) {
+  const urlSearchParams = new URLSearchParams(searchParams);
+  const page = urlSearchParams.get("page");
+  const departmentId = urlSearchParams.get("departmentId");
+  const searchFilter = urlSearchParams.get("search") || "";
+  const selectedCertificationId = urlSearchParams.get("certificationId");
   const currentPage = page ? Number.parseInt(page) : 1;
 
-  const searchParamsWithoutPage = useMemo(() => {
-    let params = {};
-    searchParams.forEach((value, key) => {
-      if (key.toLowerCase() !== "page") {
-        params = { ...params, [key]: value };
-      }
-    });
-    return params;
-  }, [searchParams]);
-
-  const { canEditCandidacy, candidate, refetch } = useCandidacy();
-
-  const [department, setDepartment] = useState<DepartmentType | undefined>(
-    candidate.department,
+  const financementHorsPlateformeFeatureActive = await isFeatureActive(
+    "FINANCEMENT_HORS_PLATEFORME",
   );
-
-  const { searchCertificationsForCandidate, updateCertification } =
-    useSetCertification({
-      departmentId: department?.id || "",
-      searchText: searchFilter,
-      currentPage,
-    });
-
-  const [selectedCertificationId, setSelectedCertificationId] = useState<
-    string | undefined
-  >();
+  const { canEditCandidacy, candidate } = await getCandidacy();
 
   if (!canEditCandidacy) {
     redirect("/");
   }
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const departments = await getDepartments();
+  const searchCertificationsForCandidate = await searchCertifications({
+    departmentId: departmentId || candidate.department.id || "",
+    searchText: searchFilter,
+    currentPage,
+  });
 
-    try {
-      const response = await updateCertification.mutateAsync({
-        candidacyId: candidate.candidacy.id,
-        certificationId: selectedCertificationId!,
-      });
-      if (response) {
-        refetch();
+  let searchParamsWithoutPage = {};
+  urlSearchParams.forEach((value, key) => {
+    if (key.toLowerCase() !== "page") {
+      searchParamsWithoutPage = { ...searchParamsWithoutPage, [key]: value };
+    }
+  });
 
-        router.push("/");
-      }
-    } catch (error) {}
-  };
+  const searchParamsWithoutCertification = new URLSearchParams(urlSearchParams);
+  searchParamsWithoutCertification.delete("certificationId")
 
-  const info =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .info;
-
-  const rows =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .rows;
-
+  const info = searchCertificationsForCandidate.info;
+  const rows = searchCertificationsForCandidate.rows;
   const selectedCertification = rows?.find(
     (certification) => certification.id == selectedCertificationId,
   );
@@ -117,70 +74,25 @@ export default function SetCertification() {
             label="Sélectionnez le diplôme que vous voulez valider"
           />
 
-          <SelectDepartment
-            required
-            departmentId={department?.id}
-            onSelectDepartment={(department) => {
-              setDepartment(department);
-            }}
+          <SelectCertificationDepartment
+            departments={departments}
+            defaultValue={candidate.department.id}
           />
-
-          <SearchBar
-            label="Rechercher un diplôme"
-            className="mb-8"
-            searchFilter={searchFilter}
-            onSearchFilterChange={(filter) => {
-              const queryParams = new URLSearchParams(searchParams);
-              if (filter && queryParams.get("page")) {
-                queryParams.set("page", "1");
-                queryParams.set("search", filter);
-              } else if (filter) {
-                queryParams.set("search", filter);
-              } else {
-                queryParams.delete("search");
-              }
-
-              const path = `${pathname}?${queryParams.toString()}`;
-              router.push(path);
-            }}
-          />
-
-          <p className="mb-0" role="status">
-            {department
-              ? `Nombre de diplômes disponibles pour le département ${
-                  department.label
-                } : ${info?.totalRows}`
-              : null}
-          </p>
+          <CertificationSearchBar searchFilter={searchFilter} />
 
           <div id="results" className="flex flex-col justify-center">
             <Results
               title=""
               listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
             >
-              {searchCertificationsForCandidate.isLoading ||
-              searchCertificationsForCandidate.isFetching
-                ? [1, 2, 3, 4, 5].map((i) => (
-                    <CardSkeleton key={`skeleton-${i}`} />
-                  ))
-                : rows?.map((certification) => (
-                    <Card
-                      key={certification.id}
-                      id={certification.id}
-                      title={certification.label}
-                      codeRncp={certification.codeRncp}
-                      onClick={() => {
-                        setSelectedCertificationId(certification.id);
-                      }}
-                    />
-                  ))}
+              <CertificationResultCard rows={rows} />
             </Results>
 
             {info && (
               <Pagination
                 totalPages={info.totalPages}
                 currentPage={currentPage}
-                baseHref={pathname}
+                baseHref={"/set-certification/"}
                 className="mx-auto"
                 baseParams={searchParamsWithoutPage}
               />
@@ -190,7 +102,22 @@ export default function SetCertification() {
       )}
 
       {selectedCertification && (
-        <form onSubmit={onSubmit}>
+        <form action={updateCertification}>
+          <input
+            type="hidden"
+            name="certificationId"
+            value={selectedCertification.id}
+          />
+          <input
+            type="hidden"
+            name="candidacyId"
+            value={candidate.candidacy.id}
+          />
+          <input
+            type="hidden"
+            name="departmentId"
+            value={departmentId || candidate.department.id}
+          />
           <h2
             data-test="certification-label"
             className="mt-6 mb-2 text-2xl font-bold text-black "
@@ -238,21 +165,21 @@ export default function SetCertification() {
           </p>
 
           <div className="flex flex-col md:flex-row gap-6 mt-6">
-            <Button
-              data-test="submit-certification-button"
+            <SubmitButton
               className="justify-center w-[100%]  md:w-fit"
-              onClick={() => {
-                console.log("do something");
-              }}
-            >
-              Choisir ce diplôme
-            </Button>
+              data-test="submit-certification-button"
+              label="Choisir ce diplôme"
+            />
             <Button
               priority="secondary"
-              className="justify-center w-[100%]  md:w-fit"
-              onClick={() => setSelectedCertificationId(undefined)}
+              className="justify-center w-[100%] p-0 md:w-fit"
             >
-              Retour
+              <Link
+                className="px-4 py-2"
+                href={`/set-certification/?${searchParamsWithoutCertification.toString()}`}
+              >
+                Retour
+              </Link>
             </Button>
           </div>
         </form>
