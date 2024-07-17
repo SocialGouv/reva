@@ -4,9 +4,13 @@ export const getFeasibilityUploadedPdfByFeasibilityId = async ({
   feasibilityId,
 }: {
   feasibilityId: string;
-}) =>
-  prismaClient.feasibilityUploadedPdf.findUnique({
+}) => {
+  const f = await prismaClient.feasibilityUploadedPdf.findUnique({
     where: {
       feasibilityId,
     },
+    include: { Feasibility: true },
   });
+
+  return { ...f, candidacyId: f?.Feasibility.candidacyId };
+};
