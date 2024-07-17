@@ -56,7 +56,7 @@ export const ParcoursPersonnaliseBlock = ({
       <div className="flex flex-col md:flex-row gap-4">
         <div>
           <h3 className="text-lg mb-2 font-medium">
-            Forfait d'étude de faisabilité et entretien post-jury
+            Forfait d'étude de faisabilité
           </h3>
           <p className="flex text-xs text-dsfr-orange-500">
             <span className="fr-icon-warning-fill fr-icon--sm mr-1" /> Ne pourra

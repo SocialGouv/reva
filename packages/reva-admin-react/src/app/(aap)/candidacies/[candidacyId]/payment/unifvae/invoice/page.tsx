@@ -251,7 +251,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           <hr />
           <Section title="5. Accompagnement">
             <dl className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6">
-              <Info title="Forfait d’étude de faisabilité et entretien post-jury">
+              <Info title="Forfait d’étude de faisabilité">
                 <p className="flex text-dsfr-orange-500">
                   <span
                     className="fr-icon-warning-fill fr-icon--sm mr-1"
