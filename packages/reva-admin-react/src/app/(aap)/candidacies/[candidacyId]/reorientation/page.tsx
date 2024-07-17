@@ -2,11 +2,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { ADMIN_ELM_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -136,8 +134,6 @@ const ReorientationPage = () => {
       }),
   });
 
-  const { isFeatureActive } = useFeatureflipping();
-
   const handleSubmitCertification = async (certificationId: string) => {
     try {
       await updateCertification.mutateAsync({
@@ -147,9 +143,7 @@ const ReorientationPage = () => {
       successToast("La certification a bien été modifiée.");
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
 
-      const backUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
-        ? `/candidacies/${candidacyId}/summary`
-        : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
+      const backUrl = `/candidacies/${candidacyId}/summary`;
       router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);

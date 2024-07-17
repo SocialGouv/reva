@@ -1,4 +1,3 @@
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
 import { getActiveCandidacyMenu } from "./getActiveCandidacyMenu";
 import { getCandidacyForMenu } from "./getCandidacyForMenu";
@@ -23,18 +22,13 @@ export const getCandidacyMenu = async ({
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
-  const menuHeader: CandidacyMenuEntry[] = (await isFeatureActiveForUser({
-    userKeycloakId,
-    feature: "NEW_CANDIDACY_SUMMARY_PAGE",
-  }))
-    ? [
-        {
-          label: "Résumé de la candidature",
-          status: "ACTIVE_WITHOUT_HINT",
-          url: buildUrl({ adminType: "React", suffix: "summary" }),
-        },
-      ]
-    : [];
+  const menuHeader: CandidacyMenuEntry[] = [
+    {
+      label: "Résumé de la candidature",
+      status: "ACTIVE_WITHOUT_HINT",
+      url: buildUrl({ adminType: "React", suffix: "summary" }),
+    },
+  ];
 
   const menuFooter: CandidacyMenuEntry[] = userRoles.includes("admin")
     ? [

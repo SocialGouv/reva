@@ -17,7 +17,6 @@ import { ResponsableFinancementBlock } from "./_components/ResponsableFinancemen
 import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { ADMIN_ELM_URL } from "@/config/config";
 import { z } from "zod";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 
@@ -81,9 +80,7 @@ const FundingPage = () => {
   const router = useRouter();
   const { isFeatureActive } = useFeatureflipping();
 
-  const candidacySummaryUrl = isFeatureActive("NEW_CANDIDACY_SUMMARY_PAGE")
-    ? `/candidacies/${candidacyId}/summary`
-    : `${ADMIN_ELM_URL}/candidacies/${candidacyId}`;
+  const candidacySummaryUrl = `/candidacies/${candidacyId}/summary`;
 
   const fundingRequestDisabled = isFeatureActive("FUNDING_REQUEST_DISABLED");
 
