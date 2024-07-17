@@ -175,38 +175,37 @@ const InformationsGeneralesRemotePage = () => {
                 hintText="Vous pouvez sélectionnez une ou plusieurs zones."
                 options={[
                   {
-                    label: "France métropolitaine",
+                    label: "France métropolitaine (UTC+2)",
                     nativeInputProps: {
                       ...register("isRemoteFranceMetropolitaine"),
                     },
                   },
                   {
-                    label: "Guadeloupe",
+                    label: "Guadeloupe (UTC-4)",
                     nativeInputProps: {
                       ...register("isRemoteGuadeloupe"),
                     },
                   },
                   {
-                    label: "Guyane",
+                    label: "Guyane (UTC-4)",
                     nativeInputProps: {
                       ...register("isRemoteGuyane"),
                     },
                   },
-
                   {
-                    label: "Martinique",
+                    label: "Martinique (UTC-3)",
                     nativeInputProps: {
                       ...register("isRemoteMartinique"),
                     },
                   },
                   {
-                    label: "Mayotte",
+                    label: "Mayotte (UTC+3)",
                     nativeInputProps: {
                       ...register("isRemoteMayotte"),
                     },
                   },
                   {
-                    label: "La Réunion",
+                    label: "La Réunion (UTC+4)",
                     nativeInputProps: {
                       ...register("isRemoteLaReunion"),
                     },
