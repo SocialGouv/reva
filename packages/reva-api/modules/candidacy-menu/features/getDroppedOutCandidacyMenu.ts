@@ -32,17 +32,13 @@ export const getDroppedOutCandidacyMenu = async ({
     status: "ACTIVE_WITHOUT_HINT",
   });
 
-  const getFundingRequestMenuEntry = async (
-    userKeycloakId?: string,
-  ): Promise<CandidacyMenuEntry | undefined> => {
+  const getFundingRequestMenuEntry = async (): Promise<
+    CandidacyMenuEntry | undefined
+  > => {
     if (candidacy.financeModule === "hors_plateforme") {
       return undefined;
     }
 
-    const isReactFundingPageActive = await isFeatureActiveForUser({
-      userKeycloakId,
-      feature: "REACT_FUNDING_PAGE",
-    });
     const editableStatus: CandidacyStatusStep[] = [
       "DOSSIER_FAISABILITE_RECEVABLE",
       "DOSSIER_FAISABILITE_NON_RECEVABLE",
@@ -51,7 +47,7 @@ export const getDroppedOutCandidacyMenu = async ({
     return {
       label: "Demande de prise en charge",
       url: buildUrl({
-        adminType: isReactFundingPageActive ? "React" : "Elm",
+        adminType: "React",
         suffix: "funding",
       }),
       status: editableStatus.includes(
@@ -118,8 +114,7 @@ export const getDroppedOutCandidacyMenu = async ({
   const candidacyIsUnireva = candidacy.financeModule === "unireva";
 
   if (candidacyHasSentFeasibilityRequest || candidacyIsUnireva) {
-    const fundingRequestMenuEntry =
-      await getFundingRequestMenuEntry(userKeycloakId);
+    const fundingRequestMenuEntry = await getFundingRequestMenuEntry();
     if (fundingRequestMenuEntry) {
       droppedOutCandidacyMenu.push(fundingRequestMenuEntry);
     }
