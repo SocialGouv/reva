@@ -13,7 +13,7 @@ const modalUpdateEmail = createModal({
   isOpenedByDefault: false,
 });
 
-const initialState: Omit<Awaited<ReturnType<typeof updateContact>>,'candidate'> = {
+const initialState: Awaited<ReturnType<typeof updateContact>> = {
   errors: {},
 }
 
