@@ -39,6 +39,8 @@ export default function UpdateForm({
           formAction(formData);
           if (formData.get("email") !== candidate.email) {
             modalUpdateEmail.open();
+          } else {
+            router.push("/");
           }
         }}
         className="flex flex-col"
