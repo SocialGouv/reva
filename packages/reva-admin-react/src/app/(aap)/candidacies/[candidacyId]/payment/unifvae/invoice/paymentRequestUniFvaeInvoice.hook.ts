@@ -88,7 +88,7 @@ export const usePaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
 
   const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
-    queryKey: [candidacyId],
+    queryKey: [candidacyId, "getCandidacyForPaymentRequestUnifvaeInvoicePage"],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
         candidacyId,

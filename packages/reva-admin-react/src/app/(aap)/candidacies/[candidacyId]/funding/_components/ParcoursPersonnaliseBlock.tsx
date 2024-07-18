@@ -1,4 +1,5 @@
 import { Candidacy } from "@/graphql/generated/graphql";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useFormContext } from "react-hook-form";
 
@@ -16,7 +17,6 @@ export const ParcoursPersonnaliseBlock = ({
     watch,
     formState: { errors },
   } = useFormContext();
-  const forfaitCost = 200;
   const individualHourCount = watch("individualHourCount") || 0;
   const individualCost = watch("individualCost") || 0;
   const collectiveHourCount = watch("collectiveHourCount") || 0;
@@ -45,7 +45,7 @@ export const ParcoursPersonnaliseBlock = ({
 
   const totalHourCount =
     accompagnementHourCount + complementsFormatifsHourCount;
-  const totalCost = accompagnementCost + complementsFormatifsCost + forfaitCost;
+  const totalCost = accompagnementCost + complementsFormatifsCost;
 
   return (
     <div className="w-full">
@@ -53,21 +53,11 @@ export const ParcoursPersonnaliseBlock = ({
         <h2 className="text-xl">3. Parcours personnalisé</h2>
       </legend>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div>
-          <h3 className="text-lg mb-2 font-medium">
-            Forfait d'étude de faisabilité
-          </h3>
-          <p className="flex text-xs text-dsfr-orange-500">
-            <span className="fr-icon-warning-fill fr-icon--sm mr-1" /> Ne pourra
-            être demandé que si l'étude a été réalisée dans sa totalité.
-          </p>
-        </div>
-        <div className="md:pl-6">
-          <h4 className="text-base mb-2 font-medium uppercase">Forfait</h4>
-          <p>{forfaitCost}€ net</p>
-        </div>
-      </div>
+      <CallOut title="Le calcul de votre forfait évolue">
+        Votre forfait d’étude de faisabilité est désormais calculé à cette
+        étape. Il s’ajoutera par la suite au montant total, qui concerne les
+        heures hors forfait.
+      </CallOut>
 
       {!isForfaitOnly && (
         <>
@@ -343,7 +333,7 @@ export const ParcoursPersonnaliseBlock = ({
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 justify-between pt-6 px-5">
-            <p className="flex-1 m-0 text-lg font-bold">Total</p>
+            <p className="flex-1 m-0 text-lg font-bold">Total hors forfait</p>
             <p className="flex-1 m-0">{totalHourCount} h</p>
             <p className="flex-1 m-0">{totalCost.toFixed(2)} €</p>
           </div>

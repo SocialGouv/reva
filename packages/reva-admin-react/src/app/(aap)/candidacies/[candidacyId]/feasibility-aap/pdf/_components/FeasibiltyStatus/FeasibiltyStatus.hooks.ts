@@ -3,7 +3,7 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 
 const getCandidacyQuery = graphql(`
-  query getCandidacyForFeasibility($candidacyId: ID!) {
+  query getCandidacyForFeasibilityStatus($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
       candidate {
@@ -73,7 +73,7 @@ export const useHooks = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidacy = useQuery({
-    queryKey: [candidacyId],
+    queryKey: [candidacyId, "getCandidacyForFeasibilityStatus"],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
         candidacyId,
