@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
-import { PageLayout } from "@/layouts/page.layout";
 import { isFeatureActive } from "@/utils/getActiveFeatures";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { Pagination } from "@/components/pagination/Pagination";
@@ -52,7 +51,7 @@ export default async function SetCertification({
   });
 
   const searchParamsWithoutCertification = new URLSearchParams(urlSearchParams);
-  searchParamsWithoutCertification.delete("certificationId")
+  searchParamsWithoutCertification.delete("certificationId");
 
   const info = searchCertificationsForCandidate.info;
   const rows = searchCertificationsForCandidate.rows;
@@ -61,11 +60,7 @@ export default async function SetCertification({
   );
 
   return (
-    <PageLayout
-      title="Choix du diplôme"
-      data-test={`certificates`}
-      displayBackToHome
-    >
+    <>
       {!selectedCertification && (
         <>
           <h2 className="mt-6 mb-2">Nouveau parcours VAE - Choix du diplôme</h2>
@@ -184,6 +179,6 @@ export default async function SetCertification({
           </div>
         </form>
       )}
-    </PageLayout>
+    </>
   );
 }
