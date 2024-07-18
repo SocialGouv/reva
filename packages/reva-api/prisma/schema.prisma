@@ -387,7 +387,7 @@ model Organism {
   label                                                  String                                                   @db.VarChar(255)
   legalStatus                                            LegalStatus                                              @default(NC) @map("legal_status")
   llToEarth                                              String?                                                  @map("ll_to_earth")
-  contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
+  contactAdministrativeEmail                             String                                                   @map("contact_administrative_email") @db.VarChar(255)
   contactAdministrativePhone                             String?                                                  @map("contact_administrative_phone") @db.VarChar(50)
   siret                                                  String
   isActive                                               Boolean                                                  @default(false) @map("is_active")
