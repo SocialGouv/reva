@@ -23,8 +23,10 @@ const UPDATE_CONTACT = graphql(`
   }
 `);
 
-export const updateContact = async (formData: FormData) => {
+export const updateContact = async (prevState: unknown, formData: FormData) => {
   const graphqlClient = getGraphQlClient();
+
+  const errors: Record<string, string> = {};
 
   const candidateId = formData.get("candidateId") as string;
   const candidateData = {
@@ -34,12 +36,29 @@ export const updateContact = async (formData: FormData) => {
     email: formData.get("email") as string,
   };
 
-  const updateContact = await graphqlClient.request(UPDATE_CONTACT, {
+  if (!candidateData.email) {
+    errors["email"] = "Email is required";
+  }
+  if (!candidateData.firstname) {
+    errors["firstname"] = "Firstname is required";
+  }
+  if (!candidateData.lastname) {
+    errors["lastname"] = "Lastname is required";
+  }
+  if (!candidateData.phone) {
+    errors["phone"] = "Phone is required";
+  }
+
+  await graphqlClient.request(UPDATE_CONTACT, {
     candidateId,
     candidateData,
   });
 
-  revalidatePath("/");
+  if (Object.keys(errors).length === 0) {
+    revalidatePath("/");
+  }
 
-  return updateContact.candidacy_updateContact;
+  return {
+    errors,
+  };
 };

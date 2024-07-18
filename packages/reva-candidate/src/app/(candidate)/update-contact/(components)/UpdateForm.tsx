@@ -6,11 +6,16 @@ import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import SubmitButton from "@/components/forms/SubmitButton";
 import { updateContact } from "../update-contact.actions";
 import { Candidate_GetCandidateWithCandidacyQuery } from "@/graphql/generated/graphql";
+import { useFormState } from "react-dom";
 
 const modalUpdateEmail = createModal({
   id: "project-update-email",
   isOpenedByDefault: false,
 });
+
+const initialState: Omit<Awaited<ReturnType<typeof updateContact>>,'candidate'> = {
+  errors: {},
+}
 
 export default function UpdateForm({
   candidate,
@@ -18,6 +23,7 @@ export default function UpdateForm({
   candidate: Candidate_GetCandidateWithCandidacyQuery["candidate_getCandidateWithCandidacy"];
 }) {
   const router = useRouter();
+  const [state, formAction] = useFormState(updateContact, initialState);
 
   useIsModalOpen(modalUpdateEmail, {
     onConceal: () => {
@@ -30,7 +36,7 @@ export default function UpdateForm({
     <>
       <form
         action={async (formData) => {
-          await updateContact(formData);
+          formAction(formData);
           if (formData.get("email") !== candidate.email) {
             modalUpdateEmail.open();
           }
@@ -42,6 +48,8 @@ export default function UpdateForm({
             <input type="hidden" name="candidateId" value={candidate.id} />
             <Input
               label="Prénom"
+              state={state?.errors?.firstname ? "error" : "default"}
+              stateRelatedMessage={state?.errors?.firstname as string}
               nativeInputProps={{
                 name: "firstname",
                 required: true,
@@ -51,6 +59,8 @@ export default function UpdateForm({
             />
             <Input
               label="Nom"
+              state={state?.errors?.lastname ? "error" : "default"}
+              stateRelatedMessage={state?.errors?.lastname as string}
               nativeInputProps={{
                 name: "lastname",
                 required: true,
@@ -61,6 +71,8 @@ export default function UpdateForm({
             <Input
               className="sm:pt-6"
               label="Téléphone"
+              state={state?.errors?.phone ? "error" : "default"}
+              stateRelatedMessage={state?.errors?.phone as string}
               nativeInputProps={{
                 name: "phone",
                 minLength: 10,
@@ -72,6 +84,8 @@ export default function UpdateForm({
             />
             <Input
               label="Email"
+              state={state?.errors?.email ? "error" : "default"}
+              stateRelatedMessage={state?.errors?.email as string}
               hintText="Format attendu : nom@domaine.fr"
               nativeInputProps={{
                 name: "email",
