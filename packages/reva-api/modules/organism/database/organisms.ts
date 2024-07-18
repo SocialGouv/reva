@@ -26,24 +26,6 @@ export const getOrganismById = async (
   }
 };
 
-export const getOrganismBySiretAndTypology = async (
-  siret: string,
-  typology: OrganismTypology,
-): Promise<Either<string, Maybe<domain.Organism>>> => {
-  try {
-    const organism = await prismaClient.organism.findFirst({
-      where: {
-        siret,
-        typology,
-      },
-    });
-    return Right(Maybe.fromNullable(organism));
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while retrieving organism`);
-  }
-};
-
 export const createOrganism = async (data: {
   label: string;
   contactAdministrativeEmail: string;

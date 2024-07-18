@@ -127,6 +127,11 @@ export const createOrganismWithMaisonMereAAP = async ({
       `[validateorganismData] Successfuly created organism with siret ${siret}`,
     );
 
+    await assignMaisonMereAAPToOrganism({
+      organismId: newOrganism.id,
+      maisonMereAAPId: maisonMereAAP.id,
+    });
+
     await createOrUpdateInformationsCommerciales({
       informationsCommerciales: {
         organismId: newOrganism.id,
@@ -186,11 +191,6 @@ export const createOrganismWithMaisonMereAAP = async ({
     logger.info(
       `[validateorganismData] Successfuly created AP with organismId ${newOrganism.id}`,
     );
-
-    await assignMaisonMereAAPToOrganism({
-      organismId: newOrganism.id,
-      maisonMereAAPId: maisonMereAAP.id,
-    });
 
     return "Ok";
   } catch (e) {

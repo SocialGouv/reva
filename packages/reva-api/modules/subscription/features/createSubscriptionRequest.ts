@@ -1,11 +1,12 @@
 import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../prisma/client";
-import { getOrganismBySiretAndTypology } from "../../organism/database/organisms";
 import {
   emptyUploadedFileStream,
   getUploadedFile,
   uploadFileToS3,
 } from "../../shared/file";
+
+import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
 
 export const createSubscriptionRequest = async ({
   params,
@@ -13,14 +14,12 @@ export const createSubscriptionRequest = async ({
   params: CreateSubscriptionRequestInput;
 }) => {
   try {
-    //organism check
-    const oldOrganism = (
-      await getOrganismBySiretAndTypology(params.companySiret, "expertFiliere")
-    )
-      .unsafeCoerce()
-      .extractNullable();
+    const oldMaisonMereAap = await getMaisonMereAapBySiretAndTypology(
+      params.companySiret,
+      "expertFiliere",
+    );
 
-    if (oldOrganism) {
+    if (oldMaisonMereAap) {
       throw new Error(
         `Ce SIRET est déjà associé à un compte. Si nécessaire, contactez votre administrateur ou support@france.vae.fr`,
       );

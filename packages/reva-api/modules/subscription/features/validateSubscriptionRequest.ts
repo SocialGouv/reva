@@ -3,16 +3,14 @@ import { prismaClient } from "../../../prisma/client";
 import { getAccountFromEmail } from "../../account/database/accounts";
 import { createAccount } from "../../account/features/createAccount";
 import * as IAM from "../../account/features/keycloak";
-import {
-  createOrganism,
-  getOrganismBySiretAndTypology,
-} from "../../organism/database/organisms";
+import { createOrganism } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 import { getDepartments } from "../../referential/features/getDepartments";
 import { getDegrees } from "../../referential/features/getDegrees";
+import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
@@ -39,19 +37,14 @@ export const validateSubscriptionRequest = async ({
 
   const getIamAccount = IAM.getAccount;
 
-  //organism check
-  const oldOrganism = (
-    await getOrganismBySiretAndTypology(
-      subscriptionRequest.companySiret,
-      "expertFiliere",
-    )
-  )
-    .unsafeCoerce()
-    .extractNullable();
+  const oldMaisonMereAap = await getMaisonMereAapBySiretAndTypology(
+    subscriptionRequest.companySiret,
+    "expertFiliere",
+  );
 
-  if (oldOrganism) {
+  if (oldMaisonMereAap) {
     throw new Error(
-      `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret}`,
+      `Ce SIRET est déjà associé à un compte. Si nécessaire, contactez votre administrateur ou support@france.vae.fr`,
     );
   }
 
