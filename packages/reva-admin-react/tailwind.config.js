@@ -21,6 +21,8 @@ module.exports = {
           orange: { 500: "#f94608" },
           "light-text-mention-grey": "#666666",
           "light-neutral-grey-1000": "#F6F6F6",
+          "light-decisions-text-default-warning": "#B34000",
+          "light-decisions-background-contrast-warning": "#FFE9E6",
         },
         neutral: {
           100: "#F6F6F6",
