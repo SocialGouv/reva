@@ -15,7 +15,7 @@ export default function RegistrationConfirmation() {
         <h1>Votre demande de création de compte a bien été enregistrée.</h1>
         <p className="mt-4 text-lg font-bold text-dsfrGray-500">
           Vous allez recevoir un mail contenant un lien d’activation qui sera
-          valable pendant 4 jours.
+          valable pendant 3 heures.
         </p>
         <p className="mt-4 text-dsfrGray-500">
           Afin de vous assurer que vous recevez bien nos e-mails, pensez à
