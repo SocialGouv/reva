@@ -32,7 +32,7 @@
                 <#elseif (client.baseUrl)?has_content>
                     <a href="${client.baseUrl}">Poursuivre sur France VAE</a>
                 <#elseif (client.clientId)?has_content && client.clientId == "reva-admin">
-                    <a href="${properties.revaUrl}/admin">Connectez vous à votre espace</a>
+                    <a href="${properties.revaUrl}/admin2">Connectez vous à votre espace</a>
                 <#else>
                     <a class="fr-link" href="${properties.revaUrl}">Poursuivre sur France VAE</a>
                 </#if>
