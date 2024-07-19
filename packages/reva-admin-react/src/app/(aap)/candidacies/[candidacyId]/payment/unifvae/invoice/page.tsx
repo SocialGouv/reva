@@ -10,7 +10,6 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CostInput } from "../../_components/form/CostInput";
@@ -111,6 +110,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     otherTrainingEffectiveHourCount,
     otherTrainingEffectiveCost,
   } = useWatch({ control });
+
+  const feasibilityPackageCostTotal = 300;
 
   const supportHourCountTotal =
     (individualEffectiveHourCount || 0) + (collectiveEffectiveHourCount || 0);
@@ -249,12 +250,19 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           </Section>
           <hr />
           <Section title="5. Accompagnement">
-            <CallOut title="Le calcul de votre forfait évolue">
-              Désormais, votre forfait d’étude de faisabilité est calculé lors
-              de la demande de prise en charge. Il s’ajoutera par la suite au
-              montant total hors forfait que vous retrouvez ici, en bas de page.
-            </CallOut>
-
+            <dl className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6">
+              <Info title="Forfait d’étude de faisabilité et entretien post-jury">
+                <p className="flex text-dsfr-orange-500">
+                  <span
+                    className="fr-icon-warning-fill fr-icon--sm mr-1"
+                    aria-hidden
+                  />
+                  Ne pourra être demandé que si l'étude a été réalisée dans sa
+                  totalité.
+                </p>
+              </Info>
+              <Info title="Forfait">300€ net</Info>
+            </dl>
             {candidacy?.feasibility?.decision === "ADMISSIBLE" && (
               <>
                 <Alert
@@ -413,10 +421,14 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   </div>
                 </fieldset>
                 <TableRow>
-                  <p className="font-bold">Total hors forfait</p>
+                  <p className="font-bold">Total</p>
                   <p>{supportHourCountTotal + trainingHourCountTotal} h</p>
                   <p>
-                    {(supportEffectiveCostTotal + trainingCostTotal).toFixed(2)}{" "}
+                    {(
+                      feasibilityPackageCostTotal +
+                      supportEffectiveCostTotal +
+                      trainingCostTotal
+                    ).toFixed(2)}{" "}
                     €
                   </p>
                 </TableRow>
