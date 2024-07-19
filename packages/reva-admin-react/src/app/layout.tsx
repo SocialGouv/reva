@@ -30,6 +30,11 @@ import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import Script from "next/script";
 import { AapCgu } from "@/components/aap-cgu";
+import {
+  AAPNotVisibleInSearchResultNotice,
+  useAAPVisibilityCheck,
+} from "@/components/aap-not-visible-in-search-result-notice/AAPNotVisibleInSearchResultNotice";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -79,6 +84,9 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     isAdminCertificationAuthority,
   } = useAuth();
 
+  const { isVisibleInSearchResults } = useAAPVisibilityCheck();
+  const { isFeatureActive } = useFeatureflipping();
+
   const bgClass = () => {
     if (isAdmin) {
       return "lg:bg-admin";
@@ -108,6 +116,13 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       />
       <Header />
       {authenticated && isGestionnaireMaisonMereAAP && <AapCgu />}
+      {authenticated &&
+        isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE") &&
+        !isAdmin &&
+        !isGestionnaireMaisonMereAAP &&
+        isOrganism &&
+        !isVisibleInSearchResults && <AAPNotVisibleInSearchResultNotice />}
+
       <main
         role="main"
         id="content"
