@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
@@ -29,6 +30,7 @@ const getOrganismQuery = graphql(`
 const OrganismDetailsLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
   const { organismId } = useParams<{ organismId: string }>();
+  const { isGestionnaireMaisonMereAAP } = useAuth();
 
   const { data: getOrganismResponse, status: getOrganismStatus } = useQuery({
     queryKey: ["organisms", "agencies-settings-aap-organism-layout"],
@@ -58,7 +60,7 @@ const OrganismDetailsLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex flex-col">
-      {!isVisibleInSearchResults && (
+      {isGestionnaireMaisonMereAAP && !isVisibleInSearchResults && (
         <Badge severity="warning" className="mb-4">
           Actuellement, vous n’êtes pas visible dans les résultats de recherche.
         </Badge>
