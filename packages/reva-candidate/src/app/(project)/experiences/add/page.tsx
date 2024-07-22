@@ -1,9 +1,3 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 
@@ -11,11 +5,11 @@ import { Duration } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useAddExperience } from "./add-experience.hooks";
+import { getCandidacy } from "@/app/home.loaders";
+import { addExperience } from "./add-experience.actions";
+import SubmitButton from "@/components/forms/SubmitButton";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -25,41 +19,8 @@ const durationOptions: { label: string; value: Duration }[] = [
   { label: "Plus de 10 ans", value: "moreThanTenYears" },
 ];
 
-export default function AddExperience() {
-  const router = useRouter();
-
-  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
-
-  const { addExperience } = useAddExperience();
-
-  const [title, setTitle] = useState<string>("");
-  const [startedAt, setStartedAt] = useState<number>(
-    new Date("2020-01-31").getTime(),
-  );
-
-  const [duration, setDuration] = useState<Duration | undefined>();
-  const [description, setDescription] = useState<string>("");
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const response = await addExperience.mutateAsync({
-        candidacyId: candidacy.id,
-        experience: {
-          title,
-          startedAt,
-          duration: duration!,
-          description,
-        },
-      });
-      if (response) {
-        refetch();
-        router.push("/");
-      }
-    } catch (error) {}
-  };
+export default async function AddExperience() {
+  const { candidacy } = await getCandidacy();
 
   return (
     <PageLayout
@@ -74,7 +35,8 @@ export default function AddExperience() {
         d’une activité extra-professionnelle."
       />
 
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <form action={addExperience} className="flex flex-col">
+        <input type="hidden" name="candidacyId" value={candidacy.id} />
         <fieldset>
           <legend>
             <h2 className="mt-2 mb-4 text-lg">Nouvelle expérience</h2>
@@ -86,10 +48,6 @@ export default function AddExperience() {
             nativeInputProps={{
               required: true,
               name: "title",
-              value: title,
-              onChange: (e) => {
-                setTitle(e.target.value);
-              },
             }}
           />
           <Input
@@ -98,10 +56,9 @@ export default function AddExperience() {
               required: true,
               name: "startedAt",
               type: "date",
-              value: new Date(startedAt).toISOString().slice(0, -14),
-              onChange: (e) => {
-                setStartedAt(new Date(e.target.value).getTime());
-              },
+              defaultValue: new Date(new Date("2020-01-31").getTime())
+                .toISOString()
+                .slice(0, -14),
             }}
           />
           <label htmlFor="duration" className="fr-label"></label>
@@ -112,10 +69,6 @@ export default function AddExperience() {
             nativeSelectProps={{
               required: true,
               name: "duration",
-              value: duration || "",
-              onChange: (e) => {
-                setDuration(e.target.value as Duration);
-              },
             }}
           >
             <option value="" disabled hidden>
@@ -133,21 +86,11 @@ export default function AddExperience() {
             label="Description du poste (optionnel)"
             nativeTextAreaProps={{
               name: "description",
-              value: description,
-              onChange: (e) => {
-                setDescription(e.target.value);
-              },
               rows: 5,
             }}
           />
         </fieldset>
-        <Button
-          className="mt-6 justify-center w-[100%] md:w-fit"
-          data-test={`project-experience-add`}
-          disabled={!canEditCandidacy}
-        >
-          Ajouter votre expérience
-        </Button>
+        <SubmitButton label="Ajouter votre experience" />
       </form>
     </PageLayout>
   );
