@@ -21,7 +21,6 @@ import {
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import * as basicSkillDb from "./database/basicSkills";
 import * as candidacyDb from "./database/candidacies";
 import * as experienceDb from "./database/experiences";
 import { cancelDropOutCandidacyEvent } from "./events";
@@ -239,13 +238,7 @@ const unsafeResolvers = {
       }
     },
 
-    getBasicSkills: async () => {
-      const result = await getBasicSkills({
-        getBasicSkills: basicSkillDb.getBasicSkills,
-      })();
-
-      return result.extract();
-    },
+    getBasicSkills,
     candidacy_candidacyCountByStatus: (
       _: unknown,
       _params: {
