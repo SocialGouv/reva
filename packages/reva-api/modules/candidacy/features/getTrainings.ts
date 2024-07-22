@@ -1,26 +1,3 @@
-import { Either, EitherAsync } from "purify-ts";
+import { prismaClient } from "../../../prisma/client";
 
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-
-export interface Training {
-  id: string;
-  label: string;
-}
-
-interface GetTrainingsDeps {
-  getTrainings: () => Promise<Either<string, Training[]>>;
-}
-
-export const getTrainings =
-  (deps: GetTrainingsDeps) =>
-  async (): Promise<Either<FunctionalError, Training[]>> =>
-    EitherAsync.fromPromise(() => deps.getTrainings()).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Erreur lors de la récupération des accompagnants",
-        ),
-    );
+export const getTrainings = () => prismaClient.training.findMany();

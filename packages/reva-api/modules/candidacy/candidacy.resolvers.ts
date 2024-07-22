@@ -26,7 +26,6 @@ import * as admissibilityDb from "./database/admissibility";
 import * as basicSkillDb from "./database/basicSkills";
 import * as candidacyDb from "./database/candidacies";
 import * as experienceDb from "./database/experiences";
-import * as trainingDb from "./database/trainings";
 import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
@@ -48,7 +47,7 @@ import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId"
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
-import { getTrainings, Training } from "./features/getTrainings";
+import { getTrainings } from "./features/getTrainings";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
@@ -75,7 +74,6 @@ import {
   sendTrainingEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { Either } from "purify-ts";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -166,13 +164,7 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    getTrainings: async () => {
-      const result: Either<FunctionalError, Training[]> = await getTrainings({
-        getTrainings: trainingDb.getTrainings,
-      })();
-
-      return result.extract();
-    },
+    getTrainings,
     getRandomOrganismsForCandidacy: async (
       _: unknown,
       {

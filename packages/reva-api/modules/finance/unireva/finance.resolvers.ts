@@ -10,7 +10,7 @@ import {
   getCandidacyFromId,
   updateCandidacyStatus,
 } from "../../candidacy/database/candidacies";
-import { getAfgsuTrainingId } from "../../candidacy/database/trainings";
+import { getAfgsuTrainingId } from "../../candidacy/features/getAfgsuTrainingId";
 import { getCandidateByCandidacyId } from "../../candidate/database/candidates";
 import * as fundingRequestsDb from "./database/fundingRequests";
 import * as paymentRequestsDb from "./database/paymentRequest";
