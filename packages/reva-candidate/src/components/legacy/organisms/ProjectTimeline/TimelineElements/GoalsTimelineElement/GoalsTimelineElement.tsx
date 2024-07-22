@@ -1,19 +1,18 @@
-"use client";
-import { useRouter } from "next/navigation";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
-
 import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { FormatedCandidacy } from "@/app/home.loaders";
+import { LinkButton } from "@/components/link-button/LinkButton";
 
-export const GoalsTimelineElement = () => {
-  const router = useRouter();
+export const GoalsTimelineElement = ({
+  canEditCandidacy, candidacy
+}: {
+  canEditCandidacy: boolean;
+  candidacy: FormatedCandidacy["candidacy"];
+}) => {
 
-  const { canEditCandidacy, candidacy } = useCandidacy();
 
   const { certification, goals } = candidacy;
 
@@ -36,18 +35,23 @@ export const GoalsTimelineElement = () => {
         ))}
       </ul>
       {status !== "readonly" && (
-        <Button
-          data-test="project-home-edit-goals"
-          priority="secondary"
-          onClick={() => {
-            router.push("/set-goals");
-          }}
-          disabled={status === "disabled"}
-        >
+        // <Button
+        //   data-test="project-home-edit-goals"
+        //   priority="secondary"
+        //   onClick={() => {
+        //     router.push("/set-goals");
+        //   }}
+        //   disabled={status === "disabled"}
+        // >
+        //   {goals.length > 0
+        //     ? "Modifiez vos objectifs"
+        //     : "Choisir vos objectifs"}
+        // </Button>
+        <LinkButton href="/set-goals" data-test="project-home-edit-goals" disabled={status === "disabled"}>
           {goals.length > 0
             ? "Modifiez vos objectifs"
             : "Choisir vos objectifs"}
-        </Button>
+        </LinkButton>
       )}
     </TimelineElement>
   );

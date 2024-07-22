@@ -1,20 +1,18 @@
-"use client";
-import { useRouter } from "next/navigation";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
-
 import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { FormatedCandidacy } from "@/app/home.loaders";
+import { LinkButton } from "@/components/link-button/LinkButton";
 
-export const CertificationTimelineElement = () => {
-  const router = useRouter();
-
-  const { canEditCandidacy, candidacy } = useCandidacy();
-
+export const CertificationTimelineElement = ({
+  canEditCandidacy,
+  candidacy,
+}: {
+  canEditCandidacy: boolean;
+  candidacy: FormatedCandidacy["candidacy"];
+}) => {
   const { certification } = candidacy;
 
   let status: TimeLineElementStatus = "active";
@@ -37,15 +35,12 @@ export const CertificationTimelineElement = () => {
         )}
 
         {status !== "readonly" && (
-          <Button
+          <LinkButton
+            href="/set-certification"
             data-test="project-home-set-certification"
-            priority="secondary"
-            onClick={() => {
-              router.push("set-certification");
-            }}
           >
             {certification ? "Modifiez votre diplôme" : "Choisir votre diplôme"}
-          </Button>
+          </LinkButton>
         )}
       </>
     </TimelineElement>
