@@ -4,6 +4,7 @@ import { graphql } from "@/graphql/generated";
 import { getGraphQlClient } from "@/utils/graphql-client-server";
 import { CandidateGoalInput } from "@/graphql/generated/graphql";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const UPDATE_GOALS = graphql(`
   mutation update_goals($candidacyId: ID!, $goals: [CandidateGoalInput!]!) {
@@ -29,5 +30,6 @@ export const updateGoals = async (formData: FormData) => {
       goals,
     },
   );
+  revalidatePath("/");
   redirect("/");
 };

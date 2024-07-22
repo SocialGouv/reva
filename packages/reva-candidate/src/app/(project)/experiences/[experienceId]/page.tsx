@@ -1,9 +1,3 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 
@@ -13,9 +7,9 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
-import { useUpdateExperience } from "./update-experience.hooks";
+import { getCandidacy } from "@/app/home.loaders";
+import { updateExperience } from "./update-experience.actions";
+import SubmitButton from "@/components/forms/SubmitButton";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -25,70 +19,38 @@ const durationOptions: { label: string; value: Duration }[] = [
   { label: "Plus de 10 ans", value: "moreThanTenYears" },
 ];
 
-export default function UpdateExperience() {
-  const router = useRouter();
-  const params = useParams<{ experienceId: string }>();
-
-  const { experienceId } = params;
-
-  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
-
-  const { updateExperience } = useUpdateExperience();
+export default async function UpdateExperience({
+  params,
+}: {
+  params: { experienceId: string };
+}) {
+  const { candidacy } = await getCandidacy();
 
   const experience = candidacy.experiences.find(
-    (experience) => experience.id == experienceId,
+    (experience) => experience.id === params.experienceId,
   );
-
-  const [title, setTitle] = useState<string>(experience?.title || "");
-  const [startedAt, setStartedAt] = useState<number>(
-    experience?.startedAt || new Date("2020-01-31").getTime(),
-  );
-  const [duration, setDuration] = useState<Duration | undefined>(
-    experience?.duration,
-  );
-  const [description, setDescription] = useState<string>(
-    experience?.description || "",
-  );
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const response = await updateExperience.mutateAsync({
-        candidacyId: candidacy.id,
-        experienceId,
-        experience: {
-          title,
-          startedAt,
-          duration: duration!,
-          description,
-        },
-      });
-      if (response) {
-        refetch();
-        router.push("/");
-      }
-    } catch (error) {}
-  };
-
+  if (!experience) {
+    throw new Error("Cette experience n'existe pas");
+  }
   return (
     <PageLayout
       className="max-w-2xl"
-      title="Modifier une expérience"
+      title="Ajouter une expérience"
       displayBackToHome
     >
-      <h2 className="mt-6 mb-2">Modifier une expérience</h2>
+      <h2 className="mt-6 mb-2">Ajouter une expérience</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"
         label="Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
         d’une activité extra-professionnelle."
       />
 
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <form action={updateExperience} className="flex flex-col">
+        <input type="hidden" name="candidacyId" value={candidacy.id} />
+        <input type="hidden" name="experienceId" value={experience.id} />
         <fieldset>
           <legend>
-            <h2 className="mt-2 mb-4 text-lg">{experience?.title}</h2>
+            <h2 className="mt-2 mb-4 text-lg">Nouvelle expérience</h2>
           </legend>
 
           <Input
@@ -97,10 +59,7 @@ export default function UpdateExperience() {
             nativeInputProps={{
               required: true,
               name: "title",
-              value: title,
-              onChange: (e) => {
-                setTitle(e.target.value);
-              },
+              defaultValue: experience.title,
             }}
           />
           <Input
@@ -109,10 +68,9 @@ export default function UpdateExperience() {
               required: true,
               name: "startedAt",
               type: "date",
-              value: new Date(startedAt).toISOString().slice(0, -14),
-              onChange: (e) => {
-                setStartedAt(new Date(e.target.value).getTime());
-              },
+              defaultValue: new Date(experience.startedAt)
+                .toISOString()
+                .slice(0, -14),
             }}
           />
           <label htmlFor="duration" className="fr-label"></label>
@@ -123,10 +81,7 @@ export default function UpdateExperience() {
             nativeSelectProps={{
               required: true,
               name: "duration",
-              value: duration || "",
-              onChange: (e) => {
-                setDuration(e.target.value as Duration);
-              },
+              defaultValue: experience.duration,
             }}
           >
             <option value="" disabled hidden>
@@ -144,21 +99,12 @@ export default function UpdateExperience() {
             label="Description du poste (optionnel)"
             nativeTextAreaProps={{
               name: "description",
-              value: description,
-              onChange: (e) => {
-                setDescription(e.target.value);
-              },
+              defaultValue: experience.description,
               rows: 5,
             }}
           />
         </fieldset>
-        <Button
-          className="mt-6 justify-center w-[100%] md:w-fit"
-          data-test={`project-experience-update`}
-          disabled={!canEditCandidacy}
-        >
-          Valider votre expérience
-        </Button>
+        <SubmitButton label="Mettre à jour votre experience" />
       </form>
     </PageLayout>
   );
