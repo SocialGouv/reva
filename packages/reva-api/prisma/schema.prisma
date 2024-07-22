@@ -1124,7 +1124,7 @@ model FeasibilityUploadedPdf {
   documentaryProofFileId        String?     @map("documentary_proof_file_id") @db.Uuid
   certificateOfAttendanceFile   File?       @relation("certificate_of_attendance_file", fields: [certificateOfAttendanceFileId], references: [id])
   certificateOfAttendanceFileId String?     @map("certificate_of_attendance_file_id") @db.Uuid
-  Feasibility                   Feasibility @relation(fields: [feasibilityId], references: [id])
+  Feasibility                   Feasibility @relation(fields: [feasibilityId], references: [id], onDelete: Cascade)
   feasibilityId                 String      @unique @map("feasibility_id") @db.Uuid
 
   @@map("feasibility_uploaded_pdf")
@@ -1457,7 +1457,7 @@ model DematerializedFeasibilityFile {
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
   swornStatementFileId              String?                             @unique @map("sworn_statement_file_id") @db.Uuid
   swornStatementFile                File?                               @relation("sworn_statement_file", fields: [swornStatementFileId], references: [id])
-  feasibility                       Feasibility                         @relation(fields: [feasibilityId], references: [id])
+  feasibility                       Feasibility                         @relation(fields: [feasibilityId], references: [id], onDelete: Cascade)
   feasibilityId                     String                              @unique @map("feasibility_id") @db.Uuid
 
   @@map("dematerialized_feasibility_file")
