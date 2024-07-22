@@ -2,15 +2,35 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import { Organism } from "@/graphql/generated/graphql";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import { OrganismCardDescription } from "./OrganismCardDescription";
 import { OrganismCardDistance } from "./OrganismCardDistance";
 import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
 import { OrganismCardTitle } from "./OrganismCardTitle";
 
-const getMandatoryInfo = (organism: Organism) => {
+const getMandatoryInfo = (
+  organism: Organism,
+  isAAPInterventionZoneUpdateFeatureActive: boolean,
+) => {
   const { informationsCommerciales: ic } = organism;
-  const isOnSite = organism.isOnSite;
-  const isRemote = organism.isRemote;
+  const isOnSite = isAAPInterventionZoneUpdateFeatureActive
+    ? organism.isOnSite
+    : !!(
+        ic?.adresseNumeroEtNomDeRue &&
+        ic?.adresseCodePostal &&
+        ic?.adresseVille &&
+        ic?.conformeNormesAccessbilite !==
+          "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" &&
+        organism.organismOnDepartments?.find((od) => od.isOnSite)
+      );
+  const isRemote = isAAPInterventionZoneUpdateFeatureActive
+    ? organism.isRemote
+    : !!(
+        ic?.conformeNormesAccessbilite ===
+          "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" ||
+        organism.organismOnDepartments?.find((od) => od.isRemote)
+      );
   return {
     label: ic?.nom || organism.label,
     website: ic?.siteInternet || organism.website,
@@ -28,7 +48,16 @@ export const OrganismCard = ({
   organism: Organism;
   onClick: () => void;
 }) => {
-  const mandatoryInfo = getMandatoryInfo(organism);
+  const { isFeatureActive } = useFeatureFlipping();
+
+  const isAAPInterventionZoneUpdateFeatureActive = isFeatureActive(
+    "AAP_INTERVENTION_ZONE_UPDATE",
+  );
+
+  const mandatoryInfo = getMandatoryInfo(
+    organism,
+    isAAPInterventionZoneUpdateFeatureActive,
+  );
 
   return (
     <div
