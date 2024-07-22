@@ -234,3 +234,5 @@ export const getCandidacy = async () => {
     candidacyStatus,
   };
 }
+
+export type FormatedCandidacy = Awaited<ReturnType<typeof getCandidacy>>

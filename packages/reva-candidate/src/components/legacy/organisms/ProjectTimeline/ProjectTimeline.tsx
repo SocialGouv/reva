@@ -22,17 +22,17 @@ export const ProjectTimeline = async ({
   className?: string;
   "data-test"?: string;
 }) => {
-  const { candidacy } = await getCandidacy();
+  const { candidacy, candidate, canEditCandidacy } = await getCandidacy();
 
   const { feasibilityFormat, feasibility, jury } = candidacy;
   const REJECTED = feasibility?.decision == "REJECTED";
 
   return (
     <Timeline className={className} data-test={dataTest}>
-      <ContactTimelineElement />
-      <CertificationTimelineElement />
-      <GoalsTimelineElement />
-      <ExperiencesTimelineElement />
+      <ContactTimelineElement candidate={candidate} />
+      <CertificationTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy} />
+      <GoalsTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy}/>
+      <ExperiencesTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy} />
       <OrganismTimelineElement />
       <ProjectSubmissionTimelineElement />
       <FeasibilityAppointmentTimelineElement />
