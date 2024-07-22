@@ -76,6 +76,8 @@ const unsafeResolvers = {
         getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
       })({ keycloakId: context.auth.userInfo?.sub });
 
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();

@@ -1,3 +1,4 @@
+"use client";
 import { format, isBefore } from "date-fns";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 

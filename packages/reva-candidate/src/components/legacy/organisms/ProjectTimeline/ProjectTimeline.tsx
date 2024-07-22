@@ -1,6 +1,3 @@
-"use client";
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { Timeline } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -16,15 +13,16 @@ import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDe
 import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
 import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
+import { getCandidacy } from "@/app/home.loaders";
 
-export const ProjectTimeline = ({
+export const ProjectTimeline = async ({
   className,
   "data-test": dataTest,
 }: {
   className?: string;
   "data-test"?: string;
 }) => {
-  const { candidacy } = useCandidacy();
+  const { candidacy } = await getCandidacy();
 
   const { feasibilityFormat, feasibility, jury } = candidacy;
   const REJECTED = feasibility?.decision == "REJECTED";

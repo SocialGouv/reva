@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";

@@ -1,6 +1,7 @@
 import { graphql } from "@/graphql/generated";
 import { getGraphQlClient } from "@/utils/graphql-client-server";
 import { isBefore } from "date-fns";
+import { cache } from "react";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacy {
@@ -186,7 +187,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   }
 `);
 
-const getCandidateWithCandidacy = async () => {
+const getCandidateWithCandidacy = cache(async () => {
   const graphqlClient = getGraphQlClient();
 
   const candidateWithCandidacy = await graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY)
@@ -194,7 +195,7 @@ const getCandidateWithCandidacy = async () => {
   return {
     candidateWithCandidacy,
   };
-};
+});
 
 export const getCandidacy = async () => {
   const {
