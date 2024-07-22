@@ -21,7 +21,7 @@ export const impersonateAccount = async (
 
     return {
       headers: data.headers,
-      redirect: `${baseUrl}/admin`,
+      redirect: `${baseUrl}/admin2`,
     };
   }
 
