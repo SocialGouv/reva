@@ -1,5 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
+import { Feasibility } from "@prisma/client";
 import { getFileNameAndUrl } from "../feasibility.features";
 import { resolversSecurityMap } from "./feasibility-uploaded-pdf.security";
 import { getFeasibilityUploadedPdfByFeasibilityId } from "./features/getFeasibilityUploadedPdfByFeasibilityId";
@@ -7,34 +8,49 @@ import { getFeasibilityUploadedPdfByFeasibilityId } from "./features/getFeasibil
 const unsafeResolvers = {
   FeasibilityUploadedPdf: {
     feasibilityFile: ({
-      candidacyId,
       feasibilityFileId,
+      Feasibility,
     }: {
-      candidacyId: string;
       feasibilityFileId: string;
-    }) => getFileNameAndUrl({ candidacyId, fileId: feasibilityFileId }),
+      Feasibility: Feasibility;
+    }) =>
+      getFileNameAndUrl({
+        candidacyId: Feasibility.candidacyId,
+        fileId: feasibilityFileId,
+      }),
     IDFile: ({
-      candidacyId,
+      Feasibility,
       IDFileId,
     }: {
-      candidacyId: string;
       IDFileId: string;
-    }) => getFileNameAndUrl({ candidacyId, fileId: IDFileId }),
+      Feasibility: Feasibility;
+    }) =>
+      getFileNameAndUrl({
+        candidacyId: Feasibility.candidacyId,
+        fileId: IDFileId,
+      }),
     documentaryProofFile: ({
-      candidacyId,
+      Feasibility,
       documentaryProofFileId: documentaryProofFileId,
     }: {
-      candidacyId: string;
+      Feasibility: Feasibility;
       documentaryProofFileId: string;
-    }) => getFileNameAndUrl({ candidacyId, fileId: documentaryProofFileId }),
+    }) =>
+      getFileNameAndUrl({
+        candidacyId: Feasibility.candidacyId,
+        fileId: documentaryProofFileId,
+      }),
     certificateOfAttendanceFile: ({
-      candidacyId,
+      Feasibility,
       certificateOfAttendanceFileId: certificateOfAttendanceFileId,
     }: {
-      candidacyId: string;
+      Feasibility: Feasibility;
       certificateOfAttendanceFileId: string;
     }) =>
-      getFileNameAndUrl({ candidacyId, fileId: certificateOfAttendanceFileId }),
+      getFileNameAndUrl({
+        candidacyId: Feasibility.candidacyId,
+        fileId: certificateOfAttendanceFileId,
+      }),
   },
   Feasibility: {
     feasibilityUploadedPdf: ({ id }: { id: string }) =>
