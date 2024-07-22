@@ -3,7 +3,6 @@ import { CandidateTypology, Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
-import { Role } from "../account/account.types";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { generateJwt } from "../candidate/auth.helper";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
@@ -22,7 +21,6 @@ import {
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import * as admissibilityDb from "./database/admissibility";
 import * as basicSkillDb from "./database/basicSkills";
 import * as candidacyDb from "./database/candidacies";
 import * as experienceDb from "./database/experiences";
@@ -33,7 +31,7 @@ import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAAPsWithZipCode } from "./features/getAAPsWithZipCode";
-import { getAdmissibility } from "./features/getAdmissibility";
+import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getBasicSkills } from "./features/getBasicSkills";
 import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
@@ -101,21 +99,8 @@ const withMandatoryTrainings = (c: Candidacy) => ({
 
 const unsafeResolvers = {
   Candidacy: {
-    admissibility: async (
-      parent: Candidacy,
-      _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } },
-    ) => {
-      const result = await getAdmissibility({
-        hasRole: context.auth.hasRole,
-        getAdmissibilityFromCandidacyId:
-          admissibilityDb.getAdmissibilityFromCandidacyId,
-      })({ candidacyId: parent.id });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .map((v) => v.extractNullable())
-        .extract();
-    },
+    admissibility: ({ id: candidacyId }: Candidacy) =>
+      getAdmissibilityByCandidacyId({ candidacyId }),
     admissibilityFvae: async (parent: Candidacy) => {
       return getAdmissibilityFvae({ candidacyId: parent.id });
     },
@@ -870,43 +855,19 @@ const unsafeResolvers = {
       return result;
     },
     candidacy_updateAdmissibility: async (
-      _: unknown,
       {
         candidacyId,
         admissibility,
       }: { candidacyId: string; admissibility: Admissibility },
       context: GraphqlContext,
-    ) => {
-      const result = await updateAdmissibility({
-        getAdmissibilityFromCandidacyId:
-          admissibilityDb.getAdmissibilityFromCandidacyId,
-        updateAdmissibility: admissibilityDb.updateAdmissibility,
-      })({
+    ) =>
+      updateAdmissibility({
         candidacyId,
         admissibility,
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_ADMISSIBILITY,
-        extraInfo: { admissibility },
-        context,
-        result,
-      });
-
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId,
-          eventType: "ADMISSIBILITY_UPDATED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
     candidacy_updateAdmissibilityFvae: (
       _: unknown,
       {

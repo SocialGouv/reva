@@ -63,4 +63,6 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isAdminOrCandidacyCompanion,
+
+  "Candidacy.admissibility": [hasRole(["admin", "manage_candidacy"])],
 };
