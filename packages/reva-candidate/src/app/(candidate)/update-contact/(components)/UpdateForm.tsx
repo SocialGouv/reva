@@ -5,8 +5,8 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import SubmitButton from "@/components/forms/SubmitButton";
 import { updateContact } from "../update-contact.actions";
-import { Candidate_GetCandidateWithCandidacyQuery } from "@/graphql/generated/graphql";
 import { useFormState } from "react-dom";
+import { FormatedCandidacy } from "@/app/home.loaders";
 
 const modalUpdateEmail = createModal({
   id: "project-update-email",
@@ -21,7 +21,7 @@ const initialState: Awaited<ReturnType<typeof updateContact>> = {
 export default function UpdateForm({
   candidate,
 }: {
-  candidate: Candidate_GetCandidateWithCandidacyQuery["candidate_getCandidateWithCandidacy"];
+  candidate: FormatedCandidacy["candidate"];
 }) {
   const router = useRouter();
   const [state, formAction] = useFormState(updateContact, initialState);
