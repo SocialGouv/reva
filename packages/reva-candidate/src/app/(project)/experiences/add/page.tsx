@@ -90,7 +90,10 @@ export default async function AddExperience() {
             }}
           />
         </fieldset>
-        <SubmitButton label="Ajouter votre experience" />
+        <SubmitButton
+          className="mt-6 justify-center w-[100%] md:w-fit"
+          label="Ajouter votre experience"
+        />
       </form>
     </PageLayout>
   );
