@@ -40,10 +40,9 @@ http:
 
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
-      service: app-candidat-staging
+      service: noop@internal
       middlewares:
-        - removeHeader
-        - add-security-headers
+        - redirect-reva-candidate
 
     app-candidate-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/candidat`)"
@@ -127,10 +126,9 @@ http:
 
     app-candidat-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
-      service: app-candidat-production-2
+      service: noop@internal
       middlewares:
-        - removeHeader
-        - add-security-headers
+        - redirect-reva-candidate
 
     app-candidate-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/candidat`)"
@@ -173,6 +171,12 @@ http:
     removePath:
       replacePath:
         path: "/"
+
+    redirect-reva-candidate:
+      redirectRegex:
+        regex: "/app(.*)"
+        replacement: "/candidat${1}"
+        permanent: true
 
     redirect-www:
       redirectRegex:
