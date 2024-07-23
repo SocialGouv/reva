@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "./build.sh",
-    "dev": "concurrently -n \"rev-api,reva-app,reva-admin,reva-admin-react\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\" \"npm run dev -w reva-admin\"",
-    "front-apps": "concurrently -n \"reva-app,reva-admin,reva-admin-react\" -c \"green,cyan\" -k \"npm run dev -w reva-app\" \"npm run dev -w reva-admin\"",
+    "dev": "concurrently -n \"rev-api,reva-app,reva-admin-react\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\"",
+    "front-apps": "concurrently -n \"reva-app,reva-admin-react\" -c \"green,cyan\" -k \"npm run dev -w reva-app\"",
     "start": "npm run start --workspace=reva-api",
     "cron": "npm run cron --workspace=reva-api",
     "prepare": "husky install",
@@ -20,7 +20,6 @@
   },
   "workspaces": [
     "packages/reva-api",
-    "packages/reva-admin",
     "packages/reva-app"
   ],
   "dependencies": {
