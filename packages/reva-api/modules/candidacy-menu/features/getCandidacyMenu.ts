@@ -43,7 +43,7 @@ export const getCandidacyMenu = async ({
   let mainMenu: CandidacyMenuEntry[] = [];
 
   if (candidacy.candidacyDropOut) {
-    mainMenu = await getDroppedOutCandidacyMenu({ candidacy, userKeycloakId });
+    mainMenu = await getDroppedOutCandidacyMenu({ candidacy });
   } else if (activeCandidacyStatus === "ARCHIVE") {
     if (candidacy.reorientationReasonId !== null) {
       mainMenu = await getReorientedCandidacyMenu({ candidacy });

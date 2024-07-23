@@ -1,6 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -11,10 +10,8 @@ import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqu
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
-  userKeycloakId,
 }: {
   candidacy: CandidacyForMenu;
-  userKeycloakId?: string;
 }): Promise<CandidacyMenuEntry[]> => {
   const activeCandidacyStatus = candidacy.candidacyStatuses.find(
     ({ isActive }) => isActive,
@@ -76,29 +73,15 @@ export const getDroppedOutCandidacyMenu = async ({
 
     const isCandidacyUniReva = candidacy.financeModule === "unireva";
 
-    const isPaymentRequestUnifvaeReactFeatureActive =
-      await isFeatureActiveForUser({
-        userKeycloakId,
-        feature: "PAYMENT_REQUEST_UNIFVAE_REACT",
-      });
-
-    const isPaymentRequestUnirevaReactFeatureActive =
-      await isFeatureActiveForUser({
-        userKeycloakId,
-        feature: "PAYMENT_REQUEST_UNIREVA_REACT",
-      });
-
-    let paymentPageUrl = null;
-
-    if (isCandidacyUniReva) {
-      paymentPageUrl = isPaymentRequestUnirevaReactFeatureActive
-        ? buildUrl({ adminType: "React", suffix: "payment/unireva/invoice" })
-        : buildUrl({ adminType: "Elm", suffix: "payment" });
-    } else {
-      paymentPageUrl = isPaymentRequestUnifvaeReactFeatureActive
-        ? buildUrl({ adminType: "React", suffix: "payment/unifvae/invoice" })
-        : buildUrl({ adminType: "Elm", suffix: "payment" });
-    }
+    const paymentPageUrl = isCandidacyUniReva
+      ? buildUrl({
+          adminType: "React",
+          suffix: "payment/unireva/invoice",
+        })
+      : buildUrl({
+          adminType: "React",
+          suffix: "payment/unifvae/invoice",
+        });
 
     return {
       label: "Demande de paiement",
