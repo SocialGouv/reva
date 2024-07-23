@@ -27,18 +27,18 @@ const getStateFromCompetence = ({
 }: {
   competence: CertificationCompetence;
   competenceDetails: CertificationCompetenceDetails[];
-}): DffCertificationCompetenceDetailsState => {
+}): DffCertificationCompetenceDetailsState | "TO_COMPLETE" => {
   return (
     competenceDetails.find(
       (detail) => detail.certificationCompetence.id === competence.id,
-    )?.state || "YES"
+    )?.state || "TO_COMPLETE"
   );
 };
 
 const BadgeState = ({
   state,
 }: {
-  state: DffCertificationCompetenceDetailsState;
+  state: DffCertificationCompetenceDetailsState | "TO_COMPLETE";
 }) => {
   if (state === "YES") {
     return (
@@ -58,6 +58,14 @@ const BadgeState = ({
     return (
       <Badge severity="new" noIcon small>
         Partiellement
+      </Badge>
+    );
+  }
+
+  if (state === "TO_COMPLETE") {
+    return (
+      <Badge severity="warning" noIcon small>
+        À compléter
       </Badge>
     );
   }
