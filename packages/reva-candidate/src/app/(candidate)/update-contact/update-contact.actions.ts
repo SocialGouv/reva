@@ -26,6 +26,7 @@ const UPDATE_CONTACT = graphql(`
 export const updateContact = async (prevState: unknown, formData: FormData) => {
   const graphqlClient = getGraphQlClient();
 
+  let success = false;
   const errors: Record<string, string> = {};
 
   const candidateId = formData.get("candidateId") as string;
@@ -49,16 +50,19 @@ export const updateContact = async (prevState: unknown, formData: FormData) => {
     errors["phone"] = "Phone is required";
   }
 
-  await graphqlClient.request(UPDATE_CONTACT, {
-    candidateId,
-    candidateData,
-  });
+  console.log('errors', errors);
 
   if (Object.keys(errors).length === 0) {
+    await graphqlClient.request(UPDATE_CONTACT, {
+      candidateId,
+      candidateData,
+    });
+    success = true;
     revalidatePath("/");
   }
 
   return {
     errors,
+    success,
   };
 };
