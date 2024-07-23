@@ -25,7 +25,6 @@ import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 
 const APP_ROUTE_PATH = "/app";
-const ADMIN_ROUTE_PATH = "/admin";
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
 const CANDIDATE_ROUTE_PATH = "/candidat";
 
@@ -44,7 +43,6 @@ export const buildApp = async (
   if (process.env.NODE_ENV === "production") {
     const DIST_FOLDER = path.join(__dirname, "..", "..");
     const APP_FOLDER = path.join(DIST_FOLDER, "app");
-    const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
 
     app.register(fastifyStatic, {
       root: APP_FOLDER,
@@ -52,18 +50,10 @@ export const buildApp = async (
       // decorateReply: false,
     });
 
-    app.register(fastifyStatic, {
-      root: ADMIN_FOLDER,
-      prefix: ADMIN_ROUTE_PATH,
-      decorateReply: false,
-    });
-
     // Deal with not found
     app.setNotFoundHandler((req, res) => {
       if (req.url.startsWith(APP_ROUTE_PATH)) {
         res.sendFile("index.html", APP_FOLDER);
-      } else if (req.url.startsWith(ADMIN_ROUTE_PATH)) {
-        res.sendFile("index.html", ADMIN_FOLDER);
       }
     });
 
@@ -74,11 +64,6 @@ export const buildApp = async (
     app.register(proxy, {
       upstream: "http://localhost:3001/app",
       prefix: APP_ROUTE_PATH,
-    });
-
-    app.register(proxy, {
-      upstream: "http://localhost:3000/admin",
-      prefix: ADMIN_ROUTE_PATH,
     });
 
     app.register(proxy, {
