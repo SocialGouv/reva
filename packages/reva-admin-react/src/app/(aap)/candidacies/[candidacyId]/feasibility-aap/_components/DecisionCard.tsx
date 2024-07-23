@@ -3,7 +3,7 @@ import {
   BadgeToComplete,
   DefaultCandidacySectionCard,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import { DfFileDecision } from "@/graphql/generated/graphql";
+import { DfFileAapDecision } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useParams } from "next/navigation";
 
@@ -11,7 +11,7 @@ export const DecisionCard = ({
   aapDecision,
   aapDecisionComment,
 }: {
-  aapDecision: DfFileDecision | null;
+  aapDecision: DfFileAapDecision | null;
   aapDecisionComment: string | null;
 }) => {
   const { candidacyId } = useParams();

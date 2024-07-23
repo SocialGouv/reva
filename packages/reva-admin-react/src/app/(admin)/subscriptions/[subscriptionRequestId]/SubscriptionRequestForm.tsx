@@ -1,16 +1,16 @@
-import { z } from "zod";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { graphql } from "@/graphql/generated";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { graphql } from "@/graphql/generated";
-import { isValid } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import { isValid } from "date-fns";
 import { useRouter } from "next/navigation";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const validateSubscriptionRequestMutation = graphql(`
   mutation validateSubscriptionRequest($subscriptionRequestId: ID!) {
@@ -94,7 +94,6 @@ export const SubscriptionRequestForm = ({
       }
       router.push("/subscriptions/pending");
     } catch (e) {
-      console.log(e);
       graphqlErrorToast(e);
     }
   });

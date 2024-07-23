@@ -3,7 +3,7 @@ import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import {
   CertificationCompetenceDetails,
-  DfFileDecision,
+  DfFileAapDecision,
   DffCertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
@@ -74,7 +74,7 @@ const AapFeasibilityPage = () => {
           />
           <DecisionCard
             aapDecision={
-              dematerializedFeasibilityFile?.aapDecision as DfFileDecision | null
+              dematerializedFeasibilityFile?.aapDecision as DfFileAapDecision | null
             }
             aapDecisionComment={
               dematerializedFeasibilityFile?.aapDecisionComment as string | null

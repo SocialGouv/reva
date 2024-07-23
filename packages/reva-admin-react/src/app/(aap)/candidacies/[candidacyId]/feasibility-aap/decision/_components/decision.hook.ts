@@ -1,15 +1,15 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { DematerializedFeasibilityFileCreateOrUpdateDecisionInput } from "@/graphql/generated/graphql";
+import { DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const createOrUpdateDecision = graphql(`
   mutation createOrUpdateDecision(
-    $input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
+    $input: DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput!
     $candidacyId: ID!
   ) {
-    dematerialized_feasibility_file_createOrUpdateDecision(
+    dematerialized_feasibility_file_createOrUpdateAapDecision(
       input: $input
       candidacyId: $candidacyId
     ) {
@@ -38,7 +38,7 @@ export const useDecision = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createOrUpdateDecisionMutation } = useMutation({
     mutationFn: (
-      input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
+      input: DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput,
     ) =>
       graphqlClient.request(createOrUpdateDecision, {
         input,

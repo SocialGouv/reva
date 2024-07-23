@@ -1,12 +1,12 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { CustomErrorBadge } from "components/organisms/CustomErrorBadge/CustomErrorBadge";
-import { DfFileDecision } from "graphql/generated/graphql";
+import { DfFileAapDecision } from "graphql/generated/graphql";
 
 export default function DecisionSection({
   decision,
   decisionComment,
 }: {
-  decision?: DfFileDecision | null;
+  decision?: DfFileAapDecision | null;
   decisionComment?: string | null;
 }) {
   const DecisionBadge = () => {

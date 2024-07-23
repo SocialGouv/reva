@@ -6,6 +6,9 @@ import { useParams } from "next/navigation";
 const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
   query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+      decision
+      decisionComment
+      decisionSentAt
       dematerializedFeasibilityFile {
         id
         swornStatementFile {
@@ -139,6 +142,20 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
   }
 `);
 
+export const createOrUpdateCertificationAuthorityDecision = graphql(`
+  mutation createOrUpdateCertificationAuthorityDecision(
+    $input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput!
+    $candidacyId: ID!
+  ) {
+    dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision(
+      input: $input
+      candidacyId: $candidacyId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useDematerializedFeasibility = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
@@ -167,5 +184,6 @@ export const useDematerializedFeasibility = () => {
     dematerializedFeasibilityFileId,
     dematerializedFeasibilityFile,
     candidacy,
+    feasibility,
   };
 };

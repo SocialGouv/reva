@@ -24,9 +24,15 @@ export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
 
 type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
 
-export interface DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
-  aapDecision: DFFileDecision;
+export interface DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {
+  aapDecision: DFFileAapDecision;
   aapDecisionComment: string;
+}
+
+export interface DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput {
+  decision: DFFileCertificationAuthorityDecision;
+  decisionComment: string;
+  decisionFile: GraphqlUploadedFile;
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {
@@ -46,4 +52,9 @@ export type DematerializedFeasibilityFileType =
   | "TRAINING_CERTIFICATE"
   | "ADDITIONAL";
 
-type DFFileDecision = "FAVORABLE" | "UNFAVORABLE";
+type DFFileAapDecision = "FAVORABLE" | "UNFAVORABLE";
+
+type DFFileCertificationAuthorityDecision =
+  | "ADMISSIBLE"
+  | "REJECTED"
+  | "INCOMPLETE";

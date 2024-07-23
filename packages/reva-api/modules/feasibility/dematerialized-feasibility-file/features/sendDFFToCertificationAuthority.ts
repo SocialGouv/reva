@@ -33,6 +33,7 @@ export const sendDFFToCertificationAuthority = async ({
       data: {
         certificationAuthorityId,
         feasibilityFileSentAt: now,
+        decision: "PENDING",
       },
     }),
   ]);

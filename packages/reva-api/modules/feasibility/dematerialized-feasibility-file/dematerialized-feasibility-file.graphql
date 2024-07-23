@@ -12,7 +12,7 @@ type DematerializedFeasibilityFile {
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
   prerequisites: [Prerequisite]!
-  aapDecision: DFFileDecision
+  aapDecision: DFFileAapDecision
   aapDecisionComment: String
   attachments: [DFFAttachment]!
   sentToCandidateAt: Timestamp
@@ -97,14 +97,26 @@ input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   prerequisites: [PrerequisiteInput]!
 }
 
-input DematerializedFeasibilityFileCreateOrUpdateDecisionInput {
-  aapDecision: DFFileDecision!
+input DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {
+  aapDecision: DFFileAapDecision!
   aapDecisionComment: String!
 }
 
-enum DFFileDecision {
+input DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput {
+  decision: DFFileCertificationAuthorityDecision!
+  decisionComment: String
+  decisionFile: Upload!
+}
+
+enum DFFileAapDecision {
   FAVORABLE
   UNFAVORABLE
+}
+
+enum DFFileCertificationAuthorityDecision {
+  ADMISSIBLE
+  INCOMPLETE
+  REJECTED
 }
 
 input competenceDetails {
@@ -140,9 +152,9 @@ type Mutation {
     input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput!
   ): DematerializedFeasibilityFile!
 
-  dematerialized_feasibility_file_createOrUpdateDecision(
+  dematerialized_feasibility_file_createOrUpdateAapDecision(
     candidacyId: ID!
-    input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput!
+    input: DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdateAttachments(
@@ -164,5 +176,10 @@ type Mutation {
   dematerialized_feasibility_file_createOrUpdateSwornStatement(
     candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision(
+    candidacyId: ID!
+    input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput!
   ): DematerializedFeasibilityFile!
 }

@@ -6,10 +6,11 @@ import { getCertificationCompetenceById } from "../../referential/features/getCe
 import { getCompetenceBlocById } from "../../referential/features/getCompetenceBlocById";
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
+  DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
+  DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
-  DematerializedFeasibilityFileCreateOrUpdateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
   DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
@@ -17,6 +18,7 @@ import { checkIsDFFReadyToBeSentToCandidateById } from "./features/checkIsDFFRea
 import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
 import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
+import { createOrUpdateCertificationAuthorityDecision } from "./features/createOrUpdateCertificationAuthorityDecision";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
@@ -133,11 +135,11 @@ const unsafeResolvers = {
       },
     ) => createOrUpdatePrerequisites(params),
 
-    dematerialized_feasibility_file_createOrUpdateDecision: (
+    dematerialized_feasibility_file_createOrUpdateAapDecision: (
       _parent: unknown,
       params: {
         candidacyId: string;
-        input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
+        input: DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput;
       },
     ) => createOrUpdateAapDecision(params),
     dematerialized_feasibility_file_createOrUpdateAttachments: (
@@ -171,6 +173,15 @@ const unsafeResolvers = {
         certificationAuthorityId: string;
       },
     ) => sendDFFToCertificationAuthority(params),
+
+    dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision:
+      (
+        _parent: unknown,
+        params: {
+          candidacyId: string;
+          input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput;
+        },
+      ) => createOrUpdateCertificationAuthorityDecision(params),
   },
 };
 

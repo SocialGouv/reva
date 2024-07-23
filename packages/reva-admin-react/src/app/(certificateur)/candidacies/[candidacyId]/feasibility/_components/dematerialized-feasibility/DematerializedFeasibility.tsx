@@ -1,6 +1,8 @@
 import DffSummary from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/DffSummary";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useUrqlClient } from "@/components/urql-client";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
@@ -10,21 +12,27 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useDematerializedFeasibility } from "./dematerializedFeasibility.hook";
+import {
+  createOrUpdateCertificationAuthorityDecision,
+  useDematerializedFeasibility,
+} from "./dematerializedFeasibility.hook";
 
 const schema = z
   .object({
-    swornStatement: z.object({
+    decision: z.enum(["ADMISSIBLE", "INCOMPLETE", "REJECTED"]),
+    decisionComment: z.string().optional(),
+    decisionFile: z.object({
       0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),
   })
-  .superRefine(({ swornStatement }, { addIssue }) => {
-    if (!swornStatement?.[0]) {
+  .superRefine(({ decisionFile }, { addIssue }) => {
+    if (!decisionFile?.[0]) {
       addIssue({
-        path: ["idCard"],
+        path: ["decisionFile"],
         message: "Merci de remplir ce champ",
         code: z.ZodIssueCode.custom,
       });
@@ -34,18 +42,22 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export const DematerializedFeasibility = () => {
-  const { dematerializedFeasibilityFile, candidacy } =
+  const { candidacyId } = useParams<{ candidacyId: string }>();
+  const { dematerializedFeasibilityFile, candidacy, feasibility } =
     useDematerializedFeasibility();
-
-  const resetFiles = useCallback(() => {}, []);
-
-  useEffect(() => {
-    resetFiles();
-  }, [resetFiles]);
+  const urqlClient = useUrqlClient();
+  const router = useRouter();
+  const decisionHasBeenMade = useMemo(() => {
+    return !!(
+      feasibility?.decisionSentAt || feasibility?.decision !== "PENDING"
+    );
+  }, [feasibility]);
 
   const defaultValues = useMemo(
     () => ({
-      swornStatement: undefined,
+      decision: undefined,
+      decisionComment: undefined,
+      decisionFile: undefined,
     }),
     [],
   );
@@ -60,12 +72,46 @@ export const DematerializedFeasibility = () => {
     defaultValues,
   });
 
+  const resetForm = useCallback(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
+  useEffect(() => {
+    resetForm();
+  }, [resetForm]);
+
+  const handleFormSubmit = async (data: FormData) => {
+    const decisionFile = data.decisionFile?.[0];
+    const input = {
+      decisionFile,
+      decision: data.decision,
+      decisionComment: data.decisionComment,
+    };
+
+    try {
+      const result = await urqlClient.mutation(
+        createOrUpdateCertificationAuthorityDecision,
+        {
+          input,
+          candidacyId,
+        },
+      );
+      if (result?.error) {
+        throw new Error(result?.error?.graphQLErrors[0].message);
+      }
+      successToast("Décision du dossier de faisability envoyée avec succès");
+      router.push(`/candidacies/feasibilities/?CATEGORY=ALL&page=1`);
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
+
   if (!candidacy || !dematerializedFeasibilityFile) return null;
 
   const organism = candidacy.organism;
 
   return (
-    <div>
+    <>
       <DffSummary
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
@@ -88,7 +134,13 @@ export const DematerializedFeasibility = () => {
       )}
 
       <hr className="mt-12 mb-11 pb-1" />
-      <form>
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        onReset={(e) => {
+          e.preventDefault();
+          resetForm();
+        }}
+      >
         <div className="mb-12">
           <h2 className="mt-0">Votre décision concernant le dossier</h2>
           <RadioButtons
@@ -100,6 +152,7 @@ export const DematerializedFeasibility = () => {
                 hintText: "",
                 nativeInputProps: {
                   value: "ADMISSIBLE",
+                  ...register("decision"),
                 },
               },
               {
@@ -108,6 +161,7 @@ export const DematerializedFeasibility = () => {
                   "Un dossier est incorrect ou incomplet s'il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n'est pas le bon, s'il manque des éléments ou si les pièces jointes sont inexploitables, erronnées etc... Il sera renvoyé à l'AAP qui devra le compléter ou le corriger rapidement.",
                 nativeInputProps: {
                   value: "INCOMPLETE",
+                  ...register("decision"),
                 },
               },
               {
@@ -116,15 +170,22 @@ export const DematerializedFeasibility = () => {
                   "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
                 nativeInputProps: {
                   value: "REJECTED",
+                  ...register("decision"),
                 },
               },
             ]}
-            state="default"
+            state={errors.decision ? "error" : "default"}
+            stateRelatedMessage={errors.decision?.message}
+            disabled={decisionHasBeenMade}
           />
           <Input
             hintText="(Optionnel)"
             label="Pouvez-vous préciser les motifs de votre décision ?"
             textArea
+            nativeTextAreaProps={register("decisionComment")}
+            state={errors.decisionComment ? "error" : "default"}
+            stateRelatedMessage={errors.decisionComment?.message}
+            disabled={decisionHasBeenMade}
           />
           <SmallNotice className="mb-4">
             Ces motifs seront transmis au candidat ainsi qu'à son architecte
@@ -133,8 +194,17 @@ export const DematerializedFeasibility = () => {
           <Upload
             label="Joindre le courrier de recevabilité"
             hint="Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas."
-            state="default"
-            stateRelatedMessage="Text de validation / d'explication de l'erreur"
+            nativeInputProps={{
+              required: true,
+              ...register("decisionFile"),
+              accept: ".pdf, .jpg, .jpeg, .png",
+            }}
+            state={errors.decisionFile ? "error" : "default"}
+            stateRelatedMessage={
+              errors.decisionFile?.[0]?.message ??
+              "Text de validation / d'explication de l'erreur"
+            }
+            disabled={decisionHasBeenMade}
           />
         </div>
 
@@ -146,6 +216,6 @@ export const DematerializedFeasibility = () => {
           }}
         />
       </form>
-    </div>
+    </>
   );
 };

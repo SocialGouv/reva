@@ -7,6 +7,7 @@ import {
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
 } from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -22,7 +23,7 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_createOrUpdatePrerequisites":
     isAdminOrCandidacyCompanion,
-  "Mutation.dematerialized_feasibility_file_createOrUpdateDecision":
+  "Mutation.dematerialized_feasibility_file_createOrUpdateAapDecision":
     isAdminOrCandidacyCompanion,
   "Mutation.dematerialized_feasibility_file_createOrUpdateAttachments":
     isAdminOrCandidacyCompanion,
@@ -35,4 +36,6 @@ export const resolversSecurityMap = {
     whenHasRole("manage_candidacy", isCandidacyOwner),
     whenHasRole("candidate", isCandidateOwnerOfCandidacy),
   ],
+  "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision":
+    isAdminOrCertificationAuthority,
 };

@@ -1,5 +1,5 @@
 import { prismaClient } from "../../../../prisma/client";
-import { DematerializedFeasibilityFileCreateOrUpdateDecisionInput } from "../dematerialized-feasibility-file.types";
+import { DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "./getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId";
 
@@ -7,7 +7,7 @@ export const createOrUpdateAapDecision = async ({
   candidacyId,
   input: { aapDecision, aapDecisionComment },
 }: {
-  input: DematerializedFeasibilityFileCreateOrUpdateDecisionInput;
+  input: DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput;
   candidacyId: string;
 }) => {
   const dFF =
