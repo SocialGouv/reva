@@ -104,7 +104,10 @@ export default async function UpdateExperience({
             }}
           />
         </fieldset>
-        <SubmitButton label="Mettre à jour votre experience" />
+        <SubmitButton
+          className="mt-6 justify-center w-[100%] md:w-fit"
+          label="Mettre à jour votre experience"
+        />
       </form>
     </PageLayout>
   );
