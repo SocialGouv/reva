@@ -23,7 +23,6 @@ const UPDATE_CERTIFICATION = graphql(`
 
 export const updateCertification = async (formData: FormData) => {
   const graphqlClient = getGraphQlClient();
-  console.log('formData', formData);
 
   const candidacyId = formData.get("candidacyId") as string;
   const certificationId = formData.get("certificationId") as string;

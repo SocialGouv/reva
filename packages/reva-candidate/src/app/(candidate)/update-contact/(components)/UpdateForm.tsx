@@ -15,6 +15,7 @@ const modalUpdateEmail = createModal({
 
 const initialState: Awaited<ReturnType<typeof updateContact>> = {
   errors: {},
+  success: false,
 }
 
 export default function UpdateForm({
@@ -24,23 +25,29 @@ export default function UpdateForm({
 }) {
   const router = useRouter();
   const [state, formAction] = useFormState(updateContact, initialState);
+  const isModalOpen = useIsModalOpen(modalUpdateEmail);
 
   useIsModalOpen(modalUpdateEmail, {
     onConceal: () => {
+      if (!isModalOpen) return;
       setTimeout(() => {
         router.push("/");
       }, 300);
     },
   });
+
+  if (state.success && !isModalOpen) {
+    router.push("/");
+    return;
+  }
+
   return (
     <>
       <form
-        action={async (formData) => {
+        action={(formData) => {
           formAction(formData);
           if (formData.get("email") !== candidate.email) {
             modalUpdateEmail.open();
-          } else {
-            router.push("/");
           }
         }}
         className="flex flex-col"
