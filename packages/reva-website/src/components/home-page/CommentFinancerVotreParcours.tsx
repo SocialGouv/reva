@@ -23,14 +23,17 @@ const CommentFinancerVotreParcours = () => (
       <div className="py-6 flex flex-col gap-14">
         <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
         <p className="my-0 text-lg">
-          Un financement peut être sollicité auprès de France VAE pour l'
-          <b>ensemble des frais de parcours</b>* pour les candidats passant par
-          la plateforme{" "}
+          Le Ministère du Travail peut financer l'
+          <b>ensemble des frais de parcours</b>* d’un des 26 diplômes
+          disponibles pour les candidats passant par la plateforme{" "}
           <Link href="https://vae.gouv.fr/" target="_blank">
             vae.gouv.fr
-          </Link>
-          . Aucune démarche administrative ne sera demandée au candidat pour
-          obtenir ce financement.
+          </Link>{" "}
+          et dans la limite du budget disponible. Aucune démarche administrative
+          ne sera demandée au candidat pour obtenir ce financement. Aucun
+          architecte accompagnateur de parcours ne peut démarrer
+          l’accompagnement (dossier de recevabilité inclus) sans l’accord
+          express de France VAE de l’accord de financement.
         </p>
       </div>
       <div className="hidden lg:flex flex-col items-center relative">
