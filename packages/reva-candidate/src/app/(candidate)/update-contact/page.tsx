@@ -27,8 +27,11 @@ export default function UpdateContact() {
 
   const { updateContact } = useUpdateContact();
 
+  const isModalOpen = useIsModalOpen(modalUpdateEmail);
   useIsModalOpen(modalUpdateEmail, {
     onConceal: () => {
+      if (!isModalOpen) return;
+
       setTimeout(() => {
         router.push("/");
       }, 300);
