@@ -379,37 +379,15 @@ const unsafeResolvers = {
       _: unknown,
       payload: any,
       context: GraphqlContext,
-    ) => {
-      const result = await updateExperienceOfCandidacy({
-        updateExperience: experienceDb.updateExperience,
-        getExperienceFromId: experienceDb.getExperienceFromId,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
+    ) =>
+      updateExperienceOfCandidacy({
         candidacyId: payload.candidacyId,
         experienceId: payload.experienceId,
         experience: payload.experience,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_EXPERIENCE,
-        context,
-        result,
-      });
-
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "EXPERIENCE_UPDATED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+      }),
     candidacy_removeExperience: async (_: unknown, payload: any) => {
       //TODO resolve the fixme because it doesnt do shit
       // FIXME : this actually doesn't do shit

@@ -1,70 +1,50 @@
-import { Either, EitherAsync } from "purify-ts";
-
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy, Experience, ExperienceInput } from "../candidacy.types";
+import { ExperienceInput } from "../candidacy.types";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
+import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
-interface UpdateExperienceOfCandidacyDeps {
-  updateExperience: (params: {
-    candidacyId: string;
-    experienceId: string;
-    experience: ExperienceInput;
-  }) => Promise<Either<string, Experience>>;
-  getExperienceFromId: (id: string) => Promise<Either<string, Experience>>;
-  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
-}
-
-export const updateExperienceOfCandidacy =
-  (deps: UpdateExperienceOfCandidacyDeps) =>
-  async (params: {
-    candidacyId: string;
-    experienceId: string;
-    experience: ExperienceInput;
-    userRoles: KeyCloakUserRole[];
-  }) => {
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`,
-        ),
+export const updateExperienceOfCandidacy = async ({
+  candidacyId,
+  experienceId,
+  experience,
+  userKeycloakId,
+  userEmail,
+  userRoles,
+}: {
+  candidacyId: string;
+  experienceId: string;
+  experience: ExperienceInput;
+  userKeycloakId?: string;
+  userEmail?: string;
+  userRoles: KeyCloakUserRole[];
+}) => {
+  if (
+    userRoles.includes("candidate") &&
+    !(await canCandidateUpdateCandidacy({ candidacyId }))
+  ) {
+    throw new Error(
+      "Impossible de mettre à jour la candidature une fois le premier entretien effectué",
     );
+  }
 
-    const checkIfExperienceExists = EitherAsync.fromPromise(() =>
-      deps.getExperienceFromId(params.experienceId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.EXPERIENCE_DOES_NOT_EXIST,
-          `Aucune expérience n'a été trouvé`,
-        ),
-    );
+  const result = await prismaClient.experience.update({
+    where: {
+      id: experienceId,
+    },
+    data: {
+      title: experience.title,
+      duration: experience.duration,
+      description: experience.description,
+      startedAt: experience.startedAt,
+    },
+  });
 
-    const updateExperience = EitherAsync.fromPromise(() =>
-      deps.updateExperience(params),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.EXPERIENCE_NOT_UPDATED,
-          `Erreur lors de la mise à jour de l'expérience`,
-        ),
-    );
-
-    if (
-      params.userRoles.includes("candidate") &&
-      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
-    ) {
-      throw new Error(
-        "Impossible de mettre à jour la candidature une fois le premier entretien effectué",
-      );
-    }
-
-    return checkIfCandidacyExists
-      .chain(() => checkIfExperienceExists)
-      .chain(() => updateExperience);
-  };
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "EXPERIENCE_UPDATED",
+    userKeycloakId,
+    userEmail,
+    userRoles,
+  });
+  return result;
+};
