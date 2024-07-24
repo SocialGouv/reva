@@ -67,6 +67,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           individualHourCount
           collectiveHourCount
           additionalHourCount
+          isCertificationPartial
           basicSkills {
             label
             id
