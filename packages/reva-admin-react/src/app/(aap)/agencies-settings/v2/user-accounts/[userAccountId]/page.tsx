@@ -8,6 +8,7 @@ import {
   UserAccountFormData,
 } from "../_components/UserAccountForm";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useMemo } from "react";
 
 const UpdateUserAccountPage = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();
@@ -36,9 +37,29 @@ const UpdateUserAccountPage = () => {
     }
   };
 
+  const defaultValues = useMemo(
+    () => ({
+      email: userAccount?.email || "",
+      firstname: userAccount?.firstname || "",
+      lastname: userAccount?.lastname || "",
+      organismId: userAccount?.organism?.id,
+      modalitesAccompagnement: userAccount?.organism?.isHeadAgency
+        ? ("REMOTE" as const)
+        : ("ONSITE" as const),
+    }),
+    [
+      userAccount?.email,
+      userAccount?.firstname,
+      userAccount?.lastname,
+      userAccount?.organism?.id,
+      userAccount?.organism?.isHeadAgency,
+    ],
+  );
+
   if (agenciesInfoStatus !== "success") {
     return null;
   }
+
   return (
     <div className="w-full flex flex-col">
       <h1 className="mb-12">
@@ -52,15 +73,7 @@ const UpdateUserAccountPage = () => {
       </p>
       <UserAccountForm
         onSubmit={handleFormSubmit}
-        defaultValues={{
-          email: userAccount?.email || "",
-          firstname: userAccount?.firstname || "",
-          lastname: userAccount?.lastname || "",
-          organismId: userAccount?.organism?.id,
-          modalitesAccompagnement: userAccount?.organism?.isHeadAgency
-            ? "REMOTE"
-            : "ONSITE",
-        }}
+        defaultValues={defaultValues}
         emailFieldDisabled
         remoteAgency={{
           id: headAgency?.id,
