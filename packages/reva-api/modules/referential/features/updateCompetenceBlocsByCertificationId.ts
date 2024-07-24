@@ -101,7 +101,8 @@ export const updateCompetenceBlocsByCertificationId = async (
 
       // Create all competences with no id and link them to blocId
       const competencesToCreate = inputBloc.competences.filter(
-        (competence) => !competence.id,
+        (competence) =>
+          bloc.competences.findIndex((c) => c.id == competence.id) == -1,
       );
       await prismaClient.certificationCompetence.createMany({
         data: competencesToCreate.map((competence) => ({
