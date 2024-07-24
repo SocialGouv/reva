@@ -1,12 +1,18 @@
 "use client";
-import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
-import { CertificationStatus } from "@/graphql/generated/graphql";
-import { Button } from "@codegouvfr/react-dsfr/Button";
+import { ReactNode } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useParams } from "next/navigation";
-import { ReactNode } from "react";
+
+import { CertificationStatus } from "@/graphql/generated/graphql";
+
+import { Button } from "@codegouvfr/react-dsfr/Button";
+
 import { BackButton } from "@/components/back-button/BackButton";
+
+import { CertificationFormacodes } from "./_components/CertificationFormacodes";
+
+import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
 
 const CertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -110,6 +116,9 @@ const CertificationPage = () => {
               </ul>
             </Info>
           </div>
+          <br />
+          <h2>Formacodes</h2>
+          <CertificationFormacodes codeRncp={certification.codeRncp} />
         </>
       )}
       <div className="flex flex-col md:flex-row gap-4 mt-8 ml-auto">

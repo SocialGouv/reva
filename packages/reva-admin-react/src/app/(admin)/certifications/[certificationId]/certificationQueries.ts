@@ -2,6 +2,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import {
   FcCertification,
+  Formacode,
   UpdateCompetenceBlocsInput,
 } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -131,6 +132,20 @@ const getFCCertificationQuery = graphql(`
         MODALITES_EVALUATION
         FACULTATIF
       }
+      FORMACODES {
+        CODE
+        LIBELLE
+      }
+    }
+  }
+`);
+
+const getFormacodesQuery = graphql(`
+  query getFormacodes {
+    getFormacodes {
+      code
+      label
+      parentCode
     }
   }
 `);
@@ -228,4 +243,16 @@ export const useFCCertificationQuery = () => {
   };
 
   return { getFCCertification };
+};
+
+export const useFormacodeQuery = () => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const getFormacodes = async (): Promise<Formacode[]> => {
+    const response = await graphqlClient.request(getFormacodesQuery);
+
+    return response.getFormacodes;
+  };
+
+  return { getFormacodes };
 };
