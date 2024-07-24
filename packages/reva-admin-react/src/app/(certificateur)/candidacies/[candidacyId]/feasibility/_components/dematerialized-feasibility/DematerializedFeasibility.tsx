@@ -6,12 +6,15 @@ import { useUrqlClient } from "@/components/urql-client";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
+  FeasibilityDecision,
 } from "@/graphql/generated/graphql";
+import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +23,39 @@ import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
+
+const DecisionSentComponent = ({
+  decisionSentAt,
+  decision,
+  decisionComment,
+}: {
+  decisionSentAt: Date;
+  decision: FeasibilityDecision;
+  decisionComment?: string | null;
+}) => {
+  const severityMap = {
+    ADMISSIBLE: "success",
+    INCOMPLETE: "info",
+    REJECTED: "error",
+  };
+
+  const titleMap = {
+    ADMISSIBLE: `Dossier recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
+    INCOMPLETE: `Dossier retourné incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`,
+    REJECTED: `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
+  };
+
+  return (
+    <Alert
+      title={titleMap[decision as keyof typeof titleMap]}
+      severity={
+        severityMap[decision as keyof typeof severityMap] as AlertProps.Severity
+      }
+      description={decisionComment ? `”${decisionComment}”` : ""}
+      className="mb-12"
+    />
+  );
+};
 
 const schema = z
   .object({
@@ -48,9 +84,7 @@ export const DematerializedFeasibility = () => {
   const urqlClient = useUrqlClient();
   const router = useRouter();
   const decisionHasBeenMade = useMemo(() => {
-    return !!(
-      feasibility?.decisionSentAt || feasibility?.decision !== "PENDING"
-    );
+    return !!(feasibility?.decision !== "PENDING");
   }, [feasibility]);
 
   const defaultValues = useMemo(
@@ -117,6 +151,15 @@ export const DematerializedFeasibility = () => {
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
         candidacy={candidacy as Candidacy}
+        HasBeenSentComponent={
+          decisionHasBeenMade && (
+            <DecisionSentComponent
+              decisionSentAt={feasibility?.decisionSentAt as any as Date}
+              decision={feasibility?.decision as FeasibilityDecision}
+              decisionComment={feasibility?.decisionComment}
+            />
+          )
+        }
       />
 
       {organism && (
@@ -133,89 +176,90 @@ export const DematerializedFeasibility = () => {
         </CallOut>
       )}
 
-      <hr className="mt-12 mb-11 pb-1" />
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        onReset={(e) => {
-          e.preventDefault();
-          resetForm();
-        }}
-      >
-        <div className="mb-12">
-          <h2 className="mt-0">Votre décision concernant le dossier</h2>
-          <RadioButtons
-            legend="Sélectionnez et justifiez votre décision."
-            name="decision"
-            options={[
-              {
-                label: "Je considère ce dossier recevable",
-                hintText: "",
-                nativeInputProps: {
-                  value: "ADMISSIBLE",
-                  ...register("decision"),
-                },
-              },
-              {
-                label: "Je considère ce dossier incomplet ou incorrect",
-                hintText:
-                  "Un dossier est incorrect ou incomplet s'il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n'est pas le bon, s'il manque des éléments ou si les pièces jointes sont inexploitables, erronnées etc... Il sera renvoyé à l'AAP qui devra le compléter ou le corriger rapidement.",
-                nativeInputProps: {
-                  value: "INCOMPLETE",
-                  ...register("decision"),
-                },
-              },
-              {
-                label: "Je considère que ce dossier n'est pas recevable",
-                hintText:
-                  "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
-                nativeInputProps: {
-                  value: "REJECTED",
-                  ...register("decision"),
-                },
-              },
-            ]}
-            state={errors.decision ? "error" : "default"}
-            stateRelatedMessage={errors.decision?.message}
-            disabled={decisionHasBeenMade}
-          />
-          <Input
-            hintText="(Optionnel)"
-            label="Pouvez-vous préciser les motifs de votre décision ?"
-            textArea
-            nativeTextAreaProps={register("decisionComment")}
-            state={errors.decisionComment ? "error" : "default"}
-            stateRelatedMessage={errors.decisionComment?.message}
-            disabled={decisionHasBeenMade}
-          />
-          <SmallNotice className="mb-4">
-            Ces motifs seront transmis au candidat ainsi qu'à son architecte
-            accompagnateur de parcours.
-          </SmallNotice>
-          <Upload
-            label="Joindre le courrier de recevabilité"
-            hint="Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas."
-            nativeInputProps={{
-              required: true,
-              ...register("decisionFile"),
-              accept: ".pdf, .jpg, .jpeg, .png",
+      {!decisionHasBeenMade && (
+        <>
+          <hr className="mt-12 mb-11 pb-1" />
+          <form
+            onSubmit={handleSubmit(handleFormSubmit)}
+            onReset={(e) => {
+              e.preventDefault();
+              resetForm();
             }}
-            state={errors.decisionFile ? "error" : "default"}
-            stateRelatedMessage={
-              errors.decisionFile?.[0]?.message ??
-              "Text de validation / d'explication de l'erreur"
-            }
-            disabled={decisionHasBeenMade}
-          />
-        </div>
+          >
+            <div className="mb-12">
+              <h2 className="mt-0">Votre décision concernant le dossier</h2>
+              <RadioButtons
+                legend="Sélectionnez et justifiez votre décision."
+                name="decision"
+                options={[
+                  {
+                    label: "Je considère ce dossier recevable",
+                    hintText: "",
+                    nativeInputProps: {
+                      value: "ADMISSIBLE",
+                      ...register("decision"),
+                    },
+                  },
+                  {
+                    label: "Je considère ce dossier incomplet ou incorrect",
+                    hintText:
+                      "Un dossier est incorrect ou incomplet s'il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n'est pas le bon, s'il manque des éléments ou si les pièces jointes sont inexploitables, erronnées etc... Il sera renvoyé à l'AAP qui devra le compléter ou le corriger rapidement.",
+                    nativeInputProps: {
+                      value: "INCOMPLETE",
+                      ...register("decision"),
+                    },
+                  },
+                  {
+                    label: "Je considère que ce dossier n'est pas recevable",
+                    hintText:
+                      "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
+                    nativeInputProps: {
+                      value: "REJECTED",
+                      ...register("decision"),
+                    },
+                  },
+                ]}
+                state={errors.decision ? "error" : "default"}
+                stateRelatedMessage={errors.decision?.message}
+              />
+              <Input
+                hintText="(Optionnel)"
+                label="Pouvez-vous préciser les motifs de votre décision ?"
+                textArea
+                nativeTextAreaProps={register("decisionComment")}
+                state={errors.decisionComment ? "error" : "default"}
+                stateRelatedMessage={errors.decisionComment?.message}
+              />
+              <SmallNotice className="mb-4">
+                Ces motifs seront transmis au candidat ainsi qu'à son architecte
+                accompagnateur de parcours.
+              </SmallNotice>
+              <Upload
+                label="Joindre le courrier de recevabilité"
+                hint="Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas."
+                nativeInputProps={{
+                  required: true,
+                  ...register("decisionFile"),
+                  accept: ".pdf, .jpg, .jpeg, .png",
+                }}
+                state={errors.decisionFile ? "error" : "default"}
+                stateRelatedMessage={
+                  errors.decisionFile?.[0]?.message ??
+                  "Text de validation / d'explication de l'erreur"
+                }
+              />
+            </div>
 
-        <FormButtons
-          backUrl={"/candidacies/feasibilities"}
-          formState={{
-            isDirty,
-            isSubmitting,
-          }}
-        />
-      </form>
+            <FormButtons
+              backUrl={"/candidacies/feasibilities"}
+              formState={{
+                isDirty,
+                isSubmitting,
+              }}
+            />
+          </form>
+        </>
+      )}
     </>
   );
 };
