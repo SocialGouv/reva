@@ -1,4 +1,5 @@
 import DffSummary from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/DffSummary";
+import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -8,13 +9,11 @@ import {
   DematerializedFeasibilityFile,
   FeasibilityDecision,
 } from "@/graphql/generated/graphql";
-import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -23,39 +22,6 @@ import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
-
-const DecisionSentComponent = ({
-  decisionSentAt,
-  decision,
-  decisionComment,
-}: {
-  decisionSentAt: Date;
-  decision: FeasibilityDecision;
-  decisionComment?: string | null;
-}) => {
-  const severityMap = {
-    ADMISSIBLE: "success",
-    INCOMPLETE: "info",
-    REJECTED: "error",
-  };
-
-  const titleMap = {
-    ADMISSIBLE: `Dossier recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
-    INCOMPLETE: `Dossier retourné incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`,
-    REJECTED: `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
-  };
-
-  return (
-    <Alert
-      title={titleMap[decision as keyof typeof titleMap]}
-      severity={
-        severityMap[decision as keyof typeof severityMap] as AlertProps.Severity
-      }
-      description={decisionComment ? `”${decisionComment}”` : ""}
-      className="mb-12"
-    />
-  );
-};
 
 const schema = z
   .object({
@@ -83,9 +49,7 @@ export const DematerializedFeasibility = () => {
     useDematerializedFeasibility();
   const urqlClient = useUrqlClient();
   const router = useRouter();
-  const decisionHasBeenMade = useMemo(() => {
-    return !!(feasibility?.decision !== "PENDING");
-  }, [feasibility]);
+  const decisionHasBeenMade = feasibility?.decision !== "PENDING";
 
   const defaultValues = useMemo(
     () => ({

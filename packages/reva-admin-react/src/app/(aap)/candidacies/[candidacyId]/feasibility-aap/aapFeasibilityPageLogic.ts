@@ -11,6 +11,9 @@ const getCandidacyById = graphql(`
         codeRncp
       }
       feasibility {
+        decision
+        decisionSentAt
+        decisionComment
         feasibilityFileSentAt
         dematerializedFeasibilityFile {
           swornStatementFileId
@@ -71,13 +74,13 @@ export const useAapFeasibilityPageLogic = () => {
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
-  const feasibilityFileSentAt = candidacy?.feasibility?.feasibilityFileSentAt;
+  const feasibility = candidacy?.feasibility;
   const dematerializedFeasibilityFile =
     candidacy?.feasibility?.dematerializedFeasibilityFile;
   return {
     certification,
     dematerializedFeasibilityFile,
     queryStatus: getCandidacyByIdStatus,
-    feasibilityFileSentAt,
+    feasibility,
   };
 };

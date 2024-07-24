@@ -1,8 +1,10 @@
 "use client";
+import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
+  FeasibilityDecision,
 } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -34,9 +36,17 @@ export default function SendFileCertificationAuthorityPage() {
     dematerializedFeasibilityFile,
     sendToCertificationAuthorityMutation,
     candidacy,
-    feasibilityFileSentAt,
+    feasibility,
   } = useSendFileCertificationAuthority();
-
+  const decision = feasibility?.decision;
+  const decisionSentAt = feasibility?.decisionSentAt;
+  const decisionComment = feasibility?.decisionComment;
+  const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
+  const feasibilityIsPending = decision === "PENDING";
+  const feasibilityIsIncomplete = decision === "INCOMPLETE";
+  const feasibilityHasBeenSent = !!feasibilityFileSentAt;
+  const feasibilityFileNeedsNewOrResendAction =
+    !feasibilityHasBeenSent || feasibilityIsIncomplete;
   const handleSendFile = async () => {
     if (
       !dematerializedFeasibilityFile ||
@@ -66,13 +76,21 @@ export default function SendFileCertificationAuthorityPage() {
         }
         candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
-          feasibilityFileSentAt && (
-            <HasBeenSentComponent
-              sentToCertificationAuthorityAt={
-                feasibilityFileSentAt as any as Date
-              }
-            />
-          )
+          feasibilityFileSentAt ? (
+            feasibilityIsPending ? (
+              <HasBeenSentComponent
+                sentToCertificationAuthorityAt={
+                  feasibilityFileSentAt as any as Date
+                }
+              />
+            ) : (
+              <DecisionSentComponent
+                decisionSentAt={decisionSentAt as any as Date}
+                decision={decision as FeasibilityDecision}
+                decisionComment={decisionComment}
+              />
+            )
+          ) : null
         }
       />
       <CertificationAuthoritySection
@@ -88,7 +106,10 @@ export default function SendFileCertificationAuthorityPage() {
         >
           Retour
         </Button>
-        <Button onClick={handleSendFile} disabled={!!feasibilityFileSentAt}>
+        <Button
+          onClick={handleSendFile}
+          disabled={!feasibilityFileNeedsNewOrResendAction}
+        >
           Envoyer au certificateur
         </Button>
       </div>

@@ -24,6 +24,9 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
     ) {
       feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
         feasibilityFileSentAt
+        decision
+        decisionSentAt
+        decisionComment
         dematerializedFeasibilityFile {
           id
           swornStatementFile {
@@ -190,13 +193,12 @@ export const useSendFileCertificationAuthority = () => {
   const dematerializedFeasibilityFile =
     feasibility?.dematerializedFeasibilityFile;
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
-  const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
 
   return {
     dematerializedFeasibilityFileId,
     candidacy,
     sendToCertificationAuthorityMutation,
     dematerializedFeasibilityFile,
-    feasibilityFileSentAt,
+    feasibility,
   };
 };

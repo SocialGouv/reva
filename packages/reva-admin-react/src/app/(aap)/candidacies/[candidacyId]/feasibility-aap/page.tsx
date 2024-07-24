@@ -5,6 +5,7 @@ import {
   CertificationCompetenceDetails,
   DfFileAapDecision,
   DffCertificationCompetenceBloc,
+  FeasibilityDecision,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
@@ -25,8 +26,10 @@ const AapFeasibilityPage = () => {
     certification,
     dematerializedFeasibilityFile,
     queryStatus,
-    feasibilityFileSentAt,
+    feasibility,
   } = useAapFeasibilityPageLogic();
+
+  const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
 
   return (
     <div className="flex flex-col">
@@ -115,6 +118,9 @@ const AapFeasibilityPage = () => {
             isReadyToBeSentToCertificationAuthority={
               dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
+            decisionSentAt={feasibility?.decisionSentAt as any as Date}
+            decision={feasibility?.decision as FeasibilityDecision}
+            decisionComment={feasibility?.decisionComment}
           />
         </ul>
       )}
