@@ -388,11 +388,6 @@ const unsafeResolvers = {
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
-    candidacy_removeExperience: async (_: unknown, payload: any) => {
-      //TODO resolve the fixme because it doesnt do shit
-      // FIXME : this actually doesn't do shit
-      logger.info("candidacy_removeExperience", payload);
-    },
 
     candidacy_updateGoals: async (
       _: unknown,

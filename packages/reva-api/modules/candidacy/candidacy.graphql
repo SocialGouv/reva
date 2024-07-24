@@ -367,7 +367,6 @@ type Mutation {
     experienceId: ID!
     experience: ExperienceInput
   ): Experience
-  candidacy_removeExperience(candidacyId: ID!, experienceId: ID!): Void
   candidacy_updateGoals(candidacyId: ID!, goals: [CandidateGoalInput!]!): Int!
   candidacy_updateContact(
     candidateId: ID!

@@ -34,7 +34,6 @@ export const resolversSecurityMap = {
     whenHasRole("candidate", isCandidateOwnerOfCandidacy),
     whenHasRole("manage_candidacy", isCandidacyOwner),
   ],
-  "Mutation.candidacy_removeExperience": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_addExperience": [
     hasRole(["admin", "manage_candidacy", "candidate"]),
     whenHasRole("candidate", isCandidateOwnerOfCandidacy),
