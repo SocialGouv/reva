@@ -128,10 +128,16 @@ type BlocCompetence {
   FACULTATIF: Boolean
 }
 
+type FCFormacode {
+  CODE: String!
+  LIBELLE: String!
+}
+
 type FCCertification {
   ID_FICHE: ID!
   NUMERO_FICHE: String!
   BLOCS_COMPETENCES: [BlocCompetence!]!
+  FORMACODES: [FCFormacode!]!
 }
 
 type Country {
@@ -195,6 +201,12 @@ type Etablissement {
   qualiopiStatus: Boolean
 }
 
+type Formacode {
+  code: ID!
+  label: String!
+  parentCode: ID
+}
+
 type Query {
   getReferential: Referential!
   searchCertificationsForCandidate(
@@ -226,6 +238,7 @@ type Query {
   getCountries: [Country!]!
   getEtablissement(siret: ID!): EtablissementDiffusible
   getEtablissementAsAdmin(siret: ID!): Etablissement
+  getFormacodes: [Formacode!]!
 }
 
 input UpdateCertificationInput {

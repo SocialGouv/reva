@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts | npx pino-pretty",
-    "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
+    "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql && rsync -R ./modules/**/**/*.csv ./dist",
     "build:ts": "rimraf ./dist && tsc -p tsconfig.json",
     "build:graphql": "npm run graphql:generate && rsync -R ./modules/*.graphql ./dist && rsync -R ./modules/**/*.graphql ./dist && rsync -R ./modules/**/**/*.graphql ./dist/modules ",
     "start": "npm run prisma:migrate:deploy && node dist/index.js",

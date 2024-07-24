@@ -6,6 +6,7 @@ import { parse } from "@fast-csv/parse";
 interface ReadCsvRowsParams<T> {
   filePath: string;
   headersDefinition: Array<keyof T | undefined>;
+  delimiter?: string;
 }
 
 interface InjectCsvRowsParams<T, U> extends ReadCsvRowsParams<T> {
@@ -33,7 +34,7 @@ export function injectCsvRows<T, U>({
         .on("data", (row: T) => {
           const t = transform(row);
           console.log(
-            `---- ${(t as any).create.id} -- ${(t as any).create.label}`
+            `---- ${(t as any).create.id} -- ${(t as any).create.label}`,
           );
           injectArgs.push(t);
         })
@@ -42,7 +43,7 @@ export function injectCsvRows<T, U>({
             await injectCommand(args);
           }
           resolve();
-        })
+        }),
     );
   });
 }
@@ -50,6 +51,7 @@ export function injectCsvRows<T, U>({
 export function readCsvRows<T>({
   filePath,
   headersDefinition,
+  delimiter,
 }: ReadCsvRowsParams<T>): Promise<T[]> {
   return new Promise((resolve, error) => {
     const rows: T[] = [];
@@ -57,6 +59,7 @@ export function readCsvRows<T>({
       parse({
         headers: headersDefinition as Array<string | undefined>,
         renameHeaders: true,
+        delimiter,
       })
         .on("error", (err) => {
           error(err);
@@ -66,7 +69,7 @@ export function readCsvRows<T>({
         })
         .on("end", () => {
           resolve(rows);
-        })
+        }),
     );
   });
 }

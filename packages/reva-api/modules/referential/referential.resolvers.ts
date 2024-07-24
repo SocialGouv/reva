@@ -38,6 +38,7 @@ import {
 } from "./features/entreprise";
 import { searchCertificationsForCandidateV2 } from "./features/searchCertificationsForCandidateV2";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
+import { getFormacodes } from "./features/getFormacodes";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -130,6 +131,7 @@ const unsafeReferentialResolvers = {
       findEtablissementDiffusible({ siret }),
     getEtablissementAsAdmin: (_: unknown, { siret }: { siret: string }) =>
       findEtablissement({ siret }),
+    getFormacodes: () => getFormacodes(),
   },
   Mutation: {
     referential_updateCertification: (
