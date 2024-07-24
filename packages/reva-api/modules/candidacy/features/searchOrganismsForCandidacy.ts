@@ -46,7 +46,7 @@ export const searchOrganismsForCandidacy = async ({
         candidacy?.certificationsAndRegions[0]?.certificationId || "",
       zip: searchFilter.zip,
       pmr: searchFilter.pmr,
-      limit: 51,
+      limit: 50,
       searchText,
     });
   } else {
@@ -58,7 +58,7 @@ export const searchOrganismsForCandidacy = async ({
       departmentId: candidacy.departmentId,
       searchText,
       searchFilter,
-      limit: 51,
+      limit: 50,
     });
 
     organismsFound = result.rows
