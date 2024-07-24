@@ -45,6 +45,10 @@ export type RNCPCertification = {
     MODALITES_EVALUATION?: string;
     FACULTATIF?: boolean;
   }[];
+  FORMACODES: {
+    CODE: string;
+    LIBELLE: string;
+  }[];
 };
 
 export class RNCPReferential {
@@ -237,6 +241,12 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
           };
         })
         .sort((a, b) => (a.CODE > b.CODE ? 1 : -1)),
+      FORMACODES: ((data.FORMACODES || []) as any[]).map((formacode) => {
+        return {
+          CODE: formacode.CODE,
+          LIBELLE: formacode.LIBELLE,
+        };
+      }),
     };
 
     return certification;
