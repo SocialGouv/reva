@@ -1,8 +1,8 @@
+import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCertification } from "../../candidacy/database/candidacies";
 import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
 import { getCertificationById } from "../../referential/features/getCertificationById";
-import { isCertificationAvailableInDepartment } from "../../referential/features/isCertificationAvailableInDepartment";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -109,9 +109,8 @@ const confirmRegistration = async ({
   // if the candidate has selected a certification during its registration, we assign it if it's available in his department
   if (
     certificationId &&
-    (await isCertificationAvailableInDepartment({
+    (await isCertificationAvailable({
       certificationId,
-      departmentId: candidateRegistrationInput.departmentId,
     }))
   ) {
     const certification = await getCertificationById({ certificationId });

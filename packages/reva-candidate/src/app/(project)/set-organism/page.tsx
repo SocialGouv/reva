@@ -42,7 +42,6 @@ export default function SetOrganism() {
 
   const { getRandomOrganismsForCandidacy, selectOrganism } = useSetOrganism({
     candidacyId: candidacy.id || "",
-    departmentId: candidate?.department.id || "",
     searchText: organismSearchText,
     searchFilter: {
       distanceStatus: organismSearchOnsite

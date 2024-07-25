@@ -3,7 +3,6 @@ import { ApolloClient, gql } from "@apollo/client";
 const GET_ORGANISMS_FOR_CANDIDACY = gql`
   query getRandomOrganismsForCandidacy(
     $candidacyId: UUID!
-    $departmentId: UUID
     $searchText: String
     $searchFilter: SearchOrganismFilter
   ) {
@@ -21,12 +20,6 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
         distanceKm
         isOnSite
         isRemote
-        organismOnDepartments(departmentId: $departmentId) {
-          id
-          departmentId
-          isRemote
-          isOnSite
-        }
         informationsCommerciales {
           nom
           telephone
@@ -48,12 +41,10 @@ export const getRandomOrganismsForCandidacy =
   (client: ApolloClient<object>) =>
   ({
     candidacyId,
-    departmentId,
     searchText,
     searchFilter,
   }: {
     candidacyId: string;
-    departmentId?: string;
     searchText?: string;
     searchFilter: { distanceStatus?: string; pmr?: boolean; zip?: string };
   }) =>
@@ -61,7 +52,6 @@ export const getRandomOrganismsForCandidacy =
       query: GET_ORGANISMS_FOR_CANDIDACY,
       variables: {
         candidacyId,
-        departmentId,
         searchText,
         searchFilter,
       },

@@ -27,7 +27,6 @@ export default async function CertificationResults({
   const currentPage = page ? Number.parseInt(page) : 1;
 
   const searchCertificationsForCandidate = await searchCertifications({
-    departmentId: departmentId || candidateDepartmentId || "",
     searchText: searchFilter,
     currentPage,
   });
@@ -51,28 +50,26 @@ export default async function CertificationResults({
 
   return (
     <>
-      {
-        !selectedCertification && (
-          <div id="results" className="flex flex-col justify-center">
-            <Results
-              title=""
-              listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
-            >
-              <CertificationResultCard rows={rows} />
-            </Results>
+      {!selectedCertification && (
+        <div id="results" className="flex flex-col justify-center">
+          <Results
+            title=""
+            listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
+          >
+            <CertificationResultCard rows={rows} />
+          </Results>
 
-            {info && (
-              <Pagination
-                totalPages={info.totalPages}
-                currentPage={currentPage}
-                baseHref={"/set-certification/"}
-                className="mx-auto"
-                baseParams={searchParamsWithoutPage}
-              />
-            )}
-          </div>
-        )
-      }
+          {info && (
+            <Pagination
+              totalPages={info.totalPages}
+              currentPage={currentPage}
+              baseHref={"/set-certification/"}
+              className="mx-auto"
+              baseParams={searchParamsWithoutPage}
+            />
+          )}
+        </div>
+      )}
       {selectedCertification && (
         <form action={updateCertification}>
           <input
@@ -80,11 +77,7 @@ export default async function CertificationResults({
             name="certificationId"
             value={selectedCertification.id}
           />
-          <input
-            type="hidden"
-            name="candidacyId"
-            value={candidacyId}
-          />
+          <input type="hidden" name="candidacyId" value={candidacyId} />
           <input
             type="hidden"
             name="departmentId"

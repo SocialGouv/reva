@@ -6,13 +6,11 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
   query searchCertificationsForCandidate(
     $offset: Int
     $limit: Int
-    $departmentId: UUID!
     $searchText: String
   ) {
     searchCertificationsForCandidate(
       offset: $offset
       limit: $limit
-      departmentId: $departmentId
       searchText: $searchText
       status: AVAILABLE
     ) {
@@ -35,11 +33,9 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
 `);
 
 export const searchCertifications = async ({
-  departmentId,
   searchText,
   currentPage,
 }: {
-  departmentId: string;
   searchText?: string;
   currentPage: number;
 }) => {
@@ -48,12 +44,14 @@ export const searchCertifications = async ({
   const RECORDS_PER_PAGE = 10;
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
 
-  const searchCertificationsForCandidate = await graphqlClient.request(SEARCH_CERTIFICATIONS_FOR_CANDIDATE, {
-    offset,
-    limit: RECORDS_PER_PAGE,
-    departmentId,
-    searchText,
-  });
+  const searchCertificationsForCandidate = await graphqlClient.request(
+    SEARCH_CERTIFICATIONS_FOR_CANDIDATE,
+    {
+      offset,
+      limit: RECORDS_PER_PAGE,
+      searchText,
+    },
+  );
 
   return searchCertificationsForCandidate.searchCertificationsForCandidate;
 };

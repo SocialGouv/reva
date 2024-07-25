@@ -1,5 +1,4 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 import { Organism } from "../../../interface";
 import { OrganismCardDescription } from "./OrganismCardDescription";
@@ -7,28 +6,11 @@ import { OrganismCardDistance } from "./OrganismCardDistance";
 import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
 import { OrganismCardTitle } from "./OrganismCardTitle";
 
-const getMandatoryInfo = (
-  organism: Organism,
-  isAAPInterventionZoneUpdateFeatureActive: boolean,
-) => {
+const getMandatoryInfo = (organism: Organism) => {
   const { informationsCommerciales: ic } = organism;
-  const isOnSite = isAAPInterventionZoneUpdateFeatureActive
-    ? organism.isOnSite
-    : !!(
-        ic?.adresseNumeroEtNomDeRue &&
-        ic?.adresseCodePostal &&
-        ic?.adresseVille &&
-        ic?.conformeNormesAccessbilite !==
-          "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" &&
-        organism.organismOnDepartments?.find((od) => od.isOnSite)
-      );
-  const isRemote = isAAPInterventionZoneUpdateFeatureActive
-    ? organism.isRemote
-    : !!(
-        ic?.conformeNormesAccessbilite ===
-          "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC" ||
-        organism.organismOnDepartments?.find((od) => od.isRemote)
-      );
+  const isOnSite = organism.isOnSite;
+
+  const isRemote = organism.isRemote;
   return {
     label: ic?.nom || organism.label,
     website: ic?.siteInternet || organism.website,
@@ -46,16 +28,7 @@ export const OrganismCard = ({
   organism: Organism;
   onClick: () => void;
 }) => {
-  const {
-    state: {
-      context: { activeFeatures },
-    },
-  } = useMainMachineContext();
-
-  const mandatoryInfo = getMandatoryInfo(
-    organism,
-    activeFeatures.includes("AAP_INTERVENTION_ZONE_UPDATE"),
-  );
+  const mandatoryInfo = getMandatoryInfo(organism);
 
   return (
     <div

@@ -8,7 +8,6 @@ import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMai
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
-import { getDepartments } from "../../referential/features/getDepartments";
 import { getDegrees } from "../../referential/features/getDegrees";
 import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
 
@@ -86,7 +85,6 @@ export const validateSubscriptionRequest = async ({
       domaineIds: [],
       ccnIds: [],
       degreeIds: degrees.map((d) => d.id),
-      departmentsWithOrganismMethods: [],
       qualiopiCertificateExpiresAt: new Date(),
       isOnSite: false, //default agency is not on site since we don't have an address
       isHeadAgency: true, // default agency is the head agency
@@ -110,8 +108,6 @@ export const validateSubscriptionRequest = async ({
     `[subscription] Successfuly created Account with organismId ${newOrganism.id}`,
   );
 
-  const allDepartements = await getDepartments();
-
   const newMaisonMereAAP = await createMaisonMereAAP({
     maisonMereAAP: {
       phone: subscriptionRequest.accountPhoneNumber ?? "",
@@ -130,11 +126,6 @@ export const validateSubscriptionRequest = async ({
       showAccountSetup: true,
     },
     ccnIds: [],
-    maisonMereAAPOnDepartements: allDepartements.map((d) => ({
-      departementId: d.id,
-      estADistance: true,
-      estSurPlace: true,
-    })),
   });
 
   await assignMaisonMereAAPToOrganism({

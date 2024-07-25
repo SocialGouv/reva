@@ -1,16 +1,10 @@
 import { ApolloClient, gql } from "@apollo/client";
 
 const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
-  query Certifications(
-    $offset: Int
-    $limit: Int
-    $departementId: UUID!
-    $searchText: String
-  ) {
+  query Certifications($offset: Int, $limit: Int, $searchText: String) {
     searchCertificationsForCandidate(
       offset: $offset
       limit: $limit
-      departmentId: $departementId
       searchText: $searchText
       status: AVAILABLE
     ) {
@@ -34,15 +28,7 @@ const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
 
 export const searchCertifications =
   (client: ApolloClient<object>) =>
-  ({
-    pageNumber,
-    departementId,
-    searchText,
-  }: {
-    pageNumber: number;
-    departementId: string;
-    searchText: string;
-  }) => {
+  ({ pageNumber, searchText }: { pageNumber: number; searchText: string }) => {
     const limit = 10;
     const offset = (pageNumber - 1) * limit;
     return client.query({
@@ -50,7 +36,6 @@ export const searchCertifications =
       variables: {
         offset,
         limit,
-        departementId,
         searchText,
       },
     });

@@ -89,7 +89,6 @@ export const createAgency = async ({
         legalStatus: statutJuridique,
         isActive: true,
         typology: typologie,
-        departmentsWithOrganismMethods: [],
         qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
         llToEarth,
         isOnSite: true,

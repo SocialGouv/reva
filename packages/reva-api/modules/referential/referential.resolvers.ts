@@ -20,7 +20,6 @@ import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 import { replaceCertification } from "./features/replaceCertification";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
-import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { updateCertification } from "./features/updateCertification";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
@@ -37,7 +36,6 @@ import {
   findQualiopiStatus,
 } from "./features/entreprise";
 import { searchCertificationsForCandidateV2 } from "./features/searchCertificationsForCandidateV2";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -88,19 +86,11 @@ const unsafeReferentialResolvers = {
       payload: {
         offset?: number;
         limit?: number;
-        departmentId?: string;
         organismId?: string;
         searchText?: string;
         status: CertificationStatus;
       },
-      context: GraphqlContext,
-    ) =>
-      (await isFeatureActiveForUser({
-        userKeycloakId: context.auth.userInfo?.sub || "",
-        feature: "AAP_INTERVENTION_ZONE_UPDATE",
-      }))
-        ? searchCertificationsForCandidateV2(payload)
-        : searchCertificationsForCandidate(payload),
+    ) => searchCertificationsForCandidateV2(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
       searchCertificationsForAdmin({
         offset: payload.offset,

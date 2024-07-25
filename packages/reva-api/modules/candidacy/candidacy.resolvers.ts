@@ -1,13 +1,10 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { CandidateTypology, Organism } from "@prisma/client";
+import { CandidateTypology } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { generateJwt } from "../candidate/auth.helper";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
-import * as organismDb from "../organism/database/organisms";
-import { Organism as OrganismCamelCase } from "../organism/organism.types";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -27,7 +24,6 @@ import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
-import { getAAPsWithZipCode } from "./features/getAAPsWithZipCode";
 import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getBasicSkills } from "./features/getBasicSkills";
@@ -41,7 +37,6 @@ import { getCandidacyWithActiveCertificationByCandidacyId } from "./features/get
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
-import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "./features/getTrainings";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -158,84 +153,12 @@ const unsafeResolvers = {
         searchFilter: SearchOrganismFilter;
         searchText?: string;
       },
-      context: GraphqlContext,
-    ) => {
-      if (
-        await isFeatureActiveForUser({
-          userKeycloakId: context.auth.userInfo?.sub || "",
-          feature: "AAP_INTERVENTION_ZONE_UPDATE",
-        })
-      ) {
-        return searchOrganismsForCandidacy({
-          candidacyId,
-          searchFilter,
-          searchText,
-        });
-      } else {
-        const candidacy = await prismaClient.candidacy.findUnique({
-          where: { id: candidacyId },
-          include: {
-            organism: true,
-            certificationsAndRegions: {
-              select: {
-                certificationId: true,
-              },
-              where: {
-                isActive: true,
-              },
-            },
-          },
-        });
-
-        let organismsFound: OrganismCamelCase[];
-
-        if (
-          searchFilter.zip &&
-          searchFilter.zip.length === 5 &&
-          searchFilter?.distanceStatus === "ONSITE"
-        ) {
-          organismsFound = await getAAPsWithZipCode({
-            certificationId:
-              candidacy?.certificationsAndRegions[0]?.certificationId || "",
-            zip: searchFilter.zip,
-            pmr: searchFilter.pmr,
-            limit: 51,
-            searchText,
-          });
-        } else {
-          const result = await getRandomOrganismsForCandidacyWithNewTypologies({
-            getRandomActiveOrganismForCertificationAndDepartment:
-              organismDb.getRandomActiveOrganismForCertificationAndDepartment,
-            getCandidacyFromId: candidacyDb.getCandidacyFromId,
-          })({ candidacyId, searchText, searchFilter, limit: 51 });
-
-          result.mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error),
-          );
-
-          if (result.isLeft()) {
-            return result.mapLeft(
-              (error) => new mercurius.ErrorWithProps(error.message, error),
-            );
-          }
-
-          const data = result.extract() as {
-            rows: Organism[];
-            totalRows: number;
-          };
-
-          organismsFound = data.rows
-            .filter((c) => c.id !== candidacy?.organism?.id)
-            .slice(0, 50);
-        }
-
-        return {
-          totalRows: organismsFound?.length ?? 0,
-          rows: organismsFound,
-        };
-      }
-    },
-
+    ) =>
+      searchOrganismsForCandidacy({
+        candidacyId,
+        searchFilter,
+        searchText,
+      }),
     getBasicSkills,
     candidacy_candidacyCountByStatus: (
       _: unknown,

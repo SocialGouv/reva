@@ -29,40 +29,38 @@ enum FeasibilityFormat {
 }
 
 model Certification {
-  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                                  String                                                   @db.VarChar(255)
-  level                                                  Int
-  activities                                             String?
-  activityArea                                           String?                                                  @map("activity_area")
-  accessibleJobType                                      String?                                                  @map("accessible_job_type")
-  abilities                                              String?
-  summary                                                String?
-  status                                                 CertificationStatus                                      @default(INACTIVE)
-  rncpId                                                 String                                                   @map("rncp_id") @db.VarChar(255)
-  candidaciesAndRegions                                  CandidaciesOnRegionsAndCertifications[]
-  organismsAndRegions                                    OrganismsOnRegionsAndCertifications[]
-  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
-  availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
-  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
-  certificationOnDomaine                                 CertificationOnDomaine[]
-  certificationOnConventionCollective                    CertificationOnConventionCollective[]
-  typeDiplome                                            TypeDiplome?                                             @relation(fields: [typeDiplomeId], references: [id])
-  typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
-  certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
-  searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
-  certificationAuthorityLocalAccountOnCertification      CertificationAuthorityLocalAccountOnCertification[]
-  certificationAuthorityTag                              String?                                                  @map("certification_authority_tag") @db.VarChar(255)
-  availableAt                                            DateTime                                                 @map("available_at") @db.Timestamptz(6)
-  expiresAt                                              DateTime                                                 @map("expires_at") @db.Timestamptz(6)
-  previousVersionCertificationId                         String?                                                  @unique @map("previous_version_certification_id") @db.Uuid
-  previousVersion                                        Certification?                                           @relation("replacement", fields: [previousVersionCertificationId], references: [id])
-  nextVersion                                            Certification?                                           @relation("replacement")
-  competenceBlocs                                        CertificationCompetenceBloc[]
-  feasibilityFormat                                      FeasibilityFormat                                        @default(UPLOADED_PDF) @map("feasibility_format")
-  financeModule                                          FinanceModule                                            @default(hors_plateforme) @map("finance_module")
-  AvailableCertification                                 AvailableCertification?
-  ActiveOrganismByAvailableCertification                 ActiveOrganismByAvailableCertification[]
+  id                                                String                                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                             String                                              @db.VarChar(255)
+  level                                             Int
+  activities                                        String?
+  activityArea                                      String?                                             @map("activity_area")
+  accessibleJobType                                 String?                                             @map("accessible_job_type")
+  abilities                                         String?
+  summary                                           String?
+  status                                            CertificationStatus                                 @default(INACTIVE)
+  rncpId                                            String                                              @map("rncp_id") @db.VarChar(255)
+  candidaciesAndRegions                             CandidaciesOnRegionsAndCertifications[]
+  organismsAndRegions                               OrganismsOnRegionsAndCertifications[]
+  createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
+  certificationOnDomaine                            CertificationOnDomaine[]
+  certificationOnConventionCollective               CertificationOnConventionCollective[]
+  typeDiplome                                       TypeDiplome?                                        @relation(fields: [typeDiplomeId], references: [id])
+  typeDiplomeId                                     String?                                             @map("type_diplome_id") @db.Uuid
+  certificationAuthorityOnCertification             CertificationAuthorityOnCertification[]
+  searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
+  certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
+  certificationAuthorityTag                         String?                                             @map("certification_authority_tag") @db.VarChar(255)
+  availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
+  expiresAt                                         DateTime                                            @map("expires_at") @db.Timestamptz(6)
+  previousVersionCertificationId                    String?                                             @unique @map("previous_version_certification_id") @db.Uuid
+  previousVersion                                   Certification?                                      @relation("replacement", fields: [previousVersionCertificationId], references: [id])
+  nextVersion                                       Certification?                                      @relation("replacement")
+  competenceBlocs                                   CertificationCompetenceBloc[]
+  feasibilityFormat                                 FeasibilityFormat                                   @default(UPLOADED_PDF) @map("feasibility_format")
+  financeModule                                     FinanceModule                                       @default(hors_plateforme) @map("finance_module")
+  AvailableCertification                            AvailableCertification?
+  ActiveOrganismByAvailableCertification            ActiveOrganismByAvailableCertification[]
 
   @@index([typeDiplomeId])
   @@map("certification")
@@ -312,22 +310,18 @@ model Region {
 }
 
 model Department {
-  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                                  String                                                   @unique @db.VarChar(255)
-  code                                                   String                                                   @unique @db.VarChar(3)
-  region                                                 Region                                                   @relation(fields: [regionId], references: [id])
-  regionId                                               String                                                   @map("region_id") @db.Uuid
-  candidacies                                            Candidacy[]
-  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
-  Candidate                                              Candidate[]
-  availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
-  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
-  OrganismsOnDepartments                                 OrganismsOnDepartments[]
-  certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
-  maisonMereAAPOnDepartement                             MaisonMereAAPOnDepartement[]
-  certificationAuthorityLocalAccountOnDepartment         CertificationAuthorityLocalAccountOnDepartment[]
-  CandidateBirthDerpartment                              Candidate[]                                              @relation("birthDepartmentCandidate")
+  id                                             String                                           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                          String                                           @unique @db.VarChar(255)
+  code                                           String                                           @unique @db.VarChar(3)
+  region                                         Region                                           @relation(fields: [regionId], references: [id])
+  regionId                                       String                                           @map("region_id") @db.Uuid
+  candidacies                                    Candidacy[]
+  createdAt                                      DateTime                                         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                      DateTime?                                        @map("updated_at") @db.Timestamptz(6)
+  Candidate                                      Candidate[]
+  certificationAuthorityOnDepartment             CertificationAuthorityOnDepartment[]
+  certificationAuthorityLocalAccountOnDepartment CertificationAuthorityLocalAccountOnDepartment[]
+  CandidateBirthDerpartment                      Candidate[]                                      @relation("birthDepartmentCandidate")
 
   @@index([regionId])
   @@map("department")
@@ -383,29 +377,27 @@ model Account {
 }
 
 model Organism {
-  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                                  String                                                   @db.VarChar(255)
-  legalStatus                                            LegalStatus                                              @default(NC) @map("legal_status")
-  llToEarth                                              String?                                                  @map("ll_to_earth")
-  contactAdministrativeEmail                             String                                                   @map("contact_administrative_email") @db.VarChar(255)
-  contactAdministrativePhone                             String?                                                  @map("contact_administrative_phone") @db.VarChar(50)
-  siret                                                  String
-  isActive                                               Boolean                                                  @default(false) @map("is_active")
-  candidacies                                            Candidacy[]
-  accounts                                               Account[]
-  regionsAndCertifications                               OrganismsOnRegionsAndCertifications[]
-  departmentsWithOrganismMethods                         OrganismsOnDepartments[]
-  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
-  FundingRequest                                         FundingRequest[]
-  typology                                               OrganismTypology                                         @map("typology")
-  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
-  organismOnDomaine                                      OrganismOnDomaine[]
-  organismOnConventionCollective                         OrganismOnConventionCollective[]
-  qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
-  website                                                String?                                                  @db.VarChar(255)
-  organismInformationsCommerciales                       OrganismInformationsCommerciales?
-  organismInformationsCommercialesId                     String?                                                  @map("organism_informations_commerciales_id") @db.Uuid
+  id                                 String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                              String                                @db.VarChar(255)
+  legalStatus                        LegalStatus                           @default(NC) @map("legal_status")
+  llToEarth                          String?                               @map("ll_to_earth")
+  contactAdministrativeEmail         String                                @map("contact_administrative_email") @db.VarChar(255)
+  contactAdministrativePhone         String?                               @map("contact_administrative_phone") @db.VarChar(50)
+  siret                              String
+  isActive                           Boolean                               @default(false) @map("is_active")
+  candidacies                        Candidacy[]
+  accounts                           Account[]
+  regionsAndCertifications           OrganismsOnRegionsAndCertifications[]
+  createdAt                          DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                          DateTime?                             @map("updated_at") @db.Timestamptz(6)
+  FundingRequest                     FundingRequest[]
+  typology                           OrganismTypology                      @map("typology")
+  organismOnDomaine                  OrganismOnDomaine[]
+  organismOnConventionCollective     OrganismOnConventionCollective[]
+  qualiopiCertificateExpiresAt       DateTime?                             @map("qualiopi_certificate_expires_at")
+  website                            String?                               @db.VarChar(255)
+  organismInformationsCommerciales   OrganismInformationsCommerciales?
+  organismInformationsCommercialesId String?                               @map("organism_informations_commerciales_id") @db.Uuid
 
   maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
   maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
@@ -494,21 +486,6 @@ model OrganismsOnRegionsAndCertifications {
 
   @@unique([organismId, regionId, certificationId])
   @@map("organism_region_certification")
-}
-
-model OrganismsOnDepartments {
-  id           String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  organism     Organism   @relation(fields: [organismId], references: [id], onDelete: Cascade)
-  organismId   String     @map("organism_id") @db.Uuid
-  department   Department @relation(fields: [departmentId], references: [id])
-  departmentId String     @map("department_id") @db.Uuid
-  isOnSite     Boolean    @default(false) @map("is_onsite")
-  isRemote     Boolean    @default(false) @map("is_remote")
-  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime?  @map("updated_at") @db.Timestamptz(6)
-
-  @@unique([organismId, departmentId])
-  @@map("organism_department")
 }
 
 model Training {
@@ -852,30 +829,6 @@ enum OrganismTypology {
   expertFiliere
   expertBranche
   expertBrancheEtFiliere
-}
-
-view AvailableCertificationsByDepartments {
-  certification                 Certification            @relation(fields: [certificationId], references: [id])
-  department                    Department               @relation(fields: [departmentId], references: [id])
-  certificationId               String                   @map("certification_id") @db.Uuid
-  departmentId                  String                   @map("department_id") @db.Uuid
-  certification_searchable_text Unsupported("tsvector")?
-
-  @@unique([certificationId, departmentId])
-  @@map("available_certification_by_department")
-}
-
-view ActiveOrganismsByAvailableCertificationsAndDepartments {
-  organism                      Organism                 @relation(fields: [organismId], references: [id], onDelete: Cascade)
-  certification                 Certification            @relation(fields: [certificationId], references: [id])
-  department                    Department               @relation(fields: [departmentId], references: [id])
-  organismId                    String                   @map("organism_id") @db.Uuid
-  certificationId               String                   @map("certification_id") @db.Uuid
-  departmentId                  String                   @map("department_id") @db.Uuid
-  certification_searchable_text Unsupported("tsvector")?
-
-  @@unique([organismId, certificationId, departmentId])
-  @@map("active_organism_by_available_certification_and_department")
 }
 
 view AvailableCertification {
@@ -1327,7 +1280,6 @@ model MaisonMereAAP {
   phone                               String?                               @map("phone") @db.VarChar(50)
   typologie                           OrganismTypology                      @map("typologie")
   maisonMereAAPOnConventionCollective MaisonMereAAPOnConventionCollective[]
-  maisonMereAAPOnDepartement          MaisonMereAAPOnDepartement[]
   siteWeb                             String?                               @map("site_web") @db.VarChar(255)
   dateExpirationCertificationQualiopi DateTime                              @map("date_expiration_certification_qualiopi")
   cguVersion                          Int?                                  @map("cgu_version")
@@ -1360,21 +1312,6 @@ model MaisonMereAAPOnConventionCollective {
 
   @@id([ccnId, maisonMereAAPId])
   @@map("maison_mere_aap_on_ccn")
-}
-
-model MaisonMereAAPOnDepartement {
-  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  departement     Department    @relation(fields: [departementId], references: [id])
-  departementId   String        @map("departement_id") @db.Uuid
-  estSurPlace     Boolean       @default(false) @map("est_sur_place")
-  estADistance    Boolean       @default(false) @map("est_a_distance")
-  maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
-  maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
-  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
-
-  @@index([maisonMereAAPId, departementId, estADistance, estSurPlace])
-  @@map("maison_mere_aap_on_departement")
 }
 
 model MaisonMereAAPOnDomaine {

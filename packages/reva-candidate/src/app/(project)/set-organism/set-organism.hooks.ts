@@ -9,7 +9,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
   query getRandomOrganismsForCandidacy(
     $candidacyId: UUID!
-    $departmentId: UUID
     $searchText: String
     $searchFilter: SearchOrganismFilter
   ) {
@@ -27,12 +26,6 @@ const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
         distanceKm
         isOnSite
         isRemote
-        organismOnDepartments(departmentId: $departmentId) {
-          id
-          departmentId
-          isRemote
-          isOnSite
-        }
         informationsCommerciales {
           nom
           telephone
@@ -63,12 +56,10 @@ const SELECT_ORGANISM_FOR_CANDIDACY = graphql(`
 
 export const useSetOrganism = ({
   candidacyId,
-  departmentId,
   searchText,
   searchFilter,
 }: {
   candidacyId: string;
-  departmentId: string;
   searchText: string;
   searchFilter: SearchOrganismFilter;
 }) => {
@@ -78,14 +69,12 @@ export const useSetOrganism = ({
     queryKey: [
       "getRandomOrganismsForCandidacy",
       candidacyId,
-      departmentId,
       searchText,
       searchFilter,
     ],
     queryFn: () =>
       graphqlClient.request(GET_ORGANISMS_FOR_CANDIDACY, {
         candidacyId,
-        departmentId,
         searchText,
         searchFilter,
       }),

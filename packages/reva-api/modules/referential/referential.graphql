@@ -200,7 +200,6 @@ type Query {
   searchCertificationsForCandidate(
     offset: Int
     limit: Int
-    departmentId: UUID
     organismId: UUID
     searchText: String
     status: CertificationStatus

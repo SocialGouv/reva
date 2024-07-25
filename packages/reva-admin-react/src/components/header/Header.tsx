@@ -46,9 +46,7 @@ export const Header = () => {
               {
                 text: "Paramètres",
                 linkProps: {
-                  href: isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
-                    ? "/agencies-settings/v2/legal-information"
-                    : "/agencies-settings/v1/legal-information",
+                  href: "/agencies-settings/v2/legal-information",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/agencies-settings"),

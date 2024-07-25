@@ -31,7 +31,6 @@ type Organism {
   contactAdministrativePhone: String
   website: String
   typology: OrganismTypology!
-  organismOnDepartments(departmentId: UUID): [OrganismOnDepartment!]!
   isActive: Boolean!
   fermePourAbsenceOuConges: Boolean!
   informationsCommerciales: OrganismInformationsCommerciales
@@ -90,7 +89,6 @@ type MaisonMereAAP {
   gestionnaire: Account!
   organisms: [Organism!]!
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAAP!
-  maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
   maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
   legalInformationDocumentsDecisions(
     input: MaisonMereAAPLegalInformationDocumentsDecisionsInput
@@ -118,18 +116,6 @@ type Account {
   maisonMereAAP: MaisonMereAAP
 }
 
-type MaisonMereAAPOnDepartment {
-  estSurPlace: Boolean!
-  estADistance: Boolean!
-  departement: Department!
-}
-
-type MaisonMereAAPOnDepartment {
-  estSurPlace: Boolean!
-  estADistance: Boolean!
-  departement: Department!
-}
-
 type MaisonMereAAPLegalInformationDocuments {
   maisonMereAAP: MaisonMereAAP!
   managerFirstname: String!
@@ -148,14 +134,6 @@ input UpdateMaisonMereAAPLegalValidationDecisionInput {
   internalComment: String
   aapComment: String
   aapUpdatedDocumentsAt: Timestamp!
-}
-
-type OrganismOnDepartment {
-  id: UUID!
-  organismId: UUID!
-  departmentId: UUID!
-  isRemote: Boolean!
-  isOnSite: Boolean!
 }
 
 enum ConformiteNormeAccessibilite {
@@ -197,16 +175,6 @@ input UpdateOrganismInput {
   isActive: Boolean!
 }
 
-input MaisonMereAAPOnDepartmentInput {
-  departmentId: UUID!
-  isOnSite: Boolean!
-  isRemote: Boolean!
-}
-
-input UpdateMaisonMereAAPInput {
-  zoneIntervention: [MaisonMereAAPOnDepartmentInput!]!
-}
-
 input CreateOrUpdateInformationsCommercialesInput {
   organismId: UUID!
   nom: String
@@ -220,12 +188,6 @@ input CreateOrUpdateInformationsCommercialesInput {
   conformeNormesAccessbilite: ConformiteNormeAccessibilite
 }
 
-input DepartmentWithOrganismMethodsInput {
-  departmentId: UUID!
-  isOnSite: Boolean!
-  isRemote: Boolean!
-}
-
 input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   nom: String!
   address: String!
@@ -236,7 +198,6 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   contactAdministrativePhone: String!
   website: String
   conformeNormesAccessbilite: ConformiteNormeAccessibilite!
-  departmentsWithOrganismMethods: [DepartmentWithOrganismMethodsInput!]!
   firstname: String!
   lastname: String!
   email: String!
@@ -266,17 +227,6 @@ input UpdateOrganismDegreesAndDomainesInput {
 type MaisonMereAAPsPaginated {
   rows: [MaisonMereAAP!]!
   info: PaginationInfo!
-}
-
-input UpdateOrganismInterventionZoneInput {
-  organismId: ID!
-  interventionZone: [InterventionZoneInput!]!
-}
-
-input InterventionZoneInput {
-  departmentId: ID!
-  isOnSite: Boolean!
-  isRemote: Boolean!
 }
 
 input UpdateOrganismAccountInput {
@@ -315,10 +265,6 @@ type Mutation {
     organismId: ID!
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
   ): Organism!
-  organism_adminUpdateMaisonMereAAP(
-    maisonMereAAPId: ID!
-    maisonMereAAPData: UpdateMaisonMereAAPInput!
-  ): String!
   organism_createOrUpdateInformationsCommerciales(
     informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
   ): OrganismInformationsCommerciales!
@@ -333,10 +279,6 @@ type Mutation {
   organism_updateOrganismDegreesAndDomaines(
     data: UpdateOrganismDegreesAndDomainesInput!
   ): Organism
-
-  organism_updateOrganismInterventionZone(
-    data: UpdateOrganismInterventionZoneInput
-  ): Organism!
 
   organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!
   organism_updateLegalInformationValidationDecision(

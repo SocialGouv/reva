@@ -10,21 +10,14 @@
           "city": "Paris",
           "contactAdministrativeEmail": "email@exemple.com",
           "contactAdministrativePhone": "0111111111",
-          "organismOnDepartments": [
-            {
-              "id": "orgaOnDepartment1",
-              "departmentId": "department1",
-              "isRemote": false,
-              "isOnSite": true,
-              "__typename": "OrganismOnDepartment"
-            }
-          ],
           "informationsCommerciales": {
             "adresseNumeroEtNomDeRue": "1 rue de l'exemple",
             "adresseCodePostal": "75000",
             "adresseVille": "Paris",
             "conformeNormesAccessbilite": "CONFORME"
-          }
+          },
+          "isOnSite": true,
+          "isRemote": false
         },
         {
           "id": "o2",
@@ -34,15 +27,8 @@
           "city": "Nantes",
           "contactAdministrativeEmail": "email2@exemple.com",
           "contactAdministrativePhone": "0222222222",
-          "organismOnDepartments": [
-            {
-              "id": "orgaOnDepartment2",
-              "departmentId": "department1",
-              "isRemote": true,
-              "isOnSite": false,
-              "__typename": "OrganismOnDepartment"
-            }
-          ]
+          "isOnSite": false,
+          "isRemote": true
         }
       ],
       "totalRows": 2

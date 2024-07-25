@@ -21,12 +21,6 @@ export type OrganismTypology =
   | "expertBranche"
   | "expertBrancheEtFiliere";
 
-export interface DepartmentWithOrganismMethods {
-  departmentId: string;
-  isOnSite: boolean;
-  isRemote: boolean;
-}
-
 type ConformiteNormeAccessibilite =
   | "CONFORME"
   | "NON_CONFORME"
@@ -68,12 +62,6 @@ export interface MaisonMereAAP {
   cgu: MaisonMereAAPCGU;
 }
 
-export interface MaisonMereAAPOnDepartement {
-  departementId: string;
-  estSurPlace: boolean;
-  estADistance: boolean;
-}
-
 export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   nom: string;
   address: string;
@@ -84,11 +72,6 @@ export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   contactAdministrativePhone?: string;
   website?: string;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite;
-  departmentsWithOrganismMethods: {
-    departmentId: string;
-    isOnSite: boolean;
-    isRemote: boolean;
-  }[];
   firstname: string;
   lastname: string;
   email: string;
@@ -109,16 +92,6 @@ export interface CreateAgencyInput {
   domaineIds: string[];
 }
 
-export interface UpdateOrganismInterventionZoneInput {
-  organismId: string;
-  interventionZone: InterventionZoneInput[];
-}
-
-export interface InterventionZoneInput {
-  departmentId: string;
-  isOnSite: boolean;
-  isRemote: boolean;
-}
 export interface CreateOrganismAccountInput {
   organismId: string;
   accountFirstname: string;

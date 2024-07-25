@@ -61,15 +61,12 @@ export const updateCertificationWithinOrganismScope = async ({
 
   // Ensure the new certification is handled by current candidacy organism
   const activeOrganism =
-    await prismaClient.activeOrganismsByAvailableCertificationsAndDepartments.findFirst(
-      {
-        where: {
-          certificationId: certificationId,
-          departmentId: candidacy.departmentId,
-          organismId: candidacy.organismId,
-        },
+    await prismaClient.activeOrganismByAvailableCertification.findFirst({
+      where: {
+        certificationId: certificationId,
+        organismId: candidacy.organismId,
       },
-    );
+    });
 
   if (!activeOrganism) {
     throw new Error(

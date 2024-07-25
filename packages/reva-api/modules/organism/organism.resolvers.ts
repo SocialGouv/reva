@@ -10,16 +10,12 @@ import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
-import { getDepartmentById } from "../referential/features/getDepartmentById";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
-import {
-  adminUpdateLegalInformationValidationStatus,
-  adminUpdateMaisonMereAAP,
-} from "./features/adminUpdateMaisonMereAAP";
+import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
 import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
@@ -28,7 +24,6 @@ import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getLLToEarthFromZip } from "./features/getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
-import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMereAAPOnConventionCollectives";
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
@@ -39,9 +34,7 @@ import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
-import { updateOrganismInterventionZone } from "./features/updateOrganismInterventionZone";
 import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
-import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
 import {
   CreateAgencyInput,
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
@@ -50,7 +43,6 @@ import {
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
-  UpdateOrganismInterventionZoneInput,
 } from "./organism.types";
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonMereAAPLegalInformationDocuments";
@@ -117,8 +109,6 @@ const unsafeResolvers = {
       getDegreeById({ degreeId: organismOnDegree.degreeId }),
   },
   MaisonMereAAP: {
-    maisonMereAAPOnDepartements: ({ id }: { id: string }) =>
-      getMaisonMereAAPOnDepartments({ maisonMereAAPId: id }),
     maisonMereAAPOnConventionCollectives: ({ id }: { id: string }) =>
       getMaisonMereAAPOnConventionCollectives({ maisonMereAAPId: id }),
     organisms: ({ id: maisonMereAAPId }: { id: string }) =>
@@ -210,10 +200,6 @@ const unsafeResolvers = {
     ccn: ({ ccnId }: { ccnId: string }) =>
       getConventionCollectiveById({ ccnId }),
   },
-  MaisonMereAAPOnDepartment: {
-    departement: ({ departementId }: { departementId: string }) =>
-      getDepartmentById({ id: departementId }),
-  },
   Mutation: {
     organism_updateOrganism: async (
       _parent: unknown,
@@ -247,29 +233,6 @@ const unsafeResolvers = {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
-    },
-    organism_adminUpdateMaisonMereAAP: async (
-      _parent: unknown,
-      params: {
-        maisonMereAAPId: string;
-        maisonMereAAPData: {
-          zoneIntervention: {
-            departmentId: string;
-            isOnSite: boolean;
-            isRemote: boolean;
-          }[];
-        };
-      },
-      context: GraphqlContext,
-    ) => {
-      if (
-        context.auth.userInfo?.sub == undefined ||
-        !context.auth.hasRole("admin")
-      ) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return adminUpdateMaisonMereAAP(params);
     },
     organism_createOrUpdateInformationsCommerciales: async (
       _parent: unknown,
@@ -386,34 +349,6 @@ const unsafeResolvers = {
       return result;
     },
 
-    organism_updateOrganismWithMaisonMereAAP: async (
-      _parent: unknown,
-      params: {
-        organismId: string;
-        organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return updateOrganismWithMaisonMereAAPById(
-          {
-            hasRole: context.auth.hasRole,
-            keycloakId: context.auth.userInfo?.sub,
-          },
-          params,
-        );
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
     organism_acceptCgu: async (
       _parent: unknown,
       _: any,
@@ -447,39 +382,6 @@ const unsafeResolvers = {
         degreeIds: params.data.degreeIds,
         domaineIds: params.data.domaineIds,
       }),
-    organism_updateOrganismInterventionZone: async (
-      _parent: unknown,
-      params: {
-        data: UpdateOrganismInterventionZoneInput;
-      },
-      context: GraphqlContext,
-    ) => {
-      if (context.auth.userInfo?.sub == undefined) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
-      }
-
-      const roles = context.auth.userInfo.realm_access?.roles || [];
-      const userKeycloakId = context.auth.userInfo.sub;
-
-      //admin has every rights
-      if (!roles.includes("admin")) {
-        //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
-        if (
-          !isUserGestionnaireMaisonMereAAPOfOrganism({
-            organismId: params.data.organismId,
-            userKeycloakId,
-            userRoles: roles,
-          })
-        ) {
-          throw new Error("Utilisateur non autorisé");
-        }
-      }
-
-      return updateOrganismInterventionZone({ params: params.data });
-    },
     organism_createAccount: async (
       _parent: unknown,
       {

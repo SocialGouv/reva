@@ -5,8 +5,6 @@ import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { selectedDepartmentsToTreeSelectItems } from "@/utils";
-import MaisonMereAAPForm from "@/app/(admin)/maisonMereAAPs/[maisonMereAAPId]/MaisonMereAAPForm";
 import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
@@ -54,15 +52,6 @@ const getMaisonMereAAP = graphql(`
         aapUpdatedDocumentsAt
         decision
         decisionTakenAt
-      }
-      maisonMereAAPOnDepartements {
-        estSurPlace
-        estADistance
-        departement {
-          id
-          label
-          code
-        }
       }
       maisonMereAAPOnConventionCollectives {
         ccn {
@@ -136,14 +125,6 @@ const MaisonMereAAPPage = () => {
     return <></>;
   }
 
-  const selectedOnSiteDepartments = maisonMereAAP.maisonMereAAPOnDepartements
-    .filter((d) => d.estSurPlace)
-    .map((d) => d.departement);
-
-  const selectedRemoteDepartments = maisonMereAAP.maisonMereAAPOnDepartements
-    .filter((d) => d.estADistance)
-    .map((d) => d.departement);
-
   return (
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
@@ -209,18 +190,6 @@ const MaisonMereAAPPage = () => {
             ))}
           </ol>
         </GrayCard>
-        <MaisonMereAAPForm
-          maisonMereAAPId={maisonMereAAP.id}
-          onSiteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedOnSiteDepartments),
-          )}
-          remoteDepartmentsOnRegions={regions.map(
-            selectedDepartmentsToTreeSelectItems(selectedRemoteDepartments),
-          )}
-          statutValidationInformationsJuridiquesMaisonMereAAP={
-            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
-          }
-        />
         {maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
           "EN_ATTENTE_DE_VERIFICATION" &&
           maisonMereAAP.legalInformationDocuments && (

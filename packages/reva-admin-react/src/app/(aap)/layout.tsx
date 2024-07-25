@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -22,7 +21,6 @@ const accountWithMaisonMereQuery = graphql(`
 
 const AapLayout = ({ children }: { children: ReactNode }) => {
   const { isGestionnaireMaisonMereAAP } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
   const { graphqlClient } = useGraphQlClient();
 
   const { data: accountWithMaisonMereResponse } = useQuery({
@@ -37,8 +35,7 @@ const AapLayout = ({ children }: { children: ReactNode }) => {
   if (
     isGestionnaireMaisonMereAAP &&
     accountWithMaisonMereResponse?.account_getAccountForConnectedUser
-      ?.maisonMereAAP?.showAccountSetup &&
-    isFeatureActive("AAP_INTERVENTION_ZONE_UPDATE")
+      ?.maisonMereAAP?.showAccountSetup
   ) {
     return (
       <AccountSetup

@@ -44,7 +44,6 @@ export const useConfiguredMainMachine = () => {
           searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
               pageNumber: context.currentCertificationPageNumber,
-              departementId: context.selectedDepartment?.id || "",
               searchText: context.certificationSearchText,
             });
           },
@@ -121,15 +120,11 @@ export const useConfiguredMainMachine = () => {
               };
             };
             const searchFilter = formatSearchFilter();
-            const isSearchDependentOnDepartment = !searchFilter.zip;
 
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>,
             )({
               candidacyId,
-              departmentId: isSearchDependentOnDepartment
-                ? selectedDepartment?.id
-                : undefined,
               searchText,
               searchFilter,
             });

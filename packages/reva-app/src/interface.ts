@@ -77,7 +77,6 @@ export interface Organism {
   contactAdministrativePhone: string | null;
   label: string;
   website?: string;
-  organismOnDepartments?: OrganismOnDepartment[];
   informationsCommerciales?: OrganismInformationsCommerciales;
   distanceKm?: number;
   isOnSite: boolean;
@@ -102,13 +101,6 @@ type ConformiteNormeAccessibilite =
   | "CONFORME"
   | "NON_CONFORME"
   | "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC";
-
-export interface OrganismOnDepartment {
-  id: string;
-  departmentId: string;
-  isRemote: boolean;
-  isOnSite: boolean;
-}
 
 export interface OrganismForCandidacy {
   candidacyId: string;
