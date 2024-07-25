@@ -76,7 +76,7 @@ export default async function UpdateExperience({
           <label htmlFor="duration" className="fr-label"></label>
 
           <Select
-            label="Durée (optionnel)"
+            label="Durée"
             hint="Pendant combien de temps avez-vous exercé ?"
             nativeSelectProps={{
               required: true,
