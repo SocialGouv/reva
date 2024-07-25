@@ -1,5 +1,4 @@
 import mjml2html from "mjml";
-import { Right } from "purify-ts";
 
 import { sendGenericEmail } from "../../shared/email";
 import { logger } from "../../shared/logger";
@@ -20,7 +19,7 @@ export const notifyNewEmailAddress = async ({ email }: { email: string }) => {
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent.html);
     logger.info("=========================");
-    return Right("ok");
+    return "ok";
   }
 
   return sendGenericEmail({
