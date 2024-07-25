@@ -25,7 +25,7 @@ export const getDroppedOutCandidacyMenu = async ({
 
   const getDropOutMenuEntry = (): CandidacyMenuEntry => ({
     label: "Abandon du candidat confirmé",
-    url: buildUrl({ adminType: "React", suffix: "drop-out" }),
+    url: buildUrl({ suffix: "drop-out" }),
     status: "ACTIVE_WITHOUT_HINT",
   });
 
@@ -44,7 +44,6 @@ export const getDroppedOutCandidacyMenu = async ({
     return {
       label: "Demande de prise en charge",
       url: buildUrl({
-        adminType: "React",
         suffix: "funding",
       }),
       status: editableStatus.includes(
@@ -75,11 +74,9 @@ export const getDroppedOutCandidacyMenu = async ({
 
     const paymentPageUrl = isCandidacyUniReva
       ? buildUrl({
-          adminType: "React",
           suffix: "payment/unireva/invoice",
         })
       : buildUrl({
-          adminType: "React",
           suffix: "payment/unifvae/invoice",
         });
 

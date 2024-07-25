@@ -26,7 +26,7 @@ export const getCandidacyMenu = async ({
     {
       label: "Résumé de la candidature",
       status: "ACTIVE_WITHOUT_HINT",
-      url: buildUrl({ adminType: "React", suffix: "summary" }),
+      url: buildUrl({ suffix: "summary" }),
     },
   ];
 
@@ -34,7 +34,7 @@ export const getCandidacyMenu = async ({
     ? [
         {
           label: "Journal des actions",
-          url: buildUrl({ adminType: "React", suffix: "logs" }),
+          url: buildUrl({ suffix: "logs" }),
           status: "ACTIVE_WITHOUT_HINT",
         },
       ]

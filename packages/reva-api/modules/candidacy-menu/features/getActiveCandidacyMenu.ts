@@ -28,7 +28,7 @@ export const getActiveCandidacyMenu = async ({
 
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",
-    url: buildUrl({ adminType: "React", suffix: "meetings" }),
+    url: buildUrl({ suffix: "meetings" }),
     status:
       activeCandidacyStatus === "PRISE_EN_CHARGE"
         ? "ACTIVE_WITH_EDIT_HINT"
@@ -51,12 +51,10 @@ export const getActiveCandidacyMenu = async ({
 
     if (candidacy.ccnId) {
       trainingUrl = buildUrl({
-        adminType: "React",
         suffix: "training",
       });
     } else if (candidacy.firstAppointmentOccuredAt) {
       trainingUrl = buildUrl({
-        adminType: "React",
         suffix: "typology",
       });
     } else {
@@ -109,8 +107,8 @@ export const getActiveCandidacyMenu = async ({
       url =
         isDematerializedFeasibilityFeatureActive &&
         feasibilityFormat === "DEMATERIALIZED"
-          ? buildUrl({ adminType: "React", suffix: "feasibility-aap" })
-          : buildUrl({ adminType: "React", suffix: "feasibility-aap/pdf" });
+          ? buildUrl({ suffix: "feasibility-aap" })
+          : buildUrl({ suffix: "feasibility-aap/pdf" });
     }
 
     return showFeasibilityEntry
@@ -150,7 +148,6 @@ export const getActiveCandidacyMenu = async ({
     return {
       label: "Demande de prise en charge",
       url: buildUrl({
-        adminType: "React",
         suffix: "funding",
       }),
       status: menuEntryStatus,
@@ -178,7 +175,6 @@ export const getActiveCandidacyMenu = async ({
         : "ACTIVE_WITHOUT_HINT";
 
       url = buildUrl({
-        adminType: "React",
         suffix: "dossier-de-validation-aap",
       });
     }
@@ -219,11 +215,9 @@ export const getActiveCandidacyMenu = async ({
 
     const paymentPageUrl = isCandidacyUniReva
       ? buildUrl({
-          adminType: "React",
           suffix: "payment/unireva/invoice",
         })
       : buildUrl({
-          adminType: "React",
           suffix: "payment/unifvae/invoice",
         });
 
@@ -253,12 +247,12 @@ export const getActiveCandidacyMenu = async ({
     return showNewJuryMenu
       ? {
           label: "Jury",
-          url: buildUrl({ adminType: "React", suffix: "jury-aap" }),
+          url: buildUrl({ suffix: "jury-aap" }),
           status: menuEntryStatus,
         }
       : {
           label: "Jury",
-          url: buildUrl({ adminType: "React", suffix: "exam-info" }),
+          url: buildUrl({ suffix: "exam-info" }),
           status: menuEntryStatus,
         };
   };
