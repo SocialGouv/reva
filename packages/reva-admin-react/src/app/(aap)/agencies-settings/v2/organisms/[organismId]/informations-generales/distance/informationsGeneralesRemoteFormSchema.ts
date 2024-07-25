@@ -23,6 +23,8 @@ export const informationsGeneralesRemoteFormSchema = z
     isRemoteMartinique: z.boolean(),
     isRemoteMayotte: z.boolean(),
     isRemoteLaReunion: z.boolean(),
+    isRemoteSaintPierreEtMiquelon: z.boolean(),
+    isRemoteSainteLucieSaintMartin: z.boolean(),
   })
   .superRefine(
     (

@@ -1,15 +1,14 @@
 "use client";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { RemoteZone } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useInformationsGeneralesRemotePage } from "./informationsGeneralesRemote.hook";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { RemoteZone } from "@/graphql/generated/graphql";
 import {
   InformationsGeneralesRemoteFormData,
   informationsGeneralesRemoteFormSchema,
@@ -44,6 +43,12 @@ const InformationsGeneralesRemotePage = () => {
       isRemoteLaReunion: organism?.remoteZones?.includes("LA_REUNION"),
       isRemoteMartinique: organism?.remoteZones?.includes("MARTINIQUE"),
       isRemoteMayotte: organism?.remoteZones?.includes("MAYOTTE"),
+      isRemoteSaintPierreEtMiquelon: organism?.remoteZones?.includes(
+        "SAINT_PIERRE_ET_MIQUELON",
+      ),
+      isRemoteSainteLucieSaintMartin: organism?.remoteZones?.includes(
+        "SAINTE_LUCIE_SAINT_MARTIN",
+      ),
       isNotRemote: !organism?.isRemote,
     } as InformationsGeneralesRemoteFormData);
   }, [organism, reset]);
@@ -60,6 +65,8 @@ const InformationsGeneralesRemotePage = () => {
         isRemoteLaReunion,
         isRemoteMartinique,
         isRemoteMayotte,
+        isRemoteSaintPierreEtMiquelon,
+        isRemoteSainteLucieSaintMartin,
         ...informationsCommerciales
       } = data;
 
@@ -83,6 +90,12 @@ const InformationsGeneralesRemotePage = () => {
         }
         if (isRemoteMayotte) {
           remoteZones.push("MAYOTTE");
+        }
+        if (isRemoteSaintPierreEtMiquelon) {
+          remoteZones.push("SAINT_PIERRE_ET_MIQUELON");
+        }
+        if (isRemoteSainteLucieSaintMartin) {
+          remoteZones.push("SAINTE_LUCIE_SAINT_MARTIN");
         }
       }
 
@@ -187,13 +200,13 @@ const InformationsGeneralesRemotePage = () => {
                     },
                   },
                   {
-                    label: "Guyane (UTC-4)",
+                    label: "Guyane (UTC-3)",
                     nativeInputProps: {
                       ...register("isRemoteGuyane"),
                     },
                   },
                   {
-                    label: "Martinique (UTC-3)",
+                    label: "Martinique (UTC-4)",
                     nativeInputProps: {
                       ...register("isRemoteMartinique"),
                     },
@@ -208,6 +221,18 @@ const InformationsGeneralesRemotePage = () => {
                     label: "La Réunion (UTC+4)",
                     nativeInputProps: {
                       ...register("isRemoteLaReunion"),
+                    },
+                  },
+                  {
+                    label: "Saint-Pierre-et-Miquelon (UTC-2)",
+                    nativeInputProps: {
+                      ...register("isRemoteSaintPierreEtMiquelon"),
+                    },
+                  },
+                  {
+                    label: "Sainte-Lucie / Saint-Martin (UTC-4)",
+                    nativeInputProps: {
+                      ...register("isRemoteSainteLucieSaintMartin"),
                     },
                   },
                 ]}

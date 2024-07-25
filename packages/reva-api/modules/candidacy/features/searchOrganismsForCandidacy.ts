@@ -1,10 +1,10 @@
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
-import { prismaClient } from "../../../prisma/client";
-import { SearchOrganismFilter } from "../candidacy.types";
-import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 import { camelCase, mapKeys } from "lodash";
+import { prismaClient } from "../../../prisma/client";
+import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
+import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 import { Organism, RemoteZone } from "../../organism/organism.types";
 import { getDepartmentById } from "../../referential/features/getDepartmentById";
+import { SearchOrganismFilter } from "../candidacy.types";
 
 export const searchOrganismsForCandidacy = async ({
   candidacyId,
@@ -253,12 +253,16 @@ const getRemoteZoneFromDepartment = async ({
   switch (departement?.code) {
     case "971":
       return "GUADELOUPE";
+    case "97150":
+      return "SAINTE_LUCIE_SAINT_MARTIN";
     case "972":
       return "MARTINIQUE";
     case "973":
       return "GUYANE";
     case "974":
       return "LA_REUNION";
+    case "975":
+      return "SAINT_PIERRE_ET_MIQUELON";
     case "976":
       return "MAYOTTE";
     default:

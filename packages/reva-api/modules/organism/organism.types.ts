@@ -161,4 +161,6 @@ export type RemoteZone =
   | "GUYANE"
   | "MARTINIQUE"
   | "MAYOTTE"
-  | "LA_REUNION";
+  | "LA_REUNION"
+  | "SAINT_PIERRE_ET_MIQUELON"
+  | "SAINTE_LUCIE_SAINT_MARTIN";

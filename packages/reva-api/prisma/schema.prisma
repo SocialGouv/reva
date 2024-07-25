@@ -430,6 +430,8 @@ enum RemoteZone {
   MARTINIQUE
   MAYOTTE
   LA_REUNION
+  SAINTE_LUCIE_SAINT_MARTIN
+  SAINT_PIERRE_ET_MIQUELON
 }
 
 model OrganismOnRemoteZone {
