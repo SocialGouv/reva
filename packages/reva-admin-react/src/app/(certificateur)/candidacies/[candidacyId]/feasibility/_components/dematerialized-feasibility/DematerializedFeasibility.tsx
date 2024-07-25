@@ -14,7 +14,8 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -48,8 +49,8 @@ export const DematerializedFeasibility = () => {
   const { dematerializedFeasibilityFile, candidacy, feasibility } =
     useDematerializedFeasibility();
   const urqlClient = useUrqlClient();
-  const router = useRouter();
   const decisionHasBeenMade = feasibility?.decision !== "PENDING";
+  const queryClient = useQueryClient();
 
   const defaultValues = useMemo(
     () => ({
@@ -98,7 +99,7 @@ export const DematerializedFeasibility = () => {
         throw new Error(result?.error?.graphQLErrors[0].message);
       }
       successToast("Décision du dossier de faisability envoyée avec succès");
-      router.push(`/candidacies/feasibilities/?CATEGORY=ALL&page=1`);
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
     } catch (e) {
       graphqlErrorToast(e);
     }
