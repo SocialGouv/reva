@@ -346,31 +346,6 @@ export const updateCertification = async (params: {
   }
 };
 
-export const deleteCandidacyFromId = async (id: string) => {
-  try {
-    const { count } = await prismaClient.candidacy.deleteMany({
-      where: {
-        id: id,
-        candidacyStatuses: {
-          some: {
-            status: "ARCHIVE",
-            isActive: true,
-          },
-        },
-      },
-    });
-
-    if (count === 0) {
-      return Right(`Candidature non trouvée.`);
-    } else {
-      return Right(`Candidature supprimée `);
-    }
-  } catch (e) {
-    logger.error(e);
-    return Left(`Candidature non supprimée, ${(e as any).message}`);
-  }
-};
-
 export const updateOrganism = async (params: {
   candidacyId: string;
   organismId: string | null;

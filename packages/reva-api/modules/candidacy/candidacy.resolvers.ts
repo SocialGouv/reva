@@ -26,7 +26,6 @@ import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
-import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAAPsWithZipCode } from "./features/getAAPsWithZipCode";
 import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
@@ -434,36 +433,6 @@ const unsafeResolvers = {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
-    },
-
-    candidacy_deleteById: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext,
-    ) => {
-      const result = await deleteCandidacy({
-        deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
-      })({
-        candidacyId: payload.candidacyId,
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId: payload.candidacyId,
-        context,
-        result: result.map((s) => ({ s })), // typing hack for nothing
-        eventType: CandidacyBusinessEvent.DELETED_CANDIDACY,
-      });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_DELETED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
     },
 
     candidacy_archiveById: async (
