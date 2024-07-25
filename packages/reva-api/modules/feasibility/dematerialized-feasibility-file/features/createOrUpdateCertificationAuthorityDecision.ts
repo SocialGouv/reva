@@ -10,6 +10,13 @@ import { prismaClient } from "../../../../prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId";
+import { CandidacyStatusStep } from "@prisma/client";
+
+const statusDecisionMapper = {
+  ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
+  REJECTED: "DOSSIER_FAISABILITE_NON_RECEVABLE",
+  INCOMPLETE: "DOSSIER_FAISABILITE_INCOMPLET",
+};
 
 export const createOrUpdateCertificationAuthorityDecision = async ({
   candidacyId,
@@ -67,25 +74,41 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
 
     await uploadFilesToS3([fileAndId]);
     const now = new Date().toISOString();
-
-    await prismaClient.feasibility.update({
-      where: {
-        id: feasibility.id,
-      },
-      data: {
-        decision,
-        decisionComment,
-        decisionSentAt: now,
-        decisionFile: {
-          create: {
-            id: fileId,
-            path: fileAndId.filePath,
-            name: fileAndId.name,
-            mimeType: fileAndId.mimeType,
+    await prismaClient.$transaction([
+      prismaClient.feasibility.update({
+        where: {
+          id: feasibility.id,
+        },
+        data: {
+          decision,
+          decisionComment,
+          decisionSentAt: now,
+          decisionFile: {
+            create: {
+              id: fileId,
+              path: fileAndId.filePath,
+              name: fileAndId.name,
+              mimeType: fileAndId.mimeType,
+            },
           },
         },
-      },
-    });
+      }),
+      prismaClient.candidaciesStatus.updateMany({
+        where: {
+          candidacyId: candidacyId,
+        },
+        data: {
+          isActive: false,
+        },
+      }),
+      prismaClient.candidaciesStatus.create({
+        data: {
+          status: statusDecisionMapper[decision] as CandidacyStatusStep,
+          isActive: true,
+          candidacyId,
+        },
+      }),
+    ]);
 
     return getDematerializedFeasibilityFileByCandidacyId({
       candidacyId,
