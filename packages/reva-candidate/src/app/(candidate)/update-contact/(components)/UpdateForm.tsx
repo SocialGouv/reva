@@ -15,7 +15,6 @@ const modalUpdateEmail = createModal({
 
 const initialState: Awaited<ReturnType<typeof updateContact>> = {
   errors: {},
-  success: false,
 }
 
 export default function UpdateForm({
@@ -32,14 +31,10 @@ export default function UpdateForm({
       if (!isModalOpen) return;
       setTimeout(() => {
         router.push("/");
+        router.refresh();
       }, 300);
     },
   });
-
-  if (state.success && !isModalOpen) {
-    router.push("/");
-    return;
-  }
 
   return (
     <>
@@ -55,6 +50,7 @@ export default function UpdateForm({
         <fieldset>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <input type="hidden" name="candidateId" value={candidate.id} />
+            <input type="hidden" name="initialEmail" value={candidate.email} />
             <Input
               label="Prénom"
               state={state?.errors?.firstname ? "error" : "default"}

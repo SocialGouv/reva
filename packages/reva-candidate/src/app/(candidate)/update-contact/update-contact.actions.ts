@@ -4,6 +4,7 @@ import { graphql } from "@/graphql/generated";
 
 import { getGraphQlClient } from "@/utils/graphql-client-server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const UPDATE_CONTACT = graphql(`
   mutation update_contact(
@@ -26,7 +27,6 @@ const UPDATE_CONTACT = graphql(`
 export const updateContact = async (prevState: unknown, formData: FormData) => {
   const graphqlClient = getGraphQlClient();
 
-  let success = false;
   const errors: Record<string, string> = {};
 
   const candidateId = formData.get("candidateId") as string;
@@ -36,6 +36,8 @@ export const updateContact = async (prevState: unknown, formData: FormData) => {
     phone: formData.get("phone") as string,
     email: formData.get("email") as string,
   };
+
+  const initialEmail = formData.get("initialEmail") as string
 
   if (!candidateData.email) {
     errors["email"] = "Email is required";
@@ -50,19 +52,18 @@ export const updateContact = async (prevState: unknown, formData: FormData) => {
     errors["phone"] = "Phone is required";
   }
 
-  console.log('errors', errors);
-
   if (Object.keys(errors).length === 0) {
     await graphqlClient.request(UPDATE_CONTACT, {
       candidateId,
       candidateData,
     });
-    success = true;
-    revalidatePath("/");
+    if (initialEmail === candidateData.email) {
+      revalidatePath("/");
+      redirect("/");
+    }
   }
 
   return {
     errors,
-    success,
   };
 };
