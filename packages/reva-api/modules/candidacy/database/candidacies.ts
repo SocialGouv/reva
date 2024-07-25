@@ -4,7 +4,6 @@ import { Either, Left, Maybe, Right } from "purify-ts";
 import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
 import * as domain from "../candidacy.types";
-import { toDomainExperiences } from "./experiences";
 
 export const candidacyIncludes = {
   experiences: true,
@@ -241,7 +240,7 @@ export const updateCandidacyStatus = async (params: {
         codeRncp: certificationAndRegion?.certification.rncpId,
       },
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -332,7 +331,7 @@ export const updateCertification = async (params: {
       certificationId: certificationAndRegion?.certification.id,
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -410,7 +409,7 @@ export const updateOrganism = async (params: {
       certificationId: certificationAndRegion?.certification.id,
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
@@ -501,7 +500,7 @@ export const updateTrainingInformations = async (params: {
       certificationId: certificationAndRegion?.certification.id,
       certification: certificationAndRegion?.certification,
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,

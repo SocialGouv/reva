@@ -2,7 +2,6 @@ import { getCandidacyById } from "./getCandidacyById";
 import { getReorientationReasonById } from "../../referential/features/getReorientationReasonById";
 import { prismaClient } from "../../../prisma/client";
 import { candidacyIncludes } from "../database/candidacies";
-import { toDomainExperiences } from "../database/experiences";
 import { logger } from "../../shared/logger";
 import {
   FunctionalCodeError,
@@ -55,7 +54,7 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
         throw new Error(
           `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide`,
         );
-      } 
+      }
     } catch (error) {
       throw new Error(
         `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide: ${error}`,
@@ -116,7 +115,7 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
       },
       reorientationReasonId: newCandidacy.reorientationReasonId,
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,

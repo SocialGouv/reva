@@ -1,7 +1,11 @@
-import { type Experience } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
-import * as domain from "../candidacy.types";
-import { isAfter, addMonths, isBefore, startOfToday, startOfDay } from "date-fns";
+import {
+  isAfter,
+  addMonths,
+  isBefore,
+  startOfToday,
+  startOfDay,
+} from "date-fns";
 
 export const candidacyIncludes = {
   experiences: true,
@@ -34,20 +38,6 @@ export const candidacyIncludes = {
   },
   reorientationReason: true,
   ccn: true,
-};
-
-export const toDomainExperiences = (
-  experiences: Experience[],
-): domain.Experience[] => {
-  return experiences.map((xp) => {
-    return {
-      id: xp.id,
-      title: xp.title,
-      startedAt: xp.startedAt,
-      duration: xp.duration,
-      description: xp.description,
-    };
-  });
 };
 
 export const updateAppointmentInformations = async (params: {
@@ -127,7 +117,7 @@ export const updateAppointmentInformations = async (params: {
     certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
     certification: candidaciesOnRegionsAndCertifications?.certification,
     organismId: updatedCandidacy.organismId,
-    experiences: toDomainExperiences(updatedCandidacy.experiences),
+    experiences: updatedCandidacy.experiences,
     phone: updatedCandidacy.candidate?.phone || null,
     email: updatedCandidacy.candidate?.email || updatedCandidacy.email,
     typology: updatedCandidacy.typology,

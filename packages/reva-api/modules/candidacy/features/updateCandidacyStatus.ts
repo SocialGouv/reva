@@ -4,7 +4,6 @@ import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
 import * as domain from "../candidacy.types";
 import { candidacyIncludes } from "../database/candidacies";
-import { toDomainExperiences } from "../database/experiences";
 
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
@@ -61,7 +60,7 @@ export const updateCandidacyStatus = async (params: {
         codeRncp: certificationAndRegion?.certification.rncpId,
       },
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,

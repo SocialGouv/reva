@@ -2,10 +2,7 @@ import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { CandidacyStatusStep } from "@prisma/client";
 import { logger } from "../../../modules/shared/logger";
 import { prismaClient } from "../../../prisma/client";
-import {
-  candidacyIncludes,
-  toDomainExperiences,
-} from "./updateAppointmentInformations";
+import { candidacyIncludes } from "./updateAppointmentInformations";
 import { getCandidacyById } from "./getCandidacyById";
 
 interface UnarchiveCandidacyParams {
@@ -114,7 +111,7 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
         codeRncp: certificationAndRegion?.certification.rncpId,
       },
       organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+      experiences: newCandidacy.experiences,
       phone: newCandidacy.candidate?.phone || null,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,

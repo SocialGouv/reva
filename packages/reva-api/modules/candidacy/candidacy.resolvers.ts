@@ -22,7 +22,6 @@ import {
   SearchOrganismFilter,
 } from "./candidacy.types";
 import * as candidacyDb from "./database/candidacies";
-import * as experienceDb from "./database/experiences";
 import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
@@ -341,40 +340,15 @@ const unsafeResolvers = {
       _: unknown,
       payload: any,
       context: GraphqlContext,
-    ) => {
-      const result = await addExperienceToCandidacy({
-        createExperience: experienceDb.insertExperience,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
+    ) =>
+      addExperienceToCandidacy({
         candidacyId: payload.candidacyId,
         experience: payload.experience,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-      logCandidacyEventUsingPurify({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.ADDED_EXPERIENCE,
-        extraInfo: result.isRight()
-          ? {
-              experienceId: result.extract().id,
-            }
-          : undefined,
-        context,
-        result,
-      });
+      }),
 
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "EXPERIENCE_ADDED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
     candidacy_updateExperience: async (
       _: unknown,
       payload: any,
