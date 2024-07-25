@@ -69,24 +69,6 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getAdmissibilityMenuEntry = (): CandidacyMenuEntry | undefined => {
-    const showAdmissibilityEntry =
-      candidacy.organism?.typology === "experimentation";
-
-    const menuEntryStatus: CandidacyMenuEntryStatus =
-      activeCandidacyStatus === "PARCOURS_CONFIRME"
-        ? "ACTIVE_WITH_EDIT_HINT"
-        : "ACTIVE_WITHOUT_HINT";
-
-    return showAdmissibilityEntry
-      ? {
-          label: "Gestion de la recevabilité",
-          url: buildUrl({ adminType: "Elm", suffix: "admissibility" }),
-          status: menuEntryStatus,
-        }
-      : undefined;
-  };
-
   const getFeasibilityMenuEntry = async ({
     userKeycloakId,
     feasibilityFormat,
@@ -285,7 +267,6 @@ export const getActiveCandidacyMenu = async ({
     getMeetingsMenuEntry(),
     getTrainingMenuEntry(),
     getTrainingValidationMenuEntry(),
-    getAdmissibilityMenuEntry(),
     await getFeasibilityMenuEntry({
       userKeycloakId,
       feasibilityFormat: candidacy.feasibilityFormat,
