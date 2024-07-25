@@ -1,6 +1,5 @@
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
-import { Left } from "purify-ts";
 
 import {
   FunctionalCodeError,
@@ -38,31 +37,11 @@ export const resolvers = {
       },
     ) => {
       if (!context.auth.hasRole("admin")) {
-        return Left(
-          new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          ),
-        )
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error),
-          )
-          .extract();
+        throw new Error("Not authorized");
       }
-
-      try {
-        return createAccount({
-          ...params.account,
-        });
-      } catch (e) {
-        logger.error(e);
-
-        if (e instanceof Error) {
-          throw new mercurius.ErrorWithProps(e.message, e);
-        } else {
-          throw new mercurius.ErrorWithProps("unknown error");
-        }
-      }
+      return createAccount({
+        ...params.account,
+      });
     },
     account_updateAccount: async (
       _parent: unknown,
