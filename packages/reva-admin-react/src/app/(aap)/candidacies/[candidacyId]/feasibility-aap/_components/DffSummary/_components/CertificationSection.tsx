@@ -41,6 +41,7 @@ export default function CertificationSection({
       ),
     };
   }, [prerequisites]);
+  const noPrerequisites = !prerequisites?.length;
 
   return (
     <div>
@@ -94,6 +95,9 @@ export default function CertificationSection({
       </div>
       <h5 className="mb-0">Prérequis obligatoires</h5>
       <div className="mb-8 mt-4">
+        {noPrerequisites && (
+          <p>Aucun prérequis n'est requis pour cette certification.</p>
+        )}
         {!!prequisitesByStatus?.acquired?.length && (
           <Accordion label="Acquis" defaultExpanded>
             <ul>
