@@ -80,7 +80,7 @@ export const AAPNotVisibleInSearchResultNotice = () => {
               </strong>{" "}
               Pour y apparaître, gérez votre compte depuis les{" "}
               <Link
-                href="/agencies-settings/v2/legal-information"
+                href="/agencies-settings/legal-information"
                 className="fr-notice__link"
               >
                 Paramètres

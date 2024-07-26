@@ -62,7 +62,7 @@ const AddAgencyPage = () => {
     try {
       await createAgency.mutateAsync(organismData);
       successToast("Modifications enregistrées");
-      router.push("/agencies-settings/v2/legal-information/");
+      router.push("/agencies-settings/legal-information/");
     } catch (e) {
       graphqlErrorToast(e);
     }

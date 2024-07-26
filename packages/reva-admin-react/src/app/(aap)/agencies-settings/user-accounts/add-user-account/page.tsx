@@ -1,70 +1,36 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useParams, useRouter } from "next/navigation";
-import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
 import {
   UserAccountForm,
   UserAccountFormData,
 } from "../_components/UserAccountForm";
+import { useAddUserAccountPage } from "./addUserAccount.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
-const UpdateUserAccountPage = () => {
-  const { userAccountId } = useParams<{ userAccountId: string }>();
+const AddUserAccountPage = () => {
+  const { headAgency, nonHeadAgencies, createUserAccount } =
+    useAddUserAccountPage();
   const router = useRouter();
-  const {
-    userAccount,
-    headAgency,
-    nonHeadAgencies,
-    agenciesInfoStatus,
-    updateUserAccount,
-  } = useUpdateUserAccountPage({ userAccountId });
 
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
-      await updateUserAccount.mutateAsync({
-        accountId: userAccountId,
+      await createUserAccount.mutateAsync({
         accountEmail: data.email,
         accountFirstname: data.firstname,
         accountLastname: data.lastname,
         organismId: data.organismId,
       });
       successToast("Modification enregistrées");
-      router.push("/agencies-settings/v2/legal-information");
+      router.push("/agencies-settings/legal-information");
     } catch (e) {
       graphqlErrorToast(e);
     }
   };
-
-  const defaultValues = useMemo(
-    () => ({
-      email: userAccount?.email || "",
-      firstname: userAccount?.firstname || "",
-      lastname: userAccount?.lastname || "",
-      organismId: userAccount?.organism?.id,
-      modalitesAccompagnement: userAccount?.organism?.isHeadAgency
-        ? ("REMOTE" as const)
-        : ("ONSITE" as const),
-    }),
-    [
-      userAccount?.email,
-      userAccount?.firstname,
-      userAccount?.lastname,
-      userAccount?.organism?.id,
-      userAccount?.organism?.isHeadAgency,
-    ],
-  );
-
-  if (agenciesInfoStatus !== "success") {
-    return null;
-  }
-
   return (
     <div className="w-full flex flex-col">
-      <h1 className="mb-12">
-        {userAccount?.firstname} {userAccount?.lastname}
-      </h1>
+      <h1 className="mb-12">Ajout d’un compte collaborateur</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
         Le collaborateur ajouté recevra un mail afin de créer son compte. Il
@@ -73,8 +39,6 @@ const UpdateUserAccountPage = () => {
       </p>
       <UserAccountForm
         onSubmit={handleFormSubmit}
-        defaultValues={defaultValues}
-        emailFieldDisabled
         remoteAgency={{
           id: headAgency?.id,
           label:
@@ -91,4 +55,4 @@ const UpdateUserAccountPage = () => {
   );
 };
 
-export default UpdateUserAccountPage;
+export default AddUserAccountPage;

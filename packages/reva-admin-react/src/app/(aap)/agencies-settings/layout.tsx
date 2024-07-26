@@ -69,16 +69,16 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   }) => [
     getNavItem({
       text: "Informations générales",
-      href: `/agencies-settings/v2/organisms/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
+      href: `/agencies-settings/organisms/${organismId}/informations-generales/${organismType === "ONSITE" ? "sur-site" : "distance"}`,
     }),
 
     getNavItem({
       text: "Filières, branches et niveaux",
-      href: `/agencies-settings/v2/organisms/${organismId}/certifications`,
+      href: `/agencies-settings/organisms/${organismId}/certifications`,
     }),
     getNavItem({
       text: "Visibilité dans les recherches",
-      href: `/agencies-settings/v2/organisms/${organismId}/absence`,
+      href: `/agencies-settings/organisms/${organismId}/absence`,
     }),
   ];
 
@@ -87,12 +87,12 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
       "before:content-[''] before:absolute before:top-[0.75rem] before:bottom-[0.75rem] before:bg-dsfr-blue-france-sun-113 before:w-[2px] before:left-0 text-dsfr-blue-france-sun-113";
 
     const isOrgansismSelected = ({ organismId }: { organismId: string }) => {
-      const href = `/agencies-settings/v2/organisms/${organismId}`;
+      const href = `/agencies-settings/organisms/${organismId}`;
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
     const isUserAccountSelected = ({ accountId }: { accountId: string }) => {
-      const href = `/agencies-settings/v2/user-accounts/${accountId}`;
+      const href = `/agencies-settings/user-accounts/${accountId}`;
       return !!currentPathname.match(new RegExp(`^${href}.*$`));
     };
 
@@ -157,7 +157,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: "/agencies-settings/v2/organisms/add-agency/",
+              href: "/agencies-settings/organisms/add-agency/",
               target: "_self",
             },
             text: (
@@ -188,7 +188,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
               return {
                 text: `${a?.firstname}  ${a?.lastname}`,
                 linkProps: {
-                  href: `/agencies-settings/v2/user-accounts/${a.id}/`,
+                  href: `/agencies-settings/user-accounts/${a.id}/`,
                   className: `fr-sidemenu__btn bg-transparent ${
                     isUserAccountSelected({ accountId: a.id })
                       ? selectedItemStyle
@@ -200,7 +200,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: "/agencies-settings/v2/user-accounts/add-user-account/",
+              href: "/agencies-settings/user-accounts/add-user-account/",
               target: "_self",
             },
             text: (
@@ -234,7 +234,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
           items={[
             getNavItem({
               text: "Informations juridiques",
-              href: "/agencies-settings/v2/legal-information",
+              href: "/agencies-settings/legal-information",
             }),
             ...getNavItems(),
           ]}
