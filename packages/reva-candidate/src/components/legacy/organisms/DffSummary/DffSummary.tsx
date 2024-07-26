@@ -40,8 +40,6 @@ export function DffSummary() {
     sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
-    // swornStatementFile,
-    // attachments,
   } = dematerializedFeasibilityFile;
 
   const {
