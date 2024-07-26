@@ -38,24 +38,28 @@ const CandidacySectionCard = ({
   return (
     <GrayCard>
       <div className="flex justify-between items-center w-full mb-5">
-        <div className="flex items-center gap-4">
-          <h4 className={`mb-0 ${disabled ? "text-neutral-400" : ""}`}>
+        <div className="flex items-center gap-4 w-full">
+          <h4
+            className={`mb-0 sm:whitespace-nowrap ${disabled ? "text-neutral-400" : ""}`}
+          >
             {titleIconClass && (
               <span className={`fr-icon fr-icon--lg ${titleIconClass} mr-2`} />
             )}
             {title}
           </h4>
-          {!disabled && badge}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 sm:w-full">
+            <div>{!disabled && badge}</div>
+            {hasButton && (
+              <Button
+                onClick={buttonOnClick}
+                priority={buttonPriority}
+                disabled={disabled}
+              >
+                {buttonTitle}
+              </Button>
+            )}
+          </div>
         </div>
-        {hasButton && (
-          <Button
-            onClick={buttonOnClick}
-            priority={buttonPriority}
-            disabled={disabled}
-          >
-            {buttonTitle}
-          </Button>
-        )}
       </div>
       {children}
     </GrayCard>

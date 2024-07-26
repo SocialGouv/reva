@@ -7,7 +7,7 @@ export const GrayCard = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <li className={`bg-neutral-100 p-6 flex flex-col ${className || ""}`}>
+  <li className={`bg-neutral-100 p-4 sm:p-6 flex flex-col ${className || ""}`}>
     {children}
   </li>
 );
