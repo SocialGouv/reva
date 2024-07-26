@@ -19,7 +19,7 @@ export const PrerequisiteInput = ({
   return (
     <div>
       <Input
-        label="Intitulé du pré-requis :"
+        label="Intitulé du prérequis :"
         nativeTextAreaProps={register(`prerequisites.${index}.label`)}
         state={errorLabel ? "error" : "default"}
         stateRelatedMessage={errorLabel}

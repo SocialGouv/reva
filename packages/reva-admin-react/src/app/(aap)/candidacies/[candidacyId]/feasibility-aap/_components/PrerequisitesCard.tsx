@@ -30,7 +30,7 @@ export const PrerequisitesCard = ({
 
   return (
     <DefaultCandidacySectionCard
-      title="Pré-requis obligatoires"
+      title="Prérequis obligatoires"
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       isEditable

@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Notice from "@codegouvfr/react-dsfr/Notice";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import Select from "@codegouvfr/react-dsfr/Select";
 
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
@@ -16,8 +16,8 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
 
-import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
+import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 
 const schema = z.object({
   feasibilityFile: z.object({
@@ -189,7 +189,7 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
         />
         <FancyUpload
           title="Joindre une autre pièce (optionnel)"
-          description="Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée."
+          description="Attestation ou certificat de suivi de formation dans le cas du prérequis demandé par la certification visée."
           hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
           nativeInputProps={{
             ...register("certificateOfAttendanceFile"),

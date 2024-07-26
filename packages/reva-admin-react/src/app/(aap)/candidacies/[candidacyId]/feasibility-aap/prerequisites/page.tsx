@@ -75,7 +75,7 @@ export default function PrerequisitesPage() {
   const handleFormSubmit = handleSubmit(async (data) => {
     if (!data.hasNoPrerequisites && !data.prerequisites.length) {
       setError("hasNoPrerequisites", {
-        message: "Vous devez cocher la case si aucun pré-requis n'est requis",
+        message: "Vous devez cocher la case si aucun prérequis n'est requis",
       });
       return;
     }
@@ -117,10 +117,10 @@ export default function PrerequisitesPage() {
 
   return (
     <div className="flex flex-col">
-      <h1>Pré-requis</h1>
+      <h1>Prérequis</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Renseignez les pré-requis liés à l'entrée en VAE et à la certification.
+        Renseignez les prérequis liés à l'entrée en VAE et à la certification.
       </p>
       <p className="text-xl font-bold mb-0">Rajouter le lien espace docu ici</p>
       <form
@@ -136,7 +136,7 @@ export default function PrerequisitesPage() {
           stateRelatedMessage={errors.hasNoPrerequisites?.message}
           options={[
             {
-              label: "Il n'y a pas de pré-requis pour cette certification.",
+              label: "Il n'y a pas de prérequis pour cette certification.",
               nativeInputProps: {
                 ...register("hasNoPrerequisites"),
                 onChange: handleCheckboxChange,
@@ -175,7 +175,7 @@ export default function PrerequisitesPage() {
               }}
             >
               <span className="fr-icon-add-line fr-icon--sm" />
-              <span className="text-sm">Ajouter un pré-requis</span>
+              <span className="text-sm">Ajouter un prérequis</span>
             </div>
           </div>
         )}

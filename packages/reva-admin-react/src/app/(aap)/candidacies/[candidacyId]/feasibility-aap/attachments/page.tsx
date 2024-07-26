@@ -247,7 +247,7 @@ export default function AttachmentsPage() {
           <FancyUpload
             className="col-span-2"
             title="Attestation ou certificat de formation (optionnel)"
-            description="Attestation ou certificat de suivi de formation justifiant du pré-requis demandé par la certification visée."
+            description="Attestation ou certificat de suivi de formation justifiant du prérequis demandé par la certification visée."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             defaultFile={trainingCertificateDefaultFile}
             nativeInputProps={{
