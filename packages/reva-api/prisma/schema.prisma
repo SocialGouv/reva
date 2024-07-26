@@ -312,7 +312,7 @@ model Region {
 model Department {
   id                                             String                                           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                          String                                           @unique @db.VarChar(255)
-  code                                           String                                           @unique @db.VarChar(3)
+  code                                           String                                           @unique @db.VarChar(5)
   region                                         Region                                           @relation(fields: [regionId], references: [id])
   regionId                                       String                                           @map("region_id") @db.Uuid
   candidacies                                    Candidacy[]
