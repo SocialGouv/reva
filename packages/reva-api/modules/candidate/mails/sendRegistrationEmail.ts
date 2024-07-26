@@ -1,6 +1,6 @@
 import mjml2html from "mjml";
 
-import { sendEmailWithLinkPurifyJS, templateMail } from "../../shared/email";
+import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendRegistrationEmail = async (email: string, token: string) => {
   const htmlContent = (url: string) =>
@@ -27,8 +27,8 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
       }),
     );
 
-  return sendEmailWithLinkPurifyJS({
-    email,
+  return sendEmailWithLink({
+    to: { email },
     subject:
       "Votre compte France VAE est créé, vous pouvez commencer votre parcours",
     token,

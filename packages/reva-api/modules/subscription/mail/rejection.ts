@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
 import { Left, Right } from "purify-ts";
 
-import { sendGenericEmailPurifyJS } from "../../shared/email";
+import { sendGenericEmail } from "../../shared/email";
 import { logger } from "../../shared/logger";
 import { template } from "./template";
 
@@ -46,7 +46,7 @@ export const sendRejectionEmail = async ({
     logger.info("=========================");
     return Right("ok");
   }
-  return sendGenericEmailPurifyJS({
+  return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Nous n’avons pas pu valider votre référencement...",

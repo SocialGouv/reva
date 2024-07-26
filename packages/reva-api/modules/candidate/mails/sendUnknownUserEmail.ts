@@ -1,5 +1,5 @@
 import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
-import { sendGenericEmailPurifyJS } from "../../shared/email";
+import { sendGenericEmail } from "../../shared/email";
 
 export const sendUnknownUserEmail = async (email: string) => {
   const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
@@ -15,7 +15,7 @@ export const sendUnknownUserEmail = async (email: string) => {
     <br>
     L’équipe France VAE`;
 
-  return sendGenericEmailPurifyJS({
+  return sendGenericEmail({
     htmlContent: htmlContent,
     to: { email },
     subject:

@@ -1,6 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import mercurius from "mercurius";
-import { Right } from "purify-ts";
+import { Left, Right } from "purify-ts";
 
 import { prismaClient } from "../../prisma/client";
 import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
@@ -98,7 +98,10 @@ const unsafeResolvers = {
         generateJWTForRegistration: async (data: unknown) =>
           Right(generateJwt(data, 3 * 60 * 60)),
         sendRegistrationEmail: async (data) =>
-          sendRegistrationEmail(data.email, data.token),
+          sendRegistrationEmail(data.email, data.token).then(
+            (r) => Right(r),
+            (e) => Left(e.message),
+          ),
       })(params.candidate);
 
       return result
@@ -134,8 +137,16 @@ const unsafeResolvers = {
         doesUserExists,
         generateJWTForLogin: async (data: unknown) =>
           Right(generateJwt(data, 1 * 60 * 60)),
-        sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),
-        sendUnknownUserEmail: async (data) => sendUnknownUserEmail(data.email),
+        sendLoginEmail: async (data) =>
+          sendLoginEmail(data.email, data.token).then(
+            (r) => Right(r),
+            (e) => Left(e.message),
+          ),
+        sendUnknownUserEmail: async (data) =>
+          sendUnknownUserEmail(data.email).then(
+            (r) => Right(r),
+            (e) => Left(e.message),
+          ),
       })(params.email);
 
       return result
