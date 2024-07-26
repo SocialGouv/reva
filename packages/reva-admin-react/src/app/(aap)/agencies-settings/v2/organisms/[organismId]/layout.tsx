@@ -33,7 +33,11 @@ const OrganismDetailsLayout = ({ children }: { children: ReactNode }) => {
   const { isGestionnaireMaisonMereAAP } = useAuth();
 
   const { data: getOrganismResponse, status: getOrganismStatus } = useQuery({
-    queryKey: ["organisms", "agencies-settings-aap-organism-layout"],
+    queryKey: [
+      organismId,
+      "organisms",
+      "agencies-settings-aap-organism-layout",
+    ],
     queryFn: () => graphqlClient.request(getOrganismQuery, { organismId }),
   });
 

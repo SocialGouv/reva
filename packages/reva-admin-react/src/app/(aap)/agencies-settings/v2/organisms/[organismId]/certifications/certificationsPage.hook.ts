@@ -69,11 +69,7 @@ export const useCertificationsPage = () => {
     referentialResponse?.getConventionCollectives || [];
   const domaines = referentialResponse?.getDomaines || [];
 
-  const {
-    data: organismResponse,
-    status: organismStatus,
-    refetch: refetchOrganism,
-  } = useQuery({
+  const { data: organismResponse, status: organismStatus } = useQuery({
     queryKey: [organismId, "organism"],
     queryFn: () => graphqlClient.request(organismQuery, { organismId }),
   });
@@ -119,7 +115,6 @@ export const useCertificationsPage = () => {
     organismConventionCollectives,
     organismTypology,
     organismStatus,
-    refetchOrganism,
     updateOrganismDegreesAndDomaines,
   };
 };

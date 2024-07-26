@@ -32,12 +32,8 @@ export const useAbsencePage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { organismId } = useParams<{ organismId: string }>();
 
-  const {
-    data: organismResponse,
-    status: organismQueryStatus,
-    refetch: refetchOrganism,
-  } = useQuery({
-    queryKey: ["organism_absence_page"],
+  const { data: organismResponse, status: organismQueryStatus } = useQuery({
+    queryKey: [organismId, "organisms", "organism_absence_page"],
     queryFn: () => graphqlClient.request(organismQuery, { organismId }),
   });
 
@@ -60,7 +56,6 @@ export const useAbsencePage = () => {
   return {
     organism,
     organismQueryStatus,
-    refetchOrganism,
     updateFermePourAbsenceOuConges,
   };
 };

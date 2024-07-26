@@ -12,14 +12,16 @@ import {
   InformationsGeneralesOnSiteFormData,
   informationsGeneralesOnSiteFormSchema,
 } from "./informationsGeneralesOnSiteFormSchema";
+import { useQueryClient } from "@tanstack/react-query";
 
 const InformationsGeneralesOnSitePage = () => {
   const {
     organism,
     getOrganismStatus,
-    refetchOrganism,
     createOrUpdateInformationsCommercialesOnSiteStatus,
   } = useInformationsGeneralesOnSitePage();
+
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -45,8 +47,10 @@ const InformationsGeneralesOnSitePage = () => {
         organismId: organism?.id,
         informationsCommerciales: data,
       });
+      queryClient.invalidateQueries({
+        queryKey: [organism?.id],
+      });
       successToast("modifications enregistrées");
-      await refetchOrganism();
     } catch (e) {
       graphqlErrorToast(e);
     }

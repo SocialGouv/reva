@@ -13,15 +13,16 @@ import {
   InformationsGeneralesRemoteFormData,
   informationsGeneralesRemoteFormSchema,
 } from "./informationsGeneralesRemoteFormSchema";
+import { useQueryClient } from "@tanstack/react-query";
 
 const InformationsGeneralesRemotePage = () => {
   const {
     organism,
     getOrganismStatus,
-    refetchOrganism,
     createOrUpdateInformationsCommercialesAndRemoteStatus,
   } = useInformationsGeneralesRemotePage();
 
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -105,8 +106,10 @@ const InformationsGeneralesRemotePage = () => {
         remoteZones,
         informationsCommerciales,
       });
+      queryClient.invalidateQueries({
+        queryKey: [organism?.id],
+      });
       successToast("modifications enregistrées");
-      await refetchOrganism();
     } catch (e) {
       graphqlErrorToast(e);
     }

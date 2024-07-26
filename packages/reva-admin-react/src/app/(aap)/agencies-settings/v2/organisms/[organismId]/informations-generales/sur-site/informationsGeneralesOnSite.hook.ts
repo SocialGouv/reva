@@ -51,11 +51,7 @@ export const useInformationsGeneralesOnSitePage = () => {
 
   const { organismId } = useParams<{ organismId: string }>();
 
-  const {
-    data: getOrganismResponse,
-    status: getOrganismStatus,
-    refetch: refetchOrganism,
-  } = useQuery({
+  const { data: getOrganismResponse, status: getOrganismStatus } = useQuery({
     queryKey: [organismId, "organism"],
     queryFn: () =>
       graphqlClient.request(getOrganismQuery, {
@@ -86,14 +82,13 @@ export const useInformationsGeneralesOnSitePage = () => {
         },
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organisms"] });
+      queryClient.invalidateQueries({ queryKey: [organismId, "organisms"] });
     },
   });
 
   return {
     organism,
     getOrganismStatus,
-    refetchOrganism,
     createOrUpdateInformationsCommercialesOnSiteStatus,
   };
 };

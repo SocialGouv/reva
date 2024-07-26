@@ -9,6 +9,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCertificationsPage } from "./certificationsPage.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   organismDegrees: z
@@ -36,9 +37,10 @@ const CertificationsPage = () => {
     organismDomaines,
     organismTypology,
     organismStatus,
-    refetchOrganism,
     updateOrganismDegreesAndDomaines,
   } = useCertificationsPage();
+
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -109,8 +111,10 @@ const CertificationsPage = () => {
         .filter((od) => od.checked)
         .map((od) => od.id),
     });
+    queryClient.invalidateQueries({
+      queryKey: [organismId],
+    });
     successToast("modifications enregistrées");
-    await refetchOrganism();
   });
 
   return (

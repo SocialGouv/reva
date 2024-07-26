@@ -8,6 +8,7 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useAbsencePage } from "./absencePage.hook";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   structureVisible: z.enum(["oui", "non"]),
@@ -16,12 +17,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const AbsencePage = () => {
-  const {
-    organism,
-    organismQueryStatus,
-    refetchOrganism,
-    updateFermePourAbsenceOuConges,
-  } = useAbsencePage();
+  const { organism, organismQueryStatus, updateFermePourAbsenceOuConges } =
+    useAbsencePage();
+
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -47,8 +46,10 @@ const AbsencePage = () => {
       organismId: organism?.id,
       fermePourAbsenceOuConges: data.structureVisible === "non",
     });
+    queryClient.invalidateQueries({
+      queryKey: [organism?.id],
+    });
     successToast("modifications enregistrées");
-    await refetchOrganism();
   });
 
   if (organismQueryStatus !== "success" || !organism) {
