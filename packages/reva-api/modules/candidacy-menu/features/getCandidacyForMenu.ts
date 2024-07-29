@@ -11,6 +11,7 @@ export const getCandidacyForMenu = ({ candidacyId }: { candidacyId: string }) =>
         Feasibility: true,
         organism: true,
         candidacyDropOut: true,
+        candidate: true,
       },
     })
     .catch(() => {

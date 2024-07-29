@@ -1,6 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -11,10 +10,10 @@ import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqu
 
 export const getActiveCandidacyMenu = async ({
   candidacy,
-  userKeycloakId,
+  isCandidateSummaryComplete,
 }: {
   candidacy: CandidacyForMenu;
-  userKeycloakId?: string;
+  isCandidateSummaryComplete: boolean;
 }) => {
   const activeCandidacyStatus = candidacy.candidacyStatuses.find(
     (status) => status.isActive,
@@ -68,29 +67,27 @@ export const getActiveCandidacyMenu = async ({
   };
 
   const getFeasibilityMenuEntry = async ({
-    userKeycloakId,
     feasibilityFormat,
+    isCandidateSummaryComplete,
   }: {
-    userKeycloakId?: string;
     feasibilityFormat: "UPLOADED_PDF" | "DEMATERIALIZED";
+    isCandidateSummaryComplete: boolean;
   }): Promise<CandidacyMenuEntry | undefined> => {
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
 
     const showFeasibilityEntry =
       candidacy.organism?.typology !== "experimentation";
 
-    const isDematerializedFeasibilityFeatureActive =
-      await isFeatureActiveForUser({
-        userKeycloakId,
-        feature: "DEMATERIALIZED_FEASIBILITY",
-      });
-
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
     const editableStatus: CandidacyStatusStep[] = [
       "PARCOURS_CONFIRME",
       "DOSSIER_FAISABILITE_INCOMPLET",
     ];
-    if (
+    const isDfDematerialized = feasibilityFormat === "DEMATERIALIZED";
+
+    if (isDfDematerialized && !isCandidateSummaryComplete) {
+      menuEntryStatus = "INACTIVE";
+    } else if (
       (editableStatus.includes(activeCandidacyStatus) && !activeFeasibility) ||
       activeFeasibility?.decision === "INCOMPLETE"
     ) {
@@ -104,11 +101,9 @@ export const getActiveCandidacyMenu = async ({
     let url = "#";
 
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
-      url =
-        isDematerializedFeasibilityFeatureActive &&
-        feasibilityFormat === "DEMATERIALIZED"
-          ? buildUrl({ suffix: "feasibility-aap" })
-          : buildUrl({ suffix: "feasibility-aap/pdf" });
+      url = isDfDematerialized
+        ? buildUrl({ suffix: "feasibility-aap" })
+        : buildUrl({ suffix: "feasibility-aap/pdf" });
     }
 
     return showFeasibilityEntry
@@ -262,8 +257,8 @@ export const getActiveCandidacyMenu = async ({
     getTrainingMenuEntry(),
     getTrainingValidationMenuEntry(),
     await getFeasibilityMenuEntry({
-      userKeycloakId,
       feasibilityFormat: candidacy.feasibilityFormat,
+      isCandidateSummaryComplete,
     }),
     getFundingRequestMenuEntry(),
     getDossierDeValidationMenuEntry(),

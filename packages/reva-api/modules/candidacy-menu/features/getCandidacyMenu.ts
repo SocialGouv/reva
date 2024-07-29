@@ -1,3 +1,4 @@
+import { Candidate } from "modules/candidate/candidate.types";
 import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
 import { getActiveCandidacyMenu } from "./getActiveCandidacyMenu";
 import { getCandidacyForMenu } from "./getCandidacyForMenu";
@@ -6,26 +7,48 @@ import { getDroppedOutCandidacyMenu } from "./getDroppedOutCandidacyMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { getReorientedCandidacyMenu } from "./getReorientedCandidacyMenu";
 
+const checkCandidateFields = (object: any, fields: (keyof Candidate)[]) => {
+  return fields.every((field) => object[field]);
+};
+
 export const getCandidacyMenu = async ({
   candidacyId,
-  userKeycloakId,
   userRoles,
 }: {
   candidacyId: string;
-  userKeycloakId?: string;
   userRoles: KeyCloakUserRole[];
 }): Promise<CandidacyMenu> => {
   const candidacy = await getCandidacyForMenu({ candidacyId });
   const activeCandidacyStatus = candidacy.candidacyStatuses.find(
     (status) => status.isActive,
   )?.status;
+  const candidate = candidacy.candidate;
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
+
+  const isCandidateSummaryComplete = checkCandidateFields(candidate, [
+    "firstname",
+    "lastname",
+    "phone",
+    "email",
+    "birthdate",
+    "birthCity",
+    "nationality",
+    "street",
+    "zip",
+    "city",
+    "countryId",
+    "departmentId",
+    "highestDegreeId",
+    "niveauDeFormationLePlusEleveDegreeId",
+  ]);
 
   const menuHeader: CandidacyMenuEntry[] = [
     {
       label: "Résumé de la candidature",
-      status: "ACTIVE_WITHOUT_HINT",
+      status: isCandidateSummaryComplete
+        ? "ACTIVE_WITHOUT_HINT"
+        : "ACTIVE_WITH_EDIT_HINT",
       url: buildUrl({ suffix: "summary" }),
     },
   ];
@@ -51,7 +74,10 @@ export const getCandidacyMenu = async ({
       mainMenu = await getDeletedCandidacyMenu({ candidacy });
     }
   } else {
-    mainMenu = await getActiveCandidacyMenu({ candidacy, userKeycloakId });
+    mainMenu = await getActiveCandidacyMenu({
+      candidacy,
+      isCandidateSummaryComplete,
+    });
   }
 
   return { menuHeader, mainMenu, menuFooter };

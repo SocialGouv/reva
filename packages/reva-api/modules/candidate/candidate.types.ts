@@ -1,4 +1,4 @@
-import { Country } from "@prisma/client";
+import { Country, Department } from "@prisma/client";
 
 import {
   Degree,
@@ -6,16 +6,37 @@ import {
 } from "../referential/referential.types";
 
 export interface Candidate {
+  id: string;
+  keycloakId: string;
+  gender?: Gender | null;
+  email: string;
   firstname: string;
   firstname2?: string | null;
   firstname3?: string | null;
   lastname: string;
-  email: string;
+  givenName?: string | null;
   phone: string;
-  vulnerabilityIndicator?: VulnerabilityIndicator | null;
-  gender?: Gender | null;
-  highestDegree?: Degree | null;
+  street?: string | null;
+  city?: string | null;
+  zip?: string | null;
   departmentId: string;
+  department?: Department;
+  birthDepartmentId?: string | null;
+  birthDepartment?: Department | null;
+  birthdate?: Date | null;
+  birthCity?: string | null;
+  countryId?: string | null;
+  country?: Country | null;
+  nationality?: string | null;
+  highestDegree?: Degree | null;
+  highestDegreeLabel?: string | null;
+  niveauDeFormationLePlusEleveDegreeId?: string | null;
+  niveauDeFormationLePlusEleve?: Degree | null;
+  highestDegreeId?: string | null;
+  vulnerabilityIndicator?: VulnerabilityIndicator | null;
+  vulnerabilityIndicatorId?: string | null;
+  createdAt: Date;
+  updatedAt?: Date | null;
 }
 
 export type Gender = "undisclosed" | "man" | "woman";
