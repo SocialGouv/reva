@@ -109,16 +109,19 @@ export default function UpdateExperience() {
               required: true,
               name: "startedAt",
               type: "date",
-              value: new Date(startedAt).toISOString().slice(0, -14),
+              defaultValue: new Date(startedAt).toISOString().slice(0, -14),
               onChange: (e) => {
-                setStartedAt(new Date(e.target.value).getTime());
+                const date = new Date(e.target.value);
+                if (date instanceof Date && !isNaN(date.getTime())) {
+                  setStartedAt(date.getTime());
+                }
               },
             }}
           />
           <label htmlFor="duration" className="fr-label"></label>
 
           <Select
-            label="Durée"
+            label="Durée (optionnel)"
             hint="Pendant combien de temps avez-vous exercé ?"
             nativeSelectProps={{
               required: true,

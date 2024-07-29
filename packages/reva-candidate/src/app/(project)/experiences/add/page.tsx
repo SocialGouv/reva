@@ -98,9 +98,12 @@ export default function AddExperience() {
               required: true,
               name: "startedAt",
               type: "date",
-              value: new Date(startedAt).toISOString().slice(0, -14),
+              defaultValue: new Date(startedAt).toISOString().slice(0, -14),
               onChange: (e) => {
-                setStartedAt(new Date(e.target.value).getTime());
+                const date = new Date(e.target.value);
+                if (date instanceof Date && !isNaN(date.getTime())) {
+                  setStartedAt(date.getTime());
+                }
               },
             }}
           />
