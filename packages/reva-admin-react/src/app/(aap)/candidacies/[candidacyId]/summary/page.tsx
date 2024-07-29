@@ -3,18 +3,11 @@ import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidac
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useAuth } from "@/components/auth/auth";
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import {
-  BadgeCompleted,
-  BadgeToComplete,
-  DefaultCandidacySectionCard,
-} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
@@ -24,7 +17,6 @@ const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
-  const router = useRouter();
 
   const { candidacy } = useCandidateSummary(candidacyId);
 
@@ -49,7 +41,7 @@ const CandidacySummaryPage = () => {
 
   if (!candidacy) return null;
 
-  const { candidate, admissibilityFvae, goals } = candidacy;
+  const { candidate, goals } = candidacy;
 
   const isCandidateInformationCompleted = checkCandidateFields(candidate, [
     "firstname",
@@ -79,18 +71,6 @@ const CandidacySummaryPage = () => {
     "city",
     "department",
   ]);
-
-  const isCandidacyAdmissibilityComplete =
-    admissibilityFvae &&
-    (!admissibilityFvae.isAlreadyAdmissible || admissibilityFvae.expiresAt);
-
-  const isCandidacyAlreadyAdmissible = admissibilityFvae?.isAlreadyAdmissible;
-
-  const isCandidacyAdmissibilityExpired =
-    admissibilityFvae &&
-    admissibilityFvae.isAlreadyAdmissible &&
-    admissibilityFvae.expiresAt &&
-    admissibilityFvae.expiresAt < new Date().getTime();
 
   return (
     <>
@@ -169,49 +149,6 @@ const CandidacySummaryPage = () => {
               </DefaultCandidacySectionCard>
             )}
             <CertificationCard candidacy={candidacy} />
-            {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
-              <CandidacySectionCard
-                title="Sa recevabilité"
-                hasButton
-                buttonOnClick={() =>
-                  router.push(`/candidacies/${candidacyId}/admissibility`)
-                }
-                buttonTitle={
-                  isCandidacyAdmissibilityComplete ? "Modifier" : "Compléter"
-                }
-                buttonPriority={
-                  isCandidacyAdmissibilityComplete ? "secondary" : "primary"
-                }
-                badge={
-                  isCandidacyAdmissibilityExpired ? (
-                    <Badge severity="warning">
-                      Recevabilité favorable expirée
-                    </Badge>
-                  ) : isCandidacyAlreadyAdmissible ? (
-                    <Badge severity="success">
-                      Recevabilité favorable en cours
-                    </Badge>
-                  ) : isCandidacyAdmissibilityComplete ? (
-                    <BadgeCompleted />
-                  ) : (
-                    <BadgeToComplete />
-                  )
-                }
-              >
-                {admissibilityFvae?.expiresAt && (
-                  <span>
-                    Date de fin de validité :{" "}
-                    {format(admissibilityFvae?.expiresAt, "dd/MM/yyyy")}
-                  </span>
-                )}
-                {!isCandidacyAdmissibilityComplete && (
-                  <SmallNotice>
-                    Besoin d'aide sur la recevabilité ? Consultez les questions
-                    fréquentes de nos utilisateurs à ce sujet.
-                  </SmallNotice>
-                )}
-              </CandidacySectionCard>
-            )}
 
             <GrayCard>
               <span className="text-2xl font-bold mb-5">Ses objectifs</span>
