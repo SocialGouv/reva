@@ -9,8 +9,8 @@ import { getCandidacyById } from "./getCandidacyById";
 import { getCandidateById } from "./getCandidateById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
-import { getCandidacyCertification } from "./getCandidacyCertification";
 import { prismaClient } from "../../../prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const submitCandidacy = async ({
   candidacyId,
@@ -44,17 +44,15 @@ export const submitCandidacy = async ({
     );
   }
 
-  const certification = await getCandidacyCertification({ candidacyId });
-
-  if (!certification) {
-    throw new Error(
-      `Impossible de trouver la certification pour la candidature ${candidacyId}`,
-    );
-  }
+  const financementHorsPlateforme = await isFeatureActiveForUser({
+    feature: "NOUVELLES_CANDIDATURES_EN_FINANCEMENT_HORS_PLATEFORME",
+  });
 
   await prismaClient.candidacy.update({
     where: { id: candidacyId },
-    data: { financeModule: "unifvae" },
+    data: {
+      financeModule: financementHorsPlateforme ? "hors_plateforme" : "unifvae",
+    },
   });
 
   const updatedCandidacy = await updateCandidacyStatus({
@@ -74,8 +72,7 @@ export const submitCandidacy = async ({
     email: candidate.email as string,
     organismName: organism.label,
     organismEmail: organism.contactAdministrativeEmail,
-    candidacyFundedByFranceVae:
-      certification.financeModule !== "hors_plateforme",
+    candidacyFundedByFranceVae: !financementHorsPlateforme,
   });
   return updatedCandidacy;
 };
