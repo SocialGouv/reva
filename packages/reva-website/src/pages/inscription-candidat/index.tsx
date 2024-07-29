@@ -97,7 +97,9 @@ const OrientationCandidatPage = () => {
   }, [certificationId]);
 
   const invalidTypology =
-    candidateTypology === "SALARIE_PUBLIC" || candidateTypology === "AUTRE";
+    candidateTypology === "SALARIE_PUBLIC" ||
+    candidateTypology === "RETRAITE" ||
+    candidateTypology === "AUTRE";
 
   const validTypology = candidateTypology && !invalidTypology;
 

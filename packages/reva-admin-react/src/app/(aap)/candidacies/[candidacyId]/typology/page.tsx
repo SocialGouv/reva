@@ -17,9 +17,12 @@ const typologyFormSchema = z.object({
   typology: z.enum([
     "NON_SPECIFIE",
     "SALARIE_PRIVE",
-    "DEMANDEUR_EMPLOI",
-    "AIDANTS_FAMILIAUX",
     "BENEVOLE",
+    "AIDANTS_FAMILIAUX",
+    "AIDANTS_FAMILIAUX_AGRICOLES",
+    "DEMANDEUR_EMPLOI",
+    "TRAVAILLEUR_NON_SALARIE",
+    "TITULAIRE_MANDAT_ELECTIF",
   ]),
   ccnId: z.string().optional(),
 });
@@ -82,12 +85,25 @@ const TypologyPage = () => {
           <option value="NON_SPECIFIE" disabled>
             Sélectionner
           </option>
+
           <option value="SALARIE_PRIVE">Salarié du privé</option>
-          <option value="DEMANDEUR_EMPLOI">Demandeur d'emploi</option>
-          <option value="AIDANTS_FAMILIAUX">Aidant familial</option>
           <option value="BENEVOLE">Bénévole</option>
+          <option value="AIDANTS_FAMILIAUX">Aidant familial</option>
+          <option value="AIDANTS_FAMILIAUX_AGRICOLES">
+            Aidant familial agricole
+          </option>
+          <option value="DEMANDEUR_EMPLOI">Demandeur d'emploi</option>
+          <option value="TRAVAILLEUR_NON_SALARIE">
+            Travailleur non salarié
+          </option>
+          <option value="TITULAIRE_MANDAT_ELECTIF">
+            Titulaire d'un mandat électif (électoral ou syndical)
+          </option>
         </Select>
-        {(typology === "DEMANDEUR_EMPLOI" || typology === "SALARIE_PRIVE") && (
+        {(typology === "SALARIE_PRIVE" ||
+          typology === "DEMANDEUR_EMPLOI" ||
+          typology === "TRAVAILLEUR_NON_SALARIE" ||
+          typology === "TITULAIRE_MANDAT_ELECTIF") && (
           <>
             <span className="font-bold">
               Convention collective sélectionnée
@@ -136,7 +152,9 @@ const TypologyPage = () => {
           </>
         )}
 
-        {(typology === "AIDANTS_FAMILIAUX" || typology === "BENEVOLE") && (
+        {(typology === "BENEVOLE" ||
+          typology === "AIDANTS_FAMILIAUX" ||
+          typology === "AIDANTS_FAMILIAUX_AGRICOLES") && (
           <Button className="ml-auto">Suivant</Button>
         )}
       </form>

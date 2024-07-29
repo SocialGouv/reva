@@ -6,7 +6,7 @@ describe("candidate registration", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
+        "active_features_empty.json",
       );
     });
   });
@@ -17,20 +17,20 @@ describe("candidate registration", () => {
     });
 
     cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
 
     cy.get('[data-testid="selected-certificate-label"]').should(
       "have.text",
-      "BTS Chaudronnier"
+      "BTS Chaudronnier",
     );
     cy.get('[data-testid="selected-certificate-code-rncp"]').should(
       "have.text",
-      "RNCP123"
+      "RNCP123",
     );
     cy.get('[data-testid="selected-certificate-type-diplome"]').should(
       "have.text",
-      "Titre-BTS"
+      "Titre-BTS",
     );
   });
 
@@ -40,7 +40,7 @@ describe("candidate registration", () => {
     });
 
     cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
 
     cy.wait("@getCertification");
@@ -56,7 +56,7 @@ describe("candidate registration", () => {
     });
 
     cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
 
     cy.wait("@getCertification");
@@ -67,7 +67,7 @@ describe("candidate registration", () => {
 
     cy.get('[data-testid="candidate-typology-error-panel"]').should(
       "have.text",
-      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`
+      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`,
     );
 
     cy.get('[data-testid="candidate-typology-select"]')
@@ -76,22 +76,22 @@ describe("candidate registration", () => {
 
     cy.get('[data-testid="candidate-typology-error-panel"]').should(
       "have.text",
-      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`
+      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`,
     );
   });
 
-  it("should show a candidate registration form when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE_OU_AIDANT_FAMILIAL'  ", () => {
+  it("should show a candidate registration form when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE'  ", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
       stubQuery(
         req,
         "getDepartments",
-        "candidate_registration_departments.json"
+        "candidate_registration_departments.json",
       );
     });
 
     cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
 
     cy.wait("@getCertification");
@@ -112,7 +112,7 @@ describe("candidate registration", () => {
 
     cy.get('[data-testid="candidate-typology-select"]')
       .children("select")
-      .select("BENEVOLE_OU_AIDANT_FAMILIAL");
+      .select("BENEVOLE");
 
     cy.get('[data-testid="candidate-registration-form"]').should("exist");
   });
@@ -123,17 +123,17 @@ describe("candidate registration", () => {
       stubQuery(
         req,
         "getDepartments",
-        "candidate_registration_departments.json"
+        "candidate_registration_departments.json",
       );
       stubMutation(
         req,
         "candidate_askForRegistration",
-        "candidate_registration_candidate_ask_for_registration.json"
+        "candidate_registration_candidate_ask_for_registration.json",
       );
     });
 
     cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
 
     cy.wait("@getCertification");
@@ -145,15 +145,15 @@ describe("candidate registration", () => {
     cy.wait("@getDepartments");
 
     cy.get('[data-testid="candidate-registration-form-firstname-input"]').type(
-      "Edgar"
+      "Edgar",
     );
 
     cy.get('[data-testid="candidate-registration-form-lastname-input"]').type(
-      "Podovsky"
+      "Podovsky",
     );
 
     cy.get('[data-testid="candidate-registration-form-phone-input"]').type(
-      "+33 1 01 01 01 01"
+      "+33 1 01 01 01 01",
     );
 
     cy.get('[data-testid="candidate-registration-form-email-input"]')
@@ -170,7 +170,7 @@ describe("candidate registration", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/confirmation/"
+      "http://localhost:3002/inscription-candidat/confirmation/",
     );
   });
 });
@@ -181,17 +181,17 @@ it("should show another certificate when i search for another one within the pag
     stubQuery(
       req,
       "searchCertificationsQuery",
-      "candidate_certificate_search.json"
+      "candidate_certificate_search.json",
     );
     stubQuery(
       req,
       "activeFeaturesForConnectedUser",
-      "active_features_empty.json"
+      "active_features_empty.json",
     );
   });
 
   cy.visit(
-    "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+    "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
   );
 
   cy.wait("@getCertification");
@@ -206,6 +206,6 @@ it("should show another certificate when i search for another one within the pag
 
   cy.url().should(
     "eq",
-    "http://localhost:3002/inscription-candidat/?certificationId=b8cc6d4b-188d-4d22-86b4-b246cbc6e6ae"
+    "http://localhost:3002/inscription-candidat/?certificationId=b8cc6d4b-188d-4d22-86b4-b246cbc6e6ae",
   );
 });

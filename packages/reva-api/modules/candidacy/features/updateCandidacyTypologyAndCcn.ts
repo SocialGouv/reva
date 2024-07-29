@@ -38,7 +38,9 @@ export const updateCandidacyTypologyAndCcn = async (
 
   const ccnRequired =
     typology === CandidateTypology.SALARIE_PRIVE ||
-    typology === CandidateTypology.DEMANDEUR_EMPLOI;
+    typology === CandidateTypology.DEMANDEUR_EMPLOI ||
+    typology === CandidateTypology.TRAVAILLEUR_NON_SALARIE ||
+    typology === CandidateTypology.TITULAIRE_MANDAT_ELECTIF;
 
   if (ccnRequired && !ccnId) {
     throw new Error(
