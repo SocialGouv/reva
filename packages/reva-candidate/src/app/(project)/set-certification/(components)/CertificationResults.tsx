@@ -4,7 +4,6 @@ import CertificationResultCard from "./CertificationResultCard";
 import { searchCertifications } from "../set-certification.loaders";
 import SubmitButton from "@/components/forms/SubmitButton";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import Link from "next/link";
 import { updateCertification } from "../set-certification.actions";
 
@@ -12,12 +11,10 @@ export default async function CertificationResults({
   searchParams,
   candidateDepartmentId,
   candidacyId,
-  financementHorsPlateformeFeatureActive,
 }: {
   searchParams: Record<string, string>;
   candidateDepartmentId: string;
   candidacyId: string;
-  financementHorsPlateformeFeatureActive: boolean;
 }) {
   const urlSearchParams = new URLSearchParams(searchParams);
   const page = urlSearchParams.get("page");
@@ -92,32 +89,6 @@ export default async function CertificationResults({
           <p data-test="certification-code-rncp" className="text-xs mb-3">
             Code RNCP: {selectedCertification.codeRncp}
           </p>
-
-          {financementHorsPlateformeFeatureActive &&
-            selectedCertification.financeModule === "hors_plateforme" && (
-              <Notice
-                className="mt-2 mb-3"
-                title={
-                  <span>
-                    <p className="mb-4">
-                      Ce diplôme peut être financé par les dispositifs comme Mon
-                      Compte Formation, l’aide des régions, l’aide de France
-                      Travail.
-                    </p>
-                    <p className="mb-4">
-                      Votre accompagnateur explorera avec vous les dispositifs
-                      de financement dont vous pouvez bénéficier. Il vous
-                      indiquera les démarches nécessaires et, le cas échéant,
-                      vous accompagnera pour les réaliser.
-                    </p>
-                    <p>
-                      Pour information, le coût moyen constaté d’un parcours est
-                      de 2516€.
-                    </p>
-                  </span>
-                }
-              />
-            )}
           <p>
             <a
               data-test="certification-more-info-link"

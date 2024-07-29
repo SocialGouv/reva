@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { isFeatureActive } from "@/utils/getActiveFeatures";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { getCandidacy } from "@/app/home.loaders";
 import CertificationSearchBar from "./(components)/CertificationSearchBar";
@@ -18,9 +17,6 @@ export default async function SetCertification({
   const searchFilter = urlSearchParams.get("search") || "";
   const selectedCertificationId = urlSearchParams.get("certificationId");
 
-  const financementHorsPlateformeFeatureActive = await isFeatureActive(
-    "FINANCEMENT_HORS_PLATEFORME",
-  );
   const { canEditCandidacy, candidate } = await getCandidacy();
 
   if (!canEditCandidacy) {
@@ -61,9 +57,6 @@ export default async function SetCertification({
         <CertificationResults
           candidateDepartmentId={candidate.department.id}
           candidacyId={candidate.candidacy.id}
-          financementHorsPlateformeFeatureActive={
-            financementHorsPlateformeFeatureActive
-          }
           searchParams={searchParams}
         />
       </Suspense>

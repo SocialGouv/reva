@@ -54,7 +54,7 @@ export const submitCandidacy = async ({
 
   await prismaClient.candidacy.update({
     where: { id: candidacyId },
-    data: { financeModule: certification.financeModule },
+    data: { financeModule: "unifvae" },
   });
 
   const updatedCandidacy = await updateCandidacyStatus({

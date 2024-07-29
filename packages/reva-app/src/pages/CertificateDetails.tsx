@@ -1,5 +1,4 @@
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { BackButton } from "components/molecules/BackButton";
 import { Page } from "components/organisms/Page";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
@@ -11,9 +10,6 @@ export const CertificateDetails = () => {
   } = useMainMachineContext();
 
   const selectedCertification = state.context.selectedCertification;
-
-  const financementHorsPlateformeFeatureActive =
-    state.context.activeFeatures.includes("FINANCEMENT_HORS_PLATEFORME");
 
   return selectedCertification ? (
     <Page
@@ -30,31 +26,6 @@ export const CertificateDetails = () => {
       <p data-test="certification-code-rncp" className="text-xs mb-3">
         Code RNCP: {selectedCertification.codeRncp}
       </p>
-      {financementHorsPlateformeFeatureActive &&
-        selectedCertification.financeModule === "hors_plateforme" && (
-          <Notice
-            className="mt-2 mb-3"
-            title={
-              <span>
-                <p className="mb-4">
-                  Ce diplôme peut être financé par les dispositifs comme Mon
-                  Compte Formation, l'aide des régions, l'aide de France
-                  Travail.
-                </p>
-                <p className="mb-4">
-                  Votre accompagnateur explorera avec vous les dispositifs de
-                  financement dont vous pouvez bénéficier. Il vous indiquera les
-                  démarches nécessaires et, le cas échéant, vous accompagnera
-                  pour les réaliser.
-                </p>
-                <p>
-                  Pour information, le coût moyen constaté d’un parcours est de
-                  2516€.
-                </p>
-              </span>
-            }
-          />
-        )}
       <p>
         <a
           data-test="certification-more-info-link"

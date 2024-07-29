@@ -14,7 +14,6 @@ const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
         summary
         codeRncp
         status
-        financeModule
       }
       info {
         totalRows

@@ -114,18 +114,12 @@ export const updateCertificationWithinOrganismScope = async ({
   }
 
   // Update candidacy certification
-  await updateCertification({
+  const updatedCandidacy = await updateCertification({
     candidacyId,
     certificationId,
     departmentId: candidacy.departmentId || "",
     author: hasRole("admin") ? "admin" : "organism",
     feasibilityFormat: newCertification.feasibilityFormat,
-  });
-
-  //Update candidacy with new certification finance module
-  const updatedCandidacy = await prismaClient.candidacy.update({
-    where: { id: candidacyId },
-    data: { financeModule: newCertification.financeModule },
   });
 
   await logCandidacyAuditEvent({

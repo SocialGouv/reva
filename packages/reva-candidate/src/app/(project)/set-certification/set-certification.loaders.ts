@@ -20,7 +20,6 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
         summary
         codeRncp
         status
-        financeModule
       }
       info {
         totalRows

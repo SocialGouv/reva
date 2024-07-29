@@ -9,7 +9,6 @@ export interface Certification {
   activityArea?: string;
   accessibleJobType?: string;
   status: "AVAILABLE" | "SOON" | "INACTIVE";
-  financeModule: FinanceModule;
 }
 
 export interface Contact {

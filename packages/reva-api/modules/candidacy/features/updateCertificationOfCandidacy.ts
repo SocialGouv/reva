@@ -87,7 +87,6 @@ export const updateCertificationOfCandidacy = async ({
       where: { id: candidacyId },
       data: {
         firstAppointmentOccuredAt: null,
-        financeModule: newCertification.financeModule,
       },
     });
 

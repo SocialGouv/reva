@@ -3,7 +3,6 @@ import AccompagnementDemarche from "@/components/home-page/AccompagnementDemarch
 import Articles from "@/components/home-page/Articles";
 import BackGroundUnions from "@/components/home-page/BackGroundUnions";
 import CommentFinancerVotreParcours from "@/components/home-page/CommentFinancerVotreParcours";
-import CommentFinancerVotreParcoursSelonVotreCertification from "@/components/home-page/CommentFinancerVotreParcoursSelonVotreCertification";
 import FaitesValiderVosCompetencesParUnDiplome from "@/components/home-page/FaitesValiderVosCompetencesParUnDiplome";
 import QuiPeutFaireUneVAE from "@/components/home-page/QuiPeutFaireUneVAE";
 import VousAvezBesoinDePlusDaide from "@/components/home-page/VousAvezBesoinDePlusDaide";
@@ -24,10 +23,6 @@ const HomePage = () => {
 
   const candidacyCreationDisabled = isFeatureActive(
     "CANDIDACY_CREATION_DISABLED",
-  );
-
-  const hasFinancementHorsPlateforme = isFeatureActive(
-    "FINANCEMENT_HORS_PLATEFORME",
   );
 
   if (featureFlippingServiceStatus === "LOADING") {
@@ -55,11 +50,7 @@ const HomePage = () => {
         <QuiPeutFaireUneVAE />
         <VousAvezBesoinDePlusDaide />
         <AccompagnementDemarche />
-        {hasFinancementHorsPlateforme ? (
-          <CommentFinancerVotreParcoursSelonVotreCertification />
-        ) : (
-          <CommentFinancerVotreParcours />
-        )}
+        <CommentFinancerVotreParcours />
         <Articles />
       </HomeContainer>
     </MainLayout>
