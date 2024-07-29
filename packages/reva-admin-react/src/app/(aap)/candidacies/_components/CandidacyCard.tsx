@@ -31,7 +31,7 @@ export const CandidacyCard = ({
   return (
     <WhiteCard key={candidacyId}>
       <div className="flex flex-col gap-2">
-        {isFeatureActive("FINANCEMENT_HORS_PLATEFORME") && (
+        {isFeatureActive("AFFICHACHE_TYPES_FINANCEMENT_CANDIDATURE") && (
           <Badge severity={fundable ? "info" : "new"} className="ml-auto">
             {fundable ? "finançable france vae" : "finançable droit commun"}
           </Badge>
