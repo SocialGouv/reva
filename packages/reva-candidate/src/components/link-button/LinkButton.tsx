@@ -1,3 +1,4 @@
+"use client";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
 
@@ -6,12 +7,14 @@ export const LinkButton = ({
   children,
   priority = "secondary",
   "data-test":dataTest,
+  prefetch = true,
   ...buttonProps
 }: {
   href: string;
   children: React.ReactNode;
   priority?: "primary" | "secondary";
   "data-test"?: string;
+  prefetch?: boolean;
 } & React.ComponentProps<typeof Button>) => {
   return (
     <Button
@@ -23,6 +26,7 @@ export const LinkButton = ({
       <Link
         className="px-4 py-2"
         href={href}
+        prefetch={prefetch}
       >
         {children}
       </Link>

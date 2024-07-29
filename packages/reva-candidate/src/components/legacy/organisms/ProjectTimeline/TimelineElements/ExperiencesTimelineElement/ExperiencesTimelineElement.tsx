@@ -67,7 +67,7 @@ const ExperienceSummary = ({
   disabled?: boolean;
 }) => {
   return (
-    <Link href={disabled ? "#" : `/experiences/${experience.id}`} className={`bg-none ${disabled ? "pointer-events-none" : ""}`}>
+    <Link prefetch={true} href={disabled ? "#" : `/experiences/${experience.id}`} className={`bg-none ${disabled ? "pointer-events-none" : ""}`}>
       <li
         className={`flex gap-4 p-4 border border-dsfrBlue-500 ${
           disabled ? "default" : "cursor-pointer"
