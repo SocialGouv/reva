@@ -2,7 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { Role } from "../../account/account.types";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { Candidacy } from "../../candidacy/candidacy.types";
 import {
@@ -24,21 +23,10 @@ import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCa
 
 const unsafeResolvers = {
   Candidacy: {
-    paymentRequest: async (
-      parent: Candidacy,
-      _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } },
-    ) => {
-      const result = await getPaymentRequestByCandidacyId({
-        hasRole: context.auth.hasRole,
-        getPaymentRequestByCandidacyId:
-          paymentRequestsDb.getPaymentRequestByCandidacyId,
-      })({ candidacyId: parent.id });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .map((v) => v.extractNullable())
-        .extract();
-    },
+    paymentRequest: (parent: Candidacy) =>
+      getPaymentRequestByCandidacyId({
+        candidacyId: parent.id,
+      }),
     fundingRequest: ({ id: candidacyId }: Candidacy) =>
       getFundingRequestByCandidacyId({ candidacyId }),
   },
