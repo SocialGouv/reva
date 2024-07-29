@@ -243,10 +243,12 @@ export const useCandidacy = () => {
     (status) => status.isActive,
   )?.status;
 
+  const isCurrentlySubmitted = candidacyStatus === "PARCOURS_ENVOYE";
+
   const isTrainingConfirmed =
     candidacy?.candidacyStatuses.findIndex(
       (status) => status.status == "PARCOURS_CONFIRME",
-    ) != -1;
+    ) != -1 && !isCurrentlySubmitted;
 
   // candidate can edit project if a training has not been sent and if the first appointment date has not passed
   const canEditCandidacy =
