@@ -60,6 +60,8 @@ export const updateContact = async (prevState: unknown, formData: FormData) => {
     if (initialEmail === candidateData.email) {
       revalidatePath("/");
       redirect("/");
+    } else {
+      redirect("/update-contact/?changeEmail=true");
     }
   }
 
