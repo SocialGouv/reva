@@ -22,7 +22,7 @@ const SuspendedCreationPage = () => {
             <h1>Service momentanément indisponible</h1>
           </header>
           <SectionParagraph className="lg:!text-[20px] lg:!leading-[28px]">
-            Les inscriptions reprendront courant juin 2024.
+            Les inscriptions reprendront prochainement.
           </SectionParagraph>
           <SectionParagraph className="lg:!text-[14px] lg:!leading-[28px]">
             Nous prenons ce temps pour étudier la conformité des dossiers des
