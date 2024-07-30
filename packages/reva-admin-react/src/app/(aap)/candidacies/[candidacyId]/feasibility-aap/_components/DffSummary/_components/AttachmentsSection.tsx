@@ -11,7 +11,6 @@ const AttachmentItem = (file: File) => {
         <span>{file.name}</span>
         <span className="fr-icon-download-line ml-2 fr-icon--sm" />
       </a>
-      <p>{file.mimeType}</p>
     </div>
   );
 };
@@ -24,7 +23,7 @@ export default function AttachmentsSection({
   swornStatementFile?: File | null;
 }) {
   return (
-    <div>
+    <div className="mb-4">
       <div className="flex">
         <span className="fr-icon-attachment-fill fr-icon--lg mr-2" />
         <h2>Pièces jointes</h2>
