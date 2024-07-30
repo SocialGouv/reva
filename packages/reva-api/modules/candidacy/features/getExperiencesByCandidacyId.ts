@@ -7,4 +7,5 @@ export const getExperiencesByCandidacyId = ({
 }) =>
   prismaClient.experience.findMany({
     where: { candidacyId },
+    orderBy: { startedAt: "desc" },
   });
