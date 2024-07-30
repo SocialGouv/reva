@@ -24,7 +24,7 @@ const CommentFinancerVotreParcours = () => (
         <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
         <p className="my-0 text-lg">
           Le Ministère du Travail peut financer l'
-          <b>ensemble des frais de parcours</b>* d’un des 26 diplômes
+          <b>ensemble des frais de parcours</b>* d’un des 24 diplômes
           disponibles pour les candidats passant par la plateforme{" "}
           <Link href="https://vae.gouv.fr/" target="_blank">
             vae.gouv.fr
