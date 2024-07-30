@@ -22,7 +22,7 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
-    "eslint": "eslint modules infra --cache",
+    "eslint": "eslint modules infra",
     "lint-staged": "lint-staged",
     "lint-all": "prettier --write \"{infra,modules}/**/*.{ts,md}\""
   },
