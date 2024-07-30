@@ -8,13 +8,11 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
   query searchCertificationsForCandidate(
     $offset: Int
     $limit: Int
-    $departmentId: UUID!
     $searchText: String
   ) {
     searchCertificationsForCandidate(
       offset: $offset
       limit: $limit
-      departmentId: $departmentId
       searchText: $searchText
       status: AVAILABLE
     ) {
@@ -24,7 +22,6 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
         summary
         codeRncp
         status
-        financeModule
       }
       info {
         totalRows
