@@ -168,7 +168,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             }
             certificationCompetenceDetails {
               text
-              state
               certificationCompetence {
                 id
                 label

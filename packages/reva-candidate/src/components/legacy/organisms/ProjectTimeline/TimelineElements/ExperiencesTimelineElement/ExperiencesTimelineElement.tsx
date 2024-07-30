@@ -1,20 +1,20 @@
+import { useRouter } from "next/navigation";
+
+import { Button } from "@codegouvfr/react-dsfr/Button";
+
 import { Duration, Experience } from "@/graphql/generated/graphql";
 
 import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
-import { FormatedCandidacy } from "@/app/home.loaders";
-import { LinkButton } from "@/components/link-button/LinkButton";
-import Link from "next/link";
 
-export const ExperiencesTimelineElement = ({
-  canEditCandidacy,
-  candidacy,
-}: {
-  canEditCandidacy: boolean;
-  candidacy: FormatedCandidacy["candidacy"];
-}) => {
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+
+export const ExperiencesTimelineElement = () => {
+  const router = useRouter();
+
+  const { canEditCandidacy, candidacy } = useCandidacy();
 
   const { goals, experiences } = candidacy;
 
@@ -39,6 +39,9 @@ export const ExperiencesTimelineElement = ({
               <ExperienceSummary
                 key={experience.id}
                 experience={experience}
+                onClick={() => {
+                  router.push(`/experiences/${experience.id}`);
+                }}
                 disabled={!canEditCandidacy}
               />
             ))}
@@ -46,12 +49,15 @@ export const ExperiencesTimelineElement = ({
         )}
         <div className="text-sm text-slate-400">
           {status !== "readonly" && (
-            <LinkButton
-              href="/experiences/add"
+            <Button
               data-test="timeline-add-experience"
+              priority="secondary"
+              onClick={() => {
+                router.push("/experiences/add");
+              }}
             >
               Ajoutez une expérience
-            </LinkButton>
+            </Button>
           )}
         </div>
       </>
@@ -61,31 +67,32 @@ export const ExperiencesTimelineElement = ({
 
 const ExperienceSummary = ({
   experience,
+  onClick,
   disabled,
 }: {
   experience: Experience;
+  onClick: () => void;
   disabled?: boolean;
 }) => {
   return (
-    <Link prefetch={true} href={disabled ? "#" : `/experiences/${experience.id}`} className={`bg-none ${disabled ? "pointer-events-none" : ""}`}>
-      <li
-        className={`flex gap-4 p-4 border border-dsfrBlue-500 ${
-          disabled ? "default" : "cursor-pointer"
-        }`}
-      >
-        <div className="flex flex-col">
-          <p data-test="timeline-experience-title" className="font-medium mb-0">
-            {experience.title}
-          </p>
-          <p data-test="timeline-experience-duration" className="mb-0">
-            {durationToString[experience.duration]}
-          </p>
-        </div>
-        {!disabled ? (
-          <span className="fr-icon-arrow-right-s-line self-center ml-auto text-dsfrBlue-500" />
-        ) : null}
-      </li>
-    </Link>
+    <li
+      className={`flex gap-4 p-4 border border-dsfrBlue-500 ${
+        disabled ? "default" : "cursor-pointer"
+      }`}
+      onClick={!disabled ? onClick : undefined}
+    >
+      <div className="flex flex-col">
+        <p data-test="timeline-experience-title" className="font-medium mb-0">
+          {experience.title}
+        </p>
+        <p data-test="timeline-experience-duration" className="mb-0">
+          {durationToString[experience.duration]}
+        </p>
+      </div>
+      {!disabled ? (
+        <span className="fr-icon-arrow-right-s-line self-center ml-auto text-dsfrBlue-500" />
+      ) : null}
+    </li>
   );
 };
 

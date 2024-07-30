@@ -86,7 +86,6 @@ export function DffSummary() {
         certificationCompetenceDetails={
           certificationCompetenceDetails as CertificationCompetenceDetails[]
         }
-        isCertificationPartial={candidacy?.isCertificationPartial}
       />
       <ExperiencesSection experiences={experiences} />
       <ParcoursSection

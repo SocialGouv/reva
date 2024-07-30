@@ -68,7 +68,6 @@ export default function DffSummary({
             (bc) => bc.certificationCompetenceBloc,
           )}
           certificationCompetenceDetails={certificationCompetenceDetails}
-          isCertificationPartial={candidacy?.isCertificationPartial}
         />
         <ExperiencesSection experiences={experiences} />
         <ParcoursSection

@@ -1,11 +1,34 @@
-import Link from "next/link";
+"use client";
 
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+
 import { PageLayout } from "@/layouts/page.layout";
-import { doLogin } from "./login.actions";
-import SubmitButton from "@/components/forms/SubmitButton";
+
+import { useLogin } from "./login.hooks";
 
 export default function Login() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState<string>("");
+
+  const { askForLogin } = useLogin();
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      const response = await askForLogin.mutateAsync({ email });
+      if (response) {
+        router.push("/login-confirmation");
+      }
+    } catch (error) {}
+  };
+
   return (
     <PageLayout title="Connexion" data-test="login-home">
       <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
@@ -20,8 +43,9 @@ export default function Login() {
         </p>
       </div>
 
-      <form action={doLogin} className="mb-6 max-w-xl">
+      <form onSubmit={onSubmit} className="mb-6 max-w-xl">
         <Input
+          disabled={askForLogin.isPending}
           hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{
             id: "email",
@@ -30,14 +54,24 @@ export default function Login() {
             type: "email",
             autoComplete: "email",
             spellCheck: "false",
+            onChange: (e) => setEmail(e.target.value),
           }}
           label="Email"
         />
-        <SubmitButton label="Me connecter" />
+        <Button data-test="login-home-submit" disabled={askForLogin.isPending}>
+          Me connecter
+        </Button>
       </form>
 
       <div className="border-t border-gray-200 pt-6">
-        <Link href="/registration" className="text-gray-500">Je n’ai pas de candidature</Link>
+        <button
+          onClick={() => {
+            router.push("/registration");
+          }}
+          className="text-gray-500 underline"
+        >
+          Je n’ai pas de candidature
+        </button>
       </div>
     </PageLayout>
   );

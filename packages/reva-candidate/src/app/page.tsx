@@ -1,12 +1,14 @@
+"use client";
+
 import { PageLayout } from "@/layouts/page.layout";
 
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/ProjectTimeline";
 
-import { getCandidacy } from "./home.loaders";
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
-export default async function Home() {
-  const { candidate } = await getCandidacy();
+export default function Home() {
+  const { candidate } = useCandidacy();
 
   return (
     <PageLayout data-test={`project-home-ready`}>

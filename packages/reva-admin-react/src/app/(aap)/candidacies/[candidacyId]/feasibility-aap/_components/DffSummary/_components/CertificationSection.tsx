@@ -17,7 +17,6 @@ export default function CertificationSection({
   prerequisites,
   blocsDeCompetences,
   certificationCompetenceDetails,
-  isCertificationPartial,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -26,7 +25,6 @@ export default function CertificationSection({
   prerequisites?: Prerequisite[] | null;
   blocsDeCompetences: CertificationCompetenceBloc[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
-  isCertificationPartial?: boolean | null;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -59,27 +57,19 @@ export default function CertificationSection({
           <p className="font-medium">{option}</p>
         </>
       )}
-      {(firstForeignLanguage || secondForeignLanguage) && (
-        <div className="flex gap-2 mb-4">
-          {firstForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 1 :</p>
-              <p className="mb-0 font-medium">{firstForeignLanguage}</p>
-            </div>
-          )}
-          {secondForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 2 :</p>
-              <p className="mb-0 font-medium">{secondForeignLanguage}</p>
-            </div>
-          )}
+      <div className="flex gap-2 mb-4">
+        <div className="flex flex-col flex-1">
+          <p className="mb-0">Langue vivante 1 :</p>
+          <p className="mb-0 font-medium">{firstForeignLanguage}</p>
         </div>
-      )}
-      <CallOut>
-        {isCertificationPartial
-          ? "Un ou plusieurs bloc(s) de compétences de la certification"
-          : "La certification dans sa totalité"}
-      </CallOut>
+        {secondForeignLanguage && (
+          <div className="flex flex-col flex-1">
+            <p className="mb-0">Langue vivante 2 :</p>
+            <p className="mb-0 font-medium">{secondForeignLanguage}</p>
+          </div>
+        )}
+      </div>
+      <CallOut>Un ou plusieurs bloc(s) de compétences visé(s)</CallOut>
 
       <h5 className="mb-0">Blocs de compétences</h5>
 

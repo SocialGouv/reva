@@ -1,3 +1,5 @@
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+
 import { Timeline } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -13,26 +15,25 @@ import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDe
 import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
 import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
-import { getCandidacy } from "@/app/home.loaders";
 
-export const ProjectTimeline = async ({
+export const ProjectTimeline = ({
   className,
   "data-test": dataTest,
 }: {
   className?: string;
   "data-test"?: string;
 }) => {
-  const { candidacy, candidate, canEditCandidacy } = await getCandidacy();
+  const { candidacy } = useCandidacy();
 
   const { feasibilityFormat, feasibility, jury } = candidacy;
   const REJECTED = feasibility?.decision == "REJECTED";
 
   return (
     <Timeline className={className} data-test={dataTest}>
-      <ContactTimelineElement candidate={candidate} />
-      <CertificationTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy} />
-      <GoalsTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy}/>
-      <ExperiencesTimelineElement candidacy={candidacy} canEditCandidacy={canEditCandidacy} />
+      <ContactTimelineElement />
+      <CertificationTimelineElement />
+      <GoalsTimelineElement />
+      <ExperiencesTimelineElement />
       <OrganismTimelineElement />
       <ProjectSubmissionTimelineElement />
       <FeasibilityAppointmentTimelineElement />

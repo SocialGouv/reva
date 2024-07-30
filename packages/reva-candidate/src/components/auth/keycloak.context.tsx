@@ -1,4 +1,3 @@
-"use client";
 import React, { useContext, useEffect, useState } from "react";
 import Keycloak, { KeycloakInitOptions } from "keycloak-js";
 

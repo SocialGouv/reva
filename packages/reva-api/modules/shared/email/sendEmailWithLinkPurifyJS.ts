@@ -1,31 +1,23 @@
+import { Right } from "purify-ts";
+
 import { logger } from "../logger";
-import { sendGenericEmail } from ".";
+import { sendGenericEmailPurifyJS } from ".";
 import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 
-export const sendEmailWithLink = async ({
-  to,
+export const sendEmailWithLinkPurifyJS = async ({
+  email,
   token,
-  action = "",
+  action,
   app = "app",
   htmlContent,
   subject,
-  customUrl,
-  attachment,
 }: {
-  to: { email: string } | { email: string }[];
+  email: string;
   token?: string;
-  action?:
-    | "registration"
-    | "login"
-    | "confirmEmail"
-    | "admin"
-    | "agencies-settings/legal-information"
-    | "";
-  customUrl?: string;
-  app?: "app" | "admin" | "admin2";
+  action: "registration" | "login" | "confirmEmail" | "admin" | "";
+  app?: "app" | "admin";
   htmlContent: (url: string) => { html: string };
   subject?: string;
-  attachment?: { name: string; content: string }[];
 }) => {
   const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
     ?.isActive;
@@ -37,22 +29,20 @@ export const sendEmailWithLink = async ({
       ? "login"
       : action;
 
-  const baseUrl = `${process.env.BASE_URL}/${appPath}`;
-  const url = customUrl
-    ? `${baseUrl}${customUrl}`
-    : `${baseUrl}/${actionPath}${token ? `?token=${token}` : ""}`;
+  const url = `${process.env.BASE_URL}/${appPath}/${actionPath}${
+    token ? `?token=${token}` : ""
+  }`;
   const emailContent = htmlContent(url);
 
   if (process.env.NODE_ENV !== "production") {
     logger.info("======= EMAIL URL =======");
     logger.info(url);
     logger.info("=========================");
-    return "result";
+    return Right("result");
   }
-  return sendGenericEmail({
+  return sendGenericEmailPurifyJS({
     htmlContent: emailContent.html,
-    to,
-    subject: subject || "France VAE",
-    attachment,
+    to: { email },
+    subject: subject || "Votre accès à votre parcours France VAE",
   });
 };

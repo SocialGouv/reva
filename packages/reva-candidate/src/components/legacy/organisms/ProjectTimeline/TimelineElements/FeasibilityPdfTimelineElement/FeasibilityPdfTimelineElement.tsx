@@ -1,4 +1,3 @@
-"use client";
 import { format } from "date-fns";
 
 import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/AuthenticatedLink";

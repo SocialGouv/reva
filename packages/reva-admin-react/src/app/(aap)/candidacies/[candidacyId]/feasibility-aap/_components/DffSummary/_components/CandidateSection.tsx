@@ -42,12 +42,12 @@ export default function CandidateSection({
         </h2>
       </div>
       <p className="mb-2 flex gap-4">
-        <span>{givenName ? `${bornLabel} : ${givenName},` : `${bornLabel}`}</span>
+        <span>{givenName ? `${bornLabel} : ${givenName},` : ""}</span>
         {birthdate && (
           <span>le : {format(birthdate as any as Date, "dd/MM/yyyy")}</span>
         )}
         <span>
-          {birthCity ? `à ${birthCity},` : ""}{" "}
+          à {birthCity ? `${birthCity},` : ""}{" "}
           {birthDepartment
             ? `${birthDepartment?.label} (${birthDepartment?.code})`
             : ""}

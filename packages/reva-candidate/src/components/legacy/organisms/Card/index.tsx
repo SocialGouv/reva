@@ -1,4 +1,3 @@
-"use client"
 import { ReactNode } from "react";
 import Image from "next/image";
 
@@ -96,23 +95,21 @@ export const CardSkeleton = () => {
   );
 
   return (
-    <div className="h-[315px] w-[288px]">
-      <CardWrapper data-type="card-skeleton">
-        <CardHeader>
-          {/* <div>CAPMR</div> */}
-          {/* <div>France Compétences</div> */}
-          {/* <div>17163</div> */}
-          <div className="flex h-[12px]">{titleSkeleton(90)}</div>
-        </CardHeader>
-        <CardBody>
-          <div className="uppercase text-[9px] text-[#99E164]"></div>
-          <div className="flex text-white h-[20px]">{titleSkeleton(180)}</div>
-          <div className="flex text-white h-[20px]">{titleSkeleton(80)}</div>
-        </CardBody>
+    <CardWrapper data-type="card-skeleton">
+      <CardHeader>
+        {/* <div>CAPMR</div> */}
+        {/* <div>France Compétences</div> */}
+        {/* <div>17163</div> */}
+        <div className="flex h-[12px]">{titleSkeleton(90)}</div>
+      </CardHeader>
+      <CardBody>
+        <div className="uppercase text-[9px] text-[#99E164]"></div>
+        <div className="flex text-white h-[20px]">{titleSkeleton(180)}</div>
+        <div className="flex text-white h-[20px]">{titleSkeleton(80)}</div>
+      </CardBody>
 
-        <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
-      </CardWrapper>
-    </div>
+      <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
+    </CardWrapper>
   );
 };
 

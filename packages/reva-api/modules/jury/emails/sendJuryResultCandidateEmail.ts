@@ -21,7 +21,7 @@ export const sendJuryResultCandidateEmail = async ({
       <p>Suite à votre passage devant un jury VAE, nous vous informons que vous pouvez dès à présent retrouver vos résultats en vous connectant à votre compte France VAE.</p>
     `,
       labelCTA: "Accéder à mon parcours",
-      url: `${baseUrl}/${isRevaCandidateActive ? "candidat/api" : "app"}/login/`,
+      url: `${baseUrl}/${isRevaCandidateActive ? "candidat" : "app"}/login/`,
     }),
   );
 
