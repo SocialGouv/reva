@@ -83,7 +83,7 @@ export default function SwornStatementPage() {
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);
       }
-      successToast("Déclaration sur l'honneur mise à jour avec succès");
+      successToast("Attestation sur l'honneur mise à jour avec succès");
       router.push(`/candidacies/${candidacyId}/feasibility-aap`);
     } catch (e) {
       graphqlErrorToast(e);
@@ -118,7 +118,7 @@ export default function SwornStatementPage() {
       <p className="text-xl mb-12">
         Pour commencer le parcours VAE, le candidat doit lire et approuver le
         dossier de faisabilité. Il doit également vous faire parvenir une
-        déclaration sur l'honneur, à transmettre ici.
+        attestation sur l'honneur, à transmettre ici.
       </p>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
@@ -129,7 +129,7 @@ export default function SwornStatementPage() {
       >
         <FancyUpload
           className="col-span-2"
-          title="Joindre la déclaration sur l'honneur signée "
+          title="Joindre l'attestation sur l'honneur signée "
           hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           defaultFile={swornStatementDefaultFile}
           nativeInputProps={{

@@ -28,7 +28,7 @@ const HasBeenSentComponent = ({
       <p className="text-xl mb-12">
         Vérifiez que toutes les informations soient correctes et envoyez le
         dossier de faisabilité au candidat. Il devra vous fournir une
-        déclaration sur l'honneur pour valider ce dossier.
+        attestation sur l'honneur pour valider ce dossier.
       </p>
     )}
   </>
