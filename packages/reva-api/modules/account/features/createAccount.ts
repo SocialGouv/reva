@@ -39,11 +39,7 @@ export const createAccount = async (params: {
           `L'organismId est obligatoire pour un groupe "organism"`,
         );
       }
-      if (
-        (await getOrganismById(params.organismId || ""))
-          .unsafeCoerce()
-          .isNothing()
-      ) {
+      if (!(await getOrganismById(params.organismId || ""))) {
         throw new FunctionalError(
           FunctionalCodeError.ORGANISM_NOT_FOUND,
           `Organisme non trouvé`,

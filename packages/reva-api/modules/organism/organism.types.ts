@@ -15,12 +15,6 @@ export interface Organism {
   distanceKm?: number;
 }
 
-export type OrganismTypology =
-  | "experimentation"
-  | "expertFiliere"
-  | "expertBranche"
-  | "expertBrancheEtFiliere";
-
 type ConformiteNormeAccessibilite =
   | "CONFORME"
   | "NON_CONFORME"
@@ -43,23 +37,6 @@ export interface OrganismInformationsCommerciales {
   adresseCodePostal: string | null;
   adresseVille: string | null;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
-}
-
-export interface MaisonMereAAPCGU {
-  version?: number;
-  acceptedAt?: Date;
-}
-
-export interface MaisonMereAAP {
-  id: string;
-  raisonSociale: string;
-  statutJuridique: LegalStatus;
-  siret: string;
-  typologie: OrganismTypology;
-  siteWeb: string;
-  dateExpirationCertificationQualiopi: Date;
-  gestionnaireAccountId: string;
-  cgu: MaisonMereAAPCGU;
 }
 
 export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {

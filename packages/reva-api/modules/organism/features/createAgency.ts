@@ -79,23 +79,21 @@ export const createAgency = async ({
     });
 
     //organism creation
-    const newOrganism = (
-      await createOrganism({
-        label: raisonSociale,
-        contactAdministrativeEmail,
-        contactAdministrativePhone: contactAdministrativePhone ?? "",
-        website: siteWeb ?? "",
-        siret,
-        legalStatus: statutJuridique,
-        isActive: true,
-        typology: typologie,
-        qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
-        llToEarth,
-        isOnSite: true,
-        domaineIds,
-        degreeIds,
-      })
-    ).unsafeCoerce();
+    const newOrganism = await createOrganism({
+      label: raisonSociale,
+      contactAdministrativeEmail,
+      contactAdministrativePhone: contactAdministrativePhone ?? "",
+      website: siteWeb ?? "",
+      siret,
+      legalStatus: statutJuridique,
+      isActive: true,
+      typology: typologie,
+      qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
+      llToEarth,
+      isOnSite: true,
+      domaineIds,
+      degreeIds,
+    });
 
     logger.info(
       `[validateorganismData] Successfuly created organism with siret ${siret}`,

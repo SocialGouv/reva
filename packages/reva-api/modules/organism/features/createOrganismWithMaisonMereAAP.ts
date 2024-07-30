@@ -105,21 +105,19 @@ export const createOrganismWithMaisonMereAAP = async ({
     const degrees = await getDegrees();
 
     //organism creation
-    const newOrganism = (
-      await createOrganism({
-        label: raisonSociale,
-        contactAdministrativeEmail,
-        contactAdministrativePhone: contactAdministrativePhone ?? "",
-        website: siteWeb ?? "",
-        siret,
-        legalStatus: statutJuridique,
-        isActive: true,
-        typology: typologie,
-        qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
-        llToEarth,
-        degreeIds: degrees.map((d) => d.id),
-      })
-    ).unsafeCoerce();
+    const newOrganism = await createOrganism({
+      label: raisonSociale,
+      contactAdministrativeEmail,
+      contactAdministrativePhone: contactAdministrativePhone ?? "",
+      website: siteWeb ?? "",
+      siret,
+      legalStatus: statutJuridique,
+      isActive: true,
+      typology: typologie,
+      qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
+      llToEarth,
+      degreeIds: degrees.map((d) => d.id),
+    });
 
     logger.info(
       `[validateorganismData] Successfuly created organism with siret ${siret}`,

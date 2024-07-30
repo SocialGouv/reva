@@ -71,25 +71,23 @@ export const validateSubscriptionRequest = async ({
   const degrees = await getDegrees();
 
   //organism creation
-  const newOrganism = (
-    await createOrganism({
-      label: subscriptionRequest.companyName ?? "",
-      contactAdministrativeEmail: subscriptionRequest.accountEmail ?? "",
-      contactAdministrativePhone: subscriptionRequest.accountPhoneNumber ?? "",
-      website: subscriptionRequest.companyWebsite,
-      siret: subscriptionRequest.companySiret ?? "",
-      legalStatus: subscriptionRequest.companyLegalStatus,
-      isActive: true,
-      typology: "expertFiliere",
-      llToEarth: null,
-      domaineIds: [],
-      ccnIds: [],
-      degreeIds: degrees.map((d) => d.id),
-      qualiopiCertificateExpiresAt: new Date(),
-      isOnSite: false, //default agency is not on site since we don't have an address
-      isHeadAgency: true, // default agency is the head agency
-    })
-  ).unsafeCoerce();
+  const newOrganism = await createOrganism({
+    label: subscriptionRequest.companyName ?? "",
+    contactAdministrativeEmail: subscriptionRequest.accountEmail ?? "",
+    contactAdministrativePhone: subscriptionRequest.accountPhoneNumber ?? "",
+    website: subscriptionRequest.companyWebsite,
+    siret: subscriptionRequest.companySiret ?? "",
+    legalStatus: subscriptionRequest.companyLegalStatus,
+    isActive: true,
+    typology: "expertFiliere",
+    llToEarth: null,
+    domaineIds: [],
+    ccnIds: [],
+    degreeIds: degrees.map((d) => d.id),
+    qualiopiCertificateExpiresAt: new Date(),
+    isOnSite: false, //default agency is not on site since we don't have an address
+    isHeadAgency: true, // default agency is the head agency
+  });
 
   logger.info(
     `[subscription] Successfuly created organism with siret ${subscriptionRequest.companySiret}`,
