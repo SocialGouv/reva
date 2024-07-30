@@ -24,24 +24,14 @@ import {
 } from "../database/candidates";
 
 export const candidateAuthentication = async ({ token }: { token: string }) => {
-  const candidateAuthenticationInput = (await getJWTContent(token))
-    .ifLeft((e) => {
-      throw new FunctionalError(FunctionalCodeError.CANDIDATE_INVALID_TOKEN, e);
-    })
-    .unsafeCoerce() as CandidateAuthenticationInput;
+  const candidateAuthenticationInput = (await getJWTContent(
+    token,
+  )) as CandidateAuthenticationInput;
 
   if (candidateAuthenticationInput.action === "registration") {
-    const account = (
-      await getCandidateAccountInIAM(candidateAuthenticationInput.email)
-    )
-      .ifLeft((e) => {
-        throw new FunctionalError(
-          FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-          e,
-        );
-      })
-      .unsafeCoerce()
-      .extractNullable();
+    const account = await getCandidateAccountInIAM(
+      candidateAuthenticationInput.email,
+    );
 
     if (account) {
       return loginCandidate({
@@ -77,20 +67,11 @@ const confirmRegistration = async ({
   candidateRegistrationInput: CandidateRegistrationInput;
 }) => {
   const { certificationId, ...candidate } = candidateRegistrationInput;
-  const candidateKeycloakId = (
-    await createCandidateAccountInIAM({
-      email: candidate.email,
-      firstname: candidate.firstname,
-      lastname: candidate.lastname,
-    })
-  )
-    .ifLeft(() => {
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_IN_IAM_NOT_CREATED,
-        `Erreur lors de la création du compte sur l'IAM`,
-      );
-    })
-    .unsafeCoerce();
+  const candidateKeycloakId = await createCandidateAccountInIAM({
+    email: candidate.email,
+    firstname: candidate.firstname,
+    lastname: candidate.lastname,
+  });
 
   let candidateWithCandidacy = (
     await createCandidateWithCandidacy({
@@ -128,21 +109,14 @@ const confirmRegistration = async ({
     ).unsafeCoerce();
   }
 
-  const iamToken = (await generateIAMToken(candidateKeycloakId))
-    .map((tokens: { accessToken: string; refreshToken: string }) => ({
-      tokens,
-      candidate: {
-        ...candidateWithCandidacy,
-        candidacy: candidateWithCandidacy.candidacies[0],
-      },
-    }))
-    .ifLeft(() => {
-      throw new FunctionalError(
-        FunctionalCodeError.IAM_TOKEN_NOT_GENERATED,
-        `Erreur lors de la génération de l'access token`,
-      );
-    })
-    .unsafeCoerce();
+  const tokens = await generateIAMToken(candidateKeycloakId);
+  const iamToken = {
+    tokens,
+    candidate: {
+      ...candidateWithCandidacy,
+      candidacy: candidateWithCandidacy.candidacies[0],
+    },
+  };
 
   await logCandidacyAuditEvent({
     candidacyId: candidateWithCandidacy.candidacies[0].id,
@@ -156,15 +130,7 @@ const confirmRegistration = async ({
 };
 
 const loginCandidate = async ({ email }: { email: string }) => {
-  const account = (await getCandidateAccountInIAM(email))
-    .ifLeft((e) => {
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-        e,
-      );
-    })
-    .unsafeCoerce()
-    .extractNullable();
+  const account = await getCandidateAccountInIAM(email);
 
   if (!account) {
     throw new FunctionalError(
@@ -173,7 +139,7 @@ const loginCandidate = async ({ email }: { email: string }) => {
     );
   }
   const candidateWithCandidacy = (
-    await getCandidateWithCandidacyFromKeycloakId(account.id)
+    await getCandidateWithCandidacyFromKeycloakId(account?.id || "")
   )
     .ifLeft(() => {
       throw new FunctionalError(
@@ -186,27 +152,14 @@ const loginCandidate = async ({ email }: { email: string }) => {
     candidacies: unknown[];
   };
 
-  const iamToken = (await generateIAMToken(candidateWithCandidacy.keycloakId))
-    .map(
-      (tokens: {
-        accessToken: string;
-        refreshToken: string;
-        idToken: string;
-      }) => ({
-        tokens,
-        candidate: {
-          ...candidateWithCandidacy,
-          candidacy: candidateWithCandidacy.candidacies[0],
-        },
-      }),
-    )
-    .ifLeft(() => {
-      throw new FunctionalError(
-        FunctionalCodeError.IAM_TOKEN_NOT_GENERATED,
-        `Erreur lors de la génération de l'access token`,
-      );
-    })
-    .unsafeCoerce();
+  const tokens = await generateIAMToken(candidateWithCandidacy.keycloakId);
+  const iamToken = {
+    tokens,
+    candidate: {
+      ...candidateWithCandidacy,
+      candidacy: candidateWithCandidacy.candidacies[0],
+    },
+  };
 
   return iamToken;
 };

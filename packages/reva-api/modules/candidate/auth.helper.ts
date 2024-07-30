@@ -1,7 +1,6 @@
 import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
-import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { logger } from "../shared/logger";
 import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
@@ -32,15 +31,14 @@ export const getJWTContent = (token: string) => {
       process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
     );
 
-    return Right(JSON.parse(dataBytes.toString(CryptoJS.enc.Utf8)));
-  } catch (_) {
-    return Left("Error while parsing JWT token");
+    return JSON.parse(dataBytes.toString(CryptoJS.enc.Utf8));
+  } catch (e) {
+    logger.error(e);
+    throw new Error("Error while parsing JWT token");
   }
 };
 
-export const getCandidateAccountInIAM = async (
-  email: string,
-): Promise<Either<string, Maybe<any>>> => {
+export const getCandidateAccountInIAM = async (email: string) => {
   try {
     const keycloakAdmin = await getKeycloakAdmin();
     const [userByEmail] = await keycloakAdmin.users.find({
@@ -49,10 +47,12 @@ export const getCandidateAccountInIAM = async (
       realm: process.env.KEYCLOAK_APP_REALM,
     });
 
-    return Right(Maybe.fromNullable(userByEmail));
+    return userByEmail;
   } catch (e) {
     logger.error(e);
-    return Left(`An error occured while retrieving ${email} on IAM`);
+    throw new Error(
+      `Erreur lors de la récupération du compte ${email} sur l' IAM`,
+    );
   }
 };
 
@@ -86,7 +86,7 @@ export const createCandidateAccountInIAM = async (account: {
   email: string;
   firstname?: string;
   lastname?: string;
-}): Promise<Either<string, string>> => {
+}) => {
   try {
     const keycloakAdmin = await getKeycloakAdmin();
 
@@ -99,11 +99,11 @@ export const createCandidateAccountInIAM = async (account: {
       realm: process.env.KEYCLOAK_APP_REALM,
     });
 
-    return Right(id);
+    return id;
   } catch (e) {
     logger.error(e);
-    return Left(
-      `An error occured while creating user with ${account.email} on IAM`,
+    throw new Error(
+      `Erreur lors de la création du compte ${account.email} sur l' IAM`,
     );
   }
 };
@@ -118,7 +118,7 @@ export const generateIAMToken = async (userId: string) => {
   });
 
   if (!user) {
-    return Left(`userId ${userId} not found`);
+    throw new Error(`userId ${userId} not found`);
   }
 
   try {
@@ -159,8 +159,9 @@ export const generateIAMToken = async (userId: string) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const idToken = grant?.id_token?.token;
-    return Right({ accessToken, refreshToken, idToken });
-  } catch (_) {
-    return Left(`Error while generating IAM token`);
+    return { accessToken, refreshToken, idToken };
+  } catch (e) {
+    logger.error(e);
+    throw new Error(`Erreur lors de la génération du token IAM`);
   }
 };
