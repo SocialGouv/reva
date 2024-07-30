@@ -1,10 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import mercurius from "mercurius";
-import { Left, Right } from "purify-ts";
 
 import { prismaClient } from "../../prisma/client";
-import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
-import { generateJwt } from "./auth.helper";
 import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
@@ -17,11 +14,6 @@ import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithC
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
-import {
-  sendLoginEmail,
-  sendRegistrationEmail,
-  sendUnknownUserEmail,
-} from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { getHighestDegreeByCandidateId } from "./features/getHighestDegreeByCandidateId";
 
@@ -93,66 +85,18 @@ const unsafeResolvers = {
           departmentId: string;
         };
       },
-    ) => {
-      const result = await askForRegistration({
-        generateJWTForRegistration: async (data: unknown) =>
-          Right(generateJwt(data, 3 * 60 * 60)),
-        sendRegistrationEmail: async (data) =>
-          sendRegistrationEmail(data.email, data.token).then(
-            (r) => Right(r),
-            (e) => Left(e.message),
-          ),
-      })(params.candidate);
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    ) => askForRegistration(params.candidate),
     candidate_login: async (
       _: any,
       params: {
         token: string;
       },
-    ) => {
-      const result = await candidateAuthentication({
+    ) =>
+      candidateAuthentication({
         ...params,
-      });
-
-      return result;
-    },
-    candidate_askForLogin: async (_: unknown, params: { email: string }) => {
-      const keycloakAdmin = await getKeycloakAdmin();
-
-      const doesUserExists = async ({ userEmail }: { userEmail: string }) =>
-        !!(
-          await keycloakAdmin.users.find({
-            max: 1,
-            realm: process.env.KEYCLOAK_APP_REALM,
-            email: userEmail,
-            exact: true,
-          })
-        ).length;
-
-      const result = await askForLogin({
-        doesUserExists,
-        generateJWTForLogin: async (data: unknown) =>
-          Right(generateJwt(data, 1 * 60 * 60)),
-        sendLoginEmail: async (data) =>
-          sendLoginEmail(data.email, data.token).then(
-            (r) => Right(r),
-            (e) => Left(e.message),
-          ),
-        sendUnknownUserEmail: async (data) =>
-          sendUnknownUserEmail(data.email).then(
-            (r) => Right(r),
-            (e) => Left(e.message),
-          ),
-      })(params.email);
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+      }),
+    candidate_askForLogin: async (_: unknown, params: { email: string }) =>
+      askForLogin(params.email),
     candidate_updateCandidateInformation: (
       _: unknown,
       {

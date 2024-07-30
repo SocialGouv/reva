@@ -51,6 +51,7 @@ export interface CandidateRegistrationInput {
   action: "registration";
 }
 
+// eslint-disable-next-line
 export interface CandidateLoginInput {
   email: string;
   action: "login";
