@@ -1,5 +1,4 @@
 import mjml2html from "mjml";
-import { Left, Right } from "purify-ts";
 
 import { sendGenericEmail } from "../../shared/email";
 import { logger } from "../../shared/logger";
@@ -36,15 +35,14 @@ export const sendRejectionEmail = async ({
     const errorMessage = htmlContent.errors
       .map((e) => e.formattedMessage)
       .join("\n");
-    logger.error(errorMessage);
-    return Left("MJML parse error");
+    throw new Error(errorMessage);
   }
 
   if (process.env.NODE_ENV !== "production") {
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent.html);
     logger.info("=========================");
-    return Right("ok");
+    return "ok";
   }
   return sendGenericEmail({
     to: { email },
