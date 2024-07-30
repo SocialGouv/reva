@@ -20,7 +20,9 @@ const schema = z.object({
       competenceId: z.string(),
       label: z.string(),
       text: z.string().min(1, "Merci de remplir ce champ"),
-      state: z.enum(["YES", "NO", "PARTIALLY"]),
+      state: z.enum(["YES", "NO", "PARTIALLY"], {
+        invalid_type_error: "Merci de choisir une option",
+      }),
     })
     .array(),
 });
@@ -195,12 +197,12 @@ const CompetenciesBlockPage = () => {
                   nativeTextAreaProps={{
                     ...register(`competences.${i}.text`),
                   }}
-                  stateRelatedMessage={
-                    errors?.competences?.[i]?.text?.message as string
-                  }
+                  stateRelatedMessage={errors?.competences?.[i]?.text?.message}
                   state={errors?.competences?.[i]?.text ? "error" : "default"}
                 />
                 <RadioButtons
+                  stateRelatedMessage={errors?.competences?.[i]?.state?.message}
+                  state={errors?.competences?.[i]?.state ? "error" : "default"}
                   orientation="horizontal"
                   options={[
                     {
