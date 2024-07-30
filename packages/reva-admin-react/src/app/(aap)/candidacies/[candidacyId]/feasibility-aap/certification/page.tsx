@@ -165,18 +165,18 @@ const CertificationPage = () => {
         >
           <Input
             label="Option ou parcours"
-            hintText="(le cas échéant)"
+            hintText="(Le cas échéant)"
             nativeInputProps={{ ...register("option") }}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Langue vivante 1"
-              hintText="(Optionnel)"
+              hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("firstForeignLanguage") }}
             />
             <Input
               label="Langue vivante 2"
-              hintText="(Optionnel)"
+              hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("secondForeignlanguage") }}
             />
           </div>
