@@ -152,7 +152,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
         >
           <FancyUpload
             title="Joindre la facture globale avec un RIB inclus"
-            description="La facture doit être nette de TVA et doit contenir un RIB."
+            description="La facture doit être nette de TVA et doit contenir un RIB. (Un RIB unique par AAP).”"
             hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
             nativeInputProps={{
               ...register("invoiceFile"),
@@ -163,7 +163,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
           />
           <FancyUpload
             title="Joindre le certificat de réalisation signé par le candidat et l'AAP"
-            description="Le document est disponible dans l'espace documentaire et doit comprendre l'ensemble des actes réalisés pour le parcours (étude de faisabilité, heures d'accompagnement individuel et collectif, actes formatifs)."
+            description="Le document est disponible dans l'espace documentaire et doit comprendre l'ensemble des actes réalisés pour le parcours (étude de faisabilité, heures d'accompagnement individuel et collectif, actes formatifs). Le certificat est également disponible avec l’accord de prise en charge de Uniformation."
             hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
             nativeInputProps={{
               ...register("certificateOfAttendanceFile"),
@@ -177,7 +177,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
           {contractorInvoiceFilesFields.map((c, i) => (
             <FancyUpload
               key={c.id}
-              title="Joindre la ou les factures(s) acquittées des actes formatifs réalisés chez des prestataires autres que l'AAP (optionnel)"
+              title="Joindre la facture acquittée des actes formatifs réalisés chez des prestataires autres que l'AAP (optionnel)"
               description="Déposez ici la facture acquittée du prestataire (hors AAP) auprès duquel le candidat a suivi sa formation. Les éléments affichés dans cette facture doivent correspondre avec l’assiduité du candidat"
               hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
               nativeInputProps={{
