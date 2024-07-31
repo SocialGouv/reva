@@ -2,6 +2,26 @@ import { GenderEnum } from "@/constants";
 import { Candidate } from "@/graphql/generated/graphql";
 import { format } from "date-fns";
 
+const genderLabelMap = (gender?: GenderEnum): string => {
+  if (gender === GenderEnum.man) {
+    return "M";
+  } else if (gender === GenderEnum.woman) {
+    return "Mme";
+  } else {
+    return "";
+  }
+};
+
+const bornLabelMap = (gender?: GenderEnum): string => {
+  if (gender === GenderEnum.man) {
+    return "Né";
+  } else if (gender === GenderEnum.woman) {
+    return "Née";
+  } else {
+    return "Né(e)";
+  }
+};
+
 export default function CandidateSection({
   candidate,
 }: {
@@ -28,8 +48,8 @@ export default function CandidateSection({
     highestDegree,
   } = candidate;
 
-  const genderLabel = gender === GenderEnum.man ? "M" : "Mme";
-  const bornLabel = gender === GenderEnum.man ? "Né" : "Née";
+  const genderLabel = genderLabelMap(gender as GenderEnum);
+  const bornLabel = bornLabelMap(gender as GenderEnum);
 
   return (
     <div>
@@ -41,7 +61,7 @@ export default function CandidateSection({
           {firstname3 ? `, ${firstname3}` : ""}
         </h2>
       </div>
-      <p className="mb-2 flex gap-4">
+      <p className="mb-2 flex gap-2">
         <span>{givenName ? `${bornLabel} : ${givenName},` : ""}</span>
         {birthdate && (
           <span>le : {format(birthdate as any as Date, "dd/MM/yyyy")}</span>
