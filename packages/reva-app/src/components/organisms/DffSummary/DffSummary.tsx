@@ -34,13 +34,13 @@ export function DffSummary(props: Props) {
     aapDecisionComment,
     attachments,
     prerequisites,
-    sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
   } = dematerializedFeasibilityFile;
   const {
     experiences,
     certification,
+    feasibility,
     goals,
     basicSkills,
     mandatoryTrainings,
@@ -49,12 +49,14 @@ export function DffSummary(props: Props) {
     collectiveHourCount,
   } = candidacy;
 
+  const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
+
   return (
     <div className="flex flex-col">
-      {sentToCandidateAt ? (
+      {sentToCertificationAuthorityAt ? (
         <Alert
           description={`Dossier envoyé au certificateur le ${format(
-            sentToCandidateAt,
+            sentToCertificationAuthorityAt,
             "dd/MM/yyyy",
           )}`}
           severity="success"
@@ -68,7 +70,6 @@ export function DffSummary(props: Props) {
           attestation sur l'honneur pour valider ce dossier.
         </p>
       )}
-
       <CandidateSection candidate={candidate as Candidate} />
       <CertificationSection
         option={option}
