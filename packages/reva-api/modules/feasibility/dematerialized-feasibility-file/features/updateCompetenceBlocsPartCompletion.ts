@@ -1,6 +1,7 @@
 import { CompetenceBlocsPartCompletionEnum } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
+import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 export const updateCompetenceBlocsPartCompletion = async ({
   dematerializedFeasibilityFileId,
@@ -59,4 +60,8 @@ export const updateCompetenceBlocsPartCompletion = async ({
     where: { id: dematerializedFeasibilityFileId },
     data: { competenceBlocsPartCompletion },
   });
+
+  if (dff.sentToCandidateAt) {
+    await resetDFFSentToCandidateState(dff);
+  }
 };

@@ -2,6 +2,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyCertificationCompletion } from "../../../candidacy/features/updateCandidacyCertificationCompletion";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
+import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPartCompletion";
 
 export const createOrUpdateCertificationInfo = async ({
@@ -57,6 +58,10 @@ export const createOrUpdateCertificationInfo = async ({
     await updateCompetenceBlocsPartCompletion({
       dematerializedFeasibilityFileId: currentFile.id,
     });
+
+    if (currentFile.sentToCandidateAt) {
+      await resetDFFSentToCandidateState(currentFile);
+    }
   } else {
     dff = await prismaClient.feasibility.create({
       data: {
@@ -75,6 +80,14 @@ export const createOrUpdateCertificationInfo = async ({
   await updateCandidacyCertificationCompletion({
     candidacyId,
     completion: input.completion,
+  });
+
+  await prismaClient.dematerializedFeasibilityFile.update({
+    where: { id: dff.id },
+    data: {
+      sentToCandidateAt: null,
+      swornStatementFile: {},
+    },
   });
 
   return dff;

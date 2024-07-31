@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { prismaClient } from "../../../../prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "./getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId";
+import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 export const createOrUpdatePrerequisites = async ({
   candidacyId,
@@ -59,6 +60,10 @@ export const createOrUpdatePrerequisites = async ({
         prerequisitesPartComplete: true,
       },
     });
+  }
+
+  if (dFF.sentToCandidateAt) {
+    await resetDFFSentToCandidateState(dFF);
   }
 
   return getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId({
