@@ -31,6 +31,7 @@ const AapFeasibilityPage = () => {
   } = useAapFeasibilityPageLogic();
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
+  const isFeasibilityEditable = feasibilityFileSentAt === null;
 
   return (
     <div className="flex flex-col">
@@ -44,7 +45,7 @@ const AapFeasibilityPage = () => {
           <DefaultCandidacySectionCard
             title="Certification visée"
             titleIconClass="fr-icon-award-fill"
-            isEditable
+            isEditable={isFeasibilityEditable}
             status={
               dematerializedFeasibilityFile?.certificationPartComplete
                 ? "COMPLETED"
@@ -83,9 +84,9 @@ const AapFeasibilityPage = () => {
               )}
             </div>
             <p className="mb-0">
-            {isCertificationPartial
-          ? "Un ou plusieurs bloc(s) de compétences visé(s)"
-          : "La certification dans sa totalité"}
+              {isCertificationPartial
+                ? "Un ou plusieurs bloc(s) de compétences visé(s)"
+                : "La certification dans sa totalité"}
             </p>
           </DefaultCandidacySectionCard>
           <CompetenciesBlocksSection
@@ -98,6 +99,7 @@ const AapFeasibilityPage = () => {
             competenceBlocsPartCompletion={
               dematerializedFeasibilityFile?.competenceBlocsPartCompletion
             }
+            isFeasibilityEditable={isFeasibilityEditable}
           />
           <PrerequisitesCard
             prerequisites={
@@ -106,6 +108,7 @@ const AapFeasibilityPage = () => {
             prerequisitesPartComplete={
               dematerializedFeasibilityFile?.prerequisitesPartComplete
             }
+            isFeasibilityEditable={isFeasibilityEditable}
           />
           <DecisionCard
             aapDecision={
@@ -114,11 +117,13 @@ const AapFeasibilityPage = () => {
             aapDecisionComment={
               dematerializedFeasibilityFile?.aapDecisionComment as string | null
             }
+            isFeasibilityEditable={isFeasibilityEditable}
           />
           <AttachmentsCard
             attachmentsPartComplete={
               dematerializedFeasibilityFile?.attachmentsPartComplete
             }
+            isFeasibilityEditable={isFeasibilityEditable}
           />
           <hr />
 

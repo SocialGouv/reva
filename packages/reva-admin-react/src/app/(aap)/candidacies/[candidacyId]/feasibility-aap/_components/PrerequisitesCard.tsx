@@ -7,9 +7,11 @@ import { useMemo } from "react";
 export const PrerequisitesCard = ({
   prerequisites,
   prerequisitesPartComplete,
+  isFeasibilityEditable,
 }: {
   prerequisites?: Prerequisite[] | null;
   prerequisitesPartComplete?: boolean | null;
+  isFeasibilityEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -33,7 +35,7 @@ export const PrerequisitesCard = ({
       title="Prérequis obligatoires"
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
-      isEditable
+      isEditable={isFeasibilityEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
     >
       {prerequisitesPartComplete &&

@@ -3,8 +3,10 @@ import { useParams } from "next/navigation";
 
 export const AttachmentsCard = ({
   attachmentsPartComplete,
+  isFeasibilityEditable,
 }: {
   attachmentsPartComplete?: boolean;
+  isFeasibilityEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
   return (
@@ -12,7 +14,7 @@ export const AttachmentsCard = ({
       title="Pièces jointes"
       titleIconClass="fr-icon-attachment-fill"
       status={attachmentsPartComplete ? "COMPLETED" : "TO_COMPLETE"}
-      isEditable
+      isEditable={isFeasibilityEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/attachments`}
     />
   );

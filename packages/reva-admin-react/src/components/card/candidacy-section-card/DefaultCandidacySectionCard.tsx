@@ -55,6 +55,10 @@ export const DefaultCandidacySectionCard = ({
       title={title}
       titleIconClass={titleIconClass}
       hasButton={false}
+      badge={
+        CustomBadge ||
+        (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />)
+      }
     >
       {children}
     </CandidacySectionCard>

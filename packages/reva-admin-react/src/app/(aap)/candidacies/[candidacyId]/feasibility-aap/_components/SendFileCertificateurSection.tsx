@@ -5,6 +5,42 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
+const AlertDffState = ({
+  decision,
+  decisionSentAt,
+  decisionComment,
+  sentToCertificationAuthorityAt,
+}: {
+  decision: FeasibilityDecision;
+  decisionSentAt: Date;
+  decisionComment?: string | null;
+  sentToCertificationAuthorityAt: Date;
+}) => {
+  const feasibilityIsPending = decision === "PENDING";
+
+  if (feasibilityIsPending) {
+    return (
+      <Alert
+        severity="success"
+        title={`Dossier envoyé au certificateur le ${format(sentToCertificationAuthorityAt, "dd/MM/yyyy")}`}
+        className="mb-6"
+      />
+    );
+  }
+
+  if (decision) {
+    return (
+      <DecisionSentComponent
+        decisionSentAt={decisionSentAt}
+        decision={decision}
+        decisionComment={decisionComment}
+      />
+    );
+  }
+
+  return null;
+};
+
 export const SendFileCertificationAuthoritySection = ({
   sentToCertificationAuthorityAt,
   isReadyToBeSentToCertificationAuthority,
@@ -23,7 +59,7 @@ export const SendFileCertificationAuthoritySection = ({
   }>();
 
   const router = useRouter();
-  const feasibilityIsPending = decision === "PENDING";
+
   const feasibilityIsIncomplete = decision === "INCOMPLETE";
   const feasibilityHasBeenSent = !!sentToCertificationAuthorityAt;
   const feasibilityFileNeedsNewOrResendAction =
@@ -33,22 +69,14 @@ export const SendFileCertificationAuthoritySection = ({
     <div>
       <h2 className="mt-0">Vérifier et envoyer le dossier au certificateur </h2>
 
-      {feasibilityHasBeenSent ? (
-        feasibilityIsPending ? (
-          <Alert
-            severity="success"
-            title={`Dossier envoyé au certificateur le ${format(sentToCertificationAuthorityAt, "dd/MM/yyyy")}`}
-            className="mb-6"
-          />
-        ) : (
-          <DecisionSentComponent
-            decisionSentAt={decisionSentAt}
-            decision={decision}
-            decisionComment={decisionComment}
-          />
-        )
-      ) : null}
-
+      <AlertDffState
+        sentToCertificationAuthorityAt={
+          sentToCertificationAuthorityAt as any as Date
+        }
+        decisionSentAt={decisionSentAt}
+        decision={decision}
+        decisionComment={decisionComment}
+      />
       <div className="flex justify-end">
         <Button
           disabled={!isReadyToBeSentToCertificationAuthority}

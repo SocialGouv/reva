@@ -32,10 +32,12 @@ export const CompetenciesBlocksSection = ({
   competenceBlocsPartCompletion,
   certificationCompetenceDetails,
   blocsDeCompetences,
+  isFeasibilityEditable,
 }: {
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   blocsDeCompetences: DffCertificationCompetenceBloc[];
+  isFeasibilityEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -60,17 +62,19 @@ export const CompetenciesBlocksSection = ({
               competenceBloc={bloc.certificationCompetenceBloc}
               competenceDetails={certificationCompetenceDetails}
             />
-            <Button
-              className="w-[120px] mt-4 flex-none"
-              priority={bloc.complete ? "secondary" : "primary"}
-              linkProps={{
-                href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
-              }}
-            >
-              <span className="mx-auto">
-                {bloc.complete ? "Modifier" : "Compléter"}
-              </span>
-            </Button>
+            {isFeasibilityEditable && (
+              <Button
+                className="w-[120px] mt-4 flex-none"
+                priority={bloc.complete ? "secondary" : "primary"}
+                linkProps={{
+                  href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
+                }}
+              >
+                <span className="mx-auto">
+                  {bloc.complete ? "Modifier" : "Compléter"}
+                </span>
+              </Button>
+            )}
           </li>
         ))}
       </ul>
