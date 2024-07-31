@@ -1,8 +1,29 @@
 import { format } from "date-fns";
 
-import { Candidate } from "@/graphql/generated/graphql";
-
+import { Candidate, Gender } from "@/graphql/generated/graphql";
 import { GenderEnum } from "@/constants";
+
+function getGenderPrefix(gender: Gender) {
+  switch (gender) {
+    case GenderEnum.man:
+      return "M. ";
+    case GenderEnum.woman:
+      return "Mme ";
+    case GenderEnum.undisclosed:
+      return "";
+  }
+}
+
+function getGenderBornLabel(gender: Gender) {
+  switch (gender) {
+    case GenderEnum.man:
+      return "Né";
+    case GenderEnum.woman:
+      return "Née";
+    case GenderEnum.undisclosed:
+      return "Né";
+  }
+}
 
 export default function CandidateSection({
   candidate,
@@ -30,22 +51,23 @@ export default function CandidateSection({
     highestDegree,
   } = candidate;
 
-  const genderLabel = gender === GenderEnum.man ? "M" : "Mme";
-  const bornLabel = gender === GenderEnum.man ? "Né" : "Née";
+  const genderLabel = gender ? getGenderPrefix(gender) : "";
+  const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   return (
     <div>
       <div className="flex">
         <span className="fr-icon-user-fill fr-icon--lg mr-2" />
         <h2>
-          {genderLabel} {lastname} {firstname}
+          {genderLabel}
+          {lastname} {firstname}
           {firstname2 ? `, ${firstname2}` : ""}
           {firstname3 ? `, ${firstname3}` : ""}
         </h2>
       </div>
-      <p className="mb-2 flex gap-4">
-        <span>{givenName ? `${bornLabel} : ${givenName},` : ""}</span>
-        {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
+      <p className="mb-2">
+        <span>{givenName ? `${bornLabel} ${givenName},` : bornLabel}</span>
+        {birthdate && <span> le {format(birthdate, "dd/MM/yyyy")} </span>}
         <span>
           à {birthCity ? `${birthCity},` : ""}{" "}
           {birthDepartment
