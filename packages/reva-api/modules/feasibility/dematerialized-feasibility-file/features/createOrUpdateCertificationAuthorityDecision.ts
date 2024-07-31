@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 import {
   UploadedFile,
@@ -10,7 +11,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId";
-import { CandidacyStatusStep } from "@prisma/client";
+import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 const statusDecisionMapper = {
   ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
@@ -72,7 +73,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         mimeType: decisionUploadedFile.mimetype,
         name: decisionUploadedFile.filename,
       };
-  
+
       await uploadFilesToS3([fileAndId]);
 
       decisionFileForDb = {
@@ -82,9 +83,8 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           name: fileAndId.name,
           mimeType: fileAndId.mimeType,
         },
-      }
+      };
     }
-
 
     const now = new Date().toISOString();
     await prismaClient.$transaction([
@@ -115,6 +115,18 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         },
       }),
     ]);
+
+    if (decision === "INCOMPLETE") {
+      await prismaClient.feasibility.update({
+        where: {
+          id: feasibility.id,
+        },
+        data: {
+          feasibilityFileSentAt: null,
+        },
+      });
+      await resetDFFSentToCandidateState(dff);
+    }
 
     return getDematerializedFeasibilityFileByCandidacyId({
       candidacyId,
