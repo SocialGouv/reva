@@ -65,9 +65,11 @@ export function DffSummary(props: Props) {
         />
       ) : (
         <p className="text-xl mb-12">
-          Vérifiez que toutes les informations soient correctes et envoyez le
-          dossier de faisabilité au candidat. Il devra vous fournir une
-          attestation sur l'honneur pour valider ce dossier.
+          Vous avez en partie rempli ce dossier avec votre accompagnateur.
+          Vérifiez les informations puis validez votre dossier en envoyant une
+          attestation sur l’honneur à votre accompagnateur. Il se chargera
+          ensuite de le transmettre au certificateur qui se prononcera sur la
+          recevabilité.
         </p>
       )}
       <CandidateSection candidate={candidate as Candidate} />
