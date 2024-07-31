@@ -37,7 +37,6 @@ export function DffSummary() {
     aapDecision,
     aapDecisionComment,
     prerequisites,
-    sentToCandidateAt,
     blocsDeCompetences,
     certificationCompetenceDetails,
   } = dematerializedFeasibilityFile;
@@ -53,12 +52,14 @@ export function DffSummary() {
     collectiveHourCount,
   } = candidacy;
 
+  const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
+
   return (
     <div className="flex flex-col">
-      {sentToCandidateAt ? (
+      {sentToCertificationAuthorityAt ? (
         <Alert
           description={`Dossier envoyé au certificateur le ${format(
-            sentToCandidateAt,
+            sentToCertificationAuthorityAt,
             "dd/MM/yyyy",
           )}`}
           severity="success"
