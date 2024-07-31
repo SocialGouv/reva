@@ -26,19 +26,29 @@ import {
 
 const schema = z
   .object({
-    decision: z.enum(["ADMISSIBLE", "INCOMPLETE", "REJECTED"]),
+    decision: z.enum(["ADMISSIBLE", "INCOMPLETE", "REJECTED"], {
+      required_error: "Merci de renseigner ce champ",
+      invalid_type_error: "Merci de renseigner ce champ",
+    }),
     decisionComment: z.string().optional(),
     decisionFile: z.object({
-      0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+      0: z.instanceof(File).optional(),
     }),
   })
-  .superRefine(({ decisionFile }, { addIssue }) => {
-    if (!decisionFile?.[0]) {
+  .superRefine(({ decision, decisionComment }, { addIssue }) => {
+    if (decision === "INCOMPLETE" && !decisionComment) {
       addIssue({
-        path: ["decisionFile"],
-        message: "Merci de remplir ce champ",
+        path: ["decisionComment"],
+        message: "Vous devez renseigner un commentaire lorsque le dossier est incomplet",
         code: z.ZodIssueCode.custom,
-      });
+      })
+    }
+    if (decision === "REJECTED" && !decisionComment) {
+      addIssue({
+        path: ["decisionComment"],
+        message: "Vous devez motiver la décision de non-recevabilité du dossier",
+        code: z.ZodIssueCode.custom,
+      })
     }
   });
 
@@ -66,10 +76,13 @@ export const DematerializedFeasibility = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isSubmitting },
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
+
+  const decision = watch("decision");
 
   const resetForm = useCallback(() => {
     reset(defaultValues);
@@ -98,7 +111,7 @@ export const DematerializedFeasibility = () => {
       if (result?.error) {
         throw new Error(result?.error?.graphQLErrors[0].message);
       }
-      successToast("Décision du dossier de faisability envoyée avec succès");
+      successToast("Décision du dossier de faisabilité envoyée avec succès");
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
     } catch (e) {
       graphqlErrorToast(e);
@@ -188,7 +201,7 @@ export const DematerializedFeasibility = () => {
                 stateRelatedMessage={errors.decision?.message}
               />
               <Input
-                hintText="(Optionnel)"
+                hintText={decision === "ADMISSIBLE" ? "(Optionnel)" : ""}
                 label="Pouvez-vous préciser les motifs de votre décision ?"
                 textArea
                 nativeTextAreaProps={register("decisionComment")}
@@ -203,14 +216,12 @@ export const DematerializedFeasibility = () => {
                 label="Joindre le courrier de recevabilité"
                 hint="Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas."
                 nativeInputProps={{
-                  required: true,
                   ...register("decisionFile"),
                   accept: ".pdf, .jpg, .jpeg, .png",
                 }}
                 state={errors.decisionFile ? "error" : "default"}
                 stateRelatedMessage={
-                  errors.decisionFile?.[0]?.message ??
-                  "Text de validation / d'explication de l'erreur"
+                  errors.decisionFile?.[0]?.message
                 }
               />
             </div>

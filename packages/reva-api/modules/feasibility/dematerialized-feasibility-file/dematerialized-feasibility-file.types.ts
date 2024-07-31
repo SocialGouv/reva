@@ -32,7 +32,7 @@ export interface DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {
 export interface DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput {
   decision: DFFileCertificationAuthorityDecision;
   decisionComment: string;
-  decisionFile: GraphqlUploadedFile;
+  decisionFile?: GraphqlUploadedFile;
 }
 
 export interface DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput {

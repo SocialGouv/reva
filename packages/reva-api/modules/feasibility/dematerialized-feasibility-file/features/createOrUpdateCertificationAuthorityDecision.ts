@@ -55,24 +55,37 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       }
     }
 
-    const decisionUploadedFile = await getUploadedFile(decisionFile);
+    let decisionFileForDb = null;
+    if (decisionFile) {
+      const decisionUploadedFile = await getUploadedFile(decisionFile);
+      const fileId = uuidV4();
+      const fileAndId: {
+        id: string;
+        file: UploadedFile;
+        filePath: string;
+        mimeType: string;
+        name: string;
+      } = {
+        id: fileId,
+        file: decisionUploadedFile,
+        filePath: getFilePath({ candidacyId, fileId }),
+        mimeType: decisionUploadedFile.mimetype,
+        name: decisionUploadedFile.filename,
+      };
+  
+      await uploadFilesToS3([fileAndId]);
 
-    const fileId = uuidV4();
-    const fileAndId: {
-      id: string;
-      file: UploadedFile;
-      filePath: string;
-      mimeType: string;
-      name: string;
-    } = {
-      id: fileId,
-      file: decisionUploadedFile,
-      filePath: getFilePath({ candidacyId, fileId }),
-      mimeType: decisionUploadedFile.mimetype,
-      name: decisionUploadedFile.filename,
-    };
+      decisionFileForDb = {
+        create: {
+          id: fileId,
+          path: fileAndId.filePath,
+          name: fileAndId.name,
+          mimeType: fileAndId.mimeType,
+        },
+      }
+    }
 
-    await uploadFilesToS3([fileAndId]);
+
     const now = new Date().toISOString();
     await prismaClient.$transaction([
       prismaClient.feasibility.update({
@@ -83,14 +96,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decision,
           decisionComment,
           decisionSentAt: now,
-          decisionFile: {
-            create: {
-              id: fileId,
-              path: fileAndId.filePath,
-              name: fileAndId.name,
-              mimeType: fileAndId.mimeType,
-            },
-          },
+          decisionFile: decisionFileForDb ? decisionFileForDb : undefined,
         },
       }),
       prismaClient.candidaciesStatus.updateMany({

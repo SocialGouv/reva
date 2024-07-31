@@ -105,7 +105,7 @@ input DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {
 input DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput {
   decision: DFFileCertificationAuthorityDecision!
   decisionComment: String
-  decisionFile: Upload!
+  decisionFile: Upload
 }
 
 enum DFFileAapDecision {
