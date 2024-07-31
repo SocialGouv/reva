@@ -8,12 +8,13 @@ import { File as GQLFile } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { object, z } from "zod";
 import {
   createOrUpdateAttachments,
   useAttachments,
 } from "./_components/attachments.hook";
+import { v4 } from "uuid";
 
 const schema = z
   .object({
@@ -48,66 +49,69 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-export default function AttachmentsPage() {
-  const { candidacyId } = useParams() satisfies { candidacyId: string };
-  const urqlClient = useUrqlClient();
-  const router = useRouter();
-  const { attachments } = useAttachments();
-  const MAX_ADDITIONAL_FILES = 2;
-  const [idCard, setIdCard] = useState<GQLFile | undefined>();
-  const [equivalenceOrExemptionProof, setEquivalenceOrExemptionProof] =
-    useState<GQLFile | undefined>();
-  const [trainingCertificate, setTrainingCertificate] = useState<
-    GQLFile | undefined
-  >();
-  const [additionalFiles, setAdditionalFiles] = useState<
-    (GQLFile | undefined)[]
-  >([]);
+const MAX_ADDITIONAL_FILES = 2;
 
-  const resetFiles = useCallback(() => {
-    setIdCard(
+export default function AttachmentsPage() {
+  const router = useRouter();
+  const urqlClient = useUrqlClient();
+
+  const { candidacyId } = useParams() satisfies { candidacyId: string };
+
+  const { attachments } = useAttachments();
+
+  const remoteIdCard = useMemo(
+    () =>
       attachments?.find((attachment) => attachment?.type === "ID_CARD")?.file,
-    );
-    setEquivalenceOrExemptionProof(
+    [attachments],
+  );
+  const remoteEquivalenceOrExemptionProof = useMemo(
+    () =>
       attachments?.find(
         (attachment) => attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
       )?.file,
-    );
-    setTrainingCertificate(
+    [attachments],
+  );
+  const remoteTrainingCertificate = useMemo(
+    () =>
       attachments?.find(
         (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
       )?.file,
-    );
-
-    setAdditionalFiles(
+    [attachments],
+  );
+  const remoteAdditionalFiles = useMemo(
+    () =>
       (attachments || [])
         .filter((attachment) => attachment?.type === "ADDITIONAL")
-        .map((attachment) => attachment?.file),
-    );
-  }, [attachments]);
+        .map((attachment) => ({ id: v4(), file: attachment?.file })),
+    [attachments],
+  );
+
+  const [additionalFiles, setAdditionalFiles] = useState<
+    { id: string; file: GQLFile | undefined }[]
+  >([]);
+
+  const resetAdditionalFiles = useCallback(() => {
+    setAdditionalFiles([...remoteAdditionalFiles]);
+  }, [remoteAdditionalFiles]);
 
   useEffect(() => {
-    resetFiles();
-  }, [resetFiles]);
-
-  const defaultValues = useMemo(
-    () => ({
-      idCard: undefined,
-      equivalenceOrExemptionProof: undefined,
-      trainingCertificate: undefined,
-      additionalFiles: [],
-    }),
-    [],
-  );
+    resetAdditionalFiles();
+  }, [resetAdditionalFiles]);
 
   const {
     register,
     handleSubmit,
-    reset,
+    resetField,
+    control,
     formState: { errors, isDirty, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: {
+      idCard: undefined,
+      equivalenceOrExemptionProof: undefined,
+      trainingCertificate: undefined,
+      additionalFiles: [],
+    },
   });
 
   const handleFormSubmit = async (data: FormData) => {
@@ -117,6 +121,7 @@ export default function AttachmentsPage() {
     const additionalFiles = data.additionalFiles
       .filter((file) => Boolean(file?.[0]))
       .map((file) => file[0]);
+
     const input = {
       idCard,
       equivalenceOrExemptionProof,
@@ -140,63 +145,45 @@ export default function AttachmentsPage() {
   };
 
   const resetForm = useCallback(() => {
-    reset(defaultValues);
-    resetFiles();
-  }, [defaultValues, reset, resetFiles]);
+    resetField("idCard");
+    resetField("equivalenceOrExemptionProof");
+    resetField("trainingCertificate");
 
-  useEffect(() => {
-    resetForm();
-  }, [resetForm]);
+    for (let index = 0; index < additionalFiles.length; index++) {
+      resetField(`additionalFiles.${index}`);
+    }
+
+    resetAdditionalFiles();
+  }, [additionalFiles.length, resetAdditionalFiles, resetField]);
 
   const idCardDefaultFile = useMemo(
-    () =>
-      idCard?.previewUrl
-        ? {
-            name: idCard.name,
-            mimeType: idCard.mimeType,
-            url: idCard.previewUrl,
-          }
-        : undefined,
-    [idCard],
+    () => getFancyDefaultFile(remoteIdCard),
+    [remoteIdCard],
   );
 
   const equivalenceOrExemptionProofDefaultFile = useMemo(
-    () =>
-      equivalenceOrExemptionProof?.previewUrl
-        ? {
-            name: equivalenceOrExemptionProof.name,
-            mimeType: equivalenceOrExemptionProof.mimeType,
-            url: equivalenceOrExemptionProof.previewUrl,
-          }
-        : undefined,
-    [equivalenceOrExemptionProof],
+    () => getFancyDefaultFile(remoteEquivalenceOrExemptionProof),
+    [remoteEquivalenceOrExemptionProof],
   );
 
   const trainingCertificateDefaultFile = useMemo(
-    () =>
-      trainingCertificate?.previewUrl
-        ? {
-            name: trainingCertificate.name,
-            mimeType: trainingCertificate.mimeType,
-            url: trainingCertificate.previewUrl,
-          }
-        : undefined,
-    [trainingCertificate],
+    () => getFancyDefaultFile(remoteTrainingCertificate),
+    [remoteTrainingCertificate],
   );
 
   const additionalFilesDefaultFile = useMemo(
     () =>
-      additionalFiles.map((_, index) =>
-        additionalFiles[index]?.previewUrl
-          ? {
-              name: additionalFiles[index]!.name,
-              mimeType: additionalFiles[index]!.mimeType,
-              url: additionalFiles[index]!.previewUrl as string,
-            }
-          : undefined,
-      ),
-    [additionalFiles],
+      remoteAdditionalFiles.map((additionalFile) => ({
+        id: additionalFile.id,
+        file: getFancyDefaultFile(additionalFile.file),
+      })),
+    [remoteAdditionalFiles],
   );
+
+  const { remove } = useFieldArray({
+    control,
+    name: "additionalFiles",
+  });
 
   return (
     <div className="flex flex-col">
@@ -257,32 +244,43 @@ export default function AttachmentsPage() {
             state={errors.trainingCertificate ? "error" : "default"}
             stateRelatedMessage={errors.trainingCertificate?.[0]?.message}
           />
-          {additionalFiles.map((_, index) => (
+          {additionalFiles.map((additionalFile, index) => (
             <FancyUpload
+              key={additionalFile.id}
               className="col-span-2"
               title="Pièce jointe supplémentaire"
               description=""
               hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
               onClickDelete={() => {
+                remove(index);
+
                 setAdditionalFiles(
-                  additionalFiles.filter((_, _index) => _index != index),
+                  additionalFiles.filter(
+                    (file) => file.id != additionalFile.id,
+                  ),
                 );
               }}
-              defaultFile={additionalFilesDefaultFile[index]}
+              defaultFile={
+                additionalFilesDefaultFile.find(
+                  (file) => file.id == additionalFile.id,
+                )?.file
+              }
               nativeInputProps={{
                 ...register(`additionalFiles.${index}`),
                 accept: ".pdf, .jpg, .jpeg, .png",
               }}
               state={errors.additionalFiles?.[index] ? "error" : "default"}
               stateRelatedMessage={errors.additionalFiles?.[index]?.message}
-              key={index}
             />
           ))}
           {additionalFiles?.length < MAX_ADDITIONAL_FILES && (
             <div
               className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
               onClick={() => {
-                setAdditionalFiles((prev) => [...prev, undefined]);
+                setAdditionalFiles((prev) => [
+                  ...prev,
+                  { id: v4(), file: undefined },
+                ]);
               }}
             >
               <span className="fr-icon-add-line fr-icon--sm" />
@@ -301,3 +299,12 @@ export default function AttachmentsPage() {
     </div>
   );
 }
+
+const getFancyDefaultFile = (file?: GQLFile) =>
+  file?.previewUrl
+    ? {
+        name: file.name,
+        mimeType: file.mimeType,
+        url: file.previewUrl,
+      }
+    : undefined;

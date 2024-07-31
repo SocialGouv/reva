@@ -48,7 +48,10 @@ export const FancyUpload = ({
   const refInputId = useRef<string>(v4());
 
   const downloadFiles = useCallback(async () => {
-    if (!defaultFile) return;
+    if (!defaultFile) {
+      setFilePreview(null);
+      return;
+    }
 
     try {
       const dataTransfer = new DataTransfer();
@@ -81,6 +84,18 @@ export const FancyUpload = ({
   useEffect(() => {
     downloadFiles();
   }, [downloadFiles]);
+
+  if (filePreview) {
+    const inputElement = document.getElementById(refInputId.current);
+    if (inputElement) {
+      const input = inputElement as HTMLInputElement;
+      if (!input.files?.length) {
+        setFilePreview(null);
+
+        downloadFiles();
+      }
+    }
+  }
 
   return (
     <div className={`relative ${className || ""}`}>
