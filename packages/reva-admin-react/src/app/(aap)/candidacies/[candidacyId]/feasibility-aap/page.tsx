@@ -27,6 +27,7 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile,
     queryStatus,
     feasibility,
+    isCertificationPartial,
   } = useAapFeasibilityPageLogic();
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
@@ -41,7 +42,7 @@ const AapFeasibilityPage = () => {
       {queryStatus === "success" && (
         <ul className="flex flex-col gap-8">
           <DefaultCandidacySectionCard
-            title="Descriptif de la certification"
+            title="Certification visée"
             titleIconClass="fr-icon-award-fill"
             isEditable
             status={
@@ -52,8 +53,39 @@ const AapFeasibilityPage = () => {
             buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
           >
             <p className="text-xl font-bold mb-2">{certification?.label}</p>
-            <p className="text-xs mb-0 text-dsfr-light-text-mention-grey">
+            <p className="text-xs mb-2 text-dsfr-light-text-mention-grey">
               RNCP {certification?.codeRncp}
+            </p>
+            {dematerializedFeasibilityFile?.option && (
+              <p>
+                Option du parcours :{" "}
+                <span className="block font-medium">
+                  {dematerializedFeasibilityFile?.option}
+                </span>
+              </p>
+            )}
+            <div className="flex flew-col gap-12">
+              {dematerializedFeasibilityFile?.firstForeignLanguage && (
+                <p>
+                  Langue vivante 1 :{" "}
+                  <span className="block font-medium">
+                    {dematerializedFeasibilityFile?.firstForeignLanguage}
+                  </span>
+                </p>
+              )}
+              {dematerializedFeasibilityFile?.secondForeignLanguage && (
+                <p>
+                  Langue vivante 2 :{" "}
+                  <span className="block font-medium">
+                    {dematerializedFeasibilityFile?.secondForeignLanguage}
+                  </span>
+                </p>
+              )}
+            </div>
+            <p className="mb-0">
+            {isCertificationPartial
+          ? "Un ou plusieurs bloc(s) de compétences visé(s)"
+          : "La certification dans sa totalité"}
             </p>
           </DefaultCandidacySectionCard>
           <CompetenciesBlocksSection
