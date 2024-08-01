@@ -12,84 +12,75 @@ import {
   validateTotalCost,
 } from "./costValidationUtils";
 
-interface CreateOrUpdatePaymentRequestDeps {
-  getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
-  getFundingRequestByCandidacyId: (params: {
-    candidacyId: string;
-  }) => Promise<Either<string, FundingRequest | null>>;
-  getPaymentRequestByCandidacyId: (params: {
-    candidacyId: string;
-  }) => Promise<Either<string, Maybe<PaymentRequest>>>;
-  createPaymentRequest: (params: {
-    candidacyId: string;
-    paymentRequest: PaymentRequest;
-  }) => Promise<Either<string, PaymentRequest>>;
-  updatePaymentRequest: (params: {
-    paymentRequestId: string;
-    paymentRequest: PaymentRequest;
-  }) => Promise<Either<string, PaymentRequest>>;
-  getAfgsuTrainingId: () => Promise<string | null>;
-}
+import * as fundingRequestsDb from "../database/fundingRequests";
+import * as paymentRequestsDb from "../database/paymentRequest";
+import { getAfgsuTrainingId } from "../../../candidacy/features/getAfgsuTrainingId";
+import { getCandidateByCandidacyId } from "../../../candidate/database/candidates";
 
-export const createOrUpdatePaymentRequestForCandidacy =
-  (deps: CreateOrUpdatePaymentRequestDeps) =>
-  async (params: {
-    candidacyId: string;
-    paymentRequest: PaymentRequest;
-  }): Promise<Either<FunctionalError, PaymentRequest>> => {
-    const createOrUpdatePaymentRequest = (
-      existingPaymentRequest: Maybe<PaymentRequest>,
-    ): Promise<Either<string, PaymentRequest>> =>
-      existingPaymentRequest.caseOf({
-        Just: (pr) =>
-          deps.updatePaymentRequest({
-            paymentRequestId: pr.id,
-            paymentRequest: params.paymentRequest,
-          }),
-
-        Nothing: () =>
-          deps.createPaymentRequest({
-            candidacyId: params.candidacyId,
-            paymentRequest: params.paymentRequest,
-          }),
-      });
-
-    const afgsuTrainingId = await deps.getAfgsuTrainingId();
-
-    return EitherAsync.fromPromise(() =>
-      deps.getFundingRequestByCandidacyId({ candidacyId: params.candidacyId }),
-    )
-      .map((fundingRequest) =>
-        EitherAsync.fromPromise(() =>
-          deps.getCandidateByCandidacyId(params.candidacyId),
-        ).map((candidate) => ({ fundingRequest, candidate })),
-      )
-      .join()
-      .chain((candidateAndFundingRequest) =>
-        Promise.resolve(
-          validatePaymentRequest(
-            candidateAndFundingRequest.candidate,
-            params.paymentRequest,
-            candidateAndFundingRequest.fundingRequest,
-            afgsuTrainingId,
-          ),
-        ),
-      )
-      .chain(() =>
-        deps.getPaymentRequestByCandidacyId({
-          candidacyId: params.candidacyId,
+export const createOrUpdatePaymentRequestForCandidacy = async (params: {
+  candidacyId: string;
+  paymentRequest: PaymentRequest;
+}): Promise<Either<FunctionalError, PaymentRequest>> => {
+  const createOrUpdatePaymentRequest = (
+    existingPaymentRequest: Maybe<PaymentRequest>,
+  ): Promise<Either<string, PaymentRequest>> =>
+    existingPaymentRequest.caseOf({
+      Just: (pr) =>
+        paymentRequestsDb.updatePaymentRequest({
+          paymentRequestId: pr.id,
+          paymentRequest: params.paymentRequest,
         }),
-      )
-      .chain(createOrUpdatePaymentRequest)
-      .mapLeft((v) =>
-        v instanceof FunctionalError
-          ? v
-          : new FunctionalError(
-              FunctionalCodeError.TECHNICAL_ERROR,
-              `Erreur pendant la création ou la mise à jour de la demande de paiement pour la candidature ${params.candidacyId}`,
-            ),
-      );
-  };
+
+      Nothing: () =>
+        paymentRequestsDb.createPaymentRequest({
+          candidacyId: params.candidacyId,
+          paymentRequest: params.paymentRequest,
+        }),
+    });
+
+  const afgsuTrainingId = await getAfgsuTrainingId();
+
+  return EitherAsync.fromPromise(() =>
+    fundingRequestsDb.getFundingRequest({
+      candidacyId: params.candidacyId,
+    }),
+  )
+    .map((fundingRequest) =>
+      EitherAsync.fromPromise(async () => {
+        try {
+          const result = await getCandidateByCandidacyId(params.candidacyId);
+          return Maybe.fromNullable(result).toEither("Candidat non trouvé");
+        } catch (_) {
+          return Left("Erreur pendant la récupération du candidat");
+        }
+      }).map((candidate) => ({ fundingRequest, candidate })),
+    )
+    .join()
+    .chain((candidateAndFundingRequest) =>
+      Promise.resolve(
+        validatePaymentRequest(
+          candidateAndFundingRequest.candidate,
+          params.paymentRequest,
+          candidateAndFundingRequest.fundingRequest,
+          afgsuTrainingId,
+        ),
+      ),
+    )
+    .chain(() =>
+      paymentRequestsDb.getPaymentRequestByCandidacyId({
+        candidacyId: params.candidacyId,
+      }),
+    )
+    .chain(createOrUpdatePaymentRequest)
+    .mapLeft((v) =>
+      v instanceof FunctionalError
+        ? v
+        : new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            `Erreur pendant la création ou la mise à jour de la demande de paiement pour la candidature ${params.candidacyId}`,
+          ),
+    );
+};
 
 const validatePaymentRequest = (
   candidate: Candidate,

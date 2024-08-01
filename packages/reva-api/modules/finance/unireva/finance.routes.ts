@@ -3,9 +3,6 @@ import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
 import { UploadedFile } from "../../shared/file";
-import { addFileToUploadSpooler } from "./database/fileUploadSpooler";
-import { getFundingRequest } from "./database/fundingRequests";
-import { getPaymentRequestByCandidacyId } from "./database/paymentRequest";
 import { addPaymentProof } from "./features/addPaymentProof";
 
 interface PaymentRequestProofBody {
@@ -72,18 +69,12 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
           );
       }
 
-      const result = await addPaymentProof(maxUploadFileSize)(
-        {
-          addFileToUploadSpooler,
-          getPaymentRequestByCandidacyId,
-          getFundingRequestFromCandidacyId: getFundingRequest,
-        },
-        {
-          candidacyId: request.body.candidacyId.value,
-          appointment: request.body.appointment,
-          invoice: request.body.invoice,
-        },
-      );
+      const result = await addPaymentProof({
+        fileMaxSize: maxUploadFileSize,
+        candidacyId: request.body.candidacyId.value,
+        appointment: request.body.appointment,
+        invoice: request.body.invoice,
+      });
 
       if (result.isLeft()) {
         const err = result.extract();

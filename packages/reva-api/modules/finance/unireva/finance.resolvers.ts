@@ -1,27 +1,14 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
-
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { Candidacy } from "../../candidacy/candidacy.types";
-import {
-  existsCandidacyWithActiveStatus,
-  getCandidacyFromId,
-  updateCandidacyStatus,
-} from "../../candidacy/database/candidacies";
-import { getAfgsuTrainingId } from "../../candidacy/features/getAfgsuTrainingId";
-import { getCandidateByCandidacyId } from "../../candidate/database/candidates";
-import * as fundingRequestsDb from "./database/fundingRequests";
-import * as paymentRequestsDb from "./database/paymentRequest";
-import * as paymentRequestBatchesDb from "./database/paymentRequestBatches";
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
 import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
-import { Either, Left, Maybe } from "purify-ts";
-import { Candidate } from "../../candidate/candidate.types";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -36,13 +23,10 @@ const unsafeResolvers = {
     candidate_getFundingRequest: async (
       _: unknown,
       params: { candidacyId: string },
-      context: { auth: any },
     ) => {
       const result = await getFundingRequest({
-        hasRole: context.auth.hasRole,
-        getCandidacyFromId,
-        getFundingRequestFromCandidacyId: fundingRequestsDb.getFundingRequest,
-      })({ candidacyId: params.candidacyId });
+        candidacyId: params.candidacyId,
+      });
 
       return result
         .map((fundingRequestInformations: any) => {
@@ -69,23 +53,6 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
-        getCandidateByCandidacyId: async (
-          id: string,
-        ): Promise<Either<string, Candidate>> => {
-          try {
-            const result = await getCandidateByCandidacyId(id);
-            return Maybe.fromNullable(result).toEither("Candidat non trouvé");
-          } catch (_) {
-            return Left("Erreur pendant la récupération du candidat");
-          }
-        },
-        getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
-        getPaymentRequestByCandidacyId:
-          paymentRequestsDb.getPaymentRequestByCandidacyId,
-        createPaymentRequest: paymentRequestsDb.createPaymentRequest,
-        updatePaymentRequest: paymentRequestsDb.updatePaymentRequest,
-        getAfgsuTrainingId: getAfgsuTrainingId,
-      })({
         candidacyId,
         paymentRequest,
       });
@@ -115,16 +82,6 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await confirmPaymentRequest({
-        hasRole: context.auth.hasRole,
-        existsCandidacyWithActiveStatus,
-        getPaymentRequestByCandidacyId:
-          paymentRequestsDb.getPaymentRequestByCandidacyId,
-        updateCandidacyStatus,
-        createPaymentRequestBatch:
-          paymentRequestBatchesDb.createPaymentRequestBatch,
-        getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
-        getCandidacyFromId,
-      })({
         candidacyId: candidacyId,
       });
 

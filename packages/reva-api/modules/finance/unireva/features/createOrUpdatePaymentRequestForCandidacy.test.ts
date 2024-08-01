@@ -1,9 +1,13 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { Left, Maybe, Right } from "purify-ts";
-
-import { Candidate } from "../../../candidate/candidate.types";
 import { FundingRequest, PaymentRequest } from "../finance.types";
 import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
+
+import * as fundingRequestsDb from "../database/fundingRequests";
+import * as paymentRequestsDb from "../database/paymentRequest";
+import * as getAfgsuTrainingIdModule from "../../../candidacy/features/getAfgsuTrainingId";
+import * as candidatesDb from "../../../candidate/database/candidates";
+
+import { Left, Maybe, Right } from "purify-ts";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",
@@ -41,32 +45,51 @@ const defaultValidFundingRequest: FundingRequest = {
   mandatoryTrainings: [],
 } as FundingRequest;
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("create or update payment request", () => {
   describe("create or update payment request", () => {
     test("should create a new valid payment request", async () => {
-      const cpr = createOrUpdatePaymentRequestForCandidacy({
-        createPaymentRequest: (params: {
-          candidacyId: string;
-          paymentRequest: PaymentRequest;
-        }) => Promise.resolve(Right(params.paymentRequest)),
+      jest
+        .spyOn(paymentRequestsDb, "createPaymentRequest")
+        .mockImplementation(
+          (params: { candidacyId: string; paymentRequest: PaymentRequest }) =>
+            Promise.resolve(Right(params.paymentRequest)),
+        );
 
-        getPaymentRequestByCandidacyId: () =>
-          Promise.resolve(Right(Maybe.empty())),
-        getFundingRequestByCandidacyId: () =>
-          Promise.resolve(Right(defaultValidFundingRequest)),
+      jest
+        .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
+        .mockImplementation(() => Promise.resolve(Right(Maybe.empty())));
 
-        updatePaymentRequest: () =>
+      jest
+        .spyOn(fundingRequestsDb, "getFundingRequest")
+        .mockImplementation(() =>
+          Promise.resolve(Right(defaultValidFundingRequest) as any),
+        );
+
+      jest
+        .spyOn(paymentRequestsDb, "updatePaymentRequest")
+        .mockImplementation(() =>
           Promise.resolve(Left("Test should not run update method")),
-        getAfgsuTrainingId: () => Promise.resolve(null),
-        getCandidateByCandidacyId: () =>
+        );
+
+      jest
+        .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
+        .mockImplementation(() => Promise.resolve(null));
+
+      jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
+        () =>
           Promise.resolve(
             Right({
               highestDegree: { level: 1 },
               vulnerabilityIndicator: { label: "Vide" },
-            } as Candidate),
-          ),
-      });
-      const result = await cpr({
+            }),
+          ) as any,
+      );
+
+      const result = await createOrUpdatePaymentRequestForCandidacy({
         candidacyId: "1234",
         paymentRequest: defaultValidPaymentRequest,
       });
@@ -74,27 +97,47 @@ describe("create or update payment request", () => {
       expect(result.isRight()).toEqual(true);
     });
   });
-  test("should update an existing valid payment request", async () => {
-    const cpr = createOrUpdatePaymentRequestForCandidacy({
-      createPaymentRequest: () =>
-        Promise.resolve(Left("Test should not run create method")),
-      getPaymentRequestByCandidacyId: () =>
-        Promise.resolve(Right(Maybe.of(defaultValidPaymentRequest))),
-      getFundingRequestByCandidacyId: () =>
-        Promise.resolve(Right(defaultValidFundingRequest)),
 
-      updatePaymentRequest: (params: { paymentRequest: PaymentRequest }) =>
+  test("should update an existing valid payment request", async () => {
+    jest
+      .spyOn(paymentRequestsDb, "createPaymentRequest")
+      .mockImplementation(() =>
+        Promise.resolve(Left("Test should not run create method")),
+      );
+
+    jest
+      .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
+      .mockImplementation(() =>
+        Promise.resolve(Right(Maybe.of(defaultValidPaymentRequest))),
+      );
+
+    jest
+      .spyOn(fundingRequestsDb, "getFundingRequest")
+      .mockImplementation(() =>
+        Promise.resolve(Right(defaultValidFundingRequest) as any),
+      );
+
+    jest
+      .spyOn(paymentRequestsDb, "updatePaymentRequest")
+      .mockImplementation((params: { paymentRequest: PaymentRequest }) =>
         Promise.resolve(Right(params.paymentRequest)),
-      getAfgsuTrainingId: () => Promise.resolve(null),
-      getCandidateByCandidacyId: () =>
+      );
+
+    jest
+      .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
+      .mockImplementation(() => Promise.resolve(null));
+
+    jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
+      () =>
         Promise.resolve(
           Right({
             highestDegree: { level: 1 },
             vulnerabilityIndicator: { label: "Vide" },
-          } as Candidate),
-        ),
-    });
-    const result = await cpr({
+          }),
+        ) as any,
+    );
+
+    const result = await createOrUpdatePaymentRequestForCandidacy({
       candidacyId: "1234",
       paymentRequest: defaultValidPaymentRequest,
     });
