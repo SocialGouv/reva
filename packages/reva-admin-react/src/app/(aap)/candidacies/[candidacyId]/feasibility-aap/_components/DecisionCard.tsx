@@ -10,11 +10,11 @@ import { useParams } from "next/navigation";
 export const DecisionCard = ({
   aapDecision,
   aapDecisionComment,
-  isFeasibilityEditable,
+  isEditable,
 }: {
   aapDecision: DfFileAapDecision | null;
   aapDecisionComment: string | null;
-  isFeasibilityEditable: boolean;
+  isEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -38,7 +38,7 @@ export const DecisionCard = ({
       title="Avis sur la faisabilité"
       titleIconClass="fr-icon-thumb-up-fill"
       status={aapDecision ? "COMPLETED" : "TO_COMPLETE"}
-      isEditable={isFeasibilityEditable}
+      isEditable={isEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/decision`}
       CustomBadge={<DecisionBadge />}
     >

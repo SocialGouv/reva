@@ -31,7 +31,8 @@ const AapFeasibilityPage = () => {
   } = useAapFeasibilityPageLogic();
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
-  const isFeasibilityEditable = feasibilityFileSentAt === null;
+  const isFeasibilityEditable =
+    !feasibilityFileSentAt || feasibility?.decision === "INCOMPLETE";
 
   return (
     <div className="flex flex-col">
@@ -99,7 +100,8 @@ const AapFeasibilityPage = () => {
             competenceBlocsPartCompletion={
               dematerializedFeasibilityFile?.competenceBlocsPartCompletion
             }
-            isFeasibilityEditable={isFeasibilityEditable}
+            disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
+            isEditable={isFeasibilityEditable}
           />
           <PrerequisitesCard
             prerequisites={
@@ -108,7 +110,8 @@ const AapFeasibilityPage = () => {
             prerequisitesPartComplete={
               dematerializedFeasibilityFile?.prerequisitesPartComplete
             }
-            isFeasibilityEditable={isFeasibilityEditable}
+            disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
+            isEditable={isFeasibilityEditable}
           />
           <DecisionCard
             aapDecision={
@@ -117,13 +120,13 @@ const AapFeasibilityPage = () => {
             aapDecisionComment={
               dematerializedFeasibilityFile?.aapDecisionComment as string | null
             }
-            isFeasibilityEditable={isFeasibilityEditable}
+            isEditable={isFeasibilityEditable}
           />
           <AttachmentsCard
             attachmentsPartComplete={
               dematerializedFeasibilityFile?.attachmentsPartComplete
             }
-            isFeasibilityEditable={isFeasibilityEditable}
+            isEditable={isFeasibilityEditable}
           />
           <hr />
 
@@ -144,6 +147,7 @@ const AapFeasibilityPage = () => {
             swornStatementFileId={
               dematerializedFeasibilityFile?.swornStatementFileId
             }
+            isEditable={isFeasibilityEditable}
           />
 
           <hr className="pb-0.5" />

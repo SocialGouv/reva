@@ -3,6 +3,7 @@ import {
   BadgeCompleted,
   BadgeToComplete,
 } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import {
   CertificationCompetenceDetails,
   CompetenceBlocsPartCompletion,
@@ -29,15 +30,17 @@ const CompetencesSectionBadge = ({
 };
 
 export const CompetenciesBlocksSection = ({
+  isEditable,
   competenceBlocsPartCompletion,
   certificationCompetenceDetails,
   blocsDeCompetences,
-  isFeasibilityEditable,
+  disabled,
 }: {
+  isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   blocsDeCompetences: DffCertificationCompetenceBloc[];
-  isFeasibilityEditable: boolean;
+  disabled: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -46,38 +49,49 @@ export const CompetenciesBlocksSection = ({
       title="Blocs de compétences"
       titleIconClass="fr-icon-survey-fill"
       badge={
-        <CompetencesSectionBadge
-          completion={competenceBlocsPartCompletion || "TO_COMPLETE"}
-        />
+        isEditable && (
+          <CompetencesSectionBadge
+            completion={competenceBlocsPartCompletion || "TO_COMPLETE"}
+          />
+        )
       }
+      disabled={disabled}
     >
-      <ul className="list-none flex flex-col">
-        {blocsDeCompetences?.map((bloc) => (
-          <li
-            key={bloc.certificationCompetenceBloc.id}
-            className="flex justify-between items-start pb-0 gap-6"
-          >
-            <CertificationCompetenceAccordion
+      {!disabled && isEditable && (
+        <ul className="list-none flex flex-col">
+          {blocsDeCompetences?.map((bloc) => (
+            <li
               key={bloc.certificationCompetenceBloc.id}
-              competenceBloc={bloc.certificationCompetenceBloc}
-              competenceDetails={certificationCompetenceDetails}
-            />
-            {isFeasibilityEditable && (
-              <Button
-                className="w-[120px] mt-4 flex-none"
-                priority={bloc.complete ? "secondary" : "primary"}
-                linkProps={{
-                  href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
-                }}
-              >
-                <span className="mx-auto">
-                  {bloc.complete ? "Modifier" : "Compléter"}
-                </span>
-              </Button>
-            )}
-          </li>
-        ))}
-      </ul>
+              className="flex justify-between items-start pb-0 gap-6"
+            >
+              <CertificationCompetenceAccordion
+                key={bloc.certificationCompetenceBloc.id}
+                competenceBloc={bloc.certificationCompetenceBloc}
+                competenceDetails={certificationCompetenceDetails}
+              />
+              {!disabled && (
+                <Button
+                  className="w-[120px] mt-4 flex-none"
+                  priority={bloc.complete ? "secondary" : "primary"}
+                  linkProps={{
+                    href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
+                  }}
+                >
+                  <span className="mx-auto">
+                    {bloc.complete ? "Modifier" : "Compléter"}
+                  </span>
+                </Button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      {disabled && (
+        <SmallNotice>
+          Vous devez d'abord détailler la certification visée avant d'intégrer
+          les prérequis.
+        </SmallNotice>
+      )}
     </CandidacySectionCard>
   );
 };

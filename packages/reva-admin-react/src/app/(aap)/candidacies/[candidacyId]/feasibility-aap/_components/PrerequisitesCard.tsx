@@ -1,4 +1,5 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Prerequisite } from "@/graphql/generated/graphql";
 import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
@@ -7,11 +8,13 @@ import { useMemo } from "react";
 export const PrerequisitesCard = ({
   prerequisites,
   prerequisitesPartComplete,
-  isFeasibilityEditable,
+  disabled,
+  isEditable,
 }: {
   prerequisites?: Prerequisite[] | null;
   prerequisitesPartComplete?: boolean | null;
-  isFeasibilityEditable: boolean;
+  disabled: boolean;
+  isEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -35,10 +38,12 @@ export const PrerequisitesCard = ({
       title="Prérequis obligatoires"
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
-      isEditable={isFeasibilityEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
+      disabled={disabled}
+      isEditable={isEditable}
     >
       {prerequisitesPartComplete &&
+        !disabled &&
         (noPrerequisites ? (
           <p className="sm:ml-10">
             Il n'y a pas de prérequis obligatoires pour cette certification
@@ -73,7 +78,13 @@ export const PrerequisitesCard = ({
               </Accordion>
             )}
           </div>
-        ))}
+        ))}{" "}
+      {disabled && (
+        <SmallNotice>
+          Vous devez d'abord détailler la certification visée avant d'intégrer
+          les prérequis.
+        </SmallNotice>
+      )}
     </DefaultCandidacySectionCard>
   );
 };
