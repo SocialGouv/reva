@@ -1,5 +1,7 @@
 "use client";
 
+import "@/styles/globals.css";
+
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
@@ -11,7 +13,6 @@ import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAtt
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Keycloak from "keycloak-js";
 import { Toaster } from "react-hot-toast";
-import "./globals.css";
 
 import { useAuth } from "@/components/auth/auth";
 import {
