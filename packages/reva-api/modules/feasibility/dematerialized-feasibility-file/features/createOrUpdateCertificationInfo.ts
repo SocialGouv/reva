@@ -82,13 +82,9 @@ export const createOrUpdateCertificationInfo = async ({
     completion: input.completion,
   });
 
-  await prismaClient.dematerializedFeasibilityFile.update({
-    where: { id: dff.id },
-    data: {
-      sentToCandidateAt: null,
-      swornStatementFile: {},
-    },
-  });
+  if (currentFile?.sentToCandidateAt) {
+    await resetDFFSentToCandidateState(currentFile);
+  }
 
   return dff;
 };
