@@ -20,7 +20,7 @@
     "cookies-next": "^4.2.1",
     "date-fns": "^3.6.0",
     "graphql": "^16.9.0",
-    "graphql-request": "^7.1.0",
+    "graphql-request": "^6.1.0",
     "keycloak-js": "^24.0.3",
     "next": "14.2.4",
     "postcss-url": "^10.1.3",
