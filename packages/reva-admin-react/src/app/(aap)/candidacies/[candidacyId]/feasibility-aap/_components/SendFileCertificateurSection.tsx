@@ -18,7 +18,7 @@ const AlertDffState = ({
 }) => {
   const feasibilityIsPending = decision === "PENDING";
 
-  if (feasibilityIsPending) {
+  if (feasibilityIsPending && sentToCertificationAuthorityAt) {
     return (
       <Alert
         severity="success"
@@ -28,7 +28,7 @@ const AlertDffState = ({
     );
   }
 
-  if (decision) {
+  if (decision !== "PENDING") {
     return (
       <DecisionSentComponent
         decisionSentAt={decisionSentAt}
