@@ -20,6 +20,8 @@ import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
 import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
+import { Either, Left, Maybe } from "purify-ts";
+import { Candidate } from "../../candidate/candidate.types";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -67,7 +69,16 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
-        getCandidateByCandidacyId,
+        getCandidateByCandidacyId: async (
+          id: string,
+        ): Promise<Either<string, Candidate>> => {
+          try {
+            const result = await getCandidateByCandidacyId(id);
+            return Maybe.fromNullable(result).toEither("Candidat non trouvé");
+          } catch (_) {
+            return Left("Erreur pendant la récupération du candidat");
+          }
+        },
         getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
         getPaymentRequestByCandidacyId:
           paymentRequestsDb.getPaymentRequestByCandidacyId,

@@ -1,12 +1,10 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
 } from "./candidate.types";
-import { getCandidateWithCandidacyFromKeycloakId } from "./database/candidates";
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
@@ -59,19 +57,14 @@ const unsafeResolvers = {
       getHighestDegreeByCandidateId({ candidateId }),
   },
   Query: {
-    candidate_getCandidateWithCandidacy: async (
-      _: any,
-      _params: any,
-      context: { auth: any },
-    ) => {
-      const result = await getCandidateWithCandidacy({
-        getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
-      })({ keycloakId: context.auth.userInfo?.sub });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    candidate_getCandidateWithCandidacy: (
+      _: unknown,
+      _params: unknown,
+      context: GraphqlContext,
+    ) =>
+      getCandidateWithCandidacy({
+        keycloakId: context.auth.userInfo?.sub || "",
+      }),
   },
   Mutation: {
     candidate_askForRegistration: async (

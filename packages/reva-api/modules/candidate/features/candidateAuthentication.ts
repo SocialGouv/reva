@@ -14,7 +14,6 @@ import {
   getJWTContent,
 } from "../auth.helper";
 import {
-  Candidate,
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
 } from "../candidate.types";
@@ -73,19 +72,11 @@ const confirmRegistration = async ({
     lastname: candidate.lastname,
   });
 
-  let candidateWithCandidacy = (
-    await createCandidateWithCandidacy({
-      ...candidate,
-      keycloakId: candidateKeycloakId,
-    })
-  )
-    .ifLeft(() => {
-      throw new FunctionalError(
-        FunctionalCodeError.ACCOUNT_WITH_PROFILE_NOT_CREATED,
-        `Erreur lors de la création du compte avec le profil`,
-      );
-    })
-    .unsafeCoerce();
+  let candidateWithCandidacy = null;
+  candidateWithCandidacy = await createCandidateWithCandidacy({
+    ...candidate,
+    keycloakId: candidateKeycloakId,
+  });
 
   // if the candidate has selected a certification during its registration, we assign it if it's available in his department
   if (
@@ -104,9 +95,12 @@ const confirmRegistration = async ({
     });
 
     //reload candidate and candidacy after certification update
-    candidateWithCandidacy = (
-      await getCandidateWithCandidacyFromKeycloakId(candidateKeycloakId)
-    ).unsafeCoerce();
+    candidateWithCandidacy =
+      await getCandidateWithCandidacyFromKeycloakId(candidateKeycloakId);
+
+    if (!candidateWithCandidacy) {
+      throw new Error("Candidat non trouvé");
+    }
   }
 
   const tokens = await generateIAMToken(candidateKeycloakId);
@@ -138,19 +132,13 @@ const loginCandidate = async ({ email }: { email: string }) => {
       `Candidat non trouvé`,
     );
   }
-  const candidateWithCandidacy = (
-    await getCandidateWithCandidacyFromKeycloakId(account?.id || "")
-  )
-    .ifLeft(() => {
-      throw new FunctionalError(
-        FunctionalCodeError.CANDIDATE_NOT_FOUND,
-        `Candidat avec candidature non trouvé`,
-      );
-    })
-    .unsafeCoerce() as Candidate & {
-    keycloakId: string;
-    candidacies: unknown[];
-  };
+  const candidateWithCandidacy = await getCandidateWithCandidacyFromKeycloakId(
+    account?.id || "",
+  );
+
+  if (!candidateWithCandidacy) {
+    throw new Error("Candidat non trouvé");
+  }
 
   const tokens = await generateIAMToken(candidateWithCandidacy.keycloakId);
   const iamToken = {
