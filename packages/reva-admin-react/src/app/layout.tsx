@@ -50,7 +50,7 @@ setDefaultOptions({ locale: fr });
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme })}>
+    <html {...getHtmlAttributes({ defaultColorScheme })} lang="fr">
       <head>
         <StartDsfr />
         <DsfrHead />
