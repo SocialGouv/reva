@@ -1,26 +1,28 @@
 import { GenderEnum } from "@/constants";
-import { Candidate } from "@/graphql/generated/graphql";
+import { Candidate, Gender } from "@/graphql/generated/graphql";
 import { format } from "date-fns";
 
-const genderLabelMap = (gender?: GenderEnum): string => {
-  if (gender === GenderEnum.man) {
-    return "M";
-  } else if (gender === GenderEnum.woman) {
-    return "Mme";
-  } else {
-    return "";
+function getGenderPrefix(gender: Gender) {
+  switch (gender) {
+    case GenderEnum.man:
+      return "M. ";
+    case GenderEnum.woman:
+      return "Mme ";
+    case GenderEnum.undisclosed:
+      return "";
   }
-};
+}
 
-const bornLabelMap = (gender?: GenderEnum): string => {
-  if (gender === GenderEnum.man) {
-    return "Né";
-  } else if (gender === GenderEnum.woman) {
-    return "Née";
-  } else {
-    return "Né(e)";
+function getGenderBornLabel(gender: Gender) {
+  switch (gender) {
+    case GenderEnum.man:
+      return "Né";
+    case GenderEnum.woman:
+      return "Née";
+    case GenderEnum.undisclosed:
+      return "Né";
   }
-};
+}
 
 export default function CandidateSection({
   candidate,
@@ -48,8 +50,8 @@ export default function CandidateSection({
     highestDegree,
   } = candidate;
 
-  const genderLabel = genderLabelMap(gender as GenderEnum);
-  const bornLabel = bornLabelMap(gender as GenderEnum);
+  const genderLabel = gender ? getGenderPrefix(gender) : "";
+  const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   return (
     <div>
