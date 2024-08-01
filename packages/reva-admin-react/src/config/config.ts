@@ -15,3 +15,7 @@ export const KEYCLOAK_URL = process.env.NEXT_PUBLIC_KEYCLOAK_URL;
 export const HELP_BUBBLE_URL = process.env.NEXT_PUBLIC_HELP_BUBBLE_URL;
 export const PRODUKTLY_CLIENT_TOKEN =
   process.env.NEXT_PUBLIC_PRODUKTLY_CLIENT_TOKEN;
+
+export const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL;
+export const MATOMO_CONTAINER_NAME =
+  process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME;

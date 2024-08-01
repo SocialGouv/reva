@@ -1,6 +1,8 @@
 "use client";
 
 import "@/styles/globals.css";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/dsfr-theme-tac-extra.css";
 
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
@@ -19,12 +21,16 @@ import {
   KeycloakProvider,
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
-import { Produktly } from "@/components/produktly/Produktly";
+import { Produktly } from "@/components/script/Produktly";
+import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
+
 import {
   HELP_BUBBLE_URL,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
   KEYCLOAK_URL,
+  MATOMO_CONTAINER_NAME,
+  MATOMO_URL,
   PRODUKTLY_CLIENT_TOKEN,
 } from "@/config/config";
 import { setDefaultOptions } from "date-fns";
@@ -68,6 +74,21 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
             </QueryClientProvider>
           </KeycloakProvider>
         </DsfrProvider>
+        {
+          // The tarteaucitron lib waits for the document load event to initialize itself
+          // (cf "window.addEventListener("load", function ()" in the tarteaucitron.js file)
+          // To avoid cases where tarteaucitron doesn't start because the document is already loaded,
+          // we need to use Script in _document.tsx with the beforeInteractive strategy.
+          // onLoad can't be used with the beforeInteractive strategy, so we manually
+          // create a script tag in order to attach the required onLoad callback
+          MATOMO_URL && MATOMO_CONTAINER_NAME && (
+            <Script strategy="beforeInteractive" id="tarteaucitron-wrapper">
+              {tarteaucitronScript({
+                matomoUrl: `${MATOMO_URL}/js/container_${MATOMO_CONTAINER_NAME}.js`,
+              })}
+            </Script>
+          )
+        }
       </body>
     </html>
   );
