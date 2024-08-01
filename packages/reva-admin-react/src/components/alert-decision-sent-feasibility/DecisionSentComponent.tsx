@@ -11,6 +11,9 @@ export const DecisionSentComponent = ({
   decision: FeasibilityDecision;
   decisionComment?: string | null;
 }) => {
+  if (!decision) {
+    return null;
+  }
   const severityMap = {
     ADMISSIBLE: "success",
     INCOMPLETE: "info",
