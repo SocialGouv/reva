@@ -5,6 +5,7 @@ import { validateCoutTotal } from "./cout-total";
 
 test("Should yield an error when total cost > 3200", () => {
   const errors = validateCoutTotal({
+    maximumTotalCostAllowed: new Decimal(3200),
     ...fundingRequestFullCertOkHours,
     individualCost: new Decimal(500),
     collectiveCost: new Decimal(500),
@@ -19,6 +20,7 @@ test("Should yield an error when total cost > 3200", () => {
 
 test("Should be ok if total cost equals 3200", () => {
   const errors = validateCoutTotal({
+    maximumTotalCostAllowed: new Decimal(3200),
     ...fundingRequestFullCertOkHours,
     individualCost: new Decimal(500),
     collectiveCost: new Decimal(500),

@@ -16,6 +16,7 @@ import {
 } from "./features/finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import { applyBusinessValidationRules } from "./validation";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const withSkillsAndTrainings = (f: any) =>
   f
@@ -85,6 +86,7 @@ const unsafeResolvers = {
       };
 
       const validationErrors = await applyBusinessValidationRules({
+        maximumTotalCostAllowed: new Decimal(3200),
         candidacyId: fundingRequestCompleted.candidacyId,
         isCertificationPartial: fundingRequestCompleted.isCertificationPartial,
         ...fundingRequestCompleted.fundingRequest,

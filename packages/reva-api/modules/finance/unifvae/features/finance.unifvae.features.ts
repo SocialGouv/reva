@@ -1,6 +1,6 @@
 import { Candidate } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
@@ -201,7 +201,19 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     }
   }
 
+  //maximum total cost allowed for unifvae payment request depends on the funding request creation date
+  const fundingRequestSentBefore20231219 = candidacy.candidacyStatuses.some(
+    (cs) =>
+      cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
+      isBefore(cs.createdAt, new Date(2023, 11, 19)),
+  );
+
+  const maximumTotalCostAllowed = fundingRequestSentBefore20231219
+    ? new Decimal(4700)
+    : new Decimal(3200);
+
   const validationErrors = await applyBusinessValidationRules({
+    maximumTotalCostAllowed,
     candidacyId,
     isCertificationPartial: candidacy.isCertificationPartial,
     individualHourCount: paymentRequest.individualEffectiveHourCount,

@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { prismaClient } from "../../../../prisma/client";
 import { validateAccompagnement } from "./accompagnement";
 import { validateComplementFormatif } from "./complement-formatif";
@@ -11,6 +12,7 @@ export const applyBusinessValidationRules = async (
   input: {
     candidacyId: string;
     isCertificationPartial: boolean;
+    maximumTotalCostAllowed: Decimal;
   } & FundingRequestUnifvaeHourFields &
     FundingRequestUnifvaeCostFields,
 ): Promise<BusinessRulesValidationError[]> => {
