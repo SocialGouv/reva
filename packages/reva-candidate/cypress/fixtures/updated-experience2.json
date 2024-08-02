@@ -1,0 +1,11 @@
+{
+  "data": {
+    "candidacy_updateExperience": {
+      "id": "id1",
+      "title": "Experience 2",
+      "startedAt": 1490832000000,
+      "duration": "moreThanFiveYears",
+      "description": "Description 2"
+    }
+  }
+}

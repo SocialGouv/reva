@@ -1,0 +1,37 @@
+{
+  "data": {
+    "getRandomOrganismsForCandidacy": {
+      "rows": [
+        {
+          "id": "o1",
+          "label": "Architecte 1",
+          "address": "1 rue de l'exemple",
+          "zip": "75000",
+          "city": "Paris",
+          "contactAdministrativeEmail": "email@exemple.com",
+          "contactAdministrativePhone": "0111111111",
+          "informationsCommerciales": {
+            "adresseNumeroEtNomDeRue": "1 rue de l'exemple",
+            "adresseCodePostal": "75000",
+            "adresseVille": "Paris",
+            "conformeNormesAccessbilite": "CONFORME"
+          },
+          "isOnSite": true,
+          "isRemote": false
+        },
+        {
+          "id": "o2",
+          "label": "Architecte 2",
+          "address": "2 rue de l'exemple",
+          "zip": "44000",
+          "city": "Nantes",
+          "contactAdministrativeEmail": "email2@exemple.com",
+          "contactAdministrativePhone": "0222222222",
+          "isOnSite": false,
+          "isRemote": true
+        }
+      ],
+      "totalRows": 2
+    }
+  }
+}
