@@ -9,8 +9,6 @@ import {
 
 import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 
-const ACCESS_TOKEN_EXPIRATION_IN_SECONDS = 60;
-
 type KeycloakUser = {
   id: string;
   email: string | null;
@@ -184,14 +182,14 @@ const initKeycloak = async (params: InitKeycloakParams) => {
       console.log("Token expired");
 
       try {
-        await keycloakInstance.updateToken(ACCESS_TOKEN_EXPIRATION_IN_SECONDS);
+        await keycloakInstance.updateToken(5);
       } catch (error) {
         console.log("error", error);
       }
     };
 
     if (authenticated) {
-      await keycloakInstance.updateToken(ACCESS_TOKEN_EXPIRATION_IN_SECONDS);
+      await keycloakInstance.updateToken(60000);
 
       const { token, refreshToken, idToken } = keycloakInstance;
       if (token && refreshToken && idToken) {
