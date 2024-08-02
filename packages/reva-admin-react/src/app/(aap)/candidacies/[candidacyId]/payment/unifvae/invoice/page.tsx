@@ -250,19 +250,24 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           </Section>
           <hr />
           <Section title="5. Accompagnement">
-            <dl className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6">
-              <Info title="Forfait d’étude de faisabilité et entretien post-jury">
-                <p className="flex text-dsfr-orange-500">
-                  <span
-                    className="fr-icon-warning-fill fr-icon--sm mr-1"
-                    aria-hidden
-                  />
-                  Ne pourra être demandé que si l'étude a été réalisée dans sa
-                  totalité.
-                </p>
-              </Info>
-              <Info title="Forfait">300€ net</Info>
-            </dl>
+            <div className="grid grid-cols-[1fr_250px] gap-y-2">
+              <span />
+              <span>Forfait</span>
+              <span className="font-medium">
+                Forfait d’étude de faisabilité
+              </span>
+              <span className="font-medium">200€ net</span>
+              <span className="font-medium">Forfait entretien post-jury</span>
+              <span className="font-medium">100€ net</span>
+              <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
+                <span
+                  className="fr-icon-warning-fill fr-icon--sm mr-1"
+                  aria-hidden
+                />
+                Le forfait de faisabilité ne pourra être demandé que si l’étude
+                a été réalisée dans sa totalité.
+              </p>
+            </div>
             {candidacy?.feasibility?.decision === "ADMISSIBLE" && (
               <>
                 <Alert
