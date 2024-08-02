@@ -1,6 +1,7 @@
 import { prismaClient } from "../../../../prisma/client";
 import { validateAccompagnement } from "./accompagnement";
 import { validateComplementFormatif } from "./complement-formatif";
+import { validateCoutTotal } from "./cout-total";
 import { validateCoutsHoraires } from "./couts-horaires";
 import { validateFeasibilityChecks } from "./feasibility-checks";
 import { valideForfaitHeures } from "./forfait-heures";
@@ -33,7 +34,8 @@ export const applyBusinessValidationRules = async (
       .concat(valideForfaitHeures({ ...input }))
       .concat(validateCoutsHoraires({ ...input }))
       .concat(validateComplementFormatif({ ...input }))
-      .concat(validateAccompagnement({ ...input }));
+      .concat(validateAccompagnement({ ...input }))
+      .concat(validateCoutTotal({ ...input }));
   }
   return errors;
 };
