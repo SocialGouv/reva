@@ -100,7 +100,7 @@ export const usePaymentRequestUniRevaInvoicePage = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
 
   const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
-    queryKey: [candidacyId],
+    queryKey: [candidacyId, "getCandidacyForPaymentRequestUniRevaInvoicePage"],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
         candidacyId,
