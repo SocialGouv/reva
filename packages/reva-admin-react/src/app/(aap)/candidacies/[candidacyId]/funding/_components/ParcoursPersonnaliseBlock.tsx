@@ -55,13 +55,18 @@ export const ParcoursPersonnaliseBlock = ({
         <h2 className="text-xl">3. Parcours personnalisé</h2>
       </legend>
 
-      <div className="grid grid-cols-[1fr_250px] gap-y-2 mb-8">
+      <div className="grid grid-cols-[1fr_250px] gap-y-2">
         <span />
         <span>Forfait</span>
         <span className="font-medium">Forfait d’étude de faisabilité</span>
         <span className="font-medium">200€ net</span>
         <span className="font-medium">Forfait entretien post-jury</span>
         <span className="font-medium">100€ net</span>
+        <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
+          <span className="fr-icon-warning-fill fr-icon--sm mr-1" aria-hidden />
+          Le forfait de faisabilité ne pourra être demandé que si l’étude a été
+          réalisée dans sa totalité.
+        </p>
       </div>
 
       {!isForfaitOnly && (
