@@ -1,0 +1,18 @@
+{
+  "data": {
+    "getReferential": {
+      "goals": [
+        {
+          "id": "goal1",
+          "label": "Goal 1",
+          "order": 1
+        },
+        {
+          "id": "goal2",
+          "label": "Goal 2",
+          "order": 2
+        }
+      ]
+    }
+  }
+}

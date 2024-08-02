@@ -1,0 +1,11 @@
+{
+  "data": {
+    "candidacy_addExperience": {
+      "id": "id1",
+      "title": "Experience 1",
+      "startedAt": 1548892800000,
+      "duration": "betweenOneAndThreeYears",
+      "description": "Description 1"
+    }
+  }
+}

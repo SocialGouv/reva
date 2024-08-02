@@ -1,0 +1,50 @@
+{
+  "data": {
+    "candidateLogged": {
+      "tokens": {
+        "accessToken": "abc",
+        "refreshToken": "def",
+        "idToken": "ghi"
+      },
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04",
+        "candidacy": {
+          "id": "c1",
+          "certificationId": null,
+          "organism": null,
+          "createdAt": null,
+          "certification": {
+            "id": "c1",
+            "label": "Titre 1",
+            "summary": "résumé 1",
+            "codeRncp": "34691",
+            "status": "AVAILABLE"
+          },
+          "experiences": [],
+          "goals": [
+            {
+              "id": "goal1"
+            }
+          ],
+          "candidacyStatuses": [
+            {
+              "status": "PROJET",
+              "isActive": true
+            }
+          ],
+          "appointmentCount": 0,
+          "certificateSkills": null,
+          "otherTraining": null,
+          "individualHourCount": null,
+          "collectiveHourCount": null,
+          "additionalHourCount": null,
+          "basicSkills": [],
+          "mandatoryTrainings": []
+        }
+      }
+    }
+  }
+}
