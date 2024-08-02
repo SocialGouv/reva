@@ -17,6 +17,8 @@ export const ParcoursPersonnaliseBlock = ({
     watch,
     formState: { errors },
   } = useFormContext();
+
+  const forfaitCost = 300;
   const individualHourCount = watch("individualHourCount") || 0;
   const individualCost = watch("individualCost") || 0;
   const collectiveHourCount = watch("collectiveHourCount") || 0;
@@ -45,7 +47,7 @@ export const ParcoursPersonnaliseBlock = ({
 
   const totalHourCount =
     accompagnementHourCount + complementsFormatifsHourCount;
-  const totalCost = accompagnementCost + complementsFormatifsCost;
+  const totalCost = forfaitCost + accompagnementCost + complementsFormatifsCost;
 
   return (
     <div className="w-full">
@@ -59,7 +61,7 @@ export const ParcoursPersonnaliseBlock = ({
         <span className="font-medium">Forfait d’étude de faisabilité</span>
         <span className="font-medium">200€ net</span>
         <span className="font-medium">Forfait entretien post-jury</span>
-        <span className="font-medium">200€ net</span>
+        <span className="font-medium">100€ net</span>
       </div>
 
       {!isForfaitOnly && (
@@ -336,7 +338,7 @@ export const ParcoursPersonnaliseBlock = ({
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 justify-between pt-6 px-5">
-            <p className="flex-1 m-0 text-lg font-bold">Total hors forfait</p>
+            <p className="flex-1 m-0 text-lg font-bold">Total</p>
             <p className="flex-1 m-0">{totalHourCount} h</p>
             <p className="flex-1 m-0">{totalCost.toFixed(2)} €</p>
           </div>
