@@ -6,7 +6,26 @@ import { useParams } from "next/navigation";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAAPFeasibilityPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
-      isCertificationPartial,
+      isCertificationPartial
+      experiences {
+        id
+        title
+        startedAt
+        duration
+        description
+      }
+      mandatoryTrainings {
+        id
+        label
+      }
+      goals {
+        id
+        label
+      }
+      basicSkills {
+        id
+        label
+      }
       certification {
         label
         codeRncp
@@ -55,6 +74,12 @@ const getCandidacyById = graphql(`
           }
           aapDecision
           aapDecisionComment
+          attachments {
+            file {
+              previewUrl
+              name
+            }
+          }
         }
       }
     }
@@ -83,6 +108,7 @@ export const useAapFeasibilityPageLogic = () => {
     candidacy?.feasibility?.dematerializedFeasibilityFile;
   return {
     certification,
+    candidacy,
     dematerializedFeasibilityFile,
     queryStatus: getCandidacyByIdStatus,
     feasibility,

@@ -1,8 +1,11 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
+import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import {
+  Candidacy,
   CertificationCompetenceDetails,
+  DematerializedFeasibilityFile,
   DfFileAapDecision,
   DffCertificationCompetenceBloc,
   FeasibilityDecision,
@@ -12,6 +15,7 @@ import { useParams } from "next/navigation";
 import { AttachmentsCard } from "./_components/AttachmentsCard";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { DecisionCard } from "./_components/DecisionCard";
+import DffSummary from "./_components/DffSummary/DffSummary";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
@@ -28,11 +32,33 @@ const AapFeasibilityPage = () => {
     queryStatus,
     feasibility,
     isCertificationPartial,
+    candidacy,
   } = useAapFeasibilityPageLogic();
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
   const isFeasibilityEditable =
     !feasibilityFileSentAt || feasibility?.decision === "INCOMPLETE";
+  const isFeasibilityReceivedOrRejected =
+    feasibility?.decision === "ADMISSIBLE" ||
+    feasibility?.decision === "REJECTED";
+
+  if (isFeasibilityReceivedOrRejected) {
+    return (
+      <DffSummary
+        dematerializedFeasibilityFile={
+          dematerializedFeasibilityFile as DematerializedFeasibilityFile
+        }
+        candidacy={candidacy as Candidacy}
+        HasBeenSentComponent={
+          <DecisionSentComponent
+            decisionSentAt={feasibility?.decisionSentAt as any as Date}
+            decision={feasibility?.decision as FeasibilityDecision}
+            decisionComment={feasibility?.decisionComment}
+          />
+        }
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col">
