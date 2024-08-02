@@ -53,11 +53,14 @@ export const ParcoursPersonnaliseBlock = ({
         <h2 className="text-xl">3. Parcours personnalisé</h2>
       </legend>
 
-      <CallOut title="Le calcul de votre forfait évolue">
-        Votre forfait d’étude de faisabilité est désormais calculé à cette
-        étape. Il s’ajoutera par la suite au montant total, qui concerne les
-        heures hors forfait.
-      </CallOut>
+      <div className="grid grid-cols-[1fr_250px] gap-y-2 mb-8">
+        <span />
+        <span>Forfait</span>
+        <span className="font-medium">Forfait d’étude de faisabilité</span>
+        <span className="font-medium">200€ net</span>
+        <span className="font-medium">Forfait entretien post-jury</span>
+        <span className="font-medium">200€ net</span>
+      </div>
 
       {!isForfaitOnly && (
         <>
