@@ -47,41 +47,39 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
       },
     },
     handler: async (request, reply) => {
-      const auhtorization = await canManageCandidacy({
-        hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId.value,
-        keycloakId: request.auth?.userInfo?.sub,
-      });
-      if (!auhtorization) {
-        return reply.status(403).send({
-          err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+      try {
+        const auhtorization = await canManageCandidacy({
+          hasRole: request.auth.hasRole,
+          candidacyId: request.body.candidacyId.value,
+          keycloakId: request.auth?.userInfo?.sub,
         });
-      }
+        if (!auhtorization) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+          });
+        }
 
-      if (
-        !hasValidMimeType(request.body.appointment) ||
-        !hasValidMimeType(request.body.invoice)
-      ) {
-        return reply
-          .status(400)
-          .send(
-            `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
-          );
-      }
+        if (
+          !hasValidMimeType(request.body.appointment) ||
+          !hasValidMimeType(request.body.invoice)
+        ) {
+          return reply
+            .status(400)
+            .send(
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
+            );
+        }
+        await addPaymentProof({
+          fileMaxSize: maxUploadFileSize,
+          candidacyId: request.body.candidacyId.value,
+          appointment: request.body.appointment,
+          invoice: request.body.invoice,
+        });
 
-      const result = await addPaymentProof({
-        fileMaxSize: maxUploadFileSize,
-        candidacyId: request.body.candidacyId.value,
-        appointment: request.body.appointment,
-        invoice: request.body.invoice,
-      });
-
-      if (result.isLeft()) {
-        const err = result.extract();
-        reply.code(500);
-        reply.send(err.message);
-      } else {
         reply.send("OK");
+      } catch (e) {
+        reply.code(500);
+        reply.send(e instanceof Error ? e.message : "Une erreur est survenue");
       }
     },
   });

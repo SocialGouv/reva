@@ -7,7 +7,7 @@ import * as paymentRequestsDb from "../database/paymentRequest";
 import * as getAfgsuTrainingIdModule from "../../../candidacy/features/getAfgsuTrainingId";
 import * as candidatesDb from "../../../candidate/database/candidates";
 
-import { Left, Maybe, Right } from "purify-ts";
+import { Right } from "purify-ts";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",
@@ -56,23 +56,23 @@ describe("create or update payment request", () => {
         .spyOn(paymentRequestsDb, "createPaymentRequest")
         .mockImplementation(
           (params: { candidacyId: string; paymentRequest: PaymentRequest }) =>
-            Promise.resolve(Right(params.paymentRequest)),
+            Promise.resolve(params.paymentRequest as any),
         );
 
       jest
         .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
-        .mockImplementation(() => Promise.resolve(Right(Maybe.empty())));
+        .mockImplementation(() => Promise.resolve(null));
 
       jest
         .spyOn(fundingRequestsDb, "getFundingRequest")
         .mockImplementation(() =>
-          Promise.resolve(Right(defaultValidFundingRequest) as any),
+          Promise.resolve(defaultValidFundingRequest as any),
         );
 
       jest
         .spyOn(paymentRequestsDb, "updatePaymentRequest")
         .mockImplementation(() =>
-          Promise.resolve(Left("Test should not run update method")),
+          Promise.reject("Test should not run update method"),
         );
 
       jest
@@ -93,8 +93,7 @@ describe("create or update payment request", () => {
         candidacyId: "1234",
         paymentRequest: defaultValidPaymentRequest,
       });
-      console.log(result);
-      expect(result.isRight()).toEqual(true);
+      expect(result).toMatchObject(defaultValidPaymentRequest);
     });
   });
 
@@ -102,25 +101,25 @@ describe("create or update payment request", () => {
     jest
       .spyOn(paymentRequestsDb, "createPaymentRequest")
       .mockImplementation(() =>
-        Promise.resolve(Left("Test should not run create method")),
+        Promise.reject("Test should not run create method"),
       );
 
     jest
       .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
       .mockImplementation(() =>
-        Promise.resolve(Right(Maybe.of(defaultValidPaymentRequest))),
+        Promise.resolve(defaultValidPaymentRequest as any),
       );
 
     jest
       .spyOn(fundingRequestsDb, "getFundingRequest")
       .mockImplementation(() =>
-        Promise.resolve(Right(defaultValidFundingRequest) as any),
+        Promise.resolve(defaultValidFundingRequest as any),
       );
 
     jest
       .spyOn(paymentRequestsDb, "updatePaymentRequest")
       .mockImplementation((params: { paymentRequest: PaymentRequest }) =>
-        Promise.resolve(Right(params.paymentRequest)),
+        Promise.resolve(params.paymentRequest as any),
       );
 
     jest
@@ -141,6 +140,6 @@ describe("create or update payment request", () => {
       candidacyId: "1234",
       paymentRequest: defaultValidPaymentRequest,
     });
-    expect(result.isRight()).toEqual(true);
+    expect(result).toMatchObject(defaultValidPaymentRequest);
   });
 });

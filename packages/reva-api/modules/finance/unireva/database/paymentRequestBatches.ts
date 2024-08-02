@@ -1,21 +1,13 @@
-import { Left, Right } from "purify-ts";
-
 import { prismaClient } from "../../../../prisma/client";
-import { logger } from "../../../shared/logger";
-import { PaymentRequestBatch } from "../finance.types";
+import { PaymentRequestBatchContent } from "../finance.types";
 
-export const createPaymentRequestBatch = async (params: {
+export const createPaymentRequestBatch = async ({
+  paymentRequestId,
+  content,
+}: {
   paymentRequestId: string;
-  content: object;
-}) => {
-  try {
-    return Right(
-      (await prismaClient.paymentRequestBatch.create({
-        data: { ...params },
-      })) as unknown as PaymentRequestBatch,
-    );
-  } catch (e) {
-    logger.error(e);
-    return Left("error while creating payment request batch");
-  }
-};
+  content: PaymentRequestBatchContent;
+}) =>
+  prismaClient.paymentRequestBatch.create({
+    data: { paymentRequestId, content: content as object },
+  });

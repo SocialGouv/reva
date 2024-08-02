@@ -1,6 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
-import mercurius from "mercurius";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { Candidacy } from "../../candidacy/candidacy.types";
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
@@ -9,6 +8,7 @@ import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { resolversSecurityMap } from "./security";
 import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
+import mercurius from "mercurius";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -29,18 +29,14 @@ const unsafeResolvers = {
       });
 
       return result
-        .map((fundingRequestInformations: any) => {
-          return {
-            fundingRequest: fundingRequestInformations.fundingRequest,
+        ? {
+            fundingRequest: result.fundingRequest,
             training: {
-              ...fundingRequestInformations.training,
-              mandatoryTrainings:
-                fundingRequestInformations.training.mandatoryTrainings,
+              ...result.training,
+              mandatoryTrainings: result.training.mandatoryTrainings,
             },
-          };
-        })
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+          }
+        : null;
     },
   },
   Mutation: {
@@ -52,11 +48,11 @@ const unsafeResolvers = {
       }: { candidacyId: string; paymentRequest: PaymentRequest },
       context: GraphqlContext,
     ) => {
-      const result = await createOrUpdatePaymentRequestForCandidacy({
-        candidacyId,
-        paymentRequest,
-      });
-      if (result.isRight()) {
+      try {
+        const result = await createOrUpdatePaymentRequestForCandidacy({
+          candidacyId,
+          paymentRequest,
+        });
         await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
@@ -64,28 +60,28 @@ const unsafeResolvers = {
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
           eventType: "PAYMENT_REQUEST_CREATED_OR_UPDATED",
         });
-      }
 
-      return result
-        .mapLeft((error) =>
-          error.errors?.length
-            ? new mercurius.ErrorWithProps(error.errors[0], {
-                businessErrors: error.errors,
-              })
-            : new mercurius.ErrorWithProps(error.message, error),
-        )
-        .extract();
+        return result;
+      } catch (e: any) {
+        if (e?.errors?.length) {
+          throw new mercurius.ErrorWithProps(e.errors[0], {
+            businessErrors: e.errors,
+          });
+        } else {
+          throw new mercurius.ErrorWithProps(e.message, e);
+        }
+      }
     },
     candidacy_confirmPaymentRequest: async (
       _: unknown,
       { candidacyId }: { candidacyId: string },
       context: GraphqlContext,
     ) => {
-      const result = await confirmPaymentRequest({
-        candidacyId: candidacyId,
-      });
+      try {
+        const result = await confirmPaymentRequest({
+          candidacyId: candidacyId,
+        });
 
-      if (result.isRight()) {
         await logCandidacyAuditEvent({
           candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
@@ -93,17 +89,17 @@ const unsafeResolvers = {
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
           eventType: "PAYMENT_REQUEST_CONFIRMED",
         });
-      }
 
-      return result
-        .mapLeft((error) =>
-          error.errors?.length
-            ? new mercurius.ErrorWithProps(error.errors[0], {
-                businessErrors: error.errors,
-              })
-            : new mercurius.ErrorWithProps(error.message, error),
-        )
-        .extract();
+        return result;
+      } catch (e: any) {
+        if (e?.errors?.length) {
+          throw new mercurius.ErrorWithProps(e.errors[0], {
+            businessErrors: e.errors,
+          });
+        } else {
+          throw new mercurius.ErrorWithProps(e.message, e);
+        }
+      }
     },
   },
 };

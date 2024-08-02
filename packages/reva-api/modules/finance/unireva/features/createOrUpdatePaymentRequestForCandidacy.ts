@@ -1,5 +1,3 @@
-import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
-
 import { Candidate } from "../../../candidate/candidate.types";
 import {
   FunctionalCodeError,
@@ -12,74 +10,58 @@ import {
   validateTotalCost,
 } from "./costValidationUtils";
 
-import * as fundingRequestsDb from "../database/fundingRequests";
-import * as paymentRequestsDb from "../database/paymentRequest";
 import { getAfgsuTrainingId } from "../../../candidacy/features/getAfgsuTrainingId";
 import { getCandidateByCandidacyId } from "../../../candidate/database/candidates";
+import { getFundingRequest } from "../database/fundingRequests";
+import {
+  createPaymentRequest,
+  getPaymentRequestByCandidacyId,
+  updatePaymentRequest,
+} from "../database/paymentRequest";
 
-export const createOrUpdatePaymentRequestForCandidacy = async (params: {
+export const createOrUpdatePaymentRequestForCandidacy = async ({
+  candidacyId,
+  paymentRequest,
+}: {
   candidacyId: string;
   paymentRequest: PaymentRequest;
-}): Promise<Either<FunctionalError, PaymentRequest>> => {
-  const createOrUpdatePaymentRequest = (
-    existingPaymentRequest: Maybe<PaymentRequest>,
-  ): Promise<Either<string, PaymentRequest>> =>
-    existingPaymentRequest.caseOf({
-      Just: (pr) =>
-        paymentRequestsDb.updatePaymentRequest({
-          paymentRequestId: pr.id,
-          paymentRequest: params.paymentRequest,
-        }),
-
-      Nothing: () =>
-        paymentRequestsDb.createPaymentRequest({
-          candidacyId: params.candidacyId,
-          paymentRequest: params.paymentRequest,
-        }),
-    });
-
+}) => {
   const afgsuTrainingId = await getAfgsuTrainingId();
 
-  return EitherAsync.fromPromise(() =>
-    fundingRequestsDb.getFundingRequest({
-      candidacyId: params.candidacyId,
-    }),
-  )
-    .map((fundingRequest) =>
-      EitherAsync.fromPromise(async () => {
-        try {
-          const result = await getCandidateByCandidacyId(params.candidacyId);
-          return Maybe.fromNullable(result).toEither("Candidat non trouvé");
-        } catch (_) {
-          return Left("Erreur pendant la récupération du candidat");
-        }
-      }).map((candidate) => ({ fundingRequest, candidate })),
-    )
-    .join()
-    .chain((candidateAndFundingRequest) =>
-      Promise.resolve(
-        validatePaymentRequest(
-          candidateAndFundingRequest.candidate,
-          params.paymentRequest,
-          candidateAndFundingRequest.fundingRequest,
-          afgsuTrainingId,
-        ),
-      ),
-    )
-    .chain(() =>
-      paymentRequestsDb.getPaymentRequestByCandidacyId({
-        candidacyId: params.candidacyId,
-      }),
-    )
-    .chain(createOrUpdatePaymentRequest)
-    .mapLeft((v) =>
-      v instanceof FunctionalError
-        ? v
-        : new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            `Erreur pendant la création ou la mise à jour de la demande de paiement pour la candidature ${params.candidacyId}`,
-          ),
-    );
+  const fundingRequest = await getFundingRequest({
+    candidacyId,
+  });
+
+  if (!fundingRequest) {
+    throw new Error("Demande de financement non trouvée");
+  }
+
+  const candidate = await getCandidateByCandidacyId(candidacyId);
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
+  }
+
+  validatePaymentRequest(
+    candidate,
+    paymentRequest,
+    fundingRequest,
+    afgsuTrainingId,
+  );
+
+  const existingPaymentRequest = await getPaymentRequestByCandidacyId({
+    candidacyId,
+  });
+
+  return existingPaymentRequest
+    ? updatePaymentRequest({
+        paymentRequestId: existingPaymentRequest.id,
+        paymentRequest,
+      })
+    : createPaymentRequest({
+        candidacyId,
+        paymentRequest,
+      });
 };
 
 const validatePaymentRequest = (
@@ -87,7 +69,7 @@ const validatePaymentRequest = (
   pr: PaymentRequest,
   fr: FundingRequest | null,
   afgsuTrainingId: string | null,
-): Either<FunctionalError, PaymentRequest> => {
+) => {
   let errors: string[] = [];
 
   if (!fr) {
@@ -135,13 +117,13 @@ const validatePaymentRequest = (
     totalCostErrorMessage && errors.push(totalCostErrorMessage);
   }
 
-  return errors.length
-    ? Left(
-        new FunctionalError(
-          FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-          `Une erreur est survenue lors de la validation du formulaire`,
-          errors,
-        ),
-      )
-    : Right(pr);
+  if (errors.length) {
+    throw new FunctionalError(
+      FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+      `Une erreur est survenue lors de la validation du formulaire`,
+      errors,
+    );
+  }
+
+  return pr;
 };

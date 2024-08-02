@@ -1,6 +1,4 @@
 import { Decimal } from "@prisma/client/runtime/library";
-
-import { TrainingForm } from "../../candidate/candidate.types";
 import { Organism } from "../../organism/organism.types";
 
 export interface FundingRequest {
@@ -33,11 +31,6 @@ export interface FundingRequest {
   numAction: string;
 }
 
-export interface FundingRequestInformations {
-  training: TrainingForm;
-  fundingRequest: FundingRequest | null;
-}
-
 export interface PaymentRequest {
   id: string;
   diagnosisEffectiveHourCount: number;
@@ -59,13 +52,6 @@ export interface PaymentRequest {
   examEffectiveHourCount: number;
   examEffectiveCost: Decimal;
   invoiceNumber: string;
-}
-
-export interface PaymentRequestBatch {
-  paymentRequestId: string;
-  sent: boolean;
-  batchFileName?: string;
-  content?: PaymentRequestBatchContent;
 }
 
 export interface PaymentRequestBatchContent {
@@ -91,11 +77,4 @@ export interface PaymentRequestBatchContent {
   CoutHeureReaComplFormBlocDeCompetencesCertifiant: number;
   NBHeureReaActeFormatifComplémentaire_Autre: number;
   CoutHeureReaActeFormatifComplémentaire_Autre: number;
-}
-
-export interface FileUploadSpoolerEntry {
-  destinationFileName: string;
-  destinationPath: string;
-  description: string;
-  fileContent?: Buffer;
 }

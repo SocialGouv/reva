@@ -1,118 +1,62 @@
-import { EitherAsync, Left, Right } from "purify-ts";
-
 import { Candidacy } from "../../../candidacy/candidacy.types";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../../shared/error/functionalError";
-import {
-  FundingRequest,
-  PaymentRequest,
-  PaymentRequestBatchContent,
-} from "../finance.types";
-
-import * as fundingRequestsDb from "../database/fundingRequests";
-import * as paymentRequestsDb from "../database/paymentRequest";
-import * as paymentRequestBatchesDb from "../database/paymentRequestBatches";
+import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 
 import {
   existsCandidacyWithActiveStatus,
   getCandidacyFromId,
   updateCandidacyStatus,
 } from "../../../candidacy/database/candidacies";
+import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
+import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
+import { FundingRequest } from "@prisma/client";
+import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
 
-export const confirmPaymentRequest = (params: { candidacyId: string }) => {
-  const validateCandidacyStatus = EitherAsync.fromPromise(() =>
-    existsCandidacyWithActiveStatus({
-      candidacyId: params.candidacyId,
+export const confirmPaymentRequest = async ({
+  candidacyId,
+}: {
+  candidacyId: string;
+}) => {
+  if (
+    !(await existsCandidacyWithActiveStatus({
+      candidacyId,
       status: "DEMANDE_FINANCEMENT_ENVOYE",
-    }),
-  )
-    .chain((existsCandidacy) => {
-      if (!existsCandidacy) {
-        return EitherAsync.liftEither(
-          Left(
-            `La demande de paiement de la candidature ${params.candidacyId} ne peut être confirmée: statut invalide.`,
-          ),
-        );
-      }
-      return EitherAsync.liftEither(Right(existsCandidacy));
-    })
-    .mapLeft(
-      (error: string) =>
-        new FunctionalError(
-          FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-          error,
-        ),
+    }))
+  ) {
+    throw new Error(
+      `La demande de paiement de la candidature ${candidacyId} ne peut être confirmée: statut invalide.`,
     );
+  }
 
-  const getCandidacyPaymentRequest = async () =>
-    (
-      await paymentRequestsDb.getPaymentRequestByCandidacyId({
-        candidacyId: params.candidacyId,
-      })
-    )
-      .chain((pr) =>
-        pr.isJust()
-          ? Right(pr.extract())
-          : Left(
-              `Aucune demande de paiement trouvée pour la candidature ${params.candidacyId}`,
-            ),
-      )
-      .mapLeft(
-        (error: string) =>
-          new FunctionalError(
-            FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-            error,
-          ),
-      );
+  const candidacy = (await getCandidacyFromId(candidacyId)).unsafeCoerce();
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
 
-  const updateCandidacy = EitherAsync.fromPromise(() =>
-    updateCandidacyStatus({
-      candidacyId: params.candidacyId,
-      status: "DEMANDE_PAIEMENT_ENVOYEE",
+  const fundingRequest = await getFundingRequestByCandidacyId({ candidacyId });
+  if (!fundingRequest) {
+    throw new Error("Demande de financement non trouvée");
+  }
+
+  const paymentRequest = await getPaymentRequestByCandidacyId({ candidacyId });
+  if (!paymentRequest) {
+    throw new Error("Demande de paiement non trouvée");
+  }
+
+  await createPaymentRequestBatch({
+    paymentRequestId: paymentRequest.id,
+    content: mapPaymentRequestBatchContent({
+      candidacy,
+      fundingRequest,
+      paymentRequest,
     }),
-  ).mapLeft(
-    () =>
-      new FunctionalError(
-        FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-        `Erreur lors de la confirmation de la demande de paiement de la candidature ${params.candidacyId}`,
-      ),
-  );
+  });
 
-  const createPaymentRequestBatch = async (paymentRequest: PaymentRequest) =>
-    EitherAsync.fromPromise(() => getCandidacyFromId(params.candidacyId))
-      .map((candidacy) =>
-        EitherAsync.fromPromise(() =>
-          fundingRequestsDb.getFundingRequest({
-            candidacyId: params.candidacyId,
-          }),
-        ).map((fundingRequest) => ({
-          fundingRequest,
-          candidacy,
-          paymentRequest,
-        })),
-      )
-      .join()
-      .map(mapPaymentRequestBatchContent)
-      .chain((content) =>
-        paymentRequestBatchesDb.createPaymentRequestBatch({
-          paymentRequestId: paymentRequest.id,
-          content,
-        }),
-      )
-      .mapLeft(
-        (e) =>
-          new FunctionalError(
-            FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
-            e,
-          ),
-      );
+  await updateCandidacyStatus({
+    candidacyId: candidacyId,
+    status: "DEMANDE_PAIEMENT_ENVOYEE",
+  });
 
-  return validateCandidacyStatus
-    .chain(getCandidacyPaymentRequest)
-    .chain(createPaymentRequestBatch)
-    .chain(() => updateCandidacy);
+  return candidacy;
 };
 
 export const mapPaymentRequestBatchContent = ({
@@ -122,7 +66,7 @@ export const mapPaymentRequestBatchContent = ({
 }: {
   candidacy: Candidacy;
   paymentRequest: PaymentRequest;
-  fundingRequest: FundingRequest | null;
+  fundingRequest: FundingRequest;
 }): PaymentRequestBatchContent => ({
   NumAction: fundingRequest?.numAction || "",
   NumFacture: paymentRequest.invoiceNumber,

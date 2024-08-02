@@ -68,14 +68,6 @@ export type CandidateAuthenticationInput =
   | CandidateLoginInput
   | CandidateConfirmEmailInput;
 
-export interface TrainingForm {
-  individualHourCount: number;
-  collectiveHourCount: number;
-  basicSkills: any;
-  mandatoryTrainings: any;
-  otherTraining: string;
-}
-
 export enum CandidateBusinessEvent {
   CREATED_CANDIDATE = "Created Candidate",
 }
