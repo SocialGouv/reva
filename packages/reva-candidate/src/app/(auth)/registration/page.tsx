@@ -204,7 +204,7 @@ export default function Registration() {
 
           <div className="border-t border-gray-200 pt-6">
             <button
-              data-test="project-contact-login"
+              data-test="navigate-to-login"
               onClick={() => {
                 router.push("/login");
               }}
