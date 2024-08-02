@@ -230,34 +230,33 @@ const unsafeResolvers = {
       _: unknown,
       payload: any,
       context: GraphqlContext,
-    ) => {
-      const result = await updateCertificationOfCandidacy({
+    ) =>
+      updateCertificationOfCandidacy({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
         userKeycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth?.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-
-      return result;
-    },
+      }),
     candidacy_updateCertificationWithinOrganismScope: async (
       _: unknown,
       payload: any,
       context: GraphqlContext,
-    ) => {
-      const result = await updateCertificationWithinOrganismScope({
-        hasRole: context.auth.hasRole,
-        candidacyId: payload.candidacyId,
-        certificationId: payload.certificationId,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth?.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
+    ) =>
+      (
+        await updateCertificationWithinOrganismScope({
+          hasRole: context.auth.hasRole,
+          candidacyId: payload.candidacyId,
+          certificationId: payload.certificationId,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth?.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        })
+      )
+        .mapLeft((error) => new mercurius.ErrorWithProps(error))
+        .extract(),
 
-      return result;
-    },
     candidacy_addExperience: async (
       _: unknown,
       payload: any,
