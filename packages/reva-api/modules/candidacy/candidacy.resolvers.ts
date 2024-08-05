@@ -452,11 +452,10 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await takeOverCandidacy({
-        existsCandidacyWithActiveStatus:
-          candidacyDb.existsCandidacyWithActiveStatus,
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-      })({
         candidacyId: payload.candidacyId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
@@ -464,18 +463,7 @@ const unsafeResolvers = {
         context,
         result,
       });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "CANDIDACY_TAKEN_OVER",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
 
     candidacy_selectOrganism: async (

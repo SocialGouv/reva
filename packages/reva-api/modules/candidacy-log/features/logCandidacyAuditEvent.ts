@@ -3,12 +3,16 @@ import { CandidacyLogUserProfile } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { CandidacyLogEventTypeAndDetails } from "../candidacy-log.types";
 
-type LogCandidacyAuditEventParams = {
-  candidacyId: string;
+export interface CandidacyAuditLogUserInfo {
   userKeycloakId?: string;
   userEmail?: string;
   userRoles: KeyCloakUserRole[];
-} & CandidacyLogEventTypeAndDetails;
+}
+
+type LogCandidacyAuditEventParams = {
+  candidacyId: string;
+} & CandidacyAuditLogUserInfo &
+  CandidacyLogEventTypeAndDetails;
 
 export const logCandidacyAuditEvent = ({
   candidacyId,
