@@ -9,6 +9,11 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
       decision
       decisionComment
       decisionSentAt
+      history {
+        decision
+        decisionComment
+        decisionSentAt
+      }
       dematerializedFeasibilityFile {
         id
         swornStatementFile {

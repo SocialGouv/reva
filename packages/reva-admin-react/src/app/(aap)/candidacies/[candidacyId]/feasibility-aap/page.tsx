@@ -9,6 +9,7 @@ import {
   DfFileAapDecision,
   DffCertificationCompetenceBloc,
   FeasibilityDecision,
+  FeasibilityHistory,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
@@ -54,6 +55,7 @@ const AapFeasibilityPage = () => {
             decisionSentAt={feasibility?.decisionSentAt as any as Date}
             decision={feasibility?.decision as FeasibilityDecision}
             decisionComment={feasibility?.decisionComment}
+            history={feasibility?.history as FeasibilityHistory[]}
           />
         }
       />
@@ -188,6 +190,7 @@ const AapFeasibilityPage = () => {
             decisionSentAt={feasibility?.decisionSentAt as any as Date}
             decision={feasibility?.decision as FeasibilityDecision}
             decisionComment={feasibility?.decisionComment}
+            history={feasibility?.history as FeasibilityHistory[]}
           />
         </ul>
       )}

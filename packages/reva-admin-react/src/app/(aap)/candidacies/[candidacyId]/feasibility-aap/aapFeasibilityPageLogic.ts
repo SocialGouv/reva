@@ -35,6 +35,11 @@ const getCandidacyById = graphql(`
         decisionSentAt
         decisionComment
         feasibilityFileSentAt
+        history {
+        decision
+        decisionComment
+        decisionSentAt
+      }
         dematerializedFeasibilityFile {
           swornStatementFileId
           isReadyToBeSentToCandidate

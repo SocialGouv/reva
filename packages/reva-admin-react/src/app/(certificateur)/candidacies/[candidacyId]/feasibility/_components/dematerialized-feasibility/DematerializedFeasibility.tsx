@@ -8,6 +8,7 @@ import {
   Candidacy,
   DematerializedFeasibilityFile,
   FeasibilityDecision,
+  FeasibilityHistory,
 } from "@/graphql/generated/graphql";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -135,6 +136,7 @@ export const DematerializedFeasibility = () => {
               decisionSentAt={feasibility?.decisionSentAt as any as Date}
               decision={feasibility?.decision as FeasibilityDecision}
               decisionComment={feasibility?.decisionComment}
+              history={feasibility?.history as FeasibilityHistory[]}
             />
           )
         }

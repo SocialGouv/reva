@@ -1,5 +1,5 @@
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { FeasibilityDecision } from "@/graphql/generated/graphql";
+import { FeasibilityDecision, FeasibilityHistory } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -10,11 +10,13 @@ const AlertDffState = ({
   decisionSentAt,
   decisionComment,
   sentToCertificationAuthorityAt,
+  history,
 }: {
   decision: FeasibilityDecision;
   decisionSentAt: Date;
   decisionComment?: string | null;
   sentToCertificationAuthorityAt: Date;
+  history: FeasibilityHistory[];
 }) => {
   const feasibilityIsPending = decision === "PENDING";
 
@@ -34,6 +36,7 @@ const AlertDffState = ({
         decisionSentAt={decisionSentAt}
         decision={decision}
         decisionComment={decisionComment}
+        history={history}
       />
     );
   }
@@ -47,12 +50,14 @@ export const SendFileCertificationAuthoritySection = ({
   decisionSentAt,
   decision,
   decisionComment,
+  history,
 }: {
   sentToCertificationAuthorityAt?: Date | null;
   isReadyToBeSentToCertificationAuthority?: boolean;
   decisionSentAt: Date;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
+  history: FeasibilityHistory[];
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -76,6 +81,7 @@ export const SendFileCertificationAuthoritySection = ({
         decisionSentAt={decisionSentAt}
         decision={decision}
         decisionComment={decisionComment}
+        history={history}
       />
       <div className="flex justify-end">
         <Button
