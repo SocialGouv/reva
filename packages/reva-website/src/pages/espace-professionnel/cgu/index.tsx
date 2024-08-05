@@ -12,10 +12,7 @@ const CguProPage = () => (
       </title>
     </Head>
     <OrganismBackground>
-      <h1>
-        Conditions générales d’utilisation de la Plateforme France VAE -
-        Structures professionnelles
-      </h1>
+      <h1>Conditions générales d’utilisation de la Plateforme France VAE</h1>
       <Cgu />
     </OrganismBackground>
   </MainLayout>
