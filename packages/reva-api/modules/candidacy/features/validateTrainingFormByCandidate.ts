@@ -1,61 +1,41 @@
-import { Either, EitherAsync, Left, Right } from "purify-ts";
-
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+  CandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
-interface ConfirmTrainingFormByCandidateDeps {
-  existsCandidacyWithActiveStatus: (params: {
-    candidacyId: string;
-    status: "PARCOURS_ENVOYE";
-  }) => Promise<Either<string, boolean>>;
-  updateCandidacyStatus: (params: {
-    candidacyId: string;
-    status: "PARCOURS_CONFIRME";
-  }) => Promise<Either<string, Candidacy>>;
-}
-
-export const confirmTrainingFormByCandidate =
-  (deps: ConfirmTrainingFormByCandidateDeps) =>
-  (params: { candidacyId: string }) => {
-    const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
-      deps.existsCandidacyWithActiveStatus({
-        candidacyId: params.candidacyId,
-        status: "PARCOURS_ENVOYE",
-      }),
-    )
-      .chain((existsCandidacy) => {
-        if (!existsCandidacy) {
-          return EitherAsync.liftEither(
-            Left(
-              `Le parcours candidat de la candidature ${params.candidacyId} ne peut être confirmé`,
-            ),
-          );
-        }
-        return EitherAsync.liftEither(Right(existsCandidacy));
-      })
-      .mapLeft(
-        (error: string) =>
-          new FunctionalError(
-            FunctionalCodeError.TRAINING_FORM_NOT_CONFIRMED,
-            error,
-          ),
-      );
-
-    const updateCandidacy = EitherAsync.fromPromise(() =>
-      deps.updateCandidacyStatus({
-        candidacyId: params.candidacyId,
-        status: "PARCOURS_CONFIRME",
-      }),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.TRAINING_FORM_NOT_CONFIRMED,
-          `Erreur lors de la confirmation du parcours candidat de la candidature ${params.candidacyId}`,
-        ),
+export const confirmTrainingFormByCandidate = async ({
+  candidacyId,
+  userKeycloakId,
+  userEmail,
+  userRoles,
+}: {
+  candidacyId: string;
+} & CandidacyAuditLogUserInfo) => {
+  if (
+    !(await existsCandidacyWithActiveStatus({
+      candidacyId,
+      status: "PARCOURS_ENVOYE",
+    }))
+  ) {
+    throw new Error(
+      `Le parcours candidat de la candidature ${candidacyId} ne peut être confirmé`,
     );
+  }
 
-    return existsCandidacyInValidation.chain(() => updateCandidacy);
-  };
+  const result = await updateCandidacyStatus({
+    candidacyId,
+    status: "PARCOURS_CONFIRME",
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "TRAINING_FORM_CONFIRMED",
+    userKeycloakId,
+    userEmail,
+    userRoles,
+  });
+
+  return result;
+};

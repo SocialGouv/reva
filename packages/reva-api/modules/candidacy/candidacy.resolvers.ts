@@ -561,11 +561,10 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await confirmTrainingFormByCandidate({
-        existsCandidacyWithActiveStatus:
-          candidacyDb.existsCandidacyWithActiveStatus,
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-      })({
         candidacyId: candidacyId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       logCandidacyEvent({
         candidacyId,
@@ -573,18 +572,7 @@ const unsafeResolvers = {
         context,
         result,
       });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId,
-          eventType: "TRAINING_FORM_CONFIRMED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
     candidacy_dropOut: async (
       _: unknown,
