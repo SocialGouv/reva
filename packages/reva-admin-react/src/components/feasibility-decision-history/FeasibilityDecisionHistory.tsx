@@ -18,7 +18,6 @@ const Info = ({
   </dl>
 );
 
-
 export const FeasibilityDecisionHistory = ({
   label,
   decisions,
@@ -56,11 +55,9 @@ const FeasibilityDecision = ({
   className?: string;
 }) => (
   <div className={`grid md:grid-cols-2 ${className || ""}`}>
-    <Info title="Décision">
-      {titleMap[decision as keyof typeof titleMap]}
-    </Info>
+    <Info title="Décision">{titleMap[decision as keyof typeof titleMap]}</Info>
     <Info title="Décision prise le : ">
-      {formatDate(decisionSentAt, "dd/MM/yyyy")}
+      {decisionSentAt ? formatDate(decisionSentAt, "dd/MM/yyyy") : ""}
     </Info>
     <Info title="Commentaire : ">{decisionComment}</Info>
   </div>
