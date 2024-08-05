@@ -1,12 +1,10 @@
-import {
-  existsCandidacyHavingHadStatus,
-  updateCandidacyStatus,
-  updateTrainingInformations,
-} from "modules/candidacy/database/candidacies";
+import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../shared/error/functionalError";
+import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
+import { updateTrainingInformations } from "./updateTrainingInformations";
 
 export const submitTraining = async (params: {
   candidacyId: string;
