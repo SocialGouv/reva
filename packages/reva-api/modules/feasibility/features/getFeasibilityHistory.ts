@@ -7,23 +7,42 @@ export const getFeasibilityHistory = async ({
   feasibilityId: string;
   candidacyId: string;
 }) => {
-  const relatedFeasibilities = await prismaClient.feasibility.findMany({
+  const feasibilityFormat = await prismaClient.feasibility.findUnique({
     where: {
-      candidacyId: candidacyId,
-      decision: "INCOMPLETE",
-      NOT: { id: feasibilityId },
+      id: feasibilityId,
     },
-    orderBy: {
-      decisionSentAt: "desc",
+    select: {
+      feasibilityFormat: true,
     },
   });
 
-  const history = relatedFeasibilities.map((f) => ({
-    id: f.id,
-    decision: f.decision,
-    decisionComment: f.decisionComment,
-    decisionSentAt: f.decisionSentAt,
-  }));
+  if (feasibilityFormat?.feasibilityFormat === "UPLOADED_PDF") {
+    const relatedFeasibilities = await prismaClient.feasibility.findMany({
+      where: {
+        candidacyId: candidacyId,
+        decision: "INCOMPLETE",
+        NOT: { id: feasibilityId },
+      },
+      orderBy: {
+        decisionSentAt: "desc",
+      },
+    });
 
-  return history;
+    const history = relatedFeasibilities.map((f) => ({
+      id: f.id,
+      decision: f.decision,
+      decisionComment: f.decisionComment,
+      decisionSentAt: f.decisionSentAt,
+    }));
+    return history;
+  } else if (feasibilityFormat?.feasibilityFormat === "DEMATERIALIZED") {
+    return prismaClient.feasibilityDecision.findMany({
+      where: {
+        feasibilityId,
+      },
+      orderBy: {
+        decisionSentAt: "desc",
+      },
+    });
+  }
 };

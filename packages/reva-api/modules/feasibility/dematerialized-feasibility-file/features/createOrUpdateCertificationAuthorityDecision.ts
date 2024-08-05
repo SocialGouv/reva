@@ -99,6 +99,12 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decisionFile: decisionFileForDb ? decisionFileForDb : undefined,
         },
       }),
+      prismaClient.feasibilityDecision.create({
+        data: {
+          decision,
+          feasibilityId: feasibility.id,
+        },
+      }),
       prismaClient.candidaciesStatus.updateMany({
         where: {
           candidacyId: candidacyId,

@@ -1064,10 +1064,22 @@ model Feasibility {
   feasibilityFormat             FeasibilityFormat              @default(UPLOADED_PDF) @map("feasibility_format")
   feasibilityUploadedPdf        FeasibilityUploadedPdf?
   dematerializedFeasibilityFile DematerializedFeasibilityFile?
+  feasibilityDecisionHistory    FeasibilityDecision[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
   @@map("feasibility")
+}
+
+model FeasibilityDecision {
+  id                    String                                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  feasibility           Feasibility                                        @relation(fields: [feasibilityId], references: [id])
+  feasibilityId         String                                             @map("feasibility_id") @db.Uuid
+  decision              FeasibilityStatus
+  decisionComment       String?                                            @map("decision_comment")
+  decisionSentAt        DateTime                                           @default(now()) @map("decision_sent_at") @db.Timestamptz(6)
+
+  @@map("feasibility_decision")
 }
 
 model FeasibilityUploadedPdf {
