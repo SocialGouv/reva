@@ -8,7 +8,7 @@ import { candidacyIncludes } from "../database/candidacies";
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;
-}): Promise<Error | domain.Candidacy> => {
+}): Promise<domain.Candidacy> => {
   try {
     const [, newCandidacy, certificationAndRegion] =
       await prismaClient.$transaction([
