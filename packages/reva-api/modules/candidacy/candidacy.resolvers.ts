@@ -4,7 +4,6 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
-import { generateJwt } from "../candidate/auth.helper";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -60,7 +59,6 @@ import {
   sendCandidacyArchivedEmailToCertificateur,
   sendCandidacyDropOutEmailToCandidate,
   sendCandidacyDropOutEmailToCertificateur,
-  sendTrainingEmail,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 
@@ -502,23 +500,12 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await submitTraining({
-        updateTrainingInformations: candidacyDb.updateTrainingInformations,
-        existsCandidacyHavingHadStatus:
-          candidacyDb.existsCandidacyHavingHadStatus,
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-      })({
         candidacyId: payload.candidacyId,
         training: payload.training,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
-
-      const candidacy = result.isRight() ? result.extract() : undefined;
-      if (candidacy?.email) {
-        const token = generateJwt(
-          { email: candidacy?.email, action: "login" },
-          1 * 60 * 60 * 24 * 4,
-        );
-        sendTrainingEmail(candidacy.email, token);
-      }
 
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
@@ -529,18 +516,7 @@ const unsafeResolvers = {
         context,
         result,
       });
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "TRAINING_FORM_SUBMITTED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
 
     candidacy_confirmTrainingForm: async (

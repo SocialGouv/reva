@@ -134,31 +134,6 @@ export const getCandidaciesFromIds = async (
   });
 };
 
-export const existsCandidacyHavingHadStatus = async (params: {
-  candidacyId: string;
-  status: CandidacyStatusStep;
-}) => {
-  try {
-    const candidaciesCount = await prismaClient.candidacy.count({
-      where: {
-        id: params.candidacyId,
-        candidacyStatuses: {
-          some: {
-            status: params.status,
-          },
-        },
-      },
-    });
-
-    return Right(candidaciesCount === 1);
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error while retrieving the candidacy with id ${params.candidacyId}`,
-    );
-  }
-};
-
 export const existsCandidacyWithActiveStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;
@@ -395,98 +370,6 @@ export const updateOrganism = async (params: {
     logger.error(e);
     return Left(
       `error while updating contact on candidacy ${params.candidacyId}`,
-    );
-  }
-};
-
-export const updateTrainingInformations = async (params: {
-  candidacyId: string;
-  training: {
-    basicSkillIds: string[];
-    mandatoryTrainingIds: string[];
-    certificateSkills: string;
-    otherTraining: string;
-    individualHourCount: number;
-    collectiveHourCount: number;
-    additionalHourCount: number;
-    isCertificationPartial: boolean;
-  };
-}) => {
-  try {
-    const [, , , , newCandidacy] = await prismaClient.$transaction([
-      prismaClient.basicSkillOnCandidacies.deleteMany({
-        where: {
-          candidacyId: params.candidacyId,
-        },
-      }),
-      prismaClient.basicSkillOnCandidacies.createMany({
-        data: params.training.basicSkillIds.map((id) => ({
-          candidacyId: params.candidacyId,
-          basicSkillId: id,
-        })),
-      }),
-      prismaClient.trainingOnCandidacies.deleteMany({
-        where: {
-          candidacyId: params.candidacyId,
-        },
-      }),
-      prismaClient.trainingOnCandidacies.createMany({
-        data: params.training.mandatoryTrainingIds.map((id) => ({
-          candidacyId: params.candidacyId,
-          trainingId: id,
-        })),
-      }),
-      prismaClient.candidacy.update({
-        where: {
-          id: params.candidacyId,
-        },
-        data: {
-          certificateSkills: params.training.certificateSkills,
-          otherTraining: params.training.otherTraining,
-          individualHourCount: params.training.individualHourCount,
-          collectiveHourCount: params.training.collectiveHourCount,
-          additionalHourCount: params.training.additionalHourCount,
-          isCertificationPartial: params.training.isCertificationPartial,
-        },
-        include: {
-          ...candidacyIncludes,
-          candidate: true,
-        },
-      }),
-    ]);
-
-    const certificationAndRegion =
-      await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-        where: {
-          candidacyId: params.candidacyId,
-          isActive: true,
-        },
-        select: {
-          certification: true,
-          region: true,
-        },
-      });
-
-    return Right({
-      id: newCandidacy.id,
-      regionId: certificationAndRegion?.region.id,
-      region: certificationAndRegion?.region,
-      department: newCandidacy.department,
-      certificationId: certificationAndRegion?.certification.id,
-      certification: certificationAndRegion?.certification,
-      organismId: newCandidacy.organismId,
-      experiences: newCandidacy.experiences,
-      phone: newCandidacy.candidate?.phone || null,
-      email: newCandidacy.candidate?.email || newCandidacy.email,
-      candidacyStatuses: newCandidacy.candidacyStatuses,
-      candidacyDropOut: newCandidacy.candidacyDropOut,
-      createdAt: newCandidacy.createdAt,
-      financeModule: newCandidacy.financeModule,
-    });
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error while updating training informations on candidacy ${params.candidacyId}`,
     );
   }
 };
