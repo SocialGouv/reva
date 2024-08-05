@@ -9,12 +9,12 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import {
-  existsCandidacyWithActiveStatus,
   updateCandidacyStatus,
   updateCertification,
   updateOrganism,
 } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
+import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,

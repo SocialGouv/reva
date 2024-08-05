@@ -1,7 +1,5 @@
-import {
-  existsCandidacyWithActiveStatus,
-  updateCandidacyStatus,
-} from "modules/candidacy/database/candidacies";
+import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
 import {
   FunctionalCodeError,
   FunctionalError,

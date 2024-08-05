@@ -1,16 +1,16 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { prismaClient } from "../../../prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   sendConfirmationCandidacySubmissionEmail,
   sendNewCandidacyEmail,
 } from "../mails";
-import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
 import { getCandidacyById } from "./getCandidacyById";
 import { getCandidateById } from "./getCandidateById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
-import { prismaClient } from "../../../prisma/client";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
 
 export const submitCandidacy = async ({
   candidacyId,

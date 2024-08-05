@@ -73,25 +73,6 @@ export const getCandidaciesFromIds = async (
   });
 };
 
-export const existsCandidacyWithActiveStatus = async (params: {
-  candidacyId: string;
-  status: CandidacyStatusStep;
-}) => {
-  const candidaciesCount = await prismaClient.candidacy.count({
-    where: {
-      id: params.candidacyId,
-      candidacyStatuses: {
-        some: {
-          status: params.status,
-          isActive: true,
-        },
-      },
-    },
-  });
-
-  return candidaciesCount === 1;
-};
-
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;

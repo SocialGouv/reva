@@ -1,15 +1,13 @@
 import { Candidacy } from "../../../candidacy/candidacy.types";
 import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 
-import {
-  existsCandidacyWithActiveStatus,
-  updateCandidacyStatus,
-} from "../../../candidacy/database/candidacies";
-import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
-import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
 import { FundingRequest } from "@prisma/client";
-import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
+import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
 import { getCandidacy } from "../../../candidacy/features/getCandidacy";
+import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
+import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
+import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
 
 export const confirmPaymentRequest = async ({
   candidacyId,
