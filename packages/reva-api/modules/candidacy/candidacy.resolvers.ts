@@ -289,31 +289,19 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await updateGoalsOfCandidacy({
-        updateGoals: candidacyDb.updateCandidacyGoals,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
         candidacyId: payload.candidacyId,
         goals: payload.goals,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_GOALS,
         context,
-        result: result.map((n) => ({ n })), // typing hack for nothing
+        result: { updatedGoalsCount: result },
       });
-
-      if (result.isRight()) {
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "GOALS_UPDATED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        });
-      }
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
 
     candidacy_updateContact: async (

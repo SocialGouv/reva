@@ -305,7 +305,6 @@ input ExperienceInput {
 
 input CandidateGoalInput {
   goalId: ID!
-  additionalInformation: String
 }
 
 input UpdateCandidateInput {

@@ -556,29 +556,3 @@ export const cancelDropOutCandidacy = async ({
     );
   }
 };
-
-export const updateCandidacyGoals = async (params: {
-  candidacyId: string;
-  goals: { candidacyId: string; goalId: string }[];
-}) => {
-  try {
-    const [, goals] = await prismaClient.$transaction([
-      prismaClient.candicadiesOnGoals.deleteMany({
-        where: {
-          candidacyId: params.candidacyId,
-        },
-      }),
-      prismaClient.candicadiesOnGoals.createMany({
-        data: params.goals.map((goal) => ({
-          candidacyId: params.candidacyId,
-          goalId: goal.goalId,
-        })),
-      }),
-    ]);
-
-    return Right(goals.count);
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while retrieving goals`);
-  }
-};

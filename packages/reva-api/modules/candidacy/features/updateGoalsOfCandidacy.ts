@@ -1,50 +1,57 @@
-import { Either, EitherAsync } from "purify-ts";
-
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+  logCandidacyAuditEvent,
+  CandidacyAuditLogUserInfo,
+} from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidacyFromId } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
+import { prismaClient } from "../../../prisma/client";
 
-interface UpdateGoalsOfCandidacyDeps {
-  updateGoals: (params: {
-    candidacyId: string;
-    goals: [];
-  }) => Promise<Either<string, number>>;
-  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
-}
+export const updateGoalsOfCandidacy = async ({
+  candidacyId,
+  goals,
+  userKeycloakId,
+  userEmail,
+  userRoles,
+}: {
+  candidacyId: string;
+  goals: {
+    goalId: string;
+  }[];
+} & CandidacyAuditLogUserInfo) => {
+  const candidacy = await getCandidacyFromId(candidacyId);
+  if (!candidacy) {
+    throw new Error(`Candidature ${candidacyId} non trouvée`);
+  }
 
-export const updateGoalsOfCandidacy =
-  (deps: UpdateGoalsOfCandidacyDeps) =>
-  async (params: { candidacyId: string; goals: [] }) => {
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`,
-        ),
+  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+    throw new Error(
+      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
     );
+  }
 
-    const updateGoals = EitherAsync.fromPromise(() =>
-      deps.updateGoals(params),
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.GOALS_NOT_UPDATED,
-          `Erreur lors de la mise à jour des objectifs`,
-        ),
-    );
+  const [, updatedGoals] = await prismaClient.$transaction([
+    prismaClient.candicadiesOnGoals.deleteMany({
+      where: {
+        candidacyId: candidacyId,
+      },
+    }),
+    prismaClient.candicadiesOnGoals.createMany({
+      data: goals.map((goal) => ({
+        candidacyId,
+        goalId: goal.goalId,
+      })),
+    }),
+  ]);
 
-    if (
-      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
-    ) {
-      throw new Error(
-        "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
-      );
-    }
+  const result = updatedGoals.count;
 
-    return checkIfCandidacyExists.chain(() => updateGoals);
-  };
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "GOALS_UPDATED",
+    userKeycloakId,
+    userEmail,
+    userRoles,
+  });
+
+  return result;
+};
