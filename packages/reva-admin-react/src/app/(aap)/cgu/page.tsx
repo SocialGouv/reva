@@ -61,8 +61,7 @@ export default function CguPage() {
       <form onSubmit={handleSubmit(submitCgu)}>
         <fieldset>
           <legend className="text-xl font-bold text-gray-900 mb-8">
-            Pour créer votre compte, vous devez accepter les conditions
-            générales d'utilisation :
+            Veuillez accepter les conditions générales d'utilisation :
           </legend>
           <Cgu />
           <hr className="mt-12 mb-8" />
