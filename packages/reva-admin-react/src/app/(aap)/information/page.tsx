@@ -4,7 +4,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export default function InformationPage() {
   return (
-    <>
+    <div>
       <div className="[&_p]:text-xl [&_p]:leading-relaxed">
         <h1>Nouveau mode de financement des parcours VAE</h1>
         <p>
@@ -80,6 +80,6 @@ export default function InformationPage() {
           Suivant
         </Button>
       </div>
-    </>
+    </div>
   );
 }
