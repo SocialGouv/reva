@@ -56,7 +56,6 @@ import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandid
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "./features/validateTrainingFormByCandidate";
 import { logCandidacyEvent } from "./logCandidacyEvent";
-import { logCandidacyEventUsingPurify } from "./logCandidacyEventUsingPurify";
 import {
   sendCandidacyArchivedEmailToCertificateur,
   sendCandidacyDropOutEmailToCandidate,
@@ -296,7 +295,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         goals: payload.goals,
       });
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_GOALS,
         context,
@@ -459,7 +458,7 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
       });
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.TOOK_OVER_CANDIDACY,
         context,
@@ -545,7 +544,7 @@ const unsafeResolvers = {
         sendTrainingEmail(candidacy.email, token);
       }
 
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.SUBMITTED_TRAINING_FORM,
         extraInfo: {
@@ -580,7 +579,7 @@ const unsafeResolvers = {
       })({
         candidacyId: candidacyId,
       });
-      logCandidacyEventUsingPurify({
+      logCandidacyEvent({
         candidacyId,
         eventType: CandidacyBusinessEvent.CONFIRMED_TRAINING_FORM,
         context,
