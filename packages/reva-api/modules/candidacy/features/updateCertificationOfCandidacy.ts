@@ -54,26 +54,23 @@ export const updateCertificationOfCandidacy = async ({
   try {
     const newCertification = await getCertificationById({ certificationId });
 
-    (
-      await updateCertification({
-        candidacyId,
-        certificationId,
-        departmentId,
-        author: "candidate",
-        feasibilityFormat: newCertification.feasibilityFormat,
-      })
-    ).unsafeCoerce();
+    await updateCertification({
+      candidacyId,
+      certificationId,
+      departmentId,
+      author: "candidate",
+      feasibilityFormat: newCertification.feasibilityFormat,
+    });
 
-    const updatedCandidacy = (
-      await updateOrganism({ candidacyId, organismId: null })
-    ).unsafeCoerce();
+    const updatedCandidacy = await updateOrganism({
+      candidacyId,
+      organismId: null,
+    });
 
-    const hasActiveCandidacyInProject = (
-      await existsCandidacyWithActiveStatus({
-        candidacyId,
-        status: CandidacyStatusStep.PROJET,
-      })
-    ).unsafeCoerce();
+    const hasActiveCandidacyInProject = await existsCandidacyWithActiveStatus({
+      candidacyId,
+      status: CandidacyStatusStep.PROJET,
+    });
 
     //Only update previous and create a new candidacy status if the candidacy is not already in project
     if (!hasActiveCandidacyInProject) {

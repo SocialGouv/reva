@@ -240,19 +240,14 @@ const unsafeResolvers = {
       payload: any,
       context: GraphqlContext,
     ) =>
-      (
-        await updateCertificationWithinOrganismScope({
-          hasRole: context.auth.hasRole,
-          candidacyId: payload.candidacyId,
-          certificationId: payload.certificationId,
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth?.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        })
-      )
-        .mapLeft((error) => new mercurius.ErrorWithProps(error))
-        .extract(),
-
+      updateCertificationWithinOrganismScope({
+        hasRole: context.auth.hasRole,
+        candidacyId: payload.candidacyId,
+        certificationId: payload.certificationId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth?.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
     candidacy_addExperience: async (
       _: unknown,
       payload: any,

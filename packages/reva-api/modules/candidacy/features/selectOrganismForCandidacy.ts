@@ -52,9 +52,7 @@ export const selectOrganismForCandidacy = async ({
   }
 
   try {
-    const updatedCandidacy = (
-      await updateOrganism({ candidacyId, organismId })
-    ).unsafeCoerce();
+    const updatedCandidacy = await updateOrganism({ candidacyId, organismId });
 
     await prismaClient.candidacy.update({
       where: { id: candidacyId },
