@@ -70,7 +70,7 @@ export const updateCandidacyStatus = async (params: {
     } as domain.Candidacy;
   } catch (e) {
     logger.error(e);
-    return Error(
+    throw new Error(
       `error while updating status on candidacy ${params.candidacyId}`,
     );
   }
