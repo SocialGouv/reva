@@ -1,24 +1,54 @@
-import { Either, EitherAsync } from "purify-ts";
+import { prismaClient } from "../../../prisma/client";
+import { candidacyIncludes } from "./updateAppointmentInformations";
 
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+export const getCandidacy = async ({
+  candidacyId,
+}: {
+  candidacyId: string;
+}) => {
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: {
+      id: candidacyId,
+    },
+    include: {
+      ...candidacyIncludes,
+      candidate: {
+        include: {
+          highestDegree: true,
+          vulnerabilityIndicator: true,
+        },
+      },
+    },
+  });
 
-interface GetCandidacyDeps {
-  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
-}
+  const certificationAndRegion =
+    await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+      where: {
+        candidacyId: candidacy?.id,
+        isActive: true,
+      },
+      include: {
+        certification: true,
+        region: true,
+      },
+    });
 
-export const getCandidacy =
-  (deps: GetCandidacyDeps) =>
-  (params: { id: string }): Promise<Either<FunctionalError, Candidacy>> =>
-    EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.id))
-      .mapLeft(
-        () =>
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-            `Aucune candidature n'a été trouvée`,
-          ),
-      )
-      .run();
+  return candidacy
+    ? {
+        ...candidacy,
+        firstname: candidacy.candidate?.firstname,
+        lastname: candidacy.candidate?.lastname,
+        phone: candidacy.candidate?.phone || null,
+        email: candidacy.candidate?.email || candidacy.email,
+        regionId: certificationAndRegion?.region.id,
+        region: certificationAndRegion?.region,
+        certificationId: certificationAndRegion?.certification.id,
+        certification: certificationAndRegion && {
+          ...certificationAndRegion?.certification,
+          codeRncp: certificationAndRegion?.certification.rncpId,
+        },
+        ccnId: candidacy.ccnId || null,
+        conventionCollective: candidacy.ccn || null,
+      }
+    : null;
+};

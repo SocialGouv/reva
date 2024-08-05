@@ -7,8 +7,6 @@ import * as paymentRequestsDb from "../database/paymentRequest";
 import * as getAfgsuTrainingIdModule from "../../../candidacy/features/getAfgsuTrainingId";
 import * as candidatesDb from "../../../candidate/database/candidates";
 
-import { Right } from "purify-ts";
-
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",
   basicSkillsEffectiveHourCount: 1,
@@ -81,12 +79,10 @@ describe("create or update payment request", () => {
 
       jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
         () =>
-          Promise.resolve(
-            Right({
-              highestDegree: { level: 1 },
-              vulnerabilityIndicator: { label: "Vide" },
-            }),
-          ) as any,
+          Promise.resolve({
+            highestDegree: { level: 1 },
+            vulnerabilityIndicator: { label: "Vide" },
+          }) as any,
       );
 
       const result = await createOrUpdatePaymentRequestForCandidacy({
@@ -128,12 +124,10 @@ describe("create or update payment request", () => {
 
     jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
       () =>
-        Promise.resolve(
-          Right({
-            highestDegree: { level: 1 },
-            vulnerabilityIndicator: { label: "Vide" },
-          }),
-        ) as any,
+        Promise.resolve({
+          highestDegree: { level: 1 },
+          vulnerabilityIndicator: { label: "Vide" },
+        }) as any,
     );
 
     const result = await createOrUpdatePaymentRequestForCandidacy({

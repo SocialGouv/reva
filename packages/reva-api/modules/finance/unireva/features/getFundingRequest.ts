@@ -1,5 +1,4 @@
-import { getCandidacyFromId } from "../../../candidacy/database/candidacies";
-
+import { getCandidacy } from "../../../candidacy/features/getCandidacy";
 import { getFundingRequest as getFundingRequestDb } from "../database/fundingRequests";
 
 export const getFundingRequest = async ({
@@ -7,9 +6,7 @@ export const getFundingRequest = async ({
 }: {
   candidacyId: string;
 }) => {
-  const candidacy = (
-    await getCandidacyFromId(candidacyId)
-  ).unsafeCoerce() as any;
+  const candidacy = await getCandidacy({ candidacyId });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");

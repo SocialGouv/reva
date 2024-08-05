@@ -3,13 +3,13 @@ import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 
 import {
   existsCandidacyWithActiveStatus,
-  getCandidacyFromId,
   updateCandidacyStatus,
 } from "../../../candidacy/database/candidacies";
 import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
 import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
 import { FundingRequest } from "@prisma/client";
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
+import { getCandidacy } from "../../../candidacy/features/getCandidacy";
 
 export const confirmPaymentRequest = async ({
   candidacyId,
@@ -27,7 +27,7 @@ export const confirmPaymentRequest = async ({
     );
   }
 
-  const candidacy = (await getCandidacyFromId(candidacyId)).unsafeCoerce();
+  const candidacy = await getCandidacy({ candidacyId });
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
   }

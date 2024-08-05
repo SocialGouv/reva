@@ -3,7 +3,7 @@ import debug from "debug";
 import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
 import { getMaisonMereAAPById } from "../../organism/features/getMaisonMereAAPById";
-import { getCandidacyFromId } from "../database/candidacies";
+import { getCandidacy } from "./getCandidacy";
 
 const log = debug("domain:canManageCandidacy");
 
@@ -34,11 +34,11 @@ export const canManageCandidacy = async ({
     return false;
   }
 
-  const candidacy = (await getCandidacyFromId(candidacyId))
-    .mapLeft((err: string) => {
-      throw err;
-    })
-    .extract();
+  const candidacy = await getCandidacy({ candidacyId });
+
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
 
   const account = await prismaClient.account.findUnique({
     where: { keycloakId },

@@ -1,5 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
-import { Either, Left, Maybe, Right } from "purify-ts";
+import { Either, Left, Right } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
@@ -36,65 +36,6 @@ export const candidacyIncludes = {
   },
   reorientationReason: true,
   ccn: true,
-};
-
-export const getCandidacyFromId = async (
-  candidacyId: string,
-): Promise<Either<string, domain.Candidacy>> => {
-  try {
-    const candidacy = await prismaClient.candidacy.findUnique({
-      where: {
-        id: candidacyId,
-      },
-      include: {
-        ...candidacyIncludes,
-        candidate: {
-          include: {
-            highestDegree: true,
-            vulnerabilityIndicator: true,
-          },
-        },
-      },
-    });
-
-    const certificationAndRegion =
-      await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-        where: {
-          candidacyId: candidacy?.id,
-          isActive: true,
-        },
-        include: {
-          certification: true,
-          region: true,
-        },
-      });
-
-    return Maybe.fromNullable(candidacy)
-      .map((c) => ({
-        ...c,
-        firstname: c.candidate?.firstname,
-        lastname: c.candidate?.lastname,
-        phone: c.candidate?.phone || null,
-        email: c.candidate?.email || c.email,
-        regionId: certificationAndRegion?.region.id,
-        region: certificationAndRegion?.region,
-        certificationId: certificationAndRegion?.certification.id,
-        certification: certificationAndRegion && {
-          ...certificationAndRegion?.certification,
-          codeRncp: certificationAndRegion?.certification.rncpId,
-        },
-        ccnId: c.ccnId || null,
-        conventionCollective: c.ccn || null,
-      }))
-      .toEither(`Candidacy ${candidacyId} not found`);
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error while retrieving the candidacy with id ${candidacyId} : ${
-        (e as Error).message
-      }`,
-    );
-  }
 };
 
 export const getCandidaciesFromIds = async (
@@ -370,72 +311,6 @@ export const updateOrganism = async (params: {
     logger.error(e);
     return Left(
       `error while updating contact on candidacy ${params.candidacyId}`,
-    );
-  }
-};
-
-interface CancelDropOutCandidacyParams {
-  candidacyId: string;
-}
-
-export const cancelDropOutCandidacy = async ({
-  candidacyId,
-}: CancelDropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
-  let candidacy;
-  try {
-    candidacy = await prismaClient.candidacy.findUnique({
-      where: {
-        id: candidacyId,
-      },
-      include: {
-        candidacyStatuses: {
-          where: {
-            isActive: true,
-          },
-        },
-        department: true,
-        experiences: true,
-        goals: true,
-      },
-    });
-    if (candidacy === null) {
-      return Left(`could not find candidacy ${candidacyId}`);
-    }
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while getting candidacy`);
-  }
-
-  let candidacyDropOut;
-  try {
-    candidacyDropOut = await prismaClient.candidacyDropOut.findFirst({
-      where: {
-        candidacyId,
-      },
-      include: { dropOutReason: true },
-    });
-
-    if (!candidacyDropOut) {
-      throw new Error("CandidacyDropOut not fount");
-    }
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`,
-    );
-  }
-
-  try {
-    await prismaClient.candidacyDropOut.delete({
-      where: {
-        candidacyId,
-      },
-    });
-    return Right({ ...candidacy, candidacyDropOut });
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`,
     );
   }
 };

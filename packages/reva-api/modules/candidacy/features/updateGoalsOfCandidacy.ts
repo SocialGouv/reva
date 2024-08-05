@@ -2,9 +2,9 @@ import {
   logCandidacyAuditEvent,
   CandidacyAuditLogUserInfo,
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCandidacyFromId } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 import { prismaClient } from "../../../prisma/client";
+import { getCandidacy } from "./getCandidacy";
 
 export const updateGoalsOfCandidacy = async ({
   candidacyId,
@@ -18,7 +18,7 @@ export const updateGoalsOfCandidacy = async ({
     goalId: string;
   }[];
 } & CandidacyAuditLogUserInfo) => {
-  const candidacy = await getCandidacyFromId(candidacyId);
+  const candidacy = await getCandidacy({ candidacyId });
   if (!candidacy) {
     throw new Error(`Candidature ${candidacyId} non trouvée`);
   }

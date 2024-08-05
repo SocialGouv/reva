@@ -17,7 +17,6 @@ import {
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import * as candidacyDb from "./database/candidacies";
 import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
@@ -62,29 +61,35 @@ import {
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 
-const withBasicSkills = (c: Candidacy) => ({
-  ...c,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  basicSkillIds: c.basicSkills.reduce((memo, bs) => {
-    return [...memo, bs.basicSkill.id];
-  }, []),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
-});
+const withBasicSkills = (c: Candidacy | null) =>
+  c
+    ? {
+        ...c,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        basicSkillIds: c.basicSkills.reduce((memo, bs) => {
+          return [...memo, bs.basicSkill.id];
+        }, []),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
+      }
+    : null;
 
-const withMandatoryTrainings = (c: Candidacy) => ({
-  ...c,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mandatoryTrainingIds: c.trainings.reduce((memo, t) => {
-    return [...memo, t.training.id];
-  }, []),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mandatoryTrainings: c.trainings.map((t) => t.training),
-});
+const withMandatoryTrainings = (c: Candidacy | null) =>
+  c
+    ? {
+        ...c,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        mandatoryTrainingIds: c.trainings.reduce((memo, t) => {
+          return [...memo, t.training.id];
+        }, []),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        mandatoryTrainings: c.trainings.map((t) => t.training),
+      }
+    : null;
 
 const unsafeResolvers = {
   Candidacy: {
@@ -107,16 +112,10 @@ const unsafeResolvers = {
       getCandidateByCandidacyId({ candidacyId }),
   },
   Query: {
-    getCandidacyById: async (_: unknown, { id }: { id: string }) => {
-      const result = await getCandidacy({
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ id });
-      return result
-        .map(withBasicSkills)
-        .map(withMandatoryTrainings)
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    getCandidacyById: async (_: unknown, { id }: { id: string }) =>
+      withBasicSkills(
+        withMandatoryTrainings(await getCandidacy({ candidacyId: id })),
+      ),
     getCandidacies: async (
       _parent: unknown,
       _params: {
@@ -486,9 +485,7 @@ const unsafeResolvers = {
         }
 
         await updateCandidacyTypologyAndCcn(context.auth, payload);
-        return (
-          await candidacyDb.getCandidacyFromId(payload.candidacyId)
-        ).unsafeCoerce();
+        return getCandidacy({ candidacyId: payload.candidacyId });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
