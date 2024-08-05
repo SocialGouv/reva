@@ -33,10 +33,10 @@ export const submitTraining = async ({
   };
 } & CandidacyAuditLogUserInfo) => {
   if (
-    !(await existsCandidacyHavingHadStatus({
+    await existsCandidacyHavingHadStatus({
       candidacyId,
       status: "DEMANDE_FINANCEMENT_ENVOYE",
-    }))
+    })
   ) {
     throw new Error(
       `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
