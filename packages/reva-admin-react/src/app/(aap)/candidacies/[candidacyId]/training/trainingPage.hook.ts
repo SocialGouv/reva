@@ -36,7 +36,7 @@ const submitTrainingMutation = graphql(`
     $candidacyId: UUID!
     $training: TrainingInput!
   ) {
-    candidacy_submitTrainingForm(
+    training_submitTrainingForm(
       candidacyId: $candidacyId
       training: $training
     ) {

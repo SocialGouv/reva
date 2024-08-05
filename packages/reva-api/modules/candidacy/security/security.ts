@@ -41,7 +41,6 @@ export const resolversSecurityMap = {
   ],
   "Mutation.candidacy_selectOrganism": [isCandidateOwnerOfCandidacy],
   "Mutation.candidacy_submitCandidacy": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_confirmTrainingForm": [isCandidateOwnerOfCandidacy],
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
@@ -52,7 +51,6 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateAppointmentInformations":
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_submitTypologyForm": isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_submitTrainingForm": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_cancelDropOutById": isAdmin,
   "Mutation.candidacy_updateAdmissibility": isAdminOrCandidacyCompanion,

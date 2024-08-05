@@ -34,13 +34,10 @@ import { getCandidacyGoals } from "./features/getCandidacyGoals";
 import { getCandidacyWithActiveCertificationByCandidacyId } from "./features/getCandidacyWithActiveCertificationByCandidacyId";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
-import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
-import { getTrainings } from "./features/getTrainings";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
-import { submitTraining } from "./features/submitTrainingForm";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAdmissibility } from "./features/updateAdmissibility";
@@ -52,7 +49,6 @@ import { updateCertificationWithinOrganismScope } from "./features/updateCertifi
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
-import { confirmTrainingFormByCandidate } from "./features/validateTrainingFormByCandidate";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import {
   sendCandidacyArchivedEmailToCertificateur,
@@ -106,8 +102,6 @@ const unsafeResolvers = {
       getCandidacyWithActiveCertificationByCandidacyId(candidacyId),
     basicSkills: async ({ id: candidacyId }: Candidacy) =>
       getBasicSkillsByCandidacyId({ candidacyId }),
-    mandatoryTrainings: async ({ id: candidacyId }: Candidacy) =>
-      getMandatoryTrainingsByCandidacyId({ candidacyId }),
     candidate: async ({ id: candidacyId }: Candidacy) =>
       getCandidateByCandidacyId({ candidacyId }),
   },
@@ -137,7 +131,6 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    getTrainings,
     getRandomOrganismsForCandidacy: async (
       _: unknown,
       {
@@ -486,50 +479,7 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    candidacy_submitTrainingForm: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext,
-    ) => {
-      const result = await submitTraining({
-        candidacyId: payload.candidacyId,
-        training: payload.training,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
 
-      logCandidacyEvent({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.SUBMITTED_TRAINING_FORM,
-        extraInfo: {
-          training: payload.training,
-        },
-        context,
-        result,
-      });
-      return result;
-    },
-
-    candidacy_confirmTrainingForm: async (
-      _: unknown,
-      { candidacyId }: { candidacyId: string },
-      context: GraphqlContext,
-    ) => {
-      const result = await confirmTrainingFormByCandidate({
-        candidacyId: candidacyId,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-      logCandidacyEvent({
-        candidacyId,
-        eventType: CandidacyBusinessEvent.CONFIRMED_TRAINING_FORM,
-        context,
-        result,
-      });
-      return result;
-    },
     candidacy_dropOut: async (
       _: unknown,
       payload: {

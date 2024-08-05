@@ -12,7 +12,7 @@ import { z } from "zod";
 
 const getTrainingsAndBasicSkillsQuery = graphql(`
   query getTrainingsAndBasicSkillsForTrainingPage {
-    getTrainings {
+    training_getTrainings {
       id
       label
     }
@@ -98,7 +98,7 @@ export const TrainingForm = ({
   const basicSkillsFromReferential =
     getTrainingsAndBasicSkillsResponse?.getBasicSkills;
   const trainingsFromReferential =
-    getTrainingsAndBasicSkillsResponse?.getTrainings;
+    getTrainingsAndBasicSkillsResponse?.training_getTrainings;
 
   const {
     register,

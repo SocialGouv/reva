@@ -1,0 +1,27 @@
+type Training {
+  id: ID!
+  label: String!
+}
+
+type Query {
+  training_getTrainings: [Training!]!
+}
+
+input TrainingInput {
+  certificateSkills: String!
+  otherTraining: String!
+  individualHourCount: Int!
+  collectiveHourCount: Int!
+  additionalHourCount: Int!
+  basicSkillIds: [UUID!]!
+  mandatoryTrainingIds: [UUID!]!
+  isCertificationPartial: Boolean!
+}
+
+type Mutation {
+  training_submitTrainingForm(
+    candidacyId: UUID!
+    training: TrainingInput!
+  ): Candidacy!
+  training_confirmTrainingForm(candidacyId: UUID!): Candidacy!
+}

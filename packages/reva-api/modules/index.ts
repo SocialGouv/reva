@@ -26,6 +26,7 @@ import { resolvers as certificationAuthorityResolvers } from "./certification-au
 import { dossierDeValidationLoaders } from "./dossier-de-validation/dossier-de-validation.loaders";
 import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
 import { dematerializedFeasibilityFileResolvers } from "./feasibility/dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
+import { feasibilityUploadedPdfResolvers } from "./feasibility/feasibility-uploaded-pdf/feasibility-uploaded-pdf.resolvers";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
@@ -40,7 +41,7 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
-import { feasibilityUploadedPdfResolvers } from "./feasibility/feasibility-uploaded-pdf/feasibility-uploaded-pdf.resolvers";
+import { trainingResolvers } from "./candidacy/training/training.resolvers";
 
 // Resolvers
 
@@ -66,6 +67,7 @@ const resolvers = mergeResolvers([
   candidacyMenuResolvers,
   dematerializedFeasibilityFileResolvers,
   feasibilityUploadedPdfResolvers,
+  trainingResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

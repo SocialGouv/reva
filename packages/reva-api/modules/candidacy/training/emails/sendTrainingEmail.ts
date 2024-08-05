@@ -1,6 +1,6 @@
 import mjml2html from "mjml";
 
-import { sendEmailWithLink, templateMail } from "../../shared/email";
+import { sendEmailWithLink, templateMail } from "../../../shared/email";
 
 export const sendTrainingEmail = async (email: string, token: string) => {
   const htmlContent = (url: string) =>
@@ -30,7 +30,7 @@ export const sendTrainingEmail = async (email: string, token: string) => {
           Nos équipes ont élaboré <a href="https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw#6062f89d">un guide en ligne pour vous aider dans cette démarche</a>.
           <br />
           <br />
-          L’équipe France VAE
+          L'équipe France VAE
         `,
         disableThanks: true,
       }),
