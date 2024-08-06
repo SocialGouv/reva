@@ -74,8 +74,10 @@ const TrainingPage = () => {
               individualHourCount: candidacy.individualHourCount,
               collectiveHourCount: candidacy.collectiveHourCount,
               additionalHourCount: candidacy.additionalHourCount,
-              mandatoryTrainingIds: candidacy.mandatoryTrainingIds,
-              basicSkillIds: candidacy.basicSkillIds,
+              mandatoryTrainingIds: candidacy.mandatoryTrainings.map(
+                (m) => m.id,
+              ),
+              basicSkillIds: candidacy.basicSkills.map((b) => b.id),
               certificateSkills: candidacy.certificateSkills,
               otherTraining: candidacy.otherTraining,
               certificationScope:

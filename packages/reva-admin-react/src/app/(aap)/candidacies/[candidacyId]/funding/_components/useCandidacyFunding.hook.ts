@@ -54,7 +54,6 @@ const getCandidacyByIdFunding = graphql(`
       }
       certificateSkills
       otherTraining
-      basicSkillIds
       basicSkills {
         id
         label

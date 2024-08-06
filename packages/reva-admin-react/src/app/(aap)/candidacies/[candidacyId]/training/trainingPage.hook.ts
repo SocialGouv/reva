@@ -17,8 +17,12 @@ const getCandidacyById = graphql(`
       individualHourCount
       collectiveHourCount
       additionalHourCount
-      basicSkillIds
-      mandatoryTrainingIds
+      basicSkills {
+        id
+      }
+      mandatoryTrainings {
+        id
+      }
       certificateSkills
       otherTraining
       isCertificationPartial

@@ -5,9 +5,7 @@ type Candidacy {
   collectiveHourCount: Int
   additionalHourCount: Int
   basicSkills: [BasicSkill!]!
-  basicSkillIds: [UUID!]!
   mandatoryTrainings: [Training!]!
-  mandatoryTrainingIds: [UUID!]!
 }
 
 type Training {
