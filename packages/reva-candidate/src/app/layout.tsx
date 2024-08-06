@@ -1,8 +1,8 @@
 "use client";
 
-import "@/styles/dsfr-theme-tac-extra.css";
-import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/globals.css";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/dsfr-theme-tac-extra.css";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
