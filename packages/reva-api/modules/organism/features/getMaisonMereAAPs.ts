@@ -51,8 +51,8 @@ export const getMaisonMereAAPs = async ({
 }): Promise<PaginatedListResult<MaisonMereAAP>> => {
   const orderBy: Prisma.MaisonMereAAPOrderByWithRelationInput[] =
     legalValidationStatus === "EN_ATTENTE_DE_VERIFICATION"
-      ? [{ maisonMereAAPLegalInformationDocuments: { createdAt: "desc" } }]
-      : [{ createdAt: "desc" }];
+      ? [{ maisonMereAAPLegalInformationDocuments: { createdAt: "desc" } }, { raisonSociale: "asc"}]
+      : [{ createdAt: "desc" }, { raisonSociale: "asc"}];
 
   const queryMaisonMereAAPs: Prisma.MaisonMereAAPFindManyArgs = {
     orderBy,
