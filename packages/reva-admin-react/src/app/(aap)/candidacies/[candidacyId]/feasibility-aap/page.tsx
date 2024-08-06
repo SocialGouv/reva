@@ -42,6 +42,10 @@ const AapFeasibilityPage = () => {
     feasibility?.decision === "ADMISSIBLE" ||
     feasibility?.decision === "REJECTED";
 
+    if (!feasibility) {
+      return null;
+    }
+
   if (isFeasibilityReceivedOrRejected) {
     return (
       <DffSummary
@@ -59,10 +63,6 @@ const AapFeasibilityPage = () => {
         }
       />
     );
-  }
-
-  if (!feasibility) {
-    return null;
   }
 
   return (

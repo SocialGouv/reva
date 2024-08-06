@@ -6,8 +6,8 @@ import { ReactNode } from "react";
 type FeasibilityHistory = {
   id: string;
   decision: FeasibilityDecisionEnum;
-  decisionSentAt: Date | null;
-  decisionComment: string;
+  decisionSentAt?: number | null;
+  decisionComment?: string | null;
 };
 
 const Info = ({

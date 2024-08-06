@@ -1,10 +1,16 @@
 import {
   FeasibilityDecision,
-  FeasibilityHistory,
 } from "@/graphql/generated/graphql";
 import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 import { FeasibilityDecisionHistory } from "../feasibility-decision-history/FeasibilityDecisionHistory";
+
+type FeasibilityHistory = {
+  id: string;
+  decision: FeasibilityDecision;
+  decisionSentAt?: number | null;
+  decisionComment?: string | null;
+};
 
 const severityMap = {
   ADMISSIBLE: "success",
