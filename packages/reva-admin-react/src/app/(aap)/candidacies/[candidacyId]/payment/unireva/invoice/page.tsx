@@ -326,7 +326,7 @@ const PaymentRequestUniRevaInvoicePage = () => {
                 <TableRow>
                   <div className="flex flex-col">
                     <p className="mb-2">Bloc de compétences</p>
-                    <pre className="text-sm text-gray-500 italic">
+                    <pre className="text-xs text-gray-500 italic text-wrap">
                       {candidacy.certificateSkills || "Non précisé"}
                     </pre>
                   </div>
@@ -346,7 +346,7 @@ const PaymentRequestUniRevaInvoicePage = () => {
                 <TableRow>
                   <div className="flex flex-col">
                     <p className="mb-2">Autres actions de formations</p>
-                    <pre className="text-sm text-gray-500 italic">
+                    <pre className="text-xs text-gray-500 italic text-wrap">
                       {candidacy.otherTraining || "Non précisé"}
                     </pre>
                   </div>
