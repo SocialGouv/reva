@@ -1,0 +1,53 @@
+{
+  "data": {
+    "getCandidacies": {
+      "rows": [
+        {
+          "id": "fb451fbc-3218-416d-9ac9-65b13432469f",
+          "sentAt": 1721832988943,
+          "firstname": "Alice",
+          "lastname": "Doe",
+          "certification": {
+            "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)"
+          },
+          "organism": {
+            "label": "Organisme Lorem Ipsum",
+            "informationsCommerciales": {
+              "nom": "Organisme Lorem Ipsum"
+            }
+          },
+          "department": {
+            "label": "Paris",
+            "code": "75"
+          },
+          "financeModule": "hors_plateforme"
+        },
+        {
+          "id": "773275af-60a3-44ec-9710-0367b0425e83",
+          "sentAt": 1721723502501,
+          "firstname": "John",
+          "lastname": "Doe",
+          "certification": {
+            "label": "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR"
+          },
+          "organism": {
+            "label": "Organisme Lorem Ipsum",
+            "informationsCommerciales": {
+              "nom": "Agence de Colombes"
+            }
+          },
+          "department": {
+            "label": "Ain",
+            "code": "01"
+          },
+          "financeModule": "unifvae"
+        }
+      ],
+      "info": {
+        "totalRows": 6,
+        "totalPages": 3,
+        "currentPage": 1
+      }
+    }
+  }
+}
