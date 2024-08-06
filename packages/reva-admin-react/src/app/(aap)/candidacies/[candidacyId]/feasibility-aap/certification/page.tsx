@@ -51,7 +51,7 @@ const CertificationPage = () => {
         label: b.code ? `${b.code} - ${b.label}` : b.label,
         checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
           (bc) => bc.certificationCompetenceBloc.id === b.id,
-        ),
+        ) || candidacy?.isCertificationPartial === false,
       })),
     }),
     [
@@ -228,7 +228,10 @@ const CertificationPage = () => {
           />
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
-            formState={{ isDirty, isSubmitting }}
+            formState={{
+              isDirty: isDirty || candidacy?.isCertificationPartial === false,
+              isSubmitting,
+            }}
           />
         </form>
       )}
