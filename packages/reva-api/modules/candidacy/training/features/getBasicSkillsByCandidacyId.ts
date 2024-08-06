@@ -8,4 +8,4 @@ export const getBasicSkillsByCandidacyId = async ({
     await prismaClient.candidacy
       .findUnique({ where: { id: candidacyId } })
       .basicSkills({ include: { basicSkill: true } })
-  )?.map((b) => b.basicSkill);
+  )?.map((b) => b.basicSkill) || [];

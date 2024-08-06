@@ -17,16 +17,6 @@ export const candidacyIncludes = {
     },
   },
   organism: true,
-  basicSkills: {
-    select: {
-      basicSkill: true,
-    },
-  },
-  trainings: {
-    select: {
-      training: true,
-    },
-  },
   candidacyDropOut: {
     include: {
       dropOutReason: true,

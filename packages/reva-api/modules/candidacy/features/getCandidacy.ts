@@ -1,5 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
-import { candidacyIncludes } from "./updateAppointmentInformations";
+import { candidacyIncludes } from "../database/candidacies";
 
 export const getCandidacy = async ({
   candidacyId,

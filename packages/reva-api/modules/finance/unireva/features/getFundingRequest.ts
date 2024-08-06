@@ -1,4 +1,6 @@
 import { getCandidacy } from "../../../candidacy/features/getCandidacy";
+import { getBasicSkillsByCandidacyId } from "../../../candidacy/training/features/getBasicSkillsByCandidacyId";
+import { getMandatoryTrainingsByCandidacyId } from "../../../candidacy/training/features/getMandatoryTrainingsByCandidacyId ";
 import { getFundingRequest as getFundingRequestDb } from "../database/fundingRequests";
 
 export const getFundingRequest = async ({
@@ -7,6 +9,14 @@ export const getFundingRequest = async ({
   candidacyId: string;
 }) => {
   const candidacy = await getCandidacy({ candidacyId });
+
+  const candidacyBasicSkills = await getBasicSkillsByCandidacyId({
+    candidacyId,
+  });
+
+  const candidacyMandatoryTrainings = await getMandatoryTrainingsByCandidacyId({
+    candidacyId,
+  });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
@@ -28,8 +38,10 @@ export const getFundingRequest = async ({
           individualHourCount: candidacy.individualHourCount || 0,
           collectiveHourCount: candidacy.collectiveHourCount || 0,
           otherTraining: candidacy.otherTraining || "",
-          basicSkills: candidacy.basicSkills.map((b: any) => b.basicSkill),
-          mandatoryTrainings: candidacy.trainings.map((t: any) => t.training),
+          basicSkills: candidacyBasicSkills.map((b: any) => b.basicSkill),
+          mandatoryTrainings: candidacyMandatoryTrainings.map(
+            (t: any) => t.training,
+          ),
         },
       }
     : null;

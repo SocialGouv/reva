@@ -8,4 +8,4 @@ export const getMandatoryTrainingsByCandidacyId = async ({
     await prismaClient.candidacy
       .findUnique({ where: { id: candidacyId } })
       .trainings({ include: { training: true } })
-  )?.map((t) => t.training);
+  )?.map((t) => t.training) || [];

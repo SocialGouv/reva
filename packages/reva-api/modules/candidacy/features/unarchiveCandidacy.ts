@@ -2,8 +2,8 @@ import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { CandidacyStatusStep } from "@prisma/client";
 import { logger } from "../../../modules/shared/logger";
 import { prismaClient } from "../../../prisma/client";
-import { candidacyIncludes } from "./updateAppointmentInformations";
 import { getCandidacyById } from "./getCandidacyById";
+import { candidacyIncludes } from "../database/candidacies";
 
 interface UnarchiveCandidacyParams {
   candidacyId: string;

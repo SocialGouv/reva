@@ -6,39 +6,7 @@ import {
   startOfToday,
   startOfDay,
 } from "date-fns";
-
-export const candidacyIncludes = {
-  experiences: true,
-  candidacyStatuses: true,
-  department: true,
-  certificationsAndRegions: {
-    select: {
-      certification: true,
-      region: true,
-    },
-    where: {
-      isActive: true,
-    },
-  },
-  organism: true,
-  basicSkills: {
-    select: {
-      basicSkill: true,
-    },
-  },
-  trainings: {
-    select: {
-      training: true,
-    },
-  },
-  candidacyDropOut: {
-    include: {
-      dropOutReason: true,
-    },
-  },
-  reorientationReason: true,
-  ccn: true,
-};
+import { candidacyIncludes } from "../database/candidacies";
 
 export const updateAppointmentInformations = async (params: {
   candidacyId: string;
