@@ -19,23 +19,35 @@ export const resolversSecurityMap = {
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationInfo":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrUpdatePrerequisites":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrUpdateAapDecision":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrUpdateAttachments":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_sendToCandidate":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_sendToCertificationAuthority":
     isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrUpdateSwornStatement": [
     hasRole(["admin", "manage_candidacy", "candidate"]),
     whenHasRole("manage_candidacy", isCandidacyOwner),
     whenHasRole("candidate", isCandidateOwnerOfCandidacy),
   ],
+
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision":
     isAdminOrCertificationAuthority,
+
+  "Mutation.dematerialized_feasibility_file_confirmCandidate": [
+    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+  ],
 };

@@ -12,6 +12,7 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
     prerequisitesPartComplete,
     aapDecision,
     swornStatementFileId,
+    candidateConfirmationAt,
   } = dematerializedFeasibilityFile;
 
   return (
@@ -20,6 +21,7 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
     competenceBlocsPartCompletion === "COMPLETED" &&
     prerequisitesPartComplete &&
     !!aapDecision &&
-    !!swornStatementFileId
+    !!swornStatementFileId &&
+    !!candidateConfirmationAt
   );
 };

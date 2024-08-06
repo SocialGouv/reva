@@ -1072,12 +1072,12 @@ model Feasibility {
 }
 
 model FeasibilityDecision {
-  id                    String                                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  feasibility           Feasibility                                        @relation(fields: [feasibilityId], references: [id])
-  feasibilityId         String                                             @map("feasibility_id") @db.Uuid
-  decision              FeasibilityStatus
-  decisionComment       String?                                            @map("decision_comment")
-  decisionSentAt        DateTime                                           @default(now()) @map("decision_sent_at") @db.Timestamptz(6)
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  feasibility     Feasibility       @relation(fields: [feasibilityId], references: [id])
+  feasibilityId   String            @map("feasibility_id") @db.Uuid
+  decision        FeasibilityStatus
+  decisionComment String?           @map("decision_comment")
+  decisionSentAt  DateTime          @default(now()) @map("decision_sent_at") @db.Timestamptz(6)
 
   @@map("feasibility_decision")
 }
@@ -1411,6 +1411,7 @@ model DematerializedFeasibilityFile {
   swornStatementFile                File?                               @relation("sworn_statement_file", fields: [swornStatementFileId], references: [id])
   feasibility                       Feasibility                         @relation(fields: [feasibilityId], references: [id], onDelete: Cascade)
   feasibilityId                     String                              @unique @map("feasibility_id") @db.Uuid
+  candidateConfirmationAt           DateTime?                           @map("candidate_confirmation_at") @db.Timestamptz(6)
 
   @@map("dematerialized_feasibility_file")
 }

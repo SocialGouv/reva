@@ -144,6 +144,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           dematerializedFeasibilityFile {
             id
             sentToCandidateAt
+            candidateConfirmationAt
             aapDecision
             aapDecisionComment
             prerequisites {
@@ -198,7 +199,7 @@ const useCandidateWithCandidacy = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidateWithCandidacy = useQuery({
-    queryKey: ["getCandidateWithCandidacy"],
+    queryKey: ["candidate"],
     queryFn: () => graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY),
   });
 
@@ -259,6 +260,10 @@ export const useCandidacy = () => {
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
 
+  const feasibility = candidacy?.feasibility;
+  const dematerializedFeasibilityFile =
+    feasibility?.dematerializedFeasibilityFile;
+
   return {
     refetch,
     candidate,
@@ -267,5 +272,7 @@ export const useCandidacy = () => {
     canEditCandidacy,
     candidacyAlreadySubmitted,
     candidacyStatus,
+    feasibility,
+    dematerializedFeasibilityFile,
   };
 };

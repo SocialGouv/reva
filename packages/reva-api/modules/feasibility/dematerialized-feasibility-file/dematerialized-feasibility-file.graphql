@@ -20,6 +20,7 @@ type DematerializedFeasibilityFile {
   swornStatementFile: File
   isReadyToBeSentToCandidate: Boolean!
   isReadyToBeSentToCertificationAuthority: Boolean!
+  candidateConfirmationAt: Timestamp
 }
 
 enum DFFCertificationCompetenceDetailsState {
@@ -181,5 +182,10 @@ type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision(
     candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_confirmCandidate(
+    candidacyId: ID!
+    dematerializedFeasibilityFileId: ID!
   ): DematerializedFeasibilityFile!
 }

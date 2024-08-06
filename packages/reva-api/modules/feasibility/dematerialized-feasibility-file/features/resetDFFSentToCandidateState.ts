@@ -10,6 +10,7 @@ export const resetDFFSentToCandidateState = async (
       where: { id: dff.id },
       data: {
         sentToCandidateAt: null,
+        candidateConfirmationAt: null,
       },
     });
   }

@@ -73,6 +73,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
               mimeType
             }
           }
+          isReadyToBeSentToCertificationAuthority
         }
         candidacy {
           certificationAuthorities {

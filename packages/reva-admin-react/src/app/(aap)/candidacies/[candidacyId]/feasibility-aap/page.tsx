@@ -42,9 +42,9 @@ const AapFeasibilityPage = () => {
     feasibility?.decision === "ADMISSIBLE" ||
     feasibility?.decision === "REJECTED";
 
-    if (!feasibility) {
-      return null;
-    }
+  if (!feasibility) {
+    return null;
+  }
 
   if (isFeasibilityReceivedOrRejected) {
     return (

@@ -16,6 +16,7 @@ import {
 } from "./dematerialized-feasibility-file.types";
 import { checkIsDFFReadyToBeSentToCandidateById } from "./features/checkIsDFFReadyToBeSentToCandidateById";
 import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./features/checkIsDFFReadyToBeSentToCertificationAuthorityById";
+import { confirmDematerializedFeasibilityFileByCandidate } from "./features/confirmDematerializedFeasibilityFileByCandidate";
 import { createOrUpdateAapDecision } from "./features/createOrUpdateAapDecision";
 import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments";
 import { createOrUpdateCertificationAuthorityDecision } from "./features/createOrUpdateCertificationAuthorityDecision";
@@ -182,6 +183,19 @@ const unsafeResolvers = {
           input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput;
         },
       ) => createOrUpdateCertificationAuthorityDecision(params),
+
+    dematerialized_feasibility_file_confirmCandidate: (
+      _parent: unknown,
+      {
+        dematerializedFeasibilityFileId,
+      }: {
+        candidacyId: string;
+        dematerializedFeasibilityFileId: string;
+      },
+    ) =>
+      confirmDematerializedFeasibilityFileByCandidate({
+        dematerializedFeasibilityFileId,
+      }),
   },
 };
 

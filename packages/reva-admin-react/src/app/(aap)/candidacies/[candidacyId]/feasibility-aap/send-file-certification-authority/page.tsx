@@ -47,6 +47,9 @@ export default function SendFileCertificationAuthorityPage() {
   const feasibilityHasBeenSent = !!feasibilityFileSentAt;
   const feasibilityFileNeedsNewOrResendAction =
     !feasibilityHasBeenSent || feasibilityIsIncomplete;
+  const isReadyToBeSentToCertificationAuthority =
+    dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority;
+
   const handleSendFile = async () => {
     if (
       !dematerializedFeasibilityFile ||
@@ -108,7 +111,10 @@ export default function SendFileCertificationAuthorityPage() {
         </Button>
         <Button
           onClick={handleSendFile}
-          disabled={!feasibilityFileNeedsNewOrResendAction}
+          disabled={
+            !feasibilityFileNeedsNewOrResendAction ||
+            !isReadyToBeSentToCertificationAuthority
+          }
         >
           Envoyer au certificateur
         </Button>

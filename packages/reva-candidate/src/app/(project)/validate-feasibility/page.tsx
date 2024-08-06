@@ -14,22 +14,34 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 
+import { graphqlErrorToast } from "@/components/toast/toast";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { useQueryClient } from "@tanstack/react-query";
+import { GraphQLError } from "graphql";
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
 
 export default function ValidateFeasibility() {
   const router = useRouter();
 
-  const { candidacy, refetch } = useCandidacy();
+  const { candidacy, dematerializedFeasibilityFile } = useCandidacy();
+  const queryClient = useQueryClient();
+  const { createOrUpdateSwornStatement, dffCandidateConfirmation } =
+    useValidateFeasibility();
 
-  const { createOrUpdateSwornStatement } = useValidateFeasibility();
+  const { mutateAsync: dffCandidateConfirmationMutation } =
+    dffCandidateConfirmation;
 
   const [swornStatementFile, setSwornStatementFile] = useState<
     File | undefined
   >();
+  const [candidateConfirmation, setCandidateConfirmation] = useState(false);
+  const candidateHasConfirmedFeasibility =
+    dematerializedFeasibilityFile?.candidateConfirmationAt;
 
-  const { organism, feasibility } = candidacy;
-  const dematerializedFeasibilityFile =
-    feasibility?.dematerializedFeasibilityFile;
+  const { organism } = candidacy;
+
+  const formIsDisabled =
+    !candidateConfirmation || !!candidateHasConfirmedFeasibility;
 
   const remoteSwornStatementFile = useMemo(
     () =>
@@ -49,15 +61,26 @@ export default function ValidateFeasibility() {
 
   const onSubmit = async () => {
     try {
-      const response = await createOrUpdateSwornStatement({
+      await dffCandidateConfirmationMutation({
         candidacyId: candidacy.id,
-        swornStatement: swornStatementFile!,
+        dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
       });
-      if (response) {
-        refetch();
-        router.push("/");
+      if (swornStatementFile) {
+        const response = await createOrUpdateSwornStatement({
+          candidacyId: candidacy.id,
+          swornStatement: swornStatementFile!,
+        });
+        if (!response) {
+          throw new GraphQLError("Erreur lors de la création de l'attestation");
+        }
       }
-    } catch (error) {}
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+      router.push("/");
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (
@@ -117,8 +140,25 @@ export default function ValidateFeasibility() {
               setSwornStatementFile(e.target.files?.[0]);
             },
             accept: ".pdf, .jpg, .jpeg, .png",
+            disabled: !!candidateHasConfirmedFeasibility,
           }}
         />
+
+        {!candidateHasConfirmedFeasibility && (
+          <Checkbox
+            options={[
+              {
+                label: "J'ai lu et accepte cette version du dossier.",
+                nativeInputProps: {
+                  onChange: (e) => {
+                    setCandidateConfirmation(e.target.checked);
+                  },
+                  checked: candidateConfirmation,
+                },
+              },
+            ]}
+          />
+        )}
 
         <div className="flex flex-row items-center justify-between">
           <Button
@@ -134,11 +174,7 @@ export default function ValidateFeasibility() {
             Retour
           </Button>
 
-          <Button
-            type="submit"
-            data-test="submit"
-            disabled={!swornStatementFile}
-          >
+          <Button type="submit" data-test="submit" disabled={formIsDisabled}>
             Envoyer
           </Button>
         </div>
