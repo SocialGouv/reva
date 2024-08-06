@@ -1,7 +1,14 @@
+import { FeasibilityDecision as FeasibilityDecisionEnum } from "@/graphql/generated/graphql";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { formatDate } from "date-fns";
-import { FeasibilityHistory } from "@/graphql/generated/graphql";
 import { ReactNode } from "react";
+
+type FeasibilityHistory = {
+  id: string;
+  decision: FeasibilityDecisionEnum;
+  decisionSentAt: Date | null;
+  decisionComment: string;
+};
 
 const Info = ({
   title,

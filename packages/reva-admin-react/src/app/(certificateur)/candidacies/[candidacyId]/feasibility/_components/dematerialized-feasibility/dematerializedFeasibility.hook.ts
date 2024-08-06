@@ -10,6 +10,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
       decisionComment
       decisionSentAt
       history {
+        id
         decision
         decisionComment
         decisionSentAt
