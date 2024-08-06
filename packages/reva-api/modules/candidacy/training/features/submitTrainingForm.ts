@@ -1,14 +1,27 @@
-import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { CandidateTypology } from "@prisma/client";
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../../shared/error/functionalError";
+  CandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { generateJwt } from "../../../candidate/auth.helper";
+import { sendTrainingEmail } from "../emails";
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 import { updateTrainingInformations } from "./updateTrainingInformations";
 
-export const submitTraining = async (params: {
+export const submitTraining = async ({
+  candidacyId,
+  userKeycloakId,
+  userEmail,
+  userRoles,
+  training,
+}: {
   candidacyId: string;
   training: {
+    candidateTypologyInformations: {
+      typology: CandidateTypology;
+      additionalInformation: string;
+    };
     basicSkillIds: string[];
     mandatoryTrainingIds: string[];
     certificateSkills: string;
@@ -18,55 +31,51 @@ export const submitTraining = async (params: {
     additionalHourCount: number;
     isCertificationPartial: boolean;
   };
-}) => {
-  const { candidacyId, training } = params;
-
-  // Check if candidacy is not already funding
-  const existsCandidacyWithFunding = await existsCandidacyHavingHadStatus({
-    candidacyId,
-    status: "DEMANDE_FINANCEMENT_ENVOYE",
-  });
-
-  if (existsCandidacyWithFunding) {
-    throw new FunctionalError(
-      FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED,
+} & CandidacyAuditLogUserInfo) => {
+  if (
+    await existsCandidacyHavingHadStatus({
+      candidacyId,
+      status: "DEMANDE_FINANCEMENT_ENVOYE",
+    })
+  ) {
+    throw new Error(
       `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
     );
   }
 
-  // Check if candidacy is taken over
-  const existsCandidacyTakenOver = await existsCandidacyHavingHadStatus({
-    candidacyId,
-    status: "PRISE_EN_CHARGE",
-  });
-
-  if (!existsCandidacyTakenOver) {
-    throw new FunctionalError(
-      FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED,
+  if (
+    !(await existsCandidacyHavingHadStatus({
+      candidacyId,
+      status: "PRISE_EN_CHARGE",
+    }))
+  ) {
+    throw new Error(
       `Ce parcours ne peut pas être envoyé car la candidature n'est pas encore prise en charge.`,
     );
   }
 
-  // Update training informations
-  try {
-    await updateTrainingInformations({ candidacyId, training });
-  } catch (_) {
-    throw new FunctionalError(
-      FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED,
-      `Erreur lors de la mise à jour du parcours candidat`,
+  await updateTrainingInformations({ candidacyId, training });
+
+  const candidacy = await updateCandidacyStatus({
+    candidacyId,
+    status: "PARCOURS_ENVOYE",
+  });
+
+  if (candidacy?.email) {
+    const token = generateJwt(
+      { email: candidacy?.email, action: "login" },
+      1 * 60 * 60 * 24 * 4,
     );
+    sendTrainingEmail(candidacy.email, token);
   }
 
-  // Update candidacy status
-  try {
-    await updateCandidacyStatus({
-      candidacyId,
-      status: "PARCOURS_ENVOYE",
-    });
-  } catch (_) {
-    throw new FunctionalError(
-      FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED,
-      `Erreur lors du changement de status de la candidature ${candidacyId}`,
-    );
-  }
+  await logCandidacyAuditEvent({
+    candidacyId: candidacyId,
+    eventType: "TRAINING_FORM_SUBMITTED",
+    userKeycloakId,
+    userEmail,
+    userRoles,
+  });
+
+  return candidacy;
 };

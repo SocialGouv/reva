@@ -1,0 +1,41 @@
+import {
+  CandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
+
+export const confirmTrainingFormByCandidate = async ({
+  candidacyId,
+  userKeycloakId,
+  userEmail,
+  userRoles,
+}: {
+  candidacyId: string;
+} & CandidacyAuditLogUserInfo) => {
+  if (
+    !(await existsCandidacyWithActiveStatus({
+      candidacyId,
+      status: "PARCOURS_ENVOYE",
+    }))
+  ) {
+    throw new Error(
+      `Le parcours candidat de la candidature ${candidacyId} ne peut être confirmé`,
+    );
+  }
+
+  const result = await updateCandidacyStatus({
+    candidacyId,
+    status: "PARCOURS_CONFIRME",
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "TRAINING_FORM_CONFIRMED",
+    userKeycloakId,
+    userEmail,
+    userRoles,
+  });
+
+  return result;
+};
