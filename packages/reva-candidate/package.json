@@ -26,6 +26,7 @@
     "postcss-url": "^10.1.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "sharp": "^0.33.4",
     "urql": "^4.1.0",
     "uuid": "^10.0.0",

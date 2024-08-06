@@ -1,8 +1,8 @@
 "use client";
 
-import "@/styles/globals.css";
-import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/globals.css";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
@@ -17,12 +17,13 @@ import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 
-import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { AuthGuard } from "@/components/auth/auth.guard";
+import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ export default function RootLayout({
         <DsfrProvider>
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
+              <Toaster position="top-right" />
               <LayoutContent>
                 <AuthGuard>
                   {({ authenticated }) =>
