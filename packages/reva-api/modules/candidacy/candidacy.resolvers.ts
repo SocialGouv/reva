@@ -24,8 +24,6 @@ import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
-import { getBasicSkills } from "./features/getBasicSkills";
-import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
 import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
@@ -100,16 +98,12 @@ const unsafeResolvers = {
       getExperiencesByCandidacyId({ candidacyId }),
     certification: async ({ id: candidacyId }: Candidacy) =>
       getCandidacyWithActiveCertificationByCandidacyId(candidacyId),
-    basicSkills: async ({ id: candidacyId }: Candidacy) =>
-      getBasicSkillsByCandidacyId({ candidacyId }),
     candidate: async ({ id: candidacyId }: Candidacy) =>
       getCandidateByCandidacyId({ candidacyId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>
-      withBasicSkills(
-        withMandatoryTrainings(await getCandidacy({ candidacyId: id })),
-      ),
+      getCandidacy({ candidacyId: id }),
     getCandidacies: async (
       _parent: unknown,
       _params: {
@@ -148,7 +142,6 @@ const unsafeResolvers = {
         searchFilter,
         searchText,
       }),
-    getBasicSkills,
     candidacy_candidacyCountByStatus: (
       _: unknown,
       _params: {

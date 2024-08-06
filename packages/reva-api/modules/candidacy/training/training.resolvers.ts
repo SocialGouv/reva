@@ -6,14 +6,19 @@ import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrain
 import { getTrainings } from "./features/getTrainings";
 import { submitTraining } from "./features/submitTrainingForm";
 import { resolversSecurityMap } from "./training.security";
+import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
+import { getBasicSkills } from "./features/getBasicSkills";
 
 const unsafeResolvers = {
   Candidacy: {
     mandatoryTrainings: async ({ id: candidacyId }: Candidacy) =>
       getMandatoryTrainingsByCandidacyId({ candidacyId }),
+    basicSkills: async ({ id: candidacyId }: Candidacy) =>
+      getBasicSkillsByCandidacyId({ candidacyId }),
   },
   Query: {
     training_getTrainings: getTrainings,
+    getBasicSkills,
   },
   Mutation: {
     training_submitTrainingForm: async (

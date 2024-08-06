@@ -1,5 +1,5 @@
 import { prismaClient } from "../../../../prisma/client";
-export const getMandatoryTrainingsByCandidacyId = async ({
+export const getBasicSkillsByCandidacyId = async ({
   candidacyId,
 }: {
   candidacyId: string;
@@ -7,5 +7,5 @@ export const getMandatoryTrainingsByCandidacyId = async ({
   (
     await prismaClient.candidacy
       .findUnique({ where: { id: candidacyId } })
-      .trainings({ include: { training: true } })
-  )?.map((t) => t.training);
+      .basicSkills({ include: { basicSkill: true } })
+  )?.map((b) => b.basicSkill);

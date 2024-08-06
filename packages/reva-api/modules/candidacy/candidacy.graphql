@@ -70,15 +70,6 @@ type Candidacy {
   readyForJuryEstimatedAt: Timestamp
   appointmentCount: Int
   candidacyStatuses: [CandidacyStatus!]!
-  certificateSkills: String
-  otherTraining: String
-  individualHourCount: Int
-  collectiveHourCount: Int
-  additionalHourCount: Int
-  basicSkillIds: [UUID!]!
-  basicSkills: [BasicSkill!]!
-  mandatoryTrainingIds: [UUID!]!
-  mandatoryTrainings: [Training!]!
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
   admissibility: Admissibility!
@@ -163,11 +154,6 @@ enum OrganismTypology {
   expertFiliere
   expertBranche
   expertBrancheEtFiliere
-}
-
-type BasicSkill {
-  id: UUID!
-  label: String!
 }
 
 type Admissibility {
@@ -267,7 +253,6 @@ type Query {
     searchText: String
     searchFilter: SearchOrganismFilter
   ): RamdomOrganisms!
-  getBasicSkills: [BasicSkill!]!
   candidacy_candidacyCountByStatus(
     searchFilter: String
   ): CandidacyCountByStatus!

@@ -1,10 +1,28 @@
+type Candidacy {
+  certificateSkills: String
+  otherTraining: String
+  individualHourCount: Int
+  collectiveHourCount: Int
+  additionalHourCount: Int
+  basicSkills: [BasicSkill!]!
+  basicSkillIds: [UUID!]!
+  mandatoryTrainings: [Training!]!
+  mandatoryTrainingIds: [UUID!]!
+}
+
 type Training {
   id: ID!
   label: String!
 }
 
+type BasicSkill {
+  id: UUID!
+  label: String!
+}
+
 type Query {
   training_getTrainings: [Training!]!
+  getBasicSkills: [BasicSkill!]!
 }
 
 input TrainingInput {
