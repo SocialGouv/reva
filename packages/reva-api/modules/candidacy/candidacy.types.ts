@@ -41,10 +41,6 @@ export interface Candidacy extends CandidacyAbstract {
   region?: Region;
   department: Department | null;
   candidacyStatuses: CandidacyStatus[];
-  // basicSkills: BasicSkill[];
-  // trainings: Training[];
-  //   individualHourCount: number | null;
-  //   collectiveHourCount: number | null;
   candidacyDropOut?: CandidacyDropOut | null;
   reorientationReason?: ReorientationReason | null;
   createdAt: Date;

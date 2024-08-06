@@ -55,36 +55,6 @@ import {
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 
-const withBasicSkills = (c: Candidacy | null) =>
-  c
-    ? {
-        ...c,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        basicSkillIds: c.basicSkills.reduce((memo, bs) => {
-          return [...memo, bs.basicSkill.id];
-        }, []),
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
-      }
-    : null;
-
-const withMandatoryTrainings = (c: Candidacy | null) =>
-  c
-    ? {
-        ...c,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        mandatoryTrainingIds: c.trainings.reduce((memo, t) => {
-          return [...memo, t.training.id];
-        }, []),
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        mandatoryTrainings: c.trainings.map((t) => t.training),
-      }
-    : null;
-
 const unsafeResolvers = {
   Candidacy: {
     admissibility: ({ id: candidacyId }: Candidacy) =>

@@ -1,7 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
-import { Candidacy } from "../../candidacy/candidacy.types";
 import { candidacyIncludes } from "../../candidacy/database/candidacies";
 
 const candidateIncludes = {
@@ -17,30 +16,6 @@ const ongoingCandidacyFilter: Prisma.CandidacyWhereInput = {
     },
   },
 };
-
-const withBasicSkills = (c: Candidacy) => ({
-  ...c,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  basicSkillIds: c.basicSkills.reduce((memo, bs) => {
-    return [...memo, bs.basicSkill.id];
-  }, []),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
-});
-
-const withMandatoryTrainings = (c: Candidacy) => ({
-  ...c,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mandatoryTrainingIds: c.trainings.reduce((memo, t) => {
-    return [...memo, t.training.id];
-  }, []),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mandatoryTrainings: c.trainings.map((t) => t.training),
-});
 
 export const createCandidateWithCandidacy = async (candidate: any) => {
   // Create account
@@ -123,20 +98,16 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
 
   return {
     ...newCandidate,
-    candidacies: newCandidate.candidacies.map((candidacy) =>
-      withBasicSkills(
-        withMandatoryTrainings({
-          ...candidacy,
-          regionId: certificationAndRegion?.region.id,
-          region: certificationAndRegion?.region,
-          certificationId: certificationAndRegion?.certification.id,
-          certification: certificationAndRegion?.certification && {
-            ...certificationAndRegion?.certification,
-            codeRncp: certificationAndRegion?.certification.rncpId,
-          },
-        }),
-      ),
-    ),
+    candidacies: newCandidate.candidacies.map((candidacy) => ({
+      ...candidacy,
+      regionId: certificationAndRegion?.region.id,
+      region: certificationAndRegion?.region,
+      certificationId: certificationAndRegion?.certification.id,
+      certification: certificationAndRegion?.certification && {
+        ...certificationAndRegion?.certification,
+        codeRncp: certificationAndRegion?.certification.rncpId,
+      },
+    })),
   };
 };
 
@@ -208,20 +179,16 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
   return candidate
     ? {
         ...candidate,
-        candidacies: candidate?.candidacies.map((candidacy) =>
-          withBasicSkills(
-            withMandatoryTrainings({
-              ...candidacy,
-              regionId: certificationAndRegion?.region.id,
-              region: certificationAndRegion?.region,
-              certificationId: certificationAndRegion?.certification.id,
-              certification: certificationAndRegion?.certification && {
-                ...certificationAndRegion?.certification,
-                codeRncp: certificationAndRegion?.certification.rncpId,
-              },
-            }),
-          ),
-        ),
+        candidacies: candidate?.candidacies.map((candidacy) => ({
+          ...candidacy,
+          regionId: certificationAndRegion?.region.id,
+          region: certificationAndRegion?.region,
+          certificationId: certificationAndRegion?.certification.id,
+          certification: certificationAndRegion?.certification && {
+            ...certificationAndRegion?.certification,
+            codeRncp: certificationAndRegion?.certification.rncpId,
+          },
+        })),
       }
     : null;
 };
