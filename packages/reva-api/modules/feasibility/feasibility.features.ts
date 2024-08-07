@@ -40,26 +40,30 @@ import {
   excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
+import { getCertificationByCandidacyId } from "../candidacy/features/getCertificationByCandidacyId";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
-export const getCertificationAuthorities = ({
-  certificationId,
+export const getCertificationAuthorities = async ({
+  candidacyId,
   departmentId,
 }: {
-  certificationId: string;
+  candidacyId: string;
   departmentId: string;
-}) =>
-  certificationId && departmentId
+}) => {
+  const certification = await getCertificationByCandidacyId({ candidacyId });
+
+  return certification && departmentId
     ? prismaClient.certificationAuthority.findMany({
         where: {
           certificationAuthorityOnDepartment: { some: { departmentId } },
           certificationAuthorityOnCertification: {
-            some: { certificationId },
+            some: { certificationId: certification.id },
           },
         },
       })
     : [];
+};
 
 export const createFeasibility = async ({
   candidacyId,

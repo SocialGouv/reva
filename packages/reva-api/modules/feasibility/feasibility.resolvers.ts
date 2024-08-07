@@ -13,10 +13,13 @@ import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 
 const unsafeResolvers = {
   Candidacy: {
-    certificationAuthorities: (parent: {
-      certificationId: string;
+    certificationAuthorities: ({
+      id: candidacyId,
+      departmentId,
+    }: {
+      id: string;
       departmentId: string;
-    }) => getCertificationAuthorities(parent),
+    }) => getCertificationAuthorities({ candidacyId, departmentId }),
     feasibility: ({ id: candidacyId }: { id: string }) =>
       getActiveFeasibilityByCandidacyid({ candidacyId }),
   },
