@@ -63,64 +63,35 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   }
 
   try {
-    const [, newCandidacy, certificationAndRegion] =
-      await prismaClient.$transaction([
-        prismaClient.candidaciesStatus.updateMany({
-          where: {
-            candidacyId: params.candidacyId,
-          },
-          data: {
-            isActive: false,
-          },
-        }),
-        prismaClient.candidacy.update({
-          where: {
-            id: params.candidacyId,
-          },
-          data: {
-            candidacyStatuses: {
-              create: {
-                status: "ARCHIVE",
-                isActive: true,
-              },
+    const [, newCandidacy] = await prismaClient.$transaction([
+      prismaClient.candidaciesStatus.updateMany({
+        where: {
+          candidacyId: params.candidacyId,
+        },
+        data: {
+          isActive: false,
+        },
+      }),
+      prismaClient.candidacy.update({
+        where: {
+          id: params.candidacyId,
+        },
+        data: {
+          candidacyStatuses: {
+            create: {
+              status: "ARCHIVE",
+              isActive: true,
             },
-            reorientationReasonId: params.reorientationReasonId,
           },
-          include: {
-            ...candidacyIncludes,
-            candidate: true,
-          },
-        }),
-        prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-          where: {
-            candidacyId: params.candidacyId,
-            isActive: true,
-          },
-          include: {
-            certification: true,
-            region: true,
-          },
-        }),
-      ]);
+          reorientationReasonId: params.reorientationReasonId,
+        },
+        include: {
+          ...candidacyIncludes,
+        },
+      }),
+    ]);
 
-    return {
-      id: newCandidacy.id,
-      regionId: certificationAndRegion?.region.id,
-      region: certificationAndRegion?.region,
-      departmentId: newCandidacy.departmentId,
-      certificationId: certificationAndRegion?.certificationId,
-      certification: {
-        ...certificationAndRegion?.certification,
-        codeRncp: certificationAndRegion?.certification.rncpId,
-      },
-      reorientationReasonId: newCandidacy.reorientationReasonId,
-      organismId: newCandidacy.organismId,
-      experiences: newCandidacy.experiences,
-      candidacyStatuses: newCandidacy.candidacyStatuses,
-      candidacyDropOut: newCandidacy.candidacyDropOut,
-      createdAt: newCandidacy.createdAt,
-      financeModule: newCandidacy.financeModule,
-    };
+    return newCandidacy;
   } catch (e) {
     logger.error(e);
     throw new Error(

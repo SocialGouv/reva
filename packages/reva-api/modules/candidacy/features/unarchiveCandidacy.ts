@@ -85,7 +85,6 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
           },
           include: {
             ...candidacyIncludes,
-            candidate: true,
           },
         }),
         prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
