@@ -34,12 +34,6 @@ export const getCandidaciesFromIds = async (
     },
     include: {
       ...candidacyIncludes,
-      candidate: {
-        include: {
-          highestDegree: true,
-          vulnerabilityIndicator: true,
-        },
-      },
     },
   });
 
@@ -86,7 +80,6 @@ export const updateCandidacyStatus = async (params: {
         },
         include: {
           ...candidacyIncludes,
-          candidate: true,
         },
       }),
       prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -164,7 +157,6 @@ export const updateCertification = async (params: {
         },
         include: {
           ...candidacyIncludes,
-          candidate: true,
         },
       }),
 
@@ -208,7 +200,6 @@ export const updateOrganism = async (params: {
     },
     include: {
       ...candidacyIncludes,
-      candidate: true,
     },
   });
 
