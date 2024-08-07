@@ -29,7 +29,6 @@ import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
-import { getCandidacyWithActiveCertificationByCandidacyId } from "./features/getCandidacyWithActiveCertificationByCandidacyId";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
@@ -55,6 +54,8 @@ import {
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
+import { getCertificationByCandidacyId } from "./features/getCertificationByCandidacyId";
+import { getRegionByCandidacyId } from "./features/getRegionByCandidacyId";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -67,12 +68,14 @@ const unsafeResolvers = {
       getCandidacyGoals({ candidacyId }),
     experiences: async ({ id: candidacyId }: Candidacy) =>
       getExperiencesByCandidacyId({ candidacyId }),
-    certification: async ({ id: candidacyId }: Candidacy) =>
-      getCandidacyWithActiveCertificationByCandidacyId(candidacyId),
     candidate: async ({ id: candidacyId }: Candidacy) =>
       getCandidateByCandidacyId({ candidacyId }),
     department: ({ departmentId }: { departmentId: string }) =>
       getDepartmentById({ id: departmentId }),
+    region: ({ id: candidacyId }: { id: string }) =>
+      getRegionByCandidacyId({ candidacyId }),
+    certification: ({ id: candidacyId }: { id: string }) =>
+      getCertificationByCandidacyId({ candidacyId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

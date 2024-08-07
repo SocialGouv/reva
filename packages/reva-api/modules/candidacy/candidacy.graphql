@@ -50,7 +50,6 @@ type Candidacy {
   id: ID!
   candidate: Candidate
   certificationId: ID
-  regionId: ID
   region: Region
   departmentId: ID
   department: Department
