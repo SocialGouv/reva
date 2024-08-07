@@ -54,6 +54,7 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { getDepartmentById } from "../referential/features/getDepartmentById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -70,6 +71,8 @@ const unsafeResolvers = {
       getCandidacyWithActiveCertificationByCandidacyId(candidacyId),
     candidate: async ({ id: candidacyId }: Candidacy) =>
       getCandidateByCandidacyId({ candidacyId }),
+    department: ({ departmentId }: { departmentId: string }) =>
+      getDepartmentById({ id: departmentId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

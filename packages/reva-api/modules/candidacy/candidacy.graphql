@@ -52,6 +52,7 @@ type Candidacy {
   certificationId: ID
   regionId: ID
   region: Region
+  departmentId: ID
   department: Department
   organismId: UUID
   organism: Organism

@@ -6,7 +6,6 @@ import * as domain from "../candidacy.types";
 export const candidacyIncludes = {
   experiences: true,
   candidacyStatuses: true,
-  department: true,
   certificationsAndRegions: {
     select: {
       certification: true,
@@ -106,7 +105,7 @@ export const updateCandidacyStatus = async (params: {
     ...newCandidacy,
     regionId: certificationAndRegion?.region.id,
     region: certificationAndRegion?.region,
-    department: newCandidacy.department,
+    departmentId: newCandidacy.departmentId,
     certificationId: certificationAndRegion?.certificationId,
     certification: {
       ...certificationAndRegion?.certification,
@@ -185,7 +184,7 @@ export const updateCertification = async (params: {
     id: newCandidacy.id,
     regionId: certificationAndRegion?.region.id,
     region: certificationAndRegion?.region,
-    department: newCandidacy.department,
+    departmentId: newCandidacy.departmentId,
     certificationId: certificationAndRegion?.certification.id,
     certification: certificationAndRegion?.certification,
     organismId: newCandidacy.organismId,
@@ -231,7 +230,7 @@ export const updateOrganism = async (params: {
     id: newCandidacy.id,
     regionId: certificationAndRegion?.region.id,
     region: certificationAndRegion?.region,
-    department: newCandidacy.department,
+    departmentId: newCandidacy.departmentId,
     certificationId: certificationAndRegion?.certification.id,
     certification: certificationAndRegion?.certification,
     organismId: newCandidacy.organismId,

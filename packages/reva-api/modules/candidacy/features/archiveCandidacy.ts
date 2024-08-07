@@ -107,7 +107,7 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
       id: newCandidacy.id,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
-      department: newCandidacy.department,
+      departmentId: newCandidacy.departmentId,
       certificationId: certificationAndRegion?.certificationId,
       certification: {
         ...certificationAndRegion?.certification,

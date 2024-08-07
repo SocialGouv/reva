@@ -39,7 +39,7 @@ export interface Candidacy extends CandidacyAbstract {
   organism?: Organism | null;
   regionId?: string;
   region?: Region;
-  department: Department | null;
+  departmentId?: string | null;
   candidacyStatuses: CandidacyStatus[];
   candidacyDropOut?: CandidacyDropOut | null;
   reorientationReason?: ReorientationReason | null;
