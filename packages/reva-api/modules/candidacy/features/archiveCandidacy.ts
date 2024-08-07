@@ -116,8 +116,6 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
       reorientationReasonId: newCandidacy.reorientationReasonId,
       organismId: newCandidacy.organismId,
       experiences: newCandidacy.experiences,
-      phone: newCandidacy.candidate?.phone || null,
-      email: newCandidacy.candidate?.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
