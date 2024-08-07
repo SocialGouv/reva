@@ -1,5 +1,8 @@
 export const IgnoreCguModalContent = () => (
   <>
+    <p className="font-bold">
+      Si vous ignorez les nouvelles Conditions Générales d'Utilisation :
+    </p>
     <ul className="mb-4 [&_li]:my-2">
       <li>
         Votre établissement restera non visible et n’apparaîtra pas dans les
@@ -16,8 +19,7 @@ export const IgnoreCguModalContent = () => (
       </li>
     </ul>
     <p>
-      Si vous avez besoin de précisions pour prendre cette décision, n'hésitez
-      pas à contacter le service support :{" "}
+      Si vous avez besoin d’aide, contactez-nous :{" "}
       <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.
     </p>
   </>

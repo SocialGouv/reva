@@ -4,10 +4,13 @@ export const Cgu = () => (
       Les présentes conditions générales d’utilisation (dites « CGU ») fixent
       les conditions d’accès et d’utilisation des services proposés dans le
       cadre du portail de la validation des acquis de l’expérience par ses
-      utilisateurs. Ce dispositif est un téléservice au sens des dispositions de
-      l’ordonnance n° 2005-1516 du 8 décembre 2005 relative aux échanges
-      électroniques entre les usagers et les autorités administratives et entre
-      les autorités administratives.
+      utilisateurs.
+    </p>
+    <p className="text-xl leading-relaxed">
+      Ce dispositif est un téléservice au sens des dispositions de l’ordonnance
+      n° 2005-1516 du 8 décembre 2005 relative aux échanges électroniques entre
+      les usagers et les autorités administratives et entre les autorités
+      administratives.
     </p>
     <hr className="mt-12 mb-6" />
     <h2>Article 1 - Définitions</h2>

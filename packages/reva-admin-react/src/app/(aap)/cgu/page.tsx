@@ -60,16 +60,13 @@ export default function CguPage() {
       </p>
       <form onSubmit={handleSubmit(submitCgu)}>
         <fieldset>
-          <legend className="text-xl font-bold text-gray-900 mb-8">
-            Veuillez accepter les conditions générales d'utilisation :
-          </legend>
           <Cgu />
           <hr className="mt-12 mb-8" />
           <Checkbox
             options={[
               {
                 label:
-                  "J'atteste avoir pris connaissance des conditions générales d'utilisation",
+                  "J’accepte les nouvelles conditions générales d’utilisation.",
                 nativeInputProps: {
                   ...register("cguAcceptance"),
                 },
@@ -83,7 +80,7 @@ export default function CguPage() {
             priority="tertiary no outline"
             onClick={modalIgnoreCgu.open}
           >
-            Ignorer les nouvelles CGU
+            Ignorer les CGU
           </Button>
           <Button type="submit" disabled={!isValid}>
             Valider les CGU
@@ -96,11 +93,12 @@ export default function CguPage() {
         title=" Que se passe-t-il si vous ignorez les nouvelles CGU ?"
         buttons={[
           {
-            children: "Relire les CGU",
-          },
-          {
             linkProps: { href: "/candidacies" },
-            children: "J'ignore les CGU",
+            children: "Ignorer les CGU",
+          },
+
+          {
+            children: "Relire les CGU",
           },
         ]}
       >
