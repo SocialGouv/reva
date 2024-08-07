@@ -46,7 +46,6 @@ const fundingRequestSample = {
 const candidateEmail = "toto@bongo.eu",
   aapEmail = "aap@formation.com",
   aapKeycloakId = "e4965f17-6c39-4ed2-8786-e504e320e476",
-  myCandidateEmail = "meuh@cocorico.com",
   myCandidatKeycloakId = "f5965f17-6c39-4ed2-8786-e504e320e476";
 
 let organism: Organism,
@@ -108,7 +107,6 @@ beforeAll(async () => {
 
   candidacyUnifvae = await prismaClient.candidacy.create({
     data: {
-      email: candidateEmail,
       organismId: organism.id,
       financeModule: "unifvae",
       candidateId: myCandidate.id,
@@ -155,14 +153,12 @@ beforeAll(async () => {
   });
   candidacyUnireva = await prismaClient.candidacy.create({
     data: {
-      email: candidateEmail,
       organismId: organism.id,
       financeModule: "unireva",
     },
   });
   myCandidacy = await prismaClient.candidacy.create({
     data: {
-      email: myCandidateEmail,
       organismId: organism.id,
       financeModule: "unifvae",
       candidacyStatuses: {

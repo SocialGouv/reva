@@ -25,6 +25,7 @@ const toDomainCandidacySummary = (
     organism: Organism | null;
     firstname: string | undefined;
     lastname: string | undefined;
+    email: string | undefined | null;
     department: Department | null;
     candidacyDropOut: CandidacyDropOut | null;
   },
@@ -67,6 +68,7 @@ const toDomainCandidacySummaries = (
     organism: Organism | null;
     firstname: string | undefined;
     lastname: string | undefined;
+    email: string | undefined | null;
     department: Department | null;
     candidacyDropOut: CandidacyDropOut | null;
   })[],
@@ -158,7 +160,7 @@ const getCandidaciesFromDb = async ({
         firstname: c.candidate?.firstname,
         lastname: c.candidate?.lastname,
         phone: c.candidate?.phone || null,
-        email: c.candidate?.email || c.email,
+        email: c.candidate?.email,
       })),
     ),
   };

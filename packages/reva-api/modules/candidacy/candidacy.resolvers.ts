@@ -466,8 +466,8 @@ const unsafeResolvers = {
         droppedOutAt,
       });
 
-      if (candidacy?.email) {
-        sendCandidacyDropOutEmailToCandidate(candidacy.email);
+      if (candidacy?.candidate?.email) {
+        sendCandidacyDropOutEmailToCandidate(candidacy.candidate.email);
       }
 
       if (candidacy?.id) {

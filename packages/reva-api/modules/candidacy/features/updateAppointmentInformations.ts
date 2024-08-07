@@ -87,7 +87,7 @@ export const updateAppointmentInformations = async (params: {
     organismId: updatedCandidacy.organismId,
     experiences: updatedCandidacy.experiences,
     phone: updatedCandidacy.candidate?.phone || null,
-    email: updatedCandidacy.candidate?.email || updatedCandidacy.email,
+    email: updatedCandidacy.candidate?.email,
     typology: updatedCandidacy.typology,
     typologyAdditional: updatedCandidacy.typologyAdditional,
     firstAppointmentOccuredAt: updatedCandidacy.firstAppointmentOccuredAt,

@@ -3,9 +3,6 @@ import { Gender } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 import { generateFundingRequestUnifvaeBatchCsvStream } from "./fundingRequestUnifvae";
 
-const candidateEmail1 = "toto@bongo.eu",
-  candidateEmail2 = "titi@bongo.eu",
-  candidateEmail3 = "tata@bongo.eu";
 const fundingRequestSample = {
   candidateSecondname: "Lapin",
   candidateThirdname: "Piou",
@@ -29,7 +26,6 @@ const fundingRequestSample = {
 beforeAll(async () => {
   await prismaClient.candidacy.create({
     data: {
-      email: candidateEmail1,
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {
@@ -51,7 +47,6 @@ beforeAll(async () => {
   });
   await prismaClient.candidacy.create({
     data: {
-      email: candidateEmail2,
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {
@@ -73,7 +68,6 @@ beforeAll(async () => {
   });
   await prismaClient.candidacy.create({
     data: {
-      email: candidateEmail3,
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {

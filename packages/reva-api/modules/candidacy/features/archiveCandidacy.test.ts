@@ -75,7 +75,6 @@ beforeAll(async () => {
 
   candidacyPriseEnCharge = await prismaClient.candidacy.create({
     data: {
-      email: candidate.email,
       candidateId: candidate.id,
       organismId: organism.id,
       candidacyStatuses: {
@@ -86,7 +85,6 @@ beforeAll(async () => {
 
   candidacyWithReorientationReason = await prismaClient.candidacy.create({
     data: {
-      email: candidate.email,
       candidateId: candidate.id,
       organismId: organism.id,
       candidacyStatuses: {
@@ -98,7 +96,6 @@ beforeAll(async () => {
 
   candidacyArchived = await prismaClient.candidacy.create({
     data: {
-      email: candidate.email,
       candidateId: candidate.id,
       organismId: organism.id,
       candidacyStatuses: {

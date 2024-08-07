@@ -27,7 +27,6 @@ beforeAll(async () => {
   normalCandidacy = await prismaClient.candidacy.create({
     data: {
       candidateId: candidate.id,
-      email: candidate.email,
       candidacyStatuses: {
         create: [{ status: "PROJET", isActive: true }],
       },
@@ -37,7 +36,6 @@ beforeAll(async () => {
   droppedoutCandidacy = await prismaClient.candidacy.create({
     data: {
       candidateId: candidate.id,
-      email: candidate.email,
       candidacyStatuses: {
         create: [{ status: "PROJET", isActive: true }],
       },
@@ -76,7 +74,9 @@ describe("cancel drop out candidacy", () => {
     });
     expect(cancelDropoutResult.id).toEqual(droppedoutCandidacy.id);
     expect(cancelDropoutResult.candidacyDropOut).not.toBeNull();
-    expect(cancelDropoutResult.candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason!.id);
+    expect(cancelDropoutResult.candidacyDropOut?.dropOutReason.id).toEqual(
+      dropoutReason!.id,
+    );
   });
 
   test("should return empty dropout reasons for the candidacy", async () => {

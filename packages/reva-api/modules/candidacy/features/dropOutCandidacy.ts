@@ -45,7 +45,6 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     );
   }
 
-  candidacy.email = candidacy.candidate?.email || candidacy.email;
   const candidacyStatus = candidacy.candidacyStatuses[0].status;
 
   const hasDropOut = Boolean(candidacy.candidacyDropOut);

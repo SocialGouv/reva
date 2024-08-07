@@ -27,7 +27,6 @@ beforeAll(async () => {
   normalCandidacy = await prismaClient.candidacy.create({
     data: {
       candidateId: candidate.id,
-      email: candidate.email,
       candidacyStatuses: {
         create: [{ status: "PROJET", isActive: true }],
       },
@@ -37,7 +36,6 @@ beforeAll(async () => {
   droppedoutCandidacy = await prismaClient.candidacy.create({
     data: {
       candidateId: candidate.id,
-      email: candidate.email,
       candidacyStatuses: {
         create: [{ status: "PROJET", isActive: true }],
       },

@@ -11,7 +11,7 @@ import {
 interface CandidacyAbstract {
   // companionId: string | null;
   experiences: Experience[];
-  email: string | null;
+  email?: string | null;
 }
 
 export interface CandidacyInput extends CandidacyAbstract {

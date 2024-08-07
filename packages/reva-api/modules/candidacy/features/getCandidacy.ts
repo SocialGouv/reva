@@ -39,7 +39,7 @@ export const getCandidacy = async ({
         firstname: candidacy.candidate?.firstname,
         lastname: candidacy.candidate?.lastname,
         phone: candidacy.candidate?.phone || null,
-        email: candidacy.candidate?.email || candidacy.email,
+        email: candidacy.candidate?.email,
         regionId: certificationAndRegion?.region.id,
         region: certificationAndRegion?.region,
         certificationId: certificationAndRegion?.certification.id,
