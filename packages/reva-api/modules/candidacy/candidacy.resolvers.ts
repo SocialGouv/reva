@@ -56,6 +56,7 @@ import { resolversSecurityMap } from "./security/security";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
 import { getCertificationByCandidacyId } from "./features/getCertificationByCandidacyId";
 import { getRegionByCandidacyId } from "./features/getRegionByCandidacyId";
+import { getOrganismById } from "../organism/features/getOrganism";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -76,6 +77,8 @@ const unsafeResolvers = {
       getRegionByCandidacyId({ candidacyId }),
     certification: ({ id: candidacyId }: { id: string }) =>
       getCertificationByCandidacyId({ candidacyId }),
+    organism: ({ organismId }: { organismId: string }) =>
+      getOrganismById({ organismId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

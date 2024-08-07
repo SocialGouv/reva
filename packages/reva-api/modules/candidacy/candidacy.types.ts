@@ -1,6 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { Organism } from "../organism/organism.types";
 import {
   DropOutReason,
   Region,
@@ -29,7 +28,6 @@ export interface Candidacy {
   certificationId?: string;
   certification?: any;
   isCertificationPartial?: boolean | null;
-  organism?: Organism | null;
   regionId?: string;
   region?: Region;
   departmentId?: string | null;

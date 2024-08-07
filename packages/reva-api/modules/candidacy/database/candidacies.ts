@@ -4,7 +4,6 @@ import { prismaClient } from "../../../prisma/client";
 
 export const candidacyIncludes = {
   candidacyStatuses: true,
-  organism: true,
   candidacyDropOut: {
     include: {
       dropOutReason: true,

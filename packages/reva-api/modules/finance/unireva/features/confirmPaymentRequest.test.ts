@@ -1,6 +1,4 @@
 import { Decimal } from "@prisma/client/runtime/library";
-
-import { Candidacy } from "../../../candidacy/candidacy.types";
 import { PaymentRequest } from "../finance.types";
 import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
 import { FundingRequest } from "@prisma/client";
@@ -30,7 +28,7 @@ describe("payment request", () => {
         invoiceNumber: "invoiceNumber_123",
       } as PaymentRequest;
       const batch = mapPaymentRequestBatchContent({
-        candidacy: { organism: { siret: "siret1234" } } as Candidacy,
+        organismSiret: "siret1234",
         paymentRequest,
         fundingRequest: { numAction: "numAction_123" } as FundingRequest,
       });

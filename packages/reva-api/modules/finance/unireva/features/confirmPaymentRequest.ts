@@ -1,6 +1,4 @@
-import { Candidacy } from "../../../candidacy/candidacy.types";
 import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
-
 import { FundingRequest } from "@prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
@@ -8,6 +6,7 @@ import { getCandidacy } from "../../../candidacy/features/getCandidacy";
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
 import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
 import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
+import { getOrganismById } from "../../../organism/features/getOrganism";
 
 export const confirmPaymentRequest = async ({
   candidacyId,
@@ -30,6 +29,16 @@ export const confirmPaymentRequest = async ({
     throw new Error("Candidature non trouvée");
   }
 
+  if (!candidacy.organismId) {
+    throw new Error("Pas d'organisme pour la candidature");
+  }
+
+  const organism = await getOrganismById({ organismId: candidacy.organismId });
+
+  if (!organism) {
+    throw new Error("Organisme non trouvé");
+  }
+
   const fundingRequest = await getFundingRequestByCandidacyId({ candidacyId });
   if (!fundingRequest) {
     throw new Error("Demande de financement non trouvée");
@@ -43,7 +52,7 @@ export const confirmPaymentRequest = async ({
   await createPaymentRequestBatch({
     paymentRequestId: paymentRequest.id,
     content: mapPaymentRequestBatchContent({
-      candidacy,
+      organismSiret: organism.siret,
       fundingRequest,
       paymentRequest,
     }),
@@ -58,17 +67,17 @@ export const confirmPaymentRequest = async ({
 };
 
 export const mapPaymentRequestBatchContent = ({
-  candidacy,
+  organismSiret,
   fundingRequest,
   paymentRequest,
 }: {
-  candidacy: Candidacy;
+  organismSiret: string;
   paymentRequest: PaymentRequest;
   fundingRequest: FundingRequest;
 }): PaymentRequestBatchContent => ({
   NumAction: fundingRequest?.numAction || "",
   NumFacture: paymentRequest.invoiceNumber,
-  SiretAP: candidacy.organism?.siret || "",
+  SiretAP: organismSiret || "",
   NbHeureReaJury: paymentRequest.examEffectiveHourCount,
   CoutHeureReaJury: paymentRequest.examEffectiveCost.toNumber(),
   NbHeureReaAPDiag: paymentRequest.diagnosisEffectiveHourCount,

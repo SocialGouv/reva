@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
 import { getMaisonMereAAPById } from "../../organism/features/getMaisonMereAAPById";
 import { getCandidacy } from "./getCandidacy";
+import { getOrganismById } from "../../organism/features/getOrganism";
 
 const log = debug("domain:canManageCandidacy");
 
@@ -53,7 +54,7 @@ export const canManageCandidacy = async ({
     return false;
   }
 
-  const candidacyOrganismId = candidacy.organism?.id;
+  const candidacyOrganismId = candidacy.organismId;
 
   const accountOrganismId = account.organismId;
 
@@ -80,9 +81,15 @@ export const canManageCandidacy = async ({
     return false;
   }
 
+  const candidacyOrganism = candidacyOrganismId
+    ? await getOrganismById({
+        organismId: candidacyOrganismId,
+      })
+    : undefined;
+
   const isMaisonMereManagingCandidacyOrganism =
     hasRole("gestion_maison_mere_aap") &&
-    maisonMere.id === candidacy.organism?.maisonMereAAPId;
+    maisonMere.id === candidacyOrganism?.maisonMereAAPId;
 
   log(
     "candidacy has an organism that is part of manager maison mere:",
