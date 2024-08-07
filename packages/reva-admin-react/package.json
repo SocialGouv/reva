@@ -51,6 +51,7 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.8",
     "autoprefixer": "^10",
+    "cypress": "^13.6.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.1",
     "eslint-config-prettier": "^9.1.0",
