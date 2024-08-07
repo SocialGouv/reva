@@ -60,7 +60,6 @@ export const updateCandidacyStatus = async (params: {
         codeRncp: certificationAndRegion?.certification.rncpId,
       },
       organismId: newCandidacy.organismId,
-      experiences: newCandidacy.experiences,
       candidacyStatuses: newCandidacy.candidacyStatuses,
       candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,

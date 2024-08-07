@@ -7,13 +7,7 @@ import {
   ReorientationReason,
 } from "../referential/referential.types";
 
-interface CandidacyAbstract {
-  // companionId: string | null;
-  experiences: Experience[];
-  email?: string | null;
-}
-
-export interface CandidacyInput extends CandidacyAbstract {
+export interface CandidacyInput {
   certificationId: string;
 }
 
@@ -30,7 +24,7 @@ export interface CandidacyConventionCollective {
   label: string;
 }
 
-export interface Candidacy extends CandidacyAbstract {
+export interface Candidacy {
   id: string;
   certificationId?: string;
   certification?: any;

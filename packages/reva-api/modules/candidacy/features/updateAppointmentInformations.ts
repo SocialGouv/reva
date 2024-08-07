@@ -85,7 +85,6 @@ export const updateAppointmentInformations = async (params: {
     certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
     certification: candidaciesOnRegionsAndCertifications?.certification,
     organismId: updatedCandidacy.organismId,
-    experiences: updatedCandidacy.experiences,
     typology: updatedCandidacy.typology,
     typologyAdditional: updatedCandidacy.typologyAdditional,
     firstAppointmentOccuredAt: updatedCandidacy.firstAppointmentOccuredAt,

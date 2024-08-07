@@ -3,7 +3,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
 export const candidacyIncludes = {
-  experiences: true,
   candidacyStatuses: true,
   organism: true,
   candidacyDropOut: {
