@@ -69,7 +69,7 @@ export default function TransferCandidacyPage() {
       <h1>Transfert de la candidature</h1>
       <p className="text-xl">
         {certificationAuthoritySelected
-          ? `Vous vous apprêtez à transférer la candidature de ${candidacy?.firstname} ${candidacy?.lastname} visant la certification ${candidacy?.certification?.label} à un nouveau service.`
+          ? `Vous vous apprêtez à transférer la candidature de ${candidacy?.candidate?.firstname} ${candidacy?.candidate?.lastname} visant la certification ${candidacy?.certification?.label} à un nouveau service.`
           : "Recherchez le service régional auquel vous souhaitez transférer cette candidature."}
       </p>
 

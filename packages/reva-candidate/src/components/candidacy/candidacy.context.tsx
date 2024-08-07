@@ -50,7 +50,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       }
       candidacy {
         id
-        email
         firstAppointmentOccuredAt
         candidacyStatuses {
           id

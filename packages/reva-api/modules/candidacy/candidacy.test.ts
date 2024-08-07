@@ -51,16 +51,18 @@ test("get existing Candidacy with admin user", async () => {
       endpoint: "getCandidacyById",
       arguments: { id: candidacy.id },
       returnFields:
-        "{organismId, firstname, lastname, email, candidacyStatuses {createdAt, isActive, status}}",
+        "{organismId, candidate{firstname, lastname, email}, candidacyStatuses {createdAt, isActive, status}}",
     },
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.getCandidacyById).toMatchObject({
     organismId: organism.id,
-    firstname: candidate.firstname,
-    lastname: candidate.lastname,
-    email: candidate.email,
+    candidate: {
+      firstname: candidate.firstname,
+      lastname: candidate.lastname,
+      email: candidate.email,
+    },
   });
 });
 

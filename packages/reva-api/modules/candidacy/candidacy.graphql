@@ -59,9 +59,6 @@ type Candidacy {
   isCertificationPartial: Boolean
   experiences: [Experience!]!
   goals: [Goal!]!
-  firstname: String
-  lastname: String
-  email: String
   typology: CandidateTypology!
   typologyAdditional: String
   ccnId: String

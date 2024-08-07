@@ -6,8 +6,10 @@ import { useParams, useSearchParams } from "next/navigation";
 const getCandidacyTransferCandidacy = graphql(`
   query getCandidacyTransferCandidacy($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
-      firstname
-      lastname
+      candidate {
+        firstname
+        lastname
+      }
       certification {
         label
       }

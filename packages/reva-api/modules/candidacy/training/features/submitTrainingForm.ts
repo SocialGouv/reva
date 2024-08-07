@@ -8,6 +8,7 @@ import { generateJwt } from "../../../candidate/auth.helper";
 import { sendTrainingEmail } from "../emails";
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 import { updateTrainingInformations } from "./updateTrainingInformations";
+import { getCandidateById } from "../../features/getCandidateById";
 
 export const submitTraining = async ({
   candidacyId,
@@ -61,12 +62,20 @@ export const submitTraining = async ({
     status: "PARCOURS_ENVOYE",
   });
 
-  if (candidacy?.email) {
+  if (!candidacy.candidateId) {
+    throw new Error("La candidature n'a pas de candidat associé");
+  }
+
+  const candidate = await getCandidateById({
+    candidateId: candidacy.candidateId,
+  });
+
+  if (candidate?.email) {
     const token = generateJwt(
-      { email: candidacy?.email, action: "login" },
+      { email: candidate?.email, action: "login" },
       1 * 60 * 60 * 24 * 4,
     );
-    sendTrainingEmail(candidacy.email, token);
+    sendTrainingEmail(candidate.email, token);
   }
 
   await logCandidacyAuditEvent({

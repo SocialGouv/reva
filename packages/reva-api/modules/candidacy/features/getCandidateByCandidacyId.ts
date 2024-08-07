@@ -7,6 +7,4 @@ export const getCandidateByCandidacyId = ({
 }: {
   candidacyId: string;
 }): Promise<Candidate | null> =>
-  prismaClient.candidate.findFirst({
-    where: { candidacies: { some: { id: candidacyId } } },
-  });
+  prismaClient.candidacy.findUnique({ where: { id: candidacyId } }).candidate();

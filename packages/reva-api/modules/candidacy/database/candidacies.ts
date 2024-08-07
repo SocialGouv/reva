@@ -48,10 +48,6 @@ export const getCandidaciesFromIds = async (
     const certificationAndRegion = c.certificationsAndRegions?.[0];
     return {
       ...c,
-      firstname: c.candidate?.firstname,
-      lastname: c.candidate?.lastname,
-      phone: c.candidate?.phone || null,
-      email: c.candidate?.email,
       regionId: certificationAndRegion?.region.id,
       region: certificationAndRegion?.region,
       certificationId: certificationAndRegion?.certification.id,
@@ -107,7 +103,7 @@ export const updateCandidacyStatus = async (params: {
     ]);
 
   return {
-    id: newCandidacy.id,
+    ...newCandidacy,
     regionId: certificationAndRegion?.region.id,
     region: certificationAndRegion?.region,
     department: newCandidacy.department,
@@ -116,14 +112,6 @@ export const updateCandidacyStatus = async (params: {
       ...certificationAndRegion?.certification,
       codeRncp: certificationAndRegion?.certification.rncpId,
     },
-    organismId: newCandidacy.organismId,
-    experiences: newCandidacy.experiences,
-    phone: newCandidacy.candidate?.phone || null,
-    email: newCandidacy.candidate?.email,
-    candidacyStatuses: newCandidacy.candidacyStatuses,
-    candidacyDropOut: newCandidacy.candidacyDropOut,
-    createdAt: newCandidacy.createdAt,
-    financeModule: newCandidacy.financeModule,
   };
 };
 
