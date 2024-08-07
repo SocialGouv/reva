@@ -7,13 +7,13 @@
     "dev": "next dev -p 3003",
     "prebuild": "only-include-used-icons && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build",
-    "start": "next start -p 3003",
+    "start": "next start",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",
     "cypress:ci": "cypress run",
-    "test:ci": "start-server-and-test start http://localhost:3003/admin2/ cypress:ci"
+    "test:ci": "start-server-and-test 'next start -p 3003' http://localhost:3003/admin2/ cypress:ci"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.9.8",
