@@ -1,12 +1,12 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getCertificationByCandidacyId = ({
+export const getCertificationByCandidacyId = async ({
   candidacyId,
 }: {
   candidacyId: string;
 }) =>
   prismaClient.candidaciesOnRegionsAndCertifications
-    .findUnique({
-      where: { id: candidacyId, isActive: true },
+    .findFirst({
+      where: { candidacyId, isActive: true },
     })
     .certification();
