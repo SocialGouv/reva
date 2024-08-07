@@ -61,36 +61,8 @@ export const updateAppointmentInformations = async (params: {
     },
     include: {
       ...candidacyIncludes,
-      candidate: true,
     },
   });
 
-  const candidaciesOnRegionsAndCertifications =
-    await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-      where: {
-        candidacyId: params.candidacyId,
-        isActive: true,
-      },
-      select: {
-        certification: true,
-        region: true,
-      },
-    });
-
-  return {
-    id: updatedCandidacy.id,
-    regionId: candidaciesOnRegionsAndCertifications?.region.id,
-    region: candidaciesOnRegionsAndCertifications?.region,
-    departmentId: updatedCandidacy.departmentId,
-    certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
-    certification: candidaciesOnRegionsAndCertifications?.certification,
-    organismId: updatedCandidacy.organismId,
-    typology: updatedCandidacy.typology,
-    typologyAdditional: updatedCandidacy.typologyAdditional,
-    firstAppointmentOccuredAt: updatedCandidacy.firstAppointmentOccuredAt,
-    appointmentCount: updatedCandidacy.appointmentCount,
-    candidacyDropOut: updatedCandidacy.candidacyDropOut,
-    candidacyStatuses: updatedCandidacy.candidacyStatuses,
-    createdAt: updatedCandidacy.createdAt,
-  };
+  return updatedCandidacy;
 };
