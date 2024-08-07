@@ -34,10 +34,7 @@ export const AapCgu = (): JSX.Element | null => {
           consulter vos candidatures en cours, mais votre profil n'apparaît plus
           dans les recherches des nouveaux candidats. Pour recevoir de nouvelles
           candidatures, veuillez accepter les{" "}
-          <Link href="/information">
-            Conditions Générales d'Utilisation (CGU)
-          </Link>
-          .
+          <Link href="/cgu">Conditions Générales d'Utilisation (CGU)</Link>.
         </>
       }
     />
