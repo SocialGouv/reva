@@ -38,12 +38,6 @@ export interface Region {
   label: string;
 }
 
-export interface Department {
-  id: string;
-  code: string;
-  label: string;
-}
-
 export interface VulnerabilityIndicator {
   id: string;
   label: string;

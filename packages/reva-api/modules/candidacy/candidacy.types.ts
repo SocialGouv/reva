@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { Organism } from "../organism/organism.types";
 import {
-  Department,
   DropOutReason,
   Region,
   ReorientationReason,
