@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import {
   DropOutReason,
-  Region,
   ReorientationReason,
 } from "../referential/referential.types";
 
@@ -25,11 +24,7 @@ export interface CandidacyConventionCollective {
 
 export interface Candidacy {
   id: string;
-  certificationId?: string;
-  certification?: any;
   isCertificationPartial?: boolean | null;
-  regionId?: string;
-  region?: Region;
   departmentId?: string | null;
   candidacyStatuses: CandidacyStatus[];
   candidacyDropOut?: CandidacyDropOut | null;
@@ -49,16 +44,7 @@ export interface CandidacyStatus {
   isActive: boolean;
 }
 
-export interface CandidacySummary
-  extends Omit<
-    Candidacy,
-    | "experiences"
-    | "goals"
-    | "candidacyStatuses"
-    | "regionId"
-    | "region"
-    | "certification"
-  > {
+export interface CandidacySummary extends Omit<Candidacy, "candidacyStatuses"> {
   id: string;
   certification: CertificationSummary;
   lastStatus: CandidacyStatus;
