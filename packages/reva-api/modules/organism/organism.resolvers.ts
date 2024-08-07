@@ -542,6 +542,10 @@ const unsafeResolvers = {
 
         const organism = await getOrganismById({ organismId: params.id });
 
+        if (!organism) {
+          return null;
+        }
+
         const roles = context.auth.userInfo.realm_access?.roles || [];
         const userKeycloakId = context.auth.userInfo.sub;
         //admin has every rights

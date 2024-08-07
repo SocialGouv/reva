@@ -15,6 +15,9 @@ export const isUserGestionnaireMaisonMereAAPOfOrganism = async ({
     const organism = await getOrganismById({
       organismId,
     });
+    if (!organism) {
+      throw new Error("Organisme non trouvé");
+    }
     const maisonMere = await getMaisonMereAAPById({
       maisonMereAAPId: organism.maisonMereAAPId || "",
     });

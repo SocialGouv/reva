@@ -83,6 +83,10 @@ export const selectOrganismForCandidacy = async ({
 
     const newOrganism = await getOrganismById({ organismId });
 
+    if (!newOrganism) {
+      throw new Error("Organisme non trouvé");
+    }
+
     if (
       candidate &&
       organism &&
