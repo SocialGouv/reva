@@ -1,17 +1,13 @@
 import {
-  hasRole,
-  isCandidacyOwner,
-  whenHasRole,
-} from "../../shared/security/middlewares";
-import {
   defaultSecurity,
   isAdmin,
   isAdminOrCandidacyCompanion,
   isAdminOrManager,
   isCandidacyCompanion,
+  isOwnerOfCandidacy,
+  isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
-import { isCandidateOwnerOfCandidacy } from "./isCandidateOwnerOfCandidacy.security";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut
@@ -24,23 +20,13 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
-  "Mutation.candidacy_updateContact": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_updateCertification": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_updateCertificationWithinOrganismScope":
-    isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_updateGoals": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_updateExperience": [
-    hasRole(["admin", "manage_candidacy", "candidate"]),
-    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
-    whenHasRole("manage_candidacy", isCandidacyOwner),
-  ],
-  "Mutation.candidacy_addExperience": [
-    hasRole(["admin", "manage_candidacy", "candidate"]),
-    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
-    whenHasRole("manage_candidacy", isCandidacyOwner),
-  ],
-  "Mutation.candidacy_selectOrganism": [isCandidateOwnerOfCandidacy],
-  "Mutation.candidacy_submitCandidacy": [isCandidateOwnerOfCandidacy],
+  "Mutation.candidacy_updateContact": isOwnerOfCandidacy,
+
+  "Mutation.candidacy_updateGoals": isOwnerOfCandidacy,
+  "Mutation.candidacy_updateExperience": isOwnerOrCanManageCandidacy,
+  "Mutation.candidacy_addExperience": isOwnerOrCanManageCandidacy,
+  "Mutation.candidacy_selectOrganism": isOwnerOfCandidacy,
+  "Mutation.candidacy_submitCandidacy": isOwnerOfCandidacy,
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
@@ -60,5 +46,5 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isAdminOrCandidacyCompanion,
 
-  "Candidacy.admissibility": [hasRole(["admin", "manage_candidacy"])],
+  "Candidacy.admissibility": isAdminOrCandidacyCompanion,
 };

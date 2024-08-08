@@ -1,13 +1,9 @@
-import { isCandidateOwnerOfCandidacy } from "../../candidacy/security/isCandidateOwnerOfCandidacy.security";
-import {
-  hasRole,
-  isCandidacyOwner,
-  whenHasRole,
-} from "../../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
   isAdminOrCertificationAuthority,
+  isOwnerOfCandidacy,
+  isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -38,16 +34,12 @@ export const resolversSecurityMap = {
   "Mutation.dematerialized_feasibility_file_sendToCertificationAuthority":
     isAdminOrCandidacyCompanion,
 
-  "Mutation.dematerialized_feasibility_file_createOrUpdateSwornStatement": [
-    hasRole(["admin", "manage_candidacy", "candidate"]),
-    whenHasRole("manage_candidacy", isCandidacyOwner),
-    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
-  ],
+  "Mutation.dematerialized_feasibility_file_createOrUpdateSwornStatement":
+    isOwnerOrCanManageCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision":
     isAdminOrCertificationAuthority,
 
-  "Mutation.dematerialized_feasibility_file_confirmCandidate": [
-    whenHasRole("candidate", isCandidateOwnerOfCandidacy),
-  ],
+  "Mutation.dematerialized_feasibility_file_confirmCandidate":
+    isOwnerOfCandidacy,
 };
