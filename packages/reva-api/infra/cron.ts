@@ -5,6 +5,7 @@ import path from "path";
 import { CronJob } from "cron";
 import dotenv from "dotenv";
 
+import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendReminderToOrganismForCandidateValidationDeadline } from "../modules/dossier-de-validation/features/sendReminderToOrganismForCandidateValidationDeadline";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
@@ -16,7 +17,6 @@ import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/refere
 import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
-import { deleteExpiredCandidacies } from "modules/candidacy/features/deleteExpiredCandidacies";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
