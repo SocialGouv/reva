@@ -5,10 +5,6 @@ import {
   ReorientationReason,
 } from "../referential/referential.types";
 
-export interface CandidacyInput {
-  certificationId: string;
-}
-
 export interface CandidacyDropOut {
   droppedOutAt: Date;
   status: CandidacyStatusStep;

@@ -1,8 +1,8 @@
-import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCertification } from "../../candidacy/database/candidacies";
 import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
+import { updateCertification } from "../../certification/features/updateCertification";
 import { getCertificationById } from "../../referential/features/getCertificationById";
+import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
 import {
   FunctionalCodeError,
   FunctionalError,

@@ -4,6 +4,8 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { getOrganismById } from "../organism/features/getOrganism";
+import { getDepartmentById } from "../referential/features/getDepartmentById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -31,6 +33,7 @@ import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus"
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
+import { getRegionByCandidacyId } from "./features/getRegionByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
@@ -41,8 +44,6 @@ import { updateAdmissibility } from "./features/updateAdmissibility";
 import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
-import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
-import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
@@ -53,10 +54,6 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { getDepartmentById } from "../referential/features/getDepartmentById";
-import { getCertificationByCandidacyId } from "./features/getCertificationByCandidacyId";
-import { getRegionByCandidacyId } from "./features/getRegionByCandidacyId";
-import { getOrganismById } from "../organism/features/getOrganism";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -75,8 +72,6 @@ const unsafeResolvers = {
       getDepartmentById({ id: departmentId }),
     region: ({ id: candidacyId }: { id: string }) =>
       getRegionByCandidacyId({ candidacyId }),
-    certification: ({ id: candidacyId }: { id: string }) =>
-      getCertificationByCandidacyId({ candidacyId }),
     organism: ({ organismId }: { organismId: string }) =>
       getOrganismById({ organismId }),
   },
@@ -187,32 +182,7 @@ const unsafeResolvers = {
       });
       return result;
     },
-    candidacy_updateCertification: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext,
-    ) =>
-      updateCertificationOfCandidacy({
-        candidacyId: payload.candidacyId,
-        certificationId: payload.certificationId,
-        departmentId: payload.departmentId,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth?.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      }),
-    candidacy_updateCertificationWithinOrganismScope: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext,
-    ) =>
-      updateCertificationWithinOrganismScope({
-        hasRole: context.auth.hasRole,
-        candidacyId: payload.candidacyId,
-        certificationId: payload.certificationId,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth?.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      }),
+
     candidacy_addExperience: async (
       _: unknown,
       payload: any,

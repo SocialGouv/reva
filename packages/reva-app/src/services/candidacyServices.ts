@@ -3,18 +3,16 @@ import { ApolloClient, gql } from "@apollo/client";
 import { Experience, candidacyStatus } from "../interface";
 
 const UPDATE_CERTIFICATION = gql`
-  mutation candidacy_updateCertification(
+  mutation certification_updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
     $departmentId: ID!
   ) {
-    candidacy_updateCertification(
+    certification_updateCertification(
       candidacyId: $candidacyId
       certificationId: $certificationId
       departmentId: $departmentId
-    ) {
-      id
-    }
+    )
   }
 `;
 
@@ -554,8 +552,8 @@ function formatCandidacy(candidate: any, getReferential: any) {
 }
 
 const CONFIRM_TRAINING_FORM = gql`
-  mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
-    candidacy_confirmTrainingForm(candidacyId: $candidacyId) {
+  mutation training_confirmTrainingForm($candidacyId: UUID!) {
+    training_confirmTrainingForm(candidacyId: $candidacyId) {
       id
       createdAt
     }

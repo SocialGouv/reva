@@ -20,9 +20,11 @@ import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
 import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
 import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 import * as candidacy from "./candidacy/candidacy.resolvers";
+import { trainingResolvers } from "./candidacy/training/training.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
+import { certificationResolvers } from "./certification/certification.resolvers";
 import { dossierDeValidationLoaders } from "./dossier-de-validation/dossier-de-validation.loaders";
 import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
 import { dematerializedFeasibilityFileResolvers } from "./feasibility/dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
@@ -41,7 +43,6 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
-import { trainingResolvers } from "./candidacy/training/training.resolvers";
 
 // Resolvers
 
@@ -68,6 +69,7 @@ const resolvers = mergeResolvers([
   dematerializedFeasibilityFileResolvers,
   feasibilityUploadedPdfResolvers,
   trainingResolvers,
+  certificationResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

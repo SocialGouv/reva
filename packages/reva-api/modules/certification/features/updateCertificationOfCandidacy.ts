@@ -2,19 +2,19 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import {
+  updateCandidacyStatus,
+  updateOrganism,
+} from "../../candidacy/database/candidacies";
+import { canCandidateUpdateCandidacy } from "../../candidacy/features/canCandidateUpdateCandidacy";
+import { existsCandidacyWithActiveStatus } from "../../candidacy/features/existsCandidacyWithActiveStatus";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
-import {
-  updateCandidacyStatus,
-  updateCertification,
-  updateOrganism,
-} from "../database/candidacies";
-import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
-import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
+import { updateCertification } from "./updateCertification";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,
@@ -62,7 +62,7 @@ export const updateCertificationOfCandidacy = async ({
       feasibilityFormat: newCertification.feasibilityFormat,
     });
 
-    const updatedCandidacy = await updateOrganism({
+    await updateOrganism({
       candidacyId,
       organismId: null,
     });
@@ -101,8 +101,6 @@ export const updateCertificationOfCandidacy = async ({
         },
       },
     });
-
-    return updatedCandidacy;
   } catch (e) {
     logger.error(e);
     throw new FunctionalError(

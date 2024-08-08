@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useState } from "react";
 import { CertificationCard } from "./_components/certification-card";
 
-import { useParams, useRouter, useSearchParams } from "next/navigation";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 const modal = createModal({
   id: "confirm-reorientation",
@@ -70,12 +70,10 @@ const updateCertificationMutation = graphql(`
     $candidacyId: ID!
     $certificationId: ID!
   ) {
-    candidacy_updateCertificationWithinOrganismScope(
+    certification_updateCertificationWithinOrganismScope(
       candidacyId: $candidacyId
       certificationId: $certificationId
-    ) {
-      id
-    }
+    )
   }
 `);
 

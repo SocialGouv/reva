@@ -1,0 +1,22 @@
+type Candidacy {
+  certificationId: ID
+  certification: Certification
+  isCertificationPartial: Boolean
+}
+
+type CertificationSummary {
+  id: ID!
+  label: String!
+}
+
+type Mutation {
+  certification_updateCertification(
+    candidacyId: ID!
+    certificationId: ID!
+    departmentId: ID!
+  ): Void
+  certification_updateCertificationWithinOrganismScope(
+    candidacyId: ID!
+    certificationId: ID!
+  ): Void
+}

@@ -551,7 +551,7 @@ export const mainMachine =
                         assign({
                           candidacyCreatedAt: (_, event) => {
                             return new Date(
-                              event.data.data.candidacy_confirmTrainingForm.createdAt,
+                              event.data.data.training_confirmTrainingForm.createdAt,
                             );
                           },
                           isTrainingProgramConfirmed: (_context, _event) =>

@@ -49,14 +49,11 @@ enum CandidacyStatusStep {
 type Candidacy {
   id: ID!
   candidate: Candidate
-  certificationId: ID
   region: Region
   departmentId: ID
   department: Department
   organismId: UUID
   organism: Organism
-  certification: Certification
-  isCertificationPartial: Boolean
   experiences: [Experience!]!
   goals: [Goal!]!
   typology: CandidateTypology!
@@ -124,11 +121,6 @@ type CandidacySummaryFilterInfo {
   parcoursConfirme: Int!
   demandeFinancementEnvoye: Int!
   demandePaiementEnvoyee: Int!
-}
-
-type CertificationSummary {
-  id: ID!
-  label: String!
 }
 
 type CandidacyStatus {
@@ -262,16 +254,6 @@ type Query {
 
 # MUTATIONS
 
-input CandidacyInput {
-  certificationId: ID!
-  regionId: ID!
-}
-
-input CertificationChangeInput {
-  candidacyId: ID!
-  certificationId: ID!
-}
-
 input ExperienceInput {
   title: String!
   startedAt: Timestamp!
@@ -315,15 +297,6 @@ input AdmissibilityInputFvae {
 
 type Mutation {
   candidacy_submitCandidacy(candidacyId: ID!): Candidacy
-  candidacy_updateCertification(
-    candidacyId: ID!
-    certificationId: ID!
-    departmentId: ID!
-  ): Candidacy
-  candidacy_updateCertificationWithinOrganismScope(
-    candidacyId: ID!
-    certificationId: ID!
-  ): Candidacy
   candidacy_addExperience(
     candidacyId: ID!
     experience: ExperienceInput

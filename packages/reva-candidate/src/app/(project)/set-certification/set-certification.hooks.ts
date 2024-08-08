@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
@@ -34,18 +34,16 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
 `);
 
 const UPDATE_CERTIFICATION = graphql(`
-  mutation candidacy_updateCertification(
+  mutation certification_updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
     $departmentId: ID!
   ) {
-    candidacy_updateCertification(
+    certification_updateCertification(
       candidacyId: $candidacyId
       certificationId: $certificationId
       departmentId: $departmentId
-    ) {
-      id
-    }
+    )
   }
 `);
 
@@ -81,7 +79,7 @@ export const useSetCertification = ({
   });
 
   const updateCertification = useMutation({
-    mutationKey: ["candidacy_updateCertification"],
+    mutationKey: ["certification_updateCertification"],
     mutationFn: ({
       candidacyId,
       certificationId,

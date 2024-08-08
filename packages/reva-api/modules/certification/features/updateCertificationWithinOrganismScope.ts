@@ -3,15 +3,13 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyStatus } from "../../candidacy/database/candidacies";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import {
-  updateCandidacyStatus,
-  updateCertification,
-} from "../database/candidacies";
+import { updateCertification } from "./updateCertification";
 
 export const updateCertificationWithinOrganismScope = async ({
   hasRole,
@@ -114,7 +112,7 @@ export const updateCertificationWithinOrganismScope = async ({
   }
 
   // Update candidacy certification
-  const updatedCandidacy = await updateCertification({
+  await updateCertification({
     candidacyId,
     certificationId,
     departmentId: candidacy.departmentId || "",
@@ -136,6 +134,4 @@ export const updateCertificationWithinOrganismScope = async ({
       },
     },
   });
-
-  return updatedCandidacy;
 };

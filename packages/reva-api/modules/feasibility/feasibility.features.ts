@@ -21,6 +21,7 @@ import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
+import { getCertificationByCandidacyId } from "../certification/features/getCertificationByCandidacyId";
 import { UploadedFile, deleteFile } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
@@ -40,7 +41,6 @@ import {
   excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { getCertificationByCandidacyId } from "../candidacy/features/getCertificationByCandidacyId";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
