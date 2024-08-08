@@ -234,7 +234,7 @@ const getArticleRegionByIdQuery = graphql(`
       data {
         attributes {
           titre
-          regions {
+          regions(publicationState: PREVIEW) {
             data {
               attributes {
                 slug
