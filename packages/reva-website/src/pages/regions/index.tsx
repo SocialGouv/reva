@@ -1,39 +1,19 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import { GetRegionsQuery } from "@/graphql/generated/graphql";
+import { getRegions } from "@/utils/strapiQueries";
 import { Card } from "@codegouvfr/react-dsfr/Card";
-import request from "graphql-request";
 import Head from "next/head";
-
-const getRegionsQuery = graphql(`
-  query getRegions {
-    regions(sort: "ordre") {
-      data {
-        attributes {
-          nom
-          slug
-          vignette {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`);
 
 const RegionsPage = ({
   getRegionsResponse,
+  preview,
 }: {
   getRegionsResponse: GetRegionsQuery;
+  preview: boolean;
 }) => {
   const regions = getRegionsResponse.regions?.data || [];
   return (
-    <MainLayout>
+    <MainLayout preview={preview}>
       <Head>
         <title>La VAE dans votre région</title>
       </Head>
@@ -100,13 +80,10 @@ const RegionCard = ({
   />
 );
 
-export async function getServerSideProps() {
-  const getRegionsResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getRegionsQuery,
-  );
+export async function getServerSideProps({ preview = false }) {
+  const getRegionsResponse = await getRegions(preview);
 
-  return { props: { getRegionsResponse } };
+  return { props: { getRegionsResponse, preview } };
 }
 
 export default RegionsPage;

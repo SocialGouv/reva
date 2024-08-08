@@ -1,44 +1,22 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import { GetArticleRegionsBySlugForRegionArticlePageQuery } from "@/graphql/generated/graphql";
+import { getArticleRegionsBySlug } from "@/utils/strapiQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { request } from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
-
-const getArticleRegionsBySlugQuery = graphql(`
-  query getArticleRegionsBySlugForRegionArticlePage(
-    $filters: ArticleRegionFiltersInput!
-  ) {
-    articleRegions(filters: $filters) {
-      data {
-        attributes {
-          titre
-          contenu
-          vignette {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`);
 
 const RegionArticlePage = ({
   getArticleRegionsBySlugResponse,
   regionSlug,
+  preview,
 }: {
   getArticleRegionsBySlugResponse?: GetArticleRegionsBySlugForRegionArticlePageQuery;
   regionSlug?: string;
+  preview?: boolean;
 }) => {
   const article = getArticleRegionsBySlugResponse?.articleRegions?.data[0];
   return article && regionSlug ? (
-    <MainLayout className="fr-container pt-16 pb-12">
+    <MainLayout className="fr-container pt-16 pb-12" preview={preview}>
       <Head>
         <title>{article.attributes?.titre}</title>
       </Head>
@@ -67,21 +45,18 @@ const RegionArticlePage = ({
 
 export async function getServerSideProps({
   params: { regionSlug, articleSlug },
+  preview = false,
 }: {
   params: { regionSlug: string; articleSlug: string };
+  preview: boolean;
 }) {
-  const getArticleRegionsBySlugResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getArticleRegionsBySlugQuery,
-    {
-      filters: {
-        regions: { slug: { eq: regionSlug } },
-        slug: { eq: articleSlug },
-      },
-    },
+  const getArticleRegionsBySlugResponse = await getArticleRegionsBySlug(
+    regionSlug,
+    articleSlug,
+    preview,
   );
 
-  return { props: { getArticleRegionsBySlugResponse, regionSlug } };
+  return { props: { getArticleRegionsBySlugResponse, regionSlug, preview } };
 }
 
 export default RegionArticlePage;

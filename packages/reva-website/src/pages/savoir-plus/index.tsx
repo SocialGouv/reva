@@ -1,15 +1,13 @@
 "use client";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import {
   ArticleDAideEntity,
   GetSectionDAidesQuery,
 } from "@/graphql/generated/graphql";
+import { getSectionDAides } from "@/utils/strapiQueries";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import request from "graphql-request";
 import { truncate } from "lodash";
 import Head from "next/head";
 import Image from "next/image";
@@ -19,37 +17,6 @@ import { useEffect, useMemo, useState } from "react";
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line" aria-hidden="true" />
 );
-
-const sectionsQuery = graphql(`
-  query getSectionDAides {
-    sectionDAides(sort: "ordre") {
-      data {
-        id
-        attributes {
-          titre
-          article_d_aides(sort: "ordre") {
-            data {
-              id
-              attributes {
-                slug
-                titre
-                vignette {
-                  data {
-                    attributes {
-                      url
-                      alternativeText
-                    }
-                  }
-                }
-                description
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`);
 
 const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
   const [
@@ -155,7 +122,13 @@ const HelpArticle = ({
   </Link>
 );
 
-const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
+const SavoirPlusPage = ({
+  sections,
+  preview,
+}: {
+  sections: GetSectionDAidesQuery;
+  preview: boolean;
+}) => {
   return (
     <>
       <Head>
@@ -169,7 +142,7 @@ const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
         <meta name="author" content="France VAE" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <MainLayout>
+      <MainLayout preview={preview}>
         <div className="flex flex-col">
           <div className="flex flex-col min-h-[300px] items-center justify-center bg-white p-4">
             <h1 className="text-5xl font-bold">En savoir plus sur la VAE</h1>
@@ -211,9 +184,9 @@ const SavoirPlusPage = ({ sections }: { sections: GetSectionDAidesQuery }) => {
   );
 };
 
-export async function getServerSideProps() {
-  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionsQuery);
-  return { props: { sections } };
+export async function getServerSideProps({ preview = false }) {
+  const sections = await getSectionDAides(preview);
+  return { props: { sections, preview } };
 }
 
 export default SavoirPlusPage;

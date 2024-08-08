@@ -1,60 +1,23 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import { GetRegionsBySlugQueryForRegionHomePageQuery } from "@/graphql/generated/graphql";
+import { getRegionsBySlug } from "@/utils/strapiQueries";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
-import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 
-const getRegionsBySlugQuery = graphql(`
-  query getRegionsBySlugQueryForRegionHomePage($filters: RegionFiltersInput!) {
-    regions(filters: $filters) {
-      data {
-        attributes {
-          nom
-          slug
-          urlExternePRCs
-          vignette {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-          article_regions(sort: "ordre") {
-            data {
-              attributes {
-                titre
-                slug
-                resume
-                vignette {
-                  data {
-                    attributes {
-                      url
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`);
-
 const RegionHomePage = ({
   getRegionsBySlugResponse,
+  preview,
 }: {
   getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionHomePageQuery;
+  preview?: boolean;
 }) => {
   const region = getRegionsBySlugResponse?.regions?.data[0];
   const [firstArticle, ...otherArticles] =
     region?.attributes?.article_regions?.data || [];
   return region ? (
-    <MainLayout className="fr-container pt-6 md:pt-16 pb-12">
+    <MainLayout className="fr-container pt-6 md:pt-16 pb-12" preview={preview}>
       <Head>
         <title>{`La VAE en ${region.attributes?.nom}`}</title>
       </Head>
@@ -135,17 +98,13 @@ const RegionHomePage = ({
 
 export async function getServerSideProps({
   params: { regionSlug },
+  preview = false,
 }: {
-  params: { regionSlug: string };
+  params: { regionSlug: string; preview: boolean };
+  preview: boolean;
 }) {
-  const getRegionsBySlugResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getRegionsBySlugQuery,
-    {
-      filters: { slug: { eq: regionSlug } },
-    },
-  );
-  return { props: { getRegionsBySlugResponse } };
+  const getRegionsBySlugResponse = await getRegionsBySlug(regionSlug, preview);
+  return { props: { getRegionsBySlugResponse, preview } };
 }
 
 export default RegionHomePage;

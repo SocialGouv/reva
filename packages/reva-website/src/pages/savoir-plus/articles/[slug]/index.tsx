@@ -1,36 +1,16 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import { GetArticleDAideQuery } from "@/graphql/generated/graphql";
+import { getArticleDAide } from "@/utils/strapiQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
-import request from "graphql-request";
 import Head from "next/head";
 
-const articleQuery = graphql(`
-  query getArticleDAide($filters: ArticleDAideFiltersInput!) {
-    articleDAides(filters: $filters) {
-      data {
-        id
-        attributes {
-          titre
-          slug
-          vignette {
-            data {
-              attributes {
-                url
-                alternativeText
-              }
-            }
-          }
-          contenu
-          description
-        }
-      }
-    }
-  }
-`);
-
-const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
+const ArticleAidePage = ({
+  articles,
+  preview,
+}: {
+  articles: GetArticleDAideQuery;
+  preview: boolean;
+}) => {
   const article = articles?.articleDAides?.data[0];
 
   if (!article) return null;
@@ -65,7 +45,7 @@ const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
           content={article.attributes?.vignette.data?.attributes?.url ?? ""}
         />
       </Head>
-      <MainLayout>
+      <MainLayout preview={preview}>
         {
           <div className="flex flex-col sm:flex-row w-full gap-8 sm:gap-16 fr-container p-32 pt-16">
             <Button
@@ -102,13 +82,13 @@ const ArticleAidePage = ({ articles }: { articles: GetArticleDAideQuery }) => {
 
 export async function getServerSideProps({
   params: { slug },
+  preview = false,
 }: {
   params: { slug: string };
+  preview: boolean;
 }) {
-  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
-    filters: { slug: { eq: slug } },
-  });
-  return { props: { articles } };
+  const articles = await getArticleDAide(slug, preview);
+  return { props: { articles, preview } };
 }
 
 export default ArticleAidePage;
