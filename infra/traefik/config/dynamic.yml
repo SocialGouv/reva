@@ -22,7 +22,7 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-for-staging
 
     site-web-staging-subscription:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
@@ -36,7 +36,7 @@ http:
       service: espace-pro-react-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-for-staging
 
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
@@ -49,7 +49,7 @@ http:
       service: app-candidate-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-for-staging
 
     api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
@@ -162,14 +162,17 @@ http:
         customResponseHeaders:
           Content-Security-Policy: "frame-ancestors 'self';"
           X-Frame-Options: SAMEORIGIN
-          X-Content-Type-Options: nosniff
     add-security-headers:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none'; img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
+          X-Frame-Options: SAMEORIGIN
+    add-security-headers-for-staging:
       headers:
         customResponseHeaders:
           Content-Security-Policy: "default-src 'none'; frame-ancestors 'self'; object-src 'none'; img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
           X-Frame-Options: SAMEORIGIN
           X-Content-Type-Options: nosniff
-
     removePath:
       replacePath:
         path: "/"
