@@ -92,9 +92,15 @@ const OrientationCandidatPage = () => {
   }, [certificationId]);
 
   const invalidTypology =
-    candidateTypology === "SALARIE_PUBLIC" ||
-    candidateTypology === "RETRAITE" ||
-    candidateTypology === "AUTRE";
+    candidateTypology !== undefined &&
+    [
+      "SALARIE_PUBLIC",
+      "RETRAITE",
+      "AIDANTS_FAMILIAUX_AGRICOLES",
+      "TRAVAILLEUR_NON_SALARIE",
+      "TITULAIRE_MANDAT_ELECTIF",
+      "AUTRE",
+    ].includes(candidateTypology);
 
   const validTypology = candidateTypology && !invalidTypology;
 

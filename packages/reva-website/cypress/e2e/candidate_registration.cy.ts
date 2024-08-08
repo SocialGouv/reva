@@ -50,7 +50,7 @@ describe("candidate registration", () => {
       .should("have.value", null);
   });
 
-  it("should show an error panel when i select a candidate typology of 'SALARIE_PUBLIC' or 'AUTRE'", () => {
+  it("should show an error panel when i select a disabled candidate typology", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
     });
@@ -61,23 +61,22 @@ describe("candidate registration", () => {
 
     cy.wait("@getCertification");
 
-    cy.get('[data-testid="candidate-typology-select"]')
-      .children("select")
-      .select("SALARIE_PUBLIC");
+    [
+      "SALARIE_PUBLIC",
+      "RETRAITE",
+      "AIDANTS_FAMILIAUX_AGRICOLES",
+      "TRAVAILLEUR_NON_SALARIE",
+      "TITULAIRE_MANDAT_ELECTIF",
+      "AUTRE",
+    ].forEach((typology) => {
+      cy.get('[data-testid="candidate-typology-select"]')
+        .children("select")
+        .select(typology);
 
-    cy.get('[data-testid="candidate-typology-error-panel"]').should(
-      "have.text",
-      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`,
-    );
-
-    cy.get('[data-testid="candidate-typology-select"]')
-      .children("select")
-      .select("AUTRE");
-
-    cy.get('[data-testid="candidate-typology-error-panel"]').should(
-      "have.text",
-      `Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`,
-    );
+      cy.get('[data-testid="candidate-typology-error-panel"]').should(
+        "be.visible",
+      );
+    });
   });
 
   it("should show a candidate registration form when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE'  ", () => {

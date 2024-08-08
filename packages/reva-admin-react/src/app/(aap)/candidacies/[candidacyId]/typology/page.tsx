@@ -89,16 +89,7 @@ const TypologyPage = () => {
           <option value="SALARIE_PRIVE">Salarié du privé</option>
           <option value="BENEVOLE">Bénévole</option>
           <option value="AIDANTS_FAMILIAUX">Aidant familial</option>
-          <option value="AIDANTS_FAMILIAUX_AGRICOLES">
-            Aidant familial agricole
-          </option>
           <option value="DEMANDEUR_EMPLOI">Demandeur d'emploi</option>
-          <option value="TRAVAILLEUR_NON_SALARIE">
-            Travailleur non salarié
-          </option>
-          <option value="TITULAIRE_MANDAT_ELECTIF">
-            Titulaire d'un mandat électif (électoral ou syndical)
-          </option>
         </Select>
         {(typology === "SALARIE_PRIVE" ||
           typology === "DEMANDEUR_EMPLOI" ||
