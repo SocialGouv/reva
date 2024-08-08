@@ -6,6 +6,7 @@ import {
   isCandidacyOwner,
   whenHasRole,
 } from "./middlewares";
+import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
 
 export const isAdminOrManager = [hasRole(["admin", "manage_candidacy"])];
 
@@ -28,4 +29,12 @@ export const isAdmin = [hasRole(["admin"])];
 
 export const isAdminOrCertificationAuthority = [
   hasRole(["admin", "manage_feasibility"]),
+];
+
+export const isOwnerOfCandidacy = [isCandidateOwnerOfCandidacy];
+
+export const isOwnerOrCanManageCandidacy = [
+  hasRole(["admin", "manage_candidacy", "candidate"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+  whenHasRole("candidate", isCandidateOwnerOfCandidacy),
 ];
