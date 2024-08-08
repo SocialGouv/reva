@@ -91,7 +91,7 @@ context("Training Program", () => {
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
           req,
-          "candidacy_confirmTrainingForm",
+          "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -118,7 +118,7 @@ context("Training Program", () => {
         .should("be.enabled")
         .click();
 
-      cy.wait("@candidacy_confirmTrainingForm");
+      cy.wait("@training_confirmTrainingForm");
     });
   });
 
@@ -134,7 +134,7 @@ context("Training Program", () => {
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
           req,
-          "candidacy_confirmTrainingForm",
+          "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -159,7 +159,7 @@ context("Training Program", () => {
       cy.get('[data-test="submit-training-program-button"]')
         .should("be.enabled")
         .click();
-      cy.wait("@candidacy_confirmTrainingForm");
+      cy.wait("@training_confirmTrainingForm");
     });
   });
 });
