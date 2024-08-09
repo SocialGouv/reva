@@ -54,14 +54,14 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 
 const unsafeResolvers = {
   Candidacy: {
     admissibility: ({ id: candidacyId }: Candidacy) =>
       getAdmissibilityByCandidacyId({ candidacyId }),
-    admissibilityFvae: async (parent: Candidacy) => {
-      return getAdmissibilityFvae({ candidacyId: parent.id });
-    },
+    admissibilityFvae: (parent: Candidacy) =>
+      getAdmissibilityFvae({ candidacyId: parent.id }),
     goals: async ({ id: candidacyId }: Candidacy) =>
       getCandidacyGoals({ candidacyId }),
     experiences: async ({ id: candidacyId }: Candidacy) =>
@@ -74,6 +74,8 @@ const unsafeResolvers = {
       getRegionByCandidacyId({ candidacyId }),
     organism: ({ organismId }: { organismId: string }) =>
       getOrganismById({ organismId }),
+    candidacyStatuses: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyStatusesByCandidacyId({ candidacyId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

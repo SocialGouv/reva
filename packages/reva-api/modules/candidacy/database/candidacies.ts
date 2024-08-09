@@ -3,7 +3,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
 export const candidacyIncludes = {
-  candidacyStatuses: true,
   candidacyDropOut: {
     include: {
       dropOutReason: true,

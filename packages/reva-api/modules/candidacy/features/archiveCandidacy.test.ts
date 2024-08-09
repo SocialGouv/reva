@@ -12,6 +12,7 @@ import {
   organismIperia,
   candidateJPL,
 } from "../../../test/fixtures/people-organisms";
+import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 
 const reorientationReasonTable = [
   { label: "Droit commun" },
@@ -151,9 +152,12 @@ describe("archive candidacy", () => {
       reorientationReasonId: reorientationReason.id,
     });
     const candidacy = result;
+    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
+      candidacyId: candidacy.id,
+    });
     expect(candidacy.reorientationReasonId).not.toBeNull();
     expect(candidacy.reorientationReasonId).toEqual(reorientationReason.id);
-    expect(candidacy.candidacyStatuses).toMatchObject(candidacyStatusesArchive);
+    expect(candidacyStatuses).toMatchObject(candidacyStatusesArchive);
   });
 
   test("should return an archived candidacy without reorientation reason", async () => {
@@ -162,7 +166,10 @@ describe("archive candidacy", () => {
       reorientationReasonId: null,
     });
     const candidacy = result;
+    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
+      candidacyId: candidacy.id,
+    });
     expect(candidacy.reorientationReasonId).toBeNull();
-    expect(candidacy.candidacyStatuses).toMatchObject(candidacyStatusesArchive);
+    expect(candidacyStatuses).toMatchObject(candidacyStatusesArchive);
   });
 });

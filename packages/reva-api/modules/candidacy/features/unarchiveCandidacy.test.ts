@@ -13,6 +13,7 @@ import {
   candidateJPL,
 } from "../../../test/fixtures/people-organisms";
 import { sub } from "date-fns";
+import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 
 const reorientationReasonTable = [
   { label: "Droit commun" },
@@ -150,8 +151,9 @@ describe("unarchive candidacy", () => {
     const candidacy = await unarchiveCandidacy({
       candidacyId: candidacyArchived.id,
     });
-    expect(candidacy.candidacyStatuses).toMatchObject(
-      unarchivedCandidacyStatuses,
-    );
+    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
+      candidacyId: candidacy.id,
+    });
+    expect(candidacyStatuses).toMatchObject(unarchivedCandidacyStatuses);
   });
 });

@@ -22,7 +22,6 @@ export interface Candidacy {
   id: string;
   isCertificationPartial?: boolean | null;
   departmentId?: string | null;
-  candidacyStatuses: CandidacyStatus[];
   candidacyDropOut?: CandidacyDropOut | null;
   reorientationReason?: ReorientationReason | null;
   createdAt: Date;
