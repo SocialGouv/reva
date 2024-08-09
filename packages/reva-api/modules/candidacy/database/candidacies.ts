@@ -51,7 +51,6 @@ export const updateCandidacyStatus = async (params: {
       },
       include: {
         ...candidacyIncludes,
-        certificationsAndRegions: { include: { certification: true } },
       },
     }),
   ]);

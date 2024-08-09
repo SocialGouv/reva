@@ -5,6 +5,7 @@ import {
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
+import { getCertificationByCandidacyId } from "../../../certification/features/getCertificationByCandidacyId";
 
 export const confirmTrainingFormByCandidate = async ({
   candidacyId,
@@ -30,15 +31,11 @@ export const confirmTrainingFormByCandidate = async ({
     status: "PARCOURS_CONFIRME",
   });
 
-  const dematerializedFeasibilityFormatCertification =
-    candidacy.certificationsAndRegions.find(
-      (certificationAndRegion) =>
-        certificationAndRegion.isActive &&
-        certificationAndRegion.certification.feasibilityFormat ===
-          "DEMATERIALIZED",
-    );
+  const candidacyCertification = await getCertificationByCandidacyId({
+    candidacyId,
+  });
 
-  if (dematerializedFeasibilityFormatCertification) {
+  if (candidacyCertification?.feasibilityFormat === "DEMATERIALIZED") {
     await prismaClient.$transaction([
       prismaClient.candidacy.update({
         where: {
