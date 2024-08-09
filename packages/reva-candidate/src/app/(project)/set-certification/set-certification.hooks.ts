@@ -34,12 +34,12 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
 `);
 
 const UPDATE_CERTIFICATION = graphql(`
-  mutation certification_updateCertification(
+  mutation updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
     $departmentId: ID!
   ) {
-    certification_updateCertification(
+    candidacy_certification_updateCertification(
       candidacyId: $candidacyId
       certificationId: $certificationId
       departmentId: $departmentId
@@ -79,7 +79,7 @@ export const useSetCertification = ({
   });
 
   const updateCertification = useMutation({
-    mutationKey: ["certification_updateCertification"],
+    mutationKey: ["candidacy_certification_updateCertification"],
     mutationFn: ({
       candidacyId,
       certificationId,

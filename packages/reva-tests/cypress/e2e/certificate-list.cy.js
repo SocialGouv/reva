@@ -10,7 +10,7 @@ context("Certificate list", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubMutation(
         req,
-        "certification_updateCertification",
+        "candidacy_certification_updateCertification",
         "updated-candidacy1.json",
       );
     });

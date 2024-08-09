@@ -10,12 +10,12 @@ type CertificationSummary {
 }
 
 type Mutation {
-  certification_updateCertification(
+  candidacy_certification_updateCertification(
     candidacyId: ID!
     certificationId: ID!
     departmentId: ID!
   ): Void
-  certification_updateCertificationWithinOrganismScope(
+  candidacy_certification_updateCertificationWithinOrganismScope(
     candidacyId: ID!
     certificationId: ID!
   ): Void

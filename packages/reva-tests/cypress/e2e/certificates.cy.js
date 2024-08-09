@@ -10,7 +10,7 @@ context("Certificates", () => {
       stubQuery(req, "Certifications", "certifications.json");
       stubMutation(
         req,
-        "certification_updateCertification",
+        "candidacy_certification_updateCertification",
         "updated-candidacy1.json",
       );
     });
@@ -40,7 +40,7 @@ context("Certificates", () => {
   it("select department and submit certificate via summary", function () {
     cy.get('[data-test="certification-select-c2"]').click();
     cy.get('[data-test="submit-certification-button"]').click();
-    cy.wait("@certification_updateCertification");
+    cy.wait("@candidacy_certification_updateCertification");
 
     cy.get('[data-test="project-home-ready"]');
     cy.get('[data-test="certification-label"]').should("contain", "Titre 2");

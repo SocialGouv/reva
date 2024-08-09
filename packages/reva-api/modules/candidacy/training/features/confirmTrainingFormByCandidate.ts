@@ -3,8 +3,8 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
-import { getCertificationByCandidacyId } from "../../../certification/features/getCertificationByCandidacyId";
+import { getCertificationByCandidacyId } from "../../certification/features/getCertificationByCandidacyId";
+import { existsCandidacyWithActiveStatus } from "../../features/existsCandidacyWithActiveStatus";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
 export const confirmTrainingFormByCandidate = async ({

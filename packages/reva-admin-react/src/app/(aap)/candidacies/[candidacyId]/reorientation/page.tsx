@@ -70,7 +70,7 @@ const updateCertificationMutation = graphql(`
     $candidacyId: ID!
     $certificationId: ID!
   ) {
-    certification_updateCertificationWithinOrganismScope(
+    candidacy_certification_updateCertificationWithinOrganismScope(
       candidacyId: $candidacyId
       certificationId: $certificationId
     )

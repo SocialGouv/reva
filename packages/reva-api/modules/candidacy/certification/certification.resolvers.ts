@@ -11,7 +11,7 @@ const unsafeResolvers = {
   },
   Query: {},
   Mutation: {
-    certification_updateCertification: async (
+    candidacy_certification_updateCertification: async (
       _: unknown,
       payload: any,
       context: GraphqlContext,
@@ -25,7 +25,7 @@ const unsafeResolvers = {
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
 
-    certification_updateCertificationWithinOrganismScope: async (
+    candidacy_certification_updateCertificationWithinOrganismScope: async (
       _: unknown,
       payload: any,
       context: GraphqlContext,

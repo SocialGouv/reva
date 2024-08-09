@@ -1,18 +1,19 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { canCandidateUpdateCandidacy } from "../../candidacy/features/canCandidateUpdateCandidacy";
-import { existsCandidacyWithActiveStatus } from "../../candidacy/features/existsCandidacyWithActiveStatus";
-import { getCertificationById } from "../../referential/features/getCertificationById";
+import { prismaClient } from "../../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
+} from "../../../shared/error/functionalError";
+import { logger } from "../../../shared/logger";
+
+import { getCertificationById } from "../../../referential/features/getCertificationById";
+import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCandidacy";
+import { existsCandidacyWithActiveStatus } from "../../features/existsCandidacyWithActiveStatus";
+import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
+import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { updateCertification } from "./updateCertification";
-import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { updateCandidacyOrganism } from "../../candidacy/features/updateCandidacyOrganism";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,

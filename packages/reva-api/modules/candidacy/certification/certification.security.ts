@@ -3,15 +3,15 @@ import {
   isAdminOrCandidacyCompanion,
   isAnyone,
   isOwnerOfCandidacy,
-} from "../shared/security/presets";
+} from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.*": isAnyone,
 
   "Mutation.*": defaultSecurity,
 
-  "Mutation.certification_updateCertification": isOwnerOfCandidacy,
+  "Mutation.candidacy_certification_updateCertification": isOwnerOfCandidacy,
 
-  "Mutation.certification_updateCertificationWithinOrganismScope":
+  "Mutation.candidacy_certification_updateCertificationWithinOrganismScope":
     isAdminOrCandidacyCompanion,
 };
