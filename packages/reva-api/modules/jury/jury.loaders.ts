@@ -1,4 +1,4 @@
-import { getCandidaciesByIds } from "./features/getCandidaciesByIds";
+import { getCandidaciesByIds } from "../dossier-de-validation/features/getCandidaciesByIds";
 
 export const juryLoaders = {
   Jury: {

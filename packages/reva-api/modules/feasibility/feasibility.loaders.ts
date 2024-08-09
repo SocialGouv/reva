@@ -1,4 +1,4 @@
-import { getCandidaciesByIds } from "./feasibility.features";
+import { getCandidaciesByIds } from "../dossier-de-validation/features/getCandidaciesByIds";
 
 export const feasibilityLoaders = {
   Feasibility: {

@@ -1,9 +1,12 @@
-import { getCandidaciesFromIds } from "../../candidacy/database/candidacies";
+import { prismaClient } from "../../../prisma/client";
 
 export const getCandidaciesByIds = async ({
   candidacyIds,
 }: {
   candidacyIds: string[];
-}) => {
-  return getCandidaciesFromIds(candidacyIds);
-};
+}) =>
+  prismaClient.candidacy.findMany({
+    where: {
+      id: { in: candidacyIds },
+    },
+  });

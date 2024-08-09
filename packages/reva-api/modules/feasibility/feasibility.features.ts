@@ -13,10 +13,7 @@ import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
-import {
-  getCandidaciesFromIds,
-  updateCandidacyStatus,
-} from "../candidacy/database/candidacies";
+import { updateCandidacyStatus } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
@@ -592,14 +589,6 @@ export const getActiveFeasibilities = async ({
   };
 
   return page;
-};
-
-export const getCandidaciesByIds = async ({
-  candidacyIds,
-}: {
-  candidacyIds: string[];
-}) => {
-  return getCandidaciesFromIds(candidacyIds);
 };
 
 export const getFeasibilityById = async ({
