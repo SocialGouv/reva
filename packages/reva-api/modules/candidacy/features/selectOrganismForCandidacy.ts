@@ -6,12 +6,12 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
-import { updateOrganism } from "../database/candidacies";
 import {
   sendNewOrganismCandidateNewCandidacyEmail,
   sendPreviousOrganismCandidateChangeOrganismEmail,
 } from "../mails";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
+import { updateCandidacyOrganism } from "./updateCandidacyOrganism";
 
 export const selectOrganismForCandidacy = async ({
   candidacyId,
@@ -52,7 +52,10 @@ export const selectOrganismForCandidacy = async ({
   }
 
   try {
-    const updatedCandidacy = await updateOrganism({ candidacyId, organismId });
+    const updatedCandidacy = await updateCandidacyOrganism({
+      candidacyId,
+      organismId,
+    });
 
     await prismaClient.candidacy.update({
       where: { id: candidacyId },

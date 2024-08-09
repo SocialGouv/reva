@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const updateOrganism = async (params: {
+export const updateCandidacyOrganism = async (params: {
   candidacyId: string;
   organismId: string | null;
 }) =>
