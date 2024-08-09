@@ -21,8 +21,6 @@ export interface Candidacy {
   departmentId?: string | null;
   candidacyDropOut?: CandidacyDropOut | null;
   createdAt: Date;
-  ccnId?: string | null;
-  conventionCollective?: CandidacyConventionCollective | null;
   financeModule: FinanceModule;
 }
 

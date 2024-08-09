@@ -56,6 +56,7 @@ import {
 import { resolversSecurityMap } from "./security/security";
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
+import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -82,6 +83,8 @@ const unsafeResolvers = {
     }: {
       reorientationReasonId: string;
     }) => getReorientationReasonById({ reorientationReasonId }),
+    conventionCollective: ({ ccnId }: { ccnId: string }) =>
+      getCandidacyConventionCollectiveById({ ccnId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

@@ -8,7 +8,6 @@ export const candidacyIncludes = {
       dropOutReason: true,
     },
   },
-  ccn: true,
 };
 
 export const getCandidaciesFromIds = async (candidacyIds: string[]) => {
