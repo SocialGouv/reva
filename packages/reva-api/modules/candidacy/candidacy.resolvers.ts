@@ -32,7 +32,6 @@ import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus"
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
-import { getRegionByCandidacyId } from "./features/getRegionByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
@@ -74,8 +73,6 @@ const unsafeResolvers = {
       getCandidateByCandidacyId({ candidacyId }),
     department: ({ departmentId }: { departmentId: string }) =>
       getDepartmentById({ id: departmentId }),
-    region: ({ id: candidacyId }: { id: string }) =>
-      getRegionByCandidacyId({ candidacyId }),
     organism: ({ organismId }: { organismId: string }) =>
       getOrganismById({ organismId }),
     candidacyStatuses: ({ id: candidacyId }: Candidacy) =>

@@ -49,7 +49,6 @@ enum CandidacyStatusStep {
 type Candidacy {
   id: ID!
   candidate: Candidate
-  region: Region
   departmentId: ID
   department: Department
   organismId: UUID
