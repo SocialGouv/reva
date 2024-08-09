@@ -1,14 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { resolversSecurityMap } from "./certification.security";
-import { getCertificationByCandidacyId } from "./features/getCertificationByCandidacyId";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
 import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 
 const unsafeResolvers = {
-  Candidacy: {
-    certification: ({ id: candidacyId }: { id: string }) =>
-      getCertificationByCandidacyId({ candidacyId }),
-  },
   Query: {},
   Mutation: {
     candidacy_certification_updateCertification: async (
