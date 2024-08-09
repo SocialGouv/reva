@@ -13,7 +13,6 @@ import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyStatus } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
@@ -38,6 +37,7 @@ import {
   excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
+import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 

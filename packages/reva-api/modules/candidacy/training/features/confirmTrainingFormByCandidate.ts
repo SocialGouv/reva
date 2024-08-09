@@ -3,9 +3,9 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
 import { getCertificationByCandidacyId } from "../../../certification/features/getCertificationByCandidacyId";
+import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
 export const confirmTrainingFormByCandidate = async ({
   candidacyId,

@@ -3,12 +3,12 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { generateJwt } from "../../../candidate/auth.helper";
 import { sendTrainingEmail } from "../emails";
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 import { updateTrainingInformations } from "./updateTrainingInformations";
 import { getCandidateById } from "../../features/getCandidateById";
+import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
 export const submitTraining = async ({
   candidacyId,

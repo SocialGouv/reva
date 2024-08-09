@@ -2,10 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import {
-  updateCandidacyStatus,
-  updateOrganism,
-} from "../../candidacy/database/candidacies";
+import { updateOrganism } from "../../candidacy/database/candidacies";
 import { canCandidateUpdateCandidacy } from "../../candidacy/features/canCandidateUpdateCandidacy";
 import { existsCandidacyWithActiveStatus } from "../../candidacy/features/existsCandidacyWithActiveStatus";
 import { getCertificationById } from "../../referential/features/getCertificationById";
@@ -15,6 +12,7 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import { updateCertification } from "./updateCertification";
+import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,

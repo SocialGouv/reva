@@ -4,10 +4,10 @@ import { format, isBefore } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
