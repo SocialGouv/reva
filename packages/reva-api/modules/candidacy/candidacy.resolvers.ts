@@ -55,6 +55,7 @@ import {
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
+import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -76,6 +77,11 @@ const unsafeResolvers = {
       getOrganismById({ organismId }),
     candidacyStatuses: ({ id: candidacyId }: Candidacy) =>
       getCandidacyStatusesByCandidacyId({ candidacyId }),
+    reorientationReason: ({
+      reorientationReasonId,
+    }: {
+      reorientationReasonId: string;
+    }) => getReorientationReasonById({ reorientationReasonId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>

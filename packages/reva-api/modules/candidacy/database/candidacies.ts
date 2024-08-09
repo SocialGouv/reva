@@ -8,7 +8,6 @@ export const candidacyIncludes = {
       dropOutReason: true,
     },
   },
-  reorientationReason: true,
   ccn: true,
 };
 

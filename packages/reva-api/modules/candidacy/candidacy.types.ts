@@ -1,9 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import {
-  DropOutReason,
-  ReorientationReason,
-} from "../referential/referential.types";
+import { DropOutReason } from "../referential/referential.types";
 
 export interface CandidacyDropOut {
   droppedOutAt: Date;
@@ -23,7 +20,6 @@ export interface Candidacy {
   isCertificationPartial?: boolean | null;
   departmentId?: string | null;
   candidacyDropOut?: CandidacyDropOut | null;
-  reorientationReason?: ReorientationReason | null;
   createdAt: Date;
   ccnId?: string | null;
   conventionCollective?: CandidacyConventionCollective | null;
