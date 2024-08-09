@@ -2,20 +2,12 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
-export const candidacyIncludes = {};
-
-export const getCandidaciesFromIds = async (candidacyIds: string[]) => {
-  const candidacies = await prismaClient.candidacy.findMany({
+export const getCandidaciesFromIds = async (candidacyIds: string[]) =>
+  prismaClient.candidacy.findMany({
     where: {
       id: { in: candidacyIds },
     },
-    include: {
-      ...candidacyIncludes,
-    },
   });
-
-  return candidacies;
-};
 
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
@@ -42,9 +34,6 @@ export const updateCandidacyStatus = async (params: {
           },
         },
       },
-      include: {
-        ...candidacyIncludes,
-      },
     }),
   ]);
 
@@ -54,18 +43,12 @@ export const updateCandidacyStatus = async (params: {
 export const updateOrganism = async (params: {
   candidacyId: string;
   organismId: string | null;
-}) => {
-  const newCandidacy = await prismaClient.candidacy.update({
+}) =>
+  prismaClient.candidacy.update({
     where: {
       id: params.candidacyId,
     },
     data: {
       organismId: params.organismId,
     },
-    include: {
-      ...candidacyIncludes,
-    },
   });
-
-  return newCandidacy;
-};

@@ -3,7 +3,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { logger } from "../../../modules/shared/logger";
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyById } from "./getCandidacyById";
-import { candidacyIncludes } from "../database/candidacies";
 
 interface UnarchiveCandidacyParams {
   candidacyId: string;
@@ -81,9 +80,6 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
               isActive: true,
             },
           },
-        },
-        include: {
-          ...candidacyIncludes,
         },
       }),
     ]);

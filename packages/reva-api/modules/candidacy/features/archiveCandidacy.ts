@@ -1,7 +1,6 @@
 import { getCandidacyById } from "./getCandidacyById";
 import { getReorientationReasonById } from "../../referential/features/getReorientationReasonById";
 import { prismaClient } from "../../../prisma/client";
-import { candidacyIncludes } from "../database/candidacies";
 import { logger } from "../../shared/logger";
 import {
   FunctionalCodeError,
@@ -84,9 +83,6 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
             },
           },
           reorientationReasonId: params.reorientationReasonId,
-        },
-        include: {
-          ...candidacyIncludes,
         },
       }),
     ]);

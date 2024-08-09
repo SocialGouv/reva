@@ -1,7 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
-import { candidacyIncludes } from "../../candidacy/database/candidacies";
 
 const candidateIncludes = {
   highestDegree: true,
@@ -62,7 +61,6 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
       include: {
         candidacies: {
           where: ongoingCandidacyFilter,
-          include: candidacyIncludes,
         },
       },
     });
@@ -74,7 +72,6 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
       include: {
         candidacies: {
           where: ongoingCandidacyFilter,
-          include: candidacyIncludes,
         },
       },
     });
@@ -127,7 +124,6 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
     include: {
       candidacies: {
         where: ongoingCandidacyFilter,
-        include: candidacyIncludes,
       },
       highestDegree: true,
       vulnerabilityIndicator: true,
@@ -156,7 +152,6 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
       include: {
         candidacies: {
           where: ongoingCandidacyFilter,
-          include: candidacyIncludes,
         },
         highestDegree: true,
         vulnerabilityIndicator: true,

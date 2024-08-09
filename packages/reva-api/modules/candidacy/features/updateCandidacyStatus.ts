@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import * as domain from "../candidacy.types";
-import { candidacyIncludes } from "../database/candidacies";
 
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
@@ -28,9 +27,6 @@ export const updateCandidacyStatus = async (params: {
             isActive: true,
           },
         },
-      },
-      include: {
-        ...candidacyIncludes,
       },
     }),
   ]);

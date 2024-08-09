@@ -6,7 +6,6 @@ import {
   startOfToday,
   startOfDay,
 } from "date-fns";
-import { candidacyIncludes } from "../database/candidacies";
 
 export const updateAppointmentInformations = async (params: {
   candidacyId: string;
@@ -58,9 +57,6 @@ export const updateAppointmentInformations = async (params: {
     data: {
       firstAppointmentOccuredAt:
         params.appointmentInformations.firstAppointmentOccuredAt,
-    },
-    include: {
-      ...candidacyIncludes,
     },
   });
 

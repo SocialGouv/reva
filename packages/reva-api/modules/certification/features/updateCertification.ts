@@ -1,5 +1,4 @@
 import { prismaClient } from "../../../prisma/client";
-import { candidacyIncludes } from "../../candidacy/database/candidacies";
 
 export const updateCertification = async (params: {
   candidacyId: string;
@@ -47,9 +46,6 @@ export const updateCertification = async (params: {
             isActive: true,
           },
         },
-      },
-      include: {
-        ...candidacyIncludes,
       },
     }),
   ]);
