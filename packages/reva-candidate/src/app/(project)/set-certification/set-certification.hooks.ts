@@ -34,7 +34,7 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
 `);
 
 const UPDATE_CERTIFICATION = graphql(`
-  mutation updateCertification(
+  mutation candidacy_certification_updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
     $departmentId: ID!

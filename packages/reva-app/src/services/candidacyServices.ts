@@ -3,7 +3,7 @@ import { ApolloClient, gql } from "@apollo/client";
 import { Experience, candidacyStatus } from "../interface";
 
 const UPDATE_CERTIFICATION = gql`
-  mutation updateCertification(
+  mutation candidacy_certification_updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
     $departmentId: ID!
