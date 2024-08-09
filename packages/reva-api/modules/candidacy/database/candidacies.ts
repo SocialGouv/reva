@@ -2,13 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
-export const candidacyIncludes = {
-  candidacyDropOut: {
-    include: {
-      dropOutReason: true,
-    },
-  },
-};
+export const candidacyIncludes = {};
 
 export const getCandidaciesFromIds = async (candidacyIds: string[]) => {
   const candidacies = await prismaClient.candidacy.findMany({

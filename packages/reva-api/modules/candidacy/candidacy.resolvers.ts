@@ -57,6 +57,8 @@ import { resolversSecurityMap } from "./security/security";
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
+import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
+import { getDropOutReasonById } from "./features/getDropOutReasonById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -85,6 +87,12 @@ const unsafeResolvers = {
     }) => getReorientationReasonById({ reorientationReasonId }),
     conventionCollective: ({ ccnId }: { ccnId: string }) =>
       getCandidacyConventionCollectiveById({ ccnId }),
+    candidacyDropOut: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyDropOutByCandidacyId({ candidacyId }),
+  },
+  CandidacyDropOut: {
+    dropOutReason: ({ dropOutReasonId }: { dropOutReasonId: string }) =>
+      getDropOutReasonById({ dropOutReasonId }),
   },
   Query: {
     getCandidacyById: async (_: unknown, { id }: { id: string }) =>
