@@ -8,8 +8,8 @@ export const candidacyCertificationLoaders = {
         candidacyIds,
       });
       return candidacyIds.map((cid) =>
-        certifications.find(
-          (c) => c.candidaciesAndRegions[0].candidacyId === cid,
+        certifications.find((c) =>
+          c.candidaciesAndRegions.some((cr) => cr.candidacyId === cid),
         ),
       );
     },

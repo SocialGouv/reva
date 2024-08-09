@@ -14,5 +14,9 @@ export const getCertificationsByCandidacyIds = ({
         },
       },
     },
-    include: { candidaciesAndRegions: { where: { isActive: true } } }, //include candidaciesAndRegions because this method is used in a graphql loader an we need access to the candidacy id in the result
+    include: {
+      candidaciesAndRegions: {
+        where: { isActive: true, candidacyId: { in: candidacyIds } },
+      },
+    }, //include candidaciesAndRegions because this method is used in a graphql loader an we need access to the candidacy id in the result
   });
