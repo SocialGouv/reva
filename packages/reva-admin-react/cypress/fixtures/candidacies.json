@@ -4,9 +4,16 @@
       "rows": [
         {
           "id": "fb451fbc-3218-416d-9ac9-65b13432469f",
-          "sentAt": 1721832988943,
-          "firstname": "Alice",
-          "lastname": "Doe",
+          "candidacyStatuses": [
+            {
+              "status": "VALIDATION",
+              "createdAt": 1721832988943
+            }
+          ],
+          "candidate": {
+            "firstname": "Alice",
+            "lastname": "Doe"
+          },
           "certification": {
             "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)"
           },
@@ -24,9 +31,16 @@
         },
         {
           "id": "773275af-60a3-44ec-9710-0367b0425e83",
-          "sentAt": 1721723502501,
-          "firstname": "John",
-          "lastname": "Doe",
+          "candidacyStatuses": [
+            {
+              "status": "VALIDATION",
+              "createdAt": 1721723502501
+            }
+          ],
+          "candidate": {
+            "firstname": "John",
+            "lastname": "Doe"
+          },
           "certification": {
             "label": "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR"
           },

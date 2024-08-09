@@ -64,8 +64,8 @@ export default function CandidaciesPage() {
             <CandidacyCard
               key={candidacy.id}
               candidacyId={candidacy.id}
-              candidateFirstname={candidacy.firstname || ""}
-              candidateLastname={candidacy.lastname || ""}
+              candidateFirstname={candidacy.candidate?.firstname || ""}
+              candidateLastname={candidacy.candidate?.lastname || ""}
               certificationLabel={candidacy?.certification?.label}
               departmentCode={candidacy.department?.code}
               departmentLabel={candidacy.department?.label}
@@ -74,7 +74,15 @@ export default function CandidaciesPage() {
                 candidacy.organism?.label
               }
               candidacySentAt={
-                candidacy.sentAt ? new Date(candidacy.sentAt) : undefined
+                candidacy.candidacyStatuses.some(
+                  (s) => s.status === "VALIDATION",
+                )
+                  ? new Date(
+                      candidacy.candidacyStatuses.find(
+                        (s) => s.status === "VALIDATION",
+                      )?.createdAt || 0,
+                    )
+                  : undefined
               }
               fundable={candidacy.financeModule !== "hors_plateforme"}
             />

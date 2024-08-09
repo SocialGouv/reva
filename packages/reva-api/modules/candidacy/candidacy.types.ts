@@ -5,13 +5,6 @@ export interface CandidacyDropOut {
   status: CandidacyStatusStep;
   otherReasonContent?: string | null;
 }
-
-export interface CandidacyConventionCollective {
-  id: string;
-  idcc: string;
-  label: string;
-}
-
 export interface Candidacy {
   id: string;
   isCertificationPartial?: boolean | null;
@@ -20,26 +13,7 @@ export interface Candidacy {
   financeModule: FinanceModule;
 }
 
-export type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";
-
-export interface CandidacyStatus {
-  id: string;
-  status: string;
-  createdAt: Date;
-  isActive: boolean;
-}
-
-export interface CandidacySummary extends Omit<Candidacy, "candidacyStatuses"> {
-  id: string;
-  certification: CertificationSummary;
-  lastStatus: CandidacyStatus;
-  createdAt: Date;
-}
-
-export interface CertificationSummary {
-  id: string;
-  label: string;
-}
+type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";
 
 export interface ExperienceInput {
   title: string;
@@ -48,43 +22,13 @@ export interface ExperienceInput {
   description: string;
 }
 
-export interface Experience extends ExperienceInput {
-  id: string;
-}
-
-export type Duration =
+type Duration =
   | "unknown"
   | "lessThanOneYear"
   | "betweenOneAndThreeYears"
   | "moreThanThreeYears"
   | "moreThanFiveYears"
   | "moreThanTenYears";
-
-export type CandidateTypology =
-  | "NON_SPECIFIE"
-  | "SALARIE_PRIVE"
-  | "SALARIE_PUBLIC_HOSPITALIER"
-  | "DEMANDEUR_EMPLOI"
-  | "AIDANTS_FAMILIAUX"
-  | "AUTRE";
-
-export interface Companion {
-  id: string;
-}
-
-export interface AppointmentInformations {
-  firstAppointmentOccuredAt: Date;
-}
-
-export interface BasicSkill {
-  id: string;
-  label: string;
-}
-
-export interface Training {
-  id: string;
-  label: string;
-}
 
 export interface Admissibility {
   id: string;
@@ -95,7 +39,7 @@ export interface Admissibility {
   status: AdmissibilityStatus | null;
 }
 
-export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
+type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
 
 export interface AdmissibilityFvae {
   isAlreadyAdmissible: boolean;

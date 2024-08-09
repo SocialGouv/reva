@@ -44,9 +44,10 @@ const getCandidaciesByStatus = graphql(`
     ) {
       rows {
         id
-        sentAt
-        firstname
-        lastname
+        candidate {
+          firstname
+          lastname
+        }
         certification {
           label
         }
@@ -61,6 +62,10 @@ const getCandidaciesByStatus = graphql(`
           code
         }
         financeModule
+        candidacyStatuses {
+          status
+          createdAt
+        }
       }
       info {
         totalRows

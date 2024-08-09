@@ -91,25 +91,7 @@ type CandidacyConventionCollectivePaginated {
   info: PaginationInfo!
 }
 
-type CandidacySummary {
-  id: ID!
-  certificationId: ID
-  certification: CertificationSummary
-  organismId: ID
-  organism: Organism
-  department: Department
-  firstname: String
-  lastname: String
-  email: String
-  isDroppedOut: Boolean!
-  isReorientation: Boolean!
-  lastStatus: CandidacyStatus!
-  createdAt: Timestamp!
-  sentAt: Timestamp
-  financeModule: FinanceModule!
-}
-
-type CandidacySummaryFilterInfo {
+type CandidacyFilterInfo {
   active: Int!
   projet: Int!
   archive: Int!
@@ -186,8 +168,8 @@ type CandidacyCountByStatus {
   PROJET_HORS_ABANDON: Int!
 }
 
-type CandidacySummaryPage {
-  rows: [CandidacySummary!]!
+type CandidacyPage {
+  rows: [Candidacy!]!
   info: PaginationInfo!
 }
 
@@ -236,7 +218,7 @@ type Query {
     limit: Int
     statusFilter: CandidacyStatusFilter
     searchFilter: String
-  ): CandidacySummaryPage!
+  ): CandidacyPage!
   getRandomOrganismsForCandidacy(
     candidacyId: UUID!
     searchText: String

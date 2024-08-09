@@ -26,7 +26,6 @@ import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
 import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
-import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
@@ -59,6 +58,7 @@ import { getReorientationReasonById } from "../referential/features/getReorienta
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
+import { getCandidacies } from "./features/getCandicacies";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -108,7 +108,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       try {
-        return getCandidacySummaries({
+        return getCandidacies({
           hasRole: context.auth.hasRole,
           iAMId: context.auth?.userInfo?.sub || "",
           ..._params,
