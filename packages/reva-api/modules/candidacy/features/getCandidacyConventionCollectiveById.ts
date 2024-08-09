@@ -5,6 +5,8 @@ export const getCandidacyConventionCollectiveById = ({
 }: {
   ccnId: string;
 }) =>
-  prismaClient.candidacyConventionCollective.findUnique({
-    where: { id: ccnId },
-  });
+  ccnId
+    ? prismaClient.candidacyConventionCollective.findUnique({
+        where: { id: ccnId },
+      })
+    : null;
