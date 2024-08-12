@@ -1,0 +1,817 @@
+[
+  {
+    "id": "fa849fe0-faa4-41a4-b1f1-628cb1683727",
+    "label": "Ain",
+    "code": "01",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.25+00",
+    "updated_at": null
+  },
+  {
+    "id": "17c9314c-9f86-46b8-a99f-4a214513f933",
+    "label": "Aisne",
+    "code": "02",
+    "region_id": "a08fbe02-dab5-4c92-956a-67114994ed92",
+    "created_at": "2024-04-24 12:22:19.252+00",
+    "updated_at": null
+  },
+  {
+    "id": "f57058ed-4239-4ec2-91ad-51faffb171e8",
+    "label": "Allier",
+    "code": "03",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.253+00",
+    "updated_at": null
+  },
+  {
+    "id": "fd3bec05-d73c-4b3f-b848-dc3efffe0905",
+    "label": "Alpes-de-Haute-Provence",
+    "code": "04",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.255+00",
+    "updated_at": null
+  },
+  {
+    "id": "a2cb5a22-0dea-4491-b0ea-cce60e4cf7af",
+    "label": "Hautes-Alpes",
+    "code": "05",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.257+00",
+    "updated_at": null
+  },
+  {
+    "id": "84286158-8894-4f55-b1da-9448f5274ea0",
+    "label": "Alpes-Maritimes",
+    "code": "06",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.259+00",
+    "updated_at": null
+  },
+  {
+    "id": "e7f065f5-cb70-421e-900f-93d3c8fe8660",
+    "label": "Ardèche",
+    "code": "07",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.261+00",
+    "updated_at": null
+  },
+  {
+    "id": "07edfd8f-299f-477f-b49b-eb5351849d54",
+    "label": "Ardennes",
+    "code": "08",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.263+00",
+    "updated_at": null
+  },
+  {
+    "id": "746f926a-09aa-4a3c-86aa-7f7a1bcf030b",
+    "label": "Ariège",
+    "code": "09",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.264+00",
+    "updated_at": null
+  },
+  {
+    "id": "eda2bcdc-9bce-4b9a-b4fc-0234a6dcd8c8",
+    "label": "Aube",
+    "code": "10",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.266+00",
+    "updated_at": null
+  },
+  {
+    "id": "4761d26a-2aed-43e4-8951-14a5ffb83f3c",
+    "label": "Aude",
+    "code": "11",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.267+00",
+    "updated_at": null
+  },
+  {
+    "id": "bffd31d8-0b49-46fb-a8b3-f66315fe2552",
+    "label": "Aveyron",
+    "code": "12",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.269+00",
+    "updated_at": null
+  },
+  {
+    "id": "468c2024-02f5-4de4-9780-79a2a9931690",
+    "label": "Bouches-du-Rhône",
+    "code": "13",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.27+00",
+    "updated_at": null
+  },
+  {
+    "id": "3deb3682-4604-47d1-84c1-df18a5e6dbe6",
+    "label": "Calvados",
+    "code": "14",
+    "region_id": "4a18ac86-9597-4d7b-b3f1-6f7cd564d0cf",
+    "created_at": "2024-04-24 12:22:19.272+00",
+    "updated_at": null
+  },
+  {
+    "id": "5f99ec31-0621-4a1c-ac53-3705fe349a2b",
+    "label": "Cantal",
+    "code": "15",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.274+00",
+    "updated_at": null
+  },
+  {
+    "id": "ba7729e1-68f5-43a2-aa5c-0c62ae397461",
+    "label": "Charente",
+    "code": "16",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.275+00",
+    "updated_at": null
+  },
+  {
+    "id": "9aa7b3a1-712b-441e-b6fe-262f1ac47b52",
+    "label": "Charente-Maritime",
+    "code": "17",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.277+00",
+    "updated_at": null
+  },
+  {
+    "id": "d6b18998-52bf-4d2e-9c8b-fffe3490d564",
+    "label": "Cher",
+    "code": "18",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.279+00",
+    "updated_at": null
+  },
+  {
+    "id": "35f04a7c-bdfc-4694-95fb-0670e8d06cd4",
+    "label": "Corrèze",
+    "code": "19",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.28+00",
+    "updated_at": null
+  },
+  {
+    "id": "e02ed801-866b-4cda-aaa8-d786f2219d77",
+    "label": "Côte-d'Or",
+    "code": "21",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.282+00",
+    "updated_at": null
+  },
+  {
+    "id": "72df01e8-f35a-406f-b906-1ff93620915c",
+    "label": "Côtes-d'Armor",
+    "code": "22",
+    "region_id": "d058c43d-35e6-453b-b916-2be1ee610563",
+    "created_at": "2024-04-24 12:22:19.284+00",
+    "updated_at": null
+  },
+  {
+    "id": "e3d90ae1-db1a-4cff-9360-f016200879cf",
+    "label": "Creuse",
+    "code": "23",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.286+00",
+    "updated_at": null
+  },
+  {
+    "id": "33874292-eb8e-4056-a834-62cd1a6eacaf",
+    "label": "Dordogne",
+    "code": "24",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.288+00",
+    "updated_at": null
+  },
+  {
+    "id": "3b0ff7ed-b66f-4a2d-ba3b-c12fbc5c87b0",
+    "label": "Doubs",
+    "code": "25",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.289+00",
+    "updated_at": null
+  },
+  {
+    "id": "d6844098-9726-4bd5-a1c1-bcaa13e2f276",
+    "label": "Drôme",
+    "code": "26",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.291+00",
+    "updated_at": null
+  },
+  {
+    "id": "65bdf0d3-4d33-4d6f-b866-ab2f33959aca",
+    "label": "Eure",
+    "code": "27",
+    "region_id": "4a18ac86-9597-4d7b-b3f1-6f7cd564d0cf",
+    "created_at": "2024-04-24 12:22:19.293+00",
+    "updated_at": null
+  },
+  {
+    "id": "9871bc24-0669-4ab0-a467-d0e2dbd9c5ef",
+    "label": "Eure-et-Loir",
+    "code": "28",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.295+00",
+    "updated_at": null
+  },
+  {
+    "id": "93eaa419-a0b6-4b40-abcc-abe8a5085043",
+    "label": "Finistère",
+    "code": "29",
+    "region_id": "d058c43d-35e6-453b-b916-2be1ee610563",
+    "created_at": "2024-04-24 12:22:19.297+00",
+    "updated_at": null
+  },
+  {
+    "id": "88d7a6ab-89aa-4153-a655-45e5d28205b4",
+    "label": "Corse-du-Sud",
+    "code": "2A",
+    "region_id": "c53cc3e3-fdbb-4b0c-97f3-38b25929f1fa",
+    "created_at": "2024-04-24 12:22:19.298+00",
+    "updated_at": null
+  },
+  {
+    "id": "25e6ad9e-0d67-47ca-adbd-f75ece6f5c78",
+    "label": "Haute-Corse",
+    "code": "2B",
+    "region_id": "c53cc3e3-fdbb-4b0c-97f3-38b25929f1fa",
+    "created_at": "2024-04-24 12:22:19.3+00",
+    "updated_at": null
+  },
+  {
+    "id": "88d7a6ab-89aa-4153-a655-45e5d28205b4",
+    "label": "Corse",
+    "code": "20",
+    "region_id": "c53cc3e3-fdbb-4b0c-97f3-38b25929f1fa",
+    "created_at": "2024-04-24 12:22:19.298+00",
+    "updated_at": null
+  },
+  {
+    "id": "29ddf65c-a9df-40a1-88e8-9075ffed82d8",
+    "label": "Gard",
+    "code": "30",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.302+00",
+    "updated_at": null
+  },
+  {
+    "id": "1ab62a99-c2c5-49e6-a880-a1695f5282cd",
+    "label": "Haute-Garonne",
+    "code": "31",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.303+00",
+    "updated_at": null
+  },
+  {
+    "id": "c8efa27a-b07b-48ba-bfcf-2d353f9fc0a3",
+    "label": "Gers",
+    "code": "32",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.305+00",
+    "updated_at": null
+  },
+  {
+    "id": "b86ca71b-930a-4e1a-83ef-fc4c2222728d",
+    "label": "Gironde",
+    "code": "33",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.306+00",
+    "updated_at": null
+  },
+  {
+    "id": "7f1df2a1-26a1-4c25-91a1-9b2f0e0d1c44",
+    "label": "Hérault",
+    "code": "34",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.308+00",
+    "updated_at": null
+  },
+  {
+    "id": "6ac0c202-09b6-430d-b6e1-1fc8e9fb396d",
+    "label": "Ille-et-Vilaine",
+    "code": "35",
+    "region_id": "d058c43d-35e6-453b-b916-2be1ee610563",
+    "created_at": "2024-04-24 12:22:19.309+00",
+    "updated_at": null
+  },
+  {
+    "id": "674950c4-7014-4b35-ac87-02ea9382912a",
+    "label": "Indre",
+    "code": "36",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.311+00",
+    "updated_at": null
+  },
+  {
+    "id": "29ea11af-3f44-44c3-8846-6e7ebb6bddce",
+    "label": "Indre-et-Loire",
+    "code": "37",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.313+00",
+    "updated_at": null
+  },
+  {
+    "id": "a9cc1250-3eac-4fd5-9796-d57bc7e6e913",
+    "label": "Isère",
+    "code": "38",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.315+00",
+    "updated_at": null
+  },
+  {
+    "id": "0fca4b4a-146a-4e45-bd9d-315025443180",
+    "label": "Jura",
+    "code": "39",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.317+00",
+    "updated_at": null
+  },
+  {
+    "id": "076048cd-f937-45f2-80a9-8a0a952426e7",
+    "label": "Landes",
+    "code": "40",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.319+00",
+    "updated_at": null
+  },
+  {
+    "id": "a3eca468-d637-40ca-8f78-e4d8390e5255",
+    "label": "Loir-et-Cher",
+    "code": "41",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.321+00",
+    "updated_at": null
+  },
+  {
+    "id": "77b1459d-c04f-49fd-86f3-5e155405e114",
+    "label": "Loire",
+    "code": "42",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.323+00",
+    "updated_at": null
+  },
+  {
+    "id": "7ab62d4b-2ad3-4c55-a655-4402dc298865",
+    "label": "Haute-Loire",
+    "code": "43",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.324+00",
+    "updated_at": null
+  },
+  {
+    "id": "8333f587-e406-4a41-be00-b0dc89e6e49a",
+    "label": "Loire-Atlantique",
+    "code": "44",
+    "region_id": "b6c12477-910f-497e-91ac-5eb0e3d75d2a",
+    "created_at": "2024-04-24 12:22:19.326+00",
+    "updated_at": null
+  },
+  {
+    "id": "bb58e7df-1a7a-4dfc-ae65-96cdad0d657a",
+    "label": "Loiret",
+    "code": "45",
+    "region_id": "72d45049-213c-49f6-8791-5cfc2268bded",
+    "created_at": "2024-04-24 12:22:19.329+00",
+    "updated_at": null
+  },
+  {
+    "id": "f51db4bf-fcd6-458e-b271-907b1795665a",
+    "label": "Lot",
+    "code": "46",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.33+00",
+    "updated_at": null
+  },
+  {
+    "id": "abb4d509-29c3-456f-9b35-b297cfba4e5f",
+    "label": "Lot-et-Garonne",
+    "code": "47",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.332+00",
+    "updated_at": null
+  },
+  {
+    "id": "e66e12f4-7a10-4098-bf74-fff78b104990",
+    "label": "Lozère",
+    "code": "48",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.334+00",
+    "updated_at": null
+  },
+  {
+    "id": "da607ebf-b495-42ee-9a1e-4b825b7874c7",
+    "label": "Maine-et-Loire",
+    "code": "49",
+    "region_id": "b6c12477-910f-497e-91ac-5eb0e3d75d2a",
+    "created_at": "2024-04-24 12:22:19.337+00",
+    "updated_at": null
+  },
+  {
+    "id": "9d7b316c-8571-42b5-8a4d-4734ca0c7b6b",
+    "label": "Manche",
+    "code": "50",
+    "region_id": "4a18ac86-9597-4d7b-b3f1-6f7cd564d0cf",
+    "created_at": "2024-04-24 12:22:19.339+00",
+    "updated_at": null
+  },
+  {
+    "id": "e50dcead-7d77-4b4d-8222-e36cd07e320f",
+    "label": "Marne",
+    "code": "51",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.341+00",
+    "updated_at": null
+  },
+  {
+    "id": "c54096f6-1d0b-414a-9e7f-136148b686a7",
+    "label": "Haute-Marne",
+    "code": "52",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.343+00",
+    "updated_at": null
+  },
+  {
+    "id": "7f496309-1d29-4e84-b05f-eb20a682c808",
+    "label": "Mayenne",
+    "code": "53",
+    "region_id": "b6c12477-910f-497e-91ac-5eb0e3d75d2a",
+    "created_at": "2024-04-24 12:22:19.345+00",
+    "updated_at": null
+  },
+  {
+    "id": "ed088fec-a868-4dc8-8087-65b5cee3cf8c",
+    "label": "Meurthe-et-Moselle",
+    "code": "54",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.347+00",
+    "updated_at": null
+  },
+  {
+    "id": "f3ee3ef0-9838-4182-8d19-6bc8f1f4256e",
+    "label": "Meuse",
+    "code": "55",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.349+00",
+    "updated_at": null
+  },
+  {
+    "id": "814e0536-c3c2-46af-8f42-72c07dc26659",
+    "label": "Morbihan",
+    "code": "56",
+    "region_id": "d058c43d-35e6-453b-b916-2be1ee610563",
+    "created_at": "2024-04-24 12:22:19.351+00",
+    "updated_at": null
+  },
+  {
+    "id": "09b8570c-d0cc-411f-bf47-0899377f0f06",
+    "label": "Moselle",
+    "code": "57",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.353+00",
+    "updated_at": null
+  },
+  {
+    "id": "9fc280cd-7362-46df-ad2d-515440cfb4dc",
+    "label": "Nièvre",
+    "code": "58",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.355+00",
+    "updated_at": null
+  },
+  {
+    "id": "40fde858-adb3-45db-aee8-da9ec3445cfb",
+    "label": "Nord",
+    "code": "59",
+    "region_id": "a08fbe02-dab5-4c92-956a-67114994ed92",
+    "created_at": "2024-04-24 12:22:19.357+00",
+    "updated_at": null
+  },
+  {
+    "id": "ed31e756-76e6-4fd2-a731-d0db57a642b9",
+    "label": "Oise",
+    "code": "60",
+    "region_id": "a08fbe02-dab5-4c92-956a-67114994ed92",
+    "created_at": "2024-04-24 12:22:19.359+00",
+    "updated_at": null
+  },
+  {
+    "id": "5985d570-55b2-4699-a667-7675da769747",
+    "label": "Orne",
+    "code": "61",
+    "region_id": "4a18ac86-9597-4d7b-b3f1-6f7cd564d0cf",
+    "created_at": "2024-04-24 12:22:19.361+00",
+    "updated_at": null
+  },
+  {
+    "id": "691e05de-da9f-47c8-a5d1-721244e1879d",
+    "label": "Pas-de-Calais",
+    "code": "62",
+    "region_id": "a08fbe02-dab5-4c92-956a-67114994ed92",
+    "created_at": "2024-04-24 12:22:19.363+00",
+    "updated_at": null
+  },
+  {
+    "id": "78d571ca-c56f-450a-af93-9b6c2305ff8d",
+    "label": "Puy-de-Dôme",
+    "code": "63",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.364+00",
+    "updated_at": null
+  },
+  {
+    "id": "9efb5fe4-92dc-46c5-a059-b7df5f2bb33a",
+    "label": "Pyrénées-Atlantiques",
+    "code": "64",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.366+00",
+    "updated_at": null
+  },
+  {
+    "id": "2d8adb7d-d8bb-43d7-a4eb-ccce5803110e",
+    "label": "Hautes-Pyrénées",
+    "code": "65",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.368+00",
+    "updated_at": null
+  },
+  {
+    "id": "559524b5-4fef-4786-9870-cb85233afecf",
+    "label": "Pyrénées-Orientales",
+    "code": "66",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.37+00",
+    "updated_at": null
+  },
+  {
+    "id": "bf58a479-0f73-4bed-9933-5d29d7218e8e",
+    "label": "Bas-Rhin",
+    "code": "67",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.371+00",
+    "updated_at": null
+  },
+  {
+    "id": "0b2d5f28-ee94-4d36-b717-a5d9e0ba5bb3",
+    "label": "Haut-Rhin",
+    "code": "68",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.373+00",
+    "updated_at": null
+  },
+  {
+    "id": "0117c631-aac2-451c-a13f-6f7bd179db61",
+    "label": "Rhône",
+    "code": "69",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.375+00",
+    "updated_at": null
+  },
+  {
+    "id": "693db200-2ef6-48f9-83ed-bfa938fd6917",
+    "label": "Haute-Saône",
+    "code": "70",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.376+00",
+    "updated_at": null
+  },
+  {
+    "id": "f1cd72b8-b7a4-4fd3-8975-87c6fc3a068d",
+    "label": "Saône-et-Loire",
+    "code": "71",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.378+00",
+    "updated_at": null
+  },
+  {
+    "id": "b46945c6-6bb4-4e94-9497-c8805aa4acef",
+    "label": "Sarthe",
+    "code": "72",
+    "region_id": "b6c12477-910f-497e-91ac-5eb0e3d75d2a",
+    "created_at": "2024-04-24 12:22:19.38+00",
+    "updated_at": null
+  },
+  {
+    "id": "1257c575-989a-41bb-8e39-6c3ecea3115f",
+    "label": "Savoie",
+    "code": "73",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.382+00",
+    "updated_at": null
+  },
+  {
+    "id": "343e8bf6-2c24-4d76-b7b1-8ac3033aead1",
+    "label": "Haute-Savoie",
+    "code": "74",
+    "region_id": "03caf95e-f158-40bf-baa0-f44df2cca735",
+    "created_at": "2024-04-24 12:22:19.383+00",
+    "updated_at": null
+  },
+  {
+    "id": "73ae7e01-ddb7-4122-95a3-3301d5665f25",
+    "label": "Paris",
+    "code": "75",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.385+00",
+    "updated_at": null
+  },
+  {
+    "id": "abd74609-4435-442e-8877-78f7da0bdb98",
+    "label": "Seine-Maritime",
+    "code": "76",
+    "region_id": "4a18ac86-9597-4d7b-b3f1-6f7cd564d0cf",
+    "created_at": "2024-04-24 12:22:19.387+00",
+    "updated_at": null
+  },
+  {
+    "id": "fa0f11f3-e627-4c79-b575-c8f68b1c729f",
+    "label": "Seine-et-Marne",
+    "code": "77",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.388+00",
+    "updated_at": null
+  },
+  {
+    "id": "a1e041d2-5868-40c2-9084-08ecf66f1b50",
+    "label": "Yvelines",
+    "code": "78",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.39+00",
+    "updated_at": null
+  },
+  {
+    "id": "b1ab5bd6-8ec7-4f0c-a199-307c47f075e6",
+    "label": "Deux-Sèvres",
+    "code": "79",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.392+00",
+    "updated_at": null
+  },
+  {
+    "id": "b714113a-8f32-4097-8daa-1bde064519ec",
+    "label": "Somme",
+    "code": "80",
+    "region_id": "a08fbe02-dab5-4c92-956a-67114994ed92",
+    "created_at": "2024-04-24 12:22:19.394+00",
+    "updated_at": null
+  },
+  {
+    "id": "e3e5e29e-484d-4028-9a2a-3bac19a735d5",
+    "label": "Tarn",
+    "code": "81",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.395+00",
+    "updated_at": null
+  },
+  {
+    "id": "3d1e9d7d-2d29-416a-98ea-6f4331358c22",
+    "label": "Tarn-et-Garonne",
+    "code": "82",
+    "region_id": "0db3372b-829e-4208-85b4-7303be76a2ab",
+    "created_at": "2024-04-24 12:22:19.397+00",
+    "updated_at": null
+  },
+  {
+    "id": "fc87c83c-51e1-4574-b7e4-bbbb424f33d8",
+    "label": "Var",
+    "code": "83",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.399+00",
+    "updated_at": null
+  },
+  {
+    "id": "94a26a16-8d57-4f4b-8a0b-3fa5647f27be",
+    "label": "Vaucluse",
+    "code": "84",
+    "region_id": "f8709c2e-b13a-4fd3-8543-d3d60bb03a29",
+    "created_at": "2024-04-24 12:22:19.4+00",
+    "updated_at": null
+  },
+  {
+    "id": "cf124287-cb03-4a48-8a69-d9c3ea165166",
+    "label": "Vendée",
+    "code": "85",
+    "region_id": "b6c12477-910f-497e-91ac-5eb0e3d75d2a",
+    "created_at": "2024-04-24 12:22:19.402+00",
+    "updated_at": null
+  },
+  {
+    "id": "617ac8c9-fd5c-4eff-bfcc-56692888a3fe",
+    "label": "Vienne",
+    "code": "86",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.404+00",
+    "updated_at": null
+  },
+  {
+    "id": "a9c9a597-a552-4706-910d-ba758b93b155",
+    "label": "Haute-Vienne",
+    "code": "87",
+    "region_id": "4541a342-c995-4568-acf7-cdac0e808601",
+    "created_at": "2024-04-24 12:22:19.406+00",
+    "updated_at": null
+  },
+  {
+    "id": "abbd5108-4f8e-438a-b375-2a5f63bd6755",
+    "label": "Vosges",
+    "code": "88",
+    "region_id": "c6b7a39e-fce7-47c0-8f12-2d50e5f12d55",
+    "created_at": "2024-04-24 12:22:19.408+00",
+    "updated_at": null
+  },
+  {
+    "id": "fffdfdbb-9003-4c04-ac52-65a0a1abfa2f",
+    "label": "Yonne",
+    "code": "89",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.41+00",
+    "updated_at": null
+  },
+  {
+    "id": "0aa1a3ff-5365-40f2-bf66-85f0cca4b5b3",
+    "label": "Territoire de Belfort",
+    "code": "90",
+    "region_id": "c99a6971-8a01-4301-9ee9-7073f2ce122f",
+    "created_at": "2024-04-24 12:22:19.412+00",
+    "updated_at": null
+  },
+  {
+    "id": "7df42368-f4bb-4e08-a9e1-d9ef72b79e45",
+    "label": "Essonne",
+    "code": "91",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.414+00",
+    "updated_at": null
+  },
+  {
+    "id": "772df66c-ae0b-4cd3-b18e-305265f3bbab",
+    "label": "Hauts-de-Seine",
+    "code": "92",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.416+00",
+    "updated_at": null
+  },
+  {
+    "id": "f30fba72-1f27-47fa-97a6-b5cfe9e05a19",
+    "label": "Seine-Saint-Denis",
+    "code": "93",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.418+00",
+    "updated_at": null
+  },
+  {
+    "id": "2a816106-3d31-459c-a277-1213bef6fdc0",
+    "label": "Val-de-Marne",
+    "code": "94",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.42+00",
+    "updated_at": null
+  },
+  {
+    "id": "1566e2f4-f247-4a65-9d1b-6810551b143b",
+    "label": "Val-d'Oise",
+    "code": "95",
+    "region_id": "c2b35dcd-96b4-45ee-adab-a52f375c526d",
+    "created_at": "2024-04-24 12:22:19.422+00",
+    "updated_at": null
+  },
+  {
+    "id": "0e7754f3-2a15-4f55-bee4-4ba89e813eb7",
+    "label": "Guadeloupe",
+    "code": "971",
+    "region_id": "27c9f08e-7994-4560-910a-d25305d657de",
+    "created_at": "2024-04-24 12:22:19.424+00",
+    "updated_at": null
+  },
+  {
+    "id": "937cbe37-e275-4b23-be75-aa5a7c0749c5",
+    "label": "Martinique",
+    "code": "972",
+    "region_id": "a94141eb-85d5-42dc-8b98-d34b6d79cdca",
+    "created_at": "2024-04-24 12:22:19.426+00",
+    "updated_at": null
+  },
+  {
+    "id": "f2a83b2b-b0d2-4839-8284-dbcc63ef29c9",
+    "label": "Guyane",
+    "code": "973",
+    "region_id": "ba137acd-13f3-4189-b9b1-259708b7512d",
+    "created_at": "2024-04-24 12:22:19.428+00",
+    "updated_at": null
+  },
+  {
+    "id": "ecda089b-289c-4585-b202-37a7d85ec64d",
+    "label": "La Réunion",
+    "code": "974",
+    "region_id": "77905f56-d289-49b2-9920-24ae4efdb6de",
+    "created_at": "2024-04-24 12:22:19.43+00",
+    "updated_at": null
+  },
+  {
+    "id": "4a949cd9-c6cd-4db9-b65e-6b11c486e62b",
+    "label": "Mayotte",
+    "code": "976",
+    "region_id": "4dd6b825-4e41-44e5-8aa5-f5b1109e0632",
+    "created_at": "2024-04-24 12:22:19.432+00",
+    "updated_at": null
+  }]
