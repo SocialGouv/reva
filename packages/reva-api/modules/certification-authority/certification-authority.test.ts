@@ -10,6 +10,7 @@ import {
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 
 const CERTIFICATION_AUTHORITY_KEYCLOAK_ID =
   "3c6d4571-da18-49a3-90e5-cc83ae7446bf";
@@ -35,6 +36,8 @@ beforeAll(async () => {
     data: {
       Account: { connect: { id: certificationAccountAutorityAccount.id } },
       label: "certification authority",
+      certificationAuthorityStructureId:
+        certificationAuthorityStructureFixtures.UIMM.id,
     },
   });
 

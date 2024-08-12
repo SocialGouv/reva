@@ -15,6 +15,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { expertFiliereOrganism } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+import { certificationAuthorityStructureFixtures } from "../../../../test/fixtures/certification";
 
 const candidateSample = {
   firstname: "Jojo",
@@ -131,7 +132,13 @@ beforeAll(async () => {
       Feasibility: {
         create: {
           decision: "ADMISSIBLE",
-          certificationAuthority: { create: { label: "dummy" } },
+          certificationAuthority: {
+            create: {
+              label: "dummy",
+              certificationAuthorityStructureId:
+                certificationAuthorityStructureFixtures.UIMM.id,
+            },
+          },
           feasibilityUploadedPdf: {
             create: {
               feasibilityFile: {

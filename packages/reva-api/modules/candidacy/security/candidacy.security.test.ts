@@ -22,6 +22,7 @@ import {
 } from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
 
 let organism: Organism,
   candidate: Candidate,
@@ -142,7 +143,11 @@ beforeAll(async () => {
   });
 
   certificationAuthority = await prismaClient.certificationAuthority.create({
-    data: { label: "certification authority" },
+    data: {
+      label: "certification authority",
+      certificationAuthorityStructureId:
+        certificationAuthorityStructureFixtures.UIMM.id,
+    },
   });
 
   certificationAuthorityAccount = await prismaClient.account.create({
@@ -171,7 +176,11 @@ beforeAll(async () => {
 
   randomCertificationAuthority =
     await prismaClient.certificationAuthority.create({
-      data: { label: "random certification authority" },
+      data: {
+        label: "random certification authority",
+        certificationAuthorityStructureId:
+          certificationAuthorityStructureFixtures.UIMM.id,
+      },
     });
 
   randomCertificationAuthorityAccount = await prismaClient.account.create({

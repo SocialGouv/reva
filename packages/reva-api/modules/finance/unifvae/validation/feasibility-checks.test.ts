@@ -6,6 +6,7 @@ import {
   fundingRequestNoHours,
 } from "../../../../test/fixtures/funding-request";
 import { validateFeasibilityChecks } from "./feasibility-checks";
+import { certificationAuthorityStructureFixtures } from "../../../../test/fixtures/certification";
 
 let candNoFeasibilty: Candidacy,
   candFeasibiltyValidated: Candidacy,
@@ -20,7 +21,14 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "ADMISSIBLE",
-            certificationAuthority: { create: { label: "dummy" } },
+            certificationAuthority: {
+              create: {
+                label: "dummy",
+                certificationAuthorityStructureId:
+                  certificationAuthorityStructureFixtures.UIMM.id,
+              },
+            },
+
             feasibilityUploadedPdf: {
               create: {
                 feasibilityFile: {
@@ -41,7 +49,13 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "REJECTED",
-            certificationAuthority: { create: { label: "dummy" } },
+            certificationAuthority: {
+              create: {
+                label: "dummy",
+                certificationAuthorityStructureId:
+                  certificationAuthorityStructureFixtures.UIMM.id,
+              },
+            },
             feasibilityUploadedPdf: {
               create: {
                 feasibilityFile: {
@@ -62,7 +76,13 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "PENDING",
-            certificationAuthority: { create: { label: "dummy" } },
+            certificationAuthority: {
+              create: {
+                label: "dummy",
+                certificationAuthorityStructureId:
+                  certificationAuthorityStructureFixtures.UIMM.id,
+              },
+            },
             feasibilityUploadedPdf: {
               create: {
                 feasibilityFile: {

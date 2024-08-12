@@ -953,9 +953,10 @@ model TypeDiplome {
 }
 
 model CertificationAuthorityStructure {
-  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label         String          @unique @db.VarChar(200)
-  Certification Certification[]
+  id                       String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                    String                   @unique @db.VarChar(200)
+  certifications           Certification[]
+  certificationAuthorities CertificationAuthority[]
 
   @@map("certification_authority_structure")
 }
@@ -974,6 +975,8 @@ model CertificationAuthority {
   certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
   DossierDeValidation                   DossierDeValidation[]
   Jury                                  Jury[]
+  certificationAuthorityStructure       CertificationAuthorityStructure         @relation(fields: [certificationAuthorityStructureId], references: [id], onDelete: Restrict)
+  certificationAuthorityStructureId     String                                  @map("certification_authority_structure_id") @db.Uuid
 
   @@map("certification_authority")
 }

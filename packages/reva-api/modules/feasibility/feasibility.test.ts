@@ -20,6 +20,7 @@ import {
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 
 const CERTIFICATOR1_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
 const CERTIFICATOR3_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
@@ -96,6 +97,8 @@ beforeAll(async () => {
   const authority75A_firstChoice =
     await prismaClient.certificationAuthority?.create({
       data: {
+        certificationAuthorityStructureId:
+          certificationAuthorityStructureFixtures.UIMM.id,
         certificationAuthorityOnDepartment: {
           create: { departmentId: parisDepartment?.id || "" },
         },
@@ -109,6 +112,8 @@ beforeAll(async () => {
   const authority75A_secondChoice =
     await prismaClient.certificationAuthority?.create({
       data: {
+        certificationAuthorityStructureId:
+          certificationAuthorityStructureFixtures.UIMM.id,
         certificationAuthorityOnDepartment: {
           create: { departmentId: parisDepartment?.id || "" },
         },
@@ -121,6 +126,8 @@ beforeAll(async () => {
 
   const authority75B = await prismaClient.certificationAuthority?.create({
     data: {
+      certificationAuthorityStructureId:
+        certificationAuthorityStructureFixtures.UIMM.id,
       certificationAuthorityOnDepartment: {
         create: { departmentId: parisDepartment?.id || "" },
       },
