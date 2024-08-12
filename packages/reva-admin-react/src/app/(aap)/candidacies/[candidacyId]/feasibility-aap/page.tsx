@@ -1,9 +1,9 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import {
   Candidacy,
+  Certification,
   CertificationCompetenceDetails,
   DematerializedFeasibilityFile,
   DfFileAapDecision,
@@ -11,21 +11,18 @@ import {
   FeasibilityDecision,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import { useParams } from "next/navigation";
 import { AttachmentsCard } from "./_components/AttachmentsCard";
+import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { DecisionCard } from "./_components/DecisionCard";
 import DffSummary from "./_components/DffSummary/DffSummary";
+import { EligibilitySection } from "./_components/EligibilitySection";
 import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
 
 const AapFeasibilityPage = () => {
-  const { candidacyId } = useParams<{
-    candidacyId: string;
-  }>();
-
   const {
     certification,
     dematerializedFeasibilityFile,
@@ -74,53 +71,19 @@ const AapFeasibilityPage = () => {
       </p>
       {queryStatus === "success" && (
         <ul className="flex flex-col gap-8">
-          <DefaultCandidacySectionCard
-            title="Certification visée"
-            titleIconClass="fr-icon-award-fill"
-            isEditable={isFeasibilityEditable}
-            status={
-              dematerializedFeasibilityFile?.certificationPartComplete
-                ? "COMPLETED"
-                : "TO_COMPLETE"
+          <EligibilitySection
+            eligibilityRequirement={
+              dematerializedFeasibilityFile?.eligibilityRequirement
             }
-            buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
-          >
-            <p className="text-xl font-bold mb-2">{certification?.label}</p>
-            <p className="text-xs mb-2 text-dsfr-light-text-mention-grey">
-              RNCP {certification?.codeRncp}
-            </p>
-            {dematerializedFeasibilityFile?.option && (
-              <p>
-                Option du parcours :{" "}
-                <span className="block font-medium">
-                  {dematerializedFeasibilityFile?.option}
-                </span>
-              </p>
-            )}
-            <div className="flex flew-col gap-12">
-              {dematerializedFeasibilityFile?.firstForeignLanguage && (
-                <p>
-                  Langue vivante 1 :{" "}
-                  <span className="block font-medium">
-                    {dematerializedFeasibilityFile?.firstForeignLanguage}
-                  </span>
-                </p>
-              )}
-              {dematerializedFeasibilityFile?.secondForeignLanguage && (
-                <p>
-                  Langue vivante 2 :{" "}
-                  <span className="block font-medium">
-                    {dematerializedFeasibilityFile?.secondForeignLanguage}
-                  </span>
-                </p>
-              )}
-            </div>
-            <p className="mb-0">
-              {isCertificationPartial
-                ? "Un ou plusieurs bloc(s) de compétences visé(s)"
-                : "La certification dans sa totalité"}
-            </p>
-          </DefaultCandidacySectionCard>
+          />
+          <CertificationSection
+            isCertificationPartial={!!isCertificationPartial}
+            dematerializedFeasibilityFile={
+              dematerializedFeasibilityFile as DematerializedFeasibilityFile
+            }
+            certification={certification as Certification}
+            isFeasibilityEditable={isFeasibilityEditable}
+          />
           <CompetenciesBlocksSection
             blocsDeCompetences={
               dematerializedFeasibilityFile?.blocsDeCompetences as DffCertificationCompetenceBloc[]

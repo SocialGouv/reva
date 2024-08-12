@@ -21,6 +21,13 @@ type DematerializedFeasibilityFile {
   isReadyToBeSentToCandidate: Boolean!
   isReadyToBeSentToCertificationAuthority: Boolean!
   candidateConfirmationAt: Timestamp
+  eligibilityRequirement: DFFEligibilityRequirement
+  eligibilityValidUntil: Timestamp
+}
+
+enum DFFEligibilityRequirement {
+  FULL_ELIGIBILITY_REQUIREMENT
+  PARTIAL_ELIGIBILITY_REQUIREMENT
 }
 
 enum DFFCertificationCompetenceDetailsState {
@@ -137,6 +144,11 @@ input DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
   swornStatement: Upload!
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput {
+  eligibilityRequirement: DFFEligibilityRequirement!
+  eligibilityValidUntil: Timestamp
+}
+
 type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationInfo(
     candidacyId: ID!
@@ -187,5 +199,10 @@ type Mutation {
   dematerialized_feasibility_file_confirmCandidate(
     candidacyId: ID!
     dematerializedFeasibilityFileId: ID!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdateEligibilityRequirement(
+    candidacyId: ID!
+    input: DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput!
   ): DematerializedFeasibilityFile!
 }

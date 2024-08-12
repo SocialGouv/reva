@@ -16,6 +16,15 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompete
   }[];
 }
 
+type EligibilityRequirement =
+  | "FULL_ELIGIBILITY_REQUIREMENT"
+  | "PARTIAL_ELIGIBILITY_REQUIREMENT";
+
+export interface DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput {
+  eligibilityRequirement: EligibilityRequirement;
+  eligibilityValidUntil: number;
+}
+
 type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
 
 export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {

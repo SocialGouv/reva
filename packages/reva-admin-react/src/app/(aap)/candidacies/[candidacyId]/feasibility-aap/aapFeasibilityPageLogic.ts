@@ -86,6 +86,8 @@ const getCandidacyById = graphql(`
               name
             }
           }
+          eligibilityRequirement
+          eligibilityValidUntil
         }
       }
     }

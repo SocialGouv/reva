@@ -42,4 +42,7 @@ export const resolversSecurityMap = {
 
   "Mutation.dematerialized_feasibility_file_confirmCandidate":
     isOwnerOfCandidacy,
+
+  "Mutation.dematerialized_feasibility_file_createOrUpdateEligibilityRequirement":
+    isAdminOrCandidacyCompanion,
 };

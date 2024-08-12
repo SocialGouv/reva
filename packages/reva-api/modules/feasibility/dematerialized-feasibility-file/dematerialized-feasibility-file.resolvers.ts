@@ -11,6 +11,7 @@ import {
   DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
+  DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput,
   DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput,
   DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput,
 } from "./dematerialized-feasibility-file.types";
@@ -32,6 +33,7 @@ import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
 import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
+import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateEligibilityRequirement";
 
 const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -196,6 +198,14 @@ const unsafeResolvers = {
       confirmDematerializedFeasibilityFileByCandidate({
         dematerializedFeasibilityFileId,
       }),
+
+    dematerialized_feasibility_file_createOrUpdateEligibilityRequirement: (
+      _parent: unknown,
+      params: {
+        candidacyId: string;
+        input: DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput;
+      },
+    ) => createOrUpdateEligibilityRequirement(params),
   },
 };
 

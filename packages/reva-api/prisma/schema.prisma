@@ -1390,6 +1390,11 @@ enum DFFDecision {
   UNFAVORABLE
 }
 
+enum DFFEligibilityRequirement {
+  FULL_ELIGIBILITY_REQUIREMENT
+  PARTIAL_ELIGIBILITY_REQUIREMENT
+}
+
 model DematerializedFeasibilityFile {
   id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   firstForeignLanguage              String?                             @map("first_foreign_language")
@@ -1411,6 +1416,8 @@ model DematerializedFeasibilityFile {
   feasibility                       Feasibility                         @relation(fields: [feasibilityId], references: [id], onDelete: Cascade)
   feasibilityId                     String                              @unique @map("feasibility_id") @db.Uuid
   candidateConfirmationAt           DateTime?                           @map("candidate_confirmation_at") @db.Timestamptz(6)
+  eligibilityRequirement            DFFEligibilityRequirement?          @map("eligibility_requirement")
+  eligibilityValidUntil             DateTime?                           @map("eligibility_valid_until") @db.Timestamptz(6)
 
   @@map("dematerialized_feasibility_file")
 }
