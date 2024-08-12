@@ -252,3 +252,33 @@ export const getArticleRegionById = async (id: string) => {
     id,
   });
 };
+
+const getPrcsQuery = graphql(`
+  query getPRCs {
+    prcs(pagination: { page: 1, pageSize: 1000 }) {
+      data {
+        id
+        attributes {
+          nom
+          email
+          adresse
+          mandataire
+          region
+          telephone
+          departement {
+            data {
+              attributes {
+                nom
+                code
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+export const getPRCs = async () => {
+  return request(STRAPI_GRAPHQL_API_URL, getPrcsQuery);
+};
