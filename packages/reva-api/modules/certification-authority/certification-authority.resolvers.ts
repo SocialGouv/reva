@@ -24,6 +24,8 @@ import { transferCandidacyToAnotherCertificationAuthority } from "./features/tra
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
+import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
+import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -35,7 +37,14 @@ const unsafeResolvers = {
       getCertificationsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
+    certificationAuthorityStructure: ({
+      certificationAuthorityStructureId,
+    }: CertificationAuthority) =>
+      getCertificationAuthorityStructureById({
+        certificationAuthorityStructureId,
+      }),
   },
+
   CertificationAuthorityLocalAccount: {
     certificationAuthority: (
       parent: CertificationAuthorityLocalAccount,
@@ -52,6 +61,10 @@ const unsafeResolvers = {
       getCertificationAuthoritiesByCertificationId({
         certificationId,
       }),
+  },
+  CertificationAuthorityStructure: {
+    certifications: ({ id: certificationStructureId }: { id: string }) =>
+      getCertificationsByCertificationStructureId({ certificationStructureId }),
   },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (

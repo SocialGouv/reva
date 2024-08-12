@@ -6,6 +6,7 @@ type CertificationAuthority {
   departments: [Department!]!
   certifications: [Certification!]!
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
+  certificationAuthorityStructure: CertificationAuthorityStructure!
 }
 
 type CertificationAuthorityLocalAccount {
@@ -14,6 +15,12 @@ type CertificationAuthorityLocalAccount {
   departments: [Department!]!
   certifications: [Certification!]!
   certificationAuthority: CertificationAuthority!
+}
+
+type CertificationAuthorityStructure {
+  id: ID!
+  label: String!
+  certifications: [Certification!]!
 }
 
 type CertificationAuthorityPaginated {

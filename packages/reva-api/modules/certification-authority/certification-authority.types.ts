@@ -3,6 +3,7 @@ export interface CertificationAuthority {
   label: string;
   contactFullName: string | null;
   contactEmail: string | null;
+  certificationAuthorityStructureId: string;
 }
 
 export interface CertificationAuthorityOrLocalAccount {
