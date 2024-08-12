@@ -11,7 +11,7 @@ import { useAbsencePage } from "./absencePage.hook";
 import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
-  structureVisible: z.enum(["oui", "non"]),
+  structureCacheeDesResultatsDeRecherche: z.enum(["oui", "non"]),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -34,7 +34,8 @@ const AbsencePage = () => {
   const resetForm = useCallback(
     () =>
       reset({
-        structureVisible: organism?.fermePourAbsenceOuConges ? "non" : "oui",
+        structureCacheeDesResultatsDeRecherche:
+          organism?.fermePourAbsenceOuConges ? "oui" : "non",
       }),
     [organism?.fermePourAbsenceOuConges, reset],
   );
@@ -44,7 +45,8 @@ const AbsencePage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     await updateFermePourAbsenceOuConges.mutateAsync({
       organismId: organism?.id,
-      fermePourAbsenceOuConges: data.structureVisible === "non",
+      fermePourAbsenceOuConges:
+        data.structureCacheeDesResultatsDeRecherche === "oui",
     });
     queryClient.invalidateQueries({
       queryKey: [organism?.id],
@@ -93,15 +95,15 @@ const AbsencePage = () => {
               {
                 label: "Oui",
                 nativeInputProps: {
-                  value: "non",
-                  ...register("structureVisible"),
+                  value: "oui",
+                  ...register("structureCacheeDesResultatsDeRecherche"),
                 },
               },
               {
                 label: "Non",
                 nativeInputProps: {
-                  value: "oui",
-                  ...register("structureVisible"),
+                  value: "non",
+                  ...register("structureCacheeDesResultatsDeRecherche"),
                 },
               },
             ]}
