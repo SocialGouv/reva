@@ -54,7 +54,7 @@ const ListePrcPage = ({
               <h1 className="font-bold mb-12" style={{ fontSize: "40px" }}>
                 {article.attributes?.titre}
               </h1>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {prcs?.map((prc) => (
                   <div key={prc.id} className="flex flex-col border p-6 gap-2">
                     <h1 className="text-2xl font-bold mb-4">
