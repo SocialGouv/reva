@@ -35,34 +35,34 @@ export const confirmTrainingFormByCandidate = async ({
     candidacyId,
   });
 
-  if (candidacyCertification?.feasibilityFormat === "DEMATERIALIZED") {
-    await prismaClient.$transaction([
-      prismaClient.candidacy.update({
-        where: {
-          id: candidacyId,
-        },
-        data: {
-          feasibilityFormat: "DEMATERIALIZED",
-        },
-      }),
-      prismaClient.feasibility.updateMany({
-        where: {
-          candidacyId,
-          isActive: true,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.feasibility.create({
-        data: {
-          feasibilityFormat: "DEMATERIALIZED",
-          candidacyId,
-          isActive: true,
-        },
-      }),
-    ]);
-  }
+  const feasibilityFormat = candidacyCertification?.feasibilityFormat;
+
+  await prismaClient.$transaction([
+    prismaClient.candidacy.update({
+      where: {
+        id: candidacyId,
+      },
+      data: {
+        feasibilityFormat,
+      },
+    }),
+    prismaClient.feasibility.updateMany({
+      where: {
+        candidacyId,
+        isActive: true,
+      },
+      data: {
+        isActive: false,
+      },
+    }),
+    prismaClient.feasibility.create({
+      data: {
+        feasibilityFormat,
+        candidacyId,
+        isActive: true,
+      },
+    }),
+  ]);
 
   await logCandidacyAuditEvent({
     candidacyId,

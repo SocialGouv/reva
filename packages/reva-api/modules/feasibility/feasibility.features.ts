@@ -15,6 +15,7 @@ import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloak
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCertificationByCandidacyId } from "../candidacy/certification/features/getCertificationByCandidacyId";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
+import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
@@ -37,7 +38,6 @@ import {
   excludeRejectedArchivedAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -109,11 +109,19 @@ export const createFeasibility = async ({
     );
   }
 
-  const existingFeasibility = await prismaClient.feasibility.findFirst({
-    where: { candidacyId, isActive: true },
-  });
+  const existingFeasibilityUploadedPdf =
+    await prismaClient.feasibility.findFirst({
+      where: {
+        candidacyId,
+        isActive: true,
+        feasibilityUploadedPdf: { isNot: null },
+      },
+    });
 
-  if (existingFeasibility && existingFeasibility.decision !== "INCOMPLETE") {
+  if (
+    existingFeasibilityUploadedPdf &&
+    existingFeasibilityUploadedPdf.decision !== "INCOMPLETE"
+  ) {
     throw new Error(
       "Un dossier de faisabilité actif éxiste déjà pour cette candidature",
     );
@@ -158,9 +166,9 @@ export const createFeasibility = async ({
     );
   }
 
-  if (existingFeasibility) {
+  if (existingFeasibilityUploadedPdf) {
     await prismaClient.feasibility.update({
-      where: { id: existingFeasibility.id },
+      where: { id: existingFeasibilityUploadedPdf.id },
       data: { isActive: false },
     });
   }
