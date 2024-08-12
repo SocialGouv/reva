@@ -818,6 +818,71 @@ export interface ApiArticleRegionArticleRegion extends Schema.CollectionType {
   };
 }
 
+export interface ApiDepartementDepartement extends Schema.CollectionType {
+  collectionName: "departements";
+  info: {
+    singularName: "departement";
+    pluralName: "departements";
+    displayName: "D\u00E9partement";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    nom: Attribute.String & Attribute.Required;
+    code: Attribute.String & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::departement.departement",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::departement.departement",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPrcPrc extends Schema.CollectionType {
+  collectionName: "prcs";
+  info: {
+    singularName: "prc";
+    pluralName: "prcs";
+    displayName: "PRC";
+    description: "";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    nom: Attribute.String & Attribute.Required;
+    email: Attribute.Email & Attribute.Required;
+    adresse: Attribute.String & Attribute.Required;
+    region: Attribute.String;
+    telephone: Attribute.String;
+    mandataire: Attribute.String;
+    departement: Attribute.Relation<
+      "api::prc.prc",
+      "oneToOne",
+      "api::departement.departement"
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<"api::prc.prc", "oneToOne", "admin::user"> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<"api::prc.prc", "oneToOne", "admin::user"> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiRegionRegion extends Schema.CollectionType {
   collectionName: "regions";
   info: {
@@ -1056,6 +1121,8 @@ declare module "@strapi/types" {
       "api::article-d-aide.article-d-aide": ApiArticleDAideArticleDAide;
       "api::article-faq.article-faq": ApiArticleFaqArticleFaq;
       "api::article-region.article-region": ApiArticleRegionArticleRegion;
+      "api::departement.departement": ApiDepartementDepartement;
+      "api::prc.prc": ApiPrcPrc;
       "api::region.region": ApiRegionRegion;
       "api::section-d-aide.section-d-aide": ApiSectionDAideSectionDAide;
       "api::section-faq.section-faq": ApiSectionFaqSectionFaq;
