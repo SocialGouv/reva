@@ -32,9 +32,6 @@ export function injectCsvRows<T, U>({
         })
         .on("data", (row: T) => {
           const t = transform(row);
-          console.log(
-            `---- ${(t as any).create.id} -- ${(t as any).create.label}`,
-          );
           injectArgs.push(t);
         })
         .on("end", async () => {

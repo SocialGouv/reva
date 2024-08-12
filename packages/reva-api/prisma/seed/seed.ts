@@ -85,7 +85,7 @@ const executeSeed = async () => {
   await addExtensions(prisma);
 };
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 main()
   .catch((e) => {

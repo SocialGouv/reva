@@ -4,6 +4,7 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "_prisma_migrations",
   "basic_skill",
   "certification",
+  "certification_authority_structure",
   "certification_on_ccn",
   "certification_on_domaine",
   "convention_collective",

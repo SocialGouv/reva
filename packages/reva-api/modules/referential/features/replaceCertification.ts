@@ -16,6 +16,14 @@ export const replaceCertification = async ({
       isEqual(today, replaceCertificationInput.availableAt)) &&
     isBefore(today, replaceCertificationInput.expiresAt);
 
+  const oldCertification = await prismaClient.certification.findUnique({
+    where: { id: replaceCertificationInput.certificationId },
+  });
+
+  if (!oldCertification) {
+    throw new Error("Ancienne certification non trouvée");
+  }
+
   const newCertification = await prismaClient.certification.create({
     data: {
       label: replaceCertificationInput.label,
@@ -47,6 +55,9 @@ export const replaceCertification = async ({
             }),
           ),
         },
+      },
+      certificationAuthorityStructure: {
+        connect: { id: oldCertification.certificationAuthorityStructureId },
       },
     },
   });
