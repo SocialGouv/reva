@@ -50,6 +50,7 @@ const getCandidacyByIdFunding = graphql(`
         isActive
       }
       candidacyDropOut {
+        createdAt
         droppedOutAt
       }
       certificateSkills
