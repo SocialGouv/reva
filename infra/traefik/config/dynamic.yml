@@ -174,7 +174,7 @@ http:
     add-security-headers-staging:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; connect-src 'self' https://api.produktly.com https://sessions.bugsnag.com https://strapi.vae.gouv.fr https://matomo.fabrique.social.gouv.fr https://auth.reva.incubateur.net;"
+          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; connect-src 'self' https://api.produktly.com https://sessions.bugsnag.com https://strapi.vae.gouv.fr https://matomo.fabrique.social.gouv.fr https://auth.reva.incubateur.net; font-src 'self' data:;"
           X-Frame-Options: SAMEORIGIN
           X-Content-Type-Options: nosniff
 
