@@ -170,7 +170,7 @@ http:
     add-security-headers-for-staging:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "default-src 'none'; frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
+          Content-Security-Policy: "default-src 'none'; frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https:; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'; connect-src 'self' https://strapi.vae.gouv.fr;"
           X-Frame-Options: SAMEORIGIN
           X-Content-Type-Options: nosniff
     removePath:
