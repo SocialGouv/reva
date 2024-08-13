@@ -32,7 +32,7 @@ export const EligibilitySection = ({
   return (
     <DefaultCandidacySectionCard
       title="Recevabilité du candidat"
-      titleIconClass="fr-icon-folder-fill"
+      titleIconClass="ri-folder-check-fill"
       status={isEligibilityPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/eligibility`}
       isEditable
