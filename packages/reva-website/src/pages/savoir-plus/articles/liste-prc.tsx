@@ -1,10 +1,14 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import {
   GetArticleDAideQuery,
   GetPrCsQuery,
 } from "@/graphql/generated/graphql";
 import { getArticleDAide, getPRCs } from "@/utils/strapiQueries";
 import Head from "next/head";
+import { usePathname, useSearchParams } from "next/navigation";
+import router from "next/router";
+import { useMemo } from "react";
 
 const ListePrcPage = ({
   prcsResponse,
@@ -16,7 +20,24 @@ const ListePrcPage = ({
   const prcs = prcsResponse?.prcs?.data;
   const article = articleResponse?.articleDAides?.data[0];
 
-  if (!article || !prcs) return null;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchFilter = searchParams.get("search") || "";
+
+  const displayedPrcs = useMemo(() => {
+    if (searchFilter) {
+      const subFilter = searchFilter.substring(0, 2);
+      return prcs?.filter((prc) =>
+        prc.attributes?.departement?.data?.attributes?.code?.startsWith(
+          subFilter,
+        ),
+      );
+    } else {
+      return prcs;
+    }
+  }, [searchFilter, prcs]);
+
+  if (!article || !prcs || !displayedPrcs) return null;
   return (
     <>
       <Head>
@@ -51,11 +72,32 @@ const ListePrcPage = ({
         {
           <div className="flex flex-col sm:flex-row w-full gap-8 sm:gap-16 fr-container p-32 pt-16">
             <div>
-              <h1 className="font-bold mb-12" style={{ fontSize: "40px" }}>
-                {article.attributes?.titre}
-              </h1>
+              <h1 className="font-bold mb-12">{article.attributes?.titre}</h1>
+              <div className="py-8 px-10 shadow-lifted mb-12 border-b-fvaeOrange border-b-4">
+                <p className="text-[32px] font-bold">
+                  Recherchez un conseiller proche de chez vous
+                </p>
+                <SearchFilterBar
+                  big
+                  placeholder="Votre code postal"
+                  searchFilter={searchFilter}
+                  resultCount={displayedPrcs.length}
+                  onSearchFilterChange={(filter) => {
+                    const queryParams = new URLSearchParams(searchParams);
+                    if (filter) {
+                      queryParams.set("search", filter);
+                    } else {
+                      queryParams.delete("search");
+                    }
+
+                    const path = `${pathname}?${queryParams.toString()}`;
+                    // Use shallow to avoid re-running getServerSideProps and refetching from Strapi the PRC list we already have
+                    router.push(path, path, { shallow: true });
+                  }}
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {prcs?.map((prc) => (
+                {displayedPrcs?.map((prc) => (
                   <div key={prc.id} className="flex flex-col border p-6 gap-2">
                     <h1 className="text-2xl font-bold mb-4">
                       {prc.attributes?.nom}
