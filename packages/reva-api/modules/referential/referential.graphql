@@ -72,27 +72,6 @@ enum CertificationStatus {
   AVAILABLE
 }
 
-type Certification {
-  id: ID!
-  label: String!
-  summary: String
-  level: Int!
-  activities: String
-  activityArea: String
-  accessibleJobType: String
-  abilities: String
-  codeRncp: String!
-  status: CertificationStatus!
-  typeDiplome: TypeDiplome!
-  certificationAuthorityTag: String
-  degree: Degree!
-  domaines: [Domaine!]!
-  conventionsCollectives: [ConventionCollective!]!
-  availableAt: Timestamp!
-  expiresAt: Timestamp!
-  competenceBlocs: [CertificationCompetenceBloc!]!
-}
-
 enum FinanceModule {
   unireva
   unifvae
