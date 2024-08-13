@@ -79,6 +79,9 @@ const AapFeasibilityPage = () => {
             eligibilityRequirement={
               dematerializedFeasibilityFile?.eligibilityRequirement
             }
+            eligibilityValidUntil={
+              dematerializedFeasibilityFile?.eligibilityValidUntil as any as Date | null
+            }
           />
           <CertificationSection
             isCertificationPartial={!!isCertificationPartial}

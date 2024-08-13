@@ -1,5 +1,7 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { format } from "date-fns";
 import { useParams } from "next/navigation";
 
 const EligibiltyBadge = ({
@@ -20,11 +22,13 @@ const EligibiltyBadge = ({
 
 export const EligibilitySection = ({
   eligibilityRequirement,
+  eligibilityValidUntil,
 }: {
   eligibilityRequirement?:
     | "FULL_ELIGIBILITY_REQUIREMENT"
     | "PARTIAL_ELIGIBILITY_REQUIREMENT"
     | null;
+  eligibilityValidUntil: Date | null;
 }) => {
   const { candidacyId } = useParams();
   const isEligibilityPartComplete = !!eligibilityRequirement;
@@ -38,7 +42,21 @@ export const EligibilitySection = ({
       isEditable
     >
       {isEligibilityPartComplete ? (
-        <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
+        <>
+          <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
+          {eligibilityValidUntil && (
+            <>
+              <p className="mb-0 mt-4">Date de fin de validité</p>
+              <p className="font-medium mb-4">
+                {format(eligibilityValidUntil, "dd/MM/yyyy")}
+              </p>
+              <CallOut className="mb-0">
+                Le candidat s'engage à respecter le délai de fin de validité de
+                la recevabilité
+              </CallOut>
+            </>
+          )}
+        </>
       ) : (
         <p>
           Renseignez la situation dans laquelle se trouve votre candidat
