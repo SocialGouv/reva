@@ -19,6 +19,7 @@ import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { z } from "zod";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import { format, isAfter, isBefore, sub } from "date-fns";
 
 const errorNumber = "Veuillez saisir une valeur numérique.";
 
@@ -237,8 +238,23 @@ const FundingPage = () => {
           </p>
         )}
       </div>
+      {!isReadOnly &&
+        candidacy?.candidacyDropOut &&
+        isAfter(
+          candidacy?.candidacyDropOut?.createdAt,
+          sub(new Date(), { months: 6 }),
+        ) && (
+          <Alert
+            data-test="funding-request-not-available"
+            className="mt-12 mb-6"
+            severity="error"
+            title="La demande de prise en charge n’est pas encore disponible"
+            description="Vous y aurez accès 6 mois après la mise en abandon du candidat."
+          />
+        )}
       <FormProvider {...methods}>
         <form
+          data-test="funding-form"
           className="flex flex-col"
           onSubmit={handleSubmit(onSubmit)}
           onReset={(e) => {

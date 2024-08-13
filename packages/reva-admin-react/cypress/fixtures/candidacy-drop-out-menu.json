@@ -1,0 +1,43 @@
+{
+  "data": {
+    "candidacyMenu_getCandidacyMenu": {
+      "menuHeader": [
+        {
+          "label": "Résumé de la candidature",
+          "url": "/admin2/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary",
+          "status": "ACTIVE_WITHOUT_HINT"
+        }
+      ],
+      "mainMenu": [
+        {
+          "label": "Abandon du candidat confirmé le 7 février 2024",
+          "url": "/admin2/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/drop-out",
+          "status": "ACTIVE_WITHOUT_HINT"
+        },
+        {
+          "label": "Demande de prise en charge",
+          "url": "/admin2/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/funding",
+          "status": "ACTIVE_WITH_EDIT_HINT"
+        },
+        {
+          "label": "Demande de paiement",
+          "url": "/admin2/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/payment/unifvae/invoice",
+          "status": "INACTIVE"
+        }
+      ],
+      "menuFooter": [
+        {
+          "label": "Journal des actions",
+          "url": "/admin2/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/logs",
+          "status": "ACTIVE_WITHOUT_HINT"
+        }
+      ]
+    },
+    "getCandidacyById": {
+      "candidate": {
+        "lastname": "Doe",
+        "firstname": "Alice"
+      }
+    }
+  }
+}

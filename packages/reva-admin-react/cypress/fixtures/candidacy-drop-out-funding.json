@@ -1,0 +1,79 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "financeModule": "unifvae",
+      "candidacyStatuses": [
+        {
+          "status": "PROJET",
+          "isActive": false
+        },
+        {
+          "status": "VALIDATION",
+          "isActive": false
+        },
+        {
+          "status": "PRISE_EN_CHARGE",
+          "isActive": false
+        },
+        {
+          "status": "PARCOURS_ENVOYE",
+          "isActive": false
+        },
+        {
+          "status": "PARCOURS_CONFIRME",
+          "isActive": false
+        },
+        {
+          "status": "DOSSIER_FAISABILITE_ENVOYE",
+          "isActive": false
+        },
+        {
+          "status": "DOSSIER_FAISABILITE_INCOMPLET",
+          "isActive": true
+        }
+      ],
+      "candidacyDropOut": {
+        "createdAt": 1707305319452,
+        "droppedOutAt": 0
+      },
+      "certificateSkills": "RNCP A",
+      "otherTraining": "Texte B",
+      "basicSkills": [
+        {
+          "id": "d2eac236-723b-4bb8-ae4c-5d16d320ec72",
+          "label": "Usage et communication numérique"
+        }
+      ],
+      "mandatoryTrainings": [
+        {
+          "id": "2790458c-040f-417d-b081-1d74b715ff9b",
+          "label": "Equipier de Première Intervention"
+        },
+        {
+          "id": "16ffd197-b95c-431c-890b-77bf58c51c6b",
+          "label": "Prévention et secours civiques de niveau 1 (PSC1)"
+        },
+        {
+          "id": "378724fb-ba6c-4686-92d9-c48b92534374",
+          "label": "Brevet national de sécurité et de sauvetage aquatique (BNSSA)"
+        }
+      ],
+      "organism": {
+        "label": "Organism 1"
+      },
+      "candidate": {
+        "lastname": "Doe",
+        "firstname": "Alice",
+        "firstname2": null,
+        "firstname3": null,
+        "gender": null,
+        "email": "alice.doe@example.com",
+        "phone": "06000000"
+      },
+      "certification": {
+        "label": "CQP Technicien de la qualité"
+      },
+      "fundingRequestUnifvae": null
+    }
+  }
+}

@@ -73,6 +73,7 @@ type Candidacy {
 }
 
 type CandidacyDropOut {
+  createdAt: Timestamp!
   dropOutReason: DropOutReason!
   droppedOutAt: Timestamp!
   otherReasonContent: String
