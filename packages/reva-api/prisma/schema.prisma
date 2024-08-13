@@ -62,6 +62,7 @@ model Certification {
   ActiveOrganismByAvailableCertification            ActiveOrganismByAvailableCertification[]
   certificationAuthorityStructure                   CertificationAuthorityStructure                     @relation(fields: [certificationAuthorityStructureId], references: [id])
   certificationAuthorityStructureId                 String                                              @map("certification_authority_structure_id") @db.Uuid
+  Candidacy                                         Candidacy[]
 
   @@index([typeDiplomeId])
   @@map("certification")
@@ -150,6 +151,8 @@ model Candidacy {
   reminderToOrganismDVDeadlineExceededSentAt DateTime?                               @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
   feasibilityFormat                          FeasibilityFormat                       @default(UPLOADED_PDF) @map("feasibility_format")
   certificationAuthorityTransferReason       String?                                 @map("certification_authority_transfer_reason")
+  certification                              Certification?                          @relation(fields: [certificationId], references: [id], onDelete: Restrict)
+  certificationId                            String?                                 @map("certification_id") @db.Uuid
 
   @@index([organismId])
   @@index([candidateId])
