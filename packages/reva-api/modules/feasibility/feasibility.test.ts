@@ -14,13 +14,13 @@ import {
 import { FastifyInstance } from "fastify";
 
 import { prismaClient } from "../../prisma/client";
+import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 import {
   candidateJPL,
   organismIperia,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 
 const CERTIFICATOR1_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
 const CERTIFICATOR3_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
@@ -163,7 +163,7 @@ beforeAll(async () => {
   });
 });
 
-async function createFeasibility(account: Account) {
+async function createPendingFeasibility(account: Account) {
   return await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
@@ -172,6 +172,7 @@ async function createFeasibility(account: Account) {
           feasibilityFileId: feasibilityFile.id,
         },
       },
+      decision: "PENDING",
       certificationAuthorityId: account.certificationAuthorityId ?? "",
     },
   });
@@ -203,9 +204,9 @@ afterEach(async () => {
 });
 
 test("should count all (2) feasibilities for admin user", async () => {
-  await createFeasibility(account75A_firstChoice);
+  await createPendingFeasibility(account75A_firstChoice);
 
-  await createFeasibility(account75A_secondChoice);
+  await createPendingFeasibility(account75A_secondChoice);
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -227,8 +228,8 @@ test("should count all (2) feasibilities for admin user", async () => {
 });
 
 test("should count all (1) available feasibility for certificator user even if other exists on the same scope", async () => {
-  await createFeasibility(account75A_firstChoice);
-  await createFeasibility(account75A_secondChoice);
+  await createPendingFeasibility(account75A_firstChoice);
+  await createPendingFeasibility(account75A_secondChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -254,7 +255,7 @@ test("should count all (1) available feasibility for certificator user even if o
 });
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
-  await createFeasibility(account75A_firstChoice);
+  await createPendingFeasibility(account75A_firstChoice);
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -276,7 +277,7 @@ test("should count no available feasibility for certificator user since he doesn
 });
 
 test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
-  const feasibility = await createFeasibility(account75A_firstChoice);
+  const feasibility = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -305,7 +306,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
 });
 
 test("should return a feasibility error for certificator 3 since he doesn't handle it", async () => {
-  const feasiblity = await createFeasibility(account75A_firstChoice);
+  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -329,7 +330,7 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
 });
 
 test("should return all (1) available feasibility for certificateur user", async () => {
-  const feasibility = await createFeasibility(account75A_firstChoice);
+  const feasibility = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -358,7 +359,7 @@ test("should return all (1) available feasibility for certificateur user", async
 });
 
 test("should count 1 pending feasibility for admin user", async () => {
-  await createFeasibility(account75A_firstChoice);
+  await createPendingFeasibility(account75A_firstChoice);
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -405,7 +406,7 @@ const postFeasibilityDecision = ({
 };
 
 test("should validate a feasibility since certificator is allowed to do so", async () => {
-  const feasiblity = await createFeasibility(account75A_firstChoice);
+  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -430,7 +431,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
 });
 
 test("should not validate a feasibility since certificator 2 doesn't handle it, even if he is on the same scope as certificator 1", async () => {
-  const feasiblity = await createFeasibility(account75A_firstChoice);
+  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -448,7 +449,7 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
 });
 
 test("should not validate a feasibility since certificator 3 doesn't handle it", async () => {
-  const feasiblity = await createFeasibility(account75A_firstChoice);
+  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -466,7 +467,7 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
 });
 
 test("should reject a feasibility since certificator is allowed to do so", async () => {
-  const feasiblity = await createFeasibility(account75A_firstChoice);
+  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
@@ -496,7 +497,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
 });
 
 test("should not reject a feasibility since certificator 3 doesn't handle it", async () => {
-  const feasiblity = await createFeasibility(account75B);
+  const feasiblity = await createPendingFeasibility(account75B);
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
     ileDeFranceCandidacyData,
