@@ -20,6 +20,12 @@
       "type": "string",
       "required": true,
       "regex": "^\\d{2,3}|\\d+[A-B]+$"
+    },
+    "prc": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::prc.prc",
+      "inversedBy": "departement"
     }
   }
 }

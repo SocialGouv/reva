@@ -832,6 +832,11 @@ export interface ApiDepartementDepartement extends Schema.CollectionType {
   attributes: {
     nom: Attribute.String & Attribute.Required;
     code: Attribute.String & Attribute.Required;
+    prc: Attribute.Relation<
+      "api::departement.departement",
+      "oneToOne",
+      "api::prc.prc"
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
