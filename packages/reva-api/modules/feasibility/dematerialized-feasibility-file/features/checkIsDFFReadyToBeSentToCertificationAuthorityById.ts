@@ -13,15 +13,26 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
     aapDecision,
     swornStatementFileId,
     candidateConfirmationAt,
+    eligibilityRequirement,
   } = dematerializedFeasibilityFile;
 
-  return (
+  let isDFFReadyToBeSentToCertificationAuthority =
     attachmentsPartComplete &&
     certificationPartComplete &&
-    competenceBlocsPartCompletion === "COMPLETED" &&
     prerequisitesPartComplete &&
-    !!aapDecision &&
+    !!eligibilityRequirement &&
     !!swornStatementFileId &&
-    !!candidateConfirmationAt
-  );
+    !!candidateConfirmationAt;
+
+  const isEligibilityTotal =
+    eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT";
+
+  if (isEligibilityTotal) {
+    isDFFReadyToBeSentToCertificationAuthority =
+      isDFFReadyToBeSentToCertificationAuthority &&
+      competenceBlocsPartCompletion === "COMPLETED" &&
+      !!aapDecision;
+  }
+
+  return isDFFReadyToBeSentToCertificationAuthority;
 };

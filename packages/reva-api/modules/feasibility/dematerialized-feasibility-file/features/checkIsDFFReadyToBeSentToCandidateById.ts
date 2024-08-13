@@ -11,13 +11,24 @@ export const checkIsDFFReadyToBeSentToCandidateById = async ({
     competenceBlocsPartCompletion,
     prerequisitesPartComplete,
     aapDecision,
+    eligibilityRequirement,
   } = dematerializedFeasibilityFile;
 
-  return (
+  let isDFFReadyToBeSentToCandidate =
     attachmentsPartComplete &&
     certificationPartComplete &&
-    competenceBlocsPartCompletion === "COMPLETED" &&
     prerequisitesPartComplete &&
-    !!aapDecision
-  );
+    !!eligibilityRequirement;
+
+  const isEligibilityTotal =
+    eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT";
+
+  if (isEligibilityTotal) {
+    isDFFReadyToBeSentToCandidate =
+      isDFFReadyToBeSentToCandidate &&
+      competenceBlocsPartCompletion === "COMPLETED" &&
+      !!aapDecision;
+  }
+
+  return isDFFReadyToBeSentToCandidate;
 };
