@@ -126,16 +126,16 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
     }
   });
 
-  let feasibiltyHistory: FeasibilityHistory[] = feasibility?.history || [];
+  let feasibilityHistory: FeasibilityHistory[] = feasibility?.history || [];
   if (feasibility?.decision == "INCOMPLETE") {
-    feasibiltyHistory = [
+    feasibilityHistory = [
       {
         id: feasibility.id,
         decision: feasibility.decision,
         decisionComment: feasibility.decisionComment,
         decisionSentAt: feasibility.decisionSentAt,
       },
-      ...feasibiltyHistory,
+      ...feasibilityHistory,
     ];
   }
 
@@ -236,8 +236,8 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
           />
         )}
 
-        {feasibiltyHistory.length > 0 && (
-          <FeasibilityDecisionHistory history={feasibiltyHistory} />
+        {feasibilityHistory.length > 0 && (
+          <FeasibilityDecisionHistory history={feasibilityHistory} />
         )}
 
         <fieldset>
