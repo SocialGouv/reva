@@ -35,12 +35,14 @@ export const CompetenciesBlocksSection = ({
   certificationCompetenceDetails,
   blocsDeCompetences,
   disabled,
+  disabledNoticeText,
 }: {
   isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   blocsDeCompetences: DffCertificationCompetenceBloc[];
   disabled: boolean;
+  disabledNoticeText: string;
 }) => {
   const { candidacyId } = useParams();
 
@@ -86,12 +88,7 @@ export const CompetenciesBlocksSection = ({
           ))}
         </ul>
       )}
-      {disabled && (
-        <SmallNotice>
-          Vous devez d'abord détailler la certification visée avant d'intégrer
-          les prérequis.
-        </SmallNotice>
-      )}
+      {disabled && <SmallNotice>{disabledNoticeText}</SmallNotice>}
     </CandidacySectionCard>
   );
 };

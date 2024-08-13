@@ -39,6 +39,10 @@ const AapFeasibilityPage = () => {
     feasibility?.decision === "ADMISSIBLE" ||
     feasibility?.decision === "REJECTED";
 
+  const isEligibilityRequirementPartial =
+    dematerializedFeasibilityFile?.eligibilityRequirement ===
+    "PARTIAL_ELIGIBILITY_REQUIREMENT";
+
   if (!feasibility) {
     return null;
   }
@@ -94,7 +98,15 @@ const AapFeasibilityPage = () => {
             competenceBlocsPartCompletion={
               dematerializedFeasibilityFile?.competenceBlocsPartCompletion
             }
-            disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
+            disabled={
+              !dematerializedFeasibilityFile?.certificationPartComplete ||
+              isEligibilityRequirementPartial
+            }
+            disabledNoticeText={
+              isEligibilityRequirementPartial
+                ? "Vous n'avez pas besoin de compléter cette catégorie puisque votre candidat a déjà une recevabilité favorable en cours."
+                : "Vous devez d'abord détailler la certification visée avant d'intégrer les prérequis."
+            }
             isEditable={isFeasibilityEditable}
           />
           <PrerequisitesCard
@@ -115,6 +127,7 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.aapDecisionComment as string | null
             }
             isEditable={isFeasibilityEditable}
+            disabled={isEligibilityRequirementPartial}
           />
           <AttachmentsCard
             attachmentsPartComplete={
