@@ -46,12 +46,13 @@ const CertificationPage = () => {
       completion: candidacy?.isCertificationPartial
         ? ("PARTIAL" as const)
         : ("COMPLETE" as const),
-      competenceBlocs: certification?.competenceBlocs.map((b) => ({
+      competenceBlocs: certification?.competenceBlocs?.map((b) => ({
         competenceBlocId: b.id,
         label: b.code ? `${b.code} - ${b.label}` : b.label,
-        checked: dematerializedFeasibilityFile?.blocsDeCompetences.some(
-          (bc) => bc.certificationCompetenceBloc.id === b.id,
-        ) || candidacy?.isCertificationPartial === false,
+        checked:
+          dematerializedFeasibilityFile?.blocsDeCompetences.some(
+            (bc) => bc.certificationCompetenceBloc.id === b.id,
+          ) || candidacy?.isCertificationPartial === false,
       })),
     }),
     [
