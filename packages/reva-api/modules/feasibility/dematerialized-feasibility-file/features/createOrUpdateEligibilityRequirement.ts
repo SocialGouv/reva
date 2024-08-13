@@ -20,17 +20,41 @@ export const createOrUpdateEligibilityRequirement = async ({
     throw new Error("Dossier de faisabilité dématérialisé non trouvé");
   }
 
-  await prismaClient.dematerializedFeasibilityFile.update({
-    where: {
-      id: dFF.id,
-    },
-    data: {
-      eligibilityRequirement,
-      eligibilityValidUntil: eligibilityValidUntil
-        ? new Date(eligibilityValidUntil).toISOString()
-        : null,
-    },
-  });
+  const eligibilityValidUntilDate = eligibilityValidUntil
+    ? new Date(eligibilityValidUntil).toISOString()
+    : null;
+
+  const hasChangedEligibilityRequirement =
+    dFF.eligibilityRequirement !== eligibilityRequirement;
+  const hasChangedEligibilityValidUntil =
+    dFF.eligibilityValidUntil !== eligibilityValidUntilDate;
+
+  if (hasChangedEligibilityRequirement) {
+    await prismaClient.dematerializedFeasibilityFile.update({
+      where: {
+        id: dFF.id,
+      },
+      data: {
+        eligibilityRequirement,
+        eligibilityValidUntil: eligibilityValidUntilDate,
+        aapDecision: null,
+        aapDecisionComment: null,
+        dffCertificationCompetenceDetails: {
+          deleteMany: {},
+        },
+        competenceBlocsPartCompletion: "TO_COMPLETE",
+      },
+    });
+  } else if (hasChangedEligibilityValidUntil) {
+    await prismaClient.dematerializedFeasibilityFile.update({
+      where: {
+        id: dFF.id,
+      },
+      data: {
+        eligibilityValidUntil: eligibilityValidUntilDate,
+      },
+    });
+  }
 
   if (dFF.sentToCandidateAt) {
     await resetDFFSentToCandidateState(dFF);
