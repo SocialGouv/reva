@@ -22,21 +22,21 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-staging
 
     site-web-staging-subscription:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
       service: site-web-staging-subscription
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-staging
 
     espace-pro-react-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-staging
 
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
@@ -49,7 +49,7 @@ http:
       service: app-candidate-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-staging
 
     api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
@@ -63,7 +63,7 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-staging
 
     # Should be removed after the creation of the /api path
     ping-staging:
@@ -95,14 +95,14 @@ http:
       service: noop@internal
       middlewares:
         - redirect-www
-        - add-security-headers
+        - add-security-headers-production
 
     vae-gouv-main-page:
       rule: "Host(`vae.gouv.fr`)"
       service: site-web-production
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-production
 
     auth-vae-gouv-fr:
       rule: "Host(`auth.vae.gouv.fr`)"
@@ -122,7 +122,7 @@ http:
       service: espace-pro-react-production
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-production
 
     app-candidat-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
@@ -135,7 +135,7 @@ http:
       service: app-candidate-production
       middlewares:
         - removeHeader
-        - add-security-headers
+        - add-security-headers-production
 
     api-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/api`)"
@@ -157,12 +157,20 @@ http:
         customResponseHeaders:
           x-request-id: "" # remove
           strict-transport-security: ""
+
     add-anti-clickjacking-headers:
       headers:
         customResponseHeaders:
           Content-Security-Policy: "frame-ancestors 'self';"
           X-Frame-Options: SAMEORIGIN
-    add-security-headers:
+
+    add-security-headers-production:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none';img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
+          X-Frame-Options: SAMEORIGIN
+
+    add-security-headers-staging:
       headers:
         customResponseHeaders:
           Content-Security-Policy: "frame-ancestors 'self'; object-src 'none';img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
