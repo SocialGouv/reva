@@ -136,7 +136,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
     className="fr-sidemenu bg-white md:h-full w-full md:max-w-[300px] mb-2 flex-shrink-0"
   >
     <div className="h-full md:border-r mr-1 lg:mr-0">
-      <div className="fr-sidemenu__inner shadow-none pr-0 h-full md:pb-24">
+      <div className="fr-sidemenu__inner shadow-none pr-2 h-full md:pb-24">
         <button
           className="fr-sidemenu__btn"
           aria-controls="fr-sidemenu-wrapper"

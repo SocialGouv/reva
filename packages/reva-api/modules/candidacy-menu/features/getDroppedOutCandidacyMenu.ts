@@ -7,6 +7,7 @@ import {
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
+import { format } from "date-fns";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
@@ -23,8 +24,12 @@ export const getDroppedOutCandidacyMenu = async ({
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
+  const label = candidacy.candidacyDropOut
+    ? `Abandon du candidat confirmé le ${format(candidacy.candidacyDropOut.createdAt, "d MMMM yyyy")}`
+    : "Abandon du candidat confirmé";
+
   const getDropOutMenuEntry = (): CandidacyMenuEntry => ({
-    label: "Abandon du candidat confirmé",
+    label,
     url: buildUrl({ suffix: "drop-out" }),
     status: "ACTIVE_WITHOUT_HINT",
   });
