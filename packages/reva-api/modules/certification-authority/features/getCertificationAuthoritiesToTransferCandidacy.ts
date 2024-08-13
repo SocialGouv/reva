@@ -17,7 +17,6 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
       id: candidacyId,
     },
     include: {
-      certificationsAndRegions: true,
       Feasibility: true,
     },
   });
@@ -26,11 +25,7 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
     throw new Error("Candidacy not found");
   }
 
-  const candidacyActiveCertification = candidacy.certificationsAndRegions.find(
-    (certification) => certification.isActive,
-  );
-
-  if (!candidacyActiveCertification) {
+  if (!candidacy.certificationId) {
     throw new Error("Candidacy has no active certification");
   }
 
@@ -48,7 +43,7 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
     },
     certificationAuthorityOnCertification: {
       some: {
-        certificationId: candidacyActiveCertification.certificationId,
+        certificationId: candidacy.certificationId,
       },
     },
   };

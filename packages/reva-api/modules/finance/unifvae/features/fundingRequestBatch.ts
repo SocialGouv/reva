@@ -11,11 +11,8 @@ export const createBatchFromFundingRequestUnifvae = async (
       include: {
         candidacy: {
           select: {
-            certificationsAndRegions: {
-              where: { isActive: true },
-              include: { certification: { select: { rncpId: true } } },
-            },
             organism: { select: { siret: true } },
+            certification: { select: { rncpId: true } },
           },
         },
         basicSkills: {
@@ -73,9 +70,7 @@ export const createBatchFromFundingRequestUnifvae = async (
       content: {
         NumAction: fundingRequest.numAction,
         SiretAP: fundingRequest.candidacy?.organism?.siret,
-        Certification:
-          fundingRequest.candidacy?.certificationsAndRegions[0]?.certification
-            .rncpId,
+        Certification: fundingRequest.candidacy?.certification?.rncpId,
         NomCandidat: fundingRequest.candidateLastname,
         PrenomCandidat1: fundingRequest.candidateFirstname,
         PrenomCandidat2: fundingRequest.candidateSecondname,

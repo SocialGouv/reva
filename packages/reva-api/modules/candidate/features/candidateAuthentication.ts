@@ -86,12 +86,16 @@ const confirmRegistration = async ({
     }))
   ) {
     const certification = await getCertificationById({ certificationId });
+    if (!certification) {
+      throw new Error("Certification non trouvée");
+    }
+
     await updateCertification({
       candidacyId: candidateWithCandidacy.candidacies[0].id,
       author: "candidate",
       certificationId,
       departmentId: candidateRegistrationInput.departmentId,
-      feasibilityFormat: (await certification).feasibilityFormat,
+      feasibilityFormat: certification.feasibilityFormat,
     });
 
     //reload candidate and candidacy after certification update

@@ -131,14 +131,7 @@ beforeAll(async () => {
       candidateId: candidate.id,
       organismId: organism.id,
       departmentId: department?.id,
-      certificationsAndRegions: {
-        create: {
-          certificationId: certification?.id as string,
-          regionId: department?.regionId as string,
-          author: "test",
-          isActive: true,
-        },
-      },
+      certificationId: certification?.id,
     },
   });
 

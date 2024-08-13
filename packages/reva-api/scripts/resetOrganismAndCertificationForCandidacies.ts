@@ -11,13 +11,9 @@ const resetOrganismAndCertificationForCandidacies = async () => {
   for (const candidacyStatus of candidacyStatuses) {
     const { candidacyId } = candidacyStatus;
 
-    await prismaClient.candidaciesOnRegionsAndCertifications.deleteMany({
-      where: { candidacyId },
-    });
-
     await prismaClient.candidacy.update({
       where: { id: candidacyId },
-      data: { organismId: null },
+      data: { organismId: null, certificationId: null },
     });
   }
 };

@@ -19,14 +19,6 @@ export const searchOrganismsForCandidacy = async ({
     where: { id: candidacyId },
     include: {
       organism: true,
-      certificationsAndRegions: {
-        select: {
-          certificationId: true,
-        },
-        where: {
-          isActive: true,
-        },
-      },
     },
   });
 
@@ -42,8 +34,7 @@ export const searchOrganismsForCandidacy = async ({
     searchFilter?.distanceStatus === "ONSITE"
   ) {
     organismsFound = await getAAPsWithZipCode({
-      certificationId:
-        candidacy?.certificationsAndRegions[0]?.certificationId || "",
+      certificationId: candidacy.certificationId || "",
       zip: searchFilter.zip,
       pmr: searchFilter.pmr,
       limit: 50,
@@ -54,7 +45,7 @@ export const searchOrganismsForCandidacy = async ({
       throw new Error("Cette candidature n'est pas associée à un département");
     }
     const result = await getRandomActiveOrganismForCertification({
-      certificationId: candidacy.certificationsAndRegions[0].certificationId,
+      certificationId: candidacy.certificationId || "",
       departmentId: candidacy.departmentId,
       searchText,
       searchFilter,

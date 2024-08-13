@@ -5,8 +5,8 @@ export const getCertificationByCandidacyId = async ({
 }: {
   candidacyId: string;
 }) =>
-  prismaClient.candidaciesOnRegionsAndCertifications
-    .findFirst({
-      where: { candidacyId, isActive: true },
-    })
-    .certification();
+  candidacyId
+    ? prismaClient.candidacy
+        .findUnique({ where: { id: candidacyId } })
+        .certification()
+    : null;

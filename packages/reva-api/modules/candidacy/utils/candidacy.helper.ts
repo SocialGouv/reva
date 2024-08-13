@@ -170,20 +170,11 @@ export const candidacySearchWord = (word: string) => {
       { organism: containsFilter("label") },
       { department: containsFilter("label") },
       {
-        certificationsAndRegions: {
-          some: {
-            AND: [
-              { isActive: true },
-              {
-                certification: {
-                  OR: [
-                    containsFilter("label"),
-                    { typeDiplome: containsFilter("label") },
-                  ],
-                },
-              },
-            ],
-          },
+        certification: {
+          OR: [
+            containsFilter("label"),
+            { typeDiplome: containsFilter("label") },
+          ],
         },
       },
     ],

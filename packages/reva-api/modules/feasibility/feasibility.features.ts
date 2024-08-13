@@ -232,15 +232,10 @@ export const createFeasibility = async ({
     where: { id: candidacyId },
     include: {
       department: true,
-      certificationsAndRegions: {
-        where: { isActive: true },
-        include: { certification: true },
-      },
     },
   });
 
-  const candidacyCertificationId =
-    candidacy?.certificationsAndRegions?.[0]?.certificationId;
+  const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy?.departmentId;
 
   if (candidacyCertificationId && candidacyDepartmentId) {
@@ -464,9 +459,7 @@ const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole = ({
         certificationAuthorityLocalAccount?.certificationAuthorityId,
       candidacy: {
         departmentId: { in: departmentIds },
-        certificationsAndRegions: {
-          some: { isActive: true, certificationId: { in: certificationIds } },
-        },
+        certificationId: { in: certificationIds },
       },
     };
   } else {
@@ -725,9 +718,8 @@ const validateFeasibility = async ({
       include: {
         candidacy: {
           include: {
-            certificationsAndRegions: {
-              where: { isActive: true },
-              include: { certification: { select: { label: true } } },
+            certification: {
+              select: { label: true },
             },
             candidate: {
               select: {
@@ -746,12 +738,11 @@ const validateFeasibility = async ({
       status: "DOSSIER_FAISABILITE_RECEVABLE",
     });
 
-    const activeCertificationAndRegion =
-      updatedFeasibility.candidacy.certificationsAndRegions[0];
-
     sendFeasibilityValidatedCandidateEmail({
       email: updatedFeasibility.candidacy.candidate?.email as string,
-      certifName: activeCertificationAndRegion.certification.label,
+      certifName:
+        updatedFeasibility.candidacy.certification?.label ||
+        "Certification inconnue",
       comment,
       certificationAuthorityLabel:
         updatedFeasibility.certificationAuthority?.label ||
@@ -934,9 +925,6 @@ const markFeasibilityAsIncomplete = async ({
       include: {
         candidacy: {
           include: {
-            certificationsAndRegions: {
-              where: { isActive: true },
-            },
             candidate: {
               select: { email: true },
             },
@@ -1078,11 +1066,6 @@ const canManageFeasibility = async ({
           (calad) => calad.departmentId,
         );
 
-      const certificationIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId,
-        );
-
       return !!(await prismaClient.feasibility.findFirst({
         where: {
           id: feasibility.id,
@@ -1090,12 +1073,6 @@ const canManageFeasibility = async ({
             certificationAuthorityLocalAccount.certificationAuthorityId,
           candidacy: {
             departmentId: { in: departmentIds },
-            certificationsAndRegions: {
-              some: {
-                isActive: true,
-                certificationId: { in: certificationIds },
-              },
-            },
           },
         },
       }));

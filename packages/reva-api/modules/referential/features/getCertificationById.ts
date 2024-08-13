@@ -3,8 +3,10 @@ import { prismaClient } from "../../../prisma/client";
 export const getCertificationById = ({
   certificationId,
 }: {
-  certificationId: string;
+  certificationId: string | null;
 }) =>
-  prismaClient.certification.findFirstOrThrow({
-    where: { id: certificationId },
-  });
+  certificationId
+    ? prismaClient.certification.findUnique({
+        where: { id: certificationId },
+      })
+    : null;

@@ -40,7 +40,6 @@ import { organismLoaders } from "./organism/organism.loaders";
 import { organismResolvers } from "./organism/organism.resolvers";
 import { referentialLoaders } from "./referential/referential.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
-import { candidacyCertificationLoaders } from "./candidacy/certification/certification.loaders";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
@@ -98,7 +97,6 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...dossierDeValidationLoaders,
     ...juryLoaders,
     ...candidacyLogLoaders,
-    ...candidacyCertificationLoaders,
   },
   errorFormatter: (error, ...args) => {
     error.errors

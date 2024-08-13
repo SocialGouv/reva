@@ -107,12 +107,7 @@ export const canManageJury = async ({
     where: {
       id: candidacyId,
       departmentId: { in: departmentIds },
-      certificationsAndRegions: {
-        some: {
-          isActive: true,
-          certificationId: { in: certificationIds },
-        },
-      },
+      certificationId: { in: certificationIds },
     },
   }));
 

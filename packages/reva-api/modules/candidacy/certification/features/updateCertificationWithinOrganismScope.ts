@@ -38,6 +38,10 @@ export const updateCertificationWithinOrganismScope = async ({
 
   const newCertification = await getCertificationById({ certificationId });
 
+  if (!newCertification) {
+    throw new Error("Certification non trouvée");
+  }
+
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,

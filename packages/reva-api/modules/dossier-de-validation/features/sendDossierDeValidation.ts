@@ -33,10 +33,6 @@ export const sendDossierDeValidation = async ({
       candidate: true,
       Feasibility: { where: { isActive: true } },
       department: true,
-      certificationsAndRegions: {
-        where: { isActive: true },
-        include: { certification: true },
-      },
     },
   });
   if (!candidacy) {
@@ -135,8 +131,7 @@ export const sendDossierDeValidation = async ({
     status: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
 
-  const candidacyCertificationId =
-    candidacy?.certificationsAndRegions?.[0]?.certificationId;
+  const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy.departmentId;
 
   if (candidacyCertificationId && candidacyDepartmentId) {

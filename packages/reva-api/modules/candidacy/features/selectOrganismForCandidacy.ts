@@ -32,9 +32,9 @@ export const selectOrganismForCandidacy = async ({
       id: true,
       organism: true,
       firstAppointmentOccuredAt: true,
-      certificationsAndRegions: true,
       candidate: true,
       candidacyStatuses: true,
+      certificationId: true,
     },
   });
 
@@ -62,18 +62,10 @@ export const selectOrganismForCandidacy = async ({
       data: { firstAppointmentOccuredAt: null },
     });
 
-    const {
-      candidate,
-      organism,
-      firstAppointmentOccuredAt,
-      certificationsAndRegions,
-    } = candidacy;
-    const activeCertificationsAndRegions = certificationsAndRegions.find(
-      (c) => c.isActive,
-    );
-
+    const { candidate, organism, firstAppointmentOccuredAt, certificationId } =
+      candidacy;
     const certification = await prismaClient.certification.findUnique({
-      where: { id: activeCertificationsAndRegions?.certificationId },
+      where: { id: certificationId || "" },
     });
 
     const currentCandidacyStatus = candidacy.candidacyStatuses.find(

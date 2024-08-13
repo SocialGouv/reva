@@ -5,15 +5,13 @@ import {
   FundingRequestUnifvae,
   Gender,
   Organism,
-  Region,
 } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
 import { expertFiliereOrganism } from "../../../../test/fixtures/people-organisms";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
-let regionIdf: Region | null = null,
-  certif: Certification | null = null,
+let certif: Certification | null = null,
   aap: Organism | null = null,
   candidacy: Candidacy | null = null,
   fundReq: FundingRequestUnifvae | null,
@@ -29,23 +27,13 @@ beforeAll(async () => {
   aap = await prismaClient.organism.create({
     data: expertFiliereOrganism,
   });
-  regionIdf = await prismaClient.region.findUnique({ where: { code: "11" } });
   certif = await prismaClient.certification.findFirst({
     where: { label: "CAP Boucher" },
   });
   candidacy = await prismaClient.candidacy.create({
     data: {
-      certificationsAndRegions: {
-        create: [
-          {
-            regionId: (regionIdf as Region).id,
-            certificationId: (certif as Certification).id,
-            isActive: true,
-            author: "nawak",
-          },
-        ],
-      },
       organismId: aap.id,
+      certificationId: (certif as Certification).id,
     },
   });
   fundReq = await prismaClient.fundingRequestUnifvae.create({
@@ -110,9 +98,6 @@ afterAll(async () => {
   });
   await prismaClient.fundingRequestUnifvae.delete({
     where: { id: (fundReq as FundingRequestUnifvae).id },
-  });
-  await prismaClient.candidaciesOnRegionsAndCertifications.deleteMany({
-    where: { candidacyId: candidacy?.id },
   });
   await prismaClient.candidacy.delete({
     where: { id: (candidacy as Candidacy).id },

@@ -52,13 +52,16 @@ export const updateCertificationOfCandidacy = async ({
 
   try {
     const newCertification = await getCertificationById({ certificationId });
+    if (!newCertification) {
+      throw new Error("Certification non trouvée");
+    }
 
     await updateCertification({
       candidacyId,
       certificationId,
       departmentId,
       author: "candidate",
-      feasibilityFormat: newCertification.feasibilityFormat,
+      feasibilityFormat: newCertification?.feasibilityFormat,
     });
 
     await updateCandidacyOrganism({

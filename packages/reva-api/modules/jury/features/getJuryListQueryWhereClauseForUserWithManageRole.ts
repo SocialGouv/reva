@@ -44,9 +44,7 @@ export const getJuryListQueryWhereClauseForUserWithManageRole = ({
         certificationAuthorityLocalAccount?.certificationAuthorityId,
       candidacy: {
         departmentId: { in: departmentIds },
-        certificationsAndRegions: {
-          some: { isActive: true, certificationId: { in: certificationIds } },
-        },
+        certificationId: { in: certificationIds },
       },
     };
   } else {

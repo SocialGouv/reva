@@ -82,12 +82,7 @@ export const canManageDossierDeValidation = async ({
             certificationAuthorityLocalAccount.certificationAuthorityId,
           candidacy: {
             departmentId: { in: departmentIds },
-            certificationsAndRegions: {
-              some: {
-                isActive: true,
-                certificationId: { in: certificationIds },
-              },
-            },
+            certificationId: { in: certificationIds },
           },
         },
       }));

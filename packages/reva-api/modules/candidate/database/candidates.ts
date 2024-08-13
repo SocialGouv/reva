@@ -1,6 +1,7 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 
 const candidateIncludes = {
   highestDegree: true,
@@ -81,29 +82,20 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
     throw new Error("Candidat non trouvé");
   }
 
-  const certificationAndRegion =
-    await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-      where: {
-        candidacyId: newCandidate.candidacies[0].id,
-        isActive: true,
-      },
-      include: {
-        certification: true,
-        region: true,
-      },
-    });
-
+  const certification = await getCertificationById({
+    certificationId: newCandidate.candidacies[0].certificationId,
+  });
   return {
     ...newCandidate,
     candidacies: newCandidate.candidacies.map((candidacy) => ({
       ...candidacy,
-      regionId: certificationAndRegion?.region.id,
-      region: certificationAndRegion?.region,
-      certificationId: certificationAndRegion?.certification.id,
-      certification: certificationAndRegion?.certification && {
-        ...certificationAndRegion?.certification,
-        codeRncp: certificationAndRegion?.certification.rncpId,
-      },
+      certificationId: certification?.id,
+      certification: certification
+        ? {
+            ...certification,
+            codeRncp: certification?.rncpId,
+          }
+        : undefined,
     })),
   };
 };
@@ -124,6 +116,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
     include: {
       candidacies: {
         where: ongoingCandidacyFilter,
+        include: { certification: true },
       },
       highestDegree: true,
       vulnerabilityIndicator: true,
@@ -152,6 +145,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
       include: {
         candidacies: {
           where: ongoingCandidacyFilter,
+          include: { certification: true },
         },
         highestDegree: true,
         vulnerabilityIndicator: true,
@@ -159,29 +153,14 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
     });
   }
 
-  const certificationAndRegion =
-    await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-      where: {
-        candidacyId: candidate?.candidacies[0].id,
-        isActive: true,
-      },
-      include: {
-        certification: true,
-        region: true,
-      },
-    });
-
   return candidate
     ? {
         ...candidate,
         candidacies: candidate?.candidacies.map((candidacy) => ({
           ...candidacy,
-          regionId: certificationAndRegion?.region.id,
-          region: certificationAndRegion?.region,
-          certificationId: certificationAndRegion?.certification.id,
-          certification: certificationAndRegion?.certification && {
-            ...certificationAndRegion?.certification,
-            codeRncp: certificationAndRegion?.certification.rncpId,
+          certification: candidacy?.certification && {
+            ...candidacy?.certification,
+            codeRncp: candidacy?.certification?.rncpId,
           },
         })),
       }
