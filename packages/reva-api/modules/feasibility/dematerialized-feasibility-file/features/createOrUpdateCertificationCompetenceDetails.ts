@@ -11,31 +11,31 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
     throw new Error("Dossier de faisabilité non trouvé");
   }
 
-  await prismaClient.dFFCertificationCompetenceDetails.deleteMany({
-    where: {
-      dematerializedFeasibilityFileId,
-      certificationCompetence: { blocId: competenceBlocId },
-    },
-  });
-
-  await prismaClient.dFFCertificationCompetenceDetails.createMany({
-    data: competenceDetails.map((c) => ({
-      dematerializedFeasibilityFileId,
-      certificationCompetenceId: c.competenceId,
-      text: c.text,
-      state: c.state,
-    })),
-  });
-
-  await prismaClient.dFFCertificationCompetenceBloc.update({
-    where: {
-      dematerializedFeasibilityFileId_certificationCompetenceBlocId: {
+  await prismaClient.$transaction([
+    prismaClient.dFFCertificationCompetenceDetails.deleteMany({
+      where: {
         dematerializedFeasibilityFileId,
-        certificationCompetenceBlocId: competenceBlocId,
+        certificationCompetence: { blocId: competenceBlocId },
       },
-    },
-    data: { complete: true },
-  });
+    }),
+    prismaClient.dFFCertificationCompetenceDetails.createMany({
+      data: competenceDetails.map((c) => ({
+        dematerializedFeasibilityFileId,
+        certificationCompetenceId: c.competenceId,
+        text: c.text,
+        state: c.state,
+      })),
+    }),
+    prismaClient.dFFCertificationCompetenceBloc.update({
+      where: {
+        dematerializedFeasibilityFileId_certificationCompetenceBlocId: {
+          dematerializedFeasibilityFileId,
+          certificationCompetenceBlocId: competenceBlocId,
+        },
+      },
+      data: { complete: true },
+    }),
+  ]);
 
   await updateCompetenceBlocsPartCompletion({
     dematerializedFeasibilityFileId,
