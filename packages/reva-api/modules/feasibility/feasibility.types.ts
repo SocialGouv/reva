@@ -1,4 +1,5 @@
 export type FeasibilityCategoryFilter =
+  | "DRAFT"
   | "ALL"
   | "PENDING"
   | "REJECTED"

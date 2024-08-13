@@ -1052,6 +1052,7 @@ model CertificationAuthorityLocalAccountOnDepartment {
 }
 
 enum FeasibilityStatus {
+  DRAFT
   PENDING
   REJECTED
   ADMISSIBLE
@@ -1065,7 +1066,7 @@ model Feasibility {
   certificationAuthority        CertificationAuthority?        @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId      String?                        @map("certification_authority_id") @db.Uuid
   feasibilityFileSentAt         DateTime?                      @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  decision                      FeasibilityStatus              @default(PENDING)
+  decision                      FeasibilityStatus              @default(DRAFT)
   decisionComment               String?                        @map("decision_comment")
   decisionSentAt                DateTime?                      @map("decision_sent_at") @db.Timestamptz(6)
   decisionFileId                String?                        @map("decision_file_id") @db.Uuid

@@ -1,4 +1,5 @@
 enum FeasibilityDecision {
+  DRAFT
   PENDING
   REJECTED
   ADMISSIBLE

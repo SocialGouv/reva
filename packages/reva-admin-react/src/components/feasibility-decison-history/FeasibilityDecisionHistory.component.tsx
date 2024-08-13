@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { format } from "date-fns";
+import { useMemo } from "react";
 import { GrayCard } from "../card/gray-card/GrayCard";
 
 interface Props {
@@ -32,7 +32,7 @@ export const FeasibilityDecisionHistory = (props: Props) => {
 
 interface FeasibilityDecision {
   id: string;
-  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE" | "PENDING";
+  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE" | "PENDING" | "DRAFT";
   decisionSentAt?: number | null | undefined;
   decisionComment?: string | null | undefined;
 }

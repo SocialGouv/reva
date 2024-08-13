@@ -35,7 +35,7 @@ import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
   excludeArchivedAndDroppedOutCandidacy,
-  excludeRejectedArchivedAndDroppedOutCandidacy,
+  excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 
@@ -123,7 +123,7 @@ export const createFeasibility = async ({
     existingFeasibilityUploadedPdf.decision !== "INCOMPLETE"
   ) {
     throw new Error(
-      "Un dossier de faisabilité actif éxiste déjà pour cette candidature",
+      "Un dossier de faisabilité actif existe déjà pour cette candidature",
     );
   }
 
@@ -175,6 +175,7 @@ export const createFeasibility = async ({
 
   const feasibility = await prismaClient.feasibility.create({
     data: {
+      decision: "PENDING",
       candidacy: { connect: { id: candidacyId } },
       certificationAuthority: { connect: { id: certificationAuthorityId } },
       feasibilityFileSentAt: new Date(),
@@ -342,6 +343,7 @@ export const getActiveFeasibilityCountByCategory = async ({
     INCOMPLETE: 0,
     ARCHIVED: 0,
     DROPPED_OUT: 0,
+    DRAFT: 0,
   };
 
   if (!hasRole("admin") && !hasRole("manage_feasibility")) {
@@ -498,7 +500,7 @@ export const getActiveFeasibilities = async ({
     case "ALL":
       queryWhereClause = {
         ...queryWhereClause,
-        ...excludeRejectedArchivedAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedDraftAndDroppedOutCandidacy,
       };
       break;
     case "ARCHIVED":

@@ -14,11 +14,11 @@ export const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput
     },
   };
 
-export const excludeRejectedArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
+export const excludeRejectedArchivedDraftAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
   {
     NOT: {
       isActive: true,
-      decision: "REJECTED",
+      decision: { in: ["REJECTED", "DRAFT"] },
     },
     candidacy: {
       candidacyStatuses: {
@@ -40,7 +40,7 @@ export const getWhereClauseFromStatusFilter = (
     case "ALL":
       whereClause = {
         ...whereClause,
-        ...excludeRejectedArchivedAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedDraftAndDroppedOutCandidacy,
       };
       break;
     case "PENDING":
