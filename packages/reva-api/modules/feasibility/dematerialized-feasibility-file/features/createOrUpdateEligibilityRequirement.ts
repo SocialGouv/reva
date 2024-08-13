@@ -56,7 +56,10 @@ export const createOrUpdateEligibilityRequirement = async ({
     });
   }
 
-  if (dFF.sentToCandidateAt) {
+  if (
+    dFF.sentToCandidateAt &&
+    (hasChangedEligibilityRequirement || hasChangedEligibilityValidUntil)
+  ) {
     await resetDFFSentToCandidateState(dFF);
   }
 
