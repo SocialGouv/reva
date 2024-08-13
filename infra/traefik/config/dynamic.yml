@@ -167,13 +167,13 @@ http:
     add-security-headers-production:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none';img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
+          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
           X-Frame-Options: SAMEORIGIN
 
     add-security-headers-staging:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none';img-src self data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
+          Content-Security-Policy: "frame-ancestors 'self'; object-src 'none'; img-src 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr 'unsafe-inline'"
           X-Frame-Options: SAMEORIGIN
 
     removePath:
