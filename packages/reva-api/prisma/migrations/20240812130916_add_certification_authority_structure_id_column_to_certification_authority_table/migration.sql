@@ -25,34 +25,20 @@ SET
       1
   );
 
+UPDATE "certification_authority"
+SET
+  "certification_authority_structure_id" = (
+    SELECT
+      id
+    from
+      "certification_authority_structure"
+    where
+      "label" = 'Structure certificatrice inconnue'
+  )
+WHERE
+  "certification_authority_structure_id" is null;
+
 ALTER TABLE "certification_authority"
 ALTER COLUMN "certification_authority_structure_id"
 SET
   NOT NULL;
-
--- delete certifications from certification authorities not associated with their structure
-DELETE FROM "certification_authority_on_certification"
-WHERE
-  "certification_authority_on_certification"."certification_id" NOT IN (
-    SELECT
-      "certification"."id"
-    FROM
-      "certification"
-      JOIN "certification_authority" on "certification_authority"."certification_authority_structure_id" = "certification"."certification_authority_structure_id"
-    WHERE
-      "certification_authority"."id" = "certification_authority_on_certification"."certification_authority_id"
-  );
-
--- delete certifications from certification authority local accounts not associated with their certification authority
-DELETE FROM "certification_authority_local_account_on_certification"
-WHERE
-  "certification_authority_local_account_on_certification"."certification_id" NOT IN (
-    SELECT
-      "certification_authority_on_certification"."certification_id"
-    FROM
-      "certification_authority_on_certification"
-      JOIN "certification_authority" ON "certification_authority"."id" = "certification_authority_on_certification"."certification_authority_id"
-      JOIN "certification_authority_local_account" ON "certification_authority_local_account"."certification_authority_id" = "certification_authority"."id"
-    WHERE
-      "certification_authority_local_account"."id" = "certification_authority_local_account_on_certification"."certification_authority_local_account_id"
-  );
