@@ -20,6 +20,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -54,6 +55,9 @@ const OrientationCandidatPage = () => {
     "CANDIDACY_CREATION_DISABLED",
   );
 
+  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
+    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
+  );
   const [candidateTypology, setCandidateTypology] = useState<
     CandidateTypology | undefined
   >();
@@ -147,6 +151,37 @@ const OrientationCandidatPage = () => {
                     rncpCode={certification.codeRncp}
                     certificateType={certification.typeDiplome.label}
                   />
+                  {affichageTypesFinancementCandidatureFeatureActive && (
+                    <Notice
+                      className="basis-1/2"
+                      title={
+                        <span>
+                          <p className="mb-4">
+                            Le parcours VAE pour ce diplôme est finançable grâce
+                            à plusieurs dispositifs (Le Compte Personnel de
+                            Formation (CPF), aides régionales, France Travail,
+                            OPCO...). Votre accompagnateur peut vous renseigner
+                            sur les aides financières dont vous pouvez
+                            bénéficier.
+                          </p>
+                          <p className="mb-4">
+                            Pour information, le coût moyen constaté d’un
+                            parcours France VAE sur l'année 2023/ 2024 est de
+                            2500€.
+                          </p>
+                          <p>
+                            <Link
+                              href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
+                              target="_blank"
+                            >
+                              Quels sont les dispositifs qui financent un
+                              parcours VAE ?
+                            </Link>
+                          </p>
+                        </span>
+                      }
+                    />
+                  )}
                 </div>
                 <h2 className="text-2xl font-bold mt-4 mb-0">
                   Quel candidat êtes vous ?
