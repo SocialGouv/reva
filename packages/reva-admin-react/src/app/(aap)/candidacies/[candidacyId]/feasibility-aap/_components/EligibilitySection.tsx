@@ -1,4 +1,5 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { DffEligibilityRequirement } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { format } from "date-fns";
@@ -7,7 +8,7 @@ import { useParams } from "next/navigation";
 const EligibiltyBadge = ({
   eligibilityRequirement,
 }: {
-  eligibilityRequirement: string;
+  eligibilityRequirement: DffEligibilityRequirement | null;
 }) => {
   if (eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT") {
     return (
@@ -24,10 +25,7 @@ export const EligibilitySection = ({
   eligibilityRequirement,
   eligibilityValidUntil,
 }: {
-  eligibilityRequirement?:
-    | "FULL_ELIGIBILITY_REQUIREMENT"
-    | "PARTIAL_ELIGIBILITY_REQUIREMENT"
-    | null;
+  eligibilityRequirement?: DffEligibilityRequirement | null;
   eligibilityValidUntil: Date | null;
 }) => {
   const { candidacyId } = useParams();
