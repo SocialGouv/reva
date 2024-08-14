@@ -187,6 +187,8 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
                 mimeType
               }
             }
+            eligibilityRequirement
+            eligibilityValidUntil
           }
         }
       }

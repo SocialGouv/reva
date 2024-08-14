@@ -7,6 +7,7 @@ import {
   Candidate,
   Certification,
   CertificationCompetenceDetails,
+  DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 
@@ -15,6 +16,7 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import CandidateSection from "./components/CandidateSection";
 import CertificationSection from "./components/CertificationSection";
 import DecisionSection from "./components/DecisionSection";
+import EligibilitySection from "./components/EligibilitySection";
 import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
@@ -39,6 +41,8 @@ export function DffSummary() {
     prerequisites,
     blocsDeCompetences,
     certificationCompetenceDetails,
+    eligibilityRequirement,
+    eligibilityValidUntil,
   } = dematerializedFeasibilityFile;
 
   const {
@@ -76,6 +80,12 @@ export function DffSummary() {
         </p>
       )}
 
+      <EligibilitySection
+        eligibilityRequirement={
+          eligibilityRequirement as DffEligibilityRequirement | null
+        }
+        eligibilityValidUntil={eligibilityValidUntil as Date | null}
+      />
       <CandidateSection candidate={candidate as Candidate} />
       <CertificationSection
         option={option}
