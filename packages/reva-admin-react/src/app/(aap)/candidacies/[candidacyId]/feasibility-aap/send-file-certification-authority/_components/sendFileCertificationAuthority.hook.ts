@@ -74,6 +74,8 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             }
           }
           isReadyToBeSentToCertificationAuthority
+          eligibilityRequirement
+          eligibilityValidUntil
         }
         candidacy {
           certificationAuthorities {

@@ -4,12 +4,14 @@ import {
   Candidate,
   DematerializedFeasibilityFile,
   DffAttachment,
+  DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateSection from "./_components/CandidateSection";
 import CertificationSection from "./_components/CertificationSection";
 import DecisionSection from "./_components/DecisionSection";
+import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
@@ -38,6 +40,8 @@ export default function DffSummary({
     blocsDeCompetences,
     certificationCompetenceDetails,
     swornStatementFile,
+    eligibilityRequirement,
+    eligibilityValidUntil,
   } = dematerializedFeasibilityFile;
   const {
     experiences,
@@ -57,6 +61,12 @@ export default function DffSummary({
       {HasBeenSentComponent}
 
       <div className="flex flex-col gap-3">
+        <EligibilitySection
+          eligibilityRequirement={
+            eligibilityRequirement as DffEligibilityRequirement | null
+          }
+          eligibilityValidUntil={eligibilityValidUntil as Date | null}
+        />
         <CandidateSection candidate={candidacy?.candidate as Candidate} />
         <CertificationSection
           option={option}

@@ -62,6 +62,8 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
               mimeType
             }
           }
+          eligibilityRequirement
+          eligibilityValidUntil
         }
         candidacy {
           individualHourCount

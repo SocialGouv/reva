@@ -61,6 +61,8 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
             mimeType
           }
         }
+        eligibilityRequirement
+        eligibilityValidUntil
       }
       candidacy {
         organism {
