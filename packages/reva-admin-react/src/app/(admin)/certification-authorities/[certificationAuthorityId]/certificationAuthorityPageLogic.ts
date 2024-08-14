@@ -62,20 +62,20 @@ const getCertificationAuthorityQuery = graphql(`
         codeRncp
         label
       }
-      certificationAuthorityStructure {
-        certifications {
-          id
-          codeRncp
-          label
-          status
-        }
-      }
     }
   }
 `);
 
 const getReferentialQuery = graphql(`
   query getReferential {
+    searchCertificationsForCandidate(limit: 500) {
+      rows {
+        id
+        label
+        status
+        codeRncp
+      }
+    }
     getRegions {
       id
       label
@@ -137,15 +137,8 @@ export const useCertificationAuthorityPageLogic = () => {
     [getReferentialResponse],
   );
   const certifications = useMemo(
-    () =>
-      getCertificationAuthorityResponse
-        ?.certification_authority_getCertificationAuthority
-        ?.certificationAuthorityStructure.certifications || [],
-    [
-      getCertificationAuthorityResponse
-        ?.certification_authority_getCertificationAuthority
-        ?.certificationAuthorityStructure.certifications,
-    ],
+    () => getReferentialResponse?.searchCertificationsForCandidate?.rows || [],
+    [getReferentialResponse],
   );
 
   const methods = useForm<FormData>({
