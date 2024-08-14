@@ -91,7 +91,7 @@ export const getActiveCandidacyMenu = async ({
       (editableStatus.includes(activeCandidacyStatus) && !activeFeasibility) ||
       activeFeasibility?.decision === "INCOMPLETE"
     ) {
-      menuEntryStatus = isDfDematerialized ? "ACTIVE_WITH_EDIT_HINT" : "ACTIVE_WITHOUT_HINT";
+      menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
     } else if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
       menuEntryStatus = "ACTIVE_WITHOUT_HINT";
     } else {

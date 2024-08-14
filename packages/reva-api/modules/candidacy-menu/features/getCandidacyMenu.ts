@@ -46,7 +46,7 @@ export const getCandidacyMenu = async ({
   const menuHeader: CandidacyMenuEntry[] = [
     {
       label: "Résumé de la candidature",
-      status: isCandidateSummaryComplete
+      status: isCandidateSummaryComplete || candidacy.feasibilityFormat === "UPLOADED_PDF"
         ? "ACTIVE_WITHOUT_HINT"
         : "ACTIVE_WITH_EDIT_HINT",
       url: buildUrl({ suffix: "summary" }),
