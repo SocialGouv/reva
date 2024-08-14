@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -23,6 +25,8 @@ const CandidacySummaryPage = () => {
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
   const { isAdmin } = useAuth();
+
+  const { isFeatureActive } = useFeatureflipping();
 
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
@@ -72,6 +76,10 @@ const CandidacySummaryPage = () => {
     "department",
   ]);
 
+  const showFundingAlert =
+    isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE") &&
+    candidacy.financeModule === "hors_plateforme";
+
   return (
     <>
       <div>
@@ -85,6 +93,25 @@ const CandidacySummaryPage = () => {
           Vous pouvez compléter ou modifier ces informations jusqu'à l'envoi du
           dossier de faisabilité.
         </p>
+        {showFundingAlert && (
+          <Alert
+            severity="warning"
+            title="Cette candidature est finançable par les dispositifs de droit commun"
+            description={
+              <div>
+                <p>
+                  Avant de fixer le rendez-vous pédagogique, assurez vous que le
+                  candidat dispose d’un financement possible (CPF, aides
+                  régionales, nationales, OPCO, France Travail...).
+                </p>
+                <p>
+                  Le candidat n’arrive pas à trouver un financement ? Nous vous
+                  conseillons de l’accompagner dans sa recherche.
+                </p>
+              </div>
+            }
+          />
+        )}
       </div>
       {!!candidate && (
         <>

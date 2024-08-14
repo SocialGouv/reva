@@ -6,6 +6,7 @@ const getCandidacyById = graphql(`
   query getCandidacySummaryById($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      financeModule
       candidacyDropOut {
         droppedOutAt
       }
