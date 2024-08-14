@@ -8,6 +8,8 @@ import {
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { FundingCallOut } from "../../../../../funding-call-out/FundingCallOut";
 
 export const CertificationTimelineElement = () => {
   const router = useRouter();
@@ -23,30 +25,50 @@ export const CertificationTimelineElement = () => {
     status = "editable";
   }
 
+  const { isFeatureActive } = useFeatureFlipping();
+  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
+    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
+  );
+
+  const candidacyStatus = candidacy.candidacyStatuses.find(
+    (status) => status.isActive,
+  )?.status;
+
+  const showFundingCallOut =
+    affichageTypesFinancementCandidatureFeatureActive &&
+    candidacyStatus === "PROJET";
+
   return (
     <TimelineElement title="Diplôme visé" status={status}>
-      <>
-        {certification && (
-          <h4
-            data-test="certification-label"
-            className="mb-4 text-base font-normal"
-          >
-            {certification.label}
-          </h4>
-        )}
+      <div className="flex flex-col md:flex-row basis-1/2 gap-6">
+        <div className="flex flex-col">
+          {certification && (
+            <h4
+              data-test="certification-label"
+              className="mb-4 text-base font-normal"
+            >
+              {certification.label}
+            </h4>
+          )}
 
-        {status !== "readonly" && (
-          <Button
-            data-test="project-home-set-certification"
-            priority="secondary"
-            onClick={() => {
-              router.push("set-certification");
-            }}
-          >
-            {certification ? "Modifiez votre diplôme" : "Choisir votre diplôme"}
-          </Button>
+          {status !== "readonly" && (
+            <Button
+              data-test="project-home-set-certification"
+              priority="secondary"
+              onClick={() => {
+                router.push("set-certification");
+              }}
+            >
+              {certification
+                ? "Modifiez votre diplôme"
+                : "Choisir votre diplôme"}
+            </Button>
+          )}
+        </div>
+        {showFundingCallOut && (
+          <FundingCallOut className="basis-1/2 ml-auto mr-6 md:mr-0" />
         )}
-      </>
+      </div>
     </TimelineElement>
   );
 };
