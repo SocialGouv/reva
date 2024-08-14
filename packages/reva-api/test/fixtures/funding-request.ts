@@ -20,7 +20,6 @@ const fundingContactInfo = {
 };
 
 const fundingRequestBase = {
-  companionId: dummyUuid,
   ...candidateInfo,
   ...fundingContactInfo,
   basicSkillsCost: new Decimal(1),
@@ -59,4 +58,20 @@ export const fundingRequestFullCertOkHours = {
   individualHourCount: new Decimal(1),
   mandatoryTrainingsHourCount: new Decimal(1),
   otherTrainingHourCount: new Decimal(1),
+};
+
+export const fundingRequestSample = {
+  ...fundingRequestBase,
+  basicSkillsCost: 12.3,
+  basicSkillsHourCount: 2.5,
+  certificateSkillsCost: 21.3,
+  certificateSkillsHourCount: 2,
+  collectiveCost: 21.3,
+  collectiveHourCount: 2,
+  individualCost: 21.3,
+  individualHourCount: 2,
+  mandatoryTrainingsCost: 21.3,
+  mandatoryTrainingsHourCount: 2,
+  otherTrainingCost: 21.3,
+  otherTrainingHourCount: 2.5,
 };

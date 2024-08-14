@@ -5,6 +5,7 @@ import { Gender } from "@prisma/client";
 // Candidates
 
 const candidateJPL = {
+  id: randomUUID(),
   firstname: "Jean-Patrick",
   lastname: "Ledru",
   email: "jean-pat.ledru@gmail.com",
@@ -46,6 +47,7 @@ const organismIperia = {
 };
 
 const expertFiliereOrganism = {
+  id: randomUUID(),
   label: "Expert filiere organism",
   siret: "5038235777",
   contactAdministrativeEmail: "expertFiliereOrganism@example.com",
@@ -94,7 +96,7 @@ const adminAccount1 = {
   email: "mimi@yolo.fr",
 };
 
-const gestionaMaisonMereAapAccount1  = {
+const gestionaMaisonMereAapAccount1 = {
   id: randomUUID(),
   keycloakId: randomUUID(),
   firstname: "Peter",
@@ -102,7 +104,7 @@ const gestionaMaisonMereAapAccount1  = {
   email: "peter@yolo.fr",
 };
 
-const gestionaMaisonMereAapAccount2  = {
+const gestionaMaisonMereAapAccount2 = {
   id: randomUUID(),
   keycloakId: randomUUID(),
   firstname: "Marge",
@@ -125,7 +127,7 @@ const maisonMereAAP1 = {
   managerFirstname: "Josette",
   managerLastname: "Ledru",
   showAccountSetup: true,
-}
+};
 
 export {
   adminAccount1,

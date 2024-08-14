@@ -20,13 +20,23 @@ import {
   Organism,
   MaisonMereAAP,
   Department,
+  CandidacyStatusStep,
 } from "@prisma/client";
+import {
+  basicSkill1Label,
+  basicSkill2Label,
+  training1Label,
+} from "../fixtures/skillAndTraining";
+import { feasibilityAdmissible } from "../fixtures/feasibility";
+import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
+import { fundingRequestSample } from "../fixtures/funding-request";
 
 export const createAdminAccount1 = async (): Promise<Account> => {
   return prismaClient.account.create({
     data: adminAccount1,
   });
 };
+
 export const createGestionaMaisonMereAapAccount1 =
   async (): Promise<Account> => {
     return prismaClient.account.upsert({
@@ -35,7 +45,7 @@ export const createGestionaMaisonMereAapAccount1 =
       },
       update: {},
       create: {
-        ...gestionaMaisonMereAapAccount1
+        ...gestionaMaisonMereAapAccount1,
       },
     });
   };
@@ -48,7 +58,7 @@ export const createGestionaMaisonMereAapAccount2 =
       },
       update: {},
       create: {
-        ...gestionaMaisonMereAapAccount2
+        ...gestionaMaisonMereAapAccount2,
       },
     });
   };
@@ -112,9 +122,18 @@ export const createMaisonMereAAP2 = async (): Promise<MaisonMereAAP> => {
 };
 
 export const createExpertFiliereOrganism = async (): Promise<Organism> => {
-  return prismaClient.organism.create({
+  const organism = await prismaClient.organism.create({
     data: expertFiliereOrganism,
   });
+
+  await prismaClient.account.create({
+    data: {
+      ...gestionaMaisonMereAapAccount1,
+      organismId: expertFiliereOrganism.id,
+    },
+  });
+
+  return organism;
 };
 
 export const createExpertBrancheOrganism = async (): Promise<Organism> => {
@@ -129,3 +148,109 @@ export const createExpertBrancheEtFiliereOrganism =
       data: expertBrancheEtFiliereOrganism,
     });
   };
+
+export const createCandidacyUnifvae = async () => {
+  const mancheDepartment = (await prismaClient.department.findFirst({
+    where: { code: "50" },
+  })) as Department;
+
+  const basicSkillId1 = (
+    await prismaClient.basicSkill.findFirstOrThrow({
+      where: {
+        label: basicSkill1Label,
+      },
+    })
+  ).id;
+
+  const basicSkillId2 = (
+    await prismaClient.basicSkill.findFirstOrThrow({
+      where: {
+        label: basicSkill2Label,
+      },
+    })
+  ).id;
+
+  return prismaClient.candidacy.create({
+    data: {
+      ...candidacyUnifvae,
+      departmentId: mancheDepartment?.id,
+      basicSkills: {
+        createMany: {
+          data: [
+            { basicSkillId: basicSkillId1 },
+            { basicSkillId: basicSkillId2 },
+          ],
+        },
+      },
+      candidacyStatuses: {
+        createMany: {
+          data: [
+            {
+              isActive: true,
+              status: CandidacyStatusStep.PARCOURS_CONFIRME,
+            },
+          ],
+        },
+      },
+      Feasibility: {
+        create: feasibilityAdmissible,
+      },
+    },
+  });
+};
+
+export const createCandidacyUnireva = async () => {
+  const mancheDepartment = (await prismaClient.department.findFirst({
+    where: { code: "50" },
+  })) as Department;
+
+  return prismaClient.candidacy.create({
+    data: {
+      ...candidacyUnireva,
+      departmentId: mancheDepartment?.id,
+      candidacyStatuses: {
+        createMany: {
+          data: [
+            {
+              isActive: true,
+              status: CandidacyStatusStep.PARCOURS_CONFIRME,
+            },
+          ],
+        },
+      },
+    },
+  });
+};
+
+export const createFundingRequest = async () => {
+  const basicSkillId1 = (
+    await prismaClient.basicSkill.findFirstOrThrow({
+      where: {
+        label: basicSkill1Label,
+      },
+    })
+  ).id;
+
+  const trainingId1 = (
+    await prismaClient.training.findFirstOrThrow({
+      where: {
+        label: training1Label,
+      },
+    })
+  ).id;
+
+  return prismaClient.fundingRequestUnifvae.create({
+    data: {
+      ...fundingRequestSample,
+      candidacyId: candidacyUnifvae.id,
+      certificateSkills: "",
+      otherTraining: "",
+      basicSkills: {
+        createMany: { data: [{ basicSkillId: basicSkillId1 }] },
+      },
+      mandatoryTrainings: {
+        createMany: { data: [{ trainingId: trainingId1 }] },
+      },
+    },
+  });
+};
