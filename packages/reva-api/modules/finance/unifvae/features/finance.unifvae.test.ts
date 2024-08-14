@@ -23,6 +23,8 @@ import {
 import {
   candidacyUnifvae,
   candidacyUnireva,
+  dropOutSixMonthsAgo,
+  dropOutSixMonthsAgoMinusOneMinute,
 } from "../../../../test/fixtures/candidacy";
 import { fundingRequestSample } from "../../../../test/fixtures/funding-request";
 import {
@@ -57,6 +59,7 @@ afterEach(async () => {
   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
   await prismaClient.fundingRequestBatchUnifvae.deleteMany();
   await prismaClient.fundingRequestUnifvae.deleteMany();
+  await prismaClient.candidacyDropOut.deleteMany();
 });
 
 test("should create fundingRequestUnifvae with matching batch", async () => {
@@ -194,4 +197,62 @@ test("should fetch fundingRequestUnifvae", async () => {
     basicSkills: [{ label: basicSkill1Label }],
     mandatoryTrainings: [{ label: training1Label }],
   });
+});
+
+test("should fail to create fundingRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
+  const createFundingRequest = async () =>
+    await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "candidacy_createFundingRequestUnifvae",
+        returnFields: "{ id }",
+        arguments: {
+          candidacyId: candidacyUnifvae.id,
+          fundingRequest: {
+            ...fundingRequestSample,
+          },
+        },
+        enumFields: ["candidateGender"],
+      },
+    });
+
+  await prismaClient.candidacy.update({
+    where: { id: candidacyUnifvae.id },
+    data: {
+      candidacyDropOut: {
+        create: {
+          ...dropOutSixMonthsAgoMinusOneMinute,
+          dropOutReason: { create: { label: "dummy" } },
+        },
+      },
+    },
+  });
+
+  const resp = await createFundingRequest();
+
+  expect(resp.statusCode).toBe(200);
+  const obj = resp.json();
+  expect(obj).toHaveProperty("errors");
+  expect(obj.errors[0].message).toBe(
+    "La demande de prise en charge n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+  );
+
+  await prismaClient.candidacy.update({
+    where: { id: candidacyUnifvae.id },
+    data: {
+      candidacyDropOut: {
+        update: dropOutSixMonthsAgo,
+      },
+    },
+  });
+
+  const resp2 = await createFundingRequest();
+
+  const obj2 = resp2.json();
+  expect(obj2).not.toHaveProperty("errors");
 });
