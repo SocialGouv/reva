@@ -25,6 +25,7 @@ export const Header = () => {
         imgUrl: "/candidat/fvae_logo.svg",
         orientation: "horizontal",
       }}
+      classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={
         authenticated
           ? [

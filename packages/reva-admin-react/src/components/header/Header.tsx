@@ -153,6 +153,7 @@ export const Header = () => {
         imgUrl: "/admin2/fvae_logo.svg",
         orientation: "horizontal",
       }}
+      classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={[
         {
           buttonProps: {
