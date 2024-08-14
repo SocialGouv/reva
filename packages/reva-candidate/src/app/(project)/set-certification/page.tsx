@@ -8,7 +8,8 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Notice } from "@codegouvfr/react-dsfr/Notice";
 
 import { PageLayout } from "@/layouts/page.layout";
 
@@ -25,6 +26,8 @@ import { Results } from "@/components/legacy/organisms/Results";
 import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
 
 import { useSetCertification } from "./set-certification.hooks";
+import Link from "next/link";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 export default function SetCertification() {
   const router = useRouter();
@@ -44,6 +47,11 @@ export default function SetCertification() {
     });
     return params;
   }, [searchParams]);
+
+  const { isFeatureActive } = useFeatureFlipping();
+  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
+    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
+  );
 
   const { canEditCandidacy, candidate, refetch } = useCandidacy();
 
@@ -192,6 +200,34 @@ export default function SetCertification() {
           <p data-test="certification-code-rncp" className="text-xs mb-3">
             Code RNCP: {selectedCertification.codeRncp}
           </p>
+          {affichageTypesFinancementCandidatureFeatureActive && (
+            <Notice
+              className="my-6 max-w-xl"
+              title={
+                <span>
+                  <p className="inline">
+                    Le parcours VAE pour ce diplôme est finançable grâce à
+                    plusieurs dispositifs (Le Compte Personnel de Formation
+                    (CPF), aides régionales, France Travail, OPCO...). Votre
+                    accompagnateur peut vous renseigner sur les aides
+                    financières dont vous pouvez bénéficier.
+                  </p>
+                  <p className="my-4">
+                    Pour information, le coût moyen constaté d’un parcours
+                    France VAE sur l&aposannée 2023/ 2024 est de 2500€.
+                  </p>
+                  <p>
+                    <Link
+                      href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
+                      target="_blank"
+                    >
+                      Quels sont les dispositifs qui financent un parcours VAE ?
+                    </Link>
+                  </p>
+                </span>
+              }
+            />
+          )}
           <p>
             <a
               data-test="certification-more-info-link"
