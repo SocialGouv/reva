@@ -17,6 +17,7 @@ import {
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import { applyBusinessValidationRules } from "./validation";
 import { Decimal } from "@prisma/client/runtime/library";
+import { isAfter, sub } from "date-fns";
 
 const withSkillsAndTrainings = (f: any) =>
   f
@@ -66,6 +67,7 @@ const unsafeResolvers = {
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: payload.candidacyId },
+        include: { candidacyDropOut: true },
       });
       if (!candidacy) {
         return new mercurius.ErrorWithProps(
@@ -84,6 +86,18 @@ const unsafeResolvers = {
           ...payload.fundingRequest,
         },
       };
+
+      if (
+        candidacy.candidacyDropOut &&
+        isAfter(
+          candidacy.candidacyDropOut.createdAt,
+          sub(new Date(), { months: 6 }),
+        )
+      ) {
+        throw new Error(
+          "La demande de prise en charge n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+        );
+      }
 
       const validationErrors = await applyBusinessValidationRules({
         maximumTotalCostAllowed: new Decimal(3200),
