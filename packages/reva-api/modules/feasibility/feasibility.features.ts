@@ -173,55 +173,61 @@ export const createFeasibility = async ({
     });
   }
 
-  const feasibility = await prismaClient.feasibility.create({
-    data: {
-      decision: "PENDING",
-      candidacy: { connect: { id: candidacyId } },
-      certificationAuthority: { connect: { id: certificationAuthorityId } },
-      feasibilityFileSentAt: new Date(),
-      feasibilityFormat: "UPLOADED_PDF",
-      feasibilityUploadedPdf: {
-        create: {
-          feasibilityFile: {
-            create: {
-              id: feasibilityFileInstance.id,
-              mimeType: feasibilityFile.mimetype,
-              name: feasibilityFile.filename,
-              path: `${candidacyId}/${feasibilityFileInstance.id}`,
+  const [_, feasibility] = await prismaClient.$transaction([
+    prismaClient.feasibility.updateMany({
+      where: { candidacyId },
+      data: { isActive: false },
+    }),
+    prismaClient.feasibility.create({
+      data: {
+        decision: "PENDING",
+        candidacy: { connect: { id: candidacyId } },
+        certificationAuthority: { connect: { id: certificationAuthorityId } },
+        feasibilityFileSentAt: new Date(),
+        feasibilityFormat: "UPLOADED_PDF",
+        feasibilityUploadedPdf: {
+          create: {
+            feasibilityFile: {
+              create: {
+                id: feasibilityFileInstance.id,
+                mimeType: feasibilityFile.mimetype,
+                name: feasibilityFile.filename,
+                path: `${candidacyId}/${feasibilityFileInstance.id}`,
+              },
             },
-          },
-          IDFile: {
-            create: {
-              id: IDFileInstance.id,
-              mimeType: IDFile.mimetype,
-              name: IDFile.filename,
-              path: `${candidacyId}/${IDFileInstance.id}`,
+            IDFile: {
+              create: {
+                id: IDFileInstance.id,
+                mimeType: IDFile.mimetype,
+                name: IDFile.filename,
+                path: `${candidacyId}/${IDFileInstance.id}`,
+              },
             },
+            documentaryProofFile: documentaryProofFile
+              ? {
+                  create: {
+                    id: documentaryProofFileInstance?.id,
+                    mimeType: documentaryProofFile.mimetype,
+                    name: documentaryProofFile.filename,
+                    path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
+                  },
+                }
+              : undefined,
+            certificateOfAttendanceFile: certificateOfAttendanceFile
+              ? {
+                  create: {
+                    id: certificateOfAttendanceFileInstance?.id,
+                    mimeType: certificateOfAttendanceFile.mimetype,
+                    name: certificateOfAttendanceFile.filename,
+                    path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
+                  },
+                }
+              : undefined,
           },
-          documentaryProofFile: documentaryProofFile
-            ? {
-                create: {
-                  id: documentaryProofFileInstance?.id,
-                  mimeType: documentaryProofFile.mimetype,
-                  name: documentaryProofFile.filename,
-                  path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
-                },
-              }
-            : undefined,
-          certificateOfAttendanceFile: certificateOfAttendanceFile
-            ? {
-                create: {
-                  id: certificateOfAttendanceFileInstance?.id,
-                  mimeType: certificateOfAttendanceFile.mimetype,
-                  name: certificateOfAttendanceFile.filename,
-                  path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
-                },
-              }
-            : undefined,
         },
       },
-    },
-  });
+    }),
+  ]);
 
   await updateCandidacyStatus({
     candidacyId,
