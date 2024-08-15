@@ -8,12 +8,13 @@ import {
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
-import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
 import { getHighestDegreeByCandidateId } from "./features/getHighestDegreeByCandidateId";
+import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
+import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 
 const unsafeResolvers = {
   Candidate: {
@@ -55,6 +56,8 @@ const unsafeResolvers = {
       getNiveauDeFormationLePlusEleve({ niveauDeFormationLePlusEleveDegreeId }),
     highestDegree: async ({ candidateId }: { candidateId: string }) =>
       getHighestDegreeByCandidateId({ candidateId }),
+    candidacy: async ({ id: candidateId }: { id: string }) =>
+      getFirstActiveCandidacyByCandidateId({ candidateId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: (
@@ -62,7 +65,7 @@ const unsafeResolvers = {
       _params: unknown,
       context: GraphqlContext,
     ) =>
-      getCandidateWithCandidacy({
+      getCandidateByKeycloakId({
         keycloakId: context.auth.userInfo?.sub || "",
       }),
   },
