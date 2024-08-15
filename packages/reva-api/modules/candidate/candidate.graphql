@@ -62,18 +62,6 @@ input CandidateInput {
   certificationId: String
 }
 
-input FullCandidateInput {
-  gender: Gender
-  firstname: String
-  firstname2: String
-  firstname3: String
-  lastname: String
-  email: String
-  phone: String
-  highestDegreeId: UUID
-  vulnerabilityIndicatorId: UUID
-}
-
 input CandidateUpdateInformationInput {
   id: UUID!
   gender: Gender!

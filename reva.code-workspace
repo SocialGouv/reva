@@ -1,0 +1,25 @@
+{
+  "folders": [
+	{
+		"path": "packages/reva-admin-react"
+	},
+	{
+		"path": "packages/reva-app"
+	},
+	{
+		"path": "packages/reva-api"
+	},
+	{
+		"path": "packages/reva-website"
+	},
+	{
+		"path": "packages/reva-tests"
+	},
+	{
+		"path": "packages/reva-candidate"
+	},
+	{
+		"path": "infra/keycloak"
+	}
+]
+}
