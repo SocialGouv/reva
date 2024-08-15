@@ -17,10 +17,8 @@ import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
 } from "../candidate.types";
-import {
-  createCandidateWithCandidacy,
-  getCandidateWithCandidacyFromKeycloakId,
-} from "../database/candidates";
+import { createCandidateWithCandidacy } from "../database/candidates";
+import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const candidateAuthentication = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -97,23 +95,12 @@ const confirmRegistration = async ({
       departmentId: candidateRegistrationInput.departmentId,
       feasibilityFormat: certification.feasibilityFormat,
     });
-
-    //reload candidate and candidacy after certification update
-    candidateWithCandidacy =
-      await getCandidateWithCandidacyFromKeycloakId(candidateKeycloakId);
-
-    if (!candidateWithCandidacy) {
-      throw new Error("Candidat non trouvé");
-    }
   }
 
   const tokens = await generateIAMToken(candidateKeycloakId);
   const iamToken = {
     tokens,
-    candidate: {
-      ...candidateWithCandidacy,
-      candidacy: candidateWithCandidacy.candidacies[0],
-    },
+    candidate,
   };
 
   await logCandidacyAuditEvent({
@@ -136,21 +123,18 @@ const loginCandidate = async ({ email }: { email: string }) => {
       `Candidat non trouvé`,
     );
   }
-  const candidateWithCandidacy = await getCandidateWithCandidacyFromKeycloakId(
-    account?.id || "",
-  );
+  const candidate = await getCandidateByKeycloakId({
+    keycloakId: account?.id || "",
+  });
 
-  if (!candidateWithCandidacy) {
+  if (!candidate) {
     throw new Error("Candidat non trouvé");
   }
 
-  const tokens = await generateIAMToken(candidateWithCandidacy.keycloakId);
+  const tokens = await generateIAMToken(candidate.keycloakId);
   const iamToken = {
     tokens,
-    candidate: {
-      ...candidateWithCandidacy,
-      candidacy: candidateWithCandidacy.candidacies[0],
-    },
+    candidate,
   };
 
   return iamToken;
