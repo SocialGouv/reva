@@ -114,13 +114,17 @@ export const createFeasibility = async ({
       where: {
         candidacyId,
         isActive: true,
-        feasibilityUploadedPdf: { isNot: null },
+        feasibilityFormat: "UPLOADED_PDF",
       },
     });
 
+  const isFeasibilityEditableDecision = ["INCOMPLETE", "DRAFT"];
+
   if (
     existingFeasibilityUploadedPdf &&
-    existingFeasibilityUploadedPdf.decision !== "INCOMPLETE"
+    !isFeasibilityEditableDecision.includes(
+      existingFeasibilityUploadedPdf.decision,
+    )
   ) {
     throw new Error(
       "Un dossier de faisabilité actif existe déjà pour cette candidature",
@@ -166,68 +170,82 @@ export const createFeasibility = async ({
     );
   }
 
-  if (existingFeasibilityUploadedPdf) {
-    await prismaClient.feasibility.update({
-      where: { id: existingFeasibilityUploadedPdf.id },
-      data: { isActive: false },
-    });
-  }
-
-  const [_, feasibility] = await prismaClient.$transaction([
-    prismaClient.feasibility.updateMany({
-      where: { candidacyId },
-      data: { isActive: false },
-    }),
-    prismaClient.feasibility.create({
-      data: {
-        decision: "PENDING",
-        candidacy: { connect: { id: candidacyId } },
-        certificationAuthority: { connect: { id: certificationAuthorityId } },
-        feasibilityFileSentAt: new Date(),
-        feasibilityFormat: "UPLOADED_PDF",
-        feasibilityUploadedPdf: {
+  const feasibilityUploadedPdfData = {
+    feasibilityFile: {
+      create: {
+        id: feasibilityFileInstance.id,
+        mimeType: feasibilityFile.mimetype,
+        name: feasibilityFile.filename,
+        path: `${candidacyId}/${feasibilityFileInstance.id}`,
+      },
+    },
+    IDFile: {
+      create: {
+        id: IDFileInstance.id,
+        mimeType: IDFile.mimetype,
+        name: IDFile.filename,
+        path: `${candidacyId}/${IDFileInstance.id}`,
+      },
+    },
+    documentaryProofFile: documentaryProofFile
+      ? {
           create: {
-            feasibilityFile: {
-              create: {
-                id: feasibilityFileInstance.id,
-                mimeType: feasibilityFile.mimetype,
-                name: feasibilityFile.filename,
-                path: `${candidacyId}/${feasibilityFileInstance.id}`,
-              },
-            },
-            IDFile: {
-              create: {
-                id: IDFileInstance.id,
-                mimeType: IDFile.mimetype,
-                name: IDFile.filename,
-                path: `${candidacyId}/${IDFileInstance.id}`,
-              },
-            },
-            documentaryProofFile: documentaryProofFile
-              ? {
-                  create: {
-                    id: documentaryProofFileInstance?.id,
-                    mimeType: documentaryProofFile.mimetype,
-                    name: documentaryProofFile.filename,
-                    path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
-                  },
-                }
-              : undefined,
-            certificateOfAttendanceFile: certificateOfAttendanceFile
-              ? {
-                  create: {
-                    id: certificateOfAttendanceFileInstance?.id,
-                    mimeType: certificateOfAttendanceFile.mimetype,
-                    name: certificateOfAttendanceFile.filename,
-                    path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
-                  },
-                }
-              : undefined,
+            id: documentaryProofFileInstance?.id,
+            mimeType: documentaryProofFile.mimetype,
+            name: documentaryProofFile.filename,
+            path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
+          },
+        }
+      : undefined,
+    certificateOfAttendanceFile: certificateOfAttendanceFile
+      ? {
+          create: {
+            id: certificateOfAttendanceFileInstance?.id,
+            mimeType: certificateOfAttendanceFile.mimetype,
+            name: certificateOfAttendanceFile.filename,
+            path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
+          },
+        }
+      : undefined,
+  } as Prisma.FeasibilityUploadedPdfCreateInput;
+
+  const feasibilityData = {
+    decision: "PENDING",
+    isActive: true,
+    candidacy: { connect: { id: candidacyId } },
+    certificationAuthority: { connect: { id: certificationAuthorityId } },
+    feasibilityFileSentAt: new Date(),
+    feasibilityFormat: "UPLOADED_PDF",
+  } as Prisma.FeasibilityCreateInput;
+
+  let feasibility;
+
+  await prismaClient.feasibility.updateMany({
+    where: { candidacyId },
+    data: { isActive: false },
+  });
+
+  if (existingFeasibilityUploadedPdf?.decision === "DRAFT") {
+    feasibility = await prismaClient.feasibility.update({
+      where: { id: existingFeasibilityUploadedPdf.id },
+      data: {
+        ...feasibilityData,
+        feasibilityUploadedPdf: {
+          upsert: {
+            create: feasibilityUploadedPdfData,
+            update: feasibilityUploadedPdfData,
           },
         },
       },
-    }),
-  ]);
+    });
+  } else {
+    feasibility = await prismaClient.feasibility.create({
+      data: {
+        ...feasibilityData,
+        feasibilityUploadedPdf: { create: feasibilityUploadedPdfData },
+      },
+    });
+  }
 
   await updateCandidacyStatus({
     candidacyId,

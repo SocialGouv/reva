@@ -1,3 +1,4 @@
+import { FeasibilityFormat } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
@@ -26,18 +27,14 @@ export const confirmTrainingFormByCandidate = async ({
     );
   }
 
-  const candidacy = await updateCandidacyStatus({
-    candidacyId,
-    status: "PARCOURS_CONFIRME",
-  });
-
   const candidacyCertification = await getCertificationByCandidacyId({
     candidacyId,
   });
 
-  const feasibilityFormat = candidacyCertification?.feasibilityFormat;
+  const feasibilityFormat =
+    candidacyCertification?.feasibilityFormat as FeasibilityFormat;
 
-  await prismaClient.$transaction([
+  const [_, __, feasibility] = await prismaClient.$transaction([
     prismaClient.candidacy.update({
       where: {
         id: candidacyId,
@@ -64,6 +61,24 @@ export const confirmTrainingFormByCandidate = async ({
     }),
   ]);
 
+  if (feasibilityFormat === "DEMATERIALIZED") {
+    await prismaClient.feasibility.update({
+      where: {
+        id: feasibility.id,
+      },
+      data: {
+        decision: "PENDING",
+        dematerializedFeasibilityFile: {
+          create: {},
+        },
+      },
+    });
+  }
+
+  const candidacy = await updateCandidacyStatus({
+    candidacyId,
+    status: "PARCOURS_CONFIRME",
+  });
   await logCandidacyAuditEvent({
     candidacyId,
     eventType: "TRAINING_FORM_CONFIRMED",
