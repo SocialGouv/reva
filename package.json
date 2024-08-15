@@ -19,7 +19,8 @@
     "deploy": "./infra/scripts/deploy.sh"
   },
   "workspaces": [
-    "packages/reva-api"
+    "packages/reva-api",
+    "packages/reva-app"
   ],
   "dependencies": {
     "husky": "^7.0.4"
