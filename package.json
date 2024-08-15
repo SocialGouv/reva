@@ -16,7 +16,9 @@
     "lint-staged": "npm run lint-staged --workspaces --if-present",
     "lint-all": "npm run lint-all --workspaces --if-present",
     "test-api": "npm run test --workspace=reva-api",
-    "deploy": "./infra/scripts/deploy.sh"
+    "deploy": "./infra/scripts/deploy.sh",
+    "graphql:generate": "npm run graphql:generate --workspace=reva-api && npm run graphql:generate --prefix packages/reva-admin-react && npm run graphql:generate --prefix packages/reva-candidate",
+    "prisma:generate": "npm run prisma:generate --workspace=reva-api"
   },
   "workspaces": [
     "packages/reva-api",
