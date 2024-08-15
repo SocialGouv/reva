@@ -1,3 +1,4 @@
+import { DematerializedFeasibilityFile } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyCertificationCompletion } from "../../../candidacy/features/updateCandidacyCertificationCompletion";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
@@ -11,7 +12,7 @@ export const createOrUpdateCertificationInfo = async ({
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
   candidacyId: string;
-}) => {
+}): Promise<DematerializedFeasibilityFile> => {
   const currentFile = await getDematerializedFeasibilityFileByCandidacyId({
     candidacyId,
   });
@@ -29,7 +30,7 @@ export const createOrUpdateCertificationInfo = async ({
     },
   };
 
-  let dff = null;
+  let dff: DematerializedFeasibilityFile;
   if (currentFile) {
     //delete previous dff certification / competenceBloc associations before recreating them
     await prismaClient.dFFCertificationCompetenceBloc.deleteMany({
@@ -63,18 +64,30 @@ export const createOrUpdateCertificationInfo = async ({
       await resetDFFSentToCandidateState(currentFile);
     }
   } else {
-    dff = await prismaClient.feasibility.create({
-      data: {
-        candidacyId,
-        feasibilityFormat: "DEMATERIALIZED",
-        dematerializedFeasibilityFile: {
-          create: {
-            ...data,
-            certificationPartComplete: true,
+    const [_, feasibility] = await prismaClient.$transaction([
+      prismaClient.feasibility.updateMany({
+        where: { candidacyId },
+        data: { isActive: false },
+      }),
+      prismaClient.feasibility.create({
+        data: {
+          candidacyId,
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            create: {
+              ...data,
+              certificationPartComplete: true,
+            },
           },
         },
-      },
-    });
+        include: {
+          dematerializedFeasibilityFile: true,
+        },
+      }),
+    ]);
+
+    dff =
+      feasibility.dematerializedFeasibilityFile as DematerializedFeasibilityFile;
   }
 
   await updateCandidacyCertificationCompletion({
