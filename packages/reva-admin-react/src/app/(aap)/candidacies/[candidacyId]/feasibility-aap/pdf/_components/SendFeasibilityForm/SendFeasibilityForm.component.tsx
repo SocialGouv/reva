@@ -169,7 +169,7 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
         <FancyUpload
           title="Joindre la pièce d’identité (carte identité, passeport, carte de séjour)"
           description="Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce sera demandée au candidat pour justifier de son identité lors du passage devant jury et la délivrance éventuelle du diplôme."
-          hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
+          hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           nativeInputProps={{
             ...register("idFile"),
           }}
