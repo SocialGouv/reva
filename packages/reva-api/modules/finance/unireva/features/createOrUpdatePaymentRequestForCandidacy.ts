@@ -11,13 +11,14 @@ import {
 } from "./costValidationUtils";
 
 import { getAfgsuTrainingId } from "../../../candidacy/features/getAfgsuTrainingId";
-import { getCandidateByCandidacyId } from "../../../candidate/database/candidates";
 import { getFundingRequest } from "../database/fundingRequests";
 import {
   createPaymentRequest,
   getPaymentRequestByCandidacyId,
   updatePaymentRequest,
 } from "../database/paymentRequest";
+import { getCandidacyById } from "../../../candidacy/features/getCandidacyById";
+import { getCandidateById } from "../../../candidacy/features/getCandidateById";
 
 export const createOrUpdatePaymentRequestForCandidacy = async ({
   candidacyId,
@@ -36,7 +37,15 @@ export const createOrUpdatePaymentRequestForCandidacy = async ({
     throw new Error("Demande de financement non trouvée");
   }
 
-  const candidate = await getCandidateByCandidacyId(candidacyId);
+  const candidacy = await getCandidacyById({ candidacyId });
+
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
+
+  const candidate = await getCandidateById({
+    candidateId: candidacy.candidateId || "",
+  });
 
   if (!candidate) {
     throw new Error("Candidat non trouvé");

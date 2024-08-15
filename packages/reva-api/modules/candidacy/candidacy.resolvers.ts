@@ -30,7 +30,6 @@ import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
-import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -58,6 +57,7 @@ import { getCandidacyConventionCollectiveById } from "./features/getCandidacyCon
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getCandidacies } from "./features/getCandicacies";
+import { getCandidateById } from "./features/getCandidateById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -69,8 +69,8 @@ const unsafeResolvers = {
       getCandidacyGoals({ candidacyId }),
     experiences: async ({ id: candidacyId }: Candidacy) =>
       getExperiencesByCandidacyId({ candidacyId }),
-    candidate: async ({ id: candidacyId }: Candidacy) =>
-      getCandidateByCandidacyId({ candidacyId }),
+    candidate: async ({ candidateId }: { candidateId: string }) =>
+      getCandidateById({ candidateId }),
     department: ({ departmentId }: { departmentId: string }) =>
       getDepartmentById({ id: departmentId }),
     organism: ({ organismId }: { organismId: string }) =>

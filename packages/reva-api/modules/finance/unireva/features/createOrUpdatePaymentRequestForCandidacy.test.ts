@@ -5,7 +5,9 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymen
 import * as fundingRequestsDb from "../database/fundingRequests";
 import * as paymentRequestsDb from "../database/paymentRequest";
 import * as getAfgsuTrainingIdModule from "../../../candidacy/features/getAfgsuTrainingId";
-import * as candidatesDb from "../../../candidate/database/candidates";
+
+import * as getCandidacyByIdModule from "../../../candidacy/features/getCandidacyById";
+import * as getCandidateByIdModule from "../../../candidacy/features/getCandidateById";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",
@@ -77,13 +79,13 @@ describe("create or update payment request", () => {
         .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
         .mockImplementation(() => Promise.resolve(null));
 
-      jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
-        () =>
-          Promise.resolve({
-            highestDegree: { level: 1 },
-            vulnerabilityIndicator: { label: "Vide" },
-          }) as any,
-      );
+      jest
+        .spyOn(getCandidacyByIdModule, "getCandidacyById")
+        .mockImplementation(() => ({}) as any);
+
+      jest
+        .spyOn(getCandidateByIdModule, "getCandidateById")
+        .mockImplementation(() => ({}) as any);
 
       const result = await createOrUpdatePaymentRequestForCandidacy({
         candidacyId: "1234",
@@ -122,14 +124,13 @@ describe("create or update payment request", () => {
       .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
       .mockImplementation(() => Promise.resolve(null));
 
-    jest.spyOn(candidatesDb, "getCandidateByCandidacyId").mockImplementation(
-      () =>
-        Promise.resolve({
-          highestDegree: { level: 1 },
-          vulnerabilityIndicator: { label: "Vide" },
-        }) as any,
-    );
+    jest
+      .spyOn(getCandidacyByIdModule, "getCandidacyById")
+      .mockImplementation(() => ({}) as any);
 
+    jest
+      .spyOn(getCandidateByIdModule, "getCandidateById")
+      .mockImplementation(() => ({}) as any);
     const result = await createOrUpdatePaymentRequestForCandidacy({
       candidacyId: "1234",
       paymentRequest: defaultValidPaymentRequest,

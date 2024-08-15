@@ -52,14 +52,3 @@ export const createCandidateWithCandidacy = async (candidateInput: any) => {
 
   return createdCandidate;
 };
-
-export const getCandidateByCandidacyId = async (id: string) =>
-  prismaClient.candidate.findFirst({
-    where: {
-      candidacies: {
-        some: {
-          id,
-        },
-      },
-    },
-  });
