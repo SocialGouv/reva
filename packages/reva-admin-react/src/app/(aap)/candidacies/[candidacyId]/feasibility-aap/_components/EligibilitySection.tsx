@@ -24,9 +24,11 @@ const EligibiltyBadge = ({
 export const EligibilitySection = ({
   eligibilityRequirement,
   eligibilityValidUntil,
+  isFeasibilityEditable,
 }: {
   eligibilityRequirement?: DffEligibilityRequirement | null;
   eligibilityValidUntil: Date | null;
+  isFeasibilityEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
   const isEligibilityPartComplete = !!eligibilityRequirement;
@@ -37,7 +39,7 @@ export const EligibilitySection = ({
       titleIconClass="ri-folder-check-fill"
       status={isEligibilityPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/eligibility`}
-      isEditable
+      isEditable={isFeasibilityEditable}
     >
       {isEligibilityPartComplete ? (
         <>
