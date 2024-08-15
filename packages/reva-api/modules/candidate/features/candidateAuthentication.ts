@@ -1,5 +1,6 @@
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCertification } from "../../candidacy/certification/features/updateCertification";
+import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
@@ -63,18 +64,25 @@ const confirmRegistration = async ({
 }: {
   candidateRegistrationInput: CandidateRegistrationInput;
 }) => {
-  const { certificationId, ...candidate } = candidateRegistrationInput;
+  const { certificationId, ...candidateInput } = candidateRegistrationInput;
   const candidateKeycloakId = await createCandidateAccountInIAM({
-    email: candidate.email,
-    firstname: candidate.firstname,
-    lastname: candidate.lastname,
+    email: candidateInput.email,
+    firstname: candidateInput.firstname,
+    lastname: candidateInput.lastname,
   });
 
-  let candidateWithCandidacy = null;
-  candidateWithCandidacy = await createCandidateWithCandidacy({
-    ...candidate,
+  const candidate = await createCandidateWithCandidacy({
+    ...candidateInput,
     keycloakId: candidateKeycloakId,
   });
+
+  const candidacy = await getFirstActiveCandidacyByCandidateId({
+    candidateId: candidate.id,
+  });
+
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
 
   // if the candidate has selected a certification during its registration, we assign it if it's available in his department
   if (
@@ -89,7 +97,7 @@ const confirmRegistration = async ({
     }
 
     await updateCertification({
-      candidacyId: candidateWithCandidacy.candidacies[0].id,
+      candidacyId: candidacy.id,
       author: "candidate",
       certificationId,
       departmentId: candidateRegistrationInput.departmentId,
@@ -104,11 +112,11 @@ const confirmRegistration = async ({
   };
 
   await logCandidacyAuditEvent({
-    candidacyId: candidateWithCandidacy.candidacies[0].id,
+    candidacyId: candidacy.id,
     eventType: "CANDIDATE_REGISTRATION_CONFIRMED",
     userRoles: [],
     userKeycloakId: candidateKeycloakId,
-    userEmail: candidate.email,
+    userEmail: candidateInput.email,
   });
 
   return iamToken;
