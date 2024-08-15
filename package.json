@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "./build.sh",
-    "dev": "concurrently -n \"rev-api,reva-app,reva-admin-react\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\"",
-    "front-apps": "concurrently -n \"reva-app,reva-admin-react\" -c \"green,cyan\" -k \"npm run dev -w reva-app\"",
+    "dev": "concurrently -n \"rev-api,reva-candidate,reva-admin-react,reva-website\" -c \"blue,green,cyan,magenta\" -k \"npm run dev -w reva-api\" \"npm run dev --prefix packages/reva-candidate\" \"npm run dev --prefix packages/reva-admin-react\" \"npm run dev --prefix packages/reva-website\"",
+    "front-apps": "concurrently -n \"reva-candidate,reva-admin-react,reva-website\" -c \"green,cyan,magenta\" -k \"npm run dev --prefix packages/reva-candidate\" \"npm run dev --prefix packages/reva-admin-react\" \"npm run dev --prefix packages/reva-website\"",
     "start": "npm run start --workspace=reva-api",
     "cron": "npm run cron --workspace=reva-api",
     "prepare": "husky install",
@@ -19,8 +19,7 @@
     "deploy": "./infra/scripts/deploy.sh"
   },
   "workspaces": [
-    "packages/reva-api",
-    "packages/reva-app"
+    "packages/reva-api"
   ],
   "dependencies": {
     "husky": "^7.0.4"
