@@ -4,7 +4,7 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymen
 
 import * as fundingRequestsDb from "../database/fundingRequests";
 import * as paymentRequestsDb from "../database/paymentRequest";
-import * as getAfgsuTrainingIdModule from "../../../candidacy/features/getAfgsuTrainingId";
+import * as getAfgsuTrainingIdModule from "../../../candidacy/training/features/getAfgsuTrainingId";
 
 import * as getCandidacyByIdModule from "../../../candidacy/features/getCandidacyById";
 import * as getCandidateByIdModule from "../../../candidacy/features/getCandidateById";

@@ -10,7 +10,7 @@ import {
   validateTotalCost,
 } from "./costValidationUtils";
 
-import { getAfgsuTrainingId } from "../../../candidacy/features/getAfgsuTrainingId";
+import { getAfgsuTrainingId } from "../../../candidacy/training/features/getAfgsuTrainingId";
 import { getFundingRequest } from "../database/fundingRequests";
 import {
   createPaymentRequest,
