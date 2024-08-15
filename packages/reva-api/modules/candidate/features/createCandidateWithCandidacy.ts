@@ -1,8 +1,18 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+interface CreateCandidateWithCandidacyInput {
+  email: string;
+  phone: string;
+  firstname: string;
+  lastname: string;
+  departmentId: string;
+  keycloakId: string;
+}
 
-export const createCandidateWithCandidacy = async (candidateInput: any) => {
+export const createCandidateWithCandidacy = async (
+  candidateInput: CreateCandidateWithCandidacyInput,
+) => {
   // Create account
   const createdCandidate = await prismaClient.candidate.create({
     data: {
