@@ -1,6 +1,4 @@
-import {
-  FeasibilityDecision,
-} from "@/graphql/generated/graphql";
+import { FeasibilityDecision } from "@/graphql/generated/graphql";
 import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 import { FeasibilityDecisionHistory } from "../feasibility-decision-history/FeasibilityDecisionHistory";
@@ -29,7 +27,7 @@ export const DecisionSentComponent = ({
   decisionComment?: string | null;
   history?: FeasibilityHistory[];
 }) => {
-  if (!decision) {
+  if (!decisionSentAt) {
     return null;
   }
 
@@ -51,15 +49,13 @@ export const DecisionSentComponent = ({
         description={decisionComment ? `”${decisionComment}”` : ""}
         className="mb-6"
       />
-      {
-        history && (
-          <FeasibilityDecisionHistory
-            className="mb-12"
-            label="Décisions précédentes"
-            decisions={history}
-          />
-        )
-      }
+      {history && (
+        <FeasibilityDecisionHistory
+          className="mb-12"
+          label="Décisions précédentes"
+          decisions={history}
+        />
+      )}
     </>
   );
 };
