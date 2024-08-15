@@ -5,9 +5,8 @@ import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymen
 import * as fundingRequestsDb from "../database/fundingRequests";
 import * as paymentRequestsDb from "../database/paymentRequest";
 import * as getAfgsuTrainingIdModule from "../../../candidacy/training/features/getAfgsuTrainingId";
-
 import * as getCandidacyByIdModule from "../../../candidacy/features/getCandidacyById";
-import * as getCandidateByIdModule from "../../../candidacy/features/getCandidateById";
+import * as getCandidateByIdModule from "../../../candidate/features/getCandidateById";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",

@@ -18,7 +18,7 @@ import {
   updatePaymentRequest,
 } from "../database/paymentRequest";
 import { getCandidacyById } from "../../../candidacy/features/getCandidacyById";
-import { getCandidateById } from "../../../candidacy/features/getCandidateById";
+import { getCandidateById } from "../../../candidate/features/getCandidateById";
 
 export const createOrUpdatePaymentRequestForCandidacy = async ({
   candidacyId,

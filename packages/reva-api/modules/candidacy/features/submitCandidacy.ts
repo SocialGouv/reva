@@ -7,10 +7,10 @@ import {
   sendNewCandidacyEmail,
 } from "../mails";
 import { getCandidacyById } from "./getCandidacyById";
-import { getCandidateById } from "./getCandidateById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
+import { getCandidateById } from "../../candidate/features/getCandidateById";
 
 export const submitCandidacy = async ({
   candidacyId,

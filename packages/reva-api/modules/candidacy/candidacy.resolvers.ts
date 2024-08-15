@@ -57,7 +57,7 @@ import { getCandidacyConventionCollectiveById } from "./features/getCandidacyCon
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getCandidacies } from "./features/getCandicacies";
-import { getCandidateById } from "./features/getCandidateById";
+import { getCandidateById } from "../candidate/features/getCandidateById";
 
 const unsafeResolvers = {
   Candidacy: {

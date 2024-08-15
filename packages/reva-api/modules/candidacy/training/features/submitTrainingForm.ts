@@ -7,8 +7,8 @@ import { generateJwt } from "../../../candidate/auth.helper";
 import { sendTrainingEmail } from "../emails";
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 import { updateTrainingInformations } from "./updateTrainingInformations";
-import { getCandidateById } from "../../features/getCandidateById";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
+import { getCandidateById } from "../../../candidate/features/getCandidateById";
 
 export const submitTraining = async ({
   candidacyId,
