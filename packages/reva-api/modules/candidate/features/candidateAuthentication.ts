@@ -18,7 +18,7 @@ import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
 } from "../candidate.types";
-import { createCandidateWithCandidacy } from "../database/candidates";
+import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const candidateAuthentication = async ({ token }: { token: string }) => {
