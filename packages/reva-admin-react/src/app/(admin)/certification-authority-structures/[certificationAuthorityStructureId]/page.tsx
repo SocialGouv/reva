@@ -1,5 +1,6 @@
 "use client";
 
+import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -52,6 +53,17 @@ const CertificationAuthorityStructurePage = () => {
             devez ajouter le certificateur administrateur et le responsable du
             référentiel depuis cet espace.
           </p>
+          <DefaultCandidacySectionCard
+            title="Informations générales"
+            titleIconClass="fr-icon-info-fill"
+            isEditable
+            status="COMPLETED"
+            buttonOnClickHref={`/certification-authority-structures/${certificationAuthorityStructureId}/informations-generales`}
+          >
+            <p className="ml-10 mb-0 font-bold">
+              {certificationAuthorityStructure.label}
+            </p>
+          </DefaultCandidacySectionCard>
         </div>
       )}
     </div>
