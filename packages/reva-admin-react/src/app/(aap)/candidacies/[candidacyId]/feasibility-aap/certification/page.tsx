@@ -71,6 +71,7 @@ const CertificationPage = () => {
     handleSubmit,
     reset,
     formState: { isDirty, isSubmitting, errors },
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -131,6 +132,28 @@ const CertificationPage = () => {
     },
     [competenceBlocFields, updateCompetenceBlocs],
   );
+
+  const handleCompetenceBlocChange = useCallback(
+    (index: number, checked: boolean) => {
+      updateCompetenceBlocs(index, { ...competenceBlocFields[index], checked });
+
+      const allChecked = competenceBlocFields.every((bloc, i) =>
+        i === index ? checked : bloc.checked,
+      );
+
+      setValue("completion", allChecked ? "COMPLETE" : "PARTIAL");
+    },
+    [competenceBlocFields, updateCompetenceBlocs, setValue],
+  );
+
+  useEffect(() => {
+    competenceBlocFields.forEach((_, index) => {
+      register(`competenceBlocs.${index}.checked`, {
+        onChange: (e) => handleCompetenceBlocChange(index, e.target.checked),
+      });
+    });
+  }, [competenceBlocFields, register, handleCompetenceBlocChange]);
+
   return (
     <div className="flex flex-col">
       <h1>Descriptif de la certification</h1>
