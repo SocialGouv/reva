@@ -26,6 +26,7 @@ import { updateCertificationAuthorityDepartmentsAndCertifications } from "./feat
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
+import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -247,6 +248,13 @@ const unsafeResolvers = {
         searchFilter?: string;
       },
     ) => getCertificationAuthoritiesToTransferCandidacy(params),
+    certification_authority_getCertificationAuthorityStructures: (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+      },
+    ) => getCertificationAuthorityStructures(params),
   },
 };
 

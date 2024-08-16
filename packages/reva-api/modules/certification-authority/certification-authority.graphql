@@ -23,6 +23,11 @@ type CertificationAuthorityStructure {
   certifications: [Certification!]!
 }
 
+type CertificationAuthorityStructurePaginated {
+  rows: [CertificationAuthorityStructure!]!
+  info: PaginationInfo!
+}
+
 type CertificationAuthorityPaginated {
   rows: [CertificationAuthority!]!
   info: PaginationInfo!
@@ -50,6 +55,32 @@ type CertificationAuhtorityOrLocalAccountPaginated {
   info: PaginationInfo!
 }
 
+input UpdateCertificationAuthorityInput {
+  label: String!
+  contactFullName: String
+  contactEmail: String
+}
+
+input CreateCertificationAuthorityLocalAccountInput {
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  departmentIds: [String!]!
+  certificationIds: [String!]!
+}
+
+input UpdateCertificationAuthorityLocalAccountInput {
+  certificationAuthorityLocalAccountId: String!
+  departmentIds: [String!]!
+  certificationIds: [String!]!
+}
+
+input UpdateCertificationAuthorityDepartmentsAndCertificationsInput {
+  certificationAuthorityId: String!
+  departmentIds: [String!]!
+  certificationIds: [String!]!
+}
+
 type Query {
   certification_authority_getCertificationAuthority(
     id: ID!
@@ -75,32 +106,12 @@ type Query {
     searchFilter: String
     candidacyId: String!
   ): CertificationAuthorityPaginated!
-}
 
-input UpdateCertificationAuthorityInput {
-  label: String!
-  contactFullName: String
-  contactEmail: String
-}
-
-input CreateCertificationAuthorityLocalAccountInput {
-  accountFirstname: String!
-  accountLastname: String!
-  accountEmail: String!
-  departmentIds: [String!]!
-  certificationIds: [String!]!
-}
-
-input UpdateCertificationAuthorityLocalAccountInput {
-  certificationAuthorityLocalAccountId: String!
-  departmentIds: [String!]!
-  certificationIds: [String!]!
-}
-
-input UpdateCertificationAuthorityDepartmentsAndCertificationsInput {
-  certificationAuthorityId: String!
-  departmentIds: [String!]!
-  certificationIds: [String!]!
+  certification_authority_getCertificationAuthorityStructures(
+    offset: Int
+    limit: Int
+    searchFilter: String
+  ): CertificationAuthorityStructurePaginated!
 }
 
 type Mutation {
