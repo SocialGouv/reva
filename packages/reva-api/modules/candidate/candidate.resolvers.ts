@@ -1,6 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { prismaClient } from "../../prisma/client";
+import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
@@ -8,13 +9,12 @@ import {
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
+import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
-import { getHighestDegreeByCandidateId } from "./features/getHighestDegreeByCandidateId";
-import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
-import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { getHighestDegreeById } from "./features/getHighestDegreeById";
 
 const unsafeResolvers = {
   Candidate: {
@@ -54,8 +54,8 @@ const unsafeResolvers = {
       niveauDeFormationLePlusEleveDegreeId: string;
     }) =>
       getNiveauDeFormationLePlusEleve({ niveauDeFormationLePlusEleveDegreeId }),
-    highestDegree: async ({ candidateId }: { candidateId: string }) =>
-      getHighestDegreeByCandidateId({ candidateId }),
+    highestDegree: async ({ highestDegreeId }: { highestDegreeId: string }) =>
+      getHighestDegreeById({ highestDegreeId }),
     candidacy: async ({ id: candidateId }: { id: string }) =>
       getFirstActiveCandidacyByCandidateId({ candidateId }),
   },
