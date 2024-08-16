@@ -64,7 +64,7 @@ const CertificationAuthorityStructuresListPage = () => {
                   <Button
                     className="ml-auto"
                     linkProps={{
-                      href: `/certification-authority-structure/${c.id}`,
+                      href: `/certification-authority-structures/${c.id}`,
                     }}
                   >
                     Voir plus
