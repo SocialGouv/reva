@@ -255,6 +255,18 @@ const unsafeResolvers = {
         offset?: number;
       },
     ) => getCertificationAuthorityStructures(params),
+
+    certification_authority_getCertificationAuthorityStructure: (
+      _parent: unknown,
+      {
+        id,
+      }: {
+        id: string;
+      },
+    ) =>
+      getCertificationAuthorityStructureById({
+        certificationAuthorityStructureId: id,
+      }),
   },
 };
 

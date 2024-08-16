@@ -112,6 +112,9 @@ type Query {
     limit: Int
     searchFilter: String
   ): CertificationAuthorityStructurePaginated!
+  certification_authority_getCertificationAuthorityStructure(
+    id: ID!
+  ): CertificationAuthorityStructure
 }
 
 type Mutation {
