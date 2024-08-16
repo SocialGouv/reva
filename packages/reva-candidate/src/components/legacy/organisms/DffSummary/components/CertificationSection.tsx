@@ -20,6 +20,7 @@ export default function CertificationSection({
   prerequisites,
   blocsDeCompetences,
   certificationCompetenceDetails,
+  isCertificationPartial,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -28,6 +29,7 @@ export default function CertificationSection({
   prerequisites?: Prerequisite[] | null;
   blocsDeCompetences: CertificationCompetenceBloc[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
+  isCertificationPartial: boolean;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -72,7 +74,11 @@ export default function CertificationSection({
           </div>
         )}
       </div>
-      <CallOut>Un ou plusieurs bloc(s) de compétences visé(s)</CallOut>
+      <CallOut>
+        {isCertificationPartial
+          ? "Un ou plusieurs bloc(s) de compétences visé(s)"
+          : "La certification dans sa totalité"}
+      </CallOut>
 
       <h5 className="mb-0">Blocs de compétences</h5>
 
