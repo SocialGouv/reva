@@ -82,7 +82,11 @@ export const Header = () => {
               {
                 text: "Certificateurs",
                 linkProps: {
-                  href: "/certification-authorities",
+                  href: isFeatureActive(
+                    "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
+                  )
+                    ? "/certification-authority-structures"
+                    : "/certification-authorities",
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith(
