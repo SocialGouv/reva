@@ -143,6 +143,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           dematerializedFeasibilityFile {
             id
             sentToCandidateAt
+            isReadyToBeSentToCandidate
             candidateConfirmationAt
             aapDecision
             aapDecisionComment

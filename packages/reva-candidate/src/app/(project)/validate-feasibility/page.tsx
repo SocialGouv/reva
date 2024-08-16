@@ -154,6 +154,8 @@ export default function ValidateFeasibility() {
                     setCandidateConfirmation(e.target.checked);
                   },
                   checked: candidateConfirmation,
+                  disabled:
+                    !dematerializedFeasibilityFile?.isReadyToBeSentToCandidate,
                 },
               },
             ]}
@@ -174,7 +176,14 @@ export default function ValidateFeasibility() {
             Retour
           </Button>
 
-          <Button type="submit" data-test="submit" disabled={formIsDisabled}>
+          <Button
+            type="submit"
+            data-test="submit"
+            disabled={
+              formIsDisabled ||
+              !dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
+            }
+          >
             Envoyer
           </Button>
         </div>
