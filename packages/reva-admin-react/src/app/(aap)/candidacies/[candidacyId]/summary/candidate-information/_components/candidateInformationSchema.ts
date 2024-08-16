@@ -23,10 +23,8 @@ export const candidateInformationSchema = z
     city: z.string().min(1, defaultErrorMessage),
     zip: z
       .string()
-      .regex(
-        /^(\d{5}|)$/,
-        "Ce champ doit être vide ou contenir un code postal",
-      ),
+      .min(5, "Le code postal doit contenir au moins 5 chiffres")
+      .regex(/^\d{5}$/, "Le code postal est invalide"),
     phone: z.string(),
     email: z.string().email(defaultErrorMessage),
   })
