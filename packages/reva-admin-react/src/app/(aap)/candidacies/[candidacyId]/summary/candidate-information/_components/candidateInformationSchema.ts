@@ -27,6 +27,7 @@ export const candidateInformationSchema = z
       .regex(/^\d{5}$/, "Le code postal est invalide"),
     phone: z.string(),
     email: z.string().email(defaultErrorMessage),
+    addressComplement: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.birthdate) {

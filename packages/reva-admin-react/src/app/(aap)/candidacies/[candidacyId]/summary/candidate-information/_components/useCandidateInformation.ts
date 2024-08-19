@@ -39,6 +39,7 @@ const getCandidacyById = graphql(`
         street
         city
         zip
+        addressComplement
         birthdate
         birthCity
         birthDepartment {

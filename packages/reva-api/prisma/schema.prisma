@@ -217,6 +217,7 @@ model Candidate {
   street                               String?                 @db.VarChar(255)
   city                                 String?                 @db.VarChar(255)
   zip                                  String?                 @db.VarChar(5)
+  addressComplement                    String?                 @db.VarChar(255)
   departmentId                         String                  @map("department_id") @db.Uuid
   department                           Department              @relation(fields: [departmentId], references: [id])
   birthDepartmentId                    String?                 @map("birth_department_id") @db.Uuid

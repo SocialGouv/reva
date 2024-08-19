@@ -47,6 +47,7 @@ type Candidate {
   zip: String
   street: String
   city: String
+  addressComplement: String
 }
 
 type Query {
@@ -80,6 +81,7 @@ input CandidateUpdateInformationInput {
   city: String!
   phone: String!
   email: String!
+  addressComplement: String
 }
 
 input CandidateProfileUpdateInput {

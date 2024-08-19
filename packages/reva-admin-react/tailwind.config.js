@@ -33,6 +33,14 @@ module.exports = {
           700: "#3A3A3A",
           900: "#161616",
         },
+        dsfrGray: {
+          contrast: "#EEEEEE",
+          altblueFrance: "#F5F5FE",
+          mentionGrey: "#666666",
+          labelGrey: "#161616",
+          defaultGrey: "#FFFFFF",
+          titleGrey: "#161616",
+        },
       },
       listStyleType: {
         square: "square",

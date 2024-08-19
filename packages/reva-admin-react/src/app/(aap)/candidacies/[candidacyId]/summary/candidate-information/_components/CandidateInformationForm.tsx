@@ -6,9 +6,11 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAdress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
@@ -40,6 +42,12 @@ const CandidateInformationForm = ({
     useUpdateCandidateInformation(candidacyId);
 
   const candidate = candidacy?.candidate;
+  const isAddressAlreadyComplete =
+    !!candidate?.street && !!candidate?.zip && !!candidate?.city;
+
+  const [completeAddressSelected, setCompleteAddressSelected] = useState(
+    isAddressAlreadyComplete,
+  );
   const franceId = countries?.find((c) => c.label === "France")?.id;
 
   const genders = [
@@ -80,6 +88,7 @@ const CandidateInformationForm = ({
       zip: candidate?.zip ?? "",
       phone: candidate?.phone ?? "",
       email: candidate?.email ?? "",
+      addressComplement: candidate?.addressComplement ?? "",
     },
   });
 
@@ -112,6 +121,7 @@ const CandidateInformationForm = ({
         zip: candidate.zip ?? "",
         phone: candidate.phone ?? "",
         email: candidate.email ?? "",
+        addressComplement: candidate.addressComplement ?? "",
       });
     },
     [reset, franceId],
@@ -156,6 +166,7 @@ const CandidateInformationForm = ({
       city: data.city,
       phone: data.phone,
       email: data.email,
+      addressComplement: data.addressComplement,
     };
 
     try {
@@ -170,6 +181,20 @@ const CandidateInformationForm = ({
     } catch (e) {
       graphqlErrorToast(e);
     }
+  };
+
+  const handleOnAddressSelection = ({
+    street,
+    zip,
+    city,
+  }: {
+    street: string;
+    zip: string;
+    city: string;
+  }) => {
+    setValue("street", street, { shouldDirty: true });
+    setValue("zip", zip, { shouldDirty: true });
+    setValue("city", city, { shouldDirty: true });
   };
 
   return (
@@ -293,29 +318,57 @@ const CandidateInformationForm = ({
           />
         </div>
         <h6 className="mb-0 text-xl font-bold">Informations de contact</h6>
-        <Input
-          label="Numéro et nom de rue"
-          className="w-full"
-          nativeInputProps={register("street")}
-          state={errors.street ? "error" : "default"}
-          stateRelatedMessage={errors.street?.message}
-        />
         <div className="flex gap-4">
-          <Input
-            label="Code postal"
-            className="w-full"
-            nativeInputProps={register("zip")}
-            state={errors.zip ? "error" : "default"}
-            stateRelatedMessage={errors.zip?.message}
+          <AutocompleteAddress
+            onOptionSelection={handleOnAddressSelection}
+            className="w-full flex-1"
           />
           <Input
-            label="Ville"
-            className="w-full"
-            nativeInputProps={register("city")}
-            state={errors.city ? "error" : "default"}
-            stateRelatedMessage={errors.city?.message}
+            label="Complément d'adresse (Optionnel)"
+            className="w-full flex-1"
+            nativeInputProps={register("addressComplement")}
+            state={errors.addressComplement ? "error" : "default"}
+            stateRelatedMessage={errors.addressComplement?.message}
           />
         </div>
+
+        <Checkbox
+          options={[
+            {
+              label: "Je ne trouve pas mon adresse",
+              nativeInputProps: {
+                checked: completeAddressSelected,
+                onChange: (e) => setCompleteAddressSelected(e.target.checked),
+              },
+            },
+          ]}
+        />
+
+        {completeAddressSelected && (
+          <div className="flex gap-4">
+            <Input
+              label="Numéro et nom de rue"
+              className="w-full flex-[3]"
+              nativeInputProps={register("street")}
+              state={errors.street ? "error" : "default"}
+              stateRelatedMessage={errors.street?.message}
+            />
+            <Input
+              label="Code postal"
+              className="w-full flex-1"
+              nativeInputProps={register("zip")}
+              state={errors.zip ? "error" : "default"}
+              stateRelatedMessage={errors.zip?.message}
+            />
+            <Input
+              label="Ville"
+              className="w-full flex-[2]"
+              nativeInputProps={register("city")}
+              state={errors.city ? "error" : "default"}
+              stateRelatedMessage={errors.city?.message}
+            />
+          </div>
+        )}
         <div className="flex gap-4">
           <Input
             label="Numéro de téléphone"

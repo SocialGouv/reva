@@ -92,6 +92,7 @@ export interface CandidateUpdateInput {
   zip: string;
   city: string;
   departmentId?: string;
+  addressComplement?: string;
 }
 
 export interface CandidateProfileUpdateInput {
