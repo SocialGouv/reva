@@ -24,6 +24,20 @@ const nextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; connect-src 'self' https://api-adresse.data.gouv.fr;",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
