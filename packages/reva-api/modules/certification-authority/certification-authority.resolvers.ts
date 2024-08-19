@@ -27,6 +27,7 @@ import { updateCertificationAuthorityLocalAccount } from "./features/updateCerti
 import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
+import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -188,6 +189,13 @@ const unsafeResolvers = {
           transferReason: string;
         },
       ) => transferCandidacyToAnotherCertificationAuthority(params),
+    certification_authority_updateCertificationAuthorityStructure: async (
+      _parent: unknown,
+      params: {
+        certificationAuthorityStructureId: string;
+        certificationAuthorityStructureLabel: string;
+      },
+    ) => updateCertificationAuthorityStructure(params),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
