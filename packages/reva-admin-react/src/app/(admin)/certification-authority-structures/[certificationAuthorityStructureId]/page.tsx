@@ -55,7 +55,7 @@ const CertificationAuthorityStructurePage = () => {
           </p>
           <DefaultCandidacySectionCard
             title="Informations générales"
-            titleIconClass="fr-icon-info-fill"
+            titleIconClass="fr-icon-information-fill"
             isEditable
             status="COMPLETED"
             buttonOnClickHref={`/certification-authority-structures/${certificationAuthorityStructureId}/informations-generales`}
