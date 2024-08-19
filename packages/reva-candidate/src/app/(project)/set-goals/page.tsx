@@ -12,6 +12,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 
 import { useSetGoals } from "./set-goals.hooks";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 export default function SetGoals() {
   const router = useRouter();
@@ -52,7 +54,9 @@ export default function SetGoals() {
         refetch();
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (

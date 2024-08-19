@@ -10,6 +10,8 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 type PageAction = {
   type: "changeCondition";
@@ -98,7 +100,9 @@ export default function ValidateTraining() {
         refetch();
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (

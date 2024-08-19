@@ -15,6 +15,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { SelectDepartment } from "@/components/select-department/SelectDepartment.component";
 
 import { useRegistration } from "./registration.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 export default function Registration() {
   const { isFeatureActive } = useFeatureFlipping();
@@ -49,7 +51,9 @@ export default function Registration() {
       if (response) {
         router.push("/registration-confirmation");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (

@@ -1,4 +1,5 @@
 import { setCookie, deleteCookie, getCookie } from 'cookies-next';
+import { errorToast } from '../toast/toast';
 
 const storageKey = "tokens";
 
@@ -15,7 +16,9 @@ export const getTokens = (): Tokens | undefined => {
       const tokens = JSON.parse(tokensData);
       return tokens;
     }
-  } catch (error) {}
+  } catch (error) {
+    errorToast(`Impossible de récupérer les jetons : ${error}`);
+  }
 
   return undefined;
 };
@@ -23,11 +26,15 @@ export const getTokens = (): Tokens | undefined => {
 export const saveTokens = (tokens: Tokens): void => {
   try {
     setCookie(storageKey, JSON.stringify(tokens));
-  } catch (error) {}
+  } catch (error) {
+    errorToast(`Impossible de sauvegarder les jetons : ${error}`);
+  }
 };
 
 export const removeTokens = (): void => {
   try {
     deleteCookie(storageKey);
-  } catch (error) {}
+  } catch (error) {
+    errorToast(`Impossible de supprimer les jetons : ${error}`);
+  }
 };

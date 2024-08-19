@@ -16,6 +16,8 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import { useAddExperience } from "./add-experience.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -58,7 +60,9 @@ export default function AddExperience() {
         refetch();
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (

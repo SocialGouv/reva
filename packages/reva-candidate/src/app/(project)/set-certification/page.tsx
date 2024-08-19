@@ -28,6 +28,8 @@ import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
 import { useSetCertification } from "./set-certification.hooks";
 import Link from "next/link";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 export default function SetCertification() {
   const router = useRouter();
@@ -88,7 +90,9 @@ export default function SetCertification() {
 
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   const info =

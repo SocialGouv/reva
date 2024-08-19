@@ -16,6 +16,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { useUpdateExperience } from "./update-experience.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -69,7 +71,9 @@ export default function UpdateExperience() {
         refetch();
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (

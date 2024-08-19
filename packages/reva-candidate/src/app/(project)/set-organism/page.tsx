@@ -16,6 +16,8 @@ import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/Organis
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
 
 import { useSetOrganism } from "./set-organism.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GraphQLError } from "graphql";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -96,7 +98,9 @@ export default function SetOrganism() {
         refetch();
         router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
   };
 
   return (
