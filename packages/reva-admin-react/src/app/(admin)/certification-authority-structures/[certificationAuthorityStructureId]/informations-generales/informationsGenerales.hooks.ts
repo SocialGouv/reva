@@ -15,7 +15,7 @@ const getCertificationAuthorityStructureQuery = graphql(`
 `);
 
 const updateCertificationAuthorityStructureMutation = graphql(`
-  mutation updateCertificationAuthorityStructure(
+  mutation updateCertificationAuthorityStructureForAdminInformationsGeneralesPage(
     $certificationAuthorityStructureId: ID!
     $certificationAuthorityStructureLabel: String!
   ) {
