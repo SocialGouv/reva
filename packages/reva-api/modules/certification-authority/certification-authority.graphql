@@ -21,6 +21,7 @@ type CertificationAuthorityStructure {
   id: ID!
   label: String!
   certifications: [Certification!]!
+  certificationAuthorities: [CertificationAuthority!]!
 }
 
 type CertificationAuthorityStructurePaginated {

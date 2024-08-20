@@ -1,10 +1,13 @@
 "use client";
 
+import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const getCertificationAuthorityStructure = graphql(`
@@ -14,6 +17,10 @@ const getCertificationAuthorityStructure = graphql(`
       label
       certifications {
         id
+      }
+      certificationAuthorities {
+        id
+        label
       }
     }
   }
@@ -43,6 +50,11 @@ const CertificationAuthorityStructurePage = () => {
 
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureResponse?.certification_authority_getCertificationAuthorityStructure;
+
+  console.log(
+    "certificationAuthorityStructure",
+    certificationAuthorityStructure,
+  );
 
   if (getCertificationAuthorityStructureStatus !== "success") {
     return null;
@@ -90,6 +102,33 @@ const CertificationAuthorityStructurePage = () => {
                 </div>
               ) : null}
             </DefaultCandidacySectionCard>
+            <CandidacySectionCard
+              title="Certificateurs administrateurs"
+              titleIconClass="fr-icon-clipboard-fill"
+            >
+              <ul className="list-none font-bold">
+                {certificationAuthorityStructure.certificationAuthorities.map(
+                  (certificationAuthority) => (
+                    <li
+                      key={certificationAuthority.id}
+                      className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
+                    >
+                      <span>{certificationAuthority.label}</span>
+                      <span>
+                        <Button
+                        priority="tertiary"
+                        linkProps={{
+                          href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}`,
+                        }}
+                        >
+                          Modifier
+                        </Button>
+                      </span>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </CandidacySectionCard>
           </div>
         </div>
       )}

@@ -29,6 +29,7 @@ import { getCertificationsByCertificationStructureId } from "./features/getCerti
 import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
+import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -68,6 +69,11 @@ const unsafeResolvers = {
   CertificationAuthorityStructure: {
     certifications: ({ id: certificationStructureId }: { id: string }) =>
       getCertificationsByCertificationStructureId({ certificationStructureId }),
+    certificationAuthorities: ({
+      id: certificationStructureId,
+    }: {
+      id: string;
+    }) => getCertificationAuthoritiesByStructureId(certificationStructureId),
   },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
