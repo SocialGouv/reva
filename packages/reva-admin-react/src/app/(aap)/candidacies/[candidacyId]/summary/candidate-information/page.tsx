@@ -1,10 +1,10 @@
 "use client";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
-import { useParams } from "next/navigation";
-import { useCandidateSummary } from "./_components/useCandidateInformation";
-import CandidateInformationForm from "./_components/CandidateInformationForm";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import { useParams } from "next/navigation";
+import CandidateInformationForm from "./_components/CandidateInformationForm";
+import { useCandidateSummary } from "./_components/useCandidateInformation";
 
 const CandidateInformationPage = () => {
   const { candidacyId } = useParams<{
@@ -48,7 +48,7 @@ const CandidateInformationPage = () => {
   }
 
   return (
-    <div className="flex flex-col w-full p-8 gap-8">
+    <div className="flex flex-col w-full gap-8">
       <div>
         <h1>Renseigner les informations</h1>
         <FormOptionalFieldsDisclaimer />

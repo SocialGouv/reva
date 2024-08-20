@@ -195,6 +195,7 @@ const CandidateInformationForm = ({
     setValue("street", street, { shouldDirty: true });
     setValue("zip", zip, { shouldDirty: true });
     setValue("city", city, { shouldDirty: true });
+    setCompleteAddressSelected(false);
   };
 
   return (
@@ -208,10 +209,10 @@ const CandidateInformationForm = ({
         className="flex flex-col gap-6"
       >
         <h6 className="mb-0 text-xl font-bold">Informations civiles</h6>
-        <div className="flex gap-6">
+        <div className="flex gap-8">
           <Select
             label="Civilité"
-            className="w-full"
+            className="w-full mb-0"
             nativeSelectProps={register("gender")}
             state={errors.gender ? "error" : "default"}
             stateRelatedMessage={errors.gender?.message}
@@ -226,40 +227,40 @@ const CandidateInformationForm = ({
           </Select>
           <Input
             label="Nom de naissance"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
           />
           <Input
             label="Nom d'usage (optionnel)"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("givenName")}
           />
         </div>
-        <div className="flex gap-6">
+        <div className="flex gap-8">
           <Input
             label="Prénom principal"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("firstname")}
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
           />
           <Input
             label="Prénom 2 (optionnel)"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("firstname2")}
           />
           <Input
             label="Prénom 3 (optionnel)"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("firstname3")}
           />
         </div>
-        <div className="flex gap-6">
+        <div className="flex">
           <Input
             label="Date de naissance"
-            className="w-full"
+            className="w-full md:w-1/3 md:pr-6"
             nativeInputProps={{
               ...register("birthdate"),
               type: "date",
@@ -267,8 +268,10 @@ const CandidateInformationForm = ({
             state={errors.birthdate ? "error" : "default"}
             stateRelatedMessage={errors.birthdate?.message}
           />
+        </div>
+        <div className="flex gap-8">
           <Select
-            className="w-full"
+            className="w-full mb-0"
             label="Pays de naissance"
             nativeSelectProps={register("country")}
             state={errors.country ? "error" : "default"}
@@ -280,10 +283,8 @@ const CandidateInformationForm = ({
               </option>
             ))}
           </Select>
-        </div>
-        <div className="flex gap-6">
           <Select
-            className="w-full"
+            className="w-full mb-0"
             label="Département de naissance"
             disabled={disabledDepartment}
             nativeSelectProps={register("birthDepartment")}
@@ -302,13 +303,13 @@ const CandidateInformationForm = ({
 
           <Input
             label="Ville de naissance"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("birthCity")}
             state={errors.birthCity ? "error" : "default"}
             stateRelatedMessage={errors.birthCity?.message}
           />
         </div>
-        <div className="flex gap-6">
+        <div className="flex gap-8">
           <Input
             label="Nationalité"
             className="w-full"
@@ -317,8 +318,10 @@ const CandidateInformationForm = ({
             stateRelatedMessage={errors.nationality?.message}
           />
         </div>
-        <h6 className="mb-0 text-xl font-bold">Informations de contact</h6>
-        <div className="flex gap-4">
+        <h6 className="mb-0 md:mt-4 text-xl font-bold">
+          Informations de contact
+        </h6>
+        <div className="flex gap-8">
           <AutocompleteAddress
             onOptionSelection={handleOnAddressSelection}
             className="w-full flex-1"
@@ -335,17 +338,18 @@ const CandidateInformationForm = ({
         <Checkbox
           options={[
             {
-              label: "Je ne trouve pas mon adresse",
+              label: "Je saisis manuellement l'adresse",
               nativeInputProps: {
                 checked: completeAddressSelected,
                 onChange: (e) => setCompleteAddressSelected(e.target.checked),
               },
             },
           ]}
+          className="mb-0"
         />
 
         {completeAddressSelected && (
-          <div className="flex gap-4">
+          <div className="flex gap-8">
             <Input
               label="Numéro et nom de rue"
               className="w-full flex-[3]"
@@ -369,7 +373,7 @@ const CandidateInformationForm = ({
             />
           </div>
         )}
-        <div className="flex gap-4">
+        <div className="flex gap-8">
           <Input
             label="Numéro de téléphone"
             className="w-full"
