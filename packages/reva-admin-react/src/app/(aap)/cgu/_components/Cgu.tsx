@@ -295,6 +295,15 @@ export const Cgu = () => (
         candidat lors de sa candidature ;
       </li>
       <li>
+        distinguer les candidatures relevant d’une prise en charge auprès
+        d’UNIFORMATION et celles relevant d’un financement de droit commun dont
+        le CPF ;
+      </li>
+      <li>
+        consulter un article d’information sur les dispositifs de financement de
+        droit commun le cas échéant ;
+      </li>
+      <li>
         renseigner les informations liées aux rendez-vous pédagogiques et à la
         recevabilité du candidat ;
       </li>
@@ -304,7 +313,10 @@ export const Cgu = () => (
       </li>
       <li>
         Saisir et solliciter une demande de prise en charge financière (en
-        nombre d’heures, coût horaire) pour les candidats qu’ils accompagnent ;
+        nombre d’heures, coût horaire) pour les candidats qu’ils accompagnent
+        dans la limite de l’enveloppe budgétaire allouée à cet effet à
+        UNIFORMATION (dès lors que la limite est atteinte, la fonctionnalité
+        n’est plus disponible) ;
       </li>
       <li>
         demander le cas échéant le paiement final des prestations réalisées sur
@@ -426,7 +438,8 @@ export const Cgu = () => (
       parcours prendra effet aussitôt. L’organisme d’accompagnement informe les
       parties prenantes et collecte les éléments de paiement. Le financeur peut
       alors utiliser les fonds destinés au financement du parcours du candidat
-      pour le financement d’autres parcours de VAE.
+      pour le financement d’autres parcours de VAE, avant la date limite pour
+      l’engagement des crédits alloués par l’Etat à UNIFORMATION (31/12/2024).
     </p>
     <p>
       <em>Abandon constaté</em>
@@ -661,13 +674,16 @@ export const Cgu = () => (
       tout moment, sans préavis, en fonction des modifications apportées à la
       plateforme, de l’évolution de la législation ou pour tout autre motif jugé
       nécessaire par ses gestionnaires. Chaque modification des CGU donne lieu à
-      une nouvelle version qui doit être acceptée par les parties.
+      une nouvelle version qui doit être acceptée par les parties. Sans
+      acceptation des nouvelles versions de CGU, l’AAP ne sera plus proposé
+      comme option aux candidats mais pourra néanmoins poursuivre les parcours
+      recevables déjà engagés.
     </p>
     <p>
       Les termes des présentes conditions générales d’utilisation s’imposent au
       public.
     </p>
     <br />
-    <p>Dernière version des CGU : 01/08/2024</p>
+    <p>Dernière version des CGU : XX/XX/2024</p>
   </>
 );
