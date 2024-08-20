@@ -67,7 +67,6 @@ export const confirmTrainingFormByCandidate = async ({
         id: feasibility.id,
       },
       data: {
-        decision: "PENDING",
         dematerializedFeasibilityFile: {
           create: {},
         },

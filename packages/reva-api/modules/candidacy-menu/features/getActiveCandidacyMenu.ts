@@ -83,14 +83,16 @@ export const getActiveCandidacyMenu = async ({
       "PARCOURS_CONFIRME",
       "DOSSIER_FAISABILITE_INCOMPLET",
     ];
+    const editableFeasibilityDecisions = ["DRAFT", "INCOMPLETE"];
+    const feasibilityDecision = activeFeasibility?.decision ?? "";
     const isDfDematerialized = feasibilityFormat === "DEMATERIALIZED";
+    const isActiveWithEditHint =
+      editableStatus.includes(activeCandidacyStatus) &&
+      editableFeasibilityDecisions.includes(feasibilityDecision);
 
     if (isDfDematerialized && !isCandidateSummaryComplete) {
       menuEntryStatus = "INACTIVE";
-    } else if (
-      (editableStatus.includes(activeCandidacyStatus) && !activeFeasibility) ||
-      activeFeasibility?.decision === "INCOMPLETE"
-    ) {
+    } else if (isActiveWithEditHint) {
       menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
     } else if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
       menuEntryStatus = "ACTIVE_WITHOUT_HINT";
