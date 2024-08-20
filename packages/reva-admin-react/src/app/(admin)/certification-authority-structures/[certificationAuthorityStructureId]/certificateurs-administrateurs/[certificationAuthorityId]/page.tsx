@@ -23,8 +23,6 @@ const CertificationAuthorityAdminsPage = () => {
   ) {
     return null;
   }
-  console.log("certificationAuthority", certificationAuthority);
-  console.log("domainsAndCertifications", domainsAndCertifications);
 
   const isInterventionAreaComplete = certificationAuthority.regions.length > 0;
   const isDomainsAndCertificationsComplete = Object.keys(domainsAndCertifications).length > 0;
