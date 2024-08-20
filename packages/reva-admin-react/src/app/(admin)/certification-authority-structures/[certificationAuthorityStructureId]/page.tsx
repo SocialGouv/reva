@@ -21,6 +21,14 @@ const getCertificationAuthorityStructure = graphql(`
       certificationAuthorities {
         id
         label
+        certificationAuthorityLocalAccounts {
+          id
+          account {
+            firstname
+            lastname
+            email
+          }
+        }
       }
     }
   }
@@ -116,16 +124,52 @@ const CertificationAuthorityStructurePage = () => {
                       <span>{certificationAuthority.label}</span>
                       <span>
                         <Button
-                        priority="tertiary"
-                        linkProps={{
-                          href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}`,
-                        }}
+                          priority="tertiary"
+                          linkProps={{
+                            href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}`,
+                          }}
                         >
                           Modifier
                         </Button>
                       </span>
                     </li>
                   ),
+                )}
+              </ul>
+            </CandidacySectionCard>
+            <CandidacySectionCard
+              title="Comptes collaborateurs"
+              titleIconClass="fr-icon-team-fill"
+            >
+              <ul className="list-none">
+                {certificationAuthorityStructure.certificationAuthorities.map(
+                  (certificationAuthority) =>
+                    certificationAuthority.certificationAuthorityLocalAccounts.map(
+                      (cala) => (
+                        <li
+                          key={cala.id}
+                          className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
+                        >
+                          <div className="flex flex-col">
+                            <span className="font-bold">
+                              {cala.account.firstname || ""}{" "}
+                              {cala.account.lastname}
+                            </span>
+                            <span>{cala.account.email}</span>
+                          </div>
+                          <span>
+                            <Button
+                              priority="tertiary"
+                              linkProps={{
+                                href: `/certification-authority-structures/${certificationAuthorityStructureId}/comptes-collaborateurs/${cala.id}`,
+                              }}
+                            >
+                              Modifier
+                            </Button>
+                          </span>
+                        </li>
+                      ),
+                    ),
                 )}
               </ul>
             </CandidacySectionCard>
