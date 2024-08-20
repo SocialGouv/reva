@@ -33,6 +33,7 @@ const CertificationAuthorityStructurePage = () => {
     queryKey: [
       certificationAuthorityStructureId,
       "getCertificationAuthorityStructure",
+      "getCertificationAuthorityStructureAdminListPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityStructure, {

@@ -43,6 +43,7 @@ export const useInformationGeneralesPage = ({
     queryKey: [
       certificationAuthorityStructureId,
       "getCertificationAuthorityStructure",
+      "getCertificationAuthorityStructureInformationsGeneralesPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityStructureQuery, {
