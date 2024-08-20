@@ -28,6 +28,7 @@ import { getCertificationAuthorityStructureById } from "./features/getCertificat
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
+import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -196,6 +197,14 @@ const unsafeResolvers = {
         certificationAuthorityStructureLabel: string;
       },
     ) => updateCertificationAuthorityStructure(params),
+    certification_authority_updateCertificationAuthorityStructureCertifications:
+      async (
+        _parent: unknown,
+        params: {
+          certificationAuthorityStructureId: string;
+          certificationIds: string[];
+        },
+      ) => updateCertificationAuthorityStructureCertifications(params),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
