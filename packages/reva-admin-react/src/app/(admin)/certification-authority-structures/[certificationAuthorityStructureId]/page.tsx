@@ -7,8 +7,10 @@ import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { useMemo } from "react";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
@@ -17,6 +19,12 @@ const getCertificationAuthorityStructure = graphql(`
       label
       certifications {
         id
+        codeRncp
+        label
+        domaines {
+          id
+          label
+        }
       }
       certificationAuthorities {
         id
@@ -58,6 +66,25 @@ const CertificationAuthorityStructurePage = () => {
 
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureResponse?.certification_authority_getCertificationAuthorityStructure;
+
+  const domainsAndCertifications = useMemo(
+    () =>
+      certificationAuthorityStructure?.certifications?.reduce(
+        (acc, curr) => {
+          if (acc[curr.domaines[0].id]) {
+            acc[curr.domaines[0].id] = [...acc[curr.domaines[0].id], curr];
+          } else {
+            acc[curr.domaines[0].id] = [curr];
+          }
+          return acc;
+        },
+        {} as Record<
+          string,
+          (typeof certificationAuthorityStructure.certifications)[0][]
+        >,
+      ) || {},
+    [certificationAuthorityStructure],
+  );
 
   if (getCertificationAuthorityStructureStatus !== "success") {
     return null;
@@ -104,6 +131,23 @@ const CertificationAuthorityStructurePage = () => {
                   </Badge>
                 </div>
               ) : null}
+              <p className="font-bold mt-6">Domaines rattachés</p>
+              {Object.entries(domainsAndCertifications).map(
+                ([domainId, certifications]) => (
+                  <Accordion
+                    label={certifications[0].domaines[0].label}
+                    key={domainId}
+                  >
+                    <div className="flex flex-wrap gap-2">
+                      {certifications.map((c) => (
+                        <Tag key={c.id}>
+                          {c.codeRncp} - {c.label}
+                        </Tag>
+                      ))}
+                    </div>
+                  </Accordion>
+                ),
+              )}
             </DefaultCandidacySectionCard>
             <CandidacySectionCard
               title="Certificateurs administrateurs"
