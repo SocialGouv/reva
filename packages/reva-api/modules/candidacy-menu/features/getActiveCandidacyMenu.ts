@@ -25,11 +25,13 @@ export const getActiveCandidacyMenu = async ({
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
+  const hasAlreadyAppointment = !!candidacy.firstAppointmentOccuredAt;
+
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",
     url: buildUrl({ suffix: "meetings" }),
     status:
-      activeCandidacyStatus === "PRISE_EN_CHARGE"
+      activeCandidacyStatus === "PRISE_EN_CHARGE" && !hasAlreadyAppointment
         ? "ACTIVE_WITH_EDIT_HINT"
         : "ACTIVE_WITHOUT_HINT",
   });
@@ -43,8 +45,7 @@ export const getActiveCandidacyMenu = async ({
   const getTrainingMenuEntry = (): CandidacyMenuEntry => {
     let trainingUrl = "#";
     let menuEntryStatus: CandidacyMenuEntryStatus =
-      activeCandidacyStatus === "PRISE_EN_CHARGE" &&
-      candidacy.firstAppointmentOccuredAt !== null
+      activeCandidacyStatus === "PRISE_EN_CHARGE" && hasAlreadyAppointment
         ? "ACTIVE_WITH_EDIT_HINT"
         : "ACTIVE_WITHOUT_HINT";
 
@@ -88,7 +89,8 @@ export const getActiveCandidacyMenu = async ({
     const isDfDematerialized = feasibilityFormat === "DEMATERIALIZED";
     const isActiveWithEditHint =
       editableStatus.includes(activeCandidacyStatus) &&
-      editableFeasibilityDecisions.includes(feasibilityDecision);
+      (!activeFeasibility ||
+        editableFeasibilityDecisions.includes(feasibilityDecision));
 
     if (isDfDematerialized && !isCandidateSummaryComplete) {
       menuEntryStatus = "INACTIVE";
