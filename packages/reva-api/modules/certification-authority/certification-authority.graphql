@@ -4,6 +4,7 @@ type CertificationAuthority {
   contactFullName: String
   contactEmail: String
   departments: [Department!]!
+  regions: [Region!]!
   certifications: [Certification!]!
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructure: CertificationAuthorityStructure!

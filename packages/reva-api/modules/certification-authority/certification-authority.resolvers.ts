@@ -30,6 +30,7 @@ import { getCertificationAuthorityStructures } from "./features/getCertification
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
+import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -37,6 +38,7 @@ const unsafeResolvers = {
       getDepartmentsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
+    regions: (parent: CertificationAuthority) => getCertificationAuthorityRegions(parent.id),
     certifications: (parent: CertificationAuthority) =>
       getCertificationsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
