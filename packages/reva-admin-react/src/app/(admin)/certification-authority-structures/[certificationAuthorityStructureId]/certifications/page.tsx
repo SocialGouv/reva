@@ -100,9 +100,9 @@ const CertificationAuthorityStructureCertificationsPage = () => {
             certificationAuthorityStructureLabel={
               certificationAuthorityStructure.label
             }
-            pageLabel={"Certifications"}
+            pageLabel={"Certifications gérées"}
           />
-          <h1>Certifications</h1>
+          <h1>Certifications gérées</h1>
           <p className="text-xl">
             Cochez les certifications proposées par la structure certificatrice.
             Vous pouvez choisir une ou plusieurs certifications.
