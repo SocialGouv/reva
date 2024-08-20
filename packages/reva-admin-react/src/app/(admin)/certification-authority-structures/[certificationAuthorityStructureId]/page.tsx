@@ -4,6 +4,7 @@ import CandidacySectionCard from "@/components/card/candidacy-section-card/Candi
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
@@ -142,35 +143,43 @@ const CertificationAuthorityStructurePage = () => {
               titleIconClass="fr-icon-team-fill"
             >
               <ul className="list-none">
-                {certificationAuthorityStructure.certificationAuthorities.map(
-                  (certificationAuthority) =>
-                    certificationAuthority.certificationAuthorityLocalAccounts.map(
-                      (cala) => (
-                        <li
-                          key={cala.id}
-                          className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-bold">
-                              {cala.account.firstname || ""}{" "}
-                              {cala.account.lastname}
-                            </span>
-                            <span>{cala.account.email}</span>
-                          </div>
-                          <span>
-                            <Button
-                              priority="tertiary"
-                              linkProps={{
-                                href: `/certification-authority-structures/${certificationAuthorityStructureId}/comptes-collaborateurs/${cala.id}`,
-                              }}
+                {certificationAuthorityStructure.certificationAuthorities
+                  .filter((ca) => ca.certificationAuthorityLocalAccounts.length)
+                  .map((certificationAuthority) => (
+                    <li key={certificationAuthority.id}>
+                      <Accordion
+                        label={certificationAuthority.label}
+                        className="before:shadow-none"
+                      >
+                        {certificationAuthority.certificationAuthorityLocalAccounts.map(
+                          (cala) => (
+                            <li
+                              key={cala.id}
+                              className="flex items-center justify-between pt-4 pb-3 border-neutral-300 first:border-t border-b"
                             >
-                              Modifier
-                            </Button>
-                          </span>
-                        </li>
-                      ),
-                    ),
-                )}
+                              <div className="flex flex-col">
+                                <span className="font-bold">
+                                  {cala.account.firstname || ""}{" "}
+                                  {cala.account.lastname}
+                                </span>
+                                <span>{cala.account.email}</span>
+                              </div>
+                              <span>
+                                <Button
+                                  priority="tertiary"
+                                  linkProps={{
+                                    href: `/certification-authority-structures/${certificationAuthorityStructureId}/comptes-collaborateurs/${cala.id}`,
+                                  }}
+                                >
+                                  Visualiser
+                                </Button>
+                              </span>
+                            </li>
+                          ),
+                        )}
+                      </Accordion>
+                    </li>
+                  ))}
               </ul>
             </CandidacySectionCard>
           </div>
