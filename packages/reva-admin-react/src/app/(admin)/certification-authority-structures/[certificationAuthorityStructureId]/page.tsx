@@ -8,7 +8,6 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const getCertificationAuthorityStructure = graphql(`
@@ -59,11 +58,6 @@ const CertificationAuthorityStructurePage = () => {
 
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureResponse?.certification_authority_getCertificationAuthorityStructure;
-
-  console.log(
-    "certificationAuthorityStructure",
-    certificationAuthorityStructure,
-  );
 
   if (getCertificationAuthorityStructureStatus !== "success") {
     return null;
