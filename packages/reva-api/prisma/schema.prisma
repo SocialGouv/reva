@@ -60,8 +60,8 @@ model Certification {
   feasibilityFormat                                 FeasibilityFormat                                   @default(UPLOADED_PDF) @map("feasibility_format")
   AvailableCertification                            AvailableCertification?
   ActiveOrganismByAvailableCertification            ActiveOrganismByAvailableCertification[]
-  certificationAuthorityStructure                   CertificationAuthorityStructure                     @relation(fields: [certificationAuthorityStructureId], references: [id])
-  certificationAuthorityStructureId                 String                                              @map("certification_authority_structure_id") @db.Uuid
+  certificationAuthorityStructure                   CertificationAuthorityStructure?                    @relation(fields: [certificationAuthorityStructureId], references: [id])
+  certificationAuthorityStructureId                 String?                                             @map("certification_authority_structure_id") @db.Uuid
   Candidacy                                         Candidacy[]
 
   @@index([typeDiplomeId])

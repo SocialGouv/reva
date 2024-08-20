@@ -57,7 +57,9 @@ export const replaceCertification = async ({
         },
       },
       certificationAuthorityStructure: {
-        connect: { id: oldCertification.certificationAuthorityStructureId },
+        connect: {
+          id: oldCertification?.certificationAuthorityStructureId || undefined,
+        },
       },
     },
   });
