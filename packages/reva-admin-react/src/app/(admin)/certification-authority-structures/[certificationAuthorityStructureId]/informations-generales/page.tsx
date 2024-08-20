@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 const schema = z.object({
   label: z.string().min(1, "Merci de remplir ce champ."),
@@ -71,27 +71,15 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
     <div className="flex flex-col flex-1">
       {certificationAuthorityStructure && (
         <div className="flex flex-col">
-          <Breadcrumb
-            currentPageLabel="Informations générales"
-            homeLinkProps={{
-              href: `/`,
-            }}
-            segments={[
-              {
-                label: "Annuaire certificateurs",
-                linkProps: {
-                  href: `/certification-authority-structures/`,
-                },
-              },
-              {
-                label: certificationAuthorityStructure.label,
-                linkProps: {
-                  href: `/certification-authority-structures/${certificationAuthorityStructureId}/`,
-                },
-              },
-            ]}
+          <CertificationAuthorityStructureBreadcrumb
+            certificationAuthorityStructureId={
+              certificationAuthorityStructureId
+            }
+            certificationAuthorityStructureLabel={
+              certificationAuthorityStructure.label
+            }
+            pageLabel={"Informations générales"}
           />
-
           <h1>Informations générales</h1>
           <p className="text-xl">
             Retrouvez ici les informations liées à la structure certificatrice.
