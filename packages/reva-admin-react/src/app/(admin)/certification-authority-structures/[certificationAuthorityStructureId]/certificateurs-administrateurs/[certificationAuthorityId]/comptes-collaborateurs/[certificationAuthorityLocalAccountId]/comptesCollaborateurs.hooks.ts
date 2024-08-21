@@ -4,7 +4,7 @@ import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 const getCertificationAuthorityLocalAccountQuery = graphql(`
-  query getCertificationAuthorityLocalAccountForComptesCollaborateursPage(
+  query getCertificationAuthorityLocalAccountForAdminComptesCollaborateursPage(
     $id: ID!
   ) {
     certification_authority_getCertificationAuthorityLocalAccount(id: $id) {
