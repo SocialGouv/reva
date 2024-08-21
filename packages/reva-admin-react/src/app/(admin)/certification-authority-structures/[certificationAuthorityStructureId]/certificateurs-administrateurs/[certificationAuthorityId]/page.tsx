@@ -7,25 +7,21 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
+import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
 
 const CertificationAuthorityAdminsPage = () => {
   const router = useRouter();
-  const {
-    certificationAuthority,
-    getCertificationAuthorityStatus,
-    domainsAndCertifications,
-  } = useCertificationAuthority();
+  const { certificationAuthority, getCertificationAuthorityStatus } =
+    useCertificationAuthority();
 
   if (
     !certificationAuthority ||
-    !domainsAndCertifications ||
     getCertificationAuthorityStatus !== "success"
   ) {
     return null;
   }
 
   const isInterventionAreaComplete = certificationAuthority.regions.length > 0;
-  const isDomainsAndCertificationsComplete = Object.keys(domainsAndCertifications).length > 0;
 
   return (
     <div className="flex flex-col flex-1">
@@ -75,19 +71,15 @@ const CertificationAuthorityAdminsPage = () => {
           buttonTitle="Modifier"
           buttonPriority="secondary"
           buttonOnClick={() => {
-            router.push(`/certification-authorities/${certificationAuthority.id}`);
+            router.push(
+              `/certification-authorities/${certificationAuthority.id}`,
+            );
           }}
           badge={
             <Badge
-              severity={
-                isInterventionAreaComplete
-                  ? "success"
-                  : "warning"
-              }
+              severity={isInterventionAreaComplete ? "success" : "warning"}
             >
-              {isInterventionAreaComplete
-                ? "Complet"
-                : "À compléter"}
+              {isInterventionAreaComplete ? "Complet" : "À compléter"}
             </Badge>
           }
         >
@@ -101,46 +93,10 @@ const CertificationAuthorityAdminsPage = () => {
             </Accordion>
           ))}
         </CandidacySectionCard>
-        <CandidacySectionCard
-          title="Certifications gérées"
-          titleIconClass="fr-icon-award-fill"
-          hasButton
-          buttonTitle="Modifier"
-          buttonPriority="secondary"
-          buttonOnClick={() => {
-            router.push(`/certification-authorities/${certificationAuthority.id}`);
-          }}
-          badge={
-            <Badge
-              severity={
-                isDomainsAndCertificationsComplete
-                  ? "success"
-                  : "warning"
-              }
-            >
-              {isDomainsAndCertificationsComplete
-                ? "Complet"
-                : "À compléter"}
-            </Badge>
-          }
-        >
-          <Badge severity="info" className="mb-4 uppercase">{certificationAuthority.certifications.length} certifications gérées</Badge>
-          <p className="font-bold">Domaines rattachés</p>
-          {Object.entries(domainsAndCertifications).map(
-            ([domainId, certifications]) => (
-              <Accordion
-                label={certifications[0].domaines[0].label}
-                key={domainId}
-              >
-                <ul>
-                  {certifications.map((c) => (
-                    <li key={c.id}>{c.label}</li>
-                  ))}
-                </ul>
-              </Accordion>
-            ),
-          )}
-        </CandidacySectionCard>
+        <CertificationsSummaryCard
+          certifications={certificationAuthority.certifications}
+          updateButtonHref={`/certification-authorities/${certificationAuthority.id}`}
+        />
         <CandidacySectionCard
           title="Compte collaborateurs"
           titleIconClass="fr-icon-team-fill"

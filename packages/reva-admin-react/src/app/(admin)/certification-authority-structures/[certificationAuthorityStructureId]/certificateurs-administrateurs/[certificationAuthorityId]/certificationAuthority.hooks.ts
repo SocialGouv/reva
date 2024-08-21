@@ -2,7 +2,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
 
 const getCertificationAuthority = graphql(`
   query getCertificationAuthoritySForAdminPage($id: ID!) {
@@ -33,7 +32,6 @@ const getCertificationAuthority = graphql(`
           id
           label
         }
-
       }
       certificationAuthorityStructure {
         id
@@ -62,10 +60,7 @@ export const useCertificationAuthority = () => {
     data: getCertificationAuthorityResponse,
     status: getCertificationAuthorityStatus,
   } = useQuery({
-    queryKey: [
-      certificationAuthorityId,
-      "getCertificationAuthority",
-    ],
+    queryKey: [certificationAuthorityId, "getCertificationAuthority"],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthority, {
         id: certificationAuthorityId,
@@ -75,17 +70,5 @@ export const useCertificationAuthority = () => {
   const certificationAuthority =
     getCertificationAuthorityResponse?.certification_authority_getCertificationAuthority;
 
-  const domainsAndCertifications = useMemo(() => certificationAuthority?.certifications?.reduce((acc, curr)=>{
-    if (acc[curr.domaines[0].id]) {
-      acc[curr.domaines[0].id] = [
-        ...acc[curr.domaines[0].id],
-        curr
-      ]
-    } else {
-      acc[curr.domaines[0].id] = [curr]
-    }
-    return acc;
-  }, {} as Record<string, typeof certificationAuthority.certifications[0][]>), [certificationAuthority]);
-
-  return { certificationAuthority, getCertificationAuthorityStatus, domainsAndCertifications };
-}
+  return { certificationAuthority, getCertificationAuthorityStatus };
+};
