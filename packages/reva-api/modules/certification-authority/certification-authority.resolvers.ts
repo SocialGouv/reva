@@ -31,6 +31,7 @@ import { updateCertificationAuthorityStructure } from "./features/updateCertific
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
+import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -38,7 +39,8 @@ const unsafeResolvers = {
       getDepartmentsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
-    regions: (parent: CertificationAuthority) => getCertificationAuthorityRegions(parent.id),
+    regions: (parent: CertificationAuthority) =>
+      getCertificationAuthorityRegions(parent.id),
     certifications: (parent: CertificationAuthority) =>
       getCertificationsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
@@ -164,6 +166,14 @@ const unsafeResolvers = {
         },
       ) =>
         updateCertificationAuthorityDepartmentsAndCertifications(params.input),
+
+    certification_authority_updateCertificationAuthorityCertifications: async (
+      _parent: unknown,
+      params: {
+        certificationAuthorityId: string;
+        certificationIds: string[];
+      },
+    ) => updateCertificationAuthorityCertifications(params),
 
     certification_authority_deleteCertificationAuthorityLocalAccount: async (
       _parent: unknown,

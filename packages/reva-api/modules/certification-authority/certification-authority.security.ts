@@ -36,4 +36,5 @@ export const resolversSecurityMap = {
     isAdmin,
   "Mutation.certification_authority_updateCertificationAuthorityStructureCertifications":
     isAdmin,
+  "Mutation.certification_authority_updateCertificationAuthorityCertifications": isAdmin
 };

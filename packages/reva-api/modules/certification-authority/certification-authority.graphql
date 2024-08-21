@@ -135,6 +135,11 @@ type Mutation {
     certificationIds: [String!]
   ): CertificationAuthorityStructure!
 
+  certification_authority_updateCertificationAuthorityCertifications(
+    certificationAuthorityId: ID!
+    certificationIds: [String!]
+  ): CertificationAuthority!
+
   certification_authority_updateCertificationAuthorityDepartmentsAndCertifications(
     input: UpdateCertificationAuthorityDepartmentsAndCertificationsInput!
   ): CertificationAuthority!
