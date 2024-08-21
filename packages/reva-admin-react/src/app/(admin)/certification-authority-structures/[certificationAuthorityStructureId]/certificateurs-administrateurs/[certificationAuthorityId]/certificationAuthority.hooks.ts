@@ -32,6 +32,10 @@ const getCertificationAuthority = graphql(`
           id
           label
         }
+        conventionsCollectives {
+          id
+          label
+        }
       }
       certificationAuthorityStructure {
         id
