@@ -113,7 +113,8 @@ const CertificationAuthorityStructurePage = () => {
                       <span>{certificationAuthority.label}</span>
                       <span>
                         <Button
-                          priority="tertiary"
+                          priority="tertiary no outline"
+                          size="small"
                           linkProps={{
                             href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}`,
                           }}
@@ -154,7 +155,8 @@ const CertificationAuthorityStructurePage = () => {
                               </div>
                               <span>
                                 <Button
-                                  priority="tertiary"
+                                  priority="tertiary no outline"
+                                  size="small"
                                   linkProps={{
                                     href: `/certification-authority-structures/${certificationAuthorityStructureId}/comptes-collaborateurs/${cala.id}`,
                                   }}
