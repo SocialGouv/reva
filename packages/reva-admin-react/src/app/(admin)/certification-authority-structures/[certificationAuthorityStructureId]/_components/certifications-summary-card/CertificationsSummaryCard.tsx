@@ -51,7 +51,7 @@ export const CertificationsSummaryCard = ({
       ) : null}
       {domaines && (
         <>
-          <p className="font-bold mt-6">Filières rattachés</p>
+          <p className="font-bold mt-6">Filières rattachées</p>
           <div className="flex flex-wrap gap-2">
             {domaines.map((d) => (
               <Tag key={d.id}>{d.label}</Tag>
