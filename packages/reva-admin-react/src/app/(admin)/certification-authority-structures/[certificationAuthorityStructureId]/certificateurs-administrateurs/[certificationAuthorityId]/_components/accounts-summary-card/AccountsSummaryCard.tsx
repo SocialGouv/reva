@@ -15,7 +15,7 @@ export default function AccountsSummaryCard({
 }) {
   return (
     <CandidacySectionCard
-      title="Compte collaborateurs"
+      title="Comptes collaborateurs"
       titleIconClass="fr-icon-team-fill"
     >
       <ul className="list-none font-bold">
