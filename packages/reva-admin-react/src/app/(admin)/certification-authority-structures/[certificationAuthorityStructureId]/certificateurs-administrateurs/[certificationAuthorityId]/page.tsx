@@ -115,7 +115,7 @@ const CertificationAuthorityAdminComponent = ({
         />
         <CertificationsSummaryCard
           certifications={certificationAuthority.certifications}
-          updateButtonHref={`/certification-authorities/${certificationAuthority.id}`}
+          updateButtonHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/certifications`}
         />
         <AccountsSummaryCard
           accounts={certificationAuthority.certificationAuthorityLocalAccounts}
