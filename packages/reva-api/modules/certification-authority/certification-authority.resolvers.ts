@@ -32,6 +32,8 @@ import { updateCertificationAuthorityStructureCertifications } from "./features/
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
+import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
+import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -78,6 +80,12 @@ const unsafeResolvers = {
     }: {
       id: string;
     }) => getCertificationAuthoritiesByStructureId(certificationStructureId),
+    certificationRegistryManager: ({
+      id: certificationStructureId,
+    }: {
+      id: string;
+    }) =>
+      getCertificationRegistryManagerByStructureId(certificationStructureId),
   },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
@@ -111,6 +119,7 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+
     certification_authority_createCertificationAuthorityLocalAccount: async (
       _parent: unknown,
       params: {
@@ -223,6 +232,20 @@ const unsafeResolvers = {
           certificationIds: string[];
         },
       ) => updateCertificationAuthorityStructureCertifications(params),
+
+    certification_authority_createCertificationRegistryManager: async (
+      _parent: unknown,
+      params: {
+        input: {
+          certificationAuthorityStructureId: string;
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
+        };
+      },
+    ) => {
+      return createCertificationRegistryManager(params.input);
+    },
   },
   Query: {
     certification_authority_getCertificationAuthority: async (

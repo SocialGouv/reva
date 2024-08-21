@@ -32,9 +32,12 @@ export const resolversSecurityMap = {
     isAnyone, //security handled in resolver
   "Mutation.certification_authority_transferCandidacyToAnotherCertificationAuthority":
     isAdminOrCertificationAuthority,
+  "Mutation.certification_authority_createCertificationRegistryManager":
+    isAdmin,
   "Mutation.certification_authority_updateCertificationAuthorityStructure":
     isAdmin,
   "Mutation.certification_authority_updateCertificationAuthorityStructureCertifications":
     isAdmin,
-  "Mutation.certification_authority_updateCertificationAuthorityCertifications": isAdmin
+  "Mutation.certification_authority_updateCertificationAuthorityCertifications":
+    isAdmin,
 };

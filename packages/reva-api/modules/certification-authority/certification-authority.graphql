@@ -23,6 +23,13 @@ type CertificationAuthorityStructure {
   label: String!
   certifications: [Certification!]!
   certificationAuthorities: [CertificationAuthority!]!
+  certificationRegistryManager: CertificationRegistryManager
+}
+
+type CertificationRegistryManager {
+  id: ID!
+  account: Account!
+  certificationAuthorityStructure: CertificationAuthorityStructure!
 }
 
 type CertificationAuthorityStructurePaginated {
@@ -71,6 +78,13 @@ input CreateCertificationAuthorityLocalAccountInput {
   certificationIds: [String!]!
 }
 
+input CertificationRegistryManagerInput {
+  certificationAuthorityStructureId: ID!
+  accountFirstname: String
+  accountLastname: String!
+  accountEmail: String!
+}
+
 input UpdateCertificationAuthorityLocalAccountInput {
   certificationAuthorityLocalAccountId: String!
   departmentIds: [String!]!
@@ -114,6 +128,7 @@ type Query {
     limit: Int
     searchFilter: String
   ): CertificationAuthorityStructurePaginated!
+
   certification_authority_getCertificationAuthorityStructure(
     id: ID!
   ): CertificationAuthorityStructure
@@ -139,6 +154,10 @@ type Mutation {
     certificationAuthorityId: ID!
     certificationIds: [String!]
   ): CertificationAuthority!
+
+  certification_authority_createCertificationRegistryManager(
+    input: CertificationRegistryManagerInput!
+  ): CertificationRegistryManager!
 
   certification_authority_updateCertificationAuthorityDepartmentsAndCertifications(
     input: UpdateCertificationAuthorityDepartmentsAndCertificationsInput!
