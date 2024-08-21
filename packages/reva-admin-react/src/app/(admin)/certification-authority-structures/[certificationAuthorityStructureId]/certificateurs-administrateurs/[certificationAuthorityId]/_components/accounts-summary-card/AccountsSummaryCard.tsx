@@ -3,8 +3,10 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 export default function AccountsSummaryCard({
   accounts,
+  hrefPrefix
 }: {
   accounts: {
+    id: string;
     account: {
       id: string;
       firstname?: string | null;
@@ -12,6 +14,7 @@ export default function AccountsSummaryCard({
       email: string;
     };
   }[];
+  hrefPrefix: string
 }) {
   return (
     <CandidacySectionCard
@@ -19,7 +22,7 @@ export default function AccountsSummaryCard({
       titleIconClass="fr-icon-team-fill"
     >
       <ul className="list-none font-bold">
-        {accounts.map(({ account }) => (
+        {accounts.map(({ account, id }) => (
           <li
             key={account.id}
             className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
@@ -34,7 +37,7 @@ export default function AccountsSummaryCard({
               <Button
                 priority="tertiary"
                 linkProps={{
-                  href: `/accounts/${account.id}`,
+                  href: `${hrefPrefix}/${id}`,
                 }}
               >
                 Visualiser

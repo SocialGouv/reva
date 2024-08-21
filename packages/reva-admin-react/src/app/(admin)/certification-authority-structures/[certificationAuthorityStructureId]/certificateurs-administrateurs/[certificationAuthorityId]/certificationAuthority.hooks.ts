@@ -42,6 +42,7 @@ const getCertificationAuthority = graphql(`
         label
       }
       certificationAuthorityLocalAccounts {
+        id
         account {
           id
           firstname

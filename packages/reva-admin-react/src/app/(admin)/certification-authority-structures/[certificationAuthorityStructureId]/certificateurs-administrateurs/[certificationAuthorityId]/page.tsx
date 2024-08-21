@@ -119,6 +119,7 @@ const CertificationAuthorityAdminComponent = ({
         />
         <AccountsSummaryCard
           accounts={certificationAuthority.certificationAuthorityLocalAccounts}
+          hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs`}
         />
       </div>
       <div className="flex flex-row justify-end mt-4 gap-x-4">
