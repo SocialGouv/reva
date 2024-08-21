@@ -5,12 +5,10 @@ import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { CertificationsSummaryCard } from "./_components/certifications-summary-card/CertificationsSummaryCard";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
@@ -67,25 +65,6 @@ const CertificationAuthorityStructurePage = () => {
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureResponse?.certification_authority_getCertificationAuthorityStructure;
 
-  const domainsAndCertifications = useMemo(
-    () =>
-      certificationAuthorityStructure?.certifications?.reduce(
-        (acc, curr) => {
-          if (acc[curr.domaines[0].id]) {
-            acc[curr.domaines[0].id] = [...acc[curr.domaines[0].id], curr];
-          } else {
-            acc[curr.domaines[0].id] = [curr];
-          }
-          return acc;
-        },
-        {} as Record<
-          string,
-          (typeof certificationAuthorityStructure.certifications)[0][]
-        >,
-      ) || {},
-    [certificationAuthorityStructure],
-  );
-
   if (getCertificationAuthorityStructureStatus !== "success") {
     return null;
   }
@@ -112,43 +91,10 @@ const CertificationAuthorityStructurePage = () => {
                 {certificationAuthorityStructure.label}
               </p>
             </DefaultCandidacySectionCard>
-            <DefaultCandidacySectionCard
-              title="Certifications gérées"
-              titleIconClass="fr-icon-award-fill"
-              isEditable
-              status={
-                certificationAuthorityStructure.certifications.length
-                  ? "COMPLETED"
-                  : "TO_COMPLETE"
-              }
-              buttonOnClickHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certifications`}
-            >
-              {certificationAuthorityStructure.certifications.length ? (
-                <div className="flex flex-col gap-6">
-                  <Badge className="bg-[#FEE7FC] text-[#6E445A]">
-                    {certificationAuthorityStructure.certifications.length}{" "}
-                    certifications gérées
-                  </Badge>
-                </div>
-              ) : null}
-              <p className="font-bold mt-6">Domaines rattachés</p>
-              {Object.entries(domainsAndCertifications).map(
-                ([domainId, certifications]) => (
-                  <Accordion
-                    label={certifications[0].domaines[0].label}
-                    key={domainId}
-                  >
-                    <div className="flex flex-wrap gap-2">
-                      {certifications.map((c) => (
-                        <Tag key={c.id}>
-                          {c.codeRncp} - {c.label}
-                        </Tag>
-                      ))}
-                    </div>
-                  </Accordion>
-                ),
-              )}
-            </DefaultCandidacySectionCard>
+            <CertificationsSummaryCard
+              certifications={certificationAuthorityStructure.certifications}
+              updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certifications`}
+            />
             <CandidacySectionCard
               title="Certificateurs administrateurs"
               titleIconClass="fr-icon-clipboard-fill"
