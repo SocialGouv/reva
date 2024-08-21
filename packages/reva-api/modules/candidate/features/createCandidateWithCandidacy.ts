@@ -1,6 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+import { createCandidacy } from "../../candidacy/features/createCandidacy";
 interface CreateCandidateWithCandidacyInput {
   email: string;
   phone: string;
@@ -38,25 +39,9 @@ export const createCandidateWithCandidacy = async (
   });
 
   if (!candidacy) {
-    await prismaClient.candidate.update({
-      data: {
-        candidacies: {
-          create: {
-            candidacyStatuses: {
-              create: {
-                status: CandidacyStatusStep.PROJET,
-                isActive: true,
-              },
-            },
-            admissibility: { create: {} },
-            examInfo: { create: {} },
-            departmentId: candidateInput.departmentId,
-          },
-        },
-      },
-      where: {
-        id: createdCandidate.id,
-      },
+    await createCandidacy({
+      departmentId: candidateInput.departmentId,
+      candidateId: createdCandidate.id,
     });
   }
 

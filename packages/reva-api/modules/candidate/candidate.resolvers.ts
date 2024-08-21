@@ -9,12 +9,12 @@ import {
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
-import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
+import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
 
 const unsafeResolvers = {
   Candidate: {
@@ -65,7 +65,7 @@ const unsafeResolvers = {
       _params: unknown,
       context: GraphqlContext,
     ) =>
-      getCandidateByKeycloakId({
+      getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
         keycloakId: context.auth.userInfo?.sub || "",
       }),
   },
