@@ -1,5 +1,3 @@
-import { CandidacyStatusStep } from "@prisma/client";
-
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacy } from "../../candidacy/features/createCandidacy";
 interface CreateCandidateWithCandidacyInput {
