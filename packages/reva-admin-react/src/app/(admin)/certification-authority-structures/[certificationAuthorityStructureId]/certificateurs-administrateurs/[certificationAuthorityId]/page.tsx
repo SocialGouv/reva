@@ -2,15 +2,11 @@
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { useCertificationAuthority } from "./certificationAuthority.hooks";
 import Input from "@codegouvfr/react-dsfr/Input";
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useRouter } from "next/navigation";
 import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
+import InterventionAreaSummaryCard from "../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
+import AccountsSummaryCard from "./_components/accounts-summary-card/AccountsSummaryCard";
 
 const CertificationAuthorityAdminsPage = () => {
-  const router = useRouter();
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthority();
 
@@ -20,8 +16,6 @@ const CertificationAuthorityAdminsPage = () => {
   ) {
     return null;
   }
-
-  const isInterventionAreaComplete = certificationAuthority.regions.length > 0;
 
   return (
     <div className="flex flex-col flex-1">
@@ -64,71 +58,15 @@ const CertificationAuthorityAdminsPage = () => {
             />
           </div>
         </form>
-        <CandidacySectionCard
-          title="Zone d'intervention"
-          titleIconClass="fr-icon-road-map-fill"
-          hasButton
-          buttonTitle="Modifier"
-          buttonPriority="secondary"
-          buttonOnClick={() => {
-            router.push(
-              `/certification-authorities/${certificationAuthority.id}`,
-            );
-          }}
-          badge={
-            <Badge
-              severity={isInterventionAreaComplete ? "success" : "warning"}
-            >
-              {isInterventionAreaComplete ? "Complet" : "À compléter"}
-            </Badge>
-          }
-        >
-          {certificationAuthority.regions.map((r) => (
-            <Accordion label={r.label} key={r.id}>
-              <ul>
-                {r.departments.map((d) => (
-                  <li key={d.id}>{d.label}</li>
-                ))}
-              </ul>
-            </Accordion>
-          ))}
-        </CandidacySectionCard>
+        <InterventionAreaSummaryCard
+          regions={certificationAuthority.regions}
+          updateButtonHref={`/certification-authorities/${certificationAuthority.id}`}
+        />
         <CertificationsSummaryCard
           certifications={certificationAuthority.certifications}
           updateButtonHref={`/certification-authorities/${certificationAuthority.id}`}
         />
-        <CandidacySectionCard
-          title="Compte collaborateurs"
-          titleIconClass="fr-icon-team-fill"
-        >
-          <ul className="list-none font-bold">
-            {certificationAuthority.certificationAuthorityLocalAccounts.map(
-              ({ account }) => (
-                <li
-                  key={account.id}
-                  className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
-                >
-                  <div className="flex flex-col">
-                    <span>
-                      {account.firstname} {account.lastname}
-                    </span>
-                    <span className="font-normal">{account.email}</span>
-                  </div>
-                  <span>
-                    <Button
-                      priority="tertiary"
-                      linkProps={{
-                        href: `/accounts/${account.id}`,
-                      }}
-                    >
-                      Visualiser
-                    </Button>
-                  </span>
-                </li>
-              ),
-            )}
-          </ul>
-        </CandidacySectionCard>
+        <AccountsSummaryCard accounts={certificationAuthority.certificationAuthorityLocalAccounts} />
       </div>
     </div>
   );
