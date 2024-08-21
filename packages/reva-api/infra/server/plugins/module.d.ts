@@ -4,6 +4,7 @@ declare type KeyCloakUserRole =
   | "manage_feasibility"
   | "gestion_maison_mere_aap"
   | "manage_certification_authority_local_account"
+  | "manage_certification_registry"
   | "candidate";
 
 declare type KeyCloakGroup =
@@ -11,4 +12,5 @@ declare type KeyCloakGroup =
   | "organism"
   | "certification_authority"
   | "gestionnaire_maison_mere_aap"
-  | "certification_authority_local_account";
+  | "certification_authority_local_account"
+  | "certification_registry_manager";
