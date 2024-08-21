@@ -40,6 +40,9 @@ const getCertificationAuthorityStructure = graphql(`
           }
         }
       }
+      certificationRegistryManager {
+        id
+      }
     }
   }
 `);
@@ -99,6 +102,23 @@ const CertificationAuthorityStructurePage = () => {
               certifications={certificationAuthorityStructure.certifications}
               updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certifications`}
             />
+            <DefaultCandidacySectionCard
+              title="Responsable du référentiel "
+              titleIconClass="fr-icon-medal-fill"
+              isEditable
+              status={
+                certificationAuthorityStructure.certificationRegistryManager
+                  ? "COMPLETED"
+                  : "TO_COMPLETE"
+              }
+              buttonOnClickHref={`/certification-authority-structures/${certificationAuthorityStructureId}/responsable-referentiel`}
+            >
+              <p className="pl-10 md:pr-48 mb-0">
+                Il ajoute, modifie ou supprime des certifications proposées par
+                la structure certificatrice. L’ajout d’un responsable du
+                référentiel est obligatoire pour la gestion des certifications.
+              </p>
+            </DefaultCandidacySectionCard>
             <CandidacySectionCard
               title="Certificateurs administrateurs"
               titleIconClass="fr-icon-clipboard-fill"
