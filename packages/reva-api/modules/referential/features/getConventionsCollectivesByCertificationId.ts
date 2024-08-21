@@ -5,8 +5,7 @@ export const getConventionsCollectivesByCertificationId = ({
 }: {
   certificationId: string;
 }) =>
-  prismaClient.conventionCollective.findMany({
-    where: {
-      certificationOnConventionCollective: { some: { certificationId } },
-    },
-  });
+  prismaClient.certification
+    .findUnique({ where: { id: certificationId } })
+    .certificationOnConventionCollective({ include: { ccn: true } })
+    .then((coccns) => coccns?.map((coccn) => coccn.ccn));

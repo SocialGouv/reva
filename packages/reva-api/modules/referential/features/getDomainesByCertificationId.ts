@@ -1,10 +1,11 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getDomainesByCertificationId = ({
+export const getDomainesByCertificationId = async ({
   certificationId,
 }: {
   certificationId: string;
 }) =>
-  prismaClient.domaine.findMany({
-    where: { certificationOnDomaine: { some: { certificationId } } },
-  });
+  prismaClient.certification
+    .findUnique({ where: { id: certificationId } })
+    .certificationOnDomaine({ include: { domaine: true } })
+    .then((cods) => cods?.map((cod) => cod.domaine));
