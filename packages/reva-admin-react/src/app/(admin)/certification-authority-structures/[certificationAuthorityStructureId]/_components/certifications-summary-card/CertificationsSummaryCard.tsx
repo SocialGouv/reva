@@ -1,19 +1,15 @@
 import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-import Badge from "@codegouvfr/react-dsfr/Badge";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import { useMemo } from "react";
-
-type Domaine = { id: string; label: string };
-type ConventionCollective = { id: string; label: string };
+import { sortBy, sortedUniqBy } from "lodash";
 
 type Certification = {
   id: string;
-  label: string;
-  codeRncp: string;
   domaines: Domaine[];
   conventionsCollectives: ConventionCollective[];
 };
+type Domaine = { id: string; label: string };
+type ConventionCollective = { id: string; label: string };
 
 export const CertificationsSummaryCard = ({
   certifications,
@@ -22,43 +18,20 @@ export const CertificationsSummaryCard = ({
   certifications: Certification[];
   updateButtonHref: string;
 }) => {
-  const domainsAndCertifications = useMemo(
-    () =>
-      certifications?.reduce(
-        (acc, curr) => {
-          if (curr.domaines.length) {
-            if (acc[curr.domaines[0].id]) {
-              acc[curr.domaines[0].id] = [...acc[curr.domaines[0].id], curr];
-            } else {
-              acc[curr.domaines[0].id] = [curr];
-            }
-          }
-          return acc;
-        },
-        {} as Record<string, Certification[]>,
-      ),
-    [certifications],
+  const certificationCount = certifications.length;
+  const domaines = sortedUniqBy(
+    sortBy(
+      certifications.flatMap((c) => c.domaines),
+      "label",
+    ),
+    "label",
   );
-
-  const ccnsAndCertifications = useMemo(
-    () =>
-      certifications?.reduce(
-        (acc, curr) => {
-          if (curr.conventionsCollectives.length) {
-            if (acc[curr.conventionsCollectives[0].id]) {
-              acc[curr.conventionsCollectives[0].id] = [
-                ...acc[curr.conventionsCollectives[0].id],
-                curr,
-              ];
-            } else {
-              acc[curr.conventionsCollectives[0].id] = [curr];
-            }
-          }
-          return acc;
-        },
-        {} as Record<string, Certification[]>,
-      ),
-    [certifications],
+  const conventionCollectives = sortedUniqBy(
+    sortBy(
+      certifications.flatMap((c) => c.conventionsCollectives),
+      "label",
+    ),
+    "label",
   );
 
   return (
@@ -66,40 +39,37 @@ export const CertificationsSummaryCard = ({
       title="Certifications gérées"
       titleIconClass="fr-icon-award-fill"
       isEditable
-      status={certifications.length ? "COMPLETED" : "TO_COMPLETE"}
+      status={certificationCount ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={updateButtonHref}
     >
-      {certifications.length ? (
+      {certificationCount ? (
         <div className="flex flex-col gap-6">
           <Badge className="bg-[#FEE7FC] text-[#6E445A]">
-            {certifications.length} certifications gérées
+            {certificationCount} certifications gérées
           </Badge>
         </div>
       ) : null}
-      <p className="font-bold mt-6">Domaines rattachés</p>
-      {Object.entries(domainsAndCertifications).map(([domainId, certs]) => (
-        <Accordion label={certs[0].domaines[0].label} key={domainId}>
+      {domaines && (
+        <>
+          <p className="font-bold mt-6">Filières rattachés</p>
           <div className="flex flex-wrap gap-2">
-            {certs.map((c) => (
-              <Tag key={c.id}>
-                {c.codeRncp} - {c.label}
-              </Tag>
+            {domaines.map((d) => (
+              <Tag key={d.id}>{d.label}</Tag>
             ))}
           </div>
-        </Accordion>
-      ))}
-      <p className="font-bold mt-6">Convention collectives rattachées</p>
-      {Object.entries(ccnsAndCertifications).map(([ccnId, certs]) => (
-        <Accordion label={certs[0].conventionsCollectives[0].label} key={ccnId}>
+        </>
+      )}
+
+      {conventionCollectives && (
+        <>
+          <p className="font-bold mt-6">Conventions collectives rattachées</p>
           <div className="flex flex-wrap gap-2">
-            {certs.map((c) => (
-              <Tag key={c.id}>
-                {c.codeRncp} - {c.label}
-              </Tag>
+            {conventionCollectives.map((c) => (
+              <Tag key={c.id}>{c.label}</Tag>
             ))}
           </div>
-        </Accordion>
-      ))}
+        </>
+      )}
     </DefaultCandidacySectionCard>
   );
 };
