@@ -4,7 +4,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 
 export default function InterventionAreaSummaryCard({
   regions,
-  updateButtonHref
+  updateButtonHref,
 }: {
   regions: {
     id: string;
@@ -15,26 +15,28 @@ export default function InterventionAreaSummaryCard({
       code: string;
     }[];
   }[];
-  updateButtonHref: string;
+  updateButtonHref?: string;
 }) {
   const isInterventionAreaComplete = regions.length > 0;
   return (
     <DefaultCandidacySectionCard
-          title="Zone d'intervention"
-          titleIconClass="fr-icon-road-map-fill"
-          isEditable
-          buttonOnClickHref={updateButtonHref}
-          status={isInterventionAreaComplete ? "COMPLETED" : "TO_COMPLETE"}
-        >
-          {regions.map((r) => (
-            <Accordion label={r.label} key={r.id}>
-              <div className="flex flex-wrap gap-2">
-                {r.departments.map((d) => (
-                  <Tag key={d.id}>{d.label} ({d.code})</Tag>
-                ))}
-              </div>
-            </Accordion>
-          ))}
-        </DefaultCandidacySectionCard>
+      title="Zone d'intervention"
+      titleIconClass="fr-icon-road-map-fill"
+      isEditable={!!updateButtonHref}
+      buttonOnClickHref={updateButtonHref || ""}
+      status={isInterventionAreaComplete ? "COMPLETED" : "TO_COMPLETE"}
+    >
+      {regions.map((r) => (
+        <Accordion label={r.label} key={r.id}>
+          <div className="flex flex-wrap gap-2">
+            {r.departments.map((d) => (
+              <Tag key={d.id}>
+                {d.label} ({d.code})
+              </Tag>
+            ))}
+          </div>
+        </Accordion>
+      ))}
+    </DefaultCandidacySectionCard>
   );
 }

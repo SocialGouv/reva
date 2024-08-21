@@ -5,6 +5,7 @@ import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
+import InterventionAreaSummaryCard from "../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
 
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const {
@@ -23,6 +24,26 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   if (getCertificationAuthorityLocalAccountStatus !== "success") {
     return null;
   }
+
+  const regionsAndDepartments: {
+    id: string;
+    label: string;
+    departments: { id: string; label: string; code: string }[];
+  }[] = [];
+  certificationAuthorityLocalAccount?.departments.forEach((department) => {
+    let region = regionsAndDepartments.find(
+      (r) => r.id === department.region.id,
+    );
+    if (!region) {
+      region = {
+        id: department.region.id,
+        label: department.region.label,
+        departments: [],
+      };
+      regionsAndDepartments.push(region);
+    }
+    region.departments.push(department);
+  });
 
   return (
     <div className="flex flex-col flex-1">
@@ -87,6 +108,8 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                 />
               </div>
             </div>
+            <InterventionAreaSummaryCard regions={regionsAndDepartments} />
+
             <CertificationsSummaryCard
               certifications={certificationAuthorityLocalAccount.certifications}
             />

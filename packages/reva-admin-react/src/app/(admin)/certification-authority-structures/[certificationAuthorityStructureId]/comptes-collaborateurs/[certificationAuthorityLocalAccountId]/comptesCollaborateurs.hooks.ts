@@ -22,6 +22,15 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
           label
         }
       }
+      departments {
+        id
+        code
+        label
+        region {
+          id
+          label
+        }
+      }
       account {
         id
         firstname
