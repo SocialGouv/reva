@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCertificationAuthority = graphql(`
@@ -75,4 +75,38 @@ export const useCertificationAuthority = () => {
     getCertificationAuthorityResponse?.certification_authority_getCertificationAuthority;
 
   return { certificationAuthority, getCertificationAuthorityStatus };
+};
+
+const updateCertificationAuthorityMutation = graphql(`
+  mutation updateCertificationAuthority(
+    $certificationAuthorityId: ID!
+    $certificationAuthorityData: UpdateCertificationAuthorityInput!
+  ) {
+    certification_authority_updateCertificationAuthority(
+      certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityData: $certificationAuthorityData
+    ) {
+      id
+      label
+      contactFullName
+      contactEmail
+    }
+  }
+`);
+
+export const useCertificationAuthorityForm = () => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const updateCertificationAuthority = useMutation({
+    mutationFn: (params: {
+      certificationAuthorityId: string;
+      certificationAuthorityData: {
+        label: string;
+        contactFullName?: string;
+        contactEmail?: string;
+      };
+    }) => graphqlClient.request(updateCertificationAuthorityMutation, params),
+  });
+
+  return { updateCertificationAuthority };
 };
