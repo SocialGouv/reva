@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
 
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const {
@@ -41,44 +42,53 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
             {certificationAuthorityLocalAccount.account.firstname}{" "}
             {certificationAuthorityLocalAccount.account.lastname}
           </h1>
-          <p className="text-xl">
+          <p className="text-xl mb-12">
             Il s’occupe des candidatures (dossier de validation, jury...)
           </p>
-          <h2>Informations de connexion</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-            <Input
-              disabled
-              label="Nom"
-              nativeInputProps={{
-                value:
-                  certificationAuthorityLocalAccount.account.lastname || "",
-              }}
-            />
-            <Input
-              disabled
-              label="Prénom"
-              nativeInputProps={{
-                value:
-                  certificationAuthorityLocalAccount.account.firstname || "",
-              }}
-            />
-            <Input
-              disabled
-              label="Email"
-              nativeInputProps={{
-                value:
-                  certificationAuthorityLocalAccount.account.firstname || "",
-              }}
-            />
-            <Input
-              disabled
-              label="Libellé"
-              className="col-span-2"
-              nativeInputProps={{
-                value:
-                  certificationAuthorityLocalAccount.certificationAuthority
-                    .label,
-              }}
+          <div className="flex flex-col gap-12">
+            <div>
+              <h2>Informations de connexion</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                <Input
+                  disabled
+                  label="Nom"
+                  nativeInputProps={{
+                    value:
+                      certificationAuthorityLocalAccount.account.lastname || "",
+                  }}
+                />
+                <Input
+                  disabled
+                  label="Prénom"
+                  nativeInputProps={{
+                    value:
+                      certificationAuthorityLocalAccount.account.firstname ||
+                      "",
+                  }}
+                />
+                <Input
+                  disabled
+                  label="Email"
+                  nativeInputProps={{
+                    value:
+                      certificationAuthorityLocalAccount.account.firstname ||
+                      "",
+                  }}
+                />
+                <Input
+                  disabled
+                  label="Libellé"
+                  className="col-span-2"
+                  nativeInputProps={{
+                    value:
+                      certificationAuthorityLocalAccount.certificationAuthority
+                        .label,
+                  }}
+                />
+              </div>
+            </div>
+            <CertificationsSummaryCard
+              certifications={certificationAuthorityLocalAccount.certifications}
             />
           </div>
         </div>

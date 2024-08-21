@@ -16,7 +16,7 @@ export const CertificationsSummaryCard = ({
   updateButtonHref,
 }: {
   certifications: Certification[];
-  updateButtonHref: string;
+  updateButtonHref?: string;
 }) => {
   const certificationCount = certifications.length;
   const domaines = sortedUniqBy(
@@ -38,9 +38,9 @@ export const CertificationsSummaryCard = ({
     <DefaultCandidacySectionCard
       title="Certifications gérées"
       titleIconClass="fr-icon-award-fill"
-      isEditable
+      isEditable={!!updateButtonHref}
       status={certificationCount ? "COMPLETED" : "TO_COMPLETE"}
-      buttonOnClickHref={updateButtonHref}
+      buttonOnClickHref={updateButtonHref || ""}
     >
       {certificationCount ? (
         <div className="flex flex-col gap-6">
@@ -51,7 +51,7 @@ export const CertificationsSummaryCard = ({
       ) : null}
       {domaines && (
         <>
-          <p className="font-bold mt-6">Filières rattachées</p>
+          <p className="font-bold mt-6">Filières rattachés</p>
           <div className="flex flex-wrap gap-2">
             {domaines.map((d) => (
               <Tag key={d.id}>{d.label}</Tag>
