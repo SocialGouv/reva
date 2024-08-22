@@ -133,7 +133,7 @@ export const useInterventionAreaFormLogic = ({
         const departmentItems = r.departments.map((d) => ({
           id: d.id,
           label: d.label,
-          selected: !!(certificationAuthority?.departments).find?.(
+          selected: !!(certificationAuthority.departments).find(
             (cad) => cad.id === d.id,
           ),
         }));
