@@ -30,7 +30,8 @@ type UserProfileType =
   | "admin"
   | "gestionnaire_maison_mere_aap"
   | "organism"
-  | "certification_authority";
+  | "certification_authority"
+  | "certification_registry_manager";
 
 export const createAccount = async (account: {
   email: string;
@@ -43,7 +44,8 @@ export const createAccount = async (account: {
     | "organism"
     | "certification_authority"
     | "gestionnaire_maison_mere_aap"
-    | "certification_authority_local_account";
+    | "certification_authority_local_account"
+    | "certification_registry_manager";
 }): Promise<string> => {
   const keycloakAdmin = await getKeycloakAdmin();
 
