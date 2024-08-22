@@ -67,7 +67,10 @@ export const useCertificationAuthorityPageLogic = () => {
     certificationAuthorityId: string;
   }>();
 
-  const { data: getCertificationAuthorityResponse } = useQuery({
+  const {
+    data: getCertificationAuthorityResponse,
+    status: getCertificationAuthorityStatus,
+  } = useQuery({
     queryKey: ["getCertificationAuthority", certificationAuthorityId],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityQuery, {
@@ -75,10 +78,11 @@ export const useCertificationAuthorityPageLogic = () => {
       }),
   });
 
-  const { data: getReferentialResponse } = useQuery({
-    queryKey: ["getReferential"],
-    queryFn: () => graphqlClient.request(getReferentialQuery),
-  });
+  const { data: getReferentialResponse, status: getReferentialstatus } =
+    useQuery({
+      queryKey: ["getReferential"],
+      queryFn: () => graphqlClient.request(getReferentialQuery),
+    });
 
   const updateCertificationAuthority = useMutation({
     mutationFn: (input: {
@@ -108,5 +112,7 @@ export const useCertificationAuthorityPageLogic = () => {
     regions,
     certifications,
     updateCertificationAuthority,
+    getCertificationAuthorityStatus,
+    getReferentialstatus,
   };
 };
