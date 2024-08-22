@@ -94,7 +94,7 @@ const CertificationAuthorityAdminComponent = ({
               }}
             />
             <Input
-              label="Nom du certificateur"
+              label="Nom du certificateur administrateur"
               nativeInputProps={{
                 ...register("contactFullName"),
               }}
@@ -111,7 +111,8 @@ const CertificationAuthorityAdminComponent = ({
         </form>
         <InterventionAreaSummaryCard
           regions={certificationAuthority.regions}
-          updateButtonHref={`/certification-authorities/${certificationAuthority.id}`}
+          departments={certificationAuthority.departments}
+          updateButtonHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}
         />
         <CertificationsSummaryCard
           certifications={certificationAuthority.certifications}

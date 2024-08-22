@@ -4,21 +4,24 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCertificationAuthority = graphql(`
-  query getCertificationAuthoritySForAdminPage($id: ID!) {
+  query getCertificationAuthorityForAdminPage($id: ID!) {
     certification_authority_getCertificationAuthority(id: $id) {
       id
       label
       contactFullName
       contactEmail
+      departments {
+          id
+          code
+          label
+          region {
+            id
+          }
+        }
       regions {
         id
         code
         label
-        departments {
-          id
-          code
-          label
-        }
       }
       certifications {
         id

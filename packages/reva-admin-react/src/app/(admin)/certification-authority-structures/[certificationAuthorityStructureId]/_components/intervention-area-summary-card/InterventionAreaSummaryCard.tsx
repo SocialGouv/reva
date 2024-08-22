@@ -4,16 +4,20 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 
 export default function InterventionAreaSummaryCard({
   regions,
+  departments,
   updateButtonHref,
 }: {
   regions: {
     id: string;
     label: string;
-    departments: {
+  }[];
+  departments: {
+    id: string;
+    label: string;
+    code: string;
+    region: {
       id: string;
-      label: string;
-      code: string;
-    }[];
+    }
   }[];
   updateButtonHref?: string;
 }) {
@@ -29,7 +33,7 @@ export default function InterventionAreaSummaryCard({
       {regions.map((r) => (
         <Accordion label={r.label} key={r.id}>
           <div className="flex flex-wrap gap-2">
-            {r.departments.map((d) => (
+            {departments.filter(d => d.region.id === r.id).map((d) => (
               <Tag key={d.id}>
                 {d.label} ({d.code})
               </Tag>
