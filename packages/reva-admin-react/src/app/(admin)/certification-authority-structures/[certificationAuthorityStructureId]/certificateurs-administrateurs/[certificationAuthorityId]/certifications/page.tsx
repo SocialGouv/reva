@@ -99,8 +99,10 @@ const CertificationAuthorityCertificationsPage = () => {
               certificationAuthorityStructureId
             }
             certificationAuthorityStructureLabel={
-              certificationAuthority.label
+              certificationAuthority.certificationAuthorityStructure.label
             }
+            certificationAuthorityId={certificationAuthorityId}
+            certificationAuthoritylabel={certificationAuthority.label}
             pageLabel={"Certifications gérées"}
           />
           <h1>Certifications gérées</h1>

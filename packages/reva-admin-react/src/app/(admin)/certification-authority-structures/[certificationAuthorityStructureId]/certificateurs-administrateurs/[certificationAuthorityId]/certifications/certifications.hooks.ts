@@ -8,6 +8,9 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
     certification_authority_getCertificationAuthority(id: $id) {
       id
       label
+      certificationAuthorityStructure {
+        label
+      }
       certifications {
         id
         codeRncp
