@@ -19,6 +19,7 @@ interface Props {
   readonly?: boolean;
   toggleButtonIsSelected?: boolean;
   fullHeight?: boolean;
+  fullWidth?: boolean;
 }
 
 export const TreeSelect = (props: Props): JSX.Element => {
@@ -31,6 +32,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
     readonly,
     toggleButtonIsSelected,
     fullHeight,
+    fullWidth,
   } = props;
 
   const isAllSelected = checkIfAllItemsSelected(items);
@@ -90,7 +92,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-2 max-w-[450px]">
+    <div className={`flex-1 flex flex-col gap-2 ${fullWidth ? "w-full" : "max-w-[450px]"}`}>
       {title && <div>{title}</div>}
       <SearchBar
         renderInput={({ className, id, placeholder, type }) => (

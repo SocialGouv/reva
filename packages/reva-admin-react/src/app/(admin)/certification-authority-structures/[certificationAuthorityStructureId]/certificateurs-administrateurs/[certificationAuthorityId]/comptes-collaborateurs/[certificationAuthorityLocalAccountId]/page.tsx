@@ -35,7 +35,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               certificationAuthorityLocalAccount.certificationAuthority
                 .certificationAuthorityStructure.label
             }
-            certificationAuthorityId={certificationAuthorityLocalAccount.id}
+            certificationAuthorityId={certificationAuthorityLocalAccount.certificationAuthority.id}
             certificationAuthoritylabel={
               certificationAuthorityLocalAccount.certificationAuthority.label
             }
