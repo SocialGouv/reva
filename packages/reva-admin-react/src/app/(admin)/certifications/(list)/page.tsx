@@ -67,7 +67,7 @@ const CertificationListPage = () => {
   return (
     certificationPage && (
       <div className="flex flex-col w-full">
-        <h1>Espace pro administrateur</h1>
+        <h1>Gestion des certifications</h1>
         {getCertificationsQueryStatus === "success" && (
           <SearchList
             title={`Certifications ${

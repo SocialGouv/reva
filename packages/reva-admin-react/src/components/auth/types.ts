@@ -3,4 +3,5 @@ export type UserRole =
   | "manage_feasibility"
   | "manage_candidacy"
   | "gestion_maison_mere_aap"
-  | "manage_certification_authority_local_account";
+  | "manage_certification_authority_local_account"
+  | "manage_certification_registry";
