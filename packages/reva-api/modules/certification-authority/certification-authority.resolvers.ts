@@ -34,6 +34,7 @@ import { getCertificationAuthorityRegions } from "./features/getCertificationAut
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
+import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -183,6 +184,14 @@ const unsafeResolvers = {
         certificationIds: string[];
       },
     ) => updateCertificationAuthorityCertifications(params),
+
+    certification_authority_updateCertificationAuthorityDepartments: async (
+      _parent: unknown,
+      params: {
+        certificationAuthorityId: string;
+        departmentIds: string[];
+      },
+    ) => updateCertificationAuthorityDepartments(params),
 
     certification_authority_deleteCertificationAuthorityLocalAccount: async (
       _parent: unknown,
