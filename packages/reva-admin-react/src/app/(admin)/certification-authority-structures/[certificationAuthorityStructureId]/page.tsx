@@ -9,6 +9,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { CertificationsSummaryCard } from "./_components/certifications-summary-card/CertificationsSummaryCard";
+import ResponsableReferentielCard from "@/app/(admin)/certification-authority-structures/[certificationAuthorityStructureId]/_components/responsable-referentiel-card/ResponsableReferentielCard";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
@@ -42,6 +43,11 @@ const getCertificationAuthorityStructure = graphql(`
       }
       certificationRegistryManager {
         id
+        account {
+          firstname
+          lastname
+          email
+        }
       }
     }
   }
@@ -102,23 +108,14 @@ const CertificationAuthorityStructurePage = () => {
               certifications={certificationAuthorityStructure.certifications}
               updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certifications`}
             />
-            <DefaultCandidacySectionCard
-              title="Responsable du référentiel "
-              titleIconClass="fr-icon-medal-fill"
-              isEditable
-              status={
-                certificationAuthorityStructure.certificationRegistryManager
-                  ? "COMPLETED"
-                  : "TO_COMPLETE"
+            <ResponsableReferentielCard
+              certificationAuthorityStructureId={
+                certificationAuthorityStructureId
               }
-              buttonOnClickHref={`/certification-authority-structures/${certificationAuthorityStructureId}/responsable-referentiel`}
-            >
-              <p className="pl-10 md:pr-48 mb-0">
-                Il ajoute, modifie ou supprime des certifications proposées par
-                la structure certificatrice. L’ajout d’un responsable du
-                référentiel est obligatoire pour la gestion des certifications.
-              </p>
-            </DefaultCandidacySectionCard>
+              certificationRegistryManager={
+                certificationAuthorityStructure.certificationRegistryManager
+              }
+            />
             <CandidacySectionCard
               title="Certificateurs administrateurs"
               titleIconClass="fr-icon-clipboard-fill"

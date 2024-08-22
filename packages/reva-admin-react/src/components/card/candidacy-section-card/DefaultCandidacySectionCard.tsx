@@ -24,26 +24,40 @@ export const DefaultCandidacySectionCard = ({
   status: "TO_COMPLETE" | "COMPLETED";
   isEditable?: boolean;
   disabled?: boolean;
-  buttonOnClickHref: string;
+  buttonOnClickHref?: string;
   children?: ReactNode;
   CustomBadge?: ReactNode;
 }) => {
   const router = useRouter();
+
+  const badge =
+    CustomBadge ||
+    (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />);
+
+  if (isEditable && buttonOnClickHref) {
+    return (
+      <CandidacySectionCard
+        title={title}
+        titleIconClass={titleIconClass}
+        badge={badge}
+        disabled={disabled}
+        hasButton
+        buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
+        buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
+        buttonOnClick={() => router.push(buttonOnClickHref)}
+      >
+        {children}
+      </CandidacySectionCard>
+    );
+  }
 
   if (isEditable) {
     return (
       <CandidacySectionCard
         title={title}
         titleIconClass={titleIconClass}
-        badge={
-          CustomBadge ||
-          (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />)
-        }
+        badge={badge}
         disabled={disabled}
-        hasButton
-        buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
-        buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
-        buttonOnClick={() => router.push(buttonOnClickHref)}
       >
         {children}
       </CandidacySectionCard>
