@@ -12,6 +12,7 @@ infra/ftps/data/*
 .idea
 .run
 .nyc_output
+*.code-workspace
 **/private
 **/coverage
 **/screenshots
