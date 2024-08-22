@@ -151,6 +151,7 @@ const CandidacySummaryPage = () => {
             </DefaultCandidacySectionCard>
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
               <DefaultCandidacySectionCard
+                data-test="candidate-profile"
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
                 isEditable

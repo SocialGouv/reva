@@ -1,0 +1,84 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "46206f6b-0a59-4478-9338-45e3a8d968e4",
+      "financeModule": "hors_plateforme",
+      "candidacyDropOut": null,
+      "reorientationReason": null,
+      "organism": {
+        "label": "Organism 1",
+        "contactAdministrativeEmail": "organism@example.com"
+      },
+      "candidacyStatuses": [
+        {
+          "status": "PROJET",
+          "isActive": false
+        },
+        {
+          "status": "VALIDATION",
+          "isActive": false
+        },
+        {
+          "status": "PRISE_EN_CHARGE",
+          "isActive": false
+        },
+        {
+          "status": "PARCOURS_ENVOYE",
+          "isActive": false
+        },
+        {
+          "status": "PARCOURS_CONFIRME",
+          "isActive": true
+        }
+      ],
+      "certification": {
+        "codeRncp": "37780",
+        "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)"
+      },
+      "admissibilityFvae": null,
+      "candidate": {
+        "id": "05a29f99-eb2e-40e6-aa20-e6351fb68dd8",
+        "firstname": "Alice",
+        "firstname2": null,
+        "firstname3": null,
+        "givenName": null,
+        "gender": null,
+        "lastname": "Doe",
+        "email": "alice.doe@example.com",
+        "phone": "06000000",
+        "street": null,
+        "city": null,
+        "zip": null,
+        "birthdate": null,
+        "birthCity": null,
+        "birthDepartment": null,
+        "country": null,
+        "nationality": null,
+        "department": {
+          "id": "7ec73887-6a69-4b54-be2c-c456e9140b44",
+          "label": "Paris",
+          "code": "75"
+        },
+        "highestDegree": null,
+        "highestDegreeLabel": null,
+        "niveauDeFormationLePlusEleve": null
+      },
+      "experiences": [
+        {
+          "id": "8c910521-ad11-411a-9f9a-3e12df598ea6",
+          "title": "Assistance de personnes",
+          "startedAt": 1579651200000,
+          "duration": "betweenOneAndThreeYears",
+          "description": "Lorem Ipsum"
+        }
+      ],
+      "goals": [
+        {
+          "id": "a3b5852d-bc44-4e54-bf6c-435bc1d85c10",
+          "label": "Me réorienter"
+        }
+      ],
+      "feasibilityFormat": "DEMATERIALIZED"
+    }
+  }
+}
