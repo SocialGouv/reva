@@ -9,6 +9,8 @@ interface Props {
 export const FeasibilityDecisionHistory = (props: Props) => {
   const { history } = props;
 
+  if (!history?.length) return null;
+
   return (
     <div>
       <h4>

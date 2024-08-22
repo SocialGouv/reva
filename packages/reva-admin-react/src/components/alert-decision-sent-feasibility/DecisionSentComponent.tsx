@@ -49,7 +49,7 @@ export const DecisionSentComponent = ({
         description={decisionComment ? `”${decisionComment}”` : ""}
         className="mb-6"
       />
-      {history && (
+      {!!history?.length && (
         <FeasibilityDecisionHistory
           className="mb-12"
           label="Décisions précédentes"
