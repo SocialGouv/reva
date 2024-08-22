@@ -60,6 +60,7 @@ export const UserAccountForm = ({
     formState,
     formState: { errors },
   } = methods;
+  const isHeadAgency = remoteAgency.id === defaultValues?.organismId;
 
   const handleFormSubmit = handleSubmit(onSubmit);
 
@@ -110,6 +111,7 @@ export const UserAccountForm = ({
             ...register("lastname"),
             autoComplete: "family-name",
           }}
+          disabled={isHeadAgency}
         />
         <Input
           label="Prénom"
@@ -119,6 +121,7 @@ export const UserAccountForm = ({
             ...register("firstname"),
             autoComplete: "given-name",
           }}
+          disabled={isHeadAgency}
         />
         <div className="col-span-2">
           <Input
