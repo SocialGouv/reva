@@ -11,17 +11,13 @@ const getCertificationAuthority = graphql(`
       contactFullName
       contactEmail
       departments {
-          id
-          code
-          label
-          region {
-            id
-          }
-        }
-      regions {
         id
         code
         label
+        region {
+          id
+          label
+        }
       }
       certifications {
         id

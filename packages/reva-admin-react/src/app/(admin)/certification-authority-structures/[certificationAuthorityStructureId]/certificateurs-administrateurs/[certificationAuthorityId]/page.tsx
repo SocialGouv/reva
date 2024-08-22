@@ -66,6 +66,26 @@ const CertificationAuthorityAdminComponent = ({
     }
   });
 
+  const regionsAndDepartments: {
+    id: string;
+    label: string;
+    departments: { id: string; label: string; code: string }[];
+  }[] = [];
+  certificationAuthority?.departments.forEach((department) => {
+    let region = regionsAndDepartments.find(
+      (r) => r.id === department.region.id,
+    );
+    if (!region) {
+      region = {
+        id: department.region.id,
+        label: department.region.label,
+        departments: [],
+      };
+      regionsAndDepartments.push(region);
+    }
+    region.departments.push(department);
+  });
+
   return (
     <div className="flex flex-col flex-1">
       <CertificationAuthorityStructureBreadcrumb
@@ -110,8 +130,7 @@ const CertificationAuthorityAdminComponent = ({
           </div>
         </form>
         <InterventionAreaSummaryCard
-          regions={certificationAuthority.regions}
-          departments={certificationAuthority.departments}
+          regions={regionsAndDepartments}
           updateButtonHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}
         />
         <CertificationsSummaryCard
