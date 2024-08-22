@@ -3,10 +3,16 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
-export const BadgeCompleted = () => <Badge severity="success">Complété</Badge>;
+export const BadgeCompleted = () => (
+  <Badge data-test="completed-badge" severity="success">
+    Complété
+  </Badge>
+);
 
 export const BadgeToComplete = () => (
-  <Badge severity="warning">À compléter</Badge>
+  <Badge data-test="to-complete-badge" severity="warning">
+    À compléter
+  </Badge>
 );
 
 export const DefaultCandidacySectionCard = ({
@@ -18,6 +24,7 @@ export const DefaultCandidacySectionCard = ({
   buttonOnClickHref,
   children,
   CustomBadge,
+  "data-test": dataTest,
 }: {
   title: string;
   titleIconClass?: string;
@@ -27,6 +34,7 @@ export const DefaultCandidacySectionCard = ({
   buttonOnClickHref?: string;
   children?: ReactNode;
   CustomBadge?: ReactNode;
+  "data-test"?: string;
 }) => {
   const router = useRouter();
 
@@ -37,6 +45,7 @@ export const DefaultCandidacySectionCard = ({
   if (isEditable && buttonOnClickHref) {
     return (
       <CandidacySectionCard
+        data-test={dataTest}
         title={title}
         titleIconClass={titleIconClass}
         badge={badge}
@@ -54,6 +63,7 @@ export const DefaultCandidacySectionCard = ({
   if (isEditable) {
     return (
       <CandidacySectionCard
+        data-test={dataTest}
         title={title}
         titleIconClass={titleIconClass}
         badge={badge}
@@ -66,6 +76,7 @@ export const DefaultCandidacySectionCard = ({
 
   return (
     <CandidacySectionCard
+      data-test={dataTest}
       title={title}
       titleIconClass={titleIconClass}
       hasButton={false}

@@ -2,6 +2,7 @@
   "data": {
     "activeFeaturesForConnectedUser": [
       "DF_DISPLAY_LOCAL_ACCOUNTS_OF_CERTIFICATION_AUTHORITY",
+      "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
       "IMPERSONATE",
       "AAP_CGU"
     ]

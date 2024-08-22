@@ -22,6 +22,7 @@ interface CandidacySectionCardProps {
   titleIconClass?: string;
   badge?: ReactNode;
   disabled?: boolean;
+  "data-test"?: string;
 }
 
 const CandidacySectionCard = ({
@@ -34,9 +35,10 @@ const CandidacySectionCard = ({
   buttonPriority,
   badge,
   disabled = false,
+  "data-test": dataTest,
 }: CandidacySectionCardProps & HasButton) => {
   return (
-    <GrayCard>
+    <GrayCard data-test={dataTest}>
       <div className="flex justify-between items-center w-full mb-5">
         <div className="flex items-center gap-4 w-full">
           <h4

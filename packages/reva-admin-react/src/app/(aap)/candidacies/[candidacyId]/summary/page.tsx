@@ -95,6 +95,7 @@ const CandidacySummaryPage = () => {
         </p>
         {showFundingAlert && (
           <Alert
+            data-test="funding-request-not-available-alert"
             severity="warning"
             title="Cette candidature est finançable par les dispositifs de droit commun"
             description={
@@ -117,6 +118,7 @@ const CandidacySummaryPage = () => {
         <>
           <ul className="flex flex-col gap-8 pl-0 mt-8">
             <DefaultCandidacySectionCard
+              data-test="candidate-information"
               title="Les informations du candidat"
               buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-information`}
               status={
@@ -151,6 +153,7 @@ const CandidacySummaryPage = () => {
             </DefaultCandidacySectionCard>
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
               <DefaultCandidacySectionCard
+                data-test="candidate-profile"
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
                 isEditable
