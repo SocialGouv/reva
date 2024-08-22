@@ -132,7 +132,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
             stateRelatedMessage={errors.accountFirstname?.message}
           />
           <Input
-            label="Email"
+            label="Email de connexion"
             disabled={!!certificationRegistryManager}
             nativeInputProps={{
               ...register("accountEmail"),
