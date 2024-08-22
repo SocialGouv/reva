@@ -102,6 +102,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       prismaClient.feasibilityDecision.create({
         data: {
           decision,
+          decisionComment,
           feasibilityId: feasibility.id,
         },
       }),
