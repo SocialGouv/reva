@@ -1,17 +1,65 @@
 "use client";
+import { z } from "zod";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { useCreateCertificationAuthorityPage } from "./createCertificationAuthority.hooks";
+import { useForm } from "react-hook-form";
+import { successToast, errorToast } from "@/components/toast/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { useRouter } from "next/navigation";
 
-type CertificationAuthorityStructure = NonNullable<
-  ReturnType<
-    typeof useCreateCertificationAuthorityPage
-  >["certificationAuthorityStructure"]
->;
-const CreateCertificationAuthorityPageContent = ({
-  certificationAuthorityStructure,
-}: {
-  certificationAuthorityStructure: CertificationAuthorityStructure;
-}) => {
+const schema = z.object({
+  label: z.string().min(1, "Merci de remplir ce champ"),
+  firstname: z.string(),
+  lastname: z.string().min(1, "Merci de remplir ce champ"),
+  email: z.string().min(1, "Merci de remplir ce champ"),
+});
+
+type FormData = z.infer<typeof schema>;
+
+const CreateCertificationAuthorityPage = () => {
+  const router = useRouter();
+  const {
+    certificationAuthorityStructure,
+    getCertificationAuthorityStructureStatus,
+    createCertificationAuthority,
+  } = useCreateCertificationAuthorityPage();
+
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const handleFormSubmit = handleSubmit(
+    async (data) => {
+      try {
+        const result = await createCertificationAuthority.mutateAsync(data);
+        successToast("L'autorité de certification a bien été enregistrée");
+        router.push(
+          `/certification-authority-structures/${certificationAuthorityStructure?.id}/certificateurs-administrateurs/${result.certification_authority_createCertificationAuthority.id}`,
+        );
+      } catch (error) {
+        const errorMessage =
+          (error as any)?.response?.errors?.[0]?.message ||
+          '"Une erreur est survenue"';
+
+        errorToast(errorMessage);
+      }
+    },
+    (e) => console.log(e),
+  );
+
+  if (
+    !certificationAuthorityStructure ||
+    getCertificationAuthorityStructureStatus !== "success"
+  ) {
+    return null;
+  }
   return (
     <div className="flex flex-col flex-1">
       <CertificationAuthorityStructureBreadcrumb
@@ -27,28 +75,58 @@ const CreateCertificationAuthorityPageContent = ({
         plateforme. Renseignez ses informations de connexion pour qu’il puisse
         commencer à travailler.
       </p>
-      <div className="flex flex-col gap-y-6"></div>
+      <form
+        className="flex flex-col gap-y-6 mt-6 mb-8"
+        onSubmit={handleFormSubmit}
+        onReset={() => reset()}
+      >
+        <h2>Informations de connexion</h2>
+        <div className="grid grid-cols-2 w-full gap-x-4">
+          <Input
+            label="Nom de la structure (ex: ASP)"
+            className="col-span-2"
+            nativeInputProps={{
+              ...register("label"),
+              placeholder: "[Nom de l’antenne du certificateur administrateur]",
+            }}
+            state={errors.label ? "error" : "default"}
+            stateRelatedMessage={errors.label?.message}
+          />
+          <Input
+            label="Nom "
+            nativeInputProps={{
+              ...register("lastname"),
+              placeholder: "[Nom de la personne physique]",
+            }}
+            state={errors.lastname ? "error" : "default"}
+            stateRelatedMessage={errors.lastname?.message}
+          />
+          <Input
+            label="Prénom (Optionnel)"
+            nativeInputProps={{
+              ...register("firstname"),
+              placeholder: "[Prénom de la personne physique]",
+            }}
+            state={errors.firstname ? "error" : "default"}
+            stateRelatedMessage={errors.firstname?.message}
+          />
+          <Input
+            label="Email de connexion"
+            nativeInputProps={{
+              ...register("email"),
+              placeholder:
+                "[Email de la personne qui va se connecter(Administrateur)]",
+            }}
+            state={errors.email ? "error" : "default"}
+            stateRelatedMessage={errors.email?.message}
+          />
+        </div>
+        <FormButtons
+          backUrl={`/certification-authority-structures/${certificationAuthorityStructure.id}`}
+          formState={{ isDirty, isSubmitting }}
+        />
+      </form>
     </div>
-  );
-};
-
-const CreateCertificationAuthorityPage = () => {
-  const {
-    certificationAuthorityStructure,
-    getCertificationAuthorityStructureStatus,
-  } = useCreateCertificationAuthorityPage();
-
-  if (
-    !certificationAuthorityStructure ||
-    getCertificationAuthorityStructureStatus !== "success"
-  ) {
-    return null;
-  }
-
-  return (
-    <CreateCertificationAuthorityPageContent
-      certificationAuthorityStructure={certificationAuthorityStructure}
-    />
   );
 };
 
