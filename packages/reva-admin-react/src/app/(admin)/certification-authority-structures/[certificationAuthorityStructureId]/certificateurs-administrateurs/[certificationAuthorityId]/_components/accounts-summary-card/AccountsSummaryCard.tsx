@@ -3,7 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 export default function AccountsSummaryCard({
   accounts,
-  hrefPrefix
+  hrefPrefix,
 }: {
   accounts: {
     id: string;
@@ -14,7 +14,7 @@ export default function AccountsSummaryCard({
       email: string;
     };
   }[];
-  hrefPrefix: string
+  hrefPrefix: string;
 }) {
   return (
     <CandidacySectionCard
@@ -35,7 +35,8 @@ export default function AccountsSummaryCard({
             </div>
             <span>
               <Button
-                priority="tertiary"
+                priority="tertiary no outline"
+                size="small"
                 linkProps={{
                   href: `${hrefPrefix}/${id}`,
                 }}
