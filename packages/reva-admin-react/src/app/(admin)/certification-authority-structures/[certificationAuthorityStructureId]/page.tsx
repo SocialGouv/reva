@@ -7,7 +7,7 @@ import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { CertificationsSummaryCard } from "./_components/certifications-summary-card/CertificationsSummaryCard";
 import ResponsableReferentielCard from "@/app/(admin)/certification-authority-structures/[certificationAuthorityStructureId]/_components/responsable-referentiel-card/ResponsableReferentielCard";
 
@@ -55,6 +55,7 @@ const getCertificationAuthorityStructure = graphql(`
 
 const CertificationAuthorityStructurePage = () => {
   const { graphqlClient } = useGraphQlClient();
+  const router = useRouter();
 
   const { certificationAuthorityStructureId } = useParams<{
     certificationAuthorityStructureId: string;
@@ -119,6 +120,14 @@ const CertificationAuthorityStructurePage = () => {
             <CandidacySectionCard
               title="Certificateurs administrateurs"
               titleIconClass="fr-icon-clipboard-fill"
+              buttonPriority="primary"
+              buttonTitle="Ajouter un compte"
+              hasButton
+              buttonOnClick={() =>
+                router.push(
+                  `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/create`,
+                )
+              }
             >
               <ul className="list-none font-bold">
                 {certificationAuthorityStructure.certificationAuthorities.map(
