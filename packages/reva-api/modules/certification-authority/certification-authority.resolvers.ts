@@ -34,6 +34,7 @@ import { getCertificationAuthorityRegions } from "./features/getCertificationAut
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
+import { createCertificationAuthority } from "./features/createCertificationAuthority";
 import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 
 const unsafeResolvers = {
@@ -133,12 +134,31 @@ const unsafeResolvers = {
         };
       },
       context: GraphqlContext,
-    ) => {
-      return createCertificationAuthorityLocalAccount({
+    ) =>
+      createCertificationAuthorityLocalAccount({
         ...params.input,
         certificationAuthorityKeycloakId: context.auth.userInfo?.sub || "",
-      });
-    },
+      }),
+
+    certification_authority_createCertificationAuthority: async (
+      _parent: unknown,
+      params: {
+        input: {
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
+          label: string;
+          contactEmail: string;
+          contactFullName: string;
+          certificationAuthorityStructureId: string;
+          departmentIds: string[];
+          certificationIds: string[];
+        };
+      },
+    ) =>
+      createCertificationAuthority({
+        ...params.input,
+      }),
 
     certification_authority_updateCertificationAuthorityLocalAccount: async (
       _parent: unknown,

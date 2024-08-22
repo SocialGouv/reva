@@ -70,6 +70,18 @@ input UpdateCertificationAuthorityInput {
   contactEmail: String
 }
 
+input CreateCertificationAuthorityInput {
+  label: String!
+  contactEmail: String!
+  contactFullName: String!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  certificationAuthorityStructureId: ID!
+  departmentIds: [ID!]!
+  certificationIds: [ID!]!
+}
+
 input CreateCertificationAuthorityLocalAccountInput {
   accountFirstname: String!
   accountLastname: String!
@@ -185,4 +197,8 @@ type Mutation {
     certificationAuthorityId: String!
     transferReason: String!
   ): Boolean!
+
+  certification_authority_createCertificationAuthority(
+    input: CreateCertificationAuthorityInput!
+  ): CertificationAuthority!
 }
