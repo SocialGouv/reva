@@ -10,6 +10,9 @@ const getCertificationAuthorityStructure = graphql(`
     certification_authority_getCertificationAuthorityStructure(id: $id) {
       id
       label
+      certifications {
+        id
+      }
     }
   }
 `);
@@ -80,7 +83,9 @@ export const useCreateCertificationAuthorityPage = () => {
         contactEmail: params.email,
         contactFullName: `${params.firstname} ${params.lastname}`,
         departmentIds: [],
-        certificationIds: [],
+        certificationIds:
+          certificationAuthorityStructure?.certifications?.map((c) => c.id) ||
+          [],
         label: params.label,
       }),
   });
