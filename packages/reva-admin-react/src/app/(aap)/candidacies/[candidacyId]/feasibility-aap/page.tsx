@@ -7,6 +7,7 @@ import {
   CertificationCompetenceDetails,
   DematerializedFeasibilityFile,
   DfFileAapDecision,
+  DffAttachment,
   DffCertificationCompetenceBloc,
   FeasibilityDecision,
   Prerequisite,
@@ -138,6 +139,9 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.attachmentsPartComplete
             }
             isEditable={isFeasibilityEditable}
+            attachments={
+              dematerializedFeasibilityFile?.attachments as DffAttachment[]
+            }
           />
           <hr />
 

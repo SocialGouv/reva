@@ -81,6 +81,7 @@ const getCandidacyById = graphql(`
           aapDecision
           aapDecisionComment
           attachments {
+            id
             file {
               previewUrl
               name

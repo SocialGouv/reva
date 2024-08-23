@@ -4,12 +4,13 @@ interface Props {
   title: string;
   name: string;
   src: string;
+  defaultDisplay?: boolean;
 }
 
 export const FancyPreview = (props: Props): JSX.Element | null => {
-  const { title, name, src } = props;
+  const { title, name, src, defaultDisplay = true } = props;
 
-  const [display, setDisplay] = useState<boolean>(true);
+  const [display, setDisplay] = useState<boolean>(defaultDisplay);
 
   const backgroundColor = display
     ? "bg-[#E3E3FD]"
