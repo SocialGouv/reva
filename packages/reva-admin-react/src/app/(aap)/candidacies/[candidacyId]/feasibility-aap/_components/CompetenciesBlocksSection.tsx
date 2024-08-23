@@ -59,7 +59,7 @@ export const CompetenciesBlocksSection = ({
       }
       disabled={disabled}
     >
-      {!disabled && isEditable && (
+      {!!blocsDeCompetences.length && (
         <ul className="list-none flex flex-col">
           {blocsDeCompetences?.map((bloc) => (
             <li
@@ -88,7 +88,9 @@ export const CompetenciesBlocksSection = ({
           ))}
         </ul>
       )}
-      {disabled && <SmallNotice>{disabledNoticeText}</SmallNotice>}
+      {disabled && (
+        <SmallNotice className="mt-4">{disabledNoticeText}</SmallNotice>
+      )}
     </CandidacySectionCard>
   );
 };
