@@ -9,12 +9,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { v4 } from "uuid";
 import { object, z } from "zod";
 import {
   createOrUpdateAttachments,
   useAttachments,
 } from "./_components/attachments.hook";
-import { v4 } from "uuid";
 
 const schema = z
   .object({
@@ -56,7 +56,7 @@ export default function AttachmentsPage() {
   const urqlClient = useUrqlClient();
 
   const { candidacyId } = useParams() satisfies { candidacyId: string };
-
+  const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const { attachments } = useAttachments();
 
   const remoteIdCard = useMemo(
@@ -138,7 +138,7 @@ export default function AttachmentsPage() {
         throw new Error(result.error.graphQLErrors[0].message);
       }
       successToast("Pièces jointes mises à jour avec succès");
-      router.push(`/candidacies/${candidacyId}/feasibility-aap`);
+      router.push(feasibilitySummaryUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }

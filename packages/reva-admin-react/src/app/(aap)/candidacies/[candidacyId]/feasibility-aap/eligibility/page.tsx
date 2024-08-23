@@ -77,6 +77,7 @@ const eligibilityRequirementMap = (
 export default function EligibilityPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
+  const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const { certification, createOrUpdateEligibilityRequirement } =
     useEligibility();
   const defaultValues = useMemo(
@@ -127,7 +128,7 @@ export default function EligibilityPage() {
     try {
       await createOrUpdateEligibilityRequirement(input);
       successToast("Recevabilité du candidat enregistré");
-      router.push(`/candidacies/${candidacyId}/feasibility-aap`);
+      router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
     }

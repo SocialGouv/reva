@@ -35,6 +35,7 @@ type DecisionForm = z.infer<typeof schema>;
 export default function DecisionPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
+  const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const { createOrUpdateDecisionMutation, aapDecision, aapDecisionComment } =
     useDecision();
   const defaultValues = useMemo(
@@ -64,7 +65,7 @@ export default function DecisionPage() {
         aapDecisionComment,
       });
       successToast("Avis enregistré");
-      router.push(`/candidacies/${candidacyId}/feasibility-aap`);
+      router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
     }

@@ -30,6 +30,7 @@ export default function PrerequisitesPage() {
     candidacyId: string;
   }>();
   const router = useRouter();
+  const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const {
     prerequisites: candidacyPrerequisites,
     prerequisitesPartComplete,
@@ -84,7 +85,7 @@ export default function PrerequisitesPage() {
         prerequisites: data.prerequisites as PrerequisiteInputType[],
       });
       successToast("Modifications enregistrées");
-      router.push(`/candidacies/${candidacyId}/feasibility-aap`);
+      router.push(feasibilitySummaryUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }

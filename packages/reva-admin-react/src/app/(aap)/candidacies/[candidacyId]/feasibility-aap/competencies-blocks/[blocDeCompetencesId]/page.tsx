@@ -9,7 +9,8 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
 import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -75,11 +76,13 @@ const createOrUpdateCompetenceDetailsMutation = graphql(`
 `);
 
 const CompetenciesBlockPage = () => {
-  const { graphqlClient } = useGraphQlClient();
   const { candidacyId, blocDeCompetencesId } = useParams<{
     candidacyId: string;
     blocDeCompetencesId: string;
   }>();
+  const { graphqlClient } = useGraphQlClient();
+  const router = useRouter();
+  const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
 
   const { data: getBlocDeCompetencesResponse } = useQuery({
     queryKey: [candidacyId, "getBlocDeCompetencesForCompetenciesBlockPage"],
@@ -163,6 +166,7 @@ const CompetenciesBlockPage = () => {
         competenceDetails,
       });
       successToast("Modifications enregistrées");
+      router.push(feasibilitySummaryUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
