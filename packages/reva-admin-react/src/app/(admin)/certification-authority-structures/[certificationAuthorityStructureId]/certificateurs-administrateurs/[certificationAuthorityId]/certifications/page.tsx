@@ -1,73 +1,36 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useCertificationsPage } from "./certifications.hooks";
-import { z } from "zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useCallback, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  useCertificationsForm,
+  useCertificationsPage,
+} from "./certifications.hooks";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-
-const schema = z.object({
-  certifications: z
-    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
-    .array(),
-});
-
-type FormData = z.infer<typeof schema>;
+import { TreeSelect } from "@/components/tree-select";
 
 const CertificationAuthorityCertificationsPage = () => {
-  const { certificationAuthorityStructureId, certificationAuthorityId } = useParams<{
-    certificationAuthorityStructureId: string;
-    certificationAuthorityId: string;
-  }>();
+  const { certificationAuthorityStructureId, certificationAuthorityId } =
+    useParams<{
+      certificationAuthorityStructureId: string;
+      certificationAuthorityId: string;
+    }>();
 
   const {
     certificationAuthority,
-    getCertificationAuthorityAndCertificationsStatus,
-    allCertifications,
+    certifications,
     updateCertificationAuthorityCertifications,
   } = useCertificationsPage({ certificationAuthorityId });
 
   const {
-    control,
-    register,
     handleSubmit,
     reset,
     formState: { isDirty, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
-
-  const { fields: certificationsFields } = useFieldArray({
-    control,
-    name: "certifications",
-  });
-
-  const resetForm = useCallback(
-    () =>
-      reset({
-        certifications: allCertifications.map((c) => ({
-          id: c.id,
-          label: `${c.codeRncp} - ${c.label}`,
-          checked: certificationAuthority?.certifications.some(
-            (cert) => cert.id === c.id,
-          ),
-        })),
-      }),
-    [allCertifications, certificationAuthority?.certifications, reset],
-  );
-
-  const handleReset = useCallback(() => {
-    resetForm();
-  }, [resetForm]);
-
-  useEffect(() => {
-    handleReset();
-  }, [handleReset]);
+    certificationsController,
+    toggleCertification,
+    toggleAllCertifications,
+  } = useCertificationsForm({ certifications });
 
   const handleFormSubmit = handleSubmit(
     async (data) => {
@@ -75,10 +38,10 @@ const CertificationAuthorityCertificationsPage = () => {
         await updateCertificationAuthorityCertifications.mutateAsync({
           certificationAuthorityId,
           certificationIds: data.certifications
-            .filter((c) => c.checked)
+            .filter((c) => c.selected)
             .map((c) => c.id),
         });
-        successToast("modifications enregistrées");
+        successToast("Modifications enregistrées");
       } catch (e) {
         graphqlErrorToast(e);
       }
@@ -86,7 +49,7 @@ const CertificationAuthorityCertificationsPage = () => {
     (e) => console.log({ e }),
   );
 
-  if (getCertificationAuthorityAndCertificationsStatus !== "success") {
+  if (!certificationAuthority) {
     return null;
   }
 
@@ -115,17 +78,19 @@ const CertificationAuthorityCertificationsPage = () => {
             onSubmit={handleFormSubmit}
             onReset={(e) => {
               e.preventDefault();
-              handleReset();
+              reset();
             }}
           >
             <div className="flex flex-col">
-              <Checkbox
-                options={certificationsFields.map((c, cIndex) => ({
-                  label: c.label,
-                  nativeInputProps: {
-                    ...register(`certifications.${cIndex}.checked`),
-                  },
-                }))}
+              <TreeSelect
+                title=""
+                label="Toutes les certifications"
+                fullWidth
+                items={certificationsController.field.value || []}
+                onClickSelectAll={(selected) =>
+                  toggleAllCertifications(selected)
+                }
+                onClickItem={(i) => toggleCertification(i.id)}
               />
             </div>
             <FormButtons
