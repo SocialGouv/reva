@@ -599,7 +599,7 @@ export const getActiveFeasibilities = async ({
     where: queryWhereClause,
     skip: offset,
     take: limit,
-    orderBy: [{ createdAt: "desc" }],
+    orderBy: [{ feasibilityFileSentAt: "desc" }],
   });
 
   const totalRows = await prismaClient.feasibility.count({
