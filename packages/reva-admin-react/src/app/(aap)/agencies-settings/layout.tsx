@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -47,6 +48,12 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
     queryKey: ["organisms", "agencies-settings-layout-page-v2"],
     queryFn: () => graphqlClient.request(agenciesInfoForConnectedUserQuery),
   });
+
+  const { isFeatureActive } = useFeatureflipping();
+  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS");
+  if (isSettingsEnabled) {
+    return children;
+  }
 
   const getNavItem = ({
     text,
