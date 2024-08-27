@@ -11,11 +11,14 @@ export const getReorientedCandidacyMenu = async ({
 }): Promise<CandidacyMenuEntry[]> => {
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
+  const deletedAt = candidacy.candidacyStatuses.find(
+    (s) => s.status === "ARCHIVE" && s.isActive,
+  )?.createdAt;
+
   const getReorientedCandidacyMenuEntry = (): CandidacyMenuEntry => ({
-    label: `Réorientée le ${format(
-      candidacy.candidacyStatuses[0].createdAt,
-      "d MMMM yyyy",
-    )}`,
+    label: deletedAt
+      ? `Réorientée le ${format(deletedAt, "d MMMM yyyy")}`
+      : "Réorientée",
     url: buildUrl({ suffix: "archive" }),
     status: "ACTIVE_WITHOUT_HINT",
   });
