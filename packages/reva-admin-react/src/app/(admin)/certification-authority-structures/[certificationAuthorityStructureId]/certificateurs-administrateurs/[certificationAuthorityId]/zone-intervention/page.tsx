@@ -1,39 +1,48 @@
 "use client";
-import {
-  useCertificationAuthority,
-  useInterventionAreaFormLogic,
-} from "./zone-intervention.hook";
-import { TreeSelect } from "@/components/tree-select";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { useCertificationAuthority } from "./zone-intervention.hook";
 import { useParams } from "next/navigation";
 import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { useCallback } from "react";
 
 const CertificationAuthorityComponent = ({
   certificationAuthority,
+  updateCertificationAuthority,
   regions,
 }: {
   certificationAuthority: NonNullable<
     ReturnType<typeof useCertificationAuthority>["certificationAuthority"]
   >;
   regions: NonNullable<ReturnType<typeof useCertificationAuthority>["regions"]>;
+  updateCertificationAuthority: ReturnType<
+    typeof useCertificationAuthority
+  >["updateCertificationAuthority"];
 }) => {
-  const {
-    regionsAndDeparmController,
-    handleFormSubmit,
-    toggleRegionOrDepartment,
-    toggleAllRegionsAndDepartments,
-    isSubmitting,
-    isDirty,
-  } = useInterventionAreaFormLogic({
-    certificationAuthority,
-    regions,
-  });
-
   const { certificationAuthorityStructureId, certificationAuthorityId } =
     useParams<{
       certificationAuthorityStructureId: string;
       certificationAuthorityId: string;
     }>();
+
+  const handleFormSubmit = useCallback(
+    async (data: InterventionAreaFormData) => {
+      try {
+        await updateCertificationAuthority.mutateAsync({
+          certificationAuthorityId,
+          departmentIds: data.regions
+            .flatMap((r) => r.children)
+            .filter((d) => d.selected)
+            .map((d) => d.id),
+        });
+        successToast("Modifications enregistrées");
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    },
+    [certificationAuthorityId, updateCertificationAuthority],
+  );
 
   return (
     <div className="flex flex-col flex-1">
@@ -46,35 +55,21 @@ const CertificationAuthorityComponent = ({
         certificationAuthoritylabel={certificationAuthority.label}
         pageLabel={"Zone d'intervention"}
       />
-      <form onSubmit={handleFormSubmit} className="flex flex-col w-full">
-        <fieldset className="grid gap-x-8">
-          <div className="flex flex-col gap-y-4 sm:gap-x-8">
-            <legend className="text-2xl font-bold">Zone d'intervention</legend>
-
-            <TreeSelect
-              title="Cochez les régions ou départements gérés"
-              label="Toute la France"
-              fullWidth
-              fullHeight
-              items={regionsAndDeparmController.field.value || []}
-              onClickSelectAll={(selected) =>
-                toggleAllRegionsAndDepartments(selected)
-              }
-              onClickItem={(i) => toggleRegionOrDepartment(i.id)}
-            />
-          </div>
-        </fieldset>
-        <FormButtons
-          formState={{ isDirty, isSubmitting }}
-          backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}`}
-        />
-      </form>
+      <InterventionAreaForm
+        backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}`}
+        entityDepartments={certificationAuthority.departments}
+        regions={regions}
+        handleFormSubmit={handleFormSubmit}
+        fullHeight
+        fullWidth
+      />
     </div>
   );
 };
 
 const CertificationAuthorityPage = () => {
-  const { certificationAuthority, regions } = useCertificationAuthority();
+  const { certificationAuthority, regions, updateCertificationAuthority } =
+    useCertificationAuthority();
 
   if (!certificationAuthority || regions.length === 0) {
     return null;
@@ -84,6 +79,7 @@ const CertificationAuthorityPage = () => {
     <CertificationAuthorityComponent
       certificationAuthority={certificationAuthority}
       regions={regions}
+      updateCertificationAuthority={updateCertificationAuthority}
     />
   );
 };

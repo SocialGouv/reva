@@ -6,23 +6,14 @@ import {
   useCertificationsForm,
 } from "./CertificationsForm.hook";
 
-type CertificationsFormCommonProps = {
+type CertificationsFormProps = {
   certifications: { id: string; label: string; selected: boolean }[];
   handleFormSubmit: (data: CertificationsFormData) => void;
   title?: string;
   fullWidth?: boolean;
   fullHeight?: boolean;
+  backUrl?: string;
 };
-
-type CertificationsFormProps =
-  | (CertificationsFormCommonProps & {
-      hasBackButton?: false;
-      backUrl?: never;
-    })
-  | (CertificationsFormCommonProps & {
-      hasBackButton: true;
-      backUrl: string;
-    });
 
 export const CertificationsForm = ({
   certifications,
@@ -30,7 +21,6 @@ export const CertificationsForm = ({
   title,
   fullWidth,
   fullHeight,
-  hasBackButton,
   backUrl,
 }: CertificationsFormProps) => {
   const {
@@ -60,14 +50,11 @@ export const CertificationsForm = ({
           fullWidth={fullWidth}
           fullHeight={fullHeight}
           items={certificationsController.field.value || []}
-          onClickSelectAll={(selected) => toggleAllCertifications(selected)}
+          onClickSelectAll={toggleAllCertifications}
           onClickItem={(i) => toggleCertification(i.id)}
         />
       </div>
-      <FormButtons
-        backUrl={hasBackButton ? backUrl : undefined}
-        formState={{ isDirty, isSubmitting }}
-      />
+      <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
     </form>
   );
 };

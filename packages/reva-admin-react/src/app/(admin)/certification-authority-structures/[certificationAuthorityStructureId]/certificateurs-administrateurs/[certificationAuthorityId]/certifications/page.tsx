@@ -51,7 +51,7 @@ const CertificationAuthorityCertificationsPage = () => {
             }
             certificationAuthorityId={certificationAuthorityId}
             certificationAuthoritylabel={certificationAuthority.label}
-            pageLabel={"Certifications gérées"}
+            pageLabel="Certifications gérées"
           />
           <h1>Certifications gérées</h1>
           <p className="text-xl">
@@ -62,7 +62,6 @@ const CertificationAuthorityCertificationsPage = () => {
             handleFormSubmit={handleFormSubmit}
             certifications={certifications}
             fullWidth
-            hasBackButton
             backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
           />
         </div>

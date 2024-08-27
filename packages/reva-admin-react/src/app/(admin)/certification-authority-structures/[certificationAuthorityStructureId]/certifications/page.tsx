@@ -62,7 +62,6 @@ const CertificationAuthorityStructureCertificationsPage = () => {
             handleFormSubmit={handleFormSubmit}
             certifications={certifications}
             fullWidth
-            hasBackButton
             backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/`}
           />
         </div>
