@@ -9,7 +9,7 @@ import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 export const Header = () => {
   const currentPathname = usePathname();
   const { isFeatureActive } = useFeatureflipping();
-
+  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS");
   const {
     isAdmin,
     isOrganism,
@@ -46,7 +46,9 @@ export const Header = () => {
               {
                 text: "Paramètres",
                 linkProps: {
-                  href: "/agencies-settings/legal-information",
+                  href: `/agencies-settings${
+                    isSettingsEnabled ? "" : "/legal-information"
+                  }`,
                   target: "_self",
                 },
                 isActive: currentPathname.startsWith("/agencies-settings"),
