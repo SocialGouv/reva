@@ -2,7 +2,6 @@ import mjml2html from "mjml";
 
 import { sendGenericEmail, templateMail } from "../../shared/email";
 import { logger } from "../../shared/logger";
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 
 const baseUrl = process.env.APP_BASE_URL || "https://vae.gouv.fr";
 
@@ -11,9 +10,6 @@ export const sendJuryResultCandidateEmail = async ({
 }: {
   email: string;
 }) => {
-  const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
-    ?.isActive;
-
   const htmlContent = mjml2html(
     templateMail({
       content: `
@@ -21,7 +17,7 @@ export const sendJuryResultCandidateEmail = async ({
       <p>Suite à votre passage devant un jury VAE, nous vous informons que vous pouvez dès à présent retrouver vos résultats en vous connectant à votre compte France VAE.</p>
     `,
       labelCTA: "Accéder à mon parcours",
-      url: `${baseUrl}/${isRevaCandidateActive ? "candidat" : "app"}/login/`,
+      url: `${baseUrl}/candidat/login/`,
     }),
   );
 

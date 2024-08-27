@@ -1,12 +1,7 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 
 const DeclarationAccessibilitePage = () => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isRevaCandidateActive = isFeatureActive("REVA_CANDIDATE");
-
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden font-light">
       <Head>
@@ -166,23 +161,15 @@ const DeclarationAccessibilitePage = () => {
           </li>
           <li>
             Parcours candidat / inscription -{" "}
-            {isRevaCandidateActive ? (
-              <a href="https://vae.gouv.fr/candidat/register/">
-                https://vae.gouv.fr/candidat/register/
-              </a>
-            ) : (
-              <a href="https://vae.gouv.fr/app/">https://vae.gouv.fr/app/</a>
-            )}
+            <a href="https://vae.gouv.fr/candidat/register/">
+              https://vae.gouv.fr/candidat/register/
+            </a>
           </li>
           <li>
             Parcours candidat / Effectuer une demande -{" "}
-            {isRevaCandidateActive ? (
-              <a href="https://vae.gouv.fr/candidat/">
-                https://vae.gouv.fr/candidat/
-              </a>
-            ) : (
-              <a href="https://vae.gouv.fr/app/">https://vae.gouv.fr/app/</a>
-            )}{" "}
+            <a href="https://vae.gouv.fr/candidat/">
+              https://vae.gouv.fr/candidat/
+            </a>
           </li>
           <li>
             Parcours espace pro / valider une candidature (jusqu’à la

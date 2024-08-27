@@ -1,4 +1,3 @@
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 import { logger } from "../../shared/logger";
 
 export const impersonateAccount = async (
@@ -44,15 +43,12 @@ export const impersonateCandiate = async (
 
   const data = await impersonate(keycloakId, KEYCLOAK_APP_REALM);
 
-  const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
-    ?.isActive;
-
   if (data) {
     const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
     return {
       headers: data.headers,
-      redirect: `${baseUrl}/${isRevaCandidateActive ? "candidat" : "app"}`,
+      redirect: `${baseUrl}/candidat`,
     };
   }
 

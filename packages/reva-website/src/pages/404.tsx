@@ -33,8 +33,6 @@ const Custom404 = () => {
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 
-  const isRevaCandidateActive = isFeatureActive("REVA_CANDIDATE");
-
   return (
     <MainLayout>
       <Head>
@@ -55,9 +53,7 @@ const Custom404 = () => {
         <RedirectionBlock
           title="Vous êtes candidat ?"
           buttonLabel="Démarrer ma VAE"
-          buttonLink={`/${
-            isRevaCandidateActive ? "candidat/register/" : "app/"
-          }`}
+          buttonLink="/candidat/register/"
         />
         <RedirectionBlock
           title="Vous êtes Architecte Accompagnateur de Parcours ?"

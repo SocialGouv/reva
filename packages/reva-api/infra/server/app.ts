@@ -1,6 +1,5 @@
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
-import fastifyStatic from "@fastify/static";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import fastify, {
@@ -10,7 +9,6 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 import MercuriusGQLUpload from "mercurius-upload";
-import path from "path";
 import { accountRoute } from "../../modules/account/account.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
@@ -24,7 +22,6 @@ import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 
-const APP_ROUTE_PATH = "/app";
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
 const CANDIDATE_ROUTE_PATH = "/candidat";
 
@@ -41,31 +38,10 @@ export const buildApp = async (
   const app = await fastify(opts);
 
   if (process.env.NODE_ENV === "production") {
-    const DIST_FOLDER = path.join(__dirname, "..", "..");
-    const APP_FOLDER = path.join(DIST_FOLDER, "app");
-
-    app.register(fastifyStatic, {
-      root: APP_FOLDER,
-      prefix: APP_ROUTE_PATH,
-      // decorateReply: false,
-    });
-
-    // Deal with not found
-    app.setNotFoundHandler((req, res) => {
-      if (req.url.startsWith(APP_ROUTE_PATH)) {
-        res.sendFile("index.html", APP_FOLDER);
-      }
-    });
-
     app.register(cors, {
       origin: (process.env.CORS_ORIGIN || "").split(","),
     });
   } else {
-    app.register(proxy, {
-      upstream: "http://localhost:3001/app",
-      prefix: APP_ROUTE_PATH,
-    });
-
     app.register(proxy, {
       upstream: "http://localhost:3003/admin2",
       prefix: ADMIN_REACT_ROUTE_PATH,

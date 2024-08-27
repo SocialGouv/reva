@@ -21,8 +21,7 @@
     "prisma:generate": "npm run prisma:generate --workspace=reva-api"
   },
   "workspaces": [
-    "packages/reva-api",
-    "packages/reva-app"
+    "packages/reva-api"
   ],
   "dependencies": {
     "husky": "^7.0.4"

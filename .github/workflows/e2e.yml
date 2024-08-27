@@ -1,5 +1,5 @@
 name: Cypress tests
-on: [ push ]
+on: [push]
 env:
   FRAMER_WEBSITE_URL: https://reva.incubateur.net
   REACT_APP_API_GRAPHQL: https://reva.incubateur.net/api/graphql
@@ -16,30 +16,11 @@ env:
   NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: reva-admin
 
 jobs:
-  cypress-run-reva-app:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 20.x ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm install
-      - run: cd packages/reva-tests && npm install
-      - run: npm run build
-      # On met le NODE_ENV ici car si on le met en global, ca install pas les devDeps
-      - run: cd packages/reva-tests && NODE_ENV=production npm run test:ci
-
   cypress-run-reva-website:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

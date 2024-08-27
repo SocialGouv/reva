@@ -1,6 +1,5 @@
 import { logger } from "../logger";
 import { sendGenericEmail } from ".";
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 
 export const sendEmailWithLink = async ({
   to,
@@ -27,15 +26,9 @@ export const sendEmailWithLink = async ({
   subject?: string;
   attachment?: { name: string; content: string }[];
 }) => {
-  const isRevaCandidateActive = (await getFeatureByKey("REVA_CANDIDATE"))
-    ?.isActive;
-
-  const appPath = isRevaCandidateActive && app == "app" ? "candidat" : app;
+  const appPath = app == "app" ? "candidat" : app;
   const actionPath =
-    isRevaCandidateActive &&
-    (action == "registration" || action == "confirmEmail")
-      ? "login"
-      : action;
+    action == "registration" || action == "confirmEmail" ? "login" : action;
 
   const baseUrl = `${process.env.BASE_URL}/${appPath}`;
   const url = customUrl
