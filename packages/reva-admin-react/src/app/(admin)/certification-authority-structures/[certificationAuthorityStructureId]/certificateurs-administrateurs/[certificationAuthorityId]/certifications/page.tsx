@@ -1,14 +1,11 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import {
-  useCertificationsForm,
-  useCertificationsPage,
-} from "./certifications.hooks";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { useCertificationsPage } from "./certifications.hooks";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
-import { TreeSelect } from "@/components/tree-select";
+import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
+import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
 
 const CertificationAuthorityCertificationsPage = () => {
   const { certificationAuthorityStructureId, certificationAuthorityId } =
@@ -23,31 +20,19 @@ const CertificationAuthorityCertificationsPage = () => {
     updateCertificationAuthorityCertifications,
   } = useCertificationsPage({ certificationAuthorityId });
 
-  const {
-    handleSubmit,
-    reset,
-    formState: { isDirty, isSubmitting },
-    certificationsController,
-    toggleCertification,
-    toggleAllCertifications,
-  } = useCertificationsForm({ certifications });
-
-  const handleFormSubmit = handleSubmit(
-    async (data) => {
-      try {
-        await updateCertificationAuthorityCertifications.mutateAsync({
-          certificationAuthorityId,
-          certificationIds: data.certifications
-            .filter((c) => c.selected)
-            .map((c) => c.id),
-        });
-        successToast("Modifications enregistrées");
-      } catch (e) {
-        graphqlErrorToast(e);
-      }
-    },
-    (e) => console.log({ e }),
-  );
+  const handleFormSubmit = async (data: CertificationsFormData) => {
+    try {
+      await updateCertificationAuthorityCertifications.mutateAsync({
+        certificationAuthorityId,
+        certificationIds: data.certifications
+          .filter((c) => c.selected)
+          .map((c) => c.id),
+      });
+      successToast("Modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
   if (!certificationAuthority) {
     return null;
@@ -73,31 +58,13 @@ const CertificationAuthorityCertificationsPage = () => {
             Cochez les certifications proposées par la structure certificatrice.
             Vous pouvez choisir une ou plusieurs certifications.
           </p>
-          <form
-            className="flex flex-col mt-4"
-            onSubmit={handleFormSubmit}
-            onReset={(e) => {
-              e.preventDefault();
-              reset();
-            }}
-          >
-            <div className="flex flex-col">
-              <TreeSelect
-                title=""
-                label="Toutes les certifications"
-                fullWidth
-                items={certificationsController.field.value || []}
-                onClickSelectAll={(selected) =>
-                  toggleAllCertifications(selected)
-                }
-                onClickItem={(i) => toggleCertification(i.id)}
-              />
-            </div>
-            <FormButtons
-              backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
-              formState={{ isDirty, isSubmitting }}
-            />
-          </form>
+          <CertificationsForm
+            handleFormSubmit={handleFormSubmit}
+            certifications={certifications}
+            fullWidth
+            hasBackButton
+            backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
+          />
         </div>
       )}
     </div>
