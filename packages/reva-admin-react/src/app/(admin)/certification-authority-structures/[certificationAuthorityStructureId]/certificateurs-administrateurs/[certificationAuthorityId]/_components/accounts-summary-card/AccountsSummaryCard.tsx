@@ -1,4 +1,4 @@
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 import Button from "@codegouvfr/react-dsfr/Button";
 
 export default function AccountsSummaryCard({
@@ -17,7 +17,7 @@ export default function AccountsSummaryCard({
   hrefPrefix: string;
 }) {
   return (
-    <CandidacySectionCard
+    <SectionCard
       title="Comptes collaborateurs"
       titleIconClass="fr-icon-team-fill"
     >
@@ -47,6 +47,6 @@ export default function AccountsSummaryCard({
           </li>
         ))}
       </ul>
-    </CandidacySectionCard>
+    </SectionCard>
   );
 }

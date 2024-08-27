@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { DffAttachment } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
@@ -14,7 +14,7 @@ export const AttachmentsCard = ({
 }) => {
   const { candidacyId } = useParams();
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Pièces jointes"
       titleIconClass="fr-icon-attachment-fill"
       status={attachmentsPartComplete ? "COMPLETED" : "TO_COMPLETE"}
@@ -35,6 +35,6 @@ export const AttachmentsCard = ({
             )
           );
         })}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

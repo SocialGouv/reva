@@ -1,7 +1,8 @@
 "use client";
 
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import ResponsableReferentielCard from "@/app/(admin)/certification-authority-structures/[certificationAuthorityStructureId]/_components/responsable-referentiel-card/ResponsableReferentielCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
@@ -9,7 +10,6 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { CertificationsSummaryCard } from "./_components/certifications-summary-card/CertificationsSummaryCard";
-import ResponsableReferentielCard from "@/app/(admin)/certification-authority-structures/[certificationAuthorityStructureId]/_components/responsable-referentiel-card/ResponsableReferentielCard";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
@@ -94,7 +94,7 @@ const CertificationAuthorityStructurePage = () => {
             référentiel depuis cet espace.
           </p>
           <div className="flex flex-col gap-6">
-            <DefaultCandidacySectionCard
+            <EnhancedSectionCard
               title="Informations générales"
               titleIconClass="fr-icon-information-fill"
               isEditable
@@ -104,7 +104,7 @@ const CertificationAuthorityStructurePage = () => {
               <p className="ml-10 mb-0 font-bold">
                 {certificationAuthorityStructure.label}
               </p>
-            </DefaultCandidacySectionCard>
+            </EnhancedSectionCard>
             <CertificationsSummaryCard
               certifications={certificationAuthorityStructure.certifications}
               updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certifications`}
@@ -117,7 +117,7 @@ const CertificationAuthorityStructurePage = () => {
                 certificationAuthorityStructure.certificationRegistryManager
               }
             />
-            <CandidacySectionCard
+            <SectionCard
               title="Certificateurs administrateurs"
               titleIconClass="fr-icon-clipboard-fill"
               buttonPriority="primary"
@@ -152,8 +152,8 @@ const CertificationAuthorityStructurePage = () => {
                   ),
                 )}
               </ul>
-            </CandidacySectionCard>
-            <CandidacySectionCard
+            </SectionCard>
+            <SectionCard
               title="Comptes collaborateurs"
               titleIconClass="fr-icon-team-fill"
             >
@@ -197,7 +197,7 @@ const CertificationAuthorityStructurePage = () => {
                     </li>
                   ))}
               </ul>
-            </CandidacySectionCard>
+            </SectionCard>
           </div>
         </div>
       )}

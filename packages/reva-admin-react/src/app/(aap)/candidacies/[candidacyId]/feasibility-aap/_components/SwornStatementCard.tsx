@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useParams } from "next/navigation";
 
@@ -14,7 +14,7 @@ export const SwornStatementCard = ({
   const { candidacyId } = useParams();
 
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Validation du candidat"
       titleIconClass="fr-icon-success-fill"
       status={swornStatementFileId ? "COMPLETED" : "TO_COMPLETE"}
@@ -28,6 +28,6 @@ export const SwornStatementCard = ({
           de l'envoyer au candidat pour validation.
         </SmallNotice>
       )}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

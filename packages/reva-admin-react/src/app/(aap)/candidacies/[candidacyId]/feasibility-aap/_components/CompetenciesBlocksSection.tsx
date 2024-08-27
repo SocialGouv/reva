@@ -1,8 +1,6 @@
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import {
-  BadgeCompleted,
-  BadgeToComplete,
-} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeCompleted";
+import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import {
   CertificationCompetenceDetails,
@@ -47,7 +45,7 @@ export const CompetenciesBlocksSection = ({
   const { candidacyId } = useParams();
 
   return (
-    <CandidacySectionCard
+    <SectionCard
       title="Blocs de compétences"
       titleIconClass="fr-icon-survey-fill"
       badge={
@@ -91,6 +89,6 @@ export const CompetenciesBlocksSection = ({
       {disabled && (
         <SmallNotice className="mt-4">{disabledNoticeText}</SmallNotice>
       )}
-    </CandidacySectionCard>
+    </SectionCard>
   );
 };

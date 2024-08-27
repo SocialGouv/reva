@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Prerequisite } from "@/graphql/generated/graphql";
 import { fr } from "@codegouvfr/react-dsfr";
@@ -34,7 +34,7 @@ export const PrerequisitesCard = ({
   const noPrerequisites = !prerequisites?.length;
 
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Prérequis obligatoires"
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
@@ -85,6 +85,6 @@ export const PrerequisitesCard = ({
           les prérequis.
         </SmallNotice>
       )}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import {
   Certification,
   DematerializedFeasibilityFile,
@@ -17,7 +17,7 @@ export const CertificationSection = ({
 }) => {
   const { candidacyId } = useParams();
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Certification visée"
       titleIconClass="fr-icon-award-fill"
       isEditable={isFeasibilityEditable}
@@ -63,6 +63,6 @@ export const CertificationSection = ({
           ? "Un ou plusieurs bloc(s) de compétences visé(s)"
           : "La certification dans sa totalité"}
       </p>
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

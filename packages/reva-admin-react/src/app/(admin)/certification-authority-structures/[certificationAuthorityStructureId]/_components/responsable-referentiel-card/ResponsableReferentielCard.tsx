@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export default function ResponsableReferentielCard({
@@ -18,7 +18,7 @@ export default function ResponsableReferentielCard({
 
   if (!certificationRegistryManager) {
     return (
-      <DefaultCandidacySectionCard
+      <EnhancedSectionCard
         title="Responsable du référentiel "
         titleIconClass="fr-icon-medal-fill"
         isEditable
@@ -30,14 +30,14 @@ export default function ResponsableReferentielCard({
           structure certificatrice. L’ajout d’un responsable du référentiel est
           obligatoire pour la gestion des certifications.
         </p>
-      </DefaultCandidacySectionCard>
+      </EnhancedSectionCard>
     );
   }
 
   const account = certificationRegistryManager.account;
 
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Responsable du référentiel "
       titleIconClass="fr-icon-medal-fill"
       isEditable
@@ -58,6 +58,6 @@ export default function ResponsableReferentielCard({
           </Button>
         </div>
       </p>
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 }

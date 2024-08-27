@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { sortBy, sortedUniqBy } from "lodash";
@@ -35,7 +35,7 @@ export const CertificationsSummaryCard = ({
   );
 
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Certifications gérées"
       titleIconClass="fr-icon-award-fill"
       isEditable={!!updateButtonHref}
@@ -70,6 +70,6 @@ export const CertificationsSummaryCard = ({
           </div>
         </>
       )}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

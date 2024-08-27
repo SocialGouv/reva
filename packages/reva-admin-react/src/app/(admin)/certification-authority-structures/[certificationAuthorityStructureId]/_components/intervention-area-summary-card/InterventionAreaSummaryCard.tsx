@@ -1,4 +1,4 @@
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 
@@ -19,7 +19,7 @@ export default function InterventionAreaSummaryCard({
 }) {
   const isInterventionAreaComplete = regions.length > 0;
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Zone d'intervention"
       titleIconClass="fr-icon-road-map-fill"
       isEditable={!!updateButtonHref}
@@ -37,6 +37,6 @@ export default function InterventionAreaSummaryCard({
           </div>
         </Accordion>
       ))}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 }

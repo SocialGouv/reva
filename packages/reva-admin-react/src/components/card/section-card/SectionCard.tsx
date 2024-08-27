@@ -25,7 +25,7 @@ interface CandidacySectionCardProps {
   "data-test"?: string;
 }
 
-const CandidacySectionCard = ({
+export const SectionCard = ({
   children,
   title,
   titleIconClass,
@@ -67,5 +67,3 @@ const CandidacySectionCard = ({
     </GrayCard>
   );
 };
-
-export default CandidacySectionCard;

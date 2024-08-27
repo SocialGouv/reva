@@ -1,8 +1,6 @@
+import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
-import {
-  BadgeToComplete,
-  DefaultCandidacySectionCard,
-} from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { DfFileAapDecision } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
@@ -37,7 +35,7 @@ export const DecisionCard = ({
   };
 
   return (
-    <DefaultCandidacySectionCard
+    <EnhancedSectionCard
       title="Avis sur la faisabilité"
       titleIconClass="fr-icon-thumb-up-fill"
       status={aapDecision ? "COMPLETED" : "TO_COMPLETE"}
@@ -53,6 +51,6 @@ export const DecisionCard = ({
           Vous ne pouvez pas émettre un avis sur la faisabilité.
         </SmallNotice>
       )}
-    </DefaultCandidacySectionCard>
+    </EnhancedSectionCard>
   );
 };

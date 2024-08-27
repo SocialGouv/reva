@@ -1,21 +1,10 @@
-import CandidacySectionCard from "@/components/card/candidacy-section-card/CandidacySectionCard";
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeCompleted";
+import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
-export const BadgeCompleted = () => (
-  <Badge data-test="completed-badge" severity="success">
-    Complété
-  </Badge>
-);
-
-export const BadgeToComplete = () => (
-  <Badge data-test="to-complete-badge" severity="warning">
-    À compléter
-  </Badge>
-);
-
-export const DefaultCandidacySectionCard = ({
+export const EnhancedSectionCard = ({
   title,
   titleIconClass,
   status,
@@ -44,7 +33,7 @@ export const DefaultCandidacySectionCard = ({
 
   if (isEditable && buttonOnClickHref) {
     return (
-      <CandidacySectionCard
+      <SectionCard
         data-test={dataTest}
         title={title}
         titleIconClass={titleIconClass}
@@ -56,13 +45,13 @@ export const DefaultCandidacySectionCard = ({
         buttonOnClick={() => router.push(buttonOnClickHref)}
       >
         {children}
-      </CandidacySectionCard>
+      </SectionCard>
     );
   }
 
   if (isEditable) {
     return (
-      <CandidacySectionCard
+      <SectionCard
         data-test={dataTest}
         title={title}
         titleIconClass={titleIconClass}
@@ -70,12 +59,12 @@ export const DefaultCandidacySectionCard = ({
         disabled={disabled}
       >
         {children}
-      </CandidacySectionCard>
+      </SectionCard>
     );
   }
 
   return (
-    <CandidacySectionCard
+    <SectionCard
       data-test={dataTest}
       title={title}
       titleIconClass={titleIconClass}
@@ -83,6 +72,6 @@ export const DefaultCandidacySectionCard = ({
       disabled={disabled}
     >
       {children}
-    </CandidacySectionCard>
+    </SectionCard>
   );
 };

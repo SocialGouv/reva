@@ -3,17 +3,17 @@ import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidac
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useAuth } from "@/components/auth/auth";
-import { DefaultCandidacySectionCard } from "@/components/card/candidacy-section-card/DefaultCandidacySectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -117,7 +117,7 @@ const CandidacySummaryPage = () => {
       {!!candidate && (
         <>
           <ul className="flex flex-col gap-8 pl-0 mt-8">
-            <DefaultCandidacySectionCard
+            <EnhancedSectionCard
               data-test="candidate-information"
               title="Les informations du candidat"
               buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-information`}
@@ -150,9 +150,9 @@ const CandidacySummaryPage = () => {
                     `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
                 </dd>
               </dl>
-            </DefaultCandidacySectionCard>
+            </EnhancedSectionCard>
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
-              <DefaultCandidacySectionCard
+              <EnhancedSectionCard
                 data-test="candidate-profile"
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
@@ -176,7 +176,7 @@ const CandidacySummaryPage = () => {
                     <p className="mb-0">{candidate.highestDegreeLabel}</p>
                   </div>
                 )}
-              </DefaultCandidacySectionCard>
+              </EnhancedSectionCard>
             )}
             <CertificationCard candidacy={candidacy} />
 
