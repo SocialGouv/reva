@@ -11,6 +11,8 @@ import { buffer } from "stream/consumers";
 import { logger } from "../logger";
 import { UploadedFile } from "./file.interface";
 
+export type S3File = { filePath: string; mimeType: string; data: Buffer };
+
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
 const createS3Client = () => {
@@ -62,11 +64,7 @@ export const uploadFile = async ({
   filePath,
   mimeType,
   data,
-}: {
-  filePath: string;
-  mimeType: string;
-  data: Buffer;
-}): Promise<void> => {
+}: S3File): Promise<void> => {
   const command = new PutObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
     Key: filePath,
@@ -93,10 +91,7 @@ const uploadWithRetry = async ({
   mimeType,
   data,
   retry = 0,
-}: {
-  filePath: string;
-  mimeType: string;
-  data: Buffer;
+}: S3File & {
   retry?: number;
 }) => {
   await uploadFile({ filePath, mimeType, data });
@@ -187,28 +182,14 @@ export const emptyUploadedFileStream = async (file?: GraphqlUploadedFile) => {
   }
 };
 
-export const uploadFileToS3 = ({
-  filePath,
-  mimeType,
-  data,
-}: {
-  filePath: string;
-  mimeType: string;
-  data: Buffer;
-}) =>
+export const uploadFileToS3 = ({ filePath, mimeType, data }: S3File) =>
   uploadWithRetry({
     filePath,
     mimeType,
     data,
   });
 
-export const uploadFilesToS3 = async (
-  files: {
-    filePath: string;
-    mimeType: string;
-    data: Buffer;
-  }[],
-) => {
+export const uploadFilesToS3 = async (files: S3File[]) => {
   try {
     for (const data of files) {
       await uploadWithRetry({

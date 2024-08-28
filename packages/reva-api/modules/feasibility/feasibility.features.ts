@@ -19,7 +19,13 @@ import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStat
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
-import { UploadedFile, deleteFile } from "../shared/file";
+import {
+  S3File,
+  UploadedFile,
+  deleteFile,
+  uploadFileToS3,
+  uploadFilesToS3,
+} from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
@@ -30,7 +36,6 @@ import {
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./emails";
-import { FeasibilityFile, uploadFeasibilityFiles } from "./feasibility.file";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import {
   FeasibilityStatusFilter,
@@ -38,6 +43,7 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
+import { v4 } from "uuid";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -131,79 +137,74 @@ export const createFeasibility = async ({
     );
   }
 
-  const files: FeasibilityFile[] = [];
+  const files: S3File[] = [];
 
-  const feasibilityFileInstance = new FeasibilityFile({
-    candidacyId: candidacyId,
-    fileToUpload: feasibilityFile,
-  });
+  const feasibilityFileInstance: S3File = {
+    filePath: `${candidacyId}/${v4()}`,
+    data: feasibilityFile._buf,
+    mimeType: feasibilityFile.mimetype,
+  };
   files.push(feasibilityFileInstance);
 
-  const IDFileInstance = new FeasibilityFile({
-    candidacyId: candidacyId,
-    fileToUpload: IDFile,
-  });
+  const IDFileInstance: S3File = {
+    filePath: `${candidacyId}/${v4()}`,
+    data: IDFile._buf,
+    mimeType: IDFile.mimetype,
+  };
   files.push(IDFileInstance);
 
-  let documentaryProofFileInstance: FeasibilityFile | undefined;
+  let documentaryProofFileInstance: S3File | undefined;
   if (documentaryProofFile) {
-    documentaryProofFileInstance = new FeasibilityFile({
-      candidacyId: candidacyId,
-      fileToUpload: documentaryProofFile,
-    });
+    documentaryProofFileInstance = {
+      filePath: `${candidacyId}/${v4()}`,
+      data: documentaryProofFile._buf,
+      mimeType: documentaryProofFile.mimetype,
+    };
     files.push(documentaryProofFileInstance);
   }
 
-  let certificateOfAttendanceFileInstance: FeasibilityFile | undefined;
+  let certificateOfAttendanceFileInstance: S3File | undefined;
   if (certificateOfAttendanceFile) {
-    certificateOfAttendanceFileInstance = new FeasibilityFile({
-      candidacyId: candidacyId,
-      fileToUpload: certificateOfAttendanceFile,
-    });
+    certificateOfAttendanceFileInstance = {
+      filePath: `${candidacyId}/${v4()}`,
+      data: certificateOfAttendanceFile._buf,
+      mimeType: certificateOfAttendanceFile.mimetype,
+    };
     files.push(certificateOfAttendanceFileInstance);
   }
 
-  const success = await uploadFeasibilityFiles(files);
-  if (!success) {
-    throw new Error(
-      `Les fichiers du dossiers de faisabilités n'ont pas pu être enregistrés. Veuillez réessayer.`,
-    );
-  }
+  await uploadFilesToS3(files);
 
   const feasibilityUploadedPdfData = {
     feasibilityFile: {
       create: {
-        id: feasibilityFileInstance.id,
         mimeType: feasibilityFile.mimetype,
         name: feasibilityFile.filename,
-        path: `${candidacyId}/${feasibilityFileInstance.id}`,
+        path: feasibilityFileInstance.filePath,
       },
     },
     IDFile: {
       create: {
-        id: IDFileInstance.id,
         mimeType: IDFile.mimetype,
         name: IDFile.filename,
-        path: `${candidacyId}/${IDFileInstance.id}`,
+        path: IDFileInstance.filePath,
       },
     },
     documentaryProofFile: documentaryProofFile
       ? {
           create: {
-            id: documentaryProofFileInstance?.id,
             mimeType: documentaryProofFile.mimetype,
             name: documentaryProofFile.filename,
-            path: `${candidacyId}/${documentaryProofFileInstance?.id}`,
+            path: documentaryProofFileInstance?.filePath,
           },
         }
       : undefined,
     certificateOfAttendanceFile: certificateOfAttendanceFile
       ? {
           create: {
-            id: certificateOfAttendanceFileInstance?.id,
             mimeType: certificateOfAttendanceFile.mimetype,
             name: certificateOfAttendanceFile.filename,
-            path: `${candidacyId}/${certificateOfAttendanceFileInstance?.id}`,
+            path: certificateOfAttendanceFileInstance?.filePath,
           },
         }
       : undefined,
@@ -666,12 +667,15 @@ const deleteFeasibilityIDFile = async (feasibilityId: string) => {
       },
     });
 
-    const file = new FeasibilityFile({
-      fileId: feasibility.feasibilityUploadedPdf?.IDFileId,
-      candidacyId: feasibility.candidacyId,
+    const file = await prismaClient.file.findUnique({
+      where: {
+        id: feasibility.feasibilityUploadedPdf.IDFileId,
+      },
     });
 
-    await deleteFile(file.keyPath);
+    if (file) {
+      await deleteFile(file.path);
+    }
   }
 };
 
@@ -707,19 +711,15 @@ const validateFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
-    let infoFileInstance: FeasibilityFile | undefined;
+    let infoFileInstance: S3File | undefined;
     if (infoFile) {
-      infoFileInstance = new FeasibilityFile({
-        candidacyId: feasibility.candidacyId,
-        fileToUpload: infoFile,
-      });
+      infoFileInstance = {
+        filePath: `${feasibility.candidacyId}/${v4()}`,
+        data: infoFile._buf,
+        mimeType: infoFile.mimetype,
+      };
 
-      const success = await uploadFeasibilityFiles([infoFileInstance]);
-      if (!success) {
-        throw new Error(
-          `Le fichier du dossiers de faisabilité n'a pas pu être enregistré. Veuillez réessayer.`,
-        );
-      }
+      await uploadFileToS3(infoFileInstance);
     }
 
     const updatedFeasibility = await prismaClient.feasibility.update({
@@ -728,16 +728,16 @@ const validateFeasibility = async ({
         decision: "ADMISSIBLE",
         decisionComment: comment,
         decisionSentAt: new Date(),
-        decisionFile: infoFile
-          ? {
-              create: {
-                id: infoFileInstance?.id,
-                mimeType: infoFile.mimetype,
-                name: infoFile.filename,
-                path: `${feasibility.candidacyId}/${infoFileInstance?.id}`,
-              },
-            }
-          : undefined,
+        decisionFile:
+          infoFile && infoFileInstance
+            ? {
+                create: {
+                  mimeType: infoFile.mimetype,
+                  name: infoFile.filename,
+                  path: infoFileInstance?.filePath,
+                },
+              }
+            : undefined,
       },
       include: {
         candidacy: {
@@ -830,19 +830,15 @@ const rejectFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
-    let infoFileInstance: FeasibilityFile | undefined;
+    let infoFileInstance: S3File | undefined;
     if (infoFile) {
-      infoFileInstance = new FeasibilityFile({
-        candidacyId: feasibility.candidacyId,
-        fileToUpload: infoFile,
-      });
+      infoFileInstance = {
+        filePath: `${feasibility.candidacyId}/${v4()}`,
+        data: infoFile._buf,
+        mimeType: infoFile.mimetype,
+      };
 
-      const success = await uploadFeasibilityFiles([infoFileInstance]);
-      if (!success) {
-        throw new Error(
-          `Le fichier du dossiers de faisabilité n'a pas pu être enregistré. Veuillez réessayer.`,
-        );
-      }
+      await uploadFileToS3(infoFileInstance);
     }
 
     const updatedFeasibility = await prismaClient.feasibility.update({
@@ -851,16 +847,16 @@ const rejectFeasibility = async ({
         decision: "REJECTED",
         decisionComment: comment,
         decisionSentAt: new Date(),
-        decisionFile: infoFile
-          ? {
-              create: {
-                id: infoFileInstance?.id,
-                mimeType: infoFile.mimetype,
-                name: infoFile.filename,
-                path: `${feasibility.candidacyId}/${infoFileInstance?.id}`,
-              },
-            }
-          : undefined,
+        decisionFile:
+          infoFile && infoFileInstance
+            ? {
+                create: {
+                  mimeType: infoFile.mimetype,
+                  name: infoFile.filename,
+                  path: infoFileInstance.filePath,
+                },
+              }
+            : undefined,
       },
       include: {
         candidacy: {
