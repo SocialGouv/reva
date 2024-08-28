@@ -13,6 +13,7 @@ export const EnhancedSectionCard = ({
   buttonOnClickHref,
   children,
   CustomBadge,
+  customButtonTitle,
   "data-test": dataTest,
 }: {
   title: string;
@@ -23,6 +24,7 @@ export const EnhancedSectionCard = ({
   buttonOnClickHref?: string;
   children?: ReactNode;
   CustomBadge?: ReactNode;
+  customButtonTitle?: string;
   "data-test"?: string;
 }) => {
   const router = useRouter();
@@ -30,6 +32,8 @@ export const EnhancedSectionCard = ({
   const badge =
     CustomBadge ||
     (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />);
+  const buttonTitle =
+    customButtonTitle || (status === "TO_COMPLETE" ? "Compléter" : "Modifier");
 
   if (isEditable && buttonOnClickHref) {
     return (
@@ -41,7 +45,7 @@ export const EnhancedSectionCard = ({
         disabled={disabled}
         hasButton
         buttonPriority={status === "TO_COMPLETE" ? "primary" : "secondary"}
-        buttonTitle={status === "TO_COMPLETE" ? "Compléter" : "Modifier"}
+        buttonTitle={buttonTitle}
         buttonOnClick={() => router.push(buttonOnClickHref)}
       >
         {children}
