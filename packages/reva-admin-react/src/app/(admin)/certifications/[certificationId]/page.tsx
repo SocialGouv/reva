@@ -13,6 +13,7 @@ import { BackButton } from "@/components/back-button/BackButton";
 import { CertificationFormacodes } from "./_components/CertificationFormacodes";
 
 import { useCertificationQueries } from "@/app/(admin)/certifications/[certificationId]/certificationQueries";
+import { CertificationGeneralInformation } from "./_components/CertificationGeneralInformation";
 
 const CertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -54,6 +55,10 @@ const CertificationPage = () => {
               {format(certification.expiresAt, "dd/MM/yyyy", { locale: fr })}
             </Info>
           </div>
+
+          <br />
+          <h2>RCNP: Informations générales</h2>
+          <CertificationGeneralInformation codeRncp={certification.codeRncp} />
 
           <br />
           <h2>Blocs de compétences</h2>

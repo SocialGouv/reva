@@ -124,6 +124,17 @@ const getFCCertificationQuery = graphql(`
     getFCCertification(rncp: $rncp) {
       ID_FICHE
       NUMERO_FICHE
+      INTITULE
+      ABREGE {
+        CODE
+        LIBELLE
+      }
+      NOMENCLATURE_EUROPE {
+        NIVEAU
+        INTITULE
+      }
+      DATE_FIN_ENREGISTREMENT
+      DATE_LIMITE_DELIVRANCE
       BLOCS_COMPETENCES {
         CODE
         LIBELLE

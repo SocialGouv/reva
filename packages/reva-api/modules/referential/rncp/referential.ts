@@ -1,3 +1,5 @@
+import { parse } from "date-fns";
+
 import { logger } from "../../shared/logger";
 
 const FRANCE_COMPENTENCES_API_KEY = process.env.FRANCE_COMPENTENCES_API_KEY;
@@ -37,6 +39,17 @@ export type FindParams = {
 export type RNCPCertification = {
   ID_FICHE: string;
   NUMERO_FICHE: string;
+  INTITULE: string;
+  ABREGE: {
+    CODE: string;
+    LIBELLE: string;
+  };
+  NOMENCLATURE_EUROPE: {
+    NIVEAU: string;
+    INTITULE: string;
+  };
+  DATE_FIN_ENREGISTREMENT: number;
+  DATE_LIMITE_DELIVRANCE: number;
   BLOCS_COMPETENCES: {
     CODE: string;
     LIBELLE: string;
@@ -227,6 +240,17 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
     const certification: RNCPCertification = {
       ID_FICHE: data.ID_FICHE,
       NUMERO_FICHE: data.NUMERO_FICHE,
+      INTITULE: data.INTITULE,
+      ABREGE: {
+        CODE: data.ABREGE.CODE,
+        LIBELLE: data.ABREGE.LIBELLE,
+      },
+      NOMENCLATURE_EUROPE: {
+        NIVEAU: data.NOMENCLATURE_EUROPE.NIVEAU,
+        INTITULE: data.NOMENCLATURE_EUROPE.INTITULE,
+      },
+      DATE_FIN_ENREGISTREMENT: getDateFromString(data.DATE_FIN_ENREGISTREMENT),
+      DATE_LIMITE_DELIVRANCE: getDateFromString(data.DATE_LIMITE_DELIVRANCE),
       BLOCS_COMPETENCES: ((data.BLOCS_COMPETENCES || []) as any[])
         .map((bloc) => {
           return {
@@ -256,4 +280,8 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
   }
 
   return undefined;
+}
+
+function getDateFromString(value: string): number {
+  return parse(value, "dd/MM/yyyy", new Date()).getTime();
 }

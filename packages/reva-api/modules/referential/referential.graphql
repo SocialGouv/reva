@@ -132,9 +132,24 @@ type FCFormacode {
   LIBELLE: String!
 }
 
+type FCAbrege {
+  CODE: String!
+  LIBELLE: String!
+}
+
+type FCNomenclatureEurope {
+  NIVEAU: String!
+  INTITULE: String!
+}
+
 type FCCertification {
   ID_FICHE: ID!
   NUMERO_FICHE: String!
+  INTITULE: String!
+  ABREGE: FCAbrege!
+  NOMENCLATURE_EUROPE: FCNomenclatureEurope!
+  DATE_FIN_ENREGISTREMENT: Timestamp!
+  DATE_LIMITE_DELIVRANCE: Timestamp!
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
 }
