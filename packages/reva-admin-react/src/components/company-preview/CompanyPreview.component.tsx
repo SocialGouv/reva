@@ -182,7 +182,7 @@ const Info = ({
   </span>
 );
 
-const CompanyBadges = ({
+export const CompanyBadges = ({
   siegeSocial,
   dateFermeture,
   qualiopiStatus,
