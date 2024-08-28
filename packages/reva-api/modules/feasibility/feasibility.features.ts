@@ -140,14 +140,14 @@ export const createFeasibility = async ({
   const files: S3File[] = [];
 
   const feasibilityFileInstance: S3File = {
-    filePath: `${candidacyId}/${v4()}`,
+    filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
     data: feasibilityFile._buf,
     mimeType: feasibilityFile.mimetype,
   };
   files.push(feasibilityFileInstance);
 
   const IDFileInstance: S3File = {
-    filePath: `${candidacyId}/${v4()}`,
+    filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
     data: IDFile._buf,
     mimeType: IDFile.mimetype,
   };
@@ -156,7 +156,7 @@ export const createFeasibility = async ({
   let documentaryProofFileInstance: S3File | undefined;
   if (documentaryProofFile) {
     documentaryProofFileInstance = {
-      filePath: `${candidacyId}/${v4()}`,
+      filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
       data: documentaryProofFile._buf,
       mimeType: documentaryProofFile.mimetype,
     };
@@ -166,7 +166,7 @@ export const createFeasibility = async ({
   let certificateOfAttendanceFileInstance: S3File | undefined;
   if (certificateOfAttendanceFile) {
     certificateOfAttendanceFileInstance = {
-      filePath: `${candidacyId}/${v4()}`,
+      filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
       data: certificateOfAttendanceFile._buf,
       mimeType: certificateOfAttendanceFile.mimetype,
     };
@@ -714,7 +714,7 @@ const validateFeasibility = async ({
     let infoFileInstance: S3File | undefined;
     if (infoFile) {
       infoFileInstance = {
-        filePath: `${feasibility.candidacyId}/${v4()}`,
+        filePath: `candidacies/${feasibility.candidacyId}/feasibility/${v4()}`,
         data: infoFile._buf,
         mimeType: infoFile.mimetype,
       };
@@ -833,7 +833,7 @@ const rejectFeasibility = async ({
     let infoFileInstance: S3File | undefined;
     if (infoFile) {
       infoFileInstance = {
-        filePath: `${feasibility.candidacyId}/${v4()}`,
+        filePath: `candidacies/${feasibility.candidacyId}/feasibility/${v4()}`,
         data: infoFile._buf,
         mimeType: infoFile.mimetype,
       };
