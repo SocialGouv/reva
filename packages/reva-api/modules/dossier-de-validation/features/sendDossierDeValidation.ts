@@ -63,7 +63,7 @@ export const sendDossierDeValidation = async ({
   }
 
   const dossierDeValidationFileId = uuidV4();
-  const filePath = `${candidacyId}/${dossierDeValidationFileId}`;
+  const filePath = `candidacies/${candidacyId}/dossier_de_validation/${dossierDeValidationFileId}`;
   await uploadFileToS3({
     filePath,
     mimeType: dossierDeValidationFile.mimetype,
@@ -76,7 +76,7 @@ export const sendDossierDeValidation = async ({
   }[] = dossierDeValidationOtherFiles.map((f) => ({ id: uuidV4(), file: f }));
 
   for (const d of dossierDeValidationOtherFilesWithIds) {
-    const filePath = `${candidacyId}/${d.id}`;
+    const filePath = `candidacies/${candidacyId}/dossier_de_validation/${d.id}`;
     await uploadFileToS3({
       filePath,
       mimeType: d.file.mimetype,
