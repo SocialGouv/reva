@@ -16,6 +16,9 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
       label
       certificationAuthorityStructure {
         label
+        certifications {
+          id
+        }
       }
       certifications {
         id
@@ -57,7 +60,10 @@ export const useCertificationsPage = ({
 
   const { data: getCertificationAuthorityAndCertificationsResponse } =
     useSuspenseQuery({
-      queryKey: [certificationAuthorityId, "getCertificationAuthorityWithCertifications"],
+      queryKey: [
+        certificationAuthorityId,
+        "getCertificationAuthorityWithCertifications",
+      ],
       queryFn: () =>
         graphqlClient.request(getCertificationAuthorityAndCertificationsQuery, {
           id: certificationAuthorityId,
@@ -90,17 +96,22 @@ export const useCertificationsPage = ({
 
   const certifications = useMemo(
     () =>
-      getCertificationAuthorityAndCertificationsResponse?.searchCertificationsForAdmin?.rows.map(
-        (c) => ({
+      getCertificationAuthorityAndCertificationsResponse?.searchCertificationsForAdmin?.rows
+        .map((c) => ({
           id: c.id,
           label: `${c.codeRncp} - ${c.label}`,
           selected:
             certificationAuthority?.certifications.some(
               (cert) => cert.id === c.id,
             ) || false,
-        }),
-      ),
+        }))
+        .sort((c) =>
+          certificationAuthority?.certificationAuthorityStructure?.certifications.some(
+            (ca) => ca.id === c.id,
+          ) ? -1 : 1,
+        ),
     [
+      certificationAuthority?.certificationAuthorityStructure?.certifications,
       certificationAuthority?.certifications,
       getCertificationAuthorityAndCertificationsResponse
         ?.searchCertificationsForAdmin?.rows,

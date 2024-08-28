@@ -102,7 +102,7 @@ export const useCertificationsPage = ({
               (cert) => cert.id === c.id,
             ) || false,
         }),
-      ),
+      ).sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)),
     [
       certificationAuthorityStructure?.certifications,
       getCertificationAuthorityStructureAndCertificationsResponse

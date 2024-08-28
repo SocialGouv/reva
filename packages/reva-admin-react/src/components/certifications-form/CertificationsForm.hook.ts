@@ -10,15 +10,6 @@ const schema = z.object({
 
 export type CertificationsFormData = z.infer<typeof schema>;
 
-const sortCertificationsSelectedFirst = (
-  certifications: { id: string; label: string; selected: boolean }[],
-) => {
-  return (
-    certifications
-      .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0))
-  );
-};
-
 export const useCertificationsForm = ({
   certifications,
 }: {
@@ -33,7 +24,7 @@ export const useCertificationsForm = ({
   } = useForm<CertificationsFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      certifications: sortCertificationsSelectedFirst(certifications),
+      certifications: certifications,
     },
   });
 
