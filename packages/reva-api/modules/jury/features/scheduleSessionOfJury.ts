@@ -102,7 +102,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
 
   const convocationFileId = uuidV4();
   if (convocationFile) {
-    const filePath = `${candidacyId}/${convocationFileId}`;
+    const filePath = `candidacies/${candidacyId}/jury/${convocationFileId}`;
     await uploadFileToS3({
       filePath,
       mimeType: convocationFile.mimetype,
