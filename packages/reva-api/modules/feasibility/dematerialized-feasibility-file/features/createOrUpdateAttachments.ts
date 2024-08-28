@@ -140,8 +140,9 @@ export const createOrUpdateAttachments = async ({
 
     for (const { file, filePath } of fileAndIds) {
       await uploadFileToS3({
-        file,
         filePath,
+        mimeType: file.mimetype,
+        data: file._buf,
       });
     }
 

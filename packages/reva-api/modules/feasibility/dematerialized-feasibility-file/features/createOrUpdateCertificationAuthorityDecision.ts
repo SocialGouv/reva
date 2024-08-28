@@ -1,7 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 import {
-  UploadedFile,
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
@@ -62,13 +61,13 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       const fileId = uuidV4();
       const fileAndId: {
         id: string;
-        file: UploadedFile;
+        data: Buffer;
         filePath: string;
         mimeType: string;
         name: string;
       } = {
         id: fileId,
-        file: decisionUploadedFile,
+        data: decisionUploadedFile._buf,
         filePath: getFilePath({ candidacyId, fileId }),
         mimeType: decisionUploadedFile.mimetype,
         name: decisionUploadedFile.filename,

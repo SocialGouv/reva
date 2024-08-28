@@ -63,7 +63,8 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
       const filePath = getFilePath({ maisonMereAAPId, fileId });
       await uploadFileToS3({
         filePath,
-        file,
+        mimeType: file.mimetype,
+        data: file._buf,
       });
     }
   }

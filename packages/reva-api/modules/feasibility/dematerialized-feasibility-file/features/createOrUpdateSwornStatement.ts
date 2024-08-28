@@ -1,7 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../../prisma/client";
 import {
-  UploadedFile,
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
@@ -47,13 +46,13 @@ export const createOrUpdateSwornStatement = async ({
     const fileId = uuidV4();
     const fileAndId: {
       id: string;
-      file: UploadedFile;
+      data: Buffer;
       filePath: string;
       mimeType: string;
       name: string;
     } = {
       id: fileId,
-      file: swornStatementFile,
+      data: swornStatementFile._buf,
       filePath: getFilePath({ candidacyId, fileId }),
       mimeType: swornStatementFile.mimetype,
       name: swornStatementFile.filename,

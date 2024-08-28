@@ -1,7 +1,6 @@
 import { v4 } from "uuid";
 
 import {
-  FileInterface,
   UploadedFile,
   deleteFile,
   fileExists,
@@ -31,10 +30,6 @@ export class FeasibilityFile {
     this.keyPath = `${data.candidacyId}/${this.id}`;
   }
 
-  get file(): FileInterface {
-    return { fileKeyPath: this.keyPath };
-  }
-
   setFileToUpload(file: UploadedFile) {
     this.fileToUpload = file;
   }
@@ -48,12 +43,13 @@ export class FeasibilityFile {
       throw new Error('"fileToUpload" has not been set');
     }
 
-    await uploadFile(
-      { ...this.file, fileType: this.fileToUpload.mimetype },
-      this.fileToUpload._buf,
-    );
+    await uploadFile({
+      filePath: this.keyPath,
+      mimeType: this.fileToUpload.mimetype,
+      data: this.fileToUpload._buf,
+    });
 
-    const exists = await fileExists(this.file);
+    const exists = await fileExists(this.keyPath);
     if (!exists && retry < 3) {
       await wait(1000);
       await this.uploadWithRetry(retry + 1);

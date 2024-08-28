@@ -9,7 +9,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { buffer } from "stream/consumers";
 import { logger } from "../logger";
-import { FileInterface, UploadedFile } from "./file.interface";
+import { UploadedFile } from "./file.interface";
 
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
@@ -36,18 +36,18 @@ const createS3Client = () => {
 const client = createS3Client?.();
 
 export const getUploadLink = async (
-  fileKeyPath: string,
-): Promise<string | undefined> => getSignedUrlForUpload(fileKeyPath);
+  filePath: string,
+): Promise<string | undefined> => getSignedUrlForUpload(filePath);
 
 export const getDownloadLink = async (
-  fileKeyPath: string,
-): Promise<string | undefined> => getSignedUrlForDownload(fileKeyPath);
+  filePath: string,
+): Promise<string | undefined> => getSignedUrlForDownload(filePath);
 
-export const fileExists = async (file: FileInterface): Promise<boolean> => {
+export const fileExists = async (filePath: string): Promise<boolean> => {
   try {
     const command = new GetObjectAclCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
-      Key: file.fileKeyPath,
+      Key: filePath,
     });
     const result = await client?.send(command);
     return result?.$metadata?.httpStatusCode === 200;
@@ -58,15 +58,20 @@ export const fileExists = async (file: FileInterface): Promise<boolean> => {
   }
 };
 
-export const uploadFile = async (
-  file: FileInterface,
-  data: Buffer,
-): Promise<void> => {
+export const uploadFile = async ({
+  filePath,
+  mimeType,
+  data,
+}: {
+  filePath: string;
+  mimeType: string;
+  data: Buffer;
+}): Promise<void> => {
   const command = new PutObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
-    Key: file.fileKeyPath,
+    Key: filePath,
     Body: data,
-    ContentType: file.fileType,
+    ContentType: mimeType,
   });
 
   try {
@@ -83,17 +88,23 @@ function wait(milliseconds: number) {
   });
 }
 
-const uploadWithRetry = async (
-  file: FileInterface,
-  data: Buffer,
+const uploadWithRetry = async ({
+  filePath,
+  mimeType,
+  data,
   retry = 0,
-) => {
-  await uploadFile(file, data);
+}: {
+  filePath: string;
+  mimeType: string;
+  data: Buffer;
+  retry?: number;
+}) => {
+  await uploadFile({ filePath, mimeType, data });
 
-  const exists = await fileExists(file);
+  const exists = await fileExists(filePath);
   if (!exists && retry < 3) {
     await wait(1000);
-    await uploadWithRetry(file, data, retry + 1);
+    await uploadWithRetry({ filePath, mimeType, data, retry: retry + 1 });
   } else if (!exists) {
     throw new Error(
       `Une erreur est survenue lors de l'envoi de(s) fichier(s). Veuillez réessayer.`,
@@ -101,10 +112,10 @@ const uploadWithRetry = async (
   }
 };
 
-export const deleteFile = async (fileKeyPath: string): Promise<void> => {
+export const deleteFile = async (filePath: string): Promise<void> => {
   const command = new DeleteObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
-    Key: fileKeyPath,
+    Key: filePath,
   });
 
   try {
@@ -116,12 +127,12 @@ export const deleteFile = async (fileKeyPath: string): Promise<void> => {
 };
 
 export const getSignedUrlForUpload = async (
-  fileKeyPath: string,
+  filePath: string,
 ): Promise<string | undefined> => {
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
-      Key: fileKeyPath,
+      Key: filePath,
     });
     if (!client) return;
     return await getSignedUrl(client, command, {
@@ -135,12 +146,12 @@ export const getSignedUrlForUpload = async (
 };
 
 export const getSignedUrlForDownload = async (
-  fileKeyPath: string,
+  filePath: string,
 ): Promise<string | undefined> => {
   try {
     const command = new GetObjectCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
-      Key: fileKeyPath,
+      Key: filePath,
     });
     if (!client) return;
     return await getSignedUrl(client, command, {
@@ -178,34 +189,33 @@ export const emptyUploadedFileStream = async (file?: GraphqlUploadedFile) => {
 
 export const uploadFileToS3 = ({
   filePath,
-  file,
+  mimeType,
+  data,
 }: {
   filePath: string;
-  file: UploadedFile;
+  mimeType: string;
+  data: Buffer;
 }) =>
-  uploadWithRetry(
-    {
-      fileKeyPath: filePath,
-      fileType: file.mimetype,
-    },
-    file._buf,
-  );
+  uploadWithRetry({
+    filePath,
+    mimeType,
+    data,
+  });
 
 export const uploadFilesToS3 = async (
   files: {
     filePath: string;
-    file: UploadedFile;
+    mimeType: string;
+    data: Buffer;
   }[],
 ) => {
   try {
     for (const data of files) {
-      await uploadWithRetry(
-        {
-          fileKeyPath: data.filePath,
-          fileType: data.file.mimetype,
-        },
-        data.file._buf,
-      );
+      await uploadWithRetry({
+        filePath: data.filePath,
+        mimeType: data.mimeType,
+        data: data.data,
+      });
     }
 
     return;

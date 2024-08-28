@@ -66,7 +66,8 @@ export const sendDossierDeValidation = async ({
   const filePath = `${candidacyId}/${dossierDeValidationFileId}`;
   await uploadFileToS3({
     filePath,
-    file: dossierDeValidationFile,
+    mimeType: dossierDeValidationFile.mimetype,
+    data: dossierDeValidationFile._buf,
   });
 
   const dossierDeValidationOtherFilesWithIds: {
@@ -78,7 +79,8 @@ export const sendDossierDeValidation = async ({
     const filePath = `${candidacyId}/${d.id}`;
     await uploadFileToS3({
       filePath,
-      file: d.file,
+      mimeType: d.file.mimetype,
+      data: d.file._buf,
     });
   }
 

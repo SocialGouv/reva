@@ -59,7 +59,8 @@ export const createSubscriptionRequest = async ({
     for (const [file, fileId] of fileAndIds) {
       if (file) {
         await uploadFileToS3({
-          file,
+          mimeType: file.mimetype,
+          data: file._buf,
           filePath: getFilePath({
             subscriptionRequestId,
             fileId,
