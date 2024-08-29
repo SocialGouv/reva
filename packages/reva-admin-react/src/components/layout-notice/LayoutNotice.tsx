@@ -1,3 +1,4 @@
+import { usePathname } from "next/navigation";
 import { useAuth } from "../auth/auth";
 import { useKeycloakContext } from "../auth/keycloakContext";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
@@ -14,7 +15,7 @@ export const LayoutNotice = () => {
   const { isGestionnaireMaisonMereAAP, isAdmin, isOrganism } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
   const { isVisibleInSearchResults } = useAAPVisibilityCheck();
-
+  const pathname = usePathname();
   const isFeatureAapCguActive = isFeatureActive("AAP_CGU");
   const isFeaturNoticeAlertFundingLimitActive = isFeatureActive(
     "NOTICE_ALERT_FUNDING_LIMIT",
@@ -32,6 +33,8 @@ export const LayoutNotice = () => {
 
   const canSeeNoticeAlertFundingLimit = isFeaturNoticeAlertFundingLimitActive;
 
+  const canSeeNoticeAapSettings = pathname === "/agencies-settings/";
+
   if (canSeeAapCgu) {
     return <AapCgu />;
   }
@@ -44,8 +47,12 @@ export const LayoutNotice = () => {
     return <AlertFundingLimit />;
   }
 
-  return CustomInfoNotice({
-    title:
-      "Bon à savoir : paramétrer votre compte vous permet d'apparaître dans les recherches des candidats.",
-  });
+  if (canSeeNoticeAapSettings) {
+    return CustomInfoNotice({
+      title:
+        "Bon à savoir : paramétrer votre compte vous permet d'apparaître dans les recherches des candidats.",
+    });
+  }
+
+  return null;
 };
