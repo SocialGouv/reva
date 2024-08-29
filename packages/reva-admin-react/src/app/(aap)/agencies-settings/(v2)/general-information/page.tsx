@@ -28,64 +28,65 @@ const GeneralInformationPage = () => {
           title="Une erreur est survenue pendant la récupération des informations générales."
         />
       )}
-      {generalInformationsStatus == "success" &&
-        etablissement &&
-        maisonMereAAP && (
-          <ul className="list-none flex flex-col gap-6 pl-0">
-            <GrayCard>
-              <h2>Informations liées au SIRET - {etablissement.siret}</h2>
-              <CompanyBadges
-                className="col-span-3 mb-4"
-                siegeSocial={etablissement.siegeSocial}
-                dateFermeture={
-                  etablissement.dateFermeture
-                    ? new Date(etablissement.dateFermeture)
-                    : null
-                }
-                qualiopiStatus={!!etablissement.qualiopiStatus}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <Info title="Raison sociale">
-                  {etablissement.raisonSociale}
-                </Info>
-                <Info title="Forme juridique">
-                  {etablissement.formeJuridique.libelle}
-                </Info>
-              </div>
-            </GrayCard>
-            <GrayCard>
-              <h2>Informations saisies à l’inscription</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <Info title="Dirigeant(e)">
-                  {maisonMereAAP.managerFirstname}{" "}
-                  {maisonMereAAP.managerLastname}
-                </Info>
-                <Info title="Administrateur">
-                  {maisonMereAAP.gestionnaire.firstname}{" "}
-                  {maisonMereAAP.gestionnaire.lastname}
-                </Info>
-                <Info title="Email">{maisonMereAAP.gestionnaire.email}</Info>
-                <Info title="Téléphone">{maisonMereAAP.phone}</Info>
-              </div>
-            </GrayCard>
-            {isGestionnaireMaisonMereAAP && (
-              <li>
-                <LegalInformationUpdateBlock
-                  maisonMereAAPId={maisonMereAAP.id}
-                  statutValidationInformationsJuridiquesMaisonMereAAP={
-                    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+      {generalInformationsStatus == "success" && maisonMereAAP && (
+        <ul className="list-none flex flex-col gap-6 pl-0">
+          <GrayCard className="min-h-[220px]">
+            <h2>Informations liées au SIRET - {maisonMereAAP.siret}</h2>
+            {etablissement && (
+              <>
+                <CompanyBadges
+                  className="col-span-3 mb-4"
+                  siegeSocial={etablissement.siegeSocial}
+                  dateFermeture={
+                    etablissement.dateFermeture
+                      ? new Date(etablissement.dateFermeture)
+                      : null
                   }
-                  decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
-                    (d) => ({
-                      ...d,
-                      decisionTakenAt: new Date(d.decisionTakenAt),
-                    }),
-                  )}
+                  qualiopiStatus={!!etablissement.qualiopiStatus}
                 />
-              </li>
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <Info title="Raison sociale">
+                    {etablissement.raisonSociale}
+                  </Info>
+                  <Info title="Forme juridique">
+                    {etablissement.formeJuridique.libelle}
+                  </Info>
+                </div>
+              </>
             )}
-          </ul>
-        )}
+          </GrayCard>
+          <GrayCard>
+            <h2>Informations saisies à l’inscription</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <Info title="Dirigeant(e)">
+                {maisonMereAAP.managerFirstname} {maisonMereAAP.managerLastname}
+              </Info>
+              <Info title="Administrateur">
+                {maisonMereAAP.gestionnaire.firstname}{" "}
+                {maisonMereAAP.gestionnaire.lastname}
+              </Info>
+              <Info title="Email">{maisonMereAAP.gestionnaire.email}</Info>
+              <Info title="Téléphone">{maisonMereAAP.phone}</Info>
+            </div>
+          </GrayCard>
+          {isGestionnaireMaisonMereAAP && (
+            <li>
+              <LegalInformationUpdateBlock
+                maisonMereAAPId={maisonMereAAP.id}
+                statutValidationInformationsJuridiquesMaisonMereAAP={
+                  maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+                }
+                decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
+                  (d) => ({
+                    ...d,
+                    decisionTakenAt: new Date(d.decisionTakenAt),
+                  }),
+                )}
+              />
+            </li>
+          )}
+        </ul>
+      )}
     </div>
   );
 };
