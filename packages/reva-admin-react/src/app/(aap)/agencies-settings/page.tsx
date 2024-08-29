@@ -39,6 +39,7 @@ const AgenciesSettingsPage = () => {
           <EnhancedSectionCard
             title="Accompagnement à distance"
             buttonOnClickHref="/agencies-settings/remote"
+            isEditable={isGestionnaireMaisonMereAAP}
             titleIconClass="fr-icon-headphone-fill"
           />
         )}
@@ -47,6 +48,7 @@ const AgenciesSettingsPage = () => {
             title="Accompagnement en présentiel"
             buttonOnClickHref="/agencies-settings/on-site"
             titleIconClass="fr-icon-home-4-fill"
+            isEditable
           >
             <p className="md:w-4/5">
               Vous avez des collaborateurs qui font des accompagnements en
