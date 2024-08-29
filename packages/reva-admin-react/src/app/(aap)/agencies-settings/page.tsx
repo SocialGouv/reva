@@ -26,13 +26,15 @@ const AgenciesSettingsPage = () => {
         plus à jour.
       </p>
       <div className="flex flex-col gap-8 mt-6">
-        <EnhancedSectionCard
-          title="Informations générales"
-          status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
-          isEditable
-          buttonOnClickHref="/agencies-settings/general-information"
-          titleIconClass="fr-icon-information-fill"
-        />
+        {isGestionnaireMaisonMereAAP && (
+          <EnhancedSectionCard
+            title="Informations générales"
+            status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
+            isEditable
+            buttonOnClickHref="/agencies-settings/general-information"
+            titleIconClass="fr-icon-information-fill"
+          />
+        )}
         {(isGestionnaireMaisonMereAAP || organism?.isRemote === true) && (
           <EnhancedSectionCard
             title="Accompagnement à distance"
