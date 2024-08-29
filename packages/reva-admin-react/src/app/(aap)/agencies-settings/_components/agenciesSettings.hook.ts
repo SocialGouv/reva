@@ -9,6 +9,12 @@ const AgenciesSettingsInfoQuery = graphql(`
       organism {
         isOnSite
         isRemote
+        accounts {
+          id
+          firstname
+          lastname
+          email
+        }
         maisonMereAAP {
           statutValidationInformationsJuridiquesMaisonMereAAP
         }
@@ -29,7 +35,7 @@ export const useAgenciesSettings = () => {
   const maisonMereAAP =
     agenciesSettingsResponse?.account_getAccountForConnectedUser?.organism
       ?.maisonMereAAP;
-  0;
+
   const organism =
     agenciesSettingsResponse?.account_getAccountForConnectedUser?.organism;
   return {
