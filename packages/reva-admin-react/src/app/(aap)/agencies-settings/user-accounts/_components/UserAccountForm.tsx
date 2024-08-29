@@ -125,7 +125,7 @@ export const UserAccountForm = ({
         />
         <div className="col-span-2">
           <Input
-            label="Adresse email"
+            label="Email de connexion"
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message?.toString()}
             disabled={emailFieldDisabled}
@@ -168,7 +168,7 @@ export const UserAccountForm = ({
         />
         <Select
           disabled={modalitesAccompagnement !== "ONSITE"}
-          label="À quel lieu d’accueil sera-t-il rattaché ?"
+          label="Choix du lieu d’accueil associé à l’accompagnement en présentiel :"
           nativeSelectProps={{
             ...register("organismId"),
           }}
