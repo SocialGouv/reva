@@ -18,7 +18,7 @@ export const EnhancedSectionCard = ({
 }: {
   title: string;
   titleIconClass?: string;
-  status: "TO_COMPLETE" | "COMPLETED";
+  status?: "TO_COMPLETE" | "COMPLETED";
   isEditable?: boolean;
   disabled?: boolean;
   buttonOnClickHref?: string;
@@ -31,7 +31,9 @@ export const EnhancedSectionCard = ({
 
   const badge =
     CustomBadge ||
-    (status === "TO_COMPLETE" ? <BadgeToComplete /> : <BadgeCompleted />);
+    (status === "TO_COMPLETE" && <BadgeToComplete />) ||
+    (status === "COMPLETED" && <BadgeCompleted />) ||
+    null;
   const buttonTitle =
     customButtonTitle || (status === "TO_COMPLETE" ? "Compléter" : "Modifier");
 
