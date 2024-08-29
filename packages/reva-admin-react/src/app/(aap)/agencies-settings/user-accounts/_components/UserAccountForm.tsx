@@ -7,6 +7,7 @@ import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { z } from "zod";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export const userAccountFormSchema = z.object({
   firstname: z
@@ -43,6 +44,9 @@ export const UserAccountForm = ({
   defaultValues?: UserAccountFormData;
   emailFieldDisabled?: boolean;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isSettingsV3Enabled = isFeatureActive("AAP_SETTINGS_V3");
+
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
     defaultValues: defaultValues || {
@@ -191,7 +195,10 @@ export const UserAccountForm = ({
             )}
           </Select>
         </fieldset>
-        <FormButtons formState={formState} />
+        <FormButtons
+          formState={formState}
+          backUrl={isSettingsV3Enabled ? "/agencies-settings" : undefined}
+        />
       </form>
     </>
   );
