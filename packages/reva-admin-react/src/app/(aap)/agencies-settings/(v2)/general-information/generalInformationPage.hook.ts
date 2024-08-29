@@ -11,6 +11,8 @@ const generalInformationQueries = graphql(`
           id
           siret
           phone
+          managerFirstname
+          managerLastname
           statutValidationInformationsJuridiquesMaisonMereAAP
           legalInformationDocumentsDecisions(
             input: { decision: DEMANDE_DE_PRECISION }

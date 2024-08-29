@@ -56,6 +56,10 @@ const GeneralInformationPage = () => {
             <GrayCard>
               <h2>Informations saisies à l’inscription</h2>
               <div className="grid grid-cols-1 md:grid-cols-2">
+                <Info title="Dirigeant(e)">
+                  {maisonMereAAP.managerFirstname}{" "}
+                  {maisonMereAAP.managerLastname}
+                </Info>
                 <Info title="Administrateur">
                   {maisonMereAAP.gestionnaire.firstname}{" "}
                   {maisonMereAAP.gestionnaire.lastname}
