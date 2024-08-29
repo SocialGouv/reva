@@ -73,7 +73,7 @@ const AgenciesSettingsPage = () => {
             title="Comptes collaborateurs"
             isEditable={isCollaboratorsEditable}
             disabled={!isCollaboratorsEditable}
-            buttonOnClickHref="/agencies-settings/collaborators"
+            buttonOnClickHref="/agencies-settings/user-accounts/add-user-account"
             titleIconClass="fr-icon-team-fill"
             CustomBadge={<div />}
             status="TO_COMPLETE"
