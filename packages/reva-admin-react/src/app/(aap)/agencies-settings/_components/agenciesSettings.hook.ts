@@ -29,7 +29,7 @@ export const useAgenciesSettings = () => {
   const maisonMereAAP =
     agenciesSettingsResponse?.account_getAccountForConnectedUser?.organism
       ?.maisonMereAAP;
-
+  0;
   const organism =
     agenciesSettingsResponse?.account_getAccountForConnectedUser?.organism;
   return {

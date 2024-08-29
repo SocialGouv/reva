@@ -2,7 +2,7 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useAgenciesSettings } from "./_components/agencies-settings.hook";
+import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
 
 const AgenciesSettingsPage = () => {
   const { isFeatureActive } = useFeatureflipping();
