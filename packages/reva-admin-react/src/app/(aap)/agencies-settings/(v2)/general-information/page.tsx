@@ -6,6 +6,7 @@ import { LegalInformationUpdateBlock } from "../../legal-information/_components
 import { CompanyBadges } from "@/components/company-preview";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { ReactNode } from "react";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 
 const GeneralInformationPage = () => {
   const { maisonMereAAP, generalInformationsStatus, etablissement } =
@@ -87,6 +88,13 @@ const GeneralInformationPage = () => {
           )}
         </ul>
       )}
+      <Button
+        className="mt-12"
+        priority="tertiary"
+        linkProps={{ href: "/agencies-settings" }}
+      >
+        Retour
+      </Button>
     </div>
   );
 };
