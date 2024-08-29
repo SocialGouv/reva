@@ -50,7 +50,7 @@ const AgenciesSettingsLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const { isFeatureActive } = useFeatureflipping();
-  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS");
+  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS_V3");
   if (isSettingsEnabled) {
     return children;
   }

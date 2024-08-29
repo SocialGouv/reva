@@ -6,7 +6,7 @@ import { useAgenciesSettings } from "./_components/agencies-settings.hook";
 
 const AgenciesSettingsPage = () => {
   const { isFeatureActive } = useFeatureflipping();
-  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS");
+  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS_V3");
   const { maisonMereAAP, organism } = useAgenciesSettings();
   if (!isSettingsEnabled) {
     return null;

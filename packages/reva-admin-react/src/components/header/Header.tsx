@@ -9,7 +9,7 @@ import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 export const Header = () => {
   const currentPathname = usePathname();
   const { isFeatureActive } = useFeatureflipping();
-  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS");
+  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS_V3");
   const {
     isAdmin,
     isOrganism,
