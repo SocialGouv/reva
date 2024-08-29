@@ -62,7 +62,7 @@ const VousAvezBesoinDePlusDaide = () => (
           imageAlt="Bâtiment public"
           imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.svg"
           label="Point-relais conseil"
-          urlLink="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+          urlLink="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
         />
         <PolygonService
           imageAlt="Mon conseil en évolution professionnelle"

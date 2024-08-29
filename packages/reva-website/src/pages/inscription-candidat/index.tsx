@@ -203,7 +203,7 @@ const OrientationCandidatPage = () => {
                           disponible dans votre situation. Nous vous invitons à
                           vous rapprocher d’un{" "}
                           <a
-                            href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                            href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
                             target="_blank"
                           >
                             point relais conseil

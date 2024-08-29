@@ -29,7 +29,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
         vous rapprocher d’un{" "}
         <a
           target="_blank"
-          href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+          href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
           title="point relais conseil - nouvelle fenêtre"
         >
           point relais conseil

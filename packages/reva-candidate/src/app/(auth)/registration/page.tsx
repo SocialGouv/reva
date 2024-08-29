@@ -97,7 +97,7 @@ export default function Registration() {
               </p>
               <a
                 className="fr-link"
-                href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
                 target="_blank"
                 rel="noreferrer"
                 title="En cas de question, contactez un Point Relais Conseil - nouvelle fenêtre"
