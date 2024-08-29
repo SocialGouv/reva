@@ -66,11 +66,6 @@ const UpdateUserAccountPage = () => {
         {userAccount?.firstname} {userAccount?.lastname}
       </h1>
       <FormOptionalFieldsDisclaimer />
-      <p>
-        Le collaborateur ajouté recevra un mail afin de créer son compte. Il
-        pourra compléter et modifier les informations qui seront affichées aux
-        candidats depuis son compte.
-      </p>
       <UserAccountForm
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}

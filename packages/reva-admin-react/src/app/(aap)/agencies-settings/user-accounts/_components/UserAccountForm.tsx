@@ -91,100 +91,108 @@ export const UserAccountForm = ({
   };
 
   return (
-    <form
-      className="flex flex-col gap-8"
-      onSubmit={handleFormSubmit}
-      onReset={(e) => {
-        e.preventDefault();
-        handleReset();
-      }}
-    >
-      <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <legend className="text-3xl font-bold mb-4">
-          Informations de connexion
-        </legend>
-        <Input
-          label="Nom"
-          state={errors.lastname ? "error" : "default"}
-          stateRelatedMessage={errors.lastname?.message?.toString()}
-          nativeInputProps={{
-            ...register("lastname"),
-            autoComplete: "family-name",
-          }}
-          disabled={isHeadAgency}
-        />
-        <Input
-          label="Prénom"
-          state={errors.firstname ? "error" : "default"}
-          stateRelatedMessage={errors.firstname?.message?.toString()}
-          nativeInputProps={{
-            ...register("firstname"),
-            autoComplete: "given-name",
-          }}
-          disabled={isHeadAgency}
-        />
-        <div className="col-span-2">
+    <>
+      <p className="mb-10 text-xl">
+        Le collaborateur ajouté recevra un mail afin de créer son compte. Il
+        pourra compléter et modifier les informations qui seront affichées aux
+        candidats depuis son compte.
+      </p>
+      <form
+        className="flex flex-col gap-8"
+        onSubmit={handleFormSubmit}
+        onReset={(e) => {
+          e.preventDefault();
+          handleReset();
+        }}
+      >
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <legend>
+            <h2>Informations de connexion</h2>
+          </legend>
           <Input
-            label="Email de connexion"
-            state={errors.email ? "error" : "default"}
-            stateRelatedMessage={errors.email?.message?.toString()}
-            disabled={emailFieldDisabled}
+            label="Nom"
+            state={errors.lastname ? "error" : "default"}
+            stateRelatedMessage={errors.lastname?.message?.toString()}
             nativeInputProps={{
-              ...register("email"),
-              autoComplete: "email",
-              type: "email",
-              spellCheck: "false",
+              ...register("lastname"),
+              autoComplete: "family-name",
             }}
+            disabled={isHeadAgency}
           />
-        </div>
-      </fieldset>
-      <fieldset className="flex flex-col w-full">
-        <legend className="text-3xl font-bold mb-6">
-          Modalités d'accompagnement
-        </legend>
-        <RadioButtons
-          orientation="horizontal"
-          options={[
-            {
-              label: "Accompagnement à distance",
-              nativeInputProps: {
-                value: "REMOTE",
-                ...register("modalitesAccompagnement", {
-                  onChange: (e) =>
-                    handleModaliteAccompagnementChange(e.target.value),
-                }),
+          <Input
+            label="Prénom"
+            state={errors.firstname ? "error" : "default"}
+            stateRelatedMessage={errors.firstname?.message?.toString()}
+            nativeInputProps={{
+              ...register("firstname"),
+              autoComplete: "given-name",
+            }}
+            disabled={isHeadAgency}
+          />
+          <div className="col-span-1">
+            <Input
+              label="Email de connexion"
+              state={errors.email ? "error" : "default"}
+              stateRelatedMessage={errors.email?.message?.toString()}
+              disabled={emailFieldDisabled}
+              nativeInputProps={{
+                ...register("email"),
+                autoComplete: "email",
+                type: "email",
+                spellCheck: "false",
+              }}
+            />
+          </div>
+        </fieldset>
+        <fieldset className="flex flex-col w-full">
+          <legend>
+            <h2>Modalités d'accompagnement</h2>
+          </legend>
+          <RadioButtons
+            classes={{ content: "grid grid-cols-1 md:grid-cols-2" }}
+            orientation="horizontal"
+            options={[
+              {
+                label: "Accompagnement à distance",
+                nativeInputProps: {
+                  value: "REMOTE",
+                  ...register("modalitesAccompagnement", {
+                    onChange: (e) =>
+                      handleModaliteAccompagnementChange(e.target.value),
+                  }),
+                },
               },
-            },
-            {
-              label: "Accompagnement en présentiel",
-              nativeInputProps: {
-                value: "ONSITE",
-                ...register("modalitesAccompagnement"),
+              {
+                label: "Accompagnement en présentiel",
+                nativeInputProps: {
+                  value: "ONSITE",
+                  ...register("modalitesAccompagnement"),
+                },
               },
-            },
-          ]}
-          state={errors.modalitesAccompagnement ? "error" : "default"}
-          stateRelatedMessage={errors.modalitesAccompagnement?.message?.toString()}
-        />
-        <Select
-          disabled={modalitesAccompagnement !== "ONSITE"}
-          label="Choix du lieu d’accueil associé à l’accompagnement en présentiel :"
-          nativeSelectProps={{
-            ...register("organismId"),
-          }}
-        >
-          {modalitesAccompagnement === "REMOTE" ? (
-            <option value={remoteAgency.id}>{remoteAgency.label}</option>
-          ) : (
-            onSiteAgencies.map((la) => (
-              <option key={la.id} value={la.id}>
-                {la.label}
-              </option>
-            ))
-          )}
-        </Select>
-      </fieldset>
-      <FormButtons formState={formState} />
-    </form>
+            ]}
+            state={errors.modalitesAccompagnement ? "error" : "default"}
+            stateRelatedMessage={errors.modalitesAccompagnement?.message?.toString()}
+          />
+          <Select
+            disabled={modalitesAccompagnement !== "ONSITE"}
+            label="Choix du lieu d’accueil associé à l’accompagnement en présentiel :"
+            nativeSelectProps={{
+              ...register("organismId"),
+            }}
+          >
+            {modalitesAccompagnement === "REMOTE" ? (
+              <option value={remoteAgency.id}>{remoteAgency.label}</option>
+            ) : (
+              onSiteAgencies.map((la) => (
+                <option key={la.id} value={la.id}>
+                  {la.label}
+                </option>
+              ))
+            )}
+          </Select>
+        </fieldset>
+        <FormButtons formState={formState} />
+      </form>
+    </>
   );
 };
