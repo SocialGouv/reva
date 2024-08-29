@@ -42,11 +42,11 @@ const CandidateInformationForm = ({
     useUpdateCandidateInformation(candidacyId);
 
   const candidate = candidacy?.candidate;
-  const isAddressAlreadyComplete =
+  const isAddressAlreadyCompleted =
     !!candidate?.street && !!candidate?.zip && !!candidate?.city;
 
-  const [completeAddressSelected, setCompleteAddressSelected] = useState(
-    isAddressAlreadyComplete,
+  const [manualAddressSelected, setManualAddress] = useState(
+    isAddressAlreadyCompleted,
   );
   const franceId = countries?.find((c) => c.label === "France")?.id;
 
@@ -195,7 +195,16 @@ const CandidateInformationForm = ({
     setValue("street", street, { shouldDirty: true });
     setValue("zip", zip, { shouldDirty: true });
     setValue("city", city, { shouldDirty: true });
-    setCompleteAddressSelected(false);
+    setManualAddress(false);
+  };
+
+  const handleToggleManualAddress = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setManualAddress(e.target.checked);
+    setValue("street", "");
+    setValue("zip", "");
+    setValue("city", "");
   };
 
   return (
@@ -322,10 +331,20 @@ const CandidateInformationForm = ({
           Informations de contact
         </h6>
         <div className="flex gap-8">
-          <AutocompleteAddress
-            onOptionSelection={handleOnAddressSelection}
-            className="w-full flex-1"
-          />
+          {manualAddressSelected ? (
+            <Input
+              label="Numéro et nom de rue"
+              className="w-full flex-1 mb-0"
+              nativeInputProps={register("street")}
+              state={errors.street ? "error" : "default"}
+              stateRelatedMessage={errors.street?.message}
+            />
+          ) : (
+            <AutocompleteAddress
+              onOptionSelection={handleOnAddressSelection}
+              className="w-full flex-1"
+            />
+          )}
           <Input
             label="Complément d'adresse (Optionnel)"
             className="w-full flex-1"
@@ -340,39 +359,30 @@ const CandidateInformationForm = ({
             {
               label: "Je saisis manuellement l'adresse",
               nativeInputProps: {
-                checked: completeAddressSelected,
-                onChange: (e) => setCompleteAddressSelected(e.target.checked),
+                checked: manualAddressSelected,
+                onChange: handleToggleManualAddress,
               },
             },
           ]}
           className="mb-0"
         />
 
-        {completeAddressSelected && (
-          <div className="flex gap-8">
-            <Input
-              label="Numéro et nom de rue"
-              className="w-full flex-[3]"
-              nativeInputProps={register("street")}
-              state={errors.street ? "error" : "default"}
-              stateRelatedMessage={errors.street?.message}
-            />
-            <Input
-              label="Code postal"
-              className="w-full flex-1"
-              nativeInputProps={register("zip")}
-              state={errors.zip ? "error" : "default"}
-              stateRelatedMessage={errors.zip?.message}
-            />
-            <Input
-              label="Ville"
-              className="w-full flex-[2]"
-              nativeInputProps={register("city")}
-              state={errors.city ? "error" : "default"}
-              stateRelatedMessage={errors.city?.message}
-            />
-          </div>
-        )}
+        <div className="flex gap-8">
+          <Input
+            label="Code postal (France uniquement)"
+            className="w-full flex-1"
+            nativeInputProps={register("zip")}
+            state={errors.zip ? "error" : "default"}
+            stateRelatedMessage={errors.zip?.message}
+          />
+          <Input
+            label="Ville"
+            className="w-full flex-[2]"
+            nativeInputProps={register("city")}
+            state={errors.city ? "error" : "default"}
+            stateRelatedMessage={errors.city?.message}
+          />
+        </div>
         <div className="flex gap-8">
           <Input
             label="Numéro de téléphone"
