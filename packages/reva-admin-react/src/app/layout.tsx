@@ -24,11 +24,7 @@ import {
 import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
 
-import { AapCgu } from "@/components/aap-cgu";
-import {
-  AAPNotVisibleInSearchResultNotice,
-  useAAPVisibilityCheck,
-} from "@/components/aap-not-visible-in-search-result-notice/AAPNotVisibleInSearchResultNotice";
+import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 import {
   HELP_BUBBLE_URL,
   KEYCLOAK_CLIENT_ID,
@@ -38,10 +34,8 @@ import {
   MATOMO_URL,
   PRODUKTLY_CLIENT_TOKEN,
 } from "@/config/config";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
-import { usePathname } from "next/navigation";
 import Script from "next/script";
 
 const keycloakInstance =
@@ -96,27 +90,6 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   );
 }
 
-const CustomNotice = ({ title }: { title: string }) => {
-  return (
-    <Notice
-      isClosable
-      onClose={function noRefCheck() {}}
-      title={title}
-      className="-mb-10"
-    />
-  );
-};
-
-const NoticeComponentMap = (pathname: string) => {
-  if (pathname === "/agencies-settings/") {
-    return CustomNotice({
-      title:
-        "Bon à savoir : paramétrer votre compte vous permet d'apparaître dans les recherches des candidats.",
-    });
-  }
-  return null;
-};
-
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
   const { authenticated } = useKeycloakContext();
 
@@ -127,10 +100,6 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     isGestionnaireMaisonMereAAP,
     isAdminCertificationAuthority,
   } = useAuth();
-
-  const { isVisibleInSearchResults } = useAAPVisibilityCheck();
-  const pathname = usePathname();
-  const NoticeComponent = NoticeComponentMap(pathname);
 
   const bgClass = () => {
     if (isAdmin) {
@@ -160,19 +129,13 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
         ]}
       />
       <Header />
-      {authenticated && isGestionnaireMaisonMereAAP && <AapCgu />}
-      {authenticated &&
-        !isAdmin &&
-        !isGestionnaireMaisonMereAAP &&
-        isOrganism &&
-        !isVisibleInSearchResults && <AAPNotVisibleInSearchResultNotice />}
+      <LayoutNotice />
 
       <main
         role="main"
         id="content"
         className={`flex flex-col flex-1 ${bgClass()}`}
       >
-        {NoticeComponent}
         <div className="fr-container flex flex-col flex-1">
           <div
             className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}

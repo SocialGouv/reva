@@ -2,15 +2,10 @@ import Link from "next/link";
 
 import Notice from "@codegouvfr/react-dsfr/Notice";
 
-import { useAppCgu } from "./AppCgu.hooks";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 import { usePathname } from "next/navigation";
+import { useAppCgu } from "./AppCgu.hooks";
 
 export const AapCgu = (): JSX.Element | null => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isFeatureAapCguActive = isFeatureActive("AAP_CGU");
-
   const pathname = usePathname();
   const isCguPathname =
     pathname.startsWith("/information") || pathname.startsWith("/cgu");
@@ -21,13 +16,14 @@ export const AapCgu = (): JSX.Element | null => {
     getMaisonMereCGU.data?.account_getAccountForConnectedUser?.maisonMereAAP
       ?.cgu;
 
-  if (!isFeatureAapCguActive || isCguPathname || cgu?.isLatestVersion) {
+  if (isCguPathname || cgu?.isLatestVersion) {
     return null;
   }
 
   return (
     <Notice
       isClosable
+      className="-mb-8"
       title={
         <>
           Votre accès à la plateforme est actuellement restreint. Vous pouvez
