@@ -1,3 +1,4 @@
+"use client";
 import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeCompleted";
 import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
