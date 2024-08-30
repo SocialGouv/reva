@@ -23,7 +23,7 @@ const InformationsRemotePage = () => {
     organism,
     getOrganismStatus,
     createOrUpdateInformationsCommercialesAndRemoteStatus,
-  } = useInformationRemotePage();
+  } = useInformationRemotePage({ organismId });
 
   const queryClient = useQueryClient();
   const {

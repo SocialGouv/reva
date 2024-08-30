@@ -45,11 +45,13 @@ const createOrUpdateInformationsCommercialesAndRemoteStatusMutation = graphql(`
   }
 `);
 
-export const useInformationRemotePage = () => {
+export const useInformationRemotePage = ({
+  organismId,
+}: {
+  organismId: string;
+}) => {
   const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
-
-  const { organismId } = useParams<{ organismId: string }>();
 
   const { data: getOrganismResponse, status: getOrganismStatus } = useQuery({
     queryKey: [organismId, "organism"],
