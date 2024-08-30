@@ -7,8 +7,10 @@ const AgenciesSettingsInfoQuery = graphql(`
   query getAgenciesSettingsInfo {
     account_getAccountForConnectedUser {
       organism {
+        id
         isOnSite
         isRemote
+        isVisibleInCandidateSearchResults
         accounts {
           id
           firstname
@@ -17,6 +19,11 @@ const AgenciesSettingsInfoQuery = graphql(`
         }
         maisonMereAAP {
           statutValidationInformationsJuridiquesMaisonMereAAP
+          organisms {
+            id
+            isRemote
+            isVisibleInCandidateSearchResults
+          }
         }
       }
     }
@@ -38,6 +45,7 @@ export const useAgenciesSettings = () => {
 
   const organism =
     agenciesSettingsResponse?.account_getAccountForConnectedUser?.organism;
+
   return {
     agenciesSettingsResponse,
     agenciesSettingsStatus,

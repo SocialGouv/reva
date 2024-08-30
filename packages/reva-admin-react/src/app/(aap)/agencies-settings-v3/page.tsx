@@ -3,6 +3,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
 import { useAuth } from "@/components/auth/auth";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 
 const AgenciesSettingsPage = () => {
   const { maisonMereAAP, organism } = useAgenciesSettings();
@@ -11,6 +12,11 @@ const AgenciesSettingsPage = () => {
     maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP ===
     "A_JOUR";
   const isCollaboratorsEditable = isGeneralInformationCompleted;
+
+  const remoteAgency = organism?.isRemote
+    ? organism
+    : maisonMereAAP?.organisms.find((o) => o.isRemote);
+
   return (
     <div className="flex flex-col w-full">
       <h1>Paramètres</h1>
@@ -29,14 +35,28 @@ const AgenciesSettingsPage = () => {
             titleIconClass="fr-icon-information-fill"
           />
         )}
-        {(isGestionnaireMaisonMereAAP || organism?.isRemote === true) && (
-          <EnhancedSectionCard
-            title="Accompagnement à distance"
-            buttonOnClickHref="/agencies-settings-v3/remote"
-            isEditable={isGestionnaireMaisonMereAAP}
-            titleIconClass="fr-icon-headphone-fill"
-          />
-        )}
+        {remoteAgency &&
+          (isGestionnaireMaisonMereAAP || organism?.isRemote) && (
+            <EnhancedSectionCard
+              title="Accompagnement à distance"
+              buttonOnClickHref={`/agencies-settings-v3/organisms/${remoteAgency.id}/remote`}
+              isEditable={true}
+              titleIconClass="fr-icon-headphone-fill"
+            >
+              <Badge
+                severity={
+                  remoteAgency.isVisibleInCandidateSearchResults
+                    ? "success"
+                    : "error"
+                }
+              >
+                {remoteAgency.isVisibleInCandidateSearchResults
+                  ? "Visible"
+                  : "Invisible"}
+              </Badge>
+            </EnhancedSectionCard>
+          )}
+
         {isGestionnaireMaisonMereAAP && (
           <EnhancedSectionCard
             title="Accompagnement en présentiel"
