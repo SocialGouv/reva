@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-export const NoticeAlert = ({ children }: { children: React.ReactNode }) => {
+export const NoticeAlert = ({
+  children,
+  isClosable = true,
+}: {
+  children: React.ReactNode;
+  isClosable?: boolean;
+}) => {
   const [visible, setVisible] = useState(true);
 
   return visible ? (
@@ -12,12 +18,14 @@ export const NoticeAlert = ({ children }: { children: React.ReactNode }) => {
         <span className="fr-icon fr-icon-warning-fill -mt-[1px]" />
         <div className="fr-notice__body pl-4 flex-1">
           <p className="fr-notice__title">{children}</p>
-          <button
-            className="fr-btn--close fr-btn text-dsfr-light-decisions-text-default-warning hover:bg-transparent"
-            onClick={() => setVisible(false)}
-          >
-            Masquer le message
-          </button>
+          {isClosable && (
+            <button
+              className="fr-btn--close fr-btn text-dsfr-light-decisions-text-default-warning hover:bg-transparent"
+              onClick={() => setVisible(false)}
+            >
+              Masquer le message
+            </button>
+          )}
         </div>
       </div>
     </div>
