@@ -45,6 +45,7 @@ type Organism {
   isRemote: Boolean!
   remoteZones: [RemoteZone!]!
   isHeadAgency: Boolean!
+  isVisibleInCandidateSearchResults: Boolean!
 }
 
 type OrganismOnDegree {

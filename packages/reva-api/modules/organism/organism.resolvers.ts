@@ -64,6 +64,7 @@ import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismI
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
 import { createOrganismAccount } from "./features/createOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
+import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 
 const unsafeResolvers = {
   Account: {
@@ -103,6 +104,10 @@ const unsafeResolvers = {
           organismId,
         })
       ).map((r) => r.remoteZone),
+    isVisibleInCandidateSearchResults: async ({ id: organismId }: Organism) =>
+      await isOrganismVisibleInCandidateSearchResults({
+        organismId,
+      }),
   },
   OrganismOnDegree: {
     degree: (organismOnDegree: { degreeId: string }) =>
