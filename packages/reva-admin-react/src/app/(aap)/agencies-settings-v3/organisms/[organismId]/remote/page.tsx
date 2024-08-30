@@ -6,12 +6,12 @@ export default function RemotePage() {
       <Breadcrumb
         currentPageLabel={"Accompagnement à distance"}
         homeLinkProps={{
-          href: `/admin2`,
+          href: `/`,
         }}
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/admin2/agencies-settings-v3" },
+            linkProps: { href: "/agencies-settings-v3" },
           },
         ]}
       />
