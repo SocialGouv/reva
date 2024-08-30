@@ -8,6 +8,7 @@ import {
 } from "./_components/AAPNotVisibleInSearchResultNotice";
 import { AlertFundingLimit } from "./_components/AlertFundingLimit";
 import { AapCgu } from "./_components/AppCgu.component";
+import { useAppCgu } from "./_components/AppCgu.hooks";
 import { CustomInfoNotice } from "./_components/CustomInfoNotice";
 
 export const LayoutNotice = () => {
@@ -21,8 +22,21 @@ export const LayoutNotice = () => {
     "NOTICE_ALERT_FUNDING_LIMIT",
   );
 
+  const isCguPathname =
+    pathname.startsWith("/information") || pathname.startsWith("/cgu");
+
+  const { getMaisonMereCGU } = useAppCgu();
+
+  const cgu =
+    getMaisonMereCGU.data?.account_getAccountForConnectedUser?.maisonMereAAP
+      ?.cgu;
+
   const canSeeAapCgu =
-    authenticated && isGestionnaireMaisonMereAAP && isFeatureAapCguActive;
+    authenticated &&
+    isGestionnaireMaisonMereAAP &&
+    isFeatureAapCguActive &&
+    !isCguPathname &&
+    !cgu?.isLatestVersion;
 
   const canSeeAAPNotVisibleInSearchResultNotice =
     authenticated &&
