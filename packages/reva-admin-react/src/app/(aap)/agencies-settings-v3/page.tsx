@@ -4,7 +4,7 @@ import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
 import { useAuth } from "@/components/auth/auth";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { RemoteZone } from "@/graphql/generated/graphql";
+import { getRemoteZoneLabel } from "./_components/getRemoteZoneLabel";
 
 const AgenciesSettingsPage = () => {
   const { maisonMereAAP, organism } = useAgenciesSettings();
@@ -17,27 +17,6 @@ const AgenciesSettingsPage = () => {
   const remoteAgency = organism?.isRemote
     ? organism
     : maisonMereAAP?.organisms.find((o) => o.isRemote);
-
-  const getRemoteZoneLabel = (remoteZone: RemoteZone) => {
-    switch (remoteZone) {
-      case "FRANCE_METROPOLITAINE":
-        return "France métropolitaine (UTC+2)";
-      case "GUADELOUPE":
-        return "Guadeloupe (UTC-4)";
-      case "GUYANE":
-        return "Guyane (UTC-3)";
-      case "LA_REUNION":
-        return "La Réunion (UTC+4)";
-      case "MARTINIQUE":
-        return "Martinique (UTC-4)";
-      case "MAYOTTE":
-        return "Mayotte (UTC+3)";
-      case "SAINTE_LUCIE_SAINT_MARTIN":
-        return "Saint-Pierre-et-Miquelon (UTC-2)";
-      case "SAINT_PIERRE_ET_MIQUELON":
-        return "Sainte-Lucie / Saint-Martin (UTC-4)";
-    }
-  };
 
   return (
     <div className="flex flex-col w-full">
