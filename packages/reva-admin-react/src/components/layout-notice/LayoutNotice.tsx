@@ -38,16 +38,17 @@ export const LayoutNotice = () => {
 
   const canSeeAAPNotVisibleInSearchResultNotice =
     authenticated &&
-    !isAdmin &&
-    !isGestionnaireMaisonMereAAP &&
     isOrganism &&
+    !isGestionnaireMaisonMereAAP &&
     !isVisibleInSearchResults;
 
-  const canSeeNoticeAlertFundingLimit = isFeaturNoticeAlertFundingLimitActive;
+  const canSeeNoticeAlertFundingLimit =
+    isFeaturNoticeAlertFundingLimitActive && isOrganism;
 
-  const canSeeNoticeAapSettings = pathname === "/agencies-settings/";
+  const canSeeNoticeAapSettings =
+    pathname === "/agencies-settings/" && isOrganism;
 
-  if (isLoading) {
+  if (isLoading || isAdmin) {
     return null;
   }
 
