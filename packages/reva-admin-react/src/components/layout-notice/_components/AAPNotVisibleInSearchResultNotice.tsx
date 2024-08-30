@@ -29,10 +29,11 @@ const getOrganismQuery = graphql(`
 export const useAAPVisibilityCheck = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getOrganismResponse } = useQuery({
-    queryKey: ["organisms", "aap-visibility-check"],
-    queryFn: () => graphqlClient.request(getOrganismQuery),
-  });
+  const { data: getOrganismResponse, isLoading: getOrganismisLoading } =
+    useQuery({
+      queryKey: ["organisms", "aap-visibility-check"],
+      queryFn: () => graphqlClient.request(getOrganismQuery),
+    });
 
   const organism =
     getOrganismResponse?.account_getAccountForConnectedUser?.organism;
@@ -57,7 +58,7 @@ export const useAAPVisibilityCheck = () => {
     );
   }
 
-  return { isVisibleInSearchResults };
+  return { isVisibleInSearchResults, getOrganismisLoading };
 };
 
 export const AAPNotVisibleInSearchResultNotice = () => {

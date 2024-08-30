@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
@@ -28,17 +28,22 @@ const acceptMaisonMereCGUMutation = graphql(`
 export const useAppCgu = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const getMaisonMereCGU = useQuery({
-    queryKey: ["getMaisonMereCGUQuery"],
-    queryFn: () => graphqlClient.request(getMaisonMereCGUQuery),
-  });
+  const { data: getMaisonMereCGU, isLoading: getMaisonMereCGUisLoading } =
+    useQuery({
+      queryKey: ["getMaisonMereCGUQuery"],
+      queryFn: () => graphqlClient.request(getMaisonMereCGUQuery),
+    });
 
   const acceptMaisonMereCgu = useMutation({
     mutationFn: () => graphqlClient.request(acceptMaisonMereCGUMutation),
   });
 
+  const maisonMereCgu =
+    getMaisonMereCGU?.account_getAccountForConnectedUser?.maisonMereAAP?.cgu;
+
   return {
-    getMaisonMereCGU,
+    getMaisonMereCGUisLoading,
+    maisonMereCgu,
     acceptMaisonMereCgu,
   };
 };
