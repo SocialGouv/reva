@@ -11,6 +11,7 @@ const AgenciesSettingsInfoQuery = graphql(`
         isOnSite
         isRemote
         isVisibleInCandidateSearchResults
+        remoteZones
         accounts {
           id
           firstname
@@ -23,6 +24,7 @@ const AgenciesSettingsInfoQuery = graphql(`
             id
             isRemote
             isVisibleInCandidateSearchResults
+            remoteZones
           }
         }
       }

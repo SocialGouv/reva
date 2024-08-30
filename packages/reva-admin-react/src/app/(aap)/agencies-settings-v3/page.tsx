@@ -4,6 +4,7 @@ import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
 import { useAuth } from "@/components/auth/auth";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { RemoteZone } from "@/graphql/generated/graphql";
 
 const AgenciesSettingsPage = () => {
   const { maisonMereAAP, organism } = useAgenciesSettings();
@@ -16,6 +17,27 @@ const AgenciesSettingsPage = () => {
   const remoteAgency = organism?.isRemote
     ? organism
     : maisonMereAAP?.organisms.find((o) => o.isRemote);
+
+  const getRemoteZoneLabel = (remoteZone: RemoteZone) => {
+    switch (remoteZone) {
+      case "FRANCE_METROPOLITAINE":
+        return "France métropolitaine (UTC+2)";
+      case "GUADELOUPE":
+        return "Guadeloupe (UTC-4)";
+      case "GUYANE":
+        return "Guyane (UTC-3)";
+      case "LA_REUNION":
+        return "La Réunion (UTC+4)";
+      case "MARTINIQUE":
+        return "Martinique (UTC-4)";
+      case "MAYOTTE":
+        return "Mayotte (UTC+3)";
+      case "SAINTE_LUCIE_SAINT_MARTIN":
+        return "Saint-Pierre-et-Miquelon (UTC-2)";
+      case "SAINT_PIERRE_ET_MIQUELON":
+        return "Sainte-Lucie / Saint-Martin (UTC-4)";
+    }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -43,17 +65,25 @@ const AgenciesSettingsPage = () => {
               isEditable={true}
               titleIconClass="fr-icon-headphone-fill"
             >
-              <Badge
-                severity={
-                  remoteAgency.isVisibleInCandidateSearchResults
-                    ? "success"
-                    : "error"
-                }
-              >
-                {remoteAgency.isVisibleInCandidateSearchResults
-                  ? "Visible"
-                  : "Invisible"}
-              </Badge>
+              <div className="pl-10 flex flex-col gap-4">
+                <Badge
+                  small
+                  severity={
+                    remoteAgency.isVisibleInCandidateSearchResults
+                      ? "success"
+                      : "error"
+                  }
+                >
+                  {remoteAgency.isVisibleInCandidateSearchResults
+                    ? "Visible"
+                    : "Invisible"}
+                </Badge>
+                <ul className="list-none pl-0 flex flex-col gap-2">
+                  {remoteAgency.remoteZones.map((r) => (
+                    <li key={r}>{getRemoteZoneLabel(r)}</li>
+                  ))}
+                </ul>
+              </div>
             </EnhancedSectionCard>
           )}
 
