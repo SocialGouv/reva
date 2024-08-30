@@ -2,7 +2,7 @@ import { NoticeAlert } from "@/components/notice/NoticeAlert";
 
 export const AlertFundingLimit = () => {
   return (
-    <NoticeAlert>
+    <NoticeAlert isClosable={false}>
       <p>
         <strong>À savoir :</strong>{" "}
         <span className="font-normal">
