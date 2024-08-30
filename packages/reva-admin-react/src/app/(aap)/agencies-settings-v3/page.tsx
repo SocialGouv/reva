@@ -1,18 +1,12 @@
 "use client";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
 import { useAuth } from "@/components/auth/auth";
 
 const AgenciesSettingsPage = () => {
-  const { isFeatureActive } = useFeatureflipping();
-  const isSettingsEnabled = isFeatureActive("AAP_SETTINGS_V3");
   const { maisonMereAAP, organism } = useAgenciesSettings();
   const { isGestionnaireMaisonMereAAP } = useAuth();
-  if (!isSettingsEnabled) {
-    return null;
-  }
   const isGeneralInformationCompleted =
     maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP ===
     "A_JOUR";
@@ -31,14 +25,14 @@ const AgenciesSettingsPage = () => {
             title="Informations générales"
             status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
             isEditable
-            buttonOnClickHref="/agencies-settings/general-information"
+            buttonOnClickHref="/agencies-settings-v3/general-information"
             titleIconClass="fr-icon-information-fill"
           />
         )}
         {(isGestionnaireMaisonMereAAP || organism?.isRemote === true) && (
           <EnhancedSectionCard
             title="Accompagnement à distance"
-            buttonOnClickHref="/agencies-settings/remote"
+            buttonOnClickHref="/agencies-settings-v3/remote"
             isEditable={isGestionnaireMaisonMereAAP}
             titleIconClass="fr-icon-headphone-fill"
           />
@@ -46,7 +40,7 @@ const AgenciesSettingsPage = () => {
         {isGestionnaireMaisonMereAAP && (
           <EnhancedSectionCard
             title="Accompagnement en présentiel"
-            buttonOnClickHref="/agencies-settings/on-site"
+            buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"
             isEditable
           >
@@ -61,7 +55,7 @@ const AgenciesSettingsPage = () => {
           <EnhancedSectionCard
             title="Accompagnement en présentiel"
             isEditable={false}
-            buttonOnClickHref="/agencies-settings/on-site"
+            buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"
           >
             <p className="md:w-4/5">
@@ -75,7 +69,7 @@ const AgenciesSettingsPage = () => {
             title="Comptes collaborateurs"
             isEditable={isCollaboratorsEditable}
             disabled={!isCollaboratorsEditable}
-            buttonOnClickHref="/agencies-settings/user-accounts/add-user-account"
+            buttonOnClickHref="/agencies-settings-v3/user-accounts/add-user-account"
             titleIconClass="fr-icon-team-fill"
             CustomBadge={<div />}
             status="TO_COMPLETE"

@@ -2,7 +2,7 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuth } from "@/components/auth/auth";
 import { useGeneralInformationPage } from "./generalInformationPage.hook";
-import { LegalInformationUpdateBlock } from "../../legal-information/_components/legal-information-update-block/LegalInformationUpdateBlock";
+import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { CompanyBadges } from "@/components/company-preview";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { ReactNode } from "react";
@@ -91,7 +91,7 @@ const GeneralInformationPage = () => {
       <Button
         className="mt-12"
         priority="tertiary"
-        linkProps={{ href: "/agencies-settings" }}
+        linkProps={{ href: "/agencies-settings-v3" }}
       >
         Retour
       </Button>
