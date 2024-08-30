@@ -6,8 +6,8 @@ export const AlertFundingLimit = () => {
       <p>
         <strong>À savoir :</strong>{" "}
         <span className="font-normal">
-          Depuis le 2 juin 2024, les financements (plafonnés à 3500€) concernent
-          uniquement les 24 certifications des secteurs sanitaire et social.
+          Depuis le 2 juin 2024, les financements concernent uniquement les 24
+          certifications des secteurs sanitaire et social.
         </span>
       </p>
     </NoticeAlert>
