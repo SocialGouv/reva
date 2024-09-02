@@ -1,0 +1,14 @@
+{
+  "data": {
+    "account_getAccountForConnectedUser": {
+      "maisonMereAAP": {
+        "id": "7b7539e7-a30c-4a6e-b13a-a82cdb6b4081",
+        "cgu": {
+          "version": 2,
+          "acceptedAt": 1725001318488,
+          "isLatestVersion": true
+        }
+      }
+    }
+  }
+}

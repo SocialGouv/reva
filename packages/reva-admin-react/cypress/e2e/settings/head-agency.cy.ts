@@ -23,7 +23,11 @@ function visitSettings({
       );
       stubQuery(req, "getAgenciesSettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
-      stubQuery(req, "getMaisonMereCGUQuery", "account/head-agency-cgu.json");
+      stubQuery(
+        req,
+        "getMaisonMereCGUQuery",
+        "account/head-agency-cgu-new.json",
+      );
     });
   });
 

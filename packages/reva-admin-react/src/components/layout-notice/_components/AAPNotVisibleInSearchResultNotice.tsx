@@ -64,7 +64,7 @@ export const useAAPVisibilityCheck = () => {
 export const AAPNotVisibleInSearchResultNotice = () => {
   return (
     <NoticeAlert>
-      <p>
+      <p data-test="not-visible-alert-notice">
         <strong>
           Actuellement, vous n'êtes pas visible dans les résultats de recherche.
         </strong>{" "}

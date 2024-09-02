@@ -5,6 +5,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 export const AapCgu = (): JSX.Element | null => {
   return (
     <Notice
+      data-test="new-cgu-notice"
       isClosable
       className="-mb-8"
       title={
