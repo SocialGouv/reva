@@ -23,6 +23,7 @@ export const AgenciesSettingsSectionOnSite = ({
 
   return (
     <EnhancedSectionCard
+      data-test="on-site-agencies"
       title="Accompagnement en présentiel"
       buttonOnClickHref="/agencies-settings-v3/organisms/add-agency"
       titleIconClass="fr-icon-home-4-fill"
