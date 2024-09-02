@@ -1,0 +1,59 @@
+{
+  "data": {
+    "account_getAccountForConnectedUser": {
+      "organism": {
+        "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+        "isOnSite": false,
+        "isRemote": true,
+        "fermePourAbsenceOuConges": true,
+        "managedDegrees": [
+          {
+            "id": "80c1b97a-b1ab-4a9e-b3d1-9a8fef24cc44"
+          },
+          {
+            "id": "719ad4cf-a0a6-4994-a38e-b9f5964dec1c"
+          },
+          {
+            "id": "d7885ad6-42ea-4070-83ab-fd9aa40b7e69"
+          },
+          {
+            "id": "4d18554a-868d-4262-9173-aee184854cfd"
+          },
+          {
+            "id": "badd478b-9411-4247-8df6-683b141509dd"
+          },
+          {
+            "id": "ca24022a-2533-4e30-90ab-d3898b9d7209"
+          },
+          {
+            "id": "b4f431ef-e325-4ce0-a61f-9ee9ed1ae90f"
+          },
+          {
+            "id": "54df34a5-3734-4e04-8796-01ef43acd1fc"
+          }
+        ],
+        "domaines": [
+          {
+            "id": "4462f3ed-d605-4e08-bb87-b481d3c0b710"
+          },
+          {
+            "id": "24a5eeaa-82af-46f6-ad03-b5a6c5babf14"
+          },
+          {
+            "id": "f69101d2-2824-4093-9ac0-8f8631e5010a"
+          },
+          {
+            "id": "24ebe074-78fc-41c7-8b56-fec2446e6253"
+          },
+          {
+            "id": "43062959-9315-4c1b-82b6-fdb9af494b0c"
+          },
+          {
+            "id": "b4e5cde7-4e2e-46bb-bbee-b3b92f8b6e3b"
+          }
+        ],
+        "conventionCollectives": []
+      }
+    }
+  }
+}

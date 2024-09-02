@@ -1,33 +1,39 @@
-import { stubQuery } from "../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 import { sub } from "date-fns";
 
 function visitFunding({ dropOutCreationDate }: { dropOutCreationDate?: Date }) {
-  cy.fixture("candidacy-drop-out-funding.json").then((candidacyDroppedOut) => {
-    if (dropOutCreationDate) {
-      candidacyDroppedOut.data.getCandidacyById.candidacyDropOut.createdAt =
-        dropOutCreationDate;
-    } else {
-      delete candidacyDroppedOut.data.getCandidacyById.candidacyDropOut;
-    }
+  cy.fixture("candidacy/candidacy-drop-out-funding.json").then(
+    (candidacyDroppedOut) => {
+      if (dropOutCreationDate) {
+        candidacyDroppedOut.data.getCandidacyById.candidacyDropOut.createdAt =
+          dropOutCreationDate;
+      } else {
+        delete candidacyDroppedOut.data.getCandidacyById.candidacyDropOut;
+      }
 
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", "active-features.json");
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility-check-admin.json",
-      );
-      stubQuery(req, "getAccountInfo", "account-admin.json");
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(
+          req,
+          "activeFeaturesForConnectedUser",
+          "features/active-features.json",
+        );
+        stubQuery(
+          req,
+          "getOrganismForAAPVisibilityCheck",
+          "visibility/admin.json",
+        );
+        stubQuery(req, "getAccountInfo", "account/admin-info.json");
 
-      stubQuery(req, "getCandidacyByIdFunding", candidacyDroppedOut);
+        stubQuery(req, "getCandidacyByIdFunding", candidacyDroppedOut);
 
-      stubQuery(
-        req,
-        "getCandidacyMenuAndCandidateInfos",
-        "candidacy-drop-out-menu.json",
-      );
-    });
-  });
+        stubQuery(
+          req,
+          "getCandidacyMenuAndCandidateInfos",
+          "candidacy/candidacy-drop-out-menu.json",
+        );
+      });
+    },
+  );
 
   cy.aap("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/funding");
 }

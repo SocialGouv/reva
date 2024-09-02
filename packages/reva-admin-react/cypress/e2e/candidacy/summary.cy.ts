@@ -1,4 +1,4 @@
-import { stubQuery } from "../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 function visitSummary({
   feasibilityFormat,
@@ -7,25 +7,29 @@ function visitSummary({
   feasibilityFormat: "DEMATERIALIZED" | "PDF";
   financeModule: "hors_plateforme" | "unifvae";
 }) {
-  cy.fixture("candidacy.json").then((candidacy) => {
+  cy.fixture("candidacy/candidacy.json").then((candidacy) => {
     candidacy.data.getCandidacyById.feasibilityFormat = feasibilityFormat;
     candidacy.data.getCandidacyById.financeModule = financeModule;
 
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", "active-features.json");
+      stubQuery(
+        req,
+        "activeFeaturesForConnectedUser",
+        "features/active-features.json",
+      );
       stubQuery(
         req,
         "getOrganismForAAPVisibilityCheck",
-        "visibility-check-admin.json",
+        "visibility/admin.json",
       );
-      stubQuery(req, "getAccountInfo", "account-admin.json");
+      stubQuery(req, "getAccountInfo", "account/admin-info.json");
 
       stubQuery(req, "getCandidacySummaryById", candidacy);
 
       stubQuery(
         req,
         "getCandidacyMenuAndCandidateInfos",
-        "candidacy-menu.json",
+        "candidacy/candidacy-menu.json",
       );
     });
   });

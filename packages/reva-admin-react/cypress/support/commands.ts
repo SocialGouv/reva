@@ -1,21 +1,21 @@
 Cypress.Commands.add("aap", (url = "/") => {
   cy.intercept("**/realms/reva/protocol/openid-connect/3p-cookies/step1.html", {
-    fixture: "auth-step1.html",
+    fixture: "auth/step1.html",
   });
 
   cy.intercept(
     "**/realms/reva/protocol/openid-connect/login-status-iframe.html",
     {
-      fixture: "auth-status-iframe.html",
+      fixture: "auth/status-iframe.html",
     },
   );
 
   cy.intercept("GET", "**/admin2/silent-check-sso.html", {
-    fixture: "auth-silent-check-sso.html",
+    fixture: "auth/silent-check-sso.html",
   });
 
   cy.intercept("POST", "**/realms/reva/protocol/openid-connect/token", {
-    fixture: "auth-token.json",
+    fixture: "auth/token.json",
   });
 
   cy.visit(url, {

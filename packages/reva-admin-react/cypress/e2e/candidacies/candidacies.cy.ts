@@ -1,21 +1,25 @@
-import { stubQuery } from "../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 context("Candidacy", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", "active-features.json");
+      stubQuery(
+        req,
+        "activeFeaturesForConnectedUser",
+        "features/active-features.json",
+      );
       stubQuery(
         req,
         "getOrganismForAAPVisibilityCheck",
-        "visibility-check-admin.json",
+        "visibility/admin.json",
       );
-      stubQuery(req, "getAccountInfo", "account-admin.json");
+      stubQuery(req, "getAccountInfo", "account/admin-info.json");
       stubQuery(
         req,
         "getCandidacyByStatusCount",
-        "candidacy-count-by-status.json",
+        "candidacy/candidacy-count-by-status.json",
       );
-      stubQuery(req, "getCandidaciesByStatus", "candidacies.json");
+      stubQuery(req, "getCandidaciesByStatus", "candidacies/candidacies.json");
     });
 
     cy.aap("/candidacies");
