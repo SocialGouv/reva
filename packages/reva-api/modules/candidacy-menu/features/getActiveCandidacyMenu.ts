@@ -7,6 +7,8 @@ import {
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
+import { getCertificationById } from "../../referential/features/getCertificationById";
+import { isFundingRequestEnabledForCertification } from "./isFundingRequestEnabledForCertification";
 
 export const getActiveCandidacyMenu = async ({
   candidacy,
@@ -119,9 +121,24 @@ export const getActiveCandidacyMenu = async ({
       : undefined;
   };
 
-  const getFundingRequestMenuEntry = (): CandidacyMenuEntry | undefined => {
+  const getFundingRequestMenuEntry = async (): Promise<
+    CandidacyMenuEntry | undefined
+  > => {
     //pas de page de demande de financemnt si le financement de la candidature est "hors plateforme"
     if (candidacy.financeModule === "hors_plateforme") {
+      return;
+    }
+
+    const certification = await getCertificationById({
+      certificationId: candidacy.certificationId,
+    });
+
+    if (
+      !certification ||
+      !isFundingRequestEnabledForCertification({
+        certificationRncpId: certification.rncpId,
+      })
+    ) {
       return;
     }
 
@@ -264,7 +281,7 @@ export const getActiveCandidacyMenu = async ({
       feasibilityFormat: candidacy.feasibilityFormat,
       isCandidateSummaryComplete,
     }),
-    getFundingRequestMenuEntry(),
+    await getFundingRequestMenuEntry(),
     getDossierDeValidationMenuEntry(),
     await getPaymentRequestMenuEntry(),
     getJuryMenuEntry(),

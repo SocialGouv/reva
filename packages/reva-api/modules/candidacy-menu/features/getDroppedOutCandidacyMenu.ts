@@ -8,6 +8,8 @@ import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
 import { format } from "date-fns";
+import { getCertificationById } from "../../referential/features/getCertificationById";
+import { isFundingRequestEnabledForCertification } from "./isFundingRequestEnabledForCertification";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
@@ -39,6 +41,19 @@ export const getDroppedOutCandidacyMenu = async ({
   > => {
     if (candidacy.financeModule === "hors_plateforme") {
       return undefined;
+    }
+
+    const certification = await getCertificationById({
+      certificationId: candidacy.certificationId,
+    });
+
+    if (
+      !certification ||
+      !isFundingRequestEnabledForCertification({
+        certificationRncpId: certification.rncpId,
+      })
+    ) {
+      return;
     }
 
     const editableStatus: CandidacyStatusStep[] = [
