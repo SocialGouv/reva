@@ -186,9 +186,18 @@ export const getActiveCandidacyMenu = async ({
             ]
           : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
 
-      menuEntryStatus = editableStatus.includes(activeCandidacyStatus)
-        ? "ACTIVE_WITH_EDIT_HINT"
-        : "ACTIVE_WITHOUT_HINT";
+      const isCandidacyStatusAdvancedEnoughToEditDossierDeValidation =
+        isCandidacyStatusEqualOrAboveGivenStatus(activeCandidacyStatus);
+
+      if (
+        editableStatus.some((s) =>
+          isCandidacyStatusAdvancedEnoughToEditDossierDeValidation(s),
+        )
+      ) {
+        menuEntryStatus = editableStatus.includes(activeCandidacyStatus)
+          ? "ACTIVE_WITH_EDIT_HINT"
+          : "ACTIVE_WITHOUT_HINT";
+      }
 
       url = buildUrl({
         suffix: "dossier-de-validation-aap",
