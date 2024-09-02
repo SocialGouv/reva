@@ -55,36 +55,44 @@ export default function RemotePage() {
       <p>
         Pour être visible complétez tout et mettez l’interrupteur sur visible.
       </p>
-      <EnhancedSectionCard
-        title="Informations affichées au candidat"
-        titleIconClass="fr-icon-information-fill"
-        isEditable
-        buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/information`}
-      >
-        <div className="flex flex-col gap-2">
-          <div className="font-bold">
-            {organism?.informationsCommerciales?.nom}
+      <div className="flex flex-col gap-6">
+        <EnhancedSectionCard
+          title="Informations affichées au candidat"
+          titleIconClass="fr-icon-information-fill"
+          isEditable
+          buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/information`}
+        >
+          <div className="flex flex-col gap-2">
+            <div className="font-bold">
+              {organism?.informationsCommerciales?.nom}
+            </div>
+            <div>
+              {organism?.informationsCommerciales?.telephone}{" "}
+              {organism?.informationsCommerciales?.emailContact}
+            </div>
+            {organism?.informationsCommerciales?.siteInternet && (
+              <Link
+                className="fr-link mr-auto"
+                target="_blank"
+                href={organism?.informationsCommerciales?.siteInternet}
+              >
+                Site internet
+              </Link>
+            )}
+            <ul className="list-none pl-0">
+              {organism?.remoteZones.map((r) => (
+                <li key={r}>{getRemoteZoneLabel(r)}</li>
+              ))}
+            </ul>
           </div>
-          <div>
-            {organism?.informationsCommerciales?.telephone}{" "}
-            {organism?.informationsCommerciales?.emailContact}
-          </div>
-          {organism?.informationsCommerciales?.siteInternet && (
-            <Link
-              className="fr-link mr-auto"
-              target="_blank"
-              href={organism?.informationsCommerciales?.siteInternet}
-            >
-              Site internet
-            </Link>
-          )}
-          <ul className="list-none pl-0">
-            {organism?.remoteZones.map((r) => (
-              <li key={r}>{getRemoteZoneLabel(r)}</li>
-            ))}
-          </ul>
-        </div>
-      </EnhancedSectionCard>
+        </EnhancedSectionCard>
+        <EnhancedSectionCard
+          title="Filières, branches et niveaux"
+          titleIconClass="fr-icon-award-fill"
+          isEditable
+          buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/domaines-ccns-degrees`}
+        />
+      </div>
     </div>
   );
 }
