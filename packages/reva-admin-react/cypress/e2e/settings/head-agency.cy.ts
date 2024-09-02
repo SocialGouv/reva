@@ -23,7 +23,6 @@ function visitSettings({
       );
       stubQuery(req, "getAgenciesSettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
-
       stubQuery(req, "getMaisonMereCGUQuery", "account/head-agency-cgu.json");
     });
   });
@@ -40,6 +39,16 @@ context("Head agency settings page", () => {
       cy.wait("@getAgenciesSettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="to-complete-badge"]',
+      ).should("exist");
+    });
+
+    it("display a 'completed badge' when account verification is pending", function () {
+      visitSettings({
+        informationsJuridiques: "EN_ATTENTE_DE_VERIFICATION",
+      });
+      cy.wait("@getAgenciesSettingsInfo");
+      cy.get(
+        '[data-test="general-information"] [data-test="completed-badge"]',
       ).should("exist");
     });
 
