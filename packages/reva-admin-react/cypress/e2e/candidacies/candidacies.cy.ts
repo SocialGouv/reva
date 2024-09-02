@@ -22,7 +22,7 @@ context("Candidacy", () => {
       stubQuery(req, "getCandidaciesByStatus", "candidacies/candidacies.json");
     });
 
-    cy.aap("/candidacies");
+    cy.agency("/candidacies");
   });
 
   it("display all candidacies", function () {

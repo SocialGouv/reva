@@ -29,6 +29,7 @@ const AgenciesSettingsPage = () => {
       <div className="flex flex-col gap-8 mt-6">
         {isGestionnaireMaisonMereAAP && (
           <EnhancedSectionCard
+            data-test="general-information"
             title="Informations générales"
             status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
             isEditable

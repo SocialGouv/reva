@@ -1,0 +1,66 @@
+{
+  "data": {
+    "account_getAccountForConnectedUser": {
+      "organism": {
+        "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+        "isOnSite": false,
+        "isRemote": true,
+        "isVisibleInCandidateSearchResults": false,
+        "remoteZones": [
+          "FRANCE_METROPOLITAINE"
+        ],
+        "accounts": [
+          {
+            "id": "e45b3b63-6bf4-4181-801d-51b19c722580",
+            "firstname": "John",
+            "lastname": "Doe",
+            "email": "joen.doe@example.com"
+          },
+          {
+            "id": "8f5fcf2d-ef76-4560-90d0-b151186b1c46",
+            "firstname": "Alice",
+            "lastname": "Doe",
+            "email": "alice.doe@example.com"
+          },
+          {
+            "id": "6d1ffe00-a8b5-4f4f-a5ea-d1fe71282ec5",
+            "firstname": "Bob",
+            "lastname": "Joe",
+            "email": "bob.joe@example.com"
+          }
+        ],
+        "maisonMereAAP": {
+          "statutValidationInformationsJuridiquesMaisonMereAAP": "A_METTRE_A_JOUR",
+          "organisms": [
+            {
+              "id": "2be04b85-ed75-41fb-9248-97fc178ba664",
+              "isRemote": false,
+              "isVisibleInCandidateSearchResults": false,
+              "remoteZones": []
+            },
+            {
+              "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+              "isRemote": true,
+              "isVisibleInCandidateSearchResults": false,
+              "remoteZones": [
+                "FRANCE_METROPOLITAINE"
+              ]
+            },
+            {
+              "id": "fb10a5d2-c081-418b-ab92-5a11314ada84",
+              "isRemote": false,
+              "isVisibleInCandidateSearchResults": false,
+              "remoteZones": []
+            },
+            {
+              "id": "513be886-4f99-44d3-8edd-6ba2987dccd0",
+              "isRemote": false,
+              "isVisibleInCandidateSearchResults": true,
+              "remoteZones": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}

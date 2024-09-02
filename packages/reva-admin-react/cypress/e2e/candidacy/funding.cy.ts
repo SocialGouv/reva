@@ -35,7 +35,7 @@ function visitFunding({ dropOutCreationDate }: { dropOutCreationDate?: Date }) {
     },
   );
 
-  cy.aap("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/funding");
+  cy.agency("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/funding");
 }
 
 const sixMonthsAgo = sub(new Date(), { months: 6 });

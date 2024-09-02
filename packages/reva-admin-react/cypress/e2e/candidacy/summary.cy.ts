@@ -34,7 +34,7 @@ function visitSummary({
     });
   });
 
-  cy.aap("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary");
+  cy.agency("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary");
 }
 
 context("Candidacy summary page", () => {

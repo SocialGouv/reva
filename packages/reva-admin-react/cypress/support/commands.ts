@@ -1,4 +1,4 @@
-Cypress.Commands.add("aap", (url = "/") => {
+function auth({ url, token }: { url: string; token: string }) {
   cy.intercept("**/realms/reva/protocol/openid-connect/3p-cookies/step1.html", {
     fixture: "auth/step1.html",
   });
@@ -15,7 +15,7 @@ Cypress.Commands.add("aap", (url = "/") => {
   });
 
   cy.intercept("POST", "**/realms/reva/protocol/openid-connect/token", {
-    fixture: "auth/token.json",
+    fixture: token,
   });
 
   cy.visit(url, {
@@ -43,4 +43,12 @@ Cypress.Commands.add("aap", (url = "/") => {
       });
     },
   });
+}
+
+Cypress.Commands.add("agency", (url = "/") => {
+  auth({ url, token: "auth/agency-token.json" });
+});
+
+Cypress.Commands.add("headAgency", (url = "/") => {
+  auth({ url, token: "auth/head-agency-token.json" });
 });
