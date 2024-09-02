@@ -10,7 +10,7 @@ const AgenciesSettingsPage = () => {
   const { maisonMereAAP, organism } = useAgenciesSettings();
   const { isGestionnaireMaisonMereAAP } = useAuth();
   const isGeneralInformationCompleted =
-    maisonMereAAP &&
+    !!maisonMereAAP &&
     ["A_JOUR", "EN_ATTENTE_DE_VERIFICATION"].includes(
       maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP,
     );
