@@ -13,7 +13,7 @@ const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
 
 export const AgenciesSettingsSectionOnSite = ({
   isGestionnaireMaisonMereAAP,
-  organisms,
+  organisms = [],
 }: {
   isGestionnaireMaisonMereAAP?: boolean;
   organisms: Organism[];
