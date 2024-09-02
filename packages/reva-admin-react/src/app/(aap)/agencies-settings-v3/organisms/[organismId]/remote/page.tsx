@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getRemoteZoneLabel } from "../../../_components/getRemoteZoneLabel";
+import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {
@@ -92,6 +93,10 @@ export default function RemotePage() {
           isEditable
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/domaines-ccns-degrees`}
         />
+        <div className="flex flex-col mt-6">
+          <h2>Visibilité de la structure</h2>
+          <OrganismVisibilityToggle organismId={organismId} />
+        </div>
       </div>
     </div>
   );
