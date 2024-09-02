@@ -1,6 +1,6 @@
-import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
 import { hasRole, whenHasRole } from "../shared/security/middlewares";
 import { isAdmin } from "../shared/security/presets";
+import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
 
 export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format

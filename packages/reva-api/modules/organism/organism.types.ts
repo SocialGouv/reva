@@ -69,6 +69,18 @@ export interface CreateAgencyInput {
   domaineIds: string[];
 }
 
+export interface CreateAgencyInfoInput {
+  nom: string;
+  address: string;
+  adresseInformationsComplementaires?: string;
+  zip: string;
+  city: string;
+  contactAdministrativeEmail: string;
+  contactAdministrativePhone?: string;
+  website?: string;
+  conformeNormesAccessibilite: ConformiteNormeAccessibilite;
+}
+
 export interface CreateOrganismAccountInput {
   organismId: string;
   accountFirstname: string;

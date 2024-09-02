@@ -21,6 +21,10 @@ const AgenciesSettingsInfoQuery = graphql(`
         maisonMereAAP {
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
+            informationsCommerciales {
+              nom
+            }
+            label
             id
             isRemote
             isVisibleInCandidateSearchResults

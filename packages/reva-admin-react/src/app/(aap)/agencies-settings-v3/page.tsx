@@ -1,10 +1,12 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
-import { useAuth } from "@/components/auth/auth";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { useAgenciesSettings } from "./_components/agenciesSettings.hook";
+import { AgenciesSettingsSectionOnSite } from "./_components/AgenciesSettingsSectionOnSite";
 import { getRemoteZoneLabel } from "./_components/getRemoteZoneLabel";
+import { Organism } from "@/graphql/generated/graphql";
 
 const AgenciesSettingsPage = () => {
   const { maisonMereAAP, organism } = useAgenciesSettings();
@@ -71,21 +73,11 @@ const AgenciesSettingsPage = () => {
             </EnhancedSectionCard>
           )}
 
-        {isGestionnaireMaisonMereAAP && (
-          <EnhancedSectionCard
-            data-test="on-site-agencies"
-            title="Accompagnement en présentiel"
-            buttonOnClickHref="/agencies-settings-v3/on-site"
-            titleIconClass="fr-icon-home-4-fill"
-            isEditable
-          >
-            <p className="md:w-4/5">
-              Vous avez des collaborateurs qui font des accompagnements en
-              présentiel ? Ajoutez les lieux d'accueil dans lesquels se rendront
-              les candidats.
-            </p>
-          </EnhancedSectionCard>
-        )}
+        <AgenciesSettingsSectionOnSite
+          isGestionnaireMaisonMereAAP={isGestionnaireMaisonMereAAP}
+          organisms={maisonMereAAP?.organisms as Organism[]}
+        />
+
         {!isGestionnaireMaisonMereAAP && organism?.isRemote === false && (
           <EnhancedSectionCard
             data-test="on-site-agency"

@@ -6,6 +6,7 @@ import {
 } from "@prisma/client";
 import mercurius from "mercurius";
 
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
@@ -15,27 +16,49 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import {
+  sendLegalInformationDocumentsApprovalEmail,
+  sendLegalInformationDocumentsUpdateNeededEmail,
+} from "./emails/sendLegalInformationDocumentsDecisionEmail";
+import { acceptCgu } from "./features/acceptCgu";
+import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
+import { createAgency } from "./features/createAgency";
+import { createAgencyInfo } from "./features/createAgencyInfo";
+import { createOrganismAccount } from "./features/createOrganismAccount";
 import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
-import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
+import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getLLToEarthFromZip } from "./features/getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
+import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
+import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonMereAAPLegalInformationDocuments";
+import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMereAAPOnConventionCollectives";
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
+import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
+import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
+import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
+import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
+import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
+import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
+import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
+import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
+import { resolversSecurityMap } from "./organism.security";
 import {
+  CreateAgencyInfoInput,
   CreateAgencyInput,
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
   CreateOrganismAccountInput,
@@ -44,27 +67,6 @@ import {
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
 } from "./organism.types";
-import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
-import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonMereAAPLegalInformationDocuments";
-import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
-import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { resolversSecurityMap } from "./organism.security";
-import {
-  sendLegalInformationDocumentsApprovalEmail,
-  sendLegalInformationDocumentsUpdateNeededEmail,
-} from "./emails/sendLegalInformationDocumentsDecisionEmail";
-import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
-import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
-import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
-import { createAgency } from "./features/createAgency";
-import { acceptCgu } from "./features/acceptCgu";
-import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
-import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
-import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
-import { createOrganismAccount } from "./features/createOrganismAccount";
-import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
-import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 
 const unsafeResolvers = {
   Account: {
@@ -350,6 +352,28 @@ const unsafeResolvers = {
       const result = await createAgency({
         params: data,
         keycloakId,
+      });
+      return result;
+    },
+    organism_createAgencyInfo: async (
+      _parent: unknown,
+      {
+        data,
+      }: {
+        data: CreateAgencyInfoInput;
+      },
+      context: GraphqlContext,
+    ) => {
+      if (context.auth.userInfo?.sub == undefined) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized",
+        );
+      }
+
+      const result = await createAgencyInfo({
+        params: data,
+        keycloakId: context.auth.userInfo.sub,
       });
       return result;
     },

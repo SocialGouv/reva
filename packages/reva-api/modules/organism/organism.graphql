@@ -205,6 +205,17 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   accountId: UUID
 }
 
+input CreateAgencyInfoInput {
+  nom: String!
+  address: String!
+  adresseInformationsComplementaires: String
+  zip: String!
+  city: String!
+  contactAdministrativeEmail: String!
+  contactAdministrativePhone: String!
+  website: String
+  conformeNormesAccessibilite: ConformiteNormeAccessibilite!
+}
 input CreateAgencyInput {
   nom: String!
   address: String!
@@ -293,6 +304,7 @@ type Mutation {
   ): Organism!
 
   organism_createAgency(data: CreateAgencyInput!): String!
+  organism_createAgencyInfo(data: CreateAgencyInfoInput!): String!
   organism_acceptCgu: Boolean!
   organism_updateMaisonMereAccountSetup(
     data: UpdateMaisonMereAccountSetupInput!
