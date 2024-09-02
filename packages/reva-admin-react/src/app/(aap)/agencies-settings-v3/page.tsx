@@ -43,6 +43,7 @@ const AgenciesSettingsPage = () => {
         {remoteAgency &&
           (isGestionnaireMaisonMereAAP || organism?.isRemote) && (
             <EnhancedSectionCard
+              data-test="remote-agency"
               title="Accompagnement à distance"
               buttonOnClickHref={`/agencies-settings-v3/organisms/${remoteAgency.id}/remote`}
               isEditable={true}
@@ -72,6 +73,7 @@ const AgenciesSettingsPage = () => {
 
         {isGestionnaireMaisonMereAAP && (
           <EnhancedSectionCard
+            data-test="on-site-agencies"
             title="Accompagnement en présentiel"
             buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"
@@ -86,6 +88,7 @@ const AgenciesSettingsPage = () => {
         )}
         {!isGestionnaireMaisonMereAAP && organism?.isRemote === false && (
           <EnhancedSectionCard
+            data-test="on-site-agency"
             title="Accompagnement en présentiel"
             isEditable={false}
             buttonOnClickHref="/agencies-settings-v3/on-site"

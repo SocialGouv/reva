@@ -62,4 +62,12 @@ context("Head agency settings page", () => {
       ).should("exist");
     });
   });
+
+  it("should display a remote block and no on-site block", function () {
+    visitSettings({ informationsJuridiques: "A_JOUR" });
+    cy.wait("@getAgenciesSettingsInfo");
+    cy.get('[data-test="remote-agency"]').should("exist");
+    cy.get('[data-test="on-site-agencies"]').should("exist");
+    cy.get('[data-test="on-site-agency"]').should("not.exist");
+  });
 });
