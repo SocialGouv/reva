@@ -149,7 +149,7 @@ type FCCertification {
   ABREGE: FCAbrege!
   NOMENCLATURE_EUROPE: FCNomenclatureEurope!
   DATE_FIN_ENREGISTREMENT: Timestamp!
-  DATE_LIMITE_DELIVRANCE: Timestamp!
+  DATE_LIMITE_DELIVRANCE: Timestamp
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
 }

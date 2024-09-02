@@ -45,9 +45,11 @@ export const CertificationGeneralInformation = ({
           {format(fcCertification.DATE_FIN_ENREGISTREMENT, "dd/MM/yyyy")}
         </Info>
         <Info title="Date limite délivrance">
-          {format(fcCertification.DATE_LIMITE_DELIVRANCE, "dd/MM/yyyy", {
-            locale: fr,
-          })}
+          {fcCertification.DATE_LIMITE_DELIVRANCE
+            ? format(fcCertification.DATE_LIMITE_DELIVRANCE, "dd/MM/yyyy", {
+                locale: fr,
+              })
+            : "Inconnue"}
         </Info>
       </div>
     </div>
