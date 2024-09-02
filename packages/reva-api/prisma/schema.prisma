@@ -157,6 +157,7 @@ model Candidacy {
   @@index([organismId])
   @@index([candidateId])
   @@index([departmentId])
+  @@index([certificationId])
   @@map("candidacy")
 }
 
