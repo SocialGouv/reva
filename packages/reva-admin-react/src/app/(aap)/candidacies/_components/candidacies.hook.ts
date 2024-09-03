@@ -1,3 +1,4 @@
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
@@ -87,6 +88,7 @@ export const useCandidacies = ({
 }) => {
   const RECORDS_PER_PAGE = 10;
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureflipping();
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
   const { data: getCandidacyByStatusResponse } = useQuery({
     queryKey: ["getCandidacyByStatusCount", searchFilter],
@@ -94,6 +96,7 @@ export const useCandidacies = ({
       graphqlClient.request(getCandidacyByStatusCount, {
         searchFilter,
       }),
+    enabled: !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS"),
   });
 
   const { data: getCandidaciesByStatusResponse } = useQuery({
