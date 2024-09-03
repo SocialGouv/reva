@@ -123,7 +123,17 @@ export default function PrerequisitesPage() {
       <p className="text-xl mb-12">
         Renseignez les prérequis liés à l'entrée en VAE et à la certification.
       </p>
-      <p className="text-xl font-bold mb-0">Rajouter le lien espace docu ici</p>
+      <p className="text-xl font-bold text-neutral-900 mb-2">
+        Retrouvez plus d’informations sur le fonctionnement des certifications
+        dans notre{" "}
+        <a
+          target="_blank"
+          href="https://fabnummas.notion.site/Fiches-rep-res-certifications-05c82b32ad254f3aa773d3175263ca1f"
+        >
+          espace documentaire
+        </a>
+        .
+      </p>
       <form
         onSubmit={handleFormSubmit}
         onReset={(e) => {
