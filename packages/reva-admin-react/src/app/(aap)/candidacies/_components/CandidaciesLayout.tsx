@@ -1,4 +1,5 @@
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import {
   CandidacyCountByStatus,
   CandidacyStatusFilter,
@@ -16,6 +17,7 @@ const CandidacyLayoutSideMenu = ({
   const candidacyStatus = searchParams.get("status");
   const searchFilter = searchParams.get("search") || "";
   const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   const hrefSideMenu = (status: CandidacyStatusFilter) => {
     const params = new URLSearchParams();
@@ -32,6 +34,11 @@ const CandidacyLayoutSideMenu = ({
   const isActive = (status: CandidacyStatusFilter) =>
     candidacyStatus === status;
 
+  const showCounters = !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS");
+
+  const getCounterText = (status: CandidacyStatusFilter) =>
+    showCounters ? `(${candidaciesByStatusCount?.[status] ?? 0})` : "";
+
   const sideMenuItems = [
     {
       linkProps: {
@@ -39,89 +46,89 @@ const CandidacyLayoutSideMenu = ({
       },
       expandedByDefault: true,
       isActive: isActive("ACTIVE_HORS_ABANDON"),
-      text: `Toutes les candidatures actives (${candidaciesByStatusCount?.ACTIVE_HORS_ABANDON ?? 0})`,
+      text: `Toutes les candidatures actives ${getCounterText("ACTIVE_HORS_ABANDON")}`,
       items: [
         {
           linkProps: {
             href: hrefSideMenu("VALIDATION_HORS_ABANDON"),
           },
-          text: `Nouvelles candidatures (${candidaciesByStatusCount?.VALIDATION_HORS_ABANDON ?? 0})`,
+          text: `Nouvelles candidatures ${getCounterText("VALIDATION_HORS_ABANDON")}`,
           isActive: isActive("VALIDATION_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("PRISE_EN_CHARGE_HORS_ABANDON"),
           },
-          text: `Candidatures prises en charge (${candidaciesByStatusCount?.PRISE_EN_CHARGE_HORS_ABANDON ?? 0})`,
+          text: `Candidatures prises en charge ${getCounterText("PRISE_EN_CHARGE_HORS_ABANDON")}`,
           isActive: isActive("PRISE_EN_CHARGE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("PARCOURS_ENVOYE_HORS_ABANDON"),
           },
-          text: `Parcours envoyés (${candidaciesByStatusCount?.PARCOURS_ENVOYE_HORS_ABANDON ?? 0})`,
+          text: `Parcours envoyés ${getCounterText("PARCOURS_ENVOYE_HORS_ABANDON")}`,
           isActive: isActive("PARCOURS_ENVOYE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("PARCOURS_CONFIRME_HORS_ABANDON"),
           },
-          text: `Parcours confirmés par le candidat (${candidaciesByStatusCount?.PARCOURS_CONFIRME_HORS_ABANDON ?? 0})`,
+          text: `Parcours confirmés par le candidat ${getCounterText("PARCOURS_CONFIRME_HORS_ABANDON")}`,
           isActive: isActive("PARCOURS_CONFIRME_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON"),
           },
-          text: `Dossiers de faisabilité envoyés (${candidaciesByStatusCount?.DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON ?? 0})`,
+          text: `Dossiers de faisabilité envoyés ${getCounterText("DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON"),
           },
-          text: `Dossiers de faisabilité incomplets (${candidaciesByStatusCount?.DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON ?? 0})`,
+          text: `Dossiers de faisabilité incomplets ${getCounterText("DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON"),
           },
-          text: `Dossiers de faisabilité recevables (${candidaciesByStatusCount?.DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON ?? 0})`,
+          text: `Dossiers de faisabilité recevables ${getCounterText("DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
           },
-          text: `Demandes de prise en charge envoyées (${candidaciesByStatusCount?.DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON ?? 0})`,
+          text: `Demandes de prise en charge envoyées ${getCounterText("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON")}`,
           isActive: isActive("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON"),
           },
-          text: `Dossiers de validation envoyés (${candidaciesByStatusCount?.DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON ?? 0})`,
+          text: `Dossiers de validation envoyés ${getCounterText("DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON"),
           },
-          text: `Dossiers de validation signalés (${candidaciesByStatusCount?.DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON ?? 0})`,
+          text: `Dossiers de validation signalés ${getCounterText("DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
           },
-          text: `Demandes de paiement envoyées (${candidaciesByStatusCount?.DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON ?? 0})`,
+          text: `Demandes de paiement envoyées ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON")}`,
           isActive: isActive("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
         },
       ],
     },
     {
-      text: `Toutes les candidatures en jury (${candidaciesByStatusCount?.JURY_HORS_ABANDON ?? 0})`,
+      text: `Toutes les candidatures en jury ${getCounterText("JURY_HORS_ABANDON")}`,
       linkProps: {
         href: hrefSideMenu("JURY_HORS_ABANDON"),
       },
@@ -130,14 +137,14 @@ const CandidacyLayoutSideMenu = ({
           linkProps: {
             href: hrefSideMenu("JURY_PROGRAMME_HORS_ABANDON"),
           },
-          text: `Jurys programmés (${candidaciesByStatusCount?.JURY_PROGRAMME_HORS_ABANDON ?? 0})`,
+          text: `Jurys programmés ${getCounterText("JURY_PROGRAMME_HORS_ABANDON")}`,
           isActive: isActive("JURY_PROGRAMME_HORS_ABANDON"),
         },
         {
           linkProps: {
             href: hrefSideMenu("JURY_PASSE_HORS_ABANDON"),
           },
-          text: `Résultats renseignés (${candidaciesByStatusCount?.JURY_PASSE_HORS_ABANDON ?? 0})`,
+          text: `Résultats renseignés ${getCounterText("JURY_PASSE_HORS_ABANDON")}`,
           isActive: isActive("JURY_PASSE_HORS_ABANDON"),
         },
       ],
@@ -145,28 +152,28 @@ const CandidacyLayoutSideMenu = ({
     },
 
     {
-      text: `Toutes les candidatures non recevables (${candidaciesByStatusCount?.DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON ?? 0})`,
+      text: `Toutes les candidatures non recevables ${getCounterText("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON")}`,
       linkProps: {
         href: hrefSideMenu("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON"),
       },
       isActive: isActive("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON"),
     },
     {
-      text: `Toutes les candidatures abandonnées (${candidaciesByStatusCount?.ABANDON ?? 0})`,
+      text: `Toutes les candidatures abandonnées ${getCounterText("ABANDON")}`,
       linkProps: {
         href: hrefSideMenu("ABANDON"),
       },
       isActive: isActive("ABANDON"),
     },
     {
-      text: `Toutes les candidatures réorientées (${candidaciesByStatusCount?.REORIENTEE ?? 0})`,
+      text: `Toutes les candidatures réorientées ${getCounterText("REORIENTEE")}`,
       linkProps: {
         href: hrefSideMenu("REORIENTEE"),
       },
       isActive: isActive("REORIENTEE"),
     },
     {
-      text: `Toutes les candidatures supprimées (${candidaciesByStatusCount?.ARCHIVE_HORS_ABANDON_HORS_REORIENTATION ?? 0})`,
+      text: `Toutes les candidatures supprimées ${getCounterText("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION")}`,
       linkProps: {
         href: hrefSideMenu("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"),
       },
@@ -176,7 +183,7 @@ const CandidacyLayoutSideMenu = ({
 
   if (isAdmin) {
     sideMenuItems.push({
-      text: `Tous les projets en cours d'édition (${candidaciesByStatusCount?.PROJET_HORS_ABANDON ?? 0})`,
+      text: `Tous les projets en cours d'édition ${getCounterText("PROJET_HORS_ABANDON")}`,
       linkProps: {
         href: hrefSideMenu("PROJET_HORS_ABANDON"),
       },
