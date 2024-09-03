@@ -37,6 +37,7 @@ import {
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import Script from "next/script";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
   const { authenticated } = useKeycloakContext();
+  const { status: featureFlippingHookStatus } = useFeatureflipping();
 
   const {
     isAdmin,
@@ -115,37 +117,39 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      <SkipLinks
-        links={[
-          {
-            anchor: "#content",
-            label: "Contenu",
-          },
-          {
-            anchor: "#footer",
-            label: "Pied de page",
-          },
-        ]}
-      />
-      <Header />
-      <LayoutNotice />
+    featureFlippingHookStatus === "INITIALIZED" && (
+      <div className="w-full min-h-screen flex flex-col">
+        <SkipLinks
+          links={[
+            {
+              anchor: "#content",
+              label: "Contenu",
+            },
+            {
+              anchor: "#footer",
+              label: "Pied de page",
+            },
+          ]}
+        />
+        <Header />
+        <LayoutNotice />
 
-      <main
-        role="main"
-        id="content"
-        className={`flex flex-col flex-1 ${bgClass()}`}
-      >
-        <div className="fr-container flex flex-col flex-1">
-          <div
-            className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
-          >
-            {authenticated && children}
+        <main
+          role="main"
+          id="content"
+          className={`flex flex-col flex-1 ${bgClass()}`}
+        >
+          <div className="fr-container flex flex-col flex-1">
+            <div
+              className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
+            >
+              {authenticated && children}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    )
   );
 };
