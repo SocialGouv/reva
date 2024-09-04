@@ -6,7 +6,7 @@ function visitSettings({
 }: {
   informationsJuridiques: StatutValidationInformationsJuridiquesMaisonMereAap;
 }) {
-  cy.fixture("account/agencies-settings.json").then((settings) => {
+  cy.fixture("account/head-agency-settings.json").then((settings) => {
     settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP =
       informationsJuridiques;
 
@@ -21,7 +21,7 @@ function visitSettings({
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
-      stubQuery(req, "getAgenciesSettingsInfo", settings);
+      stubQuery(req, "getHeadAgencySettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
       stubQuery(
         req,
@@ -40,7 +40,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "A_METTRE_A_JOUR",
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getHeadAgencySettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="to-complete-badge"]',
       ).should("exist");
@@ -50,7 +50,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "EN_ATTENTE_DE_VERIFICATION",
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getHeadAgencySettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="completed-badge"]',
       ).should("exist");
@@ -60,7 +60,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "A_JOUR",
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getHeadAgencySettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="completed-badge"]',
       ).should("exist");
@@ -69,7 +69,7 @@ context("Head agency settings page", () => {
 
   it("should display remote and user account list section and no on-site section", function () {
     visitSettings({ informationsJuridiques: "A_JOUR" });
-    cy.wait("@getAgenciesSettingsInfo");
+    cy.wait("@getHeadAgencySettingsInfo");
     cy.get('[data-test="remote-agency"]').should("exist");
     cy.get('[data-test="on-site-agencies"]').should("exist");
     cy.get('[data-test="on-site-agency"]').should("not.exist");

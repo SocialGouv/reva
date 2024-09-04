@@ -1,9 +1,9 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { useAgenciesSettings } from "@/app/(aap)/agencies-settings-v3/_components/agenciesSettings.hook";
+import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/agencySettings.hook";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
 
 export const AgencySettingsSummary = () => {
-  const { organism } = useAgenciesSettings();
+  const { organism } = useAgencySettings();
 
   return (
     <>

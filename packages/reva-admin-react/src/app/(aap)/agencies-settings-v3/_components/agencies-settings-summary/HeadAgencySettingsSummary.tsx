@@ -1,11 +1,11 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { AgenciesSettingsSectionOnSite } from "@/app/(aap)/agencies-settings-v3/_components/AgenciesSettingsSectionOnSite";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useAgenciesSettings } from "@/app/(aap)/agencies-settings-v3/_components/agenciesSettings.hook";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
+import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/headAgencySettings.hook";
 
 export const HeadAgencySettingsSummary = () => {
-  const { maisonMereAAP, organism } = useAgenciesSettings();
+  const { maisonMereAAP, organism } = useHeadyAgencySettings();
 
   const isGeneralInformationCompleted =
     !!maisonMereAAP &&

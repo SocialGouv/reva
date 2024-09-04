@@ -9,7 +9,7 @@ function visitSettings({
   isOnSite: boolean;
   isVisibleInCandidateSearchResults: boolean;
 }) {
-  cy.fixture("account/agencies-settings.json").then((settings) => {
+  cy.fixture("account/agency-settings.json").then((settings) => {
     settings.data.account_getAccountForConnectedUser.organism.isRemote =
       isRemote;
     settings.data.account_getAccountForConnectedUser.organism.isOnSite =
@@ -28,7 +28,7 @@ function visitSettings({
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
-      stubQuery(req, "getAgenciesSettingsInfo", settings);
+      stubQuery(req, "getAgencySettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/agency-info.json");
       stubQuery(
         req,
@@ -48,7 +48,7 @@ context("Agency settings page", () => {
       isOnSite: false,
       isVisibleInCandidateSearchResults: true,
     });
-    cy.wait("@getAgenciesSettingsInfo");
+    cy.wait("@getAgencySettingsInfo");
     // Make  sure the page is ready before checking non-existence of the general information section
     cy.get('[data-test="remote-agency"]').should("exist");
     cy.get('[data-test="general-information"]').should("not.exist");
@@ -62,7 +62,7 @@ context("Agency settings page", () => {
         isOnSite: false,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getAgencySettingsInfo");
       cy.get('[data-test="remote-agency"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
       cy.get('[data-test="on-site-agency"]').should("not.exist");
@@ -75,7 +75,7 @@ context("Agency settings page", () => {
         isOnSite: false,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getAgencySettingsInfo");
       cy.get('[data-test="remote-agency"] [data-test="visible-badge"]').should(
         "exist",
       );
@@ -87,7 +87,7 @@ context("Agency settings page", () => {
         isOnSite: false,
         isVisibleInCandidateSearchResults: false,
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getAgencySettingsInfo");
       cy.get(
         '[data-test="remote-agency"] [data-test="invisible-badge"]',
       ).should("exist");
@@ -101,7 +101,7 @@ context("Agency settings page", () => {
         isOnSite: true,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgenciesSettingsInfo");
+      cy.wait("@getAgencySettingsInfo");
       cy.get('[data-test="on-site-agency"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
       cy.get('[data-test="remote-agency"]').should("not.exist");
