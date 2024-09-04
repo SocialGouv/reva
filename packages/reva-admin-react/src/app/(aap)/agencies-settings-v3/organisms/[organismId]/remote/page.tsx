@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getRemoteZoneLabel } from "../../../_components/getRemoteZoneLabel";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {
@@ -21,6 +23,21 @@ const getOrganismQuery = graphql(`
         emailContact
       }
       remoteZones
+      managedDegrees {
+        id
+        degree {
+          id
+          label
+        }
+      }
+      domaines {
+        id
+        label
+      }
+      conventionCollectives {
+        id
+        label
+      }
     }
   }
 `);
@@ -36,6 +53,7 @@ export default function RemotePage() {
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
+  console.log("organism", organism);
 
   return (
     <div className="flex flex-col w-full">
@@ -92,7 +110,35 @@ export default function RemotePage() {
           titleIconClass="fr-icon-award-fill"
           isEditable
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/domaines-ccns-degrees`}
-        />
+        >
+          {organism?.domaines?.[0] && (
+            <Accordion label="Filières">
+              <div className="flex flex-wrap gap-2">
+                {organism?.domaines?.map((d) => (
+                  <Tag key={d.id}>{d.label}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+          {organism?.conventionCollectives?.[0] && (
+            <Accordion label="Branches">
+              <div className="flex flex-wrap gap-2">
+                {organism?.conventionCollectives?.map((ccn) => (
+                  <Tag key={ccn.id}>{ccn.label}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+          {organism?.managedDegrees?.[0] && (
+            <Accordion label="Niveaux">
+              <div className="flex flex-wrap gap-2">
+                {organism?.managedDegrees?.map((d) => (
+                  <Tag key={d.id}>{d.degree.label}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+        </EnhancedSectionCard>
         <div className="flex flex-col mt-6">
           <h2>Visibilité de la structure</h2>
           <OrganismVisibilityToggle organismId={organismId} />
