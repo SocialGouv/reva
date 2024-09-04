@@ -11,11 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useOrganismInformationForm } from "./OrganismInformationForm.hook";
 import {
   OrganismInformationFormData,
   organismInformationFormSchema,
 } from "./organismInformationFormSchema";
+import { useOrganismInformationForm } from "./organismInformationForm.hook";
 
 const OrganismInformationForm = ({
   mutationOnSubmit,
