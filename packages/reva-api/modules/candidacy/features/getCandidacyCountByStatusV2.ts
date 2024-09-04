@@ -8,6 +8,7 @@ import { getStatusFromStatusFilter } from "../utils/candidacy.helper";
 export const getCandidacyCountByStatusV2 = async ({
   hasRole,
   IAMId,
+  searchFilter,
 }: {
   hasRole(role: string): boolean;
   IAMId: string;
@@ -27,6 +28,10 @@ export const getCandidacyCountByStatusV2 = async ({
   let whereClause = "where 1=1";
   let fromClause = "from candidacy";
 
+  //candidacy organism as candidacyOrganism
+  fromClause +=
+    " left join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id";
+
   //candidacy active status as activeCandidacyStatus
   fromClause +=
     " join candidacy_candidacy_status activeCandidacyStatus on (candidacy.id = activeCandidacyStatus.candidacy_id and activeCandidacyStatus.is_active = true)";
@@ -41,9 +46,6 @@ export const getCandidacyCountByStatusV2 = async ({
 
   //access rights
   if (!hasRole("admin")) {
-    fromClause +=
-      " join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id";
-
     //gestionnaire maison mère
     if (hasRole("gestion_maison_mere_aap")) {
       fromClause +=
@@ -58,6 +60,74 @@ export const getCandidacyCountByStatusV2 = async ({
         " join account candidacyOrganismAccount on candidacyOrganismAccount.organism_id = candidacyOrganism.id";
       whereClause += ` and candidacyOrganismAccount.keycloak_id = '${IAMId}'`;
     }
+  }
+
+  //search filters
+  if (searchFilter) {
+    const words = searchFilter.split(/\s+/);
+
+    const searchClauses = [];
+
+    //search on organism
+    searchClauses.push(
+      getSearchFilterClause({
+        table: "candidacyOrganism",
+        fields: ["label"],
+        words,
+      }),
+    );
+
+    //search on candidate
+    fromClause += " join candidate on candidacy.candidate_id = candidate.id";
+    searchClauses.push(
+      getSearchFilterClause({
+        table: "candidate",
+        fields: [
+          "lastname",
+          "firstname",
+          "firstname2",
+          "firstname3",
+          "email",
+          "phone",
+        ],
+        words,
+      }),
+    );
+
+    //search on department
+    fromClause +=
+      " left join department on candidacy.department_id = department.id";
+    searchClauses.push(
+      getSearchFilterClause({
+        table: "department",
+        fields: ["label"],
+        words,
+      }),
+    );
+
+    //search on certification
+    fromClause +=
+      " left join certification on candidacy.certification_id = certification.id";
+    searchClauses.push(
+      getSearchFilterClause({
+        table: "certification",
+        fields: ["label"],
+        words,
+      }),
+    );
+
+    //search on certification type (type diplome)
+    fromClause +=
+      " left join type_diplome on certification.type_diplome_id = type_diplome.id";
+    searchClauses.push(
+      getSearchFilterClause({
+        table: "type_diplome",
+        fields: ["label"],
+        words,
+      }),
+    );
+
+    whereClause += ` and (${searchClauses.join(" or ")})`;
   }
 
   const query = `${selectClause} ${fromClause} ${whereClause}`;
@@ -127,3 +197,31 @@ const getSQLSelectSumClauseFromStatusFilter = (
       );
   }
 };
+
+//build a search clause for a table, a collection of fields and a collection of words
+const getSearchFilterClause = ({
+  table,
+  fields,
+  words,
+}: {
+  table: string;
+  fields: string[];
+  words: string[];
+}) =>
+  words
+    .map((word) => getSearchFilterClauseForGivenWord({ table, fields, word }))
+    .join(" or ");
+
+//build a search clause for a table, a collection of fields and a word
+const getSearchFilterClauseForGivenWord = ({
+  table,
+  fields,
+  word,
+}: {
+  table: string;
+  fields: string[];
+  word: string;
+}) =>
+  fields
+    .map((field) => "(" + `${table}.${field} ilike '%${word}%'` + ")")
+    .join(" or ");
