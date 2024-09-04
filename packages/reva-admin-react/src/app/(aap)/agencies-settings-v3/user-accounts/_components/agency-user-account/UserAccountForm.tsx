@@ -1,0 +1,144 @@
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
+import { Select } from "@codegouvfr/react-dsfr/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { z } from "zod";
+
+export const userAccountFormSchema = z.object({
+  firstname: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
+    .default(""),
+  lastname: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
+    .default(""),
+  email: z
+    .string()
+    .email("Le champ doit contenir une adresse email")
+    .default(""),
+
+  modalitesAccompagnement: z.enum(["ONSITE", "REMOTE"], {
+    invalid_type_error: "Merci de remplir ce champ",
+  }),
+  organismId: z.string(),
+});
+
+export type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
+
+export const UserAccountForm = ({
+  defaultValues,
+  agency,
+}: {
+  agency: { id: string; label: string };
+  defaultValues?: UserAccountFormData;
+  emailFieldDisabled?: boolean;
+}) => {
+  const methods = useForm<UserAccountFormData>({
+    resolver: zodResolver(userAccountFormSchema),
+    defaultValues: defaultValues || {
+      modalitesAccompagnement: "REMOTE",
+      organismId: agency.id,
+    },
+  });
+
+  const {
+    register,
+    formState,
+    formState: { errors },
+  } = methods;
+
+  return (
+    <>
+      <p className="mb-10 text-xl">
+        Voici les informations liées à votre compte collaborateur. Si vous
+        souhaitez les modifier, addressez-vous directement à l’administrateur du
+        compte principal.
+      </p>
+      <form className="flex flex-col gap-8">
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <legend>
+            <h2>Informations de connexion</h2>
+          </legend>
+          <Input
+            label="Nom"
+            state={errors.lastname ? "error" : "default"}
+            stateRelatedMessage={errors.lastname?.message?.toString()}
+            nativeInputProps={{
+              ...register("lastname"),
+              autoComplete: "family-name",
+            }}
+            disabled
+          />
+          <Input
+            label="Prénom"
+            state={errors.firstname ? "error" : "default"}
+            stateRelatedMessage={errors.firstname?.message?.toString()}
+            nativeInputProps={{
+              ...register("firstname"),
+              autoComplete: "given-name",
+            }}
+            disabled
+          />
+          <div className="col-span-1">
+            <Input
+              label="Email de connexion"
+              state={errors.email ? "error" : "default"}
+              stateRelatedMessage={errors.email?.message?.toString()}
+              disabled
+              nativeInputProps={{
+                ...register("email"),
+                autoComplete: "email",
+                type: "email",
+                spellCheck: "false",
+              }}
+            />
+          </div>
+        </fieldset>
+        <fieldset className="flex flex-col w-full">
+          <legend>
+            <h2>Modalités d'accompagnement</h2>
+          </legend>
+          <RadioButtons
+            classes={{ content: "grid grid-cols-1 md:grid-cols-2" }}
+            orientation="horizontal"
+            disabled
+            options={[
+              {
+                label: "Accompagnement à distance",
+                nativeInputProps: {
+                  value: "REMOTE",
+                  ...register("modalitesAccompagnement"),
+                },
+              },
+              {
+                label: "Accompagnement en présentiel",
+                nativeInputProps: {
+                  value: "ONSITE",
+                  ...register("modalitesAccompagnement"),
+                },
+              },
+            ]}
+            state={errors.modalitesAccompagnement ? "error" : "default"}
+            stateRelatedMessage={errors.modalitesAccompagnement?.message?.toString()}
+          />
+          <Select
+            disabled
+            label="Choix du lieu d’accueil associé à l’accompagnement en présentiel :"
+            nativeSelectProps={{
+              ...register("organismId"),
+            }}
+          >
+            <option key={agency.id} value={agency.id}>
+              {agency.label}
+            </option>
+          </Select>
+        </fieldset>
+        <FormButtons formState={formState} backUrl={"/agencies-settings-v3"} />
+      </form>
+    </>
+  );
+};

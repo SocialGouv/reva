@@ -1,9 +1,10 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/agencySettings.hook";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 export const AgencySettingsSummary = () => {
-  const { organism } = useAgencySettings();
+  const { organism, account } = useAgencySettings();
 
   return (
     <>
@@ -31,10 +32,26 @@ export const AgencySettingsSummary = () => {
         CustomBadge={<div />}
         status="COMPLETED"
       >
-        <p className="md:w-4/5">
-          Ici les informations de connexion du collaborateur actuellement
-          connecté
-        </p>
+        <div className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b">
+          <span>
+            <i className="fr-icon--sm fr-icon-home-4-fill mr-4" />
+            <span className="font-bold">
+              {account?.firstname} {account?.lastname}
+            </span>{" "}
+            - {account?.email}
+          </span>{" "}
+          <span>
+            <Button
+              priority="tertiary no outline"
+              size="small"
+              linkProps={{
+                href: `/agencies-settings-v3/user-accounts/${account?.id}`,
+              }}
+            >
+              Modifier
+            </Button>
+          </span>
+        </div>
       </EnhancedSectionCard>
     </>
   );

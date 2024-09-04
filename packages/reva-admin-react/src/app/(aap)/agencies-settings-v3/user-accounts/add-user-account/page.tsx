@@ -4,7 +4,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import {
   UserAccountForm,
   UserAccountFormData,
-} from "../_components/UserAccountForm";
+} from "../_components/head-agency-user-account/UserAccountForm";
 import { useAddUserAccountPage } from "./addUserAccount.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";

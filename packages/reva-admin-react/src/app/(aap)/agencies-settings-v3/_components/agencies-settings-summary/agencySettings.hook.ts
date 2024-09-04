@@ -12,13 +12,11 @@ const AgencySettingsInfoQuery = graphql(`
         isRemote
         isVisibleInCandidateSearchResults
         remoteZones
-        accounts {
-          id
-          firstname
-          lastname
-          email
-        }
       }
+      id
+      firstname
+      lastname
+      email
     }
   }
 `);
@@ -32,12 +30,14 @@ export const useAgencySettings = () => {
       queryFn: () => graphqlClient.request(AgencySettingsInfoQuery),
     });
 
+  const account = agencySettingsResponse?.account_getAccountForConnectedUser;
   const organism =
     agencySettingsResponse?.account_getAccountForConnectedUser?.organism;
 
   return {
     agencySettingsResponse,
     agencySettingsStatus,
+    account,
     organism,
   };
 };
