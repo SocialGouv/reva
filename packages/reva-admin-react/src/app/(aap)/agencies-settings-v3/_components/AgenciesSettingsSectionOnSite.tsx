@@ -12,13 +12,15 @@ const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
 };
 
 export const AgenciesSettingsSectionOnSite = ({
-  isGestionnaireMaisonMereAAP,
   organisms = [],
 }: {
-  isGestionnaireMaisonMereAAP?: boolean;
-  organisms: Organism[];
+  organisms?: {
+    id: string;
+    label: string;
+    isVisibleInCandidateSearchResults: boolean;
+    informationsCommerciales?: { nom?: string | null } | null;
+  }[];
 }) => {
-  if (!isGestionnaireMaisonMereAAP) return null;
   const isOnSiteAgencyComplete = !!organisms.length;
 
   return (

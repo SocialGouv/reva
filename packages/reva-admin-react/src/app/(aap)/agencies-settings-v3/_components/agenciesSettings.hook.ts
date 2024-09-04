@@ -29,6 +29,12 @@ const AgenciesSettingsInfoQuery = graphql(`
             isRemote
             isVisibleInCandidateSearchResults
             remoteZones
+            accounts {
+              id
+              email
+              firstname
+              lastname
+            }
           }
         }
       }
