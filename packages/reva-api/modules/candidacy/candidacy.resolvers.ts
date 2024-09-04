@@ -58,6 +58,8 @@ import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOut
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidateById } from "../candidate/features/getCandidateById";
+import { getCandidacyCountByStatusV2 } from "./features/getCandidacyCountByStatusV2";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -132,18 +134,29 @@ const unsafeResolvers = {
         searchFilter,
         searchText,
       }),
-    candidacy_candidacyCountByStatus: (
+    candidacy_candidacyCountByStatus: async (
       _: unknown,
       _params: {
         searchFilter?: string;
       },
       context: GraphqlContext,
-    ) =>
-      getCandidacyCountByStatus({
-        hasRole: context.auth!.hasRole,
-        IAMId: context.auth!.userInfo!.sub,
-        searchFilter: _params.searchFilter,
-      }),
+    ) => {
+      const isV2Active = await isFeatureActiveForUser({
+        userKeycloakId: context.auth.userInfo?.sub,
+        feature: "CANDIDACY_COUNT_BY_STATUS_V2",
+      });
+      return isV2Active
+        ? getCandidacyCountByStatusV2({
+            hasRole: context.auth!.hasRole,
+            IAMId: context.auth!.userInfo!.sub,
+            searchFilter: _params.searchFilter,
+          })
+        : getCandidacyCountByStatus({
+            hasRole: context.auth!.hasRole,
+            IAMId: context.auth!.userInfo!.sub,
+            searchFilter: _params.searchFilter,
+          });
+    },
     candidacy_getCandidacyCcns: async (
       _parent: unknown,
       params: {

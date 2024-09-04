@@ -4,7 +4,7 @@ import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
 import { buildContainsFilterClause } from "../../shared/search/search";
 import { CandidacyStatusFilter } from "../candidacy.types";
 
-const getStatusFromStatusFilter = (statusFilter: string) => {
+export const getStatusFromStatusFilter = (statusFilter: string) => {
   let status: CandidacyStatusStep | null = null;
   switch (statusFilter) {
     case "PARCOURS_CONFIRME_HORS_ABANDON":
