@@ -3,7 +3,6 @@ import { graphql } from "@/graphql/generated";
 import { RemoteZone } from "@/graphql/generated/graphql";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 const getOrganismQuery = graphql(`
   query getOrganismForInformationRemotePage($organismId: ID!) {

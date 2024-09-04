@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const agencyFormSchema = z.object({
+export const organismInformationFormSchema = z.object({
   adresseNumeroEtNomDeRue: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
@@ -38,4 +38,6 @@ export const agencyFormSchema = z.object({
     }),
 });
 
-export type AgencyFormData = z.infer<typeof agencyFormSchema>;
+export type OrganismInformationFormData = z.infer<
+  typeof organismInformationFormSchema
+>;

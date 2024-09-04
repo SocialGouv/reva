@@ -1,13 +1,57 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { Organism } from "@/graphql/generated/graphql";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 
 const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
   return (
-    <Badge severity={isVisible ? "success" : "error"}>
-      {isVisible ? "Visible" : "Invisible"}
-    </Badge>
+    <div className="flex items-center">
+      <Badge severity={isVisible ? "success" : "error"} small>
+        {isVisible ? "Visible" : "Invisible"}
+      </Badge>
+    </div>
+  );
+};
+
+const OrganismRow = ({
+  organism,
+  index,
+}: {
+  organism: {
+    id: string;
+    label: string;
+    isVisibleInCandidateSearchResults: boolean;
+    informationsCommerciales?: {
+      nom?: string | null;
+    } | null;
+  };
+  index: number;
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      className={`flex py-3 w-full justify-between border-b border-b-neutral-200 ${
+        !index && "border-t border-t-neutral-200"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <p className="mb-0 ">
+          {organism.informationsCommerciales?.nom || organism.label}
+        </p>
+        <VisibilityBadge
+          isVisible={!!organism.isVisibleInCandidateSearchResults}
+        />
+      </div>
+
+      <Button
+        priority="tertiary no outline"
+        onClick={() =>
+          router.push(`/agencies-settings-v3/organisms/${organism.id}/on-site`)
+        }
+      >
+        Modifier
+      </Button>
+    </div>
   );
 };
 
@@ -43,25 +87,9 @@ export const AgenciesSettingsSectionOnSite = ({
           candidats.
         </p>
       )}
-      <div className="fr-accordions-group sm:pl-10">
-        {organisms.map((o) => (
-          <Accordion
-            key={o.id}
-            label={
-              <div className="flex items-center gap-2">
-                <span className="min-w-48">
-                  {o.informationsCommerciales?.nom || o.label}
-                </span>
-                <VisibilityBadge
-                  isVisible={o.isVisibleInCandidateSearchResults}
-                />
-              </div>
-            }
-          >
-            <p>
-              {o.isVisibleInCandidateSearchResults ? "Visible" : "Invisible"}
-            </p>
-          </Accordion>
+      <div className="sm:pl-10 flex flex-col">
+        {organisms.map((organism, index) => (
+          <OrganismRow key={organism.id} organism={organism} index={index} />
         ))}
       </div>
     </EnhancedSectionCard>
