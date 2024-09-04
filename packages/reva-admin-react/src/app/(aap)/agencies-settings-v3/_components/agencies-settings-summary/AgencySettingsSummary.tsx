@@ -10,7 +10,7 @@ export const AgencySettingsSummary = () => {
       {organism?.isRemote && (
         <AgencySettingsSummarySectionRemote organism={organism} />
       )}
-      {!organism?.isRemote && (
+      {organism?.isOnSite && (
         <EnhancedSectionCard
           data-test="on-site-agency"
           title="Accompagnement en présentiel"
