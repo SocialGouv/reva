@@ -24,14 +24,15 @@ export const AgencySettingsSummarySectionRemote = ({
       titleIconClass="fr-icon-headphone-fill"
     >
       <div className="pl-10 flex flex-col gap-4">
-        <Badge
-          small
-          severity={
-            organism.isVisibleInCandidateSearchResults ? "success" : "error"
-          }
-        >
-          {organism.isVisibleInCandidateSearchResults ? "Visible" : "Invisible"}
-        </Badge>
+        {organism.isVisibleInCandidateSearchResults ? (
+          <Badge data-test="visible-badge" small severity="success">
+            Visible
+          </Badge>
+        ) : (
+          <Badge data-test="invisible-badge" small severity="error">
+            Invisible
+          </Badge>
+        )}
         <ul className="list-none pl-0 flex flex-col gap-2">
           {organism.remoteZones.map((r) => (
             <li key={r}>{getRemoteZoneLabel(r)}</li>
