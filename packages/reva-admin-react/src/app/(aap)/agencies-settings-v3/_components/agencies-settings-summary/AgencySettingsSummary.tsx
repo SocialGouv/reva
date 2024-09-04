@@ -24,6 +24,7 @@ export const AgencySettingsSummary = () => {
         </EnhancedSectionCard>
       )}
       <EnhancedSectionCard
+        data-test="user-account"
         title="Informations de connexion"
         isEditable={false}
         titleIconClass="fr-icon-team-fill"

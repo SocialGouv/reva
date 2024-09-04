@@ -30,6 +30,7 @@ export const HeadAgencySettingsSummary = () => {
       <AgencySettingsSummarySectionRemote organism={remoteOrganism} />
       <AgenciesSettingsSectionOnSite organisms={maisonMereAAP?.organisms} />
       <EnhancedSectionCard
+        data-test="user-accounts"
         title="Comptes collaborateurs"
         isEditable={isGeneralInformationCompleted}
         disabled={!isGeneralInformationCompleted}

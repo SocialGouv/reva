@@ -35,7 +35,7 @@ function visitSettings({
 }
 
 context("Head agency settings page", () => {
-  context("on the general information block", () => {
+  context("on the general information section", () => {
     it("display a 'to complete badge' when account not verified", function () {
       visitSettings({
         informationsJuridiques: "A_METTRE_A_JOUR",
@@ -67,7 +67,7 @@ context("Head agency settings page", () => {
     });
   });
 
-  it("should display a remote block and no on-site block", function () {
+  it("should display remote and user account list section and no on-site section", function () {
     visitSettings({ informationsJuridiques: "A_JOUR" });
     cy.wait("@getAgenciesSettingsInfo");
     cy.get('[data-test="remote-agency"]').should("exist");
