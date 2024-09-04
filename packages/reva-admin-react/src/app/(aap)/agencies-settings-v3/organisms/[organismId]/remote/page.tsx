@@ -2,14 +2,14 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getRemoteZoneLabel } from "../../../_components/getRemoteZoneLabel";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Tag from "@codegouvfr/react-dsfr/Tag";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {
@@ -53,7 +53,9 @@ export default function RemotePage() {
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
-  const isDomainAndLevelsComplete = organism?.managedDegrees?.[0] && (organism?.domaines?.[0] || organism?.conventionCollectives?.[0]);
+  const isDomainAndLevelsComplete =
+    organism?.managedDegrees?.[0] &&
+    (organism?.domaines?.[0] || organism?.conventionCollectives?.[0]);
 
   return (
     <div className="flex flex-col w-full">
@@ -76,7 +78,7 @@ export default function RemotePage() {
       </p>
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
-          title="Informations affichées au candidat"
+          title="Informations affichées aux candidats"
           titleIconClass="fr-icon-information-fill"
           isEditable
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/information`}
