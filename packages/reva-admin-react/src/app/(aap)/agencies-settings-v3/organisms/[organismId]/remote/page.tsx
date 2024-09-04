@@ -53,7 +53,7 @@ export default function RemotePage() {
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
-  console.log("organism", organism);
+  const isDomainAndLevelsComplete = organism?.managedDegrees?.[0] && (organism?.domaines?.[0] || organism?.conventionCollectives?.[0]);
 
   return (
     <div className="flex flex-col w-full">
@@ -110,6 +110,7 @@ export default function RemotePage() {
           titleIconClass="fr-icon-award-fill"
           isEditable
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/remote/domaines-ccns-degrees`}
+          status={isDomainAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
         >
           {organism?.domaines?.[0] && (
             <Accordion label="Filières">
