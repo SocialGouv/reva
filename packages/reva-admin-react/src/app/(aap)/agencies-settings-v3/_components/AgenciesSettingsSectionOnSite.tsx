@@ -45,9 +45,10 @@ const OrganismRow = ({
 
       <Button
         priority="tertiary no outline"
-        onClick={() =>
-          router.push(`/agencies-settings-v3/organisms/${organism.id}/on-site`)
-        }
+        size="small"
+        linkProps={{
+          href: `/agencies-settings-v3/organisms/${organism.id}/on-site`,
+        }}
       >
         Modifier
       </Button>
