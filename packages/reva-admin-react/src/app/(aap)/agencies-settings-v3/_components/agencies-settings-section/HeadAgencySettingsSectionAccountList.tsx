@@ -1,3 +1,5 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+
 export const HeadAgencySettingsSectionAccountList = ({
   organisms,
 }: {
@@ -18,27 +20,38 @@ export const HeadAgencySettingsSectionAccountList = ({
         <li
           data-test={account.id}
           key={account.id}
-          className="flex gap-x-6 py-3 border-neutral-300 border-t last:border-b"
+          className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
         >
-          {organism.isRemote && (
-            <i
-              data-test="remote-badge"
-              className="fr-icon-headphone-fill fr-icon--sm"
-            ></i>
-          )}
-          {organism.isOnSite && (
-            <i
-              data-test="on-site-badge"
-              className="fr-icon-home-4-fill fr-icon--sm"
-            ></i>
-          )}
-          <div>
-            <span className="font-bold">
-              {account.firstname} {account.lastname}
-            </span>
-            {" - "}
-            {account.email}
+          <div className="flex items-center gap-x-6">
+            {organism.isRemote && (
+              <i
+                data-test="remote-badge"
+                className="fr-icon-headphone-fill fr-icon--sm"
+              ></i>
+            )}
+            {organism.isOnSite && (
+              <i
+                data-test="on-site-badge"
+                className="fr-icon-home-4-fill fr-icon--sm"
+              ></i>
+            )}
+            <div>
+              <span className="font-bold">
+                {account.firstname} {account.lastname}
+              </span>
+              {" - "}
+              {account.email}
+            </div>
           </div>
+          <Button
+            linkProps={{
+              href: `/agencies-settings-v3/user-accounts/${account.id}`,
+            }}
+            priority="tertiary no outline"
+            size="small"
+          >
+            Modifier
+          </Button>
         </li>
       )),
     )}
