@@ -3,15 +3,19 @@ import { AgenciesSettingsSectionOnSite } from "@/app/(aap)/agencies-settings-v3/
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
 import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/headAgencySettings.hook";
+import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/HeadAgencySettingsSectionAccountList";
 
 export const HeadAgencySettingsSummary = () => {
   const { maisonMereAAP, organism } = useHeadyAgencySettings();
 
-  const isGeneralInformationCompleted =
-    !!maisonMereAAP &&
-    ["A_JOUR", "EN_ATTENTE_DE_VERIFICATION"].includes(
-      maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP,
-    );
+  if (!maisonMereAAP) {
+    return null;
+  }
+
+  const isGeneralInformationCompleted = [
+    "A_JOUR",
+    "EN_ATTENTE_DE_VERIFICATION",
+  ].includes(maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP);
 
   const remoteOrganism = organism?.isRemote
     ? organism
@@ -45,11 +49,17 @@ export const HeadAgencySettingsSummary = () => {
           status="TO_COMPLETE"
           customButtonTitle="Ajouter"
         >
-          <p className="md:w-4/5">
-            Vous avez besoin de collaborer à plusieurs sur la plateforme ?
-            Ajoutez des comptes collaborateurs pour que vos collaborateurs
-            puissent avoir accès à leurs candidatures.
-          </p>
+          {maisonMereAAP.organisms.length > 0 ? (
+            <HeadAgencySettingsSectionAccountList
+              organisms={maisonMereAAP.organisms}
+            />
+          ) : (
+            <p className="ml-10 md:w-4/5">
+              Vous avez besoin de collaborer à plusieurs sur la plateforme ?
+              Ajoutez des comptes collaborateurs pour que vos collaborateurs
+              puissent avoir accès à leurs candidatures.
+            </p>
+          )}
           {!isGeneralInformationCompleted && (
             <SmallNotice>
               Vous pourrez ajouter des comptes collaborateurs une fois que vous

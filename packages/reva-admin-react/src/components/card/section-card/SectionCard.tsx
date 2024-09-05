@@ -53,6 +53,7 @@ export const SectionCard = ({
             <div>{!disabled && badge}</div>
             {hasButton && (
               <Button
+                data-test="action-button"
                 onClick={buttonOnClick}
                 priority={buttonPriority}
                 disabled={disabled}

@@ -74,4 +74,26 @@ context("Head agency settings page", () => {
     cy.get('[data-test="on-site-agencies"]').should("exist");
     cy.get('[data-test="on-site-agency"]').should("not.exist");
   });
+
+  context("on the account list section", () => {
+    it("display all accounts with info details", function () {
+      visitSettings({ informationsJuridiques: "A_JOUR" });
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get('[data-test="account-list"] li').should("have.length", 4);
+      cy.get(
+        '[data-test="account-list"] [data-test="account-1"] [data-test="on-site-badge"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="account-list"] [data-test="account-2"] [data-test="remote-badge"]',
+      ).should("exist");
+      cy.get('[data-test="account-list"] [data-test="account-3"]').should(
+        "contain",
+        "Catherine Doe",
+      );
+      cy.get('[data-test="account-list"] [data-test="account-4"]').should(
+        "contain",
+        "bob.doe@example.com",
+      );
+    });
+  });
 });

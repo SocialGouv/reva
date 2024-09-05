@@ -27,6 +27,7 @@ const HeadAgencySettingsInfoQuery = graphql(`
             label
             id
             isRemote
+            isOnSite
             isVisibleInCandidateSearchResults
             remoteZones
             accounts {
