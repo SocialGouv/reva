@@ -1,6 +1,7 @@
 {
   "data": {
     "account_getAccountForConnectedUser": {
+      "id": "account-1",
       "organism": {
         "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
         "isOnSite": false,
@@ -22,8 +23,8 @@
           "organisms": [
             {
               "id": "2be04b85-ed75-41fb-9248-97fc178ba664",
-              "isRemote": false,
-              "isOnSite": true,
+              "isRemote": true,
+              "isOnSite": false,
               "isVisibleInCandidateSearchResults": false,
               "remoteZones": [],
               "accounts": [
@@ -37,8 +38,8 @@
             },
             {
               "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
-              "isRemote": true,
-              "isOnSite": false,
+              "isRemote": false,
+              "isOnSite": true,
               "isVisibleInCandidateSearchResults": false,
               "remoteZones": [
                 "FRANCE_METROPOLITAINE"

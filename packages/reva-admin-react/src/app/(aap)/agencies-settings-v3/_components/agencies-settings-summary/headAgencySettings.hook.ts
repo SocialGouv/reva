@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 const HeadAgencySettingsInfoQuery = graphql(`
   query getHeadAgencySettingsInfo {
     account_getAccountForConnectedUser {
+      id
       organism {
         id
         isOnSite
@@ -53,10 +54,14 @@ export const useHeadyAgencySettings = () => {
   const organism =
     headAgencySettingsResponse?.account_getAccountForConnectedUser?.organism;
 
+  const accountId =
+    headAgencySettingsResponse?.account_getAccountForConnectedUser?.id;
+  
   return {
     headAgencySettingsResponse,
     headAgencySettingsStatus,
     maisonMereAAP,
     organism,
+    accountId,
   };
 };

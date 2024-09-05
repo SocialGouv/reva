@@ -92,15 +92,12 @@ context("Head agency settings page", () => {
       );
     });
 
-    it("display all accounts with info details", function () {
+    it("display all accounts, except the head agency account, with info details", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getHeadAgencySettingsInfo");
-      cy.get('[data-test="user-accounts"] li').should("have.length", 4);
+      cy.get('[data-test="user-accounts"] li').should("have.length", 3);
       cy.get(
-        '[data-test="user-accounts"] [data-test="account-1"] [data-test="on-site-badge"]',
-      ).should("exist");
-      cy.get(
-        '[data-test="user-accounts"] [data-test="account-2"] [data-test="remote-badge"]',
+        '[data-test="user-accounts"] [data-test="account-2"] [data-test="on-site-badge"]',
       ).should("exist");
       cy.get('[data-test="user-accounts"] [data-test="account-3"]').should(
         "contain",

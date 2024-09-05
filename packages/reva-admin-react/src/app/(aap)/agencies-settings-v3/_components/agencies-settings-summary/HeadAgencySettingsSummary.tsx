@@ -6,7 +6,7 @@ import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_compon
 import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/HeadAgencySettingsSectionAccountList";
 
 export const HeadAgencySettingsSummary = () => {
-  const { maisonMereAAP, organism } = useHeadyAgencySettings();
+  const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
 
   if (!maisonMereAAP) {
     return null;
@@ -20,6 +20,8 @@ export const HeadAgencySettingsSummary = () => {
   const remoteOrganism = organism?.isRemote
     ? organism
     : maisonMereAAP?.organisms.find((o) => o.isRemote);
+
+  const hasOtherAccounts = maisonMereAAP.organisms.length > 1;
 
   return (
     <>
@@ -46,11 +48,12 @@ export const HeadAgencySettingsSummary = () => {
           buttonOnClickHref="/agencies-settings-v3/user-accounts/add-user-account"
           titleIconClass="fr-icon-team-fill"
           CustomBadge={<div />}
-          status="COMPLETED"
-          customButtonTitle="Ajouter un compte"
+          status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
+          customButtonTitle={hasOtherAccounts ? "Ajouter un compte" : "Ajouter"}
         >
-          {maisonMereAAP.organisms.length > 0 ? (
+          {hasOtherAccounts ? (
             <HeadAgencySettingsSectionAccountList
+              headAgencyAccountId={accountId}
               organisms={maisonMereAAP.organisms}
             />
           ) : (
