@@ -46,7 +46,7 @@ export const HeadAgencySettingsSummary = () => {
           buttonOnClickHref="/agencies-settings-v3/user-accounts/add-user-account"
           titleIconClass="fr-icon-team-fill"
           CustomBadge={<div />}
-          status="TO_COMPLETE"
+          status="COMPLETED"
           customButtonTitle="Ajouter un compte"
         >
           {maisonMereAAP.organisms.length > 0 ? (
