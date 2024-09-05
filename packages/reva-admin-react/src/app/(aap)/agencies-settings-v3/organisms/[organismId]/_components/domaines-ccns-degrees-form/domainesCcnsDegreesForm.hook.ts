@@ -72,7 +72,7 @@ export const useDomainesCcnsDegreesForm = ({
   const domaines = referentialResponse?.getDomaines || [];
 
   const { data: organismResponse, status: organismStatus } = useQuery({
-    queryKey: [organismId, "organism"],
+    queryKey: [organismId, "organismCcnForm"],
     queryFn: () => graphqlClient.request(organismQuery, { organismId }),
   });
 
