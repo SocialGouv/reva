@@ -8,6 +8,7 @@ const AgencySettingsInfoQuery = graphql(`
     account_getAccountForConnectedUser {
       organism {
         id
+        label
         isOnSite
         isRemote
         isVisibleInCandidateSearchResults

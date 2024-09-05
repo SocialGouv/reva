@@ -14,8 +14,12 @@ const getOrganismQuery = graphql(`
         telephone
         siteInternet
         emailContact
+        adresseNumeroEtNomDeRue
+        conformeNormesAccessbilite
+        adresseInformationsComplementaires
+        adresseCodePostal
+        adresseVille
       }
-      remoteZones
       managedDegrees {
         id
         degree {

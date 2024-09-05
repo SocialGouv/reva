@@ -2,20 +2,29 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
-import { getRemoteZoneLabel } from "../../../_components/getRemoteZoneLabel";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
 
 export default function RemotePage() {
   const { organism, organismId, organismName } = useOnSiteOrganism();
+  
+  if (!organism) return null;
 
   const isDomainAndLevelsComplete =
-    organism?.managedDegrees?.[0] &&
-    (organism?.domaines?.[0] || organism?.conventionCollectives?.[0]);
+    organism.managedDegrees?.[0] &&
+    (organism.domaines?.[0] || organism.conventionCollectives?.[0]);
 
-  if (!organism) return null;
+
+  const isAgencyInformationComplete =
+    organism.informationsCommerciales?.nom &&
+    organism.informationsCommerciales?.adresseNumeroEtNomDeRue &&
+    organism.informationsCommerciales?.adresseVille &&
+    organism.informationsCommerciales?.adresseCodePostal;
+  organism.informationsCommerciales?.telephone &&
+    organism.informationsCommerciales?.emailContact;
 
   return (
     <div className="flex flex-col w-full">
@@ -41,30 +50,49 @@ export default function RemotePage() {
           title="Informations affichées aux candidats"
           titleIconClass="fr-icon-information-fill"
           isEditable
+          status={isAgencyInformationComplete ? "COMPLETED" : "TO_COMPLETE"}
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/on-site/information`}
         >
           <div className="flex flex-col gap-2">
             <div className="font-bold">
-              {organism?.informationsCommerciales?.nom}
+              {organism.informationsCommerciales?.nom}
             </div>
             <div>
-              {organism?.informationsCommerciales?.telephone}{" "}
-              {organism?.informationsCommerciales?.emailContact}
+              {organism.informationsCommerciales?.adresseNumeroEtNomDeRue}{" "}
+              {organism.informationsCommerciales?.adresseCodePostal}{" "}
+              {organism.informationsCommerciales?.adresseVille}
+              <br />
+              {organism.informationsCommerciales
+                ?.adresseInformationsComplementaires && (
+                <>
+                  {
+                    organism.informationsCommerciales
+                      ?.adresseInformationsComplementaires
+                  }{" "}
+                  <br />
+                </>
+              )}
+              {organism.informationsCommerciales?.telephone}{" "}
+              {organism.informationsCommerciales?.emailContact}
             </div>
-            {organism?.informationsCommerciales?.siteInternet && (
+            {organism.informationsCommerciales?.siteInternet && (
               <Link
                 className="fr-link mr-auto"
                 target="_blank"
-                href={organism?.informationsCommerciales?.siteInternet}
+                href={organism.informationsCommerciales?.siteInternet}
               >
                 Site internet
               </Link>
             )}
-            <ul className="list-none pl-0">
-              {organism?.remoteZones.map((r) => (
-                <li key={r}>{getRemoteZoneLabel(r)}</li>
-              ))}
-            </ul>
+            {organism.informationsCommerciales?.conformeNormesAccessbilite && (
+              <Highlight
+                classes={{
+                  content: "mb-0",
+                }}
+              >
+                Accessible PMR
+              </Highlight>
+            )}
           </div>
         </EnhancedSectionCard>
         <EnhancedSectionCard
@@ -74,28 +102,28 @@ export default function RemotePage() {
           buttonOnClickHref={`/agencies-settings-v3/organisms/${organismId}/on-site/domaines-ccns-degrees`}
           status={isDomainAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
         >
-          {organism?.domaines?.[0] && (
+          {organism.domaines?.[0] && (
             <Accordion label="Filières">
               <div className="flex flex-wrap gap-2">
-                {organism?.domaines?.map((d) => (
+                {organism.domaines?.map((d) => (
                   <Tag key={d.id}>{d.label}</Tag>
                 ))}
               </div>
             </Accordion>
           )}
-          {organism?.conventionCollectives?.[0] && (
+          {organism.conventionCollectives?.[0] && (
             <Accordion label="Branches">
               <div className="flex flex-wrap gap-2">
-                {organism?.conventionCollectives?.map((ccn) => (
+                {organism.conventionCollectives?.map((ccn) => (
                   <Tag key={ccn.id}>{ccn.label}</Tag>
                 ))}
               </div>
             </Accordion>
           )}
-          {organism?.managedDegrees?.[0] && (
+          {organism.managedDegrees?.[0] && (
             <Accordion label="Niveaux">
               <div className="flex flex-wrap gap-2">
-                {organism?.managedDegrees?.map((d) => (
+                {organism.managedDegrees?.map((d) => (
                   <Tag key={d.id}>{d.degree.label}</Tag>
                 ))}
               </div>
