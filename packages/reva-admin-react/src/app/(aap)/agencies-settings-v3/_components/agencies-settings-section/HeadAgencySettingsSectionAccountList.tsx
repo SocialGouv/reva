@@ -12,7 +12,7 @@ export const HeadAgencySettingsSectionAccountList = ({
     isOnSite: boolean;
   }[];
 }) => (
-  <ul data-test="account-list" className="ml-6 mb-8">
+  <ul className="ml-6 mb-8">
     {organisms.map((organism) =>
       organism.accounts.map((account) => (
         <li

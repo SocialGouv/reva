@@ -41,13 +41,13 @@ export const HeadAgencySettingsSummary = () => {
         <EnhancedSectionCard
           data-test="user-accounts"
           title="Comptes collaborateurs"
-          isEditable={isGeneralInformationCompleted}
+          isEditable
           disabled={!isGeneralInformationCompleted}
           buttonOnClickHref="/agencies-settings-v3/user-accounts/add-user-account"
           titleIconClass="fr-icon-team-fill"
           CustomBadge={<div />}
           status="TO_COMPLETE"
-          customButtonTitle="Ajouter"
+          customButtonTitle="Ajouter un compte"
         >
           {maisonMereAAP.organisms.length > 0 ? (
             <HeadAgencySettingsSectionAccountList

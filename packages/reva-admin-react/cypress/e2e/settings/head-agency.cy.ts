@@ -76,21 +76,37 @@ context("Head agency settings page", () => {
   });
 
   context("on the account list section", () => {
+    it("the add button should be disabled when the head account is not verified", function () {
+      visitSettings({ informationsJuridiques: "A_METTRE_A_JOUR" });
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
+        "be.disabled",
+      );
+    });
+
+    it("the add button should be enabled when the head account is up to date", function () {
+      visitSettings({ informationsJuridiques: "A_JOUR" });
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
+        "be.enabled",
+      );
+    });
+
     it("display all accounts with info details", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getHeadAgencySettingsInfo");
-      cy.get('[data-test="account-list"] li').should("have.length", 4);
+      cy.get('[data-test="user-accounts"] li').should("have.length", 4);
       cy.get(
-        '[data-test="account-list"] [data-test="account-1"] [data-test="on-site-badge"]',
+        '[data-test="user-accounts"] [data-test="account-1"] [data-test="on-site-badge"]',
       ).should("exist");
       cy.get(
-        '[data-test="account-list"] [data-test="account-2"] [data-test="remote-badge"]',
+        '[data-test="user-accounts"] [data-test="account-2"] [data-test="remote-badge"]',
       ).should("exist");
-      cy.get('[data-test="account-list"] [data-test="account-3"]').should(
+      cy.get('[data-test="user-accounts"] [data-test="account-3"]').should(
         "contain",
         "Catherine Doe",
       );
-      cy.get('[data-test="account-list"] [data-test="account-4"]').should(
+      cy.get('[data-test="user-accounts"] [data-test="account-4"]').should(
         "contain",
         "bob.doe@example.com",
       );
