@@ -71,13 +71,13 @@ export interface CreateAgencyInput {
 
 export interface CreateAgencyInfoInput {
   nom: string;
-  address: string;
+  adresseNumeroEtNomDeRue: string;
   adresseInformationsComplementaires?: string;
-  zip: string;
-  city: string;
-  contactAdministrativeEmail: string;
-  contactAdministrativePhone?: string;
-  website?: string;
+  adresseCodePostal: string;
+  adresseVille: string;
+  emailContact: string;
+  telephone: string;
+  siteInternet?: string;
   conformeNormesAccessibilite: ConformiteNormeAccessibilite;
 }
 

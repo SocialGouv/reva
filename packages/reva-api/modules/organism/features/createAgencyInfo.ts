@@ -45,11 +45,15 @@ export const createAgencyInfo = async ({
       );
     }
     const {
-      contactAdministrativeEmail,
-      contactAdministrativePhone,
       adresseInformationsComplementaires,
-      website,
       nom,
+      adresseNumeroEtNomDeRue,
+      adresseCodePostal,
+      adresseVille,
+      emailContact,
+      telephone,
+      siteInternet,
+      conformeNormesAccessibilite,
     } = params;
     const {
       typologie,
@@ -57,19 +61,18 @@ export const createAgencyInfo = async ({
       statutJuridique,
       raisonSociale,
       siret,
-      siteWeb,
     } = maisonMereAAP;
 
     const llToEarth = await getLLToEarthFromZip({
-      zip: params.zip,
+      zip: adresseCodePostal,
     });
 
     //organism creation
     const newOrganism = await createOrganism({
       label: raisonSociale,
-      contactAdministrativeEmail,
-      contactAdministrativePhone: contactAdministrativePhone ?? "",
-      website: siteWeb ?? "",
+      contactAdministrativeEmail: emailContact,
+      contactAdministrativePhone: telephone ?? "",
+      website: siteInternet ?? "",
       siret,
       legalStatus: statutJuridique,
       isActive: true,
@@ -91,16 +94,16 @@ export const createAgencyInfo = async ({
     await createOrUpdateInformationsCommerciales({
       informationsCommerciales: {
         organismId: newOrganism.id,
-        siteInternet: website ?? "",
-        nom: nom ?? "",
-        adresseCodePostal: params.zip,
-        adresseVille: params.city,
-        adresseNumeroEtNomDeRue: params.address,
+        siteInternet: siteInternet ?? "",
+        nom,
+        adresseCodePostal,
+        adresseVille,
+        adresseNumeroEtNomDeRue,
         adresseInformationsComplementaires:
           adresseInformationsComplementaires ?? "",
-        emailContact: params.contactAdministrativeEmail,
-        telephone: params.contactAdministrativePhone ?? "",
-        conformeNormesAccessbilite: params.conformeNormesAccessibilite,
+        emailContact,
+        telephone,
+        conformeNormesAccessbilite: conformeNormesAccessibilite,
         id: randomUUID(),
       },
     });

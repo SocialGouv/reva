@@ -3,7 +3,6 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
@@ -11,18 +10,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useOrganismInformationForm } from "./organismInformationForm.hook";
 import {
   OrganismInformationFormData,
   organismInformationFormSchema,
 } from "./organismInformationFormSchema";
-import { useOrganismInformationForm } from "./organismInformationForm.hook";
 
 const OrganismInformationForm = ({
   mutationOnSubmit,
   pathRedirection,
   defaultData,
 }: {
-  mutationOnSubmit: (data: any) => Promise<void>;
+  mutationOnSubmit: (data: OrganismInformationFormData) => Promise<void>;
   pathRedirection: string;
   defaultData?: Partial<OrganismInformationFormData>;
 }) => {
@@ -55,22 +54,8 @@ const OrganismInformationForm = ({
   const { errors } = formState;
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    const organismData = {
-      nom: data.nom,
-      address: data.adresseNumeroEtNomDeRue,
-      adresseInformationsComplementaires:
-        data.adresseInformationsComplementaires,
-      zip: data.adresseCodePostal,
-      city: data.adresseVille,
-      contactAdministrativeEmail: data.emailContact,
-      contactAdministrativePhone: data.telephone,
-      website: data.siteInternet,
-      conformeNormesAccessibilite:
-        data.conformeNormesAccessibilite as ConformiteNormeAccessibilite,
-    };
-
     try {
-      await mutationOnSubmit(organismData);
+      await mutationOnSubmit(data);
       successToast("Modifications enregistrées");
       router.push(pathRedirection);
     } catch (e) {

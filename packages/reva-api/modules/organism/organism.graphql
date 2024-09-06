@@ -207,13 +207,13 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
 
 input CreateAgencyInfoInput {
   nom: String!
-  address: String!
+  adresseNumeroEtNomDeRue: String!
   adresseInformationsComplementaires: String
-  zip: String!
-  city: String!
-  contactAdministrativeEmail: String!
-  contactAdministrativePhone: String!
-  website: String
+  adresseCodePostal: String!
+  adresseVille: String!
+  emailContact: String!
+  telephone: String!
+  siteInternet: String
   conformeNormesAccessibilite: ConformiteNormeAccessibilite!
 }
 input CreateAgencyInput {

@@ -16,7 +16,7 @@ export const useAddAgencyPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
-  const createAgencyInfo = useMutation({
+  const { mutateAsync: createAgencyInfo } = useMutation({
     mutationFn: (data: CreateAgencyInfoInput) =>
       graphqlClient.request(createAgencyInfoMutation, {
         data,

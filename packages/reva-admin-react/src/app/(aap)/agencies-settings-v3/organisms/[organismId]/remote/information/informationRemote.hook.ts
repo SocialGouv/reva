@@ -89,7 +89,7 @@ export const useInformationRemotePage = ({
         },
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [organismId, "organisms"] });
+      queryClient.invalidateQueries({ queryKey: [organismId, "organism"] });
     },
   });
 
