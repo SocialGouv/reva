@@ -1,6 +1,6 @@
 import {
   defaultSecurity,
-  isAdminOrCandidacyCompanion,
+  isAdminCandidacyCompanionOrFeasibilityManager,
   isAnyone,
 } from "../shared/security/presets";
 
@@ -10,7 +10,7 @@ export const resolversSecurityMap = {
   "Query.*": isAnyone,
 
   "Query.feasibility_getActiveFeasibilityByCandidacyId":
-    isAdminOrCandidacyCompanion,
+    isAdminCandidacyCompanionOrFeasibilityManager,
 
   "Mutation.*": defaultSecurity,
 };
