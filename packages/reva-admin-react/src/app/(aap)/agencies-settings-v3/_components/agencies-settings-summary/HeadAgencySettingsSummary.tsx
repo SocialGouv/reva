@@ -1,9 +1,10 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { AgenciesSettingsSectionOnSite } from "@/app/(aap)/agencies-settings-v3/_components/AgenciesSettingsSectionOnSite";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
-import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/headAgencySettings.hook";
 import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/HeadAgencySettingsSectionAccountList";
+import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/headAgencySettings.hook";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { Organism } from "@/graphql/generated/graphql";
 
 export const HeadAgencySettingsSummary = () => {
   const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
@@ -16,10 +17,6 @@ export const HeadAgencySettingsSummary = () => {
     "A_JOUR",
     "EN_ATTENTE_DE_VERIFICATION",
   ].includes(maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP);
-
-  const remoteOrganism = organism?.isRemote
-    ? organism
-    : maisonMereAAP?.organisms.find((o) => o.isRemote);
 
   const hasOtherAccounts = maisonMereAAP.organisms.length > 1;
 
@@ -38,7 +35,7 @@ export const HeadAgencySettingsSummary = () => {
           buttonOnClickHref="/agencies-settings-v3/general-information"
           titleIconClass="fr-icon-information-fill"
         />
-        <AgencySettingsSummarySectionRemote organism={remoteOrganism} />
+        <AgencySettingsSummarySectionRemote organism={organism as Organism} />
         <AgenciesSettingsSectionOnSite organisms={maisonMereAAP?.organisms} />
         <EnhancedSectionCard
           data-test="user-accounts"
