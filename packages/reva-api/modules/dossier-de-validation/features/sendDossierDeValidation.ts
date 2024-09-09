@@ -62,10 +62,15 @@ export const sendDossierDeValidation = async ({
     );
   }
 
+  const getFilePath = ({ fileId }: { fileId: string }) =>
+    `candidacies/${candidacyId}/dossier_de_validation/${fileId}`;
+
   const dossierDeValidationFileId = uuidV4();
-  const filePath = `candidacies/${candidacyId}/dossier_de_validation/${dossierDeValidationFileId}`;
+  const dossierDeValidationFilePath = getFilePath({
+    fileId: dossierDeValidationFileId,
+  });
   await uploadFileToS3({
-    filePath,
+    filePath: dossierDeValidationFilePath,
     mimeType: dossierDeValidationFile.mimetype,
     data: dossierDeValidationFile._buf,
   });
@@ -76,7 +81,7 @@ export const sendDossierDeValidation = async ({
   }[] = dossierDeValidationOtherFiles.map((f) => ({ id: uuidV4(), file: f }));
 
   for (const d of dossierDeValidationOtherFilesWithIds) {
-    const filePath = `candidacies/${candidacyId}/dossier_de_validation/${d.id}`;
+    const filePath = getFilePath({ fileId: d.id });
     await uploadFileToS3({
       filePath,
       mimeType: d.file.mimetype,
@@ -89,7 +94,7 @@ export const sendDossierDeValidation = async ({
       id: d.id,
       mimeType: d.file.mimetype,
       name: d.file.filename,
-      path: `${candidacyId}/${d.id}`,
+      path: getFilePath({ fileId: d.id }),
     })),
   });
 
@@ -107,7 +112,7 @@ export const sendDossierDeValidation = async ({
           name: dossierDeValidationFile.filename,
           mimeType: dossierDeValidationFile.mimetype,
           id: dossierDeValidationFileId,
-          path: `${candidacyId}/${dossierDeValidationFileId}`,
+          path: `${dossierDeValidationFilePath}`,
         },
       },
       dossierDeValidationOtherFiles: {
