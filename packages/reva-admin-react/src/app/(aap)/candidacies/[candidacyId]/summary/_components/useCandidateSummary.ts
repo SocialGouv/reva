@@ -8,7 +8,7 @@ const getCandidacyById = graphql(`
       id
       financeModule
       candidacyDropOut {
-        droppedOutAt
+        createdAt
       }
       reorientationReason {
         id

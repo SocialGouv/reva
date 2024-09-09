@@ -75,7 +75,6 @@ type Candidacy {
 type CandidacyDropOut {
   createdAt: Timestamp!
   dropOutReason: DropOutReason!
-  droppedOutAt: Timestamp!
   otherReasonContent: String
   status: CandidacyStatusStep!
 }
@@ -259,7 +258,6 @@ input AppointmentInformationsInput {
 }
 
 input DropOutInput {
-  droppedOutAt: Timestamp!
   dropOutReasonId: UUID!
   otherReasonContent: String
 }

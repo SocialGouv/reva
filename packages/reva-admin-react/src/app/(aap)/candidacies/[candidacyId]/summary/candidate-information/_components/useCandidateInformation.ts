@@ -8,7 +8,7 @@ const getCandidacyById = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       candidacyDropOut {
-        droppedOutAt
+        createdAt
       }
       reorientationReason {
         id

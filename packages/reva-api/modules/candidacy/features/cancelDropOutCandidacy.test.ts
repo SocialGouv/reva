@@ -45,7 +45,6 @@ beforeAll(async () => {
   await prismaClient.candidacyDropOut.create({
     data: {
       candidacyId: droppedoutCandidacy.id,
-      droppedOutAt: new Date(),
       status: "PARCOURS_ENVOYE",
       dropOutReasonId: dropoutReason!.id,
     },

@@ -7,7 +7,6 @@ import { prismaClient } from "../../../prisma/client";
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
-  droppedOutAt: Date;
   otherReasonContent?: string;
 }
 
@@ -76,7 +75,6 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     await prismaClient.candidacyDropOut.create({
       data: {
         candidacyId: params.candidacyId,
-        droppedOutAt: params.droppedOutAt,
         status: candidacyStatus,
         dropOutReasonId: params.dropOutReasonId,
         otherReasonContent: params.otherReasonContent || null,

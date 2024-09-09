@@ -45,7 +45,6 @@ beforeAll(async () => {
   await prismaClient.candidacyDropOut.create({
     data: {
       candidacyId: droppedoutCandidacy.id,
-      droppedOutAt: new Date(),
       status: "PARCOURS_ENVOYE",
       dropOutReasonId: dropoutReason!.id,
     },
@@ -57,7 +56,6 @@ describe("drop out candidacy", () => {
     await expect(async () => {
       await dropOutCandidacy({
         candidacyId: "wr0ng1d",
-        droppedOutAt: new Date(),
         dropOutReasonId: dropoutReason!.id,
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
@@ -66,7 +64,6 @@ describe("drop out candidacy", () => {
     await expect(async () => {
       await dropOutCandidacy({
         candidacyId: droppedoutCandidacy.id,
-        droppedOutAt: new Date(),
         dropOutReasonId: dropoutReason!.id,
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT);
@@ -75,7 +72,6 @@ describe("drop out candidacy", () => {
     await expect(async () => {
       await dropOutCandidacy({
         candidacyId: normalCandidacy.id,
-        droppedOutAt: new Date(),
         dropOutReasonId: "wr0ng1d",
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON);
@@ -84,7 +80,6 @@ describe("drop out candidacy", () => {
   test("should return candidacy with drop out reason", async () => {
     const candidacy = await dropOutCandidacy({
       candidacyId: normalCandidacy.id,
-      droppedOutAt: new Date(),
       dropOutReasonId: dropoutReason!.id,
     });
     const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({

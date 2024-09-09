@@ -13,7 +13,6 @@ const getCandidacyById = graphql(`
         isActive
       }
       candidacyDropOut {
-        droppedOutAt
         dropOutReason {
           label
         }
@@ -39,14 +38,12 @@ const dropoutCandidacyByIdMutation = graphql(`
     $candidacyId: UUID!
     $dropoutReasonId: UUID!
     $otherReasonContent: String
-    $droppedOutAt: Timestamp!
   ) {
     candidacy_dropOut(
       candidacyId: $candidacyId
       dropOut: {
         dropOutReasonId: $dropoutReasonId
         otherReasonContent: $otherReasonContent
-        droppedOutAt: $droppedOutAt
       }
     ) {
       id
@@ -79,22 +76,19 @@ export const useDropout = ({ onSuccess }: { onSuccess?: () => void }) => {
     mutationFn: ({
       dropoutReasonId,
       otherReasonContent,
-      droppedOutAt,
     }: {
       dropoutReasonId: string;
       otherReasonContent?: string;
-      droppedOutAt: number;
     }) =>
       graphqlClient.request(dropoutCandidacyByIdMutation, {
         candidacyId,
         dropoutReasonId,
         otherReasonContent,
-        droppedOutAt,
       }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [candidacyId] });
-        onSuccess?.();
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+      onSuccess?.();
+    },
     onError: (e) => {
       graphqlErrorToast(e);
     },

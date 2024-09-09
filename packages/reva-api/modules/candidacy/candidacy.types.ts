@@ -1,7 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 export interface CandidacyDropOut {
-  droppedOutAt: Date;
   status: CandidacyStatusStep;
   otherReasonContent?: string | null;
 }

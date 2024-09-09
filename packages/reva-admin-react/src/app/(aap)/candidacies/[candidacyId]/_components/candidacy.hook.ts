@@ -19,7 +19,7 @@ export type CandidacyForStatus = {
         id: string;
       }
     | null;
-    candidacyDropOut?: { droppedOutAt: number } | null;
+  candidacyDropOut?: unknown;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
@@ -48,8 +48,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     ) ||
       isAdmin);
 
-  const canBeRestored =
-    isCandidacyArchivedAndNotReoriented && isAdmin;
+  const canBeRestored = isCandidacyArchivedAndNotReoriented && isAdmin;
 
   const canDroput =
     !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented;

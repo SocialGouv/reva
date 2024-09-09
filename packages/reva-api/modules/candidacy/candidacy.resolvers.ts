@@ -457,21 +457,15 @@ const unsafeResolvers = {
         candidacyId: string;
         dropOut: {
           dropOutReasonId: string;
-          droppedOutAt?: number;
           otherReasonContent?: string;
         };
       },
       context: GraphqlContext,
     ) => {
-      const droppedOutAt: Date = payload.dropOut.droppedOutAt
-        ? new Date(payload.dropOut.droppedOutAt)
-        : new Date();
-
       const candidacy = await dropOutCandidacy({
         candidacyId: payload.candidacyId,
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
-        droppedOutAt,
       });
 
       if (candidacy?.candidate?.email) {

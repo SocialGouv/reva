@@ -13,7 +13,6 @@ const getCandidacyById = graphql(`
         isActive
       }
       candidacyDropOut {
-        droppedOutAt
         dropOutReason {
           label
         }

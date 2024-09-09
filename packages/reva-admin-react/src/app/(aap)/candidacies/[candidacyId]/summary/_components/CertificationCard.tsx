@@ -15,7 +15,7 @@ export const CertificationCard = ({
     id: string;
     candidacyStatuses: CandidacyStatusSummary[];
     certification?: { codeRncp: string; label: string } | null;
-    candidacyDropOut?: { droppedOutAt: number } | null;
+    candidacyDropOut?: unknown;
   };
 }) => {
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();

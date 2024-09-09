@@ -21,12 +21,10 @@ const sixMonthsAgoMinusOneMinute = sub(new Date(), { months: 6, minutes: -1 });
 
 export const dropOutSixMonthsAgo = {
   createdAt: sixMonthsAgo,
-  droppedOutAt: sixMonthsAgo,
   status: CandidacyStatusStep.PARCOURS_CONFIRME,
 };
 
 export const dropOutSixMonthsAgoMinusOneMinute = {
   createdAt: sixMonthsAgoMinusOneMinute,
-  droppedOutAt: sixMonthsAgoMinusOneMinute,
   status: CandidacyStatusStep.PARCOURS_CONFIRME,
 };

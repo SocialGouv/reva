@@ -49,7 +49,6 @@ export const DropoutForm = ({
             await dropoutCandidacyById.mutateAsync({
               dropoutReasonId: data.dropOutReasonId,
               otherReasonContent: data.otherReasonContent,
-              droppedOutAt: Date.now(),
             });
             router.push(`/candidacies/${candidacyId}/summary`);
           } catch (error) {
