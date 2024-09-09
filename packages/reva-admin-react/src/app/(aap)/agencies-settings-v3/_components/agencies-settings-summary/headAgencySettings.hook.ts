@@ -16,6 +16,7 @@ const HeadAgencySettingsInfoQuery = graphql(`
         maisonMereAAP {
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
+            isHeadAgency
             informationsCommerciales {
               nom
             }
@@ -56,7 +57,7 @@ export const useHeadyAgencySettings = () => {
 
   const accountId =
     headAgencySettingsResponse?.account_getAccountForConnectedUser?.id;
-  
+
   return {
     headAgencySettingsResponse,
     headAgencySettingsStatus,

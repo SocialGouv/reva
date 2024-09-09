@@ -4,7 +4,29 @@ import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-setti
 import { useHeadyAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/headAgencySettings.hook";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { Organism } from "@/graphql/generated/graphql";
+import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
+
+const getRemoteOrganism = ({
+  organism,
+  maisonMereAAP,
+}: {
+  organism: Organism;
+  maisonMereAAP: MaisonMereAap;
+}) => {
+  let remoteOrganism;
+  // Utiliser l'agence actuelle si elle est configurée pour l'acompagnement à distance
+  if (organism?.isRemote) {
+    remoteOrganism = organism;
+  } else {
+    // Sinon, vérifier parmi toutes les agences s'il y en a une configurée pour l'acompagnement à distance
+    remoteOrganism = maisonMereAAP?.organisms.find((o) => o.isRemote);
+  }
+  if (!remoteOrganism) {
+    // Si aucune agence n'est configurée pour l'acompagnement à distance, utiliser l'agence administratrice
+    remoteOrganism = maisonMereAAP.organisms.find((o) => o.isHeadAgency);
+  }
+  return remoteOrganism;
+};
 
 export const HeadAgencySettingsSummary = () => {
   const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
@@ -17,6 +39,11 @@ export const HeadAgencySettingsSummary = () => {
     "A_JOUR",
     "EN_ATTENTE_DE_VERIFICATION",
   ].includes(maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP);
+
+  const remoteOrganism = getRemoteOrganism({
+    organism: organism as Organism,
+    maisonMereAAP: maisonMereAAP as MaisonMereAap,
+  });
 
   const hasOtherAccounts = maisonMereAAP.organisms.length > 1;
 
@@ -35,7 +62,7 @@ export const HeadAgencySettingsSummary = () => {
           buttonOnClickHref="/agencies-settings-v3/general-information"
           titleIconClass="fr-icon-information-fill"
         />
-        <AgencySettingsSummarySectionRemote organism={organism as Organism} />
+        <AgencySettingsSummarySectionRemote organism={remoteOrganism} />
         <AgenciesSettingsSectionOnSite organisms={maisonMereAAP?.organisms} />
         <EnhancedSectionCard
           data-test="user-accounts"
