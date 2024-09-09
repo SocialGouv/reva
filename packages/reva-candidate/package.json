@@ -10,8 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen --config codegen.ts",
-    "graphql:watch": "graphql-codegen --config codegen.ts --watch",
-    "cypress:open": "npm run graphql:generate && cypress open --e2e --browser electron"
+    "graphql:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.9.21",
@@ -43,7 +42,6 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "autoprefixer": "^10.4.19",
-    "cypress": "^13.13.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "^9.1.0",
