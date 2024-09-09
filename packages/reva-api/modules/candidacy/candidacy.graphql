@@ -76,6 +76,7 @@ type CandidacyDropOut {
   createdAt: Timestamp!
   dropOutReason: DropOutReason!
   otherReasonContent: String
+  proofReceivedByAdmin: Boolean!
   status: CandidacyStatusStep!
 }
 

@@ -62,6 +62,45 @@ afterEach(async () => {
   await prismaClient.candidacyDropOut.deleteMany();
 });
 
+const injectGraphqlFundingRequestCreation = async () =>
+  injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_createFundingRequestUnifvae",
+      returnFields: "{ id }",
+      arguments: {
+        candidacyId: candidacyUnifvae.id,
+        fundingRequest: {
+          ...fundingRequestSample,
+        },
+      },
+      enumFields: ["candidateGender"],
+    },
+  });
+
+const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
+  proofReceivedByAdmin,
+}: {
+  proofReceivedByAdmin: boolean;
+}) =>
+  prismaClient.candidacy.update({
+    where: { id: candidacyUnifvae.id },
+    data: {
+      candidacyDropOut: {
+        create: {
+          ...dropOutSixMonthsAgoMinusOneMinute,
+          dropOutReason: { connect: { label: "Autre" } },
+          proofReceivedByAdmin,
+        },
+      },
+    },
+  });
+
 test("should create fundingRequestUnifvae with matching batch", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -200,40 +239,11 @@ test("should fetch fundingRequestUnifvae", async () => {
 });
 
 test("should fail to create fundingRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
-  const createFundingRequest = async () =>
-    await injectGraphql({
-      fastify: (global as any).fastify,
-      authorization: authorizationHeaderForUser({
-        role: "manage_candidacy",
-        keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
-      }),
-      payload: {
-        requestType: "mutation",
-        endpoint: "candidacy_createFundingRequestUnifvae",
-        returnFields: "{ id }",
-        arguments: {
-          candidacyId: candidacyUnifvae.id,
-          fundingRequest: {
-            ...fundingRequestSample,
-          },
-        },
-        enumFields: ["candidateGender"],
-      },
-    });
-
-  await prismaClient.candidacy.update({
-    where: { id: candidacyUnifvae.id },
-    data: {
-      candidacyDropOut: {
-        create: {
-          ...dropOutSixMonthsAgoMinusOneMinute,
-          dropOutReason: { create: { label: "dummy" } },
-        },
-      },
-    },
+  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+    proofReceivedByAdmin: false,
   });
 
-  const resp = await createFundingRequest();
+  const resp = await injectGraphqlFundingRequestCreation();
 
   expect(resp.statusCode).toBe(200);
   const obj = resp.json();
@@ -251,8 +261,18 @@ test("should fail to create fundingRequestUnifvae when candidacy was drop out le
     },
   });
 
-  const resp2 = await createFundingRequest();
+  const resp2 = await injectGraphqlFundingRequestCreation();
 
   const obj2 = resp2.json();
   expect(obj2).not.toHaveProperty("errors");
+});
+
+test("should allow the creation of fundingRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
+  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+    proofReceivedByAdmin: true,
+  });
+
+  const resp = await injectGraphqlFundingRequestCreation();
+  const obj = resp.json();
+  expect(obj).not.toHaveProperty("errors");
 });
