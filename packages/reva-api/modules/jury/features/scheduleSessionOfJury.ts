@@ -101,10 +101,11 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   }
 
   const convocationFileId = uuidV4();
+  const convocationFilePath = `candidacies/${candidacyId}/jury/${convocationFileId}`;
+
   if (convocationFile) {
-    const filePath = `candidacies/${candidacyId}/jury/${convocationFileId}`;
     await uploadFileToS3({
-      filePath,
+      filePath: convocationFilePath,
       mimeType: convocationFile.mimetype,
       data: convocationFile._buf,
     });
@@ -123,16 +124,17 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       timeSpecified,
       addressOfSession: address,
       informationOfSession: information,
-      convocationFile: convocationFile
-        ? {
-            create: {
-              name: convocationFile.filename,
-              mimeType: convocationFile.mimetype,
-              id: convocationFileId,
-              path: `${candidacyId}/${convocationFileId}`,
-            },
-          }
-        : undefined,
+      convocationFile:
+        convocationFile && convocationFilePath
+          ? {
+              create: {
+                name: convocationFile.filename,
+                mimeType: convocationFile.mimetype,
+                id: convocationFileId,
+                path: convocationFilePath,
+              },
+            }
+          : undefined,
       certificationAuthority: {
         connect: {
           id: candidacy.Feasibility[0].certificationAuthorityId || "",
