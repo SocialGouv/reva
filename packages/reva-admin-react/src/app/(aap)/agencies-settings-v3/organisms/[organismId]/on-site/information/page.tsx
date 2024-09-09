@@ -5,6 +5,7 @@ import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import OrganismInformationForm from "../../../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../../../_components/organismInformationFormSchema";
 import { useOrganismInformationOnSite } from "./organismInformationOnSite.hook";
+import { useMemo } from "react";
 
 const InformationsOnSitePage = () => {
   const {
@@ -35,23 +36,26 @@ const InformationsOnSitePage = () => {
   const organismName =
     organism?.informationsCommerciales?.nom || organism?.label;
 
+  const defaultData = useMemo(
+    () => ({
+      adresseNumeroEtNomDeRue:
+        informationsCommerciales?.adresseNumeroEtNomDeRue ?? "",
+      adresseInformationsComplementaires:
+        informationsCommerciales?.adresseInformationsComplementaires ?? "",
+      adresseCodePostal: informationsCommerciales?.adresseCodePostal ?? "",
+      adresseVille: informationsCommerciales?.adresseVille ?? "",
+      nom: informationsCommerciales?.nom ?? "",
+      telephone: informationsCommerciales?.telephone ?? "",
+      siteInternet: informationsCommerciales?.siteInternet ?? "",
+      emailContact: informationsCommerciales?.emailContact ?? "",
+      conformeNormesAccessibilite:
+        informationsCommerciales?.conformeNormesAccessbilite as any,
+    }),
+    [informationsCommerciales],
+  );
   if (!organism) {
     return null;
   }
-  const defaultData = {
-    adresseNumeroEtNomDeRue:
-      informationsCommerciales?.adresseNumeroEtNomDeRue ?? "",
-    adresseInformationsComplementaires:
-      informationsCommerciales?.adresseInformationsComplementaires ?? "",
-    adresseCodePostal: informationsCommerciales?.adresseCodePostal ?? "",
-    adresseVille: informationsCommerciales?.adresseVille ?? "",
-    nom: informationsCommerciales?.nom ?? "",
-    telephone: informationsCommerciales?.telephone ?? "",
-    siteInternet: informationsCommerciales?.siteInternet ?? "",
-    emailContact: informationsCommerciales?.emailContact ?? "",
-    conformeNormesAccessibilite:
-      informationsCommerciales?.conformeNormesAccessbilite as any,
-  };
 
   return (
     <div className="flex flex-col">
