@@ -1,12 +1,20 @@
 import { stubQuery } from "../../utils/graphql";
 import { sub } from "date-fns";
 
-function visitFunding({ dropOutCreationDate }: { dropOutCreationDate?: Date }) {
+function visitFunding({
+  dropOutCreationDate,
+  proofReceivedByAdmin,
+}: {
+  dropOutCreationDate?: Date;
+  proofReceivedByAdmin?: boolean;
+}) {
   cy.fixture("candidacy/candidacy-drop-out-funding.json").then(
     (candidacyDroppedOut) => {
       if (dropOutCreationDate) {
         candidacyDroppedOut.data.getCandidacyById.candidacyDropOut.createdAt =
           dropOutCreationDate;
+        candidacyDroppedOut.data.getCandidacyById.candidacyDropOut.proofReceivedByAdmin =
+          proofReceivedByAdmin;
       } else {
         delete candidacyDroppedOut.data.getCandidacyById.candidacyDropOut;
       }
@@ -43,13 +51,19 @@ const sixMonthsAgoMinusOneMinute = sub(new Date(), { months: 6, minutes: -1 });
 
 context("Funding form", () => {
   it("display a 'not available' alert when dropped-out less than 6 month ago", function () {
-    visitFunding({ dropOutCreationDate: sixMonthsAgoMinusOneMinute });
+    visitFunding({
+      dropOutCreationDate: sixMonthsAgoMinusOneMinute,
+      proofReceivedByAdmin: false,
+    });
     cy.wait("@getCandidacyByIdFunding");
     cy.get('[data-test="funding-request-not-available"]').should("exist");
   });
 
   it("do not display any alert when dropped-out 6 month ago", function () {
-    visitFunding({ dropOutCreationDate: sixMonthsAgo });
+    visitFunding({
+      dropOutCreationDate: sixMonthsAgo,
+      proofReceivedByAdmin: false,
+    });
     cy.wait("@getCandidacyByIdFunding");
     // Make sure the form is ready before testing non-existence of the alert
     cy.get('[data-test="funding-form"]').should("exist");
@@ -58,6 +72,17 @@ context("Funding form", () => {
 
   it("do not display any alert when has not dropped-out", function () {
     visitFunding({});
+    cy.wait("@getCandidacyByIdFunding");
+    // Make sure the form is ready before testing non-existence of the alert
+    cy.get('[data-test="funding-form"]').should("exist");
+    cy.get('[data-test="funding-request-not-available"]').should("not.exist");
+  });
+
+  it("do not display any alert when dropped-out less than 6 month ago but with proof received by admin", function () {
+    visitFunding({
+      dropOutCreationDate: sixMonthsAgoMinusOneMinute,
+      proofReceivedByAdmin: true,
+    });
     cy.wait("@getCandidacyByIdFunding");
     // Make sure the form is ready before testing non-existence of the alert
     cy.get('[data-test="funding-form"]').should("exist");

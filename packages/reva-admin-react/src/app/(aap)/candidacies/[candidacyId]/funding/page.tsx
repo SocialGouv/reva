@@ -240,6 +240,7 @@ const FundingPage = () => {
       </div>
       {!isReadOnly &&
         candidacy?.candidacyDropOut &&
+        !candidacy.candidacyDropOut.proofReceivedByAdmin &&
         isAfter(
           candidacy?.candidacyDropOut?.createdAt,
           sub(new Date(), { months: 6 }),

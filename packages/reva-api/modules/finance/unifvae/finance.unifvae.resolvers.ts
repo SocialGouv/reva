@@ -89,6 +89,7 @@ const unsafeResolvers = {
 
       if (
         candidacy.candidacyDropOut &&
+        !candidacy.candidacyDropOut.proofReceivedByAdmin &&
         isAfter(
           candidacy.candidacyDropOut.createdAt,
           sub(new Date(), { months: 6 }),

@@ -34,7 +34,8 @@
       ],
       "candidacyDropOut": {
         "createdAt": 1707305319452,
-        "droppedOutAt": 0
+        "droppedOutAt": 0,
+        "proofReceivedByAdmin": false
       },
       "certificateSkills": "RNCP A",
       "otherTraining": "Texte B",
