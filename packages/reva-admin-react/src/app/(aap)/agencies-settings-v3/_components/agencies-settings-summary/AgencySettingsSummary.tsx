@@ -62,17 +62,31 @@ export const AgencySettingsSummary = () => {
           data-test="user-account"
           title="Informations de connexion"
           isEditable={false}
-          titleIconClass="fr-icon-team-fill"
+          titleIconClass="fr-icon-account-fill"
           CustomBadge={<div />}
           status="COMPLETED"
         >
-          <div className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b">
-            <span>
-              <i className="fr-icon--sm fr-icon-home-4-fill mr-4" />
-              <span className="font-bold">
-                {account?.firstname} {account?.lastname}
-              </span>{" "}
-            </span>
+          <div className="flex gap-x-6 items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b">
+            <div className="flex gap-x-6">
+              {organism.isRemote && (
+                <i
+                  data-test="remote-badge"
+                  className="fr-icon-headphone-fill fr-icon--sm"
+                ></i>
+              )}
+              {organism.isOnSite && (
+                <i
+                  data-test="on-site-badge"
+                  className="fr-icon-home-4-fill fr-icon--sm"
+                ></i>
+              )}
+              <span>
+                <span className="font-bold">
+                  {account?.firstname} {account?.lastname}
+                </span>
+                {" - "} {account?.email}
+              </span>
+            </div>
             <span>
               <Button
                 priority="tertiary no outline"
@@ -81,7 +95,7 @@ export const AgencySettingsSummary = () => {
                   href: `/agencies-settings-v3/user-accounts/${account?.id}`,
                 }}
               >
-                Modifier
+                Visualiser
               </Button>
             </span>
           </div>

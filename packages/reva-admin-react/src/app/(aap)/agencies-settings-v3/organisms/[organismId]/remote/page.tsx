@@ -47,7 +47,7 @@ export default function RemotePage() {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getOrganismResponse } = useQuery({
-    queryKey: [organismId, "organism"],
+    queryKey: [organismId, "organismRemote"],
     queryFn: () => graphqlClient.request(getOrganismQuery, { organismId }),
     enabled: !!organismId,
   });
