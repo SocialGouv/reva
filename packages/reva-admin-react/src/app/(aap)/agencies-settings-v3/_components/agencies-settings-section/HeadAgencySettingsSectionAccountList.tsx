@@ -14,6 +14,7 @@ export const HeadAgencySettingsSectionAccountList = ({
     }[];
     isRemote: boolean;
     isOnSite: boolean;
+    isHeadAgency: boolean;
   }[];
 }) => (
   <ul className="ml-6 mb-8">
@@ -27,12 +28,13 @@ export const HeadAgencySettingsSectionAccountList = ({
             className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
           >
             <div className="flex items-center gap-x-6">
-              {organism.isRemote && (
-                <i
-                  data-test="remote-badge"
-                  className="fr-icon-headphone-fill fr-icon--sm"
-                ></i>
-              )}
+              {organism.isRemote ||
+                (organism.isHeadAgency && (
+                  <i
+                    data-test="remote-badge"
+                    className="fr-icon-headphone-fill fr-icon--sm"
+                  ></i>
+                ))}
               {organism.isOnSite && (
                 <i
                   data-test="on-site-badge"
