@@ -40,10 +40,6 @@ export const isAdminCandidacyCompanionOrFeasibilityManager = [
     "manage_certification_authority_local_account",
   ]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
-  whenHasRole(
-    "manage_certification_authority_local_account",
-    isFeasibilityManager,
-  ),
   whenHasRole("manage_feasibility", isFeasibilityManager),
 ];
 
