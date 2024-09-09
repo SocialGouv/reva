@@ -13,19 +13,21 @@ const getRemoteOrganism = ({
   organism: Organism;
   maisonMereAAP: MaisonMereAap;
 }) => {
-  let remoteOrganism;
   // Utiliser l'agence actuelle si elle est configurée pour l'acompagnement à distance
   if (organism?.isRemote) {
-    remoteOrganism = organism;
-  } else {
-    // Sinon, vérifier parmi toutes les agences s'il y en a une configurée pour l'acompagnement à distance
-    remoteOrganism = maisonMereAAP?.organisms.find((o) => o.isRemote);
+    return organism;
   }
-  if (!remoteOrganism) {
-    // Si aucune agence n'est configurée pour l'acompagnement à distance, utiliser l'agence administratrice
-    remoteOrganism = maisonMereAAP.organisms.find((o) => o.isHeadAgency);
+
+  // Sinon, vérifier parmi toutes les agences s'il y en a une configurée pour l'acompagnement à distance
+  const maisonMereAAPRemoteOrganism = maisonMereAAP?.organisms.find(
+    (o) => o.isRemote,
+  );
+  if (maisonMereAAPRemoteOrganism) {
+    return maisonMereAAPRemoteOrganism;
   }
-  return remoteOrganism;
+
+  // Si aucune agence n'est configurée pour l'acompagnement à distance, utiliser l'agence administratrice
+  return maisonMereAAP.organisms.find((o) => o.isHeadAgency);
 };
 
 export const HeadAgencySettingsSummary = () => {
