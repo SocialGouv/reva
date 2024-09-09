@@ -33,12 +33,7 @@ export const isAdminOrCertificationAuthority = [
 ];
 
 export const isAdminCandidacyCompanionOrFeasibilityManager = [
-  hasRole([
-    "admin",
-    "manage_candidacy",
-    "manage_feasibility",
-    "manage_certification_authority_local_account",
-  ]),
+  hasRole(["admin", "manage_candidacy", "manage_feasibility"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
   whenHasRole("manage_feasibility", isFeasibilityManager),
 ];
