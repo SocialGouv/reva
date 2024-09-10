@@ -146,7 +146,7 @@ type FCCertification {
   ID_FICHE: ID!
   NUMERO_FICHE: String!
   INTITULE: String!
-  ABREGE: FCAbrege!
+  ABREGE: FCAbrege
   NOMENCLATURE_EUROPE: FCNomenclatureEurope!
   DATE_FIN_ENREGISTREMENT: Timestamp!
   DATE_LIMITE_DELIVRANCE: Timestamp

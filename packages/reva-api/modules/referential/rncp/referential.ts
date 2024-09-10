@@ -40,7 +40,7 @@ export type RNCPCertification = {
   ID_FICHE: string;
   NUMERO_FICHE: string;
   INTITULE: string;
-  ABREGE: {
+  ABREGE?: {
     CODE: string;
     LIBELLE: string;
   };
@@ -241,10 +241,12 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
       ID_FICHE: data.ID_FICHE,
       NUMERO_FICHE: data.NUMERO_FICHE,
       INTITULE: data.INTITULE,
-      ABREGE: {
-        CODE: data.ABREGE.CODE,
-        LIBELLE: data.ABREGE.LIBELLE,
-      },
+      ABREGE: data.ABREGE
+        ? {
+            CODE: data.ABREGE.CODE,
+            LIBELLE: data.ABREGE.LIBELLE,
+          }
+        : undefined,
       NOMENCLATURE_EUROPE: {
         NIVEAU: data.NOMENCLATURE_EUROPE.NIVEAU,
         INTITULE: data.NOMENCLATURE_EUROPE.INTITULE,

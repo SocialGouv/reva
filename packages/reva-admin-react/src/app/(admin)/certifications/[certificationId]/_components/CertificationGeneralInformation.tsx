@@ -39,7 +39,9 @@ export const CertificationGeneralInformation = ({
           {fcCertification.NOMENCLATURE_EUROPE.INTITULE}
         </Info>
         <Info title="Type de la certification">
-          {fcCertification.ABREGE.LIBELLE} ({fcCertification.ABREGE.CODE})
+          {fcCertification.ABREGE
+            ? `${fcCertification.ABREGE.LIBELLE} (${fcCertification.ABREGE.CODE})`
+            : "Inconnue"}
         </Info>
         <Info title="Date fin enregistrement">
           {format(fcCertification.DATE_FIN_ENREGISTREMENT, "dd/MM/yyyy")}

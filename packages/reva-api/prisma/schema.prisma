@@ -64,6 +64,14 @@ model Certification {
   certificationAuthorityStructureId                 String?                                             @map("certification_authority_structure_id") @db.Uuid
   Candidacy                                         Candidacy[]
 
+  rncpLabel            String?   @map("rncp_label") @db.VarChar(255)
+  rncpLevel            Int?      @map("rncp_level")
+  rncpTypeDiplome      String?   @map("rncp_type_diplome") @db.VarChar(255)
+  rncpExpiresAt        DateTime? @map("rncp_expires_at") @db.Timestamptz(6)
+  rncpDeliveryDeadline DateTime? @map("rncp_delivery_deadline") @db.Timestamptz(6)
+
+  certificationOnFormacode CertificationOnFormacode[]
+
   @@index([typeDiplomeId])
   @@map("certification")
 }
@@ -1611,5 +1619,20 @@ model Formacode {
   parent     Formacode?  @relation("children", fields: [parentCode], references: [code], onDelete: NoAction, onUpdate: NoAction)
   children   Formacode[] @relation("children")
 
+  certificationOnFormacode CertificationOnFormacode[]
+
   @@map("formacode")
+}
+
+model CertificationOnFormacode {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  formacode       Formacode     @relation(fields: [formacodeId], references: [id], onDelete: Cascade)
+  formacodeId     String        @map("formacode_id") @db.Uuid
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  certificationId String        @map("certification_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([formacodeId, certificationId])
+  @@map("certification_on_formacode")
 }
