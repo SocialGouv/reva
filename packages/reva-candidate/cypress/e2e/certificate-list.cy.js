@@ -4,9 +4,13 @@ context("Certificate list", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
-      stubQuery(req, "Certifications", "certifications.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubMutation(
+        req,
+        "candidate_getCandidateWithCandidacy",
+        "candidate1.json",
+      );
+      stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubMutation(
         req,
@@ -17,14 +21,18 @@ context("Certificate list", () => {
 
     cy.login();
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
   });
 
   it("should show only 2 certifications", function () {
-    cy.get('[data-test="project-home-select-certification"]').click();
-    cy.get("[name='select_department']").select("2");
-    cy.wait("@Certifications");
+    cy.get('[data-test="project-home-set-certification"]').click();
+    cy.wait("@getDepartments");
+    cy.get("[data-test='certificates-select-department']")
+      .children("select")
+      .select("Région 2");
+
+    cy.wait("@searchCertificationsForCandidate");
 
     cy.get('[data-test="results"]').children("li").should("have.length", 2);
 

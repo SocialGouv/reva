@@ -165,18 +165,21 @@ export default function SetCertification() {
               {searchCertificationsForCandidate.isLoading ||
               searchCertificationsForCandidate.isFetching
                 ? [1, 2, 3, 4, 5].map((i) => (
-                    <CardSkeleton key={`skeleton-${i}`} />
+                    <li key={`skeleton-${i}`}>
+                      <CardSkeleton />
+                    </li>
                   ))
                 : rows?.map((certification) => (
-                    <Card
-                      key={certification.id}
-                      id={certification.id}
-                      title={certification.label}
-                      codeRncp={certification.codeRncp}
-                      onClick={() => {
-                        setSelectedCertificationId(certification.id);
-                      }}
-                    />
+                    <li key={certification.id}>
+                      <Card
+                        id={certification.id}
+                        title={certification.label}
+                        codeRncp={certification.codeRncp}
+                        onClick={() => {
+                          setSelectedCertificationId(certification.id);
+                        }}
+                      />
+                    </li>
                   ))}
             </Results>
 
