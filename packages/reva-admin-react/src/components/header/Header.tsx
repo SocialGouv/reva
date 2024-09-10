@@ -95,6 +95,42 @@ export const Header = () => {
                   "/certification-authorities",
                 ),
               },
+              {
+                text: "Annuaires",
+                isActive: [
+                  "/accounts/organisms",
+                  "/certification-authority-structures",
+                  "/subscriptions",
+                ].some((path) => currentPathname.startsWith(path)),
+                menuLinks: [
+                  {
+                    text: "AAP",
+                    linkProps: {
+                      href: "/accounts/organisms",
+                      target: "_self",
+                    },
+                    isActive: currentPathname.startsWith("/accounts"),
+                  },
+                  {
+                    text: "Certificateurs",
+                    linkProps: {
+                      href: "/certification-authority-structures",
+                      target: "_self",
+                    },
+                    isActive: currentPathname.startsWith(
+                      "/certification-authority-structures",
+                    ),
+                  },
+                  {
+                    text: "Inscriptions",
+                    linkProps: {
+                      href: "/subscriptions/pending",
+                      target: "_self",
+                    },
+                    isActive: currentPathname.startsWith("/subscriptions"),
+                  },
+                ],
+              },
             ]
           : []),
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
