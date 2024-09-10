@@ -18,6 +18,13 @@ function auth({ url, token }: { url: string; token: string }) {
     fixture: token,
   });
 
+  cy.intercept("GET", "**/realms/reva/protocol/openid-connect/auth**", {
+    statusCode: 302,
+    headers: {
+      location: `${Cypress.config("baseUrl")}/silent-check-sso.html#error=login_required`,
+    },
+  });
+
   cy.visit(url, {
     onBeforeLoad(win) {
       // We store a dummy but valid state in localStorage
