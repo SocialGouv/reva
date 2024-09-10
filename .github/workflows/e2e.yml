@@ -14,6 +14,9 @@ env:
   NEXT_PUBLIC_KEYCLOAK_REALM: reva
   NEXT_PUBLIC_KEYCLOAK_URL: https://auth.reva.incubateur.net/
   NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: reva-admin
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_CLIENT_ID: reva-app
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_REALM: reva-app
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_URL: https://auth.reva.incubateur.net
 
 jobs:
   cypress-run-reva-website:
