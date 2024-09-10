@@ -677,6 +677,46 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiArticleAapArticleAap extends Schema.CollectionType {
+  collectionName: "article_aaps";
+  info: {
+    singularName: "article-aap";
+    pluralName: "article-aaps";
+    displayName: "Article AAP";
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    titre: Attribute.String;
+    slug: Attribute.String;
+    contenu: Attribute.Blocks;
+    richcontent: Attribute.RichText &
+      Attribute.CustomField<
+        "plugin::ckeditor.CKEditor",
+        {
+          output: "HTML";
+          preset: "rich";
+        }
+      >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      "api::article-aap.article-aap",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      "api::article-aap.article-aap",
+      "oneToOne",
+      "admin::user"
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
   collectionName: "article_d_aides";
   info: {
@@ -832,9 +872,9 @@ export interface ApiDepartementDepartement extends Schema.CollectionType {
   attributes: {
     nom: Attribute.String & Attribute.Required;
     code: Attribute.String & Attribute.Required;
-    prc: Attribute.Relation<
+    prcs: Attribute.Relation<
       "api::departement.departement",
-      "oneToOne",
+      "oneToMany",
       "api::prc.prc"
     >;
     createdAt: Attribute.DateTime;
@@ -875,7 +915,7 @@ export interface ApiPrcPrc extends Schema.CollectionType {
     mandataire: Attribute.String;
     departement: Attribute.Relation<
       "api::prc.prc",
-      "oneToOne",
+      "manyToOne",
       "api::departement.departement"
     >;
     createdAt: Attribute.DateTime;
@@ -1123,6 +1163,7 @@ declare module "@strapi/types" {
       "plugin::users-permissions.permission": PluginUsersPermissionsPermission;
       "plugin::users-permissions.role": PluginUsersPermissionsRole;
       "plugin::users-permissions.user": PluginUsersPermissionsUser;
+      "api::article-aap.article-aap": ApiArticleAapArticleAap;
       "api::article-d-aide.article-d-aide": ApiArticleDAideArticleDAide;
       "api::article-faq.article-faq": ApiArticleFaqArticleFaq;
       "api::article-region.article-region": ApiArticleRegionArticleRegion;

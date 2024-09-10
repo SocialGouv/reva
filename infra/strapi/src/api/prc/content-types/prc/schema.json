@@ -35,9 +35,9 @@
     },
     "departement": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::departement.departement",
-      "inversedBy": "prc"
+      "inversedBy": "prcs"
     }
   }
 }

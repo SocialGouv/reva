@@ -21,11 +21,11 @@
       "required": true,
       "regex": "^\\d{2,3}|\\d+[A-B]+$"
     },
-    "prc": {
+    "prcs": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::prc.prc",
-      "inversedBy": "departement"
+      "mappedBy": "departement"
     }
   }
 }
