@@ -43,6 +43,7 @@ export const AuthGuard = (props: Props) => {
           resetKeycloakInstance(response.candidate_login.tokens);
         }
       } catch (error) {
+        console.error(error);
         router.push("/login");
       }
     },
