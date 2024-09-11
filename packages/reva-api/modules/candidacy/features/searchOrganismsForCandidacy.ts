@@ -84,7 +84,12 @@ const getRandomActiveOrganismForCertification = async ({
   let whereClause = `where ao.certification_id=uuid('${certificationId}') and (o.is_remote or o.is_onsite)`;
 
   if (searchText) {
-    whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
+    const words = searchText.split(/\s+/);
+    const conditions = words.map(
+      (word) =>
+        `(unaccent(o.label) ilike unaccent($$%${word}%$$) or unaccent(oic.nom) ilike unaccent($$%${word}%$$))`,
+    );
+    whereClause += ` and (${conditions.join(" and ")})`;
   }
 
   if (searchFilter.distanceStatus === "REMOTE") {
