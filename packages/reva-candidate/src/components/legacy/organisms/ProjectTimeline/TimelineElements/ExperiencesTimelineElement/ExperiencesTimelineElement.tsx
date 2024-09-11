@@ -52,6 +52,7 @@ export const ExperiencesTimelineElement = () => {
             <Button
               data-test="timeline-add-experience"
               priority="secondary"
+              disabled={status === "disabled"}
               onClick={() => {
                 router.push("/experiences/add");
               }}
