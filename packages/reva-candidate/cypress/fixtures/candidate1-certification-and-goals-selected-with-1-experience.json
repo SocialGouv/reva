@@ -17,7 +17,15 @@
           "codeRncp": "34691",
           "status": "AVAILABLE"
         },
-        "experiences": [],
+        "experiences": [
+          {
+            "id": "e1",
+            "title": "Experience 1",
+            "startedAt": 1580428800000,
+            "duration": "betweenOneAndThreeYears",
+            "description": "description 1"
+          }
+        ],
         "goals": [
           {
             "id": "goal1"
