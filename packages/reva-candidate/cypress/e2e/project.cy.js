@@ -3,14 +3,13 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Project", () => {
   it("attempt to validate project", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-home-validate"]').should("be.disabled");
@@ -18,16 +17,14 @@ context("Project", () => {
 
   it("confirm registration", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate2.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate2.json");
       stubQuery(req, "submit_candidacy", "submitted-candidacy.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
-    cy.get('[data-test="project-home-loading"]');
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.wait(500);
