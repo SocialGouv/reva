@@ -17,7 +17,6 @@ context("Candidate account", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
-      stubQuery(req, "getDepartments", "departments.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "update_contact", "contact.json");
     });
