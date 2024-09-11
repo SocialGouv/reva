@@ -52,6 +52,7 @@ context("Certificates", () => {
     cy.get('[data-test="submit-certification-button"]').click();
 
     cy.wait("@candidacy_certification_updateCertification");
+    cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="project-home-ready"]');
     cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
