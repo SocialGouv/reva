@@ -209,8 +209,11 @@ const getSearchFilterClause = ({
   words: string[];
 }) =>
   words
-    .map((word) => getSearchFilterClauseForGivenWord({ table, fields, word }))
-    .join(" or ");
+    .map(
+      (word) =>
+        `( ${getSearchFilterClauseForGivenWord({ table, fields, word })} )`,
+    )
+    .join(" and ");
 
 //build a search clause for a table, a collection of fields and a word
 const getSearchFilterClauseForGivenWord = ({
