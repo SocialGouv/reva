@@ -4,13 +4,15 @@ context("Certificates", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate1.json");
+      stubQuery(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "Certifications", "certifications.json");
+      stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
       stubMutation(
         req,
-        "candidacy_updateCertification",
+        "candidacy_certification_updateCertification",
         "updated-candidacy1.json",
       );
     });
@@ -18,12 +20,14 @@ context("Certificates", () => {
     cy.login();
 
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
-    cy.get('[data-test="project-home-select-certification"]').click();
-    cy.get("[name='select_department']").select("2");
-    cy.wait("@Certifications");
+    cy.get('[data-test="project-home-set-certification"]').click();
+    cy.get("[data-test='certificates-select-department']")
+      .children("select")
+      .select("Région 2");
+    cy.wait("@searchCertificationsForCandidate");
   });
 
   it("display information about the selected certificate", function () {
@@ -39,8 +43,16 @@ context("Certificates", () => {
 
   it("select department and submit certificate via summary", function () {
     cy.get('[data-test="certification-select-c2"]').click();
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacy",
+        "candidate1-certification-titre-2-selected.json",
+      );
+    });
     cy.get('[data-test="submit-certification-button"]').click();
-    cy.wait("@candidacy_updateCertification");
+
+    cy.wait("@candidacy_certification_updateCertification");
 
     cy.get('[data-test="project-home-ready"]');
     cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
