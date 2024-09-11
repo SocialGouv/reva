@@ -155,8 +155,10 @@ const ListePrcPage = ({
 };
 
 export async function getServerSideProps() {
-  const prcsResponse = await getPRCs();
-  const articleResponse = await getArticleDAide("liste-prc", false);
+  const [prcsResponse, articleResponse] = await Promise.all([
+    getPRCs(),
+    getArticleDAide("liste-prc", false),
+  ]);
   return { props: { prcsResponse, articleResponse } };
 }
 
