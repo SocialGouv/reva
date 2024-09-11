@@ -74,6 +74,7 @@ export const OrganismTimelineElement = () => {
             <Button
               data-test="project-home-edit-organism"
               priority="secondary"
+              disabled={status === "disabled"}
               onClick={() => {
                 router.push("/set-organism");
               }}
