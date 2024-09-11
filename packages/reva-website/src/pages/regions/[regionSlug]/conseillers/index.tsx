@@ -6,6 +6,7 @@ import { Table } from "@codegouvfr/react-dsfr/Table";
 import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
+import { ReactNode, useMemo } from "react";
 
 const getRegionsBySlugQuery = graphql(`
   query getRegionsBySlugQueryForRegionAdvisorsPage(
@@ -17,6 +18,30 @@ const getRegionsBySlugQuery = graphql(`
           nom
           slug
           prcs
+          departements(sort: "code", pagination:  {
+             limit: 200
+          }) {
+            data {
+              attributes {
+                nom
+                code
+                prcs(pagination:  {
+                   limit: 200
+                }) {
+                  data {
+                    id
+                    attributes {
+                      nom
+                      adresse
+                      email
+                      telephone
+                      mandataire
+                    }
+                  }
+                }
+              }
+            }
+          }
           vignette {
             data {
               attributes {
@@ -36,6 +61,17 @@ const RegionAdvisorsPage = ({
   getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionAdvisorsPageQuery;
 }) => {
   const region = getRegionsBySlugResponse?.regions?.data[0];
+  const prcs = useMemo(() => region?.attributes?.departements?.data
+    ?.map((d) =>
+      d.attributes?.prcs?.data?.map((p) => [
+        `${d.attributes?.nom} (${d.attributes?.code})`,
+        p.attributes?.nom,
+        p.attributes?.adresse,
+        p.attributes?.telephone,
+        p.attributes?.email,
+      ]),
+    )
+    ?.flat(), [region]);
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
@@ -56,15 +92,7 @@ const RegionAdvisorsPage = ({
       </p>
       <Table
         fixed
-        data={region.attributes?.prcs.map(
-          (p: {
-            departement: string;
-            nom: string;
-            adresse: string;
-            telephone: string;
-            email: string;
-          }) => [p.departement, p.nom, p.adresse, p.telephone, p.email],
-        )}
+        data={prcs as ReactNode[][]}
         headers={[
           "Département",
           "Nom du point relais",
