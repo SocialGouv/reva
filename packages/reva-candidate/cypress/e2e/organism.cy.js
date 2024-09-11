@@ -3,14 +3,13 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Empty candidacy", () => {
   it("prevent organism selection", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-home-edit-organism').should("be.disabled");
@@ -27,15 +26,14 @@ context("Candidacy with department certification selected", () => {
     });
 
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate3.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
       stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-home-edit-organism').click();
@@ -78,9 +76,8 @@ context("Candidacy with department certification selected", () => {
 
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate3.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
       stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -96,13 +93,24 @@ context("Candidacy with department certification selected", () => {
     );
 
     cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-home-edit-organism').click();
     cy.wait("@getRandomOrganismsForCandidacy");
 
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacy",
+        "candidate3-organism-selected.json",
+      );
+    });
+
     cy.get('[data-test="project-organisms-submit-organism-o1').click();
+
     cy.wait("@candidacy_selectOrganism");
+    cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="project-home-organism-label"]').should(
       "have.text",

@@ -7,7 +7,12 @@
       "phone": "06-01-02-03-04",
       "candidacy": {
         "id": "c3",
-        "organism": null,
+        "organism": {
+          "id": "o1",
+          "label": "Architecte 1",
+          "contactAdministrativeEmail": "email@exemple.com",
+          "contactAdministrativePhone": "0111111111"
+        },
         "createdAt": 1664376421912,
         "certification": {
           "id": "c1",
