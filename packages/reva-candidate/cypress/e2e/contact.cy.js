@@ -15,15 +15,15 @@ const phone2 = "06 01 02 03 05";
 context("Candidate account", () => {
   it("update all account information", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "getDepartments", "departments.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "update_contact", "contact.json");
     });
     cy.login();
     cy.wait("@candidate_login");
-    cy.wait("@getReferential");
+    cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="project-home-update-contact"]').click();
 
@@ -37,10 +37,16 @@ context("Candidate account", () => {
     cy.get("[name=phone]").type(`{selectAll}${phone2}`);
     cy.get("[name=email]").type(`{selectAll}${email2}`);
 
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacy",
+        "candidate1-updated-contact-info.json",
+      );
+    });
+
     cy.get('[data-test="project-contact-save"]').click();
-    cy.get(
-      '[title="Fermer"][aria-controls="project-home-modal-email"]',
-    ).click();
+    cy.get('[title="Fermer"][aria-controls="project-update-email"]').click();
     cy.wait("@update_contact");
 
     cy.get('[data-test="project-home-fullname"]').contains(
