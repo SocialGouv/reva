@@ -6,7 +6,6 @@ context("Certificates", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "Certifications", "certifications.json");
       stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
