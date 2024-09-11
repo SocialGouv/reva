@@ -877,6 +877,11 @@ export interface ApiDepartementDepartement extends Schema.CollectionType {
       "oneToMany",
       "api::prc.prc"
     >;
+    region: Attribute.Relation<
+      "api::departement.departement",
+      "manyToOne",
+      "api::region.region"
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -950,6 +955,11 @@ export interface ApiRegionRegion extends Schema.CollectionType {
       "api::region.region",
       "manyToMany",
       "api::article-region.article-region"
+    >;
+    departements: Attribute.Relation<
+      "api::region.region",
+      "oneToMany",
+      "api::departement.departement"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

@@ -26,6 +26,12 @@
       "relation": "oneToMany",
       "target": "api::prc.prc",
       "mappedBy": "departement"
+    },
+    "region": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::region.region",
+      "inversedBy": "departements"
     }
   }
 }
