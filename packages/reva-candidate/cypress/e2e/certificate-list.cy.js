@@ -1,10 +1,10 @@
-import { stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Certificate list", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
-      stubQuery(req, "candidate_login", "candidate_login.json");
+      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
