@@ -73,9 +73,7 @@ export const getWhereClauseFromStatusFilter = (
         whereClause = {
           ...whereClause,
           candidacyDropOut: null,
-          candidacyStatuses: {
-            some: { AND: { isActive: true, status } },
-          },
+          status,
         };
       }
       break;
@@ -111,18 +109,14 @@ export const getWhereClauseFromStatusFilter = (
         ...whereClause,
         candidacyDropOut: null,
         reorientationReasonId: null,
-        candidacyStatuses: {
-          some: { AND: { isActive: true, status: "ARCHIVE" } },
-        },
+        status: "ARCHIVE",
       };
       break;
     case "REORIENTEE":
       whereClause = {
         ...whereClause,
         NOT: { reorientationReasonId: null },
-        candidacyStatuses: {
-          some: { AND: { isActive: true, status: "ARCHIVE" } },
-        },
+        status: "ARCHIVE",
       };
       break;
     case "JURY_HORS_ABANDON": {
