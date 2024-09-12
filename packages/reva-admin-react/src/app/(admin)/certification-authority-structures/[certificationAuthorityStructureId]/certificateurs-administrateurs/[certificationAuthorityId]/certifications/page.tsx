@@ -40,32 +40,28 @@ const CertificationAuthorityCertificationsPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      {certificationAuthority && (
-        <div className="flex flex-col">
-          <CertificationAuthorityStructureBreadcrumb
-            certificationAuthorityStructureId={
-              certificationAuthorityStructureId
-            }
-            certificationAuthorityStructureLabel={
-              certificationAuthority.certificationAuthorityStructure.label
-            }
-            certificationAuthorityId={certificationAuthorityId}
-            certificationAuthoritylabel={certificationAuthority.label}
-            pageLabel="Certifications gérées"
-          />
-          <h1>Certifications gérées</h1>
-          <p className="text-xl">
-            Cochez les certifications proposées par la structure certificatrice.
-            Vous pouvez choisir une ou plusieurs certifications.
-          </p>
-          <CertificationsForm
-            handleFormSubmit={handleFormSubmit}
-            certifications={certifications}
-            fullWidth
-            backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
-          />
-        </div>
-      )}
+      <div className="flex flex-col">
+        <CertificationAuthorityStructureBreadcrumb
+          certificationAuthorityStructureId={certificationAuthorityStructureId}
+          certificationAuthorityStructureLabel={
+            certificationAuthority.certificationAuthorityStructure.label
+          }
+          certificationAuthorityId={certificationAuthorityId}
+          certificationAuthoritylabel={certificationAuthority.label}
+          pageLabel="Certifications gérées"
+        />
+        <h1>Certifications gérées</h1>
+        <p className="text-xl">
+          Cochez les certifications proposées par la structure certificatrice.
+          Vous pouvez choisir une ou plusieurs certifications.
+        </p>
+        <CertificationsForm
+          handleFormSubmit={handleFormSubmit}
+          certifications={certifications}
+          fullWidth
+          backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
+        />
+      </div>
     </div>
   );
 };
