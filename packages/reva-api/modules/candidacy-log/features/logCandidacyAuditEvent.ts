@@ -1,4 +1,4 @@
-import { CandidacyLogUserProfile } from "@prisma/client";
+import { CandidacyLogUserProfile, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { CandidacyLogEventTypeAndDetails } from "../candidacy-log.types";
@@ -11,6 +11,7 @@ export interface CandidacyAuditLogUserInfo {
 
 type LogCandidacyAuditEventParams = {
   candidacyId: string;
+  tx?: Prisma.TransactionClient; //optional transaction to use
 } & CandidacyAuditLogUserInfo &
   CandidacyLogEventTypeAndDetails;
 
@@ -21,6 +22,7 @@ export const logCandidacyAuditEvent = ({
   userRoles,
   eventType,
   details,
+  tx,
 }: LogCandidacyAuditEventParams) => {
   if (!userKeycloakId) {
     throw new Error(
@@ -34,7 +36,7 @@ export const logCandidacyAuditEvent = ({
     );
   }
 
-  return prismaClient.candidacyLog.create({
+  return (tx || prismaClient).candidacyLog.create({
     data: {
       candidacyId,
       userKeycloakId,

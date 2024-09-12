@@ -1,3 +1,4 @@
+import { prismaClient } from "../../../prisma/client";
 import {
   logCandidacyAuditEvent,
   CandidacyAuditLogUserInfo,
@@ -12,30 +13,35 @@ export const takeOverCandidacy = async ({
   userRoles,
 }: {
   candidacyId: string;
-} & CandidacyAuditLogUserInfo) => {
-  if (
-    !(await existsCandidacyWithActiveStatus({
+} & CandidacyAuditLogUserInfo) =>
+  //execute all steps in the same transaction to ensure data consistency
+  prismaClient.$transaction(async (tx) => {
+    if (
+      !(await existsCandidacyWithActiveStatus({
+        candidacyId,
+        status: "VALIDATION",
+        tx,
+      }))
+    ) {
+      throw new Error(
+        `La candidature ${candidacyId} ne peut être prise en charge`,
+      );
+    }
+
+    const result = await updateCandidacyStatus({
       candidacyId,
-      status: "VALIDATION",
-    }))
-  ) {
-    throw new Error(
-      `La candidature ${candidacyId} ne peut être prise en charge`,
-    );
-  }
+      status: "PRISE_EN_CHARGE",
+      tx,
+    });
 
-  const result = await updateCandidacyStatus({
-    candidacyId,
-    status: "PRISE_EN_CHARGE",
+    await logCandidacyAuditEvent({
+      candidacyId,
+      eventType: "CANDIDACY_TAKEN_OVER",
+      userKeycloakId,
+      userEmail,
+      userRoles,
+      tx,
+    });
+
+    return result;
   });
-
-  await logCandidacyAuditEvent({
-    candidacyId,
-    eventType: "CANDIDACY_TAKEN_OVER",
-    userKeycloakId,
-    userEmail,
-    userRoles,
-  });
-
-  return result;
-};
