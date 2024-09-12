@@ -9,7 +9,6 @@ import {
 import { getCandidacyById } from "./getCandidacyById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
-import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
 import { getCandidateById } from "../../candidate/features/getCandidateById";
 
 export const submitCandidacy = async ({
@@ -25,10 +24,7 @@ export const submitCandidacy = async ({
   }
 
   const validateCandidacyNotAlreadySubmitted =
-    await existsCandidacyWithActiveStatus({
-      candidacyId,
-      status: CandidacyStatusStep.PROJET,
-    });
+    candidacy.status === CandidacyStatusStep.PROJET;
 
   if (!validateCandidacyNotAlreadySubmitted) {
     throw new Error(`Cette candidature a déjà été soumise`);

@@ -64,6 +64,7 @@ beforeAll(async () => {
     data: {
       candidateId: candidate1.id,
       organismId: rightOrganism.id,
+      status: CandidacyStatusStep.PROJET,
       candidacyStatuses: {
         createMany: {
           data: [
@@ -80,6 +81,7 @@ beforeAll(async () => {
     data: {
       candidateId: candidate2.id,
       organismId: rightOrganism.id,
+      status: CandidacyStatusStep.VALIDATION,
       candidacyStatuses: {
         createMany: {
           data: [

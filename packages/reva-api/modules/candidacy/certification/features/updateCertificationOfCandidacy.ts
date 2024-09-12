@@ -10,7 +10,6 @@ import { logger } from "../../../shared/logger";
 
 import { getCertificationById } from "../../../referential/features/getCertificationById";
 import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCandidacy";
-import { existsCandidacyWithActiveStatus } from "../../features/existsCandidacyWithActiveStatus";
 import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { updateCertification } from "./updateCertification";
@@ -34,6 +33,7 @@ export const updateCertificationOfCandidacy = async ({
     where: { id: candidacyId },
     select: {
       id: true,
+      status: true,
     },
   });
 
@@ -69,10 +69,8 @@ export const updateCertificationOfCandidacy = async ({
       organismId: null,
     });
 
-    const hasActiveCandidacyInProject = await existsCandidacyWithActiveStatus({
-      candidacyId,
-      status: CandidacyStatusStep.PROJET,
-    });
+    const hasActiveCandidacyInProject =
+      candidacy.status === CandidacyStatusStep.PROJET;
 
     //Only update previous and create a new candidacy status if the candidacy is not already in project
     if (!hasActiveCandidacyInProject) {

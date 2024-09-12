@@ -1,6 +1,5 @@
 import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 import { FundingRequest } from "@prisma/client";
-import { existsCandidacyWithActiveStatus } from "../../../candidacy/features/existsCandidacyWithActiveStatus";
 import { getCandidacy } from "../../../candidacy/features/getCandidacy";
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
 import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
@@ -13,20 +12,16 @@ export const confirmPaymentRequest = async ({
 }: {
   candidacyId: string;
 }) => {
-  if (
-    !(await existsCandidacyWithActiveStatus({
-      candidacyId,
-      status: "DEMANDE_FINANCEMENT_ENVOYE",
-    }))
-  ) {
+  const candidacy = await getCandidacy({ candidacyId });
+
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
+
+  if (candidacy.status !== "DEMANDE_FINANCEMENT_ENVOYE") {
     throw new Error(
       `La demande de paiement de la candidature ${candidacyId} ne peut être confirmée: statut invalide.`,
     );
-  }
-
-  const candidacy = await getCandidacy({ candidacyId });
-  if (!candidacy) {
-    throw new Error("Candidature non trouvée");
   }
 
   if (!candidacy.organismId) {

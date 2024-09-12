@@ -10,18 +10,10 @@ export const existsCandidacyWithActiveStatus = async ({
   candidacyId: string;
   status?: CandidacyStatusStep;
   tx?: Prisma.TransactionClient; //optional transaction to use
-}): Promise<boolean | string> => {
-  const candidacies = await (tx || prismaClient).candidacy.count({
+}): Promise<boolean> =>
+  !!(await (tx || prismaClient).candidacy.findUnique({
     where: {
       id: candidacyId,
-      candidacyStatuses: {
-        some: {
-          status,
-          isActive: true,
-        },
-      },
+      status,
     },
-  });
-
-  return candidacies === 1;
-};
+  }));
