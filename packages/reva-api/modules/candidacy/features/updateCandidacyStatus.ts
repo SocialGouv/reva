@@ -25,6 +25,7 @@ export const updateCandidacyStatus = async ({
         id: candidacyId,
       },
       data: {
+        status,
         candidacyStatuses: {
           create: {
             status,

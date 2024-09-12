@@ -161,6 +161,7 @@ model Candidacy {
   certificationAuthorityTransferReason       String?                                 @map("certification_authority_transfer_reason")
   certification                              Certification?                          @relation(fields: [certificationId], references: [id], onDelete: Restrict)
   certificationId                            String?                                 @map("certification_id") @db.Uuid
+  status                                     CandidacyStatusStep                     @default(PROJET)
 
   @@index([organismId])
   @@index([candidateId])
