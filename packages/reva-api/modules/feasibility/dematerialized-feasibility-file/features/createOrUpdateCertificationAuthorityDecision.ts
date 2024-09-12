@@ -11,6 +11,7 @@ import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisi
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 
 const statusDecisionMapper = {
   ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
@@ -86,8 +87,8 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
     }
 
     const now = new Date().toISOString();
-    await prismaClient.$transaction([
-      prismaClient.feasibility.update({
+    await prismaClient.$transaction(async (tx) => {
+      await tx.feasibility.update({
         where: {
           id: feasibility.id,
         },
@@ -98,29 +99,19 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decisionFile: decisionFileForDb ? decisionFileForDb : undefined,
         },
       }),
-      prismaClient.feasibilityDecision.create({
-        data: {
-          decision,
-          decisionComment,
-          feasibilityId: feasibility.id,
-        },
-      }),
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidaciesStatus.create({
-        data: {
-          status: statusDecisionMapper[decision] as CandidacyStatusStep,
-          isActive: true,
+        await tx.feasibilityDecision.create({
+          data: {
+            decision,
+            decisionComment,
+            feasibilityId: feasibility.id,
+          },
+        }),
+        await updateCandidacyStatus({
           candidacyId,
-        },
-      }),
-    ]);
+          status: statusDecisionMapper[decision] as CandidacyStatusStep,
+          tx,
+        });
+    });
 
     if (decision === "INCOMPLETE") {
       await prismaClient.feasibility.update({
