@@ -1,4 +1,4 @@
-import { CandidacyStatusStep, Prisma } from "@prisma/client";
+import { Candidacy, CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
@@ -10,7 +10,7 @@ export const updateCandidacyStatus = async ({
   candidacyId: string;
   status: CandidacyStatusStep;
   tx?: Prisma.TransactionClient; //optional transaction to use
-}) => {
+}): Promise<Candidacy> => {
   const withTransaction = async (t: Prisma.TransactionClient) => {
     await t.candidaciesStatus.updateMany({
       where: {
