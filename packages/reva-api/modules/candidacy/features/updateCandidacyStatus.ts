@@ -1,34 +1,40 @@
-import { CandidacyStatusStep } from "@prisma/client";
+import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
-export const updateCandidacyStatus = async (params: {
+export const updateCandidacyStatus = async ({
+  candidacyId,
+  status,
+  tx,
+}: {
   candidacyId: string;
   status: CandidacyStatusStep;
+  tx?: Prisma.TransactionClient; //optional transaction to use
 }) => {
-  const [, newCandidacy] = await prismaClient.$transaction([
-    prismaClient.candidaciesStatus.updateMany({
+  const withTransaction = async (t: Prisma.TransactionClient) => {
+    await t.candidaciesStatus.updateMany({
       where: {
-        candidacyId: params.candidacyId,
+        candidacyId,
       },
       data: {
         isActive: false,
       },
-    }),
-    prismaClient.candidacy.update({
+    });
+    return t.candidacy.update({
       where: {
-        id: params.candidacyId,
+        id: candidacyId,
       },
       data: {
         candidacyStatuses: {
           create: {
-            status: params.status,
+            status,
             isActive: true,
           },
         },
       },
-    }),
-  ]);
+    });
+  };
 
-  return newCandidacy;
+  //execute the code in the transaction provided or create a new one
+  return tx ? withTransaction(tx) : prismaClient.$transaction(withTransaction);
 };
