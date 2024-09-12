@@ -32,10 +32,6 @@ export const getCandidacyCountByStatusV2 = async ({
   fromClause +=
     " left join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id";
 
-  //candidacy active status as activeCandidacyStatus
-  fromClause +=
-    " join candidacy_candidacy_status activeCandidacyStatus on (candidacy.id = activeCandidacyStatus.candidacy_id and activeCandidacyStatus.is_active = true)";
-
   //left join on candidacy drop out as candidacyDropOut
   fromClause +=
     " left join candidacy_drop_out candidacyDropOut on candidacy.id = candidacyDropOut.candidacy_id";
@@ -160,25 +156,25 @@ const getSQLSelectSumClauseFromStatusFilter = (
 
       if (status !== null) {
         return getSumClause(
-          `activeCandidacyStatus.status = '${status}' and candidacyDropOut.candidacy_id is null`,
+          `candidacy.status = '${status}' and candidacyDropOut.candidacy_id is null`,
         );
       }
       break;
     }
     case "ACTIVE_HORS_ABANDON":
       return getSumClause(
-        `activeCandidacyStatus.status not in ('ARCHIVE','PROJET','DOSSIER_FAISABILITE_NON_RECEVABLE')  and candidacyDropOut.candidacy_id is null`,
+        `candidacy.status not in ('ARCHIVE','PROJET','DOSSIER_FAISABILITE_NON_RECEVABLE')  and candidacyDropOut.candidacy_id is null`,
       );
     case "ABANDON":
       return getSumClause(`candidacyDropOut.candidacy_id is not null`);
 
     case "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION":
       return getSumClause(
-        `activeCandidacyStatus.status = 'ARCHIVE' and candidacyDropOut.candidacy_id is null and candidacy.reorientation_reason_id is null`,
+        `candidacy.status = 'ARCHIVE' and candidacyDropOut.candidacy_id is null and candidacy.reorientation_reason_id is null`,
       );
     case "REORIENTEE":
       return getSumClause(
-        `activeCandidacyStatus.status = 'ARCHIVE' and candidacy.reorientation_reason_id is not null`,
+        `candidacy.status = 'ARCHIVE' and candidacy.reorientation_reason_id is not null`,
       );
 
     case "JURY_HORS_ABANDON":
