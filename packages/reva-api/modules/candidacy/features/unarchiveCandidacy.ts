@@ -3,6 +3,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { logger } from "../../../modules/shared/logger";
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyById } from "./getCandidacyById";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 interface UnarchiveCandidacyParams {
   candidacyId: string;
@@ -13,9 +14,6 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
   try {
     candidacy = await getCandidacyById({
       candidacyId: params.candidacyId,
-      includes: {
-        candidacyStatuses: true,
-      },
     });
   } catch (error) {
     logger.error(error);
@@ -29,11 +27,7 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
     );
   }
 
-  const isArchived = Boolean(
-    candidacy.candidacyStatuses.find(
-      (status) => status.status === "ARCHIVE" && status.isActive,
-    ),
-  );
+  const isArchived = candidacy.status === "ARCHIVE";
 
   if (!isArchived) {
     throw new Error(
@@ -60,31 +54,14 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
         },
         orderBy: [{ createdAt: "desc" }],
       });
-    const [, newCandidacy] = await prismaClient.$transaction([
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: params.candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidacy.update({
-        where: {
-          id: params.candidacyId,
-        },
-        data: {
-          candidacyStatuses: {
-            create: {
-              ...latestStatusBeforeArchive,
-              isActive: true,
-            },
-          },
-        },
-      }),
-    ]);
 
-    return newCandidacy;
+    if (!latestStatusBeforeArchive) {
+      throw new Error("Statut de la candidature avant archivage non trouvé");
+    }
+    return updateCandidacyStatus({
+      candidacyId: params.candidacyId,
+      status: latestStatusBeforeArchive.status,
+    });
   } catch (e) {
     logger.error(e);
     throw new Error(

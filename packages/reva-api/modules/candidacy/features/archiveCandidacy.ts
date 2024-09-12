@@ -6,6 +6,7 @@ import {
   FunctionalCodeError,
   // FunctionalError,
 } from "../../shared/error/functionalError";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 interface ArchiveCandidacyParams {
   candidacyId: string;
@@ -32,11 +33,7 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
     );
   }
 
-  const isArchived = Boolean(
-    candidacy?.candidacyStatuses.find(
-      (status) => status.status === "ARCHIVE" && status.isActive,
-    ),
-  );
+  const isArchived = candidacy.status === "ARCHIVE";
 
   if (isArchived) {
     throw new Error(
@@ -62,32 +59,22 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   }
 
   try {
-    const [, newCandidacy] = await prismaClient.$transaction([
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: params.candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidacy.update({
+    return prismaClient.$transaction(async (tx) => {
+      await updateCandidacyStatus({
+        candidacyId: candidacy.id,
+        status: "ARCHIVE",
+        tx,
+      });
+
+      return tx.candidacy.update({
         where: {
           id: params.candidacyId,
         },
         data: {
-          candidacyStatuses: {
-            create: {
-              status: "ARCHIVE",
-              isActive: true,
-            },
-          },
           reorientationReasonId: params.reorientationReasonId,
         },
-      }),
-    ]);
-
-    return newCandidacy;
+      });
+    });
   } catch (e) {
     logger.error(e);
     throw new Error(
