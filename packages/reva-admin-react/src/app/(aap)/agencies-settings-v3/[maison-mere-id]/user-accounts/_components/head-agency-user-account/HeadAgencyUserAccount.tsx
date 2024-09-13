@@ -3,10 +3,7 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useParams, useRouter } from "next/navigation";
 import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
-import {
-  UserAccountForm,
-  UserAccountFormData,
-} from "./UserAccountForm";
+import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useMemo } from "react";
 

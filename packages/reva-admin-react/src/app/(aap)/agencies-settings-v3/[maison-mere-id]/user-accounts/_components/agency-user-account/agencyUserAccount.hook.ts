@@ -1,7 +1,12 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { UpdateOrganimsAccountAndOrganismInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 
 const getAgenciesInfoQuery = graphql(`
   query getAgenciesInfoForUserAccountPage {

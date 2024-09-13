@@ -1,11 +1,11 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/agencySettings.hook";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 export const AgencySettingsSummary = () => {
-  const { organism, account } = useAgencySettings();
+  const { organism, account, maisonMereAAPId } = useAgencySettings();
 
   if (!account || !organism) return null;
 
@@ -17,7 +17,10 @@ export const AgencySettingsSummary = () => {
       </p>
       <div className="flex flex-col gap-8 mt-4">
         {organism?.isRemote && (
-          <AgencySettingsSummarySectionRemote organism={organism} />
+          <AgencySettingsSummarySectionRemote
+            organism={organism}
+            maisonMereAAPId={maisonMereAAPId}
+          />
         )}
         {organism?.isOnSite && (
           <EnhancedSectionCard
@@ -49,7 +52,7 @@ export const AgencySettingsSummary = () => {
                   priority="tertiary no outline"
                   size="small"
                   linkProps={{
-                    href: `/agencies-settings-v3/organisms/${organism.id}/on-site`,
+                    href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/on-site`,
                   }}
                 >
                   Modifier
@@ -92,7 +95,7 @@ export const AgencySettingsSummary = () => {
                 priority="tertiary no outline"
                 size="small"
                 linkProps={{
-                  href: `/agencies-settings-v3/user-accounts/${account?.id}`,
+                  href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account?.id}`,
                 }}
               >
                 Visualiser

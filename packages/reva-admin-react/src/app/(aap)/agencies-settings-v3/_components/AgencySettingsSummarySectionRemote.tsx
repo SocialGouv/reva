@@ -5,6 +5,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export const AgencySettingsSummarySectionRemote = ({
   organism,
+  maisonMereAAPId,
 }: {
   organism?: {
     id: string;
@@ -12,6 +13,7 @@ export const AgencySettingsSummarySectionRemote = ({
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
   };
+  maisonMereAAPId: string;
 }) => {
   if (!organism) return null;
 
@@ -19,7 +21,7 @@ export const AgencySettingsSummarySectionRemote = ({
     <EnhancedSectionCard
       data-test="remote-agency"
       title="Accompagnement à distance"
-      buttonOnClickHref={`/agencies-settings-v3/organisms/${organism.id}/remote`}
+      buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/remote`}
       isEditable={true}
       titleIconClass="fr-icon-headphone-fill"
     >

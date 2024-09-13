@@ -14,6 +14,7 @@ const HeadAgencySettingsInfoQuery = graphql(`
         isVisibleInCandidateSearchResults
         remoteZones
         maisonMereAAP {
+          id
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
             isHeadAgency

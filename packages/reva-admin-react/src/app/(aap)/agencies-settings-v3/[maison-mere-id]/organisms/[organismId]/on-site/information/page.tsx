@@ -2,10 +2,10 @@
 
 import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { useMemo } from "react";
 import OrganismInformationForm from "../../../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../../../_components/organismInformationFormSchema";
 import { useOrganismInformationOnSite } from "./organismInformationOnSite.hook";
-import { useMemo } from "react";
 
 const InformationsOnSitePage = () => {
   const {
@@ -13,6 +13,7 @@ const InformationsOnSitePage = () => {
     informationsCommerciales,
     organismId,
     createOrUpdateInformationsCommerciales,
+    maisonMereAAPId,
   } = useOrganismInformationOnSite();
   const handleSubmit = async (data: OrganismInformationFormData) => {
     const input = {
@@ -72,14 +73,14 @@ const InformationsOnSitePage = () => {
           {
             label: organismName,
             linkProps: {
-              href: `/agencies-settings-v3/organisms/${organismId}/on-site`,
+              href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site`,
             },
           },
         ]}
       />
       <OrganismInformationForm
         mutationOnSubmit={handleSubmit}
-        pathRedirection={`/agencies-settings-v3/organisms/${organismId}/on-site`}
+        pathRedirection={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site`}
         defaultData={defaultData}
       />
     </div>

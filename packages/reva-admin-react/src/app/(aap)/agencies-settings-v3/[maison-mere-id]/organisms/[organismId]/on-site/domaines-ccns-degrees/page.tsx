@@ -1,16 +1,16 @@
 "use client";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useParams } from "next/navigation";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import DomainesCcnsDegreesForm from "../../_components/domaines-ccns-degrees-form/DomainesCcnsDegreesForm";
+import { useOnSiteOrganism } from "../_components/onSiteOrganism.hook";
 
-const InformationsRemotePage = () => {
-  const { organismId } = useParams<{ organismId: string }>();
+const DomainesCcnsDegreesOnSitePage = () => {
+  const { organismId, organismName, maisonMereAAPId } = useOnSiteOrganism();
 
   return (
     <div className="flex flex-col">
       <Breadcrumb
-        currentPageLabel={"Filières, branches et niveaux"}
+        currentPageLabel="Filières, branches et niveaux"
         homeLinkProps={{
           href: `/`,
         }}
@@ -20,9 +20,9 @@ const InformationsRemotePage = () => {
             linkProps: { href: "/agencies-settings-v3" },
           },
           {
-            label: "Accompagnement à distance",
+            label: organismName,
             linkProps: {
-              href: `/agencies-settings-v3/organisms/${organismId}/remote`,
+              href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site`,
             },
           },
         ]}
@@ -35,10 +35,10 @@ const InformationsRemotePage = () => {
       </p>
       <DomainesCcnsDegreesForm
         organismId={organismId}
-        backButtonUrl={`/agencies-settings-v3/organisms/${organismId}/remote`}
+        backButtonUrl={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site`}
       />
     </div>
   );
 };
 
-export default InformationsRemotePage;
+export default DomainesCcnsDegreesOnSitePage;

@@ -1,10 +1,14 @@
 "use client";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { RemoteZone } from "@/graphql/generated/graphql";
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useInformationRemotePage } from "./informationRemote.hook";
@@ -12,13 +16,12 @@ import {
   InformationRemoteFormData,
   informationRemoteFormSchema,
 } from "./informationRemoteFormSchema";
-import { useQueryClient } from "@tanstack/react-query";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { useParams } from "next/navigation";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const InformationsRemotePage = () => {
-  const { organismId } = useParams<{ organismId: string }>();
+  const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{
+    organismId: string;
+    "maison-mere-id": string;
+  }>();
   const {
     organism,
     getOrganismStatus,
@@ -135,7 +138,7 @@ const InformationsRemotePage = () => {
           {
             label: "Accompagnement à distance",
             linkProps: {
-              href: `/agencies-settings-v3/organisms/${organismId}/remote`,
+              href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote`,
             },
           },
         ]}
@@ -269,7 +272,7 @@ const InformationsRemotePage = () => {
               />
             </fieldset>
             <FormButtons
-              backUrl={`/agencies-settings-v3/organisms/${organismId}/remote/`}
+              backUrl={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/`}
               formState={{ isSubmitting, isDirty }}
             />
           </form>

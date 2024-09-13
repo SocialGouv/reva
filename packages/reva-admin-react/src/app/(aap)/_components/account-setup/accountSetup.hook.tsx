@@ -1,7 +1,6 @@
-import { graphql } from "@/graphql/generated";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { useRouter } from "next/navigation";
+import { graphql } from "@/graphql/generated";
+import { useMutation } from "@tanstack/react-query";
 
 const updateAccounSetupMutation = graphql(`
   mutation updateAccountSetupAfterFirstLogin(
@@ -20,9 +19,10 @@ export const useAccountSetup = () => {
     mutationFn: (params: {
       showAccountSetup: boolean;
       maisonMereAAPId: string;
-    }) => graphqlClient.request(updateAccounSetupMutation, {
-      data: params
-    }),
+    }) =>
+      graphqlClient.request(updateAccounSetupMutation, {
+        data: params,
+      }),
   });
 
   return { updateAccount };

@@ -1,7 +1,6 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useRouter } from "next/navigation";
 
 const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
   return (
@@ -16,6 +15,7 @@ const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
 const OrganismRow = ({
   organism,
   index,
+  maisonMereAAPId,
 }: {
   organism: {
     id: string;
@@ -26,8 +26,8 @@ const OrganismRow = ({
     } | null;
   };
   index: number;
+  maisonMereAAPId: string;
 }) => {
-  const router = useRouter();
   return (
     <div
       className={`flex py-3 w-full justify-between border-b border-b-neutral-200 ${
@@ -47,7 +47,7 @@ const OrganismRow = ({
         priority="tertiary no outline"
         size="small"
         linkProps={{
-          href: `/agencies-settings-v3/organisms/${organism.id}/on-site`,
+          href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/on-site`,
         }}
       >
         Modifier
@@ -58,6 +58,7 @@ const OrganismRow = ({
 
 export const AgenciesSettingsSectionOnSite = ({
   organisms = [],
+  maisonMereAAPId,
 }: {
   organisms?: {
     id: string;
@@ -65,6 +66,7 @@ export const AgenciesSettingsSectionOnSite = ({
     isVisibleInCandidateSearchResults: boolean;
     informationsCommerciales?: { nom?: string | null } | null;
   }[];
+  maisonMereAAPId: string;
 }) => {
   const isOnSiteAgencyComplete = !!organisms.length;
 
@@ -72,7 +74,7 @@ export const AgenciesSettingsSectionOnSite = ({
     <EnhancedSectionCard
       data-test="on-site-agencies"
       title="Accompagnement en présentiel"
-      buttonOnClickHref="/agencies-settings-v3/organisms/add-agency"
+      buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/add-agency`}
       titleIconClass="fr-icon-home-4-fill"
       isEditable
       customButtonTitle={
@@ -90,7 +92,12 @@ export const AgenciesSettingsSectionOnSite = ({
       )}
       <div className="sm:pl-10 flex flex-col">
         {organisms.map((organism, index) => (
-          <OrganismRow key={organism.id} organism={organism} index={index} />
+          <OrganismRow
+            key={organism.id}
+            organism={organism}
+            index={index}
+            maisonMereAAPId={maisonMereAAPId}
+          />
         ))}
       </div>
     </EnhancedSectionCard>

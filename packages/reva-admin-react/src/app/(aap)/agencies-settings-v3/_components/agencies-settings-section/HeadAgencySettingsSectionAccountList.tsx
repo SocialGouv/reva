@@ -1,9 +1,11 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export const HeadAgencySettingsSectionAccountList = ({
+  maisonMereAAPId,
   headAgencyAccountId,
   organisms,
 }: {
+  maisonMereAAPId: string;
   headAgencyAccountId: string;
   organisms: {
     accounts: {
@@ -50,7 +52,7 @@ export const HeadAgencySettingsSectionAccountList = ({
             </div>
             <Button
               linkProps={{
-                href: `/agencies-settings-v3/user-accounts/${account.id}`,
+                href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
               }}
               priority="tertiary no outline"
               size="small"
