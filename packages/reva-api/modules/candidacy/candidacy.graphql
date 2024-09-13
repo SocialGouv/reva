@@ -70,6 +70,7 @@ type Candidacy {
   reorientationReason: ReorientationReason
   financeModule: FinanceModule!
   feasibilityFormat: FeasibilityFormat!
+  status: CandidacyStatusStep!
 }
 
 type CandidacyDropOut {
