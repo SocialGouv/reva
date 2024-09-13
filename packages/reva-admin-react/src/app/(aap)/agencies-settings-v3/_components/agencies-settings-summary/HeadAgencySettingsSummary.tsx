@@ -38,6 +38,9 @@ export const HeadAgencySettingsSummary = ({
   organism: Organism;
   accountId: string;
 }) => {
+  if (!maisonMereAAP) {
+    return null;
+  }
   const isGeneralInformationCompleted = [
     "A_JOUR",
     "EN_ATTENTE_DE_VERIFICATION",
