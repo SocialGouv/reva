@@ -1,6 +1,7 @@
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { MaisonMereAap } from "@/graphql/generated/graphql";
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -106,14 +107,13 @@ export const useGeneralInformationPage = () => {
     maisonMereAAPGeneralInformationStatus === "error" ||
     generalInformationsStatus === "error";
 
-  let maisonMereAAP = null;
+  let maisonMereAAP: MaisonMereAap | undefined;
   if (isAdmin) {
     maisonMereAAP =
-      maisonMereAAPGeneralInformationResponse?.organism_getMaisonMereAAPById;
+      maisonMereAAPGeneralInformationResponse?.organism_getMaisonMereAAPById as MaisonMereAap;
   } else {
-    maisonMereAAP =
-      generalInformationsResponse?.account_getAccountForConnectedUser
-        ?.maisonMereAAP;
+    maisonMereAAP = generalInformationsResponse
+      ?.account_getAccountForConnectedUser?.maisonMereAAP as MaisonMereAap;
   }
 
   const { data: getEtablissementData } = useQuery({
