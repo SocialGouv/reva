@@ -38,6 +38,7 @@
             "id": "goal1"
           }
         ],
+        "status": "PARCOURS_CONFIRME",
         "candidacyStatuses": [
           {
             "status": "PROJET",

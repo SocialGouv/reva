@@ -44,6 +44,7 @@
               "id": "goal1"
             }
           ],
+          "status": "PRISE_EN_CHARGE",
           "candidacyStatuses": [
             {
               "status": "PROJET",

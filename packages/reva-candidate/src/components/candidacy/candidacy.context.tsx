@@ -50,6 +50,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       }
       candidacy {
         id
+        status
         firstAppointmentOccuredAt
         candidacyStatuses {
           id
@@ -242,9 +243,7 @@ export const useCandidacy = () => {
 
   const candidacy = candidate.candidacy;
 
-  const candidacyStatus = candidacy.candidacyStatuses.find(
-    (status) => status.isActive,
-  )?.status;
+  const candidacyStatus = candidacy.status;
 
   const isCurrentlySubmitted = candidacyStatus === "PARCOURS_ENVOYE";
 

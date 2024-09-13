@@ -23,6 +23,7 @@
             "id": "goal1"
           }
         ],
+        "status": "PROJET",
         "candidacyStatuses": [
           {
             "status": "PROJET",

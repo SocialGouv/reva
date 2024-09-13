@@ -38,6 +38,7 @@
             "id": "goal1"
           }
         ],
+        "status": "VALIDATION",
         "candidacyStatuses": [
           {
             "status": "PROJET",

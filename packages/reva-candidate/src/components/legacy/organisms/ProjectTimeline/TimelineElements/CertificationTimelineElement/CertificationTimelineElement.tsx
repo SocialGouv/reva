@@ -30,9 +30,7 @@ export const CertificationTimelineElement = () => {
     "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
   );
 
-  const candidacyStatus = candidacy.candidacyStatuses.find(
-    (status) => status.isActive,
-  )?.status;
+  const candidacyStatus = candidacy.status;
 
   const showFundingCallOut =
     affichageTypesFinancementCandidatureFeatureActive &&

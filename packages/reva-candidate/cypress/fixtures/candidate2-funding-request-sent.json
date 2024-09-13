@@ -38,6 +38,7 @@
             "id": "goal1"
           }
         ],
+        "status": "DEMANDE_FINANCEMENT_ENVOYE",
         "candidacyStatuses": [
           {
             "status": "PROJET",
