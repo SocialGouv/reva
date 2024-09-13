@@ -15,7 +15,7 @@ export const sendDFFToCertificationAuthority = async ({
 
   try {
     const candidacy = await prismaClient.$transaction(async (tx) => {
-      await prismaClient.feasibility.updateMany({
+      await tx.feasibility.updateMany({
         where: { candidacyId, isActive: true },
         data: {
           certificationAuthorityId,
