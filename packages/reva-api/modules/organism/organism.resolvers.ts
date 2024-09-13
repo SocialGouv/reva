@@ -50,6 +50,7 @@ import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGest
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
+import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
@@ -552,6 +553,15 @@ const unsafeResolvers = {
 
       return updateMaisonMereAccountSetup(params.data);
     },
+    organism_updateMaisonMereOrganismsIsActive: async (
+      _parent: unknown,
+      params: {
+        data: {
+          maisonMereAAPId: string;
+          isActive: boolean;
+        };
+      },
+    ) => updateMaisonMereOrganismsIsActive(params.data),
   },
   Query: {
     organism_getOrganism: async (
