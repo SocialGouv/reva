@@ -31,13 +31,10 @@ const CandidacySummaryPage = () => {
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
     if (candidacy) {
-      const candidacyActiveStatus = candidacy.candidacyStatuses.find(
-        (s) => s.isActive && s.status === "VALIDATION",
-      )?.status;
-      if (candidacyActiveStatus) {
+      if (candidacy.status === "VALIDATION") {
         takeOverCandidacy({
           candidacyId: candidacy.id,
-          candidacyActiveStatus,
+          candidacyActiveStatus: candidacy.status,
         });
       }
     }

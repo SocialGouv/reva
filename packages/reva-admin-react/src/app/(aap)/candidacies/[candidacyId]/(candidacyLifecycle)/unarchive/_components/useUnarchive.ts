@@ -8,10 +8,7 @@ const getCandidacyById = graphql(`
   query getCandidacyForUnarchivePage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       reorientationReason {
         id
       }

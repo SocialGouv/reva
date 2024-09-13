@@ -89,8 +89,7 @@ const TrainingPage = () => {
             }}
             onSubmit={handleFormSubmit}
             disabled={isCandidacyStatusEqualOrAbove(
-              candidacy.candidacyStatuses.find((s) => s.isActive)?.status ||
-                "ARCHIVE",
+              candidacy.status || "ARCHIVE",
               "DOSSIER_FAISABILITE_ENVOYE",
             )}
           />

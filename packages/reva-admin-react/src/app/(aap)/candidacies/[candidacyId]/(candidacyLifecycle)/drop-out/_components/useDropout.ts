@@ -8,10 +8,7 @@ const getCandidacyById = graphql(`
   query getCandidacyForDroupoutPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       candidacyDropOut {
         dropOutReason {
           label

@@ -8,10 +8,7 @@ const getCandidacyWithDossierDeValidationQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       readyForJuryEstimatedAt
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       activeDossierDeValidation {
         id
         decision
@@ -52,8 +49,7 @@ export const useDossierDeValidationPageLogic = () => {
   const readyForJuryEstimatedAt = candidacy?.readyForJuryEstimatedAt;
 
   const canSignalProblem =
-    candidacy?.candidacyStatuses.filter((c) => c.isActive)[0].status ===
-      "DOSSIER_DE_VALIDATION_ENVOYE" &&
+    candidacy?.status === "DOSSIER_DE_VALIDATION_ENVOYE" &&
     dossierDeValidation?.decision === "PENDING" &&
     dossierDeValidation?.isActive;
 

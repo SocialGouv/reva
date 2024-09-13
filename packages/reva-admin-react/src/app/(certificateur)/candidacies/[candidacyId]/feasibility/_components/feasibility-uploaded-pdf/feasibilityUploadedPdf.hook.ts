@@ -22,10 +22,7 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
       candidacyDropOut {
         status
       }
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       feasibility {
         id
         decision

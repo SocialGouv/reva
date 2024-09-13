@@ -8,10 +8,7 @@ const getCandidacyQuery = graphql(`
     $candidacyId: ID!
   ) {
     getCandidacyById(id: $candidacyId) {
-      candidacyStatuses {
-        isActive
-        status
-      }
+      status
       fundingRequest {
         numAction
       }

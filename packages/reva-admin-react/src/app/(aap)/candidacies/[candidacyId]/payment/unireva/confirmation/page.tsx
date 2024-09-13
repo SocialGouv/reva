@@ -73,9 +73,7 @@ const PaymentRequestUniRevaConfirmationPage = () => {
     handleReset();
   }, [handleReset]);
 
-  const activeCandidacyStatus = candidacy?.candidacyStatuses?.find(
-    (c) => c.isActive,
-  )?.status;
+  const activeCandidacyStatus = candidacy?.status;
 
   const paymentRequestAlreadySent =
     activeCandidacyStatus &&

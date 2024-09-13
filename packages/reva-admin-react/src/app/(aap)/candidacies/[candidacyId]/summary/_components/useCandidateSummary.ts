@@ -17,10 +17,7 @@ const getCandidacyById = graphql(`
         label
         contactAdministrativeEmail
       }
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       certification {
         codeRncp
         label

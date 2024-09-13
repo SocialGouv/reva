@@ -9,6 +9,7 @@
         "label": "Organism 1",
         "contactAdministrativeEmail": "organism@example.com"
       },
+      "status": "PARCOURS_CONFIRME",
       "candidacyStatuses": [
         {
           "status": "PROJET",

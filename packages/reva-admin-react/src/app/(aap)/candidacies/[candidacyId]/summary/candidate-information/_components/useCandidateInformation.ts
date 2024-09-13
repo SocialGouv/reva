@@ -14,10 +14,7 @@ const getCandidacyById = graphql(`
         id
       }
       organismId
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       certification {
         codeRncp
         label

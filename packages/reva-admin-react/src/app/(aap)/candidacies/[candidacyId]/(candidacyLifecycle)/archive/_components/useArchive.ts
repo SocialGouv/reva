@@ -8,15 +8,11 @@ const getCandidacyById = graphql(`
   query getCandidacyForArchivePage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       reorientationReason {
         label
         disabled
       }
-
     }
   }
 `);
@@ -29,13 +25,7 @@ const archiveCandidacyByIdMutation = graphql(`
   }
 `);
 
-export const useArchive = ({ 
-  onSuccess,
-}: {
-  onSuccess?: () => void
-}
-
-) => {
+export const useArchive = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -56,19 +46,20 @@ export const useArchive = ({
       graphqlClient.request(archiveCandidacyByIdMutation, {
         candidacyId,
       }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [candidacyId] });
-        onSuccess?.();
-      },
-      onError: (e) => {
-        graphqlErrorToast(e)
-      }
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+      onSuccess?.();
+    },
+    onError: (e) => {
+      graphqlErrorToast(e);
+    },
   });
 
   const candidacy = getCandidacyByIdData?.getCandidacyById;
 
-  return { candidacyId, candidacy, archiveCandidacyById }
-}
+  return { candidacyId, candidacy, archiveCandidacyById };
+};
 
-export type CandidacyForArchive = Awaited<ReturnType<typeof useArchive>["candidacy"]
->
+export type CandidacyForArchive = Awaited<
+  ReturnType<typeof useArchive>["candidacy"]
+>;

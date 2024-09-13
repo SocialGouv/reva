@@ -5,10 +5,7 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export type CandidacyForStatus = {
   id: string;
-  candidacyStatuses: {
-    status: CandidacyStatusStep;
-    isActive: boolean;
-  }[];
+  status: CandidacyStatusStep;
   reorientationReason?:
     | {
         id?: string;
@@ -24,14 +21,12 @@ export type CandidacyForStatus = {
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const isCandidacyReoriented = !!candidacy.reorientationReason;
-  const isCandidacyArchived = candidacy.candidacyStatuses.some(
-    (s) => s.isActive && s.status === "ARCHIVE",
-  );
+  const isCandidacyArchived = candidacy.status === "ARCHIVE";
 
   const { isAdmin } = useAuth();
 
   const candidacyCurrentActiveStatus = useMemo(() => {
-    return candidacy.candidacyStatuses.find((s) => s.isActive)?.status;
+    return candidacy.status;
   }, [candidacy]);
 
   const isCandidacyArchivedAndNotReoriented =

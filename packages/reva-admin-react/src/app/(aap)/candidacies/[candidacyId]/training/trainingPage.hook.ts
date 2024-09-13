@@ -26,10 +26,7 @@ const getCandidacyById = graphql(`
       certificateSkills
       otherTraining
       isCertificationPartial
-      candidacyStatuses {
-        status
-        isActive
-      }
+      status
       feasibilityFormat
     }
   }

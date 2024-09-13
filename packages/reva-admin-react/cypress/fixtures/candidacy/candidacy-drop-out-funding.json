@@ -2,6 +2,7 @@
   "data": {
     "getCandidacyById": {
       "financeModule": "unifvae",
+      "status": "DOSSIER_FAISABILITE_INCOMPLET",
       "candidacyStatuses": [
         {
           "status": "PROJET",

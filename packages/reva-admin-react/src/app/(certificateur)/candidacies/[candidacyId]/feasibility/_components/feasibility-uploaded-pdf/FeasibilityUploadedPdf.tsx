@@ -37,9 +37,7 @@ export const FeasibilityUploadedPdf = () => {
     }
   };
 
-  const isCandidacyArchived = !!candidacy?.candidacyStatuses?.some(
-    (c) => c.isActive && c.status === "ARCHIVE",
-  );
+  const isCandidacyArchived = candidacy?.status === "ARCHIVE";
 
   const isCandidacyDroppedOut = !!candidacy?.candidacyDropOut;
 

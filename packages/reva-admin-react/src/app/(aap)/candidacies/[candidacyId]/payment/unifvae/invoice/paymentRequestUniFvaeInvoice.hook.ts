@@ -34,10 +34,7 @@ const getCandidacyQuery = graphql(`
       feasibility {
         decision
       }
-      candidacyStatuses {
-        isActive
-        status
-      }
+      status
       paymentRequestUnifvae {
         id
         invoiceNumber

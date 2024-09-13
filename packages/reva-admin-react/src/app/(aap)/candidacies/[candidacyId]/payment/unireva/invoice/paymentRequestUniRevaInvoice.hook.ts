@@ -30,10 +30,7 @@ const getCandidacyQuery = graphql(`
       feasibility {
         decision
       }
-      candidacyStatuses {
-        isActive
-        status
-      }
+      status
       fundingRequest {
         numAction
         individualHourCount

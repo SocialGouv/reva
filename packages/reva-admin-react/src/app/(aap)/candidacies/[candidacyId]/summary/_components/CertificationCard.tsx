@@ -3,36 +3,28 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useAuth } from "@/components/auth/auth";
 
-type CandidacyStatusSummary = {
-  isActive: boolean;
-  status: CandidacyStatusStep;
-};
-
 export const CertificationCard = ({
   candidacy,
 }: {
   candidacy: {
     id: string;
-    candidacyStatuses: CandidacyStatusSummary[];
+    status: CandidacyStatusStep;
     certification?: { codeRncp: string; label: string } | null;
     candidacyDropOut?: unknown;
   };
 }) => {
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
   const certification = candidacy.certification;
-  const lastStatus = candidacy.candidacyStatuses.find(
-    (s: CandidacyStatusSummary) => s.isActive,
-  );
-
+  const candidacyActiveStatus = candidacy.status;
   const canUpdateCertification =
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
-    lastStatus &&
+    candidacyActiveStatus &&
     [
       "PRISE_EN_CHARGE",
       "PARCOURS_ENVOYE",
       "PARCOURS_CONFIRME",
       "DOSSIER_FAISABILITE_INCOMPLET",
-    ].includes(lastStatus.status) &&
+    ].includes(candidacyActiveStatus) &&
     !candidacy.candidacyDropOut;
 
   return (
