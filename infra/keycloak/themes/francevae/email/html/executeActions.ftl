@@ -11,7 +11,6 @@
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_authority">
         <#assign subject = "Accédez à votre espace certificateur France VAE">
 
-    </#if>
      <#--  user_profile_type = certification_registry_manager  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
         <#assign subject = "Créez votre compte Responsable des certifications dès maintenant">
