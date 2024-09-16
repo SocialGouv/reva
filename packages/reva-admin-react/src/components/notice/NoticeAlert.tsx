@@ -17,7 +17,7 @@ export const NoticeAlert = ({
       <div className="fr-container flex">
         <span className="fr-icon fr-icon-warning-fill -mt-[1px]" />
         <div className="fr-notice__body pl-4 flex-1">
-          <p className="fr-notice__title">{children}</p>
+          <div className="fr-notice__title">{children}</div>
           {isClosable && (
             <button
               className="fr-btn--close fr-btn text-dsfr-light-decisions-text-default-warning hover:bg-transparent"
