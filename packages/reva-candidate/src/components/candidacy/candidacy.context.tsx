@@ -52,6 +52,9 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         id
         status
         firstAppointmentOccuredAt
+        candidacyDropOut {
+          createdAt
+        }
         candidacyStatuses {
           id
           createdAt

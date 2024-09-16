@@ -6,9 +6,15 @@ import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/ProjectTimeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { candidate } = useCandidacy();
+  const { candidate, candidacy } = useCandidacy();
+  const router = useRouter();
+
+  if (candidacy?.candidacyDropOut) {
+    router.push("/candidacy-dropout");
+  }
 
   return (
     <PageLayout data-test={`project-home-ready`}>
