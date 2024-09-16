@@ -31,12 +31,11 @@ const CertificationsPage = () => {
     degrees,
     conventionCollectives,
     domaines,
-    referentialStatus,
     organismManagedDegrees,
     organismConventionCollectives,
     organismDomaines,
     organismTypology,
-    organismStatus,
+    organismAndReferentialStatus,
     updateOrganismDegreesAndDomaines,
   } = useCertificationsPage();
 
@@ -67,8 +66,8 @@ const CertificationsPage = () => {
     name: "organismConventionCollectives",
   });
 
-  const resetForm = useCallback(
-    () =>
+  const resetForm = useCallback(() => {
+    organismAndReferentialStatus === "success" &&
       reset({
         organismDegrees: degrees
           .filter((d) => d.level > 2)
@@ -87,17 +86,17 @@ const CertificationsPage = () => {
           label: d.label,
           checked: !!organismDomaines.find((od) => od.id === d.id),
         })),
-      }),
-    [
-      reset,
-      degrees,
-      conventionCollectives,
-      domaines,
-      organismManagedDegrees,
-      organismConventionCollectives,
-      organismDomaines,
-    ],
-  );
+      });
+  }, [
+    organismAndReferentialStatus,
+    reset,
+    degrees,
+    conventionCollectives,
+    domaines,
+    organismManagedDegrees,
+    organismConventionCollectives,
+    organismDomaines,
+  ]);
 
   useEffect(resetForm, [resetForm]);
 
@@ -129,14 +128,13 @@ const CertificationsPage = () => {
         niveaux de certification sélectionnés.
       </p>
 
-      {referentialStatus === "error" ||
-        (organismStatus === "error" && (
-          <Alert
-            className="my-6"
-            severity="error"
-            title="Une erreur est survenue pendant la récupération des niveaux de diplôme."
-          />
-        ))}
+      {organismAndReferentialStatus === "error" && (
+        <Alert
+          className="my-6"
+          severity="error"
+          title="Une erreur est survenue pendant la récupération des niveaux de diplôme."
+        />
+      )}
 
       {updateOrganismDegreesAndDomaines.status === "error" && (
         <Alert
@@ -146,7 +144,7 @@ const CertificationsPage = () => {
         />
       )}
 
-      {referentialStatus && organismStatus === "success" && (
+      {organismAndReferentialStatus === "success" && (
         <form
           className="grid grid-cols-1 md:grid-cols-2 mt-6"
           onSubmit={handleFormSubmit}

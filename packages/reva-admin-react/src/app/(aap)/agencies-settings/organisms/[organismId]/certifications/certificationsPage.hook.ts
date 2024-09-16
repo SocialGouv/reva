@@ -4,8 +4,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
-const organismQuery = graphql(`
-  query getOrganismForCertificationsPage($organismId: ID!) {
+const organismAndReferentialQuery = graphql(`
+  query getOrganismAndReferentialForCertificationsPage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
       typology
@@ -24,11 +24,6 @@ const organismQuery = graphql(`
         label
       }
     }
-  }
-`);
-
-const referentialQuery = graphql(`
-  query getReferencialForCertificationsPage {
     getDegrees {
       id
       longLabel
@@ -59,22 +54,21 @@ export const useCertificationsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { organismId } = useParams<{ organismId: string }>();
 
-  const { data: referentialResponse, status: referentialStatus } = useQuery({
-    queryKey: ["referential"],
-    queryFn: () => graphqlClient.request(referentialQuery),
+  const {
+    data: organismAndReferentialResponse,
+    status: organismAndReferentialStatus,
+  } = useQuery({
+    queryKey: [organismId, "organism", "referential"],
+    queryFn: () =>
+      graphqlClient.request(organismAndReferentialQuery, { organismId }),
   });
 
-  const degrees = referentialResponse?.getDegrees || [];
+  const degrees = organismAndReferentialResponse?.getDegrees || [];
   const conventionCollectives =
-    referentialResponse?.getConventionCollectives || [];
-  const domaines = referentialResponse?.getDomaines || [];
+    organismAndReferentialResponse?.getConventionCollectives || [];
+  const domaines = organismAndReferentialResponse?.getDomaines || [];
 
-  const { data: organismResponse, status: organismStatus } = useQuery({
-    queryKey: [organismId, "organism"],
-    queryFn: () => graphqlClient.request(organismQuery, { organismId }),
-  });
-
-  const organism = organismResponse?.organism_getOrganism;
+  const organism = organismAndReferentialResponse?.organism_getOrganism;
 
   const organismManagedDegrees = useMemo(
     () => (organism?.managedDegrees || []).map((ndg) => ndg?.degree),
@@ -109,12 +103,11 @@ export const useCertificationsPage = () => {
     degrees,
     domaines,
     conventionCollectives,
-    referentialStatus,
     organismManagedDegrees,
     organismDomaines,
     organismConventionCollectives,
     organismTypology,
-    organismStatus,
+    organismAndReferentialStatus,
     updateOrganismDegreesAndDomaines,
   };
 };
