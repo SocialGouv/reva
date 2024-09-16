@@ -12,6 +12,11 @@
         <#assign subject = "Accédez à votre espace certificateur France VAE">
 
     </#if>
+     <#--  user_profile_type = certification_registry_manager  -->
+    <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
+        <#assign subject = "Créez votre compte Responsable des certifications dès maintenant">
+
+    </#if>
 
 <#--  Mail Subject  -->
     <#if section="title">
@@ -148,6 +153,24 @@
                         target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
             <p>Si jamais vous rencontrez encore des difficultés, n'hésitez pas à nous contacter via la messagerie
                 instantanée (en bas à droite de l'écran sur le site France VAE) ou par email à support@vae.gouv.fr</p>
+            <p>L'équipe France VAE.</p>
+        </#if>
+    
+     <#--  user_profile_type = certification_registry_manager  -->
+    <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
+        <#if section="intro">
+            <p>En tant que responsable des certifications, vous devez créer votre compte pour profiter d’un espace dédié à vos missions dans la plateforme France VAE  (éditer, corriger, modifier et valider les informations clés liées aux certifications en vue de leur publication sur France VAE).</p>
+            <p>Vous pouvez le faire dès à présent en cliquant sur le bouton ci-dessous : </p>
+        <#elseif section="actionButton">
+            <a href="${link}"
+               style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
+               target="_blank">Créer mon compte</a>
+        <#elseif section="outro">
+            <p>Ce lien est valable 4 jours.</p>
+            <p>Si vous avez dépassé ce délai, <a
+                        href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
+                        target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
+            <p>Nous restons disponibles si vous avez la moindre question.</p>
             <p>L'équipe France VAE.</p>
         </#if>
 
