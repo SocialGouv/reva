@@ -68,7 +68,7 @@ export const HeadAgencySettingsSummary = ({
         maisonMereAAPId={maisonMereAAP.id}
       />
       <AgenciesSettingsSectionOnSite
-        organisms={maisonMereAAP?.organisms}
+        organisms={maisonMereAAP?.organisms.filter((o) => !o.isHeadAgency)} //on site organisms are everty organism that are not flagged as head agency
         maisonMereAAPId={maisonMereAAP.id}
       />
       <EnhancedSectionCard
