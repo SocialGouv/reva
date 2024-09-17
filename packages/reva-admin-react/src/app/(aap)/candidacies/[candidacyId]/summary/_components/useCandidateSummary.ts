@@ -16,6 +16,9 @@ const getCandidacyById = graphql(`
       organism {
         label
         contactAdministrativeEmail
+        maisonMereAAP {
+          id
+        }
       }
       status
       certification {
