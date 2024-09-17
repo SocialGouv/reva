@@ -122,6 +122,7 @@ export const validateSubscriptionRequest = async ({
       managerFirstname: subscriptionRequest.managerFirstname,
       managerLastname: subscriptionRequest.managerLastname,
       showAccountSetup: true,
+      isSignalized: false,
     },
     ccnIds: [],
   });

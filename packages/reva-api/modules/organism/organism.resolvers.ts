@@ -57,6 +57,7 @@ import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccou
 import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
 import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
+import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateAgencyInfoInput,
@@ -562,6 +563,15 @@ const unsafeResolvers = {
         };
       },
     ) => updateMaisonMereOrganismsIsActive(params.data),
+    organism_updateMaisonMereIsSignalized: async (
+      _parent: unknown,
+      params: {
+        data: {
+          maisonMereAAPId: string;
+          isSignalized: boolean;
+        };
+      },
+    ) => updateMaisonMereIsSignalized(params.data),
   },
   Query: {
     organism_getOrganism: async (

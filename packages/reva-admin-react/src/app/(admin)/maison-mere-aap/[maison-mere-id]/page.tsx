@@ -14,6 +14,7 @@ const MaisonMereAapPage = () => {
     headAgencyOrganism,
     accountId,
     updateOrganismIsActive,
+    updateMaisonMereIsSignalized,
   } = useMaisonMereAAP(maisonMereAAPId);
 
   if (!maisonMereAAP || !maisonMereAAP.organisms) return null;
@@ -32,17 +33,40 @@ const MaisonMereAapPage = () => {
     );
   };
 
+  const handleIsSignalizedChange = async (isSignalized: boolean) => {
+    await updateMaisonMereIsSignalized({
+      maisonMereAAPId,
+      isSignalized,
+    });
+    successToast(
+      isSignalized
+        ? "La maison mère a été signalée avec succès"
+        : "La maison mère n'est plus signalée",
+    );
+  };
+
   return (
     <>
       <h1>{maisonMereAAP.raisonSociale}</h1>
-      <div className="flex items-center justify-between w-full border-y-[1px] border-y-neutral-200 py-2 my-4">
-        <span>Statut de la structure</span>
-        <ToggleSwitch
-          label=""
-          defaultChecked={maisonMereIsActive}
-          inputTitle="Activer toutes les agences de la maison mère"
-          onChange={(checked) => handleIsActiveChange(checked)}
-        />
+      <div className="flex items-center justify-between flex-col w-full border-y-[1px] border-y-neutral-200 py-2 my-4">
+        <div className="flex items-center justify-between w-full">
+          <span>Statut de la structure</span>
+          <ToggleSwitch
+            label=""
+            defaultChecked={maisonMereIsActive}
+            inputTitle="Activer toutes les agences de la maison mère"
+            onChange={(checked) => handleIsActiveChange(checked)}
+          />
+        </div>
+        <div className="flex items-center justify-between w-full">
+          <span>Signaler</span>
+          <ToggleSwitch
+            label=""
+            defaultChecked={maisonMereAAP.isSignalized}
+            inputTitle="Activer toutes les agences de la maison mère"
+            onChange={(checked) => handleIsSignalizedChange(checked)}
+          />
+        </div>
       </div>
       <HeadAgencySettingsSummary
         accountId={accountId}

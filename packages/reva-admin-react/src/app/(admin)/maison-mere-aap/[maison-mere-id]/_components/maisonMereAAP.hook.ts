@@ -9,6 +9,7 @@ const MaisonMereAAPQuery = graphql(`
       id
       raisonSociale
       statutValidationInformationsJuridiquesMaisonMereAAP
+      isSignalized
       organisms {
         isHeadAgency
         isActive
@@ -43,6 +44,14 @@ const updateMaisonMereOrganismsIsActiveMutation = graphql(`
   }
 `);
 
+const updateMaisonMereIsSignalizedMutation = graphql(`
+  mutation updateMaisonMereIsSignalizedMutation(
+    $data: UpdateMaisonMereIsSignalizedInput!
+  ) {
+    organism_updateMaisonMereIsSignalized(data: $data)
+  }
+`);
+
 export const useMaisonMereAAP = (id: string) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -68,6 +77,32 @@ export const useMaisonMereAAP = (id: string) => {
     },
   });
 
+  const { mutateAsync: updateMaisonMereIsSignalized } = useMutation({
+    mutationFn: (params: { maisonMereAAPId: string; isSignalized: boolean }) =>
+      graphqlClient.request(updateMaisonMereIsSignalizedMutation, {
+        data: {
+          maisonMereAAPId: params.maisonMereAAPId,
+          isSignalized: params.isSignalized,
+        },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [id, "maisonMereAAP"] });
+    },
+  });
+
+  // const { mutateAsync: updateOrganismIsActive } = useMutation({
+  //   mutationFn: (params: { maisonMereAAPId: string; isActive: boolean }) =>
+  //     graphqlClient.request(updateMaisonMereOrganismsIsActiveMutation, {
+  //       data: {
+  //         maisonMereAAPId: params.maisonMereAAPId,
+  //         isActive: params.isActive,
+  //       },
+  //     }),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: [id, "maisonMereAAP"] });
+  //   },
+  // });
+
   const maisonMereAAP = maisonMereAAPResponse?.organism_getMaisonMereAAPById;
 
   const headAgencyOrganism = maisonMereAAP?.organisms?.find(
@@ -83,5 +118,6 @@ export const useMaisonMereAAP = (id: string) => {
     headAgencyOrganism,
     accountId,
     updateOrganismIsActive,
+    updateMaisonMereIsSignalized,
   };
 };

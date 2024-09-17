@@ -100,6 +100,7 @@ type MaisonMereAAP {
   managerFirstname: String
   managerLastname: String
   showAccountSetup: Boolean
+  isSignalized: Boolean!
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -273,6 +274,11 @@ input UpdateMaisonMereOrganismsIsActiveInput {
   isActive: Boolean!
 }
 
+input UpdateMaisonMereIsSignalizedInput {
+  maisonMereAAPId: UUID!
+  isSignalized: Boolean!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -325,5 +331,8 @@ type Mutation {
 
   organism_updateMaisonMereOrganismsIsActive(
     data: UpdateMaisonMereOrganismsIsActiveInput
+  ): Void
+  organism_updateMaisonMereIsSignalized(
+    data: UpdateMaisonMereIsSignalizedInput
   ): Void
 }
