@@ -59,7 +59,5 @@ export async function getAvailableFormacodes(): Promise<Formacode[]> {
     (key) => availableFormacodes[key],
   );
 
-  console.log(mappedFormacodes);
-
   return mappedFormacodes;
 }
