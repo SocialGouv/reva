@@ -427,6 +427,7 @@ model Organism {
 
   ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
   OrganismOnRemoteZone                   OrganismOnRemoteZone[]
+  organismOnFormacode                    OrganismOnFormacode[]
 
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
@@ -1623,6 +1624,7 @@ model Formacode {
   children   Formacode[] @relation("children")
 
   certificationOnFormacode CertificationOnFormacode[]
+  organismOnFormacode      OrganismOnFormacode[]
 
   @@map("formacode")
 }
@@ -1638,4 +1640,17 @@ model CertificationOnFormacode {
 
   @@unique([formacodeId, certificationId])
   @@map("certification_on_formacode")
+}
+
+model OrganismOnFormacode {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  formacode   Formacode @relation(fields: [formacodeId], references: [id], onDelete: Cascade)
+  formacodeId String    @map("formacode_id") @db.Uuid
+  organism    Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId  String    @map("organism_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([formacodeId, organismId])
+  @@map("organism_on_formacode")
 }

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 const organismAndReferentialQuery = graphql(`
-  query getOrganismAndReferentialForCertificationsPage($organismId: ID!) {
+  query getOrganismForFormacodesCcnsDegreesForm($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
       typology
@@ -14,8 +14,8 @@ const organismAndReferentialQuery = graphql(`
           label
         }
       }
-      domaines {
-        id
+      formacodes {
+        code
         label
       }
       conventionCollectives {
@@ -28,9 +28,11 @@ const organismAndReferentialQuery = graphql(`
       longLabel
       level
     }
-    getDomaines {
-      id
+    getFormacodes {
+      type
+      code
       label
+      parentCode
     }
     getConventionCollectives {
       id
@@ -39,17 +41,17 @@ const organismAndReferentialQuery = graphql(`
   }
 `);
 
-const updateOrganismDegreesAndDomainesMutation = graphql(`
-  mutation organism_createOrUpdateOrganismOnDegrees(
-    $data: UpdateOrganismDegreesAndDomainesInput!
+const updateOrganismDegreesAndFormacodesMutation = graphql(`
+  mutation organism_createOrUpdateOrganismOnFormacodes(
+    $data: UpdateOrganismDegreesAndFormacodesInput!
   ) {
-    organism_updateOrganismDegreesAndDomaines(data: $data) {
+    organism_updateOrganismDegreesAndFormacodes(data: $data) {
       id
     }
   }
 `);
 
-export const useDomainesCcnsDegreesForm = ({
+export const useFormacodesCcnsDegreesForm = ({
   organismId,
 }: {
   organismId: string;
@@ -68,7 +70,7 @@ export const useDomainesCcnsDegreesForm = ({
   const degrees = organismAndReferentialResponse?.getDegrees || [];
   const conventionCollectives =
     organismAndReferentialResponse?.getConventionCollectives || [];
-  const domaines = organismAndReferentialResponse?.getDomaines || [];
+  const formacodes = organismAndReferentialResponse?.getFormacodes || [];
 
   const organism = organismAndReferentialResponse?.organism_getOrganism;
 
@@ -77,38 +79,38 @@ export const useDomainesCcnsDegreesForm = ({
     [organism?.managedDegrees],
   );
 
-  const organismDomaines = organism?.domaines || [];
+  const organismFormacodes = organism?.formacodes || [];
   const organismConventionCollectives = organism?.conventionCollectives || [];
   const organismTypology = organism?.typology;
 
-  const updateOrganismDegreesAndDomaines = useMutation({
+  const updateOrganismDegreesAndFormacodes = useMutation({
     mutationFn: ({
       organismId,
       degreeIds,
-      domaineIds,
+      formacodeIds,
     }: {
       organismId: string;
       degreeIds: string[];
-      domaineIds: string[];
+      formacodeIds: string[];
     }) =>
-      graphqlClient.request(updateOrganismDegreesAndDomainesMutation, {
+      graphqlClient.request(updateOrganismDegreesAndFormacodesMutation, {
         data: {
           organismId,
           degreeIds,
-          domaineIds,
+          formacodeIds,
         },
       }),
   });
 
   return {
     degrees,
-    domaines,
+    formacodes,
     conventionCollectives,
     organismManagedDegrees,
-    organismDomaines,
+    organismFormacodes,
     organismConventionCollectives,
     organismTypology,
     organismAndReferentialStatus,
-    updateOrganismDegreesAndDomaines,
+    updateOrganismDegreesAndFormacodes,
   };
 };

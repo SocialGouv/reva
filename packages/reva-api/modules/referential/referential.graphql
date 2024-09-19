@@ -215,7 +215,14 @@ type Etablissement {
   qualiopiStatus: Boolean
 }
 
+enum FormacodeType {
+  DOMAIN
+  SUB_DOMAIN
+  KEYWORD
+}
+
 type Formacode {
+  type: FormacodeType!
   code: ID!
   label: String!
   parentCode: ID

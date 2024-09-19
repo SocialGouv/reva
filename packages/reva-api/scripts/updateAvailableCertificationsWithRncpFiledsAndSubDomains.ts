@@ -9,7 +9,11 @@ const updateAvailableCertificationsWithRncpFiledsAndSubDomains = async () => {
   });
 
   for (const { rncpId } of certifications) {
-    await updateCertificationWithRncpFiledsAndSubDomains({ rncpId });
+    try {
+      await updateCertificationWithRncpFiledsAndSubDomains({ rncpId });
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 

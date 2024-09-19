@@ -31,6 +31,10 @@ const getOrganismQuery = graphql(`
         id
         label
       }
+      formacodes {
+        code
+        label
+      }
       conventionCollectives {
         id
         label

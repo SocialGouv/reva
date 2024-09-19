@@ -1,15 +1,16 @@
 "use client";
-import { successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import { useDomainesCcnsDegreesForm } from "./domainesCcnsDegreesForm.hook";
+import { useFormacodesCcnsDegreesForm } from "./formacodesCcnsDegreesForm.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const schema = z.object({
   organismDegrees: z
@@ -18,14 +19,19 @@ const schema = z.object({
   organismConventionCollectives: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
-  organismDomaines: z
-    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
-    .array(),
+  organismFormacodes: z.record(
+    z.string(),
+    z.object({
+      id: z.string(),
+      label: z.string(),
+      checked: z.boolean(),
+    }),
+  ),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const DomainesCcnsDegreesForm = ({
+const FormacodesCcnsDegreesForm = ({
   organismId,
   backButtonUrl,
 }: {
@@ -35,14 +41,14 @@ const DomainesCcnsDegreesForm = ({
   const {
     degrees,
     conventionCollectives,
-    domaines,
+    formacodes,
     organismManagedDegrees,
     organismConventionCollectives,
-    organismDomaines,
+    organismFormacodes,
     organismTypology,
     organismAndReferentialStatus,
-    updateOrganismDegreesAndDomaines,
-  } = useDomainesCcnsDegreesForm({ organismId });
+    updateOrganismDegreesAndFormacodes,
+  } = useFormacodesCcnsDegreesForm({ organismId });
 
   const queryClient = useQueryClient();
 
@@ -61,15 +67,20 @@ const DomainesCcnsDegreesForm = ({
     name: "organismDegrees",
   });
 
-  const { fields: organismDomainesFields } = useFieldArray({
-    control,
-    name: "organismDomaines",
-  });
-
   const { fields: organismConventionCollectivesFields } = useFieldArray({
     control,
     name: "organismConventionCollectives",
   });
+
+  const domains = useMemo(
+    () => formacodes.filter((formacode) => formacode.type == "DOMAIN"),
+    [formacodes],
+  );
+
+  const subDomains = useMemo(
+    () => formacodes.filter((formacode) => formacode.type == "SUB_DOMAIN"),
+    [formacodes],
+  );
 
   const resetForm = useCallback(() => {
     organismAndReferentialStatus === "success" &&
@@ -86,39 +97,50 @@ const DomainesCcnsDegreesForm = ({
           label: c.label,
           checked: !!organismConventionCollectives.find((oc) => oc.id === c.id),
         })),
-        organismDomaines: domaines.map((d) => ({
-          id: d.id,
-          label: d.label,
-          checked: !!organismDomaines.find((od) => od.id === d.id),
-        })),
+        organismFormacodes: subDomains.reduce(
+          (acc, d) => ({
+            ...acc,
+            [d.code]: {
+              id: d.code,
+              label: d.label,
+              checked: !!organismFormacodes.find((od) => od.code === d.code),
+            },
+          }),
+          {},
+        ),
       });
   }, [
     organismAndReferentialStatus,
     reset,
     degrees,
     conventionCollectives,
-    domaines,
+    subDomains,
     organismManagedDegrees,
     organismConventionCollectives,
-    organismDomaines,
+    organismFormacodes,
   ]);
 
   useEffect(resetForm, [resetForm]);
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    await updateOrganismDegreesAndDomaines.mutateAsync({
-      organismId,
-      degreeIds: data.organismDegrees
-        .filter((od) => od.checked)
-        .map((od) => od.id),
-      domaineIds: data.organismDomaines
-        .filter((od) => od.checked)
-        .map((od) => od.id),
-    });
-    queryClient.invalidateQueries({
-      queryKey: [organismId],
-    });
-    successToast("modifications enregistrées");
+    try {
+      await updateOrganismDegreesAndFormacodes.mutateAsync({
+        organismId,
+        degreeIds: data.organismDegrees
+          .filter((od) => od.checked)
+          .map((od) => od.id),
+        formacodeIds: Object.keys(data.organismFormacodes)
+          .map((key) => data.organismFormacodes[key])
+          .filter((od) => od.checked)
+          .map((od) => od.id),
+      });
+      queryClient.invalidateQueries({
+        queryKey: [organismId],
+      });
+      successToast("modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   });
 
   return (
@@ -131,7 +153,7 @@ const DomainesCcnsDegreesForm = ({
         />
       )}
 
-      {updateOrganismDegreesAndDomaines.status === "error" && (
+      {updateOrganismDegreesAndFormacodes.status === "error" && (
         <Alert
           className="my-6"
           severity="error"
@@ -141,7 +163,7 @@ const DomainesCcnsDegreesForm = ({
 
       {organismAndReferentialStatus === "success" && (
         <form
-          className="grid grid-cols-1 md:grid-cols-2 mt-6"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 mt-6"
           onSubmit={handleFormSubmit}
           onReset={(e) => {
             e.preventDefault();
@@ -150,27 +172,36 @@ const DomainesCcnsDegreesForm = ({
         >
           <fieldset className="flex flex-col gap-4">
             <legend className="text-3xl font-bold mb-4">
-              {organismTypology === "expertFiliere" && "Filières"}
+              {organismTypology === "expertFiliere" && "Domaines"}
               {organismTypology === "expertBranche" && "Branches"}
               {organismTypology === "expertBrancheEtFiliere" &&
-                "Filières et branches"}
+                "Domaines et branches"}
             </legend>
+
             {(organismTypology === "expertFiliere" ||
-              organismTypology === "expertBrancheEtFiliere") && (
-              <Checkbox
-                legend={
-                  <p className="text-sm">
-                    Quelles sont les filières que vous couvrez ?
-                  </p>
-                }
-                options={organismDomainesFields.map((od, odIndex) => ({
-                  label: od.label,
-                  nativeInputProps: {
-                    ...register(`organismDomaines.${odIndex}.checked`),
-                  },
-                }))}
-              />
-            )}
+              organismTypology === "expertBrancheEtFiliere") &&
+              domains.map((domain) => (
+                <Accordion
+                  className="before:shadow-none [&_div]:pb-0"
+                  key={domain.code}
+                  label={domain.label}
+                  defaultExpanded
+                >
+                  <Checkbox
+                    className="[&_label]:block [&_label]:first-letter:uppercase"
+                    options={subDomains
+                      .filter(
+                        (subDomain) => subDomain.parentCode == domain.code,
+                      )
+                      .map((od) => ({
+                        label: od.label,
+                        nativeInputProps: {
+                          ...register(`organismFormacodes.${od.code}.checked`),
+                        },
+                      }))}
+                  />
+                </Accordion>
+              ))}
             {(organismTypology === "expertBranche" ||
               organismTypology === "expertBrancheEtFiliere") && (
               <div className="flex flex-col">
@@ -229,4 +260,4 @@ const DomainesCcnsDegreesForm = ({
   );
 };
 
-export default DomainesCcnsDegreesForm;
+export default FormacodesCcnsDegreesForm;

@@ -38,6 +38,7 @@ type Organism {
   managedDegrees: [OrganismOnDegree!]!
   accounts: [Account!]!
   domaines: [Domaine!]!
+  formacodes: [Formacode!]!
   conventionCollectives: [ConventionCollective!]!
   llToEarth: String
   distanceKm: Float
@@ -237,6 +238,12 @@ input UpdateOrganismDegreesAndDomainesInput {
   domaineIds: [ID!]!
 }
 
+input UpdateOrganismDegreesAndFormacodesInput {
+  organismId: ID!
+  degreeIds: [ID!]!
+  formacodeIds: [ID!]!
+}
+
 type MaisonMereAAPsPaginated {
   rows: [MaisonMereAAP!]!
   info: PaginationInfo!
@@ -301,6 +308,10 @@ type Mutation {
 
   organism_updateOrganismDegreesAndDomaines(
     data: UpdateOrganismDegreesAndDomainesInput!
+  ): Organism
+
+  organism_updateOrganismDegreesAndFormacodes(
+    data: UpdateOrganismDegreesAndFormacodesInput!
   ): Organism
 
   organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!

@@ -43,6 +43,7 @@ import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
 import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
+import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormacodesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
@@ -69,6 +70,7 @@ import {
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
 } from "./organism.types";
+import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 
 const unsafeResolvers = {
   Account: {
@@ -96,6 +98,10 @@ const unsafeResolvers = {
       }),
     domaines: ({ id: organismId }: Organism) =>
       getOrganismDomainesByOrganismId({
+        organismId,
+      }),
+    formacodes: ({ id: organismId }: Organism) =>
+      getOrganismFormacodesByOrganismId({
         organismId,
       }),
     conventionCollectives: ({ id: organismId }: Organism) =>
@@ -412,6 +418,21 @@ const unsafeResolvers = {
         organismId: params.data.organismId,
         degreeIds: params.data.degreeIds,
         domaineIds: params.data.domaineIds,
+      }),
+    organism_updateOrganismDegreesAndFormacodes: async (
+      _parent: unknown,
+      params: {
+        data: {
+          organismId: string;
+          degreeIds: string[];
+          formacodeIds: string[];
+        };
+      },
+    ) =>
+      updateOrganismDegreesAndFormacodes({
+        organismId: params.data.organismId,
+        degreeIds: params.data.degreeIds,
+        formacodeIds: params.data.formacodeIds,
       }),
     organism_createAccount: async (
       _parent: unknown,

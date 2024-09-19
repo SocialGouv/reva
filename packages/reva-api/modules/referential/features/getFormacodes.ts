@@ -15,10 +15,51 @@ export async function getFormacodes(): Promise<Formacode[]> {
   const formacodes: Formacode[] = codes.map((formacode) => ({
     id: formacode.id,
     code: formacode.code,
-    label: formacode.label,
+    label: formacode.label
+      .toLowerCase()
+      .replace(/^./, (str) => str.toUpperCase()),
     type: formacode.type,
     parentCode: formacode.parentCode || undefined,
   }));
 
   return formacodes;
+}
+
+export async function getAvailableFormacodes(): Promise<Formacode[]> {
+  const formacodes: Formacode[] = await getFormacodes();
+
+  const certifications = await prismaClient.certification.findMany({
+    where: { status: "AVAILABLE" },
+    include: { certificationOnFormacode: true },
+  });
+
+  const availableFormacodes: { [key: string]: Formacode } = {};
+
+  for (const certification of certifications) {
+    const { certificationOnFormacode } = certification;
+
+    for (const relation of certificationOnFormacode) {
+      const formacode = formacodes.find((f) => f.id == relation.formacodeId);
+
+      if (formacode) {
+        availableFormacodes[formacode.id] = formacode;
+
+        const parent =
+          formacode.parentCode &&
+          formacodes.find((f) => f.code == formacode.parentCode);
+
+        if (parent) {
+          availableFormacodes[parent.id] = parent;
+        }
+      }
+    }
+  }
+
+  const mappedFormacodes = Object.keys(availableFormacodes).map(
+    (key) => availableFormacodes[key],
+  );
+
+  console.log(mappedFormacodes);
+
+  return mappedFormacodes;
 }
