@@ -55,7 +55,7 @@ export const sendLegalInformationDocumentsUpdateNeededEmail = async ({
   aapComment: string;
 }) => {
   return sendEmailWithLink({
-    app: "admin2",
+    app: "admin",
     action: "agencies-settings/legal-information",
     to: { email },
     htmlContent: (url: string) => {

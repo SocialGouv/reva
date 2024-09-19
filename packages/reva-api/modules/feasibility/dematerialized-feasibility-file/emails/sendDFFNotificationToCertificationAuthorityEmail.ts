@@ -31,7 +31,7 @@ export const sendDFFNotificationToCertificationAuthorityEmail = ({
     to: { email },
     htmlContent,
     subject: "Un nouveau dossier de faisabilité vous a été transmis",
-    app: "admin2",
+    app: "admin",
     customUrl: `/candidacies/${candidacyId}/feasibility`,
   });
 };

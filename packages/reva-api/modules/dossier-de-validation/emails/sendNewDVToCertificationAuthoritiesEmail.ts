@@ -26,7 +26,7 @@ export const sendNewDVToCertificationAuthoritiesEmail = ({
 
   return sendEmailWithLink({
     to: emails.map((email) => ({ email })),
-    app: "admin2",
+    app: "admin",
     htmlContent,
     customUrl: `/candidacies/${candidacyId}/dossier-de-validation`,
     subject: "Un nouveau dossier de validation est en attente",

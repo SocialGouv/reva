@@ -40,6 +40,6 @@ export const sendCandidacyTransferToNewCertificationAuthorityEmail = ({
     htmlContent,
     subject: "Une candidature vous a été transférée",
     customUrl: `/candidacies/${candidacyId}/feasibility/`,
-    app: "admin2",
+    app: "admin",
   });
 };

@@ -21,12 +21,20 @@ export const sendEmailWithLink = async ({
     | "agencies-settings/legal-information"
     | "";
   customUrl?: string;
-  app?: "app" | "admin" | "admin2";
+  app?: "app" | "admin";
   htmlContent: (url: string) => { html: string };
   subject?: string;
   attachment?: { name: string; content: string }[];
 }) => {
-  const appPath = app == "app" ? "candidat" : app;
+  let appPath = "no_app_defined";
+  switch (app) {
+    case "app":
+      appPath = "candidat";
+      break;
+    case "admin":
+      appPath = "admin2";
+      break;
+  }
   const actionPath =
     action == "registration" || action == "confirmEmail" ? "login" : action;
 
