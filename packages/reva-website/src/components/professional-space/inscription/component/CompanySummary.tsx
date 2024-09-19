@@ -38,8 +38,8 @@ export const CompanySummary = ({ currentStep }: { currentStep: number }) => {
   );
 
   const accountFullname = toFullname(
-    professionalSpaceInfos.accountLastname,
     professionalSpaceInfos.accountFirstname,
+    professionalSpaceInfos.accountLastname,
   );
 
   return (
