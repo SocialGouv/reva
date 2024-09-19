@@ -31,6 +31,6 @@ export const sendNewEmailCandidateEmail = ({
     htmlContent,
     token,
     action: "confirmEmail",
-    app: "app",
+    app: "candidate",
   });
 };

@@ -42,6 +42,6 @@ export const sendTrainingEmail = async (email: string, token: string) => {
     action: "login",
     htmlContent,
     subject: "Votre parcours pédagogique est prêt pour validation",
-    app: "app",
+    app: "candidate",
   });
 };

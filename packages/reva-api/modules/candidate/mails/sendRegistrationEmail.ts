@@ -34,6 +34,6 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
     token,
     action: "login",
     htmlContent,
-    app: "app",
+    app: "candidate",
   });
 };

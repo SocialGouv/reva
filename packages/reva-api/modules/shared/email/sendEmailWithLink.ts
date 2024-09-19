@@ -5,7 +5,7 @@ export const sendEmailWithLink = async ({
   to,
   token,
   action = "",
-  app = "app",
+  app,
   htmlContent,
   subject,
   customUrl,
@@ -21,14 +21,14 @@ export const sendEmailWithLink = async ({
     | "agencies-settings/legal-information"
     | "";
   customUrl?: string;
-  app: "app" | "admin";
+  app: "candidate" | "admin";
   htmlContent: (url: string) => { html: string };
   subject?: string;
   attachment?: { name: string; content: string }[];
 }) => {
   let appPath = "no_app_defined";
   switch (app) {
-    case "app":
+    case "candidate":
       appPath = "candidat";
       break;
     case "admin":
