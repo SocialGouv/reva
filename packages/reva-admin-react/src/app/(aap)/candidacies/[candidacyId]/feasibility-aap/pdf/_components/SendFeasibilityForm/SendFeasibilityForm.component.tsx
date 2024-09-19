@@ -39,7 +39,7 @@ interface Props {
   candidacyId: string;
 }
 
-export const SendFeasibilityForm = (props: Props): JSX.Element => {
+export const SendFeasibilityForm = (props: Props): React.ReactNode => {
   const { candidacyId } = props;
 
   const { candidacy, sendFeasibility } = useSendFeasibilityForm(candidacyId);
@@ -137,6 +137,24 @@ export const SendFeasibilityForm = (props: Props): JSX.Element => {
       },
       ...feasibilityHistory,
     ];
+  }
+
+  if (candidacy.status !== "success") {
+    return null;
+  }
+
+  if (!certificationAuthorities.length) {
+    return (
+      <Alert
+        className="mt-4"
+        small
+        severity="warning"
+        title="Attention"
+        description="Aucun certificateur n'est actuellement rattaché à cette certification
+          pour le département de la candidature. Il n'est donc pas actuellement
+          possible de remplir le dossier de faisabilité."
+      />
+    );
   }
 
   return (
