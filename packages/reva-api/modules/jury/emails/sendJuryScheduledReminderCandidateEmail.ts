@@ -31,5 +31,6 @@ export const sendJuryScheduledReminderCandidateEmail = async ({
     to: { email },
     htmlContent,
     subject: "N'oubliez pas votre passage en jury VAE",
+    app: "app",
   });
 };

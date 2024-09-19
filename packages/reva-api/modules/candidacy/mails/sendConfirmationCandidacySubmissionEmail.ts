@@ -56,5 +56,6 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
     to: { email },
     htmlContent,
     subject: "Votre candidature a été transmise",
+    app: "app",
   });
 };

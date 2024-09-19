@@ -2,11 +2,6 @@ import mjml2html from "mjml";
 
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
-const baseUrl =
-  process.env.ELM_ADMIN_BASE_URL ||
-  process.env.APP_BASE_URL ||
-  "https://vae.gouv.fr";
-
 export const sendJuryScheduledAAPEmail = async ({
   candidacyId,
   email,
@@ -36,7 +31,8 @@ export const sendJuryScheduledAAPEmail = async ({
   return sendEmailWithLink({
     to: { email },
     htmlContent,
+    app: "admin",
     subject: "Convocation de passage en jury pour un de vos candidats",
-    customUrl: `${baseUrl}/admin2/candidacies/${candidacyId}/jury-aap`,
+    customUrl: `/candidacies/${candidacyId}/jury-aap`,
   });
 };

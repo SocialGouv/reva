@@ -21,7 +21,7 @@ export const sendEmailWithLink = async ({
     | "agencies-settings/legal-information"
     | "";
   customUrl?: string;
-  app?: "app" | "admin";
+  app: "app" | "admin";
   htmlContent: (url: string) => { html: string };
   subject?: string;
   attachment?: { name: string; content: string }[];

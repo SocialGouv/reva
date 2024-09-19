@@ -22,5 +22,6 @@ export const sendLoginEmail = async (email: string, token: string) => {
     action: "login",
     htmlContent,
     subject: "Accédez à votre compte France VAE",
+    app: "app",
   });
 };

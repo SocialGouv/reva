@@ -44,5 +44,6 @@ export const sendJuryScheduledCandidateEmail = async ({
     htmlContent,
     subject: "Convocation de passage devant un jury VAE",
     attachment,
+    app: "app",
   });
 };
