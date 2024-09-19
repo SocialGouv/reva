@@ -117,7 +117,11 @@ export const CompanySiretStepForm = () => {
             hintText="14 chiffres"
             state={errors.companySiret ? "error" : "default"}
             stateRelatedMessage={errors.companySiret?.message}
-            nativeInputProps={{ ...register("companySiret") }}
+            nativeInputProps={{
+              ...register("companySiret", {
+                setValueAs: (siret) => siret.replace(/\s+/g, ""),
+              }),
+            }}
           />
 
           <Input
