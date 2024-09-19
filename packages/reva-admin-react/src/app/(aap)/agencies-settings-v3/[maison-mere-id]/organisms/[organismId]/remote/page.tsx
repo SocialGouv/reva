@@ -147,7 +147,9 @@ export default function RemotePage() {
               <Accordion label="Domaines" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.formacodes?.map((formacode) => (
-                    <Tag key={formacode.code}>{formacode.label}</Tag>
+                    <Tag key={formacode.code}>
+                      {`${formacode.code} ${formacode.label}`}
+                    </Tag>
                   ))}
                 </div>
               </Accordion>

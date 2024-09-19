@@ -194,7 +194,7 @@ const FormacodesCcnsDegreesForm = ({
                         (subDomain) => subDomain.parentCode == domain.code,
                       )
                       .map((od) => ({
-                        label: od.label,
+                        label: `${od.code} ${od.label}`,
                         nativeInputProps: {
                           ...register(`organismFormacodes.${od.code}.checked`),
                         },
