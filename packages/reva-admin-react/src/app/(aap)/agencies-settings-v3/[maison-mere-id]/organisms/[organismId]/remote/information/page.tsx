@@ -26,6 +26,7 @@ const InformationsRemotePage = () => {
     organism,
     getOrganismStatus,
     createOrUpdateInformationsCommercialesAndRemoteStatus,
+    isAdmin,
   } = useInformationRemotePage({ organismId });
 
   const queryClient = useQueryClient();
@@ -131,10 +132,17 @@ const InformationsRemotePage = () => {
           href: `/`,
         }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+          isAdmin
+            ? {
+                label: organism?.maisonMereAAP?.raisonSociale,
+                linkProps: {
+                  href: `/maison-mere-aap/${maisonMereAAPId}`,
+                },
+              }
+            : {
+                label: "Paramètres",
+                linkProps: { href: "/agencies-settings-v3" },
+              },
           {
             label: "Accompagnement à distance",
             linkProps: {

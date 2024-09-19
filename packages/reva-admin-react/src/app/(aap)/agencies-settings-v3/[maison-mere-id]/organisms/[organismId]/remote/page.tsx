@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
@@ -15,6 +16,9 @@ import { useFeatureflipping } from "@/components/feature-flipping/featureFlippin
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
+      maisonMereAAP {
+        raisonSociale
+      }
       id
       informationsCommerciales {
         id
@@ -61,6 +65,7 @@ export default function RemotePage() {
     queryFn: () => graphqlClient.request(getOrganismQuery, { organismId }),
     enabled: !!organismId,
   });
+  const { isAdmin } = useAuth();
 
   const organism = getOrganismResponse?.organism_getOrganism;
   const isDomainAndLevelsComplete =
@@ -81,10 +86,17 @@ export default function RemotePage() {
           href: `/`,
         }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+          isAdmin
+            ? {
+                label: organism?.maisonMereAAP?.raisonSociale,
+                linkProps: {
+                  href: `/maison-mere-aap/${maisonMereAAPId}`,
+                },
+              }
+            : {
+                label: "Paramètres",
+                linkProps: { href: "/agencies-settings-v3" },
+              },
         ]}
       />
 

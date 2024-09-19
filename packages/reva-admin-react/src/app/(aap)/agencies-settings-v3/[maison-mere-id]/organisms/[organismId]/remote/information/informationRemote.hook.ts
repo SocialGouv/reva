@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { RemoteZone } from "@/graphql/generated/graphql";
@@ -16,6 +17,9 @@ const getOrganismQuery = graphql(`
         telephone
         siteInternet
         emailContact
+      }
+      maisonMereAAP {
+        raisonSociale
       }
     }
   }
@@ -49,6 +53,7 @@ export const useInformationRemotePage = ({
 }: {
   organismId: string;
 }) => {
+  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
 
@@ -97,5 +102,6 @@ export const useInformationRemotePage = ({
     organism,
     getOrganismStatus,
     createOrUpdateInformationsCommercialesAndRemoteStatus,
+    isAdmin,
   };
 };

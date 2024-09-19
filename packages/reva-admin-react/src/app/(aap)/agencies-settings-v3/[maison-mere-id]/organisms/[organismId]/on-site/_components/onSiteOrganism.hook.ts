@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +9,9 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       label
+      maisonMereAAP {
+        raisonSociale
+      }
       informationsCommerciales {
         id
         nom
@@ -44,6 +48,7 @@ const getOrganismQuery = graphql(`
 `);
 
 export const useOnSiteOrganism = () => {
+  const { isAdmin } = useAuth();
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{
     organismId: string;
     "maison-mere-id": string;
@@ -61,5 +66,5 @@ export const useOnSiteOrganism = () => {
   const organismName =
     organism?.informationsCommerciales?.nom || organism?.label;
 
-  return { organism, organismId, organismName, maisonMereAAPId };
+  return { organism, organismId, organismName, maisonMereAAPId, isAdmin };
 };

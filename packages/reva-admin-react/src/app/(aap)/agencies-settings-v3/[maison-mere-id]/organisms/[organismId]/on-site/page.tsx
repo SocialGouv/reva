@@ -1,5 +1,6 @@
 "use client";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
@@ -7,14 +8,12 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
-export default function RemotePage() {
+export default function OnSitePage() {
   const { isFeatureActive } = useFeatureflipping();
 
-  const { organism, organismId, organismName, maisonMereAAPId } =
+  const { organism, organismId, organismName, maisonMereAAPId, isAdmin } =
     useOnSiteOrganism();
-
   if (!organism) return null;
 
   const isDomainAndLevelsComplete =
@@ -43,10 +42,17 @@ export default function RemotePage() {
           href: `/`,
         }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+          isAdmin
+            ? {
+                label: organism?.maisonMereAAP?.raisonSociale,
+                linkProps: {
+                  href: `/maison-mere-aap/${maisonMereAAPId}`,
+                },
+              }
+            : {
+                label: "Paramètres",
+                linkProps: { href: "/agencies-settings-v3" },
+              },
         ]}
       />
 

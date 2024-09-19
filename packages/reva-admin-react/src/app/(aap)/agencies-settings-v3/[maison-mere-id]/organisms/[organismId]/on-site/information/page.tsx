@@ -14,6 +14,7 @@ const InformationsOnSitePage = () => {
     organismId,
     createOrUpdateInformationsCommerciales,
     maisonMereAAPId,
+    isAdmin,
   } = useOrganismInformationOnSite();
   const handleSubmit = async (data: OrganismInformationFormData) => {
     const input = {
@@ -66,10 +67,17 @@ const InformationsOnSitePage = () => {
           href: `/`,
         }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+          isAdmin
+            ? {
+                label: organism?.maisonMereAAP?.raisonSociale,
+                linkProps: {
+                  href: `/maison-mere-aap/${maisonMereAAPId}`,
+                },
+              }
+            : {
+                label: "Paramètres",
+                linkProps: { href: "/agencies-settings-v3" },
+              },
           {
             label: organismName,
             linkProps: {

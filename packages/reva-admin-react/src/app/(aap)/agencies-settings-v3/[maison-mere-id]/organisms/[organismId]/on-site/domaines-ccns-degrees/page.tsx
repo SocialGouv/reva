@@ -5,7 +5,8 @@ import DomainesCcnsDegreesForm from "../../_components/domaines-ccns-degrees-for
 import { useOnSiteOrganism } from "../_components/onSiteOrganism.hook";
 
 const DomainesCcnsDegreesOnSitePage = () => {
-  const { organismId, organismName, maisonMereAAPId } = useOnSiteOrganism();
+  const { organismId, organismName, maisonMereAAPId, isAdmin, organism } =
+    useOnSiteOrganism();
 
   return (
     <div className="flex flex-col">
@@ -15,10 +16,17 @@ const DomainesCcnsDegreesOnSitePage = () => {
           href: `/`,
         }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+          isAdmin
+            ? {
+                label: organism?.maisonMereAAP?.raisonSociale,
+                linkProps: {
+                  href: `/maison-mere-aap/${maisonMereAAPId}`,
+                },
+              }
+            : {
+                label: "Paramètres",
+                linkProps: { href: "/agencies-settings-v3" },
+              },
           {
             label: organismName,
             linkProps: {
