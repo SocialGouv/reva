@@ -1,5 +1,6 @@
 "use client";
 import { HeadAgencySettingsSummary } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/HeadAgencySettingsSummary";
+import { Impersonate } from "@/components/impersonate";
 import { successToast } from "@/components/toast/toast";
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
@@ -47,7 +48,10 @@ const MaisonMereAapPage = () => {
 
   return (
     <>
-      <h1>{maisonMereAAP.raisonSociale}</h1>
+      <div className="flex justify-between w-full">
+        <h1>{maisonMereAAP.raisonSociale}</h1>
+        <Impersonate accountId={accountId} />
+      </div>
       <div className="flex items-center justify-between flex-col w-full border-y-[1px] border-y-neutral-200 py-2 my-4">
         <div className="flex items-center justify-between w-full">
           <span>Statut de la structure</span>
