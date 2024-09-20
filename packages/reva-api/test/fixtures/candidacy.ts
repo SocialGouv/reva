@@ -8,6 +8,7 @@ export const candidacyUnifvae = {
   organismId: expertFiliereOrganism.id,
   financeModule: FinanceModule.unifvae,
   candidateId: candidateJPL.id,
+  isCertificationPartial: false,
 };
 
 export const candidacyUnireva = {

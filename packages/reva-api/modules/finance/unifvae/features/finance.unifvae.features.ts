@@ -1,6 +1,6 @@
 import { Candidate } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
-import { format, isBefore } from "date-fns";
+import { format, isAfter, isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
@@ -188,8 +188,9 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       );
     }
   }
-  // If the candidate has dropped out we ensure that the funding request has been sent
+  // If the candidate has dropped out ...
   else {
+    // If the candidate has dropped out we ensure that the funding request has been sent
     if (
       !candidacy.candidacyStatuses?.some(
         (s) => s.status === "DEMANDE_FINANCEMENT_ENVOYE",
@@ -197,6 +198,19 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     ) {
       throw new Error(
         "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+      );
+    }
+    // If the candidate has dropped out for less than 6 months and no proof of dropout has been received by the france vae admin, we prevent the payment request creation
+    if (
+      candidacy.candidacyDropOut &&
+      !candidacy.candidacyDropOut.proofReceivedByAdmin &&
+      isAfter(
+        candidacy.candidacyDropOut.createdAt,
+        sub(new Date(), { months: 6 }),
+      )
+    ) {
+      throw new Error(
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
       );
     }
   }

@@ -26,7 +26,10 @@ import {
   dropOutSixMonthsAgo,
   dropOutSixMonthsAgoMinusOneMinute,
 } from "../../../../test/fixtures/candidacy";
-import { fundingRequestSample } from "../../../../test/fixtures/funding-request";
+import {
+  fundingRequestSample,
+  paymentRequestInputBase,
+} from "../../../../test/fixtures/funding-request";
 import {
   basicSkill1Label,
   training1Label,
@@ -57,12 +60,14 @@ afterAll(async () => {
 afterEach(async () => {
   await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany();
   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
+  await prismaClient.paymentRequestBatchUnifvae.deleteMany();
+  await prismaClient.paymentRequestUnifvae.deleteMany();
   await prismaClient.fundingRequestBatchUnifvae.deleteMany();
   await prismaClient.fundingRequestUnifvae.deleteMany();
   await prismaClient.candidacyDropOut.deleteMany();
 });
 
-const injectGraphqlFundingRequestCreation = async () =>
+const injectGraphqlPaymentRequestCreation = async () =>
   injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -71,15 +76,14 @@ const injectGraphqlFundingRequestCreation = async () =>
     }),
     payload: {
       requestType: "mutation",
-      endpoint: "candidacy_createFundingRequestUnifvae",
+      endpoint: "candidacy_createOrUpdatePaymentRequestUnifvae",
       returnFields: "{ id }",
       arguments: {
         candidacyId: candidacyUnifvae.id,
-        fundingRequest: {
-          ...fundingRequestSample,
+        paymentRequest: {
+          ...paymentRequestInputBase,
         },
       },
-      enumFields: ["candidateGender"],
     },
   });
 
@@ -238,18 +242,18 @@ test("should fetch fundingRequestUnifvae", async () => {
   });
 });
 
-test("should fail to create fundingRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
+test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
   await dropOutCandidacySixMonthsAgoMinusOneMinute({
     proofReceivedByAdmin: false,
   });
 
-  const resp = await injectGraphqlFundingRequestCreation();
+  const resp = await injectGraphqlPaymentRequestCreation();
 
   expect(resp.statusCode).toBe(200);
   const obj = resp.json();
   expect(obj).toHaveProperty("errors");
   expect(obj.errors[0].message).toBe(
-    "La demande de prise en charge n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+    "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
   );
 
   await prismaClient.candidacy.update({
@@ -261,18 +265,18 @@ test("should fail to create fundingRequestUnifvae when candidacy was drop out le
     },
   });
 
-  const resp2 = await injectGraphqlFundingRequestCreation();
+  const resp2 = await injectGraphqlPaymentRequestCreation();
 
   const obj2 = resp2.json();
   expect(obj2).not.toHaveProperty("errors");
 });
 
-test("should allow the creation of fundingRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
+test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
   await dropOutCandidacySixMonthsAgoMinusOneMinute({
     proofReceivedByAdmin: true,
   });
 
-  const resp = await injectGraphqlFundingRequestCreation();
+  const resp = await injectGraphqlPaymentRequestCreation();
   const obj = resp.json();
   expect(obj).not.toHaveProperty("errors");
 });
