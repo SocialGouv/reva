@@ -1,18 +1,19 @@
 "use client";
+import { Impersonate } from "@/components/impersonate";
+import { errorToast, successToast } from "@/components/toast/toast";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
+import InterventionAreaSummaryCard from "../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
+import AccountsSummaryCard from "./_components/accounts-summary-card/AccountsSummaryCard";
 import {
   useCertificationAuthority,
   useCertificationAuthorityForm,
 } from "./certificationAuthority.hooks";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
-import InterventionAreaSummaryCard from "../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
-import AccountsSummaryCard from "./_components/accounts-summary-card/AccountsSummaryCard";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { errorToast, successToast } from "@/components/toast/toast";
-import Button from "@codegouvfr/react-dsfr/Button";
 
 type FormData = z.infer<typeof schema>;
 
@@ -97,7 +98,10 @@ const CertificationAuthorityAdminComponent = ({
         }
         pageLabel={certificationAuthority.label}
       />
-      <h1>{certificationAuthority.label}</h1>
+      <div className="flex justify-between w-full">
+        <h1>{certificationAuthority.label}</h1>
+        <Impersonate accountId={certificationAuthority?.account?.id} />
+      </div>
       <p className="text-xl">
         Il s’occupe des candidatures (dossier de validation, jury...) et peut
         ajouter des comptes collaborateurs. L’ajout d’un certificateur

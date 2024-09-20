@@ -10,6 +10,9 @@ const getCertificationAuthority = graphql(`
       label
       contactFullName
       contactEmail
+      account {
+        id
+      }
       departments {
         id
         code
