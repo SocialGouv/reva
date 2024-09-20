@@ -1,5 +1,6 @@
 type CertificationAuthority {
   id: ID!
+  account: Account!
   label: String!
   contactFullName: String
   contactEmail: String

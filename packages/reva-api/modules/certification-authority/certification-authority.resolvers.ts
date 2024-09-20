@@ -10,32 +10,33 @@ import { logger } from "../shared/logger";
 import { resolversSecurityMap } from "./certification-authority.security";
 import { CertificationAuthority } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
+import { createCertificationAuthority } from "./features/createCertificationAuthority";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
+import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
+import { getAccountByCertificationAuthorityId } from "./features/getAccountByCertificationAuthorityId";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
+import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthoritiesToTransferCandidacy } from "./features/getCertificationAuthoritiesToTransferCandidacy";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
+import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
+import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
+import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
+import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
+import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
+import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
+import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
-import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
-import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
-import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
-import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
-import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
-import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
-import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
-import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
-import { createCertificationAuthority } from "./features/createCertificationAuthority";
-import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -54,6 +55,10 @@ const unsafeResolvers = {
     }: CertificationAuthority) =>
       getCertificationAuthorityStructureById({
         certificationAuthorityStructureId,
+      }),
+    account: (parent: CertificationAuthority) =>
+      getAccountByCertificationAuthorityId({
+        certificationAuthorityId: parent.id,
       }),
   },
 
