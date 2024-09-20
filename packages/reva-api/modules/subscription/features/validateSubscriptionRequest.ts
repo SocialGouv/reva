@@ -10,6 +10,7 @@ import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 import { getDegrees } from "../../referential/features/getDegrees";
 import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
+import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
@@ -70,6 +71,14 @@ export const validateSubscriptionRequest = async ({
 
   const degrees = await getDegrees();
 
+  const cgu = await getLastProfessionalCgu({
+    maxCreatedAt: subscriptionRequest.createdAt,
+  });
+
+  if (!cgu) {
+    throw new Error("CGU non trouvées");
+  }
+
   //organism creation
   const newOrganism = await createOrganism({
     label: subscriptionRequest.companyName ?? "",
@@ -117,8 +126,8 @@ export const validateSubscriptionRequest = async ({
       dateExpirationCertificationQualiopi: new Date(),
       gestionnaireAccountId: account.id,
       statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
-      cguVersion: null,
-      cguAcceptedAt: null,
+      cguVersion: cgu.version,
+      cguAcceptedAt: subscriptionRequest.createdAt,
       managerFirstname: subscriptionRequest.managerFirstname,
       managerLastname: subscriptionRequest.managerLastname,
       showAccountSetup: true,

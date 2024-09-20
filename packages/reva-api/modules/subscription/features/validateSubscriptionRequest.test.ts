@@ -35,6 +35,12 @@ const subRequest = {
   },
 } satisfies Prisma.SubscriptionRequestCreateInput;
 
+const cgu = {
+  id: "2d761888-390c-47c1-909a-d88bc9b97878",
+  version: 1,
+  createdAt: new Date(2021, 1, 1),
+} as Prisma.ProfessionalCguCreateInput;
+
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
   (global as any).fastify = app;
@@ -47,6 +53,7 @@ beforeEach(async () => {
   await prismaClient.maisonMereAAP.deleteMany();
   await prismaClient.account.deleteMany();
   await prismaClient.subscriptionRequest.deleteMany();
+  await prismaClient.professionalCgu.deleteMany();
 });
 
 test("It should validate a correct subscription request", async () => {
@@ -58,6 +65,7 @@ test("It should validate a correct subscription request", async () => {
       Promise.resolve("ab3c88f8-87d0-4757-a5bd-f26ace8d2baf"),
     );
 
+  await prismaClient.professionalCgu.create({ data: cgu });
   await prismaClient.subscriptionRequest.create({
     data: subRequest,
   });
@@ -124,6 +132,7 @@ test("It should fail to validate the subscription request if a keycloak account 
       Promise.resolve({ id: existingKeycloakAccountId }),
     );
 
+  await prismaClient.professionalCgu.create({ data: cgu });
   await prismaClient.subscriptionRequest.create({
     data: subRequest,
   });
