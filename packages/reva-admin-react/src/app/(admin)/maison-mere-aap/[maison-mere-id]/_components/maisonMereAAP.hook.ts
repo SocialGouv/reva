@@ -90,19 +90,6 @@ export const useMaisonMereAAP = (id: string) => {
     },
   });
 
-  // const { mutateAsync: updateOrganismIsActive } = useMutation({
-  //   mutationFn: (params: { maisonMereAAPId: string; isActive: boolean }) =>
-  //     graphqlClient.request(updateMaisonMereOrganismsIsActiveMutation, {
-  //       data: {
-  //         maisonMereAAPId: params.maisonMereAAPId,
-  //         isActive: params.isActive,
-  //       },
-  //     }),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: [id, "maisonMereAAP"] });
-  //   },
-  // });
-
   const maisonMereAAP = maisonMereAAPResponse?.organism_getMaisonMereAAPById;
 
   const headAgencyOrganism = maisonMereAAP?.organisms?.find(
