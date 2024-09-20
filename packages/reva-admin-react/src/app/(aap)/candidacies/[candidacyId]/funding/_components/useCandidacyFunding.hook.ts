@@ -51,7 +51,6 @@ const getCandidacyByIdFunding = graphql(`
       }
       candidacyDropOut {
         createdAt
-        proofReceivedByAdmin
       }
       certificateSkills
       otherTraining

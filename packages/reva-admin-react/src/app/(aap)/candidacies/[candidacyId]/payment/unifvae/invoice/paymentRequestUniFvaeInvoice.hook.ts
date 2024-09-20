@@ -51,6 +51,10 @@ const getCandidacyQuery = graphql(`
         otherTrainingEffectiveHourCount
         otherTrainingEffectiveCost
       }
+      candidacyDropOut {
+        createdAt
+        proofReceivedByAdmin
+      }
     }
   }
 `);

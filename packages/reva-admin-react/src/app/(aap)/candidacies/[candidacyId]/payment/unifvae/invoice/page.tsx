@@ -22,6 +22,7 @@ import {
   paymentRequestUniFvaeInvoiceSchema,
 } from "./paymentRequestUniFvaeInvoiceFormSchema";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
+import { isAfter, sub } from "date-fns";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -180,6 +181,21 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       <CandidacyBackButton candidacyId={candidacyId} />
       <h1>Demande de paiement</h1>
       <FormOptionalFieldsDisclaimer />
+      {!paymentRequestAlreadySent &&
+        candidacy?.candidacyDropOut &&
+        !candidacy.candidacyDropOut.proofReceivedByAdmin &&
+        isAfter(
+          candidacy?.candidacyDropOut?.createdAt,
+          sub(new Date(), { months: 6 }),
+        ) && (
+          <Alert
+            data-test="payment-request-not-available"
+            className="my-4"
+            severity="error"
+            title="La demande de paiement n’est pas encore disponible"
+            description="Vous y aurez accès 6 mois après la mise en abandon du candidat."
+          />
+        )}
       <Alert
         className="mb-6"
         severity="info"
@@ -205,6 +221,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       <hr />
       {getCandidacyStatus === "success" && candidacy && (
         <form
+          data-test="payment-form"
           className="flex flex-col"
           onSubmit={handleFormSubmit}
           onReset={(e) => {
