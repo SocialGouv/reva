@@ -53,7 +53,7 @@ export const SearchList = <T,>({
       {hint && hint({ totalRows: searchResultsPage.info.totalRows })}
 
       <SearchFilterBar
-        className="mb-6"
+        className="mb-2"
         searchFilter={searchFilter}
         resultCount={searchResultsPage.info.totalRows}
         onSearchFilterChange={(filter) => {

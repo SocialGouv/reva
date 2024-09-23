@@ -55,7 +55,7 @@ export const SearchFilterBar = ({
       />
       {defaultSearchFilter ? (
         <>
-          <div className="font-semibold text-xl">
+          <div className="text-xs text-neutral-500">
             {resultCountLabel} pour « {defaultSearchFilter} »
           </div>
           <Button
@@ -67,7 +67,7 @@ export const SearchFilterBar = ({
           </Button>
         </>
       ) : (
-        <div className="font-semibold text-xl">{resultCountLabel}</div>
+        <div className="text-xs text-neutral-500">{resultCountLabel}</div>
       )}
     </div>
   );
