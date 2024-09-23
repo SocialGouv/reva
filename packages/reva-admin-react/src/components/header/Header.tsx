@@ -29,64 +29,63 @@ export const Header = () => {
     ? "/certification-authority-structures"
     : "/certification-authorities";
 
-  const adminTabs = [];
-
-  if (isAdmin) {
-    adminTabs.push({
+  const adminTabsV1 = [
+    {
+      text: "Inscriptions",
+      linkProps: {
+        href: "/subscriptions/pending",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/subscriptions"),
+    },
+    {
+      text: "Comptes",
+      linkProps: {
+        href: "/accounts/organisms",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/accounts"),
+    },
+    {
       text: "Certifications",
       linkProps: {
         href: "/certifications",
         target: "_self",
       },
       isActive: currentPathname.startsWith("/certifications"),
-    });
-    if (isAdminDashboardV2Enabled) {
-      adminTabs.push({
-        text: "Annuaires",
-        isActive: [
-          "/accounts/organisms",
-          "/certification-authority-structures",
-          "/subscriptions",
-        ].some((path) => currentPathname.startsWith(path)),
-        menuLinks: [
-          {
-            text: "AAP",
-            linkProps: {
-              href: "/accounts/organisms",
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith("/accounts"),
-          },
-          {
-            text: "Certificateurs",
-            linkProps: {
-              href: certificateursPath,
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith(certificateursPath),
-          },
-          {
-            text: "Inscriptions",
-            linkProps: {
-              href: "/subscriptions/pending",
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith("/subscriptions"),
-          },
-        ],
-      });
-    } else {
-      adminTabs.push(
+    },
+    {
+      text: "Certificateurs",
+      linkProps: {
+        href: isFeatureActive(
+          "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
+        )
+          ? "/certification-authority-structures"
+          : "/certification-authorities",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/certification-authorities"),
+    },
+  ];
+  const adminTabsV2 = [
+    {
+      text: "Certifications",
+      linkProps: {
+        href: "/certifications",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/certifications"),
+    },
+    {
+      text: "Annuaires",
+      isActive: [
+        "/accounts/organisms",
+        "/certification-authority-structures",
+        "/subscriptions",
+      ].some((path) => currentPathname.startsWith(path)),
+      menuLinks: [
         {
-          text: "Inscriptions",
-          linkProps: {
-            href: "/subscriptions/pending",
-            target: "_self",
-          },
-          isActive: currentPathname.startsWith("/subscriptions"),
-        },
-        {
-          text: "Comptes",
+          text: "AAP",
           linkProps: {
             href: "/accounts/organisms",
             target: "_self",
@@ -96,18 +95,24 @@ export const Header = () => {
         {
           text: "Certificateurs",
           linkProps: {
-            href: isFeatureActive(
-              "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
-            )
-              ? "/certification-authority-structures"
-              : "/certification-authorities",
+            href: certificateursPath,
             target: "_self",
           },
-          isActive: currentPathname.startsWith("/certification-authorities"),
+          isActive: currentPathname.startsWith(certificateursPath),
         },
-      );
-    }
-  }
+        {
+          text: "Inscriptions",
+          linkProps: {
+            href: "/subscriptions/pending",
+            target: "_self",
+          },
+          isActive: currentPathname.startsWith("/subscriptions"),
+        },
+      ],
+    },
+  ];
+
+  const adminTabs = isAdminDashboardV2Enabled ? adminTabsV2 : adminTabsV1;
 
   const navigation = authenticated
     ? [
@@ -142,7 +147,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...adminTabs,
+        ...(isAdmin ? adminTabs : []),
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
               {
