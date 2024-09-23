@@ -1,8 +1,8 @@
 import { endOfDay, startOfDay, sub } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
-import { sendAlertDeadlineExceededDVToOrganism } from "../../dossier-de-validation/emails";
 import { logger } from "../../shared/logger";
+import { sendAlertDeadlineExceededDatePrevisionnelleJuryToOrganism } from "../emails/sendAlertDeadlineExceededDatePrevisionnelleJuryToOrganism";
 
 // eslint-disable-next-line import/no-unused-modules
 export const sendReminderToOrganismForCandidateJuryDeadline = async () => {
@@ -43,8 +43,8 @@ export const sendReminderToOrganismForCandidateJuryDeadline = async () => {
         candidacyStatus.candidacy.organism?.contactAdministrativeEmail;
 
       if (email) {
-        await sendAlertDeadlineExceededDVToOrganism({
-          candadicyId: candidacyStatus.candidacyId,
+        await sendAlertDeadlineExceededDatePrevisionnelleJuryToOrganism({
+          candidacyId: candidacyStatus.candidacyId,
           email,
         });
         candidacyIdsToUpdate.push(candidacyStatus.candidacy.id);

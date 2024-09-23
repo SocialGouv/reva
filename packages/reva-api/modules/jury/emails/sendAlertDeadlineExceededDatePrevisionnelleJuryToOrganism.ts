@@ -2,7 +2,7 @@ import mjml2html from "mjml";
 
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
-export const sendAlertDeadlineExceededDatePrevisionnelleToOrganism = ({
+export const sendAlertDeadlineExceededDatePrevisionnelleJuryToOrganism = ({
   email,
   candidacyId,
 }: {
