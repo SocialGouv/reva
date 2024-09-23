@@ -63,6 +63,16 @@ export const searchOrganismsForCandidacy = async ({
   };
 };
 
+const isFormacodeFeatureActive = async (): Promise<boolean> => {
+  const isAapSettingsV3Active = (await getFeatureByKey("AAP_SETTINGS_V3"))
+    ?.isActive;
+  const isAapSettingsFormacodeActive = (
+    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
+  )?.isActive;
+
+  return !!(isAapSettingsV3Active && isAapSettingsFormacodeActive);
+};
+
 const getRandomActiveOrganismForCertification = async ({
   certificationId,
   departmentId,
@@ -76,8 +86,13 @@ const getRandomActiveOrganismForCertification = async ({
   searchFilter: SearchOrganismFilter;
   limit: number;
 }) => {
+  let organismView = "active_organism_by_available_certification";
+  if (await isFormacodeFeatureActive()) {
+    organismView = `${organismView}_based_on_formacode`;
+  }
+
   let fromClause = `from organism o
-    join active_organism_by_available_certification ao on ao.organism_id = o.id
+    join ${organismView} ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id
    left join organism_informations_commerciales as oic on oic.organism_id = o.id`;
 
@@ -220,12 +235,17 @@ const getAAPsWithZipCode = async ({
     }
   }
 
+  let organismView = "active_organism_by_available_certification";
+  if (await isFormacodeFeatureActive()) {
+    organismView = `${organismView}_based_on_formacode`;
+  }
+
   const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
       SELECT DISTINCT(o.*),o.is_onsite as "isOnSite", (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
-       JOIN active_organism_by_available_certification ao on ao.organism_id=o.id
+       JOIN ${organismView} ao on ao.organism_id=o.id
       ${whereClause}
       ORDER BY distance_km ASC
       LIMIT ${limit}

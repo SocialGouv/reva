@@ -3,8 +3,9 @@ import { deburr } from "lodash";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification } from "../referential.types";
+import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 
-export const searchCertificationsForCandidateV2 = async ({
+export const searchCertificationsForCandidate = async ({
   offset,
   limit,
   organismId,
@@ -26,9 +27,13 @@ export const searchCertificationsForCandidateV2 = async ({
     .map((t) => t + ":*")
     .join("&");
 
-  const certificationView = organismId
+  let certificationView = organismId
     ? "active_organism_by_available_certification"
     : "available_certification";
+
+  if (await isFormacodeFeatureActive()) {
+    certificationView = `${certificationView}_based_on_formacode`;
+  }
 
   const organismQuery = `
       from certification c, ${certificationView} available_certification
@@ -77,4 +82,14 @@ export const searchCertificationsForCandidateV2 = async ({
     }),
   };
   return page;
+};
+
+const isFormacodeFeatureActive = async (): Promise<boolean> => {
+  const isAapSettingsV3Active = (await getFeatureByKey("AAP_SETTINGS_V3"))
+    ?.isActive;
+  const isAapSettingsFormacodeActive = (
+    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
+  )?.isActive;
+
+  return !!(isAapSettingsV3Active && isAapSettingsFormacodeActive);
 };

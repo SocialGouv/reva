@@ -35,7 +35,7 @@ import {
   findKbis,
   findQualiopiStatus,
 } from "./features/entreprise";
-import { searchCertificationsForCandidateV2 } from "./features/searchCertificationsForCandidateV2";
+import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { getAvailableFormacodes } from "./features/getFormacodes";
 
 const unsafeReferentialResolvers = {
@@ -91,7 +91,7 @@ const unsafeReferentialResolvers = {
         searchText?: string;
         status: CertificationStatus;
       },
-    ) => searchCertificationsForCandidateV2(payload),
+    ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
       searchCertificationsForAdmin({
         offset: payload.offset,

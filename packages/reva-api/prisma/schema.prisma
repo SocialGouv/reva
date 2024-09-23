@@ -72,6 +72,9 @@ model Certification {
 
   certificationOnFormacode CertificationOnFormacode[]
 
+  AvailableCertificationBasedOnFormacode                 AvailableCertificationBasedOnFormacode?
+  ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
+
   @@index([typeDiplomeId])
   @@map("certification")
 }
@@ -428,6 +431,8 @@ model Organism {
   ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
   OrganismOnRemoteZone                   OrganismOnRemoteZone[]
   organismOnFormacode                    OrganismOnFormacode[]
+
+  ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
@@ -868,6 +873,26 @@ view ActiveOrganismByAvailableCertification {
 
   @@unique([organismId, certificationId])
   @@map("active_organism_by_available_certification")
+}
+
+view AvailableCertificationBasedOnFormacode {
+  certification                 Certification            @relation(fields: [certificationId], references: [id])
+  certificationId               String                   @map("certification_id") @db.Uuid
+  certification_searchable_text Unsupported("tsvector")?
+
+  @@unique([certificationId])
+  @@map("available_certification_based_on_formacode")
+}
+
+view ActiveOrganismByAvailableCertificationBasedOnFormacode {
+  organism                      Organism                 @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  certification                 Certification            @relation(fields: [certificationId], references: [id])
+  organismId                    String                   @map("organism_id") @db.Uuid
+  certificationId               String                   @map("certification_id") @db.Uuid
+  certification_searchable_text Unsupported("tsvector")?
+
+  @@unique([organismId, certificationId])
+  @@map("active_organism_by_available_certification_based_on_formacode")
 }
 
 model Domaine {
