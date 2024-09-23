@@ -7,11 +7,7 @@ export const WhiteCard = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <li
-    className={`bg-white py-5 pl-6 pr-4 border flex flex-col ${
-      className || ""
-    }`}
-  >
+  <li className={`bg-white p-6 border flex flex-col ${className || ""}`}>
     {children}
   </li>
 );
