@@ -1,4 +1,5 @@
 import { Candidate } from "@prisma/client";
+import { isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
@@ -75,6 +76,19 @@ export const updateCandidate = async ({
       throw new Error(`Le département n'existe pas`);
     }
     candidateInput.departmentId = department.id;
+  }
+
+  const today = new Date();
+
+  const dateSelected = new Date(Number(candidate.birthdate));
+  console.log("dateSelected", dateSelected);
+  const sixteenYearsAgo = sub(today, { years: 16 });
+  const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
+    dateSelected,
+    sixteenYearsAgo,
+  );
+  if (!candidateBirthdayIsOlderThan16YearsAgo) {
+    throw new Error(`Le candidat doit avoir plus de 16 ans`);
   }
 
   const previousEmail = candidateToUpdate.email;
