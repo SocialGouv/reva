@@ -11,7 +11,7 @@ export const sendReminderToOrganismForCandidateValidationDeadline =
     const dateFeatureHasBeenReleasedInProduction = process.env
       .FEATURE_RELEASED_DATE_DV
       ? new Date(process.env.FEATURE_RELEASED_DATE_DV).toISOString()
-      : new Date("2024-02-13T00:00:00.000Z").toISOString();
+      : new Date("2024-09-23T00:00:00.000Z").toISOString();
 
     const candidaciesStatus = await prismaClient.candidaciesStatus.findMany({
       where: {
