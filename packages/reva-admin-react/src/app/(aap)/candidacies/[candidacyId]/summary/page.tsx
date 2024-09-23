@@ -15,6 +15,7 @@ import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Link from "next/link";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -192,19 +193,22 @@ const CandidacySummaryPage = () => {
             </GrayCard>
             {isAdmin && (
               <GrayCard>
-                {candidacy.organism?.maisonMereAAP?.id ? (
-                  <Link
-                    className="fr-link mr-auto text-2xl font-bold mb-5 "
-                    href={`/maison-mere-aap/${candidacy.organism?.maisonMereAAP?.id}`}
-                    target="_blank"
-                  >
-                    Son architecte de parcours
-                  </Link>
-                ) : (
-                  <span className="text-2xl font-bold mb-5">
+                <div className="flex flex-row justify-between mb-5">
+                  <span className="text-2xl font-bold">
                     Son architecte de parcours
                   </span>
-                )}
+
+                  {candidacy.organism?.maisonMereAAP?.id && (
+                    <Button
+                      priority="secondary"
+                      linkProps={{
+                        href: `/maison-mere-aap/${candidacy.organism?.maisonMereAAP?.id}`,
+                      }}
+                    >
+                      Voir son profil
+                    </Button>
+                  )}
+                </div>
                 {candidacy.organism ? (
                   <>
                     <p className="mb-0">{candidacy.organism.label}</p>
