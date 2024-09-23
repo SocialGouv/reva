@@ -1,4 +1,3 @@
-export * from "./sendAlertDeadlineExceededDatePrevisionnelleJuryToOrganism";
 export * from "./sendJuryResultAAPEmail";
 export * from "./sendJuryResultCandidateEmail";
 export * from "./sendJuryScheduledAAPEmail";
