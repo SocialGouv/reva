@@ -77,11 +77,18 @@ export const Header = () => {
       isActive: currentPathname.startsWith("/certifications"),
     },
     {
+      text: "Vérifications",
+      linkProps: {
+        href: "/subscriptions/pending",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/subscriptions"),
+    },
+    {
       text: "Annuaires",
       isActive: [
         "/maison-mere-aap",
         "/certification-authority-structures",
-        "/subscriptions",
       ].some((path) => currentPathname.startsWith(path)),
       menuLinks: [
         {
@@ -100,14 +107,6 @@ export const Header = () => {
             target: "_self",
           },
           isActive: currentPathname.startsWith(certificateursPath),
-        },
-        {
-          text: "Inscriptions",
-          linkProps: {
-            href: "/subscriptions/pending",
-            target: "_self",
-          },
-          isActive: currentPathname.startsWith("/subscriptions"),
         },
       ],
     },
