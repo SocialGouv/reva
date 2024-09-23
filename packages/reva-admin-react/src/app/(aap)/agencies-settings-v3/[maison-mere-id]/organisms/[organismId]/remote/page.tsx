@@ -155,7 +155,7 @@ export default function RemotePage() {
               </Accordion>
             )}
             {organism?.conventionCollectives?.[0] && (
-              <Accordion label="Branches">
+              <Accordion label="Branches" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.conventionCollectives?.map((ccn) => (
                     <Tag key={ccn.id}>{ccn.label}</Tag>
@@ -164,7 +164,7 @@ export default function RemotePage() {
               </Accordion>
             )}
             {organism?.managedDegrees?.[0] && (
-              <Accordion label="Niveaux">
+              <Accordion label="Niveaux" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.managedDegrees?.map((d) => (
                     <Tag key={d.id}>{d.degree.label}</Tag>
@@ -182,7 +182,7 @@ export default function RemotePage() {
             status={isDomainAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
           >
             {organism?.domaines?.[0] && (
-              <Accordion label="Filières">
+              <Accordion label="Filières" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.domaines?.map((d) => (
                     <Tag key={d.id}>{d.label}</Tag>
@@ -191,7 +191,7 @@ export default function RemotePage() {
               </Accordion>
             )}
             {organism?.conventionCollectives?.[0] && (
-              <Accordion label="Branches">
+              <Accordion label="Branches" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.conventionCollectives?.map((ccn) => (
                     <Tag key={ccn.id}>{ccn.label}</Tag>
@@ -200,7 +200,7 @@ export default function RemotePage() {
               </Accordion>
             )}
             {organism?.managedDegrees?.[0] && (
-              <Accordion label="Niveaux">
+              <Accordion label="Niveaux" defaultExpanded>
                 <div className="flex flex-wrap gap-2">
                   {organism?.managedDegrees?.map((d) => (
                     <Tag key={d.id}>{d.degree.label}</Tag>

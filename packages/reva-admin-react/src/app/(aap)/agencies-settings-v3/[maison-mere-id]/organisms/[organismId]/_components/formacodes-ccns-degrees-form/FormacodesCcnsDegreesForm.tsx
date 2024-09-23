@@ -178,30 +178,35 @@ const FormacodesCcnsDegreesForm = ({
                 "Domaines et branches"}
             </legend>
 
-            {(organismTypology === "expertFiliere" ||
-              organismTypology === "expertBrancheEtFiliere") &&
-              domains.map((domain) => (
-                <Accordion
-                  className="before:shadow-none [&_div]:pb-0"
-                  key={domain.code}
-                  label={domain.label}
-                  defaultExpanded
-                >
-                  <Checkbox
-                    className="[&_label]:block [&_label]:first-letter:uppercase"
-                    options={subDomains
-                      .filter(
-                        (subDomain) => subDomain.parentCode == domain.code,
-                      )
-                      .map((od) => ({
-                        label: `${od.code} ${od.label}`,
-                        nativeInputProps: {
-                          ...register(`organismFormacodes.${od.code}.checked`),
-                        },
-                      }))}
-                  />
-                </Accordion>
-              ))}
+            <div className="flex flex-col">
+              {(organismTypology === "expertFiliere" ||
+                organismTypology === "expertBrancheEtFiliere") &&
+                domains.map((domain) => (
+                  <Accordion
+                    className="[&_div]:pb-0"
+                    key={domain.code}
+                    label={domain.label}
+                    defaultExpanded
+                  >
+                    <Checkbox
+                      className="[&_label]:block [&_label]:first-letter:uppercase"
+                      options={subDomains
+                        .filter(
+                          (subDomain) => subDomain.parentCode == domain.code,
+                        )
+                        .map((od) => ({
+                          label: `${od.code} ${od.label}`,
+                          nativeInputProps: {
+                            ...register(
+                              `organismFormacodes.${od.code}.checked`,
+                            ),
+                          },
+                        }))}
+                    />
+                  </Accordion>
+                ))}
+            </div>
+
             {(organismTypology === "expertBranche" ||
               organismTypology === "expertBrancheEtFiliere") && (
               <div className="flex flex-col">
