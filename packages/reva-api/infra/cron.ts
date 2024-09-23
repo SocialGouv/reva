@@ -6,7 +6,6 @@ import { CronJob } from "cron";
 import dotenv from "dotenv";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
-import { sendReminderToOrganismForCandidateValidationDeadline } from "../modules/dossier-de-validation/features/sendReminderToOrganismForCandidateValidationDeadline";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
@@ -18,6 +17,7 @@ import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/r
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
 import { sendReminderToOrganismForCandidateJuryDeadline } from "../modules/jury/features/sendReminderToOrganismForCandidateJuryDeadline";
+import { sendReminderToOrganismForCandidateDossierDeValidationDeadline } from "../modules/dossier-de-validation/features/sendReminderToOrganismForCandidateDossierDeValidationDeadline";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
@@ -152,7 +152,7 @@ CronJob.from({
         logger.info(
           "Running send-reminder-to-organism-for-candidate-dv-deadline batch",
         );
-        await sendReminderToOrganismForCandidateValidationDeadline();
+        await sendReminderToOrganismForCandidateDossierDeValidationDeadline();
       },
     }),
   start: true,
