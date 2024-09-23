@@ -79,18 +79,19 @@ export const Header = () => {
     {
       text: "Annuaires",
       isActive: [
-        "/accounts/organisms",
+        "/maison-mere-aap",
         "/certification-authority-structures",
         "/subscriptions",
       ].some((path) => currentPathname.startsWith(path)),
       menuLinks: [
         {
-          text: "AAP",
+          text: "Structures accompagnatrices",
           linkProps: {
-            href: "/accounts/organisms",
+            "data-test": "maison-mere-aap-link",
+            href: "/maison-mere-aap",
             target: "_self",
           },
-          isActive: currentPathname.startsWith("/accounts"),
+          isActive: currentPathname.startsWith("/maison-mere-aap"),
         },
         {
           text: "Certificateurs",

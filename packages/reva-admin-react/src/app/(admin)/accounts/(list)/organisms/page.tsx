@@ -1,6 +1,5 @@
 "use client";
 import { Card } from "@/app/(admin)/accounts/components/card/Card";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
@@ -38,10 +37,7 @@ const getAccountsWithOrganism = graphql(`
 const RECORDS_PER_PAGE = 10;
 const OrganismsPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { isFeatureActive } = useFeatureflipping();
-  const isAdminMaisonMereAapV2Active = isFeatureActive(
-    "admin_maison_mere_aap_v2",
-  );
+
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
@@ -76,11 +72,7 @@ const OrganismsPage = () => {
                   key={account.id}
                   label={account.organism.label}
                   email={account.email}
-                  href={
-                    isAdminMaisonMereAapV2Active
-                      ? `/maison-mere-aap/${account.organism.maisonMereAAP?.id}`
-                      : `/accounts/${account.id}`
-                  }
+                  href={`/accounts/${account.id}`}
                 />
               ) : null
             }

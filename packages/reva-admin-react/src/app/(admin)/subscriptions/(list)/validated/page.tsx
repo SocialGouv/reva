@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 const getValidatedSubscriptionRequests = graphql(`
-  query getMaisonMereAAPs($offset: Int, $searchFilter: String) {
+  query getValidatedSubscription($offset: Int, $searchFilter: String) {
     organism_getMaisonMereAAPs(
       limit: 10
       offset: $offset

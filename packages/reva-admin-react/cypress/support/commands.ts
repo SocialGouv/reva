@@ -59,3 +59,7 @@ Cypress.Commands.add("agency", (url = "/") => {
 Cypress.Commands.add("headAgency", (url = "/") => {
   auth({ url, token: "auth/head-agency-token.json" });
 });
+
+Cypress.Commands.add("admin", (url = "/") => {
+  auth({ url, token: "auth/admin-token.json" });
+});

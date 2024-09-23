@@ -1,0 +1,63 @@
+{
+  "data": {
+    "organism_getMaisonMereAAPs": {
+      "rows": [
+        {
+          "id": "94527668-7361-4c4f-afd6-adbeb92113d5",
+          "raisonSociale": "Structure accompagnatrice 1",
+          "createdAt": 1721380110413
+        },
+        {
+          "id": "13511893-46f5-40d8-8543-b7c3fe5c6842",
+          "raisonSociale": "Structure accompagnatrice 2",
+          "createdAt": 1721223356764
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 3",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 4",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 5",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 6",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 7",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 8",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 9",
+          "createdAt": 1720790619955
+        },
+        {
+          "id": "151bbd86-8251-4f69-b805-4743033c3efb",
+          "raisonSociale": "Structure accompagnatrice 10",
+          "createdAt": 1720790619955
+        }
+      ],
+      "info": {
+        "totalRows": 28,
+        "totalPages": 3,
+        "currentPage": 1
+      }
+    }
+  }
+}
