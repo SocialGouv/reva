@@ -17,11 +17,13 @@ import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/refere
 import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
+import { sendReminderToOrganismForCandidateJuryDeadline } from "../modules/jury/features/sendReminderToOrganismForCandidateJuryDeadline";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
+const EVERY_DAY_AT_3_AM = "0 3 * * *";
 
 const fundingRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
@@ -151,6 +153,25 @@ CronJob.from({
           "Running send-reminder-to-organism-for-candidate-dv-deadline batch",
         );
         await sendReminderToOrganismForCandidateValidationDeadline();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send a reminder to the organism  that the deadline for providing the "date prévionnelle" for the jury has passed
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_REMINDER_TO_ORGANISM_FOR_CANDIDATE_JURY_DEADLINE ||
+    EVERY_DAY_AT_3_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-reminder-to-organism-for-candidate-jury-deadline",
+      batchCallback: async () => {
+        logger.info(
+          "Running send-reminder-to-organism-for-candidate-jury-deadline batch",
+        );
+        await sendReminderToOrganismForCandidateJuryDeadline();
       },
     }),
   start: true,
