@@ -35,10 +35,30 @@ import {
   training1Label,
 } from "../../../../test/fixtures/skillAndTraining";
 
+const updateCandidacyCertification = async ({
+  candidacyId,
+  certificationRncpId,
+}: {
+  candidacyId: string;
+  certificationRncpId: string;
+}) => {
+  const certification = await prismaClient.certification.findFirst({
+    where: { rncpId: certificationRncpId },
+  });
+  return prismaClient.candidacy.update({
+    where: { id: candidacyId },
+    data: { certificationId: certification?.id },
+  });
+};
+
 beforeAll(async () => {
   await createExpertFiliereOrganism();
   await createCandidateJPL();
   await createCandidacyUnifvae();
+  await updateCandidacyCertification({
+    candidacyId: candidacyUnifvae.id,
+    certificationRncpId: "35830",
+  });
   await createCandidacyUnireva();
 });
 
@@ -209,6 +229,39 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
   expect(obj).toHaveProperty("errors");
   expect(obj.errors[0].message).toBe(
     'Cannot create FundingRequestUnifvae: candidacy.financeModule is "unireva"',
+  );
+});
+
+test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidacy certification", async () => {
+  await updateCandidacyCertification({
+    candidacyId: candidacyUnifvae.id,
+    certificationRncpId: "37537",
+  });
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_createFundingRequestUnifvae",
+      returnFields:
+        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
+      arguments: {
+        candidacyId: candidacyUnifvae.id,
+        fundingRequest: {
+          ...fundingRequestSample,
+        },
+      },
+      enumFields: ["candidateGender"],
+    },
+  });
+  expect(resp.statusCode).toBe(200);
+  const obj = resp.json();
+  expect(obj).toHaveProperty("errors");
+  expect(obj.errors[0].message).toBe(
+    "La demande de financement n'est pas autorisée pour cette certification",
   );
 });
 

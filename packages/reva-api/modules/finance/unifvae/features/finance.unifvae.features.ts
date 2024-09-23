@@ -8,6 +8,7 @@ import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { isFundingRequestEnabledForCertification } from "../../../candidacy-menu/features/isFundingRequestEnabledForCertification";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
@@ -30,6 +31,7 @@ export const createFundingRequestUnifvae = async ({
       otherTraining: true,
       certificateSkills: true,
       candidate: true,
+      certification: true,
     },
   });
   if (candidacy === null) {
@@ -47,6 +49,17 @@ export const createFundingRequestUnifvae = async ({
       candidateLastname: candidacy.candidate?.lastname,
     },
   });
+
+  if (
+    !candidacy.certification ||
+    !isFundingRequestEnabledForCertification({
+      certificationRncpId: candidacy.certification.rncpId,
+    })
+  ) {
+    throw new Error(
+      "La demande de financement n'est pas autorisée pour cette certification",
+    );
+  }
 
   await prismaClient.$transaction([
     prismaClient.basicSkillOnFundingRequestsUnifvae.createMany({
