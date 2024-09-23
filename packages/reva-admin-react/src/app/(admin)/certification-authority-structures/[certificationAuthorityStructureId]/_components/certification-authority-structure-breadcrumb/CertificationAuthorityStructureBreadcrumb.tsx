@@ -1,18 +1,20 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
-type BreadcrumbsProps = {
-  certificationAuthorityStructureId: string;
-  certificationAuthorityStructureLabel: string;
-  certificationAuthorityId?: never;
-  certificationAuthoritylabel?: never;
-  pageLabel: string;
-} | {
-  certificationAuthorityStructureId: string;
-  certificationAuthorityStructureLabel: string;
-  certificationAuthorityId: string;
-  certificationAuthoritylabel: string;
-  pageLabel: string;
-}
+type BreadcrumbsProps =
+  | {
+      certificationAuthorityStructureId: string;
+      certificationAuthorityStructureLabel: string;
+      certificationAuthorityId?: never;
+      certificationAuthoritylabel?: never;
+      pageLabel: string;
+    }
+  | {
+      certificationAuthorityStructureId: string;
+      certificationAuthorityStructureLabel: string;
+      certificationAuthorityId: string;
+      certificationAuthoritylabel: string;
+      pageLabel: string;
+    };
 
 export const CertificationAuthorityStructureBreadcrumb = ({
   certificationAuthorityStructureId,
@@ -23,7 +25,7 @@ export const CertificationAuthorityStructureBreadcrumb = ({
 }: BreadcrumbsProps) => {
   const segments = [
     {
-      label: "Annuaire certificateurs",
+      label: "Structures certificatrices",
       linkProps: {
         href: `/certification-authority-structures/`,
       },

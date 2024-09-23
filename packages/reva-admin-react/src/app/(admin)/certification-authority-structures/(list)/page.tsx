@@ -51,7 +51,7 @@ const CertificationAuthorityStructuresListPage = () => {
   return (
     certificationAuthorityStructuresPage && (
       <div className="flex flex-col flex-1">
-        <h1>Annuaire certificateurs</h1>
+        <h1>Structures certificatrices</h1>
         {getCertificationAuthorityStructuresStatus === "success" && (
           <>
             <span className="text-xs mb-1">

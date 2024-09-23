@@ -94,7 +94,7 @@ export const Header = () => {
           isActive: currentPathname.startsWith("/maison-mere-aap"),
         },
         {
-          text: "Certificateurs",
+          text: "Structures certificatrices",
           linkProps: {
             href: certificateursPath,
             target: "_self",
