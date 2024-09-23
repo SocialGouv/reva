@@ -43,16 +43,16 @@ export const candidateInformationSchema = z
       const today = new Date();
 
       const dateSelected = new Date(data.birthdate);
-      const eighteenYearsAgo = sub(today, { years: 18 });
-      const candidateBirthdayIsOlderThan18YearsAgo = isBefore(
+      const sixteenYearsAgo = sub(today, { years: 16 });
+      const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
         dateSelected,
-        eighteenYearsAgo,
+        sixteenYearsAgo,
       );
 
-      if (!candidateBirthdayIsOlderThan18YearsAgo) {
+      if (!candidateBirthdayIsOlderThan16YearsAgo) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Le candidat doit être majeur",
+          message: "Le candidat doit avoir plus de 16 ans",
           path: ["birthdate"],
         });
       }
