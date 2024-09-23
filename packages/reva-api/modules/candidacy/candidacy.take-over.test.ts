@@ -182,7 +182,7 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
   expect(resp.json()).toHaveProperty("errors");
 });
 
-test("candidacy_takeOver should fail when candidacy status is not validation", async function () {
+test("candidacy_takeOver should do nothing when candidacy status is not validation", async function () {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -193,11 +193,14 @@ test("candidacy_takeOver should fail when candidacy status is not validation", a
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
       arguments: { candidacyId: candidacyProject.id },
-      returnFields: "{ id }",
+      returnFields: "{ id,status }",
     },
   });
   expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).toHaveProperty("errors");
+  expect(resp.json()).not.toHaveProperty("errors");
+  expect(resp.json()).toMatchObject({
+    data: { candidacy_takeOver: { status: "PROJET" } },
+  });
 });
 
 test("candidacy_takeOver should update candidacy statuses when active status is validation", async function () {

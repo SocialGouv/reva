@@ -11,11 +11,13 @@ export const getCandidacyById = async function getCandidacyById<
 >({
   candidacyId,
   includes = {} as SelectedIncludes,
+  tx,
 }: {
   candidacyId: string;
   includes?: SelectedIncludes;
+  tx?: Prisma.TransactionClient; //optional transaction to use
 }): CandidacyReturnType<SelectedIncludes> {
-  const candidacy = await prismaClient.candidacy.findUnique({
+  const candidacy = await (tx || prismaClient).candidacy.findUnique({
     where: { id: candidacyId },
     include: includes,
   });

@@ -3,7 +3,7 @@ import {
   logCandidacyAuditEvent,
   CandidacyAuditLogUserInfo,
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { existsCandidacyWithActiveStatus } from "./existsCandidacyWithActiveStatus";
+import { getCandidacyById } from "./getCandidacyById";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const takeOverCandidacy = async ({
@@ -16,16 +16,15 @@ export const takeOverCandidacy = async ({
 } & CandidacyAuditLogUserInfo) =>
   //execute all steps in the same transaction to ensure data consistency
   prismaClient.$transaction(async (tx) => {
-    if (
-      !(await existsCandidacyWithActiveStatus({
-        candidacyId,
-        status: "VALIDATION",
-        tx,
-      }))
-    ) {
-      throw new Error(
-        `La candidature ${candidacyId} ne peut être prise en charge`,
-      );
+    const candidacy = await getCandidacyById({ candidacyId, tx });
+
+    if (!candidacy) {
+      throw new Error("Candidature non trouvée");
+    }
+
+    //candidacy is already taken over or premature call
+    if (candidacy.status !== "VALIDATION") {
+      return candidacy;
     }
 
     const result = await updateCandidacyStatus({
