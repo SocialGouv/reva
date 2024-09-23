@@ -22,12 +22,93 @@ export const Header = () => {
   const candidaciesLabel = isAdmin
     ? "Certificateurs/Candidatures"
     : "Candidatures";
-
+  const isAdminDashboardV2Enabled = isFeatureActive("admin_dashboard_v2");
   const certificateursPath = isFeatureActive(
     "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
   )
     ? "/certification-authority-structures"
     : "/certification-authorities";
+
+  const adminTabs = [];
+
+  if (isAdmin) {
+    adminTabs.push({
+      text: "Certifications",
+      linkProps: {
+        href: "/certifications",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/certifications"),
+    });
+    if (isAdminDashboardV2Enabled) {
+      adminTabs.push({
+        text: "Annuaires",
+        isActive: [
+          "/accounts/organisms",
+          "/certification-authority-structures",
+          "/subscriptions",
+        ].some((path) => currentPathname.startsWith(path)),
+        menuLinks: [
+          {
+            text: "AAP",
+            linkProps: {
+              href: "/accounts/organisms",
+              target: "_self",
+            },
+            isActive: currentPathname.startsWith("/accounts"),
+          },
+          {
+            text: "Certificateurs",
+            linkProps: {
+              href: certificateursPath,
+              target: "_self",
+            },
+            isActive: currentPathname.startsWith(certificateursPath),
+          },
+          {
+            text: "Inscriptions",
+            linkProps: {
+              href: "/subscriptions/pending",
+              target: "_self",
+            },
+            isActive: currentPathname.startsWith("/subscriptions"),
+          },
+        ],
+      });
+    } else {
+      adminTabs.push(
+        {
+          text: "Inscriptions",
+          linkProps: {
+            href: "/subscriptions/pending",
+            target: "_self",
+          },
+          isActive: currentPathname.startsWith("/subscriptions"),
+        },
+        {
+          text: "Comptes",
+          linkProps: {
+            href: "/accounts/organisms",
+            target: "_self",
+          },
+          isActive: currentPathname.startsWith("/accounts"),
+        },
+        {
+          text: "Certificateurs",
+          linkProps: {
+            href: isFeatureActive(
+              "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
+            )
+              ? "/certification-authority-structures"
+              : "/certification-authorities",
+            target: "_self",
+          },
+          isActive: currentPathname.startsWith("/certification-authorities"),
+        },
+      );
+    }
+  }
+
   const navigation = authenticated
     ? [
         ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
@@ -61,52 +142,7 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isAdmin
-          ? [
-              {
-                text: "Certifications",
-                linkProps: {
-                  href: "/certifications",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/certifications"),
-              },
-              {
-                text: "Annuaires",
-                isActive: [
-                  "/accounts/organisms",
-                  "/certification-authority-structures",
-                  "/subscriptions",
-                ].some((path) => currentPathname.startsWith(path)),
-                menuLinks: [
-                  {
-                    text: "AAP",
-                    linkProps: {
-                      href: "/accounts/organisms",
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith("/accounts"),
-                  },
-                  {
-                    text: "Certificateurs",
-                    linkProps: {
-                      href: certificateursPath,
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith(certificateursPath),
-                  },
-                  {
-                    text: "Inscriptions",
-                    linkProps: {
-                      href: "/subscriptions/pending",
-                      target: "_self",
-                    },
-                    isActive: currentPathname.startsWith("/subscriptions"),
-                  },
-                ],
-              },
-            ]
-          : []),
+        ...adminTabs,
         ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
           ? [
               {
