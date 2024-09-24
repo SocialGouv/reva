@@ -40,6 +40,7 @@ export const createCandidateWithCandidacy = async (
     await createCandidacy({
       departmentId: candidateInput.departmentId,
       candidateId: createdCandidate.id,
+      typeAccompagnement: "ACCOMPAGNE",
     });
   }
 

@@ -16,6 +16,7 @@ export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =
       await createCandidacy({
         candidateId: candidate.id,
         departmentId: candidate.departmentId,
+        typeAccompagnement: "ACCOMPAGNE",
       });
     }
     return candidate;

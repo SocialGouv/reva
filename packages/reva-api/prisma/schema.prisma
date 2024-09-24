@@ -165,12 +165,18 @@ model Candidacy {
   certification                              Certification?                          @relation(fields: [certificationId], references: [id], onDelete: Restrict)
   certificationId                            String?                                 @map("certification_id") @db.Uuid
   status                                     CandidacyStatusStep                     @default(PROJET)
+  typeAccompagnement                         CandidacyTypeAccompagnement             @default(ACCOMPAGNE) @map("type_accompagnement")
 
   @@index([organismId])
   @@index([candidateId])
   @@index([departmentId])
   @@index([certificationId])
   @@map("candidacy")
+}
+
+enum CandidacyTypeAccompagnement {
+  AUTONOME
+  ACCOMPAGNE
 }
 
 /// Candicadies statuses
