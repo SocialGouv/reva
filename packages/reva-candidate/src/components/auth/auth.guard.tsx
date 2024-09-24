@@ -6,12 +6,10 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { Loader } from "../legacy/atoms/Icons";
 
-import { useKeycloakContext } from "./keycloak.context";
 import { useAuth } from "./auth.hooks";
+import { useKeycloakContext } from "./keycloak.context";
 
 const UNAUTHENTICATED_PATHS = [
-  "/registration-confirmation",
-  "/registration",
   "/login-confirmation",
   "/login",
   "/logout-confirmation",
