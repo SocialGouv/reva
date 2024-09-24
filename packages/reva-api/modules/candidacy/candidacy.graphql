@@ -71,6 +71,12 @@ type Candidacy {
   financeModule: FinanceModule!
   feasibilityFormat: FeasibilityFormat!
   status: CandidacyStatusStep!
+  typeAccompagnement: TypeAccompagnement!
+}
+
+enum TypeAccompagnement {
+  ACCOMPAGNE
+  AUTONOME
 }
 
 type CandidacyDropOut {
