@@ -154,6 +154,7 @@ const getFCCertificationQuery = graphql(`
 const getFormacodesQuery = graphql(`
   query getFormacodes {
     getFormacodes {
+      id
       type
       code
       label

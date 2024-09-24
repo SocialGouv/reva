@@ -222,10 +222,17 @@ enum FormacodeType {
 }
 
 type Formacode {
+  id: ID!
   type: FormacodeType!
   code: ID!
   label: String!
   parentCode: ID
+}
+
+input ActiveCertificationsFiltersInput {
+  domaines: [String!]
+  branches: [String!]
+  levels: [Int!]
 }
 
 type Query {
@@ -259,6 +266,9 @@ type Query {
   getEtablissement(siret: ID!): EtablissementDiffusible
   getEtablissementAsAdmin(siret: ID!): Etablissement
   getFormacodes: [Formacode!]!
+  getActiveCertifications(
+    filters: ActiveCertificationsFiltersInput
+  ): [Certification!]!
 }
 
 input UpdateCertificationInput {

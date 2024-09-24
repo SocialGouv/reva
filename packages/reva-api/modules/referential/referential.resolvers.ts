@@ -37,6 +37,7 @@ import {
 } from "./features/entreprise";
 import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { getAvailableFormacodes } from "./features/getFormacodes";
+import { getActiveCertifications } from "./features/getActiveCertifications";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -122,6 +123,16 @@ const unsafeReferentialResolvers = {
     getEtablissementAsAdmin: (_: unknown, { siret }: { siret: string }) =>
       findEtablissement({ siret }),
     getFormacodes: () => getAvailableFormacodes(),
+    getActiveCertifications: (
+      _: any,
+      payload: {
+        filters?: {
+          domaines?: string[];
+          branches?: string[];
+          levels?: number[];
+        };
+      },
+    ) => getActiveCertifications(payload.filters),
   },
   Mutation: {
     referential_updateCertification: (

@@ -1,0 +1,66 @@
+import { prismaClient } from "../../../prisma/client";
+import { Certification } from "../referential.types";
+
+export const getActiveCertifications = async (filters?: {
+  domaines?: string[];
+  branches?: string[];
+  levels?: number[];
+}): Promise<Certification[]> => {
+  const { domaines, branches, levels } = filters || {};
+
+  let certifications: Certification[] = [];
+
+  if (domaines && domaines?.length > 0) {
+    const domaineCertifications =
+      await prismaClient.certificationOnFormacode.findMany({
+        where: {
+          formacodeId: { in: domaines },
+          certification: {
+            status: "AVAILABLE",
+            level: { in: levels },
+            certificationOnConventionCollective: {
+              none: {},
+            },
+          },
+        },
+        include: {
+          certification: true,
+        },
+      });
+
+    const mappedCertifications: Certification[] = domaineCertifications.map(
+      ({ certification }) => ({
+        ...certification,
+        codeRncp: certification.rncpId,
+      }),
+    );
+
+    certifications = [...certifications, ...mappedCertifications];
+  }
+
+  if (branches && branches?.length > 0) {
+    const domaineCertifications =
+      await prismaClient.certificationOnConventionCollective.findMany({
+        where: {
+          certification: {
+            status: "AVAILABLE",
+            level: { in: levels },
+          },
+        },
+        include: {
+          certification: true,
+        },
+      });
+
+    const mappedCertifications: Certification[] = domaineCertifications.map(
+      ({ certification }) => ({
+        ...certification,
+        codeRncp: certification.rncpId,
+      }),
+    );
+
+    certifications = [...certifications, ...mappedCertifications];
+  }
+
+  return certifications;
+};

@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import { useFormacodesCcnsDegreesForm } from "./formacodesCcnsDegreesForm.hook";
+import {
+  useActiveCertifications,
+  useFormacodesCcnsDegreesForm,
+} from "./formacodesCcnsDegreesForm.hook";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
@@ -14,7 +17,12 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const schema = z.object({
   organismDegrees: z
-    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .object({
+      id: z.string(),
+      label: z.string(),
+      level: z.number(),
+      checked: z.boolean(),
+    })
     .array(),
   organismConventionCollectives: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
@@ -23,7 +31,7 @@ const schema = z.object({
     z.string(),
     z.object({
       id: z.string(),
-      label: z.string(),
+      code: z.string(),
       checked: z.boolean(),
     }),
   ),
@@ -58,6 +66,7 @@ const FormacodesCcnsDegreesForm = ({
     reset,
     control,
     formState: { isSubmitting, isDirty },
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -71,6 +80,9 @@ const FormacodesCcnsDegreesForm = ({
     control,
     name: "organismConventionCollectives",
   });
+
+  const watchedOrganismFormacodes = watch("organismFormacodes");
+  const watchedOrganismDegrees = watch("organismDegrees");
 
   const domains = useMemo(
     () => formacodes.filter((formacode) => formacode.type == "DOMAIN"),
@@ -90,6 +102,7 @@ const FormacodesCcnsDegreesForm = ({
           .map((d) => ({
             id: d.id,
             label: d.longLabel,
+            level: d.level,
             checked: !!organismManagedDegrees.find((omd) => omd.id === d.id),
           })),
         organismConventionCollectives: conventionCollectives.map((c) => ({
@@ -100,9 +113,9 @@ const FormacodesCcnsDegreesForm = ({
         organismFormacodes: subDomains.reduce(
           (acc, d) => ({
             ...acc,
-            [d.code]: {
-              id: d.code,
-              label: d.label,
+            [d.id]: {
+              id: d.id,
+              code: d.code,
               checked: !!organismFormacodes.find((od) => od.code === d.code),
             },
           }),
@@ -132,7 +145,7 @@ const FormacodesCcnsDegreesForm = ({
         formacodeIds: Object.keys(data.organismFormacodes)
           .map((key) => data.organismFormacodes[key])
           .filter((od) => od.checked)
-          .map((od) => od.id),
+          .map((od) => od.code),
       });
       queryClient.invalidateQueries({
         queryKey: [organismId],
@@ -141,6 +154,22 @@ const FormacodesCcnsDegreesForm = ({
     } catch (e) {
       graphqlErrorToast(e);
     }
+  });
+
+  const selectedFormacodes = Object.keys(
+    watchedOrganismFormacodes || {},
+  ).filter((key) => watchedOrganismFormacodes[key].checked);
+
+  const selectedLevels = (watchedOrganismDegrees || [])
+    .filter((degree) => degree.checked)
+    .map((degree) => degree.level);
+
+  const selectedBranches = organismConventionCollectives.map((ccn) => ccn.id);
+
+  const { certifications } = useActiveCertifications({
+    domaines: selectedFormacodes,
+    branches: selectedBranches,
+    levels: selectedLevels,
   });
 
   return (
@@ -197,9 +226,7 @@ const FormacodesCcnsDegreesForm = ({
                         .map((od) => ({
                           label: `${od.code} ${od.label}`,
                           nativeInputProps: {
-                            ...register(
-                              `organismFormacodes.${od.code}.checked`,
-                            ),
+                            ...register(`organismFormacodes.${od.id}.checked`),
                           },
                         }))}
                     />
@@ -254,6 +281,19 @@ const FormacodesCcnsDegreesForm = ({
               }))}
             />
           </fieldset>
+
+          {certifications.length > 0 && (
+            <fieldset className="col-span-2 flex flex-col bg-neutral-100 p-6">
+              <h3>Certifications proposées aux candidats :</h3>
+              {certifications.map((certification) => (
+                <span
+                  key={certification.id}
+                  className="border-t last:border-b py-2 text-sm"
+                >{`${certification.codeRncp} - ${certification.label}`}</span>
+              ))}
+            </fieldset>
+          )}
+
           <FormButtons
             className="col-span-2"
             formState={{ isSubmitting, isDirty }}

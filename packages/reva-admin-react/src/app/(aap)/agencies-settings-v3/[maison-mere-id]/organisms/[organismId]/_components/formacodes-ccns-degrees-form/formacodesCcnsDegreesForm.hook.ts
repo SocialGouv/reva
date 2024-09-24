@@ -1,5 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { ActiveCertificationsFiltersInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -29,6 +30,7 @@ const organismAndReferentialQuery = graphql(`
       level
     }
     getFormacodes {
+      id
       type
       code
       label
@@ -113,4 +115,29 @@ export const useFormacodesCcnsDegreesForm = ({
     organismAndReferentialStatus,
     updateOrganismDegreesAndFormacodes,
   };
+};
+
+const getActiveCertificationsQuery = graphql(`
+  query getActiveCertifications($filters: ActiveCertificationsFiltersInput) {
+    getActiveCertifications(filters: $filters) {
+      id
+      codeRncp
+      label
+      level
+    }
+  }
+`);
+
+export const useActiveCertifications = (
+  filters?: ActiveCertificationsFiltersInput,
+) => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const { data } = useQuery({
+    queryKey: [filters],
+    queryFn: () =>
+      graphqlClient.request(getActiveCertificationsQuery, { filters }),
+  });
+
+  return { certifications: data?.getActiveCertifications || [] };
 };
