@@ -117,6 +117,13 @@ export type LegalInformationValidationDecisionInput = {
   aapUpdatedDocumentsAt: Date;
 };
 
+export type UpdateMaisonMereLegalInformationInput = {
+  maisonMereAAPId: string;
+  siret: string;
+  statutJuridique: LegalStatus;
+  raisonSociale: string;
+};
+
 export type RemoteZone =
   | "FRANCE_METROPOLITAINE"
   | "GUADELOUPE"

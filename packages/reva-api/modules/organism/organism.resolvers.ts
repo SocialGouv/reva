@@ -51,14 +51,16 @@ import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGest
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
+import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
+import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLegalInformation";
 import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
+import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
 import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
-import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateAgencyInfoInput,
@@ -67,10 +69,10 @@ import {
   CreateOrganismAccountInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
+  UpdateMaisonMereLegalInformationInput,
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
 } from "./organism.types";
-import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 
 const unsafeResolvers = {
   Account: {
@@ -593,6 +595,12 @@ const unsafeResolvers = {
         };
       },
     ) => updateMaisonMereIsSignalized(params.data),
+    organism_updateMaisonMereLegalInformation: async (
+      _parent: unknown,
+      params: {
+        data: UpdateMaisonMereLegalInformationInput;
+      },
+    ) => updateMaisonMereLegalInformation(params.data),
   },
   Query: {
     organism_getOrganism: async (

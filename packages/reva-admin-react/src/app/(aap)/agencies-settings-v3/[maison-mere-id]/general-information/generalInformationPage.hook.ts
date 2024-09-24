@@ -1,10 +1,17 @@
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { MaisonMereAap } from "@/graphql/generated/graphql";
+import {
+  MaisonMereAap,
+  UpdateMaisonMereLegalInformationInput,
+} from "@/graphql/generated/graphql";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const generalInformationQueries = graphql(`
   query getAccountMaisonMereGeneralInformation {
@@ -75,16 +82,42 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
   }
 `);
 
+const updateMaisonMereLegalInformationMutation = graphql(`
+  mutation updateMaisonMereLegalInformation(
+    $data: UpdateMaisonMereLegalInformationInput!
+  ) {
+    organism_updateMaisonMereLegalInformation(data: $data)
+  }
+`);
+
+const schema = z.object({
+  siret: z.string().regex(/^\d{14}$/, {
+    message: "Le numéro de SIRET doit contenir 14 chiffres.",
+  }),
+});
+
+type FormValues = z.infer<typeof schema>;
+
 export const useGeneralInformationPage = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { "maison-mere-id": maisonMereAAPId } = useParams();
+  const queryClient = useQueryClient();
+  const { "maison-mere-id": maisonMereAAPId }: { "maison-mere-id": string } =
+    useParams();
   const { isGestionnaireMaisonMereAAP, isAdmin } = useAuth();
+
+  const { mutateAsync: updateMaisonMereLegalInformation } = useMutation({
+    mutationFn: (data: UpdateMaisonMereLegalInformationInput) =>
+      graphqlClient.request(updateMaisonMereLegalInformationMutation, { data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [maisonMereAAPId] });
+    },
+  });
 
   const {
     data: generalInformationsResponse,
     status: generalInformationsStatus,
   } = useQuery({
-    queryKey: ["maisonMereAAPGeneralInformation"],
+    queryKey: [maisonMereAAPId, "maisonMereAAPGeneralInformation"],
     queryFn: () => graphqlClient.request(generalInformationQueries),
   });
 
@@ -95,7 +128,7 @@ export const useGeneralInformationPage = () => {
     queryKey: [maisonMereAAPId, "maisonMereAAP"],
     queryFn: () =>
       graphqlClient.request(getMaisonMereAAPGeneralInformationAdminQuery, {
-        maisonMereAAPId: maisonMereAAPId as string,
+        maisonMereAAPId,
       }),
     enabled: isAdmin,
   });
@@ -116,13 +149,33 @@ export const useGeneralInformationPage = () => {
       ?.account_getAccountForConnectedUser?.maisonMereAAP as MaisonMereAap;
   }
 
+  const defaultValues = useMemo(
+    () => ({ siret: maisonMereAAP?.siret }),
+    [maisonMereAAP?.siret],
+  );
+
+  const formHook = useForm<FormValues>({
+    resolver: zodResolver(schema),
+  });
+  const { watch, reset } = formHook;
+
+  const handleReset = useCallback(() => {
+    reset(defaultValues);
+  }, [reset, defaultValues]);
+
+  useEffect(() => {
+    handleReset();
+  }, [handleReset]);
+
+  const siret = watch("siret");
+
   const { data: getEtablissementData } = useQuery({
-    queryKey: [maisonMereAAP?.siret],
+    queryKey: [siret],
     queryFn: () =>
       graphqlClient.request(getEtablissementQuery, {
-        siret: maisonMereAAP?.siret || "",
+        siret: siret || "",
       }),
-    enabled: !!maisonMereAAP?.siret && maisonMereAAP?.siret?.length >= 14,
+    enabled: !!siret && siret?.length >= 14,
   });
 
   const etablissement = getEtablissementData?.getEtablissement;
@@ -131,8 +184,13 @@ export const useGeneralInformationPage = () => {
     maisonMereAAPSuccess,
     maisonMereAAPError,
     maisonMereAAP,
+    maisonMereAAPId,
     etablissement,
     isGestionnaireMaisonMereAAP,
     isAdmin,
+    siret,
+    formHook,
+    handleReset,
+    updateMaisonMereLegalInformation,
   };
 };

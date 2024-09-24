@@ -286,6 +286,13 @@ input UpdateMaisonMereIsSignalizedInput {
   isSignalized: Boolean!
 }
 
+input UpdateMaisonMereLegalInformationInput {
+  maisonMereAAPId: UUID!
+  siret: String!
+  statutJuridique: LegalStatus!
+  raisonSociale: String!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -345,5 +352,9 @@ type Mutation {
   ): Void
   organism_updateMaisonMereIsSignalized(
     data: UpdateMaisonMereIsSignalizedInput
+  ): Void
+
+  organism_updateMaisonMereLegalInformation(
+    data: UpdateMaisonMereLegalInformationInput
   ): Void
 }
