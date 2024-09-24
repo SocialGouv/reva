@@ -26,7 +26,7 @@ context("Submission", () => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacy",
-        "candidate2-taken-over",
+        "candidate2-taken-over.json",
       );
 
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
