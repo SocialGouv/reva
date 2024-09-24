@@ -50,6 +50,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       }
       candidacy {
         id
+        typeAccompagnement
         status
         firstAppointmentOccuredAt
         candidacyDropOut {

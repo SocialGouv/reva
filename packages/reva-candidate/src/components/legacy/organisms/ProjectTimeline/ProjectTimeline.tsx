@@ -15,21 +15,42 @@ import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDe
 import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
 import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
+import { FeasibilityFormat } from "@/graphql/generated/graphql";
 
-export const ProjectTimeline = ({
-  className,
-  "data-test": dataTest,
-}: {
+interface TimelineProps {
   className?: string;
-  "data-test"?: string;
-}) => {
+}
+
+export const ProjectTimeline = ({ className }: TimelineProps) => {
   const { candidacy } = useCandidacy();
 
   const { feasibilityFormat, feasibility, jury } = candidacy;
-  const REJECTED = feasibility?.decision == "REJECTED";
+  const feasibilityRejected = feasibility?.decision == "REJECTED";
 
+  return candidacy.typeAccompagnement === "ACCOMPAGNE" ? (
+    <AccompagneTimeline
+      className={className}
+      feasibilityFormat={feasibilityFormat}
+      feasibilityRejected={feasibilityRejected}
+      gotJuryResult={!!jury?.result}
+    />
+  ) : (
+    <AutonomeTimeline className={className} />
+  );
+};
+
+const AccompagneTimeline = ({
+  className,
+  feasibilityFormat,
+  feasibilityRejected,
+  gotJuryResult,
+}: TimelineProps & {
+  feasibilityFormat: FeasibilityFormat;
+  feasibilityRejected: boolean;
+  gotJuryResult: boolean;
+}) => {
   return (
-    <Timeline className={className} data-test={dataTest}>
+    <Timeline className={className} data-test="accompagne-project-timeline">
       <ContactTimelineElement />
       <CertificationTimelineElement />
       <GoalsTimelineElement />
@@ -45,14 +66,23 @@ export const ProjectTimeline = ({
         <FeasibilityDematTimelineElement />
       )}
 
-      {!REJECTED && (
+      {!feasibilityRejected && (
         <>
           <DossierDeValidationTimelineElement />
           <JuryTimelineElement />
         </>
       )}
 
-      {jury?.result && <ProjectEndedTimelineElement />}
+      {gotJuryResult && <ProjectEndedTimelineElement />}
+    </Timeline>
+  );
+};
+
+const AutonomeTimeline = ({ className }: TimelineProps) => {
+  return (
+    <Timeline className={className} data-test="autonome-project-timeline">
+      <ContactTimelineElement />
+      <CertificationTimelineElement />
     </Timeline>
   );
 };

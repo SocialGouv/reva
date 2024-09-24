@@ -34,7 +34,7 @@ export default function Home() {
         souhaitons une pleine réussite dans ce projet !
       </p>
 
-      <ProjectTimeline className="mt-8" data-test="project-home-timeline" />
+      <ProjectTimeline className="mt-8" />
     </PageLayout>
   );
 }

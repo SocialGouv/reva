@@ -7,6 +7,7 @@
       "phone": "06-01-02-03-04",
       "candidacy": {
         "id": "c3",
+        "typeAccompagnement": "ACCOMPAGNE",
         "organism": null,
         "createdAt": 1664376421912,
         "certification": {
