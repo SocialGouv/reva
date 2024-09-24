@@ -14,6 +14,7 @@ export const createCandidacy = ({
       candidateId,
       admissibility: { create: {} },
       examInfo: { create: {} },
+      status: "PROJET",
       candidacyStatuses: {
         create: {
           status: CandidacyStatusStep.PROJET,
