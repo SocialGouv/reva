@@ -1,16 +1,16 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useLogin } from "./login.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GraphQLError } from "graphql";
+import { useLogin } from "./login.hooks";
 
 export default function Login() {
   const router = useRouter();
@@ -66,17 +66,6 @@ export default function Login() {
           Me connecter
         </Button>
       </form>
-
-      <div className="border-t border-gray-200 pt-6">
-        <button
-          onClick={() => {
-            router.push("/registration");
-          }}
-          className="text-gray-500 underline"
-        >
-          Je n’ai pas de candidature
-        </button>
-      </div>
     </PageLayout>
   );
 }
