@@ -115,7 +115,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
       if (textError) {
         if (response.status == 413) {
           errorToast(
-            "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieur à 20 Mo.",
+            "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieure à 9 Mo.",
           );
         } else {
           errorToast(textError);

@@ -26,7 +26,7 @@ type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
 export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
   server,
 ) => {
-  const maxUploadFileSizeInBytes = 20971520;
+  const maxUploadFileSizeInBytes = 9437184;
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
@@ -201,7 +201,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           maxUploadFileSizeInBytes
       ) {
         return reply
-          .status(400)
+          .status(413)
           .send(
             `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
               maxUploadFileSizeInBytes / 1024 / 1024,
@@ -284,7 +284,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
         if (infoFile._buf?.byteLength > maxUploadFileSizeInBytes) {
           return reply
-            .status(400)
+            .status(413)
             .send(
               `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
                 maxUploadFileSizeInBytes / 1024 / 1024,
