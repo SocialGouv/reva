@@ -26,7 +26,7 @@ type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
 export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
   server,
 ) => {
-  const maxUploadFileSizeInBytes = 9437184;
+  const maxUploadFileSizeInBytes = 20971520;
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
