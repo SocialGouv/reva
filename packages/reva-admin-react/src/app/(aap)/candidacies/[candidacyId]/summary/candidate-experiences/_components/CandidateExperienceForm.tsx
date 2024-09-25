@@ -30,12 +30,23 @@ const durationToString: {
   moreThanTenYears: "Plus de 10 ans",
 };
 
-export const schema = z.object({
-  title: z.string().min(1, "Merci de remplir ce champ"),
-  description: z.string(),
-  startedAt: z.string().min(1, "Merci de remplir ce champ"),
-  duration: z.enum(durationValues),
-});
+export const schema = z
+  .object({
+    title: z.string().min(1, "Merci de remplir ce champ"),
+    description: z.string(),
+    startedAt: z.string().min(1, "Merci de remplir ce champ"),
+    duration: z.enum(durationValues),
+  })
+  .superRefine((data, ctx) => {
+    if (data.startedAt > new Date().toISOString()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startedAt"],
+        message:
+          "La date de début ne peut pas se situer dans le futur.",
+      });
+    }
+  });
 
 export type CandidateExperienceFormData = z.infer<typeof schema>;
 
@@ -112,7 +123,11 @@ export const CandidateExperienceForm = ({
           />
           <Input
             label="Date de début"
-            nativeInputProps={{ type: "date", ...register("startedAt") }}
+            nativeInputProps={{
+              type: "date",
+              max: new Date().toISOString().split("T")[0],
+              ...register("startedAt"),
+            }}
             state={errors.startedAt ? "error" : "default"}
             stateRelatedMessage={errors.startedAt?.message}
           />
