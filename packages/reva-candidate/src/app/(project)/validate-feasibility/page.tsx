@@ -35,6 +35,9 @@ export default function ValidateFeasibility() {
     File | undefined
   >();
   const [candidateConfirmation, setCandidateConfirmation] = useState(false);
+  const [candidateDecisionComment, setCandidateDecisionComment] = useState(
+    dematerializedFeasibilityFile?.candidateDecisionComment ?? "",
+  );
   const candidateHasConfirmedFeasibility =
     dematerializedFeasibilityFile?.candidateConfirmationAt;
 
@@ -64,6 +67,9 @@ export default function ValidateFeasibility() {
       await dffCandidateConfirmationMutation({
         candidacyId: candidacy.id,
         dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
+        input: {
+          candidateDecisionComment,
+        },
       });
       if (swornStatementFile) {
         const response = await createOrUpdateSwornStatement({
@@ -87,7 +93,10 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <h2 className="mt-6 mb-4">Dossier de faisabilité </h2>
 
-      <DffSummary />
+      <DffSummary
+        candidateDecisionComment={candidateDecisionComment}
+        setCandidateDecisionComment={setCandidateDecisionComment}
+      />
 
       <form
         className="flex flex-col gap-12"

@@ -11,6 +11,7 @@ export const resetDFFSentToCandidateState = async (
       data: {
         sentToCandidateAt: null,
         candidateConfirmationAt: null,
+        candidateDecisionComment: null,
       },
     });
   }

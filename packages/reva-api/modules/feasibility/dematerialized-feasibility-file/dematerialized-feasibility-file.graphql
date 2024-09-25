@@ -14,6 +14,7 @@ type DematerializedFeasibilityFile {
   prerequisites: [Prerequisite]!
   aapDecision: DFFileAapDecision
   aapDecisionComment: String
+  candidateDecisionComment: String
   attachments: [DFFAttachment]!
   sentToCandidateAt: Timestamp
   swornStatementFileId: ID
@@ -116,6 +117,10 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionI
   decisionFile: Upload
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput {
+  candidateDecisionComment: String
+}
+
 enum DFFileAapDecision {
   FAVORABLE
   UNFAVORABLE
@@ -199,6 +204,7 @@ type Mutation {
   dematerialized_feasibility_file_confirmCandidate(
     candidacyId: ID!
     dematerializedFeasibilityFileId: ID!
+    input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdateEligibilityRequirement(

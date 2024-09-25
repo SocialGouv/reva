@@ -2,6 +2,7 @@ import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { useUrqlClient } from "@/components/graphql/urql-client/UrqlClient";
+import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "@/graphql/generated/graphql";
 import { useMutation } from "@tanstack/react-query";
 
 const CREATE_OR_UPDATE_SWORN_STATEMENT = graphql(`
@@ -22,10 +23,12 @@ const dffCandidateConfirmationRequest = graphql(`
   mutation dematerialized_feasibility_file_confirmCandidate(
     $candidacyId: ID!
     $dematerializedFeasibilityFileId: ID!
+    $input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput!
   ) {
     dematerialized_feasibility_file_confirmCandidate(
       candidacyId: $candidacyId
       dematerializedFeasibilityFileId: $dematerializedFeasibilityFileId
+      input: $input
     ) {
       id
     }
@@ -53,13 +56,16 @@ export const useValidateFeasibility = () => {
     mutationFn: async ({
       candidacyId,
       dematerializedFeasibilityFileId,
+      input,
     }: {
       candidacyId: string;
       dematerializedFeasibilityFileId: string;
+      input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput;
     }) =>
       graphqlClient.request(dffCandidateConfirmationRequest, {
         candidacyId,
         dematerializedFeasibilityFileId,
+        input,
       }),
   });
 

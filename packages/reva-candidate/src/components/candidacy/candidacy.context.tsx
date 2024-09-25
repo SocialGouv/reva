@@ -152,6 +152,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             candidateConfirmationAt
             aapDecision
             aapDecisionComment
+            candidateDecisionComment
             prerequisites {
               label
               state

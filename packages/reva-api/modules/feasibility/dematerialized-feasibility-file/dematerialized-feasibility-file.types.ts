@@ -67,3 +67,7 @@ type DFFileCertificationAuthorityDecision =
   | "ADMISSIBLE"
   | "REJECTED"
   | "INCOMPLETE";
+
+export interface DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput {
+  candidateDecisionComment: string;
+}

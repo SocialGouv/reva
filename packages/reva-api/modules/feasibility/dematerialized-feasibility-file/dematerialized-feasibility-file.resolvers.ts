@@ -8,6 +8,7 @@ import { resolversSecurityMap } from "./dematerialized-feasibility-file.security
 import {
   DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
+  DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput,
   DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput,
@@ -23,6 +24,7 @@ import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments"
 import { createOrUpdateCertificationAuthorityDecision } from "./features/createOrUpdateCertificationAuthorityDecision";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
+import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateEligibilityRequirement";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
@@ -33,7 +35,6 @@ import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
 import { sendDFFToCertificationAuthority } from "./features/sendDFFToCertificationAuthority";
-import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateEligibilityRequirement";
 
 const unsafeResolvers = {
   DematerializedFeasibilityFile: {
@@ -190,13 +191,16 @@ const unsafeResolvers = {
       _parent: unknown,
       {
         dematerializedFeasibilityFileId,
+        input,
       }: {
         candidacyId: string;
         dematerializedFeasibilityFileId: string;
+        input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput;
       },
     ) =>
       confirmDematerializedFeasibilityFileByCandidate({
         dematerializedFeasibilityFileId,
+        input,
       }),
 
     dematerialized_feasibility_file_createOrUpdateEligibilityRequirement: (
