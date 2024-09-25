@@ -52,8 +52,8 @@ const MaisonMereAapPage = () => {
         <h1>{maisonMereAAP.raisonSociale}</h1>
         <Impersonate accountId={accountId} />
       </div>
-      <div className="flex items-center justify-between flex-col w-full border-y-[1px] border-y-neutral-200 py-2 my-4">
-        <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between flex-col w-full  py-2 my-4">
+        <div className="flex items-center justify-between w-full border-y-[1px] border-y-neutral-200">
           <span>Statut de la structure</span>
           <ToggleSwitch
             label=""
@@ -62,14 +62,19 @@ const MaisonMereAapPage = () => {
             onChange={(checked) => handleIsActiveChange(checked)}
           />
         </div>
-        <div className="flex items-center justify-between w-full">
-          <span>Signaler</span>
+        <div className="flex items-center justify-between w-full flex-wrap pb-4 border-b-[1px] border-y-neutral-200">
+          <span>Signaler cette structure</span>
           <ToggleSwitch
             label=""
             defaultChecked={maisonMereAAP.isSignalized}
-            inputTitle="Activer toutes les agences de la maison mère"
+            inputTitle="Signaler la maison mère"
             onChange={(checked) => handleIsSignalizedChange(checked)}
           />
+          <span className="text-xs text-dsfrGray-mentionGrey">
+            À utiliser lorsqu’un ou plusieurs candidats se plaignent des délais
+            de traitement de cette strucure. Les stuctures signalées auront un
+            badge permettant de les repérer plus facilement.
+          </span>
         </div>
       </div>
       <HeadAgencySettingsSummary
