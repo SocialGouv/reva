@@ -11,6 +11,7 @@ import {
   expertFiliereOrganism,
   organismIperia,
   maisonMereAAP1,
+  maisonMereAAP2,
 } from "../fixtures/people-organisms";
 
 import { prismaClient } from "../../prisma/client";
@@ -115,7 +116,7 @@ export const createMaisonMereAAP1 = async (): Promise<MaisonMereAAP> => {
 export const createMaisonMereAAP2 = async (): Promise<MaisonMereAAP> => {
   return prismaClient.maisonMereAAP.create({
     data: {
-      ...maisonMereAAP1,
+      ...maisonMereAAP2,
       gestionnaireAccountId: gestionaMaisonMereAapAccount2.id,
     },
   });

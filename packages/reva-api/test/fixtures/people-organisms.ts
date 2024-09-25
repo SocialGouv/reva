@@ -116,7 +116,7 @@ const maisonMereAAP1 = {
   phone: "0612345678",
   raisonSociale: "Maison Mere Organism Iperia",
   siteWeb: "https://www.iperia.fr",
-  siret: "5038235679",
+  siret: "13002526500013",
   statutJuridique: "ASSOCIATION_LOI_1901" as const,
   typologie: "expertFiliere" as const,
   dateExpirationCertificationQualiopi: new Date(),
@@ -127,6 +127,14 @@ const maisonMereAAP1 = {
   managerFirstname: "Josette",
   managerLastname: "Ledru",
   showAccountSetup: true,
+};
+
+const maisonMereAAP2 = {
+  ...maisonMereAAP1,
+  siret: "12000015300029",
+  raisonSociale: "Maison Mere Organism 2",
+  managerFirstname: "Alice",
+  managerLastname: "Doe",
 };
 
 export {
@@ -142,4 +150,5 @@ export {
   expertFiliereOrganism,
   organismIperia,
   maisonMereAAP1,
+  maisonMereAAP2,
 };
