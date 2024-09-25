@@ -30,7 +30,7 @@ export const getSubscriptionCountByStatus = async ({
             statutValidationInformationsJuridiquesMaisonMereAAP: status,
           },
         ],
-        ...(searchFilter && { OR: buildMaisonMereFilters(searchFilter) }),
+        ...(searchFilter && buildMaisonMereFilters(searchFilter)),
       },
     });
 

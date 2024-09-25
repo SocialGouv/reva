@@ -7,7 +7,9 @@ import {
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 
-export const buildMaisonMereFilters = (searchFilter: string) => {
+export const buildMaisonMereFilters: (
+  searchFilter: string,
+) => Prisma.MaisonMereAAPWhereInput = (searchFilter) => {
   const containsFilter = (field: string) => ({
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
@@ -31,12 +33,14 @@ export const buildMaisonMereFilters = (searchFilter: string) => {
     },
   };
 
-  return [
-    containsFilter("raisonSociale"),
-    containsFilter("siret"),
-    filtersAccount,
-    filtersLegalInformation,
-  ];
+  return {
+    OR: [
+      containsFilter("raisonSociale"),
+      containsFilter("siret"),
+      filtersAccount,
+      filtersLegalInformation,
+    ],
+  };
 };
 
 export const getMaisonMereAAPs = async ({
@@ -67,16 +71,17 @@ export const getMaisonMereAAPs = async ({
   const queryCount: Prisma.MaisonMereAAPCountArgs = {};
 
   if (searchFilter) {
-    const filters = buildMaisonMereFilters(searchFilter);
+    const words = searchFilter.split(/\s+/);
+    const filters = { AND: words.map(buildMaisonMereFilters) };
 
     queryMaisonMereAAPs.where = {
       ...queryMaisonMereAAPs.where,
-      OR: filters,
+      ...filters,
     };
 
     queryCount.where = {
       ...queryCount.where,
-      OR: filters,
+      ...filters,
     };
   }
 

@@ -59,3 +59,14 @@ test("find maison mere by its siret number", async () => {
     { id: maisonMereAAP2.id },
   ]);
 });
+
+test("find maison mere by some unordered key words from its raison social", async () => {
+  const response = await injectGraphqlGetMaisonMereAAPs(
+    "organism2 mere maison",
+  );
+
+  expect(response.json()).not.toHaveProperty("errors");
+  expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
+    { id: maisonMereAAP2.id },
+  ]);
+});
