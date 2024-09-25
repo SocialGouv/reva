@@ -1486,6 +1486,7 @@ model DematerializedFeasibilityFile {
   competenceBlocsPartCompletion     CompetenceBlocsPartCompletionEnum   @default(TO_COMPLETE) @map("competence_blocs_part_completion")
   aapDecision                       DFFDecision?                        @map("aap_decision")
   aapDecisionComment                String?                             @map("aap_decision_comment")
+  candidateDecisionComment          String?                             @map("candidate_decision_comment")
   attachments                       DFFAttachment[]
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
   sentToCandidateAt                 DateTime?                           @map("sent_to_candidate_at") @db.Timestamptz(6)
