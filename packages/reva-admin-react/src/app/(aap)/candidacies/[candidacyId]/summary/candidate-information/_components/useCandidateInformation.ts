@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { CandidateUpdateInformationInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidacyById = graphql(`
   query getCandidacyById($candidacyId: ID!) {
@@ -163,6 +163,7 @@ const updateCandidateInformationMutation = graphql(`
 
 export const useUpdateCandidateInformation = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     mutateAsync: updateCandidateInformationMutate,
@@ -178,6 +179,9 @@ export const useUpdateCandidateInformation = (candidacyId: string) => {
         candidacyId,
         candidateInformation,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+    },
   });
 
   return {

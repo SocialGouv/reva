@@ -2,7 +2,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -63,6 +63,7 @@ const updateCandidateProfileMutation = graphql(`
 
 export const useCandidateProfilePageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -92,6 +93,9 @@ export const useCandidateProfilePageLogic = () => {
         candidacyId,
         candidateProfile,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+    },
   });
 
   const candidate = getCandidateProfileResponse?.getCandidacyById?.candidate;

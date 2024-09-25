@@ -11,8 +11,8 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -37,7 +37,8 @@ const CandidateInformationForm = ({
   countries?: Countries;
   departments?: Departments;
 }) => {
-  const queryClient = useQueryClient();
+  const backUrl = `/candidacies/${candidacyId}/summary`;
+  const router = useRouter();
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
 
@@ -175,9 +176,7 @@ const CandidateInformationForm = ({
       });
       successToast("Les informations ont bien été mises à jour");
 
-      await queryClient.invalidateQueries({
-        queryKey: [candidacyId],
-      });
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -399,10 +398,7 @@ const CandidateInformationForm = ({
             stateRelatedMessage={errors.email?.message}
           />
         </div>
-        <FormButtons
-          backUrl={`/candidacies/${candidacyId}/summary`}
-          formState={formState}
-        />
+        <FormButtons backUrl={backUrl} formState={formState} />
       </form>
     </>
   );
