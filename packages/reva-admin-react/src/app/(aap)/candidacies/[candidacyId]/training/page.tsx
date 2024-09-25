@@ -4,6 +4,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
 import { useTrainingPage } from "./trainingPage.hook";
 
@@ -22,6 +23,7 @@ const getTypologyLabel = (typology?: string) => {
 };
 const TrainingPage = () => {
   const { candidacy, submitTraining } = useTrainingPage();
+  const router = useRouter();
 
   const handleFormSubmit = async (values: TrainingFormValues) => {
     try {
@@ -34,6 +36,7 @@ const TrainingPage = () => {
         },
       });
       successToast("Le parcours personnalisé a bien été envoyé.");
+      router.push(`/candidacies/${candidacy?.id}/summary`);
     } catch (e) {
       graphqlErrorToast(e);
     }
