@@ -16,6 +16,8 @@ import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/Jury
 import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
 import { FeasibilityFormat } from "@/graphql/generated/graphql";
+import { TypeAccompagnementTimelineElement } from "./TimelineElements/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 interface TimelineProps {
   className?: string;
@@ -49,10 +51,14 @@ const AccompagneTimeline = ({
   feasibilityRejected: boolean;
   gotJuryResult: boolean;
 }) => {
+  const { isFeatureActive } = useFeatureFlipping();
   return (
     <Timeline className={className} data-test="accompagne-project-timeline">
       <ContactTimelineElement />
       <CertificationTimelineElement />
+      {isFeatureActive("TYPE_ACCOMPAGNEMENT_CANDIDAT") && (
+        <TypeAccompagnementTimelineElement />
+      )}
       <GoalsTimelineElement />
       <ExperiencesTimelineElement />
       <OrganismTimelineElement />
@@ -83,6 +89,7 @@ const AutonomeTimeline = ({ className }: TimelineProps) => {
     <Timeline className={className} data-test="autonome-project-timeline">
       <ContactTimelineElement />
       <CertificationTimelineElement />
+      <TypeAccompagnementTimelineElement />
     </Timeline>
   );
 };

@@ -28,6 +28,7 @@ export const TimelineElement = ({
   children,
   className = "",
   classNameChildren = "",
+  "data-test": dataTest,
 }: {
   title: string;
   description?: string | ReactElement;
@@ -35,8 +36,9 @@ export const TimelineElement = ({
   children?: React.ReactNode;
   className?: string;
   classNameChildren?: string;
+  "data-test"?: string;
 }) => (
-  <section className={`flex gap-3 ${className}`}>
+  <section className={`flex gap-3 ${className}`} data-test={dataTest}>
     <BarWithWhiteDot status={status} />
     <div
       className={`flex flex-col ${status === "disabled" ? "opacity-40" : ""}
