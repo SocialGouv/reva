@@ -25,6 +25,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         sentToCandidateAt
         aapDecision
         aapDecisionComment
+        candidateDecisionComment
         prerequisites {
           label
           state

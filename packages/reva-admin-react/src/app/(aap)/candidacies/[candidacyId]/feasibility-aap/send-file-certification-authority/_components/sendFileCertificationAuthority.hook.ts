@@ -37,6 +37,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           sentToCandidateAt
           aapDecision
           aapDecisionComment
+          candidateDecisionComment
           prerequisites {
             label
             state

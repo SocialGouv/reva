@@ -15,6 +15,7 @@ import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
+import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 
 export default function DffSummary({
   dematerializedFeasibilityFile,
@@ -42,6 +43,7 @@ export default function DffSummary({
     swornStatementFile,
     eligibilityRequirement,
     eligibilityValidUntil,
+    candidateDecisionComment,
   } = dematerializedFeasibilityFile;
   const {
     experiences,
@@ -93,6 +95,11 @@ export default function DffSummary({
           decision={aapDecision}
           decisionComment={aapDecisionComment}
         />
+        {candidateDecisionComment && (
+          <CandidateDecisionCommentSection
+            candidateDecisionComment={candidateDecisionComment}
+          />
+        )}
         <AttachmentsSection
           attachments={attachments as DffAttachment[]}
           swornStatementFile={swornStatementFile}

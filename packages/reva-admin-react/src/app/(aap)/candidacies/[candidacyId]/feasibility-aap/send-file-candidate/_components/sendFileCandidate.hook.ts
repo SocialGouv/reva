@@ -26,6 +26,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           sentToCandidateAt
           aapDecision
           aapDecisionComment
+          candidateDecisionComment
           prerequisites {
             label
             state
