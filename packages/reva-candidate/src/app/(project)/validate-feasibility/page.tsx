@@ -117,11 +117,12 @@ export default function ValidateFeasibility() {
 
             <Download
               className="mb-0"
-              details="PDF – 61,88 Ko"
-              label="Attestation_sur_l_honneur_modèle"
+              details="PDF - 1455 Ko"
+              label="Modèle d'attestation sur l'honneur"
               linkProps={{
                 title: "Attestation_sur_l_honneur_modèle",
-                href: "https://www.notion.so/fabnummas/Attestation-sur-l-honneur-du-candidat-pour-transmission-DF-parcours-sans-yousign-92e08c5625f54c269e969e6c5a00319f?pvs=4",
+                href: "/files/attestation_sur_l_honneur_modele.pdf",
+                target: "_blank",
               }}
             />
           </div>
