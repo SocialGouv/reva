@@ -5,6 +5,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
 import { File as GQLFile } from "@/graphql/generated/graphql";
+import Download from "@codegouvfr/react-dsfr/Download";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -116,20 +117,35 @@ export default function SwornStatementPage() {
       <h1>Validation du candidat</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Pour commencer le parcours VAE, le candidat doit lire et approuver le
-        dossier de faisabilité. Il doit également vous faire parvenir une
-        attestation sur l'honneur, à transmettre ici.
+        L'attestation sur l'honneur est un document que doit fournir le candidat
+        pour valider son dossier de faisabilité. Vous pouvez aussi télécharger
+        notre modèle et le faire avec lui.
       </p>
+      <h2 className="mb-0">Modèle d'attestation sur l'honneur</h2>
+      <p className="text-xl mb-0">
+        Ce modèle (aussi disponible sur l'espace candidat) est à remplir avec le
+        candidat. Pensez à lui faire signer le document avant de le joindre.
+      </p>
+      <Download
+        details="PDF - 1455 Ko"
+        label="Modèle d'attestation sur l'honneur"
+        linkProps={{
+          title: "Attestation_sur_l_honneur_modèle",
+          href: "/files/attestation_sur_l_honneur_modele.pdf",
+          target: "_blank",
+        }}
+      />
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
         onReset={(e) => {
           e.preventDefault();
           resetForm();
         }}
+        className="mt-4"
       >
         <FancyUpload
           className="col-span-2"
-          title="Joindre l'attestation sur l'honneur signée "
+          title="Joindre l'attestation sur l'honneur complétée et signée"
           hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           defaultFile={swornStatementDefaultFile}
           nativeInputProps={{
