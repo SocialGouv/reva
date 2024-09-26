@@ -70,7 +70,7 @@ context("When the funding alert feature is activated", () => {
         cy.get('[data-test="new-cgu-notice"]').should("not.exist");
       });
 
-      it("do not display a not-visible notice when head agency is closed", function () {
+      it("display a not-visible notice when head agency is closed", function () {
         interceptCandidacies({
           fermePourAbsenceOuConges: true,
           isCguAccepted: true,
@@ -80,8 +80,8 @@ context("When the funding alert feature is activated", () => {
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait("@getOrganismForAAPVisibilityCheck");
 
-        cy.get('[data-test="funding-alert-notice"]').should("exist");
-        cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
+        cy.get('[data-test="funding-alert-notice"]').should("not.exist");
+        cy.get('[data-test="not-visible-alert-notice"]').should("exist");
         cy.get('[data-test="new-cgu-notice"]').should("not.exist");
       });
     });
