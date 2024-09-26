@@ -22,6 +22,7 @@ import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
+import { CandidateDecisionCommentCard } from "./_components/CandidateDecisionCommentCard";
 
 const AapFeasibilityPage = () => {
   const {
@@ -155,6 +156,13 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
             }
           />
+          {dematerializedFeasibilityFile?.candidateDecisionComment && (
+            <CandidateDecisionCommentCard
+              candidateDecisionComment={
+                dematerializedFeasibilityFile.candidateDecisionComment as string
+              }
+            />
+          )}
           <SwornStatementCard
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null

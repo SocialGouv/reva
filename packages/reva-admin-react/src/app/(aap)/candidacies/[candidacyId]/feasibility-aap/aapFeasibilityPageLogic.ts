@@ -80,6 +80,7 @@ const getCandidacyById = graphql(`
           }
           aapDecision
           aapDecisionComment
+          candidateDecisionComment
           attachments {
             id
             file {
