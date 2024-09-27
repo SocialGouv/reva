@@ -64,6 +64,8 @@ export function DffSummary({
   } = candidacy;
 
   const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
+  const isEligibilityRequirementPartial =
+    eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
   return (
     <div className="flex flex-col">
@@ -107,6 +109,7 @@ export function DffSummary({
           certificationCompetenceDetails as CertificationCompetenceDetails[]
         }
         isCertificationPartial={!!candidacy?.isCertificationPartial}
+        isEligibilityRequirementPartial={isEligibilityRequirementPartial}
       />
       <ExperiencesSection experiences={experiences} />
       <ParcoursSection

@@ -21,6 +21,7 @@ export default function CertificationSection({
   blocsDeCompetences,
   certificationCompetenceDetails,
   isCertificationPartial,
+  isEligibilityRequirementPartial,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -30,6 +31,7 @@ export default function CertificationSection({
   blocsDeCompetences: CertificationCompetenceBloc[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   isCertificationPartial: boolean;
+  isEligibilityRequirementPartial: boolean;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -83,12 +85,14 @@ export default function CertificationSection({
       <h5 className="mb-0">Blocs de compétences</h5>
 
       <div className="mb-8 mt-4">
-        {blocsDeCompetences.map((certificationCompetenceBloc) => (
+        {blocsDeCompetences.map((certificationCompetenceBloc, index) => (
           <CertificationCompetenceAccordion
             key={certificationCompetenceBloc.id}
             defaultExpanded
             competenceBloc={certificationCompetenceBloc}
             competenceDetails={certificationCompetenceDetails}
+            hideAccordionContent={isEligibilityRequirementPartial}
+            isFirstRow={index === 0}
           />
         ))}
       </div>
