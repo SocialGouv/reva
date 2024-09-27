@@ -9,10 +9,12 @@ export const getCandidacyCountByStatusV2 = async ({
   hasRole,
   IAMId,
   searchFilter,
+  maisonMereAAPId,
 }: {
   hasRole(role: string): boolean;
   IAMId: string;
   searchFilter?: string;
+  maisonMereAAPId?: string;
 }) => {
   if (!hasRole("admin") && !hasRole("manage_candidacy")) {
     throw new Error("Utilisateur non autorisé");
@@ -55,6 +57,25 @@ export const getCandidacyCountByStatusV2 = async ({
       fromClause +=
         " join account candidacyOrganismAccount on candidacyOrganismAccount.organism_id = candidacyOrganism.id";
       whereClause += ` and candidacyOrganismAccount.keycloak_id = '${IAMId}'`;
+    }
+  } else if (hasRole("admin") && maisonMereAAPId) {
+    const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+      where: { id: maisonMereAAPId },
+      select: {
+        gestionnaire: {
+          select: {
+            keycloakId: true,
+          },
+        },
+      },
+    });
+
+    if (maisonMereAAP?.gestionnaire.keycloakId) {
+      fromClause +=
+        " join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id";
+      fromClause +=
+        " join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id";
+      whereClause += ` and mmaAccount.keycloak_id = '${maisonMereAAP?.gestionnaire.keycloakId}'`;
     }
   }
 

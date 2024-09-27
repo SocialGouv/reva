@@ -104,6 +104,7 @@ const unsafeResolvers = {
         offset?: number;
         statusFilter?: CandidacyStatusFilter;
         searchFilter?: string;
+        maisonMereAAPId?: string;
       },
       context: GraphqlContext,
     ) => {
@@ -139,6 +140,7 @@ const unsafeResolvers = {
       _: unknown,
       _params: {
         searchFilter?: string;
+        maisonMereAAPId?: string;
       },
       context: GraphqlContext,
     ) => {
@@ -150,12 +152,12 @@ const unsafeResolvers = {
         ? getCandidacyCountByStatusV2({
             hasRole: context.auth!.hasRole,
             IAMId: context.auth!.userInfo!.sub,
-            searchFilter: _params.searchFilter,
+            ..._params,
           })
         : getCandidacyCountByStatus({
             hasRole: context.auth!.hasRole,
             IAMId: context.auth!.userInfo!.sub,
-            searchFilter: _params.searchFilter,
+            ..._params,
           });
     },
     candidacy_getCandidacyCcns: async (

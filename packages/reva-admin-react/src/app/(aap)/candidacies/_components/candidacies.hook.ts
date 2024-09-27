@@ -5,8 +5,11 @@ import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 
 const getCandidacyByStatusCount = graphql(`
-  query getCandidacyByStatusCount($searchFilter: String) {
-    candidacy_candidacyCountByStatus(searchFilter: $searchFilter) {
+  query getCandidacyByStatusCount($searchFilter: String, $maisonMereAAPId: ID) {
+    candidacy_candidacyCountByStatus(
+      searchFilter: $searchFilter
+      maisonMereAAPId: $maisonMereAAPId
+    ) {
       ACTIVE_HORS_ABANDON
       DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON
       DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON
@@ -36,12 +39,14 @@ const getCandidaciesByStatus = graphql(`
     $searchFilter: String
     $statusFilter: CandidacyStatusFilter
     $offset: Int
+    $maisonMereAAPId: ID
   ) {
     getCandidacies(
       searchFilter: $searchFilter
       statusFilter: $statusFilter
       limit: 10
       offset: $offset
+      maisonMereAAPId: $maisonMereAAPId
     ) {
       rows {
         id
@@ -81,20 +86,23 @@ export const useCandidacies = ({
   searchFilter,
   statusFilter,
   currentPage,
+  maisonMereAAPId,
 }: {
   searchFilter: string;
   statusFilter: CandidacyStatusFilter;
   currentPage: number;
+  maisonMereAAPId?: string;
 }) => {
   const RECORDS_PER_PAGE = 10;
   const { graphqlClient } = useGraphQlClient();
   const { isFeatureActive } = useFeatureflipping();
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
   const { data: getCandidacyByStatusResponse } = useQuery({
-    queryKey: ["getCandidacyByStatusCount", searchFilter],
+    queryKey: ["getCandidacyByStatusCount", searchFilter, maisonMereAAPId],
     queryFn: () =>
       graphqlClient.request(getCandidacyByStatusCount, {
         searchFilter,
+        maisonMereAAPId,
       }),
     enabled: !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS"),
   });
@@ -105,12 +113,14 @@ export const useCandidacies = ({
       searchFilter,
       statusFilter,
       currentPage,
+      maisonMereAAPId,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesByStatus, {
         searchFilter,
         statusFilter,
         offset,
+        maisonMereAAPId,
       }),
   });
 

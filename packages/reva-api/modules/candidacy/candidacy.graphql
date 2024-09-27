@@ -225,6 +225,7 @@ type Query {
     limit: Int
     statusFilter: CandidacyStatusFilter
     searchFilter: String
+    maisonMereAAPId: ID
   ): CandidacyPage!
   getRandomOrganismsForCandidacy(
     candidacyId: UUID!
@@ -233,6 +234,7 @@ type Query {
   ): RamdomOrganisms!
   candidacy_candidacyCountByStatus(
     searchFilter: String
+    maisonMereAAPId: ID
   ): CandidacyCountByStatus!
   candidacy_getCandidacyCcns(
     offset: Int

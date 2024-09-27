@@ -16,6 +16,7 @@ export const getCandidacies = async ({
   offset,
   statusFilter,
   searchFilter,
+  maisonMereAAPId,
 }: {
   hasRole(role: string): boolean;
   iAMId: string;
@@ -23,6 +24,7 @@ export const getCandidacies = async ({
   offset?: number;
   statusFilter?: CandidacyStatusFilter;
   searchFilter?: string;
+  maisonMereAAPId?: string;
 }) => {
   const realOffset = offset || 0;
   const realLimit = limit || 10000;
@@ -35,7 +37,26 @@ export const getCandidacies = async ({
   };
 
   if (hasRole("admin")) {
+    let organismAccountKeycloakId: string | undefined;
+    if (maisonMereAAPId) {
+      const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+        where: { id: maisonMereAAPId },
+        select: {
+          gestionnaire: {
+            select: {
+              keycloakId: true,
+            },
+          },
+        },
+      });
+
+      if (maisonMereAAP?.gestionnaire.keycloakId) {
+        organismAccountKeycloakId = maisonMereAAP?.gestionnaire.keycloakId;
+      }
+    }
+
     candidaciesAndTotal = await getCandidaciesFromDb({
+      organismAccountKeycloakId,
       offset: realOffset,
       limit: realLimit,
       statusFilter,

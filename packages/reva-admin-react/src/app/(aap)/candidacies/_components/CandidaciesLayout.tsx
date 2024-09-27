@@ -7,6 +7,7 @@ import {
 import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
+import { MaisonMereAAP } from "./MaisonMereAAP";
 
 const CandidacyLayoutSideMenu = ({
   candidaciesByStatusCount,
@@ -16,6 +17,10 @@ const CandidacyLayoutSideMenu = ({
   const searchParams = useSearchParams();
   const candidacyStatus = searchParams.get("status");
   const searchFilter = searchParams.get("search") || "";
+  const maisonMereAAPId = searchParams.get("maisonMereAAPId") as
+    | string
+    | undefined;
+
   const { isAdmin } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
 
@@ -195,8 +200,9 @@ const CandidacyLayoutSideMenu = ({
     <nav
       role="navigation"
       aria-label="Menu latéral"
-      className="fr-sidemenu bg-white md:h-full w-full md:max-w-[450px] mb-2 flex-shrink-0"
+      className="fr-sidemenu bg-white md:h-full w-full md:max-w-[450px] mb-2 flex flex-col flex-shrink-0 gap-4"
     >
+      {maisonMereAAPId && <MaisonMereAAP maisonMereAAPId={maisonMereAAPId} />}
       <SideMenu
         className="md:min-h-[900px]"
         align="left"

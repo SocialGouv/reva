@@ -6,6 +6,7 @@ import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useParams } from "next/navigation";
 import { useMaisonMereAAP } from "./_components/maisonMereAAP.hook";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const MaisonMereAapPage = () => {
   const { "maison-mere-id": maisonMereAAPId }: { "maison-mere-id": string } =
@@ -48,9 +49,22 @@ const MaisonMereAapPage = () => {
 
   return (
     <>
-      <div className="flex justify-between w-full">
+      <div className="flex w-full">
         <h1>{maisonMereAAP.raisonSociale}</h1>
-        <Impersonate accountId={accountId} />
+        <div className="flex-1 flex w-full gap-4 justify-end">
+          <Impersonate accountId={accountId} />
+          <div>
+            <Button
+              priority="secondary"
+              linkProps={{
+                href: `/candidacies/?status=ACTIVE_HORS_ABANDON&page=1&maisonMereAAPId=${maisonMereAAPId}`,
+                target: "_blank",
+              }}
+            >
+              Voir les candidatures
+            </Button>
+          </div>
+        </div>
       </div>
       <div className="flex items-center justify-between flex-col w-full  py-2 my-4">
         <div className="flex items-center justify-between w-full border-y-[1px] border-y-neutral-200">
