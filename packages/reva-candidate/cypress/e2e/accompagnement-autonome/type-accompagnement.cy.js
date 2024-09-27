@@ -92,6 +92,30 @@ context("Type accompagnement", () => {
     ).should("be.disabled");
   });
 
+  it("should hide the type_accompagnement update button when the candidacy status is not 'PROJET'", function () {
+    cy.fixture("candidate1.json").then((candidate) => {
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+        "AUTONOME";
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+        "VALIDATION";
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+      });
+    });
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    });
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@activeFeaturesForConnectedUser");
+
+    cy.get(
+      '[data-test="type-accompagnement-timeline-element-update-button"]',
+    ).should("not.exist");
+  });
+
   it("should open the type_accompagnement choice page when i click on the update button", function () {
     cy.fixture("candidate1-certification-titre-2-selected.json").then(
       (candidate) => {
