@@ -11,7 +11,8 @@ export const DossierDeValidationTimelineElement = () => {
   const PENDING = dossierDeValidation?.decision === "PENDING";
   const INCOMPLETE = dossierDeValidation?.decision === "INCOMPLETE";
 
-  let text = `Pensez à prévenir votre accompagnateur quand vous avez terminé la rédaction de votre dossier de validation.`;
+  let text =
+    "Pensez à prévenir votre accompagnateur quand vous avez terminé la rédaction de votre dossier de validation. Ce dernier se chargera de le transmettre au certificateur.";
 
   if (PENDING || INCOMPLETE) {
     text = `Votre dossier de validation a été transmis au certificateur.`;
