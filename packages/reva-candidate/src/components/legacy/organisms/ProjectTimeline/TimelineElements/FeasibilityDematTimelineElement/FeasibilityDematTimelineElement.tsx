@@ -50,14 +50,14 @@ export const FeasibilityDematTimelineElement = () => {
     text = (
       <>
         <span>
-          Vous avez reçu votre dossier de faisabilité{" "}
+          Votre dossier de faisabilité vous a été transmis le{" "}
           {format(
             dematerializedFeasibilityFile.sentToCandidateAt!,
             "dd/MM/yyyy",
           )}
-          . Votre accompagnateur est en train d’y apporter quelques
-          modifications. Vous recevrez prochainement la nouvelle version de
-          votre dossier.
+          . Vérifiez les informations renseignées par votre organisme
+          accompagnateur et transmettez nous la déclaration sur l&apos;honneur
+          signée de votre part.
         </span>
       </>
     );
