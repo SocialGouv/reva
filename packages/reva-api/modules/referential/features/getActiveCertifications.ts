@@ -28,11 +28,22 @@ export const getActiveCertifications = async (filters?: {
         },
       });
 
-    const mappedCertifications: Certification[] = domaineCertifications.map(
-      ({ certification }) => ({
-        ...certification,
-        codeRncp: certification.rncpId,
-      }),
+    const mappedCertifications = domaineCertifications.reduce(
+      (acc, { certification }) => {
+        const isIndexed = acc.findIndex((c) => c.id == certification.id) != -1;
+        if (!isIndexed) {
+          return [
+            ...acc,
+            {
+              ...certification,
+              codeRncp: certification.rncpId,
+            },
+          ];
+        }
+
+        return acc;
+      },
+      [] as Certification[],
     );
 
     certifications = [...certifications, ...mappedCertifications];
