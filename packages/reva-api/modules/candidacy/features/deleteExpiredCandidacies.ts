@@ -12,6 +12,7 @@ export const deleteExpiredCandidacies = async () => {
       isActive: true,
       status: "PROJET",
       createdAt: { lt: prev2MonthesDate },
+      candidacy: { typeAccompagnement: "ACCOMPAGNE" },
     },
   });
 
