@@ -8,7 +8,6 @@ import {
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FundingCallOut } from "../../../../../funding-call-out/FundingCallOut";
 
 export const CertificationTimelineElement = () => {
@@ -25,15 +24,11 @@ export const CertificationTimelineElement = () => {
     status = "editable";
   }
 
-  const { isFeatureActive } = useFeatureFlipping();
-  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
-
   const candidacyStatus = candidacy.status;
 
   const showFundingCallOut =
-    affichageTypesFinancementCandidatureFeatureActive &&
+    candidacy.financeModule === "hors_plateforme" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE" &&
     candidacyStatus === "PROJET";
 
   return (

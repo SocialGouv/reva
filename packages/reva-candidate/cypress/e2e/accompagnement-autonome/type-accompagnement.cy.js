@@ -51,12 +51,10 @@ context("Type accompagnement", () => {
     });
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="type-accompagnement-timeline-element"]').should(
       "exist",
@@ -77,12 +75,10 @@ context("Type accompagnement", () => {
     });
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
@@ -104,12 +100,10 @@ context("Type accompagnement", () => {
     });
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
@@ -128,12 +122,10 @@ context("Type accompagnement", () => {
     );
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',

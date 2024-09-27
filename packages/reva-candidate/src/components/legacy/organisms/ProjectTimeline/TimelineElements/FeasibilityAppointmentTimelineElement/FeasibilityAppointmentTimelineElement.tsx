@@ -6,7 +6,6 @@ import {
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FundingCallOut } from "../../../../../funding-call-out/FundingCallOut";
 
 export const FeasibilityAppointmentTimelineElement = () => {
@@ -22,13 +21,9 @@ export const FeasibilityAppointmentTimelineElement = () => {
     status = "readonly";
   }
 
-  const { isFeatureActive } = useFeatureFlipping();
-  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
-
   const showFundingCallOut =
-    affichageTypesFinancementCandidatureFeatureActive &&
+    candidacy.financeModule === "hors_plateforme" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE" &&
     candidacyStatus !== "PROJET";
 
   return (

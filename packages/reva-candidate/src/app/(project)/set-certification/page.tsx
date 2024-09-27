@@ -27,12 +27,12 @@ import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
 
 import { useSetCertification } from "./set-certification.hooks";
 import Link from "next/link";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GraphQLError } from "graphql";
 
 export default function SetCertification() {
   const router = useRouter();
+  const { candidacy } = useCandidacy();
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -49,11 +49,6 @@ export default function SetCertification() {
     });
     return params;
   }, [searchParams]);
-
-  const { isFeatureActive } = useFeatureFlipping();
-  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
 
   const { canEditCandidacy, candidate, refetch } = useCandidacy();
 
@@ -106,6 +101,10 @@ export default function SetCertification() {
   const selectedCertification = rows?.find(
     (certification) => certification.id == selectedCertificationId,
   );
+
+  const showFundingNotice =
+    candidacy.financeModule === "hors_plateforme" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE";
 
   return (
     <PageLayout
@@ -207,7 +206,7 @@ export default function SetCertification() {
           <p data-test="certification-code-rncp" className="text-xs mb-3">
             Code RNCP: {selectedCertification.codeRncp}
           </p>
-          {affichageTypesFinancementCandidatureFeatureActive && (
+          {showFundingNotice && (
             <Notice
               className="my-6 max-w-xl"
               title={

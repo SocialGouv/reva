@@ -25,12 +25,10 @@ context("Accompagnement Autonome Timeline", () => {
     });
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="autonome-project-timeline"]').should("exist");
   });
