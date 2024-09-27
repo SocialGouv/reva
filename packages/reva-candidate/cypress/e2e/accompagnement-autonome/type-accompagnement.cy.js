@@ -114,28 +114,51 @@ context("Type accompagnement", () => {
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
     ).click();
-    cy.location("pathname") // yields "/favorites/regional/local"
-      .should("include", "/type-accompagnement/");
+    cy.location("pathname").should("equal", "/candidat/type-accompagnement/");
   });
 
-  it("should show the type-accompagnement choice page when i access it", function () {
+  it("should allow me to complete the type-accompagnement choice page", function () {
     cy.fixture("candidate1-certification-titre-2-selected.json").then(
       (candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "AUTONOME";
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForTypeAccompagnementPage",
+            candidate,
+          );
         });
       },
     );
+
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacy",
+        "candidate1-certification-titre-2-selected.json",
+      );
+      stubMutation(
+        req,
+        "updateTypeAccompagnementForTypeAccompagnementPage",
+        "candidate1-certification-titre-2-selected.json",
+      );
     });
     cy.login();
-    cy.visit("/type-accompagnement");
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.visit("/type-accompagnement");
+    cy.wait("@getCandidateWithCandidacyForTypeAccompagnementPage");
 
     cy.get("h1").should("contain.text", "Choix accompagnement");
+    cy.get(".type-accompagnement-autonome-radio-button").should("be.checked");
+    cy.get(".type-accompagnement-accompagne-radio-button ~ label").click();
+    cy.get(".type-accompagnement-accompagne-radio-button").should("be.checked");
+
+    cy.get('[data-test="submit-type-accompagnement-form-button"]').click();
+    cy.wait("@updateTypeAccompagnementForTypeAccompagnementPage");
+
+    cy.location("pathname").should("equal", "/candidat/");
   });
 });
