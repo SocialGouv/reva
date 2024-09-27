@@ -103,7 +103,7 @@ export const FeasibilityDematTimelineElement = () => {
                 },
               }}
             >
-              {dematerializedFeasibilityFile.swornStatementFile
+              {dematerializedFeasibilityFile.candidateConfirmationAt
                 ? "Consultez"
                 : "Vérifiez votre dossier"}
             </Button>
