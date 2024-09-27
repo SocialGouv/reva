@@ -13,6 +13,7 @@ import {
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { AttachmentsCard } from "./_components/AttachmentsCard";
+import { CandidateDecisionCommentCard } from "./_components/CandidateDecisionCommentCard";
 import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { DecisionCard } from "./_components/DecisionCard";
@@ -22,7 +23,6 @@ import { PrerequisitesCard } from "./_components/PrerequisitesCard";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementCard } from "./_components/SwornStatementCard";
-import { CandidateDecisionCommentCard } from "./_components/CandidateDecisionCommentCard";
 
 const AapFeasibilityPage = () => {
   const {
@@ -114,6 +114,7 @@ const AapFeasibilityPage = () => {
                 : "Vous devez d'abord détailler la certification visée avant d'intégrer les prérequis."
             }
             isEditable={isFeasibilityEditable}
+            isEligibilityRequirementPartial={isEligibilityRequirementPartial}
           />
           <PrerequisitesCard
             prerequisites={

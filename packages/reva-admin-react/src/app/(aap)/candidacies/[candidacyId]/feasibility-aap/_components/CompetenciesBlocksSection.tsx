@@ -34,6 +34,7 @@ export const CompetenciesBlocksSection = ({
   blocsDeCompetences,
   disabled,
   disabledNoticeText,
+  isEligibilityRequirementPartial,
 }: {
   isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
@@ -41,6 +42,7 @@ export const CompetenciesBlocksSection = ({
   blocsDeCompetences: DffCertificationCompetenceBloc[];
   disabled: boolean;
   disabledNoticeText: string;
+  isEligibilityRequirementPartial: boolean;
 }) => {
   const { candidacyId } = useParams();
 
@@ -59,7 +61,7 @@ export const CompetenciesBlocksSection = ({
     >
       {!!blocsDeCompetences.length && (
         <ul className="list-none flex flex-col">
-          {blocsDeCompetences?.map((bloc) => (
+          {blocsDeCompetences?.map((bloc, index) => (
             <li
               key={bloc.certificationCompetenceBloc.id}
               className="flex justify-between items-start pb-0 gap-6"
@@ -68,6 +70,8 @@ export const CompetenciesBlocksSection = ({
                 key={bloc.certificationCompetenceBloc.id}
                 competenceBloc={bloc.certificationCompetenceBloc}
                 competenceDetails={certificationCompetenceDetails}
+                hideAccordionContent={isEligibilityRequirementPartial}
+                isFirstRow={index === 0}
               />
               {!disabled && (
                 <Button

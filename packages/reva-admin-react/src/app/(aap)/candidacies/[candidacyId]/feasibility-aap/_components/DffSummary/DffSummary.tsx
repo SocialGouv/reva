@@ -8,6 +8,7 @@ import {
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import AttachmentsSection from "./_components/AttachmentsSection";
+import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 import CandidateSection from "./_components/CandidateSection";
 import CertificationSection from "./_components/CertificationSection";
 import DecisionSection from "./_components/DecisionSection";
@@ -15,7 +16,6 @@ import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
-import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 
 export default function DffSummary({
   dematerializedFeasibilityFile,
@@ -55,7 +55,8 @@ export default function DffSummary({
     individualHourCount,
     collectiveHourCount,
   } = candidacy as Candidacy;
-
+  const isEligibilityRequirementPartial =
+    eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
   return (
     <div className="flex flex-col">
       <h1>Dossier de faisabilité</h1>
@@ -81,6 +82,7 @@ export default function DffSummary({
           )}
           certificationCompetenceDetails={certificationCompetenceDetails}
           isCertificationPartial={candidacy?.isCertificationPartial}
+          isEligibilityRequirementPartial={isEligibilityRequirementPartial}
         />
         <ExperiencesSection experiences={experiences} />
         <ParcoursSection
