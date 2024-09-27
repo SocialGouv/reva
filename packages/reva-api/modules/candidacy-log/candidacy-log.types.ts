@@ -35,7 +35,8 @@ export type CandidacyLogEventTypeAndDetails =
         | "FEASIBILITY_MARKED_AS_INCOMPLETE"
         | "FUNDING_REQUEST_CREATED"
         | "PAYMENT_REQUEST_CREATED_OR_UPDATED"
-        | "PAYMENT_REQUEST_CONFIRMED";
+        | "PAYMENT_REQUEST_CONFIRMED"
+        | "TYPE_ACCOMPAGNEMENT_UPDATED";
       details?: undefined;
     }
   | {
@@ -86,6 +87,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "ADMISSIBILITY_FVAE_UPDATED";
       details: { isAlreadyAdmissible: boolean; expiresAt: Date | null };
+    }
+  | {
+      eventType: "TYPE_ACCOMPAGNEMENT_UPDATED";
+      details: { typeAccompagnement: string };
     };
 
 export type CandidacyLog = {

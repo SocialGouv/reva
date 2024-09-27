@@ -27,6 +27,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_addExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_selectOrganism": isOwnerOfCandidacy,
   "Mutation.candidacy_submitCandidacy": isOwnerOfCandidacy,
+  "Mutation.candidacy_updateTypeAccompagnement": isOwnerOfCandidacy,
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,

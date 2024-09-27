@@ -1,5 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { CandidateTypology } from "@prisma/client";
+import { CandidacyTypeAccompagnement, CandidateTypology } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
@@ -60,6 +60,7 @@ import { getCandidacies } from "./features/getCandicacies";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { getCandidacyCountByStatusV2 } from "./features/getCandidacyCountByStatusV2";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
+import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -581,6 +582,31 @@ const unsafeResolvers = {
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
         userEmail: context.auth.userInfo?.email,
         details: { readyForJuryEstimatedAt: params.readyForJuryEstimatedAt },
+      });
+      return result;
+    },
+    candidacy_updateTypeAccompagnement: async (
+      _parent: unknown,
+      {
+        candidacyId,
+        typeAccompagnement,
+      }: {
+        candidacyId: string;
+        typeAccompagnement: CandidacyTypeAccompagnement;
+      },
+      context: GraphqlContext,
+    ) => {
+      const result = await updateCandidacyTypeAccompagnement({
+        candidacyId,
+        typeAccompagnement,
+      });
+      await logCandidacyAuditEvent({
+        candidacyId,
+        eventType: "TYPE_ACCOMPAGNEMENT_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        userEmail: context.auth.userInfo?.email,
+        details: { typeAccompagnement },
       });
       return result;
     },

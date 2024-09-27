@@ -118,6 +118,8 @@ export const getCandidacyLogMessage = ({
           ? `Heure de passage: ${details.timeOfSession}`
           : ""
       }`;
+    case "TYPE_ACCOMPAGNEMENT_UPDATED":
+      return `Type d'accompagnement modifié. Nouveau type d'accompagnement ${details?.typeAccompagnement}`;
     default:
       return "Évenement inconnu";
   }
