@@ -64,18 +64,22 @@ export default function CertificationSection({
           <p className="font-medium">{option}</p>
         </>
       )}
-      <div className="flex gap-2 mb-4">
-        <div className="flex flex-col flex-1">
-          <p className="mb-0">Langue vivante 1 :</p>
-          <p className="mb-0 font-medium">{firstForeignLanguage}</p>
+      {(firstForeignLanguage || secondForeignLanguage) && (
+        <div className="flex gap-2 mb-4">
+          {firstForeignLanguage && (
+            <div className="flex flex-col flex-1">
+              <p className="mb-0">Langue vivante 1 :</p>
+              <p className="mb-0 font-medium">{firstForeignLanguage}</p>
+            </div>
+          )}
+          {secondForeignLanguage && (
+            <div className="flex flex-col flex-1">
+              <p className="mb-0">Langue vivante 2 :</p>
+              <p className="mb-0 font-medium">{secondForeignLanguage}</p>
+            </div>
+          )}
         </div>
-        {secondForeignLanguage && (
-          <div className="flex flex-col flex-1">
-            <p className="mb-0">Langue vivante 2 :</p>
-            <p className="mb-0 font-medium">{secondForeignLanguage}</p>
-          </div>
-        )}
-      </div>
+      )}
       <CallOut>
         {isCertificationPartial
           ? "Un ou plusieurs bloc(s) de compétences visé(s)"
