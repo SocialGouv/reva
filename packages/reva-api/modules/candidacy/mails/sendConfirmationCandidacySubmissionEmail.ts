@@ -23,7 +23,7 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
           <li>En cas de préconisation d'acte de formation pour sécuriser votre parcours, l'organisme accompagnateur doit vous présenter trois devis/propositions de centres de formation différents, afin que vous puissiez faire un choix éclairé.</li>
         </ul>`
     : `<ul>
-        <li>Votre accompagnateur explorera avec vous les dispositifs de financement dont vous pouvez bénéficier. Il vous indiquera les démarches nécessaires et, le cas échéant, vous accompagnera pour les réaliser. Pour information, le coût moyen constaté d’un parcours est de 2516€.</li>
+        <li>Votre accompagnateur explorera avec vous les dispositifs de financement dont vous pouvez bénéficier. Il vous indiquera les démarches nécessaires et, le cas échéant, vous accompagnera pour les réaliser.</li>
         <li>En cas de préconisation d'acte de formation pour sécuriser votre parcours, l'organisme accompagnateur doit vous présenter trois devis/propositions de centres de formation différents, afin que vous puissiez faire un choix éclairé. Le choix final de l’organisme vous revient.</li>
         <li>Afin d’optimiser votre premier rendez-vous avec votre accompagnateur, nous vous invitons à créer votre compte <a href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/">CPF</a> si ce n’est pas déjà fait, à vous munir de vos codes d’accès à votre compte CPF et consulter le solde de votre droit CPF.</li>
       </ul>`;
