@@ -5,10 +5,18 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
+import { CertificationAuthority } from "./(components)/CertificationAuthority";
+import { useAuth } from "@/components/auth/auth";
 
 const getFeasibilityCountByCategoryQuery = graphql(`
-  query getFeasibilityCountByCategory($searchFilter: String) {
-    feasibilityCountByCategory(searchFilter: $searchFilter) {
+  query getFeasibilityCountByCategory(
+    $searchFilter: String
+    $certificationAuthorityId: ID
+  ) {
+    feasibilityCountByCategory(
+      searchFilter: $searchFilter
+      certificationAuthorityId: $certificationAuthorityId
+    ) {
       ALL
       PENDING
       REJECTED
@@ -21,9 +29,13 @@ const getFeasibilityCountByCategoryQuery = graphql(`
 `);
 
 const getDossierDeValidationCountByCategoryQuery = graphql(`
-  query getDossierDeValidationCountByCategory($searchFilter: String) {
+  query getDossierDeValidationCountByCategory(
+    $searchFilter: String
+    $certificationAuthorityId: ID
+  ) {
     dossierDeValidation_dossierDeValidationCountByCategory(
       searchFilter: $searchFilter
+      certificationAuthorityId: $certificationAuthorityId
     ) {
       ALL
       PENDING
@@ -33,8 +45,14 @@ const getDossierDeValidationCountByCategoryQuery = graphql(`
 `);
 
 const getJuryCountByCategoryQuery = graphql(`
-  query getJuryCountByCategory($searchFilter: String) {
-    jury_juryCountByCategory(searchFilter: $searchFilter) {
+  query getJuryCountByCategory(
+    $searchFilter: String
+    $certificationAuthorityId: ID
+  ) {
+    jury_juryCountByCategory(
+      searchFilter: $searchFilter
+      certificationAuthorityId: $certificationAuthorityId
+    ) {
       SCHEDULED
       PASSED
     }
@@ -46,30 +64,50 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams();
 
   const searchFilter = searchParams.get("search") || "";
+  const certificationAuthorityId = searchParams.get(
+    "certificationAuthorityId",
+  ) as string | undefined;
+
+  const { isAdmin } = useAuth();
 
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
-    queryKey: ["getFeasibilityCountByCategory", searchFilter],
+    queryKey: [
+      "getFeasibilityCountByCategory",
+      searchFilter,
+      certificationAuthorityId,
+    ],
     queryFn: () =>
       graphqlClient.request(getFeasibilityCountByCategoryQuery, {
         searchFilter,
+        certificationAuthorityId,
       }),
   });
 
   const { data: getDossierDeValidationCountByCategoryResponse } = useQuery({
-    queryKey: ["getDossierDeValidationCountByCategory", searchFilter],
+    queryKey: [
+      "getDossierDeValidationCountByCategory",
+      searchFilter,
+      certificationAuthorityId,
+    ],
     queryFn: () =>
       graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
         searchFilter,
+        certificationAuthorityId,
       }),
   });
 
   const { data: getJuryCountByCategoryResponse } = useQuery({
-    queryKey: ["getJuryCountByCategory", searchFilter],
+    queryKey: [
+      "getJuryCountByCategory",
+      searchFilter,
+      certificationAuthorityId,
+    ],
     queryFn: () =>
       graphqlClient.request(getJuryCountByCategoryQuery, {
         searchFilter,
+        certificationAuthorityId,
       }),
   });
 
@@ -80,6 +118,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
     if (searchFilter) {
       params.set("search", searchFilter);
+    }
+    if (certificationAuthorityId) {
+      params.set("certificationAuthorityId", certificationAuthorityId);
     }
 
     return `${path}/?${params.toString()}`;
@@ -224,14 +265,26 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
-      <SideMenu
-        className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
-        align="left"
-        burgerMenuButtonText="Candidatures"
-        sticky
-        fullHeight
-        items={menuItems}
-      />
+      <nav
+        role="navigation"
+        aria-label="Menu latéral"
+        className="flex flex-col gap-4"
+      >
+        {isAdmin && certificationAuthorityId && (
+          <CertificationAuthority
+            certificationAuthorityId={certificationAuthorityId}
+          />
+        )}
+        <SideMenu
+          className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
+          align="left"
+          burgerMenuButtonText="Candidatures"
+          sticky
+          fullHeight
+          items={menuItems}
+        />
+      </nav>
+
       <div className="mt-3 flex-1">{children}</div>
     </div>
   );

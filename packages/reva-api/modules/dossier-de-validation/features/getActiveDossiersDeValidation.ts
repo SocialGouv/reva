@@ -16,6 +16,7 @@ export const getActiveDossiersDeValidation = async ({
   offset = 0,
   categoryFilter,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -23,6 +24,7 @@ export const getActiveDossiersDeValidation = async ({
   offset?: number;
   categoryFilter?: DossierDeValidationStatusFilter;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }): Promise<PaginatedListResult<DossierDeValidation>> => {
   let queryWhereClause: Prisma.DossierDeValidationWhereInput = {
     isActive: true,
@@ -64,6 +66,31 @@ export const getActiveDossiersDeValidation = async ({
       }),
       candidacy: candidacyWhereClause,
     };
+  } else if (hasRole("admin") && certificationAuthorityId) {
+    const account = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+
+    if (account) {
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    }
   }
 
   if (searchFilter && searchFilter.length > 0) {

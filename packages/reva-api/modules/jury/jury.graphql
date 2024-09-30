@@ -73,8 +73,12 @@ type Query {
     limit: Int
     categoryFilter: JuryCategoryFilter
     searchFilter: String
+    certificationAuthorityId: ID
   ): JuryPage!
-  jury_juryCountByCategory(searchFilter: String): JuryCountByCategory!
+  jury_juryCountByCategory(
+    searchFilter: String
+    certificationAuthorityId: ID
+  ): JuryCountByCategory!
 }
 
 type Mutation {

@@ -16,6 +16,7 @@ export const getActiveJuries = async ({
   offset = 0,
   categoryFilter,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -23,6 +24,7 @@ export const getActiveJuries = async ({
   offset?: number;
   categoryFilter?: JuryStatusFilter;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }): Promise<PaginatedListResult<Jury>> => {
   let queryWhereClause: Prisma.JuryWhereInput = {
     isActive: true,
@@ -64,6 +66,31 @@ export const getActiveJuries = async ({
       }),
       candidacy: candidacyWhereClause,
     };
+  } else if (hasRole("admin") && certificationAuthorityId) {
+    //admin has access to everything
+    const account = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+    if (account) {
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    }
   }
 
   if (searchFilter && searchFilter.length > 0) {

@@ -100,8 +100,23 @@ const CertificationAuthorityAdminComponent = ({
       />
       <div className="flex justify-between w-full">
         <h1>{certificationAuthority.label}</h1>
-        <Impersonate accountId={certificationAuthority?.account?.id} />
+
+        <div className="flex-1 flex w-full gap-4 justify-end">
+          <Impersonate accountId={certificationAuthority?.account?.id} />
+          <div>
+            <Button
+              priority="secondary"
+              linkProps={{
+                href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityId=${certificationAuthority.id}`,
+                target: "_blank",
+              }}
+            >
+              Voir les candidatures
+            </Button>
+          </div>
+        </div>
       </div>
+
       <p className="text-xl">
         Il s’occupe des candidatures (dossier de validation, jury...) et peut
         ajouter des comptes collaborateurs. L’ajout d’un certificateur

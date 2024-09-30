@@ -62,6 +62,7 @@ const unsafeResolvers = {
         limit?: number;
         category?: DossierDeValidationStatusFilter;
         searchFilter?: string;
+        certificationAuthorityId?: string;
       },
       context: GraphqlContext,
     ) =>
@@ -74,6 +75,7 @@ const unsafeResolvers = {
       _: unknown,
       _params: {
         searchFilter?: string;
+        certificationAuthorityId?: string;
       },
       context: GraphqlContext,
     ) =>
@@ -81,6 +83,7 @@ const unsafeResolvers = {
         keycloakId: context.auth.userInfo?.sub || "",
         hasRole: context.auth.hasRole,
         searchFilter: _params.searchFilter,
+        certificationAuthorityId: _params.certificationAuthorityId,
       }),
   },
   Mutation: {

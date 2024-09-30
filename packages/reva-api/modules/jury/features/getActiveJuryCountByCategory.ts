@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Account, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
@@ -13,10 +13,12 @@ export const getActiveJuryCountByCategory = async ({
   keycloakId,
   hasRole,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }) => {
   const JuryCountByCategory: Record<JuryStatusFilter, number> = {
     ALL: 0,
@@ -36,6 +38,14 @@ export const getActiveJuryCountByCategory = async ({
         })
       : null;
 
+  let certificationAuthorityAccount: Account | null;
+
+  if (hasRole("admin") && certificationAuthorityId) {
+    certificationAuthorityAccount = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+  }
+
   await Promise.all(
     (Object.keys(JuryCountByCategory) as JuryStatusFilter[]).map(
       async (statusFilter) => {
@@ -51,6 +61,15 @@ export const getActiveJuryCountByCategory = async ({
                     account,
                     isCertificationAuthorityLocalAccount,
                     certificationAuthorityLocalAccount,
+                  }),
+                };
+              } else if (hasRole("admin") && certificationAuthorityAccount) {
+                whereClause = {
+                  ...whereClause,
+                  ...getJuryListQueryWhereClauseForUserWithManageRole({
+                    account: certificationAuthorityAccount,
+                    isCertificationAuthorityLocalAccount: false,
+                    certificationAuthorityLocalAccount: null,
                   }),
                 };
               }

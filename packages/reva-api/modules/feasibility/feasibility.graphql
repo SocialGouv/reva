@@ -71,12 +71,16 @@ enum FeasibilityCategoryFilter {
 }
 
 type Query {
-  feasibilityCountByCategory(searchFilter: String): FeasibilityCountByCategory!
+  feasibilityCountByCategory(
+    searchFilter: String
+    certificationAuthorityId: ID
+  ): FeasibilityCountByCategory!
   feasibilities(
     offset: Int
     limit: Int
     categoryFilter: FeasibilityCategoryFilter
     searchFilter: String
+    certificationAuthorityId: ID
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
   feasibility_getActiveFeasibilityByCandidacyId(candidacyId: ID!): Feasibility

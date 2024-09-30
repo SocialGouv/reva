@@ -350,10 +350,12 @@ export const getActiveFeasibilityCountByCategory = async ({
   keycloakId,
   hasRole,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }) => {
   const feasibilityCountByCategory: Record<FeasibilityStatusFilter, number> = {
     ALL: 0,
@@ -383,6 +385,14 @@ export const getActiveFeasibilityCountByCategory = async ({
         })
       : null;
 
+  let certificationAuthorityAccount: Account | null;
+
+  if (hasRole("admin") && certificationAuthorityId) {
+    certificationAuthorityAccount = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+  }
+
   await Promise.all(
     (Object.keys(feasibilityCountByCategory) as FeasibilityStatusFilter[]).map(
       async (statusFilter) => {
@@ -399,6 +409,17 @@ export const getActiveFeasibilityCountByCategory = async ({
                       account,
                       isCertificationAuthorityLocalAccount,
                       certificationAuthorityLocalAccount,
+                    },
+                  ),
+                };
+              } else if (hasRole("admin") && certificationAuthorityAccount) {
+                whereClause = {
+                  ...whereClause,
+                  ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+                    {
+                      account: certificationAuthorityAccount,
+                      isCertificationAuthorityLocalAccount: false,
+                      certificationAuthorityLocalAccount: null,
                     },
                   ),
                 };
@@ -503,6 +524,7 @@ export const getActiveFeasibilities = async ({
   offset = 0,
   categoryFilter,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -510,6 +532,7 @@ export const getActiveFeasibilities = async ({
   offset?: number;
   categoryFilter?: FeasibilityCategoryFilter;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
@@ -579,6 +602,31 @@ export const getActiveFeasibilities = async ({
       }),
       candidacy: candidacyWhereClause,
     };
+  } else if (hasRole("admin") && certificationAuthorityId) {
+    //admin has access to everything
+    const account = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+    if (account) {
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
+          account,
+          isCertificationAuthorityLocalAccount: false,
+          certificationAuthorityLocalAccount: null,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    }
   } else if (!hasRole("admin")) {
     //admin has access to everything
     throw new Error("Utilisateur non autorisé");

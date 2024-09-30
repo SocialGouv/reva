@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Account, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
@@ -13,10 +13,12 @@ export const getActiveDossierDeValidationCountByCategory = async ({
   keycloakId,
   hasRole,
   searchFilter,
+  certificationAuthorityId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
+  certificationAuthorityId?: string;
 }) => {
   const DossierDeValidationCountByCategory: Record<
     DossierDeValidationStatusFilter,
@@ -39,6 +41,14 @@ export const getActiveDossierDeValidationCountByCategory = async ({
         })
       : null;
 
+  let certificationAuthorityAccount: Account | null;
+
+  if (hasRole("admin") && certificationAuthorityId) {
+    certificationAuthorityAccount = await prismaClient.account.findFirst({
+      where: { certificationAuthorityId },
+    });
+  }
+
   await Promise.all(
     (
       Object.keys(
@@ -58,6 +68,17 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                     account,
                     isCertificationAuthorityLocalAccount,
                     certificationAuthorityLocalAccount,
+                  },
+                ),
+              };
+            } else if (hasRole("admin") && certificationAuthorityAccount) {
+              whereClause = {
+                ...whereClause,
+                ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
+                  {
+                    account: certificationAuthorityAccount,
+                    isCertificationAuthorityLocalAccount: false,
+                    certificationAuthorityLocalAccount: null,
                   },
                 ),
               };

@@ -32,6 +32,9 @@ const CandidacyLayoutSideMenu = ({
     if (searchFilter) {
       params.set("search", searchFilter);
     }
+    if (maisonMereAAPId) {
+      params.set("maisonMereAAPId", maisonMereAAPId);
+    }
 
     return `/candidacies?${params.toString()}`;
   };
@@ -200,11 +203,13 @@ const CandidacyLayoutSideMenu = ({
     <nav
       role="navigation"
       aria-label="Menu latéral"
-      className="fr-sidemenu bg-white md:h-full w-full md:max-w-[450px] mb-2 flex flex-col flex-shrink-0 gap-4"
+      className="flex flex-col gap-4"
     >
-      {maisonMereAAPId && <MaisonMereAAP maisonMereAAPId={maisonMereAAPId} />}
+      {isAdmin && maisonMereAAPId && (
+        <MaisonMereAAP maisonMereAAPId={maisonMereAAPId} />
+      )}
       <SideMenu
-        className="md:min-h-[900px]"
+        className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
         align="left"
         burgerMenuButtonText="Candidatures"
         items={sideMenuItems}
@@ -220,10 +225,10 @@ export const CandidaciesLayout = ({
   children: ReactNode;
   candidaciesByStatusCount: CandidacyCountByStatus;
 }) => (
-  <div className="flex flex-col md:flex-row w-full">
+  <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
     <CandidacyLayoutSideMenu
       candidaciesByStatusCount={candidaciesByStatusCount}
     />
-    <div className="w-full">{children}</div>
+    <div className="mt-3 flex-1">{children}</div>
   </div>
 );

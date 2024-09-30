@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -17,12 +18,14 @@ const getDossiersDeValidationQuery = graphql(`
     $limit: Int
     $searchFilter: String
     $categoryFilter: DossierDeValidationCategoryFilter
+    $certificationAuthorityId: ID
   ) {
     dossierDeValidation_getDossiersDeValidation(
       categoryFilter: $categoryFilter
       limit: $limit
       offset: $offset
       searchFilter: $searchFilter
+      certificationAuthorityId: $certificationAuthorityId
     ) {
       rows {
         id
@@ -72,6 +75,9 @@ const DossiersDeValidationPage = () => {
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
   const searchFilter = searchParams.get("search") || "";
+  const certificationAuthorityId = searchParams.get(
+    "certificationAuthorityId",
+  ) as string | undefined;
 
   const category = searchParams.get("CATEGORY");
 
@@ -90,7 +96,13 @@ const DossiersDeValidationPage = () => {
   const { isAdmin } = useAuth();
 
   const { data: getDossiersDeValidationResponse } = useQuery({
-    queryKey: ["getDossiersDeValidation", searchFilter, currentPage, category],
+    queryKey: [
+      "getDossiersDeValidation",
+      searchFilter,
+      currentPage,
+      category,
+      certificationAuthorityId,
+    ],
     queryFn: () =>
       graphqlClient.request(getDossiersDeValidationQuery, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
@@ -99,6 +111,7 @@ const DossiersDeValidationPage = () => {
         categoryFilter: (category === null || category === "ALL"
           ? undefined
           : category) as DossierDeValidationCategoryFilter,
+        certificationAuthorityId,
       }),
   });
 
@@ -115,10 +128,41 @@ const DossiersDeValidationPage = () => {
         return "Tous les dossiers de validation";
     }
   }, [category]);
+
+  const getPathnameWithoutCertificationAuthorityId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityId");
+    return `${currentPathname}?${currentParams.toString()}`;
+  };
+
   return (
     dossierDeValidationPage && (
       <div className="flex flex-col">
-        {!isAdmin && <h1>Espace certificateur</h1>}
+        {isAdmin ? (
+          certificationAuthorityId ? (
+            <div>
+              <h1>Candidatures de la structure</h1>
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: getPathnameWithoutCertificationAuthorityId(),
+                }}
+              >
+                Accéder à toutes les candidatures
+              </Button>
+              <p className="mt-6">
+                Ici, vous pouvez rechercher une ou plusieurs candidatures gérées
+                par cette structure. Pour retrouver toutes les candidatures de
+                la plateforme, cliquez sur “Accéder à toutes les candidatures”.
+              </p>
+            </div>
+          ) : (
+            <h1>Espace pro administrateur</h1>
+          )
+        ) : (
+          <h1>Espace certificateur</h1>
+        )}
+
         <CandidacySearchList
           title={categoryLabel}
           searchFilter={searchFilter}

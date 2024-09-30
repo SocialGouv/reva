@@ -39,6 +39,7 @@ const unsafeResolvers = {
       _: unknown,
       _params: {
         searchFilter?: string;
+        certificationAuthorityId?: string;
       },
       context: any,
     ) =>
@@ -46,6 +47,7 @@ const unsafeResolvers = {
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
         searchFilter: _params.searchFilter,
+        certificationAuthorityId: _params.certificationAuthorityId,
       }),
     feasibilities: (
       _: unknown,
@@ -54,6 +56,7 @@ const unsafeResolvers = {
         limit?: number;
         category?: FeasibilityCategoryFilter;
         searchFilter?: string;
+        certificationAuthorityId?: string;
       },
       context: any,
     ) =>
