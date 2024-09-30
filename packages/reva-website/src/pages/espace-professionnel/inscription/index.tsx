@@ -1,5 +1,6 @@
 "use client";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
@@ -11,6 +12,8 @@ import { CguStep } from "@/components/professional-space/inscription/form/CguSte
 import { CompanyDocumentsStepForm } from "@/components/professional-space/inscription/form/CompanyDocumentsStepForm";
 import { CompanySiretStepForm } from "@/components/professional-space/inscription/form/CompanySiretStepForm";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const PageContent = () => {
   const { currentStep } = useProfessionalSpaceSubscriptionContext();
@@ -28,7 +31,25 @@ const PageContent = () => {
   }
 };
 
-const ProfessionalSpaceCreationPage = ({}) => {
+const ProfessionalSpaceCreationPage = (): React.ReactNode => {
+  const { isFeatureActive, status } = useFeatureflipping();
+
+  const isAAPSubscriptionSuspended = isFeatureActive(
+    "AAP_SUBSCRIPTION_SUSPENDED",
+  );
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status == "INITIALIZED" && isAAPSubscriptionSuspended) {
+      router.push("/espace-professionnel/creation-suspendue/");
+    }
+  }, [router, status, isAAPSubscriptionSuspended]);
+
+  if (status !== "INITIALIZED" || isAAPSubscriptionSuspended) {
+    return null;
+  }
+
   return (
     <MainLayout>
       <Head>

@@ -1,4 +1,3 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -27,12 +26,6 @@ const RedirectionBlock = ({
   );
 };
 const Custom404 = () => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isAAPSubscriptionSuspended = isFeatureActive(
-    "AAP_SUBSCRIPTION_SUSPENDED",
-  );
-
   return (
     <MainLayout>
       <Head>
@@ -58,11 +51,7 @@ const Custom404 = () => {
         <RedirectionBlock
           title="Vous êtes Architecte Accompagnateur de Parcours ?"
           buttonLabel="Créer un compte"
-          buttonLink={
-            isAAPSubscriptionSuspended
-              ? "/espace-professionnel/creation-suspendue/"
-              : "/espace-professionnel/inscription/"
-          }
+          buttonLink="/espace-professionnel/inscription/"
         />
         <RedirectionBlock
           title="Un autre problème ?"

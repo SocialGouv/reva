@@ -1,4 +1,3 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   Hexagon,
@@ -14,11 +13,7 @@ const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-2 " aria-hidden="true" />
 );
 
-interface SuiviCandidatProps {
-  isAAPSubscriptionSuspended?: boolean;
-}
-
-const SuiviCandidat = (props: SuiviCandidatProps) => (
+const SuiviCandidat = () => (
   <section className="fr-container flex flex-col gap-10 lg:flex-row lg:gap-10">
     <div className="flex flex-col basis-3/5">
       <header>
@@ -40,9 +35,7 @@ const SuiviCandidat = (props: SuiviCandidatProps) => (
         priority="primary"
         className="justify-center !w-full  lg:!w-fit"
         linkProps={{
-          href: props.isAAPSubscriptionSuspended
-            ? "/espace-professionnel/creation-suspendue/"
-            : "/espace-professionnel/inscription/",
+          href: "/espace-professionnel/inscription/",
         }}
         size="large"
       >
@@ -206,12 +199,6 @@ const NotreEquipeVousAccompagne = () => (
 );
 
 const ProfessionalSpaceHomePage = () => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isAAPSubscriptionSuspended = isFeatureActive(
-    "AAP_SUBSCRIPTION_SUSPENDED",
-  );
-
   return (
     <MainLayout className=" py-20  gap-32 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
@@ -224,7 +211,7 @@ const ProfessionalSpaceHomePage = () => {
         />
       </Head>
 
-      <SuiviCandidat isAAPSubscriptionSuspended={isAAPSubscriptionSuspended} />
+      <SuiviCandidat />
       <InterfaceProfessionnels />
       <EngagementAAP />
       <NotreEquipeVousAccompagne />

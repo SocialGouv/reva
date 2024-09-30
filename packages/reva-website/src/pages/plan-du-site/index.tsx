@@ -1,15 +1,8 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Link from "next/link";
 
 const SiteMapPage = () => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isAAPSubscriptionSuspended = isFeatureActive(
-    "AAP_SUBSCRIPTION_SUSPENDED",
-  );
-
   return (
     <MainLayout className="fr-container pt-10 items-start gap-5">
       <Head>
@@ -32,13 +25,7 @@ const SiteMapPage = () => {
           <Link href="/espace-professionnel">Espace professionnel</Link>
           <ul>
             <li>
-              <Link
-                href={
-                  isAAPSubscriptionSuspended
-                    ? "/espace-professionnel/creation-suspendue/"
-                    : "/espace-professionnel/inscription/"
-                }
-              >
+              <Link href="/espace-professionnel/inscription/">
                 Création d'un espace professionnel
               </Link>
             </li>

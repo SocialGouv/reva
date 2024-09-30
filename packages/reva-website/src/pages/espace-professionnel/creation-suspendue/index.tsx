@@ -1,9 +1,30 @@
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { SectionParagraph } from "@/components/section-content/SectionContent";
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const SuspendedCreationPage = () => {
+  const { isFeatureActive, status } = useFeatureflipping();
+
+  const isAAPSubscriptionSuspended = isFeatureActive(
+    "AAP_SUBSCRIPTION_SUSPENDED",
+  );
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status == "INITIALIZED" && !isAAPSubscriptionSuspended) {
+      router.push("/espace-professionnel/inscription/");
+    }
+  }, [router, status, isAAPSubscriptionSuspended]);
+
+  if (status !== "INITIALIZED" || !isAAPSubscriptionSuspended) {
+    return null;
+  }
+
   return (
     <MainLayout className="py-20 gap-32 lg:gap-24 lg:pb-80">
       <Head>
