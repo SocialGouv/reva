@@ -53,7 +53,7 @@ const Custom404 = () => {
         <RedirectionBlock
           title="Vous êtes candidat ?"
           buttonLabel="Démarrer ma VAE"
-          buttonLink="/candidat/register/"
+          buttonLink="/inscription-candidat/"
         />
         <RedirectionBlock
           title="Vous êtes Architecte Accompagnateur de Parcours ?"
