@@ -199,29 +199,27 @@ const OrientationCandidatPage = () => {
                       className="basis-1/2"
                       title={
                         <span>
-                          Le parcours VAE sur vae.gouv.fr n'est pas encore
-                          disponible dans votre situation. Nous vous invitons à
-                          vous rapprocher d’un{" "}
+                          Votre situation ne vous permet pas de réaliser un
+                          parcours VAE sur{" "}
+                          <a href="https://vae.gouv.fr/" target="_blank">
+                            vae.gouv.fr
+                          </a>
+                          . Pour savoir si d’autres options existent, vous
+                          pouvez contacter dès à présent un{" "}
                           <a
                             href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
                             target="_blank"
                           >
                             point relais conseil
-                          </a>
-                          , d’un{" "}
+                          </a>{" "}
+                          ou un{" "}
                           <a
                             href="https://mon-cep.org/#trouver"
                             target="_blank"
                           >
                             conseiller en évolution professionnelle
                           </a>
-                          , une{" "}
-                          <a
-                            href="https://www.transitionspro.fr/"
-                            target="_blank"
-                          >
-                            association de transition professionnelle (AT Pro).
-                          </a>
+                          .
                         </span>
                       }
                     />
