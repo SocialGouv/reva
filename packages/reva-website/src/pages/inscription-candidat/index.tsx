@@ -157,27 +157,27 @@ const OrientationCandidatPage = () => {
                       title={
                         <span>
                           <p className="mb-4">
-                            Le parcours VAE pour ce diplôme est finançable grâce
-                            à plusieurs dispositifs (Le Compte Personnel de
-                            Formation (CPF), aides régionales, France Travail,
-                            OPCO...). Votre accompagnateur peut vous renseigner
-                            sur les aides financières dont vous pouvez
-                            bénéficier.
-                          </p>
-                          <p className="mb-4">
-                            Pour information, le coût moyen constaté d’un
-                            parcours France VAE sur l'année 2023/ 2024 est de
-                            2500€.
-                          </p>
-                          <p>
+                            Ce diplôme peut être financé par votre Compte
+                            Personnel de Formation (
                             <Link
-                              href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
+                              href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
                               target="_blank"
                             >
-                              Quels sont les dispositifs qui financent un
-                              parcours VAE ?
+                              CPF
+                            </Link>
+                            ).
+                          </p>
+                          <p className="mb-4">
+                            Vous pouvez dès à présent consulter vos droits sur
+                            la plateforme{" "}
+                            <Link
+                              href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/droits"
+                              target="_blank"
+                            >
+                              Mon Compte Formation
                             </Link>
                           </p>
+                          <p></p>
                         </span>
                       }
                     />
