@@ -18,6 +18,7 @@ import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityD
 import { FeasibilityFormat } from "@/graphql/generated/graphql";
 import { TypeAccompagnementTimelineElement } from "./TimelineElements/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
 
 interface TimelineProps {
   className?: string;
@@ -90,6 +91,7 @@ const AutonomeTimeline = ({ className }: TimelineProps) => {
       <ContactTimelineElement />
       <CertificationTimelineElement />
       <TypeAccompagnementTimelineElement />
+      <SelfServiceFeasibilityFileTimelineElement />
     </Timeline>
   );
 };
