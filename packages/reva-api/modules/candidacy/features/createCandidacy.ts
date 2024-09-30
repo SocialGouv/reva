@@ -19,8 +19,7 @@ export const createCandidacy = async ({
   });
 
   const financementHorsPlateforme =
-    financementHorsPlateformeFeatureActive ||
-    typeAccompagnement === "ACCOMPAGNE";
+    financementHorsPlateformeFeatureActive || typeAccompagnement === "AUTONOME";
 
   return prismaClient.candidacy.create({
     data: {
