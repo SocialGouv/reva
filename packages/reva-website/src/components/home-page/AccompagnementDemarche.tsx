@@ -64,7 +64,7 @@ const AccompagnementDemarche = () => {
           imageAlt="Deux personnes qui discutent"
         />
       </div>
-      <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 w-full mt-14 lg:mt-0 lg:h-[132px]">
+      <div className="flex flex-col lg:flex-row items-center relative lg:ml-10 text-start  border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 w-full mt-14 lg:mt-0 lg:h-[132px]">
         <Image
           src="/home-page/image-home-character-young-man-glasses.png"
           width={181}
@@ -72,15 +72,29 @@ const AccompagnementDemarche = () => {
           alt="Homme portant des lunettes"
           className="relative -top-28 lg:top-0 lg:-left-10"
         />
-        <div className="flex flex-col justify-center px-8 pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
-          <h6 className="mb-4 text-lg lg:text-xl">
-            Gestion de l'administratif
-          </h6>
-          <p className="my-0">
-            {isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE")
-              ? "Prise en charge administrative de votre dossier, recherche de financement et de la programmation du jury."
-              : "Prise en charge administrative de votre dossier, de son financement et de la programmation du jury."}
-          </p>
+        <div className="flex flex-col justify-center pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
+          {isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE") ? (
+            <>
+              <h6 className="mb-4 text-lg lg:text-xl">
+                Un coup de pouce utile !
+              </h6>
+              <p className="my-0">
+                Votre accompagnateur vous aidera dans toutes les démarches de
+                votre parcours, de la recherche de financement jusqu’au passage
+                devant le jury.
+              </p>
+            </>
+          ) : (
+            <>
+              <h6 className="mb-4 text-lg lg:text-xl">
+                Gestion de l'administratif
+              </h6>
+              <p className="my-0">
+                Prise en charge administrative de votre dossier, de son
+                financement et de la programmation du jury.
+              </p>
+            </>
+          )}
         </div>
       </div>
       <Link

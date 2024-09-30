@@ -73,19 +73,16 @@ const CommentFinancerVotreParcoursHorsPlateforme = () => (
       <div className="py-6 flex flex-col gap-14">
         <h2 className="text-white my-0">Comment financer votre parcours ?</h2>
         <p className="my-0 text-lg">
-          Actuellement, il existe plusieurs dispositifs (nationaux, régionaux,
-          privés…) pour financer intégralement ou partiellement votre parcours
-          VAE. Votre accompagnateur explorera les pistes de financement adaptées
-          à votre profil. L'objectif ? Que vous puissiez réaliser votre VAE dans
-          les meilleures conditions !
-        </p>
-        <p>
+          À l’heure actuelle, il est possible de financer en partie ou
+          intégralement un parcours VAE via votre Compte Personnel de Formation
+          (CPF) ou par financement personnel. Pour en savoir plus, vous pouvez
+          consulter notre article :{" "}
           <Link
             href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
             target="_blank"
             className="text-[#8585F6]"
           >
-            Quels sont les dispositifs qui financent un parcours VAE ?
+            Comment financer son parcours VAE ?
           </Link>
         </p>
       </div>
@@ -99,11 +96,11 @@ const CommentFinancerVotreParcoursHorsPlateforme = () => (
         <div className="flex gap-2">
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-blue.svg')]"
-            label="OPCO"
+            label="Financement personnel"
           />
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-pink.svg')]"
-            label="Aides nationales et régionales"
+            label="Autres aides potentielles à venir"
           />
         </div>
       </div>
