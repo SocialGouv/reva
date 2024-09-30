@@ -12,6 +12,7 @@ import {
   VoidTypeDefinition,
 } from "graphql-scalars";
 import mercurius, { MercuriusOptions } from "mercurius";
+import { NoSchemaIntrospectionCustomRule } from "graphql";
 
 import { GraphQLUpload } from "graphql-upload-minimal";
 import { loaders as accountLoaders } from "./account/account.loaders";
@@ -98,6 +99,11 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...juryLoaders,
     ...candidacyLogLoaders,
   },
+  validationRules:
+    process.env.NODE_ENV === "production"
+      ? [NoSchemaIntrospectionCustomRule]
+      : undefined,
+
   errorFormatter: (error, ...args) => {
     error.errors
       ? error.errors.forEach((e) => logger.error(e))
