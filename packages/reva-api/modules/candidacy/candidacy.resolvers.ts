@@ -58,8 +58,6 @@ import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOut
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidateById } from "../candidate/features/getCandidateById";
-import { getCandidacyCountByStatusV2 } from "./features/getCandidacyCountByStatusV2";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 
 const unsafeResolvers = {
@@ -143,23 +141,12 @@ const unsafeResolvers = {
         maisonMereAAPId?: string;
       },
       context: GraphqlContext,
-    ) => {
-      const isV2Active = await isFeatureActiveForUser({
-        userKeycloakId: context.auth.userInfo?.sub,
-        feature: "CANDIDACY_COUNT_BY_STATUS_V2",
-      });
-      return isV2Active
-        ? getCandidacyCountByStatusV2({
-            hasRole: context.auth!.hasRole,
-            IAMId: context.auth!.userInfo!.sub,
-            ..._params,
-          })
-        : getCandidacyCountByStatus({
-            hasRole: context.auth!.hasRole,
-            IAMId: context.auth!.userInfo!.sub,
-            ..._params,
-          });
-    },
+    ) =>
+      getCandidacyCountByStatus({
+        hasRole: context.auth!.hasRole,
+        IAMId: context.auth!.userInfo!.sub,
+        ..._params,
+      }),
     candidacy_getCandidacyCcns: async (
       _parent: unknown,
       params: {
