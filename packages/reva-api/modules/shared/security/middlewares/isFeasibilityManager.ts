@@ -24,7 +24,7 @@ export const isFeasibilityManager =
       });
 
       if (!candidacyFeasibility || !account) {
-        return false;
+        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
       }
 
       if (
@@ -57,19 +57,20 @@ export const isFeasibilityManager =
       });
 
       if (!candidacyFeasibility) {
-        return false;
+        throw new Error("Candidature inexistante.");
       }
 
       const certificationAuthorityLocalAccount =
         await prismaClient.certificationAuthorityLocalAccount.findFirst({
-          where: { accountId: context.auth.userInfo.sub },
+          where: { account: { keycloakId: context.auth.userInfo.sub } },
           include: {
             certificationAuthorityLocalAccountOnCertification: true,
             certificationAuthorityLocalAccountOnDepartment: true,
           },
         });
+
       if (!certificationAuthorityLocalAccount) {
-        return false;
+        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
       }
 
       const candidacyCertificationId =
