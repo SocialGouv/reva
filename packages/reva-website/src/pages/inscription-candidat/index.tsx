@@ -95,16 +95,21 @@ const OrientationCandidatPage = () => {
     updateCertification();
   }, [certificationId]);
 
+  const UNSUPPORTED_TYPOLOGIES =
+    affichageTypesFinancementCandidatureFeatureActive
+      ? ["SALARIE_PUBLIC"]
+      : [
+          "SALARIE_PUBLIC",
+          "RETRAITE",
+          "AIDANTS_FAMILIAUX_AGRICOLES",
+          "TRAVAILLEUR_NON_SALARIE",
+          "TITULAIRE_MANDAT_ELECTIF",
+          "AUTRE",
+        ];
+
   const invalidTypology =
     candidateTypology !== undefined &&
-    [
-      "SALARIE_PUBLIC",
-      "RETRAITE",
-      "AIDANTS_FAMILIAUX_AGRICOLES",
-      "TRAVAILLEUR_NON_SALARIE",
-      "TITULAIRE_MANDAT_ELECTIF",
-      "AUTRE",
-    ].includes(candidateTypology);
+    UNSUPPORTED_TYPOLOGIES.includes(candidateTypology);
 
   const validTypology = candidateTypology && !invalidTypology;
 
