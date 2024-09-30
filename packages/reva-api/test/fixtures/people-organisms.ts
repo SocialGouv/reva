@@ -71,6 +71,25 @@ const expertBrancheEtFiliereOrganism = {
   typology: "expertBrancheEtFiliere" as const,
 };
 
+const agencePrincipaleMaisonMere2 = {
+  id: randomUUID(),
+  isHeadAgency: true,
+  siret: "",
+  label: "Agence principale Maison Mere 2",
+  contactAdministrativeEmail: "distanciel.m2@example.com",
+  isActive: true,
+  typology: "expertBranche" as const,
+};
+
+const lieuAccueilMaisonMere2 = {
+  id: randomUUID(),
+  siret: "",
+  label: "Lieu Accueil Maison Mere 2",
+  contactAdministrativeEmail: "presentiel.m2@example.com",
+  isActive: true,
+  typology: "expertBranche" as const,
+};
+
 // Architectes
 
 const archiIperia1 = {
@@ -112,7 +131,16 @@ const gestionaMaisonMereAapAccount2 = {
   email: "marge@yolo.fr",
 };
 
+const collaborateurMaisonMereAapAccount2 = {
+  id: randomUUID(),
+  keycloakId: randomUUID(),
+  firstname: "Alice",
+  lastname: "Doe",
+  email: "alice.doe.m2@example.com",
+};
+
 const maisonMereAAP1 = {
+  id: randomUUID(),
   phone: "0612345678",
   raisonSociale: "Maison Mere Organism1",
   siteWeb: "https://www.iperia.fr",
@@ -131,6 +159,7 @@ const maisonMereAAP1 = {
 
 const maisonMereAAP2 = {
   ...maisonMereAAP1,
+  id: randomUUID(),
   siret: "12000015300029",
   raisonSociale: "Maison Mere Organism2",
   managerFirstname: "Alice",
@@ -151,4 +180,7 @@ export {
   organismIperia,
   maisonMereAAP1,
   maisonMereAAP2,
+  agencePrincipaleMaisonMere2,
+  lieuAccueilMaisonMere2,
+  collaborateurMaisonMereAapAccount2,
 };

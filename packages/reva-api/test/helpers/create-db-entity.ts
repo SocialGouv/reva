@@ -12,6 +12,9 @@ import {
   organismIperia,
   maisonMereAAP1,
   maisonMereAAP2,
+  agencePrincipaleMaisonMere2,
+  lieuAccueilMaisonMere2,
+  collaborateurMaisonMereAapAccount2,
 } from "../fixtures/people-organisms";
 
 import { prismaClient } from "../../prisma/client";
@@ -119,6 +122,28 @@ export const createMaisonMereAAP2 = async (): Promise<MaisonMereAAP> => {
       ...maisonMereAAP2,
       gestionnaireAccountId: gestionaMaisonMereAapAccount2.id,
     },
+  });
+};
+
+export const createCollaborateurMaisonMereAAP2 = async (): Promise<Account> => {
+  return prismaClient.account.create({
+    data: {
+      ...collaborateurMaisonMereAapAccount2,
+      organismId: lieuAccueilMaisonMere2.id,
+    },
+  });
+};
+
+export const createAgencePrincipaleMaisonMere2 =
+  async (): Promise<Organism> => {
+    return prismaClient.organism.create({
+      data: agencePrincipaleMaisonMere2,
+    });
+  };
+
+export const createLieuAccueilMaisonMere2 = async (): Promise<Organism> => {
+  return prismaClient.organism.create({
+    data: lieuAccueilMaisonMere2,
   });
 };
 

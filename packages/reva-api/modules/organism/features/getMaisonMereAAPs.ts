@@ -14,22 +14,44 @@ export const buildMaisonMereFilters: (
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
 
-  const filtersAccount = {
+  const accountContainsFilter = [
+    containsFilter("firstname"),
+    containsFilter("lastname"),
+    containsFilter("email"),
+  ];
+
+  const filtersAccount: Prisma.MaisonMereAAPWhereInput = {
     gestionnaire: {
-      OR: [
-        containsFilter("firstname"),
-        containsFilter("lastname"),
-        containsFilter("email"),
-      ],
+      OR: accountContainsFilter,
     },
   };
 
-  const filtersLegalInformation = {
+  const filtersLegalInformation: Prisma.MaisonMereAAPWhereInput = {
     maisonMereAAPLegalInformationDocuments: {
       OR: [
         containsFilter("managerFirstname"),
         containsFilter("managerLastname"),
       ],
+    },
+  };
+
+  const filterOrganisms: Prisma.MaisonMereAAPWhereInput = {
+    organismes: {
+      some: {
+        OR: [containsFilter("contactAdministrativeEmail")],
+      },
+    },
+  };
+
+  const filterOrganismAccounts: Prisma.MaisonMereAAPWhereInput = {
+    organismes: {
+      some: {
+        accounts: {
+          some: {
+            OR: accountContainsFilter,
+          },
+        },
+      },
     },
   };
 
@@ -39,6 +61,8 @@ export const buildMaisonMereFilters: (
       containsFilter("siret"),
       filtersAccount,
       filtersLegalInformation,
+      filterOrganisms,
+      filterOrganismAccounts,
     ],
   };
 };
