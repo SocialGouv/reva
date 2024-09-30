@@ -6,12 +6,15 @@ export const sendDVSentToCandidateEmail = ({ email }: { email: string }) => {
   const htmlContent = mjml2html(
     templateMail({
       content: `
-          Nous vous informons que votre architecte accompagnateur de parcours a transmis votre dossier de validation  au certificateur.
-          <br />
-          <br />
-          Votre dossier va être consulté par des membres d’un jury VAE et vous recevrez une convocation vous informant d’une date de passage devant ce jury dans les 3 mois à compter de ce jour.
-        `,
-      bottomLine: "L'équipe France VAE",
+          <p>Nous vous confirmons que votre dossier de validation a bien été déposé et qu’il sera prochainement consulté par les membres de jury.</p>
+          <p>Vous recevrez une convocation environ 15 jours avant votre date de jury.</p>
+          <p>Il est prévu que le jury se tienne sous 3 mois, néanmoins certains délais organisationnels peuvent prolonger ce délai.</p>
+          <p>Le cas échéant, vous pouvez contacter votre accompagnateur afin qu’il fasse une relance auprès du service concerné.</p>
+          `,
+      bottomLine: `
+          <p>Cordialement,</p>
+          <p>L'équipe France VAE</p>
+          `,
     }),
   ).html;
 
