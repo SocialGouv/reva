@@ -6,6 +6,9 @@ import { useFeasibilityPageLogic } from "./_components/feasibilityPage.hook";
 
 const FeasibilityPage = () => {
   const { feasibilityFormat } = useFeasibilityPageLogic();
+  if (!feasibilityFormat) {
+    return null;
+  }
   const isDematerializedFeasibilityFile =
     feasibilityFormat === "DEMATERIALIZED";
 
