@@ -96,17 +96,16 @@ const CandidacySummaryPage = () => {
           <Alert
             data-test="funding-request-not-available-alert"
             severity="warning"
-            title="Cette candidature est finançable par les dispositifs de droit commun"
+            title="Ce parcours n’est plus finançable via France VAE "
             description={
               <div>
                 <p>
-                  Avant de fixer le rendez-vous pédagogique, assurez vous que le
-                  candidat dispose d’un financement possible (CPF, aides
-                  régionales, nationales, OPCO, France Travail...).
+                  En revanche, il peut en partie être financé par le Compte
+                  Personnel de Formation du candidat.
                 </p>
                 <p>
-                  Le candidat n’arrive pas à trouver un financement ? Nous vous
-                  conseillons de l’accompagner dans sa recherche.
+                  Ce dernier peut consulter ses droits depuis la plateforme Mon
+                  Compte Formation.
                 </p>
               </div>
             }
