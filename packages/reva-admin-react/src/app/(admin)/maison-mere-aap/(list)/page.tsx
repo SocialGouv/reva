@@ -62,7 +62,7 @@ const MaisonMereAapListPage = () => {
   return (
     <div className="flex flex-col">
       <h1>Structures accompagnatrices</h1>
-      <p>
+      <p className="text-xl leading-8 mb-12">
         En tant qu'administrateur, vous avez la possibilité de visualiser
         l’intégralité des structures accompagnatrices (anciennement appelées
         Maisons Mères) ainsi que les informations relatives aux comptes
@@ -70,6 +70,10 @@ const MaisonMereAapListPage = () => {
       </p>
       {status === "success" && (
         <SearchList
+          searchBarProps={{
+            lifted: true,
+            title: "Recherchez par nom, numéro SIRET, adresse email etc.",
+          }}
           searchFilter={searchFilter}
           searchResultsPage={data.organism_getMaisonMereAAPs}
         >

@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 
 export const SearchFilterBar = ({
   className,
+  lifted = false,
+  title,
   searchFilter: defaultSearchFilter,
   onSearchFilterChange,
   resultCount,
 }: {
   className: string;
+  lifted?: boolean;
+  title?: string;
   searchFilter: string;
   onSearchFilterChange: (filter: string) => void;
   resultCount: number;
@@ -24,35 +28,40 @@ export const SearchFilterBar = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <SearchBar
-        className="mb-6"
-        onButtonClick={onSearchFilterChange}
-        allowEmptySearch
-        renderInput={({ className, id, placeholder, type }) => (
-          <input
-            id={id}
-            className={className}
-            placeholder={placeholder}
-            type={type}
-            value={searchFilter}
-            onChange={(event) => setSearchFilter(event.currentTarget.value)}
-            onKeyDown={(event) => {
-              if (event.key !== "Enter") {
-                return;
-              }
+      <div
+        className={`${lifted ? "lg:p-8 lg:shadow-lifted lg:border-b-4 lg:border-[#CFCFCF] mb-12" : "mb-6"}`}
+      >
+        {title && <h2>{title}</h2>}
+        <SearchBar
+          big={lifted}
+          onButtonClick={onSearchFilterChange}
+          allowEmptySearch
+          renderInput={({ className, id, placeholder, type }) => (
+            <input
+              id={id}
+              className={className}
+              placeholder={placeholder}
+              type={type}
+              value={searchFilter}
+              onChange={(event) => setSearchFilter(event.currentTarget.value)}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter") {
+                  return;
+                }
 
-              if (event.currentTarget.value !== "") {
-                return;
-              }
+                if (event.currentTarget.value !== "") {
+                  return;
+                }
 
-              event.preventDefault();
-              event.stopPropagation();
+                event.preventDefault();
+                event.stopPropagation();
 
-              onSearchFilterChange("");
-            }}
-          />
-        )}
-      />
+                onSearchFilterChange("");
+              }}
+            />
+          )}
+        />
+      </div>
       {defaultSearchFilter ? (
         <>
           <div className="text-xs text-neutral-500">

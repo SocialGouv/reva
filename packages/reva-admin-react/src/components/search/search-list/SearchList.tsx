@@ -12,6 +12,10 @@ type SearchResultsPage<T> = {
 export interface SearchListProps<T> {
   title?: string;
   hint?: ({ totalRows }: { totalRows: number }) => ReactNode;
+  searchBarProps?: {
+    lifted?: boolean;
+    title?: string;
+  };
   searchFilter: string;
   searchResultsPage: SearchResultsPage<T>;
   children?: (searchResult: T) => ReactNode;
@@ -21,6 +25,7 @@ export interface SearchListProps<T> {
 export const SearchList = <T,>({
   title,
   hint,
+  searchBarProps,
   searchFilter,
   children,
   searchResultsPage,
@@ -53,6 +58,7 @@ export const SearchList = <T,>({
       {hint && hint({ totalRows: searchResultsPage.info.totalRows })}
 
       <SearchFilterBar
+        {...searchBarProps}
         className="mb-2"
         searchFilter={searchFilter}
         resultCount={searchResultsPage.info.totalRows}
