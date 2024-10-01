@@ -23,6 +23,7 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
         status
       }
       status
+      typeAccompagnement
       feasibility {
         id
         decision

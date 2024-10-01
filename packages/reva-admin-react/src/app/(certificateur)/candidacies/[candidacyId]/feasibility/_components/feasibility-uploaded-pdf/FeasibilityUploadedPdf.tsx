@@ -110,17 +110,21 @@ export const FeasibilityUploadedPdf = () => {
             </GrayCard>
           )}
 
-          <GrayCard>
-            <h5 className="text-2xl font-bold mb-4">
-              Architecte accompagnateur de parcours
-            </h5>
-            <h6 className="text-xl font-bold mb-4">
-              {candidacy.organism?.label}
-            </h6>
-            <p className="text-lg mb-0">
-              {candidacy.organism?.contactAdministrativeEmail}
-            </p>
-          </GrayCard>
+          {candidacy.typeAccompagnement === "ACCOMPAGNE" ? (
+            <GrayCard>
+              <h5 className="text-2xl font-bold mb-4">
+                Architecte accompagnateur de parcours
+              </h5>
+              <h6 className="text-xl font-bold mb-4">
+                {candidacy.organism?.label}
+              </h6>
+              <p className="text-lg mb-0">
+                {candidacy.organism?.contactAdministrativeEmail}
+              </p>
+            </GrayCard>
+          ) : (
+            <Alert severity="info" title="Candidat en autonomie" />
+          )}
 
           {!isFeasibilityEditable && (
             <div>
