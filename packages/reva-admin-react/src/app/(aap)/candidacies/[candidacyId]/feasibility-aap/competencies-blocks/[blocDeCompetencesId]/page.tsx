@@ -177,8 +177,9 @@ const CompetenciesBlockPage = () => {
       <h1>Blocs de compétences</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl">
-        Détailler l’activité et le niveau d’autonomie et/ou de responsabilité du
-        candidat, et donner des exemples d’outils, méthodes, supports utilisés
+        Détaillez les activités et le niveau d’autonomie et/ou de responsabilité
+        du candidat, et donnez des exemples d’outils, méthodes, supports
+        utilisés.
       </p>
       {block && (
         <>

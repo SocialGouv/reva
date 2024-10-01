@@ -231,7 +231,8 @@ export default function EligibilityPage() {
 
         <CallOut title="Bon à savoir">
           Si vous déposez le dossier de validation du candidat au-delà de la
-          date de fin de validité, il ne sera pas accepté par le certificateur.
+          date de fin de validité, il pourrait ne pas être accepté par le
+          certificateur.
         </CallOut>
 
         <FormButtons

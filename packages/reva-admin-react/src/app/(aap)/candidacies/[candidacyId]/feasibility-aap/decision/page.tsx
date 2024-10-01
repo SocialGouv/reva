@@ -83,9 +83,8 @@ export default function DecisionPage() {
       <h1>Avis sur la faisabilité</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Donnez l'avis que vous souhaitez émettre quant à cette candidature.
-        Expliquer ensuite les raisons pour lesquelles vous vous positionnez sur
-        cet avis.
+        Renseignez votre avis quant à la faisabilité de ce projet de VAE.
+        Précisez ensuite les raisons de cet avis.
       </p>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
