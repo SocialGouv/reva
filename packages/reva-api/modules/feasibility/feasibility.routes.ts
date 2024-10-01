@@ -11,6 +11,7 @@ import {
   getActiveFeasibilityByCandidacyid,
   handleFeasibilityDecision,
 } from "./feasibility.features";
+import { isCandidateOwnerOfCandidacyFeature } from "../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };
@@ -144,7 +145,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         keycloakId: request.auth?.userInfo?.sub,
       });
 
-      if (!authorized) {
+      const isCandidateOwner = await isCandidateOwnerOfCandidacyFeature({
+        candidacyId: request.body.candidacyId.value,
+        keycloakId: request.auth?.userInfo?.sub,
+      });
+
+      if (!authorized && !isCandidateOwner) {
         return reply.status(403).send({
           err: "Vous n'êtes pas autorisé à gérer cette candidature.",
         });

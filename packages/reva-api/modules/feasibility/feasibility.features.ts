@@ -89,29 +89,43 @@ export const createFeasibility = async ({
   userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
-  const allowedStatues: CandidacyStatusStep[] = [
+  const allowedStatuesAccompagne: CandidacyStatusStep[] = [
     "PARCOURS_CONFIRME",
     "DOSSIER_FAISABILITE_INCOMPLET",
   ];
+  const allowedStatuesAutonome: CandidacyStatusStep[] = [
+    "PROJET",
+    "DOSSIER_FAISABILITE_INCOMPLET",
+  ];
 
-  const lastStatus = await prismaClient.candidaciesStatus.findFirst({
-    where: {
-      candidacyId: candidacyId,
-      isActive: true,
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+    include: {
+      department: true,
     },
-    select: {
-      status: true,
-    },
-    orderBy: [{ createdAt: "desc" }],
   });
+
+  const lastStatus = candidacy?.status;
 
   if (!lastStatus) {
     throw new Error("La candidature n'a aucun statut actif");
   }
 
-  if (!allowedStatues.includes(lastStatus.status)) {
+  if (
+    candidacy.typeAccompagnement === "ACCOMPAGNE" &&
+    !allowedStatuesAccompagne.includes(lastStatus)
+  ) {
     throw new Error(
       `Le statut de la candidature doit être en "PARCOURS_CONFIRME" ou "DOSSIER_FAISABILITE_INCOMPLET" pour envoyer un dossier de faisabilité.`,
+    );
+  }
+
+  if (
+    candidacy.typeAccompagnement === "AUTONOME" &&
+    !allowedStatuesAutonome.includes(lastStatus)
+  ) {
+    throw new Error(
+      `Le statut de la candidature doit être en "PROJET" ou "DOSSIER_FAISABILITE_INCOMPLET" pour envoyer un dossier de faisabilité.`,
     );
   }
 
@@ -253,12 +267,12 @@ export const createFeasibility = async ({
     status: "DOSSIER_FAISABILITE_ENVOYE",
   });
 
-  const candidacy = await prismaClient.candidacy.findFirst({
-    where: { id: candidacyId },
-    include: {
-      department: true,
-    },
-  });
+  // const candidacy = await prismaClient.candidacy.findFirst({
+  //   where: { id: candidacyId },
+  //   include: {
+  //     department: true,
+  //   },
+  // });
 
   const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy?.departmentId;
