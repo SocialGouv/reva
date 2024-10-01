@@ -19,6 +19,7 @@ import { FeasibilityFormat } from "@/graphql/generated/graphql";
 import { TypeAccompagnementTimelineElement } from "./TimelineElements/general/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/autonome/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
+import { DossierDeValidationAutonomeTimelineElement } from "./TimelineElements/autonome/DossierDeValidationAutonomeTimelineElement/DossierDeValidationAutonomeTimelineElement";
 
 interface TimelineProps {
   className?: string;
@@ -92,6 +93,7 @@ const AutonomeTimeline = ({ className }: TimelineProps) => {
       <CertificationTimelineElement />
       <TypeAccompagnementTimelineElement />
       <SelfServiceFeasibilityFileTimelineElement />
+      <DossierDeValidationAutonomeTimelineElement />
     </Timeline>
   );
 };
