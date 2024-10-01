@@ -6,7 +6,7 @@ import {
 } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { FundingCallOut } from "../../../../../funding-call-out/FundingCallOut";
+import { FundingCallOut } from "../../../../../../funding-call-out/FundingCallOut";
 
 export const FeasibilityAppointmentTimelineElement = () => {
   const { candidacyStatus, candidacy } = useCandidacy();

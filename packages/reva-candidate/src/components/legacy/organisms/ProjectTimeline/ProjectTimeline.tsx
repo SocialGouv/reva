@@ -2,23 +2,23 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { Timeline } from "@/components/legacy/molecules/Timeline/Timeline";
 
-import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
-import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
-import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/GoalsTimelineElement";
-import { ExperiencesTimelineElement } from "./TimelineElements/ExperiencesTimelineElement/ExperiencesTimelineElement";
-import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
-import { ProjectSubmissionTimelineElement } from "./TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
-import { FeasibilityAppointmentTimelineElement } from "./TimelineElements/FeasibilityAppointmentTimelineElement/FeasibilityAppointmentTimelineElement";
-import { TrainingProgramTimelineElement } from "./TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
-import { FeasibilityPdfTimelineElement } from "./TimelineElements/FeasibilityPdfTimelineElement/FeasibilityPdfTimelineElement";
-import { DossierDeValidationTimelineElement } from "./TimelineElements/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
-import { JuryTimelineElement } from "./TimelineElements/JuryTimelineElement/JuryTimelineElement";
-import { ProjectEndedTimelineElement } from "./TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
-import { FeasibilityDematTimelineElement } from "./TimelineElements/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
+import { ContactTimelineElement } from "./TimelineElements/general/ContactTimelineElement/ContactTimelineElement";
+import { CertificationTimelineElement } from "./TimelineElements/general/CertificationTimelineElement/CertificationTimelineElement";
+import { GoalsTimelineElement } from "./TimelineElements/accompagne/GoalsTimelineElement/GoalsTimelineElement";
+import { ExperiencesTimelineElement } from "./TimelineElements/accompagne/ExperiencesTimelineElement/ExperiencesTimelineElement";
+import { OrganismTimelineElement } from "./TimelineElements/general/OrganismTimelineElement/OrganismTimelineElement";
+import { ProjectSubmissionTimelineElement } from "./TimelineElements/accompagne/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
+import { FeasibilityAppointmentTimelineElement } from "./TimelineElements/accompagne/FeasibilityAppointmentTimelineElement/FeasibilityAppointmentTimelineElement";
+import { TrainingProgramTimelineElement } from "./TimelineElements/accompagne/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
+import { FeasibilityPdfTimelineElement } from "./TimelineElements/accompagne/FeasibilityPdfTimelineElement/FeasibilityPdfTimelineElement";
+import { DossierDeValidationTimelineElement } from "./TimelineElements/accompagne/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
+import { JuryTimelineElement } from "./TimelineElements/accompagne/JuryTimelineElement/JuryTimelineElement";
+import { ProjectEndedTimelineElement } from "./TimelineElements/general/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
+import { FeasibilityDematTimelineElement } from "./TimelineElements/accompagne/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
 import { FeasibilityFormat } from "@/graphql/generated/graphql";
-import { TypeAccompagnementTimelineElement } from "./TimelineElements/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
+import { TypeAccompagnementTimelineElement } from "./TimelineElements/general/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
+import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/autonome/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
 
 interface TimelineProps {
   className?: string;
