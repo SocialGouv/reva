@@ -66,6 +66,17 @@ export default function Login() {
           Me connecter
         </Button>
       </form>
+
+      <div className="border-t border-gray-200 pt-6">
+        <button
+          onClick={() => {
+            window.location.href = "/inscription-candidat/";
+          }}
+          className="text-gray-500 underline"
+        >
+          Je n&apos;ai pas de candidature
+        </button>
+      </div>
     </PageLayout>
   );
 }
