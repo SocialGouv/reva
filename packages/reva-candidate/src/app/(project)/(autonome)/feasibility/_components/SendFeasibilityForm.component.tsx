@@ -13,11 +13,11 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 import { GraphQLError } from "graphql";
-import { DownloadTile } from "../page";
 import { useFeasibilityPage } from "../feasibility.hook";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
+import { DownloadTile } from "@/components/download-tile/DownloadTile";
 
 const schema = z.object({
   feasibilityFile: z.object({
