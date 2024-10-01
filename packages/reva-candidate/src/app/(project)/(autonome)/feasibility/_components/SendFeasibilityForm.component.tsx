@@ -1,4 +1,8 @@
-import { errorToast, graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -158,7 +162,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         }
       } else {
         successToast("Dossier de faisabilité envoyé");
-        router.push('/');
+        router.push("/");
       }
     } catch (error) {
       graphqlErrorToast(error as GraphQLError);
@@ -197,6 +201,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         {certificationAuthorities.length > 1 && (
           <Select
+            className="w-3/5"
             label={
               <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
                 SÉLECTIONNEZ L&apos;AUTORITÉ DE CERTIFICATION

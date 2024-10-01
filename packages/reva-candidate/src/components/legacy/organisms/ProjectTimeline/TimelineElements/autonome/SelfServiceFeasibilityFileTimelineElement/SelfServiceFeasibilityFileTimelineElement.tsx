@@ -46,7 +46,7 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
     );
   } else if (candidacy.feasibility?.decision === "REJECTED") {
     badge = (
-      <Badge severity="warning">
+      <Badge severity="error">
         Non-recevable
       </Badge>
     );
