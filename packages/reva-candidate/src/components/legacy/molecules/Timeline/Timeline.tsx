@@ -1,4 +1,3 @@
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import { ReactElement } from "react";
 
 export const Timeline = ({
@@ -27,7 +26,7 @@ export const TimelineElement = ({
   description,
   status,
   children,
-  isStepComplete,
+  badge,
   className = "",
   classNameChildren = "",
   "data-test": dataTest,
@@ -35,7 +34,7 @@ export const TimelineElement = ({
   title: string;
   description?: string | ReactElement;
   status: TimeLineElementStatus;
-  isStepComplete?: boolean;
+  badge?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
   classNameChildren?: string;
@@ -49,11 +48,7 @@ export const TimelineElement = ({
     >
       <h3 className="text-xl leading-none mb-0">
         {title}
-        {typeof isStepComplete !== "undefined" && (
-          <Badge style={{ marginLeft: "0.5rem" }} small severity={isStepComplete ? "success" : "warning"}>
-            {isStepComplete ? "Complété" : "À compléter"}
-          </Badge>
-        )}
+        {badge ? <span className="ml-2">{badge}</span> : null}
       </h3>
 
       {description ? (
