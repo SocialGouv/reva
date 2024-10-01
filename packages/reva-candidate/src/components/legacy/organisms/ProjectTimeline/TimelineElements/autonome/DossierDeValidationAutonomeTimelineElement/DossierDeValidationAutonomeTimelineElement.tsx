@@ -1,11 +1,22 @@
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 
 export const DossierDeValidationAutonomeTimelineElement = () => {
-  const status: TimeLineElementStatus = "disabled";
+  const { candidacy } = useCandidacy();
+  const router = useRouter();
+
+  let status: TimeLineElementStatus = "disabled";
+
+  const activeStatuses = ["DOSSIER_FAISABILITE_RECEVABLE"];
+
+  if (activeStatuses.includes(candidacy.status)) {
+    status = "active";
+  }
 
   return (
     <TimelineElement
@@ -16,8 +27,11 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
     >
       <Button
         data-test="dossier-de-validation-autonome-timeline-element-update-button"
-        priority="secondary"
+        priority={status === "active" ? "primary" : "secondary"}
         disabled={status === "disabled"}
+        onClick={() => {
+          router.push("/dossier-de-validation-autonome");
+        }}
       >
         Compléter
       </Button>
