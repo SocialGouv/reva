@@ -27,7 +27,7 @@ export const FeasibilityAppointmentTimelineElement = () => {
     candidacyStatus !== "PROJET";
 
   return (
-    <TimelineElement title="Étude de faisabilité" status={status}>
+    <TimelineElement title="Rendez-vous pédagogique" status={status}>
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex flex-col basis-1/2">
           {candidacy.firstAppointmentOccuredAt && candidacy.organism ? (
