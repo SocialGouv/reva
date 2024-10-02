@@ -87,6 +87,7 @@ export const DossierDeValidationTab = ({
       >
         <div className="flex flex-col gap-6 mb-12">
           <FancyUpload
+            className="dossier-de-validation-file-upload"
             title="Joindre le dossier de validation"
             hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
             nativeInputProps={{
@@ -129,7 +130,8 @@ export const DossierDeValidationTab = ({
           ))}
         </div>
         <Checkbox
-          legend="Avez-vous bien vérifié ces éléments avant l’envoi ? "
+          legend="Avez-vous bien vérifié ces éléments avant l’envoi ?"
+          data-test="dossier-de-validation-checkbox-group"
           options={[
             {
               label: "Mon dossier de validation est correct, complet et signé.",

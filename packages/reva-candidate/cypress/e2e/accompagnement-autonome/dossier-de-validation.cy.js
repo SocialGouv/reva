@@ -119,4 +119,63 @@ context("Accompagnement autonome - Dossier de validation", () => {
     ).click();
     cy.wait("@updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage");
   });
+
+  it("should let me send a dossier de validation", function () {
+    cy.fixture("candidate1-certification-titre-2-selected.json").then(
+      (candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+          "AUTONOME";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "DOSSIER_FAISABILITE_RECEVABLE";
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+            candidate,
+          );
+        });
+      },
+    );
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubMutation(
+        req,
+        "updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage",
+        "candidate1-certification-titre-2-selected.json",
+      );
+    });
+
+    cy.intercept(
+      "POST",
+      "/api/dossier-de-validation/upload-dossier-de-validation",
+      { fixture: "candidate1-certification-titre-2-selected.json" },
+    ).as("uploadDossierDeValidation");
+
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.visit("/dossier-de-validation-autonome/");
+    cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+
+    cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+    cy.get(
+      ".dossier-de-validation-file-upload > .fr-upload-group > input",
+    ).selectFile({
+      contents: Cypress.Buffer.from("file contents"),
+      fileName: "file.pdf",
+    });
+
+    cy.get('[data-test="dossier-de-validation-checkbox-group"]')
+      .find("label")
+      .click({ multiple: true });
+
+    cy.get('button[type="submit"]').click();
+
+    cy.wait("@uploadDossierDeValidation");
+  });
 });
