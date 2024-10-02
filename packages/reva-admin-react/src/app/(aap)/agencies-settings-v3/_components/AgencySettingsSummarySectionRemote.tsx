@@ -9,7 +9,6 @@ export const AgencySettingsSummarySectionRemote = ({
 }: {
   organism?: {
     id: string;
-    isRemote: boolean;
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
   };

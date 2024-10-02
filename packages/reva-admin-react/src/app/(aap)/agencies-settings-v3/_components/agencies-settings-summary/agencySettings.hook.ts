@@ -12,8 +12,7 @@ const AgencySettingsInfoQuery = graphql(`
       organism {
         id
         label
-        isOnSite
-        isRemote
+        isHeadAgency
         isVisibleInCandidateSearchResults
         remoteZones
       }
