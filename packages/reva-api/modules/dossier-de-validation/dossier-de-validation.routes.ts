@@ -8,6 +8,7 @@ import { canManageDossierDeValidation } from "./features/canManageDossierDeValid
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getDossierDeValidationOtherFiles } from "./features/getDossierDeValidationOtherFiles";
 import { sendDossierDeValidation } from "./features/sendDossierDeValidation";
+import { isCandidateOwnerOfCandidacyFeature } from "../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 
 interface UploadDossierDeValidationBody {
   candidacyId: { value: string };
@@ -135,11 +136,16 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
       },
     },
     handler: async (request, reply) => {
-      const authorized = await canUserManageCandidacy({
-        hasRole: request.auth.hasRole,
-        candidacyId: request.body.candidacyId.value,
-        keycloakId: request.auth?.userInfo?.sub,
-      });
+      const authorized =
+        (await canUserManageCandidacy({
+          hasRole: request.auth.hasRole,
+          candidacyId: request.body.candidacyId.value,
+          keycloakId: request.auth?.userInfo?.sub,
+        })) ||
+        (await isCandidateOwnerOfCandidacyFeature({
+          candidacyId: request.body.candidacyId.value,
+          keycloakId: request.auth?.userInfo?.sub,
+        }));
 
       if (!authorized) {
         return reply.status(403).send({
