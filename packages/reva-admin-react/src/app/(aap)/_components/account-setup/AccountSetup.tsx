@@ -56,9 +56,7 @@ export default function AccountSetup({
                   setTimeout(() => {
                     queryClient.invalidateQueries({ queryKey: ["organisms"] });
                   }, 100);
-                  router.push(
-                    `/agencies-settings/organisms/${headAgencyId}/informations-generales/distance`,
-                  );
+                  router.push(`/agencies-settings-v3/`);
                 },
                 onError: graphqlErrorToast,
               },
