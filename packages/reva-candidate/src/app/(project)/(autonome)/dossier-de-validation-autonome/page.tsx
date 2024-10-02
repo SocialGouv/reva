@@ -5,16 +5,21 @@ import { useDossierDeValidationAutonomePage } from "./dossierDeValidationAutonom
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GraphQLError } from "graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import {
+  DossierDeValidationFormData,
+  DossierDeValidationTab,
+} from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
 
 export default function DossierDeValidationAutonomePag() {
   const {
     readyForJuryEstimatedAt,
     certificationAuthority,
     updateReadyForJuryEstimatedAt,
+    sendDossierDeValidation,
     queryStatus,
   } = useDossierDeValidationAutonomePage();
 
-  const handleSubmit = async ({
+  const handleReadyForJuryEstimatedDateFormSubmit = async ({
     readyForJuryEstimatedAt,
   }: {
     readyForJuryEstimatedAt: Date;
@@ -28,6 +33,22 @@ export default function DossierDeValidationAutonomePag() {
       graphqlErrorToast(error as GraphQLError);
     }
   };
+
+  const handleDossierDeValidationFormSubmit = async ({
+    dossierDeValidationFile,
+    dossierDeValidationOtherFiles,
+  }: DossierDeValidationFormData) => {
+    try {
+      await sendDossierDeValidation({
+        dossierDeValidationFile,
+        dossierDeValidationOtherFiles,
+      });
+      successToast("Modifications enregistrées");
+    } catch (error) {
+      graphqlErrorToast(error as GraphQLError);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <h1>Dossier de validation</h1>
@@ -52,7 +73,20 @@ export default function DossierDeValidationAutonomePag() {
                     email: certificationAuthority?.contactEmail || "",
                     name: certificationAuthority?.contactFullName || "",
                   }}
-                  onSubmit={handleSubmit}
+                  onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
+                />
+              ),
+            },
+            {
+              label: "Dêpot du dossier",
+              isDefault: false,
+              content: (
+                <DossierDeValidationTab
+                  certificationAuthorityInfo={{
+                    email: certificationAuthority?.contactEmail || "",
+                    name: certificationAuthority?.contactFullName || "",
+                  }}
+                  onSubmit={handleDossierDeValidationFormSubmit}
                 />
               ),
             },
