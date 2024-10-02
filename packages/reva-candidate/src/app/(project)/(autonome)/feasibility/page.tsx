@@ -2,16 +2,15 @@
 import { PageLayout } from "@/layouts/page.layout";
 import { SendFeasibilityForm } from "./_components/SendFeasibilityForm.component";
 
-
 export default function Feasibility() {
   return (
     <PageLayout title="Dosier de faisabilité" displayBackToHome>
       <h1 className="mt-8">Dosier de faisabilité</h1>
       <p className="text-xl">
-        Téléchargez la trame du dossier de faisabilité afin de le remplir avant
-        de l’envoyer à votre certificateur. S’il n’est pas renseigné vous pouvez
-        alors le choisir ci dessous. En cas de besoin, consultez la
-        documentation suivante :
+        Téléchargez, remplissez puis envoyez votre dossier de faisabilité au
+        certificateur. Si vous avez déjà une recevabilité, vous pouvez
+        téléverser votre courrier de recevabilité à la place du dossier de
+        faisabilité.
       </p>
       <p>
         <a

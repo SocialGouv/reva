@@ -10,7 +10,6 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
@@ -22,6 +21,7 @@ import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const schema = z.object({
   feasibilityFile: z.object({
@@ -70,7 +70,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FeasibilityFormData>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -182,52 +182,61 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     ];
   }
 
-  if (!certificationAuthorities.length) {
-    return (
-      <Alert
-        className="mt-4"
-        small
-        severity="warning"
-        title="Attention"
-        description="Aucun certificateur n'est actuellement rattaché à cette certification
-          pour le département de la candidature. Il n'est donc pas actuellement
-          possible de remplir le dossier de faisabilité."
-      />
-    );
-  }
+  // if (!certificationAuthorities.length) {
+  //   return (
+  //     <Alert
+  //       className="mt-4"
+  //       small
+  //       severity="warning"
+  //       title="Attention"
+  //       description="Aucun certificateur n'est actuellement rattaché à cette certification
+  //         pour le département de la candidature. Il n'est donc pas actuellement
+  //         possible de remplir le dossier de faisabilité."
+  //     />
+  //   );
+  // }
 
   return (
     <>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         {certificationAuthorities.length > 1 && (
-          <Select
-            className="w-3/5"
-            label={
-              <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
-                SÉLECTIONNEZ L&apos;AUTORITÉ DE CERTIFICATION
-              </label>
-            }
-            nativeSelectProps={{
-              onChange: (event) =>
-                setCertificationAuthorityId(event.target.value),
-              value: certificationAuthorityId || "",
-              required: true,
-            }}
-          >
-            <>
-              <option disabled hidden value="">
-                Sélectionner
-              </option>
-              {certificationAuthorities.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
+          <>
+            <Select
+              className="w-3/5"
+              label={
+                <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
+                  SÉLECTIONNEZ L&apos;AUTORITÉ DE CERTIFICATION
+                </label>
+              }
+              nativeSelectProps={{
+                onChange: (event) =>
+                  setCertificationAuthorityId(event.target.value),
+                value: certificationAuthorityId || "",
+                required: true,
+              }}
+            >
+              <>
+                <option disabled hidden value="">
+                  Sélectionner
                 </option>
-              ))}
-            </>
-          </Select>
+                {certificationAuthorities.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </>
+            </Select>
+          </>
         )}
         {CertificationContactCard}
-
+        {certificationAuthorities.length === 0 && (
+          <Alert
+            severity="warning"
+            title="Il n’y aucun certificateur rattaché à ce diplôme pour le moment"
+            description="Pour en savoir plus, contactez le support à support@vae.gouv.fr."
+            className="w-3/5"
+          />
+        )}
         <DownloadTile
           name="Trame du dossier de faisabilité"
           description="Pour compléter votre dossier, vous devez télécharger cette trame de dossier de faisabilité, le compléter, le signer et le joindre avec toutes les pièces justificatives nécessaires."
@@ -309,7 +318,17 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           </GrayCard>
         </fieldset>
 
-        <div className="flex flex-row justify-end">
+        <FormButtons
+          formState={{
+            isDirty: isDirty,
+            isSubmitting: isSubmitting,
+            canSubmit: certificationAuthorities.length > 0,
+          }}
+          backUrl="/"
+          submitButtonLabel="Envoyer"
+        />
+
+        {/* <div className="flex flex-row justify-end">
           <Button
             priority="primary"
             type="submit"
@@ -317,7 +336,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           >
             Valider
           </Button>
-        </div>
+        </div> */}
       </form>
     </>
   );

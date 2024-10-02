@@ -53,7 +53,7 @@ export const TimelineElement = ({
 
       {description ? (
         typeof description === "string" ? (
-          <p className="text-sm text-dsfrGray-500 mt-4 mb-0">{description}</p>
+          <p className="text-xs leading-5 text-dsfrGray-500 mb-0">{description}</p>
         ) : (
           description
         )
