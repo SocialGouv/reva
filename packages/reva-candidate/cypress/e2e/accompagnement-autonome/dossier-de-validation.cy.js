@@ -8,6 +8,11 @@ context("Accompagnement autonome - Dossier de validation", () => {
           "AUTONOME";
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+            candidate,
+          );
         });
       },
     );
@@ -39,6 +44,11 @@ context("Accompagnement autonome - Dossier de validation", () => {
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+            candidate,
+          );
         });
       },
     );
@@ -69,7 +79,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
     cy.get("h1").should("contain.text", "Dossier de validation");
   });
 
-  it.only("should let me change the readyForJuryEstimatedAt date", function () {
+  it("should let me change the readyForJuryEstimatedAt date", function () {
     cy.fixture("candidate1-certification-titre-2-selected.json").then(
       (candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
