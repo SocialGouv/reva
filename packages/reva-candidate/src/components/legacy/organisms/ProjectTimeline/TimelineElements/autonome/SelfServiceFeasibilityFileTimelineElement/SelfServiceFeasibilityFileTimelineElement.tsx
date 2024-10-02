@@ -14,7 +14,8 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
 
   let status: TimeLineElementStatus = "disabled";
 
-  const canComplete = !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE"
+  const canComplete =
+    !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
 
   if (canComplete) {
     status = "editable";
@@ -27,29 +28,13 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
   let badge = null;
 
   if (canComplete) {
-    badge = (
-      <Badge severity="warning">
-        À compléter
-      </Badge>
-    );
+    badge = <Badge severity="warning">À compléter</Badge>;
   } else if (candidacy.feasibility?.decision === "PENDING") {
-    badge = (
-      <Badge severity="info">
-        Envoyé
-      </Badge>
-    );
+    badge = <Badge severity="info">Envoyé</Badge>;
   } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
-    badge = (
-      <Badge severity="success">
-        Validé
-      </Badge>
-    );
+    badge = <Badge severity="success">Validé</Badge>;
   } else if (candidacy.feasibility?.decision === "REJECTED") {
-    badge = (
-      <Badge severity="error">
-        Non-recevable
-      </Badge>
-    );
+    badge = <Badge severity="error">Non-recevable</Badge>;
   }
 
   return (
@@ -60,7 +45,19 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
       badge={badge}
       data-test="feasibility-timeline-element"
     >
-      {status !== "readonly" && (
+      {candidacy.feasibility?.decision === "PENDING" && (
+        <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
+          <span className="fr-icon-time-fill m-auto" />
+          <p className="text-xs mb-0">
+            Votre dossier est étudié par votre certificateur. En cas d’erreur ou
+            d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs
+            délais. Si votre dossier est bon, vous recevrez une réponse dans un
+            délai de 2 mois. S’il est considéré comme incomplet, vous devrez le
+            modifier et le renvoyer.
+          </p>
+        </div>
+      )}
+      {status !== "readonly" ? (
         <Button
           data-test="feasibility-timeline-element-update-button"
           priority="primary"
@@ -70,6 +67,16 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
           disabled={status === "disabled"}
         >
           Compléter
+        </Button>
+      ) : (
+        <Button
+          data-test="feasibility-timeline-element-review-button"
+          priority="secondary"
+          onClick={() => {
+            router.push("/feasibility");
+          }}
+        >
+          Consulter
         </Button>
       )}
     </TimelineElement>

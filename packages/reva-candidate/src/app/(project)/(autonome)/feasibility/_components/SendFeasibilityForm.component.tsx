@@ -4,24 +4,21 @@ import {
   successToast,
 } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 import { GraphQLError } from "graphql";
 import { useFeasibilityPage } from "../feasibility.hook";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import { FeasibilityHistory } from "@/graphql/generated/graphql";
-import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { UploadForm } from "./UploadForm";
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 
 const schema = z.object({
   feasibilityFile: z.object({
@@ -37,7 +34,7 @@ const schema = z.object({
     .array(),
 });
 
-type FeasibilityFormData = z.infer<typeof schema>;
+export type FeasibilityFormData = z.infer<typeof schema>;
 
 export const SendFeasibilityForm = (): React.ReactNode => {
   const { candidacy, queryStatus } = useFeasibilityPage();
@@ -47,24 +44,22 @@ export const SendFeasibilityForm = (): React.ReactNode => {
 
   const feasibility = candidacy.feasibility;
 
-  const certificationAuthorities = useMemo(
-    () => candidacy.certificationAuthorities || [],
-    [candidacy.certificationAuthorities],
-  );
+  const certificationAuthorities = candidacy.certificationAuthorities || [];
+  const canUpload =
+    !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
 
   const [certificationAuthorityId, setCertificationAuthorityId] = useState<
     string | undefined
-  >(candidacy.feasibility?.certificationAuthority?.id);
+  >(() => {
+    if (certificationAuthorities.length == 1) {
+      return certificationAuthorities[0].id;
+    }
+    return candidacy.feasibility?.certificationAuthority?.id;
+  });
 
   const certificationAuthority = certificationAuthorities.find(
     (c) => c.id == certificationAuthorityId,
   );
-
-  useEffect(() => {
-    if (certificationAuthorities.length == 1) {
-      setCertificationAuthorityId(certificationAuthorities[0].id);
-    }
-  }, [certificationAuthorities]);
 
   const {
     register,
@@ -169,40 +164,83 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     }
   });
 
-  let feasibilityHistory: FeasibilityHistory[] = feasibility?.history || [];
-  if (feasibility?.decision == "INCOMPLETE") {
-    feasibilityHistory = [
-      {
-        id: feasibility.id,
-        decision: feasibility.decision,
-        decisionComment: feasibility.decisionComment,
-        decisionSentAt: feasibility.decisionSentAt,
-      },
-      ...feasibilityHistory,
-    ];
-  }
-
-  // if (!certificationAuthorities.length) {
-  //   return (
-  //     <Alert
-  //       className="mt-4"
-  //       small
-  //       severity="warning"
-  //       title="Attention"
-  //       description="Aucun certificateur n'est actuellement rattaché à cette certification
-  //         pour le département de la candidature. Il n'est donc pas actuellement
-  //         possible de remplir le dossier de faisabilité."
-  //     />
-  //   );
+  // let feasibilityHistory: FeasibilityHistory[] = feasibility?.history || [];
+  // if (feasibility?.decision == "INCOMPLETE") {
+  //   feasibilityHistory = [
+  //     {
+  //       id: feasibility.id,
+  //       decision: feasibility.decision,
+  //       decisionComment: feasibility.decisionComment,
+  //       decisionSentAt: feasibility.decisionSentAt,
+  //     },
+  //     ...feasibilityHistory,
+  //   ];
   // }
 
   return (
     <>
+      {candidacy.feasibility?.decision == "REJECTED" && (
+        <Alert
+          className="mb-8"
+          severity="error"
+          title={`Dossier déclaré non recevable le ${new Date(candidacy.feasibility.decisionSentAt!).toLocaleDateString("fr-FR")}`}
+          description={
+            <>
+              <p>
+                Voici le motif transmis par votre certificateur : {'"'}
+                {candidacy.feasibility.decisionComment}
+                {'"'}
+              </p>
+              <p>
+                Si vous souhaitez en savoir plus, contactez votre certificateur
+                avant de renvoyer votre dossier mis à jour.
+              </p>
+            </>
+          }
+        />
+      )}
+      {candidacy.feasibility?.decision == "INCOMPLETE" && (
+        <Alert
+          className="mb-8"
+          severity="warning"
+          title={`Dossier déclaré incomplet le ${new Date(candidacy.feasibility.decisionSentAt!).toLocaleDateString("fr-FR")}`}
+          description={
+            <>
+              <p>
+                Voici le motif transmis par votre certificateur : {'"'}
+                {candidacy.feasibility.decisionComment}
+                {'"'}
+              </p>
+              <p>
+                Si vous souhaitez en savoir plus, contactez votre certificateur
+                avant de renvoyer votre dossier mis à jour.
+              </p>
+            </>
+          }
+        />
+      )}
+      {candidacy.feasibility?.decision == "PENDING" && (
+        <Alert
+          className="mb-8"
+          severity="info"
+          title={`Dossier envoyé le ${new Date(candidacy.feasibility.feasibilityFileSentAt!).toLocaleDateString("fr-FR")}`}
+          description={
+            <>
+              <p>
+                Votre dossier a bien été envoyé au certificateur concerné. En
+                attendant la réponse de votre certificateur sur votre
+                recevabilité (dans un délai de 2 mois), vos pièces
+                justificatives restent consultables.
+              </p>
+            </>
+          }
+        />
+      )}
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
-        {certificationAuthorities.length > 1 && (
+        {certificationAuthorities.length > 1 && canUpload && (
           <>
             <Select
-              className="w-3/5"
+              className="w-3/5 mb-0"
               label={
                 <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
                   SÉLECTIONNEZ L&apos;AUTORITÉ DE CERTIFICATION
@@ -244,49 +282,69 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           mimeType="application/pdf"
         />
         <hr className="pb-1" />
-        <FancyUpload
-          title="Joindre le dossier de faisabilité"
-          description="Le dossier doit être complet et signé par vous-même et le candidat. Pensez à vérifier que vous avez tout saisi avant l’envoi."
-          hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
-          nativeInputProps={{
-            ...register("feasibilityFile"),
-            accept: ".pdf",
-          }}
-          state={errors.feasibilityFile ? "error" : "default"}
-          stateRelatedMessage={errors.feasibilityFile?.[0]?.message}
-        />
-        <FancyUpload
-          title="Joindre la pièce d’identité (carte identité, passeport, carte de séjour)"
-          description="Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce sera demandée au candidat pour justifier de son identité lors du passage devant jury et la délivrance éventuelle du diplôme."
-          hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-          nativeInputProps={{
-            ...register("idFile"),
-          }}
-          state={errors.idFile ? "error" : "default"}
-          stateRelatedMessage={errors.idFile?.[0]?.message}
-        />
-        <FancyUpload
-          title="Joindre une autre pièce (optionnel)"
-          description="Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
-          hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
-          nativeInputProps={{
-            ...register("documentaryProofFile"),
-            accept: ".pdf",
-          }}
-          state={errors.documentaryProofFile ? "error" : "default"}
-          stateRelatedMessage={errors.documentaryProofFile?.[0]?.message}
-        />
-        <FancyUpload
-          title="Joindre une autre pièce (optionnel)"
-          description="Attestation ou certificat de suivi de formation dans le cas du prérequis demandé par la certification visée."
-          hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
-          nativeInputProps={{
-            ...register("certificateOfAttendanceFile"),
-            accept: ".pdf",
-          }}
-          state={errors.certificateOfAttendanceFile ? "error" : "default"}
-          stateRelatedMessage={errors.certificateOfAttendanceFile?.[0]?.message}
-        />
+        {canUpload && (
+          <UploadForm
+            errors={errors}
+            register={register}
+            requirements={requirements}
+          />
+        )}
+
+        {!canUpload && feasibility?.feasibilityUploadedPdf && (
+          <div>
+            {feasibility?.feasibilityUploadedPdf?.feasibilityFile
+              .previewUrl && (
+              <FancyPreview
+                defaultDisplay={false}
+                name="Dossier de faisabilité"
+                title={
+                  feasibility?.feasibilityUploadedPdf?.feasibilityFile.name
+                }
+                src={
+                  feasibility?.feasibilityUploadedPdf?.feasibilityFile
+                    .previewUrl
+                }
+              />
+            )}
+            {feasibility?.feasibilityUploadedPdf?.IDFile?.previewUrl && (
+              <FancyPreview
+                defaultDisplay={false}
+                name="Pièce d'identité"
+                title={feasibility?.feasibilityUploadedPdf?.IDFile.name}
+                src={feasibility?.feasibilityUploadedPdf?.IDFile.previewUrl}
+              />
+            )}
+            {feasibility?.feasibilityUploadedPdf?.documentaryProofFile
+              ?.previewUrl && (
+              <FancyPreview
+                defaultDisplay={false}
+                name="Justificatif équivalence"
+                title={
+                  feasibility?.feasibilityUploadedPdf?.documentaryProofFile.name
+                }
+                src={
+                  feasibility?.feasibilityUploadedPdf?.documentaryProofFile
+                    .previewUrl
+                }
+              />
+            )}
+            {feasibility?.feasibilityUploadedPdf?.certificateOfAttendanceFile
+              ?.previewUrl && (
+              <FancyPreview
+                defaultDisplay={false}
+                name="Attestation ou certificat de formation"
+                title={
+                  feasibility?.feasibilityUploadedPdf
+                    ?.certificateOfAttendanceFile.name
+                }
+                src={
+                  feasibility?.feasibilityUploadedPdf
+                    ?.certificateOfAttendanceFile.previewUrl
+                }
+              />
+            )}
+          </div>
+        )}
 
         {/* {certificationAuthority && (
           <CertificationAuthorityLocalAccounts
@@ -297,26 +355,10 @@ export const SendFeasibilityForm = (): React.ReactNode => {
             departmentId={candidacy.data?.getCandidacyById?.department?.id}
           />
         )} */}
-
+        {/* 
         {feasibilityHistory.length > 0 && (
           <FeasibilityDecisionHistory history={feasibilityHistory} />
-        )}
-
-        <fieldset>
-          <h4>Avant de finaliser votre envoi</h4>
-          <GrayCard>
-            <Checkbox
-              className="mb-0"
-              options={requirements.map((option, optionId) => ({
-                label: option.label,
-                nativeInputProps: {
-                  required: true,
-                  ...register(`requirements.${optionId}.checked`),
-                },
-              }))}
-            />
-          </GrayCard>
-        </fieldset>
+        )} */}
 
         <FormButtons
           formState={{
@@ -327,16 +369,6 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           backUrl="/"
           submitButtonLabel="Envoyer"
         />
-
-        {/* <div className="flex flex-row justify-end">
-          <Button
-            priority="primary"
-            type="submit"
-            disabled={sendFeasibility.isPending}
-          >
-            Valider
-          </Button>
-        </div> */}
       </form>
     </>
   );
