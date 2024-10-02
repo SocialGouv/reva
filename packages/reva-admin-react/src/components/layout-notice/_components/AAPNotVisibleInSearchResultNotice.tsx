@@ -69,10 +69,7 @@ export const AAPNotVisibleInSearchResultNotice = () => {
           Actuellement, vous n'êtes pas visible dans les résultats de recherche.
         </strong>{" "}
         Pour y apparaître, gérez votre compte depuis les{" "}
-        <Link
-          href="/agencies-settings/legal-information"
-          className="fr-notice__link"
-        >
+        <Link href="/agencies-settings-v3" className="fr-notice__link">
           Paramètres
         </Link>
       </p>
