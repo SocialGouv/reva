@@ -20,9 +20,12 @@ import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import {
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+  OOS_DOMAIN,
   S3File,
   UploadedFile,
   deleteFile,
+  getDownloadLink,
   uploadFileToS3,
   uploadFilesToS3,
 } from "../shared/file";
@@ -347,13 +350,23 @@ export const getFileNameAndUrl = async ({
   if (fileId) {
     const file = await prismaClient.file.findFirst({
       where: { id: fileId },
-      select: { name: true },
+      select: { name: true, path: true },
     });
+
+    if (!file) {
+      throw new Error("Fichier non trouvé");
+    }
+    const downloadUrl = await getDownloadLink(file?.path);
+
     return {
       name: file?.name || "",
       url: file
         ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/feasibility/file/${fileId}`
         : "",
+      previewUrl: downloadUrl?.replace(
+        OOS_DOMAIN,
+        FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+      ),
     };
   } else {
     return null;
