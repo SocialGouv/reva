@@ -1,6 +1,9 @@
 import { randomUUID } from "crypto";
 
-import { Gender } from "@prisma/client";
+import {
+  Gender,
+  StatutValidationInformationsJuridiquesMaisonMereAAP,
+} from "@prisma/client";
 
 // Candidates
 
@@ -149,7 +152,8 @@ const maisonMereAAP1 = {
   typologie: "expertFiliere" as const,
   dateExpirationCertificationQualiopi: new Date(),
   // gestionnaireAccountId: account.id,
-  statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR" as const,
+  statutValidationInformationsJuridiquesMaisonMereAAP:
+    StatutValidationInformationsJuridiquesMaisonMereAAP.A_JOUR,
   cguVersion: null,
   cguAcceptedAt: null,
   managerFirstname: "Josette",
@@ -164,6 +168,8 @@ const maisonMereAAP2 = {
   raisonSociale: "Maison Mere Organism2",
   managerFirstname: "Alice",
   managerLastname: "Doe",
+  statutValidationInformationsJuridiquesMaisonMereAAP:
+    StatutValidationInformationsJuridiquesMaisonMereAAP.A_METTRE_A_JOUR,
 };
 
 export {

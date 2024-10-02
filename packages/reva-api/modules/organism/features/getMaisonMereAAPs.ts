@@ -94,42 +94,32 @@ export const getMaisonMereAAPs = async ({
 
   const queryCount: Prisma.MaisonMereAAPCountArgs = {};
 
-  if (searchFilter) {
-    const words = searchFilter.split(/\s+/);
-    const filters = { AND: words.map(buildMaisonMereFilters) };
-
-    queryMaisonMereAAPs.where = {
-      ...queryMaisonMereAAPs.where,
-      ...filters,
-    };
-
-    queryCount.where = {
-      ...queryCount.where,
-      ...filters,
-    };
-  }
-
-  if (legalValidationStatus) {
-    queryMaisonMereAAPs.where = {
-      ...queryMaisonMereAAPs.where,
-      AND: [
+  const legalValidationStatusFilters = legalValidationStatus
+    ? [
         {
           statutValidationInformationsJuridiquesMaisonMereAAP:
             legalValidationStatus,
         },
-      ],
-    };
+      ]
+    : [];
 
-    queryCount.where = {
-      ...queryCount.where,
-      AND: [
-        {
-          statutValidationInformationsJuridiquesMaisonMereAAP:
-            legalValidationStatus,
-        },
-      ],
-    };
-  }
+  const searchWordFilters = searchFilter
+    ? searchFilter.split(/\s+/).map(buildMaisonMereFilters)
+    : [];
+
+  const filters = {
+    AND: [...legalValidationStatusFilters, ...searchWordFilters],
+  };
+
+  queryMaisonMereAAPs.where = {
+    ...queryMaisonMereAAPs.where,
+    ...filters,
+  };
+
+  queryCount.where = {
+    ...queryCount.where,
+    ...filters,
+  };
 
   const maisonMereAAPs =
     await prismaClient.maisonMereAAP.findMany(queryMaisonMereAAPs);

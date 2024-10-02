@@ -23,8 +23,15 @@ import {
   maisonMereAAP1,
   maisonMereAAP2,
 } from "../../../test/fixtures/people-organisms";
+import { StatutValidationInformationsJuridiquesMaisonMereAAP } from ".prisma/client";
 
-const injectGraphqlGetMaisonMereAAPs = async (searchFilter: string) => {
+const injectGraphqlGetMaisonMereAAPs = async ({
+  searchFilter,
+  legalValidationStatus,
+}: {
+  searchFilter: string;
+  legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
+}) => {
   return injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -37,7 +44,9 @@ const injectGraphqlGetMaisonMereAAPs = async (searchFilter: string) => {
       arguments: {
         offset: 0,
         searchFilter,
+        ...(legalValidationStatus && { legalValidationStatus }),
       },
+      enumFields: ["legalValidationStatus"],
       returnFields: "{ rows { id } info { totalRows totalPages currentPage }}",
     },
   });
@@ -99,7 +108,9 @@ afterAll(async () => {
 });
 
 test("find maison mere by its siret number", async () => {
-  const response = await injectGraphqlGetMaisonMereAAPs(maisonMereAAP2.siret);
+  const response = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: maisonMereAAP2.siret,
+  });
 
   expect(response.json()).not.toHaveProperty("errors");
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
@@ -108,9 +119,9 @@ test("find maison mere by its siret number", async () => {
 });
 
 test("find maison mere by some unordered key words from its raison social", async () => {
-  const response = await injectGraphqlGetMaisonMereAAPs(
-    "organism2 mere maison",
-  );
+  const response = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: "organism2 mere maison",
+  });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
     { id: maisonMereAAP2.id },
@@ -118,9 +129,9 @@ test("find maison mere by some unordered key words from its raison social", asyn
 });
 
 test("find maison mere by admin email", async () => {
-  const response = await injectGraphqlGetMaisonMereAAPs(
-    gestionaMaisonMereAapAccount1.email,
-  );
+  const response = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: gestionaMaisonMereAapAccount1.email,
+  });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
     { id: maisonMereAAP1.id },
@@ -128,11 +139,31 @@ test("find maison mere by admin email", async () => {
 });
 
 test("find maison mere by collaborateur email", async () => {
-  const response = await injectGraphqlGetMaisonMereAAPs(
-    collaborateurMaisonMereAapAccount2.email,
-  );
+  const response = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: collaborateurMaisonMereAapAccount2.email,
+  });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
+    { id: maisonMereAAP2.id },
+  ]);
+});
+
+test("find maison mere by text filters and legal validation status", async () => {
+  const response = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: "organism2 mere maison",
+    legalValidationStatus: "A_JOUR",
+  });
+
+  expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject(
+    [],
+  );
+
+  const response2 = await injectGraphqlGetMaisonMereAAPs({
+    searchFilter: "organism2 mere maison",
+    legalValidationStatus: "A_METTRE_A_JOUR",
+  });
+
+  expect(response2.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
     { id: maisonMereAAP2.id },
   ]);
 });
