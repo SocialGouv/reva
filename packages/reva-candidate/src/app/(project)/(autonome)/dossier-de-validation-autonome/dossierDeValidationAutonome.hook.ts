@@ -9,6 +9,12 @@ const getCandidateQuery = graphql(`
       candidacy {
         id
         readyForJuryEstimatedAt
+        feasibility {
+          certificationAuthority {
+            contactFullName
+            contactEmail
+          }
+        }
       }
     }
   }
@@ -54,8 +60,11 @@ export const useDossierDeValidationAutonomePage = () => {
     getCandidateResponse?.candidate_getCandidateWithCandidacy?.candidacy;
   const readyForJuryEstimatedAt = candidacy?.readyForJuryEstimatedAt;
 
+  const certificationAuthority = candidacy?.feasibility?.certificationAuthority;
+
   return {
     readyForJuryEstimatedAt,
+    certificationAuthority,
     queryStatus,
     updateReadyForJuryEstimatedAt,
   };

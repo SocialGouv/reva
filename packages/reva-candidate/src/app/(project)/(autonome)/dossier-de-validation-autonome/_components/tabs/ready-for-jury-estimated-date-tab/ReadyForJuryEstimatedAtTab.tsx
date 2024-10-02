@@ -1,15 +1,18 @@
 "use client";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { isValid } from "date-fns";
 import { useState } from "react";
 
 export const ReadyForJuryEstimatedDateTab = ({
   defaultValues,
+  certificationAuthorityInfo,
   onSubmit,
 }: {
   defaultValues?: { readyForJuryEstimatedAt?: Date };
+  certificationAuthorityInfo: { name: string; email: string };
   onSubmit?: (data: { readyForJuryEstimatedAt: Date }) => void;
 }) => {
   const [readyForJuryEstimatedAt, setReadyForJuryEstimatedAt] = useState(
@@ -57,6 +60,10 @@ export const ReadyForJuryEstimatedDateTab = ({
           Valider
         </Button>
       </form>
+      <CallOut title="Comment contacter mon certificateur ?" className="mt-8">
+        <div className="mt-2">{certificationAuthorityInfo.name}</div>
+        <div>{certificationAuthorityInfo.email}</div>
+      </CallOut>
     </div>
   );
 };

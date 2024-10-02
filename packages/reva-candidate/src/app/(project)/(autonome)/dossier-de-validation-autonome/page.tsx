@@ -9,6 +9,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 export default function DossierDeValidationAutonomePag() {
   const {
     readyForJuryEstimatedAt,
+    certificationAuthority,
     updateReadyForJuryEstimatedAt,
     queryStatus,
   } = useDossierDeValidationAutonomePage();
@@ -46,6 +47,10 @@ export default function DossierDeValidationAutonomePag() {
                     readyForJuryEstimatedAt: readyForJuryEstimatedAt
                       ? new Date(readyForJuryEstimatedAt)
                       : undefined,
+                  }}
+                  certificationAuthorityInfo={{
+                    email: certificationAuthority?.contactEmail || "",
+                    name: certificationAuthority?.contactFullName || "",
                   }}
                   onSubmit={handleSubmit}
                 />
