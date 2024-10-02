@@ -23,7 +23,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       title="Dossier de validation"
       status={status}
       data-test="dossier-de-validation-autonome-timeline-element"
-      description="Le dossier de validation sera présenté au moment du jury."
+      description="Ce dossier permet de justifier de vos expériences et compétences lors de votre passage devant le jury."
     >
       <Button
         data-test="dossier-de-validation-autonome-timeline-element-update-button"
