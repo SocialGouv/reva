@@ -19,7 +19,9 @@ const MaisonMereAapPage = () => {
     updateMaisonMereIsSignalized,
   } = useMaisonMereAAP(maisonMereAAPId);
 
-  if (!maisonMereAAP) return null;
+  if (!maisonMereAAP || !maisonMereAAP.organisms) return null;
+  const organisms = maisonMereAAP.organisms;
+  const maisonMereIsActive = !!organisms.find((organism) => organism.isActive);
 
   const handleIsActiveChange = async (isActive: boolean) => {
     await updateOrganismIsActive({
@@ -69,7 +71,7 @@ const MaisonMereAapPage = () => {
           <span>Statut de la structure</span>
           <ToggleSwitch
             label=""
-            defaultChecked={maisonMereAAP.isActive}
+            defaultChecked={maisonMereIsActive}
             inputTitle="Activer toutes les agences de la maison mère"
             onChange={(checked) => handleIsActiveChange(checked)}
           />

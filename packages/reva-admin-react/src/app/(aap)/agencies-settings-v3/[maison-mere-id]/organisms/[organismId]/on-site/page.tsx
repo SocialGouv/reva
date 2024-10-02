@@ -186,7 +186,7 @@ export default function OnSitePage() {
           </EnhancedSectionCard>
         )}
         <div className="flex flex-col mt-6">
-          <h2>Visibilité du lieu d’accueil</h2>
+          <h2>Visibilité de la structure</h2>
           <OrganismVisibilityToggle organismId={organismId} />
         </div>
       </div>

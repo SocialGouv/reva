@@ -101,7 +101,6 @@ type MaisonMereAAP {
   managerFirstname: String
   managerLastname: String
   showAccountSetup: Boolean
-  isActive: Boolean!
   isSignalized: Boolean!
 }
 
