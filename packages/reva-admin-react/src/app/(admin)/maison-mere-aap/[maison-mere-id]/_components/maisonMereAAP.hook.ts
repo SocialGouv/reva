@@ -9,6 +9,7 @@ const MaisonMereAAPQuery = graphql(`
       id
       raisonSociale
       statutValidationInformationsJuridiquesMaisonMereAAP
+      isActive
       isSignalized
       organisms {
         isHeadAgency

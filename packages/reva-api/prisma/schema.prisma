@@ -1376,6 +1376,7 @@ model MaisonMereAAP {
   managerFirstname                    String?                               @map("manager_firstname")
   managerLastname                     String?                               @map("manager_lastname")
   showAccountSetup                    Boolean                               @default(false) @map("show_account_setup")
+  isActive                            Boolean                               @default(false) @map("is_active")
   isSignalized                        Boolean                               @default(false) @map("is_signalized")
 
   gestionnaire                                        Account                                             @relation(fields: [gestionnaireAccountId], references: [id])

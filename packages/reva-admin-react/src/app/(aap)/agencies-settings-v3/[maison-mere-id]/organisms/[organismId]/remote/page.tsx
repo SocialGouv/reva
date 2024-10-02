@@ -211,7 +211,7 @@ export default function RemotePage() {
           </EnhancedSectionCard>
         )}
         <div className="flex flex-col mt-6">
-          <h2>Visibilité de la structure</h2>
+          <h2>Visibilité de l'accompagnement à distance</h2>
           <OrganismVisibilityToggle organismId={organismId} />
         </div>
       </div>

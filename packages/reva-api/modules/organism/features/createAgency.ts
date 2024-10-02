@@ -102,6 +102,7 @@ export const createAgency = async ({
     await assignMaisonMereAAPToOrganism({
       organismId: newOrganism.id,
       maisonMereAAPId: maisonMereAAP.id,
+      isActive: maisonMereAAP.isActive,
     });
 
     await createOrUpdateInformationsCommerciales({
