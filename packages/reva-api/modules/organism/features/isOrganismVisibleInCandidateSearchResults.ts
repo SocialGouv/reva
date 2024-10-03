@@ -1,3 +1,4 @@
+import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 import { prismaClient } from "../../../prisma/client";
 
 export const isOrganismVisibleInCandidateSearchResults = async ({
@@ -10,16 +11,36 @@ export const isOrganismVisibleInCandidateSearchResults = async ({
     include: {
       managedDegrees: true,
       organismOnDomaine: true,
+      organismOnFormacode: true,
       organismOnConventionCollective: true,
+      organismInformationsCommerciales: true,
     },
   });
 
+  if (!o) {
+    return false;
+  }
+
+  const isFormacodeActive = await isFormacodeFeatureActive();
+  const domainsLength = isFormacodeActive
+    ? o.organismOnFormacode.length
+    : o.organismOnDomaine.length;
+
   return (
-    o &&
     o.isActive &&
     (o.isOnSite || o.isRemote) &&
     !o.fermePourAbsenceOuConges &&
     o.managedDegrees.length &&
-    (o.organismOnDomaine.length || o.organismOnConventionCollective.length)
+    (domainsLength || o.organismOnConventionCollective.length)
   );
+};
+
+const isFormacodeFeatureActive = async (): Promise<boolean> => {
+  const isAapSettingsV3Active = (await getFeatureByKey("AAP_SETTINGS_V3"))
+    ?.isActive;
+  const isAapSettingsFormacodeActive = (
+    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
+  )?.isActive;
+
+  return !!(isAapSettingsV3Active && isAapSettingsFormacodeActive);
 };
