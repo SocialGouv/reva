@@ -120,6 +120,39 @@ context("Accompagnement autonome - Dossier de validation", () => {
     cy.wait("@updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage");
   });
 
+  it("should show the ready for jury estimated date in the timeline when it's set", function () {
+    cy.fixture("candidate1-certification-titre-2-selected.json").then(
+      (candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+          "AUTONOME";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "DOSSIER_FAISABILITE_RECEVABLE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+            candidate,
+          );
+        });
+      },
+    );
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+    });
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.get(
+      '[data-test="dossier-de-validation-autonome-timeline-element"]',
+    ).should(
+      "contain.text",
+      "Vous avez renseigné une date de dépôt prévisionnelle, le 01/10/2024.Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.",
+    );
+  });
+
   it("should let me send a dossier de validation", function () {
     cy.fixture("candidate1-certification-titre-2-selected.json").then(
       (candidate) => {
