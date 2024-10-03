@@ -175,11 +175,6 @@ context("Accompagnement autonome - Dossier de validation", () => {
     );
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
-      stubMutation(
-        req,
-        "updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage",
-        "candidate1-certification-titre-2-selected.json",
-      );
     });
 
     cy.intercept(
