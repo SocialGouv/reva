@@ -11,6 +11,7 @@ interface Decision {
   aapComment: string;
   decisionTakenAt: Date;
 }
+
 export const LegalInformationUpdateBlock = ({
   maisonMereAAPId,
   statutValidationInformationsJuridiquesMaisonMereAAP,
@@ -125,7 +126,8 @@ const NeedUpdateStatusBlock = ({
       </p>
       <ul>
         <li>
-          Une lettre de délégation signée par le dirigeant et le délégataire
+          Une lettre de délégation signée et datée par le dirigeant et le
+          délégataire
         </li>
         <li>
           Une copie du justificatif d'identité de la personne ayant reçu
