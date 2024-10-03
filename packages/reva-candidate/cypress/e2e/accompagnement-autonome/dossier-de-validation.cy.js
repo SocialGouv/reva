@@ -163,8 +163,6 @@ context("Accompagnement autonome - Dossier de validation", () => {
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-        });
-        cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
             req,
             "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
@@ -207,5 +205,43 @@ context("Accompagnement autonome - Dossier de validation", () => {
     cy.wait("@uploadDossierDeValidation");
 
     cy.location("pathname").should("equal", "/candidat/");
+  });
+
+  it("should let me view a read only version of the ready for jury date tab once the dossier de validation is sent", function () {
+    cy.fixture("candidate1-certification-titre-2-selected.json").then(
+      (candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+          "AUTONOME";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "DOSSIER_VALIDATION_ENVOYE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          { dossierDeValidationOtherFiles: [] };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+            candidate,
+          );
+        });
+      },
+    );
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+    });
+
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+
+    cy.visit("/dossier-de-validation-autonome/");
+    cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+
+    cy.get(".ready-for-jury-estimated-date-text").should(
+      "contain.text",
+      "01/10/2024",
+    );
   });
 });

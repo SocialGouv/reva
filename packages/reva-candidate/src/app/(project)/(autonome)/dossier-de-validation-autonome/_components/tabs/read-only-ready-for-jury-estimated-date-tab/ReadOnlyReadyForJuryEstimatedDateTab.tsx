@@ -19,7 +19,7 @@ export const ReadOnlyReadyForJuryEstimatedDateTab = ({
     </p>
     <dl>
       <dt>date prévisionelle</dt>
-      <dd className="font-medium">
+      <dd className="font-medium ready-for-jury-estimated-date-text">
         {readyForJuryEstimatedAt
           ? format(readyForJuryEstimatedAt, "dd/MM/yyyy")
           : ""}
