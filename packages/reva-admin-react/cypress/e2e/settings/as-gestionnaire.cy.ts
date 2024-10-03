@@ -31,7 +31,7 @@ function visitSettings({
     });
   });
 
-  cy.headAgency("/agencies-settings-v3/");
+  cy.gestionnaire("/agencies-settings-v3/");
 }
 
 context("Head agency settings page", () => {

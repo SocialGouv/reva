@@ -29,7 +29,7 @@ const getRemoteOrganism = ({
   return maisonMereAAP.organisms.find((o) => o.isHeadAgency);
 };
 
-export const HeadAgencySettingsSummary = ({
+export const SettingsSummaryForGestionnaire = ({
   maisonMereAAP,
   organism,
   accountId,

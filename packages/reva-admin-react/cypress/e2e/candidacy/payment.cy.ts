@@ -47,7 +47,7 @@ function visitPayment({
     },
   );
 
-  cy.agency(
+  cy.collaborateur(
     "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/payment/unifvae/invoice/",
   );
 }

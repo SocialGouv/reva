@@ -1,5 +1,5 @@
 "use client";
-import { HeadAgencySettingsSummary } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/HeadAgencySettingsSummary";
+import { SettingsSummaryForGestionnaire } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForGestionnaire";
 import { Impersonate } from "@/components/impersonate";
 import { successToast } from "@/components/toast/toast";
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
@@ -94,7 +94,7 @@ const MaisonMereAapPage = () => {
           </span>
         </div>
       </div>
-      <HeadAgencySettingsSummary
+      <SettingsSummaryForGestionnaire
         accountId={accountId}
         organism={headAgencyOrganism as Organism}
         maisonMereAAP={maisonMereAAP as MaisonMereAap}

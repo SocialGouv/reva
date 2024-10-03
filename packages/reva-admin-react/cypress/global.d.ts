@@ -8,13 +8,13 @@ declare namespace Cypress {
     admin(url?: string): void;
 
     /**
-     * Logs-in as a head-agency (aka "maison mere")
+     * Logs-in as a gestionnaire de maison mere
      */
-    headAgency(url?: string): void;
+    gestionnaire(url?: string): void;
 
     /**
-     * Logs-in as an agency
+     * Logs-in as a collaborateur
      */
-    agency(url?: string): void;
+    collaborateur(url?: string): void;
   }
 }
