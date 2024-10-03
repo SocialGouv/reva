@@ -166,7 +166,6 @@ export const LegalInformationUpdateForm = ({
           title="Copie du justificatif d'identité du dirigeant"
           description={
             <>
-              Le dirigeant est la personne mentionnée sur l’attestation URSSAF.
               La pièce d’identité peut être une carte nationale d’identité en
               cours de validité ou périmée de moins de 5 ans (recto/verso) ou un
               passeport en cours de validité.
@@ -176,7 +175,7 @@ export const LegalInformationUpdateForm = ({
                 cadrée et qu’y soient apposés, par le dirigeant lui-même, la
                 mention manuscrite “J’atteste que je suis à l’origine de la
                 fourniture du présent justificatif d’identité”, ses nom et
-                prénom, la date du jour ainsi qu’une signature.
+                prénom(s), la date du jour ainsi qu’une signature.
               </strong>
             </>
           }
