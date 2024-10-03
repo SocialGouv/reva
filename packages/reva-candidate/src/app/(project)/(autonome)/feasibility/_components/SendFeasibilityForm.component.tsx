@@ -4,7 +4,7 @@ import {
   successToast,
 } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-hi
 import Notice from "@codegouvfr/react-dsfr/Notice";
 
 const schema = z.object({
+  certificationAuthorityId: z.string(),
   feasibilityFile: z.object({
     0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
   }),
@@ -51,28 +52,25 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const canUpload =
     !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
 
-  const [certificationAuthorityId, setCertificationAuthorityId] = useState<
-    string | undefined
-  >(() => {
-    if (certificationAuthorities.length == 1) {
-      return certificationAuthorities[0].id;
-    }
-    return candidacy.feasibility?.certificationAuthority?.id;
-  });
-
-  const certificationAuthority = certificationAuthorities.find(
-    (c) => c.id == certificationAuthorityId,
-  );
-
   const {
     register,
     handleSubmit,
+    reset,
     control,
+    watch,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<FeasibilityFormData>({
     resolver: zodResolver(schema),
     mode: "all",
     defaultValues: {
+      certificationAuthorityId:
+        certificationAuthorities.length == 1
+          ? certificationAuthorities[0].id
+          : candidacy.feasibility?.certificationAuthority?.id || "",
+      feasibilityFile: {},
+      idFile: {},
+      documentaryProofFile: {},
+      certificateOfAttendanceFile: {},
       requirements: [
         {
           id: "0",
@@ -89,6 +87,8 @@ export const SendFeasibilityForm = (): React.ReactNode => {
       ],
     },
   });
+
+  const certificationAuthorityId = watch("certificationAuthorityId");
 
   const { fields: requirements } = useFieldArray({
     control,
@@ -135,14 +135,14 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   }
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    if (!candidacyId || !certificationAuthority) {
+    if (!candidacyId) {
       return;
     }
 
     try {
       const response = await sendFeasibility.mutateAsync({
         candidacyId,
-        certificationAuthorityId: certificationAuthority.id,
+        certificationAuthorityId: data.certificationAuthorityId,
         feasibilityFile: data.feasibilityFile[0],
         IDFile: data.idFile[0],
         documentaryProofFile: data.documentaryProofFile?.[0],
@@ -282,7 +282,14 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           )}
         </>
       )}
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+      <form
+        onSubmit={handleFormSubmit}
+        onReset={(e) => {
+          e.preventDefault();
+          reset();
+        }}
+        className="flex flex-col gap-6"
+      >
         {certificationAuthorities.length > 1 && canUpload && (
           <>
             <Select
@@ -293,9 +300,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                 </label>
               }
               nativeSelectProps={{
-                onChange: (event) =>
-                  setCertificationAuthorityId(event.target.value),
-                value: certificationAuthorityId || "",
+                ...register("certificationAuthorityId"),
                 required: true,
               }}
             >

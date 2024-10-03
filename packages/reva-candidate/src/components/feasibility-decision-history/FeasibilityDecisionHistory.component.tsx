@@ -12,7 +12,7 @@ export const FeasibilityDecisionHistory = (props: Props) => {
   if (!history?.length) return null;
 
   return (
-    <Accordion label="Décisions précédentes" className="mb-8" defaultExpanded>
+    <Accordion label="Décisions précédentes" className="mb-8">
       {history.map((previousFeasibility) => (
         <FeasibilityDecisionInfo
           key={previousFeasibility.id}
