@@ -177,5 +177,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
     cy.get('button[type="submit"]').click();
 
     cy.wait("@uploadDossierDeValidation");
+
+    cy.location("pathname").should("equal", "/candidat/");
   });
 });
