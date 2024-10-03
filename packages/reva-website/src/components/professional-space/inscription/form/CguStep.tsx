@@ -36,13 +36,19 @@ export const CguStep = () => {
         en toute sérénité :
       </p>
       <ul>
-        <li>Un webinaire de présentation assuré par les équipes France VAE</li>
         <li>
-          Des vidéos de présentation qui répondent rapidement à vos questions
+          Une présentation à suivre pour répondre rapidement à vos questions et
+          valider votre inscription
         </li>
         <li>
-          Notre guide de création de compte Architecte Accompagnateur de
-          Parcours (AAP)
+          Notre{" "}
+          <a
+            target="_blank"
+            href="https://scribehow.com/shared/Creation_dun_compte_Architecte_Accompagnateur_de_Parcours_sur_France_VAE__7qPWB2zFT2yYOz_Zy0NRnA?referrer=workspace"
+          >
+            guide
+          </a>{" "}
+          de création de compte Architecte Accompagnateur de Parcours (AAP)
         </li>
       </ul>
       <p>
@@ -87,7 +93,7 @@ export const CguStep = () => {
             options={[
               {
                 label:
-                  "J'atteste avoir pris connaissance des conditions générales d'utilisation",
+                  "J'atteste avoir pris connaissance des Conditions Générales d’Utilisation.",
                 nativeInputProps: {
                   ...register("isCguCheckboxChecked"),
                 },

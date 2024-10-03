@@ -92,8 +92,8 @@ export const AccountInfoStepForm = () => {
             <fieldset>
               <legend className="text-xl text-gray-900 mb-6">
                 L’administrateur du compte France VAE peut paramétrer les
-                filières, les agences et les niveaux de parcours depuis son
-                compte.
+                structures et/ou lieux d’accueil, ainsi que les domaines et
+                niveaux de certification depuis son compte.
               </legend>
               <div className="mb-6 md:mb-0 md:grid grid-cols-1 md:grid-cols-2 gap-x-8">
                 <Checkbox
