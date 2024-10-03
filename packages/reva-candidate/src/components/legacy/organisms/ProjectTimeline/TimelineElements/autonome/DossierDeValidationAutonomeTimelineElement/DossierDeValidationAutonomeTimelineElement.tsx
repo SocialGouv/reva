@@ -4,6 +4,7 @@ import {
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
 import { graphql } from "@/graphql/generated";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { useQuery } from "@tanstack/react-query";
@@ -60,6 +61,9 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
     <TimelineElement
       title="Dossier de validation"
       status={status}
+      badge={
+        status === "readonly" ? <Badge severity="success">Envoyé</Badge> : null
+      }
       data-test="dossier-de-validation-autonome-timeline-element"
       description="Ce dossier permet de justifier de vos expériences et compétences lors de votre passage devant le jury."
     >
