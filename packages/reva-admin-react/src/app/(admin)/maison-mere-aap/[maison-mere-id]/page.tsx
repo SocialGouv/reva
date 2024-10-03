@@ -65,7 +65,7 @@ const MaisonMereAapPage = () => {
         </div>
       </div>
       <div className="flex items-center justify-between flex-col w-full  py-2 my-4">
-        <div className="flex items-center justify-between w-full border-y-[1px] border-y-neutral-200">
+        <div className="flex items-center justify-between w-full flex-wrap pb-4 border-b-[1px] border-y-neutral-200">
           <span>Statut de la structure</span>
           <ToggleSwitch
             label=""
@@ -73,6 +73,11 @@ const MaisonMereAapPage = () => {
             inputTitle="Activer toutes les agences de la maison mère"
             onChange={(checked) => handleIsActiveChange(checked)}
           />
+          <span className="text-xs text-dsfrGray-mentionGrey">
+            Si le statut de la structure est désactivé, l'accompagnement à
+            distance et les lieux d'accueil ne seront plus affichés aux
+            candidats dans les résultats de recherche.
+          </span>
         </div>
         <div className="flex items-center justify-between w-full flex-wrap pb-4 border-b-[1px] border-y-neutral-200">
           <span>Signaler cette structure</span>
