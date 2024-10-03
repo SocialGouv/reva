@@ -39,7 +39,7 @@ export const ProjectTimeline = ({ className }: TimelineProps) => {
       gotJuryResult={!!jury?.result}
     />
   ) : (
-    <AutonomeTimeline className={className} />
+    <AutonomeTimeline className={className} gotJuryResult={!!jury?.result} />
   );
 };
 
@@ -86,7 +86,10 @@ const AccompagneTimeline = ({
   );
 };
 
-const AutonomeTimeline = ({ className }: TimelineProps) => {
+const AutonomeTimeline = ({
+  className,
+  gotJuryResult,
+}: TimelineProps & { gotJuryResult: boolean }) => {
   return (
     <Timeline className={className} data-test="autonome-project-timeline">
       <ContactTimelineElement />
@@ -94,6 +97,8 @@ const AutonomeTimeline = ({ className }: TimelineProps) => {
       <TypeAccompagnementTimelineElement />
       <SelfServiceFeasibilityFileTimelineElement />
       <DossierDeValidationAutonomeTimelineElement />
+      <JuryTimelineElement />
+      {gotJuryResult && <ProjectEndedTimelineElement />}
     </Timeline>
   );
 };

@@ -46,8 +46,14 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
 
   const activeStatuses = ["DOSSIER_FAISABILITE_RECEVABLE"];
 
+  const readOnlyStatus = ["DOSSIER_DE_VALIDATION_ENVOYE"];
+
   if (activeStatuses.includes(candidacy.status)) {
     status = "active";
+  }
+
+  if (readOnlyStatus.includes(candidacy.status)) {
+    status = "readonly";
   }
 
   return (
