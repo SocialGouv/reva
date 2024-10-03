@@ -10,6 +10,7 @@ import {
   DossierDeValidationTab,
 } from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
 import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
+import { ReadOnlyDossierDeValidationTab } from "./_components/tabs/read-only-dossier-de-validation-tab/ReadOnlyDossierDeValidationTab";
 
 export default function DossierDeValidationAutonomePag() {
   const {
@@ -75,6 +76,31 @@ export default function DossierDeValidationAutonomePag() {
                         readyForJuryEstimatedAt
                           ? new Date(readyForJuryEstimatedAt)
                           : undefined
+                      }
+                      certificationAuthorityInfo={{
+                        email: certificationAuthority?.contactEmail || "",
+                        name: certificationAuthority?.contactFullName || "",
+                      }}
+                    />
+                  ),
+                },
+                {
+                  label: "Dêpot du dossier",
+                  isDefault: false,
+                  content: (
+                    <ReadOnlyDossierDeValidationTab
+                      dossierDeValidationSentAt={
+                        dossierDeValidation.dossierDeValidationSentAt
+                          ? new Date(
+                              dossierDeValidation?.dossierDeValidationSentAt,
+                            )
+                          : undefined
+                      }
+                      dossierDeValidationFile={
+                        dossierDeValidation.dossierDeValidationFile
+                      }
+                      dossierDeValidationOtherFiles={
+                        dossierDeValidation.dossierDeValidationOtherFiles
                       }
                       certificationAuthorityInfo={{
                         email: certificationAuthority?.contactEmail || "",

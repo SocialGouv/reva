@@ -21,6 +21,15 @@ const getCandidateQuery = graphql(`
         activeDossierDeValidation {
           id
           decision
+          dossierDeValidationSentAt
+          dossierDeValidationFile {
+            name
+            previewUrl
+          }
+          dossierDeValidationOtherFiles {
+            name
+            previewUrl
+          }
         }
       }
     }
