@@ -238,6 +238,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
 
     cy.visit("/dossier-de-validation-autonome/");
     cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+    cy.get(".fr-tabs__tab").contains("Date").click();
 
     cy.get(".ready-for-jury-estimated-date-text").should(
       "contain.text",

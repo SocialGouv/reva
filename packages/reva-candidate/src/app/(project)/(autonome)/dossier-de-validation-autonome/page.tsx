@@ -73,7 +73,7 @@ export default function DossierDeValidationAutonomePag() {
               tabs={[
                 {
                   label: "Date prévisionnelle",
-                  isDefault: true,
+                  isDefault: false,
                   content: (
                     <ReadOnlyReadyForJuryEstimatedDateTab
                       readyForJuryEstimatedAt={
@@ -90,7 +90,7 @@ export default function DossierDeValidationAutonomePag() {
                 },
                 {
                   label: "Dêpot du dossier",
-                  isDefault: false,
+                  isDefault: true,
                   content: (
                     <ReadOnlyDossierDeValidationTab
                       dossierDeValidationSentAt={
@@ -120,7 +120,7 @@ export default function DossierDeValidationAutonomePag() {
               tabs={[
                 {
                   label: "Date prévisionnelle",
-                  isDefault: true,
+                  isDefault: !readyForJuryEstimatedAt,
                   content: (
                     <ReadyForJuryEstimatedDateTab
                       defaultValues={{
@@ -138,7 +138,7 @@ export default function DossierDeValidationAutonomePag() {
                 },
                 {
                   label: "Dêpot du dossier",
-                  isDefault: false,
+                  isDefault: !!readyForJuryEstimatedAt,
                   content: (
                     <DossierDeValidationTab
                       certificationAuthorityInfo={{
