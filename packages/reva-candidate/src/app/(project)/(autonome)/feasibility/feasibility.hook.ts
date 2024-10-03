@@ -15,6 +15,11 @@ const getCandidacyQuery = graphql(`
           decisionSentAt
           decisionComment
           feasibilityFileSentAt
+          decisionFile {
+            name
+            url
+            previewUrl
+          }
           certificationAuthority {
             id
             label

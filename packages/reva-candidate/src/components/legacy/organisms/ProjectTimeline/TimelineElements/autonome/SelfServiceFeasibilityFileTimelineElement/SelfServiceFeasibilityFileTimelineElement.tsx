@@ -32,7 +32,7 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
   } else if (candidacy.feasibility?.decision === "PENDING") {
     badge = <Badge severity="info">Envoyé</Badge>;
   } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
-    badge = <Badge severity="success">Validé</Badge>;
+    badge = <Badge severity="success">Recevable</Badge>;
   } else if (candidacy.feasibility?.decision === "REJECTED") {
     badge = <Badge severity="error">Non-recevable</Badge>;
   }
@@ -54,6 +54,34 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
             délais. Si votre dossier est bon, vous recevrez une réponse dans un
             délai de 2 mois. S’il est considéré comme incomplet, vous devrez le
             modifier et le renvoyer.
+          </p>
+        </div>
+      )}
+      {candidacy.feasibility?.decision === "INCOMPLETE" && (
+        <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
+          <span className="fr-icon-info-fill m-auto" />
+          <p className="text-xs mb-0">
+            Selon le certificateur, votre dossier est incomplet. Cliquez sur
+            “Compléter” pour consulter ses remarques et rajouter le ou les
+            éléments manquants avant de renvoyer votre dossier de faisabilité.
+          </p>
+        </div>
+      )}
+      {candidacy.feasibility?.decision === "REJECTED" && (
+        <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
+          <span className="fr-icon-info-fill m-auto" />
+          <p className="text-xs mb-0">
+            Votre certificateur a estimé que votre dossier n’était pas recevable
+            pour la suite de votre VAE.
+          </p>
+        </div>
+      )}
+      {candidacy.feasibility?.decision === "ADMISSIBLE" && (
+        <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
+          <span className="fr-icon-time-fill m-auto" />
+          <p className="text-xs mb-0">
+            Félicitations, votre dossier est recevable ! Vous pouvez poursuivre
+            votre parcours VAE.
           </p>
         </div>
       )}
