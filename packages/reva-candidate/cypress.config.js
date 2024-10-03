@@ -13,4 +13,9 @@ export default defineConfig({
     },
     baseUrl: "http://localhost:3004/candidat/",
   },
+  retries: {
+    // Configure retry attempts for `cypress run`
+    // Default is 0
+    runMode: 2,
+  },
 });
