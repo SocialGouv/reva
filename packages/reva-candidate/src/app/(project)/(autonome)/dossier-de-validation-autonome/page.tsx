@@ -11,6 +11,7 @@ import {
 } from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
 import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
 import { ReadOnlyDossierDeValidationTab } from "./_components/tabs/read-only-dossier-de-validation-tab/ReadOnlyDossierDeValidationTab";
+import { useRouter } from "next/navigation";
 
 export default function DossierDeValidationAutonomePag() {
   const {
@@ -21,6 +22,8 @@ export default function DossierDeValidationAutonomePag() {
     sendDossierDeValidation,
     queryStatus,
   } = useDossierDeValidationAutonomePage();
+
+  const router = useRouter();
 
   const handleReadyForJuryEstimatedDateFormSubmit = async ({
     readyForJuryEstimatedAt,
@@ -47,6 +50,7 @@ export default function DossierDeValidationAutonomePag() {
         dossierDeValidationOtherFiles,
       });
       successToast("Modifications enregistrées");
+      router.push("/");
     } catch (error) {
       graphqlErrorToast(error as GraphQLError);
     }
