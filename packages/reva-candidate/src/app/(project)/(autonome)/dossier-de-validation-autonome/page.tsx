@@ -9,11 +9,13 @@ import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
 } from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
+import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
 
 export default function DossierDeValidationAutonomePag() {
   const {
     readyForJuryEstimatedAt,
     certificationAuthority,
+    dossierDeValidation,
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
     queryStatus,
@@ -49,6 +51,9 @@ export default function DossierDeValidationAutonomePag() {
     }
   };
 
+  const readOnlyView =
+    dossierDeValidation && dossierDeValidation.decision !== "INCOMPLETE";
+
   return (
     <div className="flex flex-col">
       <h1>Dossier de validation</h1>
@@ -57,41 +62,67 @@ export default function DossierDeValidationAutonomePag() {
         déposez-le afin de la transmettre au certificateur.
       </p>
       {queryStatus === "success" && (
-        <Tabs
-          tabs={[
-            {
-              label: "Date prévisionnelle",
-              isDefault: true,
-              content: (
-                <ReadyForJuryEstimatedDateTab
-                  defaultValues={{
-                    readyForJuryEstimatedAt: readyForJuryEstimatedAt
-                      ? new Date(readyForJuryEstimatedAt)
-                      : undefined,
-                  }}
-                  certificationAuthorityInfo={{
-                    email: certificationAuthority?.contactEmail || "",
-                    name: certificationAuthority?.contactFullName || "",
-                  }}
-                  onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
-                />
-              ),
-            },
-            {
-              label: "Dêpot du dossier",
-              isDefault: false,
-              content: (
-                <DossierDeValidationTab
-                  certificationAuthorityInfo={{
-                    email: certificationAuthority?.contactEmail || "",
-                    name: certificationAuthority?.contactFullName || "",
-                  }}
-                  onSubmit={handleDossierDeValidationFormSubmit}
-                />
-              ),
-            },
-          ]}
-        />
+        <>
+          {readOnlyView ? (
+            <Tabs
+              tabs={[
+                {
+                  label: "Date prévisionnelle",
+                  isDefault: true,
+                  content: (
+                    <ReadOnlyReadyForJuryEstimatedDateTab
+                      readyForJuryEstimatedAt={
+                        readyForJuryEstimatedAt
+                          ? new Date(readyForJuryEstimatedAt)
+                          : undefined
+                      }
+                      certificationAuthorityInfo={{
+                        email: certificationAuthority?.contactEmail || "",
+                        name: certificationAuthority?.contactFullName || "",
+                      }}
+                    />
+                  ),
+                },
+              ]}
+            />
+          ) : (
+            <Tabs
+              tabs={[
+                {
+                  label: "Date prévisionnelle",
+                  isDefault: true,
+                  content: (
+                    <ReadyForJuryEstimatedDateTab
+                      defaultValues={{
+                        readyForJuryEstimatedAt: readyForJuryEstimatedAt
+                          ? new Date(readyForJuryEstimatedAt)
+                          : undefined,
+                      }}
+                      certificationAuthorityInfo={{
+                        email: certificationAuthority?.contactEmail || "",
+                        name: certificationAuthority?.contactFullName || "",
+                      }}
+                      onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
+                    />
+                  ),
+                },
+                {
+                  label: "Dêpot du dossier",
+                  isDefault: false,
+                  content: (
+                    <DossierDeValidationTab
+                      certificationAuthorityInfo={{
+                        email: certificationAuthority?.contactEmail || "",
+                        name: certificationAuthority?.contactFullName || "",
+                      }}
+                      onSubmit={handleDossierDeValidationFormSubmit}
+                    />
+                  ),
+                },
+              ]}
+            />
+          )}
+        </>
       )}
       <Button priority="tertiary" linkProps={{ href: "/" }} className="mt-12">
         Retour

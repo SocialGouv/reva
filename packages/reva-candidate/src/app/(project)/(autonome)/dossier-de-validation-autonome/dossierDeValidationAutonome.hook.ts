@@ -18,6 +18,10 @@ const getCandidateQuery = graphql(`
             contactEmail
           }
         }
+        activeDossierDeValidation {
+          id
+          decision
+        }
       }
     }
   }
@@ -66,6 +70,8 @@ export const useDossierDeValidationAutonomePage = () => {
 
   const certificationAuthority = candidacy?.feasibility?.certificationAuthority;
 
+  const dossierDeValidation = candidacy?.activeDossierDeValidation;
+
   const sendDossierDeValidation = useCallback(
     async (data: {
       dossierDeValidationFile: {
@@ -112,6 +118,7 @@ export const useDossierDeValidationAutonomePage = () => {
   return {
     readyForJuryEstimatedAt,
     certificationAuthority,
+    dossierDeValidation,
     queryStatus,
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
