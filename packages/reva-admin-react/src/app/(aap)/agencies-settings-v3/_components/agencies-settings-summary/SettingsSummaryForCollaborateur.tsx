@@ -1,10 +1,10 @@
-import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/agencySettings.hook";
+import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/settingsForCollaborateur.hook";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 
-export const AgencySettingsSummary = () => {
+export const SettingsSummaryForCollaborateur = () => {
   const { organism, account, maisonMereAAPId } = useAgencySettings();
 
   if (!account || !organism) return null;

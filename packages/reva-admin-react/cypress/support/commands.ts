@@ -52,11 +52,11 @@ function auth({ url, token }: { url: string; token: string }) {
   });
 }
 
-Cypress.Commands.add("agency", (url = "/") => {
+Cypress.Commands.add("collaborateur", (url = "/") => {
   auth({ url, token: "auth/agency-token.json" });
 });
 
-Cypress.Commands.add("headAgency", (url = "/") => {
+Cypress.Commands.add("gestionnaire", (url = "/") => {
   auth({ url, token: "auth/head-agency-token.json" });
 });
 

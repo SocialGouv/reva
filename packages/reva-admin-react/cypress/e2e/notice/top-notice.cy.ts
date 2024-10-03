@@ -46,7 +46,7 @@ context("When the funding alert feature is activated", () => {
           isCguAccepted: false,
         });
 
-        cy.headAgency("/candidacies");
+        cy.gestionnaire("/candidacies");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait("@getOrganismForAAPVisibilityCheck");
 
@@ -62,7 +62,7 @@ context("When the funding alert feature is activated", () => {
           isCguAccepted: true,
         });
 
-        cy.headAgency("/candidacies");
+        cy.gestionnaire("/candidacies");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait("@getOrganismForAAPVisibilityCheck");
 
@@ -76,7 +76,7 @@ context("When the funding alert feature is activated", () => {
           isCguAccepted: true,
         });
 
-        cy.headAgency("/candidacies");
+        cy.gestionnaire("/candidacies");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait("@getOrganismForAAPVisibilityCheck");
 
@@ -94,7 +94,7 @@ context("When the funding alert feature is activated", () => {
         isCguAccepted: false,
       });
 
-      cy.agency("/candidacies");
+      cy.collaborateur("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
@@ -109,7 +109,7 @@ context("When the funding alert feature is activated", () => {
         isCguAccepted: false,
       });
 
-      cy.agency("/candidacies");
+      cy.collaborateur("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 

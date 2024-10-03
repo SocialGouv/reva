@@ -41,7 +41,7 @@ function visitSettings({
     });
   });
 
-  cy.agency("/agencies-settings-v3/");
+  cy.collaborateur("/agencies-settings-v3/");
 }
 
 context("Agency settings page", () => {
