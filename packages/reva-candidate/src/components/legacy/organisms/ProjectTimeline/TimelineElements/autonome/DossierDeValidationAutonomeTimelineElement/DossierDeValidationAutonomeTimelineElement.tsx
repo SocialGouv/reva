@@ -63,7 +63,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       data-test="dossier-de-validation-autonome-timeline-element"
       description="Ce dossier permet de justifier de vos expériences et compétences lors de votre passage devant le jury."
     >
-      {status == "active" && !!candidacy.readyForJuryEstimatedAt && (
+      {status === "active" && !!candidacy.readyForJuryEstimatedAt && (
         <Notice
           title={
             <span className=" text-dsfrGray-500 italic font-normal">
@@ -81,6 +81,14 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
           classes={{ title: "text-dsfrGray-500" }}
         />
       )}
+      {candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE" && (
+        <Notice
+          title="Votre certificateur est en train d’étudier votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais. Si votre dossier est bon, vous recevrez prochainement une convocation pour le jury. S’il est considéré comme incomplet, vous devrez le modifier et le renvoyer. "
+          className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
+          classes={{ title: "text-dsfrGray-500 italic font-normal text-sm" }}
+        />
+      )}
+
       <Button
         data-test="dossier-de-validation-autonome-timeline-element-update-button"
         priority={status === "active" ? "primary" : "secondary"}
@@ -89,7 +97,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
           router.push("/dossier-de-validation-autonome");
         }}
       >
-        Compléter
+        {status === "readonly" ? "Consulter" : "Compléter"}
       </Button>
     </TimelineElement>
   );
