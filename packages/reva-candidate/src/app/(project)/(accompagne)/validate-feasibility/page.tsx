@@ -106,39 +106,49 @@ export default function ValidateFeasibility() {
           onSubmit();
         }}
       >
-        <div className="flex flex-row gap-6">
-          <div className="flex flex-col gap-8 min-h-[200px]">
-            <h5 className="mb-0">Validation du dossier de faisabilité</h5>
+        <div className="flex flex-col gap-3">
+          <h2 className="mb-0">Validation du dossier de faisabilité</h2>
 
-            <p className="mb-0">
-              Pour valider votre dossier, vous devez télécharger ce modèle
-              d’attestation, le compléter, le signer et le joindre.
-            </p>
+          <p className="mb-0 text-xl">
+            Pour valider votre dossier, vous devez télécharger ce modèle
+            d’attestation, le compléter, le signer et le joindre.
+          </p>
 
-            <Download
-              className="mb-0"
-              details="PDF - 1455 Ko"
-              label="Modèle d'attestation sur l'honneur"
-              linkProps={{
-                title: "Attestation_sur_l_honneur_modèle",
-                href: "/files/attestation_sur_l_honneur_modele.pdf",
-                target: "_blank",
-              }}
-            />
+          <div className="flex gap-6">
+            <div className="flex flex-col gap-8 flex-[1]">
+              <Download
+                className="mb-0"
+                details="PDF - 1455 Ko"
+                label="Modèle d'attestation sur l'honneur"
+                linkProps={{
+                  title: "Attestation_sur_l_honneur_modèle",
+                  href: "/files/attestation_sur_l_honneur_modele.pdf",
+                  target: "_blank",
+                }}
+              />
+
+              <p>
+                <b>
+                  Vous ne pouvez pas télécharger votre attestation ou ne
+                  parvenez pas à la remplir ?
+                </b>{" "}
+                Demandez à votre accompagnateur de le faire pour vous.
+              </p>
+            </div>
+
+            <CallOut
+              className="min-h-[200px] flex justify-end flex-col-reverse gap-2 flex-[1]"
+              title="Comment contacter mon accompagnateur ?"
+            >
+              <>
+                <span>{organism?.label}</span>
+                <br />
+                <span>{organism?.contactAdministrativeEmail}</span>
+                <br />
+                <span>{organism?.contactAdministrativePhone}</span>
+              </>
+            </CallOut>
           </div>
-
-          <CallOut
-            className="min-h-[200px] flex justify-end flex-col-reverse gap-2"
-            title="Besoin d’aide ? Contactez votre accompagnateur, il saura vous guider."
-          >
-            <>
-              <span>{organism?.label}</span>
-              <br />
-              <span>{organism?.contactAdministrativeEmail}</span>
-              <br />
-              <span>{organism?.contactAdministrativePhone}</span>
-            </>
-          </CallOut>
         </div>
 
         <FancyUpload
