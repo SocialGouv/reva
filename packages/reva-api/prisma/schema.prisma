@@ -49,7 +49,6 @@ model Certification {
   certificationAuthorityOnCertification             CertificationAuthorityOnCertification[]
   searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
-  certificationAuthorityTag                         String?                                             @map("certification_authority_tag") @db.VarChar(255)
   availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
   expiresAt                                         DateTime                                            @map("expires_at") @db.Timestamptz(6)
   previousVersionCertificationId                    String?                                             @unique @map("previous_version_certification_id") @db.Uuid

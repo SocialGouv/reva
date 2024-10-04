@@ -27,9 +27,11 @@ export const searchCertificationsForAdmin = async ({
         { label: { contains: searchText, mode: "insensitive" } },
         { rncpId: { contains: searchText, mode: "insensitive" } },
         {
-          certificationAuthorityTag: {
-            contains: searchText,
-            mode: "insensitive",
+          certificationAuthorityStructure: {
+            label: {
+              contains: searchText,
+              mode: "insensitive",
+            },
           },
         },
         {

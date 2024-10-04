@@ -65,7 +65,6 @@ export async function seedCertifications(prisma: PrismaClient) {
             summary,
             typeDiplome: { connect: { id: typeDiplome as string } },
             status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
-            certificationAuthorityTag: unquotedCertificationAuthorityTag,
             availableAt: new Date(),
             expiresAt: new Date(),
             certificationAuthorityStructure: {
