@@ -11,7 +11,7 @@ export const sendDFFNotificationToCandidateEmail = ({
       templateMail({
         content: `
         <p>Bonjour,</p>
-        <p>Votre accompagnateur a terminé de remplir votre dossier de faisabilité. Connectez-vous à votre espace, prenez le temps de le lire avec soin, relevez les éventuels oublis ou modifications à faire, et envoyez-lui une déclaration sur l’honneur pour valider votre dossier.</p>
+        <p>Votre accompagnateur a terminé de remplir votre dossier de faisabilité. Connectez-vous à votre espace, prenez le temps de le lire avec soin, relevez les éventuels oublis ou modifications à faire, et envoyez-lui une attestation sur l’honneur pour valider votre dossier.</p>
         <p>Pour vous aider, vous trouverez un modèle d’attestation sur l’honneur à remplir dans le résumé de votre candidature.</p>
         <p>1. Téléchargez le document ;</p>
         <p>2. Remplissez-le avec les informations appropriées ;</p>
