@@ -78,6 +78,13 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
         lastname
         email
       }
+      organisms {
+        isHeadAgency
+        accounts {
+          id
+        }
+        remoteZones
+      }
     }
   }
 `);
