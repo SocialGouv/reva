@@ -44,7 +44,7 @@ const schema = z
       } else if (isBefore(new Date(eligibilityValidUntil), new Date())) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "La date de fin de validité doit être dans le futur",
+          message: "Merci d'indiquer une date postérieure à la date du jour",
           path: ["eligibilityValidUntil"],
         });
       }
