@@ -147,7 +147,7 @@ const AapFeasibilityPage = () => {
           />
           <hr />
 
-          <h2>Récapitulatif et envoi du dossier au candidat</h2>
+          <h2>Vérifier et envoyer le dossier au candidat</h2>
 
           <SendFileCandidateSection
             sentToCandidateAt={
