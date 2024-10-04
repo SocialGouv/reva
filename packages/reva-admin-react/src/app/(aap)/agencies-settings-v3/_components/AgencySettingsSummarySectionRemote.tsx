@@ -35,7 +35,7 @@ export const AgencySettingsSummarySectionRemote = ({
           </Badge>
         )}
         <ul className="list-none pl-0 flex flex-col gap-2">
-          {organism.remoteZones.map((r) => (
+          {organism.remoteZones?.map((r) => (
             <li key={r}>{getRemoteZoneLabel(r)}</li>
           ))}
         </ul>
