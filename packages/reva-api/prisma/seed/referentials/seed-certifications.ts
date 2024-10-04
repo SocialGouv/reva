@@ -23,6 +23,7 @@ export async function seedCertifications(prisma: PrismaClient) {
       Prisma.CertificationCreateInput & {
         level: string;
         isActive?: string;
+        certificationAuthorityTag: string;
       },
       Prisma.CertificationCreateArgs
     >({
