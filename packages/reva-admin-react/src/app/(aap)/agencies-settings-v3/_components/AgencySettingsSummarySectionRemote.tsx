@@ -22,18 +22,20 @@ export const AgencySettingsSummarySectionRemote = ({
       title="Accompagnement à distance"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/remote`}
       isEditable={true}
-      titleIconClass="fr-icon-headphone-fill"
-    >
-      <div className="pl-10 flex flex-col gap-4">
-        {organism.isVisibleInCandidateSearchResults ? (
-          <Badge data-test="visible-badge" small severity="success">
+      CustomBadge={
+        organism.isVisibleInCandidateSearchResults ? (
+          <Badge data-test="visible-badge" severity="success">
             Visible
           </Badge>
         ) : (
-          <Badge data-test="invisible-badge" small severity="error">
+          <Badge data-test="invisible-badge" severity="error">
             Invisible
           </Badge>
-        )}
+        )
+      }
+      titleIconClass="fr-icon-headphone-fill"
+    >
+      <div className="pl-10 flex flex-col gap-4">
         <ul className="list-none pl-0 flex flex-col gap-2">
           {organism.remoteZones?.map((r) => (
             <li key={r}>{getRemoteZoneLabel(r)}</li>
