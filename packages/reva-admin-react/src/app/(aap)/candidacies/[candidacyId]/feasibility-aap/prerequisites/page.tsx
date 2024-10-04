@@ -118,10 +118,12 @@ export default function PrerequisitesPage() {
 
   return (
     <div className="flex flex-col">
-      <h1>Prérequis</h1>
+      <h1>Prérequis obligatoires</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Renseignez les prérequis liés à l'entrée en VAE et à la certification.
+        Un prérequis obligatoire est une condition exigée par le certificateur
+        afin que le candidat puisse passer devant le jury VAE ou recevoir le
+        parchemin lié à la certification.
       </p>
       <p className="text-xl font-bold text-neutral-900 mb-2">
         Retrouvez plus d’informations sur le fonctionnement des certifications
