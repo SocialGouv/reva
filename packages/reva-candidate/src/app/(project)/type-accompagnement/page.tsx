@@ -31,7 +31,7 @@ export default function ChooseTypeAccompagnementPage() {
     }
   };
   return (
-    <PageLayout title="Choix accompagnement" displayBackToHome>
+    <PageLayout title="Choix accompagnement">
       <h1 className="mt-8">Choix accompagnement</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
@@ -98,6 +98,9 @@ const Form = ({
         </CallOut>
       </div>
       <div className="mt-8 flex flex-col md:flex-row gap-4">
+        <Button priority="tertiary" linkProps={{ href: "/" }}>
+          Retour
+        </Button>
         <Button
           type="reset"
           priority="tertiary no outline"
