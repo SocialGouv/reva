@@ -57,13 +57,21 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
     status = "readonly";
   }
 
+  let badge = undefined;
+  switch (status) {
+    case "readonly":
+      badge = <Badge severity="success">Envoyé</Badge>;
+      break;
+    case "active":
+      badge = <Badge severity="warning">À Compléter</Badge>;
+      break;
+  }
+
   return (
     <TimelineElement
       title="Dossier de validation"
       status={status}
-      badge={
-        status === "readonly" ? <Badge severity="success">Envoyé</Badge> : null
-      }
+      badge={badge}
       data-test="dossier-de-validation-autonome-timeline-element"
       description="Ce dossier permet de justifier de vos expériences et compétences lors de votre passage devant le jury."
     >
