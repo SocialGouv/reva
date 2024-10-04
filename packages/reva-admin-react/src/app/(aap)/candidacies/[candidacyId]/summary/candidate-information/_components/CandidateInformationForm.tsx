@@ -108,10 +108,9 @@ const CandidateInformationForm = ({
         firstname2: candidate.firstname2 ?? "",
         firstname3: candidate.firstname3 ?? "",
         birthCity: candidate.birthCity ?? "",
-        birthdate: format(
-          candidate.birthdate ? new Date(candidate?.birthdate) : new Date(),
-          "yyyy-MM-dd",
-        ),
+        birthdate: candidate.birthdate
+          ? format(new Date(candidate?.birthdate), "yyyy-MM-dd")
+          : undefined,
         birthDepartment: candidate.birthDepartment?.id ?? "",
         country: candidate.country?.id ?? franceId,
         countryIsFrance: candidate.country?.id === franceId,
@@ -160,7 +159,9 @@ const CandidateInformationForm = ({
       nationality: data.nationality,
       gender: data.gender as GenderEnum,
       countryId: data.country,
-      birthdate: new Date(data.birthdate).getTime(),
+      birthdate: data.birthdate
+        ? new Date(data.birthdate).getTime()
+        : new Date().getTime(),
       birthDepartmentId: data.birthDepartment,
       street: data.street,
       zip: data.zip,
