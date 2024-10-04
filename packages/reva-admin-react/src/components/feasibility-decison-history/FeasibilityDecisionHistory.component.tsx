@@ -9,13 +9,13 @@ interface Props {
 export const FeasibilityDecisionHistory = (props: Props) => {
   const { history } = props;
 
-  if (!history?.length) return null;
+  const canDisplayHistory = history?.length && history.length > 1;
+
+  if (!canDisplayHistory) return null;
 
   return (
     <div>
-      <h4>
-        {history.length === 1 ? "Décision précédente" : "Décisions précédentes"}
-      </h4>
+      <h4>Décisions précédentes</h4>
 
       <div className="gap-8">
         {history.map((previousFeasibility) => (
