@@ -15,6 +15,9 @@ const AgencySettingsInfoQuery = graphql(`
         isHeadAgency
         isVisibleInCandidateSearchResults
         remoteZones
+        informationsCommerciales {
+          nom
+        }
       }
       id
       firstname

@@ -13,6 +13,9 @@ const HeadAgencySettingsInfoQuery = graphql(`
         isRemote
         isVisibleInCandidateSearchResults
         remoteZones
+        informationsCommerciales {
+          nom
+        }
         maisonMereAAP {
           id
           statutValidationInformationsJuridiquesMaisonMereAAP

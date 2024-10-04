@@ -11,6 +11,7 @@ export const AgencySettingsSummarySectionRemote = ({
     id: string;
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
+    informationsCommerciales?: { nom?: string | null } | null;
   };
   maisonMereAAPId: string;
 }) => {
@@ -37,7 +38,10 @@ export const AgencySettingsSummarySectionRemote = ({
     >
       <div className="pl-10 flex flex-col gap-4">
         <ul className="list-none pl-0 flex flex-col gap-2">
-          {organism.remoteZones?.map((r) => (
+          <div className="font-bold mb-2">
+            {organism?.informationsCommerciales?.nom}
+          </div>
+          {organism.remoteZones.map((r) => (
             <li key={r}>{getRemoteZoneLabel(r)}</li>
           ))}
         </ul>
