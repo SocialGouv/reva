@@ -42,7 +42,7 @@ export const FeasibilityDematTimelineElement = () => {
         <span>1. vous recevrez un e-mail</span>
         <br />
         <span>
-          2. puis vous aurez à valider ce parcours dans votre espace candidat.
+          2. puis vous aurez à valider ce dossier dans votre espace candidat.
         </span>
       </>
     );
