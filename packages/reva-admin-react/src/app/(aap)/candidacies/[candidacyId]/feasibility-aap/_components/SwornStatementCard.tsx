@@ -15,7 +15,7 @@ export const SwornStatementCard = ({
 
   return (
     <EnhancedSectionCard
-      title="Validation du candidat"
+      title="Attestation sur l'honneur"
       titleIconClass="fr-icon-success-fill"
       status={swornStatementFileId ? "COMPLETED" : "TO_COMPLETE"}
       isEditable={isEditable}
@@ -24,8 +24,8 @@ export const SwornStatementCard = ({
     >
       {!sentToCandidateAt && (
         <SmallNotice>
-          Vous devez remplir tous les éléments du dossier de faisabilité avant
-          de l'envoyer au candidat pour validation.
+          Ce document est obligatoire pour considérer le dossier de faisabilité
+          comme validé par le candidat.
         </SmallNotice>
       )}
     </EnhancedSectionCard>
