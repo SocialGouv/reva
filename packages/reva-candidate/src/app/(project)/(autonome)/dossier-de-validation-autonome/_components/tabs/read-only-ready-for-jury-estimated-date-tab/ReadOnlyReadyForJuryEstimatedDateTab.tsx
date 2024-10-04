@@ -1,7 +1,7 @@
 "use client";
 
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { format } from "date-fns";
+import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
 
 export const ReadOnlyReadyForJuryEstimatedDateTab = ({
   readyForJuryEstimatedAt,
@@ -26,9 +26,6 @@ export const ReadOnlyReadyForJuryEstimatedDateTab = ({
       </dd>
     </dl>
 
-    <CallOut title="Comment contacter mon certificateur ?" className="mt-8">
-      <div className="mt-2">{certificationAuthorityInfo.name}</div>
-      <div>{certificationAuthorityInfo.email}</div>
-    </CallOut>
+    <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
   </div>
 );

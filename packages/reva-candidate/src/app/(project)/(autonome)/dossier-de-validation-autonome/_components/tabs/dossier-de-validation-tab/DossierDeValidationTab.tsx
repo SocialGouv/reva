@@ -1,11 +1,11 @@
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
 
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
@@ -73,10 +73,7 @@ export const DossierDeValidationTab = ({
       transmettre à votre certificateur depuis cette page.Si des pièces
       supplémentaires sont requises (ex : attestation de premiers secours),
       elles seront également à envoyer ici.
-      <CallOut title="Comment contacter mon certificateur ?" className="mt-8">
-        <div className="mt-2">{certificationAuthorityInfo.name}</div>
-        <div>{certificationAuthorityInfo.email}</div>
-      </CallOut>
+      <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
       <form
         className="flex flex-col flex-1 mb-2 overflow-auto"
         onSubmit={handleFormSubmit}
