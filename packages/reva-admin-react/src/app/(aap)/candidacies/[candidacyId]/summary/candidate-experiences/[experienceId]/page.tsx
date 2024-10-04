@@ -9,7 +9,7 @@ import { graphql } from "@/graphql/generated";
 import { ExperienceInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const getCandidadateExperiencesQuery = graphql(`
   query getCandidadateExperiencesQuery($candidacyId: ID!) {
@@ -47,6 +47,7 @@ const EditCandidateExperiencePage = () => {
     experienceId: string;
   }>();
   const { graphqlClient } = useGraphQlClient();
+  const router = useRouter();
 
   const { data: getCandidadateExperiencesResponse } = useQuery({
     queryKey: [candidacyId, getCandidadateExperiencesQuery],
@@ -81,6 +82,7 @@ const EditCandidateExperiencePage = () => {
         ).getTime(),
       });
       successToast("Expérience modifiée");
+      router.push(`/candidacies/${candidacyId}/summary`);
     } catch (e) {
       graphqlErrorToast(e);
     }
