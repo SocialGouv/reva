@@ -78,6 +78,14 @@ const unsafeResolvers = {
       getCertificationAuthoritiesByCertificationId({
         certificationId,
       }),
+    certificationAuthorityStructure: ({
+      certificationAuthorityStructureId,
+    }: {
+      certificationAuthorityStructureId: string;
+    }) =>
+      getCertificationAuthorityStructureById({
+        certificationAuthorityStructureId: certificationAuthorityStructureId,
+      }),
   },
   CertificationAuthorityStructure: {
     certifications: ({ id: certificationStructureId }: { id: string }) =>
