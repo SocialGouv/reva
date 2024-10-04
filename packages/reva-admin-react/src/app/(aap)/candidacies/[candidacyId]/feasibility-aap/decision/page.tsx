@@ -83,8 +83,8 @@ export default function DecisionPage() {
       <h1>Avis sur la faisabilité</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Renseignez votre avis quant à la faisabilité de ce projet de VAE.
-        Précisez ensuite les raisons de cet avis.
+        Donnez votre avis sur la faisabilité de la candidature et ajoutez des
+        commentaires utiles à la réalisation du parcours VAE.
       </p>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
@@ -94,7 +94,7 @@ export default function DecisionPage() {
         }}
       >
         <div>
-          <h6>Avis sur ce dossier</h6>
+          <h6>Quel est votre avis sur la faisabilité de cette candidature ?</h6>
           <RadioButtons
             className="mb-6"
             name="decision"
