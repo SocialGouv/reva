@@ -16,7 +16,6 @@ export const informationRemoteFormSchema = z
       ])
       .optional()
       .default(""),
-    isNotRemote: z.boolean(),
     isRemoteFranceMetropolitaine: z.boolean(),
     isRemoteGuadeloupe: z.boolean(),
     isRemoteGuyane: z.boolean(),
@@ -29,7 +28,6 @@ export const informationRemoteFormSchema = z
   .superRefine(
     (
       {
-        isNotRemote,
         isRemoteFranceMetropolitaine,
         isRemoteGuadeloupe,
         isRemoteGuyane,
@@ -50,7 +48,6 @@ export const informationRemoteFormSchema = z
         fieldValue: unknown;
       }) => {
         if (!fieldValue) {
-          console.log({ fieldValue });
           addIssue({
             path: [fieldName],
             message: "Merci de remplir ce champ",
@@ -58,37 +55,35 @@ export const informationRemoteFormSchema = z
           });
         }
       };
-      if (!isNotRemote) {
-        [
-          {
-            fieldName: "nom",
-            fieldValue: nom,
-          },
-          {
-            fieldName: "emailContact",
-            fieldValue: emailContact,
-          },
-          {
-            fieldName: "telephone",
-            fieldValue: telephone,
-          },
-        ].forEach(assertRequiredField);
-        if (
-          ![
-            isRemoteFranceMetropolitaine,
-            isRemoteGuadeloupe,
-            isRemoteGuyane,
-            isRemoteLaReunion,
-            isRemoteMartinique,
-            isRemoteMayotte,
-          ].some((r) => !!r)
-        ) {
-          addIssue({
-            path: ["isRemoteFranceMetropolitaine"],
-            message: "Au moins une case doit être cochée",
-            code: z.ZodIssueCode.custom,
-          });
-        }
+      [
+        {
+          fieldName: "nom",
+          fieldValue: nom,
+        },
+        {
+          fieldName: "emailContact",
+          fieldValue: emailContact,
+        },
+        {
+          fieldName: "telephone",
+          fieldValue: telephone,
+        },
+      ].forEach(assertRequiredField);
+      if (
+        ![
+          isRemoteFranceMetropolitaine,
+          isRemoteGuadeloupe,
+          isRemoteGuyane,
+          isRemoteLaReunion,
+          isRemoteMartinique,
+          isRemoteMayotte,
+        ].some((r) => !!r)
+      ) {
+        addIssue({
+          path: ["isRemoteFranceMetropolitaine"],
+          message: "Au moins une case doit être cochée",
+          code: z.ZodIssueCode.custom,
+        });
       }
     },
   );

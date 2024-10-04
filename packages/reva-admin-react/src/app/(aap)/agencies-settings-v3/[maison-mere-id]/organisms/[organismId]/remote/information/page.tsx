@@ -4,13 +4,13 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { RemoteZone } from "@/graphql/generated/graphql";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useInformationRemotePage } from "./informationRemote.hook";
 import {
   InformationRemoteFormData,
@@ -66,7 +66,6 @@ const InformationsRemotePage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
       const {
-        isNotRemote,
         isRemoteFranceMetropolitaine,
         isRemoteGuadeloupe,
         isRemoteGuyane,
@@ -80,36 +79,34 @@ const InformationsRemotePage = () => {
 
       const remoteZones: RemoteZone[] = [];
 
-      if (!isNotRemote) {
-        if (isRemoteFranceMetropolitaine) {
-          remoteZones.push("FRANCE_METROPOLITAINE");
-        }
-        if (isRemoteGuadeloupe) {
-          remoteZones.push("GUADELOUPE");
-        }
-        if (isRemoteGuyane) {
-          remoteZones.push("GUYANE");
-        }
-        if (isRemoteLaReunion) {
-          remoteZones.push("LA_REUNION");
-        }
-        if (isRemoteMartinique) {
-          remoteZones.push("MARTINIQUE");
-        }
-        if (isRemoteMayotte) {
-          remoteZones.push("MAYOTTE");
-        }
-        if (isRemoteSaintPierreEtMiquelon) {
-          remoteZones.push("SAINT_PIERRE_ET_MIQUELON");
-        }
-        if (isRemoteSainteLucieSaintMartin) {
-          remoteZones.push("SAINTE_LUCIE_SAINT_MARTIN");
-        }
+      if (isRemoteFranceMetropolitaine) {
+        remoteZones.push("FRANCE_METROPOLITAINE");
+      }
+      if (isRemoteGuadeloupe) {
+        remoteZones.push("GUADELOUPE");
+      }
+      if (isRemoteGuyane) {
+        remoteZones.push("GUYANE");
+      }
+      if (isRemoteLaReunion) {
+        remoteZones.push("LA_REUNION");
+      }
+      if (isRemoteMartinique) {
+        remoteZones.push("MARTINIQUE");
+      }
+      if (isRemoteMayotte) {
+        remoteZones.push("MAYOTTE");
+      }
+      if (isRemoteSaintPierreEtMiquelon) {
+        remoteZones.push("SAINT_PIERRE_ET_MIQUELON");
+      }
+      if (isRemoteSainteLucieSaintMartin) {
+        remoteZones.push("SAINTE_LUCIE_SAINT_MARTIN");
       }
 
       await createOrUpdateInformationsCommercialesAndRemoteStatus.mutateAsync({
         organismId: organism?.id,
-        isRemote: !isNotRemote,
+        isRemote: true,
         remoteZones,
         informationsCommerciales,
       });
@@ -121,8 +118,6 @@ const InformationsRemotePage = () => {
       graphqlErrorToast(e);
     }
   });
-
-  const { isNotRemote } = useWatch({ control });
 
   return (
     <div className="flex flex-col">
@@ -169,21 +164,8 @@ const InformationsRemotePage = () => {
               handleReset();
             }}
           >
-            <Checkbox
-              className="col-span-2 mb-4"
-              options={[
-                {
-                  label:
-                    "Je ne souhaite pas faire d’accompagnement à distance.",
-                  nativeInputProps: { ...register("isNotRemote") },
-                },
-              ]}
-              state={errors.isNotRemote ? "error" : "default"}
-              stateRelatedMessage={errors.isNotRemote?.message}
-            />
             <fieldset className="grid grid-cols-1 md:grid-cols-3 gap-x-6">
               <Input
-                disabled={isNotRemote}
                 className="col-span-3"
                 label="Nom de la structure (affiché aux candidats)"
                 state={errors.nom ? "error" : "default"}
@@ -191,7 +173,6 @@ const InformationsRemotePage = () => {
                 nativeInputProps={{ ...register("nom") }}
               />
               <Input
-                disabled={isNotRemote}
                 label="Téléphone"
                 nativeInputProps={{
                   ...register("telephone"),
@@ -200,7 +181,6 @@ const InformationsRemotePage = () => {
                 stateRelatedMessage={errors.telephone?.message}
               />
               <Input
-                disabled={isNotRemote}
                 label="E-mail de contact"
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message}
@@ -209,7 +189,6 @@ const InformationsRemotePage = () => {
                 }}
               />
               <Input
-                disabled={isNotRemote}
                 label="Site internet (optionnel)"
                 nativeInputProps={{
                   ...register("siteInternet"),
@@ -218,7 +197,6 @@ const InformationsRemotePage = () => {
             </fieldset>
             <fieldset className="flex flex-col mt-6">
               <Checkbox
-                disabled={isNotRemote}
                 legend="Quelles zones seront couvertes en distanciel ?"
                 hintText="Vous pouvez sélectionnez une ou plusieurs zones."
                 options={[
