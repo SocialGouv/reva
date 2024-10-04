@@ -191,7 +191,7 @@ export default function AttachmentsPage() {
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
         Ajoutez toutes les pièces jointes nécessaires à la validation du dossier
-        de recevabilité. Si nécessaire, vous pouvez revenir sur cet espace pour
+        de faisabilité. Si nécessaire, vous pouvez revenir sur cet espace pour
         les ajouter au fur et à mesure.
       </p>
       <form
@@ -205,7 +205,7 @@ export default function AttachmentsPage() {
           <FancyUpload
             className="col-span-2"
             title="Pièce d'identité"
-            description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
+            description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant le jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             defaultFile={idCardDefaultFile}
             nativeInputProps={{
