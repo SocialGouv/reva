@@ -2,8 +2,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 
-const getMaisonMereAAPRasionSocialeAdminQuery = graphql(`
-  query getMaisonMereAAPRasionSocialeAdminQuery($maisonMereAAPId: ID!) {
+const getMaisonMereAAPRaisonSocialeAdminQuery = graphql(`
+  query getMaisonMereAAPRaisonSocialeAdminQuery($maisonMereAAPId: ID!) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
       raisonSociale
@@ -19,9 +19,9 @@ export const useMaisonMereAAP = ({
   const { graphqlClient } = useGraphQlClient();
 
   const { data: maisonMereAAPData } = useQuery({
-    queryKey: [maisonMereAAPId, "maisonMereAAP"],
+    queryKey: [maisonMereAAPId, "maisonMereAAP", "CandidaciesPage"],
     queryFn: () =>
-      graphqlClient.request(getMaisonMereAAPRasionSocialeAdminQuery, {
+      graphqlClient.request(getMaisonMereAAPRaisonSocialeAdminQuery, {
         maisonMereAAPId,
       }),
   });

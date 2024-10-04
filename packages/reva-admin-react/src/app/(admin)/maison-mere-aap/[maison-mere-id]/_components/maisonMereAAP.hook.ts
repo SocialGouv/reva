@@ -58,7 +58,7 @@ export const useMaisonMereAAP = (id: string) => {
   const queryClient = useQueryClient();
   const { data: maisonMereAAPResponse, status: maisonMereAAPStatus } = useQuery(
     {
-      queryKey: [id, "maisonMereAAP"],
+      queryKey: [id, "maisonMereAAP", "MaisonMereAapPage"],
       queryFn: () =>
         graphqlClient.request(MaisonMereAAPQuery, { maisonMereAAPId: id }),
       enabled: !!id,

@@ -124,15 +124,16 @@ export const useGeneralInformationPage = () => {
     data: generalInformationsResponse,
     status: generalInformationsStatus,
   } = useQuery({
-    queryKey: [maisonMereAAPId, "maisonMereAAPGeneralInformation"],
+    queryKey: [maisonMereAAPId, "maisonMereAAP", "GeneralInformationPage"],
     queryFn: () => graphqlClient.request(generalInformationQueries),
+    enabled: !isAdmin,
   });
 
   const {
     data: maisonMereAAPGeneralInformationResponse,
     status: maisonMereAAPGeneralInformationStatus,
   } = useQuery({
-    queryKey: [maisonMereAAPId, "maisonMereAAP"],
+    queryKey: [maisonMereAAPId, "maisonMereAAP", "GeneralInformationPage"],
     queryFn: () =>
       graphqlClient.request(getMaisonMereAAPGeneralInformationAdminQuery, {
         maisonMereAAPId,

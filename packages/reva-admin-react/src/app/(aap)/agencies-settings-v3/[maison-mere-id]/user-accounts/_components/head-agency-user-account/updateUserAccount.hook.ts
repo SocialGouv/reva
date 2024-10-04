@@ -92,7 +92,7 @@ export const useUpdateUserAccountPage = ({
 
   const { data: maisonMereAAPAdmin, status: maisonMereAAPAdminStatus } =
     useQuery({
-      queryKey: [maisonMereAAPId, "maisonMereAAP"],
+      queryKey: [maisonMereAAPId, "maisonMereAAP", "UpdateUserAccountPage"],
       queryFn: () =>
         graphqlClient.request(getMaisonMereAAPUpdateUserAccountPageAdminQuery, {
           maisonMereAAPId,
