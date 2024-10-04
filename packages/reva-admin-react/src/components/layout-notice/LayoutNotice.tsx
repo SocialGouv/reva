@@ -37,7 +37,10 @@ export const LayoutNotice = () => {
     !maisonMereCgu?.isLatestVersion;
 
   const canSeeAAPNotVisibleInSearchResultNotice =
-    authenticated && isOrganism && !isVisibleInSearchResults;
+    authenticated &&
+    !isGestionnaireMaisonMereAAP &&
+    isOrganism &&
+    !isVisibleInSearchResults;
 
   const canSeeNoticeAlertFundingLimit =
     isFeaturNoticeAlertFundingLimitActive && isOrganism;
