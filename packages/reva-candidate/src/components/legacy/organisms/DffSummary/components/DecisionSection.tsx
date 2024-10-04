@@ -38,7 +38,7 @@ export default function DecisionSection({
     <div>
       <div className="flex">
         <span className="fr-icon-thumb-up-fill fr-icon--lg mr-2" />
-        <h2 className="mb-0">Avis de faisabilité</h2>
+        <h2 className="mb-0">L&apos;avis de mon accompagnateur </h2>
       </div>
       <div className="my-4">
         <DecisionBadge />
