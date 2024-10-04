@@ -20,6 +20,7 @@ const getOrganismQuery = graphql(`
         raisonSociale
       }
       id
+      isRemote
       informationsCommerciales {
         id
         nom
@@ -109,6 +110,7 @@ export default function RemotePage() {
           title="Informations affichées aux candidats"
           titleIconClass="fr-icon-information-fill"
           isEditable
+          status={organism?.isRemote ? "COMPLETED" : "TO_COMPLETE"}
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/information`}
         >
           <div className="flex flex-col gap-2">
