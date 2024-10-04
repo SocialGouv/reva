@@ -36,12 +36,14 @@ export const UserAccountForm = ({
   remoteAgency,
   onSiteAgencies,
   emailFieldDisabled,
+  backUrl,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
   onSiteAgencies: { id: string; label: string }[];
   defaultValues?: UserAccountFormData;
   emailFieldDisabled?: boolean;
+  backUrl: string;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
@@ -191,7 +193,7 @@ export const UserAccountForm = ({
             )}
           </Select>
         </fieldset>
-        <FormButtons formState={formState} backUrl={"/agencies-settings-v3"} />
+        <FormButtons formState={formState} backUrl={backUrl} />
       </form>
     </>
   );

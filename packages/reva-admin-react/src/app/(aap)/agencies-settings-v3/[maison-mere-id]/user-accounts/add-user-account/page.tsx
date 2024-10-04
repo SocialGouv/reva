@@ -1,18 +1,26 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useRouter } from "next/navigation";
 import {
   UserAccountForm,
   UserAccountFormData,
 } from "../_components/head-agency-user-account/UserAccountForm";
 import { useAddUserAccountPage } from "./addUserAccount.hook";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useRouter } from "next/navigation";
 
 const AddUserAccountPage = () => {
-  const { headAgency, nonHeadAgencies, createUserAccount } =
-    useAddUserAccountPage();
+  const {
+    headAgency,
+    nonHeadAgencies,
+    createUserAccount,
+    isAdmin,
+    maisonMereAAPId,
+  } = useAddUserAccountPage();
   const router = useRouter();
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAPId}`
+    : `/agencies-settings-v3`;
 
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
@@ -22,8 +30,8 @@ const AddUserAccountPage = () => {
         accountLastname: data.lastname,
         organismId: data.organismId,
       });
-      successToast("Modification enregistrées");
-      router.push("/agencies-settings-v3");
+      successToast("Compte créé");
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -45,6 +53,7 @@ const AddUserAccountPage = () => {
           id: a.id,
           label: a.informationsCommerciales?.nom || a.label,
         }))}
+        backUrl={backUrl}
       />
     </div>
   );
