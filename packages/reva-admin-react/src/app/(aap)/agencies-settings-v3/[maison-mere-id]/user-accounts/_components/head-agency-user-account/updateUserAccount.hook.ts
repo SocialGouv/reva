@@ -1,7 +1,9 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { UpdateOrganimsAccountAndOrganismInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 const getAgenciesInfoQuery = graphql(`
   query getAgenciesInfoForUpdateUserAccountPage {
@@ -31,6 +33,32 @@ const getAgenciesInfoQuery = graphql(`
   }
 `);
 
+const getMaisonMereAAPUpdateUserAccountPageAdminQuery = graphql(`
+  query getMaisonMereAAPUpdateUserAccountPageAdmin($maisonMereAAPId: ID!) {
+    organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
+      id
+      organisms {
+        id
+        isHeadAgency
+        label
+        informationsCommerciales {
+          nom
+        }
+        accounts {
+          id
+          firstname
+          lastname
+          email
+          organism {
+            id
+            isHeadAgency
+          }
+        }
+      }
+    }
+  }
+`);
+
 const updateUserAccountMutation = graphql(`
   mutation updateUserAccountForUpdateUserAccountPage(
     $maisonMereAAPId: ID!
@@ -52,11 +80,25 @@ export const useUpdateUserAccountPage = ({
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
+  const { isAdmin } = useAuth();
+
+  const { "maison-mere-id": maisonMereAAPId }: { "maison-mere-id": string } =
+    useParams();
 
   const { data: agenciesInfo, status: agenciesInfoStatus } = useQuery({
     queryKey: ["organisms", "updateUserAccount"],
     queryFn: () => graphqlClient.request(getAgenciesInfoQuery),
   });
+
+  const { data: maisonMereAAPAdmin, status: maisonMereAAPAdminStatus } =
+    useQuery({
+      queryKey: [maisonMereAAPId, "maisonMereAAP"],
+      queryFn: () =>
+        graphqlClient.request(getMaisonMereAAPUpdateUserAccountPageAdminQuery, {
+          maisonMereAAPId,
+        }),
+      enabled: isAdmin,
+    });
 
   const updateUserAccount = useMutation({
     mutationFn: (data: UpdateOrganimsAccountAndOrganismInput) =>
@@ -66,12 +108,22 @@ export const useUpdateUserAccountPage = ({
         data,
       }),
     mutationKey: ["organisms", "agencies-settings-add-user-account-page"],
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["organisms"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["organisms"] });
+      queryClient.invalidateQueries({ queryKey: [maisonMereAAPId] });
+    },
   });
 
-  const agencies =
-    agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP
-      ?.organisms || [];
+  let maisonMereAAP =
+    agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP;
+  if (isAdmin) {
+    maisonMereAAP = maisonMereAAPAdmin?.organism_getMaisonMereAAPById;
+  } else {
+    maisonMereAAP =
+      agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP;
+  }
+
+  const agencies = maisonMereAAP?.organisms || [];
 
   const headAgency = agencies.find((a) => a.isHeadAgency);
   const nonHeadAgencies = agencies.filter((a) => !a.isHeadAgency);
@@ -80,11 +132,16 @@ export const useUpdateUserAccountPage = ({
     .flatMap((a) => a.accounts)
     .find((a) => a.id === userAccountId);
 
+  const agenciesInfoIsSuccess =
+    agenciesInfoStatus === "success" || maisonMereAAPAdminStatus === "success";
+
   return {
     headAgency,
     nonHeadAgencies,
     userAccount,
-    agenciesInfoStatus,
+    agenciesInfoIsSuccess,
     updateUserAccount,
+    isAdmin,
+    maisonMereAAPId,
   };
 };

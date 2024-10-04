@@ -1,11 +1,11 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
 import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useMemo } from "react";
 
 const HeadAgencyUserAccount = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();
@@ -14,9 +14,15 @@ const HeadAgencyUserAccount = () => {
     userAccount,
     headAgency,
     nonHeadAgencies,
-    agenciesInfoStatus,
+    agenciesInfoIsSuccess,
     updateUserAccount,
+    isAdmin,
+    maisonMereAAPId,
   } = useUpdateUserAccountPage({ userAccountId });
+
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAPId}`
+    : `/agencies-settings-v3`;
 
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
@@ -53,7 +59,7 @@ const HeadAgencyUserAccount = () => {
     ],
   );
 
-  if (agenciesInfoStatus !== "success") {
+  if (!agenciesInfoIsSuccess) {
     return null;
   }
 
@@ -78,6 +84,7 @@ const HeadAgencyUserAccount = () => {
           id: a.id,
           label: a.informationsCommerciales?.nom || a.label,
         }))}
+        backUrl={backUrl}
       />
     </div>
   );
