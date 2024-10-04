@@ -27,7 +27,9 @@ const getCertificationsQuery = graphql(`
         label
         codeRncp
         status
-        certificationAuthorityTag
+        certificationAuthorityStructure {
+          label
+        }
         expiresAt
       }
       info {
@@ -84,7 +86,7 @@ const CertificationListPage = () => {
               <WhiteCard key={c.id} className="gap-2">
                 <span className="text-gray-500 text-sm">{c.codeRncp}</span>
                 <span className="text-lg font-bold">{c.label}</span>
-                <span>{c.certificationAuthorityTag}</span>
+                <span>{c.certificationAuthorityStructure.label}</span>
                 <span>Expire le: {format(c.expiresAt, "dd/MM/yyyy")}</span>
                 <Tag
                   small

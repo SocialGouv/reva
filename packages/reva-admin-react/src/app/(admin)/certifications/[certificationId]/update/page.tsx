@@ -20,7 +20,6 @@ const UpdateCertificationPage = () => {
     degrees,
     domaines,
     conventionCollectives,
-    certificationAuthorityTags,
     updateCertification,
   } = useCertificationQueries({
     certificationId,
@@ -35,7 +34,6 @@ const UpdateCertificationPage = () => {
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
         typeDiplomeId: data.typeDiplomeId,
-        certificationAuthorityTag: data.certificationAuthorityTag,
         domaineIds: data.domaineId ? [data.domaineId] : [],
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
@@ -61,8 +59,7 @@ const UpdateCertificationPage = () => {
         typeDiplomes &&
         domaines &&
         conventionCollectives &&
-        degrees &&
-        certificationAuthorityTags && (
+        degrees && (
           <>
             <BackButton href={`/certifications/${certificationId}`}>
               Retour
@@ -75,7 +72,6 @@ const UpdateCertificationPage = () => {
               domaines={domaines}
               conventionCollectives={conventionCollectives}
               degrees={degrees}
-              certificationAuthorityTags={certificationAuthorityTags}
               onSubmit={handleFormSubmit}
             />
           </>

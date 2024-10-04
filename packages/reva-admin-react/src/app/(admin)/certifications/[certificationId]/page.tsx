@@ -99,7 +99,7 @@ const CertificationPage = () => {
               title="Administrateur de la certification"
               className="col-span-2"
             >
-              {certification.certificationAuthorityTag || "Inconnu"}
+              {certification.certificationAuthorityStructure.label || "Inconnu"}
             </Info>
             <Info
               title="Admins Certificateur et comptes locaux"

@@ -10,7 +10,6 @@ type Certification {
   codeRncp: String!
   status: CertificationStatus!
   typeDiplome: TypeDiplome!
-  certificationAuthorityTag: String
   degree: Degree!
   domaines: [Domaine!]!
   conventionsCollectives: [ConventionCollective!]!
@@ -260,7 +259,6 @@ type Query {
   getDomaines: [Domaine!]!
   getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
-  getCertificationAuthorityTags: [String!]!
   getFCCertification(rncp: ID!): FCCertification
   getCountries: [Country!]!
   getEtablissement(siret: ID!): EtablissementDiffusible
@@ -277,7 +275,6 @@ input UpdateCertificationInput {
   level: Int!
   codeRncp: String!
   typeDiplomeId: String!
-  certificationAuthorityTag: String!
   domaineIds: [String!]!
   conventionCollectiveIds: [String!]!
   availableAt: Timestamp!

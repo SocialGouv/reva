@@ -1,7 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { prismaClient } from "../../prisma/client";
-import { getCertificationAuthorityTags } from "./features/getCertificationAuthorityTags";
 import { getCertificationById } from "./features/getCertificationById";
 import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
 import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
@@ -114,7 +113,6 @@ const unsafeReferentialResolvers = {
     getConventionCollectives: () =>
       prismaClient.conventionCollective.findMany(),
     getTypeDiplomes,
-    getCertificationAuthorityTags,
     getFCCertification: (_: unknown, { rncp }: { rncp: string }) =>
       RNCPReferential.getInstance().findOneByRncp(rncp),
     getCountries: () => prismaClient.country.findMany(),

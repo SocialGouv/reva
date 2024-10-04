@@ -29,8 +29,6 @@ export const replaceCertification = async ({
       label: replaceCertificationInput.label,
       rncpId: replaceCertificationInput.codeRncp,
       level: replaceCertificationInput.level,
-      certificationAuthorityTag:
-        replaceCertificationInput.certificationAuthorityTag,
       availableAt: replaceCertificationInput.availableAt,
       expiresAt: replaceCertificationInput.expiresAt,
       status: certificationAvailableNow ? "AVAILABLE" : "INACTIVE",

@@ -17,7 +17,6 @@ const schema = z.object({
   degreeLevel: z.number(),
   conventionCollectiveId: z.string(),
   domaineId: z.string(),
-  certificationAuthorityTag: z.string(),
 });
 
 export type UpdateOrReplaceCertificationFormData = z.infer<typeof schema>;
@@ -32,7 +31,6 @@ const certificationToFormData = (
         expiresAt: format(new Date(c.expiresAt || ""), "yyyy-MM-dd"),
         availableAt: format(new Date(c.availableAt || ""), "yyyy-MM-dd"),
         typeDiplomeId: c.typeDiplome?.id || "",
-        certificationAuthorityTag: c.certificationAuthorityTag || "",
         degreeLevel: c.degree?.level || -1,
         conventionCollectiveId: c.conventionsCollectives?.[0]?.id || "",
         domaineId: c.domaines?.[0]?.id || "",
@@ -45,7 +43,6 @@ const UpdateOrReplaceCertificationForm = ({
   domaines,
   conventionCollectives,
   degrees,
-  certificationAuthorityTags,
   onSubmit,
 }: {
   certification: Certification;
@@ -53,7 +50,6 @@ const UpdateOrReplaceCertificationForm = ({
   domaines: { id: string; label: string }[];
   conventionCollectives: { id: string; label: string }[];
   degrees: { id: string; level: number; longLabel: string }[];
-  certificationAuthorityTags: string[];
   onSubmit: (data: UpdateOrReplaceCertificationFormData) => void;
 }) => {
   const {
@@ -90,19 +86,6 @@ const UpdateOrReplaceCertificationForm = ({
         state={errors.codeRncp ? "error" : "default"}
         stateRelatedMessage={errors.codeRncp?.message}
       />
-      <Select
-        label="Tag certificateur"
-        nativeSelectProps={{
-          ...register("certificationAuthorityTag"),
-        }}
-      >
-        <option />
-        {certificationAuthorityTags?.map((t) => (
-          <option key={t} value={t}>
-            {t}
-          </option>
-        ))}
-      </Select>
       <Input
         className="col-start-1"
         label="Disponible à partir du"

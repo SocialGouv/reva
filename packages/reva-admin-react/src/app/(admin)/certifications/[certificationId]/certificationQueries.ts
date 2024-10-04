@@ -1,3 +1,4 @@
+import CertificationAuthoritySection from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/send-file-certification-authority/_components/CertificationAuthoritySection";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import {
@@ -29,11 +30,13 @@ const getCertificationQuery = graphql(`
           }
         }
       }
+      certificationAuthorityStructure {
+        label
+      }
       typeDiplome {
         id
         label
       }
-      certificationAuthorityTag
       degree {
         id
         longLabel
@@ -81,7 +84,6 @@ const getReferentialForCertificationQuery = graphql(`
       id
       label
     }
-    getCertificationAuthorityTags
   }
 `);
 
@@ -190,7 +192,6 @@ export const useCertificationQueries = ({
       level: number;
       codeRncp: string;
       typeDiplomeId: string;
-      certificationAuthorityTag: string;
       domaineIds: string[];
       conventionCollectiveIds: string[];
       availableAt: number;
@@ -207,7 +208,6 @@ export const useCertificationQueries = ({
       level: number;
       codeRncp: string;
       typeDiplomeId: string;
-      certificationAuthorityTag: string;
       domaineIds: string[];
       conventionCollectiveIds: string[];
       availableAt: number;
@@ -234,8 +234,6 @@ export const useCertificationQueries = ({
     typeDiplomes: getReferentialResponse?.getTypeDiplomes,
     domaines: getReferentialResponse?.getDomaines,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
-    certificationAuthorityTags:
-      getReferentialResponse?.getCertificationAuthorityTags,
     updateCertification,
     replaceCertification,
     updateCompetenceBlocsByCertificationId,

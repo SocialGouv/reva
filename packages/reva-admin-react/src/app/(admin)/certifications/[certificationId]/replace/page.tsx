@@ -19,7 +19,6 @@ const ReplaceCertificationPage = () => {
     degrees,
     domaines,
     conventionCollectives,
-    certificationAuthorityTags,
     replaceCertification,
   } = useCertificationQueries({
     certificationId,
@@ -36,7 +35,6 @@ const ReplaceCertificationPage = () => {
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
         typeDiplomeId: data.typeDiplomeId,
-        certificationAuthorityTag: data.certificationAuthorityTag,
         domaineIds: data.domaineId ? [data.domaineId] : [],
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
@@ -62,8 +60,7 @@ const ReplaceCertificationPage = () => {
         typeDiplomes &&
         domaines &&
         conventionCollectives &&
-        degrees &&
-        certificationAuthorityTags && (
+        degrees && (
           <>
             <BackButton href={`/certifications/${certificationId}`}>
               Retour
@@ -78,7 +75,6 @@ const ReplaceCertificationPage = () => {
               domaines={domaines}
               conventionCollectives={conventionCollectives}
               degrees={degrees}
-              certificationAuthorityTags={certificationAuthorityTags}
               onSubmit={handleFormSubmit}
             />
           </>

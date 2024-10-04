@@ -28,8 +28,6 @@ export const updateCertification = async ({
         label: updateCertificationInput.label,
         rncpId: updateCertificationInput.codeRncp,
         level: updateCertificationInput.level,
-        certificationAuthorityTag:
-          updateCertificationInput.certificationAuthorityTag,
         availableAt: updateCertificationInput.availableAt,
         expiresAt: updateCertificationInput.expiresAt,
         typeDiplome: {

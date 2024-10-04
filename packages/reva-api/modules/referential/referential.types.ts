@@ -57,7 +57,6 @@ export interface UpdateCertificationInput {
   level: number;
   codeRncp: string;
   typeDiplomeId: string;
-  certificationAuthorityTag: string;
   domaineIds: string[];
   conventionCollectiveIds: string[];
   availableAt: Date;
