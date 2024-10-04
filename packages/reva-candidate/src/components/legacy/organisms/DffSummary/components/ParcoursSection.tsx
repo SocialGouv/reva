@@ -17,7 +17,7 @@ export default function ParcoursSection({
     <div>
       <div className="flex">
         <span className="fr-icon-time-fill fr-icon--lg mr-2" />
-        <h2>Parcours envisagé</h2>
+        <h2>Parcours proposé</h2>
       </div>
       <p className="mb-2">
         Accompagnement individuel : {individualHourCount ?? 0}h
