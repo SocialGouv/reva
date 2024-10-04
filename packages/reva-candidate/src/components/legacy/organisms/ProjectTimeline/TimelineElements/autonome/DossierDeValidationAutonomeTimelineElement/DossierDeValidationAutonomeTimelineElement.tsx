@@ -70,16 +70,16 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       {status === "active" && !!candidacy.readyForJuryEstimatedAt && (
         <Notice
           title={
-            <span className=" text-dsfrGray-500 italic font-normal">
-              <p className="inline text-sm">
+            <>
+              <span className="inline text-sm text-dsfrGray-500 italic font-normal">
                 Vous avez renseigné une date de dépôt prévisionnelle, le{" "}
                 {format(candidacy.readyForJuryEstimatedAt, "dd/MM/yyyy")}.
-              </p>
-              <p className="ml-8 text-sm">
+              </span>
+              <span className="block md:ml-8 text-sm text-dsfrGray-500 italic font-normal">
                 Assurez-vous de bien transmettre votre dossier de validation à
                 votre certificateur.
-              </p>
-            </span>
+              </span>
+            </>
           }
           className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
           classes={{ title: "text-dsfrGray-500" }}
