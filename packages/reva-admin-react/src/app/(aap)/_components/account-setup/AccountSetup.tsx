@@ -20,23 +20,25 @@ export default function AccountSetup({
   return (
     <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto">
       <div className="col-span-2">
-        <h1 className="">Bienvenue sur votre compte administrateur</h1>
+        <h1 className="">Bienvenue dans votre espace professionnel</h1>
         <p className="text-lg">
-          Pour recevoir vos premières candidatures, commencez par paramétrer
-          votre compte.{" "}
+          Ici, vous avez la main sur toute la gestion de votre structure et des
+          autres lieux d'accueil. Un seul endroit pour :
         </p>
         <ul className="text-lg ml-4 mb-8">
           <li>
-            Définissez vos modalités d’accompagnement (présentiel ou à distance)
+            Mettre à jour vos informations juridiques et commerciales en un clic
           </li>
-          <li>Sélectionnez vos filières et vos niveaux de certification</li>
           <li>
-            Ajoutez des lieux d’accueil et gérez leur visibilité dans les
-            recherches
+            Ajouter et gérer de nouveaux lieux d'accueil en toute simplicité
+          </li>
+          <li>
+            Passer en mode "invisible" pour ne plus recevoir de candidatures
+            momentanément
           </li>
         </ul>
         <p className="text-sm">
-          💡 Quand vous ajoutez un nouveau lieu d’accueil, pensez à utiliser une
+          💡 Quand vous ajoutez un compte collaborateur, pensez à utiliser une
           nouvelle adresse mail. Sinon, vous rencontrerez des difficultés pour
           vous connecter.
         </p>
