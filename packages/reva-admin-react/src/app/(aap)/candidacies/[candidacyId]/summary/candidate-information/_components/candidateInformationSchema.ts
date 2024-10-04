@@ -56,6 +56,12 @@ export const candidateInformationSchema = z
           path: ["birthdate"],
         });
       }
+    } else {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Merci de remplir ce champ",
+        path: ["birthdate"],
+      });
     }
 
     const phoneNumberFormatted = deserializeStringToPhoneNumberStructure(
