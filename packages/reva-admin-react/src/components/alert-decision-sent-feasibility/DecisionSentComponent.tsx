@@ -37,6 +37,8 @@ export const DecisionSentComponent = ({
     REJECTED: `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
   };
 
+  const canDisplayHistory = history?.length && history.length > 1;
+
   return (
     <>
       <Alert
@@ -49,7 +51,7 @@ export const DecisionSentComponent = ({
         description={decisionComment ? `”${decisionComment}”` : ""}
         className="mb-6"
       />
-      {!!history?.length && (
+      {canDisplayHistory && (
         <FeasibilityDecisionHistory
           className="mb-12"
           label="Décisions précédentes"
