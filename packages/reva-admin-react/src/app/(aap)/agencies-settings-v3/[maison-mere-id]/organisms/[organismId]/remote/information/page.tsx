@@ -120,7 +120,7 @@ const InformationsRemotePage = () => {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Breadcrumb
         currentPageLabel={"Informations affichées au candidat"}
         homeLinkProps={{
@@ -149,9 +149,8 @@ const InformationsRemotePage = () => {
       <h1>Informations affichées au candidat</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
-        Renseignez les informations qui seront affichées dans les résultats de
-        recherche des candidats puis sélectionnez les zones où se dérouleront
-        vos accompagnements à distance.
+        Renseignez les informations qui seront affichées dans les recherches des
+        candidats pour un accompagnement à distance.
       </p>
 
       {getOrganismStatus === "success" && (
@@ -181,7 +180,7 @@ const InformationsRemotePage = () => {
                 stateRelatedMessage={errors.telephone?.message}
               />
               <Input
-                label="E-mail de contact"
+                label="E-mail de contact (affiché au candidat)"
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message}
                 nativeInputProps={{
@@ -197,8 +196,8 @@ const InformationsRemotePage = () => {
             </fieldset>
             <fieldset className="flex flex-col mt-6">
               <Checkbox
-                legend="Quelles zones seront couvertes en distanciel ?"
-                hintText="Vous pouvez sélectionnez une ou plusieurs zones."
+                legend="Quelles sont les zones éligibles à l'accompagnement à distance ?"
+                hintText="Vous pouvez sélectionner une ou plusieurs zones."
                 options={[
                   {
                     label: "France métropolitaine (UTC+2)",
