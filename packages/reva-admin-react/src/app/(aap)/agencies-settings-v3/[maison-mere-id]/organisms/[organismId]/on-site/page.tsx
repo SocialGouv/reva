@@ -8,6 +8,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 export default function OnSitePage() {
   const { isFeatureActive } = useFeatureflipping();
@@ -58,11 +59,18 @@ export default function OnSitePage() {
 
       <h1>{organismName}</h1>
       <p>
-        Renseignez les modalités d’accompagnement en présentiel de ce lieu
-        d’accueil ainsi que les domaines, branches et niveaux gérés par
+        Complétez et/ou modifiez les modalités d’accompagnement en présentiel de
+        ce lieu d’accueil ainsi que les domaines, branches et niveaux gérés par
         celui-ci. Vous pouvez aussi changer la visibilité du lieu d’accueil dans
         les résultats de recherche des candidats.
       </p>
+      <Alert
+        className="mt-6 mb-8"
+        severity="warning"
+        small
+        title="Ces modifications seront appliquées à tous les collaborateurs proposant des accompagnements sur ce lieu d'accueil."
+        description=""
+      />
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
           title="Informations affichées aux candidats"

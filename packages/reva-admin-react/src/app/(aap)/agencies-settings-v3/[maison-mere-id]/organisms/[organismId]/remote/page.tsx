@@ -104,7 +104,7 @@ export default function RemotePage() {
 
       <h1>Accompagnement à distance</h1>
       <p>
-        Consultez et/ou modifiez les modalités d’accompagnement à distance ainsi
+        Complétez et/ou modifiez les modalités d’accompagnement à distance ainsi
         que les domaines, branches et niveaux. Si vous le souhaitez, vous pouvez
         aussi rendre l’accompagnement à distance invisible dans les résultats de
         recherche des candidats.
