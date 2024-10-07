@@ -138,7 +138,7 @@ const OrganismInformationForm = ({
                 stateRelatedMessage={errors.adresseInformationsComplementaires?.message?.toString()}
               />
               <Input
-                label="Code Postal"
+                label="Code postal"
                 nativeInputProps={{ ...register("adresseCodePostal") }}
                 state={errors.adresseCodePostal ? "error" : "default"}
                 stateRelatedMessage={errors.adresseCodePostal?.message?.toString()}
@@ -160,7 +160,7 @@ const OrganismInformationForm = ({
               />
 
               <Input
-                label="E-mail de contact"
+                label="E-mail de contact (affiché aux candidats)"
                 nativeInputProps={{ ...register("emailContact") }}
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message?.toString()}
@@ -206,7 +206,10 @@ const OrganismInformationForm = ({
                   },
                 ]}
                 state={errors.conformeNormesAccessibilite ? "error" : "default"}
-                stateRelatedMessage={"Veuillez sélectionner une option"}
+                stateRelatedMessage={
+                  errors.conformeNormesAccessibilite &&
+                  "Veuillez sélectionner une option"
+                }
               />
             </div>
           </fieldset>
