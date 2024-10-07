@@ -15,8 +15,8 @@ const AgenciesSettingsPage = () => {
       {isGestionnaireMaisonMereAAP ? (
         <div className="w-full">
           <p className="text-xl">
-            Complétez les paramètres de compte de votre structure pour recevoir
-            vos premières candidatures.
+            Complétez ou modifiez les paramètres de compte de votre structure
+            pour recevoir vos premières candidatures.
           </p>
           <SettingsSummaryForGestionnaire
             maisonMereAAP={maisonMereAAP as MaisonMereAap}

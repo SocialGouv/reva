@@ -80,7 +80,7 @@ export const SettingsSummaryForGestionnaire = ({
         titleIconClass="fr-icon-team-fill"
         CustomBadge={<div />}
         status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
-        customButtonTitle={hasOtherAccounts ? "Ajouter un compte" : "Ajouter"}
+        customButtonTitle={hasOtherAccounts ? "Créer un compte" : "Ajouter"}
       >
         {hasOtherAccounts ? (
           <HeadAgencySettingsSectionAccountList
