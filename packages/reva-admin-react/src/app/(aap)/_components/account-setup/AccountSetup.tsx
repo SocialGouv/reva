@@ -22,13 +22,11 @@ export default function AccountSetup({
       <div className="col-span-2">
         <h1 className="">Bienvenue dans votre espace professionnel</h1>
         <p className="text-lg">
-          Ici, vous avez la main sur toute la gestion de votre structure et des
-          autres lieux d'accueil. Un seul endroit pour :
+          Ici, vous avez la main sur toute la gestion de votre structure. Un
+          seul endroit pour :
         </p>
         <ul className="text-lg ml-4 mb-8">
-          <li>
-            Mettre à jour vos informations juridiques et commerciales en un clic
-          </li>
+          <li>Mettre à jour vos informations en un clic</li>
           <li>
             Ajouter et gérer de nouveaux lieux d'accueil en toute simplicité
           </li>
