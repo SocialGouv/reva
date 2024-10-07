@@ -73,7 +73,7 @@ export const CompetenciesBlocksSection = ({
                 hideAccordionContent={isEligibilityRequirementPartial}
                 isFirstRow={index === 0}
               />
-              {!disabled && (
+              {!disabled && isEditable && (
                 <Button
                   className="w-[120px] mt-4 flex-none"
                   priority={bloc.complete ? "secondary" : "primary"}
