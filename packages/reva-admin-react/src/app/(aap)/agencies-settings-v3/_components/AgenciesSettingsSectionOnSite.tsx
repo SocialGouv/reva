@@ -77,9 +77,7 @@ export const AgenciesSettingsSectionOnSite = ({
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/add-agency`}
       titleIconClass="fr-icon-home-4-fill"
       isEditable
-      customButtonTitle={
-        isOnSiteAgencyComplete ? "Ajouter un lieu d'accueil" : "Ajouter"
-      }
+      customButtonTitle={"Ajouter un lieu d'accueil"}
       status={isOnSiteAgencyComplete ? "COMPLETED" : "TO_COMPLETE"}
       CustomBadge={<div />}
     >

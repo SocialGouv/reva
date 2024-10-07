@@ -80,7 +80,7 @@ export const SettingsSummaryForGestionnaire = ({
         titleIconClass="fr-icon-team-fill"
         CustomBadge={<div />}
         status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
-        customButtonTitle={hasOtherAccounts ? "Créer un compte" : "Ajouter"}
+        customButtonTitle={"Créer un compte"}
       >
         {hasOtherAccounts ? (
           <HeadAgencySettingsSectionAccountList
@@ -90,9 +90,9 @@ export const SettingsSummaryForGestionnaire = ({
           />
         ) : (
           <p className="ml-10 md:w-4/5">
-            Vous avez besoin de collaborer à plusieurs sur la plateforme ?
-            Ajoutez des comptes collaborateurs pour que vos collaborateurs
-            puissent avoir accès à leurs candidatures.
+            Vous avez besoin de collaborer à plusieurs sur la plateforme ? Créez
+            des comptes collaborateurs pour que vos collaborateurs puissent
+            avoir accès à leurs candidatures.
           </p>
         )}
         {!isGeneralInformationCompleted && (

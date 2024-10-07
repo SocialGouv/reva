@@ -12,10 +12,13 @@ export const AgencySettingsSummarySectionRemote = ({
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
     informationsCommerciales?: { nom?: string | null } | null;
+    isRemote: boolean;
   };
   maisonMereAAPId: string;
 }) => {
   if (!organism) return null;
+
+  const informationComplete = organism.isRemote;
 
   return (
     <EnhancedSectionCard
@@ -36,6 +39,12 @@ export const AgencySettingsSummarySectionRemote = ({
       }
       titleIconClass="fr-icon-headphone-fill"
     >
+      {!informationComplete && (
+        <p className="md:w-4/5">
+          Ce choix est optionnel. Vous pouvez très bien paramétrer votre compte
+          sans sélectionner cette modalité d’accompagnement.
+        </p>
+      )}
       <div className="pl-10 flex flex-col gap-4">
         <ul className="list-none pl-0 flex flex-col gap-2">
           <div className="font-bold mb-2">
