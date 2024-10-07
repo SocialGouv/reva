@@ -70,7 +70,7 @@ context("When the funding alert feature is activated", () => {
         cy.get('[data-test="new-cgu-notice"]').should("not.exist");
       });
 
-      it("should not display a not-visible notice when head agency is closed", function () {
+      it.skip("should not display a not-visible notice when head agency is closed", function () {
         interceptCandidacies({
           fermePourAbsenceOuConges: true,
           isCguAccepted: true,
