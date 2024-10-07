@@ -1365,7 +1365,7 @@ model MaisonMereAAP {
   statutValidationInformationsJuridiquesMaisonMereAAP StatutValidationInformationsJuridiquesMaisonMereAAP @default(A_METTRE_A_JOUR) @map("statut_validation_informations_juridiques_maison_mere_aap")
   maisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments?
   maisonMereAAPLegalInformationDocumentsDecision      MaisonMereAAPLegalInformationDocumentsDecision[]
-  isMCFCompatible                                     Boolean                                             @default(false) @map("is_mcf_compatible")
+  isMCFCompatible                                     Boolean?                                            @map("is_mcf_compatible")
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
