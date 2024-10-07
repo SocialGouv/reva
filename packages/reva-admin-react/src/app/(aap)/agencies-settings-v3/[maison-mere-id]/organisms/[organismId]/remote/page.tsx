@@ -103,7 +103,10 @@ export default function RemotePage() {
 
       <h1>Accompagnement à distance</h1>
       <p>
-        Pour être visible complétez tout et mettez l’interrupteur sur visible.
+        Renseignez les modalités d’accompagnement à distance ainsi que les
+        domaines, branches et niveaux. Si vous le souhaitez, vous pouvez aussi
+        rendre l’accompagnement à distance invisible dans les résultats de
+        recherche des candidats.
       </p>
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
@@ -213,7 +216,6 @@ export default function RemotePage() {
           </EnhancedSectionCard>
         )}
         <div className="flex flex-col mt-6">
-          <h2>Visibilité de l'accompagnement à distance</h2>
           <OrganismVisibilityToggle organismId={organismId} />
         </div>
       </div>
