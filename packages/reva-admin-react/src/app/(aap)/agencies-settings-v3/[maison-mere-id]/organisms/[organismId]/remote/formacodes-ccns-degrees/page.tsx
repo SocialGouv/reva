@@ -33,16 +33,16 @@ const InformationsRemotePage = () => {
       <h1>Domaines, branches et niveaux</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
-        Sélectionnez les filières, branches et niveaux gérés par ce lieu
-        d’accueil. Pour information, les chiffres que vous retrouvez devant
-        l’appellation des domaines sont ceux du formacode RNCP.
+        Sélectionnez les domaines, branches et niveaux gérés à distance. Pour
+        information, les chiffres que vous retrouvez devant l’appellation des
+        domaines sont ceux du formacode.
       </p>
       <a
         className="fr-link mr-auto"
         href="https://fabnummas.notion.site/b1488dbfffa740908ae7b04e3294653a?v=fff653b7be07818fa5e1000c59999416"
         target="_blank"
       >
-        Liste des certifications par sous-domaine et niveaux (dans France VAE)
+        Liste des certifications par sous-domaines et niveaux (dans France VAE)
       </a>
       <FormacodesCcnsDegreesForm
         organismId={organismId}
