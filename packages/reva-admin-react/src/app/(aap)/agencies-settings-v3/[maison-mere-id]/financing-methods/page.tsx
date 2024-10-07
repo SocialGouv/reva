@@ -25,13 +25,13 @@ export default function FinancingMethodsPage() {
 
   const defaultValues = useMemo(() => {
     if (
-      maisonMereAAP?.isMcfCompatible === null ||
-      maisonMereAAP?.isMcfCompatible === undefined
+      maisonMereAAP?.isMCFCompatible === null ||
+      maisonMereAAP?.isMCFCompatible === undefined
     ) {
       return undefined;
     } else {
       return {
-        isMcfCompatible: maisonMereAAP.isMcfCompatible
+        isMCFCompatible: maisonMereAAP.isMCFCompatible
           ? ("true" as const)
           : ("false" as const),
       };
@@ -45,7 +45,7 @@ export default function FinancingMethodsPage() {
   ) => {
     try {
       await updateMaisonMereAAPFinancingMethods.mutateAsync({
-        isMcfCompatible: data.isMcfCompatible === "true",
+        isMCFCompatible: data.isMCFCompatible === "true",
       });
       successToast("modifications enregistrées");
     } catch (e) {
@@ -96,7 +96,7 @@ export default function FinancingMethodsPage() {
 }
 
 const financingMethodsFormSchema = z.object({
-  isMcfCompatible: z.enum(["true", "false"]),
+  isMCFCompatible: z.enum(["true", "false"]),
 });
 
 type FinancingMethodsFormData = z.infer<typeof financingMethodsFormSchema>;
@@ -129,20 +129,20 @@ const FinancingMethodsForm = ({
               label: "Oui",
               nativeInputProps: {
                 value: "true",
-                ...register("isMcfCompatible"),
+                ...register("isMCFCompatible"),
               },
             },
             {
               label: "Non",
               nativeInputProps: {
                 value: "false",
-                ...register("isMcfCompatible"),
+                ...register("isMCFCompatible"),
               },
             },
           ]}
-          state={errors.isMcfCompatible ? "error" : "default"}
+          state={errors.isMCFCompatible ? "error" : "default"}
           stateRelatedMessage={
-            errors.isMcfCompatible && "Veuillez sélectionner une option"
+            errors.isMCFCompatible && "Veuillez sélectionner une option"
           }
         />
       </fieldset>

@@ -604,7 +604,7 @@ const unsafeResolvers = {
     ) => updateMaisonMereLegalInformation(params.data),
     organism_updateMaisonMereAAPFinancingMethods: async (
       _parent: unknown,
-      params: { maisonMereAAPId: string; isMcfCompatible: boolean },
+      params: { maisonMereAAPId: string; isMCFCompatible: boolean },
     ) => updateMaisonMereAAPFinancingMethods(params),
   },
   Query: {

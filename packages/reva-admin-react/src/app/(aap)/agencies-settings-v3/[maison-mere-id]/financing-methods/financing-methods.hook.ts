@@ -7,7 +7,7 @@ const getMaisonMereAAPQuery = graphql(`
   query getAccountMaisonMereFinancingMethods($maisonMereAAPId: ID!) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
-      isMcfCompatible
+      isMCFCompatible
       raisonSociale
     }
   }
@@ -16,14 +16,14 @@ const getMaisonMereAAPQuery = graphql(`
 const updateMaisonMereAAPFinancingMethodsMutation = graphql(`
   mutation updateMaisonMereAAPFinancingMethods(
     $maisonMereAAPId: ID!
-    $isMcfCompatible: Boolean!
+    $isMCFCompatible: Boolean!
   ) {
     organism_updateMaisonMereAAPFinancingMethods(
       maisonMereAAPId: $maisonMereAAPId
-      isMcfCompatible: $isMcfCompatible
+      isMCFCompatible: $isMCFCompatible
     ) {
       id
-      isMcfCompatible
+      isMCFCompatible
     }
   }
 `);
@@ -42,10 +42,10 @@ export const useFinancingMethodsPage = ({
   });
 
   const updateMaisonMereAAPFinancingMethods = useMutation({
-    mutationFn: ({ isMcfCompatible }: { isMcfCompatible: boolean }) =>
+    mutationFn: ({ isMCFCompatible }: { isMCFCompatible: boolean }) =>
       graphqlClient.request(updateMaisonMereAAPFinancingMethodsMutation, {
         maisonMereAAPId,
-        isMcfCompatible,
+        isMCFCompatible,
       }),
   });
 

@@ -2,12 +2,12 @@ import { prismaClient } from "../../../prisma/client";
 
 export const updateMaisonMereAAPFinancingMethods = ({
   maisonMereAAPId,
-  isMcfCompatible,
+  isMCFCompatible,
 }: {
   maisonMereAAPId: string;
-  isMcfCompatible: boolean;
+  isMCFCompatible: boolean;
 }) =>
   prismaClient.maisonMereAAP.update({
     where: { id: maisonMereAAPId },
-    data: { isMcfCompatible },
+    data: { isMCFCompatible },
   });
