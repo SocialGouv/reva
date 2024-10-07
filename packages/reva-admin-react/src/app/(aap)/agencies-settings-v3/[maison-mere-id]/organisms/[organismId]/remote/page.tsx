@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {
@@ -103,11 +104,18 @@ export default function RemotePage() {
 
       <h1>Accompagnement à distance</h1>
       <p>
-        Renseignez les modalités d’accompagnement à distance ainsi que les
-        domaines, branches et niveaux. Si vous le souhaitez, vous pouvez aussi
-        rendre l’accompagnement à distance invisible dans les résultats de
+        Consultez et/ou modifiez les modalités d’accompagnement à distance ainsi
+        que les domaines, branches et niveaux. Si vous le souhaitez, vous pouvez
+        aussi rendre l’accompagnement à distance invisible dans les résultats de
         recherche des candidats.
       </p>
+      <Alert
+        className="mt-6 mb-8"
+        severity="warning"
+        small
+        title="Ces modifications seront appliquées à tous les collaborateurs proposant des accompagnements à distance."
+        description=""
+      />
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
           title="Informations affichées aux candidats"
