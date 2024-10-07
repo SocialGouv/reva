@@ -95,7 +95,7 @@ export const UserAccountForm = ({
   return (
     <>
       <p className="mb-10 text-xl">
-        Le collaborateur ajouté recevra un mail afin de créer son compte. Il
+        Le collaborateur ajouté recevra un mail pour finaliser son compte. Il
         pourra compléter et modifier les informations qui seront affichées aux
         candidats depuis son compte.
       </p>

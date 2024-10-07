@@ -38,7 +38,7 @@ const AddUserAccountPage = () => {
   };
   return (
     <div className="w-full flex flex-col">
-      <h1>Ajout d’un compte collaborateur</h1>
+      <h1>Création d’un compte collaborateur</h1>
       <FormOptionalFieldsDisclaimer />
       <UserAccountForm
         onSubmit={handleFormSubmit}
