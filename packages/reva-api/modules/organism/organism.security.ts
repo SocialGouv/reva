@@ -25,6 +25,11 @@ export const resolversSecurityMap = {
 
   "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
 
+  "Query.organism_getMaisonMereAAPById": [
+    hasRole(["admin", "gestion_maison_mere_aap"]),
+    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+  ],
+
   "Mutation.organism_updateMaisonMereIsSignalized": isAdmin,
 
   "Mutation.organism_acceptCgu": [hasRole(["gestion_maison_mere_aap"])],
