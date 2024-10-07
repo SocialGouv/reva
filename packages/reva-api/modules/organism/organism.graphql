@@ -103,6 +103,7 @@ type MaisonMereAAP {
   showAccountSetup: Boolean
   isActive: Boolean!
   isSignalized: Boolean!
+  isMcfCompatible:Boolean!
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
