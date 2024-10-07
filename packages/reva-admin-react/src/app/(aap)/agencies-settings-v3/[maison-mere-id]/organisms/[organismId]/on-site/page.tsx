@@ -58,7 +58,10 @@ export default function OnSitePage() {
 
       <h1>{organismName}</h1>
       <p>
-        Pour être visible complétez tout et mettez l'interrupteur sur visible.
+        Renseignez les modalités d’accompagnement en présentiel de ce lieu
+        d’accueil ainsi que les domaines, branches et niveaux gérés par
+        celui-ci. Vous pouvez aussi changer la visibilité du lieu d’accueil dans
+        les résultats de recherche des candidats.
       </p>
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
@@ -186,7 +189,6 @@ export default function OnSitePage() {
           </EnhancedSectionCard>
         )}
         <div className="flex flex-col mt-6">
-          <h2>Visibilité du lieu d’accueil</h2>
           <OrganismVisibilityToggle organismId={organismId} />
         </div>
       </div>
