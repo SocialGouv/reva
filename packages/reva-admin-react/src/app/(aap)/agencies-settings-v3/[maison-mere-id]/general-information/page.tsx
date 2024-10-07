@@ -96,7 +96,7 @@ const GeneralInformationPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <h1>Informations juridiques</h1>
+      <h1>Informations générales</h1>
       <p>
         Retrouvez ici les informations renseignées lors de l'inscription. Vous
         pouvez signaler un changement au support si ces informations ne sont
@@ -168,7 +168,7 @@ const GeneralInformationPage = () => {
               )}
             </GrayCard>
             <GrayCard>
-              <h2>Informations saisies à l’inscription</h2>
+              <h2>Dirigeant et administrateur du compte</h2>
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <Info title="Dirigeant(e)">
                   {maisonMereAAP.managerFirstname}{" "}
