@@ -3,19 +3,18 @@ import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidac
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
 import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useAuth } from "@/components/auth/auth";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import Link from "next/link";
-import Button from "@codegouvfr/react-dsfr/Button";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -79,6 +78,11 @@ const CandidacySummaryPage = () => {
     isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE") &&
     candidacy.financeModule === "hors_plateforme";
 
+  const isCandidateEditable =
+    candidacy.feasibilityFormat === "DEMATERIALIZED" &&
+    (!candidacy.feasibility?.feasibilityFileSentAt ||
+      candidacy.feasibility?.decision === "INCOMPLETE");
+
   return (
     <>
       <div>
@@ -122,7 +126,7 @@ const CandidacySummaryPage = () => {
               status={
                 isCandidateInformationCompleted ? "COMPLETED" : "TO_COMPLETE"
               }
-              isEditable={candidacy.feasibilityFormat === "DEMATERIALIZED"}
+              isEditable={isCandidateEditable}
             >
               <dl>
                 <dt className="sr-only">Prénom et nom</dt>
@@ -154,7 +158,7 @@ const CandidacySummaryPage = () => {
                 data-test="candidate-profile"
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
-                isEditable
+                isEditable={isCandidateEditable}
                 status={
                   isCandidateProfileCompleted ? "COMPLETED" : "TO_COMPLETE"
                 }

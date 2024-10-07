@@ -80,6 +80,10 @@ const getCandidacyById = graphql(`
         label
       }
       feasibilityFormat
+      feasibility {
+        feasibilityFileSentAt
+        decision
+      }
     }
   }
 `);
