@@ -73,6 +73,7 @@ import {
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
 } from "./organism.types";
+import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
 
 const unsafeResolvers = {
   Account: {
@@ -601,6 +602,10 @@ const unsafeResolvers = {
         data: UpdateMaisonMereLegalInformationInput;
       },
     ) => updateMaisonMereLegalInformation(params.data),
+    organism_updateMaisonMereAAPFinancingMethods: async (
+      _parent: unknown,
+      params: { maisonMereAAPId: string; isMcfCompatible: boolean },
+    ) => updateMaisonMereAAPFinancingMethods(params),
   },
   Query: {
     organism_getOrganism: async (
@@ -683,14 +688,7 @@ const unsafeResolvers = {
       params: {
         maisonMereAAPId: string;
       },
-      context: GraphqlContext,
-    ) => {
-      if (!context.auth.hasRole("admin")) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return getMaisonMereAAPById({ id: params.maisonMereAAPId });
-    },
+    ) => getMaisonMereAAPById({ id: params.maisonMereAAPId }),
   },
 };
 

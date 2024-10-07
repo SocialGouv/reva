@@ -46,4 +46,9 @@ export const resolversSecurityMap = {
     whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
   ],
   "Mutation.organism_updateMaisonMereLegalInformation": isAdmin,
+
+  "Mutation.organism_updateMaisonMereAAPFinancingMethods": [
+    hasRole(["admin", "gestion_maison_mere_aap"]),
+    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+  ],
 };

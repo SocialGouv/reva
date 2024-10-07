@@ -103,7 +103,7 @@ type MaisonMereAAP {
   showAccountSetup: Boolean
   isActive: Boolean!
   isSignalized: Boolean!
-  isMcfCompatible:Boolean!
+  isMcfCompatible: Boolean!
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {
@@ -359,4 +359,8 @@ type Mutation {
   organism_updateMaisonMereLegalInformation(
     data: UpdateMaisonMereLegalInformationInput
   ): Void
+  organism_updateMaisonMereAAPFinancingMethods(
+    maisonMereAAPId: ID!
+    isMcfCompatible: Boolean!
+  ): MaisonMereAAP!
 }
