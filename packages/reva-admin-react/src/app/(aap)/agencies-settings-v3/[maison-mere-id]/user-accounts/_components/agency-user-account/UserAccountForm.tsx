@@ -55,7 +55,7 @@ export const UserAccountForm = ({
     <>
       <p className="mb-10 text-xl">
         Voici les informations liées à votre compte collaborateur. Si vous
-        souhaitez les modifier, addressez-vous directement à l’administrateur du
+        souhaitez les modifier, adressez-vous directement à l’administrateur du
         compte principal.
       </p>
       <form className="flex flex-col gap-8">
