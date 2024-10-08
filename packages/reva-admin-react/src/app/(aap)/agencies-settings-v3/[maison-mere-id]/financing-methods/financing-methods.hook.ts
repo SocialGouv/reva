@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getMaisonMereAAPQuery = graphql(`
   query getAccountMaisonMereFinancingMethods($maisonMereAAPId: ID!) {
@@ -34,6 +34,8 @@ export const useFinancingMethodsPage = ({
   maisonMereAAPId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
   const { data, isLoading } = useQuery({
     queryKey: [maisonMereAAPId, "maisonMereAAP", "FinancingMethodsPage"],
     queryFn: () =>
@@ -47,6 +49,8 @@ export const useFinancingMethodsPage = ({
         maisonMereAAPId,
         isMCFCompatible,
       }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [maisonMereAAPId] }),
   });
 
   const maisonMereAAP = data?.organism_getMaisonMereAAPById;
