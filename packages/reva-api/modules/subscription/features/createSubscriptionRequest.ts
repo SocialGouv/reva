@@ -6,25 +6,12 @@ import {
   uploadFileToS3,
 } from "../../shared/file";
 
-import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
-
 export const createSubscriptionRequest = async ({
   params,
 }: {
   params: CreateSubscriptionRequestInput;
 }) => {
   try {
-    const oldMaisonMereAap = await getMaisonMereAapBySiretAndTypology(
-      params.companySiret,
-      "expertFiliere",
-    );
-
-    if (oldMaisonMereAap) {
-      throw new Error(
-        `Ce SIRET est déjà associé à un compte. Si nécessaire, contactez votre administrateur ou support@france.vae.fr`,
-      );
-    }
-
     const attestationURSSAFFile = await getUploadedFile(
       params.attestationURSSAF,
     );
