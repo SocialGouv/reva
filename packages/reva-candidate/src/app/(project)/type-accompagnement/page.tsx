@@ -31,15 +31,13 @@ export default function ChooseTypeAccompagnementPage() {
     }
   };
   return (
-    <PageLayout title="Choix accompagnement">
-      <h1 className="mt-8">Choix accompagnement</h1>
+    <PageLayout title="Modalités de parcours">
+      <h1 className="mt-8">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
-        Vous avez la possibilité de vous faire accompagner par un professionnel
-        de la VAE. Cet accompagnateur vous guidera dans les démarches
-        administratives auprès du certificateur, vous guidera lors de la
-        confection de votre dossier de validation et vous préparera au passage
-        du jury.
+        Aujourd’hui, il exite 2 manières de réaliser un parcours VAE : en
+        autonomie ou accompagné. Attention, certains diplômes se poursuivent
+        uniquement en autonomie.
       </p>
       {queryStatus === "success" && typeAccompagnement && (
         <Form defaultValues={{ typeAccompagnement }} onSubmit={handleSubmit} />
@@ -69,10 +67,10 @@ const Form = ({
       <div className="grid grid-cols-1 md:grid-cols-2">
         <fieldset>
           <RadioButtons
-            legend="Vous devez choisir d'être accompagné ou non :"
+            legend="Que souhaitez-vous faire pour ce parcours ? "
             options={[
               {
-                label: "Je souhaite être accompagnée par un AAP",
+                label: "Je souhaite réaliser ma VAE avec un accompagnateur",
                 nativeInputProps: {
                   value: "ACCOMPAGNE",
                   className: "type-accompagnement-accompagne-radio-button",
@@ -92,9 +90,20 @@ const Form = ({
             ]}
           />
         </fieldset>
-        <CallOut title="Pourquoi faire le choix de l’accompagnement ?">
-          Un accompagnateur vous permet d’avoir accès à toutes les infos
-          nécessaires. Le financement peut alors passer par votre CPF.
+        <CallOut title="À quoi sert un accompagnateur ?">
+          <p className="mt-2">
+            C’est un expert de la VAE qui vous aide à chaque grande étape de
+            votre parcours : rédaction du dossier de faisabilité, communication
+            avec le certificateur, préparation au passage devant le jury, etc.
+          </p>
+          <p className="mt-4">
+            Cet acompagnement peut être financé par des dispositifs tels que{" "}
+            <a href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation">
+              Mon Compte Formation.
+            </a>{" "}
+            En revanche, si vous faites ce parcours en autonomie, les frais de
+            jury seront à votre charge.
+          </p>
         </CallOut>
       </div>
       <div className="mt-8 flex flex-col md:flex-row gap-4">

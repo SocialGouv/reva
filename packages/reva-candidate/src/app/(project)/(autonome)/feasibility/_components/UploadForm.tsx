@@ -19,7 +19,7 @@ export const UploadForm = ({
     <>
       <FancyUpload
         title="Joindre le dossier de faisabilité"
-        description="Le dossier doit être complet et signé par vous-même et le candidat. Pensez à vérifier que vous avez tout saisi avant l’envoi."
+        description="Vous devez le remplir avec attention et le signer. Pensez à vérifier que vous avez tout saisi avant l’envoi au certificateur."
         hint="Format supporté : PDF uniquement avec un poids maximum de 20 Mo"
         nativeInputProps={{
           ...register("feasibilityFile"),
@@ -30,7 +30,7 @@ export const UploadForm = ({
       />
       <FancyUpload
         title="Joindre la pièce d’identité (carte identité, passeport, carte de séjour)"
-        description="Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce sera demandée au candidat pour justifier de son identité lors du passage devant jury et la délivrance éventuelle du diplôme."
+        description="Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce permet de justifier de votre identité lors du passage devant jury et la délivrance éventuelle du diplôme."
         hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
         nativeInputProps={{
           ...register("idFile"),

@@ -18,7 +18,7 @@ export default function Feasibility() {
           target="_blank"
           className="text-dsfrBlue-500"
         >
-          Notice d’utilisation du dossier de faisabilité
+          Besoin d&apos;aide ? Consultez le tutoriel “Parcours VAE en autonomie”
         </a>
       </p>
       <SendFeasibilityForm />

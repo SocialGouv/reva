@@ -23,7 +23,7 @@ export const TypeAccompagnementTimelineElement = () => {
 
   return (
     <TimelineElement
-      title="Nécessité d’accompagnement"
+      title="Modalités de parcours"
       status={status}
       data-test="type-accompagnement-timeline-element"
     >

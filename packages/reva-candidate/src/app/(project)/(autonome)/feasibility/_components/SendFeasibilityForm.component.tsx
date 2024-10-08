@@ -61,7 +61,6 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     formState: { errors, isSubmitting, isDirty },
   } = useForm<FeasibilityFormData>({
     resolver: zodResolver(schema),
-    mode: "all",
     defaultValues: {
       certificationAuthorityId:
         certificationAuthorities.length == 1
@@ -74,14 +73,13 @@ export const SendFeasibilityForm = (): React.ReactNode => {
       requirements: [
         {
           id: "0",
-          label:
-            "J'ai bien vérifié que le dossier de faisabilité était correct, complet et signé par moi-même ainsi que par le candidat.",
+          label: "Mon dossier de faisabilité est correct, complet et signé.",
           checked: false,
         },
         {
           id: "1",
           label:
-            "J'ai bien vérifié que la pièce d’identité était conforme, en cours de validité et lisible.",
+            "Ma pièce d’identité est conforme, en cours de validité et lisible.",
           checked: false,
         },
       ],
