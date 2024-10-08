@@ -35,10 +35,6 @@ export default function Login() {
 
   return (
     <PageLayout title="Connexion" data-test="login-home">
-      <h1 className="text-3xl font-bold text-dsfrBlue-500 mb-0">
-        Bienvenue <span aria-hidden="true">🤝</span>,
-      </h1>
-
       <div className="mb-6 max-w-xl">
         <h2 className="my-6">Connexion</h2>
         <p className="mb-10">
