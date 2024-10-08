@@ -167,7 +167,7 @@ context("Type accompagnement", () => {
     cy.visit("/type-accompagnement");
     cy.wait("@getCandidateWithCandidacyForTypeAccompagnementPage");
 
-    cy.get("h1").should("contain.text", "Choix accompagnement");
+    cy.get("h1").should("contain.text", "Modalités de parcours");
     cy.get(".type-accompagnement-autonome-radio-button").should("be.checked");
     cy.get(".type-accompagnement-accompagne-radio-button ~ label").click();
     cy.get(".type-accompagnement-accompagne-radio-button").should("be.checked");
