@@ -228,7 +228,6 @@ const unsafeResolvers = {
           contactAdministrativeEmail: string;
           contactAdministrativePhone: string | null;
           website: string | null;
-          isActive: boolean;
         };
       },
       context: GraphqlContext,

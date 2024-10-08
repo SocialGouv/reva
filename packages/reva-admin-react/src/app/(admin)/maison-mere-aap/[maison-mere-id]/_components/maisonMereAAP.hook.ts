@@ -13,7 +13,6 @@ const MaisonMereAAPQuery = graphql(`
       isSignalized
       organisms {
         isHeadAgency
-        isActive
         accounts {
           id
         }

@@ -16,7 +16,6 @@ const updateOrganismMutation = graphql(`
       contactAdministrativeEmail
       contactAdministrativePhone
       website
-      isActive
     }
   }
 `);
@@ -32,7 +31,6 @@ export const useOrganismForm = () => {
         contactAdministrativeEmail: string;
         contactAdministrativePhone?: string;
         website?: string;
-        isActive: boolean;
       };
     }) => graphqlClient.request(updateOrganismMutation, params),
   });

@@ -31,7 +31,6 @@ type Organism {
   contactAdministrativePhone: String
   website: String
   typology: OrganismTypology!
-  isActive: Boolean!
   fermePourAbsenceOuConges: Boolean!
   informationsCommerciales: OrganismInformationsCommerciales
   maisonMereAAP: MaisonMereAAP
@@ -177,7 +176,6 @@ input UpdateOrganismInput {
   contactAdministrativeEmail: String!
   contactAdministrativePhone: String
   website: String
-  isActive: Boolean!
 }
 
 input CreateOrUpdateInformationsCommercialesInput {

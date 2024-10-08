@@ -12,7 +12,6 @@ export const updateOrganismById = async (
       contactAdministrativeEmail: string;
       contactAdministrativePhone: string | null;
       website: string | null;
-      isActive: boolean;
     };
   },
 ): Promise<Organism> => {
@@ -36,7 +35,6 @@ export const updateOrganismById = async (
   organism.contactAdministrativeEmail = organismData.contactAdministrativeEmail;
   organism.contactAdministrativePhone = organismData.contactAdministrativePhone;
   organism.website = organismData.website;
-  organism.isActive = organismData.isActive;
 
   // Update Business DB
   await prismaClient.organism.update({
@@ -46,7 +44,6 @@ export const updateOrganismById = async (
       contactAdministrativeEmail: organismData.contactAdministrativeEmail,
       contactAdministrativePhone: organismData.contactAdministrativePhone,
       website: organismData.website,
-      isActive: organismData.isActive,
     },
   });
 

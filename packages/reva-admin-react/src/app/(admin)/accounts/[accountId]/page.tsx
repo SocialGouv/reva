@@ -22,7 +22,6 @@ const getAccount = graphql(`
         website
         contactAdministrativeEmail
         contactAdministrativePhone
-        isActive
       }
       certificationAuthority {
         id

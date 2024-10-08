@@ -69,7 +69,6 @@ const getMaisonMereAAP = graphql(`
         informationsCommerciales {
           nom
         }
-        isActive
         fermePourAbsenceOuConges
         managedDegrees {
           id

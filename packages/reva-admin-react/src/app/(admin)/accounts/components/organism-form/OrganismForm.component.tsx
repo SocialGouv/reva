@@ -5,7 +5,6 @@ import * as z from "zod";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,7 +20,6 @@ const schema = z.object({
     .default(""),
   contactAdministrativePhone: z.string().optional().default(""),
   website: z.string().optional().default(""),
-  isActive: z.enum(["Activé", "Désactivé"]),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -33,7 +31,6 @@ interface Props {
     contactAdministrativeEmail: string;
     contactAdministrativePhone?: string | null;
     website?: string | null;
-    isActive: boolean;
   };
 }
 
@@ -51,7 +48,6 @@ const OrganismForm = (props: Props) => {
       contactAdministrativeEmail: organism.contactAdministrativeEmail || "",
       contactAdministrativePhone: organism.contactAdministrativePhone || "",
       website: organism.website || "",
-      isActive: organism.isActive ? "Activé" : "Désactivé",
     },
   });
 
@@ -63,7 +59,6 @@ const OrganismForm = (props: Props) => {
         organismId: organism.id,
         organismData: {
           ...data,
-          isActive: data.isActive == "Activé",
         },
       });
 
@@ -113,27 +108,6 @@ const OrganismForm = (props: Props) => {
             nativeInputProps={{ ...register("website") }}
           />
         </fieldset>
-
-        <RadioButtons
-          legend="Statut de la structure"
-          orientation="horizontal"
-          options={[
-            {
-              label: "Activé",
-              nativeInputProps: {
-                value: "Activé",
-                ...register("isActive"),
-              },
-            },
-            {
-              label: "Désactivé",
-              nativeInputProps: {
-                value: "Désactivé",
-                ...register("isActive"),
-              },
-            },
-          ]}
-        />
 
         <div className="flex flex-row justify-end">
           <Button disabled={isSubmitting}>Enregistrer</Button>

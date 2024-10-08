@@ -8,9 +8,19 @@ import {
   expertBrancheEtFiliereOrganism,
   expertBrancheOrganism,
   expertFiliereOrganism,
+  gestionaMaisonMereAapAccount1,
+  maisonMereAAPExpertFiliere,
+  gestionaMaisonMereAapAccount2,
+  maisonMereAAPExpertBranche,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import {
+  createGestionaMaisonMereAapAccount1,
+  createGestionaMaisonMereAapAccount2,
+  createMaisonMereAAPExpertFiliere,
+  createMaisonMereAAPExpertBranche,
+} from "../../test/helpers/create-db-entity";
 
 async function attachOrganismToAllDegrees(organism: Organism | null) {
   const degrees = await prismaClient.degree.findMany();
@@ -71,12 +81,38 @@ beforeAll(async () => {
       },
     });
 
+  await createGestionaMaisonMereAapAccount1();
+  await createGestionaMaisonMereAapAccount2();
+
+  await createMaisonMereAAPExpertFiliere();
+  await createMaisonMereAAPExpertBranche();
+
   expertFiliere = await prismaClient.organism.create({
     data: expertFiliereOrganism,
   });
+
+  await prismaClient.maisonMereAAP.update({
+    where: { id: maisonMereAAPExpertFiliere.id },
+    data: {
+      organismes: {
+        connect: [{ id: expertFiliere.id }],
+      },
+    },
+  });
+
   expertBranche = await prismaClient.organism.create({
     data: expertBrancheOrganism,
   });
+
+  await prismaClient.maisonMereAAP.update({
+    where: { id: maisonMereAAPExpertBranche.id },
+    data: {
+      organismes: {
+        connect: [{ id: expertBranche.id }],
+      },
+    },
+  });
+
   await prismaClient.organism.create({
     data: expertBrancheEtFiliereOrganism,
   });
@@ -104,6 +140,22 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await prismaClient.organism.deleteMany({});
+
+  await prismaClient.maisonMereAAP.delete({
+    where: { id: maisonMereAAPExpertFiliere.id },
+  });
+
+  await prismaClient.maisonMereAAP.delete({
+    where: { id: maisonMereAAPExpertBranche.id },
+  });
+
+  await prismaClient.account.delete({
+    where: { id: gestionaMaisonMereAapAccount1.id },
+  });
+
+  await prismaClient.account.delete({
+    where: { id: gestionaMaisonMereAapAccount2.id },
+  });
 });
 
 /**

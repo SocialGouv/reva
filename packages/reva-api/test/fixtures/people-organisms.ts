@@ -159,6 +159,7 @@ const maisonMereAAP1 = {
   managerFirstname: "Josette",
   managerLastname: "Ledru",
   showAccountSetup: true,
+  isActive: true,
 };
 
 const maisonMereAAP2 = {
@@ -170,6 +171,38 @@ const maisonMereAAP2 = {
   managerLastname: "Doe",
   statutValidationInformationsJuridiquesMaisonMereAAP:
     StatutValidationInformationsJuridiquesMaisonMereAAP.A_METTRE_A_JOUR,
+};
+
+const maisonMereAAPExpertFiliere = {
+  id: randomUUID(),
+  phone: "0612345678",
+  raisonSociale: "Maison Mere ExpertFiliere",
+  siteWeb: "https://www.iperia.fr",
+  siret: "13002526500013",
+  statutJuridique: "ASSOCIATION_LOI_1901" as const,
+  typologie: "expertFiliere" as const,
+  dateExpirationCertificationQualiopi: new Date(),
+  // gestionnaireAccountId: account.id,
+  statutValidationInformationsJuridiquesMaisonMereAAP:
+    StatutValidationInformationsJuridiquesMaisonMereAAP.A_JOUR,
+  cguVersion: null,
+  cguAcceptedAt: null,
+  managerFirstname: "Josette",
+  managerLastname: "Ledru",
+  showAccountSetup: true,
+  isActive: true,
+};
+
+const maisonMereAAPExpertBranche = {
+  ...maisonMereAAPExpertFiliere,
+  id: randomUUID(),
+  siret: "12000015300029",
+  raisonSociale: "Maison Mere ExpertBranche",
+  managerFirstname: "Alice",
+  managerLastname: "Doe",
+  statutValidationInformationsJuridiquesMaisonMereAAP:
+    StatutValidationInformationsJuridiquesMaisonMereAAP.A_METTRE_A_JOUR,
+  typologie: "expertBranche" as const,
 };
 
 export {
@@ -189,4 +222,6 @@ export {
   agencePrincipaleMaisonMere2,
   lieuAccueilMaisonMere2,
   collaborateurMaisonMereAapAccount2,
+  maisonMereAAPExpertFiliere,
+  maisonMereAAPExpertBranche,
 };
