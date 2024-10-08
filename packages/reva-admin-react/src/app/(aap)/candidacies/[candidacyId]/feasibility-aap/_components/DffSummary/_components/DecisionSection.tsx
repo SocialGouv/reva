@@ -12,7 +12,7 @@ export default function DecisionSection({
   const DecisionBadge = () => {
     if (decision === "FAVORABLE") {
       return (
-        <Badge severity="success" noIcon>
+        <Badge severity="success" noIcon className="hide-bg-for-pdf">
           Favorable
         </Badge>
       );
