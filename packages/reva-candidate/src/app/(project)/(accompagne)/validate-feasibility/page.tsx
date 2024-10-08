@@ -104,13 +104,11 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        {typeof window !== "undefined" && (
-          <ButtonConvertHtmlToPdf
-            label="Télécharger le dossier de faisabilité"
-            elementId="dff-to-print"
-            filename="dossier_de_faisabilite.pdf"
-          />
-        )}
+        <ButtonConvertHtmlToPdf
+          label="Télécharger le dossier de faisabilité"
+          elementId="dff-to-print"
+          filename="dossier_de_faisabilite.pdf"
+        />
       </div>
 
       <DffSummary
