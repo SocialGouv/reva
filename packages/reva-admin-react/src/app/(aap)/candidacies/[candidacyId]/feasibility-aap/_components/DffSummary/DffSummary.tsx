@@ -1,5 +1,4 @@
 "use client";
-import { ButtonConvertHtmlToPdf } from "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf";
 import {
   Candidacy,
   Candidate,
@@ -8,6 +7,7 @@ import {
   DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
+import dynamic from "next/dynamic";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 import CandidateSection from "./_components/CandidateSection";
@@ -17,6 +17,16 @@ import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
+
+// The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
+// We use dynamic import to ensure the component is only loaded on the client side.
+const ButtonConvertHtmlToPdf = dynamic(
+  () =>
+    import(
+      "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf"
+    ).then((mod) => mod.ButtonConvertHtmlToPdf),
+  { ssr: false },
+);
 
 export default function DffSummary({
   dematerializedFeasibilityFile,
