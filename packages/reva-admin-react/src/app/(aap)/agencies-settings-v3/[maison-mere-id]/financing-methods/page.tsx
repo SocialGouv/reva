@@ -9,10 +9,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 export default function FinancingMethodsPage() {
+  const router = useRouter();
+
   const { "maison-mere-id": maisonMereAAPId } = useParams<{
     "maison-mere-id": string;
   }>();
@@ -40,6 +42,10 @@ export default function FinancingMethodsPage() {
 
   if (isLoading || !maisonMereAAP) return null;
 
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAP.id}`
+    : `/agencies-settings-v3`;
+
   const handleFinancingMethodsFormSubmit = async (
     data: FinancingMethodsFormData,
   ) => {
@@ -48,6 +54,7 @@ export default function FinancingMethodsPage() {
         isMCFCompatible: data.isMCFCompatible === "true",
       });
       successToast("modifications enregistrées");
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -85,11 +92,7 @@ export default function FinancingMethodsPage() {
       <FinancingMethodsForm
         onSubmit={handleFinancingMethodsFormSubmit}
         defaultValues={defaultValues}
-        backUrl={
-          isAdmin
-            ? `/maison-mere-aap/${maisonMereAAP.id}`
-            : `/agencies-settings-v3`
-        }
+        backUrl={backUrl}
       />
     </div>
   );
