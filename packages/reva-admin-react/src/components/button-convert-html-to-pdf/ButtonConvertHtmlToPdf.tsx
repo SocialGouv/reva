@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
+import { useState } from "react";
 export const ButtonConvertHtmlToPdf = ({
   label,
   elementId,
@@ -10,7 +11,9 @@ export const ButtonConvertHtmlToPdf = ({
   elementId: string;
   filename: string;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const handleConvertHtmlToPdf = () => {
+    setIsLoading(true);
     const element = document.getElementById(elementId);
     if (element) {
       const elementsToHide = document.querySelectorAll(".hide-bg-for-pdf");
@@ -19,14 +22,21 @@ export const ButtonConvertHtmlToPdf = ({
       });
 
       const options = {
-        margin: 0.8,
+        margin: [0.3, 0.5, 0.2, 0.5],
         filename,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
+        image: { type: "jpeg", quality: 0.8 },
+        pagebreak: {
+          mode: "avoid-all",
+        },
+        html2canvas: {
+          scale: 3,
+          logging: false,
+        },
         jsPDF: {
           unit: "in",
           format: "letter",
           orientation: "portrait",
+          compress: true,
         },
       };
       html2pdf()
@@ -37,6 +47,9 @@ export const ButtonConvertHtmlToPdf = ({
           elementsToHide.forEach((el) => {
             (el as HTMLElement).classList.remove("hide-bg-for-pdf");
           });
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
@@ -47,6 +60,7 @@ export const ButtonConvertHtmlToPdf = ({
       priority="secondary"
       size="small"
       onClick={handleConvertHtmlToPdf}
+      disabled={isLoading}
     >
       {label}
     </Button>

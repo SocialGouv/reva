@@ -109,7 +109,11 @@ export const CertificationCompetenceAccordion = ({
   }
 
   return (
-    <Accordion label={label} defaultExpanded={defaultExpanded}>
+    <Accordion
+      label={label}
+      defaultExpanded={defaultExpanded}
+      className="hide-bg-for-pdf"
+    >
       {competenceBloc.competences.map((competence) => (
         <div key={competence.id}>
           <BadgeState
