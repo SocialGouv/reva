@@ -133,7 +133,7 @@ export const validateSubscriptionRequest = async ({
       showAccountSetup: true,
       isActive: true,
       isSignalized: false,
-      isMCFCompatible: false,
+      isMCFCompatible: null,
     },
     ccnIds: [],
   });
