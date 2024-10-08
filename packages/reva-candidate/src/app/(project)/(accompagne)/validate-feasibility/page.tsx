@@ -14,6 +14,7 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 
+import { ButtonConvertHtmlToPdf } from "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { useQueryClient } from "@tanstack/react-query";
@@ -91,7 +92,14 @@ export default function ValidateFeasibility() {
 
   return (
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
-      <h2 className="mt-6 mb-4">Dossier de faisabilité </h2>
+      <div className="flex justify-between mb-4 mt-6">
+        <h1 className="mb-0">Dossier de faisabilité </h1>
+        <ButtonConvertHtmlToPdf
+          label="Télécharger le dossier de faisabilité"
+          elementId="dff-to-print"
+          filename="dossier_de_faisabilite.pdf"
+        />
+      </div>
 
       <DffSummary
         candidateDecisionComment={candidateDecisionComment}
@@ -105,6 +113,7 @@ export default function ValidateFeasibility() {
 
           onSubmit();
         }}
+        data-html2canvas-ignore="true"
       >
         <div className="flex flex-col gap-3">
           <h2 className="mb-0">Validation du dossier de faisabilité</h2>

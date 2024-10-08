@@ -68,7 +68,7 @@ export function DffSummary({
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" id="dff-to-print">
       {sentToCertificationAuthorityAt ? (
         <Alert
           description={`Dossier envoyé au certificateur le ${format(

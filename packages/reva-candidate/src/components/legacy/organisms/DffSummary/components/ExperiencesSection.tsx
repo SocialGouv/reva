@@ -20,7 +20,10 @@ export default function ExperiencesSection({
   return (
     <div className="mb-8">
       <div className="flex">
-        <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
+        <span
+          className="fr-icon-briefcase-fill fr-icon--lg mr-2"
+          data-html2canvas-ignore="true"
+        />
         <h2 className="mb-0">Expériences professionnelles</h2>
       </div>
       {experiences.length > 0 && (
