@@ -56,7 +56,10 @@ export default function CandidateSection({
   return (
     <div>
       <div className="flex">
-        <span className="fr-icon-user-fill fr-icon--lg mr-2" />
+        <span
+          className="fr-icon-user-fill fr-icon--lg mr-2"
+          data-html2canvas-ignore="true"
+        />
         <h2>
           {genderLabel} {lastname} {firstname}
           {firstname2 ? `, ${firstname2}` : ""}

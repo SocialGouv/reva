@@ -42,21 +42,21 @@ const BadgeState = ({
 }) => {
   if (state === "YES") {
     return (
-      <Badge noIcon severity="success" small>
+      <Badge noIcon severity="success" small className="hide-bg-for-pdf">
         Oui
       </Badge>
     );
   }
   if (state === "NO") {
     return (
-      <Badge severity="error" noIcon small>
+      <Badge severity="error" noIcon small className="hide-bg-for-pdf">
         Non
       </Badge>
     );
   }
   if (state === "PARTIALLY") {
     return (
-      <Badge severity="new" noIcon small>
+      <Badge severity="new" noIcon small className="hide-bg-for-pdf">
         Partiellement
       </Badge>
     );

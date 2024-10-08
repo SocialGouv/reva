@@ -28,6 +28,7 @@
     "date-fns": "^3.6.0",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
+    "html2pdf.js": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^24.0.3",
     "lodash": "^4.17.21",

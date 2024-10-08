@@ -48,7 +48,10 @@ export default function CertificationSection({
   return (
     <div>
       <div className="flex">
-        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
+        <span
+          className="fr-icon-award-fill fr-icon--lg mr-2"
+          data-html2canvas-ignore="true"
+        />
         <h2>Certification visée</h2>
       </div>
       <h4 className="mb-2">{certification?.label}</h4>

@@ -25,7 +25,7 @@ const HasBeenSentComponent = ({
         className="mb-12"
       />
     ) : (
-      <p className="text-xl mb-12">
+      <p className="text-xl mb-12" data-html2canvas-ignore="true">
         Vérifiez que toutes les informations soient correctes et envoyez le
         dossier de faisabilité au candidat. Il devra vous fournir une
         attestation sur l'honneur pour valider ce dossier.

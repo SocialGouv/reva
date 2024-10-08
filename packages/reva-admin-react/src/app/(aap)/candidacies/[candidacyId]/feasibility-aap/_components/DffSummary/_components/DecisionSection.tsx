@@ -27,7 +27,10 @@ export default function DecisionSection({
   return (
     <div>
       <div className="flex">
-        <span className="fr-icon-thumb-up-fill fr-icon--lg mr-2" />
+        <span
+          className="fr-icon-thumb-up-fill fr-icon--lg mr-2"
+          data-html2canvas-ignore="true"
+        />
         <h2 className="mb-0">Avis de faisabilité</h2>
       </div>
       <div className="my-4">

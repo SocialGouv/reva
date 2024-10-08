@@ -1,4 +1,5 @@
 "use client";
+import { ButtonConvertHtmlToPdf } from "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf";
 import {
   Candidacy,
   Candidate,
@@ -58,8 +59,19 @@ export default function DffSummary({
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
   return (
-    <div className="flex flex-col">
-      <h1>Dossier de faisabilité</h1>
+    <div className="flex flex-col" id="dff-to-print">
+      <div className="flex justify-between mb-4">
+        <h1 className="mb-0">Dossier de faisabilité</h1>
+        <ButtonConvertHtmlToPdf
+          label="Télécharger le dossier de faisabilité"
+          elementId="dff-to-print"
+          filename="dossier_de_faisabilite.pdf"
+        />
+      </div>
+      <p>
+        Retrouvez les informations liées à la faisabilité de ce parcours VAE et
+        donnez votre décision sur la recevabilité du dossier
+      </p>
 
       {HasBeenSentComponent}
 
