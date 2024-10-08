@@ -329,8 +329,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         <DownloadTile
           name="Trame du dossier de faisabilité"
           description="Pour compléter votre dossier, vous devez télécharger cette trame de dossier de faisabilité, le compléter, le signer et le joindre avec toutes les pièces justificatives nécessaires."
-          url="/files/Dossier_faisabilité_candidat_autonome.pdf"
+          url="/candidat/files/Dossier_faisabilité_candidat_autonome.pdf"
           mimeType="application/pdf"
+          fileSizeInBytes={2407563}
         />
         <hr className="pb-1" />
         {canUpload && (

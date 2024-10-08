@@ -5,7 +5,7 @@ import { SendFeasibilityForm } from "./_components/SendFeasibilityForm.component
 export default function Feasibility() {
   return (
     <PageLayout title="Dosier de faisabilité">
-      <h1 className="mt-8">Dosier de faisabilité</h1>
+      <h1 className="mt-8">Dossier de faisabilité</h1>
       <p className="text-xl">
         Téléchargez, remplissez puis envoyez votre dossier de faisabilité au
         certificateur. Si vous avez déjà une recevabilité, vous pouvez

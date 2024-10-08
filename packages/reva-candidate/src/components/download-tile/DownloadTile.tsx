@@ -3,11 +3,13 @@ export const DownloadTile = ({
   description,
   url,
   mimeType,
+  fileSizeInBytes,
 }: {
   name: string;
   description?: string;
   url: string;
   mimeType: string;
+  fileSizeInBytes?: number;
 }) => {
   return (
     <div className="fr-tile fr-tile--download fr-enlarge-link">
@@ -22,6 +24,12 @@ export const DownloadTile = ({
           <div className="fr-card__end">
             <p className="fr-tile__detail">
               {mimeType.split("/").pop()?.toUpperCase()}
+              {fileSizeInBytes &&
+                ` - ${
+                  fileSizeInBytes > 1024 * 1024
+                    ? `${(fileSizeInBytes / (1024 * 1024)).toFixed(2)} Mo`
+                    : `${(fileSizeInBytes / 1024).toFixed(2)} Ko`
+                }`}
             </p>
           </div>
         </div>
