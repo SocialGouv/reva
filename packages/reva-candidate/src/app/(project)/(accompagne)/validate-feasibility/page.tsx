@@ -14,12 +14,22 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 
-import { ButtonConvertHtmlToPdf } from "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { useQueryClient } from "@tanstack/react-query";
 import { GraphQLError } from "graphql";
+import dynamic from "next/dynamic";
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
+
+// The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
+// We use dynamic import to ensure the component is only loaded on the client side.
+const ButtonConvertHtmlToPdf = dynamic(
+  () =>
+    import(
+      "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf"
+    ).then((mod) => mod.ButtonConvertHtmlToPdf),
+  { ssr: false },
+);
 
 export default function ValidateFeasibility() {
   const router = useRouter();
@@ -94,11 +104,13 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        <ButtonConvertHtmlToPdf
-          label="Télécharger le dossier de faisabilité"
-          elementId="dff-to-print"
-          filename="dossier_de_faisabilite.pdf"
-        />
+        {typeof window !== "undefined" && (
+          <ButtonConvertHtmlToPdf
+            label="Télécharger le dossier de faisabilité"
+            elementId="dff-to-print"
+            filename="dossier_de_faisabilite.pdf"
+          />
+        )}
       </div>
 
       <DffSummary
