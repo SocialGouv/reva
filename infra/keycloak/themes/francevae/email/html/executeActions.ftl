@@ -27,8 +27,8 @@
     <#if (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "gestionnaire_maison_mere_aap">
         <#if section="intro">
             <p>Votre compte a été créé avec succès ! Nous sommes heureux de vous accueillir en tant qu'Architecte
-                Accompagnateur de Parcours (AAP) sur notre plateforme France VAE. Votre structure est désormais visible
-                par les candidats.</p>
+                Accompagnateur de Parcours (AAP) sur notre plateforme France VAE. Vous serez prochainement visible
+                dans les résultats de recherche des candidats.</p>
 
             <h2>Prochaine étape : activez votre compte</h2>
             <p>Pour finaliser votre inscription, cliquez sur le bouton ci-dessous, il vous sera demandé de choisir un
@@ -46,35 +46,25 @@
 
             <h2>Tout ce qu’il faut savoir pour bien démarrer</h2>
             <ul>
-                <li><strong>Mode invisible</strong> : Besoin d’un peu de temps pour vous familiariser avec l’univers
-                    France VAE ? Profitez du mode invisible (activable depuis les paramètres de votre compte) pour vous
-                    documenter avant de recevoir vos premières candidatures. Cliquez sur l’icône 💡en bas à droite dans
-                    votre espace personnel pour avoir accès à toutes nos ressources.<br /><br />
+                <li>
+                    <strong>Paramétrage du compte</strong> : Renseignez les informations essentielles à votre référencement
+                    sur la plateforme et apparaissez rapidement dans les recherches des candidats.
+                    Pour vous accompagner dans votre démarche, suivez notre tutoriel qui vous explique
+                    le paramétrage pas à pas.<br /><br />
                 </li>
-                <li><strong>Webinaires</strong> : Participez à nos différents webinaires et obtenez toutes les
-                    informations nécessaires à
-                    votre nouveau rôle d’AAP. Vous serez régulièrement informé des sujets via notre
-                    newsletter.<br /><br />
-                </li>
-                <li><strong>Tutoriels</strong> : Parfois, on a juste besoin d’un petit coup de pouce pour avancer
+                <li><a href="https://fabnummas.notion.site/Tutoriels-et-autres-pas-pas-5113b725db8c4a598e6d29aa105a1968">
+                    <strong>Tutoriels</strong></a> : Parfois, on a juste besoin d’un petit coup de pouce pour avancer
                     sereinement sur la plateforme. C’est chose possible grâce à nos tutoriels !<br /><br />
                 </li>
                 <li>
-                    <a href="https://vae.gouv.fr/savoir-plus/"><strong>Espace d’informations</strong></a> : Découvrez
-                    les documents clés pour accompagner efficacement vos premiers candidats.<br /><br />
-                </li>
-                <li>
                     <a href="https://fabnummas.notion.site/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67">
-                        <strong> Cahier des charges des AAP</strong></a> : Familiarisez-vous avec vos responsabilités et
-                    les attentes du rôle.<br /><br />
+                    <strong>Cahier des charges des AAP</strong></a> : Familiarisez-vous avec vos responsabilités et
+                    les attentes du rôle en consultant le cahier des charges.<br /><br />
                 </li>
                 <li>
-                    <strong>Dossier de faisabilité</strong> : Téléchargez les dossiers de faisabilité et modifiez-les
-                    via Adobe Reader.<br /><br />
-                </li>
-                <li><strong>Facturation</strong> : Vous devrez adresser une seule facturation en fin d’accompagnement à
-                    Uniformation. <i>Bon à savoir</i> : Si vous décidez de prescrire une formation à votre candidat,
-                    votre organisme devra avancer les frais de formation.
+                    <a href="https://fabnummas.notion.site/f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea">
+                    <strong>Espace documentaire</strong></a> : Découvrez les documents clés pour accompagner efficacement vos premiers candidats.
+                    Cliquez sur l’icône 💡 en bas à droite de votre espace professionnel pour avoir accès à toutes nos ressources.
                 </li>
             </ul>
             <p>Pour toute question, vous pouvez consulter notre
