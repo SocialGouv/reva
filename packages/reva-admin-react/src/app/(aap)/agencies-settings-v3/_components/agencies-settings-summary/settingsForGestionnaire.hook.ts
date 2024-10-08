@@ -18,6 +18,7 @@ const HeadAgencySettingsInfoQuery = graphql(`
         }
         maisonMereAAP {
           id
+          isMCFCompatible
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
             isHeadAgency

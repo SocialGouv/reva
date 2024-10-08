@@ -11,6 +11,7 @@ const MaisonMereAAPQuery = graphql(`
       statutValidationInformationsJuridiquesMaisonMereAAP
       isActive
       isSignalized
+      isMCFCompatible
       organisms {
         isHeadAgency
         accounts {

@@ -4,6 +4,7 @@ import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-setti
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
+import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 
 const getRemoteOrganism = ({
   organism,
@@ -46,6 +47,8 @@ export const SettingsSummaryForGestionnaire = ({
     "EN_ATTENTE_DE_VERIFICATION",
   ].includes(maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP);
 
+  const isFinancingMethodsCompleted = maisonMereAAP.isMCFCompatible !== null;
+
   const remoteOrganism = getRemoteOrganism({
     organism: organism as Organism,
     maisonMereAAP: maisonMereAAP as MaisonMereAap,
@@ -63,6 +66,29 @@ export const SettingsSummaryForGestionnaire = ({
         buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/general-information`}
         titleIconClass="fr-icon-information-fill"
       />
+      <EnhancedSectionCard
+        data-test="financing-methods"
+        title="Modalités de financement"
+        status={isFinancingMethodsCompleted ? "COMPLETED" : "TO_COMPLETE"}
+        isEditable
+        buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/financing-methods`}
+        titleIconClass="fr-icon-coin-fill"
+      >
+        {!isFinancingMethodsCompleted && (
+          <p data-test="no-financing-method-text">
+            Vous êtes référencé sur la plateforme Mon Compte Formation ?
+            Faites-le faire savoir aux candidats afin qu’ils puissent financer
+            l’accompagnement via ce dispositif.
+          </p>
+        )}
+        {isFinancingMethodsCompleted && (
+          <Highlight className="[&_p]:mb-0" data-test="financing-methods-text">
+            {maisonMereAAP.isMCFCompatible
+              ? "Référencé Mon Compte Formation"
+              : "Non-référencé Mon Compte Formation"}
+          </Highlight>
+        )}
+      </EnhancedSectionCard>
       <AgencySettingsSummarySectionRemote
         organism={remoteOrganism}
         maisonMereAAPId={maisonMereAAP.id}

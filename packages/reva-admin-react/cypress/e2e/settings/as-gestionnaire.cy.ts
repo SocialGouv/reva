@@ -2,14 +2,17 @@ import { stubQuery } from "../../utils/graphql";
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 function visitSettings({
-  informationsJuridiques,
+  informationsJuridiques = "A_JOUR",
+  isMCFCompatible = null,
 }: {
-  informationsJuridiques: StatutValidationInformationsJuridiquesMaisonMereAap;
+  informationsJuridiques?: StatutValidationInformationsJuridiquesMaisonMereAap;
+  isMCFCompatible?: boolean | null;
 }) {
   cy.fixture("account/head-agency-settings.json").then((settings) => {
     settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP =
       informationsJuridiques;
-
+    settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.isMCFCompatible =
+      isMCFCompatible;
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
@@ -107,6 +110,42 @@ context("Head agency settings page", () => {
         "contain",
         "bob.doe@example.com",
       );
+    });
+  });
+
+  context("on the financing methods section", () => {
+    it("display a 'to complete badge' when we don't know if the AAP is MCP compatible or not", function () {
+      visitSettings({});
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="to-complete-badge"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="no-financing-method-text"]',
+      ).should(
+        "contain.text",
+        "Vous êtes référencé sur la plateforme Mon Compte Formation ? Faites-le faire savoir aux candidats afin qu’ils puissent financer l’accompagnement via ce dispositif.",
+      );
+    });
+    it("display a 'completed badge' when the AAP is MCP compatible ", function () {
+      visitSettings({ isMCFCompatible: true });
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="completed-badge"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="financing-methods-text"]',
+      ).should("contain.text", "Référencé Mon Compte Formation");
+    });
+    it("display a 'completed badge' when the AAP is not MCP compatible ", function () {
+      visitSettings({ isMCFCompatible: false });
+      cy.wait("@getHeadAgencySettingsInfo");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="completed-badge"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="financing-methods"] [data-test="financing-methods-text"]',
+      ).should("contain.text", "Non-référencé Mon Compte Formation");
     });
   });
 });
