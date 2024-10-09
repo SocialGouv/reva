@@ -22,6 +22,7 @@ export const ReadOnlyDossierDeValidationTab = ({
   return (
     <div className="flex flex-col">
       <Alert
+        data-test="dossier-de-validation-sent-alert"
         title={`Dossier de validation envoyé le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
         severity="info"
         className="mt-8"

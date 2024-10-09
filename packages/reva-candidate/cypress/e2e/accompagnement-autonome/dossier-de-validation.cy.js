@@ -245,4 +245,45 @@ context("Accompagnement autonome - Dossier de validation", () => {
       "01/10/2024",
     );
   });
+
+  it("should let me view a read only version of the dossier de validation tab once the dossier de validation is sent", function () {
+    cy.fixture("candidate1-certification-titre-2-selected.json").then(
+      (candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+          "AUTONOME";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "DOSSIER_VALIDATION_ENVOYE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          {
+            dossierDeValidationOtherFiles: [],
+            dossierDeValidationSentAt: 1727776800000,
+          };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+            candidate,
+          );
+        });
+      },
+    );
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+    });
+
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+
+    cy.visit("/dossier-de-validation-autonome/");
+    cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+
+    cy.get('[data-test="dossier-de-validation-sent-alert"]').should(
+      "contain.text",
+      "Dossier de validation envoyé le 01/10/2024",
+    );
+  });
 });
