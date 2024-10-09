@@ -32,7 +32,7 @@ export const CguStep = () => {
   const alertDescription = (
     <>
       <p>
-        Nous vous proposons plusieurs ressources pour démarrer votre inscritpion
+        Nous vous proposons plusieurs ressources pour démarrer votre inscription
         en toute sérénité :
       </p>
       <ul>
