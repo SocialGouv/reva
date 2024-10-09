@@ -20,8 +20,9 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { UploadForm } from "./UploadForm";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
-import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
-import Notice from "@codegouvfr/react-dsfr/Notice";
+// import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
+// import Notice from "@codegouvfr/react-dsfr/Notice";
+import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
 
 const schema = z.object({
   certificationAuthorityId: z.string(),
@@ -183,116 +184,15 @@ export const SendFeasibilityForm = (): React.ReactNode => {
 
   return (
     <div className="mt-12">
-      {candidacy.feasibility?.decision == "REJECTED" && (
-        <>
-          <Alert
-            className="mb-8"
-            severity="error"
-            title={`Dossier déclaré non recevable le ${new Date(candidacy.feasibility.decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            description={
-              <>
-                <p>
-                  Voici le motif transmis par votre certificateur : {'"'}
-                  {candidacy.feasibility.decisionComment}
-                  {'"'}
-                </p>
-                <p>
-                  Si vous souhaitez en savoir plus, contactez votre
-                  certificateur avant de renvoyer votre dossier mis à jour.
-                </p>
-              </>
-            }
-          />
-
-          {feasibilityHistory.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibilityHistory} />
-          )}
-        </>
-      )}
-      {candidacy.feasibility?.decision == "INCOMPLETE" && (
-        <>
-          <Alert
-            className="mb-8"
-            severity="warning"
-            title={`Dossier déclaré incomplet le ${new Date(candidacy.feasibility.decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            description={
-              <>
-                <p>
-                  Voici le motif transmis par votre certificateur : {'"'}
-                  {candidacy.feasibility.decisionComment}
-                  {'"'}
-                </p>
-                <p>
-                  Si vous souhaitez en savoir plus, contactez votre
-                  certificateur avant de renvoyer votre dossier mis à jour.
-                </p>
-              </>
-            }
-          />
-          {feasibilityHistory.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibilityHistory} />
-          )}
-        </>
-      )}
-      {candidacy.feasibility?.decision == "PENDING" && (
-        <Alert
-          className="mb-8"
-          severity="info"
-          title={`Dossier envoyé le ${new Date(candidacy.feasibility.feasibilityFileSentAt!).toLocaleDateString("fr-FR")}`}
-          description={
-            <>
-              <p>
-                Votre dossier a bien été envoyé au certificateur concerné. En
-                attendant la réponse de votre certificateur sur votre
-                recevabilité (dans un délai de 2 mois), vos pièces
-                justificatives restent consultables.
-              </p>
-            </>
-          }
+      {candidacy.feasibility?.decision && (
+        <FeasibilityDecisionDisplay
+          decision={candidacy.feasibility.decision}
+          feasibilityHistory={feasibilityHistory}
+          decisionComment={candidacy.feasibility.decisionComment}
+          decisionSentAt={candidacy.feasibility.decisionSentAt}
+          decisionFile={candidacy.feasibility.decisionFile}
+          feasibilityFileSentAt={candidacy.feasibility.feasibilityFileSentAt}
         />
-      )}
-      {candidacy.feasibility?.decision == "ADMISSIBLE" && (
-        <>
-          <Alert
-            className="mb-8"
-            severity="success"
-            title={`Dossier déclaré recevable le ${new Date(candidacy.feasibility.decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            description={
-              <>
-                <p>
-                  Félicitations, votre dossier a été accepté par votre
-                  certificateur. Vous pouvez commencer la prochaine étape : le
-                  dossier de validation !
-                </p>
-              </>
-            }
-          />
-          {candidacy.feasibility.decisionFile && (
-            <div className="mb-8 p-6">
-              <h2>
-                <span className="fr-icon-attachment-fill fr-icon--lg mr-2" />
-                Pièces jointes
-              </h2>
-
-              <div className="mb-6">
-                {/* Use array in anticipation for future US that will let certification authorities upload multiple files */}
-                {[candidacy.feasibility.decisionFile].map((file) => (
-                  <FancyPreview
-                    defaultDisplay={false}
-                    name={file.name}
-                    title={file?.name}
-                    src={file.previewUrl!}
-                    key={file?.name}
-                  />
-                ))}
-              </div>
-              <Notice
-                className="bg-transparent -ml-6"
-                title="Le certificateur peut ajouter des pièces jointes (courrier de recevabilité, trame du dossier de validation…) pour vous aider à continuer votre parcours. N'hésitez pas à les consulter !"
-              />
-            </div>
-          )}
-        </>
       )}
       <form
         onSubmit={handleFormSubmit}
