@@ -18,6 +18,7 @@ export default function DossierDeValidationAutonomePag() {
     readyForJuryEstimatedAt,
     certificationAuthority,
     dossierDeValidation,
+    dossierDeValidationProblems,
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
     queryStatus,
@@ -145,6 +146,10 @@ export default function DossierDeValidationAutonomePag() {
                         email: certificationAuthority?.contactEmail || "",
                         name: certificationAuthority?.contactFullName || "",
                       }}
+                      dossierDeValidationIncomplete={
+                        dossierDeValidation?.decision === "INCOMPLETE"
+                      }
+                      dossierDeValidationProblems={dossierDeValidationProblems}
                       onSubmit={handleDossierDeValidationFormSubmit}
                     />
                   ),

@@ -21,6 +21,8 @@ const getCandidateQuery = graphql(`
         activeDossierDeValidation {
           id
           decision
+          decisionSentAt
+          decisionComment
           dossierDeValidationSentAt
           dossierDeValidationFile {
             name
@@ -29,6 +31,11 @@ const getCandidateQuery = graphql(`
           dossierDeValidationOtherFiles {
             name
             previewUrl
+          }
+          history {
+            id
+            decisionSentAt
+            decisionComment
           }
         }
       }
@@ -81,6 +88,19 @@ export const useDossierDeValidationAutonomePage = () => {
 
   const dossierDeValidation = candidacy?.activeDossierDeValidation;
 
+  const dossierDeValidationProblems =
+    dossierDeValidation?.history?.map((h) => ({
+      decisionSentAt: new Date(h.decisionSentAt || 0),
+      decisionComment: h.decisionComment || "",
+    })) || [];
+
+  if (dossierDeValidation?.decision === "INCOMPLETE") {
+    dossierDeValidationProblems.unshift({
+      decisionSentAt: new Date(dossierDeValidation.decisionSentAt || 0),
+      decisionComment: dossierDeValidation.decisionComment || "",
+    });
+  }
+
   const sendDossierDeValidation = useCallback(
     async (data: {
       dossierDeValidationFile: {
@@ -128,6 +148,7 @@ export const useDossierDeValidationAutonomePage = () => {
     readyForJuryEstimatedAt,
     certificationAuthority,
     dossierDeValidation,
+    dossierDeValidationProblems,
     queryStatus,
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,

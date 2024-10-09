@@ -319,5 +319,49 @@ context("Accompagnement autonome - Dossier de validation", () => {
         '[data-test="dossier-de-validation-autonome-timeline-element"] [data-test="dossier-de-validation-signale-notice"]',
       ).should("exist");
     });
+
+    it("should show a 'dossier de validation signalé' alert if i open a signaled dossier de validation", function () {
+      cy.fixture("candidate1-certification-titre-2-selected.json").then(
+        (candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+            "AUTONOME";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+            "DOSSIER_DE_VALIDATION_SIGNALE";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+            {
+              dossierDeValidationOtherFiles: [],
+              decision: "INCOMPLETE",
+            };
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+            stubQuery(
+              req,
+              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              candidate,
+            );
+            stubQuery(
+              req,
+              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              candidate,
+            );
+          });
+        },
+      );
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate_login.json");
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.get(
+        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+      ).click();
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.get(".fr-tabs__tab").contains("du dossier").click();
+      cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
+        "exist",
+      );
+    });
   });
 });

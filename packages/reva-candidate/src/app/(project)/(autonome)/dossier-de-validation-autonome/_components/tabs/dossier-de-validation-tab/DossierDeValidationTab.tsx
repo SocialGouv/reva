@@ -6,6 +6,9 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { format } from "date-fns";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
@@ -35,9 +38,17 @@ export type DossierDeValidationFormData = z.infer<
 
 export const DossierDeValidationTab = ({
   certificationAuthorityInfo,
+  dossierDeValidationIncomplete,
+  dossierDeValidationProblems,
   onSubmit,
 }: {
   certificationAuthorityInfo: { name: string; email: string };
+  dossierDeValidationIncomplete?: boolean;
+  dossierDeValidationProblems: {
+    decisionSentAt: Date;
+    decisionComment: string;
+  }[];
+
   onSubmit: (data: DossierDeValidationFormData) => Promise<void>;
 }) => {
   const {
@@ -69,11 +80,41 @@ export const DossierDeValidationTab = ({
 
   return (
     <div className="flex flex-col">
-      Une fois votre dossier de validation complété et relu, vous pouvez le
-      transmettre à votre certificateur depuis cette page.Si des pièces
-      supplémentaires sont requises (ex : attestation de premiers secours),
-      elles seront également à envoyer ici.
+      <p className="mb-8">
+        Une fois votre dossier de validation complété et relu, vous pouvez le
+        transmettre à votre certificateur depuis cette page.Si des pièces
+        supplémentaires sont requises (ex : attestation de premiers secours),
+        elles seront également à envoyer ici.
+      </p>
+      {dossierDeValidationIncomplete && (
+        <Alert
+          data-test="dossier-de-validation-signale-alert"
+          severity="error"
+          title="Dossier de validation signalé par le certificateur"
+          description="Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous. Merci de retourner rapidement un dossier valide."
+        />
+      )}
       <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
+      {dossierDeValidationIncomplete && (
+        <>
+          <ul className="flex flex-col gap-8 pl-0">
+            {dossierDeValidationProblems.map((p, i) => (
+              <GrayCard key={i}>
+                <dl>
+                  <dt className="font-bold text-xl">Dossier signalé :</dt>
+                  <dd>
+                    Dossier signalé le {format(p.decisionSentAt, "dd/MM/yyyy")}
+                  </dd>
+                  <br />
+                  <dt className="font-bold text-xl">Motif du signalement :</dt>
+                  <dd>{p.decisionComment}</dd>
+                </dl>
+              </GrayCard>
+            ))}
+          </ul>
+          <hr className="mt-8 mb-5" />
+        </>
+      )}
       <form
         className="flex flex-col flex-1 mb-2 overflow-auto"
         onSubmit={handleFormSubmit}
