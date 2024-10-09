@@ -10,6 +10,7 @@ import {
 } from "../../../shared/error/functionalError";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { updateCertification } from "./updateCertification";
+import { getFeatureByKey } from "../../../feature-flipping/feature-flipping.features";
 
 export const updateCertificationWithinOrganismScope = async ({
   hasRole,
@@ -61,14 +62,24 @@ export const updateCertificationWithinOrganismScope = async ({
     );
   }
 
+  const isFormacodeActive = await isFormacodeFeatureActive();
+
   // Ensure the new certification is handled by current candidacy organism
-  const activeOrganism =
-    await prismaClient.activeOrganismByAvailableCertification.findFirst({
-      where: {
-        certificationId: certificationId,
-        organismId: candidacy.organismId,
-      },
-    });
+  const activeOrganism = isFormacodeActive
+    ? await prismaClient.activeOrganismByAvailableCertificationBasedOnFormacode.findFirst(
+        {
+          where: {
+            certificationId: certificationId,
+            organismId: candidacy.organismId,
+          },
+        },
+      )
+    : await prismaClient.activeOrganismByAvailableCertification.findFirst({
+        where: {
+          certificationId: certificationId,
+          organismId: candidacy.organismId,
+        },
+      });
 
   if (!activeOrganism) {
     throw new Error(
@@ -138,4 +149,14 @@ export const updateCertificationWithinOrganismScope = async ({
       },
     },
   });
+};
+
+const isFormacodeFeatureActive = async (): Promise<boolean> => {
+  const isAapSettingsV3Active = (await getFeatureByKey("AAP_SETTINGS_V3"))
+    ?.isActive;
+  const isAapSettingsFormacodeActive = (
+    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
+  )?.isActive;
+
+  return !!(isAapSettingsV3Active && isAapSettingsFormacodeActive);
 };
