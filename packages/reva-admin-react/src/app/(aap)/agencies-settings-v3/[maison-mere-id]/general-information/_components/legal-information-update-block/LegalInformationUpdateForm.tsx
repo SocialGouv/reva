@@ -212,7 +212,7 @@ export const LegalInformationUpdateForm = ({
             <FancyUpload
               className="col-span-2"
               title="Lettre de délégation"
-              description="Il s'agit de la lettre de délégation de l'administration du compte FVAE signée et datée par le dirigeant et le délégataire"
+              description="Il s'agit de la lettre de délégation de l'administration du compte France VAE signée et datée par le dirigeant et le délégataire"
               hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
               nativeInputProps={{
                 ...register("lettreDeDelegation"),
