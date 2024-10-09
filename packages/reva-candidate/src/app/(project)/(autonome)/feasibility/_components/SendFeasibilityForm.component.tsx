@@ -102,7 +102,21 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         (c) => c.id === certificationAuthorityId,
       );
     return (
-      <CallOut title="Comment contacter mon certificateur ?" className="w-3/5">
+      <CallOut
+        title={
+          <>
+            <h4 className="inline-block">
+              Comment contacter mon certificateur ?
+            </h4>
+            <span
+              className="fr-icon-question-line ml-4 text-dsfrBlue-500"
+              aria-hidden="true"
+              title="Il étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys."
+            />
+          </>
+        }
+        className="w-3/5"
+      >
         {selectedCertificationAuthority?.label}
         <br />
         {selectedCertificationAuthority?.contactFullName}
