@@ -286,4 +286,38 @@ context("Accompagnement autonome - Dossier de validation", () => {
       "Dossier de validation envoyé le 01/10/2024",
     );
   });
+
+  context("Dossier de validation signalé", () => {
+    it("should show a 'to complete' badge and a warning in the timeline", function () {
+      cy.fixture("candidate1-certification-titre-2-selected.json").then(
+        (candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+            "AUTONOME";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+            "DOSSIER_DE_VALIDATION_SIGNALE";
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+            stubQuery(
+              req,
+              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              candidate,
+            );
+          });
+        },
+      );
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate_login.json");
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.get(
+        '[data-test="dossier-de-validation-autonome-timeline-element"] [data-test="timeline-element-badge"]',
+      ).should("contain.text", "À compléter");
+      cy.get(
+        '[data-test="dossier-de-validation-autonome-timeline-element"] [data-test="dossier-de-validation-signale-notice"]',
+      ).should("exist");
+    });
+  });
 });

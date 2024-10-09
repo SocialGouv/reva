@@ -48,12 +48,18 @@ export const TimelineElement = ({
     >
       <h3 className="text-xl leading-none mb-0">
         {title}
-        {badge ? <span className="ml-2">{badge}</span> : null}
+        {badge ? (
+          <span className="ml-2" data-test="timeline-element-badge">
+            {badge}
+          </span>
+        ) : null}
       </h3>
 
       {description ? (
         typeof description === "string" ? (
-          <p className="text-xs leading-5 mt-1 text-dsfrGray-500 mb-0">{description}</p>
+          <p className="text-xs leading-5 mt-1 text-dsfrGray-500 mb-0">
+            {description}
+          </p>
         ) : (
           description
         )
