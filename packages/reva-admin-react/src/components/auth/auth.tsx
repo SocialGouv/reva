@@ -7,12 +7,12 @@ import { UserRole } from "./types";
 export const useAuth = () => {
   const { accessToken } = useKeycloakContext();
 
-  let isAdmin,
-    isCertificationAuthority,
-    isOrganism,
-    isGestionnaireMaisonMereAAP,
-    isCertificationRegistryManager,
-    isAdminCertificationAuthority = false;
+  let isAdmin: boolean = false,
+    isCertificationAuthority: boolean = false,
+    isOrganism: boolean = false,
+    isGestionnaireMaisonMereAAP: boolean = false,
+    isCertificationRegistryManager: boolean = false,
+    isAdminCertificationAuthority: boolean = false;
 
   let roles: UserRole[] = [];
 

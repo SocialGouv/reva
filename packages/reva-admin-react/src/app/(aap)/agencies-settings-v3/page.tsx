@@ -6,7 +6,7 @@ import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 import { useHeadyAgencySettings } from "./_components/agencies-settings-summary/settingsForGestionnaire.hook";
 
 const AgenciesSettingsPage = () => {
-  const { isGestionnaireMaisonMereAAP } = useAuth();
+  const { isGestionnaireMaisonMereAAP, isAdmin } = useAuth();
   const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
 
   return (
@@ -22,6 +22,7 @@ const AgenciesSettingsPage = () => {
             maisonMereAAP={maisonMereAAP as MaisonMereAap}
             organism={organism as Organism}
             accountId={accountId as string}
+            isAdmin={!!isAdmin}
           />
         </div>
       ) : (

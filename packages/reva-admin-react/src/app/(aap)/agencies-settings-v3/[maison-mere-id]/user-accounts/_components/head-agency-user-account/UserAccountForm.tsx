@@ -37,6 +37,7 @@ export const UserAccountForm = ({
   onSiteAgencies,
   emailFieldDisabled,
   backUrl,
+  isAdmin,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
@@ -44,6 +45,7 @@ export const UserAccountForm = ({
   defaultValues?: UserAccountFormData;
   emailFieldDisabled?: boolean;
   backUrl: string;
+  isAdmin: boolean;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
@@ -119,7 +121,7 @@ export const UserAccountForm = ({
               ...register("lastname"),
               autoComplete: "family-name",
             }}
-            disabled={isHeadAgency}
+            disabled={isHeadAgency && !isAdmin}
           />
           <Input
             label="Prénom"
@@ -129,14 +131,14 @@ export const UserAccountForm = ({
               ...register("firstname"),
               autoComplete: "given-name",
             }}
-            disabled={isHeadAgency}
+            disabled={isHeadAgency && !isAdmin}
           />
           <div className="col-span-1">
             <Input
               label="Email de connexion"
               state={errors.email ? "error" : "default"}
               stateRelatedMessage={errors.email?.message?.toString()}
-              disabled={emailFieldDisabled}
+              disabled={emailFieldDisabled && !isAdmin}
               nativeInputProps={{
                 ...register("email"),
                 autoComplete: "email",

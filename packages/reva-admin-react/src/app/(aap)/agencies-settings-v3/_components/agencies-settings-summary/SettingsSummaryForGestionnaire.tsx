@@ -34,10 +34,12 @@ export const SettingsSummaryForGestionnaire = ({
   maisonMereAAP,
   organism,
   accountId,
+  isAdmin,
 }: {
   maisonMereAAP: MaisonMereAap;
   organism: Organism;
   accountId: string;
+  isAdmin: boolean;
 }) => {
   if (!maisonMereAAP) {
     return null;
@@ -100,7 +102,7 @@ export const SettingsSummaryForGestionnaire = ({
       <EnhancedSectionCard
         data-test="user-accounts"
         title="Comptes collaborateurs"
-        isEditable
+        isEditable={!isAdmin}
         disabled={!isGeneralInformationCompleted}
         buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/add-user-account`}
         titleIconClass="fr-icon-team-fill"

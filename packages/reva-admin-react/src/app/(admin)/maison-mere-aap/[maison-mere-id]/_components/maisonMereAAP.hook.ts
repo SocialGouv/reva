@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 
@@ -56,6 +57,7 @@ const updateMaisonMereIsSignalizedMutation = graphql(`
 export const useMaisonMereAAP = (id: string) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
+  const { isAdmin } = useAuth();
   const { data: maisonMereAAPResponse, status: maisonMereAAPStatus } = useQuery(
     {
       queryKey: [id, "maisonMereAAP", "MaisonMereAapPage"],
@@ -107,5 +109,6 @@ export const useMaisonMereAAP = (id: string) => {
     accountId,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
+    isAdmin,
   };
 };

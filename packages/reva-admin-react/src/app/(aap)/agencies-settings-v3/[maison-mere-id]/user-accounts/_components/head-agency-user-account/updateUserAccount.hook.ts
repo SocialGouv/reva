@@ -103,8 +103,7 @@ export const useUpdateUserAccountPage = ({
   const updateUserAccount = useMutation({
     mutationFn: (data: UpdateOrganimsAccountAndOrganismInput) =>
       graphqlClient.request(updateUserAccountMutation, {
-        maisonMereAAPId:
-          agenciesInfo?.account_getAccountForConnectedUser?.maisonMereAAP?.id,
+        maisonMereAAPId,
         data,
       }),
     mutationKey: ["organisms", "agencies-settings-add-user-account-page"],

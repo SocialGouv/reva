@@ -34,7 +34,7 @@ const HeadAgencyUserAccount = () => {
         organismId: data.organismId,
       });
       successToast("Modification enregistrées");
-      router.push("/agencies-settings-v3");
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -85,6 +85,7 @@ const HeadAgencyUserAccount = () => {
           label: a.informationsCommerciales?.nom || a.label,
         }))}
         backUrl={backUrl}
+        isAdmin={isAdmin}
       />
     </div>
   );
