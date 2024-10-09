@@ -3,12 +3,13 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { LegalStatus } from "@/graphql/generated/graphql";
+import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { UseFormRegister } from "react-hook-form";
 import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { useGeneralInformationPage } from "./generalInformationPage.hook";
 
@@ -47,7 +48,15 @@ const GeneralInformationPage = () => {
       );
     }
 
-    const siret = data.siret;
+    const {
+      siret,
+      managerFirstname,
+      managerLastname,
+      gestionnaireFirstname,
+      gestionnaireLastname,
+      gestionnaireEmail,
+      phone,
+    } = data;
     const { formeJuridique, raisonSociale, qualiopiStatus, dateFermeture } =
       etablissement;
 
@@ -77,9 +86,15 @@ const GeneralInformationPage = () => {
         raisonSociale,
         siret,
         maisonMereAAPId,
+        managerFirstname,
+        managerLastname,
+        gestionnaireFirstname,
+        gestionnaireLastname,
+        gestionnaireEmail,
+        phone,
       });
 
-      successToast("Le numéro de SIRET a été modifié");
+      successToast("Les informations ont été modifiées");
       router.push(backUrl);
     } catch (error) {
       graphqlErrorToast(error);
@@ -169,18 +184,11 @@ const GeneralInformationPage = () => {
             </GrayCard>
             <GrayCard>
               <h2>Dirigeant et administrateur du compte</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <Info title="Dirigeant(e)">
-                  {maisonMereAAP.managerFirstname}{" "}
-                  {maisonMereAAP.managerLastname}
-                </Info>
-                <Info title="Administrateur">
-                  {maisonMereAAP.gestionnaire.firstname}{" "}
-                  {maisonMereAAP.gestionnaire.lastname}
-                </Info>
-                <Info title="Email">{maisonMereAAP.gestionnaire.email}</Info>
-                <Info title="Téléphone">{maisonMereAAP.phone}</Info>
-              </div>
+              {isAdmin ? (
+                <AccountInfoForm register={register} />
+              ) : (
+                <AccountInfo maisonMereAAP={maisonMereAAP} />
+              )}
             </GrayCard>
             {(isGestionnaireMaisonMereAAP || isAdmin) && (
               <li>
@@ -237,4 +245,56 @@ const Info = ({
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>
+);
+
+const AccountInfo = ({ maisonMereAAP }: { maisonMereAAP: MaisonMereAap }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2">
+    <Info title="Dirigeant(e)">
+      {maisonMereAAP.managerFirstname} {maisonMereAAP.managerLastname}
+    </Info>
+    <Info title="Administrateur">
+      {maisonMereAAP.gestionnaire.firstname}{" "}
+      {maisonMereAAP.gestionnaire.lastname}
+    </Info>
+    <Info title="Email">{maisonMereAAP.gestionnaire.email}</Info>
+    <Info title="Téléphone">{maisonMereAAP.phone}</Info>
+  </div>
+);
+
+const AccountInfoForm = ({
+  register,
+}: {
+  register: UseFormRegister<{
+    managerFirstname: string;
+    managerLastname: string;
+    gestionnaireFirstname: string;
+    gestionnaireLastname: string;
+    gestionnaireEmail: string;
+    siret: string;
+    phone: string;
+  }>;
+}) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <Input
+      label="Prénom du dirigeant(e)"
+      nativeInputProps={register("managerFirstname")}
+    />
+    <Input
+      label="Nom du dirigeant(e)"
+      nativeInputProps={register("managerLastname")}
+    />
+    <Input
+      label="Prénom du gestionnaire"
+      nativeInputProps={register("gestionnaireFirstname")}
+    />
+    <Input
+      label="Nom du gestionnaire"
+      nativeInputProps={register("gestionnaireLastname")}
+    />
+    <Input
+      label="Email du gestionnaire"
+      nativeInputProps={register("gestionnaireEmail")}
+    />
+    <Input label="Téléphone" nativeInputProps={register("phone")} />
+  </div>
 );

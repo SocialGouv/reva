@@ -101,6 +101,12 @@ const schema = z.object({
   siret: z.string().regex(/^\d{14}$/, {
     message: "Le numéro de SIRET doit contenir 14 chiffres.",
   }),
+  managerFirstname: z.string(),
+  managerLastname: z.string(),
+  gestionnaireFirstname: z.string(),
+  gestionnaireLastname: z.string(),
+  gestionnaireEmail: z.string().email(),
+  phone: z.string(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -158,8 +164,16 @@ export const useGeneralInformationPage = () => {
   }
 
   const defaultValues = useMemo(
-    () => ({ siret: maisonMereAAP?.siret }),
-    [maisonMereAAP?.siret],
+    () => ({
+      siret: maisonMereAAP?.siret,
+      managerFirstname: maisonMereAAP?.managerFirstname ?? "",
+      managerLastname: maisonMereAAP?.managerLastname ?? "",
+      gestionnaireFirstname: maisonMereAAP?.gestionnaire?.firstname ?? "",
+      gestionnaireLastname: maisonMereAAP?.gestionnaire?.lastname ?? "",
+      gestionnaireEmail: maisonMereAAP?.gestionnaire?.email ?? "",
+      phone: maisonMereAAP?.phone ?? "",
+    }),
+    [maisonMereAAP],
   );
 
   const formHook = useForm<FormValues>({

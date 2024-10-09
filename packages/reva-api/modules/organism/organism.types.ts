@@ -122,6 +122,12 @@ export type UpdateMaisonMereLegalInformationInput = {
   siret: string;
   statutJuridique: LegalStatus;
   raisonSociale: string;
+  managerFirstname: string;
+  managerLastname: string;
+  gestionnaireFirstname: string;
+  gestionnaireLastname: string;
+  gestionnaireEmail: string;
+  phone: string;
 };
 
 export type RemoteZone =

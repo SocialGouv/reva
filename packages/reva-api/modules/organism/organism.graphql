@@ -291,6 +291,12 @@ input UpdateMaisonMereLegalInformationInput {
   siret: String!
   statutJuridique: LegalStatus!
   raisonSociale: String!
+  managerFirstname: String!
+  managerLastname: String!
+  gestionnaireFirstname: String!
+  gestionnaireLastname: String!
+  gestionnaireEmail: String!
+  phone: String!
 }
 
 type Mutation {

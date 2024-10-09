@@ -6,6 +6,12 @@ export const updateMaisonMereLegalInformation = async ({
   raisonSociale,
   siret,
   statutJuridique,
+  managerFirstname,
+  managerLastname,
+  gestionnaireFirstname,
+  gestionnaireLastname,
+  gestionnaireEmail,
+  phone,
 }: UpdateMaisonMereLegalInformationInput) =>
   prismaClient.maisonMereAAP.update({
     where: { id: maisonMereAAPId },
@@ -13,5 +19,15 @@ export const updateMaisonMereLegalInformation = async ({
       siret,
       statutJuridique,
       raisonSociale,
+      managerFirstname,
+      managerLastname,
+      phone,
+      gestionnaire: {
+        update: {
+          firstname: gestionnaireFirstname,
+          lastname: gestionnaireLastname,
+          email: gestionnaireEmail,
+        },
+      },
     },
   });
