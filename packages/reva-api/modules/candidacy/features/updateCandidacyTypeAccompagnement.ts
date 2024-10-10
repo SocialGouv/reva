@@ -2,6 +2,7 @@ import { CandidacyTypeAccompagnement } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyById } from "./getCandidacyById";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,
@@ -34,6 +35,10 @@ export const updateCandidacyTypeAccompagnement = async ({
     );
   }
 
+  const certification = await getCertificationById({
+    certificationId: candidacy.certificationId,
+  });
+
   const financementHorsPlateformeFeatureActive = await isFeatureActiveForUser({
     feature: "NOUVELLES_CANDIDATURES_EN_FINANCEMENT_HORS_PLATEFORME",
   });
@@ -50,6 +55,10 @@ export const updateCandidacyTypeAccompagnement = async ({
       goals: { deleteMany: { candidacyId } },
       experiences: { deleteMany: { candidacyId } },
       financeModule: financementHorsPlateforme ? "hors_plateforme" : "unifvae",
+      feasibilityFormat:
+        typeAccompagnement === "AUTONOME"
+          ? "UPLOADED_PDF"
+          : certification?.feasibilityFormat,
     },
   });
 };
