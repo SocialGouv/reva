@@ -27,6 +27,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "TRAINING_FORM_CONFIRMED"
         | "CANDIDACY_DROPPED_OUT"
         | "CANDIDACY_DROP_OUT_CANCELED"
+        | "CANDIDACY_DROP_OUT_VALIDATED"
         | "ADMISSIBILITY_FVAE_UPDATED"
         | "ADMISSIBILITY_UPDATED"
         | "FEASIBILITY_SENT"

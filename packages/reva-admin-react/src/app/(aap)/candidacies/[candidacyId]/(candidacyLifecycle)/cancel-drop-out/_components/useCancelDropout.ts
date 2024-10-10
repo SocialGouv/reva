@@ -15,6 +15,8 @@ const getCandidacyById = graphql(`
         }
         otherReasonContent
         status
+        createdAt
+        proofReceivedByAdmin
       }
     }
   }

@@ -682,6 +682,7 @@ model CandidacyDropOut {
   proofReceivedByAdmin Boolean             @default(false) @map("proof_received_by_admin")
   createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt            DateTime?           @map("updated_at") @db.Timestamptz(6)
+  validatedAt          DateTime?           @map("validated_at") @db.Timestamptz(6)
 
   @@id([candidacyId])
   @@map("candidacy_drop_out")

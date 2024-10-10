@@ -13,8 +13,11 @@ const getCandidacyById = graphql(`
         dropOutReason {
           label
         }
+        createdAt
         otherReasonContent
         status
+        proofReceivedByAdmin
+        validatedAt
       }
     }
   }
@@ -48,7 +51,15 @@ const dropoutCandidacyByIdMutation = graphql(`
   }
 `);
 
-export const useDropout = ({ onSuccess }: { onSuccess?: () => void }) => {
+const validateDropoutCandidacyByIdMutation = graphql(`
+  mutation validateDropoutCandidacyById($candidacyId: UUID!) {
+    candidacy_validateDropOut(candidacyId: $candidacyId) {
+      id
+    }
+  }
+`);
+
+export const useDropout = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -84,7 +95,19 @@ export const useDropout = ({ onSuccess }: { onSuccess?: () => void }) => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
-      onSuccess?.();
+    },
+    onError: (e) => {
+      graphqlErrorToast(e);
+    },
+  });
+
+  const validateDropoutCandidacyById = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(validateDropoutCandidacyByIdMutation, {
+        candidacyId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
     },
     onError: (e) => {
       graphqlErrorToast(e);
@@ -96,7 +119,13 @@ export const useDropout = ({ onSuccess }: { onSuccess?: () => void }) => {
     (reason) => reason.isActive,
   );
 
-  return { candidacyId, candidacy, activeDropoutReasons, dropoutCandidacyById };
+  return {
+    candidacyId,
+    candidacy,
+    activeDropoutReasons,
+    dropoutCandidacyById,
+    validateDropoutCandidacyById,
+  };
 };
 
 export type CandidacyForDropout = Awaited<

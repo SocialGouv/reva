@@ -39,6 +39,7 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_submitTypologyForm": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_validateDropOut": isAdmin,
   "Mutation.candidacy_cancelDropOutById": isAdmin,
   "Mutation.candidacy_updateAdmissibility": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateAdmissibilityFvae": isAdminOrCandidacyCompanion,

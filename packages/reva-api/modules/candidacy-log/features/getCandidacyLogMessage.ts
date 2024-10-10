@@ -71,6 +71,8 @@ export const getCandidacyLogMessage = ({
       return "Parcours candidat confirmé.";
     case "CANDIDACY_DROPPED_OUT":
       return "Candidature abandonnée.";
+    case "CANDIDACY_DROP_OUT_VALIDATED":
+      return "Validation de l'abandon de la candidature.";
     case "CANDIDACY_DROP_OUT_CANCELED":
       return "Annulation de l'abandon de la candidature.";
     case "ADMISSIBILITY_UPDATED":

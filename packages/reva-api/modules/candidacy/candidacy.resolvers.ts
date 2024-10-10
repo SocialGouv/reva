@@ -59,6 +59,7 @@ import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
+import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -477,6 +478,33 @@ const unsafeResolvers = {
       await logCandidacyAuditEvent({
         candidacyId: payload.candidacyId,
         eventType: "CANDIDACY_DROPPED_OUT",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+      return candidacy;
+    },
+    candidacy_validateDropOut: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+      },
+      context: GraphqlContext,
+    ) => {
+      const candidacy = await validateDropOutCandidacy({
+        candidacyId: payload.candidacyId,
+      });
+
+      logCandidacyEvent({
+        candidacyId: payload.candidacyId,
+        eventType: CandidacyBusinessEvent.VALIDATED_DROPPED_OUT_CANDIDACY,
+        context,
+        result: candidacy,
+      });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROP_OUT_VALIDATED",
         userKeycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
