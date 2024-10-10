@@ -16,7 +16,7 @@ export const UploadForm = ({
   requirements,
 }: UploadFormProps) => {
   return (
-    <>
+    <div data-test="feasibility-upload-form">
       <FancyUpload
         title="Joindre le dossier de faisabilité"
         description="Vous devez le remplir avec attention et le signer. Pensez à vérifier que vous avez tout saisi avant l’envoi au certificateur."
@@ -75,6 +75,6 @@ export const UploadForm = ({
           }))}
         />
       </fieldset>
-    </>
+    </div>
   );
 };

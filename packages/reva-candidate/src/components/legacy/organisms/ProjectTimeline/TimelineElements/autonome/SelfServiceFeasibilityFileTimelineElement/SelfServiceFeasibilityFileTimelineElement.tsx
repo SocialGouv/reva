@@ -28,13 +28,41 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
   let badge = null;
 
   if (canComplete) {
-    badge = <Badge severity="warning">À compléter</Badge>;
+    badge = (
+      <Badge
+        severity="warning"
+        data-test="feasibility-timeline-element-complete-badge"
+      >
+        À compléter
+      </Badge>
+    );
   } else if (candidacy.feasibility?.decision === "PENDING") {
-    badge = <Badge severity="info">Envoyé</Badge>;
+    badge = (
+      <Badge
+        severity="info"
+        data-test="feasibility-timeline-element-pending-badge"
+      >
+        Envoyé
+      </Badge>
+    );
   } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
-    badge = <Badge severity="success">Recevable</Badge>;
+    badge = (
+      <Badge
+        severity="success"
+        data-test="feasibility-timeline-element-admissible-badge"
+      >
+        Recevable
+      </Badge>
+    );
   } else if (candidacy.feasibility?.decision === "REJECTED") {
-    badge = <Badge severity="error">Non-recevable</Badge>;
+    badge = (
+      <Badge
+        severity="error"
+        data-test="feasibility-timeline-element-rejected-badge"
+      >
+        Non-recevable
+      </Badge>
+    );
   }
 
   return (

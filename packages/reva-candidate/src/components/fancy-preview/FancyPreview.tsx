@@ -17,7 +17,10 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
     : "bg-dsfr-light-neutral-grey-1000";
 
   return (
-    <div className="flex flex-col gap-4 first:border-t border-gray-200 border-b ">
+    <div
+      className="flex flex-col gap-4 first:border-t border-gray-200 border-b"
+      data-test={`feasibility-files-preview-${title}`}
+    >
       <div
         className={`flex flex-row items-center justify-between px-4 py-3 cursor-pointer ${backgroundColor}`}
         onClick={() => setDisplay(!display)}
