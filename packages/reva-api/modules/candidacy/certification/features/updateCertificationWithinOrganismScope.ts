@@ -34,6 +34,7 @@ export const updateCertificationWithinOrganismScope = async ({
       departmentId: true,
       organismId: true,
       candidacyDropOut: { select: { candidacyId: true } },
+      typeAccompagnement: true,
     },
   });
 
@@ -132,7 +133,10 @@ export const updateCertificationWithinOrganismScope = async ({
     certificationId,
     departmentId: candidacy.departmentId || "",
     author: hasRole("admin") ? "admin" : "organism",
-    feasibilityFormat: newCertification.feasibilityFormat,
+    feasibilityFormat:
+      candidacy.typeAccompagnement === "ACCOMPAGNE"
+        ? newCertification?.feasibilityFormat
+        : "UPLOADED_PDF",
   });
 
   await logCandidacyAuditEvent({

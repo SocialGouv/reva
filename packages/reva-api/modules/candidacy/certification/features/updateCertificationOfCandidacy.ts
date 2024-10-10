@@ -34,6 +34,7 @@ export const updateCertificationOfCandidacy = async ({
     select: {
       id: true,
       status: true,
+      typeAccompagnement: true,
     },
   });
 
@@ -61,7 +62,10 @@ export const updateCertificationOfCandidacy = async ({
       certificationId,
       departmentId,
       author: "candidate",
-      feasibilityFormat: newCertification?.feasibilityFormat,
+      feasibilityFormat:
+        candidacy.typeAccompagnement === "ACCOMPAGNE"
+          ? newCertification?.feasibilityFormat
+          : "UPLOADED_PDF",
     });
 
     await updateCandidacyOrganism({
