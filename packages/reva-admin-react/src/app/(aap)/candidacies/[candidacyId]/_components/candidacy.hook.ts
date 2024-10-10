@@ -1,7 +1,10 @@
 import { useAuth } from "@/components/auth/auth";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { useMemo } from "react";
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import {
+  CandidacyDropOut,
+  CandidacyStatusStep,
+} from "@/graphql/generated/graphql";
 
 export type CandidacyForStatus = {
   id: string;
@@ -16,7 +19,14 @@ export type CandidacyForStatus = {
         id: string;
       }
     | null;
-  candidacyDropOut?: unknown;
+  candidacyDropOut?:
+    | {
+        __typename?: "CandidacyDropOut";
+        createdAt: number;
+        proofReceivedByAdmin: boolean;
+      }
+    | null
+    | undefined;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
@@ -49,7 +59,10 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented;
 
   const canCancelDropout =
-    isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented && !!isAdmin;
+    isCandidacyDroppedOut &&
+    !candidacy.candidacyDropOut?.proofReceivedByAdmin &&
+    !isCandidacyArchivedAndNotReoriented &&
+    !!isAdmin;
 
   return {
     candidacyCurrentActiveStatus,

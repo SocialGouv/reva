@@ -23,7 +23,7 @@ export const DropoutForm = ({
   activeDropoutReasons: NonNullable<ActiveDropoutReasons>;
 }) => {
   const router = useRouter();
-  const { candidacyId, dropoutCandidacyById } = useDropout({});
+  const { candidacyId, dropoutCandidacyById } = useDropout();
   const form = useForm({
     defaultValues: {
       otherReasonContent: "",
