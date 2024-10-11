@@ -64,7 +64,7 @@ export const updateCertificationOfCandidacy = async ({
       author: "candidate",
       feasibilityFormat:
         candidacy.typeAccompagnement === "ACCOMPAGNE"
-          ? newCertification?.feasibilityFormat
+          ? newCertification.feasibilityFormat
           : "UPLOADED_PDF",
     });
 

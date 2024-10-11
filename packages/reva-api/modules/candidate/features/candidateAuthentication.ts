@@ -101,7 +101,10 @@ const confirmRegistration = async ({
       author: "candidate",
       certificationId,
       departmentId: candidateRegistrationInput.departmentId,
-      feasibilityFormat: certification.feasibilityFormat,
+      feasibilityFormat:
+        candidacy.typeAccompagnement === "ACCOMPAGNE"
+          ? certification.feasibilityFormat
+          : "UPLOADED_PDF",
     });
   }
 

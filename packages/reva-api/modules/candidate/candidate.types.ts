@@ -41,6 +41,7 @@ export interface Candidate {
 
 export type Gender = "undisclosed" | "man" | "woman";
 
+export type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
 export interface CandidateRegistrationInput {
   firstname: string;
   lastname: string;
@@ -48,6 +49,7 @@ export interface CandidateRegistrationInput {
   phone: string;
   departmentId: string;
   certificationId?: string;
+  typeAccompagnement: TypeAccompagnement;
   action: "registration";
 }
 

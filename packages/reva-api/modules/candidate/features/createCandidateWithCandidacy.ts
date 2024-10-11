@@ -1,11 +1,13 @@
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacy } from "../../candidacy/features/createCandidacy";
+import { TypeAccompagnement } from "../candidate.types";
 interface CreateCandidateWithCandidacyInput {
   email: string;
   phone: string;
   firstname: string;
   lastname: string;
   departmentId: string;
+  typeAccompagnement: TypeAccompagnement;
   keycloakId: string;
 }
 
@@ -40,7 +42,7 @@ export const createCandidateWithCandidacy = async (
     await createCandidacy({
       departmentId: candidateInput.departmentId,
       candidateId: createdCandidate.id,
-      typeAccompagnement: "ACCOMPAGNE",
+      typeAccompagnement: candidateInput.typeAccompagnement,
     });
   }
 

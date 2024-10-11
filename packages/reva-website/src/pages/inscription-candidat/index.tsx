@@ -73,7 +73,11 @@ const OrientationCandidatPage = () => {
 
   const handleFormSubmit = async (form: CandidateRegistrationFormSchema) => {
     await request(GRAPHQL_API_URL, askForRegistrationMutation, {
-      candidate: { ...form, certificationId: certificationId as string },
+      candidate: {
+        ...form,
+        typeAccompagnement: "ACCOMPAGNE",
+        certificationId: certificationId as string,
+      },
     });
     router.push("/inscription-candidat/confirmation");
   };

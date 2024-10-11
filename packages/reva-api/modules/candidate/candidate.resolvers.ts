@@ -5,6 +5,7 @@ import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getF
 import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
+  TypeAccompagnement,
 } from "./candidate.types";
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
@@ -79,6 +80,7 @@ const unsafeResolvers = {
           firstname: string;
           lastname: string;
           departmentId: string;
+          typeAccompagnement: TypeAccompagnement;
         };
       },
     ) => askForRegistration(params.candidate),

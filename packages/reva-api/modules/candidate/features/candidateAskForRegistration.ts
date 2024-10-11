@@ -1,4 +1,5 @@
 import { generateJwt } from "../auth.helper";
+import { TypeAccompagnement } from "../candidate.types";
 import { sendRegistrationEmail } from "../mails/sendRegistrationEmail";
 
 interface CandidateInput {
@@ -8,6 +9,7 @@ interface CandidateInput {
   lastname: string;
   departmentId: string;
   certificationId?: string;
+  typeAccompagnement: TypeAccompagnement;
 }
 
 export const askForRegistration = async (params: CandidateInput) => {
