@@ -17,13 +17,14 @@ export const SendFileCandidateSection = ({
   const router = useRouter();
 
   return (
-    <div>
+    <div data-test="send-file-candidate-section">
       {sentToCandidateAt && (
         <Alert
           description="Vous avez fait de nouvelles modifications sur le dossier ou prévoyez d'en faire ? Veillez à bien renvoyer le dossier au candidat afin qu'il valide la nouvelle version."
           severity="success"
           title={`Dossier envoyé au candidat le ${format(sentToCandidateAt, "dd/MM/yyyy")}`}
           className="mb-6"
+          data-test="sent-file-alert"
         />
       )}
       <div className="flex justify-end">
