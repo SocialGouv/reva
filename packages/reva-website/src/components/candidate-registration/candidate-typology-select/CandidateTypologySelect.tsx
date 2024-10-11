@@ -23,7 +23,7 @@ export const CandidateTypologySelect = ({
   <Select
     data-testid="candidate-typology-select"
     className="basis-1/2 !mb-0"
-    label="Votre statut"
+    label="Situation actuelle"
     nativeSelectProps={{
       value: candidateTypology || "NON_SPECIFIE",
       onChange: (e) => onChange?.(e.target.value as CandidateTypology),

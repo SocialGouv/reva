@@ -53,6 +53,11 @@ describe("candidate registration", () => {
   it("should show an error panel when i select a disabled candidate typology", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
+      stubQuery(
+        req,
+        "getDepartments",
+        "candidate_registration_departments.json",
+      );
     });
 
     cy.visit(
@@ -60,6 +65,8 @@ describe("candidate registration", () => {
     );
 
     cy.wait("@getCertification");
+
+    cy.wait("@getDepartments");
 
     [
       "SALARIE_PUBLIC",
@@ -187,6 +194,7 @@ it("should show another certificate when i search for another one within the pag
       "activeFeaturesForConnectedUser",
       "active_features_empty.json",
     );
+    stubQuery(req, "getDepartments", "candidate_registration_departments.json");
   });
 
   cy.visit(
@@ -194,6 +202,7 @@ it("should show another certificate when i search for another one within the pag
   );
 
   cy.wait("@getCertification");
+  cy.wait("@getDepartments");
 
   cy.get('[data-testid="autocomplete-input"]').type("ebeniste", {
     delay: 0,
