@@ -47,17 +47,7 @@ const unsafeResolvers = {
       getPaymentRequestUnifvaeFromCandidacyId(candidacyId),
   },
 
-  Query: {
-    candidacy_getFundingRequestUnifvae: async (
-      _: unknown,
-      payload: { candidacyId: string },
-    ) => {
-      const fundreq = await getFundingRequestUnifvaeFromCandidacyId(
-        payload.candidacyId,
-      );
-      return withSkillsAndTrainings(fundreq);
-    },
-  },
+  Query: {},
   Mutation: {
     candidacy_createFundingRequestUnifvae: async (
       _: unknown,
@@ -147,5 +137,4 @@ export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_createOrUpdatePaymentRequestUnifvae":
     isAdminOrCandidacyCompanion,
-  "Query.candidacy_getFundingRequestUnifvae": isAdminOrCandidacyCompanion,
 });

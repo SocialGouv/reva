@@ -13,7 +13,6 @@ import {
   createCandidacyUnireva,
   createCandidateJPL,
   createExpertFiliereOrganism,
-  createFundingRequest,
 } from "../../../../test/helpers/create-db-entity";
 import {
   candidateJPL,
@@ -30,10 +29,6 @@ import {
   fundingRequestSample,
   paymentRequestInputBase,
 } from "../../../../test/fixtures/funding-request";
-import {
-  basicSkill1Label,
-  training1Label,
-} from "../../../../test/fixtures/skillAndTraining";
 
 const updateCandidacyCertification = async ({
   candidacyId,
@@ -263,36 +258,6 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
   expect(obj.errors[0].message).toBe(
     "La demande de financement n'est pas autorisée pour cette certification",
   );
-});
-
-test("should fetch fundingRequestUnifvae", async () => {
-  await createFundingRequest();
-
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
-    }),
-    payload: {
-      requestType: "query",
-      endpoint: "candidacy_getFundingRequestUnifvae",
-      returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, fundingContactEmail, fundingContactFirstname, fundingContactLastname, fundingContactPhone, basicSkills {label}, mandatoryTrainings {label}, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
-      arguments: {
-        candidacyId: candidacyUnifvae.id,
-      },
-    },
-  });
-  expect(resp.statusCode).toBe(200);
-  const obj = resp.json();
-  expect(obj).not.toHaveProperty("errors");
-
-  expect(obj.data.candidacy_getFundingRequestUnifvae).toMatchObject({
-    ...fundingRequestSample,
-    basicSkills: [{ label: basicSkill1Label }],
-    mandatoryTrainings: [{ label: training1Label }],
-  });
 });
 
 test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
