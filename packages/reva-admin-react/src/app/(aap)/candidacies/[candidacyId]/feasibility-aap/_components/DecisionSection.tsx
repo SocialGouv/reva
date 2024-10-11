@@ -6,7 +6,7 @@ import { DfFileAapDecision } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useParams } from "next/navigation";
 
-export const DecisionCard = ({
+export const DecisionSection = ({
   aapDecision,
   aapDecisionComment,
   isEditable,
@@ -22,13 +22,15 @@ export const DecisionCard = ({
   const DecisionBadge = () => {
     if (aapDecision === "FAVORABLE") {
       return (
-        <Badge severity="success" noIcon>
+        <Badge severity="success" noIcon data-test="favorable-badge">
           Favorable
         </Badge>
       );
     }
     if (aapDecision === "UNFAVORABLE") {
-      return <CustomErrorBadge label="Non favorable" />;
+      return (
+        <CustomErrorBadge label="Non favorable" dataTest="unfavorable-badge" />
+      );
     }
 
     return <BadgeToComplete />;
@@ -43,6 +45,7 @@ export const DecisionCard = ({
       disabled={disabled}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/decision`}
       CustomBadge={<DecisionBadge />}
+      data-test="decision-section"
     >
       {aapDecisionComment && <p className="md:pl-10">“{aapDecisionComment}”</p>}
       {disabled && (
