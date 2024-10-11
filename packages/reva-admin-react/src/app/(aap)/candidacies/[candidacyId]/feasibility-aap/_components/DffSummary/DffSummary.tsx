@@ -69,7 +69,7 @@ export default function DffSummary({
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
   return (
-    <div className="flex flex-col" id="dff-to-print">
+    <div className="flex flex-col" id="dff-to-print" data-test="dff-summary">
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
         <ButtonConvertHtmlToPdf
