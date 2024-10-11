@@ -2,7 +2,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { useParams } from "next/navigation";
 
-export const SwornStatementCard = ({
+export const SwornStatementSection = ({
   sentToCandidateAt,
   swornStatementFileId,
   isEditable,
@@ -21,6 +21,7 @@ export const SwornStatementCard = ({
       isEditable={isEditable}
       disabled={!sentToCandidateAt}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}
+      data-test="sworn-statement-section"
     >
       {!sentToCandidateAt && (
         <SmallNotice>
