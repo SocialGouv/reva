@@ -1,5 +1,8 @@
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { FeasibilityDecision, FeasibilityHistory } from "@/graphql/generated/graphql";
+import {
+  FeasibilityDecision,
+  FeasibilityHistory,
+} from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -71,7 +74,7 @@ export const SendFileCertificationAuthoritySection = ({
     !feasibilityHasBeenSent || feasibilityIsIncomplete;
 
   return (
-    <div>
+    <div data-test="send-file-certification-authority-section">
       <h2 className="mt-0">Vérifier et envoyer le dossier au certificateur </h2>
 
       <AlertDffState
