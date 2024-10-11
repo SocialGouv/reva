@@ -40,6 +40,7 @@ export const EligibilitySection = ({
       status={isEligibilityPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/eligibility`}
       isEditable={isFeasibilityEditable}
+      data-test="eligibility-section"
     >
       {isEligibilityPartComplete ? (
         <>
