@@ -1,7 +1,7 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
-export const CandidateDecisionCommentCard = ({
+export const CandidateDecisionCommentSection = ({
   candidateDecisionComment,
 }: {
   candidateDecisionComment: string;
@@ -10,6 +10,7 @@ export const CandidateDecisionCommentCard = ({
     <EnhancedSectionCard
       title="Commentaire du candidat"
       titleIconClass="ri-message-3-fill"
+      data-test="candidate-decision-comment-section"
     >
       <p className="md:pl-8 md:pr-6">“{candidateDecisionComment}”</p>
       <SmallNotice>
