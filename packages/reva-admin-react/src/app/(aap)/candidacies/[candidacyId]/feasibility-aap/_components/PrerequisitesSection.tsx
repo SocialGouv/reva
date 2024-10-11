@@ -5,7 +5,8 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
-export const PrerequisitesCard = ({
+
+export const PrerequisitesSection = ({
   prerequisites,
   prerequisitesPartComplete,
   disabled,
@@ -41,6 +42,7 @@ export const PrerequisitesCard = ({
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
       disabled={disabled}
       isEditable={isEditable}
+      data-test="prerequisites-section"
     >
       {prerequisitesPartComplete &&
         !disabled &&
