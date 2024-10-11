@@ -3,7 +3,7 @@ import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { DffAttachment } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
 
-export const AttachmentsCard = ({
+export const AttachmentsSection = ({
   attachmentsPartComplete,
   isEditable,
   attachments,
@@ -20,6 +20,7 @@ export const AttachmentsCard = ({
       status={attachmentsPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       isEditable={isEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/attachments`}
+      data-test="attachments-section"
     >
       {!!attachments.length &&
         attachments.map(({ id, file }) => {
