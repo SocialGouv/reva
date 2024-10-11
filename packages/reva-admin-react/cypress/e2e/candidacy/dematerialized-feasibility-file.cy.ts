@@ -95,7 +95,22 @@ const defaultFeasibilityFile = {
 function visitFeasibility(feasibility = defaultFeasibilityFile) {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getAccountInfo", "account/admin-info.json");
+      stubQuery(
+        req,
+        "activeFeaturesForConnectedUser",
+        "features/active-features.json",
+      );
+      stubQuery(
+        req,
+        "getMaisonMereCGUQuery",
+        "account/head-agency-cgu-accepted.json",
+      );
+      stubQuery(
+        req,
+        "getOrganismForAAPVisibilityCheck",
+        "visibility/organism.json",
+      );
+      stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
       candidacy.data.getCandidacyById.feasibility = feasibility;
       stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
 
