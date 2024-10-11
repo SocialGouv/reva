@@ -7,7 +7,6 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
 import {
   createFundingRequestUnifvae,
   createOrUpdatePaymentRequestUnifvae,
@@ -17,6 +16,7 @@ import {
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import { applyBusinessValidationRules } from "./validation";
 import { Decimal } from "@prisma/client/runtime/library";
+import { resolversSecurityMap } from "./security";
 
 const withSkillsAndTrainings = (f: any) =>
   f
@@ -133,8 +133,7 @@ const unsafeResolvers = {
   },
 };
 
-export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
-  "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_createOrUpdatePaymentRequestUnifvae":
-    isAdminOrCandidacyCompanion,
-});
+export const financeUnifvaeResolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap,
+);
