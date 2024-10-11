@@ -27,6 +27,7 @@ export const CertificationSection = ({
           : "TO_COMPLETE"
       }
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/certification`}
+      data-test="certification-section"
     >
       <p className="text-xl font-bold mb-2">{certification?.label}</p>
       <p className="text-xs mb-2 text-dsfr-light-text-mention-grey">
