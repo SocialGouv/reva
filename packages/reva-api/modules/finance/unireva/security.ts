@@ -1,5 +1,8 @@
 import { hasRole } from "../../shared/security/middlewares";
-import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
+import {
+  isAdminOrCandidacyCompanion,
+  isAdminOrManager,
+} from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.candidate_getFundingRequest": [hasRole(["admin", "manage_candidacy"])],
@@ -9,5 +12,6 @@ export const resolversSecurityMap = {
 
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
 
-  "Candidacy.paymentRequest": [hasRole(["admin", "manage_candidacy"])],
+  "Candidacy.fundingRequest": isAdminOrManager,
+  "Candidacy.paymentRequest": isAdminOrManager,
 };
