@@ -1,0 +1,68 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "57bf364b-8c8b-4ff4-889b-66917e26d7d0",
+      "isCertificationPartial": false,
+      "experiences": [
+        {
+          "id": "b2927373-1073-44d7-b494-ea78c7c56b74",
+          "title": "Intitulé de l'experience test",
+          "startedAt": 1580428800000,
+          "duration": "lessThanOneYear",
+          "description": "Description du poste test"
+        }
+      ],
+      "mandatoryTrainings": [
+        {
+          "id": "2790458c-040f-417d-b081-1d74b715ff9b",
+          "label": "Equipier de Première Intervention"
+        }
+      ],
+      "goals": [
+        {
+          "id": "bc5365e2-a208-4c19-98f9-22f15de894cd",
+          "label": "Trouver plus facilement un emploi"
+        }
+      ],
+      "basicSkills": [
+        {
+          "id": "d2eac236-723b-4bb8-ae4c-5d16d320ec72",
+          "label": "Usage et communication numérique"
+        }
+      ],
+      "certification": {
+        "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+        "codeRncp": "37780"
+      },
+      "feasibility": {
+        "decision": "DRAFT",
+        "decisionSentAt": null,
+        "decisionComment": null,
+        "feasibilityFileSentAt": null,
+        "history": [],
+        "dematerializedFeasibilityFile": {
+          "swornStatementFileId": null,
+          "isReadyToBeSentToCandidate": false,
+          "isReadyToBeSentToCertificationAuthority": false,
+          "sentToCandidateAt": null,
+          "certificationPartComplete": false,
+          "competenceBlocsPartCompletion": "TO_COMPLETE",
+          "attachmentsPartComplete": false,
+          "prerequisitesPartComplete": false,
+          "firstForeignLanguage": null,
+          "secondForeignLanguage": null,
+          "option": null,
+          "prerequisites": [],
+          "blocsDeCompetences": [],
+          "certificationCompetenceDetails": [],
+          "aapDecision": null,
+          "aapDecisionComment": null,
+          "candidateDecisionComment": null,
+          "attachments": [],
+          "eligibilityRequirement": null,
+          "eligibilityValidUntil": null
+        }
+      }
+    }
+  }
+}

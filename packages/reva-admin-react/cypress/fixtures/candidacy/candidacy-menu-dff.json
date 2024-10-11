@@ -1,0 +1,58 @@
+{
+  "data": {
+    "candidacyMenu_getCandidacyMenu": {
+      "menuHeader": [
+        {
+          "label": "Résumé de la candidature",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/summary",
+          "status": "ACTIVE_WITHOUT_HINT"
+        }
+      ],
+      "mainMenu": [
+        {
+          "label": "Rendez-vous pédagogique",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/meetings",
+          "status": "ACTIVE_WITHOUT_HINT"
+        },
+        {
+          "label": "Définition du parcours",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/typology",
+          "status": "ACTIVE_WITHOUT_HINT"
+        },
+        {
+          "label": "Validation du parcours",
+          "url": "#",
+          "status": "INACTIVE"
+        },
+        {
+          "label": "Dossier de faisabilité",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/feasibility-aap",
+          "status": "ACTIVE_WITH_EDIT_HINT"
+        },
+        {
+          "label": "Dossier de validation",
+          "url": "#",
+          "status": "INACTIVE"
+        },
+        {
+          "label": "Jury",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/jury-aap",
+          "status": "INACTIVE"
+        }
+      ],
+      "menuFooter": [
+        {
+          "label": "Journal des actions",
+          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/logs",
+          "status": "ACTIVE_WITHOUT_HINT"
+        }
+      ]
+    },
+    "getCandidacyById": {
+      "candidate": {
+        "lastname": "Alice",
+        "firstname": "Doe"
+      }
+    }
+  }
+}
