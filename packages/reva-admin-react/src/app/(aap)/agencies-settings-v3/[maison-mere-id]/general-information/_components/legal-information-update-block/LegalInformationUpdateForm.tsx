@@ -7,6 +7,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -61,8 +62,10 @@ type FormData = z.infer<typeof schema>;
 
 export const LegalInformationUpdateForm = ({
   maisonMereAAPId,
+  backUrl,
 }: {
   maisonMereAAPId: string;
+  backUrl: string;
 }) => {
   const {
     register,
@@ -77,6 +80,8 @@ export const LegalInformationUpdateForm = ({
   const { accessToken } = useKeycloakContext();
 
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const handleFormSubmit = handleSubmit(
     async (data) => {
@@ -119,6 +124,7 @@ export const LegalInformationUpdateForm = ({
         queryClient.invalidateQueries({
           queryKey: ["maisonMereAAPLegalInformation"],
         });
+        router.push(backUrl);
       } else {
         errorToast(await result.text());
       }
@@ -246,6 +252,7 @@ export const LegalInformationUpdateForm = ({
           </>
         )}
         <FormButtons
+          backUrl={backUrl}
           formState={{ isDirty, isSubmitting }}
           className="col-span-2"
         />

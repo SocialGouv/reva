@@ -185,7 +185,11 @@ const GeneralInformationPage = () => {
             {(isGestionnaireMaisonMereAAP || isAdmin) && (
               <li>
                 <LegalInformationUpdateBlock
-                  maisonMereAAPId={maisonMereAAP.id}
+                  onUpdateButtonClick={() =>
+                    router.push(
+                      `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information-update`,
+                    )
+                  }
                   statutValidationInformationsJuridiquesMaisonMereAAP={
                     maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
                   }

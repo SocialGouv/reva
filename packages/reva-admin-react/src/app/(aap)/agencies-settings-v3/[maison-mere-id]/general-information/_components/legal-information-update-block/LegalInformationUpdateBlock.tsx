@@ -1,8 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useState } from "react";
-import { LegalInformationUpdateForm } from "./LegalInformationUpdateForm";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { format } from "date-fns";
 
@@ -13,20 +11,14 @@ interface Decision {
 }
 
 export const LegalInformationUpdateBlock = ({
-  maisonMereAAPId,
   statutValidationInformationsJuridiquesMaisonMereAAP,
   decisions,
+  onUpdateButtonClick,
 }: {
-  maisonMereAAPId: string;
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
   decisions: Decision[];
+  onUpdateButtonClick(): void;
 }) => {
-  const [showUpdateFormButtonPressed, setShowUpdateFormButtonPressed] =
-    useState(false);
-
-  const showUpdateForm =
-    statutValidationInformationsJuridiquesMaisonMereAAP === "A_METTRE_A_JOUR" &&
-    showUpdateFormButtonPressed;
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col border p-6">
@@ -40,15 +32,11 @@ export const LegalInformationUpdateBlock = ({
         {statutValidationInformationsJuridiquesMaisonMereAAP ===
           "A_METTRE_A_JOUR" && (
           <NeedUpdateStatusBlock
-            showUpdateButton={!showUpdateForm}
-            onUpdateButtonClick={() => setShowUpdateFormButtonPressed(true)}
+            onUpdateButtonClick={onUpdateButtonClick}
             decisions={decisions}
           />
         )}
       </div>
-      {showUpdateForm && (
-        <LegalInformationUpdateForm maisonMereAAPId={maisonMereAAPId} />
-      )}
     </div>
   );
 };
@@ -69,11 +57,9 @@ const ValidationPendingStatusBlock = () => (
 );
 
 const NeedUpdateStatusBlock = ({
-  showUpdateButton,
   onUpdateButtonClick,
   decisions,
 }: {
-  showUpdateButton: boolean;
   onUpdateButtonClick(): void;
   decisions: Decision[];
 }) => {
@@ -135,11 +121,9 @@ const NeedUpdateStatusBlock = ({
         </li>
       </ul>
       <p>Assurez-vous d'avoir ces documents en version numérique.</p>
-      {showUpdateButton && (
-        <Button className="ml-auto" onClick={onUpdateButtonClick}>
-          Mettre à jour
-        </Button>
-      )}
+      <Button type="button" className="ml-auto" onClick={onUpdateButtonClick}>
+        Mettre à jour
+      </Button>
     </>
   );
 };
