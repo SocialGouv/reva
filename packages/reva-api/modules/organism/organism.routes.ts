@@ -87,18 +87,21 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           justificatifIdentiteDelegataire,
         } = request.body;
 
+        const hasRole = request.auth.hasRole;
+
         const maisonMereAAPId = request.params.maisonMereAAPId;
         const managerFirstname = request.body.managerFirstname.value;
         const managerLastname = request.body.managerLastname.value;
         const delegataire = request.body.delegataire?.value;
 
-        const authorized = await isUserGestionnaireMaisonMereAAPOfMaisonMereAAP(
-          {
+        const authorized =
+          hasRole("admin") ||
+          (await isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
             maisonMereAAPId,
             userKeycloakId: request.auth.userInfo.sub,
             userRoles: request.auth.userInfo.realm_access?.roles || [],
-          },
-        );
+          }));
+
         if (!authorized) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à gérer cette candidature.",
