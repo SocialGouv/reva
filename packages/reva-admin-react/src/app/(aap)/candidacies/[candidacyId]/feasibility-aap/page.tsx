@@ -12,17 +12,17 @@ import {
   FeasibilityDecision,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import { AttachmentsCard } from "./_components/AttachmentsCard";
-import { CandidateDecisionCommentCard } from "./_components/CandidateDecisionCommentCard";
+import { AttachmentsSection } from "./_components/AttachmentsSection";
+import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
 import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
-import { DecisionCard } from "./_components/DecisionCard";
+import { DecisionSection } from "./_components/DecisionSection";
 import DffSummary from "./_components/DffSummary/DffSummary";
 import { EligibilitySection } from "./_components/EligibilitySection";
-import { PrerequisitesCard } from "./_components/PrerequisitesCard";
+import { PrerequisitesSection } from "./_components/PrerequisitesSection";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
-import { SwornStatementCard } from "./_components/SwornStatementCard";
+import { SwornStatementSection } from "./_components/SwornStatementSection";
 
 const AapFeasibilityPage = () => {
   const {
@@ -116,7 +116,7 @@ const AapFeasibilityPage = () => {
             isEditable={isFeasibilityEditable}
             isEligibilityRequirementPartial={isEligibilityRequirementPartial}
           />
-          <PrerequisitesCard
+          <PrerequisitesSection
             prerequisites={
               dematerializedFeasibilityFile?.prerequisites as Prerequisite[]
             }
@@ -126,7 +126,7 @@ const AapFeasibilityPage = () => {
             disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
             isEditable={isFeasibilityEditable}
           />
-          <DecisionCard
+          <DecisionSection
             aapDecision={
               dematerializedFeasibilityFile?.aapDecision as DfFileAapDecision | null
             }
@@ -136,7 +136,7 @@ const AapFeasibilityPage = () => {
             isEditable={isFeasibilityEditable}
             disabled={isEligibilityRequirementPartial}
           />
-          <AttachmentsCard
+          <AttachmentsSection
             attachmentsPartComplete={
               dematerializedFeasibilityFile?.attachmentsPartComplete
             }
@@ -158,13 +158,13 @@ const AapFeasibilityPage = () => {
             }
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
-            <CandidateDecisionCommentCard
+            <CandidateDecisionCommentSection
               candidateDecisionComment={
                 dematerializedFeasibilityFile.candidateDecisionComment as string
               }
             />
           )}
-          <SwornStatementCard
+          <SwornStatementSection
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
