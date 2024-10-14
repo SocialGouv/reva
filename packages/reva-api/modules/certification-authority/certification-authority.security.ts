@@ -49,6 +49,7 @@ export const resolversSecurityMap = {
   "CertificationAuthority.certificationAuthorityLocalAccounts":
     isAdminOrCertificationAuthority,
   "CertificationAuthority.certificationAuthorityStructure": isAdmin,
-
   "CertificationAuthority.account": isAdmin,
+
+  "CertificationAuthorityLocalAccount.certificationAuthority": isAdmin,
 };
