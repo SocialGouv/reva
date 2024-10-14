@@ -9,6 +9,7 @@ import {
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FundingCallOut } from "../../../../../../funding-call-out/FundingCallOut";
+// import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export const CertificationTimelineElement = () => {
   const router = useRouter();
@@ -32,16 +33,49 @@ export const CertificationTimelineElement = () => {
     candidacyStatus === "PROJET";
 
   return (
-    <TimelineElement title="Diplôme visé" status={status}>
-      <div className="flex flex-col md:flex-row basis-1/2 gap-6">
-        <div className="flex flex-col">
+    <TimelineElement
+      title="Choix du diplôme"
+      status={status}
+      // badge={
+      //   certification ? (
+      //     <Badge
+      //       severity="success"
+      //       data-test="certification-timeline-element-badge"
+      //     >
+      //       Complété
+      //     </Badge>
+      //   ) : (
+      //     <Badge
+      //       severity="warning"
+      //       data-test="certification-timeline-element-badge"
+      //     >
+      //       À compléter
+      //     </Badge>
+      //   )
+      // }
+    >
+      <div className="flex flex-col md:flex-row basis-1/2 gap-6 ">
+        <div className="flex flex-col w-full">
           {certification && (
-            <h4
-              data-test="certification-label"
-              className="mb-4 text-base font-normal"
-            >
-              {certification.label}
-            </h4>
+            <div className="border p-6">
+              <p
+                className="text-dsfrGray-500 italic text-xs mb-4"
+                data-test="timeline-certification-code-rncp"
+              >
+                Code RNCP : {certification.codeRncp}
+              </p>
+              <h4 data-test="certification-label" className="mb-6 text-xl">
+                {certification.label}
+              </h4>
+              <a
+                href={`https://www.francecompetences.fr/recherche/rncp/${certification.codeRncp}/`}
+                target="_blank"
+                className="text-dsfrBlue-500"
+                data-test="timeline-certification-more-info-link"
+              >
+                Lire les détails de la fiche diplôme
+              </a>
+            </div>
           )}
 
           {status !== "readonly" && (

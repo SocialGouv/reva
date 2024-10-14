@@ -43,7 +43,7 @@ export const TimelineElement = ({
   <section className={`flex gap-3 ${className}`} data-test={dataTest}>
     <BarWithWhiteDot status={status} />
     <div
-      className={`flex flex-col ${status === "disabled" ? "opacity-40" : ""}
+      className={`flex flex-col w-full ${status === "disabled" ? "opacity-40" : ""}
 `}
     >
       <h3 className="text-xl leading-none mb-0">
