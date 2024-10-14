@@ -9,7 +9,6 @@ import {
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FundingCallOut } from "../../../../../../funding-call-out/FundingCallOut";
-// import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export const CertificationTimelineElement = () => {
   const router = useRouter();
@@ -33,27 +32,7 @@ export const CertificationTimelineElement = () => {
     candidacyStatus === "PROJET";
 
   return (
-    <TimelineElement
-      title="Choix du diplôme"
-      status={status}
-      // badge={
-      //   certification ? (
-      //     <Badge
-      //       severity="success"
-      //       data-test="certification-timeline-element-badge"
-      //     >
-      //       Complété
-      //     </Badge>
-      //   ) : (
-      //     <Badge
-      //       severity="warning"
-      //       data-test="certification-timeline-element-badge"
-      //     >
-      //       À compléter
-      //     </Badge>
-      //   )
-      // }
-    >
+    <TimelineElement title="Choix du diplôme" status={status}>
       <div className="flex flex-col md:flex-row basis-1/2 gap-6 ">
         <div className="flex flex-col w-full">
           {certification && (
