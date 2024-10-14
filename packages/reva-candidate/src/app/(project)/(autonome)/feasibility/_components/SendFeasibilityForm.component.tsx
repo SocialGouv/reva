@@ -23,6 +23,7 @@ import { FeasibilityHistory } from "@/graphql/generated/graphql";
 // import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
 // import Notice from "@codegouvfr/react-dsfr/Notice";
 import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
+import Tooltip from "@/components/tooltip/Tooltip";
 
 const schema = z.object({
   certificationAuthorityId: z.string(),
@@ -109,14 +110,15 @@ export const SendFeasibilityForm = (): React.ReactNode => {
             <h4 className="inline-block">
               Comment contacter mon certificateur ?
             </h4>
-            <span
-              className="fr-icon-question-line ml-4 text-dsfrBlue-500"
-              aria-hidden="true"
-              title="Il étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys."
-            />
+            <Tooltip tooltipText="Il étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys.">
+              <span
+                className="fr-icon-question-line text-dsfrBlue-500"
+                aria-hidden="true"
+              />
+            </Tooltip>
           </>
         }
-        className="w-3/5"
+        className="w-full md:w-3/5"
       >
         {selectedCertificationAuthority?.label}
         <br />
