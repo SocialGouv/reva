@@ -38,6 +38,7 @@ import { updateCertificationAuthorityLocalAccount } from "./features/updateCerti
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
+import { getAccountById } from "../account/features/getAccount";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -68,12 +69,13 @@ const unsafeResolvers = {
   },
 
   CertificationAuthorityLocalAccount: {
-    certificationAuthority: (
-      parent: CertificationAuthorityLocalAccount,
-      _: unknown,
-    ) =>
+    certificationAuthority: (parent: CertificationAuthorityLocalAccount) =>
       getCertificationAuthorityById({
         id: parent.certificationAuthorityId,
+      }),
+    account: (parent: CertificationAuthorityLocalAccount, _: unknown) =>
+      getAccountById({
+        id: parent.accountId,
       }),
   },
   Certification: {

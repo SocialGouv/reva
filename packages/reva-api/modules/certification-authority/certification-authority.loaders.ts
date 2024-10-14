@@ -1,4 +1,3 @@
-import { getAccountsByIds } from "../account/features/getAccountsByIds";
 import { getCertificationRelationsByCertificationAuthorityLocalAccountIds } from "./features/getCertificationRelationsByCertificationAuthorityLocalAccountIds";
 import { getDepartmentRelationsByCertificationAuthorityLocalAccountIds } from "./features/getDepartmentRelationsByCertificationAuthorityLocalAccountIds";
 
@@ -32,16 +31,6 @@ export const certificationAuthorityLoaders = {
           .filter((cr) => cr.certificationAuthorityLocalAccountId === cid)
           .map((cr) => cr.certification),
       );
-    },
-
-    account: async (queries: { obj: { accountId: string } }[]) => {
-      const accountIds: string[] = queries.map(({ obj }) => obj.accountId);
-
-      const accounts = await getAccountsByIds({
-        accountIds,
-      });
-
-      return accountIds.map((aid) => accounts.find((a) => a.id === aid));
     },
   },
 };
