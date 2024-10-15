@@ -103,10 +103,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       {status === "active" && dossierSignale && (
         <Notice
           data-test="dossier-de-validation-signale-notice"
-          title="Selon le certificateur, votre dossier est incomplet. Cliquez sur
-                “Compléter” pour consulter ses remarques et rajouter le ou les
-                élements manquants avant de renvoyer votre dossier de
-                validation."
+          title={`Le certificateur a signalé que votre dossier comportait des erreurs. Cliquez sur "Compléter" pour consulter ses remarques et le renvoyer.`}
           className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
           classes={{
             title: "inline text-sm text-dsfrGray-500 italic font-normal",
@@ -116,7 +113,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
 
       {candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE" && (
         <Notice
-          title="Votre certificateur est en train d’étudier votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais. Si votre dossier est bon, vous recevrez prochainement une convocation pour le jury. S’il est considéré comme incomplet, vous devrez le modifier et le renvoyer. "
+          title="Votre certificateur est en train d’étudier votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
           className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
           classes={{ title: "text-dsfrGray-500 italic font-normal text-sm" }}
         />

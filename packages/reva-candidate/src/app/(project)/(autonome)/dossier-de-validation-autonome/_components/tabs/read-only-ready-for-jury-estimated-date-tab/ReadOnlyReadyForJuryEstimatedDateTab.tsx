@@ -13,9 +13,10 @@ export const ReadOnlyReadyForJuryEstimatedDateTab = ({
   <div className="flex flex-col">
     <p>
       La date prévisionnelle est une simple estimation. Il s’agit de la date à
-      laquelle vous pensez avoir finalisé son dossier de validation.
+      laquelle vous pensez avoir finalisé votre dossier de validation.
       Rassurez-vous, si vous ne la respectez pas, ce n’est pas compromettant
-      pour votre parcours !
+      pour votre parcours ! Cela permet simplement au certificateur de prévoir
+      une date de passage devant les jurys.
     </p>
     <dl>
       <dt>date prévisionelle</dt>

@@ -79,9 +79,8 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
           <p className="text-xs mb-0">
             Votre dossier est étudié par votre certificateur. En cas d’erreur ou
             d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs
-            délais. Si votre dossier est bon, vous recevrez une réponse dans un
-            délai de 2 mois. S’il est considéré comme incomplet, vous devrez le
-            modifier et le renvoyer.
+            délais. Vous recevrez une réponse dans un délai de 2 mois. S’il est
+            considéré comme incomplet, vous devrez le modifier et le renvoyer.
           </p>
         </div>
       )}

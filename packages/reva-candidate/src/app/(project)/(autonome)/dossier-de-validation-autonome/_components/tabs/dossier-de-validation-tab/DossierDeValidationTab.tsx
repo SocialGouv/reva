@@ -82,7 +82,7 @@ export const DossierDeValidationTab = ({
     <div className="flex flex-col">
       <p className="mb-8">
         Une fois votre dossier de validation complété et relu, vous pouvez le
-        transmettre à votre certificateur depuis cette page.Si des pièces
+        transmettre à votre certificateur depuis cette page. Si des pièces
         supplémentaires sont requises (ex : attestation de premiers secours),
         elles seront également à envoyer ici.
       </p>
