@@ -67,4 +67,6 @@ export const resolversSecurityMap = {
   "MaisonMereAAP.organisms": [
     hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
   ],
+
+  "MaisonMereAAP.legalInformationDocuments": isAdmin,
 };
