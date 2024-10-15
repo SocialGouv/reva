@@ -33,9 +33,18 @@ const getOrganismQuery = graphql(`
 const createOrUpdateInformationsCommercialesMutation = graphql(`
   mutation createOrUpdateInformationsCommercialesMutation(
     $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
+    $organismId: String!
   ) {
     organism_createOrUpdateInformationsCommerciales(
       informationsCommerciales: $createOrUpdateInformationsCommercialesInput
+    ) {
+      id
+    }
+    organism_updateOrganismOnSiteAndRemoteStatus(
+      organismId: $organismId
+      isOnSite: true
+      isRemote: false
+      remoteZones: []
     ) {
       id
     }
@@ -62,6 +71,7 @@ export const useOrganismInformationOnSite = () => {
       informationsCommerciales: CreateOrUpdateInformationsCommercialesInput,
     ) =>
       graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
+        organismId,
         createOrUpdateInformationsCommercialesInput: informationsCommerciales,
       }),
   });
