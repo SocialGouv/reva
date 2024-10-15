@@ -1,3 +1,4 @@
+import { hasRole } from "../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdmin,
@@ -50,6 +51,13 @@ export const resolversSecurityMap = {
   "CertificationAuthority.account": isAdmin,
 
   "CertificationAuthorityLocalAccount.certificationAuthority": isAdmin,
+  "CertificationAuthorityLocalAccount.account": [
+    hasRole([
+      "admin",
+      "manage_candidacy",
+      "manage_certification_authority_local_account",
+    ]),
+  ],
 
   "CertificationAuthorityStructure.certificationAuthorities": isAdmin,
   "CertificationAuthorityStructure.certificationRegistryManager": isAdmin,
