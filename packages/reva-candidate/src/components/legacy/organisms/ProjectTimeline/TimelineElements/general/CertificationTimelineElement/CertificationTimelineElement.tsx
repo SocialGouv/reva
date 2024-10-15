@@ -36,7 +36,7 @@ export const CertificationTimelineElement = () => {
       <div className="flex flex-col md:flex-row basis-1/2 gap-6 ">
         <div className="flex flex-col w-full">
           {certification && (
-            <div className="border p-6">
+            <div className="border p-6 mb-6">
               <p
                 className="text-dsfrGray-500 italic text-xs mb-4"
                 data-test="timeline-certification-code-rncp"
