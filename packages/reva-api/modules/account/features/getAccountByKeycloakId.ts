@@ -4,4 +4,7 @@ export const getAccountByKeycloakId = ({
   keycloakId,
 }: {
   keycloakId: string;
-}) => prismaClient.account.findFirst({ where: { keycloakId } });
+}) =>
+  keycloakId
+    ? prismaClient.account.findUnique({ where: { keycloakId } })
+    : null;

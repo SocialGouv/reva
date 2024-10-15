@@ -5,6 +5,8 @@ export const getMaisonMereAAPById = ({
 }: {
   maisonMereAAPId: string;
 }) =>
-  prismaClient.maisonMereAAP.findFirst({
-    where: { id: maisonMereAAPId },
-  });
+  maisonMereAAPId
+    ? prismaClient.maisonMereAAP.findUnique({
+        where: { id: maisonMereAAPId },
+      })
+    : null;
