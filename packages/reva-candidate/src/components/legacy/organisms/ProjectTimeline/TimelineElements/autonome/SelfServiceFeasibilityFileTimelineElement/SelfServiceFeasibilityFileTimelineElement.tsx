@@ -96,8 +96,8 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
       )}
       {candidacy.feasibility?.decision === "REJECTED" && (
         <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
-          <span className="fr-icon-info-fill m-auto" />
-          <p className="text-xs mb-0">
+          <span className="fr-icon-info-fill my-auto" />
+          <p className="text-xs mb-0 leading-normal">
             Votre certificateur a estimé que votre dossier n’était pas recevable
             pour la suite de votre VAE.
           </p>
@@ -105,8 +105,8 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
       )}
       {candidacy.feasibility?.decision === "ADMISSIBLE" && (
         <div className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic">
-          <span className="fr-icon-time-fill m-auto" />
-          <p className="text-xs mb-0">
+          <span className="fr-icon-time-fill my-auto " />
+          <p className="text-xs mb-0 leading-normal">
             Félicitations, votre dossier est recevable ! Vous pouvez poursuivre
             votre parcours VAE.
           </p>
