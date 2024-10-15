@@ -40,7 +40,11 @@ const zodSchema = z.object({
   lastname: z.string().min(1, "Merci de remplir ce champ"),
   phone: z.string().min(10, "Veuillez entrer un numéro de téléphone valide"),
   email: z.string().email("Format attendu : nom@domaine.fr"),
-  departmentId: z.string().min(1, "Merci de remplir ce champ"),
+  departmentId: z
+    .string({
+      required_error: "Merci de remplir ce champ",
+    })
+    .min(1, "Merci de remplir ce champ"),
   typeAccompagnement: z.enum(["ACCOMPAGNE", "AUTONOME"]).optional(),
 });
 
