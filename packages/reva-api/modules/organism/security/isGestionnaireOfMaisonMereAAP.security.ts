@@ -13,7 +13,11 @@ export const isGestionnaireOfMaisonMereAAP =
     if (
       !(await isUserGestionnaireMaisonMereAAPOfMaisonMereAAP({
         userRoles: context.auth.userInfo.realm_access?.roles || [],
-        maisonMereAAPId: args.maisonMereAAPId || args.data?.maisonMereAAPId || root.maisonMereAAPId,
+        maisonMereAAPId:
+          args.maisonMereAAPId ||
+          args.data?.maisonMereAAPId ||
+          root.maisonMereAAPId ||
+          root.id,
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {

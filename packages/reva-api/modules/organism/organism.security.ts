@@ -69,4 +69,9 @@ export const resolversSecurityMap = {
   ],
 
   "MaisonMereAAP.legalInformationDocuments": isAdmin,
+
+  "MaisonMereAAP.legalInformationDocumentsDecisions": [
+    hasRole(["admin", "gestion_maison_mere_aap"]),
+    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+  ],
 };
