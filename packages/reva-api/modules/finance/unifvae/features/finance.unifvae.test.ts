@@ -17,7 +17,7 @@ import {
 import {
   candidateJPL,
   expertFiliereOrganism,
-  gestionaMaisonMereAapAccount1,
+  gestionnaireMaisonMereAAP1,
 } from "../../../../test/fixtures/people-organisms";
 import {
   candidacyUnifvae,
@@ -87,7 +87,7 @@ const injectGraphqlPaymentRequestCreation = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -125,7 +125,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -203,7 +203,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -236,7 +236,7 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionaMaisonMereAapAccount1.keycloakId,
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
     }),
     payload: {
       requestType: "mutation",

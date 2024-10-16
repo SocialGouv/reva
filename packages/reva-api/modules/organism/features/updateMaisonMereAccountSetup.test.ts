@@ -7,8 +7,8 @@ import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import {
-  createGestionaMaisonMereAapAccount1,
-  createGestionaMaisonMereAapAccount2,
+  createGestionnaireMaisonMereAapAccount1,
+  createGestionnaireMaisonMereAapAccount2,
   createMaisonMereAAP1,
   createMaisonMereAAP2,
 } from "../../../test/helpers/create-db-entity";
@@ -19,9 +19,9 @@ let account: Account,
   maisonMereAAP2: MaisonMereAAP;
 
 beforeAll(async () => {
-  account = await createGestionaMaisonMereAapAccount1();
+  account = await createGestionnaireMaisonMereAapAccount1();
 
-  account2 = await createGestionaMaisonMereAapAccount2();
+  account2 = await createGestionnaireMaisonMereAapAccount2();
 
   maisonMereAAP = await createMaisonMereAAP1();
 

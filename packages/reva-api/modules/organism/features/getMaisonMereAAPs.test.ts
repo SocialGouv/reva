@@ -8,8 +8,8 @@ import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import {
   createAgencePrincipaleMaisonMere2,
   createCollaborateurMaisonMereAAP2,
-  createGestionaMaisonMereAapAccount1,
-  createGestionaMaisonMereAapAccount2,
+  createGestionnaireMaisonMereAapAccount1,
+  createGestionnaireMaisonMereAapAccount2,
   createLieuAccueilMaisonMere2,
   createMaisonMereAAP1,
   createMaisonMereAAP2,
@@ -17,8 +17,8 @@ import {
 import {
   agencePrincipaleMaisonMere2,
   collaborateurMaisonMereAapAccount2,
-  gestionaMaisonMereAapAccount1,
-  gestionaMaisonMereAapAccount2,
+  gestionnaireMaisonMereAAP1,
+  gestionnaireMaisonMereAAP2,
   lieuAccueilMaisonMere2,
   maisonMereAAP1,
   maisonMereAAP2,
@@ -53,8 +53,8 @@ const injectGraphqlGetMaisonMereAAPs = async ({
 };
 
 beforeAll(async () => {
-  await createGestionaMaisonMereAapAccount1();
-  await createGestionaMaisonMereAapAccount2();
+  await createGestionnaireMaisonMereAapAccount1();
+  await createGestionnaireMaisonMereAapAccount2();
 
   await createMaisonMereAAP1();
   await createMaisonMereAAP2();
@@ -99,11 +99,11 @@ afterAll(async () => {
   });
 
   await prismaClient.account.delete({
-    where: { id: gestionaMaisonMereAapAccount1.id },
+    where: { id: gestionnaireMaisonMereAAP1.id },
   });
 
   await prismaClient.account.delete({
-    where: { id: gestionaMaisonMereAapAccount2.id },
+    where: { id: gestionnaireMaisonMereAAP2.id },
   });
 });
 
@@ -130,7 +130,7 @@ test("find maison mere by some unordered key words from its raison social", asyn
 
 test("find maison mere by admin email", async () => {
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: gestionaMaisonMereAapAccount1.email,
+    searchFilter: gestionnaireMaisonMereAAP1.email,
   });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([

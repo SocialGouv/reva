@@ -118,7 +118,7 @@ const adminAccount1 = {
   email: "mimi@yolo.fr",
 };
 
-const gestionaMaisonMereAapAccount1 = {
+const gestionnaireMaisonMereAAP1 = {
   id: randomUUID(),
   keycloakId: randomUUID(),
   firstname: "Peter",
@@ -126,7 +126,7 @@ const gestionaMaisonMereAapAccount1 = {
   email: "peter@yolo.fr",
 };
 
-const gestionaMaisonMereAapAccount2 = {
+const gestionnaireMaisonMereAAP2 = {
   id: randomUUID(),
   keycloakId: randomUUID(),
   firstname: "Marge",
@@ -207,8 +207,8 @@ const maisonMereAAPExpertBranche = {
 
 export {
   adminAccount1,
-  gestionaMaisonMereAapAccount1,
-  gestionaMaisonMereAapAccount2,
+  gestionnaireMaisonMereAAP1,
+  gestionnaireMaisonMereAAP2,
   archiIperia1,
   archiIperia2,
   candidateJPL,

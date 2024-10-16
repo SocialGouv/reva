@@ -1,7 +1,7 @@
 import {
   adminAccount1,
-  gestionaMaisonMereAapAccount1,
-  gestionaMaisonMereAapAccount2,
+  gestionnaireMaisonMereAAP1,
+  gestionnaireMaisonMereAAP2,
   archiIperia1,
   archiIperia2,
   candidateJPL,
@@ -43,28 +43,28 @@ export const createAdminAccount1 = async (): Promise<Account> => {
   });
 };
 
-export const createGestionaMaisonMereAapAccount1 =
+export const createGestionnaireMaisonMereAapAccount1 =
   async (): Promise<Account> => {
     return prismaClient.account.upsert({
       where: {
-        id: gestionaMaisonMereAapAccount1.id,
+        id: gestionnaireMaisonMereAAP1.id,
       },
       update: {},
       create: {
-        ...gestionaMaisonMereAapAccount1,
+        ...gestionnaireMaisonMereAAP1,
       },
     });
   };
 
-export const createGestionaMaisonMereAapAccount2 =
+export const createGestionnaireMaisonMereAapAccount2 =
   async (): Promise<Account> => {
     return prismaClient.account.upsert({
       where: {
-        id: gestionaMaisonMereAapAccount2.id,
+        id: gestionnaireMaisonMereAAP2.id,
       },
       update: {},
       create: {
-        ...gestionaMaisonMereAapAccount2,
+        ...gestionnaireMaisonMereAAP2,
       },
     });
   };
@@ -114,7 +114,7 @@ export const createMaisonMereAAPExpertFiliere =
     return prismaClient.maisonMereAAP.create({
       data: {
         ...maisonMereAAPExpertFiliere,
-        gestionnaireAccountId: gestionaMaisonMereAapAccount1.id,
+        gestionnaireAccountId: gestionnaireMaisonMereAAP1.id,
       },
     });
   };
@@ -124,7 +124,7 @@ export const createMaisonMereAAPExpertBranche =
     return prismaClient.maisonMereAAP.create({
       data: {
         ...maisonMereAAPExpertBranche,
-        gestionnaireAccountId: gestionaMaisonMereAapAccount2.id,
+        gestionnaireAccountId: gestionnaireMaisonMereAAP2.id,
       },
     });
   };
@@ -133,7 +133,7 @@ export const createMaisonMereAAP1 = async (): Promise<MaisonMereAAP> => {
   return prismaClient.maisonMereAAP.create({
     data: {
       ...maisonMereAAP1,
-      gestionnaireAccountId: gestionaMaisonMereAapAccount1.id,
+      gestionnaireAccountId: gestionnaireMaisonMereAAP1.id,
     },
   });
 };
@@ -142,7 +142,7 @@ export const createMaisonMereAAP2 = async (): Promise<MaisonMereAAP> => {
   return prismaClient.maisonMereAAP.create({
     data: {
       ...maisonMereAAP2,
-      gestionnaireAccountId: gestionaMaisonMereAapAccount2.id,
+      gestionnaireAccountId: gestionnaireMaisonMereAAP2.id,
     },
   });
 };
@@ -176,7 +176,7 @@ export const createExpertFiliereOrganism = async (): Promise<Organism> => {
 
   await prismaClient.account.create({
     data: {
-      ...gestionaMaisonMereAapAccount1,
+      ...gestionnaireMaisonMereAAP1,
       organismId: expertFiliereOrganism.id,
     },
   });

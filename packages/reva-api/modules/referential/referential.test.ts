@@ -8,16 +8,16 @@ import {
   expertBrancheEtFiliereOrganism,
   expertBrancheOrganism,
   expertFiliereOrganism,
-  gestionaMaisonMereAapAccount1,
+  gestionnaireMaisonMereAAP1,
   maisonMereAAPExpertFiliere,
-  gestionaMaisonMereAapAccount2,
+  gestionnaireMaisonMereAAP2,
   maisonMereAAPExpertBranche,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import {
-  createGestionaMaisonMereAapAccount1,
-  createGestionaMaisonMereAapAccount2,
+  createGestionnaireMaisonMereAapAccount1,
+  createGestionnaireMaisonMereAapAccount2,
   createMaisonMereAAPExpertFiliere,
   createMaisonMereAAPExpertBranche,
 } from "../../test/helpers/create-db-entity";
@@ -81,8 +81,8 @@ beforeAll(async () => {
       },
     });
 
-  await createGestionaMaisonMereAapAccount1();
-  await createGestionaMaisonMereAapAccount2();
+  await createGestionnaireMaisonMereAapAccount1();
+  await createGestionnaireMaisonMereAapAccount2();
 
   await createMaisonMereAAPExpertFiliere();
   await createMaisonMereAAPExpertBranche();
@@ -150,11 +150,11 @@ afterAll(async () => {
   });
 
   await prismaClient.account.delete({
-    where: { id: gestionaMaisonMereAapAccount1.id },
+    where: { id: gestionnaireMaisonMereAAP1.id },
   });
 
   await prismaClient.account.delete({
-    where: { id: gestionaMaisonMereAapAccount2.id },
+    where: { id: gestionnaireMaisonMereAAP2.id },
   });
 });
 
