@@ -2,6 +2,7 @@
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      typeAccompagnement
       candidate {
         firstname
         lastname
@@ -43,6 +45,8 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   const candidate = getCandidacyResponse?.getCandidacyById?.candidate;
   const juryDateOfSession =
     getCandidacyResponse?.getCandidacyById?.jury?.dateOfSession;
+  const typeAccompagnement =
+    getCandidacyResponse?.getCandidacyById?.typeAccompagnement;
 
   const menuItem = (text: string | ReactNode, path: string) => ({
     isActive: currentPathname.startsWith(path),
@@ -77,14 +81,21 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     <div className="flex flex-col flex-1 w-full md:flex-row gap-10 md:gap-0 ">
       <SideMenu
         title={
-          <div className="flex items-center pt-1.5">
-            <span className="fr-icon-user-fill fr-icon mr-2" />
-            <p className="font-bold text-xl capitalize">
-              {`${candidate?.firstname || ""} ${
-                candidate?.lastname || ""
-              }`.toLowerCase()}
-            </p>
-          </div>
+          <>
+            <div className="flex items-center pt-1.5">
+              <span className="fr-icon-user-fill fr-icon mr-2" />
+              <p className="font-bold text-xl capitalize">
+                {`${candidate?.firstname || ""} ${
+                  candidate?.lastname || ""
+                }`.toLowerCase()}
+              </p>
+            </div>
+            {typeAccompagnement === "AUTONOME" && (
+              <Badge severity="new" className="mt-8">
+                Candidat en autonomie
+              </Badge>
+            )}
+          </>
         }
         className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
         align="left"

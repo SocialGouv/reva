@@ -1,24 +1,14 @@
-import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 import { BackButton } from "@/components/back-button/BackButton";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import {
-  FeasibilityDecisionHistory,
-  FeasibilityDecisionInfo,
-} from "@/components/feasibility-decison-history";
 import { errorToast } from "@/components/toast/toast";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useRouter } from "next/navigation";
 import { FeasibilityForm, FeasibilityFormData } from "../FeasibilityForm";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
-
-const FileLink = ({ url, text }: { url: string; text: string }) => (
-  <AuthenticatedLink
-    text={text}
-    title={text}
-    url={url}
-    className="fr-link fr-icon-download-line fr-link--icon-right text-blue-900 text-lg mr-auto break-words"
-  />
-);
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { FeasibilityFormAutonomous } from "../FeasibilityFormAutonomous";
+import FeasibilityDecisionDisplay from "../FeasibilityDecisionDisplay";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacy, feasibility, submitFeasibilityDecision } =
@@ -60,57 +50,63 @@ export const FeasibilityUploadedPdf = () => {
       {feasibility && candidacy && (
         <div className="flex flex-col gap-8">
           <div>
-            <h1>
-              {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
-            </h1>
-            <p className="text-2xl font-bold mb-0">
+            <h1 className="mb-12">Dossier de faisabilité</h1>
+            <FeasibilityDecisionDisplay
+              decision={feasibility.decision}
+              decisionComment={feasibility.decisionComment}
+              decisionSentAt={feasibility.decisionSentAt}
+              feasibilityHistory={feasibility.history}
+            />
+            <h2 className="mb-6 mt-12">Certification visée</h2>
+            <p className="text-lg font-bold mb-0">
               {candidacy.certification?.label}
             </p>
           </div>
-
-          {feasibilityFile && (
-            <GrayCard>
-              <h6 className="mb-1">Dossier de faisabilité</h6>
-              <FileLink url={feasibilityFile.url} text={feasibilityFile.name} />
-            </GrayCard>
-          )}
-
-          {IDFile && (
-            <GrayCard>
-              <h6 className="mb-1">Pièce d'identité</h6>
-              <FileLink url={IDFile.url} text={IDFile.name} />
-              <Alert
-                className="mt-4"
-                title="Attention"
-                description="La pièce d’identité du candidat sera effacée de nos serveurs lorsque la recevabilité sera prononcée (recevable, non recevable ou incomplet)."
-                severity="warning"
+          <div>
+            {feasibilityFile?.previewUrl && (
+              <FancyPreview
+                src={feasibilityFile.previewUrl}
+                name={feasibilityFile.name}
+                title="Dossier de faisabilite"
+                defaultDisplay={false}
               />
-            </GrayCard>
-          )}
+            )}
 
-          {documentaryProofFile && (
-            <GrayCard>
-              <h6 className="mb-1">Justificatif(s)</h6>
-              <FileLink
-                url={documentaryProofFile.url}
-                text={documentaryProofFile.name}
+            {IDFile?.previewUrl && (
+              <FancyPreview
+                src={IDFile.previewUrl}
+                name={IDFile.name}
+                title="Pièce d'identité"
+                defaultDisplay={false}
               />
-            </GrayCard>
-          )}
+            )}
 
-          {certificateOfAttendanceFile && (
-            <GrayCard>
-              <h6 className="mb-1">
-                Attestation ou certificat de suivi de formation
-              </h6>
-              <FileLink
-                url={certificateOfAttendanceFile.url}
-                text={certificateOfAttendanceFile.name}
+            {documentaryProofFile?.previewUrl && (
+              <FancyPreview
+                src={documentaryProofFile.previewUrl}
+                name={documentaryProofFile.name}
+                title="Justificatifs"
+                defaultDisplay={false}
               />
-            </GrayCard>
-          )}
+            )}
 
-          {candidacy.typeAccompagnement === "ACCOMPAGNE" ? (
+            {certificateOfAttendanceFile?.previewUrl && (
+              <FancyPreview
+                src={certificateOfAttendanceFile.previewUrl}
+                name={certificateOfAttendanceFile.name}
+                title="Attestation ou certificat de suivi de formation"
+                defaultDisplay={false}
+              />
+            )}
+            <Alert
+              className="mt-4"
+              severity="warning"
+              title="Qu’arrive-t-il au document d’identité après la décision du certificateur ?"
+              description="Pour des raisons de protection des données personnelles, nous effaçons le document de nos serveurs  lorsque la décision concernant la recevabilité (recevable, non recevable ou incomplet) est prononcée."
+            />
+          </div>
+
+          {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
             <GrayCard>
               <h5 className="text-2xl font-bold mb-4">
                 Architecte accompagnateur de parcours
@@ -122,30 +118,32 @@ export const FeasibilityUploadedPdf = () => {
                 {candidacy.organism?.contactAdministrativeEmail}
               </p>
             </GrayCard>
-          ) : (
-            <Alert severity="info" title="Candidat en autonomie" />
           )}
 
-          {!isFeasibilityEditable && (
-            <div>
-              <h5 className="text-2xl font-bold mb-2">
-                Décision prise concernant ce dossier
+          {candidacy.typeAccompagnement === "AUTONOME" && (
+            <CallOut>
+              <h5 className="text-2xl font-bold mb-4">
+                Contact du candidat :{" "}
               </h5>
-              <FeasibilityDecisionInfo
-                id={feasibility.id}
-                decision={feasibility.decision}
-                decisionSentAt={feasibility.decisionSentAt}
-                decisionComment={feasibility.decisionComment}
-              />
-            </div>
+              <p className="text-lg mb-0">
+                {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
+              </p>
+              <p className="text-lg mb-0">{candidacy.candidate?.phone}</p>
+              <p className="text-lg mb-0">{candidacy.candidate?.email}</p>
+            </CallOut>
           )}
 
-          {feasibility.history.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibility.history} />
-          )}
-          {isFeasibilityEditable && (
-            <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
-          )}
+          {isFeasibilityEditable &&
+            candidacy?.typeAccompagnement === "ACCOMPAGNE" && (
+              <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
+            )}
+          {isFeasibilityEditable &&
+            candidacy?.typeAccompagnement === "AUTONOME" && (
+              <FeasibilityFormAutonomous
+                className="mt-4"
+                onSubmit={handleFormSubmit}
+              />
+            )}
         </div>
       )}
     </div>

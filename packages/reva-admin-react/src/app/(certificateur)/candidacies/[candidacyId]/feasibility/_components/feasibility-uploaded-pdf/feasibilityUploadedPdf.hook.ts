@@ -14,6 +14,8 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
       candidate {
         firstname
         lastname
+        phone
+        email
       }
       organism {
         label
@@ -39,18 +41,22 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
           IDFile {
             url
             name
+            previewUrl
           }
           feasibilityFile {
             url
             name
+            previewUrl
           }
           documentaryProofFile {
             url
             name
+            previewUrl
           }
           certificateOfAttendanceFile {
             url
             name
+            previewUrl
           }
         }
       }
