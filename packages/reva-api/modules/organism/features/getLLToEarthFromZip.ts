@@ -50,9 +50,6 @@ export const getLLToEarthFromZip = async ({ zip }: { zip?: string | null }) => {
   const [longitude, latitude] = coordinates;
 
   const [{ ll_to_earth }]: { ll_to_earth: string }[] =
-    await prismaClient.$queryRawUnsafe(
-      `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`,
-    );
-
+    await prismaClient.$queryRaw`SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`;
   return ll_to_earth;
 };

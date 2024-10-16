@@ -24,7 +24,7 @@ type SearchResponse = {
         importance: number;
         street: string;
       };
-    }
+    },
   ];
 };
 
@@ -55,7 +55,7 @@ type SearchResponse = {
       if (!zipCode) continue;
 
       const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zipCode}&limit=1"`
+        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zipCode}&limit=1"`,
       );
 
       const { features }: SearchResponse = await res.json();
@@ -72,10 +72,7 @@ type SearchResponse = {
       const [longitude, latitude] = coordinates;
 
       const [{ ll_to_earth: llToEarth }]: { ll_to_earth: string }[] =
-        await prismaClient.$queryRawUnsafe(
-          `SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`
-        );
-
+        await prismaClient.$queryRaw`SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`;
       await prismaClient.organism.update({
         where: { id: organism.id },
         data: {
