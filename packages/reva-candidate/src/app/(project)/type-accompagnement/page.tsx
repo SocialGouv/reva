@@ -36,8 +36,8 @@ export default function ChooseTypeAccompagnementPage() {
       <FormOptionalFieldsDisclaimer />
       <p>
         Aujourd’hui, il exite 2 manières de réaliser un parcours VAE : en
-        autonomie ou accompagné. Attention, certains diplômes se poursuivent
-        uniquement en autonomie.
+        autonomie ou accompagné. Choisissez l&apos;option qui vous convient le
+        mieux.
       </p>
       {queryStatus === "success" && typeAccompagnement && (
         <Form defaultValues={{ typeAccompagnement }} onSubmit={handleSubmit} />
@@ -97,12 +97,13 @@ const Form = ({
             avec le certificateur, préparation au passage devant le jury, etc.
           </p>
           <p className="mt-4">
-            Cet acompagnement peut être financé par des dispositifs tels que{" "}
+            Ces acompagnements peuvent être financés par des dispositifs tels
+            que{" "}
             <a href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation">
               Mon Compte Formation.
             </a>{" "}
-            En revanche, si vous faites ce parcours en autonomie, les frais de
-            jury seront à votre charge.
+            À noter : si vous faites votre parcours en autonomie, il est
+            possible que des frais soient à votre charge (jury, formation…).
           </p>
         </CallOut>
       </div>

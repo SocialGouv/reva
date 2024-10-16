@@ -185,8 +185,8 @@ export const CandidateRegistrationForm = ({
               >
                 Compte Personnel de Formation
               </Link>
-              . En revanche, si vous faites ce parcours en autonomie, les frais
-              de jury seront à votre charge.
+              . À noter : si vous faites votre parcours en autonomie, il est
+              possible que des frais soient à votre charge (jury, formation…).
             </CallOut>
           </div>
         </div>
