@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification } from "../referential.types";
 import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
+import { Prisma } from "@prisma/client";
 
 export const searchCertificationsForCandidate = async ({
   offset,
@@ -35,55 +36,40 @@ export const searchCertificationsForCandidate = async ({
     certificationView = `${certificationView}_based_on_formacode`;
   }
 
-  const queryParams = [];
+  const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, ${certificationView} available_certification
+    where c.id=available_certification.certification_id and status='AVAILABLE'`)} 
+      ${
+        organismId
+          ? Prisma.sql` and available_certification.organism_id=uuid(${organismId})`
+          : Prisma.empty
+      }
+      ${
+        searchTextInTsQueryFormat
+          ? Prisma.sql` and certification_searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
+          : Prisma.empty
+      }`;
 
-  const getCurrentQueryParamName = () => `$${queryParams.length}`;
-  let commonQuery = "";
-
-  if (organismId) {
-    let organismQuery = `from certification c, ${certificationView} available_certification
-      where c.id=available_certification.certification_id and status='AVAILABLE'`;
-
-    queryParams.push(organismId);
-    organismQuery += ` and available_certification.organism_id=uuid(${getCurrentQueryParamName()})`;
-
-    if (searchTextInTsQueryFormat) {
-      queryParams.push(searchTextInTsQueryFormat);
-      organismQuery += ` and certification_searchable_text@@to_tsquery('simple',unaccent(${getCurrentQueryParamName()}))`;
-    }
-    commonQuery = organismQuery;
-  } else {
-    let allCertificationsQuery = `
+  const allCertificationsQuery = Prisma.sql`
       from certification c
-      where c.status='AVAILABLE'`;
+      where c.status='AVAILABLE'
+      ${
+        searchTextInTsQueryFormat
+          ? Prisma.sql` and searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
+          : Prisma.empty
+      }`;
 
-    if (searchTextInTsQueryFormat) {
-      queryParams.push(searchTextInTsQueryFormat);
-      allCertificationsQuery += ` and searchable_text@@to_tsquery('simple',unaccent(${getCurrentQueryParamName()}))`;
-    }
-    commonQuery = allCertificationsQuery;
-  }
+  const commonQuery = organismId ? organismQuery : allCertificationsQuery;
 
-  queryParams.push(realOffset);
-  const offsetParamName = getCurrentQueryParamName();
-  queryParams.push(realLimit);
-  const limitParamName = getCurrentQueryParamName();
-
-  const certifications = (await prismaClient.$queryRawUnsafe(
-    `select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt", c.type_diplome_id as "typeDiplomeId"
+  const certifications =
+    (await prismaClient.$queryRaw`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt", c.type_diplome_id as "typeDiplomeId"
       ${commonQuery}
-      order by c.label offset ${offsetParamName} limit ${limitParamName}`,
-    ...queryParams,
-  )) as Certification[];
+      order by c.label offset ${realOffset} limit ${realLimit}`) as Certification[];
 
   const certificationCount = Number(
     (
-      (await prismaClient.$queryRawUnsafe(
-        `select count(distinct(c.id))
+      (await prismaClient.$queryRaw`select count(distinct(c.id))
       ${commonQuery}
-      `,
-        ...queryParams,
-      )) as { count: bigint }[]
+      `) as { count: bigint }[]
     )[0].count,
   );
 
