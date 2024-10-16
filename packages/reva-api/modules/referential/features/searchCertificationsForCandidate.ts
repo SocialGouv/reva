@@ -35,41 +35,55 @@ export const searchCertificationsForCandidate = async ({
     certificationView = `${certificationView}_based_on_formacode`;
   }
 
-  const organismQuery = `
-      from certification c, ${certificationView} available_certification
-      where c.id=available_certification.certification_id and status='AVAILABLE' 
-      ${
-        organismId
-          ? ` and available_certification.organism_id=uuid('${organismId}')`
-          : ""
-      }
-      ${
-        searchTextInTsQueryFormat
-          ? ` and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
-          : ""
-      }`;
+  const queryParams = [];
 
-  const allCertificationsQuery = `
+  const getCurrentQueryParamName = () => `$${queryParams.length}`;
+  let commonQuery = "";
+
+  if (organismId) {
+    let organismQuery = `from certification c, ${certificationView} available_certification
+      where c.id=available_certification.certification_id and status='AVAILABLE'`;
+
+    queryParams.push(organismId);
+    organismQuery += ` and available_certification.organism_id=uuid(${getCurrentQueryParamName()})`;
+
+    if (searchTextInTsQueryFormat) {
+      queryParams.push(searchTextInTsQueryFormat);
+      organismQuery += ` and certification_searchable_text@@to_tsquery('simple',unaccent(${getCurrentQueryParamName()}))`;
+    }
+    commonQuery = organismQuery;
+  } else {
+    let allCertificationsQuery = `
       from certification c
-      where c.status='AVAILABLE'
-      ${
-        searchTextInTsQueryFormat
-          ? ` and searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
-          : ""
-      }`;
+      where c.status='AVAILABLE'`;
 
-  const commonQuery = organismId ? organismQuery : allCertificationsQuery;
+    if (searchTextInTsQueryFormat) {
+      queryParams.push(searchTextInTsQueryFormat);
+      allCertificationsQuery += ` and searchable_text@@to_tsquery('simple',unaccent(${getCurrentQueryParamName()}))`;
+    }
+    commonQuery = allCertificationsQuery;
+  }
 
-  const certifications =
-    (await prismaClient.$queryRaw`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt", c.type_diplome_id as "typeDiplomeId"
+  queryParams.push(realOffset);
+  const offsetParamName = getCurrentQueryParamName();
+  queryParams.push(realLimit);
+  const limitParamName = getCurrentQueryParamName();
+
+  const certifications = (await prismaClient.$queryRawUnsafe(
+    `select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt", c.type_diplome_id as "typeDiplomeId"
       ${commonQuery}
-      order by c.label offset ${realOffset} limit ${realLimit}`) as Certification[];
+      order by c.label offset ${offsetParamName} limit ${limitParamName}`,
+    ...queryParams,
+  )) as Certification[];
 
   const certificationCount = Number(
     (
-      (await prismaClient.$queryRaw`select count(distinct(c.id))
+      (await prismaClient.$queryRawUnsafe(
+        `select count(distinct(c.id))
       ${commonQuery}
-      `) as { count: bigint }[]
+      `,
+        ...queryParams,
+      )) as { count: bigint }[]
     )[0].count,
   );
 
