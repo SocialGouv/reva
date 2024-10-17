@@ -15,7 +15,9 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
   let status: TimeLineElementStatus = "disabled";
 
   const canComplete =
-    !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
+    (!candidacy.feasibility ||
+      candidacy.feasibility.decision == "INCOMPLETE") &&
+    candidacy.certification;
 
   if (canComplete) {
     status = "editable";
