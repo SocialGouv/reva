@@ -3,10 +3,10 @@ import {
   TimelineElement,
   TimeLineElementStatus,
 } from "@/components/legacy/molecules/Timeline/Timeline";
+import { TimelineNotice } from "@/components/timeline-notice/TimelineNotice";
 import { graphql } from "@/graphql/generated";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -83,39 +83,22 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       {status === "active" &&
         !dossierSignale &&
         !!candidacy.readyForJuryEstimatedAt && (
-          <Notice
-            title={
-              <>
-                <span className="inline text-sm text-dsfrGray-500 italic font-normal">
-                  Vous avez renseigné une date de dépôt prévisionnelle, le{" "}
-                  {format(candidacy.readyForJuryEstimatedAt, "dd/MM/yyyy")}.
-                </span>
-                <span className="block md:ml-8 text-sm text-dsfrGray-500 italic font-normal">
-                  Assurez-vous de bien transmettre votre dossier de validation à
-                  votre certificateur.
-                </span>
-              </>
-            }
-            className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
-            classes={{ title: "text-dsfrGray-500" }}
+          <TimelineNotice
+            icon="info-fill"
+            text={`Vous avez renseigné une date de dépôt prévisionnelle, le ${format(candidacy.readyForJuryEstimatedAt, "dd/MM/yyyy")}. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.`}
           />
         )}
       {status === "active" && dossierSignale && (
-        <Notice
-          data-test="dossier-de-validation-signale-notice"
-          title={`Le certificateur a signalé que votre dossier comportait des erreurs. Cliquez sur "Compléter" pour consulter ses remarques et le renvoyer.`}
-          className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
-          classes={{
-            title: "inline text-sm text-dsfrGray-500 italic font-normal",
-          }}
+        <TimelineNotice
+          icon="info-fill"
+          text={`Le certificateur a signalé que votre dossier comportait des erreurs. Cliquez sur "Compléter" pour consulter ses remarques et le renvoyer.`}
         />
       )}
 
       {candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE" && (
-        <Notice
-          title="Votre certificateur est en train d’étudier votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
-          className="pt-0 bg-transparent  [&_.fr-container]:pl-0"
-          classes={{ title: "text-dsfrGray-500 italic font-normal text-sm" }}
+        <TimelineNotice
+          icon="info-fill"
+          text="Votre certificateur est en train d’envoyer votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
         />
       )}
 
