@@ -5,6 +5,7 @@ import { getLastProfessionalCgu } from "../../organism/features/getLastProfessio
 import { Organism, RemoteZone } from "../../organism/organism.types";
 import { getDepartmentById } from "../../referential/features/getDepartmentById";
 import { SearchOrganismFilter } from "../candidacy.types";
+import { Prisma } from "@prisma/client";
 
 export const searchOrganismsForCandidacy = async ({
   candidacyId,
@@ -91,44 +92,46 @@ const getRandomActiveOrganismForCertification = async ({
     organismView = `${organismView}_based_on_formacode`;
   }
 
-  let fromClause = `from organism o
+  let fromClause = Prisma.raw(`from organism o
     join ${organismView} ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id
-   left join organism_informations_commerciales as oic on oic.organism_id = o.id`;
-
-  let whereClause = `where ao.certification_id=uuid('${certificationId}') and (o.is_remote or o.is_onsite)`;
+   left join organism_informations_commerciales as oic on oic.organism_id = o.id`);
+  let whereClause = Prisma.sql`where ao.certification_id=uuid(${certificationId}) and (o.is_remote or o.is_onsite)`;
 
   if (searchText) {
     const words = searchText.split(/\s+/);
-    const conditions = words.map(
-      (word) =>
-        `(unaccent(o.label) ilike unaccent($$%${word}%$$) or unaccent(oic.nom) ilike unaccent($$%${word}%$$))`,
-    );
-    whereClause += ` and (${conditions.join(" and ")})`;
+    const conditions = words.map((word) => {
+      const wordWithWildcards = "%" + word + "%";
+      return Prisma.sql`(unaccent(o.label) ilike unaccent(${wordWithWildcards}) or unaccent(oic.nom) ilike unaccent(${wordWithWildcards}))`;
+    });
+
+    const conditionsString = Prisma.join(conditions, " and ");
+    whereClause = Prisma.sql`${whereClause} and (${conditionsString})`;
   }
 
   if (searchFilter.distanceStatus === "REMOTE") {
     const candidacyDepartmentRemoteZone = await getRemoteZoneFromDepartment({
       departmentId,
     });
-    whereClause += " and o.is_remote=true";
-    fromClause += ` join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`;
+    whereClause = Prisma.sql`${whereClause} and o.is_remote=true`;
+    fromClause = Prisma.raw(
+      `${fromClause.sql} join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`,
+    );
   }
   if (searchFilter.distanceStatus === "ONSITE") {
-    whereClause += `
-          and o.is_onsite = true
-          `;
+    whereClause = Prisma.sql`${whereClause} and o.is_onsite = true`;
   }
 
   const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))?.isActive;
   if (isCGUAcceptanceRequired) {
     const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
     if (CGU_AAP_VERSION != undefined) {
-      whereClause += ` and mm."cgu_version" = '${CGU_AAP_VERSION}' `;
+      whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
     }
   }
 
-  const queryResults = `
+  const results = (
+    await prismaClient.$queryRaw<Organism[]>`
           select o.id,
                  o.label,
                  o.legal_status,
@@ -141,22 +144,18 @@ const getRandomActiveOrganismForCertification = async ({
                  ao.organism_id
             ${fromClause}
             ${whereClause}
-          order by Random() limit ${limit}`;
-
-  const results = (
-    await prismaClient.$queryRawUnsafe<Organism[]>(queryResults)
+          order by Random() limit ${limit}`
   ).map(
     (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
   ) as unknown as Organism[];
 
-  const queryCount = `
+  const count = Number(
+    (
+      await prismaClient.$queryRaw<{ count: number }[]>`
           select count(distinct (o.id))
             ${fromClause}
-            ${whereClause}`;
-
-  const count = Number(
-    (await prismaClient.$queryRawUnsafe<{ count: number }[]>(queryCount))[0]
-      .count,
+            ${whereClause}`
+    )[0].count,
   );
 
   return { rows: results, totalRows: count };
@@ -207,10 +206,10 @@ const getAAPsWithZipCode = async ({
     - Ensures the presence of non-null values for 'll_to_earth', 'adresse_numero_et_nom_de_rue', 'adresse_code_postal', 'adresse_ville'.
   */
 
-  let whereClause = `
+  let whereClause = Prisma.sql`
   where o.id = ao.organism_id
   and o.is_onsite = true
-  and ao.certification_id=uuid('${certificationId}')
+  and ao.certification_id=uuid(${certificationId})
   and o.ll_to_earth IS NOT NULL
   and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
   and (oic."adresse_code_postal" IS NOT NULL or oic."adresse_code_postal" != '')
@@ -218,20 +217,21 @@ const getAAPsWithZipCode = async ({
   `;
 
   if (searchText) {
-    whereClause += ` and (unaccent(o.label) ilike unaccent($$%${searchText}%$$) or unaccent(oic.nom) ilike unaccent($$%${searchText}%$$))`;
+    const searchTextWithWildCards = `%${searchText}%`;
+    whereClause = Prisma.sql`${whereClause} and (unaccent(o.label) ilike unaccent(${searchTextWithWildCards}) or unaccent(oic.nom) ilike unaccent(${searchTextWithWildCards}))`;
   }
 
   if (pmr) {
-    whereClause += ` and oic."conformeNormesAccessbilite" = 'CONFORME' `;
+    whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" = 'CONFORME' `;
   } else {
-    whereClause += ` and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
+    whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
   }
 
   const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))?.isActive;
   if (isCGUAcceptanceRequired) {
     const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
     if (CGU_AAP_VERSION != undefined) {
-      whereClause += ` and mm."cgu_version" = '${CGU_AAP_VERSION}' `;
+      whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
     }
   }
 
@@ -240,16 +240,18 @@ const getAAPsWithZipCode = async ({
     organismView = `${organismView}_based_on_formacode`;
   }
 
-  const organisms: Organism[] = await prismaClient.$queryRawUnsafe(`
+  const prismaSqlOrganismView = Prisma.raw(organismView);
+
+  const organisms: Organism[] = await prismaClient.$queryRaw`
       SELECT DISTINCT(o.*),o.is_onsite as "isOnSite", (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
       FROM organism o
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
-       JOIN ${organismView} ao on ao.organism_id=o.id
+       JOIN ${prismaSqlOrganismView} ao on ao.organism_id=o.id
       ${whereClause}
       ORDER BY distance_km ASC
       LIMIT ${limit}
-  `);
+  `;
 
   if (!organisms?.length) {
     return [];
