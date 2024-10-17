@@ -23,7 +23,6 @@ export const BasicBackButton = ({
   return (
     <Button
       data-test="button-back"
-      iconId="fr-icon-arrow-go-back-fill"
       onClick={onClick}
       priority="tertiary"
       title="Revenir"

@@ -24,6 +24,7 @@ import { FeasibilityHistory } from "@/graphql/generated/graphql";
 // import Notice from "@codegouvfr/react-dsfr/Notice";
 import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
 import Tooltip from "@/components/tooltip/Tooltip";
+import { BackButton } from "@/components/legacy/molecules/BackButton";
 
 const schema = z.object({
   certificationAuthorityId: z.string(),
@@ -249,77 +250,83 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         />
         <hr className="pb-1" />
         {canUpload && (
-          <UploadForm
-            errors={errors}
-            register={register}
-            requirements={requirements}
-          />
+          <>
+            <UploadForm
+              errors={errors}
+              register={register}
+              requirements={requirements}
+            />
+            <FormButtons
+              formState={{
+                isDirty: isDirty,
+                isSubmitting: isSubmitting,
+                canSubmit: certificationAuthorities.length > 0,
+              }}
+              backUrl="/"
+              submitButtonLabel="Envoyer"
+            />
+          </>
         )}
 
         {!canUpload && feasibility?.feasibilityUploadedPdf && (
-          <div>
-            {feasibility?.feasibilityUploadedPdf?.feasibilityFile
-              .previewUrl && (
-              <FancyPreview
-                defaultDisplay={false}
-                name="Dossier de faisabilité"
-                title={
-                  feasibility?.feasibilityUploadedPdf?.feasibilityFile.name
-                }
-                src={
-                  feasibility?.feasibilityUploadedPdf?.feasibilityFile
-                    .previewUrl
-                }
-              />
-            )}
-            {feasibility?.feasibilityUploadedPdf?.IDFile?.previewUrl && (
-              <FancyPreview
-                defaultDisplay={false}
-                name="Pièce d'identité"
-                title={feasibility?.feasibilityUploadedPdf?.IDFile.name}
-                src={feasibility?.feasibilityUploadedPdf?.IDFile.previewUrl}
-              />
-            )}
-            {feasibility?.feasibilityUploadedPdf?.documentaryProofFile
-              ?.previewUrl && (
-              <FancyPreview
-                defaultDisplay={false}
-                name="Justificatif équivalence"
-                title={
-                  feasibility?.feasibilityUploadedPdf?.documentaryProofFile.name
-                }
-                src={
-                  feasibility?.feasibilityUploadedPdf?.documentaryProofFile
-                    .previewUrl
-                }
-              />
-            )}
-            {feasibility?.feasibilityUploadedPdf?.certificateOfAttendanceFile
-              ?.previewUrl && (
-              <FancyPreview
-                defaultDisplay={false}
-                name="Attestation ou certificat de formation"
-                title={
-                  feasibility?.feasibilityUploadedPdf
-                    ?.certificateOfAttendanceFile.name
-                }
-                src={
-                  feasibility?.feasibilityUploadedPdf
-                    ?.certificateOfAttendanceFile.previewUrl
-                }
-              />
-            )}
-          </div>
+          <>
+            <div>
+              {feasibility?.feasibilityUploadedPdf?.feasibilityFile
+                .previewUrl && (
+                <FancyPreview
+                  defaultDisplay={false}
+                  name="Dossier de faisabilité"
+                  title={
+                    feasibility?.feasibilityUploadedPdf?.feasibilityFile.name
+                  }
+                  src={
+                    feasibility?.feasibilityUploadedPdf?.feasibilityFile
+                      .previewUrl
+                  }
+                />
+              )}
+              {feasibility?.feasibilityUploadedPdf?.IDFile?.previewUrl && (
+                <FancyPreview
+                  defaultDisplay={false}
+                  name="Pièce d'identité"
+                  title={feasibility?.feasibilityUploadedPdf?.IDFile.name}
+                  src={feasibility?.feasibilityUploadedPdf?.IDFile.previewUrl}
+                />
+              )}
+              {feasibility?.feasibilityUploadedPdf?.documentaryProofFile
+                ?.previewUrl && (
+                <FancyPreview
+                  defaultDisplay={false}
+                  name="Justificatif équivalence"
+                  title={
+                    feasibility?.feasibilityUploadedPdf?.documentaryProofFile
+                      .name
+                  }
+                  src={
+                    feasibility?.feasibilityUploadedPdf?.documentaryProofFile
+                      .previewUrl
+                  }
+                />
+              )}
+              {feasibility?.feasibilityUploadedPdf?.certificateOfAttendanceFile
+                ?.previewUrl && (
+                <FancyPreview
+                  defaultDisplay={false}
+                  name="Attestation ou certificat de formation"
+                  title={
+                    feasibility?.feasibilityUploadedPdf
+                      ?.certificateOfAttendanceFile.name
+                  }
+                  src={
+                    feasibility?.feasibilityUploadedPdf
+                      ?.certificateOfAttendanceFile.previewUrl
+                  }
+                />
+              )}
+            </div>
+            <BackButton label="Retour" />
+          </>
         )}
-        <FormButtons
-          formState={{
-            isDirty: isDirty,
-            isSubmitting: isSubmitting,
-            canSubmit: certificationAuthorities.length > 0,
-          }}
-          backUrl="/"
-          submitButtonLabel="Envoyer"
-        />
       </form>
     </div>
   );
