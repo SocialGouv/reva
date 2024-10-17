@@ -63,8 +63,7 @@ export const getFeasibilityTimelineElementInfo = ({
     !!feasibility?.feasibilityFileSentAt &&
     !certificationDecisions.includes(decision);
 
-  const formatDate = (date: number | undefined) =>
-    date ? format(date, "dd/MM/yyyy") : "date inconnue";
+  const formatDate = (date: number) => format(date, "dd/MM/yyyy");
 
   switch (true) {
     case decision === "ADMISSIBLE":
@@ -177,9 +176,10 @@ export const getFeasibilityTimelineElementInfo = ({
           <InformationWithIcon title="Le dossier constitué à cette étape vous permettra d’accéder à votre accompagnement VAE.">
             <p className="italic mb-0 text-sm">
               Votre dossier de faisabilité vous a été transmis le{" "}
-              {formatDate(sentToCandidateAt)}. Vérifiez les informations
-              renseignées par votre organisme accompagnateur et transmettez nous
-              l&apos;attestation sur l&apos;honneur signée de votre part.
+              {formatDate(sentToCandidateAt as number)}. Vérifiez les
+              informations renseignées par votre organisme accompagnateur et
+              transmettez nous l&apos;attestation sur l&apos;honneur signée de
+              votre part.
             </p>
           </InformationWithIcon>
         ),
