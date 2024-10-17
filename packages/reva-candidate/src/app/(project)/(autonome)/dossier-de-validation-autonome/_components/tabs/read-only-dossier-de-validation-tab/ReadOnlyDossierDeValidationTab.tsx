@@ -14,7 +14,7 @@ export const ReadOnlyDossierDeValidationTab = ({
   dossierDeValidationFile,
   dossierDeValidationOtherFiles,
 }: {
-  certificationAuthorityInfo: { name: string; email: string };
+  certificationAuthorityInfo: { name: string; email: string; label: string };
   dossierDeValidationSentAt?: Date;
   dossierDeValidationFile?: FilePreview;
   dossierDeValidationOtherFiles: FilePreview[];

@@ -14,6 +14,7 @@ const getCandidateQuery = graphql(`
         readyForJuryEstimatedAt
         feasibility {
           certificationAuthority {
+            label
             contactFullName
             contactEmail
           }

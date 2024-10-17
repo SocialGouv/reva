@@ -8,7 +8,7 @@ export const ReadOnlyReadyForJuryEstimatedDateTab = ({
   certificationAuthorityInfo,
 }: {
   readyForJuryEstimatedAt?: Date;
-  certificationAuthorityInfo: { name: string; email: string };
+  certificationAuthorityInfo: { name: string; email: string; label: string };
 }) => (
   <div className="flex flex-col">
     <p>

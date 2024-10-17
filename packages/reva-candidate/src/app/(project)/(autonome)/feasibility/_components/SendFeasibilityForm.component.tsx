@@ -20,8 +20,6 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { UploadForm } from "./UploadForm";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
-// import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
-// import Notice from "@codegouvfr/react-dsfr/Notice";
 import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
 import Tooltip from "@/components/tooltip/Tooltip";
 import { BackButton } from "@/components/legacy/molecules/BackButton";

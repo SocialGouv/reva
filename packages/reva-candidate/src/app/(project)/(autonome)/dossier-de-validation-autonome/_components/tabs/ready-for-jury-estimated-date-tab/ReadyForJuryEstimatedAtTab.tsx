@@ -12,7 +12,7 @@ export const ReadyForJuryEstimatedDateTab = ({
   onSubmit,
 }: {
   defaultValues?: { readyForJuryEstimatedAt?: Date };
-  certificationAuthorityInfo: { name: string; email: string };
+  certificationAuthorityInfo: { name: string; email: string; label: string };
   onSubmit?: (data: { readyForJuryEstimatedAt: Date }) => void;
 }) => {
   const [readyForJuryEstimatedAt, setReadyForJuryEstimatedAt] = useState(

@@ -83,6 +83,7 @@ export default function DossierDeValidationAutonomePag() {
                           : undefined
                       }
                       certificationAuthorityInfo={{
+                        label: certificationAuthority?.label || "",
                         email: certificationAuthority?.contactEmail || "",
                         name: certificationAuthority?.contactFullName || "",
                       }}
@@ -108,6 +109,7 @@ export default function DossierDeValidationAutonomePag() {
                         dossierDeValidation.dossierDeValidationOtherFiles
                       }
                       certificationAuthorityInfo={{
+                        label: certificationAuthority?.label || "",
                         email: certificationAuthority?.contactEmail || "",
                         name: certificationAuthority?.contactFullName || "",
                       }}
@@ -130,6 +132,7 @@ export default function DossierDeValidationAutonomePag() {
                           : undefined,
                       }}
                       certificationAuthorityInfo={{
+                        label: certificationAuthority?.label || "",
                         email: certificationAuthority?.contactEmail || "",
                         name: certificationAuthority?.contactFullName || "",
                       }}
@@ -143,6 +146,7 @@ export default function DossierDeValidationAutonomePag() {
                   content: (
                     <DossierDeValidationTab
                       certificationAuthorityInfo={{
+                        label: certificationAuthority?.label || "",
                         email: certificationAuthority?.contactEmail || "",
                         name: certificationAuthority?.contactFullName || "",
                       }}

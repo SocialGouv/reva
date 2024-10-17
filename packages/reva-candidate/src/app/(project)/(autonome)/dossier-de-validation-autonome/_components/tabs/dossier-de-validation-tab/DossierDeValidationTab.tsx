@@ -42,7 +42,7 @@ export const DossierDeValidationTab = ({
   dossierDeValidationProblems,
   onSubmit,
 }: {
-  certificationAuthorityInfo: { name: string; email: string };
+  certificationAuthorityInfo: { name: string; email: string; label: string };
   dossierDeValidationIncomplete?: boolean;
   dossierDeValidationProblems: {
     decisionSentAt: Date;
