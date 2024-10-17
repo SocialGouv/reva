@@ -27,5 +27,6 @@ export const getSwornStatementFileWithFileNameAndUrlById = async ({
       OOS_DOMAIN,
       FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
     ),
+    createdAt: file.createdAt,
   };
 };

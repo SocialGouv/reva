@@ -38,6 +38,7 @@ type File {
   name: String!
   mimeType: String!
   previewUrl: String
+  createdAt: Timestamp
 }
 
 type Candidacy {

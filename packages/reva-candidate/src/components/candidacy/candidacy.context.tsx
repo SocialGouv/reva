@@ -186,6 +186,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
               previewUrl
               url
               mimeType
+              createdAt
             }
             attachments {
               type
