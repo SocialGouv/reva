@@ -90,6 +90,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
         )}
       {status === "active" && dossierSignale && (
         <TimelineNotice
+          data-test="dossier-de-validation-signale-notice"
           icon="info-fill"
           text={`Le certificateur a signalé que votre dossier comportait des erreurs. Cliquez sur "Compléter" pour consulter ses remarques et le renvoyer.`}
         />

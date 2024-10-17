@@ -154,7 +154,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
         '[data-test="dossier-de-validation-autonome-timeline-element"]',
       ).should(
         "contain.text",
-        "Vous avez renseigné une date de dépôt prévisionnelle, le 01/10/2024.Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.",
+        "Vous avez renseigné une date de dépôt prévisionnelle, le 01/10/2024. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.",
       );
     });
 
