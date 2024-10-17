@@ -29,6 +29,7 @@ import { useSetCertification } from "./set-certification.hooks";
 import Link from "next/link";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GraphQLError } from "graphql";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 export default function SetCertification() {
   const router = useRouter();
@@ -203,9 +204,12 @@ export default function SetCertification() {
           >
             {selectedCertification.label}
           </h2>
-          <p data-test="certification-code-rncp" className="text-xs mb-3">
+          <p data-test="certification-code-rncp" className="text-xs mb-4">
             Code RNCP: {selectedCertification.codeRncp}
           </p>
+          <div className="mb-12 h-5 px-1.5 bg-[#e8edff] rounded justify-center items-center leading-tight inline-flex text-[#0063cb] text-xs font-bold uppercase ">
+            VAE EN AUTONOMIE ou accompagnée
+          </div>
           {showFundingNotice && (
             <Notice
               className="my-6 max-w-xl"
@@ -242,27 +246,47 @@ export default function SetCertification() {
               target="_blank"
               rel="noreferrer"
               href={`https://www.francecompetences.fr/recherche/rncp/${selectedCertification.codeRncp}/`}
+              className="text-dsfrBlue-500"
             >
               Lire les détails de la fiche diplôme
             </a>
           </p>
 
-          <div className="flex flex-col md:flex-row gap-6 mt-6">
-            <Button
-              data-test="submit-certification-button"
-              className="justify-center w-[100%]  md:w-fit"
-              onClick={() => {
-                console.log("do something");
-              }}
+          <CallOut
+            title="À quoi sert un accompagnateur ?"
+            classes={{ title: "pb-2" }}
+            className="w-full md:w-3/5 mt-8 mb-12"
+          >
+            C’est un expert de la VAE qui vous aide à chaque grande étape de
+            votre parcours : rédaction du dossier de faisabilité, communication
+            avec le certificateur, préparation au passage devant le jury, etc.
+            <br />
+            <br />
+            <strong>Bon à savoir :</strong> ces accompagnements peuvent être en
+            partie financés par votre{" "}
+            <Link
+              href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+              target="_blank"
             >
-              Choisir ce diplôme
-            </Button>
+              Compte Personnel de Formation
+            </Link>
+            . À noter : si vous faites votre parcours en autonomie, il est
+            possible que des frais soient à votre charge (jury, formation…).
+          </CallOut>
+
+          <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
             <Button
               priority="secondary"
               className="justify-center w-[100%]  md:w-fit"
               onClick={() => setSelectedCertificationId(undefined)}
             >
               Retour
+            </Button>
+            <Button
+              data-test="submit-certification-button"
+              className="justify-center w-[100%]  md:w-fit"
+            >
+              Choisir
             </Button>
           </div>
         </form>
