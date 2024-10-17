@@ -32,7 +32,7 @@ export const ContactTimelineElement = () => {
           router.push("/update-contact");
         }}
       >
-        Modifiez les informations
+        Modifier les informations
       </Button>
     </TimelineElement>
   );

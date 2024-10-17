@@ -66,7 +66,7 @@ export const CertificationTimelineElement = () => {
               }}
             >
               {certification
-                ? "Modifiez votre diplôme"
+                ? "Modifier votre diplôme"
                 : "Choisir votre diplôme"}
             </Button>
           )}
