@@ -22,7 +22,7 @@ interface GraphqlRequest {
   variables: GraphqlVariables | null;
 }
 
-type GraphqlRequestDefinition = GraphqlRequestParameters & {
+export type GraphqlRequestDefinition = GraphqlRequestParameters & {
   requestType: GraphqlRequestType;
 };
 type InjectGraphqlParameters = {
@@ -32,7 +32,7 @@ type InjectGraphqlParameters = {
 };
 
 function hasFormatedQuery(
-  obj: GraphqlRequest | GraphqlRequestDefinition
+  obj: GraphqlRequest | GraphqlRequestDefinition,
 ): obj is GraphqlRequest {
   return "query" in obj;
 }
@@ -75,7 +75,7 @@ const graphqlRequestPayload =
 const graphqlArgumentValue = (
   key: string,
   val: unknown,
-  enumFields?: string[]
+  enumFields?: string[],
 ): string => {
   switch (typeof val) {
     case "string":
@@ -92,7 +92,7 @@ const graphqlArgumentValue = (
           return graphqlArgumentList(
             val as GraqhqlRequestArguments,
             enumFields,
-            true
+            true,
           );
       }
     default:
@@ -103,7 +103,7 @@ const graphqlArgumentValue = (
 const graphqlArgumentList = (
   args?: GraqhqlRequestArguments,
   enumFields?: string[],
-  nested?: boolean
+  nested?: boolean,
 ): string => {
   if (Array.isArray(args)) {
     const argumentList = args
@@ -115,7 +115,7 @@ const graphqlArgumentList = (
     ? Object.entries(args)
         .map(
           ([key, value]) =>
-            `${key}: ` + graphqlArgumentValue(key, value, enumFields)
+            `${key}: ` + graphqlArgumentValue(key, value, enumFields),
         )
         .join(",")
     : undefined;
