@@ -78,25 +78,25 @@ export const SelfServiceFeasibilityFileTimelineElement = () => {
     >
       {candidacy.feasibility?.decision === "PENDING" && (
         <TimelineNotice
-          icon="time-fill"
+          icon="fr-icon-time-fill"
           text="Votre dossier est étudié par votre certificateur. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais. Vous recevrez une réponse dans un délai de 2 mois. S’il est considéré comme incomplet, vous devrez le modifier et le renvoyer."
         />
       )}
       {candidacy.feasibility?.decision === "INCOMPLETE" && (
         <TimelineNotice
-          icon="info-fill"
+          icon="fr-icon-info-fill"
           text="Selon le certificateur, votre dossier est incomplet. Cliquez sur “Compléter” pour consulter ses remarques et rajouter le ou les éléments manquants avant de renvoyer votre dossier de faisabilité."
         />
       )}
       {candidacy.feasibility?.decision === "REJECTED" && (
         <TimelineNotice
-          icon="info-fill"
+          icon="fr-icon-info-fill"
           text="Votre certificateur a estimé que votre dossier n'est pas recevable pour la suite de votre VAE."
         />
       )}
       {candidacy.feasibility?.decision === "ADMISSIBLE" && (
         <TimelineNotice
-          icon="info-fill"
+          icon="fr-icon-info-fill"
           text="Félicitations, votre dossier est recevable ! Vous pouvez poursuivre votre parcours VAE."
         />
       )}

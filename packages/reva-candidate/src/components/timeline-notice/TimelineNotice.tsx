@@ -8,7 +8,7 @@ export const TimelineNotice = ({
       className="flex flex-row gap-4 w-3/5 text-dsfrGray-500 mb-4 italic"
       {...rest}
     >
-      <span className={`fr-icon-${icon} my-auto`} />
+      <span className={`${icon} my-auto`} />
       <p className="text-sm mb-0 leading-normal">{text}</p>
     </div>
   );

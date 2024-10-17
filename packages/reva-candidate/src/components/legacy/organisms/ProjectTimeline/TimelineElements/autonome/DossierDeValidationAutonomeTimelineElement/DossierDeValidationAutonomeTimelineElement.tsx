@@ -84,21 +84,21 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
         !dossierSignale &&
         !!candidacy.readyForJuryEstimatedAt && (
           <TimelineNotice
-            icon="info-fill"
+            icon="fr-icon-info-fill"
             text={`Vous avez renseigné une date de dépôt prévisionnelle, le ${format(candidacy.readyForJuryEstimatedAt, "dd/MM/yyyy")}. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.`}
           />
         )}
       {status === "active" && dossierSignale && (
         <TimelineNotice
           data-test="dossier-de-validation-signale-notice"
-          icon="info-fill"
+          icon="fr-icon-info-fill"
           text={`Le certificateur a signalé que votre dossier comportait des erreurs. Cliquez sur "Compléter" pour consulter ses remarques et le renvoyer.`}
         />
       )}
 
       {candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE" && (
         <TimelineNotice
-          icon="info-fill"
+          icon="fr-icon-info-fill"
           text="Votre certificateur est en train d’envoyer votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
         />
       )}
