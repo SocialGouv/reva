@@ -21,7 +21,7 @@ export const isGestionnaireOfMaisonMereAAP =
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cette candidature");
+      throw new Error("Vous n'êtes pas autorisé à accéder à cette maison mère");
     }
     return next(root, args, context, info);
   };
