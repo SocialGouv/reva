@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import {
   CandidacyStatusFilter,
@@ -21,42 +22,39 @@ export const getCandidacyCountByStatus = async ({
   }
 
   //get a count of candidacy by each status of candidacyCountByStatus in the select clause
-  const selectClause = `select ${candidacyStatusFilters
-    .map((sf) =>
-      getSQLSelectSumClauseFromStatusFilter(sf as CandidacyStatusFilter),
-    )
-    .filter((s) => s)
-    .join(", ")}`;
-  let whereClause = "where 1=1";
-  let fromClause = "from candidacy";
+  //no need to escape query parameters since they are not user inputs
+  const selectClause = Prisma.raw(
+    `select ${candidacyStatusFilters
+      .map((sf) =>
+        getSQLSelectSumClauseFromStatusFilter(sf as CandidacyStatusFilter),
+      )
+      .filter((s) => s)
+      .join(", ")}`,
+  );
+  let whereClause = Prisma.sql`where 1=1`;
+  let fromClause = Prisma.sql`from candidacy`;
 
   //candidacy organism as candidacyOrganism
-  fromClause +=
-    " left join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id";
+  fromClause = Prisma.sql`${fromClause} left join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id`;
 
   //left join on candidacy drop out as candidacyDropOut
-  fromClause +=
-    " left join candidacy_drop_out candidacyDropOut on candidacy.id = candidacyDropOut.candidacy_id";
+  fromClause = Prisma.sql`${fromClause} left join candidacy_drop_out candidacyDropOut on candidacy.id = candidacyDropOut.candidacy_id`;
 
   //left join on active jury as activeJury
-  fromClause +=
-    " left join jury activeJury on candidacy.id = activeJury.candidacy_id and activeJury.is_active = true";
+  fromClause = Prisma.sql`${fromClause} left join jury activeJury on candidacy.id = activeJury.candidacy_id and activeJury.is_active = true`;
 
   //access rights
   if (!hasRole("admin")) {
     //gestionnaire maison mère
     if (hasRole("gestion_maison_mere_aap")) {
-      fromClause +=
-        " join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id";
-      fromClause +=
-        " join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id";
-      whereClause += ` and mmaAccount.keycloak_id = '${IAMId}'`;
+      fromClause = Prisma.sql`${fromClause} join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id`;
+      fromClause = Prisma.sql`${fromClause} join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id`;
+      whereClause = Prisma.sql`${whereClause} and mmaAccount.keycloak_id = ${IAMId}::uuid`;
     }
     //aap (manage_candidacy role) but not gestionnaire maison mère
     else {
-      fromClause +=
-        " join account candidacyOrganismAccount on candidacyOrganismAccount.organism_id = candidacyOrganism.id";
-      whereClause += ` and candidacyOrganismAccount.keycloak_id = '${IAMId}'`;
+      fromClause = Prisma.sql`${fromClause} join account candidacyOrganismAccount on candidacyOrganismAccount.organism_id = candidacyOrganism.id`;
+      whereClause = Prisma.sql`${whereClause} and candidacyOrganismAccount.keycloak_id = ${IAMId}::uuid`;
     }
   } else if (hasRole("admin") && maisonMereAAPId) {
     const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
@@ -71,11 +69,9 @@ export const getCandidacyCountByStatus = async ({
     });
 
     if (maisonMereAAP?.gestionnaire.keycloakId) {
-      fromClause +=
-        " join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id";
-      fromClause +=
-        " join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id";
-      whereClause += ` and mmaAccount.keycloak_id = '${maisonMereAAP?.gestionnaire.keycloakId}'`;
+      fromClause = Prisma.sql`${fromClause} join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id`;
+      fromClause = Prisma.sql`${fromClause} join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id`;
+      whereClause = Prisma.sql`${whereClause} and mmaAccount.keycloak_id = '${maisonMereAAP?.gestionnaire.keycloakId}'`;
     }
   }
 
@@ -95,7 +91,7 @@ export const getCandidacyCountByStatus = async ({
     );
 
     //search on candidate
-    fromClause += " join candidate on candidacy.candidate_id = candidate.id";
+    fromClause = Prisma.sql`${fromClause} join candidate on candidacy.candidate_id = candidate.id`;
     searchClauses.push(
       getSearchFilterClause({
         table: "candidate",
@@ -112,8 +108,7 @@ export const getCandidacyCountByStatus = async ({
     );
 
     //search on department
-    fromClause +=
-      " left join department on candidacy.department_id = department.id";
+    fromClause = Prisma.sql`${fromClause} left join department on candidacy.department_id = department.id`;
     searchClauses.push(
       getSearchFilterClause({
         table: "department",
@@ -123,8 +118,7 @@ export const getCandidacyCountByStatus = async ({
     );
 
     //search on certification
-    fromClause +=
-      " left join certification on candidacy.certification_id = certification.id";
+    fromClause = Prisma.sql`${fromClause} left join certification on candidacy.certification_id = certification.id`;
     searchClauses.push(
       getSearchFilterClause({
         table: "certification",
@@ -134,8 +128,7 @@ export const getCandidacyCountByStatus = async ({
     );
 
     //search on certification type (type diplome)
-    fromClause +=
-      " left join type_diplome on certification.type_diplome_id = type_diplome.id";
+    fromClause = Prisma.sql`${fromClause} left join type_diplome on certification.type_diplome_id = type_diplome.id`;
     searchClauses.push(
       getSearchFilterClause({
         table: "type_diplome",
@@ -144,11 +137,11 @@ export const getCandidacyCountByStatus = async ({
       }),
     );
 
-    whereClause += ` and (${searchClauses.join(" or ")})`;
+    whereClause = Prisma.sql` ${whereClause} and (${Prisma.join(searchClauses, " or ")})`;
   }
 
-  const query = `${selectClause} ${fromClause} ${whereClause}`;
-  const [result] = (await prismaClient.$queryRawUnsafe(query)) as Array<object>;
+  const query = Prisma.sql`${selectClause} ${fromClause} ${whereClause}`;
+  const [result] = (await prismaClient.$queryRaw(query)) as Array<object>;
   return result;
 };
 
@@ -225,12 +218,13 @@ const getSearchFilterClause = ({
   fields: string[];
   words: string[];
 }) =>
-  words
-    .map(
+  Prisma.join(
+    words.map(
       (word) =>
-        `( ${getSearchFilterClauseForGivenWord({ table, fields, word })} )`,
-    )
-    .join(" and ");
+        Prisma.sql`( ${getSearchFilterClauseForGivenWord({ table, fields, word })} )`,
+    ),
+    " and ",
+  );
 
 //build a search clause for a table, a collection of fields and a word
 const getSearchFilterClauseForGivenWord = ({
@@ -242,6 +236,11 @@ const getSearchFilterClauseForGivenWord = ({
   fields: string[];
   word: string;
 }) =>
-  fields
-    .map((field) => "(" + `${table}.${field} ilike '%${word}%'` + ")")
-    .join(" or ");
+  Prisma.join(
+    fields.map((field) => {
+      const tableAndField = Prisma.raw(`${table}.${field}`);
+      const wordWithWildcards = `%${word}%`;
+      return Prisma.sql`(${tableAndField} ilike ${wordWithWildcards})`;
+    }),
+    " or ",
+  );
