@@ -7,11 +7,18 @@ import {
   uploadFilesToS3,
 } from "../../../../modules/shared/file";
 import { prismaClient } from "../../../../prisma/client";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import {
+  sendFeasibilityIncompleteMailToAAP,
+  sendFeasibilityRejectedCandidateEmail,
+  sendFeasibilityValidatedCandidateEmail,
+} from "../../emails";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
-import { getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId";
+import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+
+const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 const statusDecisionMapper = {
   ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
@@ -27,10 +34,9 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
   input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput;
 }) => {
   try {
-    const dff =
-      await getDematerializedFeasibilityFileWithFeasibilityFileByCandidacyId({
-        candidacyId,
-      });
+    const dff = await getDematerializedFeasibilityFileWithDetailsByCandidacyId({
+      candidacyId,
+    });
 
     if (!dff) {
       throw new Error(
@@ -122,7 +128,42 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           feasibilityFileSentAt: null,
         },
       });
+
       await resetDFFSentToCandidateState(dff);
+      const aapEmail =
+        dff.feasibility.candidacy.organism?.contactAdministrativeEmail;
+      if (aapEmail) {
+        sendFeasibilityIncompleteMailToAAP({
+          email: aapEmail,
+          feasibilityUrl: `${baseUrl}/admin2/candidacies/${candidacyId}/feasibility-aap`,
+          comment: decisionComment,
+        });
+      }
+    }
+
+    const candidateEmail = dff.feasibility.candidacy.candidate?.email;
+    const certifName = dff.feasibility.candidacy.certification?.label;
+    const certificationAuthorityLabel =
+      dff.feasibility.candidacy.certification?.certificationAuthorityStructure
+        ?.label;
+
+    if (candidateEmail && certifName && certificationAuthorityLabel) {
+      if (decision === "ADMISSIBLE") {
+        sendFeasibilityValidatedCandidateEmail({
+          email: candidateEmail,
+          comment: decisionComment,
+          certifName,
+          certificationAuthorityLabel,
+        });
+      }
+
+      if (decision === "REJECTED") {
+        sendFeasibilityRejectedCandidateEmail({
+          email: candidateEmail,
+          comment: decisionComment,
+          certificationAuthorityLabel,
+        });
+      }
     }
 
     return getDematerializedFeasibilityFileByCandidacyId({
