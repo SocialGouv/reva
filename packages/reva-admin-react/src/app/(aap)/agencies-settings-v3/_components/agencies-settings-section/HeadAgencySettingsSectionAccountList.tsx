@@ -1,9 +1,11 @@
+import { Impersonate } from "@/components/impersonate";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export const HeadAgencySettingsSectionAccountList = ({
   maisonMereAAPId,
   headAgencyAccountId,
   organisms,
+  isAdmin,
 }: {
   maisonMereAAPId: string;
   headAgencyAccountId: string;
@@ -18,6 +20,7 @@ export const HeadAgencySettingsSectionAccountList = ({
     isOnSite: boolean;
     isHeadAgency: boolean;
   }[];
+  isAdmin?: boolean;
 }) => (
   <ul className="ml-6 mb-8">
     {organisms.map((organism) =>
@@ -50,15 +53,18 @@ export const HeadAgencySettingsSectionAccountList = ({
                 {account.email}
               </div>
             </div>
-            <Button
-              linkProps={{
-                href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
-              }}
-              priority="tertiary no outline"
-              size="small"
-            >
-              Modifier
-            </Button>
+            <div className="flex justify-between items-center">
+              {isAdmin && <Impersonate accountId={account.id} size="small" />}
+              <Button
+                linkProps={{
+                  href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
+                }}
+                priority="tertiary no outline"
+                size="small"
+              >
+                Modifier
+              </Button>
+            </div>
           </li>
         )),
     )}

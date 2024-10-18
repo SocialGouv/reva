@@ -44,7 +44,14 @@ const AgencyUserAccount = () => {
       <UserAccountForm
         defaultValues={defaultValues}
         emailFieldDisabled
-        agency={userAccount?.organism}
+        agency={{
+          id: userAccount.organism.id,
+          label: `${userAccount.organism.label} 
+        ${`( ${
+          userAccount.organism.informationsCommerciales?.nom ||
+          "Nom commercial non renseignés"
+        } )`}`,
+        }}
       />
     </div>
   );

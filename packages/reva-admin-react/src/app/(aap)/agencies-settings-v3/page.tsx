@@ -17,7 +17,7 @@ const AgenciesSettingsPage = () => {
             Complétez ou modifiez les paramètres de compte de votre structure
             pour recevoir vos premières candidatures.
           </p>
-          <SettingsSummaryForGestionnaireSection isAdmin={!!isAdmin} />
+          <SettingsSummaryForGestionnaireSection isAdmin={isAdmin} />
         </div>
       ) : (
         <SettingsSummaryForCollaborateur />
@@ -40,7 +40,7 @@ const SettingsSummaryForGestionnaireSection = ({
       maisonMereAAP={maisonMereAAP as MaisonMereAap}
       organism={organism as Organism}
       accountId={accountId as string}
-      isAdmin={!!isAdmin}
+      isAdmin={isAdmin}
     />
   );
 };

@@ -3,7 +3,7 @@ import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-setting
 import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/HeadAgencySettingsSectionAccountList";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
+import { Account, MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 
 const getRemoteOrganism = ({
@@ -33,7 +33,7 @@ const getRemoteOrganism = ({
 export const SettingsSummaryForGestionnaire = ({
   maisonMereAAP,
   organism,
-  accountId,
+  accountId: headAgencyAccountId,
   isAdmin,
 }: {
   maisonMereAAP: MaisonMereAap;
@@ -56,7 +56,13 @@ export const SettingsSummaryForGestionnaire = ({
     maisonMereAAP: maisonMereAAP as MaisonMereAap,
   });
 
-  const hasOtherAccounts = maisonMereAAP.organisms.length > 1;
+  const otherAccounts = maisonMereAAP.organisms.reduce((acc, organism) => {
+    const accounts = organism.accounts.filter(
+      (account) => account.id != headAgencyAccountId,
+    );
+    return [...acc, ...accounts];
+  }, [] as Account[]);
+  const hasOtherAccounts = otherAccounts.length > 0;
 
   return (
     <div className="flex flex-col gap-8 mt-4 w-full">
@@ -98,6 +104,7 @@ export const SettingsSummaryForGestionnaire = ({
       <AgenciesSettingsSectionOnSite
         organisms={maisonMereAAP?.organisms.filter((o) => !o.isHeadAgency)} //on site organisms are everty organism that are not flagged as head agency
         maisonMereAAPId={maisonMereAAP.id}
+        isEditable={!isAdmin}
       />
       <EnhancedSectionCard
         data-test="user-accounts"
@@ -112,9 +119,10 @@ export const SettingsSummaryForGestionnaire = ({
       >
         {hasOtherAccounts ? (
           <HeadAgencySettingsSectionAccountList
-            headAgencyAccountId={accountId}
+            headAgencyAccountId={headAgencyAccountId}
             organisms={maisonMereAAP.organisms}
             maisonMereAAPId={maisonMereAAP.id}
+            isAdmin={isAdmin}
           />
         ) : (
           <p className="ml-10 md:w-4/5">

@@ -6,10 +6,6 @@ import {
 import { TokenService } from "../utils/token.service";
 import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
-const { BASE_URL, KEYCLOAK_ADMIN_REALM_REVA, KEYCLOAK_APP_REALM } = process.env;
-
-const baseUrl = BASE_URL || "https://vae.gouv.fr";
-
 export const getImpersonateUrl = async (
   context: {
     hasRole: (role: string) => boolean;
@@ -21,6 +17,8 @@ export const getImpersonateUrl = async (
   },
 ): Promise<string | undefined> => {
   const { accountId, candidateId } = params;
+
+  const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
   if (accountId) {
     const token = await getImpersonateUrlForAccount(context, { accountId });
@@ -63,7 +61,7 @@ const getImpersonateUrlForAccount = async (
   // Check if account with accountToUpdate.keycloakId exsits
   const keycloakAccount = await keycloakAdmin.users.findOne({
     id: accountToUpdate.keycloakId,
-    realm: KEYCLOAK_ADMIN_REALM_REVA,
+    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
   });
 
   if (!keycloakAccount) {
@@ -78,7 +76,7 @@ const getImpersonateUrlForAccount = async (
     // Get groups of accountToUpdate
     const groups = await keycloakAdmin.users.listGroups({
       id: accountToUpdate.keycloakId,
-      realm: KEYCLOAK_ADMIN_REALM_REVA,
+      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
     });
 
     // Check if account with accountToUpdate.keycloakId is not an admin account
@@ -126,7 +124,7 @@ const getImpersonateUrlForCandidate = async (
   // Check if candidate with candidateToUpdate.keycloakId exsits
   const keycloakAccount = await keycloakAdmin.users.findOne({
     id: candidateToUpdate.keycloakId,
-    realm: KEYCLOAK_APP_REALM,
+    realm: process.env.KEYCLOAK_APP_REALM,
   });
 
   if (!keycloakAccount) {

@@ -35,7 +35,16 @@ const createS3Client = () => {
     },
   });
 };
-const client = createS3Client?.();
+
+let client = createS3Client();
+
+const getClient = () => {
+  if (!client) {
+    client = createS3Client();
+  }
+
+  return client;
+};
 
 export const getUploadLink = async (
   filePath: string,
@@ -51,7 +60,7 @@ export const fileExists = async (filePath: string): Promise<boolean> => {
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: filePath,
     });
-    const result = await client?.send(command);
+    const result = await getClient()?.send(command);
     return result?.$metadata?.httpStatusCode === 200;
   } catch (error) {
     console.error(error);
@@ -65,6 +74,9 @@ export const uploadFile = async ({
   mimeType,
   data,
 }: S3File): Promise<void> => {
+  console.log(process.env.OUTSCALE_BUCKET_NAME);
+  console.log(filePath);
+
   const command = new PutObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
     Key: filePath,
@@ -73,7 +85,7 @@ export const uploadFile = async ({
   });
 
   try {
-    await client?.send(command);
+    await getClient()?.send(command);
   } catch (error) {
     console.error(error);
     logger.error(error);
@@ -114,7 +126,7 @@ export const deleteFile = async (filePath: string): Promise<void> => {
   });
 
   try {
-    await client?.send(command);
+    await getClient()?.send(command);
   } catch (error) {
     console.error(error);
     logger.error(error);
