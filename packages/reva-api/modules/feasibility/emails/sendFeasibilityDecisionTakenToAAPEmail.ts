@@ -14,7 +14,6 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
     templateMail({
       content: `
       <p>Bonjour,</p>
-      <br/>
       <p>Un nouvel avis de recevabilité est disponible via le lien ci-dessous.</p>
       `,
       labelCTA: "Accéder à la notification de recevabilité",

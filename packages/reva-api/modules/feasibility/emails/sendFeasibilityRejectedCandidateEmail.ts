@@ -31,7 +31,6 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     templateMail({
       content: `
         <p>Bonjour,</p>
-        <br/>
         <p>Vous trouverez ci-dessous la décision du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité.</p>
         <p>Malheureusement, votre dossier a été jugé non recevable par le certificateur. Nous vous invitons à prendre contact avec votre architecte de parcours pour comprendre cette décision et échanger ensemble sur les suites à donner à votre parcours.</p>
         ${commentInfo}
