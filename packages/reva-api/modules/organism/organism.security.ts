@@ -4,100 +4,65 @@ import { isAdmin } from "../shared/security/presets";
 import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
 import { isOwnerOfOrganism } from "./security/isOwnerOfOrganism";
 
+const isAdminOrGestionnaireOfMaisonMereAAP = [
+  hasRole(["admin", "gestion_maison_mere_aap"]),
+  whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+];
+
+const isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism = [
+  hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
+  whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
+  whenHasRoleButNotOthers(
+    "manage_candidacy",
+    ["gestion_maison_mere_aap"],
+    isOwnerOfOrganism,
+  ),
+];
+
 export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
 
-  "MaisonMereAAPLegalInformationDocuments.attestationURSSAFFile": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
-  "MaisonMereAAPLegalInformationDocuments.justificatifIdentiteDirigeantFile": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
-  "MaisonMereAAPLegalInformationDocuments.lettreDeDelegationFile": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
-  "MaisonMereAAPLegalInformationDocuments.justificatifIdentiteDelegataireFile":
-    [
-      hasRole(["admin", "gestion_maison_mere_aap"]),
-      whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-    ],
-
-  "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
-
-  "Query.organism_getMaisonMereAAPById": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
+  "Query.organism_getMaisonMereAAPById": isAdminOrGestionnaireOfMaisonMereAAP,
 
   "Mutation.organism_updateMaisonMereIsSignalized": isAdmin,
 
   "Mutation.organism_acceptCgu": [hasRole(["gestion_maison_mere_aap"])],
-  "Mutation.organism_updateMaisonMereAccountSetup": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
-  "Mutation.organism_createAccount": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
-  "Mutation.organism_updateAccountAndOrganism": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
+
+  "Mutation.organism_updateMaisonMereAccountSetup":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+  "Mutation.organism_createAccount": isAdminOrGestionnaireOfMaisonMereAAP,
+  "Mutation.organism_updateAccountAndOrganism":
+    isAdminOrGestionnaireOfMaisonMereAAP,
   "Mutation.organism_updateMaisonMereLegalInformation": isAdmin,
 
-  "Mutation.organism_updateMaisonMereAAPFinancingMethods": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
+  "Mutation.organism_updateMaisonMereAAPFinancingMethods":
+    isAdminOrGestionnaireOfMaisonMereAAP,
 
-  "Organism.accounts": [
-    hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-    whenHasRoleButNotOthers(
-      "manage_candidacy",
-      ["gestion_maison_mere_aap"],
-      isOwnerOfOrganism,
-    ),
-  ],
+  "Organism.accounts":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 
-  "Organism.maisonMereAAP": [
-    hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-    whenHasRoleButNotOthers(
-      "manage_candidacy",
-      ["gestion_maison_mere_aap"],
-      isOwnerOfOrganism,
-    ),
-  ],
+  "Organism.maisonMereAAP":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 
-  "MaisonMereAAP.gestionnaire": [
-    hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-    whenHasRoleButNotOthers(
-      "manage_candidacy",
-      ["gestion_maison_mere_aap"],
-      isOwnerOfOrganism,
-    ),
-  ],
+  "MaisonMereAAP.gestionnaire":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 
-  "MaisonMereAAP.organisms": [
-    hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-    whenHasRoleButNotOthers(
-      "manage_candidacy",
-      ["gestion_maison_mere_aap"],
-      isOwnerOfOrganism,
-    ),
-  ],
+  "MaisonMereAAP.organisms":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 
   "MaisonMereAAP.legalInformationDocuments": isAdmin,
 
-  "MaisonMereAAP.legalInformationDocumentsDecisions": [
-    hasRole(["admin", "gestion_maison_mere_aap"]),
-    whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
-  ],
+  "MaisonMereAAP.legalInformationDocumentsDecisions":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+
+  "MaisonMereAAPLegalInformationDocuments.attestationURSSAFFile":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+  "MaisonMereAAPLegalInformationDocuments.justificatifIdentiteDirigeantFile":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+  "MaisonMereAAPLegalInformationDocuments.lettreDeDelegationFile":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+  "MaisonMereAAPLegalInformationDocuments.justificatifIdentiteDelegataireFile":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+
+  "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
 };
