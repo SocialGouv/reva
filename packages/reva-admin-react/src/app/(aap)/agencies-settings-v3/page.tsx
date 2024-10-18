@@ -7,7 +7,6 @@ import { useHeadyAgencySettings } from "./_components/agencies-settings-summary/
 
 const AgenciesSettingsPage = () => {
   const { isGestionnaireMaisonMereAAP, isAdmin } = useAuth();
-  const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
 
   return (
     <div className="flex flex-col w-full">
@@ -18,12 +17,7 @@ const AgenciesSettingsPage = () => {
             Complétez ou modifiez les paramètres de compte de votre structure
             pour recevoir vos premières candidatures.
           </p>
-          <SettingsSummaryForGestionnaire
-            maisonMereAAP={maisonMereAAP as MaisonMereAap}
-            organism={organism as Organism}
-            accountId={accountId as string}
-            isAdmin={!!isAdmin}
-          />
+          <SettingsSummaryForGestionnaireSection isAdmin={!!isAdmin} />
         </div>
       ) : (
         <SettingsSummaryForCollaborateur />
@@ -33,3 +27,20 @@ const AgenciesSettingsPage = () => {
 };
 
 export default AgenciesSettingsPage;
+
+const SettingsSummaryForGestionnaireSection = ({
+  isAdmin,
+}: {
+  isAdmin: boolean;
+}) => {
+  const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
+
+  return (
+    <SettingsSummaryForGestionnaire
+      maisonMereAAP={maisonMereAAP as MaisonMereAap}
+      organism={organism as Organism}
+      accountId={accountId as string}
+      isAdmin={!!isAdmin}
+    />
+  );
+};
