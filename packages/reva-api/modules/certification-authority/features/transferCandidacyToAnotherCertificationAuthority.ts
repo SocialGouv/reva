@@ -40,6 +40,10 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     throw new Error(`Aucune candidature trouvée avec l'ID : ${candidacyId}`);
   }
 
+  const candidacyActiveFeasibility = candidacy.Feasibility.find(
+    (f) => f.isActive,
+  );
+
   const newCertificationAuthority =
     await prismaClient.certificationAuthority.findUnique({
       where: {
@@ -53,10 +57,6 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     );
   }
 
-  const candidacyActiveFeasibility = candidacy.Feasibility.find(
-    (f) => f.isActive,
-  );
-
   await prismaClient.candidacy.update({
     where: {
       id: candidacyId,
@@ -64,9 +64,32 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     data: {
       certificationAuthorityTransferReason: transferReason,
       Feasibility: {
-        update: {
+        updateMany: {
           where: {
-            id: candidacyActiveFeasibility?.id,
+            candidacyId,
+            isActive: true,
+          },
+          data: {
+            certificationAuthorityId: newCertificationAuthority.id,
+          },
+        },
+      },
+      dossierDeValidation: {
+        updateMany: {
+          where: {
+            candidacyId,
+            isActive: true,
+          },
+          data: {
+            certificationAuthorityId: newCertificationAuthority.id,
+          },
+        },
+      },
+      Jury: {
+        updateMany: {
+          where: {
+            candidacyId,
+            isActive: true,
           },
           data: {
             certificationAuthorityId: newCertificationAuthority.id,
