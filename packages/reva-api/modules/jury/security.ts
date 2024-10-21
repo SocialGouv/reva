@@ -1,5 +1,6 @@
 import {
   defaultSecurity,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAdminOrCandidacyCompanion,
   isAnyone,
 } from "../shared/security/presets";
@@ -12,4 +13,9 @@ export const resolversSecurityMap = {
 
   "Mutation.jury_updateExamInfo": isAdminOrCandidacyCompanion,
   "Mutation.jury_updateResult": isAnyone,
+
+  "Candidacy.jury": isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  "Candidacy.examInfo":
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  "Jury.candidacy": isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };
