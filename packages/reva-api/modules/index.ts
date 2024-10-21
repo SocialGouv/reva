@@ -33,7 +33,6 @@ import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
-import { juryLoaders } from "./jury/jury.loaders";
 import { juryResolvers } from "./jury/jury.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import { organismResolvers } from "./organism/organism.resolvers";
@@ -92,7 +91,6 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...organismLoaders,
     ...certificationAuthorityLoaders,
     ...referentialLoaders,
-    ...juryLoaders,
     ...candidacyLogLoaders,
   },
   validationRules:

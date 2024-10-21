@@ -15,6 +15,7 @@ import { updateResultOfJury } from "./features/updateResultOfJury";
 import { ExamInfo, JuryInfo } from "./jury.types";
 import { resolversSecurityMap } from "./security";
 import { JuryStatusFilter } from "./types/juryStatusFilter.type";
+import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -41,6 +42,8 @@ const unsafeResolvers = {
             })
           )?.[0]
         : undefined,
+    candidacy: async ({ candidacyId }: { candidacyId: string }) =>
+      getCandidacy({ candidacyId }),
   },
   Query: {
     jury_getJuries: (
