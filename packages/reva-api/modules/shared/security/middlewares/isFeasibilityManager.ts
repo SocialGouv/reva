@@ -16,11 +16,14 @@ export const isFeasibilityManager =
       args.candidacyId || args.data?.candidacyId || root.candidacyId || root.id;
 
     if (context.auth.hasRole("manage_certification_authority_local_account")) {
-      const candidacyFeasibility = await prismaClient.feasibility.findFirst({
-        where: { candidacyId, isActive: true },
-      });
+      // using candidacy.findUnique and fluent prisma api to let prisma batch the queries (graphql optimization)
+      const candidacyFeasibility = (
+        await prismaClient.candidacy
+          .findUnique({ where: { id: candidacyId } })
+          .Feasibility({ where: { isActive: true } })
+      )?.[0];
 
-      const account = await prismaClient.account.findFirst({
+      const account = await prismaClient.account.findUnique({
         where: { keycloakId: context.auth.userInfo.sub },
       });
 
@@ -36,34 +39,48 @@ export const isFeasibilityManager =
         return next(root, args, context, info);
       }
     } else if (context.auth.hasRole("manage_feasibility")) {
-      const candidacyFeasibility = await prismaClient.feasibility.findFirst({
-        where: { candidacyId, isActive: true },
-        select: {
-          certificationAuthorityId: true,
-          candidacy: {
+      // using candidacy.findUnique and fluent prisma api to let prisma batch the queries (graphql optimization)
+      const candidacyFeasibility = (
+        await prismaClient.candidacy
+          .findUnique({ where: { id: candidacyId } })
+          .Feasibility({
+            where: { isActive: true },
             select: {
-              certification: {
+              certificationAuthorityId: true,
+              candidacy: {
                 select: {
-                  id: true,
-                },
-              },
-              department: {
-                select: {
-                  id: true,
+                  certification: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                  department: {
+                    select: {
+                      id: true,
+                    },
+                  },
                 },
               },
             },
-          },
-        },
-      });
+          })
+      )?.[0];
 
       if (!candidacyFeasibility) {
         throw new Error("Candidature inexistante.");
       }
 
+      const account = await prismaClient.account.findUnique({
+        where: { keycloakId: context.auth.userInfo.sub },
+      });
+
+      if (!account) {
+        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+      }
+
+      //use the accountId instead of account:{keycloadId ...} in order to be able to use a findUnique and let prisma batch the queries
       const certificationAuthorityLocalAccount =
-        await prismaClient.certificationAuthorityLocalAccount.findFirst({
-          where: { account: { keycloakId: context.auth.userInfo.sub } },
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { accountId: account.id },
           include: {
             certificationAuthorityLocalAccountOnCertification: true,
             certificationAuthorityLocalAccountOnDepartment: true,
