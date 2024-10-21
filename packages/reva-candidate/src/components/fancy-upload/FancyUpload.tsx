@@ -100,7 +100,7 @@ export const FancyUpload = ({
   return (
     <div className={`relative ${className || ""}`}>
       <Upload
-        className={`border bg-dsfr-light-neutral-grey-1000 p-8`}
+        className={`border bg-dsfrGray-50 p-8`}
         label={
           <div
             onClick={(e) => {
@@ -163,7 +163,13 @@ export const FancyUpload = ({
       />
 
       {filePreview && urlPreview && (
-        <FancyPreview title={title} name={filePreview.name} src={urlPreview} />
+        <FancyPreview
+          title={title}
+          name={filePreview.name}
+          src={urlPreview}
+          showFileName={false}
+          transparentBg={false}
+        />
       )}
     </div>
   );

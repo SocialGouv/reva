@@ -5,20 +5,31 @@ interface Props {
   name: string;
   src: string;
   defaultDisplay?: boolean;
+  showFileName?: boolean;
+  transparentBg?: boolean;
 }
 
 export const FancyPreview = (props: Props): JSX.Element | null => {
-  const { title, name, src, defaultDisplay = true } = props;
+  const {
+    title,
+    name,
+    src,
+    defaultDisplay = true,
+    showFileName = true,
+    transparentBg = true,
+  } = props;
 
   const [display, setDisplay] = useState<boolean>(defaultDisplay);
 
   const backgroundColor = display
     ? "bg-[#E3E3FD]"
-    : "bg-dsfr-light-neutral-grey-1000";
+    : transparentBg
+      ? "bg-transparent"
+      : "bg-dsfrGray-50";
 
   return (
     <div
-      className="flex flex-col gap-4 first:border-t border-gray-200 border-b"
+      className={`flex flex-col gap-4 first:border-t border-gray-200 border-b ${transparentBg ? "" : "border-x"}`}
       data-test={`feasibility-files-preview-${title}`}
     >
       <div
@@ -26,7 +37,11 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
         onClick={() => setDisplay(!display)}
       >
         <label className="text-blue-800 font-medium cursor-pointer">
-          {title}
+          {showFileName
+            ? title
+            : display
+              ? "Masquer la piece jointe"
+              : "Voir la piece jointe"}
         </label>
         <span
           className={`text-blue-800 ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
