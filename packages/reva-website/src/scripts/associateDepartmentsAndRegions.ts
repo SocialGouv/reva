@@ -82,7 +82,7 @@ const getOrCreateRegion = async (name: string) => {
     console.log("Found Strapi region", regions?.data[0]?.attributes?.nom);
     return regions.data[0];
   }
-  console.log('Region not found, creating it', name);
+  console.log("Region not found, creating it", name);
   const { createRegion } = await request(
     STRAPI_GRAPHQL_API_URL,
     createRegionQuery,
