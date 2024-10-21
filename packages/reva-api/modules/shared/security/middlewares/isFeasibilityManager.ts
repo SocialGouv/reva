@@ -6,13 +6,14 @@ const log = debug("gql:security");
 export const isFeasibilityManager =
   (next: IFieldResolver<unknown>) =>
   async (
-    root: unknown,
-    args: { candidacyId?: string; [x: string]: unknown },
+    root: any,
+    args: Record<string, any>,
     context: MercuriusContext,
     info: any,
   ) => {
     log("isFeasibilityManager");
-    const candidacyId = args.candidacyId ?? "";
+    const candidacyId =
+      args.candidacyId || args.data?.candidacyId || root.candidacyId || root.id;
 
     if (context.auth.hasRole("manage_certification_authority_local_account")) {
       const candidacyFeasibility = await prismaClient.feasibility.findFirst({

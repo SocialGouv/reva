@@ -22,9 +22,12 @@ export const isCandidateOwnerOfCandidacy =
     context: MercuriusContext,
     info: any,
   ) => {
+    const candidacyId =
+      args.candidacyId || args.data?.candidacyId || root.candidacyId || root.id;
+
     if (
       !(await isCandidateOwnerOfCandidacyFeature({
-        candidacyId: args["candidacyId"],
+        candidacyId: candidacyId,
         keycloakId: context.auth.userInfo?.sub,
       }))
     ) {
