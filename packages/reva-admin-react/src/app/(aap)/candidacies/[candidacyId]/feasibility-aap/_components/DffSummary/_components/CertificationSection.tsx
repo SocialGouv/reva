@@ -1,7 +1,7 @@
 import {
   Certification,
-  CertificationCompetenceBloc,
   CertificationCompetenceDetails,
+  DffCertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
@@ -25,7 +25,7 @@ export default function CertificationSection({
   secondForeignLanguage?: string | null;
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
-  blocsDeCompetences: CertificationCompetenceBloc[];
+  blocsDeCompetences: DffCertificationCompetenceBloc[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   isCertificationPartial?: boolean | null;
   isEligibilityRequirementPartial: boolean;
@@ -89,11 +89,12 @@ export default function CertificationSection({
       <h5 className="mb-0">Blocs de compétences</h5>
 
       <div className="mb-8 mt-4">
-        {blocsDeCompetences.map((certificationCompetenceBloc, index) => (
+        {blocsDeCompetences.map((bc, index) => (
           <CertificationCompetenceAccordion
-            key={certificationCompetenceBloc.id}
+            key={bc.certificationCompetenceBloc.id}
             defaultExpanded
-            competenceBloc={certificationCompetenceBloc}
+            competenceBloc={bc.certificationCompetenceBloc}
+            competenceBlocText={bc.text}
             competenceDetails={certificationCompetenceDetails}
             hideAccordionContent={isEligibilityRequirementPartial}
             isFirstRow={index === 0}
@@ -108,7 +109,7 @@ export default function CertificationSection({
           </p>
         )}
         {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Acquis" defaultExpanded>
+          <Accordion label="Acquis" defaultExpanded className="hide-bg-for-pdf">
             <ul>
               {prequisitesByStatus?.acquired?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -117,7 +118,11 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion label="En cours" defaultExpanded>
+          <Accordion
+            label="En cours"
+            defaultExpanded
+            className="hide-bg-for-pdf"
+          >
             <ul>
               {prequisitesByStatus?.inProgress?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -126,7 +131,11 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion label="Préconisés" defaultExpanded>
+          <Accordion
+            label="Préconisés"
+            defaultExpanded
+            className="hide-bg-for-pdf"
+          >
             <ul>
               {prequisitesByStatus?.recommended?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>

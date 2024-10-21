@@ -70,6 +70,7 @@ export const CompetenciesBlocksSection = ({
               <CertificationCompetenceAccordion
                 key={bloc.certificationCompetenceBloc.id}
                 competenceBloc={bloc.certificationCompetenceBloc}
+                competenceBlocText={bloc.text}
                 competenceDetails={certificationCompetenceDetails}
                 hideAccordionContent={isEligibilityRequirementPartial}
                 isFirstRow={index === 0}

@@ -4,7 +4,7 @@ import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPart
 
 export const createOrUpdateCertificationCompetenceDetails = async ({
   dematerializedFeasibilityFileId,
-  competenceBlocId,
+  competenceBloc,
   competenceDetails,
 }: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput) => {
   if (!dematerializedFeasibilityFileId) {
@@ -15,14 +15,13 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
     prismaClient.dFFCertificationCompetenceDetails.deleteMany({
       where: {
         dematerializedFeasibilityFileId,
-        certificationCompetence: { blocId: competenceBlocId },
+        certificationCompetence: { blocId: competenceBloc.id },
       },
     }),
     prismaClient.dFFCertificationCompetenceDetails.createMany({
       data: competenceDetails.map((c) => ({
         dematerializedFeasibilityFileId,
         certificationCompetenceId: c.competenceId,
-        text: c.text,
         state: c.state,
       })),
     }),
@@ -30,10 +29,10 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
       where: {
         dematerializedFeasibilityFileId_certificationCompetenceBlocId: {
           dematerializedFeasibilityFileId,
-          certificationCompetenceBlocId: competenceBlocId,
+          certificationCompetenceBlocId: competenceBloc.id,
         },
       },
-      data: { complete: true },
+      data: { complete: true, text: competenceBloc.text },
     }),
   ]);
 

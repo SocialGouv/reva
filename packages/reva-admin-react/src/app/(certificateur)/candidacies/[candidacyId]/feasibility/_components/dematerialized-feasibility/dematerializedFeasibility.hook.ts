@@ -34,6 +34,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         secondForeignLanguage
         option
         blocsDeCompetences {
+          text
           certificationCompetenceBloc {
             id
             code
@@ -47,7 +48,6 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           }
         }
         certificationCompetenceDetails {
-          text
           state
           certificationCompetence {
             id

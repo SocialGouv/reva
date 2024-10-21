@@ -102,6 +102,7 @@ type CertificationCompetenceBloc {
   id: ID!
   code: String
   label: String!
+  text: String
   isOptional: Boolean
   FCCompetences: String
   competences: [CertificationCompetence!]!

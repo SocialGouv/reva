@@ -60,6 +60,7 @@ const getCandidacyById = graphql(`
           }
           blocsDeCompetences {
             complete
+            text
             certificationCompetenceBloc {
               id
               code
@@ -72,7 +73,6 @@ const getCandidacyById = graphql(`
           }
           certificationCompetenceDetails {
             state
-            text
             certificationCompetence {
               id
               label

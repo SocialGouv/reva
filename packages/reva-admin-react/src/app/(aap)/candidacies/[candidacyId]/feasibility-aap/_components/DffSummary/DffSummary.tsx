@@ -99,9 +99,7 @@ export default function DffSummary({
           secondForeignLanguage={secondForeignLanguage}
           certification={certification}
           prerequisites={prerequisites as Prerequisite[]}
-          blocsDeCompetences={blocsDeCompetences.map(
-            (bc) => bc.certificationCompetenceBloc,
-          )}
+          blocsDeCompetences={blocsDeCompetences}
           certificationCompetenceDetails={certificationCompetenceDetails}
           isCertificationPartial={candidacy?.isCertificationPartial}
           isEligibilityRequirementPartial={isEligibilityRequirementPartial}

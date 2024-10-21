@@ -7,20 +7,6 @@ import {
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
-const getTextFromCompetence = ({
-  competence,
-  competenceDetails,
-}: {
-  competence: CertificationCompetence;
-  competenceDetails: CertificationCompetenceDetails[];
-}): string => {
-  return (
-    competenceDetails.find(
-      (detail) => detail.certificationCompetence.id === competence.id,
-    )?.text || ""
-  );
-};
-
 const getStateFromCompetence = ({
   competence,
   competenceDetails,
@@ -89,12 +75,14 @@ const CertificationCompetenceRow = ({
 
 export const CertificationCompetenceAccordion = ({
   competenceBloc,
+  competenceBlocText,
   competenceDetails,
   isFirstRow,
   defaultExpanded = false,
   hideAccordionContent = false,
 }: {
   competenceBloc: CertificationCompetenceBloc;
+  competenceBlocText?: string | null;
   competenceDetails: CertificationCompetenceDetails[];
   isFirstRow: boolean;
   defaultExpanded?: boolean;
@@ -123,17 +111,11 @@ export const CertificationCompetenceAccordion = ({
             })}
           />
           <p>
-            <span className="font-bold">{competence.label} :</span>
-            <br />
-            <span>
-              {getTextFromCompetence({
-                competence,
-                competenceDetails,
-              })}
-            </span>
+            <span className="font-bold">{competence.label}</span>
           </p>
         </div>
       ))}
+      {!!competenceBlocText && <p>{competenceBlocText}</p>}
     </Accordion>
   );
 };

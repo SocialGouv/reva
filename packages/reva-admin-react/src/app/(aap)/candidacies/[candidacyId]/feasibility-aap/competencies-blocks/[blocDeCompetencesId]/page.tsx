@@ -4,8 +4,11 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-import { CompetenceDetails } from "@/graphql/generated/graphql";
-import { Input } from "@codegouvfr/react-dsfr/Input";
+import {
+  CertificationCompetenceBlocInput,
+  CompetenceDetails,
+} from "@/graphql/generated/graphql";
+import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -20,12 +23,12 @@ const schema = z.object({
     .object({
       competenceId: z.string(),
       label: z.string(),
-      text: z.string().min(1, "Merci de remplir ce champ"),
       state: z.enum(["YES", "NO", "PARTIALLY"], {
         invalid_type_error: "Merci de choisir une option",
       }),
     })
     .array(),
+  blocText: z.string().min(1, "Merci de remplir ce champ"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -43,13 +46,13 @@ const getBlocDeCompetencesQuery = graphql(`
           certificationCompetence {
             id
           }
-          text
         }
         blocsDeCompetences(blocDeCompetencesId: $blocDeCompetencesId) {
           certificationCompetenceBloc {
             id
             code
             label
+            text
             competences {
               id
               label
@@ -66,7 +69,7 @@ const createOrUpdateCompetenceDetailsMutation = graphql(`
     $input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
     $candidacyId: ID!
   ) {
-    dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+    dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails(
       candidacyId: $candidacyId
       input: $input
     ) {
@@ -96,7 +99,7 @@ const CompetenciesBlockPage = () => {
   const createOrUpdateCompetenceDetails = useMutation({
     mutationFn: (input: {
       dematerializedFeasibilityFileId: string;
-      competenceBlocId: string;
+      competenceBloc: CertificationCompetenceBlocInput;
       competenceDetails: CompetenceDetails[];
     }) =>
       graphqlClient.request(createOrUpdateCompetenceDetailsMutation, {
@@ -119,15 +122,17 @@ const CompetenciesBlockPage = () => {
       competences: competencesFromBlock?.map((c) => ({
         competenceId: c.id,
         label: c.label,
-        text: dematerializedFile?.certificationCompetenceDetails.find(
-          (ccd) => ccd.certificationCompetence.id === c.id,
-        )?.text,
         state: dematerializedFile?.certificationCompetenceDetails.find(
           (ccd) => ccd.certificationCompetence.id === c.id,
         )?.state,
       })),
+      blocText: block?.text || "",
     }),
-    [competencesFromBlock, dematerializedFile?.certificationCompetenceDetails],
+    [
+      competencesFromBlock,
+      dematerializedFile?.certificationCompetenceDetails,
+      block,
+    ],
   );
 
   const {
@@ -156,13 +161,15 @@ const CompetenciesBlockPage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     const competenceDetails = data.competences.map((c) => ({
       competenceId: c.competenceId,
-      text: c.text,
       state: c.state,
     }));
     try {
       await createOrUpdateCompetenceDetails.mutateAsync({
         dematerializedFeasibilityFileId: dematerializedFile?.id || "",
-        competenceBlocId: blocDeCompetencesId,
+        competenceBloc: {
+          id: blocDeCompetencesId,
+          text: data.blocText,
+        },
         competenceDetails,
       });
       successToast("Modifications enregistrées");
@@ -184,7 +191,7 @@ const CompetenciesBlockPage = () => {
       {block && (
         <>
           <h2 className="mb-0">{block.code}</h2>
-          <p className="text-lg font-medium">{block.label}</p>
+          <p className="text-xl font-bold mb-8">{block.label}</p>
           <form
             onSubmit={handleFormSubmit}
             onReset={(e) => {
@@ -194,17 +201,7 @@ const CompetenciesBlockPage = () => {
           >
             {competencesFields?.map((c, i) => (
               <>
-                <Input
-                  key={c.id}
-                  textArea
-                  label={c.label}
-                  classes={{ nativeInputOrTextArea: "!min-h-[88px]" }}
-                  nativeTextAreaProps={{
-                    ...register(`competences.${i}.text`),
-                  }}
-                  stateRelatedMessage={errors?.competences?.[i]?.text?.message}
-                  state={errors?.competences?.[i]?.text ? "error" : "default"}
-                />
+                <p className="text-lg font-medium">{c.label}</p>
                 <RadioButtons
                   stateRelatedMessage={errors?.competences?.[i]?.state?.message}
                   state={errors?.competences?.[i]?.state ? "error" : "default"}
@@ -235,6 +232,15 @@ const CompetenciesBlockPage = () => {
                 />
               </>
             ))}
+            <Input
+              textArea
+              label="Commentaire sur le bloc"
+              nativeTextAreaProps={{
+                ...register("blocText"),
+              }}
+              stateRelatedMessage={errors?.blocText?.message}
+              state={errors?.blocText ? "error" : "default"}
+            />
             <FormButtons
               backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
               formState={{

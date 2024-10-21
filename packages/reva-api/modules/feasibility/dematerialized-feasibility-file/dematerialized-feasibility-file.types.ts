@@ -8,10 +8,12 @@ export interface DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInp
 
 export interface DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
   dematerializedFeasibilityFileId: string;
-  competenceBlocId: string;
+  competenceBloc: {
+    id: string;
+    text: string;
+  };
   competenceDetails: {
     competenceId: string;
-    text: string;
     state: CompetenceDetailState;
   }[];
 }

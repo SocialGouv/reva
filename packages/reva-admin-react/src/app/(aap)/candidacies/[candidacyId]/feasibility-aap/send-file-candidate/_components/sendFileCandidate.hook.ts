@@ -35,6 +35,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           secondForeignLanguage
           option
           blocsDeCompetences {
+            text
             certificationCompetenceBloc {
               id
               code
@@ -48,7 +49,6 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             }
           }
           certificationCompetenceDetails {
-            text
             state
             certificationCompetence {
               id

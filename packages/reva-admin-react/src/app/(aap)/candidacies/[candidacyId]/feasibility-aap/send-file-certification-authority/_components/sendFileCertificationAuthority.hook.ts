@@ -46,6 +46,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           secondForeignLanguage
           option
           blocsDeCompetences {
+            text
             certificationCompetenceBloc {
               id
               code
@@ -59,7 +60,6 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             }
           }
           certificationCompetenceDetails {
-            text
             state
             certificationCompetence {
               id

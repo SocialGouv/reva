@@ -40,6 +40,7 @@ enum DFFCertificationCompetenceDetailsState {
 type DFFCertificationCompetenceBloc {
   complete: Boolean!
   certificationCompetenceBloc: CertificationCompetenceBloc!
+  text: String
 }
 
 type Prerequisite {
@@ -66,7 +67,7 @@ enum PrerequisiteState {
 }
 type CertificationCompetenceDetails {
   certificationCompetence: CertificationCompetence!
-  text: String!
+  text: String
   state: DFFCertificationCompetenceDetailsState!
 }
 
@@ -98,7 +99,7 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput {
 
 input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput {
   dematerializedFeasibilityFileId: ID!
-  competenceBlocId: ID!
+  competenceBloc: CertificationCompetenceBlocInput!
   competenceDetails: [competenceDetails!]!
 }
 
@@ -132,9 +133,13 @@ enum DFFileCertificationAuthorityDecision {
   REJECTED
 }
 
+input CertificationCompetenceBlocInput {
+  id: ID!
+  text: String!
+}
+
 input competenceDetails {
   competenceId: ID!
-  text: String!
   state: DFFCertificationCompetenceDetailsState!
 }
 
@@ -160,7 +165,7 @@ type Mutation {
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput!
   ): DematerializedFeasibilityFile!
 
-  dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails(
+  dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails(
     candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
   ): DematerializedFeasibilityFile!

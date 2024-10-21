@@ -120,7 +120,7 @@ const unsafeResolvers = {
         input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
       },
     ) => createOrUpdateCertificationInfo(params),
-    dematerialized_feasibility_file_createOrupdateCertificationCompetenceDetails:
+    dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails:
       (
         _parent: unknown,
         params: {
