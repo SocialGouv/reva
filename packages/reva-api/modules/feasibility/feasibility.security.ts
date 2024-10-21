@@ -17,4 +17,6 @@ export const resolversSecurityMap = {
 
   "Candidacy.feasibility":
     isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+
+  "Feasibility.candidacy": isAdminCandidacyCompanionOrFeasibilityManager,
 };

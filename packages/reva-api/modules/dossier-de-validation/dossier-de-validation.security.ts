@@ -24,4 +24,7 @@ export const dossierDeValidationResolversSecurityMap = {
 
   "Candidacy.activeDossierDeValidation:":
     isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+
+  "DossierDeValidation.candidacy":
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };
