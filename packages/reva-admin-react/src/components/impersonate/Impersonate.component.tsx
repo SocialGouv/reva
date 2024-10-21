@@ -10,11 +10,10 @@ import { useHooks } from "./Impersonate.hooks";
 interface Props {
   candidateId?: string;
   accountId?: string;
-  size?: "small" | "medium" | "large";
 }
 
 export const Impersonate = (props: Props): JSX.Element | null => {
-  const { candidateId, accountId, size } = props;
+  const { candidateId, accountId } = props;
 
   const { isFeatureActive } = useFeatureflipping();
   const { isAdmin } = useAuth();
@@ -30,7 +29,7 @@ export const Impersonate = (props: Props): JSX.Element | null => {
         }
       }}
     >
-      <Button priority="secondary" type="button" size={size}>
+      <Button priority="secondary" type="button">
         Impersonate
       </Button>
     </CopyClipBoard>

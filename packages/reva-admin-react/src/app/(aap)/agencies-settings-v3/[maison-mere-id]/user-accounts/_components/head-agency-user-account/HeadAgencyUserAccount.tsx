@@ -72,6 +72,7 @@ const HeadAgencyUserAccount = () => {
       <UserAccountForm
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}
+        emailFieldDisabled
         remoteAgency={{
           id: headAgency?.id,
           label:

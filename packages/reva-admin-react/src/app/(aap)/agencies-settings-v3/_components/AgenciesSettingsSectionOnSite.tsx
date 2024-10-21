@@ -59,7 +59,6 @@ const OrganismRow = ({
 export const AgenciesSettingsSectionOnSite = ({
   organisms = [],
   maisonMereAAPId,
-  isEditable,
 }: {
   organisms?: {
     id: string;
@@ -68,7 +67,6 @@ export const AgenciesSettingsSectionOnSite = ({
     informationsCommerciales?: { nom?: string | null } | null;
   }[];
   maisonMereAAPId: string;
-  isEditable?: boolean;
 }) => {
   const isOnSiteAgencyComplete = !!organisms.length;
 
@@ -78,7 +76,7 @@ export const AgenciesSettingsSectionOnSite = ({
       title="Accompagnement en présentiel"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/add-agency`}
       titleIconClass="fr-icon-home-4-fill"
-      isEditable={isEditable}
+      isEditable
       customButtonTitle={"Ajouter un lieu d'accueil"}
       status={isOnSiteAgencyComplete ? "COMPLETED" : "TO_COMPLETE"}
       CustomBadge={<div />}

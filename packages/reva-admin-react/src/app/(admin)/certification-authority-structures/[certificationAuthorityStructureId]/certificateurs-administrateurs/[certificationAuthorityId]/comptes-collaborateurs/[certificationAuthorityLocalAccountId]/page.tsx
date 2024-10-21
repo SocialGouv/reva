@@ -58,8 +58,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                 .certificationAuthorityStructure.label
             }
             certificationAuthorityId={
-              certificationAuthorityLocalAccount.certificationAuthority.id
-            }
+              certificationAuthorityLocalAccount.certificationAuthority.id}
             certificationAuthoritylabel={
               certificationAuthorityLocalAccount.certificationAuthority.label
             }
@@ -98,7 +97,8 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                   label="Email"
                   nativeInputProps={{
                     value:
-                      certificationAuthorityLocalAccount.account.email || "",
+                      certificationAuthorityLocalAccount.account.email ||
+                      "",
                   }}
                 />
                 <Input

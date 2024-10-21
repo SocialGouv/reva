@@ -9,8 +9,6 @@ export const SettingsSummaryForCollaborateur = () => {
 
   if (!account || !organism) return null;
 
-  console.log(organism);
-
   return (
     <>
       <p className="text-xl">
@@ -28,16 +26,13 @@ export const SettingsSummaryForCollaborateur = () => {
           <EnhancedSectionCard
             data-test="on-site-agency"
             title="Accompagnement en présentiel"
+            isEditable={false}
             buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"
           >
             <div className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b">
               <span className="font-bold">
                 {organism.label}{" "}
-                {`( ${
-                  organism.informationsCommerciales?.nom ||
-                  "Nom commercial non renseignés"
-                } )`}
                 <Badge
                   small
                   className="ml-2"
