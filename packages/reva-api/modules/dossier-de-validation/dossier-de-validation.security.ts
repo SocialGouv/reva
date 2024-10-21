@@ -1,5 +1,8 @@
 import { hasRole } from "../shared/security/middlewares";
-import { defaultSecurity } from "../shared/security/presets";
+import {
+  defaultSecurity,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+} from "../shared/security/presets";
 import { canManageDossierDeValidation } from "./security/canManageDossierDeValidation";
 
 export const dossierDeValidationResolversSecurityMap = {
@@ -18,4 +21,7 @@ export const dossierDeValidationResolversSecurityMap = {
   ],
 
   "Mutation.dossierDeValidation_signalProblem": canManageDossierDeValidation,
+
+  "Candidacy.activeDossierDeValidation:":
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };

@@ -1,6 +1,7 @@
 import {
   defaultSecurity,
   isAdminCandidacyCompanionOrFeasibilityManager,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAnyone,
 } from "../shared/security/presets";
 
@@ -13,4 +14,7 @@ export const resolversSecurityMap = {
     isAdminCandidacyCompanionOrFeasibilityManager,
 
   "Mutation.*": defaultSecurity,
+
+  "Candidacy.feasibility":
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };
