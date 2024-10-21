@@ -8,13 +8,14 @@ const log = debug("gql:security");
 export const isCandidacyOwner =
   (next: IFieldResolver<unknown>) =>
   async (
-    root: unknown,
-    args: { candidacyId?: string; [x: string]: unknown },
+    root: any,
+    args: Record<string, any>,
     context: MercuriusContext,
     info: any,
   ) => {
     log("isCandidacyOwner");
-    const candidacyId = args.candidacyId ?? "";
+    const candidacyId =
+      args.candidacyId || args.data?.candidacyId || root.candidacyId || root.id;
     if (!candidacyId) {
       throw new Error("Candidacy ID is required in isCandidacyOwner");
     }
