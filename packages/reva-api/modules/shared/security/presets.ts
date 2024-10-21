@@ -38,6 +38,13 @@ export const isAdminCandidacyCompanionOrFeasibilityManager = [
   whenHasRole("manage_feasibility", isFeasibilityManager),
 ];
 
+export const isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate = [
+  hasRole(["admin", "manage_candidacy", "manage_feasibility", "candidate"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+  whenHasRole("manage_feasibility", isFeasibilityManager),
+  whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+];
+
 export const isOwnerOfCandidacy = [isCandidateOwnerOfCandidacy];
 
 export const isOwnerOrCanManageCandidacy = [
