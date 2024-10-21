@@ -10,6 +10,7 @@ import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDoss
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
+import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   DossierDeValidation: {
@@ -42,6 +43,8 @@ const unsafeResolvers = {
         candidacyId,
         dossierDeValidationId: id,
       }),
+    candidacy: ({ candidacyId }: { candidacyId: string }) =>
+      getCandidacy({ candidacyId }),
   },
   Candidacy: {
     activeDossierDeValidation: ({ id }: { id: string }) =>

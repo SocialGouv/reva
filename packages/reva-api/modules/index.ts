@@ -26,11 +26,9 @@ import { trainingResolvers } from "./candidacy/training/training.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
-import { dossierDeValidationLoaders } from "./dossier-de-validation/dossier-de-validation.loaders";
 import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
 import { dematerializedFeasibilityFileResolvers } from "./feasibility/dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
 import { feasibilityUploadedPdfResolvers } from "./feasibility/feasibility-uploaded-pdf/feasibility-uploaded-pdf.resolvers";
-import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
@@ -91,11 +89,9 @@ export const graphqlConfiguration: MercuriusOptions = {
   graphiql: !!process.env.GRAPHIQL,
   loaders: {
     ...accountLoaders,
-    ...feasibilityLoaders,
     ...organismLoaders,
     ...certificationAuthorityLoaders,
     ...referentialLoaders,
-    ...dossierDeValidationLoaders,
     ...juryLoaders,
     ...candidacyLogLoaders,
   },

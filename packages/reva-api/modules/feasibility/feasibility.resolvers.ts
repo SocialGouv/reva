@@ -10,6 +10,7 @@ import {
 import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
+import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -33,6 +34,8 @@ const unsafeResolvers = {
     }) => getFileNameAndUrl({ candidacyId, fileId: decisionFileId }),
     history: ({ candidacyId, id }: { candidacyId: string; id: string }) =>
       getFeasibilityHistory({ candidacyId, feasibilityId: id }),
+    candidacy: ({ candidacyId }: { candidacyId: string }) =>
+      getCandidacy({ candidacyId }),
   },
   Query: {
     feasibilityCountByCategory: (
