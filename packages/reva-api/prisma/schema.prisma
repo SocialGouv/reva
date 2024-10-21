@@ -1053,7 +1053,7 @@ model CertificationAuthorityLocalAccount {
   id                                                String                                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
-  accountId                                         String                                              @map("account_id") @db.Uuid
+  accountId                                         String                                              @unique @map("account_id") @db.Uuid
   account                                           Account                                             @relation(fields: [accountId], references: [id])
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
