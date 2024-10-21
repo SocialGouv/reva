@@ -5,8 +5,8 @@ import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 import {
   Certification,
-  CertificationCompetenceBloc,
   CertificationCompetenceDetails,
+  DffCertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 
@@ -28,7 +28,7 @@ export default function CertificationSection({
   secondForeignLanguage?: string | null;
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
-  blocsDeCompetences: CertificationCompetenceBloc[];
+  blocsDeCompetences?: DffCertificationCompetenceBloc[] | null;
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   isCertificationPartial: boolean;
   isEligibilityRequirementPartial: boolean;
@@ -92,11 +92,12 @@ export default function CertificationSection({
       <h5 className="mb-0">Blocs de compétences</h5>
 
       <div className="mb-8 mt-4">
-        {blocsDeCompetences.map((certificationCompetenceBloc, index) => (
+        {blocsDeCompetences?.map((bc, index) => (
           <CertificationCompetenceAccordion
-            key={certificationCompetenceBloc.id}
+            key={bc.certificationCompetenceBloc.id}
             defaultExpanded
-            competenceBloc={certificationCompetenceBloc}
+            competenceBloc={bc.certificationCompetenceBloc}
+            competenceBlocText={bc.text}
             competenceDetails={certificationCompetenceDetails}
             hideAccordionContent={isEligibilityRequirementPartial}
             isFirstRow={index === 0}

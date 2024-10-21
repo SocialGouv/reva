@@ -161,6 +161,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             secondForeignLanguage
             option
             blocsDeCompetences {
+              text
               certificationCompetenceBloc {
                 id
                 code
@@ -174,7 +175,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
               }
             }
             certificationCompetenceDetails {
-              text
               state
               certificationCompetence {
                 id

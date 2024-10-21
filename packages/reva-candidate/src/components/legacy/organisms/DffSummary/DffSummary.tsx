@@ -7,6 +7,7 @@ import {
   Candidate,
   Certification,
   CertificationCompetenceDetails,
+  DffCertificationCompetenceBloc,
   DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
@@ -102,9 +103,9 @@ export function DffSummary({
         secondForeignLanguage={secondForeignLanguage}
         certification={certification as Certification}
         prerequisites={prerequisites as Prerequisite[]}
-        blocsDeCompetences={blocsDeCompetences.map(
-          (bc) => bc.certificationCompetenceBloc,
-        )}
+        blocsDeCompetences={
+          blocsDeCompetences as DffCertificationCompetenceBloc[]
+        }
         certificationCompetenceDetails={
           certificationCompetenceDetails as CertificationCompetenceDetails[]
         }
