@@ -84,6 +84,7 @@ const HeadAgencyUserAccount = () => {
           label: a.informationsCommerciales?.nom || a.label,
         }))}
         backUrl={backUrl}
+        isAdmin={isAdmin}
       />
     </div>
   );
