@@ -14,7 +14,7 @@ const isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism = [
   whenHasRole("gestion_maison_mere_aap", isGestionnaireOfMaisonMereAAP),
   whenHasRoleButNotOthers(
     "manage_candidacy",
-    ["gestion_maison_mere_aap"],
+    ["admin", "gestion_maison_mere_aap"],
     isOwnerOfOrganism,
   ),
 ];
