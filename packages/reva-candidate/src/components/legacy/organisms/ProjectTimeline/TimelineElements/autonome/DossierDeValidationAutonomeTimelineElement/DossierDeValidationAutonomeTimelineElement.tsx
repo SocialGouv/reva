@@ -99,7 +99,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
       {candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE" && (
         <TimelineNotice
           icon="fr-icon-info-fill"
-          text="Votre certificateur est en train d’envoyer votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
+          text="Votre certificateur est en train d’étudier votre dossier. En cas d’erreur ou d’oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
         />
       )}
 

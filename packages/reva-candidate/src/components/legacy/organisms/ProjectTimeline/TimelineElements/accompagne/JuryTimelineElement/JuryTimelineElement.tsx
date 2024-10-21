@@ -11,7 +11,11 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 export const JuryTimelineElement = () => {
   const { candidacy } = useCandidacy();
 
-  const { jury, activeDossierDeValidation: dossierDeValidation } = candidacy;
+  const {
+    jury,
+    activeDossierDeValidation: dossierDeValidation,
+    typeAccompagnement,
+  } = candidacy;
 
   let text = `Votre jury sera programmé prochainement. Vous recevrez une convocation officielle du certificateur par courrier ou par e-mail.`;
 
@@ -29,8 +33,7 @@ export const JuryTimelineElement = () => {
   const juryOutOfDate = jury ? isBefore(jury.dateOfSession, new Date()) : false;
 
   if (jury && juryOutOfDate) {
-    text =
-      "Vous recevrez la décision du jury par e-mail sous 15 jours environ. Certains certificateurs envoient en plus un courrier accompagné d'un parchemin. Votre accompagnateur sera lui aussi informé de la décision du certificateur.";
+    text = `Vous recevrez la décision du jury par e-mail sous 15 jours environ. Certains certificateurs envoient en plus un courrier accompagné d'un parchemin. ${typeAccompagnement === "ACCOMPAGNE" ? "Votre accompagnateur sera lui aussi informé de la décision du certificateur." : ""}`;
   }
 
   if (jury?.result) {
