@@ -9,7 +9,7 @@ export const isCandidateOwnerOfCandidacyFeature = async ({
   keycloakId?: string;
 }) =>
   !!keycloakId &&
-  !!(await prismaClient.candidacy.findFirst({
+  !!(await prismaClient.candidacy.findUnique({
     where: { id: candidacyId, candidate: { keycloakId } },
     select: { id: true },
   }));
