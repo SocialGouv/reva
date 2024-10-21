@@ -4,6 +4,7 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrManager,
   isCandidacyCompanion,
+  isOwnerOfCandidate,
   isOwnerOfCandidacy,
   isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
@@ -20,7 +21,7 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
-  "Mutation.candidacy_updateContact": isOwnerOfCandidacy,
+  "Mutation.candidacy_updateContact": isOwnerOfCandidate,
 
   "Mutation.candidacy_updateGoals": isOwnerOfCandidacy,
   "Mutation.candidacy_updateExperience": isOwnerOrCanManageCandidacy,
