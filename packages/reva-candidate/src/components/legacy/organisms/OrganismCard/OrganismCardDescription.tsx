@@ -1,3 +1,4 @@
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 export const OrganismCardDescription = ({
@@ -5,12 +6,19 @@ export const OrganismCardDescription = ({
   phone,
   isOnSite,
   isRemote,
+  isMCFCompatible,
 }: {
   email: string;
   phone: string | null;
   isOnSite: boolean;
   isRemote: boolean;
+  isMCFCompatible: boolean;
 }) => {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isAffichateTypesFinancementCandidatureFeatureActive = isFeatureActive(
+    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
+  );
+
   return (
     <>
       <p className="truncate mb-0">
@@ -38,34 +46,45 @@ export const OrganismCardDescription = ({
             </>
           )}
         </p>
-        {(isOnSite || isRemote) && (
-          <div className="flex gap-1 -mt-1">
-            {isOnSite && (
+        <div className="flex gap-2 -mt-1">
+          {isOnSite && (
+            <Tag
+              data-test="project-organisms-onsite-tag"
+              className="min-h-4 text-xs sm:text-sm sm:min-h-8"
+            >
+              <span
+                aria-hidden="true"
+                className="sm:hidden fr-icon-building-fill fr-icon--xs mr-1"
+              />
+              Sur site
+            </Tag>
+          )}
+          {isRemote && (
+            <Tag
+              data-test="project-organisms-remote-tag"
+              className="min-h-4 text-xs sm:text-sm sm:min-h-8"
+            >
+              <span
+                aria-hidden="true"
+                className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
+              />
+              À distance
+            </Tag>
+          )}
+          {isAffichateTypesFinancementCandidatureFeatureActive &&
+            isMCFCompatible && (
               <Tag
-                data-test="project-organisms-onsite-tag"
-                className="min-h-4 text-xs sm:text-sm sm:min-h-8"
-              >
-                <span
-                  aria-hidden="true"
-                  className="sm:hidden fr-icon-building-fill fr-icon--xs mr-1"
-                />
-                Sur site
-              </Tag>
-            )}
-            {isRemote && (
-              <Tag
-                data-test="project-organisms-remote-tag"
+                data-test="project-organisms-mcf-tag"
                 className="min-h-4 text-xs sm:text-sm sm:min-h-8"
               >
                 <span
                   aria-hidden="true"
                   className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
                 />
-                À distance
+                MCF
               </Tag>
             )}
-          </div>
-        )}
+        </div>
       </div>
     </>
   );

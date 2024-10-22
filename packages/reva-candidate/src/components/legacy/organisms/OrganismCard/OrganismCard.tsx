@@ -51,6 +51,7 @@ export const OrganismCard = ({
           phone={mandatoryInfo.phone ?? null}
           isOnSite={mandatoryInfo.isOnSite}
           isRemote={mandatoryInfo.isRemote}
+          isMCFCompatible={!!organism.isMaisonMereMCFCompatible}
         />
       </div>
       <div className="flex justify-between">

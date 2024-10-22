@@ -26,6 +26,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
         distanceKm
         isOnSite
         isRemote
+        isMaisonMereMCFCompatible
         informationsCommerciales {
           nom
           telephone
