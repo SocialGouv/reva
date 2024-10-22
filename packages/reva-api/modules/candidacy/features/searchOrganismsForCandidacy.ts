@@ -64,13 +64,11 @@ export const searchOrganismsForCandidacy = async ({
 };
 
 const isFormacodeFeatureActive = async (): Promise<boolean> => {
-  const isAapSettingsV3Active = (await getFeatureByKey("AAP_SETTINGS_V3"))
-    ?.isActive;
   const isAapSettingsFormacodeActive = (
     await getFeatureByKey("AAP_SETTINGS_FORMACODE")
   )?.isActive;
 
-  return !!(isAapSettingsV3Active && isAapSettingsFormacodeActive);
+  return !!isAapSettingsFormacodeActive;
 };
 
 const getRandomActiveOrganismForCertification = async ({

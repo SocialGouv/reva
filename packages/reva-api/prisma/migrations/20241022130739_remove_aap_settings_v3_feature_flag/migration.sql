@@ -1,0 +1,3 @@
+DELETE FROM "features"
+WHERE
+    KEY = 'AAP_SETTINGS_V3'
