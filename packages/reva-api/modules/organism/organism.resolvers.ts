@@ -121,6 +121,12 @@ const unsafeResolvers = {
       await isOrganismVisibleInCandidateSearchResults({
         organismId,
       }),
+    isMaisonMereMCFCompatible: async ({ maisonMereAAPId }: Organism) =>
+      (
+        await getMaisonMereAAPById({
+          id: maisonMereAAPId || "",
+        })
+      )?.isMCFCompatible,
   },
   OrganismOnDegree: {
     degree: (organismOnDegree: { degreeId: string }) =>

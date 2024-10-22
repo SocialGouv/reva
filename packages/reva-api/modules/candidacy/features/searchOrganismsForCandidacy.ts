@@ -1,4 +1,3 @@
-import { camelCase, mapKeys } from "lodash";
 import { prismaClient } from "../../../prisma/client";
 import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
@@ -130,24 +129,21 @@ const getRandomActiveOrganismForCertification = async ({
     }
   }
 
-  const results = (
-    await prismaClient.$queryRaw<Organism[]>`
+  const results = await prismaClient.$queryRaw<Organism[]>`
           select o.id,
                  o.label,
-                 o.legal_status,
-                 o.contact_administrative_email,
-                 o.contact_administrative_phone,
+                 o.legal_status as "labelStatus",
+                 o.contact_administrative_email as "contactAdministrativeEmail",
+                 o.contact_administrative_phone as "contactAdministrativePhone",
                  o.website,
                  o.siret,
                  o.is_onsite as "isOnSite",
-                 o.is_remote,
-                 ao.organism_id
+                 o.is_remote as "isRemote",
+                 o.maison_mere_aap_id as "maisonMereAAPId",
+                 ao.organism_id as "organismId"
             ${fromClause}
             ${whereClause}
-          order by Random() limit ${limit}`
-  ).map(
-    (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
-  ) as unknown as Organism[];
+          order by Random() limit ${limit}`;
 
   const count = Number(
     (
@@ -243,13 +239,24 @@ const getAAPsWithZipCode = async ({
   const prismaSqlOrganismView = Prisma.raw(organismView);
 
   const organisms: Organism[] = await prismaClient.$queryRaw`
-      SELECT DISTINCT(o.*),o.is_onsite as "isOnSite", (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS distance_km
+      SELECT DISTINCT o.id,
+                 o.label,
+                 o.legal_status as "labelStatus",
+                 o.contact_administrative_email as "contactAdministrativeEmail",
+                 o.contact_administrative_phone as "contactAdministrativePhone",
+                 o.website,
+                 o.siret,
+                 o.is_onsite as "isOnSite",
+                 o.is_remote as "isRemote",
+                 o.maison_mere_aap_id as "maisonMereAAPId",
+                 ao.organism_id as "organismId",
+                  (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS "distanceKm"
       FROM organism o
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
        JOIN ${prismaSqlOrganismView} ao on ao.organism_id=o.id
       ${whereClause}
-      ORDER BY distance_km ASC
+      ORDER BY "distanceKm" ASC
       LIMIT ${limit}
   `;
 
@@ -257,9 +264,7 @@ const getAAPsWithZipCode = async ({
     return [];
   }
 
-  return organisms.map(
-    (o) => mapKeys(o, (_, k) => camelCase(k)), //mapping rawquery output field names in snake case to camel case
-  ) as unknown as Organism[];
+  return organisms;
 };
 
 const getRemoteZoneFromDepartment = async ({
