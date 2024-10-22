@@ -72,7 +72,6 @@ const HeadAgencyUserAccount = () => {
       <UserAccountForm
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}
-        emailFieldDisabled
         remoteAgency={{
           id: headAgency?.id,
           label:
@@ -85,7 +84,6 @@ const HeadAgencyUserAccount = () => {
           label: a.informationsCommerciales?.nom || a.label,
         }))}
         backUrl={backUrl}
-        isAdmin={isAdmin}
       />
     </div>
   );

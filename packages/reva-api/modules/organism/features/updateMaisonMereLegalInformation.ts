@@ -1,3 +1,4 @@
+import { updateAccountById } from "../../account/features/updateAccount";
 import { prismaClient } from "../../../prisma/client";
 import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
 
@@ -23,7 +24,7 @@ export const updateMaisonMereLegalInformation = async ({
     );
   }
 
-  return prismaClient.maisonMereAAP.update({
+  const updatedMaisonMere = await prismaClient.maisonMereAAP.update({
     where: { id: maisonMereAAPId },
     data: {
       siret,
@@ -32,13 +33,19 @@ export const updateMaisonMereLegalInformation = async ({
       managerFirstname,
       managerLastname,
       phone,
-      gestionnaire: {
-        update: {
-          firstname: gestionnaireFirstname,
-          lastname: gestionnaireLastname,
-          email: gestionnaireEmail,
-        },
-      },
     },
   });
+
+  if (updatedMaisonMere.gestionnaireAccountId) {
+    await updateAccountById({
+      accountId: updatedMaisonMere.gestionnaireAccountId,
+      accountData: {
+        email: gestionnaireEmail,
+        firstname: gestionnaireFirstname,
+        lastname: gestionnaireLastname,
+      },
+    });
+  }
+
+  return updatedMaisonMere;
 };

@@ -35,17 +35,13 @@ export const UserAccountForm = ({
   defaultValues,
   remoteAgency,
   onSiteAgencies,
-  emailFieldDisabled,
   backUrl,
-  isAdmin,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
   onSiteAgencies: { id: string; label: string }[];
   defaultValues?: UserAccountFormData;
-  emailFieldDisabled?: boolean;
   backUrl: string;
-  isAdmin: boolean;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
@@ -64,7 +60,6 @@ export const UserAccountForm = ({
     formState,
     formState: { errors },
   } = methods;
-  const isHeadAgency = remoteAgency.id === defaultValues?.organismId;
 
   const handleFormSubmit = handleSubmit(onSubmit);
 
@@ -121,7 +116,6 @@ export const UserAccountForm = ({
               ...register("lastname"),
               autoComplete: "family-name",
             }}
-            disabled={isHeadAgency && !isAdmin}
           />
           <Input
             label="Prénom"
@@ -131,14 +125,12 @@ export const UserAccountForm = ({
               ...register("firstname"),
               autoComplete: "given-name",
             }}
-            disabled={isHeadAgency && !isAdmin}
           />
           <div className="col-span-1">
             <Input
               label="Email de connexion"
               state={errors.email ? "error" : "default"}
               stateRelatedMessage={errors.email?.message?.toString()}
-              disabled={emailFieldDisabled && !isAdmin}
               nativeInputProps={{
                 ...register("email"),
                 autoComplete: "email",
@@ -155,6 +147,7 @@ export const UserAccountForm = ({
           <RadioButtons
             classes={{ content: "grid grid-cols-1 md:grid-cols-2" }}
             orientation="horizontal"
+            disabled={onSiteAgencies.length == 0}
             options={[
               {
                 label: "Accompagnement à distance",

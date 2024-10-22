@@ -1,6 +1,6 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
+import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
+import { buildApp } from "../../../infra/server/app";
+import * as updateAccount from "../../account/features/updateAccount";
 
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
@@ -20,6 +20,7 @@ import {
   maisonMereAAP1,
   maisonMereAAP2,
 } from "../../../test/fixtures/people-organisms";
+import { Account } from "@prisma/client";
 
 const newMaisonMereAAP1Data = (siret: string) => ({
   raisonSociale: "Nouvelle raison sociale",
@@ -49,6 +50,9 @@ const updateMaisonMereLegalInformationPayload: (
 });
 
 beforeAll(async () => {
+  const app = await buildApp({ keycloakPluginMock });
+  (global as any).fastify = app;
+
   await createGestionnaireMaisonMereAapAccount1();
   await createGestionnaireMaisonMereAapAccount2();
   await createMaisonMereAAP1();
@@ -80,6 +84,10 @@ test("should not allow a gestionnaire to update maison mere legal information", 
 });
 
 test("should allow admin to update maison mere legal information", async () => {
+  jest
+    .spyOn(updateAccount, "updateAccountById")
+    .mockImplementation(() => Promise.resolve({} as Account));
+
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -105,11 +113,6 @@ test("should allow admin to update maison mere legal information", async () => {
     managerFirstname: newMaisonMere.managerFirstname,
     managerLastname: newMaisonMere.managerLastname,
     phone: newMaisonMere.phone,
-    gestionnaire: {
-      firstname: newMaisonMere.gestionnaireFirstname,
-      lastname: newMaisonMere.gestionnaireLastname,
-      email: newMaisonMere.gestionnaireEmail,
-    },
   });
 });
 
