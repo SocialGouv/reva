@@ -150,7 +150,7 @@ const getSQLSelectSumClauseFromStatusFilter = (
   statusFilter: CandidacyStatusFilter,
 ) => {
   const getSumClause = (when: string) =>
-    `sum(case when (${when}) then 1 else 0 end)::INTEGER AS "${statusFilter}"`;
+    `coalesce(sum(case when (${when}) then 1 else 0 end),0)::INTEGER AS "${statusFilter}"`;
 
   switch (statusFilter) {
     case "PARCOURS_CONFIRME_HORS_ABANDON":
