@@ -8,7 +8,8 @@ const rncpIdsOfCertificationsWithFundingRequestEnabled = [
   "34692",
   "35830",
   "35832",
-  "492",
+  "492", //ancien code rncp  Diplôme d'Etat Moniteur éducateur - DEME
+  "39643", //nouveau code rncp  Diplôme d'Etat Moniteur éducateur - DEME
   "4503",
   "34826",
   "35028",
