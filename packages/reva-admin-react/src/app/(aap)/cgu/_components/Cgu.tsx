@@ -4,16 +4,17 @@ export const Cgu = () => (
       Les présentes conditions générales d’utilisation (dites « CGU ») fixent
       les conditions d’accès et d’utilisation des services proposés dans le
       cadre du portail de la validation des acquis de l’expérience par ses
-      utilisateurs.
+      utilisateurs. Ce dispositif est un téléservice au sens des dispositions de
+      l’ordonnance n° 2005-1516 du 8 décembre 2005 relative aux échanges
+      électroniques entre les usagers et les autorités administratives et entre
+      les autorités administratives.
     </p>
     <p className="text-xl leading-relaxed">
-      Ce dispositif est un téléservice au sens des dispositions de l’ordonnance
-      n° 2005-1516 du 8 décembre 2005 relative aux échanges électroniques entre
-      les usagers et les autorités administratives et entre les autorités
-      administratives.
+      Les présentes CGU s’appliquent à tout utilisateur accédant au site et
+      utilisant ses services.
     </p>
     <hr className="mt-12 mb-6" />
-    <h2>Article 1 - Définitions</h2>
+    <h2>Définitions</h2>
     <p>
       <u>Validation des acquis de l’expérience (VAE)</u> : La validation des
       acquis de l’expérience (VAE) est un droit individuel. Elle permet
@@ -79,8 +80,8 @@ export const Cgu = () => (
       obtenir des informations.
     </p>
     <p>
-      <u>Personne inscrite (inscrit)</u> : personne intéressée par une démarche
-      de VAE et qui a créé un compte sur la plateforme France VAE.
+      <u>Personne inscrite</u> : Personne intéressée par une démarche de VAE et
+      qui a créé un compte sur la plateforme France VAE.
     </p>
     <p>
       <u>Candidat</u> : Personne qui indique, via la plateforme France VAE, son
@@ -96,7 +97,7 @@ export const Cgu = () => (
       du certificateur après l’étude du dossier de faisabilité.
     </p>
     <p>
-      <u>Projet de VAE en cours</u> : Sont considérées comme tels, les projets
+      <u>Projet de VAE en cours</u> : Sont considérés comme tels, les projets
       des personnes qui ont démarré la réalisation de leur dossier de
       faisabilité en vue de le déposer auprès d'un certificateur, ceux des
       personnes en cours de parcours (recevables), ceux des personnes ayant
@@ -134,12 +135,12 @@ export const Cgu = () => (
     <p>- la durée et le type d’accompagnement (individuel et collectif) ;</p>
     <p>- les actes formatifs complémentaires ; </p>
     <p>
-      - Tout autre action concourant à l’atteinte de l’objectif de certification
+      - tout autre action concourant à l’atteinte de l’objectif de certification
       (période d’immersion, lecture de documentation dédiée…)
     </p>
     <p>
       <u>Décision de Recevabilité/Non-Recevabilité</u> : Désigne la décision,
-      par laquelle le certificateur, sur examen du dossier de faisabilité
+      par laquelle le certificateur, sur examen du dossier de faisabilité,
       autorise ou non le candidat à la VAE à poursuivre sa démarche de
       certification par la voie de la VAE. Cet examen consiste à vérifier le
       caractère suffisamment adéquat des activités précédemment exercées par le
@@ -152,7 +153,7 @@ export const Cgu = () => (
       <u>Demande de prise en charge France VAE</u> : Demande de financement,
       formalisée par l’AAP pour le compte du candidat, des frais liés à la
       démarche de VAE visant à couvrir les dépenses liées notamment aux
-      entretiens de faisabilité, à l’accompagnement, à certains actes formatifs
+      entretiens de faisabilité, à l’accompagnement, à certains actes formatifs.
     </p>
     <p>
       <u>Abandon</u> : Fin du projet de VAE comprenant le retrait, l'abandon
@@ -201,7 +202,7 @@ export const Cgu = () => (
       son AAP à l'issue du prononcé des résultats du jury. L'objectif est de
       réfléchir aux suites éventuelles du parcours du candidat.
     </p>
-    <h2>Article 2 - Objet et champ d’application</h2>
+    <h2>Objet et champ d’application</h2>
     <p>
       Le portail de la Validation des acquis de l’expérience (VAE) a pour objet
       de fournir l’information sur la VAE, d’assurer l’interface entre les
@@ -217,8 +218,7 @@ export const Cgu = () => (
       décret n° 2023-1275 du 27 décembre 2023 relatif à la validation des acquis
       de l'expérience.
     </p>
-    <p></p>
-    <h2>Article 3 - Fonctionnalités de la plateforme</h2>
+    <h2>Fonctionnalités de la plateforme</h2>
     <h3>Grand public :</h3>
     <p>
       Sur la plateforme, le visiteur (potentiel futur candidat) saisit les
@@ -234,8 +234,13 @@ export const Cgu = () => (
     </p>
     <p>
       Une fois connecté, et une certification professionnelle visée, la personne
-      peut transmettre sa demande et devient, de ce fait, candidate. Elle peut
-      dès lors compléter et suivre son parcours étape par étape.
+      peut transmettre sa demande à un organisme Architecte accompagnateur de
+      parcours et devient, de ce fait, candidate. Elle peut dès lors compléter
+      et suivre son parcours étape par étape.
+    </p>
+    <p>
+      Le candidat peut changer d‘organisme Architecte accompagnateur de parcours
+      tant que le premier rendez-vous avec celui-ci n’est pas réalisé.
     </p>
     <p>
       Dans le cadre du traitement des demandes soumises au service d'assistance
@@ -255,7 +260,6 @@ export const Cgu = () => (
         Du nombre d’heures d’accompagnement individuel et collectif ainsi que
         les heures de formations complémentaires à suivre ;
       </li>
-
       <li>
         Des formations obligatoires à suivre (ex : sauveteur secouriste du
         travail) ;
@@ -266,8 +270,11 @@ export const Cgu = () => (
       </li>
     </ul>
     <p>
-      Le candidat peut suivre à tout moment les étapes de son parcours en
-      cliquant sur le bouton prévu à cet effet.
+      Le candidat peut suivre à tout moment les étapes de son parcours en se
+      connectant à son espace via le lien « connexion candidat » de la
+      plateforme, en renseignant son adresse mail de compte. Il recevra alors un
+      lien unique et temporaire de connexion à son espace et pourra suivre
+      l’avancée de son parcours.
     </p>
     <p>
       Après l’envoi de son dossier de faisabilité au certificateur via la
@@ -283,31 +290,43 @@ export const Cgu = () => (
     </p>
     <h3>Architecte Accompagnateur de Parcours :</h3>
     <p>
-      Chaque Structure professionnelle Architecte Accompagnateur de Parcours
-      (AAP) dispose d’un compte et d’un parcours personnalisé lui permettant de
-      suivre les candidatures des candidats L’accès à ce compte nécessite la
-      création et l’usage d’un mot de passe confidentiel.
+      Chaque organisme Architecte Accompagnateur de Parcours (AAP) dispose d’un
+      compte et d’un parcours personnalisé lui permettant de suivre les
+      candidatures des candidats L’accès à ce compte nécessite la création et
+      l’usage d’un mot de passe confidentiel.
     </p>
     <p>Il leur est possible de :</p>
     <ul>
       <li>
-        consulter une candidature et les informations renseignées par le
+        Consulter une candidature et les informations renseignées par le
         candidat lors de sa candidature ;
       </li>
       <li>
-        renseigner les informations liées aux rendez-vous pédagogiques et à la
+        Distinguer les candidatures relevant d’une prise en charge auprès
+        d’UNIFORMATION et celles relevant d’un financement de droit commun dont
+        le CPF ;
+      </li>
+      <li>
+        Consulter un article d’information sur les dispositifs de financement de
+        droit commun le cas échéant ;
+      </li>
+      <li>
+        Renseigner les informations liées aux rendez-vous pédagogiques et à la
         recevabilité du candidat ;
       </li>
       <li>
-        définir le parcours d’accompagnement prévisionnel du candidat (en nombre
+        Définir le parcours d’accompagnement prévisionnel du candidat (en nombre
         d’heures) et de l’envoyer au candidat pour validation ;
       </li>
       <li>
         Saisir et solliciter une demande de prise en charge financière (en
-        nombre d’heures, coût horaire) pour les candidats qu’ils accompagnent ;
+        nombre d’heures, coût horaire) pour les candidats qu’ils accompagnent
+        dans la limite de l’enveloppe budgétaire allouée à cet effet à
+        UNIFORMATION (dès lors que la limite est atteinte, la fonctionnalité
+        n’est plus disponible ;
       </li>
       <li>
-        demander le cas échéant le paiement final des prestations réalisées sur
+        Demander le cas échéant le paiement final des prestations réalisées sur
         la base de pièces justificatives (facture et attestation de présence du
         candidat) ;
       </li>
@@ -335,9 +354,8 @@ export const Cgu = () => (
         ses services ;
       </li>
       <li>
-        Renseigner les modalités (présentiel/distanciel ou capacité à
-        accompagner des personnes en situation de handicap) de l’accompagnement
-        qu’elle propose ;
+        Renseigner les modalités (présentiel/distanciel ou capacité à accueillir
+        des personnes à mobilité réduite) de l’accompagnement qu’il propose ;
       </li>
     </ul>
     <p>
