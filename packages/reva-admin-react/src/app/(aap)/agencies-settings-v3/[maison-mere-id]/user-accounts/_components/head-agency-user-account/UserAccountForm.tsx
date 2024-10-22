@@ -36,12 +36,14 @@ export const UserAccountForm = ({
   remoteAgency,
   onSiteAgencies,
   backUrl,
+  disabled,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
   onSiteAgencies: { id: string; label: string }[];
   defaultValues?: UserAccountFormData;
   backUrl: string;
+  disabled?: boolean;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
@@ -116,6 +118,7 @@ export const UserAccountForm = ({
               ...register("lastname"),
               autoComplete: "family-name",
             }}
+            disabled={disabled}
           />
           <Input
             label="Prénom"
@@ -125,6 +128,7 @@ export const UserAccountForm = ({
               ...register("firstname"),
               autoComplete: "given-name",
             }}
+            disabled={disabled}
           />
           <div className="col-span-1">
             <Input
@@ -137,6 +141,7 @@ export const UserAccountForm = ({
                 type: "email",
                 spellCheck: "false",
               }}
+              disabled={disabled}
             />
           </div>
         </fieldset>
@@ -147,7 +152,7 @@ export const UserAccountForm = ({
           <RadioButtons
             classes={{ content: "grid grid-cols-1 md:grid-cols-2" }}
             orientation="horizontal"
-            disabled={onSiteAgencies.length == 0}
+            disabled={onSiteAgencies.length == 0 || disabled}
             options={[
               {
                 label: "Accompagnement à distance",
@@ -171,7 +176,7 @@ export const UserAccountForm = ({
             stateRelatedMessage={errors.modalitesAccompagnement?.message?.toString()}
           />
           <Select
-            disabled={modalitesAccompagnement !== "ONSITE"}
+            disabled={modalitesAccompagnement !== "ONSITE" || disabled}
             label="Choix du lieu d’accueil associé à l’accompagnement en présentiel :"
             nativeSelectProps={{
               ...register("organismId"),

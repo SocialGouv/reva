@@ -373,6 +373,7 @@ model Account {
   featureBetaTest                    FeatureBetaTest[]
   certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
   certificationRegistryManager       CertificationRegistryManager[]
+  disabledAt                         DateTime?                            @map("disabled_at") @db.Timestamptz(6)
 
   @@index([email])
   @@index([organismId])

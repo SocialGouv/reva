@@ -33,12 +33,12 @@ const getRemoteOrganism = ({
 export const SettingsSummaryForGestionnaire = ({
   maisonMereAAP,
   organism,
-  accountId: headAgencyAccountId,
+  gestionnaireAccountId,
   isAdmin,
 }: {
   maisonMereAAP: MaisonMereAap;
   organism: Organism;
-  accountId: string;
+  gestionnaireAccountId: string;
   isAdmin: boolean;
 }) => {
   if (!maisonMereAAP) {
@@ -56,12 +56,16 @@ export const SettingsSummaryForGestionnaire = ({
     maisonMereAAP: maisonMereAAP as MaisonMereAap,
   });
 
-  const otherAccounts = maisonMereAAP.organisms.reduce((acc, organism) => {
+  let otherAccounts = maisonMereAAP.organisms.reduce((acc, organism) => {
     const accounts = organism.accounts.filter(
-      (account) => account.id != headAgencyAccountId,
+      (account) => account.id != gestionnaireAccountId,
     );
     return [...acc, ...accounts];
   }, [] as Account[]);
+
+  otherAccounts = isAdmin
+    ? otherAccounts
+    : otherAccounts.filter((account) => !account.disabledAt);
   const hasOtherAccounts = otherAccounts.length > 0;
 
   return (
@@ -119,7 +123,7 @@ export const SettingsSummaryForGestionnaire = ({
       >
         {hasOtherAccounts ? (
           <HeadAgencySettingsSectionAccountList
-            headAgencyAccountId={headAgencyAccountId}
+            gestionnaireAccountId={gestionnaireAccountId}
             organisms={maisonMereAAP.organisms}
             maisonMereAAPId={maisonMereAAP.id}
             isAdmin={isAdmin}

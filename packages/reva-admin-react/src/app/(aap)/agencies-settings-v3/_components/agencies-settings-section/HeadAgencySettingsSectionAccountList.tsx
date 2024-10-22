@@ -1,21 +1,18 @@
+import { DisableAccount } from "@/components/disable-account";
 import { Impersonate } from "@/components/impersonate";
+import { Account } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export const HeadAgencySettingsSectionAccountList = ({
   maisonMereAAPId,
-  headAgencyAccountId,
+  gestionnaireAccountId,
   organisms,
   isAdmin,
 }: {
   maisonMereAAPId: string;
-  headAgencyAccountId: string;
+  gestionnaireAccountId: string;
   organisms: {
-    accounts: {
-      id: string;
-      firstname?: string | null;
-      lastname?: string | null;
-      email: string;
-    }[];
+    accounts: Account[];
     isRemote: boolean;
     isOnSite: boolean;
     isHeadAgency: boolean;
@@ -25,7 +22,8 @@ export const HeadAgencySettingsSectionAccountList = ({
   <ul className="ml-6 mb-8">
     {organisms.map((organism) =>
       organism.accounts
-        .filter((account) => account.id !== headAgencyAccountId)
+        .filter((account) => account.id !== gestionnaireAccountId)
+        .filter((account) => isAdmin || !account.disabledAt)
         .map((account) => (
           <li
             data-test={account.id}
@@ -54,7 +52,6 @@ export const HeadAgencySettingsSectionAccountList = ({
               </div>
             </div>
             <div className="flex justify-between items-center">
-              {isAdmin && <Impersonate accountId={account.id} size="small" />}
               <Button
                 linkProps={{
                   href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
@@ -62,8 +59,16 @@ export const HeadAgencySettingsSectionAccountList = ({
                 priority="tertiary no outline"
                 size="small"
               >
-                Modifier
+                {!account.disabledAt ? "Modifier" : "Visualiser"}
               </Button>
+
+              {!account.disabledAt && isAdmin && (
+                <DisableAccount accountId={account.id} size="small" />
+              )}
+
+              {!account.disabledAt && isAdmin && (
+                <Impersonate accountId={account.id} size="small" />
+              )}
             </div>
           </li>
         )),

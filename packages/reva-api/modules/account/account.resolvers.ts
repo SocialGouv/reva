@@ -13,6 +13,7 @@ import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getAccounts } from "./features/getAccounts";
 import { getImpersonateUrl } from "./features/impersonate";
 import { updateAccountById } from "./features/updateAccount";
+import { disableAccountById } from "./features/disableAccount";
 
 export const resolvers = {
   Mutation: {
@@ -69,6 +70,32 @@ export const resolvers = {
         }
 
         return updateAccountById(params);
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    account_disableAccount: async (
+      _parent: unknown,
+      params: {
+        accountId: string;
+      },
+      context: GraphqlContext,
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized",
+          );
+        }
+
+        const hasRole = context.auth.hasRole;
+        if (!hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return disableAccountById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

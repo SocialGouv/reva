@@ -33,13 +33,14 @@ const SettingsSummaryForGestionnaireSection = ({
 }: {
   isAdmin: boolean;
 }) => {
-  const { maisonMereAAP, organism, accountId } = useHeadyAgencySettings();
+  const { maisonMereAAP, organism, gestionnaireAccountId } =
+    useHeadyAgencySettings();
 
   return (
     <SettingsSummaryForGestionnaire
       maisonMereAAP={maisonMereAAP as MaisonMereAap}
       organism={organism as Organism}
-      accountId={accountId as string}
+      gestionnaireAccountId={gestionnaireAccountId as string}
       isAdmin={isAdmin}
     />
   );

@@ -22,6 +22,7 @@ const getAgenciesInfoQuery = graphql(`
             firstname
             lastname
             email
+            disabledAt
             organism {
               id
               isHeadAgency
@@ -49,6 +50,7 @@ const getMaisonMereAAPUpdateUserAccountPageAdminQuery = graphql(`
           firstname
           lastname
           email
+          disabledAt
           organism {
             id
             isHeadAgency

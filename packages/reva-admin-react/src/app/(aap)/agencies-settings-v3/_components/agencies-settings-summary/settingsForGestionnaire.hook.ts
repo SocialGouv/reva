@@ -36,6 +36,7 @@ const HeadAgencySettingsInfoQuery = graphql(`
               email
               firstname
               lastname
+              disabledAt
             }
           }
         }
@@ -60,7 +61,7 @@ export const useHeadyAgencySettings = () => {
   const organism =
     headAgencySettingsResponse?.account_getAccountForConnectedUser?.organism;
 
-  const accountId =
+  const gestionnaireAccountId =
     headAgencySettingsResponse?.account_getAccountForConnectedUser?.id;
 
   return {
@@ -68,6 +69,6 @@ export const useHeadyAgencySettings = () => {
     headAgencySettingsStatus,
     maisonMereAAP,
     organism,
-    accountId,
+    gestionnaireAccountId,
   };
 };

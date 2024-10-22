@@ -12,6 +12,7 @@ type Account {
   lastname: String
   certificationAuthority: CertificationAuthority
   organism: Organism
+  disabledAt: Timestamp
 }
 
 input AccountInput {
@@ -40,6 +41,7 @@ type Mutation {
     accountId: ID!
     accountData: UpdateAccountInput!
   ): Account!
+  account_disableAccount(accountId: ID!): Account!
 }
 
 type AccountsPaginated {

@@ -14,7 +14,7 @@ const MaisonMereAapPage = () => {
   const {
     maisonMereAAP,
     headAgencyOrganism,
-    accountId,
+    gestionnaireAccountId,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
     isAdmin,
@@ -51,7 +51,7 @@ const MaisonMereAapPage = () => {
       <div className="flex w-full">
         <h1>{maisonMereAAP.raisonSociale}</h1>
         <div className="flex-1 flex w-full gap-4 justify-end">
-          <Impersonate accountId={accountId} />
+          <Impersonate accountId={gestionnaireAccountId} />
           <div>
             <Button
               priority="secondary"
@@ -96,7 +96,7 @@ const MaisonMereAapPage = () => {
         </div>
       </div>
       <SettingsSummaryForGestionnaire
-        accountId={accountId}
+        gestionnaireAccountId={gestionnaireAccountId}
         organism={headAgencyOrganism as Organism}
         maisonMereAAP={maisonMereAAP as MaisonMereAap}
         isAdmin={isAdmin}

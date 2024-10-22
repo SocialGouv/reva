@@ -70,6 +70,7 @@ const HeadAgencyUserAccount = () => {
       </h1>
       <FormOptionalFieldsDisclaimer />
       <UserAccountForm
+        disabled={!!userAccount?.disabledAt}
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}
         remoteAgency={{

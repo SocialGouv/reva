@@ -13,6 +13,9 @@ const MaisonMereAAPQuery = graphql(`
       isActive
       isSignalized
       isMCFCompatible
+      gestionnaire {
+        id
+      }
       organisms {
         isHeadAgency
         accounts {
@@ -32,6 +35,7 @@ const MaisonMereAAPQuery = graphql(`
           email
           firstname
           lastname
+          disabledAt
         }
       }
     }
@@ -99,14 +103,14 @@ export const useMaisonMereAAP = (id: string) => {
     (organism) => organism.isHeadAgency,
   );
 
-  const accountId = headAgencyOrganism?.accounts[0]?.id;
+  const gestionnaireAccountId = maisonMereAAP?.gestionnaire.id;
 
   return {
     maisonMereAAPResponse,
     maisonMereAAPStatus,
     maisonMereAAP,
     headAgencyOrganism,
-    accountId,
+    gestionnaireAccountId,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
     isAdmin,
