@@ -9,8 +9,6 @@ export const SettingsSummaryForCollaborateur = () => {
 
   if (!account || !organism) return null;
 
-  console.log(organism);
-
   return (
     <>
       <p className="text-xl">
