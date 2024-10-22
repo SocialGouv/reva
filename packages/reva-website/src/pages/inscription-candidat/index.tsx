@@ -146,27 +146,25 @@ const OrientationCandidatPage = () => {
                       title={
                         <span>
                           <p className="mb-4">
-                            Ce diplôme peut être financé par votre Compte
-                            Personnel de Formation (
+                            Ce diplôme peut être financé par votre{" "}
                             <Link
                               href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
                               target="_blank"
                             >
-                              CPF
-                            </Link>
-                            ).
+                              Compte Personnel de Formation
+                            </Link>{" "}
+                            (CPF). Vous pouvez dès à présent consulter vos
+                            droits sur la plateforme Mon Compte Formation.
                           </p>
-                          <p className="mb-4">
-                            Vous pouvez dès à présent consulter vos droits sur
-                            la plateforme{" "}
+                          <p>
+                            Article utile :{" "}
                             <Link
-                              href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/droits"
+                              href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
                               target="_blank"
                             >
-                              Mon Compte Formation
+                              Comment financer un parcours VAE ?
                             </Link>
                           </p>
-                          <p></p>
                         </span>
                       }
                     />
