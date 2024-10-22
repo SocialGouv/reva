@@ -6,7 +6,6 @@ import {
   AAPNotVisibleInSearchResultNotice,
   useAAPVisibilityCheck,
 } from "./_components/AAPNotVisibleInSearchResultNotice";
-import { AlertFundingLimit } from "./_components/AlertFundingLimit";
 import { AapCgu } from "./_components/AppCgu.component";
 import { useAppCgu } from "./_components/AppCgu.hooks";
 import { CustomInfoNotice } from "./_components/CustomInfoNotice";
@@ -19,9 +18,6 @@ export const LayoutNotice = () => {
     useAAPVisibilityCheck();
   const pathname = usePathname();
   const isFeatureAapCguActive = isFeatureActive("AAP_CGU");
-  const isFeaturNoticeAlertFundingLimitActive = isFeatureActive(
-    "NOTICE_ALERT_FUNDING_LIMIT",
-  );
 
   const isCguPathname =
     pathname.startsWith("/information") || pathname.startsWith("/cgu");
@@ -42,9 +38,6 @@ export const LayoutNotice = () => {
     isOrganism &&
     !isVisibleInSearchResults;
 
-  const canSeeNoticeAlertFundingLimit =
-    isFeaturNoticeAlertFundingLimitActive && isOrganism;
-
   const canSeeNoticeAapSettings =
     pathname === "/agencies-settings/" && isOrganism;
 
@@ -58,10 +51,6 @@ export const LayoutNotice = () => {
 
   if (canSeeAAPNotVisibleInSearchResultNotice) {
     return <AAPNotVisibleInSearchResultNotice />;
-  }
-
-  if (canSeeNoticeAlertFundingLimit) {
-    return <AlertFundingLimit />;
   }
 
   if (canSeeNoticeAapSettings) {

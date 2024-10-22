@@ -37,85 +37,81 @@ function interceptCandidacies({
   });
 }
 
-context("When the funding alert feature is activated", () => {
-  context("for an head agency", () => {
-    context("when latest cgu aren't accepted", () => {
-      it("display a cgu notice", function () {
-        interceptCandidacies({
-          fermePourAbsenceOuConges: false,
-          isCguAccepted: false,
-        });
-
-        cy.gestionnaire("/candidacies");
-        cy.wait("@getMaisonMereCGUQuery");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
-
-        cy.get('[data-test="new-cgu-notice"]').should("exist");
-        cy.get('[data-test="funding-alert-notice"]').should("not.exist");
-      });
-    });
-
-    context("when latest cgu are accepted", () => {
-      it("display the default funding alert", function () {
-        interceptCandidacies({
-          fermePourAbsenceOuConges: false,
-          isCguAccepted: true,
-        });
-
-        cy.gestionnaire("/candidacies");
-        cy.wait("@getMaisonMereCGUQuery");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
-
-        cy.get('[data-test="funding-alert-notice"]').should("exist");
-        cy.get('[data-test="new-cgu-notice"]').should("not.exist");
-      });
-
-      it("should not display a not-visible notice", function () {
-        interceptCandidacies({
-          fermePourAbsenceOuConges: true,
-          isCguAccepted: true,
-        });
-
-        cy.gestionnaire("/candidacies");
-        cy.wait("@getMaisonMereCGUQuery");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
-
-        cy.get('[data-test="funding-alert-notice"]').should("exist");
-        cy.get('[data-test="new-cgu-notice"]').should("not.exist");
-        cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
-      });
-    });
-  });
-
-  context("for an agency", () => {
-    it("should not display a cgu notice, even if the head agency hasn't accepted the latest CGU", function () {
+context("for an head agency", () => {
+  context("when latest cgu aren't accepted", () => {
+    it("display a cgu notice", function () {
       interceptCandidacies({
         fermePourAbsenceOuConges: false,
         isCguAccepted: false,
       });
 
-      cy.collaborateur("/candidacies");
+      cy.gestionnaire("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
-      cy.get('[data-test="funding-alert-notice"]').should("exist");
+      cy.get('[data-test="new-cgu-notice"]').should("exist");
       cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
-      cy.get('[data-test="new-cgu-notice"]').should("not.exist");
     });
+  });
 
-    it("display a not-visible notice when agency is closed", function () {
+  context("when latest cgu are accepted", () => {
+    it("should not display a cgu notice", function () {
       interceptCandidacies({
-        fermePourAbsenceOuConges: true,
-        isCguAccepted: false,
+        fermePourAbsenceOuConges: false,
+        isCguAccepted: true,
       });
 
-      cy.collaborateur("/candidacies");
+      cy.gestionnaire("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
-      cy.get('[data-test="not-visible-alert-notice"]').should("exist");
-      cy.get('[data-test="funding-alert-notice"]').should("not.exist");
+      cy.get('[data-test="results"]').should("exist");
       cy.get('[data-test="new-cgu-notice"]').should("not.exist");
     });
+
+    it("should not display a not-visible notice", function () {
+      interceptCandidacies({
+        fermePourAbsenceOuConges: true,
+        isCguAccepted: true,
+      });
+
+      cy.gestionnaire("/candidacies");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+
+      cy.get('[data-test="results"]').should("exist");
+      cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
+    });
+  });
+});
+
+context("for an agency", () => {
+  it("should not display a cgu notice, even if the head agency hasn't accepted the latest CGU", function () {
+    interceptCandidacies({
+      fermePourAbsenceOuConges: false,
+      isCguAccepted: false,
+    });
+
+    cy.collaborateur("/candidacies");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+
+    cy.get('[data-test="results"]').should("exist");
+    cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
+    cy.get('[data-test="new-cgu-notice"]').should("not.exist");
+  });
+
+  it("display a not-visible notice when agency is closed", function () {
+    interceptCandidacies({
+      fermePourAbsenceOuConges: true,
+      isCguAccepted: false,
+    });
+
+    cy.collaborateur("/candidacies");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+
+    cy.get('[data-test="not-visible-alert-notice"]').should("exist");
+    cy.get('[data-test="new-cgu-notice"]').should("not.exist");
   });
 });
