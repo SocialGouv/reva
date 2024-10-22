@@ -109,7 +109,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
             <h4 className="inline-block">
               Comment contacter mon certificateur ?
             </h4>
-            <Tooltip tooltipText="Il étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys.">
+            <Tooltip tooltipText="Il vous informe sur les frais liés à votre parcours VAE, étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys.">
               <span
                 className="fr-icon-question-line text-dsfrBlue-500"
                 aria-hidden="true"
@@ -208,8 +208,8 @@ export const SendFeasibilityForm = (): React.ReactNode => {
             <Select
               className="w-3/5 mb-0"
               label={
-                <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
-                  SÉLECTIONNEZ L&apos;AUTORITÉ DE CERTIFICATION
+                <label className="block mt-[6px] mb-[10px]">
+                  Sélectionnez la structure certificatrice :
                 </label>
               }
               nativeSelectProps={{

@@ -99,7 +99,10 @@ const Form = ({
           <p className="mt-4">
             Ces acompagnements peuvent être financés par des dispositifs tels
             que{" "}
-            <a href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation">
+            <a
+              href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+              target="_blank"
+            >
               Mon Compte Formation.
             </a>{" "}
             À noter : si vous faites votre parcours en autonomie, il est
@@ -119,7 +122,7 @@ const Form = ({
           Réinitialiser
         </Button>
         <Button data-test="submit-type-accompagnement-form-button">
-          Valider
+          Enregistrer
         </Button>
       </div>
     </form>

@@ -11,7 +11,7 @@ export const ContactTimelineElement = () => {
   const { candidate } = useCandidacy();
 
   return (
-    <TimelineElement title="Vos informations de contact" status="editable">
+    <TimelineElement title="Mes informations" status="editable">
       <ul className="list-none mt-0 pl-0 leading-tight">
         {candidate.phone && (
           <li data-test="project-home-contact-phone" className="mb-2">
@@ -32,7 +32,7 @@ export const ContactTimelineElement = () => {
           router.push("/update-contact");
         }}
       >
-        Modifier les informations
+        Modifier
       </Button>
     </TimelineElement>
   );

@@ -89,7 +89,7 @@ export const DossierDeValidationTab = ({
       {dossierDeValidationIncomplete && (
         <Alert
           data-test="dossier-de-validation-signale-alert"
-          severity="error"
+          severity="warning"
           title="Dossier de validation signalé par le certificateur"
           description="Ce dossier de validation a été signalé comme comportant des erreurs par le certificateur. Les détails du signalement sont disponibles ci-dessous. Merci de retourner rapidement un dossier valide."
         />

@@ -24,6 +24,7 @@ export const TypeAccompagnementTimelineElement = () => {
   return (
     <TimelineElement
       title="Modalités de parcours"
+      description="VAE accompagnée ou en autonomie ? Vous pouvez changer d’avis jusqu’à l’envoi du dossier de faisabilité."
       status={status}
       data-test="type-accompagnement-timeline-element"
     >

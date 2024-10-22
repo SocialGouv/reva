@@ -69,7 +69,7 @@ export default function UpdateContact() {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       graphqlErrorToast(error as GraphQLError);
     }
   };
@@ -80,7 +80,7 @@ export default function UpdateContact() {
       data-test={`project-update-contact`}
       displayBackToHome
     >
-      <h2 className="mt-6 mb-2">Modifiez vos informations</h2>
+      <h2 className="mt-6 mb-2">Mes informations</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"
         label="Tous les champs sont obligatoires."
@@ -151,7 +151,7 @@ export default function UpdateContact() {
           data-test={`project-contact-save`}
           className="my-6 self-end w-full sm:w-auto flex justify-center"
         >
-          Modifiez les informations
+          Enregistrer
         </Button>
       </form>
 

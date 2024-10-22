@@ -54,11 +54,11 @@ export const FeasibilityFormAutonomous = ({
     <form className={`flex flex-col ${className}`} onSubmit={handleFormSubmit}>
       <fieldset>
         <legend>
-          <h1>Envoi de la décision</h1>
+          <h1>Décision concernant ce dossier</h1>
           <FormOptionalFieldsDisclaimer />
         </legend>
         <RadioButtons
-          legend="Décision prise concernant ce dossier"
+          legend="Sélectionnez si ce dossier est recevable, incomplet/incorrect ou non recevable."
           options={[
             {
               label: <p className="mb-0 text-base">Ce dossier est recevable</p>,

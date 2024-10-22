@@ -18,9 +18,6 @@ export default function Home() {
 
   return (
     <PageLayout data-test={`project-home-ready`}>
-      <h1 className="text-lg font-bold text-dsfrGray-500">
-        Bienvenue <span aria-hidden="true">🤝</span>,
-      </h1>
       <NameBadge
         as="h2"
         className="mt-4"
@@ -29,9 +26,8 @@ export default function Home() {
         lastname={candidate.lastname}
       />
       <p className="max-w-xl my-4 pr-6 text-dsfrGray-500 text-base">
-        Transmettez ici toutes les informations relatives à votre parcours VAE
-        et suivez, étape par étape, l’avancement de votre démarche. Nous vous
-        souhaitons une pleine réussite dans ce projet !
+        Bienvenue sur votre espace ! Toutes les étapes et informations relatives
+        à votre parcours VAE se trouvent ici.
       </p>
 
       <ProjectTimeline className="mt-8" />

@@ -48,6 +48,7 @@ export const JuryTimelineElement = () => {
   return (
     <TimelineElement
       title="Jury"
+      description="Date, lieu de passage... Les informations essentielles à votre passage devant le jury sont ici."
       classNameChildren="pb-0"
       status={
         jury?.result ? "readonly" : dossierDeValidation ? "active" : "disabled"

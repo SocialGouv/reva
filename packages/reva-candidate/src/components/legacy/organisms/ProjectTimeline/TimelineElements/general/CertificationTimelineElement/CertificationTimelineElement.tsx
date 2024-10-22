@@ -65,9 +65,7 @@ export const CertificationTimelineElement = () => {
                 router.push("set-certification");
               }}
             >
-              {certification
-                ? "Modifier votre diplôme"
-                : "Choisir votre diplôme"}
+              {certification ? "Modifier" : "Choisir votre diplôme"}
             </Button>
           )}
         </div>
