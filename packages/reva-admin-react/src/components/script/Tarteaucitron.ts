@@ -1,9 +1,20 @@
-export const tarteaucitronScript = ({ matomoUrl }: { matomoUrl: string }) => `
+export const tarteaucitronScript = ({
+  matomoUrl,
+  crispID,
+}: {
+  matomoUrl: string;
+  crispID: string;
+}) => `
     var script = document.createElement("script");
 
     var matomoServiceInit = function() {
       window.tarteaucitron.user.matomotmUrl = "${matomoUrl}";
       (window.tarteaucitron.job = window.tarteaucitron.job || []).push("matomotm");
+    };
+
+    var crispServiceInit = function() {
+      window.tarteaucitron.user.crispID = "${crispID}";
+      (window.tarteaucitron.job = window.tarteaucitron.job || []).push("crisp");
     };
 
     script.src = "/admin2/vendor/tarteaucitronjs/tarteaucitron.js";
@@ -15,6 +26,7 @@ export const tarteaucitronScript = ({ matomoUrl }: { matomoUrl: string }) => `
           iconPosition: "BottomLeft",
         });
         matomoServiceInit();
+        crispServiceInit();
       }
     };
 

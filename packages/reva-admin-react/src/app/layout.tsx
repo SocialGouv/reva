@@ -38,6 +38,8 @@ import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import Script from "next/script";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { useCrisp } from "@/components/crisp/useCrisp";
+import { useEffect } from "react";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -78,10 +80,12 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
           // we need to use Script in _document.tsx with the beforeInteractive strategy.
           // onLoad can't be used with the beforeInteractive strategy, so we manually
           // create a script tag in order to attach the required onLoad callback
-          MATOMO_URL && MATOMO_CONTAINER_NAME && (
+          ((MATOMO_URL && MATOMO_CONTAINER_NAME) ||
+            process.env.NEXT_PUBLIC_CRISP_ID) && (
             <Script strategy="beforeInteractive" id="tarteaucitron-wrapper">
               {tarteaucitronScript({
                 matomoUrl: `${MATOMO_URL}/js/container_${MATOMO_CONTAINER_NAME}.js`,
+                crispID: process.env.NEXT_PUBLIC_CRISP_ID || "",
               })}
             </Script>
           )
@@ -92,8 +96,16 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 }
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const { authenticated } = useKeycloakContext();
-  const { status: featureFlippingHookStatus } = useFeatureflipping();
+  const { authenticated, keycloakUser } = useKeycloakContext();
+  const { status: featureFlippingHookStatus, isFeatureActive } =
+    useFeatureflipping();
+
+  const shouldLoadCrisp =
+    authenticated && isFeatureActive("SHOW_CRISP_IN_ADMIN");
+
+  const { configureUser, resetUser } = useCrisp({
+    shouldLoad: shouldLoadCrisp,
+  });
 
   const {
     isAdmin,
@@ -102,6 +114,19 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     isGestionnaireMaisonMereAAP,
     isAdminCertificationAuthority,
   } = useAuth();
+
+  useEffect(() => {
+    if (keycloakUser && shouldLoadCrisp) {
+      const { id, email } = keycloakUser;
+      configureUser({
+        id,
+        email,
+      });
+    } else {
+      resetUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keycloakUser, shouldLoadCrisp]);
 
   const bgClass = () => {
     if (isAdmin) {
