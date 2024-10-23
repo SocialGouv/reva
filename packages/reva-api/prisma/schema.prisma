@@ -114,55 +114,56 @@ enum FinanceModule {
 }
 
 model Candidacy {
-  id                                         String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  organism                                   Organism?                      @relation(fields: [organismId], references: [id])
-  organismId                                 String?                        @map("organism_id") @db.Uuid
+  id                                         String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism                                   Organism?                             @relation(fields: [organismId], references: [id])
+  organismId                                 String?                               @map("organism_id") @db.Uuid
   candidacyStatuses                          CandidaciesStatus[]
   goals                                      CandicadiesOnGoals[]
   experiences                                Experience[]
-  typology                                   CandidateTypology              @default(NON_SPECIFIE)
-  typologyAdditional                         String?                        @map("typology_additional")
-  ccn                                        CandidacyConventionCollective? @relation(fields: [ccnId], references: [id], onDelete: NoAction)
-  ccnId                                      String?                        @map("ccn_id") @db.Uuid
-  firstAppointmentOccuredAt                  DateTime?                      @map("first_appointment_occured_at") @db.Timestamptz(6)
-  appointmentCount                           Int                            @default(0) @map("appointment_count")
+  typology                                   CandidateTypology                     @default(NON_SPECIFIE)
+  typologyAdditional                         String?                               @map("typology_additional")
+  ccn                                        CandidacyConventionCollective?        @relation(fields: [ccnId], references: [id], onDelete: NoAction)
+  ccnId                                      String?                               @map("ccn_id") @db.Uuid
+  firstAppointmentOccuredAt                  DateTime?                             @map("first_appointment_occured_at") @db.Timestamptz(6)
+  appointmentCount                           Int                                   @default(0) @map("appointment_count")
   trainings                                  TrainingOnCandidacies[]
   basicSkills                                BasicSkillOnCandidacies[]
-  certificateSkills                          String?                        @map("certificate_skills")
-  otherTraining                              String?                        @map("other_training")
-  individualHourCount                        Int?                           @map("individual_hour_count")
-  collectiveHourCount                        Int?                           @map("collective_hour_count")
-  additionalHourCount                        Int?                           @map("additional_hour_count")
-  candidate                                  Candidate?                     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  candidateId                                String?                        @map("candidate_id") @db.Uuid
-  department                                 Department?                    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  departmentId                               String?                        @map("department_id") @db.Uuid
-  candidacyDropOut                           CandidacyDropOut?              @relation()
-  reorientationReason                        ReorientationReason?           @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
-  reorientationReasonId                      String?                        @map("reorientation_reason_id") @db.Uuid
-  createdAt                                  DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                  DateTime?                      @map("updated_at") @db.Timestamptz(6)
-  financeModule                              FinanceModule                  @default(hors_plateforme) @map("finance_module")
+  certificateSkills                          String?                               @map("certificate_skills")
+  otherTraining                              String?                               @map("other_training")
+  individualHourCount                        Int?                                  @map("individual_hour_count")
+  collectiveHourCount                        Int?                                  @map("collective_hour_count")
+  additionalHourCount                        Int?                                  @map("additional_hour_count")
+  candidate                                  Candidate?                            @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  candidateId                                String?                               @map("candidate_id") @db.Uuid
+  department                                 Department?                           @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId                               String?                               @map("department_id") @db.Uuid
+  candidacyDropOut                           CandidacyDropOut?                     @relation()
+  reorientationReason                        ReorientationReason?                  @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
+  reorientationReasonId                      String?                               @map("reorientation_reason_id") @db.Uuid
+  createdAt                                  DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                  DateTime?                             @map("updated_at") @db.Timestamptz(6)
+  financeModule                              FinanceModule                         @default(hors_plateforme) @map("finance_module")
   FundingRequest                             FundingRequest[]
   paymentRequest                             PaymentRequest?
   fundingRequestUnifvae                      FundingRequestUnifvae[]
-  isCertificationPartial                     Boolean?                       @map("is_certification_partial")
+  isCertificationPartial                     Boolean?                              @map("is_certification_partial")
   admissibility                              Admissibility?
   admissibilityFvae                          AdmissibilityFvae?
   examInfo                                   ExamInfo?
-  readyForJuryEstimatedAt                    DateTime?                      @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
+  readyForJuryEstimatedAt                    DateTime?                             @map("ready_for_jury_estimated_at") @db.Timestamptz(6)
   Feasibility                                Feasibility[]
   dossierDeValidation                        DossierDeValidation[]
   paymentRequestUnifvae                      PaymentRequestUnifvae?
   Jury                                       Jury[]
   CandidacyLog                               CandidacyLog[]
-  reminderToOrganismDVDeadlineExceededSentAt DateTime?                      @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
-  feasibilityFormat                          FeasibilityFormat              @default(UPLOADED_PDF) @map("feasibility_format")
-  certificationAuthorityTransferReason       String?                        @map("certification_authority_transfer_reason")
-  certification                              Certification?                 @relation(fields: [certificationId], references: [id], onDelete: Restrict)
-  certificationId                            String?                        @map("certification_id") @db.Uuid
-  status                                     CandidacyStatusStep            @default(PROJET)
-  typeAccompagnement                         CandidacyTypeAccompagnement    @default(ACCOMPAGNE) @map("type_accompagnement")
+  reminderToOrganismDVDeadlineExceededSentAt DateTime?                             @map("reminder_to_organism_dv_deadline_exceeded_sent_at") @db.Timestamptz(6)
+  feasibilityFormat                          FeasibilityFormat                     @default(UPLOADED_PDF) @map("feasibility_format")
+  certificationAuthorityTransferReason       String?                               @map("certification_authority_transfer_reason")
+  certification                              Certification?                        @relation(fields: [certificationId], references: [id], onDelete: Restrict)
+  certificationId                            String?                               @map("certification_id") @db.Uuid
+  status                                     CandidacyStatusStep                   @default(PROJET)
+  typeAccompagnement                         CandidacyTypeAccompagnement           @default(ACCOMPAGNE) @map("type_accompagnement")
+  CandidacyOnCandidacyFinancingMethod        CandidacyOnCandidacyFinancingMethod[]
 
   @@index([organismId])
   @@index([candidateId])
@@ -1668,4 +1669,29 @@ model OrganismOnFormacode {
 
   @@unique([formacodeId, organismId])
   @@map("organism_on_formacode")
+}
+
+model CandidacyFinancingMethod {
+  id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                               String                                @unique @db.VarChar(255)
+  order                               Int
+  createdAt                           DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                           DateTime?                             @map("updated_at") @db.Timestamptz(6)
+  CandidacyOnCandidacyFinancingMethod CandidacyOnCandidacyFinancingMethod[]
+
+  @@map("candidacy_financing_method")
+}
+
+model CandidacyOnCandidacyFinancingMethod {
+  id                         String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                String                   @map("candidacy_id") @db.Uuid
+  candidacy                  Candidacy                @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyFinancingMethodId String                   @map("candidacy_financing_method") @db.Uuid
+  candidacyFinancingMethod   CandidacyFinancingMethod @relation(fields: [candidacyFinancingMethodId], references: [id], onDelete: Cascade)
+  additionalInformation      String?                  @map("additional_information")
+  createdAt                  DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime?                @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([candidacyId, candidacyFinancingMethodId])
+  @@map("candidacy_on_candidacy_financing_method")
 }
