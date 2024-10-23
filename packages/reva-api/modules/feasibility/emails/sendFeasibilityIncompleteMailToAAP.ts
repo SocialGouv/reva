@@ -49,11 +49,6 @@ export const sendFeasibilityIncompleteMailToAAP = async ({
     throw new Error(errorMessage);
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(htmlContent.html);
-    logger.info("=========================");
-  }
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,

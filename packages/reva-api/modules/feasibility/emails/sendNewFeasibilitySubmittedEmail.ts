@@ -30,13 +30,6 @@ export const sendNewFeasibilitySubmittedEmail = async ({
     throw new Error(errorMessage);
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    logger.info("======= RECIPIENTS =======");
-    logger.info(emails.join(", "));
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(htmlContent.html);
-    logger.info("=========================");
-  }
   return sendGenericEmail({
     to: emails.map((email) => ({ email })),
     htmlContent: htmlContent.html,

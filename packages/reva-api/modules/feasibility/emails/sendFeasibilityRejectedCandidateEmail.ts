@@ -46,11 +46,6 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     throw new Error(errorMessage);
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(htmlContent.html);
-    logger.info("=========================");
-  }
   const attachment = infoFile
     ? [{ name: infoFile.filename, content: infoFile._buf.toString("base64") }]
     : undefined;

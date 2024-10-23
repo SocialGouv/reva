@@ -1,7 +1,6 @@
 import mjml2html from "mjml";
 
 import { sendGenericEmail } from "../../shared/email";
-import { logger } from "../../shared/logger";
 import { template } from "./template";
 
 export const sendRejectionEmail = async ({
@@ -37,12 +36,6 @@ export const sendRejectionEmail = async ({
     throw new Error(errorMessage);
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(htmlContent.html);
-    logger.info("=========================");
-    return "ok";
-  }
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
