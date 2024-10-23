@@ -90,7 +90,7 @@ const MaisonMereAapPage = () => {
           />
           <span className="text-xs text-dsfrGray-mentionGrey">
             À utiliser lorsqu’un ou plusieurs candidats se plaignent des délais
-            de traitement de cette strucure. Les stuctures signalées auront un
+            de traitement de cette structure. Les structures signalées auront un
             badge permettant de les repérer plus facilement.
           </span>
         </div>
