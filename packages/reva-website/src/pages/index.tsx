@@ -41,10 +41,11 @@ const HomePage = () => {
       <Notice
         title={
           candidacyCreationDisabled
-            ? "Nous vous informons qu'il sera à nouveau possible de déposer prochainement une candidature sur la plateforme France VAE. Nous nous excusons pour l'interruption de notre service et vous remercions pour votre compréhension."
+            ? "En raison d'une mise à jour technique, le service d'inscription sera indisponible jusqu'au lundi 28 octobre."
             : "Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
         }
       />
+
       <HomeContainer>
         <FaitesValiderVosCompetencesParUnDiplome />
         <QuiPeutFaireUneVAE />

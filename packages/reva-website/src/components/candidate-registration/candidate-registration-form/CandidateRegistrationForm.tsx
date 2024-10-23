@@ -235,9 +235,8 @@ export const CandidateRegistrationForm = ({
               className="basis-1/2"
               title={
                 <p className="font-normal">
-                  Le dépôt de nouvelles candidatures est temporairement
-                  indisponible. Nous vous remercions de votre patience et nous
-                  excusons pour tout désagrément.
+                  En raison d'une mise à jour technique, le service
+                  d'inscription sera indisponible jusqu'au lundi 28 octobre.
                 </p>
               }
             />
