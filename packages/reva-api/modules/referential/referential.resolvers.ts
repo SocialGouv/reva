@@ -37,6 +37,7 @@ import {
 import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
 import { getAvailableFormacodes } from "./features/getFormacodes";
 import { getActiveCertifications } from "./features/getActiveCertifications";
+import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -131,6 +132,7 @@ const unsafeReferentialResolvers = {
         };
       },
     ) => getActiveCertifications(payload.filters),
+    getCandidacyFinancingMethods,
   },
   Mutation: {
     referential_updateCertification: (
