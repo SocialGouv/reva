@@ -1,6 +1,6 @@
 import { generateJwt } from "../auth.helper";
 import { TypeAccompagnement } from "../candidate.types";
-import { sendRegistrationEmail } from "../mails/sendRegistrationEmail";
+import { sendRegistrationEmail } from "../emails/sendRegistrationEmail";
 
 interface CandidateInput {
   email: string;

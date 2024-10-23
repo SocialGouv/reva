@@ -1,6 +1,6 @@
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import { generateJwt } from "../auth.helper";
-import { sendLoginEmail, sendUnknownUserEmail } from "../mails";
+import { sendLoginEmail, sendUnknownUserEmail } from "../emails";
 
 export const askForLogin = async (email: string) => {
   const keycloakAdmin = await getKeycloakAdmin();
