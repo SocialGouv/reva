@@ -33,6 +33,7 @@ const TrainingPage = () => {
         training: {
           ...rest,
           isCertificationPartial: certificationScope === "PARTIAL",
+          candidacyFinancingMethodIds: [],
         },
       });
       successToast("Le parcours personnalisé a bien été envoyé.");

@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../../prisma/client";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
 
 export const updateTrainingInformations = async (params: {
   candidacyId: string;
@@ -11,32 +12,67 @@ export const updateTrainingInformations = async (params: {
     collectiveHourCount: number;
     additionalHourCount: number;
     isCertificationPartial: boolean;
+    candidacyFinancingMethodIds: string[];
+    candidacyFinancingMethodOtherSourceText?: string;
   };
 }) =>
-  prismaClient.$transaction([
-    prismaClient.basicSkillOnCandidacies.deleteMany({
+  prismaClient.$transaction(async (tx) => {
+    await tx.basicSkillOnCandidacies.deleteMany({
       where: {
         candidacyId: params.candidacyId,
       },
-    }),
-    prismaClient.basicSkillOnCandidacies.createMany({
+    });
+    await tx.basicSkillOnCandidacies.createMany({
       data: params.training.basicSkillIds.map((id) => ({
         candidacyId: params.candidacyId,
         basicSkillId: id,
       })),
-    }),
-    prismaClient.trainingOnCandidacies.deleteMany({
+    });
+    await tx.trainingOnCandidacies.deleteMany({
       where: {
         candidacyId: params.candidacyId,
       },
-    }),
-    prismaClient.trainingOnCandidacies.createMany({
+    });
+    await tx.trainingOnCandidacies.createMany({
       data: params.training.mandatoryTrainingIds.map((id) => ({
         candidacyId: params.candidacyId,
         trainingId: id,
       })),
-    }),
-    prismaClient.candidacy.update({
+    });
+
+    await tx.candidacyOnCandidacyFinancingMethod.deleteMany({
+      where: {
+        candidacyId: params.candidacyId,
+      },
+    });
+    await tx.candidacyOnCandidacyFinancingMethod.createMany({
+      data: params.training.candidacyFinancingMethodIds.map((id) => ({
+        candidacyId: params.candidacyId,
+        candidacyFinancingMethodId: id,
+      })),
+    });
+
+    if (
+      params.training.candidacyFinancingMethodIds.find(
+        (id) => id === CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+      )
+    ) {
+      await tx.candidacyOnCandidacyFinancingMethod.update({
+        where: {
+          candidacyId_candidacyFinancingMethodId: {
+            candidacyId: params.candidacyId,
+            candidacyFinancingMethodId:
+              CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+          },
+        },
+        data: {
+          additionalInformation:
+            params.training.candidacyFinancingMethodOtherSourceText,
+        },
+      });
+    }
+
+    await tx.candidacy.update({
       where: {
         id: params.candidacyId,
       },
@@ -48,5 +84,5 @@ export const updateTrainingInformations = async (params: {
         additionalHourCount: params.training.additionalHourCount,
         isCertificationPartial: params.training.isCertificationPartial,
       },
-    }),
-  ]);
+    });
+  });

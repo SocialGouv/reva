@@ -31,6 +31,8 @@ export const submitTraining = async ({
     collectiveHourCount: number;
     additionalHourCount: number;
     isCertificationPartial: boolean;
+    candidacyFinancingMethodIds: string[];
+    candidacyFinancingMethodOtherSourceText?: string;
   };
 } & CandidacyAuditLogUserInfo) => {
   if (

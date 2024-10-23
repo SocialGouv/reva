@@ -32,6 +32,8 @@ input TrainingInput {
   basicSkillIds: [UUID!]!
   mandatoryTrainingIds: [UUID!]!
   isCertificationPartial: Boolean!
+  candidacyFinancingMethodIds: [UUID]!
+  candidacyFinancingMethodOtherSourceText: String
 }
 
 type Mutation {

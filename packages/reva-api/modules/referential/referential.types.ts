@@ -1,3 +1,6 @@
+export const CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID =
+  "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
+
 export interface Degree {
   id: string;
   code: string;
