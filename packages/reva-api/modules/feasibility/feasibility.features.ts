@@ -8,6 +8,7 @@ import {
   Prisma,
 } from "@prisma/client";
 
+import { v4 } from "uuid";
 import { prismaClient } from "../../prisma/client";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
@@ -36,7 +37,8 @@ import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityRejectedCandidateEmail,
-  sendFeasibilityValidatedCandidateEmail,
+  sendFeasibilityValidatedToCandidateAccompagneEmail,
+  sendFeasibilityValidatedToCandidateAutonomeEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./emails";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
@@ -46,7 +48,6 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { v4 } from "uuid";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -837,24 +838,40 @@ const validateFeasibility = async ({
       status: "DOSSIER_FAISABILITE_RECEVABLE",
     });
 
-    sendFeasibilityValidatedCandidateEmail({
-      email: updatedFeasibility.candidacy.candidate?.email as string,
-      certifName:
-        updatedFeasibility.candidacy.certification?.label ||
-        "Certification inconnue",
-      comment,
-      certificationAuthorityLabel:
-        updatedFeasibility.certificationAuthority?.label ||
-        "certificateur inconnu",
-      infoFile,
-    });
-
-    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
-      sendFeasibilityDecisionTakenToAAPEmail({
-        email:
-          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
+    const isAutonome =
+      updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
+    if (isAutonome) {
+      sendFeasibilityValidatedToCandidateAutonomeEmail({
+        email: updatedFeasibility.candidacy.candidate?.email as string,
+        certifName:
+          updatedFeasibility.candidacy.certification?.label ||
+          "Certification inconnue",
+        comment,
+        certificationAuthorityLabel:
+          updatedFeasibility.certificationAuthority?.label ||
+          "certificateur inconnu",
+        infoFile,
       });
+    } else {
+      sendFeasibilityValidatedToCandidateAccompagneEmail({
+        email: updatedFeasibility.candidacy.candidate?.email as string,
+        certifName:
+          updatedFeasibility.candidacy.certification?.label ||
+          "Certification inconnue",
+        comment,
+        certificationAuthorityLabel:
+          updatedFeasibility.certificationAuthority?.label ||
+          "certificateur inconnu",
+        infoFile,
+      });
+
+      if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
+        sendFeasibilityDecisionTakenToAAPEmail({
+          email:
+            updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
+        });
+      }
     }
 
     // Delete ID File from feasibility

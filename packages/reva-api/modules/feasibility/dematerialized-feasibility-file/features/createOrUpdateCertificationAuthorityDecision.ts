@@ -11,7 +11,8 @@ import { updateCandidacyStatus } from "../../../candidacy/features/updateCandida
 import {
   sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityRejectedCandidateEmail,
-  sendFeasibilityValidatedCandidateEmail,
+  sendFeasibilityValidatedToCandidateAccompagneEmail,
+  sendFeasibilityValidatedToCandidateAutonomeEmail,
 } from "../../emails";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
@@ -148,13 +149,24 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         ?.label;
 
     if (candidateEmail && certifName && certificationAuthorityLabel) {
+      const isAutonome =
+        dff.feasibility.candidacy.typeAccompagnement === "AUTONOME";
       if (decision === "ADMISSIBLE") {
-        sendFeasibilityValidatedCandidateEmail({
-          email: candidateEmail,
-          comment: decisionComment,
-          certifName,
-          certificationAuthorityLabel,
-        });
+        if (isAutonome) {
+          sendFeasibilityValidatedToCandidateAutonomeEmail({
+            email: candidateEmail,
+            comment: decisionComment,
+            certifName,
+            certificationAuthorityLabel,
+          });
+        } else {
+          sendFeasibilityValidatedToCandidateAccompagneEmail({
+            email: candidateEmail,
+            comment: decisionComment,
+            certifName,
+            certificationAuthorityLabel,
+          });
+        }
       }
 
       if (decision === "REJECTED") {

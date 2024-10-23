@@ -8,7 +8,7 @@ import {
 import { UploadedFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 
-export const sendFeasibilityValidatedCandidateEmail = async ({
+export const sendFeasibilityValidatedToCandidateAccompagneEmail = async ({
   email,
   comment,
   certifName,
@@ -52,12 +52,6 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
       .join("\n");
     logger.error(errorMessage);
     throw new Error(errorMessage);
-  }
-
-  if (process.env.NODE_ENV !== "production") {
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(htmlContent.html);
-    logger.info("=========================");
   }
 
   const attachment = infoFile
