@@ -1,5 +1,5 @@
-import { logger } from "../logger";
 import { sendGenericEmail } from ".";
+import { logger } from "../logger";
 
 export const sendEmailWithLink = async ({
   to,

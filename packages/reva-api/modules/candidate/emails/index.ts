@@ -1,3 +1,4 @@
 export * from "./sendLoginEmail";
-export * from "./sendRegistrationEmail";
+export * from "./sendRegistrationEmailToCandidateAccompagne";
+export * from "./sendRegistrationEmailToCandidateAutonome";
 export * from "./sendUnknownUserEmail";
