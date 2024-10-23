@@ -1,4 +1,3 @@
-import { DisableAccount } from "@/components/disable-account";
 import { Impersonate } from "@/components/impersonate";
 import { Account } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -52,6 +51,10 @@ export const HeadAgencySettingsSectionAccountList = ({
               </div>
             </div>
             <div className="flex justify-between items-center">
+              {!account.disabledAt && isAdmin && (
+                <Impersonate accountId={account.id} size="small" />
+              )}
+
               <Button
                 linkProps={{
                   href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
@@ -61,14 +64,6 @@ export const HeadAgencySettingsSectionAccountList = ({
               >
                 {!account.disabledAt ? "Modifier" : "Visualiser"}
               </Button>
-
-              {!account.disabledAt && isAdmin && (
-                <DisableAccount accountId={account.id} size="small" />
-              )}
-
-              {!account.disabledAt && isAdmin && (
-                <Impersonate accountId={account.id} size="small" />
-              )}
             </div>
           </li>
         )),

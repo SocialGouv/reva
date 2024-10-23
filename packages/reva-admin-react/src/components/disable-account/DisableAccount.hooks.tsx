@@ -22,7 +22,8 @@ export const useHooks = () => {
     mutationKey: ["accountId"],
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["organism_getMaisonMereAAPById"],
+        predicate: (query) =>
+          query.queryKey.findIndex((key) => key == "maisonMereAAP") != -1,
       });
     },
   });

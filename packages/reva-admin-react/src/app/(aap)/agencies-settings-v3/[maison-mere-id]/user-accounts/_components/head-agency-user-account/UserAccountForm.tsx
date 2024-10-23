@@ -37,6 +37,7 @@ export const UserAccountForm = ({
   onSiteAgencies,
   backUrl,
   disabled,
+  FooterComponent,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   remoteAgency: { id: string; label: string };
@@ -44,6 +45,7 @@ export const UserAccountForm = ({
   defaultValues?: UserAccountFormData;
   backUrl: string;
   disabled?: boolean;
+  FooterComponent?: React.ReactNode;
 }) => {
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
@@ -193,6 +195,11 @@ export const UserAccountForm = ({
             )}
           </Select>
         </fieldset>
+
+        {FooterComponent && (
+          <div className="border-gray-200 border-t pt-8">{FooterComponent}</div>
+        )}
+
         <FormButtons formState={formState} backUrl={backUrl} />
       </form>
     </>

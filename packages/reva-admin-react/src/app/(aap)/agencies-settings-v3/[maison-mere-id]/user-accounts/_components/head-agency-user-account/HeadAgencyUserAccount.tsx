@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
 import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
+import { DisableAccount } from "@/components/disable-account";
 
 const HeadAgencyUserAccount = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();
@@ -85,6 +86,11 @@ const HeadAgencyUserAccount = () => {
           label: a.informationsCommerciales?.nom || a.label,
         }))}
         backUrl={backUrl}
+        FooterComponent={
+          !userAccount?.disabledAt && (
+            <DisableAccount accountId={userAccountId} />
+          )
+        }
       />
     </div>
   );
