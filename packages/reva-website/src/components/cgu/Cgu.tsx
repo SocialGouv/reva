@@ -686,6 +686,6 @@ export const Cgu = () => (
       public.
     </p>
     <br />
-    <p>Dernière version des CGU : 01/08/2024</p>
+    <p>Dernière version des CGU : 23/10/2024</p>
   </>
 );
