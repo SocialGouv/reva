@@ -239,7 +239,7 @@ export const Cgu = () => (
       et suivre son parcours étape par étape.
     </p>
     <p>
-      Le candidat peut changer d‘organisme Architecte accompagnateur de parcours
+      Le candidat peut changer d'organisme Architecte accompagnateur de parcours
       tant que le premier rendez-vous avec celui-ci n'est pas réalisé.
     </p>
     <p>
@@ -323,7 +323,7 @@ export const Cgu = () => (
         nombre d'heures, coût horaire) pour les candidats qu'ils accompagnent
         dans la limite de l'enveloppe budgétaire allouée à cet effet à
         UNIFORMATION (dès lors que la limite est atteinte, la fonctionnalité
-        n'est plus disponible ;
+        n'est plus disponible) ;
       </li>
       <li>
         Demander le cas échéant le paiement final des prestations réalisées sur
@@ -367,8 +367,8 @@ export const Cgu = () => (
       </li>
     </ul>
     <p>
-      L'administrateur France VAE valide ou non l'accès de la Structure
-      Professionnelle AAP à la Plateforme selon les données saisies.
+      L'administrateur France VAE valide ou non l'accès de l'organisme AAP à la
+      Plateforme selon les données saisies et pièces justificatives.
     </p>
     <h3>Certificateurs :</h3>
     <p>
@@ -392,13 +392,17 @@ export const Cgu = () => (
         Recevoir les dates prévisionnelles de dépôt des dossiers de validation
         des candidats ;
       </li>
+      <li>Recevoir le dossier de validation ;</li>
+      <li>
+        Signaler un dossier de validation non conforme (illisible, incomplet…);
+      </li>
       <li>Saisir les dates de jury ;</li>
       <li>
         Saisir le résultat à la session de jury ou l'absence du candidat à la
         session de jury ;
       </li>
       <li>
-        Saisir un commentaire en cas de validation partiel ou d'échec du
+        Saisir un commentaire en cas de validation partielle ou d'échec du
         candidat.
       </li>
     </ul>
@@ -464,9 +468,7 @@ export const Cgu = () => (
       En cas de souhait du candidat de ne pas donner suite à son parcours, il
       signale son abandon, ainsi que la raison de son abandon. L'arrêt du
       parcours prendra effet aussitôt. L'organisme d'accompagnement informe les
-      parties prenantes et collecte les éléments de paiement. Le financeur peut
-      alors utiliser les fonds destinés au financement du parcours du candidat
-      pour le financement d'autres parcours de VAE.
+      parties prenantes et collecte les éléments de paiement.
     </p>
     <p>
       <em>Abandon constaté</em>
@@ -482,7 +484,7 @@ export const Cgu = () => (
       Dans ce cas, France VAE informe le candidat que son abandon a été signalé
       par l'AAP. Le candidat dispose d'un délai de 15 jours pour notifier qu'il
       n'a pas abandonné et pour contester le signalement d'abandon de parcours
-      de formation. À l'expiration de ce délai, il sera présumé avoir abandonné.
+      de VAE. À l'expiration de ce délai, il sera présumé avoir abandonné.
     </p>
     <h3>5.3 Procédure de certification </h3>
     <p>
@@ -568,7 +570,7 @@ export const Cgu = () => (
       l'administrateur d'entrer en contact avec l'organisme d'accompagnement.
     </p>
     <h3>6.3 Règles relatives aux déréférencements</h3>
-    <p className="mb-0">
+    <p>
       En cas de perte du certificat Qualiopi constatée par les administrateurs
       France VAE et, si l'AAP n'a pas, de sa propre initiative, rendu son compte
       non visible sur la plateforme, les administrateurs pourront procéder à son
@@ -581,7 +583,7 @@ export const Cgu = () => (
       d'escroquerie, France VAE peut déréférencer l'organisme concerné. Ainsi,
       un organisme défaillant dans son accompagnement peut être déréférencé.
     </p>
-    <p className="mb-0">
+    <p>
       Lorsque France VAE prévoit de sanctionner un organisme par une procédure
       de déréférencement, il informe l'organisme de l'ouverture de la procédure
       et lui précise les motifs de la décision envisagée. L'organisme mis en
@@ -595,7 +597,7 @@ export const Cgu = () => (
       reprochés et la durée du déréférencement. La décision comprend les délais
       et voies de recours.
     </p>
-    <h3>6.4 Autres sanctions consécutives à un accompagnement défaillant</h3>
+    <h3>6.4 Autres sanctions</h3>
     <p>
       L'organisme s'engage à assurer un accompagnement répondant aux exigences
       législatives et réglementaires relatives à la VAE, ainsi qu'au cahier des
@@ -609,7 +611,7 @@ export const Cgu = () => (
         Suppression et archivage du compte pour les violations les plus graves,
         particulièrement en cas d'usurpation d'identité ou de fausse identité ;
       </li>
-      <li>Remboursement des frais avancés ;</li>
+      <li>Recouvrement des frais avancés ;</li>
       <li>Arrêt de financement.</li>
     </ul>
     <h2>Article 7 - Engagements des titulaires de compte AAP</h2>
@@ -617,8 +619,11 @@ export const Cgu = () => (
     <p>
       Toute information transmise par l'organisme AAP dans le cadre de son
       référencement et des mises à jour de son compte est de sa seule
-      responsabilité. Le titulaire du compte AAP s'engage à ne pas modifier ou
-      altérer les données pour des finalités illicites ou étrangères au suivi, à
+      responsabilité.
+    </p>
+    <p>
+      Le titulaire du compte AAP s'engage à ne pas modifier ou altérer les
+      données pour des finalités illicites ou étrangères au suivi, à
       l'évaluation, à la réalisation ou, le cas échéant, à la constatation de
       l'abandon du parcours.
     </p>
@@ -636,9 +641,9 @@ export const Cgu = () => (
     <p>
       Il est aussi rappelé qu'en cas de perte du certificat Qualiopi pour les
       actions permettant de faire valider les acquis de l'expérience,
-      l'organisme AAP doit mettre son compte en invisibilité depuis son espace
-      et ne plus accueillir de nouveaux candidats France VAE tant que ce
-      certificat n'est plus actif.
+      l'organisme AAP doit rendre son compte non visible depuis son espace et ne
+      plus accueillir de nouveaux candidats France VAE tant que ce certificat
+      n'est plus actif.
     </p>
     <h3>7.2 Confidentialité des données</h3>
     <p>
@@ -727,17 +732,17 @@ export const Cgu = () => (
       communication par les organismes accompagnateurs en incluant notamment un
       lien vers celle-ci sur les plateformes de communication des intéressés.
     </p>
-    <h2>Article 11 - Droit applicable</h2>
+    <h2>Article 12 - Droit applicable</h2>
     <p>
       En cas de litige relatif aux présentes conditions générales d'utilisation,
       le droit applicable est le droit français.
     </p>
-    <h2>Article 12 - Juridiction compétente</h2>
+    <h2>Article 13 - Juridiction compétente</h2>
     <p>
       En cas de litige relatif aux présentes conditions générales d'utilisation,
       la juridiction compétente est le tribunal administratif de Paris.
     </p>
-    <h2>Article 13 - Mise à jour des CGU</h2>
+    <h2>Article 14 - Mise à jour des CGU</h2>
     <p>
       Les termes des présentes conditions d'utilisation peuvent être amendés à
       tout moment, sans préavis, en fonction des modifications apportées à la
@@ -752,7 +757,6 @@ export const Cgu = () => (
       Les termes des présentes conditions générales d'utilisation s'imposent au
       public.
     </p>
-
     <br />
     <p>Dernière version des CGU : 23/10/2024</p>
   </>
