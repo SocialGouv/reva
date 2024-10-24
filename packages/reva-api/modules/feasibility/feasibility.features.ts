@@ -271,13 +271,6 @@ export const createFeasibility = async ({
     status: "DOSSIER_FAISABILITE_ENVOYE",
   });
 
-  // const candidacy = await prismaClient.candidacy.findFirst({
-  //   where: { id: candidacyId },
-  //   include: {
-  //     department: true,
-  //   },
-  // });
-
   const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy?.departmentId;
 
