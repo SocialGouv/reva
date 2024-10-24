@@ -436,14 +436,25 @@ export const Cgu = () => (
     </p>
     <p>
       Le candidat s'engage à fournir des informations exactes et à les maintenir
-      à jour. Une candidature sur une certification professionnelle n'est pas
-      possible si le candidat est déjà engagé en parcours de formation initiale
-      pour la même certification professionnelle.
+      à jour.
+    </p>
+    <p>
+      Une candidature sur une certification professionnelle n'est pas possible
+      si le candidat est déjà engagé en parcours de formation initiale pour la
+      même certification professionnelle.
     </p>
     <p>
       Au cours de la même année civile, un candidat ne peut soumettre plus d'une
       candidature pour une même certification professionnelle ou plus de trois
       pour des certifications professionnelles différentes.
+    </p>
+    <p>
+      Toute information transmise par le candidat est de sa seule
+      responsabilité. Il est rappelé que toute personne procédant à une fausse
+      déclaration pour elle-même ou pour autrui s'expose, notamment aux
+      sanctions prévues aux articles 226-4-1 et 441-1 du code pénal, prévoyant
+      des peines pouvant aller jusqu'à trois ans d'emprisonnement et 45 000
+      euros d'amende.
     </p>
     <h3>5.2 Cas de l'abandon du parcours</h3>
     <p>
@@ -534,6 +545,17 @@ export const Cgu = () => (
       pour les actions de validation des acquis de l'expérience et doit
       signaler, le cas échéant, la perte de cette certification.
     </p>
+    <p>
+      En cas de perte de la certification Qualiopi pour les actions de
+      validation des acquis de l'expérience, l'organisme d'accompagnement peut à
+      nouveau solliciter le référencement au sein du portail France VAE en
+      produisant son justificatif de certificat valide et son enregistrement sur
+      le service{" "}
+      <a href="https://annuaire-entreprises.data.gouv.fr/">
+        L'annuaire des entreprises
+      </a>
+      .
+    </p>
     <h3>6.2 Règles relatives à la mise en invisibilité</h3>
     <p>
       En cas de risque d'atteintes graves aux intérêts publics ou de soupçon de
@@ -546,16 +568,18 @@ export const Cgu = () => (
       l'administrateur d'entrer en contact avec l'organisme d'accompagnement.
     </p>
     <h3>6.3 Règles relatives aux déréférencements</h3>
-    <p>
+    <p className="mb-0">
       En cas de perte du certificat Qualiopi constatée par les administrateurs
       France VAE et, si l'AAP n'a pas, de sa propre initiative, rendu son compte
       non visible sur la plateforme, les administrateurs pourront procéder à son
-      déréférencement. En cas de manquement de l'organisme d'accompagnement aux
-      obligations qu'il tire des dispositions législatives, réglementaires ou
-      contractuelles relatives à la VAE, ou en cas notamment de fraude, de vol
-      ou d'escroquerie, France VAE peut déréférencer l'organisme concerné.
-      Ainsi, un organisme défaillant dans son accompagnement peut être
-      déréférencé.
+      déréférencement.
+    </p>
+    <p>
+      En cas de manquement de l'organisme d'accompagnement aux obligations qu'il
+      tire des dispositions législatives, réglementaires ou contractuelles
+      relatives à la VAE, ou en cas notamment de fraude, de vol ou
+      d'escroquerie, France VAE peut déréférencer l'organisme concerné. Ainsi,
+      un organisme défaillant dans son accompagnement peut être déréférencé.
     </p>
     <p className="mb-0">
       Lorsque France VAE prévoit de sanctionner un organisme par une procédure
