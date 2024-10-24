@@ -8,7 +8,7 @@ import {
 import { UploadedFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
 
-export const sendFeasibilityRejectedCandidateEmail = async ({
+export const sendFeasibilityRejectedToCandidateAccompagneEmail = async ({
   email,
   comment,
   certificationAuthorityLabel,
@@ -53,7 +53,7 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Votre dossier de faisabilité",
+    subject: "Votre dossier de faisabilité VAE est non recevable",
     attachment,
   });
 };

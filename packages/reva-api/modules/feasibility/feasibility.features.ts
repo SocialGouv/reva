@@ -36,7 +36,8 @@ import { getWhereClauseFromSearchFilter } from "../shared/search/search";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
-  sendFeasibilityRejectedCandidateEmail,
+  sendFeasibilityRejectedToCandidateAccompagneEmail,
+  sendFeasibilityRejectedToCandidateAutonomeEmail,
   sendFeasibilityValidatedToCandidateAccompagneEmail,
   sendFeasibilityValidatedToCandidateAutonomeEmail,
   sendNewFeasibilitySubmittedEmail,
@@ -950,6 +951,7 @@ const rejectFeasibility = async ({
               select: { email: true },
             },
             organism: { select: { contactAdministrativeEmail: true } },
+            certification: { select: { label: true } },
           },
         },
         certificationAuthority: true,
@@ -961,21 +963,37 @@ const rejectFeasibility = async ({
       status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
     });
 
-    sendFeasibilityRejectedCandidateEmail({
-      email: updatedFeasibility.candidacy.candidate?.email as string,
-      comment,
-      certificationAuthorityLabel:
-        updatedFeasibility.certificationAuthority?.label ||
-        "certificateur inconnu",
-      infoFile,
-    });
-
-    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
-      sendFeasibilityDecisionTakenToAAPEmail({
-        email:
-          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+    const isAutonome =
+      updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
+    const certificationName =
+      updatedFeasibility.candidacy.certification?.label ||
+      "certification inconnue";
+    const certificationAuthorityLabel =
+      updatedFeasibility.certificationAuthority?.label ||
+      "certificateur inconnu";
+    if (isAutonome) {
+      sendFeasibilityRejectedToCandidateAutonomeEmail({
+        email: updatedFeasibility.candidacy.candidate?.email as string,
+        comment,
+        certificationAuthorityLabel,
+        certificationName,
+        infoFile,
       });
+    } else {
+      sendFeasibilityRejectedToCandidateAccompagneEmail({
+        email: updatedFeasibility.candidacy.candidate?.email as string,
+        comment,
+        certificationAuthorityLabel,
+        infoFile,
+      });
+
+      if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
+        sendFeasibilityDecisionTakenToAAPEmail({
+          email:
+            updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+        });
+      }
     }
 
     // Delete ID File from feasibility

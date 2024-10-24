@@ -10,7 +10,8 @@ import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import {
   sendFeasibilityIncompleteMailToAAP,
-  sendFeasibilityRejectedCandidateEmail,
+  sendFeasibilityRejectedToCandidateAccompagneEmail,
+  sendFeasibilityRejectedToCandidateAutonomeEmail,
   sendFeasibilityValidatedToCandidateAccompagneEmail,
   sendFeasibilityValidatedToCandidateAutonomeEmail,
 } from "../../emails";
@@ -170,11 +171,20 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       }
 
       if (decision === "REJECTED") {
-        sendFeasibilityRejectedCandidateEmail({
-          email: candidateEmail,
-          comment: decisionComment,
-          certificationAuthorityLabel,
-        });
+        if (isAutonome) {
+          sendFeasibilityRejectedToCandidateAutonomeEmail({
+            email: candidateEmail,
+            comment: decisionComment,
+            certificationAuthorityLabel,
+            certificationName: certifName,
+          });
+        } else {
+          sendFeasibilityRejectedToCandidateAccompagneEmail({
+            email: candidateEmail,
+            comment: decisionComment,
+            certificationAuthorityLabel,
+          });
+        }
       }
     }
 
