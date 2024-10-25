@@ -72,6 +72,16 @@ type Candidacy {
   feasibilityFormat: FeasibilityFormat!
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
+  candidacyOnCandidacyFinancingMethods: [CandidacyOnCandidacyFinancingMethod!]!
+}
+type CandidacyOnCandidacyFinancingMethod {
+  candidacyFinancingMethod: CandidacyFinancingMethod!
+  additionalInformation: String
+}
+
+type CandidacyFinancingMethod {
+  id: ID!
+  label: String!
 }
 
 enum TypeAccompagnement {

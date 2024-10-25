@@ -60,6 +60,8 @@ import { getCandidacies } from "./features/getCandicacies";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
+import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features/getCandidacyOnCandidacyFinancingMethodsByCandidacyId";
+import { getCandidacyFinancingMethodById } from "./features/getCandidacyFinancingMethodById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -88,6 +90,15 @@ const unsafeResolvers = {
       getCandidacyConventionCollectiveById({ ccnId }),
     candidacyDropOut: ({ id: candidacyId }: Candidacy) =>
       getCandidacyDropOutByCandidacyId({ candidacyId }),
+    candidacyOnCandidacyFinancingMethods: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
+  },
+  CandidacyOnCandidacyFinancingMethod: {
+    candidacyFinancingMethod: ({
+      candidacyFinancingMethodId,
+    }: {
+      candidacyFinancingMethodId: string;
+    }) => getCandidacyFinancingMethodById({ candidacyFinancingMethodId }),
   },
   CandidacyDropOut: {
     dropOutReason: ({ dropOutReasonId }: { dropOutReasonId: string }) =>
