@@ -16,6 +16,13 @@ export const submitCandidacy = async ({
 }: {
   candidacyId: string;
 }) => {
+  const candidacyCreationDisabled = await isFeatureActiveForUser({
+    feature: "CANDIDACY_CREATION_DISABLED",
+  });
+  if (candidacyCreationDisabled) {
+    throw new Error("La création de candidature est désactivée");
+  }
+
   const candidacy = await getCandidacyById({
     candidacyId,
   });
