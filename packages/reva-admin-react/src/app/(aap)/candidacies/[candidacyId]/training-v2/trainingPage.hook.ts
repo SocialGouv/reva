@@ -4,6 +4,8 @@ import { TrainingInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
+export const OTHER_FINANCING_METHOD_ID = "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
+
 const getCandidacyByIdWithReferential = graphql(`
   query getCandidacyAndReferentialForCandidacyTrainingPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
@@ -29,6 +31,13 @@ const getCandidacyByIdWithReferential = graphql(`
       status
       feasibilityFormat
       financeModule
+      candidacyOnCandidacyFinancingMethods {
+        additionalInformation
+        candidacyFinancingMethod {
+          id
+          label
+        }
+      }
     }
     training_getTrainings {
       id

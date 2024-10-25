@@ -6,7 +6,10 @@ import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrA
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
 import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
-import { useTrainingPage } from "./trainingPage.hook";
+import {
+  OTHER_FINANCING_METHOD_ID,
+  useTrainingPage,
+} from "./trainingPage.hook";
 
 const getTypologyLabel = (typology?: string) => {
   switch (typology) {
@@ -28,6 +31,17 @@ const TrainingPage = () => {
     referential,
     submitTraining,
   } = useTrainingPage();
+
+  const candidacyFinancingMethodIds =
+    candidacy?.candidacyOnCandidacyFinancingMethods?.map(
+      (c) => c.candidacyFinancingMethod.id,
+    ) || [];
+
+  const candidacyFinancingMethodOtherSourceText =
+    candidacy?.candidacyOnCandidacyFinancingMethods?.find(
+      (c) => c.candidacyFinancingMethod.id === OTHER_FINANCING_METHOD_ID,
+    )?.additionalInformation;
+
   const router = useRouter();
 
   const handleFormSubmit = async (values: TrainingFormValues) => {
@@ -105,6 +119,8 @@ const TrainingPage = () => {
                       ? "PARTIAL"
                       : "COMPLETE"
                     : null,
+                candidacyFinancingMethodIds,
+                candidacyFinancingMethodOtherSourceText,
               }}
               onSubmit={handleFormSubmit}
               disabled={isCandidacyStatusEqualOrAbove(

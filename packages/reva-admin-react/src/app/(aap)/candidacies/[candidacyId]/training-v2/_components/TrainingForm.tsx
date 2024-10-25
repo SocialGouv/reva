@@ -5,8 +5,7 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-
-const OTHER_FINANCING_METHOD_ID = "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
+import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -120,6 +119,8 @@ export const TrainingForm = ({
           checked: defaultValues?.candidacyFinancingMethodIds?.includes(fm.id),
         }),
       ),
+      candidacyFinancingMethodOtherSourceText:
+        defaultValues?.candidacyFinancingMethodOtherSourceText || "",
     },
   });
 
