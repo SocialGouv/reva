@@ -72,19 +72,7 @@ type Candidacy {
   feasibilityFormat: FeasibilityFormat!
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
-  candidacyOnCandidacyFinancingMethods: [CandidacyOnCandidacyFinancingMethod!]!
-  estimatedCost: Float
 }
-type CandidacyOnCandidacyFinancingMethod {
-  candidacyFinancingMethod: CandidacyFinancingMethod!
-  additionalInformation: String
-}
-
-type CandidacyFinancingMethod {
-  id: ID!
-  label: String!
-}
-
 enum TypeAccompagnement {
   ACCOMPAGNE
   AUTONOME
