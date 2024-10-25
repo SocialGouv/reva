@@ -14,6 +14,7 @@ export const updateTrainingInformations = async (params: {
     isCertificationPartial: boolean;
     candidacyFinancingMethodIds: string[];
     candidacyFinancingMethodOtherSourceText?: string;
+    estimatedCost?: number;
   };
 }) =>
   prismaClient.$transaction(async (tx) => {
@@ -83,6 +84,7 @@ export const updateTrainingInformations = async (params: {
         collectiveHourCount: params.training.collectiveHourCount,
         additionalHourCount: params.training.additionalHourCount,
         isCertificationPartial: params.training.isCertificationPartial,
+        estimatedCost: params.training.estimatedCost,
       },
     });
   });

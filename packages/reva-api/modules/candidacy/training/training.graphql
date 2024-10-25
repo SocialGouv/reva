@@ -34,6 +34,7 @@ input TrainingInput {
   isCertificationPartial: Boolean!
   candidacyFinancingMethodIds: [UUID]!
   candidacyFinancingMethodOtherSourceText: String
+  estimatedCost: Float
 }
 
 type Mutation {

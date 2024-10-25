@@ -73,6 +73,7 @@ type Candidacy {
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
   candidacyOnCandidacyFinancingMethods: [CandidacyOnCandidacyFinancingMethod!]!
+  estimatedCost: Float
 }
 type CandidacyOnCandidacyFinancingMethod {
   candidacyFinancingMethod: CandidacyFinancingMethod!

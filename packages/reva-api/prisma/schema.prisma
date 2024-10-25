@@ -164,6 +164,7 @@ model Candidacy {
   status                                     CandidacyStatusStep                   @default(PROJET)
   typeAccompagnement                         CandidacyTypeAccompagnement           @default(ACCOMPAGNE) @map("type_accompagnement")
   candidacyOnCandidacyFinancingMethod        CandidacyOnCandidacyFinancingMethod[]
+  estimatedCost                              Decimal?                              @map("estimated_cost")
 
   @@index([organismId])
   @@index([candidateId])

@@ -33,6 +33,7 @@ export const submitTraining = async ({
     isCertificationPartial: boolean;
     candidacyFinancingMethodIds: string[];
     candidacyFinancingMethodOtherSourceText?: string;
+    estimatedCost?: number;
   };
 } & CandidacyAuditLogUserInfo) => {
   if (
