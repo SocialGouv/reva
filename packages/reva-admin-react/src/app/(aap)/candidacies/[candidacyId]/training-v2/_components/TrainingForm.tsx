@@ -44,6 +44,9 @@ const trainingFormSchema = z.object({
       message: "Merci de remplir ce champ",
     }),
   }),
+  estimatedCost: z
+    .number({ errorMap: () => ({ message: "Merci de remplir ce champ" }) })
+    .optional(),
   candidacyFinancingMethods: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
@@ -65,6 +68,7 @@ export interface TrainingFormValues {
   certificationScope: "PARTIAL" | "COMPLETE";
   candidacyFinancingMethodIds: string[];
   candidacyFinancingMethodOtherSourceText?: string;
+  estimatedCost?: number;
 }
 export interface TrainingFormProps {
   defaultValues: NullablePartial<TrainingFormValues>;
@@ -92,7 +96,7 @@ export const TrainingForm = ({
     handleSubmit,
     control,
     setError,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<TrainingFormData>({
     resolver: zodResolver(trainingFormSchema),
     defaultValues: {
@@ -121,6 +125,7 @@ export const TrainingForm = ({
       ),
       candidacyFinancingMethodOtherSourceText:
         defaultValues?.candidacyFinancingMethodOtherSourceText || "",
+      estimatedCost: defaultValues?.estimatedCost || undefined,
     },
   });
 
@@ -141,51 +146,63 @@ export const TrainingForm = ({
 
   const { candidacyFinancingMethods } = useWatch({ control });
 
-  const handleFormSubmit = handleSubmit((data) => {
-    const {
-      basicSkills,
-      mandatoryTrainings,
-      candidacyFinancingMethods,
-      candidacyFinancingMethodOtherSourceText,
-      ...rest
-    } = data;
+  const handleFormSubmit = handleSubmit(
+    (data) => {
+      const {
+        basicSkills,
+        mandatoryTrainings,
+        candidacyFinancingMethods,
+        candidacyFinancingMethodOtherSourceText,
+        estimatedCost,
+        ...rest
+      } = data;
 
-    if (
-      showCandidacyFinancingMethodFields &&
-      !candidacyFinancingMethods.some((fm) => fm.checked)
-    ) {
-      setError("candidacyFinancingMethods", {
-        type: "required",
-        message: "Merci de remplir ce champ",
+      if (showCandidacyFinancingMethodFields) {
+        if (!estimatedCost) {
+          setError("estimatedCost", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+
+        if (!candidacyFinancingMethods.some((fm) => fm.checked)) {
+          setError("candidacyFinancingMethods", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+
+        if (
+          candidacyFinancingMethods
+            .filter((fm) => fm.checked)
+            .some((fm) => fm.id === OTHER_FINANCING_METHOD_ID) &&
+          !candidacyFinancingMethodOtherSourceText
+        ) {
+          setError("candidacyFinancingMethodOtherSourceText", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+      }
+      if (!isValid) {
+        return;
+      }
+
+      onSubmit?.({
+        ...rest,
+        estimatedCost,
+        candidacyFinancingMethodOtherSourceText,
+        mandatoryTrainingIds: mandatoryTrainings
+          .filter((t) => t.checked)
+          .map((t) => t.id),
+        basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
+        candidacyFinancingMethodIds: candidacyFinancingMethods
+          .filter((fm) => fm.checked)
+          .map((fm) => fm.id),
       });
-      return;
-    }
-
-    if (
-      candidacyFinancingMethods
-        .filter((fm) => fm.checked)
-        .some((fm) => fm.id === OTHER_FINANCING_METHOD_ID) &&
-      !candidacyFinancingMethodOtherSourceText
-    ) {
-      setError("candidacyFinancingMethodOtherSourceText", {
-        type: "required",
-        message: "Merci de remplir ce champ",
-      });
-      return;
-    }
-
-    onSubmit?.({
-      ...rest,
-      candidacyFinancingMethodOtherSourceText,
-      mandatoryTrainingIds: mandatoryTrainings
-        .filter((t) => t.checked)
-        .map((t) => t.id),
-      basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
-      candidacyFinancingMethodIds: candidacyFinancingMethods
-        .filter((fm) => fm.checked)
-        .map((fm) => fm.id),
-    });
-  });
+    },
+    (e) => console.log({ error: e }),
+  );
 
   const candidacyFinancingMethodOtherSourceTextInputDisabled =
     !candidacyFinancingMethods?.find(
@@ -328,6 +345,20 @@ export const TrainingForm = ({
       {showCandidacyFinancingMethodFields && (
         <>
           <h2 className="text-lg">Modalités de financement</h2>
+          <Input
+            className="max-w-[282px]"
+            disabled={disabled}
+            label="Montant du devis validé par le candidat :"
+            nativeInputProps={{
+              ...register("estimatedCost", { valueAsNumber: true }),
+              type: "number",
+              step: "0.01",
+              min: 0,
+              inputMode: "decimal",
+            }}
+            state={errors.estimatedCost ? "error" : "default"}
+            stateRelatedMessage={errors.estimatedCost?.message}
+          />
           <Checkbox
             disabled={disabled}
             legend="Plusieurs financements possibles :"

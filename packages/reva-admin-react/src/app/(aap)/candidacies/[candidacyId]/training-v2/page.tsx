@@ -121,6 +121,7 @@ const TrainingPage = () => {
                     : null,
                 candidacyFinancingMethodIds,
                 candidacyFinancingMethodOtherSourceText,
+                estimatedCost: candidacy.estimatedCost,
               }}
               onSubmit={handleFormSubmit}
               disabled={isCandidacyStatusEqualOrAbove(
