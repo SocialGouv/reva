@@ -10,6 +10,7 @@ import { updateTrainingInformations } from "./updateTrainingInformations";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { getCandidateById } from "../../../candidate/features/getCandidateById";
 import { getCandidacy } from "../../features/getCandidacy";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
 
 export const submitTraining = async ({
   candidacyId,
@@ -69,6 +70,17 @@ export const submitTraining = async ({
     if (!training.candidacyFinancingMethodIds.length) {
       throw new Error(
         `Au moins une modalité de financement doit être renseignée`,
+      );
+    }
+
+    if (
+      training.candidacyFinancingMethodIds.includes(
+        CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+      ) &&
+      !training.candidacyFinancingMethodOtherSourceText
+    ) {
+      throw new Error(
+        "Un motif doit être renseigné quand la modalité de financement 'Autre source de financement' est cochée",
       );
     }
   }

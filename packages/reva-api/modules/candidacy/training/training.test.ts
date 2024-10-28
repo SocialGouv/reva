@@ -14,6 +14,7 @@ import {
 } from "../../../test/helpers/create-db-entity";
 import { gestionnaireMaisonMereAAP1 } from "../../../test/fixtures/people-organisms";
 import { logger } from "../../shared/logger";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
 
 let candidacy: Candidacy;
 
@@ -166,5 +167,51 @@ test("AAP should not be able to submit a basic training form without at least on
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().errors?.[0].message).toEqual(
     "Au moins une modalité de financement doit être renseignée",
+  );
+});
+
+test("AAP should not be able to submit a basic training form without a text when the 'other source' financing method has been checked", async () => {
+  await prismaClient.candidacy.update({
+    where: { id: candidacy.id },
+    data: {
+      status: "PRISE_EN_CHARGE",
+      financeModule: "hors_plateforme",
+      candidacyStatuses: {
+        deleteMany: {},
+        createMany: {
+          data: [
+            { status: "PROJET", isActive: false },
+            { status: "VALIDATION", isActive: false },
+            { status: "PRISE_EN_CHARGE", isActive: true },
+          ],
+        },
+      },
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "training_submitTrainingForm",
+      arguments: {
+        candidacyId: candidacy.id,
+        training: {
+          ...basicTrainingForm,
+          candidacyFinancingMethodIds: [
+            CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+          ],
+        },
+      },
+      returnFields: "{id,status}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors?.[0].message).toEqual(
+    "Un motif doit être renseigné quand la modalité de financement 'Autre source de financement' est cochée",
   );
 });
