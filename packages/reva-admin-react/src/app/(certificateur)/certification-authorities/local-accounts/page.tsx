@@ -35,32 +35,30 @@ export default function Page() {
             classes={{ inner: "h-full" }}
             burgerMenuButtonText="Comptes locaux"
             title="Comptes locaux"
-            items={
-              [
-                ...localAccounts.map((item) => ({
-                  isActive: false,
-                  linkProps: {
-                    href: `/certification-authorities/local-accounts/${item.id}`,
-                    target: "_self",
-                  },
-                  text: `${item.account.firstname} ${item.account.lastname}`,
-                })),
-                {
-                  isActive: false,
-                  linkProps: {
-                    href: "/certification-authorities/local-accounts/add-local-account/",
-                    target: "_self",
-                  },
-                  text: (
-                    <div className="w-full h-full bg-white">
-                      <Button size="small" priority="secondary">
-                        Ajouter un compte local
-                      </Button>
-                    </div>
-                  ),
+            items={[
+              ...localAccounts.map((item) => ({
+                isActive: false,
+                linkProps: {
+                  href: `/certification-authorities/local-accounts/${item.id}`,
+                  target: "_self",
                 },
-              ] || []
-            }
+                text: `${item.account.firstname} ${item.account.lastname}`,
+              })),
+              {
+                isActive: false,
+                linkProps: {
+                  href: "/certification-authorities/local-accounts/add-local-account/",
+                  target: "_self",
+                },
+                text: (
+                  <div className="w-full h-full bg-white">
+                    <Button size="small" priority="secondary">
+                      Ajouter un compte local
+                    </Button>
+                  </div>
+                ),
+              },
+            ]}
           />
           <div className="w-full flex flex-col items-center justify-center px-4 sm:px-10 text-gray-500">
             <span>
