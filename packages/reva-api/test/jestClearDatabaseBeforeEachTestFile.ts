@@ -21,7 +21,7 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "candidacy_financing_method",
 ];
 
-const clearDatabase = async () => {
+export const clearDatabase = async () => {
   const tablenames = await prismaClient.$queryRaw<
     Array<{ tablename: string }>
   >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;

@@ -13,6 +13,7 @@ import {
   createExpertFiliereOrganism,
 } from "../../test/helpers/create-db-entity";
 import { candidateJPL } from "../../test/fixtures/people-organisms";
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 let candidacy: Candidacy;
 
@@ -23,20 +24,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany();
-  await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
-  await prismaClient.candidacyDropOut.deleteMany();
-  await prismaClient.feasibility.deleteMany({});
-  await prismaClient.candidaciesStatus.deleteMany();
-  await prismaClient.basicSkillOnCandidacies.deleteMany();
-  await prismaClient.candidacyLog.deleteMany();
-  await prismaClient.candidacy.deleteMany();
-  await prismaClient.account.updateMany({ data: { organismId: null } });
-  await prismaClient.organism.deleteMany();
-  await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
-  await prismaClient.maisonMereAAP.deleteMany();
-  await prismaClient.account.deleteMany();
-  await prismaClient.candidate.deleteMany();
+  await clearDatabase();
 });
 
 test("candidate should be able to change it's type_accompagnement when the candidacy is still in project", async () => {
