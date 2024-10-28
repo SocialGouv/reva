@@ -11,6 +11,7 @@ type Candidacy {
 }
 
 type CandidacyOnCandidacyFinancingMethod {
+  id: ID!
   candidacyFinancingMethod: CandidacyFinancingMethod!
   additionalInformation: String
 }
