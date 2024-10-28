@@ -9,6 +9,7 @@ export const candidacyUnifvae = {
   financeModule: FinanceModule.unifvae,
   candidateId: candidateJPL.id,
   isCertificationPartial: false,
+  status: CandidacyStatusStep.PARCOURS_CONFIRME,
 };
 
 export const candidacyUnireva = {

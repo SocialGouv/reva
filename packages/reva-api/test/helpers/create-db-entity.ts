@@ -234,6 +234,22 @@ export const createCandidacyUnifvae = async () => {
         createMany: {
           data: [
             {
+              isActive: false,
+              status: CandidacyStatusStep.PROJET,
+            },
+            {
+              isActive: false,
+              status: CandidacyStatusStep.VALIDATION,
+            },
+            {
+              isActive: false,
+              status: CandidacyStatusStep.PRISE_EN_CHARGE,
+            },
+            {
+              isActive: false,
+              status: CandidacyStatusStep.PARCOURS_ENVOYE,
+            },
+            {
               isActive: true,
               status: CandidacyStatusStep.PARCOURS_CONFIRME,
             },
