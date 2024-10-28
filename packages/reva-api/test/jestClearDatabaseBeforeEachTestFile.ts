@@ -18,6 +18,7 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "training",
   "type_diplome",
   "vulnerability_indicator",
+  "candidacy_financing_method",
 ];
 
 const clearDatabase = async () => {
