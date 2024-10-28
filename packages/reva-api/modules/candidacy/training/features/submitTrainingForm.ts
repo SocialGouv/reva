@@ -67,9 +67,13 @@ export const submitTraining = async ({
   }
 
   if (candidacy.financeModule === "hors_plateforme") {
+    if (!training.estimatedCost) {
+      throw new Error("Un montant de devis doit être renseigné");
+    }
+
     if (!training.candidacyFinancingMethodIds.length) {
       throw new Error(
-        `Au moins une modalité de financement doit être renseignée`,
+        "Au moins une modalité de financement doit être renseignée",
       );
     }
 
