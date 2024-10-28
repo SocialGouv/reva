@@ -6,7 +6,10 @@ import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrA
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
 import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
-import { useTrainingPage } from "./trainingPage.hook";
+import {
+  OTHER_FINANCING_METHOD_ID,
+  useTrainingPage,
+} from "./trainingPage.hook";
 
 const getTypologyLabel = (typology?: string) => {
   switch (typology) {
@@ -22,7 +25,23 @@ const getTypologyLabel = (typology?: string) => {
   return typology;
 };
 const TrainingPage = () => {
-  const { candidacy, submitTraining } = useTrainingPage();
+  const {
+    getCandidacyByIdWithReferentialStatus,
+    candidacy,
+    referential,
+    submitTraining,
+  } = useTrainingPage();
+
+  const candidacyFinancingMethodIds =
+    candidacy?.candidacyOnCandidacyFinancingMethods?.map(
+      (c) => c.candidacyFinancingMethod.id,
+    ) || [];
+
+  const candidacyFinancingMethodOtherSourceText =
+    candidacy?.candidacyOnCandidacyFinancingMethods?.find(
+      (c) => c.candidacyFinancingMethod.id === OTHER_FINANCING_METHOD_ID,
+    )?.additionalInformation;
+
   const router = useRouter();
 
   const handleFormSubmit = async (values: TrainingFormValues) => {
@@ -33,7 +52,6 @@ const TrainingPage = () => {
         training: {
           ...rest,
           isCertificationPartial: certificationScope === "PARTIAL",
-          candidacyFinancingMethodIds: [],
         },
       });
       successToast("Le parcours personnalisé a bien été envoyé.");
@@ -70,33 +88,48 @@ const TrainingPage = () => {
             </Button>
           </div>
           <hr />
-          <TrainingForm
-            showCertificationCompletionFields={
-              candidacy.feasibilityFormat === "UPLOADED_PDF"
-            }
-            defaultValues={{
-              individualHourCount: candidacy.individualHourCount,
-              collectiveHourCount: candidacy.collectiveHourCount,
-              additionalHourCount: candidacy.additionalHourCount,
-              mandatoryTrainingIds: candidacy.mandatoryTrainings.map(
-                (m) => m.id,
-              ),
-              basicSkillIds: candidacy.basicSkills.map((b) => b.id),
-              certificateSkills: candidacy.certificateSkills,
-              otherTraining: candidacy.otherTraining,
-              certificationScope:
-                candidacy.isCertificationPartial !== null
-                  ? candidacy.isCertificationPartial
-                    ? "PARTIAL"
-                    : "COMPLETE"
-                  : null,
-            }}
-            onSubmit={handleFormSubmit}
-            disabled={isCandidacyStatusEqualOrAbove(
-              candidacy.status || "ARCHIVE",
-              "DOSSIER_FAISABILITE_ENVOYE",
-            )}
-          />
+          {getCandidacyByIdWithReferentialStatus === "success" && (
+            <TrainingForm
+              showCertificationCompletionFields={
+                candidacy.feasibilityFormat === "UPLOADED_PDF"
+              }
+              showCandidacyFinancingMethodFields={
+                candidacy.financeModule === "hors_plateforme"
+              }
+              basicSkillsFromReferential={
+                referential.basicSkillsFromReferential
+              }
+              trainingsFromReferential={referential.trainingsFromReferential}
+              candidacyFinancingMethodsFromReferential={
+                referential.candidacyFinancingMethodsFromReferential
+              }
+              defaultValues={{
+                individualHourCount: candidacy.individualHourCount,
+                collectiveHourCount: candidacy.collectiveHourCount,
+                additionalHourCount: candidacy.additionalHourCount,
+                mandatoryTrainingIds: candidacy.mandatoryTrainings.map(
+                  (m) => m.id,
+                ),
+                basicSkillIds: candidacy.basicSkills.map((b) => b.id),
+                certificateSkills: candidacy.certificateSkills,
+                otherTraining: candidacy.otherTraining,
+                certificationScope:
+                  candidacy.isCertificationPartial !== null
+                    ? candidacy.isCertificationPartial
+                      ? "PARTIAL"
+                      : "COMPLETE"
+                    : null,
+                candidacyFinancingMethodIds,
+                candidacyFinancingMethodOtherSourceText,
+                estimatedCost: candidacy.estimatedCost,
+              }}
+              onSubmit={handleFormSubmit}
+              disabled={isCandidacyStatusEqualOrAbove(
+                candidacy.status || "ARCHIVE",
+                "DOSSIER_FAISABILITE_ENVOYE",
+              )}
+            />
+          )}
         </>
       )}
     </>

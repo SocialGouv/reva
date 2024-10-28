@@ -1,27 +1,11 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-
-const getTrainingsAndBasicSkillsQuery = graphql(`
-  query getTrainingsAndBasicSkillsForTrainingPage {
-    training_getTrainings {
-      id
-      label
-    }
-    getBasicSkills {
-      id
-      label
-    }
-  }
-`);
+import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -60,6 +44,14 @@ const trainingFormSchema = z.object({
       message: "Merci de remplir ce champ",
     }),
   }),
+  estimatedCost: z
+    .number({ errorMap: () => ({ message: "Merci de remplir ce champ" }) })
+    .optional(),
+  candidacyFinancingMethods: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
+
+  candidacyFinancingMethodOtherSourceText: z.string().optional(),
 });
 
 type TrainingFormData = z.infer<typeof trainingFormSchema>;
@@ -74,41 +66,67 @@ export interface TrainingFormValues {
   certificateSkills: string;
   otherTraining: string;
   certificationScope: "PARTIAL" | "COMPLETE";
+  candidacyFinancingMethodIds: string[];
+  candidacyFinancingMethodOtherSourceText?: string;
+  estimatedCost?: number;
 }
 export interface TrainingFormProps {
-  defaultValues?: NullablePartial<TrainingFormValues>;
+  defaultValues: NullablePartial<TrainingFormValues>;
+  basicSkillsFromReferential: { id: string; label: string }[];
+  trainingsFromReferential: { id: string; label: string }[];
+  candidacyFinancingMethodsFromReferential: { id: string; label: string }[];
   onSubmit?(values: TrainingFormValues): void;
   disabled?: boolean;
   showCertificationCompletionFields?: boolean;
+  showCandidacyFinancingMethodFields?: boolean;
 }
 
 export const TrainingForm = ({
   defaultValues,
+  basicSkillsFromReferential,
+  trainingsFromReferential,
+  candidacyFinancingMethodsFromReferential,
   onSubmit,
   disabled,
   showCertificationCompletionFields,
+  showCandidacyFinancingMethodFields,
 }: TrainingFormProps) => {
-  const { graphqlClient } = useGraphQlClient();
-
-  const { data: getTrainingsAndBasicSkillsResponse } = useQuery({
-    queryKey: ["getTrainingsAndBasicSkillsQuery"],
-    queryFn: () => graphqlClient.request(getTrainingsAndBasicSkillsQuery),
-  });
-
-  const basicSkillsFromReferential =
-    getTrainingsAndBasicSkillsResponse?.getBasicSkills;
-  const trainingsFromReferential =
-    getTrainingsAndBasicSkillsResponse?.training_getTrainings;
-
   const {
     register,
     handleSubmit,
-    reset,
     control,
-    formState: { errors, isDirty, isSubmitting },
+    setError,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<TrainingFormData>({
     resolver: zodResolver(trainingFormSchema),
-    disabled,
+    defaultValues: {
+      individualHourCount: defaultValues.individualHourCount || 0,
+      collectiveHourCount: defaultValues.collectiveHourCount || 0,
+      additionalHourCount: defaultValues.additionalHourCount || 0,
+      certificateSkills: defaultValues.certificateSkills || "",
+      otherTraining: defaultValues.otherTraining || "",
+      certificationScope: defaultValues.certificationScope || "COMPLETE",
+      basicSkills: basicSkillsFromReferential?.map((s) => ({
+        id: s.id,
+        label: s.label,
+        checked: defaultValues?.basicSkillIds?.includes(s.id),
+      })),
+      mandatoryTrainings: trainingsFromReferential?.map((t) => ({
+        id: t.id,
+        label: t.label,
+        checked: defaultValues?.mandatoryTrainingIds?.includes(t.id),
+      })),
+      candidacyFinancingMethods: candidacyFinancingMethodsFromReferential?.map(
+        (fm) => ({
+          id: fm.id,
+          label: fm.label,
+          checked: defaultValues?.candidacyFinancingMethodIds?.includes(fm.id),
+        }),
+      ),
+      candidacyFinancingMethodOtherSourceText:
+        defaultValues?.candidacyFinancingMethodOtherSourceText || "",
+      estimatedCost: defaultValues?.estimatedCost || undefined,
+    },
   });
 
   const { fields: basicSkillsFields } = useFieldArray({
@@ -121,64 +139,75 @@ export const TrainingForm = ({
     name: "mandatoryTrainings",
   });
 
-  const resetForm = useCallback(
-    () =>
-      reset(
-        defaultValues
-          ? {
-              individualHourCount: defaultValues.individualHourCount || 0,
-              collectiveHourCount: defaultValues.collectiveHourCount || 0,
-              additionalHourCount: defaultValues.additionalHourCount || 0,
-              certificateSkills: defaultValues.certificateSkills || "",
-              otherTraining: defaultValues.otherTraining || "",
-              certificationScope:
-                defaultValues.certificationScope || "COMPLETE",
-              basicSkills: basicSkillsFromReferential?.map((s) => ({
-                id: s.id,
-                label: s.label,
-                checked: defaultValues?.basicSkillIds?.includes(s.id),
-              })),
-              mandatoryTrainings: trainingsFromReferential?.map((t) => ({
-                id: t.id,
-                label: t.label,
-                checked: defaultValues?.mandatoryTrainingIds?.includes(t.id),
-              })),
-            }
-          : {
-              basicSkills: basicSkillsFromReferential?.map((s) => ({
-                id: s.id,
-                label: s.label,
-              })),
-              mandatoryTrainings: trainingsFromReferential?.map((t) => ({
-                id: t.id,
-                label: t.label,
-              })),
-            },
-      ),
-    [
-      basicSkillsFromReferential,
-      trainingsFromReferential,
-      defaultValues,
-      reset,
-    ],
+  const { fields: candidacyFinancingMethodsFields } = useFieldArray({
+    control,
+    name: "candidacyFinancingMethods",
+  });
+
+  const { candidacyFinancingMethods } = useWatch({ control });
+
+  const handleFormSubmit = handleSubmit(
+    (data) => {
+      const {
+        basicSkills,
+        mandatoryTrainings,
+        candidacyFinancingMethods,
+        candidacyFinancingMethodOtherSourceText,
+        estimatedCost,
+        ...rest
+      } = data;
+
+      if (showCandidacyFinancingMethodFields) {
+        if (!estimatedCost) {
+          setError("estimatedCost", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+
+        if (!candidacyFinancingMethods.some((fm) => fm.checked)) {
+          setError("candidacyFinancingMethods", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+
+        if (
+          candidacyFinancingMethods
+            .filter((fm) => fm.checked)
+            .some((fm) => fm.id === OTHER_FINANCING_METHOD_ID) &&
+          !candidacyFinancingMethodOtherSourceText
+        ) {
+          setError("candidacyFinancingMethodOtherSourceText", {
+            type: "required",
+            message: "Merci de remplir ce champ",
+          });
+        }
+      }
+      if (!isValid) {
+        return;
+      }
+
+      onSubmit?.({
+        ...rest,
+        estimatedCost,
+        candidacyFinancingMethodOtherSourceText,
+        mandatoryTrainingIds: mandatoryTrainings
+          .filter((t) => t.checked)
+          .map((t) => t.id),
+        basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
+        candidacyFinancingMethodIds: candidacyFinancingMethods
+          .filter((fm) => fm.checked)
+          .map((fm) => fm.id),
+      });
+    },
+    (e) => console.log({ error: e }),
   );
 
-  useEffect(() => {
-    if (!isDirty) {
-      resetForm();
-    }
-  }, [isDirty, resetForm]);
-
-  const handleFormSubmit = handleSubmit((data) => {
-    const { basicSkills, mandatoryTrainings, ...rest } = data;
-    onSubmit?.({
-      ...rest,
-      mandatoryTrainingIds: mandatoryTrainings
-        .filter((t) => t.checked)
-        .map((t) => t.id),
-      basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
-    });
-  });
+  const candidacyFinancingMethodOtherSourceTextInputDisabled =
+    !candidacyFinancingMethods?.find(
+      (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
+    )?.checked;
 
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
@@ -313,6 +342,54 @@ export const TrainingForm = ({
         />
       )}
       <br />
+      {showCandidacyFinancingMethodFields && (
+        <>
+          <h2 className="text-lg">Modalités de financement</h2>
+          <Input
+            className="max-w-[282px]"
+            disabled={disabled}
+            label="Montant du devis validé par le candidat :"
+            nativeInputProps={{
+              ...register("estimatedCost", { valueAsNumber: true }),
+              type: "number",
+              step: "0.01",
+              min: 0,
+              inputMode: "decimal",
+            }}
+            state={errors.estimatedCost ? "error" : "default"}
+            stateRelatedMessage={errors.estimatedCost?.message}
+          />
+          <Checkbox
+            disabled={disabled}
+            legend="Plusieurs financements possibles :"
+            options={candidacyFinancingMethodsFields.map((fm, fmIndex) => ({
+              label: fm.label,
+              nativeInputProps: {
+                ...register(`candidacyFinancingMethods.${fmIndex}.checked`),
+              },
+            }))}
+            state={errors.candidacyFinancingMethods ? "error" : "default"}
+            stateRelatedMessage={errors.candidacyFinancingMethods?.message}
+          />
+          <Input
+            disabled={
+              disabled || candidacyFinancingMethodOtherSourceTextInputDisabled
+            }
+            label="S’il s’agit d’une autre source de financement, merci de l’indiquer ici :"
+            nativeInputProps={{
+              ...register("candidacyFinancingMethodOtherSourceText"),
+            }}
+            state={
+              errors.candidacyFinancingMethodOtherSourceText
+                ? "error"
+                : "default"
+            }
+            stateRelatedMessage={
+              errors.candidacyFinancingMethodOtherSourceText?.message
+            }
+          />
+        </>
+      )}
       <Button className="ml-auto" disabled={isSubmitting || disabled}>
         Envoyer le parcours
       </Button>

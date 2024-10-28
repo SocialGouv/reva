@@ -4,8 +4,10 @@ import { TrainingInput } from "@/graphql/generated/graphql";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const getCandidacyById = graphql(`
-  query getCandidacyForCandidacyTrainingPage($candidacyId: ID!) {
+export const OTHER_FINANCING_METHOD_ID = "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
+
+const getCandidacyByIdWithReferential = graphql(`
+  query getCandidacyAndReferentialForCandidacyTrainingPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
       typology
@@ -28,6 +30,27 @@ const getCandidacyById = graphql(`
       isCertificationPartial
       status
       feasibilityFormat
+      financeModule
+      estimatedCost
+      candidacyOnCandidacyFinancingMethods {
+        additionalInformation
+        candidacyFinancingMethod {
+          id
+          label
+        }
+      }
+    }
+    training_getTrainings {
+      id
+      label
+    }
+    getBasicSkills {
+      id
+      label
+    }
+    getCandidacyFinancingMethods {
+      id
+      label
     }
   }
 `);
@@ -53,10 +76,13 @@ export const useTrainingPage = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyByIdData } = useQuery({
+  const {
+    data: getCandidacyByIdWithReferentiaData,
+    status: getCandidacyByIdWithReferentialStatus,
+  } = useQuery({
     queryKey: [candidacyId, "getCandidacyForCandidateTrainingPage"],
     queryFn: () =>
-      graphqlClient.request(getCandidacyById, {
+      graphqlClient.request(getCandidacyByIdWithReferential, {
         candidacyId,
       }),
   });
@@ -75,7 +101,24 @@ export const useTrainingPage = () => {
       }),
   });
 
-  const candidacy = getCandidacyByIdData?.getCandidacyById;
+  const basicSkillsFromReferential =
+    getCandidacyByIdWithReferentiaData?.getBasicSkills || [];
+  const trainingsFromReferential =
+    getCandidacyByIdWithReferentiaData?.training_getTrainings || [];
+  const candidacyFinancingMethodsFromReferential =
+    getCandidacyByIdWithReferentiaData?.getCandidacyFinancingMethods || [];
+  const candidacy = getCandidacyByIdWithReferentiaData?.getCandidacyById;
 
-  return { candidacy, submitTraining };
+  const referential = {
+    basicSkillsFromReferential,
+    trainingsFromReferential,
+    candidacyFinancingMethodsFromReferential,
+  };
+
+  return {
+    getCandidacyByIdWithReferentialStatus,
+    candidacy,
+    referential,
+    submitTraining,
+  };
 };
