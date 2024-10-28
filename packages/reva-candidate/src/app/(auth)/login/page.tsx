@@ -9,7 +9,6 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 import { useLogin } from "./login.hooks";
 
 export default function Login() {
@@ -29,7 +28,7 @@ export default function Login() {
         router.push("/login-confirmation");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

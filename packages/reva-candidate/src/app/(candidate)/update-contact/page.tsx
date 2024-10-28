@@ -15,7 +15,6 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { useUpdateContact } from "./update-contact.hooks";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 
 const modalUpdateEmail = createModal({
   id: "project-update-email",
@@ -70,7 +69,7 @@ export default function UpdateContact() {
       }
     } catch (error) {
       console.log(error);
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

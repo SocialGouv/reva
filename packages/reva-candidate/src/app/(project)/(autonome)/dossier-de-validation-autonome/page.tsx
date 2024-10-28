@@ -3,7 +3,7 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { ReadyForJuryEstimatedDateTab } from "./_components/tabs/ready-for-jury-estimated-date-tab/ReadyForJuryEstimatedAtTab";
 import { useDossierDeValidationAutonomePage } from "./dossierDeValidationAutonome.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import {
   DossierDeValidationFormData,
@@ -37,7 +37,7 @@ export default function DossierDeValidationAutonomePag() {
       });
       successToast("Modifications enregistrées");
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 
@@ -53,7 +53,7 @@ export default function DossierDeValidationAutonomePag() {
       successToast("Modifications enregistrées");
       router.push("/");
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

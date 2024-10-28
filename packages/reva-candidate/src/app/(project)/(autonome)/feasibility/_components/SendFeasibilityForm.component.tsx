@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
-import { GraphQLError } from "graphql";
+
 import { useFeasibilityPage } from "../feasibility.hook";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
@@ -177,7 +177,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   });
 

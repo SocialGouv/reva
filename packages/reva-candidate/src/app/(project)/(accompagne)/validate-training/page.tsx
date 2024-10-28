@@ -10,7 +10,6 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Alert from "@codegouvfr/react-dsfr/Alert";
@@ -142,7 +141,7 @@ export default function ValidateTraining() {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

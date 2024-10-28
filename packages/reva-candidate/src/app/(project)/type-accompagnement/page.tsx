@@ -8,7 +8,7 @@ import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 import { useState } from "react";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
+
 import { useRouter } from "next/navigation";
 
 type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
@@ -27,7 +27,7 @@ export default function ChooseTypeAccompagnementPage() {
       successToast("Modifications enregistrées");
       router.push("/");
     } catch (e) {
-      graphqlErrorToast(e as GraphQLError);
+      graphqlErrorToast(e);
     }
   };
   return (

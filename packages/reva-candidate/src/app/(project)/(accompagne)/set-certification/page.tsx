@@ -28,7 +28,6 @@ import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
 import { useSetCertification } from "./set-certification.hooks";
 import Link from "next/link";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 export default function SetCertification() {
@@ -87,7 +86,7 @@ export default function SetCertification() {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

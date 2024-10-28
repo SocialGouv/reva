@@ -17,9 +17,10 @@ import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary"
 import { graphqlErrorToast } from "@/components/toast/toast";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { useQueryClient } from "@tanstack/react-query";
-import { GraphQLError } from "graphql";
+
 import dynamic from "next/dynamic";
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
+import { GraphQLError } from "graphql";
 
 // The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
 // We use dynamic import to ensure the component is only loaded on the client side.
@@ -96,7 +97,7 @@ export default function ValidateFeasibility() {
       });
       router.push("/");
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 
