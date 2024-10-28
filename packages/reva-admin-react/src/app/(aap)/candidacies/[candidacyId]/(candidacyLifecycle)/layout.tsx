@@ -1,3 +1,5 @@
+"use client";
+
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { ReactNode } from "react";
 
