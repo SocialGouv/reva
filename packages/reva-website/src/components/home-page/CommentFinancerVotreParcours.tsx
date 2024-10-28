@@ -10,7 +10,7 @@ const PolygonFinancer = ({
   label: string;
 }) => (
   <div
-    className={`text-lg font-medium ${bgUrl} bg-contain bg-no-repeat bg-center p-6 min-h-[248px] min-w-[222px] flex items-center justify-center w-44 text-center`}
+    className={`text-lg font-medium leading-snug ${bgUrl} bg-contain bg-no-repeat bg-center p-6 min-h-[248px] min-w-[222px] flex items-center justify-center w-44 text-center`}
   >
     {label}
   </div>
@@ -100,7 +100,7 @@ const CommentFinancerVotreParcoursHorsPlateforme = () => (
           />
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-pink.svg')]"
-            label="Autres aides potentielles à venir"
+            label="Financements complémentaires au CPF (employeurs, régions ou France Travail, autres)"
           />
         </div>
       </div>
