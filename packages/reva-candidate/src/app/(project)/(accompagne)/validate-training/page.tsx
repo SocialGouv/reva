@@ -9,9 +9,11 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GraphQLError } from "graphql";
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 
 type Condition =
   | "conditionOne"
@@ -71,16 +73,13 @@ const pageReducer = (state: PageState, action: PageAction) => {
           newState.conditionFiveChecked;
     }
   }
-  console.log(newState);
   return newState;
 };
 
 export default function ValidateTraining() {
   const router = useRouter();
 
-  const { candidacy, refetch, isTrainingConfirmed } = useCandidacy();
-
-  const { confirmTrainingForm } = useValidateTraining();
+  const { confirmTrainingForm, candidacy } = useValidateTraining();
 
   const [pageState, pageDispatch] = useReducer(pageReducer, {
     conditionOneChecked: false,
@@ -89,8 +88,19 @@ export default function ValidateTraining() {
     conditionFourChecked: false,
     conditionFiveChecked: false,
     allConditionsChecked: false,
-    candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
+    candidacyFundedByFranceVae: candidacy?.financeModule !== "hors_plateforme",
   });
+
+  if (!candidacy) {
+    return null;
+  }
+
+  const isCurrentlySubmitted = candidacy.status === "PARCOURS_ENVOYE";
+
+  const isTrainingConfirmed =
+    candidacy.candidacyStatuses.findIndex(
+      (status) => status.status == "PARCOURS_CONFIRME",
+    ) != -1 && !isCurrentlySubmitted;
 
   const {
     additionalHourCount,
@@ -108,7 +118,6 @@ export default function ValidateTraining() {
         candidacyId: candidacy.id,
       });
       if (response) {
-        refetch();
         router.push("/");
       }
     } catch (error) {
@@ -142,12 +151,12 @@ export default function ValidateTraining() {
   const trainingOptions: { title: string; condition: Condition }[] = [
     {
       title:
-        "J’ai bien compris qu’il s’agissait des étapes et prestations nécessaires pour atteindre mon objectif de diplôme.",
+        "Je comprends qu’il s’agit d’étapes et de prestations nécessaires pour obtenir mon diplôme.",
       condition: "conditionOne",
     },
     {
       title:
-        "Je m’engage à suivre ce parcours ou informer mon organisme d’accompagnement de tout abandon dans les 48h.",
+        "Je m’engage à suivre ce parcours ou à informer mon accompagnateur de tout abandon dans les 48h.",
       condition: "conditionTwo",
     },
     ...(candidacy.financeModule !== "hors_plateforme"
@@ -161,48 +170,61 @@ export default function ValidateTraining() {
       : []),
     {
       title:
-        "J’accepte que les résultats de mon étude personnalisée ainsi que les résultats de ma session de jury me soient transmis ainsi qu’à mon accompagnateur.",
+        "J’accepte que les résultats de mon étude personnalisée et les résultats de ma session de jury soient transmis à mon accompagnateur et moi-même.",
       condition: "conditionFour",
     },
     {
       title:
-        "Je certifie que je ne prépare pas ce diplôme en formation initiale durant l’année de mon parcours VAE.",
+        "Je certifie que je ne suis pas de formation initiale liée à ce diplôme avant et pendant mon parcours VAE.",
       condition: "conditionFive",
     },
   ];
 
   const TrainingValidationForm = () => (
-    <>
+    <div className="flex flex-col gap-12">
       <Checkbox
         data-test="accept-conditions-checkbox-group"
-        className="mt-10"
+        className="mb-0"
         legend="Conditions générales"
         options={trainingOptions.map((option) => checkboxOption(option))}
       />
-      <Button
-        data-test="submit-training-program-button"
-        className="mt-6 justify-center w-[100%]  md:w-fit"
-        nativeButtonProps={{
-          onClick: onSubmit,
-        }}
-        disabled={!pageState.allConditionsChecked}
-      >
-        Valider votre parcours
-      </Button>
-    </>
+      <Alert
+        title="Une fois votre parcours validé, vous ne pourrez plus le changer ! "
+        description="Pensez à lire avec attention le parcours proposé par votre accompagnateur. Si cette proposition ne vous satisfait pas, contactez votre accompagnateur avant de valider "
+        severity="info"
+      />
+      <div className="flex justify-between">
+        <Button priority="secondary" linkProps={{ href: "/" }}>
+          Retour
+        </Button>
+        <Button
+          data-test="submit-training-program-button"
+          className="justify-center w-[100%]  md:w-fit"
+          nativeButtonProps={{
+            onClick: onSubmit,
+          }}
+          disabled={!pageState.allConditionsChecked}
+        >
+          Valider
+        </Button>
+      </div>
+    </div>
   );
 
   return (
-    <PageLayout className="max-w-2xl" title="Votre parcours" displayBackToHome>
-      <h2 className="mt-6 mb-4">
-        {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}
-      </h2>
-      <p>
-        Suite à votre rendez-vous de faisabilité avec votre Architecte de
-        Parcours, veuillez valider la proposition de parcours suivante :
+    <PageLayout title="Votre parcours">
+      <h1 className="mt-6 mb-4 text-5xl">
+        {isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"}
+      </h1>
+      <FormOptionalFieldsDisclaimer />
+
+      <p className="mb-10">
+        Ce parcours a été pensé suite à votre rendez-vous pédagogique. Prenez le
+        temps de le consulter et validez-le pour pouvoir commencer votre
+        parcours VAE.
       </p>
       <ul
-        className="text-dsfrGray-700 list-square list-inside"
+        className="text-dsfrGray-700 list-disc list-inside"
         data-test="general-informations"
       >
         {candidacy.isCertificationPartial ? (
@@ -217,7 +239,7 @@ export default function ValidateTraining() {
           title="Formations obligatoires"
           data-test="mandatory-training-section"
         >
-          <ul className="list-square list-inside">
+          <ul className="list-disc list-inside">
             {mandatoryTrainings.map((mt) => (
               <li key={mt.id} className="text-dsfrGray-800">
                 {mt.label}
@@ -231,7 +253,7 @@ export default function ValidateTraining() {
           title="Savoirs de base"
           data-test="basic-skills-section"
         >
-          <ul className="list-square list-inside">
+          <ul className="list-disc list-inside">
             {basicSkills.map((mt) => (
               <li key={mt.id} className="text-dsfrGray-800">
                 {mt.label}
@@ -253,8 +275,30 @@ export default function ValidateTraining() {
           <p>{otherTraining}</p>
         </TrainingSection>
       )}
-
+      {candidacy.financeModule === "hors_plateforme" && (
+        <TrainingSection
+          title="Modalités de financement"
+          className="flex flex-col gap-4 mb-8"
+        >
+          <div className="flex flex-wrap gap-2">
+            {candidacy.candidacyOnCandidacyFinancingMethods.map((fm) => (
+              <Tag key={fm.id}>
+                {fm.additionalInformation || fm.candidacyFinancingMethod.label}
+              </Tag>
+            ))}
+          </div>
+          <span>
+            Montant du devis que vous avez validé :{" "}
+            <strong>{candidacy.estimatedCost}€</strong>
+          </span>
+        </TrainingSection>
+      )}
       {!isTrainingConfirmed && <TrainingValidationForm />}
+      {isTrainingConfirmed && (
+        <Button priority="secondary" linkProps={{ href: "/" }}>
+          Retour
+        </Button>
+      )}
     </PageLayout>
   );
 }
@@ -262,14 +306,20 @@ export default function ValidateTraining() {
 const TrainingSection = ({
   title,
   children,
+  className,
   "data-test": dataTest,
 }: {
   title: string;
   children?: React.ReactNode;
+  className?: string;
+
   "data-test"?: string;
 }) => (
-  <section className="text-dsfrGray-800 mt-4" data-test={dataTest}>
-    <h2 className="text-dsfrGray-800 text-lg font-bold mb-3">{title} :</h2>
+  <section
+    className={`text-dsfrGray-800 mt-4 ${className || ""}`}
+    data-test={dataTest}
+  >
+    <h2 className="text-dsfrGray-800 text-3xl font-bold mb-3">{title} :</h2>
     {children}
   </section>
 );

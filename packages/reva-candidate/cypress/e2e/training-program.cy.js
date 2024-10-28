@@ -10,6 +10,11 @@ context("Training Program", () => {
           "candidate_getCandidateWithCandidacy",
           "candidate2-training-confirmed.json",
         );
+        stubQuery(
+          req,
+          "getCandidateWithCandidacyForTrainingValidation",
+          "candidate2-training-confirmed.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
@@ -17,6 +22,7 @@ context("Training Program", () => {
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
+      cy.wait("@getCandidateWithCandidacyForTrainingValidation");
     });
 
     it("display all fields", () => {
@@ -53,6 +59,11 @@ context("Training Program", () => {
           "candidate_getCandidateWithCandidacy",
           "candidate2-missing-training-fields.json",
         );
+        stubQuery(
+          req,
+          "getCandidateWithCandidacyForTrainingValidation",
+          "candidate2-missing-training-fields.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
@@ -60,6 +71,7 @@ context("Training Program", () => {
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
+      cy.wait("@getCandidateWithCandidacyForTrainingValidation");
     });
 
     it("don't display missing fields", () => {
@@ -92,6 +104,11 @@ context("Training Program", () => {
         );
         stubQuery(
           req,
+          "getCandidateWithCandidacyForTrainingValidation",
+          "candidate2-training-sent.json",
+        );
+        stubQuery(
+          req,
           "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
@@ -102,6 +119,7 @@ context("Training Program", () => {
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();
+      cy.wait("@getCandidateWithCandidacyForTrainingValidation");
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
         .find("input")
@@ -134,6 +152,11 @@ context("Training Program", () => {
         );
         stubQuery(
           req,
+          "getCandidateWithCandidacyForTrainingValidation",
+          "candidate2-training-confirmed-sent-again.json",
+        );
+        stubQuery(
+          req,
           "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
@@ -144,6 +167,7 @@ context("Training Program", () => {
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();
+      cy.wait("@getCandidateWithCandidacyForTrainingValidation");
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
         .find("input")
