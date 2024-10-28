@@ -40,6 +40,19 @@ afterEach(async () => {
 });
 
 test("candidate should be able to change it's type_accompagnement when the candidacy is still in project", async () => {
+  await prismaClient.candidacy.update({
+    where: { id: candidacy.id },
+    data: {
+      status: "PROJET",
+      candidacyStatuses: {
+        deleteMany: {},
+        createMany: {
+          data: [{ status: "PROJET", isActive: true }],
+        },
+      },
+    },
+  });
+
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -64,8 +77,20 @@ test("candidate should be able to change it's type_accompagnement when the candi
 test("candidate should NOT be able to change it's type_accompagnement when the candidacy is not in project", async () => {
   await prismaClient.candidacy.update({
     where: { id: candidacy.id },
-    data: { status: "VALIDATION" },
+    data: {
+      status: "VALIDATION",
+      candidacyStatuses: {
+        deleteMany: {},
+        createMany: {
+          data: [
+            { status: "PROJET", isActive: false },
+            { status: "VALIDATION", isActive: true },
+          ],
+        },
+      },
+    },
   });
+
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
