@@ -799,7 +799,10 @@ components:
         nom:
           type: string
           example: "Diplôme d'Etat Aide soignant - DEAS"
-
+        estViseePartiellement:
+          type: boolean
+          example: false
+    
     Candidat:
       type: object
       properties:
