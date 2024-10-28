@@ -127,3 +127,44 @@ test("AAP should be able to submit a basic training form when candidacy status i
     status: "PARCOURS_ENVOYE",
   });
 });
+
+test("AAP should not be able to submit a basic training form without at least one financing method  when candidacy financeModule is 'hors_plateforme'", async () => {
+  await prismaClient.candidacy.update({
+    where: { id: candidacy.id },
+    data: {
+      status: "PRISE_EN_CHARGE",
+      financeModule: "hors_plateforme",
+      candidacyStatuses: {
+        deleteMany: {},
+        createMany: {
+          data: [
+            { status: "PROJET", isActive: false },
+            { status: "VALIDATION", isActive: false },
+            { status: "PRISE_EN_CHARGE", isActive: true },
+          ],
+        },
+      },
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "training_submitTrainingForm",
+      arguments: {
+        candidacyId: candidacy.id,
+        training: basicTrainingForm,
+      },
+      returnFields: "{id,status}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors?.[0].message).toEqual(
+    "Au moins une modalité de financement doit être renseignée",
+  );
+});

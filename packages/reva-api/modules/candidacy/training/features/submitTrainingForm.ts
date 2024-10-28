@@ -9,6 +9,7 @@ import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus
 import { updateTrainingInformations } from "./updateTrainingInformations";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { getCandidateById } from "../../../candidate/features/getCandidateById";
+import { getCandidacy } from "../../features/getCandidacy";
 
 export const submitTraining = async ({
   candidacyId,
@@ -58,9 +59,23 @@ export const submitTraining = async ({
     );
   }
 
+  let candidacy = await getCandidacy({ candidacyId });
+
+  if (!candidacy) {
+    throw new Error("La candidature n'a pas été trouvée");
+  }
+
+  if (candidacy.financeModule === "hors_plateforme") {
+    if (!training.candidacyFinancingMethodIds.length) {
+      throw new Error(
+        `Au moins une modalité de financement doit être renseignée`,
+      );
+    }
+  }
+
   await updateTrainingInformations({ candidacyId, training });
 
-  const candidacy = await updateCandidacyStatus({
+  candidacy = await updateCandidacyStatus({
     candidacyId,
     status: "PARCOURS_ENVOYE",
   });
