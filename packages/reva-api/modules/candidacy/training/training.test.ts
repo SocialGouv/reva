@@ -89,7 +89,7 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
   );
 });
 
-test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE'", async () => {
+test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'unifvae'", async () => {
   await prismaClient.candidacy.update({
     where: { id: candidacy.id },
     data: {
@@ -214,4 +214,51 @@ test("AAP should not be able to submit a basic training form without a text when
   expect(resp.json().errors?.[0].message).toEqual(
     "Un motif doit être renseigné quand la modalité de financement 'Autre source de financement' est cochée",
   );
+});
+
+test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'hors_plateforme'", async () => {
+  await prismaClient.candidacy.update({
+    where: { id: candidacy.id },
+    data: {
+      status: "PRISE_EN_CHARGE",
+      financeModule: "hors_plateforme",
+      candidacyStatuses: {
+        deleteMany: {},
+        createMany: {
+          data: [
+            { status: "PROJET", isActive: false },
+            { status: "VALIDATION", isActive: false },
+            { status: "PRISE_EN_CHARGE", isActive: true },
+          ],
+        },
+      },
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "training_submitTrainingForm",
+      arguments: {
+        candidacyId: candidacy.id,
+        training: {
+          ...basicTrainingForm,
+          candidacyFinancingMethodIds: [
+            CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+          ],
+          candidacyFinancingMethodOtherSourceText: "My other source text",
+        },
+      },
+      returnFields: "{id,status}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().data.training_submitTrainingForm).toMatchObject({
+    status: "PARCOURS_ENVOYE",
+  });
 });
