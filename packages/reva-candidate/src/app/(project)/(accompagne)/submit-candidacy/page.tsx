@@ -10,7 +10,6 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
@@ -34,7 +33,7 @@ export default function SubmitCandidacy() {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

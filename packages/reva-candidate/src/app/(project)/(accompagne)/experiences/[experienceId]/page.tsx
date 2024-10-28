@@ -17,7 +17,6 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { useUpdateExperience } from "./update-experience.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -72,7 +71,7 @@ export default function UpdateExperience() {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

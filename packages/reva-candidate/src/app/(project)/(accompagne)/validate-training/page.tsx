@@ -11,7 +11,6 @@ import { PageLayout } from "@/layouts/page.layout";
 import { useValidateTraining } from "./validate-training.hooks";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { GraphQLError } from "graphql";
 
 type Condition =
   | "conditionOne"
@@ -112,7 +111,7 @@ export default function ValidateTraining() {
         router.push("/");
       }
     } catch (error) {
-      graphqlErrorToast(error as GraphQLError);
+      graphqlErrorToast(error);
     }
   };
 

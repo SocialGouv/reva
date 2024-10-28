@@ -54,7 +54,8 @@ export const warningToast = (message: string) =>
     <Alert severity="warning" title={message} className="bg-white" />
   ));
 
-export const graphqlErrorToast = (error: GraphQLError) => {
+export const graphqlErrorToast = (_error: unknown) => {
+  const error = _error as GraphQLError;
   const message = error?.response?.errors
     ?.map((e: { message?: string }) => e?.message)
     ?.join(", ");
