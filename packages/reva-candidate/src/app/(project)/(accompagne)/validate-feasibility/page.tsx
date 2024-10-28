@@ -75,13 +75,6 @@ export default function ValidateFeasibility() {
 
   const onSubmit = async () => {
     try {
-      await dffCandidateConfirmationMutation({
-        candidacyId: candidacy.id,
-        dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
-        input: {
-          candidateDecisionComment,
-        },
-      });
       if (swornStatementFile) {
         const response = await createOrUpdateSwornStatement({
           candidacyId: candidacy.id,
@@ -91,6 +84,13 @@ export default function ValidateFeasibility() {
           throw new GraphQLError("Erreur lors de la création de l'attestation");
         }
       }
+      await dffCandidateConfirmationMutation({
+        candidacyId: candidacy.id,
+        dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
+        input: {
+          candidateDecisionComment,
+        },
+      });
       queryClient.invalidateQueries({
         queryKey: ["candidate"],
       });
