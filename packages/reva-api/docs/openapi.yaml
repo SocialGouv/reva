@@ -521,10 +521,10 @@ components:
     Genre:
       type: string
       enum:
-        - homme
-        - femme
-        - non_specifie
-      example: "femme"
+        - HOMME
+        - FEMME
+        - NON_SPECIFIE
+      example: "FEMME"
       description: Genre du candidat
 
     TypologieCandidat:
@@ -549,6 +549,18 @@ components:
         - AUTRE
       description: Typologie du candidat
       example: SALARIE_PRIVE
+
+    DureeExperience:
+      type: string
+      enum:
+        - INCONNU
+        - MOINS_D_UN_AN
+        - ENTRE_UN_ET_TROIS_ANS
+        - PLUS_DE_TROIS_ANS
+        - PLUS_DE_CINQ_ANS
+        - PLUS_DE_DIX_ANS
+      description: Durée de l'expérience
+      example: "ENTRE_UN_ET_TROIS_ANS"
 
     CandidatureId:
       type: string
@@ -946,8 +958,32 @@ components:
           description: Le dossier de faisabilité, la pièce d'identité et autres documents éventuels
           items:
             $ref: '#/components/schemas/Fichier'
+        experiences:
+          type: array
+          description: Les expériences du candidat
+          items:
+            $ref: '#/components/schemas/Experience'
         statut:
           $ref: '#/components/schemas/StatutDossierDeFaisabilite'
+
+    Experience:
+      type: object
+      properties:
+        titre:
+          type: string
+          description: Titre de l'expérience
+          example: "Boulanger"
+        description:
+          type: string
+          description: Description de l'expérience
+          example: "Préparation et cuisson de pains et viennoiseries"
+        duree:
+          $ref: '#/components/schemas/DureeExperience'
+        dateDemarrage:
+          type: string
+          format: date
+          description: Date de démarrage de l'expérience
+          example: "2021-01-01"
 
     DossierDeFaisabiliteDecision:
       type: object
