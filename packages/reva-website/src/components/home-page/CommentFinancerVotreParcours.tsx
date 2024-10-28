@@ -100,7 +100,7 @@ const CommentFinancerVotreParcoursHorsPlateforme = () => (
           />
           <PolygonFinancer
             bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-pink.svg')]"
-            label="Autres aides potentielles à venir"
+            label="Financements complémentaires au CPF (employeurs, régions ou France Travail, autres)"
           />
         </div>
       </div>
