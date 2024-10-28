@@ -37,8 +37,10 @@ export const DossierDeValidationTimelineElement = () => {
       description={
         FEASIBILITY_ADMISSIBLE ? (
           <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
-            Votre dossier de validation permettra au jury de valider le fait que
-            vous avez bien les compétences pour obtenir votre diplôme.
+            Votre dossier de validation permettra au jury de prendre
+            connaissances de vos activités et de votre parcours afin de prendre
+            une première mesure de vos compétences acquises et de préparer votre
+            entretien.
           </p>
         ) : undefined
       }

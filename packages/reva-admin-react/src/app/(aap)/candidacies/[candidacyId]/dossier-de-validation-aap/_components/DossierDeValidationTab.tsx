@@ -167,14 +167,17 @@ export const DossierDeValidationTab = ({
         options={[
           {
             label:
-              "J’ai bien vérifié que le dossier de validation était complet et lisible.",
+              "J’ai bien vérifié que le dossier de validation était complet, signé et lisible.",
             nativeInputProps: { ...register("dossierDeValidationChecked") },
           },
         ]}
         state={errors.dossierDeValidationChecked ? "error" : "default"}
         stateRelatedMessage={errors.dossierDeValidationChecked?.message}
       />
-      <FormButtons formState={{ isDirty, isSubmitting }} />
+      <FormButtons
+        formState={{ isDirty, isSubmitting }}
+        submitButtonLabel="Enregistrer et envoyer"
+      />
     </form>
   );
 };
