@@ -650,14 +650,6 @@ components:
         data:
           $ref: '#/components/schemas/DossierDeFaisabilite'
 
-    DossierDeFaisabilitePriseEnCompteResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Message de confirmation de la prise en compte
-          example: "La prise en compte a bien été enregistrée."
-
     DossierDeFaisabiliteDecisionsResponse:
       type: object
       properties:
@@ -781,8 +773,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/CandidatureId'
         certification:
           $ref: '#/components/schemas/Certification'
         candidat:
@@ -863,10 +854,6 @@ components:
     Organisme:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174000"
         nom:
           type: string
           example: "Organisme de Formation ABC"
