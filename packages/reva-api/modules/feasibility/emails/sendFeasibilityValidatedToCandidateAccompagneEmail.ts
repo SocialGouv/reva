@@ -11,13 +11,13 @@ import { logger } from "../../shared/logger";
 export const sendFeasibilityValidatedToCandidateAccompagneEmail = async ({
   email,
   comment,
-  certifName,
+  certificationName,
   certificationAuthorityLabel,
   infoFile,
 }: {
   email: string;
   comment?: string;
-  certifName: string;
+  certificationName: string;
   certificationAuthorityLabel: string;
   infoFile?: UploadedFile;
 }) => {
@@ -32,9 +32,9 @@ export const sendFeasibilityValidatedToCandidateAccompagneEmail = async ({
     templateMail({
       content: `
       <p>Bonjour,</p>
-      <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certifName}</em>.</p>
+      <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certificationName}</em>.</p>
       <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE. Nous vous invitons à prendre contact avec votre architecte de parcours afin d’organiser la suite.</p>
-      <span>${commentInfo}</span>
+      ${commentInfo}
       <br/>
       <p>Si un relevé de recevabilité est joint à ce mail, nous vous conseillons de le télécharger et de le conserver. Pour rappel, vous pouvez aussi le retrouver dans votre compte candidat.</p>
       <p><strong>Attention : dossier plagié = certification refusée ?</strong></p>

@@ -11,13 +11,13 @@ import { logger } from "../../shared/logger";
 export const sendFeasibilityValidatedToCandidateAutonomeEmail = async ({
   email,
   comment,
-  certifName,
+  certificationName,
   certificationAuthorityLabel,
   infoFile,
 }: {
   email: string;
   comment?: string;
-  certifName: string;
+  certificationName: string;
   certificationAuthorityLabel: string;
   infoFile?: UploadedFile;
 }) => {
@@ -32,9 +32,9 @@ export const sendFeasibilityValidatedToCandidateAutonomeEmail = async ({
     templateMail({
       content: `
       <p>Bonjour,</p>
-      <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certifName}</em>.</p>
+      <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certificationName}</em>.</p>
       <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE.</p>
-      <span>${commentInfo}</span>
+      ${commentInfo}
       <h3>Quelles sont les prochaines étapes ?</h3>
       <p>Désormais, il vous faut travailler sur votre dossier de validation afin de prouver au jury que vous avez l’expérience et les connaissances nécessaires pour obtenir votre diplôme ! Nous vous recommandons de lire notre article <a href="https://vae.gouv.fr/savoir-plus/articles/rediger-dossier-validation/">“Comment rédiger son dossier de validation”</a> ou de consulter notre <a href="https://scribehow.com/shared/Tutoriel__Candidats_sans_AAP_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents">tutoriel sur le parcours autonome</a> avant de débuter cette démarche.</p>
       <h3>Attention : dossier plagié = certification refusée ?</h3>

@@ -36,6 +36,7 @@ import { getWhereClauseFromSearchFilter } from "../shared/search/search";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
+  sendFeasibilityIncompleteToCandidateAutonomeEmail,
   sendFeasibilityRejectedToCandidateAccompagneEmail,
   sendFeasibilityRejectedToCandidateAutonomeEmail,
   sendFeasibilityValidatedToCandidateAccompagneEmail,
@@ -834,28 +835,26 @@ const validateFeasibility = async ({
 
     const isAutonome =
       updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
+    const certificationName =
+      updatedFeasibility.candidacy.certification?.label ||
+      "certification inconnue";
+    const certificationAuthorityLabel =
+      updatedFeasibility.certificationAuthority?.label ||
+      "certificateur inconnu";
     if (isAutonome) {
       sendFeasibilityValidatedToCandidateAutonomeEmail({
         email: updatedFeasibility.candidacy.candidate?.email as string,
-        certifName:
-          updatedFeasibility.candidacy.certification?.label ||
-          "Certification inconnue",
+        certificationName,
         comment,
-        certificationAuthorityLabel:
-          updatedFeasibility.certificationAuthority?.label ||
-          "certificateur inconnu",
+        certificationAuthorityLabel,
         infoFile,
       });
     } else {
       sendFeasibilityValidatedToCandidateAccompagneEmail({
         email: updatedFeasibility.candidacy.candidate?.email as string,
-        certifName:
-          updatedFeasibility.candidacy.certification?.label ||
-          "Certification inconnue",
+        certificationName,
         comment,
-        certificationAuthorityLabel:
-          updatedFeasibility.certificationAuthority?.label ||
-          "certificateur inconnu",
+        certificationAuthorityLabel,
         infoFile,
       });
 
@@ -1052,8 +1051,10 @@ const markFeasibilityAsIncomplete = async ({
               select: { email: true },
             },
             organism: { select: { contactAdministrativeEmail: true } },
+            certification: { select: { label: true } },
           },
         },
+        certificationAuthority: { select: { label: true } },
       },
     });
 
@@ -1062,13 +1063,32 @@ const markFeasibilityAsIncomplete = async ({
       status: "DOSSIER_FAISABILITE_INCOMPLET",
     });
 
-    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
-      sendFeasibilityIncompleteMailToAAP({
-        email:
-          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+    const isAutonome =
+      updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
+
+    if (isAutonome) {
+      const certificationName =
+        updatedFeasibility.candidacy.certification?.label ||
+        "certification inconnue";
+      const certificationAuthorityLabel =
+        updatedFeasibility.certificationAuthority?.label ||
+        "certificateur inconnu";
+
+      sendFeasibilityIncompleteToCandidateAutonomeEmail({
+        email: updatedFeasibility.candidacy.candidate?.email as string,
         comment,
+        certificationAuthorityLabel,
+        certificationName,
       });
+    } else {
+      if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
+        sendFeasibilityIncompleteMailToAAP({
+          email:
+            updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          comment,
+        });
+      }
     }
 
     // Delete ID File from feasibility

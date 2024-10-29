@@ -1,4 +1,4 @@
-import { CandidacyStatusStep } from "@prisma/client";
+import { CandidacyStatusStep, FeasibilityDecision } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 import {
   deleteFile,
@@ -10,6 +10,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import {
   sendFeasibilityIncompleteMailToAAP,
+  sendFeasibilityIncompleteToCandidateAutonomeEmail,
   sendFeasibilityRejectedToCandidateAccompagneEmail,
   sendFeasibilityRejectedToCandidateAutonomeEmail,
   sendFeasibilityValidatedToCandidateAccompagneEmail,
@@ -19,13 +20,79 @@ import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisi
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
-
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 const statusDecisionMapper = {
   ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
   REJECTED: "DOSSIER_FAISABILITE_NON_RECEVABLE",
   INCOMPLETE: "DOSSIER_FAISABILITE_INCOMPLET",
+};
+const sendFeasibilityDecisionTakenEmail = async ({
+  candidateEmail,
+  aapEmail,
+  decision,
+  decisionComment,
+  certificationName,
+  certificationAuthorityLabel,
+  isAutonome,
+  candidacyId,
+}: {
+  candidateEmail: string;
+  aapEmail: string;
+  decision: FeasibilityDecision["decision"];
+  decisionComment: string;
+  certificationName: string;
+  certificationAuthorityLabel: string;
+  isAutonome: boolean;
+  candidacyId: string;
+}) => {
+  if (decision === "INCOMPLETE") {
+    if (isAutonome) {
+      sendFeasibilityIncompleteToCandidateAutonomeEmail({
+        email: candidateEmail,
+        comment: decisionComment,
+        certificationAuthorityLabel,
+        certificationName,
+      });
+    } else {
+      sendFeasibilityIncompleteMailToAAP({
+        email: aapEmail,
+        feasibilityUrl: `${baseUrl}/candidacies/${candidacyId}/feasibility`,
+        comment: decisionComment,
+      });
+    }
+  } else if (decision === "REJECTED") {
+    if (isAutonome) {
+      sendFeasibilityRejectedToCandidateAutonomeEmail({
+        email: candidateEmail,
+        comment: decisionComment,
+        certificationAuthorityLabel,
+        certificationName,
+      });
+    } else {
+      sendFeasibilityRejectedToCandidateAccompagneEmail({
+        email: candidateEmail,
+        comment: decisionComment,
+        certificationAuthorityLabel,
+      });
+    }
+  } else if (decision === "ADMISSIBLE") {
+    if (isAutonome) {
+      sendFeasibilityValidatedToCandidateAutonomeEmail({
+        email: candidateEmail,
+        comment: decisionComment,
+        certificationAuthorityLabel,
+        certificationName,
+      });
+    } else {
+      sendFeasibilityValidatedToCandidateAccompagneEmail({
+        email: candidateEmail,
+        comment: decisionComment,
+        certificationAuthorityLabel,
+        certificationName,
+      });
+    }
+  }
 };
 
 export const createOrUpdateCertificationAuthorityDecision = async ({
@@ -121,6 +188,30 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         });
     });
 
+    const isAutonome =
+      dff.feasibility.candidacy.typeAccompagnement === "AUTONOME";
+
+    const candidateEmail = dff.feasibility.candidacy.candidate?.email as string;
+    const certificationName =
+      dff.feasibility.candidacy.certification?.label ||
+      "certification inconnue";
+    const certificationAuthorityLabel =
+      dff.feasibility.candidacy.certification?.certificationAuthorityStructure
+        ?.label || "certificateur inconnu";
+    const aapEmail = dff.feasibility.candidacy.organism
+      ?.contactAdministrativeEmail as string;
+
+    sendFeasibilityDecisionTakenEmail({
+      candidateEmail,
+      aapEmail,
+      decision,
+      decisionComment,
+      certificationName,
+      certificationAuthorityLabel,
+      isAutonome,
+      candidacyId,
+    });
+
     if (decision === "INCOMPLETE") {
       await prismaClient.feasibility.update({
         where: {
@@ -132,60 +223,6 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       });
 
       await resetDFFSentToCandidateState(dff);
-      const aapEmail =
-        dff.feasibility.candidacy.organism?.contactAdministrativeEmail;
-      if (aapEmail) {
-        sendFeasibilityIncompleteMailToAAP({
-          email: aapEmail,
-          feasibilityUrl: `${baseUrl}/admin2/candidacies/${candidacyId}/feasibility-aap`,
-          comment: decisionComment,
-        });
-      }
-    }
-
-    const candidateEmail = dff.feasibility.candidacy.candidate?.email;
-    const certifName = dff.feasibility.candidacy.certification?.label;
-    const certificationAuthorityLabel =
-      dff.feasibility.candidacy.certification?.certificationAuthorityStructure
-        ?.label;
-
-    if (candidateEmail && certifName && certificationAuthorityLabel) {
-      const isAutonome =
-        dff.feasibility.candidacy.typeAccompagnement === "AUTONOME";
-      if (decision === "ADMISSIBLE") {
-        if (isAutonome) {
-          sendFeasibilityValidatedToCandidateAutonomeEmail({
-            email: candidateEmail,
-            comment: decisionComment,
-            certifName,
-            certificationAuthorityLabel,
-          });
-        } else {
-          sendFeasibilityValidatedToCandidateAccompagneEmail({
-            email: candidateEmail,
-            comment: decisionComment,
-            certifName,
-            certificationAuthorityLabel,
-          });
-        }
-      }
-
-      if (decision === "REJECTED") {
-        if (isAutonome) {
-          sendFeasibilityRejectedToCandidateAutonomeEmail({
-            email: candidateEmail,
-            comment: decisionComment,
-            certificationAuthorityLabel,
-            certificationName: certifName,
-          });
-        } else {
-          sendFeasibilityRejectedToCandidateAccompagneEmail({
-            email: candidateEmail,
-            comment: decisionComment,
-            certificationAuthorityLabel,
-          });
-        }
-      }
     }
 
     return getDematerializedFeasibilityFileByCandidacyId({
