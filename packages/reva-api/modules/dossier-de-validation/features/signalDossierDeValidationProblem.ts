@@ -3,7 +3,7 @@ import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidac
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
 import { getOrganismByCandidacyId } from "../../candidacy/features/getOrganismByCandidacyId";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { sendDVSignalToOrganismEmail } from "../emails";
+import { sendDVReportedToOrganismEmail } from "../emails";
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({
@@ -70,7 +70,7 @@ export const signalDossierDeValidationProblem = async ({
   });
 
   if (organism?.contactAdministrativeEmail) {
-    sendDVSignalToOrganismEmail({
+    sendDVReportedToOrganismEmail({
       email: organism?.contactAdministrativeEmail,
       candadicyId: updatedDossierDeValidation.candidacyId,
       decisionComment,

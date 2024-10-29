@@ -2,7 +2,7 @@ import mjml2html from "mjml";
 
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
-export const sendDVSignalToOrganismEmail = ({
+export const sendDVReportedToOrganismEmail = ({
   email,
   candadicyId,
   decisionComment,
