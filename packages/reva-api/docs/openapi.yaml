@@ -144,6 +144,7 @@ paths:
           required: false
           schema:
             type: string
+            maxLength: 100
             example: "Alice+Doe"
         - name: statut
           in: query
@@ -187,6 +188,7 @@ paths:
           required: false
           schema:
             type: string
+            maxLength: 100
             example: "Alice+Doe"
         - name: statut
           in: query
@@ -302,6 +304,7 @@ paths:
           required: false
           schema:
             type: string
+            maxLength: 100
             example: "Alice+Doe"
         - name: statut
           in: query
@@ -786,9 +789,11 @@ components:
       properties:
         codeRncp:
           type: string
+          maxLength: 255
           example: "35830"
         nom:
           type: string
+          maxLength: 255
           example: "Diplôme d'Etat Aide soignant - DEAS"
         estViseePartiellement:
           type: boolean
@@ -801,21 +806,27 @@ components:
           $ref: '#/components/schemas/Genre'
         prenom:
           type: string
+          maxLength: 255
           example: "Alice"
         prenom2:
           type: string
+          maxLength: 255
           example: "Marie"
         prenom3:
           type: string
+          maxLength: 255
           example: "Claire"
         nom:
           type: string
+          maxLength: 255
           example: "Doe"
         nomUsage:
           type: string
+          maxLength: 255
           example: "Poe"
         communeNaissance:
           type: string
+          maxLength: 255
           example: "Paris"
         departementNaissance:
           $ref: '#/components/schemas/Departement'
@@ -825,15 +836,19 @@ components:
           example: "1980-01-01"
         nationalite:
           type: string
+          maxLength: 255
           example: "Française"
         situation:
           $ref: '#/components/schemas/Situation'
         email:
           type: string
+          maxLength: 255
           format: email
           example: "alice.doe@example.com"
         telephone:
           type: string
+          maxLength: 10
+          minLength: 10
           example: "+33612345678"
         adresse:
           $ref: '#/components/schemas/Adresse'
@@ -845,6 +860,7 @@ components:
           $ref: '#/components/schemas/Diplome'
         intituleCertificationObtenuePlusEleve:
           type: string
+          maxLength: 255
           example: "Baccalauréat Scientifique"
         niveauFormationPlusEleve:
           $ref: '#/components/schemas/Diplome'
@@ -856,11 +872,13 @@ components:
       properties:
         nom:
           type: string
+          maxLength: 255
           example: "Organisme de Formation ABC"
         contact:
           $ref: '#/components/schemas/Contact'
         siteWeb:
           type: string
+          maxLength: 255
           format: uri
           example: "https://www.organisme-abc.fr"
 
@@ -869,13 +887,16 @@ components:
       properties:
         nom:
           type: string
+          maxLength: 255
           example: "John Doe"
         email:
           type: string
+          maxLength: 255
           format: email
           example: "contact@organisme-abc.fr"
         telephone:
           type: string
+          maxLength: 255
           example: "+33123456789"
 
     Adresse:
@@ -885,22 +906,27 @@ components:
           $ref: '#/components/schemas/Departement'
         codePostal:
           type: string
+          pattern: '^\d{5}$'
           description: Code postal
           example: "75001"
         rue:
           type: string
+          maxLength: 255
           description: Rue
           example: "1234 rue de la Paix"
         complementAdresse:
           type: string
+          maxLength: 255
           description: Complément d'adresse
           example: "Bâtiment A"
         ville:
           type: string
+          maxLength: 255
           description: Ville
           example: "Paris"
         pays:
           type: string
+          maxLength: 255
           description: Pays
           example: "France"
 
@@ -909,26 +935,31 @@ components:
       properties:
         code:
           type: string
+          maxLength: 5
           description: Code du département
-          example: "75"
+          example: "973"
         nom:
           type: string
+          maxLength: 255
           description: Nom du département
-          example: "Paris"
+          example: "Guyane"
 
     Diplome:
       type: object
       properties:
         code:
           type: string
+          maxLength: 255
           description: >
             Code du diplôme (N1_SANS, N2_CLEA, N3_CAP_BEP, N4_BAC, N5_BAC_2, N6_BAC_3_4, N7_BAC_5 ou N8_BAC_8)
           example: "N4_BAC"
         label:
           type: string
+          maxLength: 255
           example: "Niveau 4 : Baccalauréat"
         labelLong:
           type: string
+          maxLength: 255
           example: "Niveau 4 (Bac pro, Brevet professionnel, CQP 4, MC 4, Titre professionnel 4, DE 4)"
         niveau:
           type: integer
@@ -1037,10 +1068,12 @@ components:
       properties:
         nom:
           type: string
+          maxLength: 255
           example: "document.pdf"
         url:
           type: string
           example: "https://files.vae.gouv.fr/abc/document.pdf"
         typeMime:
           type: string
+          maxLength: 255
           example: "application/pdf"
