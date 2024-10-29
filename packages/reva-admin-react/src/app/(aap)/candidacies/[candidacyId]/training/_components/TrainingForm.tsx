@@ -163,6 +163,7 @@ export const TrainingForm = ({
             type: "required",
             message: "Merci de remplir ce champ",
           });
+          return;
         }
 
         if (!candidacyFinancingMethods.some((fm) => fm.checked)) {
@@ -170,6 +171,7 @@ export const TrainingForm = ({
             type: "required",
             message: "Merci de remplir ce champ",
           });
+          return;
         }
 
         if (
@@ -182,10 +184,8 @@ export const TrainingForm = ({
             type: "required",
             message: "Merci de remplir ce champ",
           });
+          return;
         }
-      }
-      if (!isValid) {
-        return;
       }
 
       onSubmit?.({
