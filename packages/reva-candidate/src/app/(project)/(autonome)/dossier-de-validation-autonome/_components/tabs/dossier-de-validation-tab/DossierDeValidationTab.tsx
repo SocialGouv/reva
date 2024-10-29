@@ -1,14 +1,14 @@
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { format } from "date-fns";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
@@ -168,6 +168,7 @@ export const DossierDeValidationTab = ({
           ))}
         </div>
         <Checkbox
+          className="mr-0"
           legend="Avez-vous bien vérifié ces éléments avant l’envoi ?"
           data-test="dossier-de-validation-checkbox-group"
           options={[
