@@ -1,9 +1,11 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
-import { getOrganismByCandidacyId } from "../../candidacy/features/getOrganismByCandidacyId";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { sendDVReportedToOrganismEmail } from "../emails";
+import {
+  sendDVReportedToCandidateAutonomeEmail,
+  sendDVReportedToOrganismEmail,
+} from "../emails";
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({
@@ -49,8 +51,17 @@ export const signalDossierDeValidationProblem = async ({
     );
   }
 
-  const candidacy = await getOrganismByCandidacyId({
-    candidacyId: dossierDeValidation.candidacyId,
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: dossierDeValidation.candidacyId },
+    include: {
+      organism: true,
+      candidate: true,
+      certification: { select: { label: true } },
+    },
+  });
+  const feasibility = await prismaClient.feasibility.findFirst({
+    where: { candidacyId: dossierDeValidation.candidacyId, isActive: true },
+    include: { certificationAuthority: { select: { label: true } } },
   });
 
   const organism = candidacy?.organism;
@@ -69,12 +80,27 @@ export const signalDossierDeValidationProblem = async ({
     status: "DOSSIER_DE_VALIDATION_SIGNALE",
   });
 
-  if (organism?.contactAdministrativeEmail) {
-    sendDVReportedToOrganismEmail({
-      email: organism?.contactAdministrativeEmail,
-      candadicyId: updatedDossierDeValidation.candidacyId,
+  const isAutonome = candidacy?.typeAccompagnement === "AUTONOME";
+
+  if (isAutonome) {
+    const certificationName =
+      candidacy?.certification?.label || "certification inconnue";
+    const certificationAuthorityLabel =
+      feasibility?.certificationAuthority?.label || "certificateur inconnu";
+    sendDVReportedToCandidateAutonomeEmail({
+      email: candidacy?.candidate?.email as string,
       decisionComment,
+      certificationName,
+      certificationAuthorityLabel,
     });
+  } else {
+    if (organism?.contactAdministrativeEmail) {
+      sendDVReportedToOrganismEmail({
+        email: organism?.contactAdministrativeEmail,
+        candadicyId: updatedDossierDeValidation.candidacyId,
+        decisionComment,
+      });
+    }
   }
 
   await logCandidacyAuditEvent({
