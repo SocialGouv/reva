@@ -1,4 +1,4 @@
-import { deleteFile } from "modules/shared/file";
+import { deleteFile } from "../../shared/file";
 import { prismaClient } from "../../../prisma/client";
 import { sendRejectionEmail } from "../mail";
 
