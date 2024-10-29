@@ -1,3 +1,4 @@
+import { deleteFile } from "modules/shared/file";
 import { prismaClient } from "../../../prisma/client";
 import { sendRejectionEmail } from "../mail";
 
@@ -23,6 +24,23 @@ export const rejectSubscriptionRequest = async ({
   await prismaClient.subscriptionRequest.update({
     where: { id: subscriptionRequestId },
     data: { status: "REJECTED", rejectionReason: reason, internalComment },
+  });
+
+  const filesIds = [
+    subscriptionRequest?.attestationURSSAFFileId,
+    subscriptionRequest?.justificatifIdentiteDirigeantFileId,
+    subscriptionRequest?.lettreDeDelegationFileId,
+    subscriptionRequest?.justificatifIdentiteDelegataireFileId,
+  ].filter((d) => !!d) as string[];
+
+  const files = await prismaClient.file.findMany({
+    where: { id: { in: filesIds } },
+  });
+
+  await Promise.all(files.map((f) => deleteFile(f.path)));
+
+  await prismaClient.file.deleteMany({
+    where: { id: { in: filesIds } },
   });
 
   await sendRejectionEmail({
