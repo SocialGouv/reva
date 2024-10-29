@@ -1,6 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   sendConfirmationCandidacySubmissionEmail,
@@ -47,17 +46,6 @@ export const submitCandidacy = async ({
     );
   }
 
-  const financementHorsPlateforme = await isFeatureActiveForUser({
-    feature: "NOUVELLES_CANDIDATURES_EN_FINANCEMENT_HORS_PLATEFORME",
-  });
-
-  await prismaClient.candidacy.update({
-    where: { id: candidacyId },
-    data: {
-      financeModule: financementHorsPlateforme ? "hors_plateforme" : "unifvae",
-    },
-  });
-
   const updatedCandidacy = await updateCandidacyStatus({
     candidacyId,
     status: CandidacyStatusStep.VALIDATION,
@@ -75,7 +63,7 @@ export const submitCandidacy = async ({
     email: candidate.email as string,
     organismName: organism.label,
     organismEmail: organism.contactAdministrativeEmail,
-    candidacyFundedByFranceVae: !financementHorsPlateforme,
+    candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
   });
   return updatedCandidacy;
 };
