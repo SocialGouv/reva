@@ -10,7 +10,6 @@ import {
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
 import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
@@ -24,15 +23,6 @@ export const DematerializedFeasibility = () => {
   const urqlClient = useUrqlClient();
   const decisionHasBeenMade = feasibility?.decision !== "PENDING";
   const queryClient = useQueryClient();
-
-  const defaultValues = useMemo(
-    () => ({
-      decision: undefined,
-      decisionComment: undefined,
-      decisionFile: undefined,
-    }),
-    [],
-  );
 
   const handleFormSubmit = async (data: FeasibilityFormData) => {
     const decisionFile = data.infoFile?.[0];
