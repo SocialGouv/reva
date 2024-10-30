@@ -37,7 +37,7 @@ export const DecisionSentComponent = ({
     REJECTED: `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
   };
 
-  const canDisplayHistory = history?.length && history.length > 1;
+  const canDisplayHistory = !!history?.length && history.length > 1;
 
   return (
     <>
