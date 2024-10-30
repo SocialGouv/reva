@@ -58,7 +58,15 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   });
 
   const items = [
-    menuItem("Étude de faisabilité", `/candidacies/${candidacyId}/feasibility`),
+    isFeatureActive("FEASIBILITY_COMPLETION_STATUS")
+      ? menuItem(
+          "Étude de faisabilité",
+          `/candidacies/${candidacyId}/feasibility-v2`,
+        )
+      : menuItem(
+          "Étude de faisabilité",
+          `/candidacies/${candidacyId}/feasibility`,
+        ),
     menuItem(
       "Dossier de validation",
       `/candidacies/${candidacyId}/dossier-de-validation`,
