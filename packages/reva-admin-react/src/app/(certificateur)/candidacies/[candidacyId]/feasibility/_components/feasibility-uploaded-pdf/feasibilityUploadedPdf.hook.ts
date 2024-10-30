@@ -84,7 +84,7 @@ export const useFeasibilityUploadedPdf = () => {
   const feasibility = candidacy?.feasibility;
 
   const submitFeasibilityDecision = async (data: {
-    decision: "Admissible" | "Rejected" | "Incomplete";
+    decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE";
     comment: string;
     infoFile?: File;
   }) => {

@@ -1261,11 +1261,11 @@ export const handleFeasibilityDecision = async (args: {
 }) => {
   const { decision, ...otherParameters } = args;
   switch (decision) {
-    case "Admissible":
+    case "ADMISSIBLE":
       return validateFeasibility(otherParameters);
-    case "Rejected":
+    case "REJECTED":
       return rejectFeasibility(otherParameters);
-    case "Incomplete":
+    case "INCOMPLETE":
       return markFeasibilityAsIncomplete(otherParameters);
 
     default:

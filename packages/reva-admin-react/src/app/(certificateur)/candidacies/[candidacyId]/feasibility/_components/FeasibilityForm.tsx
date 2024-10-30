@@ -10,7 +10,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 
 const schema = z
   .object({
-    decision: z.enum(["Admissible", "Rejected", "Incomplete"], {
+    decision: z.enum(["ADMISSIBLE", "REJECTED", "INCOMPLETE"], {
       errorMap: () => {
         return { message: "Merci de remplir ce champ" };
       },
@@ -19,7 +19,7 @@ const schema = z
     infoFile: z.object({ 0: z.instanceof(File).optional() }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
-    if (decision !== "Admissible" && !comment) {
+    if (decision !== "ADMISSIBLE" && !comment) {
       addIssue({
         path: ["comment"],
         code: "too_small",
@@ -69,7 +69,7 @@ export const FeasibilityForm = ({
               ),
               nativeInputProps: {
                 ...register("decision"),
-                value: "Admissible",
+                value: "ADMISSIBLE",
               },
             },
             {
@@ -83,7 +83,7 @@ export const FeasibilityForm = ({
                 "Un dossier est incorrect ou incomplet si il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n’est pas le bon, s’il manque des éléments ou si les pièces jointes sont inexploitables, erronées etc... Il sera renvoyé à l’AAP qui devra le compléter ou le corriger rapidement.",
               nativeInputProps: {
                 ...register("decision"),
-                value: "Incomplete",
+                value: "INCOMPLETE",
               },
             },
             {
@@ -94,7 +94,7 @@ export const FeasibilityForm = ({
               ),
               hintText:
                 "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
-              nativeInputProps: { ...register("decision"), value: "Rejected" },
+              nativeInputProps: { ...register("decision"), value: "REJECTED" },
             },
           ]}
           state={errors.decision ? "error" : "default"}
@@ -107,7 +107,7 @@ export const FeasibilityForm = ({
           label={
             <span className="uppercase text-xs font-semibold">
               PRÉCISEZ LES MOTIFS DE VOTRE DÉCISION{" "}
-              {decision === "Admissible" ? "(OPTIONNEL)" : ""}
+              {decision === "ADMISSIBLE" ? "(OPTIONNEL)" : ""}
             </span>
           }
           hintText="Texte de description libre"

@@ -9,7 +9,7 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
 const schema = z
   .object({
-    decision: z.enum(["Admissible", "Rejected", "Incomplete"], {
+    decision: z.enum(["ADMISSIBLE", "REJECTED", "INCOMPLETE"], {
       errorMap: () => {
         return { message: "Merci de remplir ce champ" };
       },
@@ -18,7 +18,7 @@ const schema = z
     infoFile: z.object({ 0: z.instanceof(File).optional() }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
-    if (decision !== "Admissible" && !comment) {
+    if (decision !== "ADMISSIBLE" && !comment) {
       addIssue({
         path: ["comment"],
         code: "too_small",
@@ -64,7 +64,7 @@ export const FeasibilityForm = ({
               label: <p className="mb-0 text-base">Ce dossier est recevable</p>,
               nativeInputProps: {
                 ...register("decision"),
-                value: "Admissible",
+                value: "ADMISSIBLE",
               },
             },
             {
@@ -77,7 +77,7 @@ export const FeasibilityForm = ({
                 "Est considéré comme incomplet ou incorrect tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronnées, informations manquantes, mauvais dossier...). Le candidat aura accès à la modification de son dossier pour apporter les informations complémentaires demandées.",
               nativeInputProps: {
                 ...register("decision"),
-                value: "Incomplete",
+                value: "INCOMPLETE",
               },
             },
             {
@@ -86,7 +86,7 @@ export const FeasibilityForm = ({
               ),
               hintText:
                 "Est considéré comme non recevable un dossier complet affichant des expériences qui ne correspondent pas au référentiel de la certification (ou bloc) visée. Si le dossier n’est pas recevable, le candidat ne pourra plus demander de recevabilité sur cette certification durant l’année civile en cours.",
-              nativeInputProps: { ...register("decision"), value: "Rejected" },
+              nativeInputProps: { ...register("decision"), value: "REJECTED" },
             },
           ]}
           state={errors.decision ? "error" : "default"}
@@ -99,7 +99,7 @@ export const FeasibilityForm = ({
           label={
             <span className="text-base">
               Pouvez-vous préciser les motifs de cette décision ?{" "}
-              {decision === "Admissible" ? "(Optionnel)" : ""}
+              {decision === "ADMISSIBLE" ? "(Optionnel)" : ""}
             </span>
           }
           hintText="Ces motifs seront transmis au candidat et à l'AAP le cas échéant."

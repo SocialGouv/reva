@@ -368,7 +368,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
-    decision: "Admissible",
+    decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
@@ -389,7 +389,7 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
-    decision: "Admissible",
+    decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
@@ -403,7 +403,7 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
-    decision: "Admissible",
+    decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
@@ -417,7 +417,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
-    decision: "Rejected",
+    decision: "REJECTED",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
