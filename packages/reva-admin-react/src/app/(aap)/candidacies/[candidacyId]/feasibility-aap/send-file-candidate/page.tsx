@@ -14,7 +14,7 @@ import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 const HasBeenSentComponent = ({
   sentToCandidateAt,
 }: {
-  sentToCandidateAt: Date;
+  sentToCandidateAt: Date | null;
 }) => (
   <>
     {sentToCandidateAt ? (
@@ -67,7 +67,9 @@ export default function SendFileCandidatePage() {
         HasBeenSentComponent={
           <HasBeenSentComponent
             sentToCandidateAt={
-              dematerializedFeasibilityFile?.sentToCandidateAt as any as Date
+              dematerializedFeasibilityFile?.sentToCandidateAt
+                ? new Date(dematerializedFeasibilityFile?.sentToCandidateAt)
+                : null
             }
           />
         }

@@ -1,6 +1,13 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import toast from "react-hot-toast";
 
+interface GraphQLError {
+  response?: {
+    errors?: Array<{ message?: string }>;
+  };
+  message?: string;
+}
+
 export const successToast = (
   props:
     | {
@@ -47,7 +54,8 @@ export const warningToast = (message: string) =>
     <Alert severity="warning" title={message} className="bg-white" />
   ));
 
-export const graphqlErrorToast = (error: any) => {
+export const graphqlErrorToast = (_error: unknown) => {
+  const error = _error as GraphQLError;
   const message = error?.response?.errors
     ?.map((e: { message?: string }) => e?.message)
     ?.join(", ");

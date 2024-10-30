@@ -1,5 +1,4 @@
 "use client";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import Badge from "@codegouvfr/react-dsfr/Badge";
@@ -31,8 +30,6 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     candidacyId: string;
   }>();
   const { graphqlClient } = useGraphQlClient();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   const { data: getCandidacyResponse } = useQuery({
     queryKey: ["getCandidacy", candidacyId],

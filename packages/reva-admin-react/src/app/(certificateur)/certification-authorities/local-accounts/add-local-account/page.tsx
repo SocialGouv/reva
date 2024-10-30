@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { errorToast, successToast } from "@/components/toast/toast";
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { useCertificationAuthorityQueries } from "../certificationAuthorityQueries";
 import { FormLocalAccount } from "../components/form-local-account";
@@ -28,11 +28,7 @@ const AddLocalAccountPage = () => {
 
           router.push("/certification-authorities/local-accounts");
         } catch (error) {
-          const errorMessage =
-            (error as any)?.response?.errors?.[0]?.message ||
-            '"Une erreur est survenue"';
-
-          errorToast(errorMessage);
+          graphqlErrorToast(error);
         }
       }}
       buttonValidateText="Valider"

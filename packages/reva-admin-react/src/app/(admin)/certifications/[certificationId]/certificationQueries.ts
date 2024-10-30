@@ -1,4 +1,3 @@
-import CertificationAuthoritySection from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/send-file-certification-authority/_components/CertificationAuthoritySection";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import {

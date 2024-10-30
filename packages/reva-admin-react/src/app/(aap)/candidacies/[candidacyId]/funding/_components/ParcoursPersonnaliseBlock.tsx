@@ -1,5 +1,4 @@
 import { Candidacy } from "@/graphql/generated/graphql";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useFormContext } from "react-hook-form";
 

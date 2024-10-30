@@ -75,7 +75,7 @@ const CandidacyDropoutComponent = ({
 
                   successToast("L'abandon a été validé avec succès");
                 } catch (error) {
-                  graphqlErrorToast(e);
+                  graphqlErrorToast(error);
                 }
               }}
             >

@@ -72,7 +72,7 @@ const DomainesCcnsDegreesForm = ({
   });
 
   const resetForm = useCallback(() => {
-    organismAndReferentialStatus === "success" &&
+    if (organismAndReferentialStatus === "success") {
       reset({
         organismDegrees: degrees
           .filter((d) => d.level > 2)
@@ -92,6 +92,7 @@ const DomainesCcnsDegreesForm = ({
           checked: !!organismDomaines.find((od) => od.id === d.id),
         })),
       });
+    }
   }, [
     organismAndReferentialStatus,
     reset,

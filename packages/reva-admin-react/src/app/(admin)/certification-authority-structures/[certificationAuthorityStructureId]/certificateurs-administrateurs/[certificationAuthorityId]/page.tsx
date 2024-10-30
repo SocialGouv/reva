@@ -1,6 +1,6 @@
 "use client";
 import { Impersonate } from "@/components/impersonate";
-import { errorToast, successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,11 +59,7 @@ const CertificationAuthorityAdminComponent = ({
 
       successToast("L'autorité de certification a bien été mise à jour");
     } catch (error) {
-      const errorMessage =
-        (error as any)?.response?.errors?.[0]?.message ||
-        '"Une erreur est survenue"';
-
-      errorToast(errorMessage);
+      graphqlErrorToast(error);
     }
   });
 

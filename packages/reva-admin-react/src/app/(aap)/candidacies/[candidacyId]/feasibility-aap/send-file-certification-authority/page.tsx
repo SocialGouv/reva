@@ -82,13 +82,13 @@ export default function SendFileCertificationAuthorityPage() {
           feasibilityFileSentAt ? (
             feasibilityIsPending ? (
               <HasBeenSentComponent
-                sentToCertificationAuthorityAt={
-                  feasibilityFileSentAt as any as Date
-                }
+                sentToCertificationAuthorityAt={new Date(feasibilityFileSentAt)}
               />
             ) : (
               <DecisionSentComponent
-                decisionSentAt={decisionSentAt as any as Date}
+                decisionSentAt={
+                  decisionSentAt ? new Date(decisionSentAt) : null
+                }
                 decision={decision as FeasibilityDecision}
                 decisionComment={decisionComment}
               />

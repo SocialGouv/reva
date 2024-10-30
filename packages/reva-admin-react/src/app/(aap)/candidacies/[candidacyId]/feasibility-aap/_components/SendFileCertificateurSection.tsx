@@ -16,9 +16,9 @@ const AlertDffState = ({
   history,
 }: {
   decision: FeasibilityDecision;
-  decisionSentAt: Date;
+  decisionSentAt: Date | null;
   decisionComment?: string | null;
-  sentToCertificationAuthorityAt: Date;
+  sentToCertificationAuthorityAt: Date | null;
   history: FeasibilityHistory[];
 }) => {
   const feasibilityIsPending = decision === "PENDING";
@@ -57,7 +57,7 @@ export const SendFileCertificationAuthoritySection = ({
 }: {
   sentToCertificationAuthorityAt?: Date | null;
   isReadyToBeSentToCertificationAuthority?: boolean;
-  decisionSentAt: Date;
+  decisionSentAt: Date | null;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
   history: FeasibilityHistory[];
@@ -79,7 +79,9 @@ export const SendFileCertificationAuthoritySection = ({
 
       <AlertDffState
         sentToCertificationAuthorityAt={
-          sentToCertificationAuthorityAt as any as Date
+          sentToCertificationAuthorityAt
+            ? new Date(sentToCertificationAuthorityAt)
+            : null
         }
         decisionSentAt={decisionSentAt}
         decision={decision}

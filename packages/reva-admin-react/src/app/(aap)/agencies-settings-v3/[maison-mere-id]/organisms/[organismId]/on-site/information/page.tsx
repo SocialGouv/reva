@@ -51,7 +51,7 @@ const InformationsOnSitePage = () => {
       siteInternet: informationsCommerciales?.siteInternet ?? "",
       emailContact: informationsCommerciales?.emailContact ?? "",
       conformeNormesAccessibilite:
-        informationsCommerciales?.conformeNormesAccessbilite as any,
+        informationsCommerciales?.conformeNormesAccessbilite as OrganismInformationFormData["conformeNormesAccessibilite"],
     }),
     [informationsCommerciales],
   );

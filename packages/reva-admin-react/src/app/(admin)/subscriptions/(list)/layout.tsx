@@ -43,10 +43,7 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams();
   const searchFilter = searchParams.get("search") || "";
 
-  const {
-    data: getSubscriptionCountByStatusResponse,
-    status: getSubscriptionCountByStatusStatus,
-  } = useQuery({
+  const { data: getSubscriptionCountByStatusResponse } = useQuery({
     queryKey: ["getSubscriptionCountByStatus", searchFilter],
     queryFn: () =>
       graphqlClient.request(getSubscriptionCountByStatus, {

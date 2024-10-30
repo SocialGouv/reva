@@ -43,10 +43,6 @@ const AapLayout = ({ children }: { children: ReactNode }) => {
   ) {
     return (
       <AccountSetup
-        headAgencyId={
-          accountWithMaisonMereResponse?.account_getAccountForConnectedUser
-            ?.organism?.id
-        }
         maisonMereAAPId={
           accountWithMaisonMereResponse.account_getAccountForConnectedUser
             .maisonMereAAP.id

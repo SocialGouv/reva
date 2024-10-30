@@ -3,7 +3,7 @@ import { z } from "zod";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { useCreateCertificationAuthorityPage } from "./createCertificationAuthority.hooks";
 import { useForm } from "react-hook-form";
-import { successToast, errorToast } from "@/components/toast/toast";
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -44,11 +44,7 @@ const CreateCertificationAuthorityPage = () => {
           `/certification-authority-structures/${certificationAuthorityStructure?.id}/certificateurs-administrateurs/${result.certification_authority_createCertificationAuthority.id}`,
         );
       } catch (error) {
-        const errorMessage =
-          (error as any)?.response?.errors?.[0]?.message ||
-          '"Une erreur est survenue"';
-
-        errorToast(errorMessage);
+        graphqlErrorToast(error);
       }
     },
     (e) => console.log(e),

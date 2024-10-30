@@ -8,10 +8,8 @@ import { useAccountSetup } from "./accountSetup.hook";
 
 export default function AccountSetup({
   maisonMereAAPId,
-  headAgencyId,
 }: {
   maisonMereAAPId: string;
-  headAgencyId: string;
 }) {
   const { updateAccount } = useAccountSetup();
   const queryClient = useQueryClient();

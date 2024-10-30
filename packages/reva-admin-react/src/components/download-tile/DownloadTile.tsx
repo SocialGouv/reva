@@ -1,5 +1,3 @@
-import { AuthenticatedLink } from "../authenticated-link/AuthenticatedLink";
-
 export const DownloadTile = ({
   name,
   url,
@@ -14,7 +12,9 @@ export const DownloadTile = ({
       <div className="fr-tile__body">
         <div className="fr-tile__content">
           <h3 className="fr-tile__title">
-            <a href={url} target="_blank">{name}</a>
+            <a href={url} target="_blank">
+              {name}
+            </a>
           </h3>
           <p className="fr-tile__detail">
             {mimeType.split("/").pop()?.toUpperCase()}

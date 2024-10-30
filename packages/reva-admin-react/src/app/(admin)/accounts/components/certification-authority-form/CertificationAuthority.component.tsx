@@ -8,7 +8,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { errorToast, successToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useCertificationAuthorityForm } from "./CertificationAuthority.hook";
 
@@ -60,11 +60,7 @@ const CertificationAuthorityForm = (props: Props) => {
 
       successToast("L'autorité de certification a bien été mis à jour");
     } catch (error) {
-      const errorMessage =
-        (error as any)?.response?.errors?.[0]?.message ||
-        '"Une erreur est survenue"';
-
-      errorToast(errorMessage);
+      graphqlErrorToast(error);
     }
   });
 

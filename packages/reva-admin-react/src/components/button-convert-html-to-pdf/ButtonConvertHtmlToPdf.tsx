@@ -1,5 +1,4 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-// @ts-ignore
 import html2pdf from "html2pdf.js";
 import { useState } from "react";
 export const ButtonConvertHtmlToPdf = ({

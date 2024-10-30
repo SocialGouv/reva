@@ -7,7 +7,6 @@ import { useUrqlClient } from "@/components/urql-client";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
-  FeasibilityDecision,
 } from "@/graphql/generated/graphql";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -39,16 +38,18 @@ const schema = z
     if (decision === "INCOMPLETE" && !decisionComment) {
       addIssue({
         path: ["decisionComment"],
-        message: "Vous devez renseigner un commentaire lorsque le dossier est incomplet",
+        message:
+          "Vous devez renseigner un commentaire lorsque le dossier est incomplet",
         code: z.ZodIssueCode.custom,
-      })
+      });
     }
     if (decision === "REJECTED" && !decisionComment) {
       addIssue({
         path: ["decisionComment"],
-        message: "Vous devez motiver la décision de non-recevabilité du dossier",
+        message:
+          "Vous devez motiver la décision de non-recevabilité du dossier",
         code: z.ZodIssueCode.custom,
-      })
+      });
     }
   });
 
@@ -130,12 +131,17 @@ export const DematerializedFeasibility = () => {
         }
         candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
-          decisionHasBeenMade && (
+          decisionHasBeenMade &&
+          feasibility && (
             <DecisionSentComponent
-              decisionSentAt={feasibility?.decisionSentAt as any as Date}
-              decision={feasibility?.decision as FeasibilityDecision}
+              decisionSentAt={
+                feasibility.decisionSentAt
+                  ? new Date(feasibility.decisionSentAt)
+                  : null
+              }
+              decision={feasibility.decision}
               decisionComment={feasibility?.decisionComment}
-              history={feasibility?.history}
+              history={feasibility.history}
             />
           )
         }
@@ -221,9 +227,7 @@ export const DematerializedFeasibility = () => {
                   accept: ".pdf, .jpg, .jpeg, .png",
                 }}
                 state={errors.decisionFile ? "error" : "default"}
-                stateRelatedMessage={
-                  errors.decisionFile?.[0]?.message
-                }
+                stateRelatedMessage={errors.decisionFile?.[0]?.message}
               />
             </div>
 

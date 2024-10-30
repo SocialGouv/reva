@@ -5,7 +5,6 @@ import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { sortRegionsByAlphabeticalOrderAndDOM } from "@/utils";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 import { Info } from "@/components/organism-summary/Info";
@@ -82,21 +81,6 @@ const getMaisonMereAAP = graphql(`
   }
 `);
 
-const getRegions = graphql(`
-  query getRegions {
-    getRegions {
-      id
-      label
-      code
-      departments {
-        id
-        label
-        code
-      }
-    }
-  }
-`);
-
 const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
@@ -111,16 +95,9 @@ const MaisonMereAAPPage = () => {
         }),
     });
 
-  const { data: getRegionsResponse, isLoading: isRegionsLoading } = useQuery({
-    queryKey: ["getRegionsResponse"],
-    queryFn: () => graphqlClient.request(getRegions),
-  });
-
   const maisonMereAAP = getMaisonMereAAPResponse?.organism_getMaisonMereAAPById;
-  const unsortedRegions = getRegionsResponse?.getRegions || [];
-  const regions = sortRegionsByAlphabeticalOrderAndDOM(unsortedRegions);
 
-  if (isMaisonMereAAPLoading || isRegionsLoading || !maisonMereAAP) {
+  if (isMaisonMereAAPLoading || !maisonMereAAP) {
     return <></>;
   }
 

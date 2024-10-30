@@ -22,7 +22,7 @@ export const DecisionSentComponent = ({
   decisionComment,
   history,
 }: {
-  decisionSentAt: Date;
+  decisionSentAt: Date | null;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
   history?: FeasibilityHistory[];

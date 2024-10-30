@@ -58,5 +58,6 @@ export const withRolesGuard =
  * Used for cleaner names in react dev tools
  */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getDisplayName = (WrappedComponent: React.ComponentType<any>) =>
   WrappedComponent.displayName || WrappedComponent.name || "Component";
