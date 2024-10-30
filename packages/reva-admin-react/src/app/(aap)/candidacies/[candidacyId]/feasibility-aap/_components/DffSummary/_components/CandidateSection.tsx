@@ -91,19 +91,19 @@ export default function CandidateSection({
         <span>Téléphone : {phone}</span>
       </p>
       <h3>Niveau de formation</h3>
-      <p className="mb-4">
-        Niveau de formation le plus élevé: {niveauDeFormationLePlusEleve?.level}
+      <p className="mb-0">Niveau de formation le plus élevé</p>
+      <p className="mb-2 font-medium">
+        {niveauDeFormationLePlusEleve?.longLabel}
       </p>
-      <p className="mb-2">
-        Niveau de la certification obtenue la plus élevée :{" "}
-        {highestDegree?.level}
-      </p>
-      <p className="mb-2">{highestDegree?.longLabel}</p>
+      <p className="mb-0">Niveau de la certification obtenue la plus élevée</p>
+      <p className="mb-2 font-medium">{highestDegree?.longLabel}</p>
       {highestDegreeLabel && (
-        <p>
-          Intitulé de la certification la plus élevée obtenue:{" "}
-          {highestDegreeLabel}
-        </p>
+        <>
+          <p className="mb-0">
+            Intitulé de la certification la plus élevée obtenue
+          </p>
+          <p className="mb-2 font-medium">{highestDegreeLabel}</p>
+        </>
       )}
     </div>
   );

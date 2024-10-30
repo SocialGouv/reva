@@ -103,11 +103,10 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           certificateSkills
           candidate {
             highestDegree {
-              level
               longLabel
             }
             niveauDeFormationLePlusEleve {
-              level
+              longLabel
             }
             highestDegreeLabel
             firstname
