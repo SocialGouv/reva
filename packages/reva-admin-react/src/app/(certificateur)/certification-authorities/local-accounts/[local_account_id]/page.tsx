@@ -2,11 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import {
-  errorToast,
-  graphqlErrorToast,
-  successToast,
-} from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
@@ -64,8 +60,8 @@ const EditLocalAccountPage = () => {
       );
       successToast("Compte local supprimé");
       router.push("/certification-authorities/local-accounts");
-    } catch (e) {
-      graphqlErrorToast(e);
+    } catch (error) {
+      graphqlErrorToast(error);
     }
   };
 
@@ -104,11 +100,7 @@ const EditLocalAccountPage = () => {
 
               router.push("/certification-authorities/local-accounts");
             } catch (error) {
-              const errorMessage =
-                (error as any)?.response?.errors?.[0]?.message ||
-                '"Une erreur est survenue"';
-
-              errorToast(errorMessage);
+              graphqlErrorToast(error);
             }
           }
         }}

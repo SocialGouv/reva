@@ -122,7 +122,11 @@ export const DematerializedFeasibility = () => {
         HasBeenSentComponent={
           !waitingForDecision && (
             <DecisionSentComponent
-              decisionSentAt={feasibility?.decisionSentAt as any as Date}
+              decisionSentAt={
+                feasibility?.decisionSentAt
+                  ? new Date(feasibility.decisionSentAt)
+                  : null
+              }
               decision={feasibility?.decision as FeasibilityDecision}
               decisionComment={feasibility?.decisionComment}
               history={feasibility?.history}

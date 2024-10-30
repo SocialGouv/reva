@@ -9,7 +9,7 @@ import { format, isAfter, startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { errorToast } from "@/components/toast/toast";
+import { graphqlErrorToast } from "@/components/toast/toast";
 import { JuryResult } from "@/graphql/generated/graphql";
 
 import { useJuryPageLogic } from "./juryPageLogic";
@@ -92,13 +92,8 @@ export const Resultat = (): JSX.Element => {
           },
         });
       } catch (error) {
-        const errorMessage =
-          (error as any)?.response?.errors?.[0]?.message ||
-          '"Une erreur est survenue"';
-
-        errorToast(errorMessage);
-
         console.error(error);
+        graphqlErrorToast(error);
       }
     }
   };

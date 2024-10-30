@@ -9,7 +9,6 @@ import {
   DfFileAapDecision,
   DffAttachment,
   DffCertificationCompetenceBloc,
-  FeasibilityDecision,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { AttachmentsSection } from "./_components/AttachmentsSection";
@@ -58,10 +57,14 @@ const AapFeasibilityPage = () => {
         candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
           <DecisionSentComponent
-            decisionSentAt={feasibility?.decisionSentAt as any as Date}
-            decision={feasibility?.decision as FeasibilityDecision}
-            decisionComment={feasibility?.decisionComment}
-            history={feasibility?.history}
+            decisionSentAt={
+              feasibility.decisionSentAt
+                ? new Date(feasibility.decisionSentAt)
+                : null
+            }
+            decision={feasibility.decision}
+            decisionComment={feasibility.decisionComment}
+            history={feasibility.history}
           />
         }
       />
@@ -82,7 +85,9 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.eligibilityRequirement
             }
             eligibilityValidUntil={
-              dematerializedFeasibilityFile?.eligibilityValidUntil as any as Date | null
+              dematerializedFeasibilityFile?.eligibilityValidUntil
+                ? new Date(dematerializedFeasibilityFile?.eligibilityValidUntil)
+                : null
             }
             isFeasibilityEditable={isFeasibilityEditable}
           />
@@ -178,15 +183,19 @@ const AapFeasibilityPage = () => {
 
           <SendFileCertificationAuthoritySection
             sentToCertificationAuthorityAt={
-              feasibilityFileSentAt as any as Date | null
+              feasibilityFileSentAt ? new Date(feasibilityFileSentAt) : null
             }
             isReadyToBeSentToCertificationAuthority={
               dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
-            decisionSentAt={feasibility?.decisionSentAt as any as Date}
-            decision={feasibility?.decision as FeasibilityDecision}
-            decisionComment={feasibility?.decisionComment}
-            history={feasibility?.history}
+            decisionSentAt={
+              feasibility.decisionSentAt
+                ? new Date(feasibility.decisionSentAt)
+                : null
+            }
+            decision={feasibility.decision}
+            decisionComment={feasibility.decisionComment}
+            history={feasibility.history}
           />
         </ul>
       )}

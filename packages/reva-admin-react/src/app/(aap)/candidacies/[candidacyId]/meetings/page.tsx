@@ -138,8 +138,6 @@ const MeetingsPage = () => {
   const firstAppointmentOccuredAt =
     getCandidacyResponse?.getCandidacyById?.firstAppointmentOccuredAt;
 
-  const candidateId = getCandidacyResponse?.getCandidacyById?.candidate?.id;
-
   const candidacyCreatedAt = getCandidacyResponse?.getCandidacyById?.createdAt;
 
   const handleFormSubmit = handleSubmit(async (data) => {

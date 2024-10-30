@@ -137,7 +137,6 @@ export const useJuryPageLogic = () => {
       getCandidacy.refetch();
     },
   });
-  updateJuryResult;
 
   return {
     getCandidacy,

@@ -48,7 +48,7 @@ const CandidacyArchiveComponent = ({
 };
 
 const CandidacyArchivePage = () => {
-  const { candidacy, candidacyId } = useArchive({});
+  const { candidacy } = useArchive({});
 
   if (!candidacy) {
     return null;

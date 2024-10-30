@@ -34,7 +34,6 @@ const InformationsRemotePage = () => {
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<InformationRemoteFormData>({
     resolver: zodResolver(informationRemoteFormSchema),

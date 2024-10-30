@@ -95,7 +95,7 @@ const FormacodesCcnsDegreesForm = ({
   );
 
   const resetForm = useCallback(() => {
-    organismAndReferentialStatus === "success" &&
+    if (organismAndReferentialStatus === "success") {
       reset({
         organismDegrees: degrees
           .filter((d) => d.level > 2)
@@ -122,6 +122,7 @@ const FormacodesCcnsDegreesForm = ({
           {},
         ),
       });
+    }
   }, [
     organismAndReferentialStatus,
     reset,

@@ -157,8 +157,10 @@ const FundingPage = () => {
     try {
       await createFundingRequestUnifvaeMutate(dataToSend);
       successToast("La demande de financement a bien été enregistrée.");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e.response?.errors) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return e.response.errors.forEach((error: any) => {
           const isInputError = error.message.startsWith("input.");
           if (isInputError) {

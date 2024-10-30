@@ -19,7 +19,7 @@ const schema = z
     admissibilityStatus: z.enum(
       ["unknownAdmissibility", "alreadyAdmissible", "notAlreadyAdmissible"],
       {
-        errorMap: (issue, ctx) => {
+        errorMap: (_issue, _ctx) => {
           return { message: "Merci de remplir ce champ" };
         },
       },

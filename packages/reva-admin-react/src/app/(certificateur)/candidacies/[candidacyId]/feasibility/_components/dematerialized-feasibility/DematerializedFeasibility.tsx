@@ -7,7 +7,6 @@ import { useUrqlClient } from "@/components/urql-client";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
-  FeasibilityDecision,
 } from "@/graphql/generated/graphql";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -132,12 +131,17 @@ export const DematerializedFeasibility = () => {
         }
         candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
-          decisionHasBeenMade && (
+          decisionHasBeenMade &&
+          feasibility && (
             <DecisionSentComponent
-              decisionSentAt={feasibility?.decisionSentAt as any as Date}
-              decision={feasibility?.decision as FeasibilityDecision}
+              decisionSentAt={
+                feasibility.decisionSentAt
+                  ? new Date(feasibility.decisionSentAt)
+                  : null
+              }
+              decision={feasibility.decision}
               decisionComment={feasibility?.decisionComment}
-              history={feasibility?.history}
+              history={feasibility.history}
             />
           )
         }

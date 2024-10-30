@@ -1,4 +1,3 @@
-import { ADMIN_ELM_URL } from "@/config/config";
 import Button from "@codegouvfr/react-dsfr/Button";
 import {
   CandidacyForStatus,

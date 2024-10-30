@@ -32,8 +32,6 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   }>();
   const { graphqlClient } = useGraphQlClient();
 
-  const { isFeatureActive } = useFeatureflipping();
-
   const { data: getCandidacyResponse } = useQuery({
     queryKey: ["getCandidacy", candidacyId],
     queryFn: () =>
@@ -56,6 +54,8 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     },
     text,
   });
+
+  const { isFeatureActive } = useFeatureflipping();
 
   const items = [
     isFeatureActive("FEASIBILITY_COMPLETION_STATUS")

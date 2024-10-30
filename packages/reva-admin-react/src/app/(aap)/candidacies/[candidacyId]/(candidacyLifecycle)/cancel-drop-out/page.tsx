@@ -45,7 +45,7 @@ const CandidacyArchiveComponent = ({
 };
 
 const CandidacyArchivePage = () => {
-  const { candidacy, candidacyId } = useCancelDropout({});
+  const { candidacy } = useCancelDropout({});
 
   if (!candidacy) {
     return null;

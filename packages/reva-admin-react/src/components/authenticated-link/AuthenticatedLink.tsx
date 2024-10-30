@@ -21,10 +21,10 @@ export const AuthenticatedLink = ({
       xhr.responseType = "blob";
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
 
-      xhr.onload = async function (e) {
+      xhr.onload = async function (_error) {
         if (this.status == 200) {
           try {
-            var blob = new Blob([this.response], {
+            const blob = new Blob([this.response], {
               type: xhr.getResponseHeader("content-type") || "",
             });
             const url = window.URL.createObjectURL(blob);
@@ -53,7 +53,7 @@ export const AuthenticatedLink = ({
       xhr.open("GET", url);
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
 
-      xhr.onload = async function (e) {
+      xhr.onload = async function (_error) {
         if (this.status == 200) {
           try {
             const json = JSON.parse(this.responseText);
@@ -81,7 +81,7 @@ export const AuthenticatedLink = ({
     if (!url) {
       url = await getFileUrlFromBlob();
     }
-    let a = document.createElement("a");
+    const a = document.createElement("a");
     document.body.appendChild(a);
     a.href = url!;
     a.target = "_blank";

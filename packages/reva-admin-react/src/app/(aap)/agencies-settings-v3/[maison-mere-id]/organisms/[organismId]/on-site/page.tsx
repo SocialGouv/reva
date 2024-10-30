@@ -29,8 +29,8 @@ export default function OnSitePage() {
     organism.informationsCommerciales?.nom &&
     organism.informationsCommerciales?.adresseNumeroEtNomDeRue &&
     organism.informationsCommerciales?.adresseVille &&
-    organism.informationsCommerciales?.adresseCodePostal;
-  organism.informationsCommerciales?.telephone &&
+    organism.informationsCommerciales?.adresseCodePostal &&
+    organism.informationsCommerciales?.telephone &&
     organism.informationsCommerciales?.emailContact;
 
   const isFormacodeEnabled = isFeatureActive("AAP_SETTINGS_FORMACODE");

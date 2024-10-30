@@ -3,7 +3,6 @@ import { Duration } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const durationToString: {
   [key in Duration]: string;
@@ -31,8 +30,6 @@ export const CandidateExperiencesSectionCard = ({
     startedAt: Date;
   }[];
 }) => {
-  const router = useRouter();
-
   return (
     <GrayCard>
       <span className="text-2xl font-bold">Ses expériences</span>

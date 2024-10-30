@@ -96,7 +96,7 @@ export const TrainingForm = ({
     handleSubmit,
     control,
     setError,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<TrainingFormData>({
     resolver: zodResolver(trainingFormSchema),
     defaultValues: {

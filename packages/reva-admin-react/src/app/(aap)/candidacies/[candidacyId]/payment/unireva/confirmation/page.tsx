@@ -41,15 +41,10 @@ const PaymentRequestUniRevaConfirmationPage = () => {
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();
 
-  const {
-    register,
-    reset,
-    formState,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<PaymentRequestUniRevaConfirmationFormData>({
-    resolver: zodResolver(paymentRequestUniRevaConfirmationSchema),
-  });
+  const { register, reset, formState, handleSubmit } =
+    useForm<PaymentRequestUniRevaConfirmationFormData>({
+      resolver: zodResolver(paymentRequestUniRevaConfirmationSchema),
+    });
 
   const handleFormSubmit = handleSubmit(
     async () => {

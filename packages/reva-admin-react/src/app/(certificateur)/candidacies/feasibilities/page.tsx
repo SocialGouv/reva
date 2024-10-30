@@ -170,7 +170,7 @@ const FeasibilitiesPage = () => {
             r.feasibilityFileSentAt && (
               <p className="text-lg col-span-2 mb-0">
                 Dossier envoyé le{" "}
-                {format(r.feasibilityFileSentAt as any as Date, "d MMM yyyy")}
+                {format(r.feasibilityFileSentAt, "d MMM yyyy")}
               </p>
             )
           }

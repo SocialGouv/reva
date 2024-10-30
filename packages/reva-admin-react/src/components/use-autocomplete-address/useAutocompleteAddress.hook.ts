@@ -65,7 +65,7 @@ export function useAutocompleteAddress({ search }: { search?: string }) {
       if (!data.features.length) {
         return [];
       }
-      const result = data.features.map((feature: any) => {
+      const result = data.features.map((feature) => {
         return {
           label: feature.properties.label,
           street: feature.properties.name,

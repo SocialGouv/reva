@@ -24,8 +24,6 @@ export const Keycloak = (config: {
   url: string;
 }) => {
   const keycloak = new _Keycloak(config);
-  //@ts-ignore
-  window.keycloak = keycloak;
   return keycloak;
 };
 
@@ -37,7 +35,7 @@ export const KeycloakProvider = ({
 }: KeycloakProviderProps) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-  const [ready, setReady] = useState<boolean>(false);
+  const [, setReady] = useState<boolean>(false);
 
   const logout = () => {
     setAuthenticated(false);
@@ -65,13 +63,10 @@ export const KeycloakProvider = ({
   useEffect(() => {
     const initKeycloak = async () => {
       if (keycloakInstance) {
-        let config: KeycloakInitOptions = {
+        const config: KeycloakInitOptions = {
           enableLogging: process.env.NODE_ENV !== "production",
           onLoad: "check-sso",
-          //@ts-ignore
-          promiseType: "native",
           silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
-          iframeTarget: this,
           checkLoginIframe: true,
         };
 
@@ -117,9 +112,10 @@ export const KeycloakProvider = ({
           }
 
           setReady(true);
-        } catch (e: any) {
+        } catch (e) {
           console.log("Error keycloak", e);
-          if (e?.error === "login_required") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((e as any)?.error === "login_required") {
             setReady(true);
           }
         }
