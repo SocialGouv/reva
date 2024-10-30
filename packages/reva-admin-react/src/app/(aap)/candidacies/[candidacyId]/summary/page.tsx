@@ -168,14 +168,21 @@ const CandidacySummaryPage = () => {
                     <p className="font-bold mb-0">
                       Niveau de la formation la plus élevée
                     </p>
-                    <p className="mb-0">
+                    <p className="mb-2">
                       {candidate.niveauDeFormationLePlusEleve?.label}
                     </p>
-                    <br />
-                    <p className="font-bold mb-0">
-                      Intitulé de la certification la plus élevée obtenue
+                    <p className="mb-0 font-bold">
+                      Niveau de la certification obtenue la plus élevée
                     </p>
-                    <p className="mb-0">{candidate.highestDegreeLabel}</p>
+                    <p className="mb-2">{candidate.highestDegree?.label}</p>
+                    {candidate.highestDegreeLabel && (
+                      <>
+                        <p className="font-bold mb-0">
+                          Intitulé de la certification la plus élevée obtenue
+                        </p>
+                        <p className="mb-2">{candidate.highestDegreeLabel}</p>
+                      </>
+                    )}
                   </div>
                 )}
               </EnhancedSectionCard>
