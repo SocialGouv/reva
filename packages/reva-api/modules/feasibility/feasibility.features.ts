@@ -1109,6 +1109,61 @@ const markFeasibilityAsIncomplete = async ({
   }
 };
 
+const markFeasibilityAsComplete = async ({
+  feasibilityId,
+  hasRole,
+  keycloakId,
+  userEmail,
+  userRoles,
+}: {
+  feasibilityId: string;
+  hasRole: (role: string) => boolean;
+  keycloakId: string;
+  userEmail: string;
+  userRoles: KeyCloakUserRole[];
+}) => {
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+  });
+
+  const authorized = await canManageFeasibility({
+    hasRole,
+    feasibility,
+    keycloakId,
+  });
+
+  if (feasibility && (hasRole("admin") || authorized)) {
+    return prismaClient.$transaction(async (tx) => {
+      const updatedFeasibility = await tx.feasibility.update({
+        where: { id: feasibilityId },
+        data: {
+          decision: "COMPLETE",
+          decisionSentAt: new Date(),
+        },
+      });
+
+      await updateCandidacyStatus({
+        tx,
+        candidacyId: feasibility?.candidacyId || "",
+        status: "DOSSIER_FAISABILITE_COMPLET",
+      });
+
+      await logCandidacyAuditEvent({
+        tx,
+        candidacyId: feasibility?.candidacyId,
+        userKeycloakId: keycloakId,
+        userEmail,
+        userRoles,
+        eventType: "FEASIBILITY_MARKED_AS_COMPLETE",
+      });
+
+      return updatedFeasibility;
+    });
+  } else {
+    throw new Error("Utilisateur non autorisé");
+  }
+};
+
 export const canDownloadFeasibilityFiles = async ({
   hasRole,
   feasibility,
@@ -1265,6 +1320,8 @@ export const handleFeasibilityDecision = async (args: {
       return validateFeasibility(otherParameters);
     case "REJECTED":
       return rejectFeasibility(otherParameters);
+    case "COMPLETE":
+      return markFeasibilityAsComplete(otherParameters);
     case "INCOMPLETE":
       return markFeasibilityAsIncomplete(otherParameters);
 

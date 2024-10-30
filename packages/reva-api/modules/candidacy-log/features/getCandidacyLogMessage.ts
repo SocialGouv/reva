@@ -84,6 +84,8 @@ export const getCandidacyLogMessage = ({
       )}`;
     case "FEASIBILITY_SENT":
       return "Dossier de faisabilité envoyé.";
+    case "FEASIBILITY_MARKED_AS_COMPLETE":
+      return "Dossier de faisabilité complet.";
     case "FEASIBILITY_MARKED_AS_INCOMPLETE":
       return "Dossier de faisabilité jugé incomplet.";
     case "FEASIBILITY_REJECTED":
