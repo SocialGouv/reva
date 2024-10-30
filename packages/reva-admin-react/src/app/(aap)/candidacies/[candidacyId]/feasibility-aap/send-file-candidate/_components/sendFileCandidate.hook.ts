@@ -109,6 +109,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             niveauDeFormationLePlusEleve {
               level
             }
+            highestDegreeLabel
             firstname
             firstname2
             firstname3

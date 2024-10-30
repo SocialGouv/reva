@@ -127,6 +127,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             niveauDeFormationLePlusEleve {
               level
             }
+            highestDegreeLabel
             firstname
             firstname2
             firstname3

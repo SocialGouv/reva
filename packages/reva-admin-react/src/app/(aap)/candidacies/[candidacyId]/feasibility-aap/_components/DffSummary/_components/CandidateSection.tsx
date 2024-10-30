@@ -48,6 +48,7 @@ export default function CandidateSection({
     city,
     niveauDeFormationLePlusEleve,
     highestDegree,
+    highestDegreeLabel,
   } = candidate;
 
   const genderLabel = gender ? getGenderPrefix(gender) : "";
@@ -97,7 +98,13 @@ export default function CandidateSection({
         Niveau de la certification obtenue la plus élevée :{" "}
         {highestDegree?.level}
       </p>
-      <p>{highestDegree?.longLabel}</p>
+      <p className="mb-2">{highestDegree?.longLabel}</p>
+      {highestDegreeLabel && (
+        <p>
+          Intitulé de la certification la plus élevée obtenue:{" "}
+          {highestDegreeLabel}
+        </p>
+      )}
     </div>
   );
 }
