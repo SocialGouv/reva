@@ -127,9 +127,9 @@ export const ProfessionalSpaceSubscriptionProvider = (props: {
   }, [state.currentStep]);
 
   const goBackToPreviousStep = useCallback(() => {
-    let newCurrentStep = state.currentStep;
+    const newCurrentStep = state.currentStep;
 
-    let previousStepOf = {
+    const previousStepOf = {
       cguStep: "cguStep" as Step,
       companySiretStep: "cguStep" as Step,
       accountInfoStep: "companySiretStep" as Step,

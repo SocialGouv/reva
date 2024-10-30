@@ -1,14 +1,18 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import { GetSectionFaqsQuery } from "@/graphql/generated/graphql";
 import { getSectionFaqs } from "@/utils/strapiQueries";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import Head from "next/head";
 
-const FaqPage = ({ sections, preview }: { sections: GetSectionFaqsQuery, preview: boolean }) => (
+const FaqPage = ({
+  sections,
+  preview,
+}: {
+  sections: GetSectionFaqsQuery;
+  preview: boolean;
+}) => (
   <>
     <Head>
       <title>France VAE | FAQ </title>
@@ -30,8 +34,8 @@ const FaqPage = ({ sections, preview }: { sections: GetSectionFaqsQuery, preview
           {sections.sectionFaqs?.data?.map((s) => (
             <Tile
               key={s.id}
-              enlargeLink
-              horizontal
+              enlargeLinkOrButton
+              orientation="horizontal"
               linkProps={{
                 href: `#section-${s.id}`,
               }}

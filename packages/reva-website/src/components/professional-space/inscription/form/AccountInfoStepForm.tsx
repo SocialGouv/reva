@@ -12,11 +12,8 @@ import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 
 export const AccountInfoStepForm = () => {
-  const {
-    goBackToPreviousStep,
-    professionalSpaceInfos,
-    submitAccountInfoStep,
-  } = useProfessionalSpaceSubscriptionContext();
+  const { professionalSpaceInfos, submitAccountInfoStep } =
+    useProfessionalSpaceSubscriptionContext();
 
   const zodSchema = z.object({
     accountFirstname: z.string().min(1, "Merci de remplir ce champ"),
