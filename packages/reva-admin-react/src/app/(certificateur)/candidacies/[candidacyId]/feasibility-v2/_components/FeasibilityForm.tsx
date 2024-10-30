@@ -1,11 +1,11 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const schema = z
   .object({
@@ -43,7 +43,7 @@ export const FeasibilityForm = ({
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<FeasibilityFormData>({ resolver: zodResolver(schema) });
 
   const handleFormSubmit = handleSubmit((data) => onSubmit?.(data));
@@ -115,9 +115,10 @@ export const FeasibilityForm = ({
         />
       </fieldset>
       <br />
-      <Button className="ml-auto mt-8" disabled={isSubmitting || !isValid}>
-        Envoyer la décision
-      </Button>
+      <FormButtons
+        backUrl="/candidacies/feasibilities"
+        formState={{ isSubmitting, isDirty }}
+      />
     </form>
   );
 };
