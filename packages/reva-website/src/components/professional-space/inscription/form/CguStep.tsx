@@ -21,7 +21,7 @@ export const CguStep = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm<CguStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: {

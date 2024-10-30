@@ -36,7 +36,6 @@ type FormData = z.infer<typeof schema>;
 
 export const CompanyDocumentsStepForm = () => {
   const {
-    goBackToPreviousStep,
     submitCompanyDocumentsStep,
     professionalSpaceInfos: { delegataire },
   } = useProfessionalSpaceSubscriptionContext();

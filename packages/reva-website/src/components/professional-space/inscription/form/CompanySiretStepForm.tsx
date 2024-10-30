@@ -92,7 +92,7 @@ export const CompanySiretStepForm = () => {
       }
     }
 
-    submitCompanySiretStep(data as any);
+    submitCompanySiretStep(data);
   };
 
   return (
