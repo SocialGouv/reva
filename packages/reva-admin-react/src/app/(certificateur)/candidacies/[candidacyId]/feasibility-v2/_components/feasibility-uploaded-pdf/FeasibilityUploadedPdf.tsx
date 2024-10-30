@@ -7,7 +7,6 @@ import { FeasibilityForm, FeasibilityFormData } from "../FeasibilityForm";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import { FeasibilityFormAutonomous } from "../FeasibilityFormAutonomous";
 import FeasibilityDecisionDisplay from "../FeasibilityDecisionDisplay";
 
 export const FeasibilityUploadedPdf = () => {
@@ -133,17 +132,9 @@ export const FeasibilityUploadedPdf = () => {
             </CallOut>
           )}
 
-          {isFeasibilityEditable &&
-            candidacy?.typeAccompagnement === "ACCOMPAGNE" && (
-              <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
-            )}
-          {isFeasibilityEditable &&
-            candidacy?.typeAccompagnement === "AUTONOME" && (
-              <FeasibilityFormAutonomous
-                className="mt-4"
-                onSubmit={handleFormSubmit}
-              />
-            )}
+          {isFeasibilityEditable && (
+            <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
+          )}
         </div>
       )}
     </div>

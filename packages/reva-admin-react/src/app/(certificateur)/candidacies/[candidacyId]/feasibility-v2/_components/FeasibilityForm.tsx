@@ -1,12 +1,11 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
-import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
 const schema = z
   .object({
@@ -55,18 +54,14 @@ export const FeasibilityForm = ({
     <form className={`flex flex-col ${className}`} onSubmit={handleFormSubmit}>
       <fieldset>
         <legend>
-          <h1>Envoi de la décision</h1>
+          <h1>Décision concernant ce dossier</h1>
           <FormOptionalFieldsDisclaimer />
         </legend>
         <RadioButtons
-          legend="Décision prise concernant ce dossier"
+          legend="Sélectionnez si ce dossier est recevable, incomplet/incorrect ou non recevable."
           options={[
             {
-              label: (
-                <p className="mb-0">
-                  Ce dossier est <strong>recevable</strong>
-                </p>
-              ),
+              label: <p className="mb-0 text-base">Ce dossier est recevable</p>,
               nativeInputProps: {
                 ...register("decision"),
                 value: "Admissible",
@@ -74,13 +69,12 @@ export const FeasibilityForm = ({
             },
             {
               label: (
-                <p className="mb-0">
-                  Ce dossier est considéré comme{" "}
-                  <strong>incomplet ou incorrect</strong>
+                <p className="mb-0 text-base">
+                  Ce dossier est incomplet ou incorrect
                 </p>
               ),
               hintText:
-                "Un dossier est incorrect ou incomplet si il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n’est pas le bon, s’il manque des éléments ou si les pièces jointes sont inexploitables, erronées etc... Il sera renvoyé à l’AAP qui devra le compléter ou le corriger rapidement.",
+                "Est considéré comme incomplet ou incorrect tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronnées, informations manquantes, mauvais dossier...). Le candidat aura accès à la modification de son dossier pour apporter les informations complémentaires demandées.",
               nativeInputProps: {
                 ...register("decision"),
                 value: "Incomplete",
@@ -88,12 +82,10 @@ export const FeasibilityForm = ({
             },
             {
               label: (
-                <p className="mb-0">
-                  Ce dossier n'est <strong>pas recevable</strong>
-                </p>
+                <p className="mb-0 text-base">Ce dossier est non recevable</p>
               ),
               hintText:
-                "La non recevabilité d'un dossier ne peut être prononcée que sur un dossier complet ET pour lequel les activités du candidat ne semblent pas correspondre au référentiel de la certification (ou bloc) visée. Le candidat ne pourra plus demander de recevabilité sur cette certification durant l'année civile en cours.",
+                "Est considéré comme non recevable un dossier complet affichant des expériences qui ne correspondent pas au référentiel de la certification (ou bloc) visée. Si le dossier n’est pas recevable, le candidat ne pourra plus demander de recevabilité sur cette certification durant l’année civile en cours.",
               nativeInputProps: { ...register("decision"), value: "Rejected" },
             },
           ]}
@@ -101,28 +93,28 @@ export const FeasibilityForm = ({
           stateRelatedMessage={errors.decision?.message}
         />
         <Input
-          classes={{ nativeInputOrTextArea: "!min-h-[200px]" }}
-          className="max-w-md"
+          classes={{ nativeInputOrTextArea: "!min-h-[100px]" }}
+          className="w-full"
           textArea
           label={
-            <span className="uppercase text-xs font-semibold">
-              PRÉCISEZ LES MOTIFS DE VOTRE DÉCISION{" "}
-              {decision === "Admissible" ? "(OPTIONNEL)" : ""}
+            <span className="text-base">
+              Pouvez-vous préciser les motifs de cette décision ?{" "}
+              {decision === "Admissible" ? "(Optionnel)" : ""}
             </span>
           }
-          hintText="Texte de description libre"
+          hintText="Ces motifs seront transmis au candidat et à l'AAP le cas échéant."
           nativeTextAreaProps={register("comment")}
           state={errors.comment ? "error" : "default"}
           stateRelatedMessage={errors.comment?.message}
         />
-        <Upload
-          label="Joindre le courrier de recevabilité"
-          hint="Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas"
+        <FancyUpload
+          title="Joindre le courrier de recevabilité (Optionnel)"
+          description="Ce courrier sera joint au message envoyé au candidat."
+          hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           nativeInputProps={register("infoFile")}
         />
       </fieldset>
       <br />
-      <Notice title="Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours" />
       <Button className="ml-auto mt-8" disabled={isSubmitting || !isValid}>
         Envoyer la décision
       </Button>
