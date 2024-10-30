@@ -383,6 +383,7 @@ export const getActiveFeasibilityCountByCategory = async ({
   const feasibilityCountByCategory: Record<FeasibilityStatusFilter, number> = {
     ALL: 0,
     PENDING: 0,
+    COMPLETE: 0,
     ADMISSIBLE: 0,
     REJECTED: 0,
     INCOMPLETE: 0,
