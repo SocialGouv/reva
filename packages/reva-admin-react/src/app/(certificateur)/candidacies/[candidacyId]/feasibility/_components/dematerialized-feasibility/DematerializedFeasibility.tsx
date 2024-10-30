@@ -39,16 +39,18 @@ const schema = z
     if (decision === "INCOMPLETE" && !decisionComment) {
       addIssue({
         path: ["decisionComment"],
-        message: "Vous devez renseigner un commentaire lorsque le dossier est incomplet",
+        message:
+          "Vous devez renseigner un commentaire lorsque le dossier est incomplet",
         code: z.ZodIssueCode.custom,
-      })
+      });
     }
     if (decision === "REJECTED" && !decisionComment) {
       addIssue({
         path: ["decisionComment"],
-        message: "Vous devez motiver la décision de non-recevabilité du dossier",
+        message:
+          "Vous devez motiver la décision de non-recevabilité du dossier",
         code: z.ZodIssueCode.custom,
-      })
+      });
     }
   });
 
@@ -139,6 +141,7 @@ export const DematerializedFeasibility = () => {
             />
           )
         }
+        displayGiveYourDecisionSubtitle
       />
 
       {organism && (
@@ -221,9 +224,7 @@ export const DematerializedFeasibility = () => {
                   accept: ".pdf, .jpg, .jpeg, .png",
                 }}
                 state={errors.decisionFile ? "error" : "default"}
-                stateRelatedMessage={
-                  errors.decisionFile?.[0]?.message
-                }
+                stateRelatedMessage={errors.decisionFile?.[0]?.message}
               />
             </div>
 

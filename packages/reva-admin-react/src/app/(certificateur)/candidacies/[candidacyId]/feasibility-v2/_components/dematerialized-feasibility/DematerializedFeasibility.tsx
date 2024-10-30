@@ -81,6 +81,7 @@ export const DematerializedFeasibility = () => {
             />
           )
         }
+        displayGiveYourDecisionSubtitle
       />
 
       {organism && (

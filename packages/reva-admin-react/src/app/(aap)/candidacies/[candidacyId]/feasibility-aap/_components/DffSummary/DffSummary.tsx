@@ -32,10 +32,12 @@ export default function DffSummary({
   dematerializedFeasibilityFile,
   candidacy,
   HasBeenSentComponent,
+  displayGiveYourDecisionSubtitle = false,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
   candidacy: Candidacy;
   HasBeenSentComponent?: React.ReactNode;
+  displayGiveYourDecisionSubtitle?: boolean;
 }) {
   if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
@@ -78,10 +80,12 @@ export default function DffSummary({
           filename="dossier_de_faisabilite.pdf"
         />
       </div>
-      <p>
-        Retrouvez les informations liées à la faisabilité de ce parcours VAE et
-        donnez votre décision sur la recevabilité du dossier
-      </p>
+      {displayGiveYourDecisionSubtitle && (
+        <p>
+          Retrouvez les informations liées à la faisabilité de ce parcours VAE
+          et donnez votre décision sur la recevabilité du dossier
+        </p>
+      )}
 
       {HasBeenSentComponent}
 
