@@ -54,7 +54,7 @@ export const FeasibilityForm = ({
     <form className={`flex flex-col ${className}`} onSubmit={handleFormSubmit}>
       <fieldset>
         <legend>
-          <h1>Décision concernant ce dossier</h1>
+          <h2>Décision concernant ce dossier</h2>
           <FormOptionalFieldsDisclaimer />
         </legend>
         <RadioButtons
