@@ -48,6 +48,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       niveauDeFormationLePlusEleve {
         level
       }
+      highestDegreeLabel
       candidacy {
         id
         typeAccompagnement
