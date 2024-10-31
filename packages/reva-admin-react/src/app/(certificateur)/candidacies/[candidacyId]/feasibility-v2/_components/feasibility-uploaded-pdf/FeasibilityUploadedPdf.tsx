@@ -3,21 +3,45 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { errorToast } from "@/components/toast/toast";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useRouter } from "next/navigation";
-import { FeasibilityForm, FeasibilityFormData } from "../FeasibilityForm";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import FeasibilityDecisionDisplay from "../FeasibilityDecisionDisplay";
+import {
+  FeasibilityCompletionForm,
+  FeasibilityCompletionFormData,
+} from "../FeasibilityCompletionForm";
+import {
+  FeasibilityValidationForm,
+  FeasibilityValidationFormData,
+} from "../FeasibilityValidationForm";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacy, feasibility, submitFeasibilityDecision } =
     useFeasibilityUploadedPdf();
   const router = useRouter();
-  const handleFormSubmit = async (data: FeasibilityFormData) => {
+
+  const handleCompletionFormSubmit = async (
+    data: FeasibilityCompletionFormData,
+  ) => {
     const result = await submitFeasibilityDecision({
       decision: data.decision,
       comment: data.comment,
-      infoFile: data?.infoFile?.[0],
+    });
+    if (result.ok) {
+      router.push("/candidacies/feasibilities");
+    } else {
+      errorToast(await result.text());
+    }
+  };
+
+  const handleValidationFormSubmit = async (
+    data: FeasibilityValidationFormData,
+  ) => {
+    const result = await submitFeasibilityDecision({
+      decision: data.decision,
+      comment: data.comment,
+      infoFile: data.infoFile?.[0],
     });
     if (result.ok) {
       router.push("/candidacies/feasibilities");
@@ -30,10 +54,19 @@ export const FeasibilityUploadedPdf = () => {
 
   const isCandidacyDroppedOut = !!candidacy?.candidacyDropOut;
 
-  const isFeasibilityEditable =
+  const isFeasibilityWaitingToBeMarkedAsComplete =
     feasibility?.decision === "PENDING" &&
     !isCandidacyArchived &&
     !isCandidacyDroppedOut;
+
+  const isFeasibilityWaitingToBeValidated =
+    feasibility?.decision === "COMPLETE" &&
+    !isCandidacyArchived &&
+    !isCandidacyDroppedOut;
+
+  const waitingForDecision =
+    isFeasibilityWaitingToBeMarkedAsComplete ||
+    isFeasibilityWaitingToBeValidated;
 
   const uploadedPdf = feasibility?.feasibilityUploadedPdf;
   const feasibilityFile = uploadedPdf?.feasibilityFile;
@@ -132,8 +165,20 @@ export const FeasibilityUploadedPdf = () => {
             </CallOut>
           )}
 
-          {isFeasibilityEditable && (
-            <FeasibilityForm className="mt-4" onSubmit={handleFormSubmit} />
+          {waitingForDecision && (
+            <>
+              <hr className="mt-12 mb-11 pb-1" />
+              {isFeasibilityWaitingToBeMarkedAsComplete && (
+                <FeasibilityCompletionForm
+                  onSubmit={handleCompletionFormSubmit}
+                />
+              )}
+              {isFeasibilityWaitingToBeValidated && (
+                <FeasibilityValidationForm
+                  onSubmit={handleValidationFormSubmit}
+                />
+              )}
+            </>
           )}
         </div>
       )}
