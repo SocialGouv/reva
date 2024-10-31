@@ -21,9 +21,10 @@ const AlertDffState = ({
   sentToCertificationAuthorityAt: Date;
   history: FeasibilityHistory[];
 }) => {
-  const feasibilityIsPending = decision === "PENDING";
+  const feasibilityIsPendingOrComplete =
+    decision === "PENDING" || decision === "COMPLETE";
 
-  if (feasibilityIsPending && sentToCertificationAuthorityAt) {
+  if (feasibilityIsPendingOrComplete && sentToCertificationAuthorityAt) {
     return (
       <Alert
         severity="success"
