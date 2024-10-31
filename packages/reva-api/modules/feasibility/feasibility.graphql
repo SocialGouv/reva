@@ -3,6 +3,7 @@ enum FeasibilityDecision {
   PENDING
   REJECTED
   ADMISSIBLE
+  COMPLETE
   INCOMPLETE
 }
 

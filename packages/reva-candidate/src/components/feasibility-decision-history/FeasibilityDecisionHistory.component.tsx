@@ -28,7 +28,13 @@ export const FeasibilityDecisionHistory = (props: Props) => {
 
 interface FeasibilityDecision {
   id: string;
-  decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE" | "PENDING" | "DRAFT";
+  decision:
+    | "ADMISSIBLE"
+    | "COMPLETE"
+    | "REJECTED"
+    | "INCOMPLETE"
+    | "PENDING"
+    | "DRAFT";
   decisionSentAt?: number | null | undefined;
   decisionComment?: string | null | undefined;
 }
