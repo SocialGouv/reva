@@ -1,10 +1,7 @@
 import { useAuth } from "@/components/auth/auth";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { useMemo } from "react";
-import {
-  CandidacyDropOut,
-  CandidacyStatusStep,
-} from "@/graphql/generated/graphql";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export type CandidacyForStatus = {
   id: string;
