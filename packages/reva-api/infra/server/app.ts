@@ -21,6 +21,7 @@ import { logger } from "../../modules/shared/logger";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
+import { strapiWebhookRoute } from "../../modules/strapi/strapi.routes";
 
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
 const CANDIDATE_ROUTE_PATH = "/candidat";
@@ -109,6 +110,7 @@ export const buildApp = async (
   app.register(dossierDeValidationRoute, { prefix: "/api" });
   app.register(juryRoute, { prefix: "/api" });
   app.register(organismRoutes, { prefix: "/api" });
+  app.register(strapiWebhookRoute, { prefix: "/api" });
 
   logger.info("started");
   return app;
