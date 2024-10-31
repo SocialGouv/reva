@@ -23,7 +23,7 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
         className={`flex flex-row items-center justify-between px-4 py-3 cursor-pointer ${backgroundColor}`}
         onClick={() => setDisplay(!display)}
       >
-        <label className="text-blue-800 font-medium cursor-pointer">
+        <label className="text-blue-800 font-medium cursor-pointer max-w-xs sm:max-w-md break-words">
           {title}
         </label>
         <span
