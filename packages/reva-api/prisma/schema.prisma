@@ -1340,7 +1340,7 @@ enum StatutValidationInformationsJuridiquesMaisonMereAAP {
 model ProfessionalCgu {
   id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  version   Int      @map("version")
+  version   Int      @default(autoincrement()) @map("version")
 
   @@map("professional_cgu")
 }
