@@ -66,6 +66,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         eligibilityValidUntil
       }
       candidacy {
+        status
         organism {
           label
           informationsCommerciales {
@@ -145,6 +146,9 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           city
           street
           zip
+        }
+        candidacyDropOut {
+          createdAt
         }
       }
     }

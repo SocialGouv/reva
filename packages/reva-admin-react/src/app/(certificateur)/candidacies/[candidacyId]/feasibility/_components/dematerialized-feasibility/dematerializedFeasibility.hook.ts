@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
-  query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
+  query feasibilityGetActiveFeasibilityByCandidacyIdV2($candidacyId: ID!) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       decision
       decisionComment

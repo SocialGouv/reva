@@ -14,20 +14,72 @@ import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
-import { FeasibilityForm, FeasibilityFormData } from "../FeasibilityForm";
+import {
+  FeasibilityCompletionForm,
+  FeasibilityCompletionFormData,
+} from "../FeasibilityCompletionForm";
+import {
+  FeasibilityValidationForm,
+  FeasibilityValidationFormData,
+} from "../FeasibilityValidationForm";
 
 export const DematerializedFeasibility = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const { dematerializedFeasibilityFile, candidacy, feasibility } =
     useDematerializedFeasibility();
   const urqlClient = useUrqlClient();
-  const decisionHasBeenMade = feasibility?.decision !== "PENDING";
   const queryClient = useQueryClient();
 
-  const handleFormSubmit = async (data: FeasibilityFormData) => {
+  const isCandidacyArchived = candidacy?.status === "ARCHIVE";
+
+  const isCandidacyDroppedOut = !!candidacy?.candidacyDropOut;
+
+  const isFeasibilityWaitingToBeMarkedAsComplete =
+    feasibility?.decision === "PENDING" &&
+    !isCandidacyArchived &&
+    !isCandidacyDroppedOut;
+
+  const isFeasibilityWaitingToBeValidated =
+    feasibility?.decision === "COMPLETE" &&
+    !isCandidacyArchived &&
+    !isCandidacyDroppedOut;
+
+  const waitingForDecision =
+    isFeasibilityWaitingToBeMarkedAsComplete ||
+    isFeasibilityWaitingToBeValidated;
+
+  const handleValidationFormSubmit = async (
+    data: FeasibilityValidationFormData,
+  ) => {
     const decisionFile = data.infoFile?.[0];
     const input = {
       decisionFile,
+      decision: data.decision,
+      decisionComment: data.comment,
+    };
+
+    try {
+      const result = await urqlClient.mutation(
+        createOrUpdateCertificationAuthorityDecision,
+        {
+          input,
+          candidacyId,
+        },
+      );
+      if (result?.error) {
+        throw new Error(result?.error?.graphQLErrors[0].message);
+      }
+      successToast("Décision du dossier de faisabilité envoyée avec succès");
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
+
+  const handleCompletionFormSubmit = async (
+    data: FeasibilityCompletionFormData,
+  ) => {
+    const input = {
       decision: data.decision,
       decisionComment: data.comment,
     };
@@ -62,7 +114,7 @@ export const DematerializedFeasibility = () => {
         }
         candidacy={candidacy as Candidacy}
         HasBeenSentComponent={
-          decisionHasBeenMade && (
+          !waitingForDecision && (
             <DecisionSentComponent
               decisionSentAt={feasibility?.decisionSentAt as any as Date}
               decision={feasibility?.decision as FeasibilityDecision}
@@ -88,10 +140,15 @@ export const DematerializedFeasibility = () => {
         </CallOut>
       )}
 
-      {!decisionHasBeenMade && (
+      {waitingForDecision && (
         <>
           <hr className="mt-12 mb-11 pb-1" />
-          <FeasibilityForm onSubmit={handleFormSubmit} />
+          {isFeasibilityWaitingToBeMarkedAsComplete && (
+            <FeasibilityCompletionForm onSubmit={handleCompletionFormSubmit} />
+          )}
+          {isFeasibilityWaitingToBeValidated && (
+            <FeasibilityValidationForm onSubmit={handleValidationFormSubmit} />
+          )}
         </>
       )}
     </>
