@@ -1,98 +1,21 @@
+import { stubQuery } from "../../../../utils/graphql";
 import {
-  CompetenceBlocsPartCompletion,
-  DematerializedFeasibilityFile,
-  DffEligibilityRequirement,
-  DfFileAapDecision,
-  DfFileCertificationAuthorityDecision,
-} from "@/graphql/generated/graphql";
-import { stubQuery } from "../../utils/graphql";
+  DATE_NOW,
+  DEFAULT_BLOCS_COMPETENCES,
+  DEFAULT_BLOCS_COMPETENCES_COMPLETED,
+  DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+  DEFAULT_FEASIBILITY_FILE,
+  DFF_AAP_DECISION_FAVORABLE,
+  DFF_AAP_DECISION_UNFAVORABLE,
+  DFF_BLOCS_COMPETENCES_COMPLETED,
+  DFF_CERTIFICATION_AUTHORITY_DECISION_ADMISSIBLE,
+  DFF_CERTIFICATION_AUTHORITY_DECISION_INCOMPLETE,
+  DFF_CERTIFICATION_AUTHORITY_DECISION_REJECTED,
+  DFF_FULL_ELIGIBILITY,
+  DFF_PARTIAL_ELIGIBILITY,
+} from "./dff-mocks";
 
-const FULL_ELIGIBILITY =
-  "FULL_ELIGIBILITY_REQUIREMENT" as DffEligibilityRequirement;
-const PARTIAL_ELIGIBILITY =
-  "PARTIAL_ELIGIBILITY_REQUIREMENT" as DffEligibilityRequirement;
-const COMPLETED = "COMPLETED" as CompetenceBlocsPartCompletion;
-const FAVORABLE = "FAVORABLE" as DfFileAapDecision;
-const UNFAVORABLE = "UNFAVORABLE" as DfFileAapDecision;
-const DATE_NOW = new Date().getTime();
-const DECISION_ADMISSIBLE =
-  "ADMISSIBLE" as DfFileCertificationAuthorityDecision;
-const DECISION_INCOMPLETE =
-  "INCOMPLETE" as DfFileCertificationAuthorityDecision;
-const DECISION_REJECTED = "REJECTED" as DfFileCertificationAuthorityDecision;
-
-const defaultBlocsDeCompetences = [
-  {
-    complete: false,
-    certificationCompetenceBloc: {
-      id: "fe2aa5ab-6989-43c7-8332-b57f48511f3c",
-      code: "RNCP37780BC01",
-      label:
-        "Gestion de son activité professionnelle auprès de particuliers employeurs",
-      competences: [
-        {
-          id: "3040f14e-2f6a-4e66-8b91-3f6e70391839",
-          label:
-            "Construire son activité professionnelle en toute autonomie dans le secteur spécifique de l'emploi entre particuliers en recherchant des particuliers employeurs avec des outils de communication adaptés, en conduisant des entretiens d'embauche, et en négociant ses contrats de travail pour maintenir son employabilité",
-        },
-        {
-          id: "7e1d726d-9e7e-4c54-a878-cab165920be5",
-          label:
-            "Consolider son activité professionnelle en toute autonomie auprès des particuliers employeurs en veillant aux évolutions des métiers du secteur et en utilisant ses droits à la formation tout au long de la vie afin de maintenir son employabilité et d'affirmer son identité professionnelle",
-        },
-        {
-          id: "74e4e8c3-fdfd-4fa8-8fe0-f0b6a1dcbdb2",
-          label:
-            "Maintenir les relations de travail favorables avec les particuliers employeurs en s'appuyant sur les droits et les devoirs respectifs du salarié et des particuliers employeurs afin de développer la relation de confiance",
-        },
-        {
-          id: "aa2d6cd2-5fad-4e63-af3e-97c3efd1bb69",
-          label:
-            "Adapter la proposition de son intervention aux évolutions de situations afin de répondre aux besoins et attentes des particuliers employeurs",
-        },
-      ],
-    },
-  },
-];
-
-const defaultBlocsDeCompetencesCompleted = [
-  { ...defaultBlocsDeCompetences[0], complete: true },
-];
-
-const defaultDematerializedFeasibilityFile: Partial<DematerializedFeasibilityFile> =
-  {
-    swornStatementFileId: null,
-    isReadyToBeSentToCandidate: false,
-    isReadyToBeSentToCertificationAuthority: false,
-    sentToCandidateAt: null,
-    certificationPartComplete: false,
-    competenceBlocsPartCompletion: "TO_COMPLETE",
-    attachmentsPartComplete: false,
-    prerequisitesPartComplete: false,
-    firstForeignLanguage: null,
-    secondForeignLanguage: null,
-    option: null,
-    prerequisites: [],
-    blocsDeCompetences: [],
-    certificationCompetenceDetails: [],
-    aapDecision: null,
-    aapDecisionComment: null,
-    candidateDecisionComment: null,
-    attachments: [],
-    eligibilityRequirement: null,
-    eligibilityValidUntil: null,
-  };
-
-const defaultFeasibilityFile = {
-  decision: "DRAFT",
-  decisionSentAt: null,
-  decisionComment: null,
-  feasibilityFileSentAt: null,
-  history: [],
-  dematerializedFeasibilityFile: defaultDematerializedFeasibilityFile,
-};
-
-function visitFeasibility(feasibility = defaultFeasibilityFile) {
+function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE) {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
@@ -186,11 +109,10 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When eligibility is completed", () => {
     it("should display 'completed' badge for the eligibility section", function () {
       const feasibilityEligibilityCompleted = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement:
-            "FULL_ELIGIBILITY_REQUIREMENT" as DffEligibilityRequirement,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
         },
       };
 
@@ -230,12 +152,12 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When eligibility and certification are completed", () => {
     it("should display 'completed' badges for the certification and eligibility sections", function () {
       const feasibilityEligibilityAndCertificationCompleted = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetences,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES,
         },
       };
 
@@ -278,12 +200,12 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When eligibility is partial and certification is completed", () => {
     it("should display 'completed' badges for certification and eligibility sections", function () {
       const feasibilityEligibilityPartial = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: PARTIAL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_PARTIAL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetences,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES,
         },
       };
       visitFeasibility(feasibilityEligibilityPartial);
@@ -327,16 +249,16 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
     () => {
       it("should display 'completed' badges for all sections", function () {
         const feasibilityEligibilityAndCertificationCompleted = {
-          ...defaultFeasibilityFile,
+          ...DEFAULT_FEASIBILITY_FILE,
           dematerializedFeasibilityFile: {
-            ...defaultDematerializedFeasibilityFile,
-            eligibilityRequirement: FULL_ELIGIBILITY,
+            ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+            eligibilityRequirement: DFF_FULL_ELIGIBILITY,
             certificationPartComplete: true,
-            blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+            blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
             attachmentsPartComplete: true,
             prerequisitesPartComplete: true,
-            aapDecision: FAVORABLE,
-            competenceBlocsPartCompletion: COMPLETED,
+            aapDecision: DFF_AAP_DECISION_FAVORABLE,
+            competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
             isReadyToBeSentToCandidate: true,
           },
         };
@@ -380,16 +302,16 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the file has been sent to the candidate", () => {
     it("should display sent file alert and enable sworn statement button", () => {
       const feasibilityWithSentToCandidate = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
         },
@@ -435,16 +357,16 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the decision is marked as unfavorable", () => {
     it("should display an 'unfavorable' badge in the decision section", () => {
       const feasibilityUnfavorableDecision = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: UNFAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_UNFAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
         },
       };
@@ -485,10 +407,10 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should display candidate's comment when candidateDecisionComment exists", () => {
       const feasibilityWithUnfavorableDecision = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          aapDecision: UNFAVORABLE,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          aapDecision: DFF_AAP_DECISION_UNFAVORABLE,
           candidateDecisionComment: "Candidate's comment on the decision",
         },
       };
@@ -503,19 +425,19 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
     });
   });
 
-  context("When all previous steps are completed", () => {
+  context("When the feasibility file has been sent to the candidate", () => {
     it("should enable the sworn attestation section", () => {
       const feasibilityAllCompleted = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
         },
@@ -557,16 +479,16 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should enable the 'send to certification authority' section if the sworn attestation is completed", () => {
       const feasibilityAllCompletedWithSwornAttestation = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
           swornStatementFileId: "some-file-id",
@@ -610,16 +532,16 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should show all sections as completed and enable certification authority section", function () {
       const feasibilityAllCompleted = {
-        ...defaultFeasibilityFile,
+        ...DEFAULT_FEASIBILITY_FILE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
           swornStatementFileId: "some-file-id",
@@ -667,17 +589,17 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
     () => {
       it("should hide all badges and section buttons", () => {
         const feasibilityFileSent = {
-          ...defaultFeasibilityFile,
+          ...DEFAULT_FEASIBILITY_FILE,
           feasibilityFileSentAt: DATE_NOW as any,
           dematerializedFeasibilityFile: {
-            ...defaultDematerializedFeasibilityFile,
-            eligibilityRequirement: FULL_ELIGIBILITY,
+            ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+            eligibilityRequirement: DFF_FULL_ELIGIBILITY,
             certificationPartComplete: true,
-            blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+            blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
             attachmentsPartComplete: true,
             prerequisitesPartComplete: true,
-            aapDecision: FAVORABLE,
-            competenceBlocsPartCompletion: COMPLETED,
+            aapDecision: DFF_AAP_DECISION_FAVORABLE,
+            competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
             isReadyToBeSentToCandidate: true,
             sentToCandidateAt: DATE_NOW,
             swornStatementFileId: "some-file-id",
@@ -732,17 +654,17 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the decision is ADMISSIBLE or REJECTED", () => {
     it("should display the feasibility summary when the decision is ADMISSIBLE", () => {
       const feasibilityAdmissibleDecision = {
-        ...defaultFeasibilityFile,
-        decision: DECISION_ADMISSIBLE,
+        ...DEFAULT_FEASIBILITY_FILE,
+        decision: DFF_CERTIFICATION_AUTHORITY_DECISION_ADMISSIBLE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
           swornStatementFileId: "some-file-id",
@@ -755,17 +677,17 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should display the feasibility summary when the decision is REJECTED", () => {
       const feasibilityRejectedDecision = {
-        ...defaultFeasibilityFile,
-        decision: DECISION_REJECTED,
+        ...DEFAULT_FEASIBILITY_FILE,
+        decision: DFF_CERTIFICATION_AUTHORITY_DECISION_REJECTED,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           sentToCandidateAt: DATE_NOW,
           swornStatementFileId: "some-file-id",
@@ -780,17 +702,17 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the decision is INCOMPLETE", () => {
     it("should display all sections as editable with completed badges when the file is not ready to be sent to the certification authority", () => {
       const feasibilityIncompleteDecision = {
-        ...defaultFeasibilityFile,
-        decision: DECISION_INCOMPLETE,
+        ...DEFAULT_FEASIBILITY_FILE,
+        decision: DFF_CERTIFICATION_AUTHORITY_DECISION_INCOMPLETE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           swornStatementFileId: "some-file-id",
           isReadyToBeSentToCertificationAuthority: false,
@@ -834,17 +756,17 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should display all sections as editable with completed badges when the file is ready to be sent to the certification authority", () => {
       const feasibilityIncompleteDecision = {
-        ...defaultFeasibilityFile,
-        decision: DECISION_INCOMPLETE,
+        ...DEFAULT_FEASIBILITY_FILE,
+        decision: DFF_CERTIFICATION_AUTHORITY_DECISION_INCOMPLETE,
         dematerializedFeasibilityFile: {
-          ...defaultDematerializedFeasibilityFile,
-          eligibilityRequirement: FULL_ELIGIBILITY,
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
           certificationPartComplete: true,
-          blocsDeCompetences: defaultBlocsDeCompetencesCompleted,
+          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
           attachmentsPartComplete: true,
           prerequisitesPartComplete: true,
-          aapDecision: FAVORABLE,
-          competenceBlocsPartCompletion: COMPLETED,
+          aapDecision: DFF_AAP_DECISION_FAVORABLE,
+          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
           isReadyToBeSentToCandidate: true,
           swornStatementFileId: "some-file-id",
           isReadyToBeSentToCertificationAuthority: true,
