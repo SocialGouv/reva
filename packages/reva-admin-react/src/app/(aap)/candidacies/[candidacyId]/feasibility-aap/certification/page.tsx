@@ -194,17 +194,20 @@ const CertificationPage = () => {
             label="Option ou parcours"
             hintText="(Le cas échéant)"
             nativeInputProps={{ ...register("option") }}
+            data-test="certification-option-input"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Langue vivante 1"
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("firstForeignLanguage") }}
+              data-test="certification-first-foreign-language-input"
             />
             <Input
               label="Langue vivante 2"
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("secondForeignlanguage") }}
+              data-test="certification-second-foreign-language-input"
             />
           </div>
 
@@ -236,6 +239,7 @@ const CertificationPage = () => {
             ]}
             state={errors.completion ? "error" : "default"}
             stateRelatedMessage={errors.completion?.message}
+            data-test="certification-completion-radio-buttons"
           />
 
           <Checkbox
@@ -252,6 +256,7 @@ const CertificationPage = () => {
                 ...register(`competenceBlocs.${bIndex}.checked`),
               },
             }))}
+            data-test="competence-blocs-checkbox"
           />
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
