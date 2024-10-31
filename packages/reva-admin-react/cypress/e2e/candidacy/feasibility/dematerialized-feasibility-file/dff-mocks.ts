@@ -5,6 +5,7 @@ import {
   DfFileAapDecision,
   DfFileCertificationAuthorityDecision,
 } from "@/graphql/generated/graphql";
+import { addMonths, format } from "date-fns";
 
 export const DFF_FULL_ELIGIBILITY =
   "FULL_ELIGIBILITY_REQUIREMENT" as DffEligibilityRequirement;
@@ -92,3 +93,13 @@ export const DEFAULT_FEASIBILITY_FILE = {
   history: [],
   dematerializedFeasibilityFile: DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
 };
+
+export const DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(
+  addMonths(new Date(), 6),
+  "yyyy-MM-dd",
+);
+
+export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
+  addMonths(new Date(), -6),
+  "yyyy-MM-dd",
+);
