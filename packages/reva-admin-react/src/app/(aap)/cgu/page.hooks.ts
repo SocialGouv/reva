@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import request from "graphql-request";
 
 const getMaisonMereCGUQuery = graphql(`
   query getMaisonMereCGUQuery {
@@ -25,6 +26,22 @@ const acceptMaisonMereCGUMutation = graphql(`
   }
 `);
 
+const getCguQuery = graphql(`
+  query getCgu {
+    legals(filters: { nom: { eq: "CGU" } }) {
+      data {
+        id
+        attributes {
+          titre
+          contenu
+          chapo
+          dateDeMiseAJour
+        }
+      }
+    }
+  }
+`);
+
 export const useAppCgu = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -33,6 +50,17 @@ export const useAppCgu = () => {
     queryFn: () => graphqlClient.request(getMaisonMereCGUQuery),
   });
 
+  const getCguResponse = useQuery({
+    queryKey: ["getCguFromStrapi"],
+    queryFn: () =>
+      request(
+        (process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL ?? "") + "/graphql",
+        getCguQuery,
+      ),
+  });
+
+  const cguResponse = getCguResponse?.data?.legals?.data[0]?.attributes;
+
   const acceptMaisonMereCgu = useMutation({
     mutationFn: () => graphqlClient.request(acceptMaisonMereCGUMutation),
   });
@@ -40,5 +68,6 @@ export const useAppCgu = () => {
   return {
     getMaisonMereCGU,
     acceptMaisonMereCgu,
+    cguResponse,
   };
 };
