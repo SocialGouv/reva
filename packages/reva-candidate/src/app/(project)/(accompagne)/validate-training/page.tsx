@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useReducer } from "react";
+import { ChangeEvent, useEffect, useReducer } from "react";
 import { useRouter } from "next/navigation";
 
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -22,13 +22,18 @@ type Condition =
   | "conditionFour"
   | "conditionFive";
 
-type PageAction = {
-  type: "changeCondition";
-  payload: {
-    condition: Condition;
-    checked: boolean;
-  };
-};
+type PageAction =
+  | {
+      type: "changeCondition";
+      payload: {
+        condition: Condition;
+        checked: boolean;
+      };
+    }
+  | {
+      type: "updateCandidacyFundedByFranceVae";
+      payload: boolean;
+    };
 
 interface PageState {
   conditionOneChecked: boolean;
@@ -42,36 +47,45 @@ interface PageState {
 
 const pageReducer = (state: PageState, action: PageAction) => {
   const newState = { ...state };
+  const updateConditionChecked = () => {
+    newState.allConditionsChecked = newState.candidacyFundedByFranceVae
+      ? newState.conditionOneChecked &&
+        newState.conditionTwoChecked &&
+        newState.conditionThreeChecked &&
+        newState.conditionFourChecked &&
+        newState.conditionFiveChecked
+      : newState.conditionOneChecked &&
+        newState.conditionTwoChecked &&
+        newState.conditionFourChecked &&
+        newState.conditionFiveChecked;
+  };
   switch (action.type) {
-    case "changeCondition": {
-      switch (action.payload.condition) {
-        case "conditionOne":
-          newState.conditionOneChecked = action.payload.checked;
-          break;
-        case "conditionTwo":
-          newState.conditionTwoChecked = action.payload.checked;
-          break;
-        case "conditionThree":
-          newState.conditionThreeChecked = action.payload.checked;
-          break;
-        case "conditionFour":
-          newState.conditionFourChecked = action.payload.checked;
-          break;
-        case "conditionFive":
-          newState.conditionFiveChecked = action.payload.checked;
-          break;
+    case "changeCondition":
+      {
+        switch (action.payload.condition) {
+          case "conditionOne":
+            newState.conditionOneChecked = action.payload.checked;
+            break;
+          case "conditionTwo":
+            newState.conditionTwoChecked = action.payload.checked;
+            break;
+          case "conditionThree":
+            newState.conditionThreeChecked = action.payload.checked;
+            break;
+          case "conditionFour":
+            newState.conditionFourChecked = action.payload.checked;
+            break;
+          case "conditionFive":
+            newState.conditionFiveChecked = action.payload.checked;
+            break;
+        }
+        updateConditionChecked();
       }
-      newState.allConditionsChecked = newState.candidacyFundedByFranceVae
-        ? newState.conditionOneChecked &&
-          newState.conditionTwoChecked &&
-          newState.conditionThreeChecked &&
-          newState.conditionFourChecked &&
-          newState.conditionFiveChecked
-        : newState.conditionOneChecked &&
-          newState.conditionTwoChecked &&
-          newState.conditionFourChecked &&
-          newState.conditionFiveChecked;
-    }
+      break;
+    case "updateCandidacyFundedByFranceVae":
+      newState.candidacyFundedByFranceVae = action.payload;
+      updateConditionChecked();
+      break;
   }
   return newState;
 };
@@ -90,6 +104,13 @@ export default function ValidateTraining() {
     allConditionsChecked: false,
     candidacyFundedByFranceVae: candidacy?.financeModule !== "hors_plateforme",
   });
+
+  useEffect(() => {
+    pageDispatch({
+      type: "updateCandidacyFundedByFranceVae",
+      payload: candidacy?.financeModule !== "hors_plateforme",
+    });
+  }, [candidacy]);
 
   if (!candidacy) {
     return null;
@@ -136,7 +157,6 @@ export default function ValidateTraining() {
     nativeInputProps: {
       checked: pageState[`${condition}Checked`],
       onChange: (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.checked);
         pageDispatch({
           type: "changeCondition",
           payload: {
