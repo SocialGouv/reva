@@ -68,7 +68,8 @@ type DFFileAapDecision = "FAVORABLE" | "UNFAVORABLE";
 type DFFileCertificationAuthorityDecision =
   | "ADMISSIBLE"
   | "REJECTED"
-  | "INCOMPLETE";
+  | "INCOMPLETE"
+  | "COMPLETE";
 
 export interface DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput {
   candidateDecisionComment: string;

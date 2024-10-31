@@ -129,6 +129,7 @@ enum DFFileAapDecision {
 
 enum DFFileCertificationAuthorityDecision {
   ADMISSIBLE
+  COMPLETE
   INCOMPLETE
   REJECTED
 }
