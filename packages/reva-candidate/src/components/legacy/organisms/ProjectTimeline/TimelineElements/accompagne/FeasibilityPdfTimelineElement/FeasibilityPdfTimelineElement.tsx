@@ -15,6 +15,7 @@ export const FeasibilityPdfTimelineElement = () => {
   const INCOMPLETE = feasibility?.decision === "INCOMPLETE";
   const ADMISSIBLE = feasibility?.decision === "ADMISSIBLE";
   const REJECTED = feasibility?.decision === "REJECTED";
+  const COMPLETE = feasibility?.decision === "COMPLETE";
 
   let text = `Si le dossier de faisabilité est jugé recevable par le certificateur, alors vous pourrez démarrer l’étape du Dossier de validation, avec l’accompagnement et les éventuelles formations prévues au moment de la Définition du parcours pédagogique.`;
 
@@ -42,7 +43,7 @@ export const FeasibilityPdfTimelineElement = () => {
       status={
         ADMISSIBLE || REJECTED
           ? "readonly"
-          : PENDING || INCOMPLETE
+          : PENDING || COMPLETE || INCOMPLETE
             ? "active"
             : "disabled"
       }
