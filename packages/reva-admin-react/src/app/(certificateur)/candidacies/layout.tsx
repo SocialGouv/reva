@@ -78,6 +78,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: [
+      "feasibilities",
       "getFeasibilityCountByCategory",
       searchFilter,
       certificationAuthorityId,

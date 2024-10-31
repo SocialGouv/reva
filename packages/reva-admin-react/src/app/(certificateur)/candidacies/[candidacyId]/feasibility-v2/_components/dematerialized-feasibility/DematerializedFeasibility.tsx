@@ -71,6 +71,9 @@ export const DematerializedFeasibility = () => {
       }
       successToast("Décision du dossier de faisabilité envoyée avec succès");
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
+      queryClient.invalidateQueries({
+        queryKey: ["feasibilities"],
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -97,6 +100,9 @@ export const DematerializedFeasibility = () => {
       }
       successToast("Décision du dossier de faisabilité envoyée avec succès");
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
+      queryClient.invalidateQueries({
+        queryKey: ["feasibilities"],
+      });
     } catch (e) {
       graphqlErrorToast(e);
     }
