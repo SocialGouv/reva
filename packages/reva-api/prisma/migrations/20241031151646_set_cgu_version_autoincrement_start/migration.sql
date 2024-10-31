@@ -1,0 +1,1 @@
+ALTER SEQUENCE "professional_cgu_version_seq" START 4
