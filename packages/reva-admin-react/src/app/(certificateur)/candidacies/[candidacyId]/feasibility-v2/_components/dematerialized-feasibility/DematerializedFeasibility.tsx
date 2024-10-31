@@ -142,7 +142,7 @@ export const DematerializedFeasibility = () => {
 
       {waitingForDecision && (
         <>
-          <hr className="mt-12 mb-11 pb-1" />
+          <hr className="mt-14 mb-8" />
           {isFeasibilityWaitingToBeMarkedAsComplete && (
             <FeasibilityCompletionForm onSubmit={handleCompletionFormSubmit} />
           )}

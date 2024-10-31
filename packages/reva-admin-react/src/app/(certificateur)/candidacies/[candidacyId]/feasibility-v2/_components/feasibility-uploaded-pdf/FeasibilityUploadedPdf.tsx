@@ -167,7 +167,7 @@ export const FeasibilityUploadedPdf = () => {
 
           {waitingForDecision && (
             <>
-              <hr className="mt-12 mb-11 pb-1" />
+              <hr className="mt-2 mb-3 pb-1" />
               {isFeasibilityWaitingToBeMarkedAsComplete && (
                 <FeasibilityCompletionForm
                   onSubmit={handleCompletionFormSubmit}
