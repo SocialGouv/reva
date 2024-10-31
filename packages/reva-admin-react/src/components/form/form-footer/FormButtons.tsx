@@ -6,7 +6,6 @@ export const FormButtons = ({
   formState: { isDirty, isSubmitting, canSubmit = true },
   className,
   disabled,
-  dataTest,
 }: {
   backUrl?: string;
   formState: {
@@ -17,12 +16,11 @@ export const FormButtons = ({
   submitButtonLabel?: string;
   className?: string;
   disabled?: boolean;
-  dataTest?: string;
 }) => {
   return (
     <div
       className={`flex gap-4 items-center justify-between mt-10 ${className || ""}`}
-      data-test={dataTest}
+      data-test="form-buttons"
     >
       {backUrl && (
         <Button priority="secondary" linkProps={{ href: backUrl }}>

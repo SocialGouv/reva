@@ -45,7 +45,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should have disabled form buttons by default", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -57,7 +57,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should disable date and time fields when TOTAL eligibility is selected", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -79,7 +79,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
           cy.get("input").should("be.disabled");
         });
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -91,7 +91,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should handle PARTIAL eligibility with future date validation", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -119,7 +119,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             .check({ force: true });
         });
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -129,7 +129,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should show error message when submitting PARTIAL eligibility with past date", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -161,7 +161,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
         cy.get('[class*="fr-error-text"]').should("not.exist");
       });
 
-      cy.get('[data-test="eligibility-form-buttons"]')
+      cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -177,7 +177,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
       it("should disable date and time fields when PARTIAL_WITH_CHANGE eligibility is selected", function () {
         visitFeasibilityEligibility();
 
-        cy.get('[data-test="eligibility-form-buttons"]')
+        cy.get('[data-test="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("be.disabled");
@@ -199,7 +199,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             cy.get("input").should("be.disabled");
           });
 
-        cy.get('[data-test="eligibility-form-buttons"]')
+        cy.get('[data-test="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("not.be.disabled");
@@ -211,7 +211,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
       it("should handle PARTIAL_WITHOUT_CHANGE eligibility with future date validation", function () {
         visitFeasibilityEligibility();
 
-        cy.get('[data-test="eligibility-form-buttons"]')
+        cy.get('[data-test="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("be.disabled");
@@ -239,7 +239,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
               .check({ force: true });
           });
 
-        cy.get('[data-test="eligibility-form-buttons"]')
+        cy.get('[data-test="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("not.be.disabled");

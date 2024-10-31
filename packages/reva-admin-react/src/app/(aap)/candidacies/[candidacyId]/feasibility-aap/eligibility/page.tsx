@@ -244,7 +244,6 @@ export default function EligibilityPage() {
             isDirty,
             isSubmitting,
           }}
-          dataTest="eligibility-form-buttons"
         />
       </form>
     </div>
