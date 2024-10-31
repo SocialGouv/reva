@@ -1,5 +1,8 @@
 import { Cgu } from "@/components/cgu/Cgu";
+import { HardCodedCgu } from "@/components/cgu/HardCodedCgu";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { GetCguQuery } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -15,7 +18,11 @@ const zodSchema = z.object({
 
 type CguStepFormSchema = z.infer<typeof zodSchema>;
 
-export const CguStep = () => {
+export const CguStep = ({
+  getCguResponse,
+}: {
+  getCguResponse: GetCguQuery;
+}) => {
   const { professionalSpaceInfos, submitCguStep } =
     useProfessionalSpaceSubscriptionContext();
   const {
@@ -28,6 +35,12 @@ export const CguStep = () => {
       ...professionalSpaceInfos,
     },
   });
+
+  const { isFeatureActive, status } = useFeatureflipping();
+  const showFromStrapi = isFeatureActive("CGU_FROM_STRAPI");
+  if (status !== "INITIALIZED") {
+    return null;
+  }
 
   const alertDescription = (
     <>
@@ -87,7 +100,19 @@ export const CguStep = () => {
               générales d'utilisation
             </h2>
           </legend>
-          <Cgu />
+          {showFromStrapi ? (
+            <Cgu
+              cguHtml={
+                getCguResponse?.legals?.data[0]?.attributes?.contenu ?? ""
+              }
+              chapo={getCguResponse?.legals?.data[0]?.attributes?.chapo ?? ""}
+              updatedAt={
+                getCguResponse?.legals?.data[0]?.attributes?.dateDeMiseAJour
+              }
+            />
+          ) : (
+            <HardCodedCgu />
+          )}
           <Checkbox
             className="!mt-2"
             options={[

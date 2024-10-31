@@ -11,15 +11,17 @@ import { AccountInfoStepForm } from "@/components/professional-space/inscription
 import { CguStep } from "@/components/professional-space/inscription/form/CguStep";
 import { CompanyDocumentsStepForm } from "@/components/professional-space/inscription/form/CompanyDocumentsStepForm";
 import { CompanySiretStepForm } from "@/components/professional-space/inscription/form/CompanySiretStepForm";
+import { GetCguQuery } from "@/graphql/generated/graphql";
+import { getCgu } from "@/utils/strapiQueries";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const PageContent = () => {
+const PageContent = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
   const { currentStep } = useProfessionalSpaceSubscriptionContext();
   switch (currentStep) {
     case "cguStep":
-      return <CguStep />;
+      return <CguStep getCguResponse={getCguResponse} />;
     case "companySiretStep":
       return <CompanySiretStepForm />;
     case "accountInfoStep":
@@ -31,7 +33,11 @@ const PageContent = () => {
   }
 };
 
-const ProfessionalSpaceCreationPage = (): React.ReactNode => {
+const ProfessionalSpaceCreationPage = ({
+  getCguResponse,
+}: {
+  getCguResponse: GetCguQuery;
+}): React.ReactNode => {
   const { isFeatureActive, status } = useFeatureflipping();
 
   const isAAPSubscriptionSuspended = isFeatureActive(
@@ -60,7 +66,7 @@ const ProfessionalSpaceCreationPage = (): React.ReactNode => {
       </Head>
       <OrganismBackground>
         <ProfessionalSpaceSubscriptionProvider>
-          <PageContent />
+          <PageContent getCguResponse={getCguResponse} />
         </ProfessionalSpaceSubscriptionProvider>
       </OrganismBackground>
     </MainLayout>
@@ -68,3 +74,8 @@ const ProfessionalSpaceCreationPage = (): React.ReactNode => {
 };
 
 export default ProfessionalSpaceCreationPage;
+
+export async function getServerSideProps() {
+  const getCguResponse = await getCgu();
+  return { props: { getCguResponse } };
+}
