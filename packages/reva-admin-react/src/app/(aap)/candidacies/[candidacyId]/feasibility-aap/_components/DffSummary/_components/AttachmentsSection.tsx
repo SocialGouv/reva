@@ -6,7 +6,7 @@ const AttachmentItem = (file: File) => {
       <a
         href={file.previewUrl as string}
         download={file.name}
-        className="text-dsfr-blue-france-sun-113 mb-1 break-words max-w-screen-md"
+        className="text-dsfr-blue-france-sun-113 mb-1 break-words max-w-sm sm:max-w-md xl:max-w-3xl"
       >
         <span>{file.name}</span>
         <span className="fr-icon-download-line ml-2 fr-icon--sm" />
