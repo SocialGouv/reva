@@ -26,18 +26,20 @@ const statusToProgressPosition = (status: CandidacyStatusStep) => {
       return 5;
     case "DOSSIER_FAISABILITE_ENVOYE":
       return 6;
+    case "DOSSIER_FAISABILITE_COMPLET":
+      return 7;
     case "DOSSIER_FAISABILITE_RECEVABLE":
-      return 7;
-    case "DOSSIER_FAISABILITE_NON_RECEVABLE":
-      return 7;
-    case "DEMANDE_FINANCEMENT_ENVOYE":
       return 8;
-    case "DOSSIER_DE_VALIDATION_SIGNALE":
+    case "DOSSIER_FAISABILITE_NON_RECEVABLE":
+      return 8;
+    case "DEMANDE_FINANCEMENT_ENVOYE":
       return 9;
-    case "DOSSIER_DE_VALIDATION_ENVOYE":
+    case "DOSSIER_DE_VALIDATION_SIGNALE":
       return 10;
-    case "DEMANDE_PAIEMENT_ENVOYEE":
+    case "DOSSIER_DE_VALIDATION_ENVOYE":
       return 11;
+    case "DEMANDE_PAIEMENT_ENVOYEE":
+      return 12;
     default:
       return -1;
   }

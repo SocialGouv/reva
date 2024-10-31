@@ -156,7 +156,6 @@ const getSQLSelectSumClauseFromStatusFilter = (
     case "PARCOURS_CONFIRME_HORS_ABANDON":
     case "PRISE_EN_CHARGE_HORS_ABANDON":
     case "PARCOURS_ENVOYE_HORS_ABANDON":
-    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON":
@@ -204,6 +203,10 @@ const getSQLSelectSumClauseFromStatusFilter = (
     case "JURY_PASSE_HORS_ABANDON":
       return getSumClause(
         `candidacyDropOut.candidacy_id  is null and activeJury.id is not null and activeJury.date_of_result is not null`,
+      );
+    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
+      return getSumClause(
+        `candidacy.status in ('DOSSIER_FAISABILITE_ENVOYE','DOSSIER_FAISABILITE_COMPLET') and candidacyDropOut.candidacy_id is null`,
       );
   }
 };

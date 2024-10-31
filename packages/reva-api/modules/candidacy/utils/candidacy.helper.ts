@@ -16,9 +16,6 @@ export const getStatusFromStatusFilter = (statusFilter: string) => {
     case "PARCOURS_ENVOYE_HORS_ABANDON":
       status = "PARCOURS_ENVOYE";
       break;
-    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
-      status = "DOSSIER_FAISABILITE_ENVOYE";
-      break;
     case "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON":
       status = "DOSSIER_FAISABILITE_RECEVABLE";
       break;
@@ -58,7 +55,6 @@ export const getWhereClauseFromStatusFilter = (
     case "PARCOURS_CONFIRME_HORS_ABANDON":
     case "PRISE_EN_CHARGE_HORS_ABANDON":
     case "PARCOURS_ENVOYE_HORS_ABANDON":
-    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON":
     case "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON":
@@ -152,6 +148,15 @@ export const getWhereClauseFromStatusFilter = (
 
       break;
     }
+    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        status: {
+          in: ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_FAISABILITE_COMPLET"],
+        },
+      };
+      break;
   }
   return whereClause;
 };
