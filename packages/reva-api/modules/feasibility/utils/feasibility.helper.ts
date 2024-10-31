@@ -46,6 +46,7 @@ export const getWhereClauseFromStatusFilter = (
     case "PENDING":
     case "REJECTED":
     case "ADMISSIBLE":
+    case "COMPLETE":
     case "INCOMPLETE":
       whereClause = {
         ...whereClause,
