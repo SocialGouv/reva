@@ -4,7 +4,7 @@ dotenv.config();
 export default {
   projects: {
     api: {
-      schema: ['./packages/reva-api/modules/generated-graphql-schema.graphql'],
+      schema: ['./packages/reva-api/modules/generated-graphql-schema.graphql', `${process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL}/graphql`],
       documents: ['./packages/reva-{api,candidate,admin-react}/src/**/*.{graphql,js,ts,jsx,tsx}'],
       extensions: {
         endpoints: {
