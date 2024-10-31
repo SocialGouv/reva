@@ -282,3 +282,23 @@ const getPrcsQuery = graphql(`
 export const getPRCs = async () => {
   return request(STRAPI_GRAPHQL_API_URL, getPrcsQuery);
 };
+
+const getCguQuery = graphql(`
+  query getCgu {
+    legals(filters: { nom: { eq: "CGU" } }) {
+      data {
+        id
+        attributes {
+          titre
+          contenu
+          chapo
+          dateDeMiseAJour
+        }
+      }
+    }
+  }
+`);
+
+export const getCgu = async () => {
+  return request(STRAPI_GRAPHQL_API_URL, getCguQuery);
+};
