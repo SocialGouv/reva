@@ -59,7 +59,7 @@ export const PrerequisiteInput = ({
         <div
           className="flex gap-2 cursor-pointer text-blue-900 items-center"
           onClick={onDelete}
-          data-test="delete-prerequisite-button"
+          data-test={`delete-prerequisite-button-${index}`}
         >
           <span className="fr-icon-delete-bin-line fr-icon--sm" />
           <span className="text-sm font-medium">Supprimer</span>

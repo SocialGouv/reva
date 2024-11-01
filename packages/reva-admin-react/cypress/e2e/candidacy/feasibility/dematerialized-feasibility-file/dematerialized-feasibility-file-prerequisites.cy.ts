@@ -112,6 +112,28 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
   });
 
   context("Prerequisites Management", () => {
+    it("should show error when submitting with empty prerequisite label", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="prerequisite-input-0"]')
+        .should("exist")
+        .within(() => {
+          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
+            {
+              force: true,
+            },
+          );
+        });
+
+      cy.get('[data-test="form-buttons"]')
+        .find('button[type="submit"]')
+        .click();
+
+      cy.get('[data-test="prerequisite-input-0"]').within(() => {
+        cy.get(".fr-error-text").should("exist");
+      });
+    });
+
     it("should allow adding multiple prerequisites with different states", () => {
       visitFeasibilityPrerequisites();
 
@@ -168,7 +190,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]').should("exist");
       cy.get('[data-test="prerequisite-input-1"]').should("exist");
 
-      cy.get('[data-test="delete-prerequisite-button"]').first().click();
+      cy.get('[data-test="delete-prerequisite-button-0"]').click();
 
       cy.get('[data-test="prerequisite-input-0"]').should("exist");
       cy.get('[data-test="prerequisite-input-1"]').should("not.exist");
