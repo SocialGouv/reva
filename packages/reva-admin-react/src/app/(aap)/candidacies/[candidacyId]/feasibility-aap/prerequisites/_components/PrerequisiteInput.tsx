@@ -17,7 +17,7 @@ export const PrerequisiteInput = ({
   errorState?: string;
 }) => {
   return (
-    <div>
+    <div data-test={`prerequisite-input-${index}`}>
       <Input
         label="Intitulé du prérequis :"
         nativeTextAreaProps={register(`prerequisites.${index}.label`)}
@@ -59,6 +59,7 @@ export const PrerequisiteInput = ({
         <div
           className="flex gap-2 cursor-pointer text-blue-900 items-center"
           onClick={onDelete}
+          data-test="delete-prerequisite-button"
         >
           <span className="fr-icon-delete-bin-line fr-icon--sm" />
           <span className="text-sm font-medium">Supprimer</span>

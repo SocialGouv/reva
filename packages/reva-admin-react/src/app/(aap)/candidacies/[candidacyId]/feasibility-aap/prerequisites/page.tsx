@@ -156,6 +156,7 @@ export default function PrerequisitesPage() {
               },
             },
           ]}
+          data-test="has-no-prerequisites-checkbox"
         />
         {!hasNoPrerequisites && (
           <div>
@@ -186,6 +187,7 @@ export default function PrerequisitesPage() {
                   { shouldDirty: true },
                 );
               }}
+              data-test="add-prerequisite-button"
             >
               <span className="fr-icon-add-line fr-icon--sm" />
               <span className="text-sm">Ajouter un prérequis</span>
