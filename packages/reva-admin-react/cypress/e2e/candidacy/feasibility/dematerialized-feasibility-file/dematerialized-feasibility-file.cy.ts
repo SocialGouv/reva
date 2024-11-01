@@ -590,7 +590,7 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       it("should hide all badges and section buttons", () => {
         const feasibilityFileSent = {
           ...DEFAULT_FEASIBILITY_FILE,
-          feasibilityFileSentAt: DATE_NOW as any,
+          feasibilityFileSentAt: DATE_NOW as number,
           dematerializedFeasibilityFile: {
             ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
             eligibilityRequirement: DFF_FULL_ELIGIBILITY,

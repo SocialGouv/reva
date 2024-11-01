@@ -89,7 +89,7 @@ export const DEFAULT_FEASIBILITY_FILE = {
   decision: "DRAFT",
   decisionSentAt: null,
   decisionComment: null,
-  feasibilityFileSentAt: null,
+  feasibilityFileSentAt: null as null | number,
   history: [],
   dematerializedFeasibilityFile: DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
 };
