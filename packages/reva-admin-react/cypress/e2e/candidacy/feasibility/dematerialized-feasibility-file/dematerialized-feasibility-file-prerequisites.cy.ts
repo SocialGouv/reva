@@ -1,0 +1,215 @@
+import { stubQuery } from "../../../../utils/graphql";
+
+function visitFeasibilityPrerequisites() {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "features/active-features.json",
+    );
+    stubQuery(
+      req,
+      "getMaisonMereCGUQuery",
+      "account/head-agency-cgu-accepted.json",
+    );
+    stubQuery(
+      req,
+      "getOrganismForAAPVisibilityCheck",
+      "visibility/organism.json",
+    );
+    stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
+
+    stubQuery(
+      req,
+      "getCandidacyMenuAndCandidateInfos",
+      "candidacy/candidacy-menu-dff.json",
+    );
+
+    stubQuery(
+      req,
+      "feasibilityWithDematerializedFeasibilityFileByCandidacyId",
+      "feasibility/dematerialized-feasibility-file-prerequisites.json",
+    );
+  });
+
+  cy.collaborateur(
+    "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/prerequisites",
+  );
+}
+
+describe("Dematerialized Feasibility File - Prerequisites Page", () => {
+  context("Initial form state", () => {
+    it("should display an empty prerequisites form with disabled submit button", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="form-buttons"]')
+        .should("exist")
+        .within(() => {
+          cy.get("button").should("be.disabled");
+        });
+    });
+  });
+
+  context("No Prerequisites Checkbox", () => {
+    it("should enable form submission when indicating no prerequisites are required", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="has-no-prerequisites-checkbox"]')
+        .find('input[type="checkbox"]')
+        .check({
+          force: true,
+        });
+
+      cy.get('[data-test="form-buttons"]')
+        .should("exist")
+        .within(() => {
+          cy.get("button").should("not.be.disabled");
+        });
+    });
+
+    it("should remove all prerequisite inputs when indicating no prerequisites", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="prerequisite-input-0"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.0.label"]').type(
+            "First prerequisite",
+          );
+          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
+            {
+              force: true,
+            },
+          );
+        });
+
+      cy.get('[data-test="add-prerequisite-button"]').click();
+      cy.get('[data-test="prerequisite-input-1"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.1.label"]').type(
+            "Second prerequisite",
+          );
+          cy.get(
+            'input[name="prerequisites.1.state"][value="IN_PROGRESS"]',
+          ).check({
+            force: true,
+          });
+        });
+
+      cy.get('[data-test="prerequisite-input-0"]').should("exist");
+      cy.get('[data-test="prerequisite-input-1"]').should("exist");
+
+      cy.get('[data-test="has-no-prerequisites-checkbox"]')
+        .find('input[type="checkbox"]')
+        .check({
+          force: true,
+        });
+
+      cy.get('[data-test="prerequisite-input-0"]').should("not.exist");
+      cy.get('[data-test="prerequisite-input-1"]').should("not.exist");
+    });
+  });
+
+  context("Prerequisites Management", () => {
+    it("should allow adding multiple prerequisites with different states", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="prerequisite-input-0"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.0.label"]').type(
+            "First prerequisite",
+          );
+
+          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
+            {
+              force: true,
+            },
+          );
+        });
+
+      cy.get('[data-test="add-prerequisite-button"]').click();
+
+      cy.get('[data-test="prerequisite-input-1"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.1.label"]').type(
+            "Second prerequisite",
+          );
+
+          cy.get(
+            'input[name="prerequisites.1.state"][value="IN_PROGRESS"]',
+          ).check({
+            force: true,
+          });
+        });
+
+      cy.get('[data-test="form-buttons"]')
+        .should("exist")
+        .within(() => {
+          cy.get("button").should("not.be.disabled");
+        });
+    });
+
+    it("should allow removing individual prerequisites", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="prerequisite-input-0"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.0.label"]').type(
+            "To be deleted",
+          );
+        });
+
+      cy.get('[data-test="add-prerequisite-button"]').click();
+
+      cy.get('[data-test="prerequisite-input-0"]').should("exist");
+      cy.get('[data-test="prerequisite-input-1"]').should("exist");
+
+      cy.get('[data-test="delete-prerequisite-button"]').first().click();
+
+      cy.get('[data-test="prerequisite-input-0"]').should("exist");
+      cy.get('[data-test="prerequisite-input-1"]').should("not.exist");
+    });
+
+    it("should allow toggling between all prerequisite states", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="prerequisite-input-0"]')
+        .should("exist")
+        .within(() => {
+          cy.get('textarea[name="prerequisites.0.label"]').type(
+            "Test prerequisite",
+          );
+
+          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
+            {
+              force: true,
+            },
+          );
+          cy.get(
+            'input[name="prerequisites.0.state"][value="IN_PROGRESS"]',
+          ).check({
+            force: true,
+          });
+          cy.get(
+            'input[name="prerequisites.0.state"][value="RECOMMENDED"]',
+          ).check({
+            force: true,
+          });
+        });
+    });
+  });
+
+  context("Navigation", () => {
+    it("should provide navigation back to feasibility summary", () => {
+      visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="form-buttons"]')
+        .find('a[href*="/feasibility-aap"]')
+        .should("exist");
+    });
+  });
+});

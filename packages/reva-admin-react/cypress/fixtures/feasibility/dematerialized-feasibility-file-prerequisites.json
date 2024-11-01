@@ -1,0 +1,10 @@
+{
+  "data": {
+    "feasibility_getActiveFeasibilityByCandidacyId": {
+      "dematerializedFeasibilityFile": {
+        "prerequisitesPartComplete": false,
+        "prerequisites": []
+      }
+    }
+  }
+}
