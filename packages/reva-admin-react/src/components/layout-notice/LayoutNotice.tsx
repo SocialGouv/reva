@@ -1,7 +1,6 @@
 import { usePathname } from "next/navigation";
 import { useAuth } from "../auth/auth";
 import { useKeycloakContext } from "../auth/keycloakContext";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 import {
   AAPNotVisibleInSearchResultNotice,
   useAAPVisibilityCheck,
@@ -13,11 +12,9 @@ import { CustomInfoNotice } from "./_components/CustomInfoNotice";
 export const LayoutNotice = () => {
   const { authenticated } = useKeycloakContext();
   const { isGestionnaireMaisonMereAAP, isAdmin, isOrganism } = useAuth();
-  const { isFeatureActive, status } = useFeatureflipping();
   const { isVisibleInSearchResults, getOrganismisLoading } =
     useAAPVisibilityCheck();
   const pathname = usePathname();
-  const isFeatureAapCguActive = isFeatureActive("AAP_CGU");
 
   const isCguPathname =
     pathname.startsWith("/information") || pathname.startsWith("/cgu");
@@ -28,7 +25,6 @@ export const LayoutNotice = () => {
   const canSeeAapCgu =
     authenticated &&
     isGestionnaireMaisonMereAAP &&
-    isFeatureAapCguActive &&
     !isCguPathname &&
     !maisonMereCgu?.isLatestVersion;
 

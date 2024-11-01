@@ -119,12 +119,9 @@ const getRandomActiveOrganismForCertification = async ({
     whereClause = Prisma.sql`${whereClause} and o.is_onsite = true`;
   }
 
-  const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))?.isActive;
-  if (isCGUAcceptanceRequired) {
-    const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
-    if (CGU_AAP_VERSION != undefined) {
-      whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
-    }
+  const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
+  if (CGU_AAP_VERSION != undefined) {
+    whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
   }
 
   const results = await prismaClient.$queryRaw<Organism[]>`
@@ -221,12 +218,9 @@ const getAAPsWithZipCode = async ({
     whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
   }
 
-  const isCGUAcceptanceRequired = (await getFeatureByKey("AAP_CGU"))?.isActive;
-  if (isCGUAcceptanceRequired) {
-    const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
-    if (CGU_AAP_VERSION != undefined) {
-      whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
-    }
+  const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
+  if (CGU_AAP_VERSION != undefined) {
+    whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
   }
 
   let organismView = "active_organism_by_available_certification";
