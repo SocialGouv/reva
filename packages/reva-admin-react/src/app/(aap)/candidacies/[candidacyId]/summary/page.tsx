@@ -5,7 +5,6 @@ import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summ
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -26,8 +25,6 @@ const CandidacySummaryPage = () => {
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
   const { isAdmin } = useAuth();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
@@ -74,9 +71,7 @@ const CandidacySummaryPage = () => {
     "department",
   ]);
 
-  const showFundingAlert =
-    isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE") &&
-    candidacy.financeModule === "hors_plateforme";
+  const showFundingAlert = candidacy.financeModule === "hors_plateforme";
 
   const isCandidateEditable =
     candidacy.feasibilityFormat === "DEMATERIALIZED" &&

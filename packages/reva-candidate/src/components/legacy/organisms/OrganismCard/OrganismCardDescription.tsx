@@ -1,4 +1,3 @@
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 export const OrganismCardDescription = ({
@@ -14,11 +13,6 @@ export const OrganismCardDescription = ({
   isRemote: boolean;
   isMCFCompatible: boolean;
 }) => {
-  const { isFeatureActive } = useFeatureFlipping();
-  const isAffichateTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
-
   return (
     <>
       <p className="truncate mb-0">
@@ -71,19 +65,18 @@ export const OrganismCardDescription = ({
               À distance
             </Tag>
           )}
-          {isAffichateTypesFinancementCandidatureFeatureActive &&
-            isMCFCompatible && (
-              <Tag
-                data-test="project-organisms-mcf-tag"
-                className="min-h-4 text-xs sm:text-sm sm:min-h-8"
-              >
-                <span
-                  aria-hidden="true"
-                  className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
-                />
-                MCF
-              </Tag>
-            )}
+          {isMCFCompatible && (
+            <Tag
+              data-test="project-organisms-mcf-tag"
+              className="min-h-4 text-xs sm:text-sm sm:min-h-8"
+            >
+              <span
+                aria-hidden="true"
+                className="sm:hidden fr-icon-customer-service-fill fr-icon--xs mr-1"
+              />
+              MCF
+            </Tag>
+          )}
         </div>
       </div>
     </>

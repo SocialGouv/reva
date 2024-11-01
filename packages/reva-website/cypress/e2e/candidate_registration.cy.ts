@@ -70,11 +70,6 @@ describe("candidate registration", () => {
 
     [
       "SALARIE_PUBLIC",
-      "RETRAITE",
-      "AIDANTS_FAMILIAUX_AGRICOLES",
-      "TRAVAILLEUR_NON_SALARIE",
-      "TITULAIRE_MANDAT_ELECTIF",
-      "AUTRE",
     ].forEach((typology) => {
       cy.get('[data-testid="candidate-typology-select"]')
         .children("select")

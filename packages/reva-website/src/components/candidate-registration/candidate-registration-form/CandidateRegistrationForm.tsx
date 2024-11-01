@@ -57,10 +57,6 @@ export const CandidateRegistrationForm = ({
 }) => {
   const { isFeatureActive } = useFeatureflipping();
 
-  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
-
   const [availableDepartments, setAvailableDepartments] = useState<
     DepartmentOption[]
   >([]);
@@ -72,17 +68,7 @@ export const CandidateRegistrationForm = ({
     CandidateTypology | undefined
   >();
 
-  const UNSUPPORTED_TYPOLOGIES =
-    affichageTypesFinancementCandidatureFeatureActive
-      ? ["SALARIE_PUBLIC"]
-      : [
-          "SALARIE_PUBLIC",
-          "RETRAITE",
-          "AIDANTS_FAMILIAUX_AGRICOLES",
-          "TRAVAILLEUR_NON_SALARIE",
-          "TITULAIRE_MANDAT_ELECTIF",
-          "AUTRE",
-        ];
+  const UNSUPPORTED_TYPOLOGIES = ["SALARIE_PUBLIC"];
 
   const invalidTypology =
     candidateTypology !== undefined &&

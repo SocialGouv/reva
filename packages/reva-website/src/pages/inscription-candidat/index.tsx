@@ -46,10 +46,6 @@ const OrientationCandidatPage = () => {
   const { isFeatureActive, status: featureFlippingServiceStatus } =
     useFeatureflipping();
 
-  const affichageTypesFinancementCandidatureFeatureActive = isFeatureActive(
-    "AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE",
-  );
-
   const [certification, setCertification] = useState<Pick<
     Certification,
     "id" | "label" | "codeRncp" | "typeDiplome"
@@ -140,35 +136,33 @@ const OrientationCandidatPage = () => {
                     rncpCode={certification.codeRncp}
                     certificateType={certification.typeDiplome.label}
                   />
-                  {affichageTypesFinancementCandidatureFeatureActive && (
-                    <Notice
-                      className="basis-1/2"
-                      title={
-                        <span>
-                          <p className="mb-4">
-                            Ce diplôme peut être financé par votre{" "}
-                            <Link
-                              href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
-                              target="_blank"
-                            >
-                              Compte Personnel de Formation
-                            </Link>{" "}
-                            (CPF). Vous pouvez dès à présent consulter vos
-                            droits sur la plateforme Mon Compte Formation.
-                          </p>
-                          <p>
-                            Article utile :{" "}
-                            <Link
-                              href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
-                              target="_blank"
-                            >
-                              Comment financer un parcours VAE ?
-                            </Link>
-                          </p>
-                        </span>
-                      }
-                    />
-                  )}
+                  <Notice
+                    className="basis-1/2"
+                    title={
+                      <span>
+                        <p className="mb-4">
+                          Ce diplôme peut être financé par votre{" "}
+                          <Link
+                            href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
+                            target="_blank"
+                          >
+                            Compte Personnel de Formation
+                          </Link>{" "}
+                          (CPF). Vous pouvez dès à présent consulter vos droits
+                          sur la plateforme Mon Compte Formation.
+                        </p>
+                        <p>
+                          Article utile :{" "}
+                          <Link
+                            href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
+                            target="_blank"
+                          >
+                            Comment financer un parcours VAE ?
+                          </Link>
+                        </p>
+                      </span>
+                    }
+                  />
                 </div>
                 <CandidateRegistrationForm onSubmit={handleFormSubmit} />
               </div>

@@ -2,8 +2,6 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
-
 const AapStepBlock = ({
   description,
   title,
@@ -25,11 +23,6 @@ const AapStepBlock = ({
 );
 
 const AccompagnementDemarche = () => {
-  const { isFeatureActive, status } = useFeatureflipping();
-  if (status !== "INITIALIZED") {
-    return null;
-  }
-
   return (
     <section
       id="accompagnement-demarche"
@@ -73,28 +66,12 @@ const AccompagnementDemarche = () => {
           className="relative -top-28 lg:top-0 lg:-left-10"
         />
         <div className="flex flex-col justify-center pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
-          {isFeatureActive("AFFICHAGE_TYPES_FINANCEMENT_CANDIDATURE") ? (
-            <>
-              <h6 className="mb-4 text-lg lg:text-xl">
-                Un coup de pouce utile !
-              </h6>
-              <p className="my-0">
-                Votre accompagnateur vous aidera dans toutes les démarches de
-                votre parcours, de la recherche de financement jusqu’au passage
-                devant le jury.
-              </p>
-            </>
-          ) : (
-            <>
-              <h6 className="mb-4 text-lg lg:text-xl">
-                Gestion de l'administratif
-              </h6>
-              <p className="my-0">
-                Prise en charge administrative de votre dossier, de son
-                financement et de la programmation du jury.
-              </p>
-            </>
-          )}
+          <h6 className="mb-4 text-lg lg:text-xl">Un coup de pouce utile !</h6>
+          <p className="my-0">
+            Votre accompagnateur vous aidera dans toutes les démarches de votre
+            parcours, de la recherche de financement jusqu’au passage devant le
+            jury.
+          </p>
         </div>
       </div>
       <Link
