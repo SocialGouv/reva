@@ -118,7 +118,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
 
         DossierDeValidationCountByCategory[statusFilter] = value;
       } catch (e) {
-        e;
+        console.error(e);
       }
     }),
   );

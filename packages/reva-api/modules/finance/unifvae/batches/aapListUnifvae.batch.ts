@@ -56,7 +56,10 @@ export const batchAapListUnifvae = async (batchKey: string) => {
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e,
     );
-    e instanceof Error && logger.error(e.message);
+
+    if (e instanceof Error) {
+      logger.error(e.message);
+    }
   } finally {
     logger.info(`Batch ${batchKey} terminé`);
   }
@@ -76,15 +79,18 @@ async function generateCsvStream(itemsToSendIds: string[]) {
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       });
 
-      results.length
-        ? results.map((mmaap) =>
-            this.push({
-              SIRET: mmaap.siret,
-              Nom: mmaap.raisonSociale,
-              email: mmaap.gestionnaire.email,
-            }),
-          )
-        : this.push(null);
+      if (results.length) {
+        results.forEach((mmaap) =>
+          this.push({
+            SIRET: mmaap.siret,
+            Nom: mmaap.raisonSociale,
+            email: mmaap.gestionnaire.email,
+          }),
+        );
+      } else {
+        this.push(null);
+      }
+
       skip += RECORDS_PER_FETCH;
     },
   });

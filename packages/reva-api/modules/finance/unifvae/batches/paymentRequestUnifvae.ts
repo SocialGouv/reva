@@ -63,7 +63,10 @@ export const batchPaymentRequestUnifvae = async (batchKey: string) => {
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e,
     );
-    e instanceof Error && logger.error(e.message);
+
+    if (e instanceof Error) {
+      logger.error(e.message);
+    }
   } finally {
     logger.info(`Batch ${batchKey} terminé`);
   }
@@ -84,9 +87,12 @@ async function generatePaymentRequestUnifvaeBatchCsvStream(
         orderBy: { createdAt: "asc" },
       });
 
-      results.length
-        ? results.map((frb) => this.push(frb.content))
-        : this.push(null);
+      if (results.length) {
+        results.map((frb) => this.push(frb.content));
+      } else {
+        this.push(null);
+      }
+
       skip += RECORDS_PER_FETCH;
     },
   });

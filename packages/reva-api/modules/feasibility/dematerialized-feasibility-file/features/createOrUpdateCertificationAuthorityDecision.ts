@@ -174,19 +174,21 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decisionSentAt: now,
           decisionFile: decisionFileForDb ? decisionFileForDb : undefined,
         },
-      }),
-        await tx.feasibilityDecision.create({
-          data: {
-            decision,
-            decisionComment,
-            feasibilityId: feasibility.id,
-          },
-        }),
-        await updateCandidacyStatus({
-          candidacyId,
-          status: statusDecisionMapper[decision] as CandidacyStatusStep,
-          tx,
-        });
+      });
+
+      await tx.feasibilityDecision.create({
+        data: {
+          decision,
+          decisionComment,
+          feasibilityId: feasibility.id,
+        },
+      });
+
+      await updateCandidacyStatus({
+        candidacyId,
+        status: statusDecisionMapper[decision] as CandidacyStatusStep,
+        tx,
+      });
     });
 
     const isAutonome =

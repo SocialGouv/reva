@@ -20,9 +20,12 @@ const generatePaymentRequestBatchCsvStream = async (
         take: RECORDS_PER_FETCH,
       });
 
-      results.length
-        ? results.map((prb) => this.push(prb.content))
-        : this.push(null);
+      if (results.length) {
+        results.map((prb) => this.push(prb.content));
+      } else {
+        this.push(null);
+      }
+
       skip += RECORDS_PER_FETCH;
     },
   });
@@ -51,9 +54,8 @@ export const batchPaymentRequest = async (batchKey: string) => {
     if (itemsToSendIds.length === 0) {
       logger.info("Found no fundingRequestUnifvae to process.");
     } else {
-      const batchReadableStream = await generatePaymentRequestBatchCsvStream(
-        itemsToSendIds,
-      );
+      const batchReadableStream =
+        await generatePaymentRequestBatchCsvStream(itemsToSendIds);
 
       const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
       const fileName = `DR_${fileDate}.csv`;
@@ -82,7 +84,10 @@ export const batchPaymentRequest = async (batchKey: string) => {
       `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e,
     );
-    e instanceof Error && logger.error(e.message);
+
+    if (e instanceof Error) {
+      logger.error(e.message);
+    }
   } finally {
     logger.info(`Batch ${batchKey} terminé`);
   }

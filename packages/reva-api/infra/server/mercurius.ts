@@ -12,7 +12,7 @@ const buildGqlContext = async (req: FastifyRequest, _reply: FastifyReply) => {
 type PromiseType<T> = T extends PromiseLike<infer U> ? U : T;
 
 declare module "mercurius" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface MercuriusContext
     extends PromiseType<ReturnType<typeof buildGqlContext>> {}
 }
@@ -20,7 +20,7 @@ declare module "mercurius" {
 export const mercuriusGraphQL = (
   server: FastifyInstance,
   _opts: unknown,
-  done: () => void
+  done: () => void,
 ) => {
   server.register(mercurius, {
     ...graphqlConfiguration,

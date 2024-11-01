@@ -123,7 +123,9 @@ const validatePaymentRequest = (
       total,
       isCandidateBacNonFragile,
     );
-    totalCostErrorMessage && errors.push(totalCostErrorMessage);
+    if (totalCostErrorMessage) {
+      errors.push(totalCostErrorMessage);
+    }
   }
 
   if (errors.length) {

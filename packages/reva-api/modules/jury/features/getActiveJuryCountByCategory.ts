@@ -105,7 +105,7 @@ export const getActiveJuryCountByCategory = async ({
 
           JuryCountByCategory[statusFilter] = value;
         } catch (e) {
-          e;
+          console.error(e);
         }
       },
     ),

@@ -99,9 +99,11 @@ export const graphqlConfiguration: MercuriusOptions = {
       : undefined,
 
   errorFormatter: (error, ...args) => {
-    error.errors
-      ? error.errors.forEach((e) => logger.error(e))
-      : logger.error(error);
+    if (error.errors) {
+      error.errors.forEach((e) => logger.error(e));
+    } else {
+      logger.error(error);
+    }
 
     return {
       ...mercurius.defaultErrorFormatter(error, ...args),
