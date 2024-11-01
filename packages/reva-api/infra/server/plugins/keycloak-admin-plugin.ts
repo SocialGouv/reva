@@ -7,7 +7,7 @@ import { logger } from "../../../modules/shared/logger";
 const dynamicImport = async (packageName: string) =>
   new Function(`return import('${packageName}')`)();
 
-const keycloakAdminPlugin: FastifyPluginCallback<Record<string, never>> = (
+const keycloakAdminPlugin: FastifyPluginCallback<Record<never, never>> = (
   app,
   _opts,
   next,
