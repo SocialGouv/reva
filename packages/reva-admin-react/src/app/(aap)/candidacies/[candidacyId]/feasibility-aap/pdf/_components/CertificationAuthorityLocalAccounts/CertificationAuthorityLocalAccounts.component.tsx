@@ -1,6 +1,5 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useCertificationAuthorityLocalAccounts } from "./CertificationAuthorityLocalAccounts.hooks";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 interface Props {
   certificationAuthorityId: string;
@@ -36,14 +35,7 @@ export const CertificationAuthorityLocalAccounts = (
     );
   }
 
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isActive = isFeatureActive(
-    "DF_DISPLAY_LOCAL_ACCOUNTS_OF_CERTIFICATION_AUTHORITY",
-  );
-
   if (
-    !isActive ||
     certificationAuthorityQuery.isLoading ||
     certificationAuthorityQuery.isFetching
   ) {
