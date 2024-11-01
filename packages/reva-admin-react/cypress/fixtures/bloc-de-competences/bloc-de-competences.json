@@ -1,0 +1,21 @@
+{
+  "data": {
+    "feasibility_getActiveFeasibilityByCandidacyId": {
+      "dematerializedFeasibilityFile": {
+        "id": "e21a3d6c-977f-4ee4-ad5f-e7c74d7e0b56",
+        "certificationCompetenceDetails": [],
+        "blocsDeCompetences": [
+          {
+            "certificationCompetenceBloc": {
+              "id": "4c06558e-8e3e-4559-882e-321607a6b4e1",
+              "code": "RNCP38565BC01",
+              "label": "Accompagner le développement du jeune enfant",
+              "text": null,
+              "competences": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}
