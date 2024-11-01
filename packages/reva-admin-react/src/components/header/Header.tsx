@@ -4,11 +4,9 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 export const Header = () => {
   const currentPathname = usePathname();
-  const { isFeatureActive } = useFeatureflipping();
   const {
     isAdmin,
     isOrganism,
@@ -21,43 +19,8 @@ export const Header = () => {
   const candidaciesLabel = isAdmin
     ? "Certificateurs/Candidatures"
     : "Candidatures";
-  const isAdminDashboardV2Enabled = isFeatureActive("admin_dashboard_v2");
 
-  const adminTabsV1 = [
-    {
-      text: "Inscriptions",
-      linkProps: {
-        href: "/subscriptions/pending",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/subscriptions"),
-    },
-    {
-      text: "Comptes",
-      linkProps: {
-        href: "/accounts/organisms",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/accounts"),
-    },
-    {
-      text: "Certifications",
-      linkProps: {
-        href: "/certifications",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/certifications"),
-    },
-    {
-      text: "Certificateurs",
-      linkProps: {
-        href: "/certification-authority-structures",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/certification-authorities"),
-    },
-  ];
-  const adminTabsV2 = [
+  const adminTabs = [
     {
       text: "Certifications",
       linkProps: {
@@ -103,8 +66,6 @@ export const Header = () => {
       ],
     },
   ];
-
-  const adminTabs = isAdminDashboardV2Enabled ? adminTabsV2 : adminTabsV1;
 
   const navigation = authenticated
     ? [
