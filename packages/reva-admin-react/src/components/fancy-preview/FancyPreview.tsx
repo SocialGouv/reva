@@ -29,6 +29,7 @@ export const FancyPreview = (props: Props): JSX.Element | null => {
         <span
           className={`text-blue-800 ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
           aria-hidden="true"
+          data-test={`feasibility-files-preview-${title}-toggle`}
         />
       </div>
       {display && (

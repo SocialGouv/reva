@@ -215,6 +215,7 @@ export default function AttachmentsPage() {
             }}
             state={errors.idCard ? "error" : "default"}
             stateRelatedMessage={errors.idCard?.[0]?.message}
+            dataTest="id-card-upload"
           />
           <FancyUpload
             className="col-span-2"
@@ -230,6 +231,7 @@ export default function AttachmentsPage() {
             stateRelatedMessage={
               errors.equivalenceOrExemptionProof?.[0]?.message
             }
+            dataTest="equivalence-proof-upload"
           />
           <FancyUpload
             className="col-span-2"
@@ -243,6 +245,7 @@ export default function AttachmentsPage() {
             }}
             state={errors.trainingCertificate ? "error" : "default"}
             stateRelatedMessage={errors.trainingCertificate?.[0]?.message}
+            dataTest="training-certificate-upload"
           />
           {additionalFiles.map((additionalFile, index) => (
             <FancyUpload
@@ -271,6 +274,7 @@ export default function AttachmentsPage() {
               }}
               state={errors.additionalFiles?.[index] ? "error" : "default"}
               stateRelatedMessage={errors.additionalFiles?.[index]?.message}
+              dataTest={`additional-file-${index}`}
             />
           ))}
           {additionalFiles?.length < MAX_ADDITIONAL_FILES && (
@@ -282,6 +286,7 @@ export default function AttachmentsPage() {
                   { id: v4(), file: undefined },
                 ]);
               }}
+              data-test="add-additional-file-button"
             >
               <span className="fr-icon-add-line fr-icon--sm" />
               <span className="text-sm">Ajouter une pièce jointe</span>

@@ -1,12 +1,12 @@
 import {
-  ReactNode,
   DetailedHTMLProps,
   InputHTMLAttributes,
-  useState,
-  useEffect,
-  useRef,
+  ReactNode,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
+  useState,
 } from "react";
 import { v4 } from "uuid";
 
@@ -25,6 +25,7 @@ export const FancyUpload = ({
   stateRelatedMessage,
   defaultFile,
   onClickDelete,
+  dataTest,
 }: {
   title: string;
   description?: ReactNode;
@@ -38,6 +39,7 @@ export const FancyUpload = ({
   stateRelatedMessage?: ReactNode;
   defaultFile?: { name: string; url: string; mimeType: string };
   onClickDelete?: () => void;
+  dataTest?: string;
 }) => {
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const urlPreview = useMemo(
@@ -98,7 +100,7 @@ export const FancyUpload = ({
   }
 
   return (
-    <div className={`relative ${className || ""}`}>
+    <div className={`relative ${className || ""}`} data-test={dataTest}>
       <Upload
         className={`border bg-dsfr-light-neutral-grey-1000 p-8`}
         label={
@@ -120,6 +122,7 @@ export const FancyUpload = ({
 
                     onClickDelete();
                   }}
+                  data-test="delete-file-button"
                 >
                   Supprimer
                   <span className="fr-icon-delete-line" />
