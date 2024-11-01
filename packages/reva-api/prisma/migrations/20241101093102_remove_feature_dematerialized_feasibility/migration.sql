@@ -1,0 +1,3 @@
+DELETE FROM "features"
+WHERE
+    key = 'DEMATERIALIZED_FEASIBILITY';
