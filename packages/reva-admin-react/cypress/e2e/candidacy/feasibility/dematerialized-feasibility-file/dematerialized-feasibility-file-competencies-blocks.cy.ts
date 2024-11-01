@@ -1,42 +1,35 @@
 import { stubQuery } from "../../../../utils/graphql";
-import { DEFAULT_FEASIBILITY_FILE, DF_CERTIFICATION } from "./dff-mocks";
 
-function visitFeasibilityCompetenciesBlock(
-  feasibility = DEFAULT_FEASIBILITY_FILE,
-) {
-  cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "features/active-features.json",
-      );
-      stubQuery(
-        req,
-        "getMaisonMereCGUQuery",
-        "account/head-agency-cgu-accepted.json",
-      );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/organism.json",
-      );
-      stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
-      candidacy.data.getCandidacyById.feasibility = feasibility;
-      candidacy.data.getCandidacyById.certification = DF_CERTIFICATION;
+function visitFeasibilityCompetenciesBlock() {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "features/active-features.json",
+    );
+    stubQuery(
+      req,
+      "getMaisonMereCGUQuery",
+      "account/head-agency-cgu-accepted.json",
+    );
+    stubQuery(
+      req,
+      "getOrganismForAAPVisibilityCheck",
+      "visibility/organism.json",
+    );
+    stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
 
-      stubQuery(
-        req,
-        "getBlocDeCompetencesForCompetenciesBlockPage",
-        "bloc-de-competences/bloc-de-competences.json",
-      );
+    stubQuery(
+      req,
+      "getBlocDeCompetencesForCompetenciesBlockPage",
+      "feasibility/dematerialized-feasibility-file-bloc-de-competences.json",
+    );
 
-      stubQuery(
-        req,
-        "getCandidacyMenuAndCandidateInfos",
-        "candidacy/candidacy-menu-dff.json",
-      );
-    });
+    stubQuery(
+      req,
+      "getCandidacyMenuAndCandidateInfos",
+      "candidacy/candidacy-menu-dff.json",
+    );
   });
 
   cy.collaborateur(
