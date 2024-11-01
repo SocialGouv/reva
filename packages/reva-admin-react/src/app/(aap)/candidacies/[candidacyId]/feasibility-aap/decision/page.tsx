@@ -116,6 +116,7 @@ export default function DecisionPage() {
                 },
               },
             ]}
+            data-test="aap-decision-radio-buttons"
           />
         </div>
         <div className="my-2">
@@ -130,6 +131,7 @@ export default function DecisionPage() {
             nativeTextAreaProps={register("aapDecisionComment")}
             state={errors.aapDecisionComment ? "error" : "default"}
             stateRelatedMessage={errors.aapDecisionComment?.message}
+            data-test="aap-decision-comment-input"
           />
         </div>
         <FormButtons
