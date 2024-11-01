@@ -12,7 +12,6 @@
     "front-apps": "concurrently -n \"reva-candidate,reva-admin-react,reva-website\" -c \"green,cyan,magenta\" -k \"npm run dev --prefix packages/reva-candidate\" \"npm run dev --prefix packages/reva-admin-react\" \"npm run dev --prefix packages/reva-website\"",
     "start": "npm run start --workspace=reva-api",
     "cron": "npm run cron --workspace=reva-api",
-    "prepare": "husky install",
     "lint-staged": "npm run lint-staged --workspaces --if-present",
     "lint-all": "npm run lint-all --workspaces --if-present",
     "test-api": "npm run test --workspace=reva-api",
@@ -24,15 +23,7 @@
   "workspaces": [
     "packages/reva-api"
   ],
-  "dependencies": {
-    "husky": "^7.0.4"
-  },
   "devDependencies": {
     "concurrently": "^7.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint-staged --workspaces --if-present"
-    }
   }
 }
