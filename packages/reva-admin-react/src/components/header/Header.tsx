@@ -22,11 +22,6 @@ export const Header = () => {
     ? "Certificateurs/Candidatures"
     : "Candidatures";
   const isAdminDashboardV2Enabled = isFeatureActive("admin_dashboard_v2");
-  const certificateursPath = isFeatureActive(
-    "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
-  )
-    ? "/certification-authority-structures"
-    : "/certification-authorities";
 
   const adminTabsV1 = [
     {
@@ -56,11 +51,7 @@ export const Header = () => {
     {
       text: "Certificateurs",
       linkProps: {
-        href: isFeatureActive(
-          "NEW_CERTIFICATION_AUTHORITY_ADMINISTRATION_PAGES",
-        )
-          ? "/certification-authority-structures"
-          : "/certification-authorities",
+        href: "/certification-authority-structures",
         target: "_self",
       },
       isActive: currentPathname.startsWith("/certification-authorities"),
@@ -102,10 +93,12 @@ export const Header = () => {
         {
           text: "Structures certificatrices",
           linkProps: {
-            href: certificateursPath,
+            href: "/certification-authority-structures",
             target: "_self",
           },
-          isActive: currentPathname.startsWith(certificateursPath),
+          isActive: currentPathname.startsWith(
+            "/certification-authority-structures",
+          ),
         },
       ],
     },
