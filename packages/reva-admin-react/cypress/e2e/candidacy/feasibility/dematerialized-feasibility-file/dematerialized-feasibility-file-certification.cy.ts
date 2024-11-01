@@ -1,7 +1,7 @@
 import { stubQuery } from "../../../../utils/graphql";
-import { DEFAULT_FEASIBILITY_FILE, DF_CERTIFICATION } from "./dff-mocks";
+import { DF_CERTIFICATION } from "./dff-mocks";
 
-function visitFeasibilityCertification(feasibility = DEFAULT_FEASIBILITY_FILE) {
+function visitFeasibilityCertification() {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
@@ -20,7 +20,6 @@ function visitFeasibilityCertification(feasibility = DEFAULT_FEASIBILITY_FILE) {
         "visibility/organism.json",
       );
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
-      candidacy.data.getCandidacyById.feasibility = feasibility;
       candidacy.data.getCandidacyById.certification = DF_CERTIFICATION;
 
       stubQuery(
