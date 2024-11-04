@@ -316,10 +316,6 @@ type Mutation {
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
   ): OrganismInformationsCommerciales!
-  organism_createOrganismWithMaisonMereAAP(
-    organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
-  ): String!
-
   organism_updateOrganismDegreesAndDomaines(
     data: UpdateOrganismDegreesAndDomainesInput!
   ): Organism
