@@ -1,6 +1,6 @@
 type CertificationAuthority {
   id: ID!
-  account: Account!
+  account: Account
   label: String!
   contactFullName: String
   contactEmail: String
@@ -9,6 +9,7 @@ type CertificationAuthority {
   certifications: [Certification!]!
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructure: CertificationAuthorityStructure!
+  showLocalAccountsContactInfo: Boolean!
 }
 
 type CertificationAuthorityLocalAccount {
