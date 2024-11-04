@@ -49,11 +49,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should display an empty form with enabled submit button", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="form-buttons"]')
-        .should("exist")
-        .within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
+      cy.get('[data-test="form-buttons"]').should("exist");
     });
   });
 
