@@ -82,21 +82,22 @@ const SubscriptionRequestPage = () => {
           manager={subscriptionRequest}
           account={subscriptionRequest}
         />
-
-        <LegalDocumentList
-          attestationURSSAFFileUrl={
-            subscriptionRequest.attestationURSSAFFile.url
-          }
-          justificatifIdentiteDirigeantFileUrl={
-            subscriptionRequest.justificatifIdentiteDirigeantFile.url
-          }
-          lettreDeDelegationFileUrl={
-            subscriptionRequest.lettreDeDelegationFile?.url
-          }
-          justificatifIdentiteDelegataireFileUrl={
-            subscriptionRequest.justificatifIdentiteDelegataireFile?.url
-          }
-        />
+        {subscriptionRequest.status !== "REJECTED" && (
+          <LegalDocumentList
+            attestationURSSAFFileUrl={
+              subscriptionRequest.attestationURSSAFFile!.url
+            }
+            justificatifIdentiteDirigeantFileUrl={
+              subscriptionRequest.justificatifIdentiteDirigeantFile!.url
+            }
+            lettreDeDelegationFileUrl={
+              subscriptionRequest.lettreDeDelegationFile?.url
+            }
+            justificatifIdentiteDelegataireFileUrl={
+              subscriptionRequest.justificatifIdentiteDelegataireFile?.url
+            }
+          />
+        )}
         {subscriptionRequest.status === "REJECTED" && (
           <div className="flex flex-col gap-6 mt-8">
             <div>
