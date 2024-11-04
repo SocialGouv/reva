@@ -23,7 +23,15 @@ export const rejectSubscriptionRequest = async ({
 
   await prismaClient.subscriptionRequest.update({
     where: { id: subscriptionRequestId },
-    data: { status: "REJECTED", rejectionReason: reason, internalComment },
+    data: {
+      status: "REJECTED",
+      rejectionReason: reason,
+      internalComment,
+      attestationURSSAFFileId: null,
+      justificatifIdentiteDirigeantFileId: null,
+      lettreDeDelegationFileId: null,
+      justificatifIdentiteDelegataireFileId: null,
+    },
   });
 
   const filesIds = [

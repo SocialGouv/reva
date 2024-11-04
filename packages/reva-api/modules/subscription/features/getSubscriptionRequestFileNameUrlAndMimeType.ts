@@ -33,14 +33,14 @@ export const getSubscriptionRequestFileNameUrlAndMimeType = async ({
   let filePath = "";
   switch (fileType) {
     case "attestationURSSAFFile":
-      filename = sr.attestationURSSAFFile.name;
-      mimeType = sr.attestationURSSAFFile.mimeType;
-      filePath = sr.attestationURSSAFFile.path;
+      filename = sr.attestationURSSAFFile?.name || "";
+      mimeType = sr.attestationURSSAFFile?.mimeType || "";
+      filePath = sr.attestationURSSAFFile?.path || "";
       break;
     case "justificatifIdentiteDirigeantFile":
-      filename = sr.justificatifIdentiteDirigeantFile.name;
-      mimeType = sr.justificatifIdentiteDirigeantFile.mimeType;
-      filePath = sr.justificatifIdentiteDirigeantFile.path;
+      filename = sr.justificatifIdentiteDirigeantFile?.name || "";
+      mimeType = sr.justificatifIdentiteDirigeantFile?.mimeType || "";
+      filePath = sr.justificatifIdentiteDirigeantFile?.path || "";
       break;
     case "lettreDeDelegationFile":
       filename = sr.lettreDeDelegationFile?.name || "";
