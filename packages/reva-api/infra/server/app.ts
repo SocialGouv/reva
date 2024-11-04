@@ -8,7 +8,7 @@ import fastify, {
   FastifyPluginOptions,
   FastifyServerOptions,
 } from "fastify";
-import MercuriusGQLUpload from "mercurius-upload";
+import MercuriusGQLUpload from "./mercurius-upload";
 import { accountRoute } from "../../modules/account/account.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
@@ -84,12 +84,6 @@ export const buildApp = async (
 
   app.register(keycloakAdminPlugin);
 
-  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000000 });
-
-  app.register(mercuriusGraphQL, {
-    prefix: "/api",
-  });
-
   if (OOS_DOMAIN !== "") {
     app.register(proxy, {
       upstream: OOS_DOMAIN,
@@ -100,17 +94,21 @@ export const buildApp = async (
   app.register(proofUploadRoute, {
     prefix: "/api",
   });
-
   app.register(paymentRequestFvaeFileUploadAndConfirmationRoute, {
     prefix: "/api",
   });
-
   app.register(accountRoute, { prefix: "/api" });
   app.register(feasibilityFileUploadRoute, { prefix: "/api" });
   app.register(dossierDeValidationRoute, { prefix: "/api" });
   app.register(juryRoute, { prefix: "/api" });
   app.register(organismRoutes, { prefix: "/api" });
   app.register(strapiWebhookRoute, { prefix: "/api" });
+
+  // keep MercuriusGQLUpload at the end to handle conflict with fastify.addContentTypeParser("multipart/form-data", ...)
+  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000000 });
+  app.register(mercuriusGraphQL, {
+    prefix: "/api",
+  });
 
   logger.info("started");
   return app;
