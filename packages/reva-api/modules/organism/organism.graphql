@@ -305,10 +305,6 @@ type Mutation {
     organismId: ID!
     organismData: UpdateOrganismInput!
   ): Organism!
-  organism_updateOrganismWithMaisonMereAAP(
-    organismId: ID!
-    organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
-  ): Organism!
   organism_createOrUpdateInformationsCommerciales(
     informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
   ): OrganismInformationsCommerciales!
