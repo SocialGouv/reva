@@ -71,7 +71,7 @@ export const getCandidacyCountByStatus = async ({
     if (maisonMereAAP?.gestionnaire.keycloakId) {
       fromClause = Prisma.sql`${fromClause} join maison_mere_aap mma on candidacyOrganism.maison_mere_aap_id = mma.id`;
       fromClause = Prisma.sql`${fromClause} join account mmaAccount on mma.gestionnaire_account_id = mmaAccount.id`;
-      whereClause = Prisma.sql`${whereClause} and mmaAccount.keycloak_id = '${maisonMereAAP?.gestionnaire.keycloakId}'`;
+      whereClause = Prisma.sql`${whereClause} and mmaAccount.keycloak_id = ${maisonMereAAP?.gestionnaire.keycloakId}::uuid`;
     }
   }
 
