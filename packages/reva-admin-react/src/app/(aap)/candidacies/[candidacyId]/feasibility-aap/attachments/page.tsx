@@ -7,7 +7,7 @@ import { useUrqlClient } from "@/components/urql-client";
 import { File as GQLFile } from "@/graphql/generated/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { object, z } from "zod";
@@ -15,6 +15,10 @@ import {
   createOrUpdateAttachments,
   useAttachments,
 } from "./_components/attachments.hook";
+
+const ACCEPTED_FILE_TYPES = ".pdf, .jpg, .jpeg, .png" as const;
+const MAX_FILE_SIZE = "2Mo" as const;
+const hintMessage = `Formats supportés : ${ACCEPTED_FILE_TYPES} avec un poids maximum de ${MAX_FILE_SIZE}`;
 
 const schema = z
   .object({
@@ -59,45 +63,6 @@ export default function AttachmentsPage() {
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const { attachments } = useAttachments();
 
-  const remoteIdCard = useMemo(
-    () =>
-      attachments?.find((attachment) => attachment?.type === "ID_CARD")?.file,
-    [attachments],
-  );
-  const remoteEquivalenceOrExemptionProof = useMemo(
-    () =>
-      attachments?.find(
-        (attachment) => attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
-      )?.file,
-    [attachments],
-  );
-  const remoteTrainingCertificate = useMemo(
-    () =>
-      attachments?.find(
-        (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
-      )?.file,
-    [attachments],
-  );
-  const remoteAdditionalFiles = useMemo(
-    () =>
-      (attachments || [])
-        .filter((attachment) => attachment?.type === "ADDITIONAL")
-        .map((attachment) => ({ id: v4(), file: attachment?.file })),
-    [attachments],
-  );
-
-  const [additionalFiles, setAdditionalFiles] = useState<
-    { id: string; file: GQLFile | undefined }[]
-  >([]);
-
-  const resetAdditionalFiles = useCallback(() => {
-    setAdditionalFiles([...remoteAdditionalFiles]);
-  }, [remoteAdditionalFiles]);
-
-  useEffect(() => {
-    resetAdditionalFiles();
-  }, [resetAdditionalFiles]);
-
   const {
     register,
     handleSubmit,
@@ -113,6 +78,61 @@ export default function AttachmentsPage() {
       additionalFiles: [],
     },
   });
+
+  const {
+    fields: additionalFilesFields,
+    append: appendAdditionalFiles,
+    remove: removeAdditionalFiles,
+  } = useFieldArray({
+    control,
+    name: "additionalFiles",
+  });
+
+  const remoteFiles = useMemo(
+    () => ({
+      idCard: attachments?.find((attachment) => attachment?.type === "ID_CARD")
+        ?.file,
+      equivalenceOrExemptionProof: attachments?.find(
+        (attachment) => attachment?.type === "EQUIVALENCE_OR_EXEMPTION_PROOF",
+      )?.file,
+      trainingCertificate: attachments?.find(
+        (attachment) => attachment?.type === "TRAINING_CERTIFICATE",
+      )?.file,
+      additionalFiles: (attachments || [])
+        .filter((attachment) => attachment?.type === "ADDITIONAL")
+        .map((attachment) => ({
+          id: v4(),
+          name: attachment?.file?.name,
+          file: attachment?.file,
+        })),
+    }),
+    [attachments],
+  );
+
+  const resetAdditionalFiles = useCallback(() => {
+    additionalFilesFields.forEach(() => removeAdditionalFiles(0));
+    if (remoteFiles.additionalFiles.length > 0) {
+      remoteFiles.additionalFiles.forEach((file) => {
+        appendAdditionalFiles({
+          0: file.file
+            ? new File([], file.file.name, { type: file.file.mimeType })
+            : undefined,
+        });
+      });
+    }
+  }, [
+    remoteFiles.additionalFiles,
+    appendAdditionalFiles,
+    additionalFilesFields,
+    removeAdditionalFiles,
+  ]);
+
+  useEffect(() => {
+    if (remoteFiles.additionalFiles.length > 0) {
+      resetAdditionalFiles();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remoteFiles.additionalFiles]);
 
   const handleFormSubmit = async (data: FormData) => {
     const idCard = data.idCard?.[0];
@@ -148,42 +168,8 @@ export default function AttachmentsPage() {
     resetField("idCard");
     resetField("equivalenceOrExemptionProof");
     resetField("trainingCertificate");
-
-    for (let index = 0; index < additionalFiles.length; index++) {
-      resetField(`additionalFiles.${index}`);
-    }
-
     resetAdditionalFiles();
-  }, [additionalFiles.length, resetAdditionalFiles, resetField]);
-
-  const idCardDefaultFile = useMemo(
-    () => getFancyDefaultFile(remoteIdCard),
-    [remoteIdCard],
-  );
-
-  const equivalenceOrExemptionProofDefaultFile = useMemo(
-    () => getFancyDefaultFile(remoteEquivalenceOrExemptionProof),
-    [remoteEquivalenceOrExemptionProof],
-  );
-
-  const trainingCertificateDefaultFile = useMemo(
-    () => getFancyDefaultFile(remoteTrainingCertificate),
-    [remoteTrainingCertificate],
-  );
-
-  const additionalFilesDefaultFile = useMemo(
-    () =>
-      remoteAdditionalFiles.map((additionalFile) => ({
-        id: additionalFile.id,
-        file: getFancyDefaultFile(additionalFile.file),
-      })),
-    [remoteAdditionalFiles],
-  );
-
-  const { remove } = useFieldArray({
-    control,
-    name: "additionalFiles",
-  });
+  }, [resetAdditionalFiles, resetField]);
 
   return (
     <div className="flex flex-col">
@@ -206,12 +192,12 @@ export default function AttachmentsPage() {
             className="col-span-2"
             title="Pièce d'identité"
             description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant le jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
-            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={idCardDefaultFile}
+            hint={hintMessage}
+            defaultFile={getFancyDefaultFile(remoteFiles.idCard)}
             nativeInputProps={{
               required: true,
               ...register("idCard"),
-              accept: ".pdf, .jpg, .jpeg, .png",
+              accept: ACCEPTED_FILE_TYPES,
             }}
             state={errors.idCard ? "error" : "default"}
             stateRelatedMessage={errors.idCard?.[0]?.message}
@@ -221,11 +207,13 @@ export default function AttachmentsPage() {
             className="col-span-2"
             title="Justificatif d'équivalence ou de dispense (optionnel)"
             description="Copie du ou des justificatifs ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
-            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={equivalenceOrExemptionProofDefaultFile}
+            hint={hintMessage}
+            defaultFile={getFancyDefaultFile(
+              remoteFiles.equivalenceOrExemptionProof,
+            )}
             nativeInputProps={{
               ...register("equivalenceOrExemptionProof"),
-              accept: ".pdf, .jpg, .jpeg, .png",
+              accept: ACCEPTED_FILE_TYPES,
             }}
             state={errors.equivalenceOrExemptionProof ? "error" : "default"}
             stateRelatedMessage={
@@ -237,54 +225,45 @@ export default function AttachmentsPage() {
             className="col-span-2"
             title="Attestation ou certificat de formation (optionnel)"
             description="Attestation ou certificat de suivi de formation justifiant du prérequis demandé par la certification visée."
-            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
-            defaultFile={trainingCertificateDefaultFile}
+            hint={hintMessage}
+            defaultFile={getFancyDefaultFile(remoteFiles.trainingCertificate)}
             nativeInputProps={{
               ...register("trainingCertificate"),
-              accept: ".pdf, .jpg, .jpeg, .png",
+              accept: ACCEPTED_FILE_TYPES,
             }}
             state={errors.trainingCertificate ? "error" : "default"}
             stateRelatedMessage={errors.trainingCertificate?.[0]?.message}
             dataTest="training-certificate-upload"
           />
-          {additionalFiles.map((additionalFile, index) => (
+          {additionalFilesFields.map((field, index) => (
             <FancyUpload
-              key={additionalFile.id}
+              key={field.id}
               className="col-span-2"
               title="Pièce jointe supplémentaire"
               description=""
-              hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
+              hint={hintMessage}
               onClickDelete={() => {
-                remove(index);
-
-                setAdditionalFiles(
-                  additionalFiles.filter(
-                    (file) => file.id != additionalFile.id,
-                  ),
-                );
+                removeAdditionalFiles(index);
               }}
-              defaultFile={
-                additionalFilesDefaultFile.find(
-                  (file) => file.id == additionalFile.id,
-                )?.file
-              }
+              defaultFile={getFancyDefaultFile(
+                remoteFiles.additionalFiles.find(
+                  (file) => file.name === field[0]?.name,
+                )?.file,
+              )}
               nativeInputProps={{
                 ...register(`additionalFiles.${index}`),
-                accept: ".pdf, .jpg, .jpeg, .png",
+                accept: ACCEPTED_FILE_TYPES,
               }}
               state={errors.additionalFiles?.[index] ? "error" : "default"}
               stateRelatedMessage={errors.additionalFiles?.[index]?.message}
               dataTest={`additional-file-${index}`}
             />
           ))}
-          {additionalFiles?.length < MAX_ADDITIONAL_FILES && (
+          {additionalFilesFields.length < MAX_ADDITIONAL_FILES && (
             <div
               className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
               onClick={() => {
-                setAdditionalFiles((prev) => [
-                  ...prev,
-                  { id: v4(), file: undefined },
-                ]);
+                appendAdditionalFiles({ 0: undefined });
               }}
               data-test="add-additional-file-button"
             >
