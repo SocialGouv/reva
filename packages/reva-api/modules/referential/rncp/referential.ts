@@ -2,7 +2,6 @@ import { parse } from "date-fns";
 
 import { logger } from "../../shared/logger";
 
-const FRANCE_COMPENTENCES_API_KEY = process.env.FRANCE_COMPENTENCES_API_KEY;
 const URL = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
 
 /*
@@ -70,6 +69,8 @@ export class RNCPReferential {
   private apiKey: string;
 
   private constructor() {
+    const FRANCE_COMPENTENCES_API_KEY = process.env.FRANCE_COMPENTENCES_API_KEY;
+
     if (!FRANCE_COMPENTENCES_API_KEY) {
       const error = `"FRANCE_COMPENTENCES_API_KEY" has not been set`;
       console.error(error);
@@ -224,11 +225,20 @@ function splitString(value: string): string[] {
   }
 
   // Space + UpperFirst regEx
-  const regExDefault = new RegExp(/(?= [A-ZÀ-Ö])/g);
+  const regExSpaceUpperFirst = new RegExp(/(?= [A-ZÀ-Ö])/g);
+  if (cleanedValue.match(regExSpaceUpperFirst)) {
+    let list: string[] = [];
+    list = cleanedValue.split(regExSpaceUpperFirst);
+    list = list.map((v) => v.replace(new RegExp(/^ /), ""));
+    return list;
+  }
+
+  // Jump line + UpperFirst regEx
+  const regExDefault = new RegExp(/(?=\n[A-ZÀ-Ö])/g);
   if (cleanedValue.match(regExDefault)) {
     let list: string[] = [];
     list = cleanedValue.split(regExDefault);
-    list = list.map((v) => v.replace(new RegExp(/^ /), ""));
+    list = list.map((v) => v.replace(new RegExp(/^\n/), ""));
     return list;
   }
 
