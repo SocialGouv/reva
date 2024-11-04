@@ -44,7 +44,7 @@ function visitFeasibilityAttachments() {
   );
 }
 
-describe.skip("Dematerialized Feasibility File - Attachments Page", () => {
+describe("Dematerialized Feasibility File - Attachments Page", () => {
   context("Initial form state", () => {
     it("should display an empty form with enabled submit button", () => {
       visitFeasibilityAttachments();
