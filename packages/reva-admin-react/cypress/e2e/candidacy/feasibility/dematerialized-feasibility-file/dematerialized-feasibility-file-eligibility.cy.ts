@@ -14,16 +14,20 @@ function visitFeasibilityEligibility() {
       );
       stubQuery(
         req,
-        "getMaisonMereCGUQuery",
-        "account/head-agency-cgu-accepted.json",
-      );
-      stubQuery(
-        req,
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
+      stubQuery(
+        req,
+        "getMaisonMereCGUQuery",
+        "account/head-agency-cgu-accepted.json",
+      );
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
-      stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
+      stubQuery(
+        req,
+        "getCandidacyByIdForAapFeasibilityEligibilityPage",
+        candidacy,
+      );
 
       stubQuery(
         req,
@@ -36,6 +40,15 @@ function visitFeasibilityEligibility() {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/eligibility",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@getCandidacyByIdForAapFeasibilityEligibilityPage",
+  ]);
 }
 
 describe("Dematerialized Feasibility File Eligibility Page", () => {

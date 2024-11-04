@@ -35,6 +35,15 @@ function visitFeasibilityDecision() {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/decision",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@feasibilityWithDematerializedFeasibilityFileDecisionByCandidacyId",
+  ]);
 }
 
 describe("Dematerialized Feasibility File - AAP Decision Page", () => {

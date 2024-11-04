@@ -48,13 +48,21 @@ function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE) {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@getCandidacyByIdForAAPFeasibilityPage",
+  ]);
 }
 
 describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the feasibility file is in its initial state", () => {
     it("should display all sections", function () {
       visitFeasibility();
-      cy.wait("@getCandidacyByIdForAAPFeasibilityPage");
       cy.get("[data-test='eligibility-section']").should("exist");
       cy.get("[data-test='certification-section']").should("exist");
       cy.get("[data-test='competencies-blocks-section']").should("exist");
@@ -73,7 +81,6 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
     it("should display 'to complete' badges for eligibility, certification, decision, and attachments sections", function () {
       visitFeasibility();
-      cy.wait("@getCandidacyByIdForAAPFeasibilityPage");
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='to-complete-badge']").should("exist");
         cy.get("button").should("not.be.disabled");

@@ -35,6 +35,15 @@ function visitFeasibilityCompetenciesBlock() {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/competencies-blocks/4c06558e-8e3e-4559-882e-321607a6b4e1/",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@getBlocDeCompetencesForCompetenciesBlockPage",
+  ]);
 }
 
 describe("Dematerialized Feasibility File - Competencies Block Page", () => {

@@ -42,6 +42,15 @@ function visitFeasibilityAttachments() {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/attachments",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId",
+  ]);
 }
 
 describe("Dematerialized Feasibility File - Attachments Page", () => {
@@ -49,7 +58,11 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should display an empty form with enabled submit button", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="form-buttons"]').should("exist");
+      cy.get('[data-test="form-buttons"]')
+        .should("exist")
+        .within(() => {
+          cy.get("button").should("not.be.disabled");
+        });
     });
   });
 

@@ -39,6 +39,15 @@ function visitFeasibilityCertification() {
   cy.collaborateur(
     "/candidacies/57bf364b-8c8b-4ff4-889b-66917e26d7d0/feasibility-aap/certification",
   );
+
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getMaisonMereCGUQuery",
+    "@getOrganismForAAPVisibilityCheck",
+    "@getAccountInfo",
+    "@getCandidacyMenuAndCandidateInfos",
+    "@getCandidacyByIdForAapFeasibilityCertificationPage",
+  ]);
 }
 
 describe("Dematerialized Feasibility File Certification Page", () => {
