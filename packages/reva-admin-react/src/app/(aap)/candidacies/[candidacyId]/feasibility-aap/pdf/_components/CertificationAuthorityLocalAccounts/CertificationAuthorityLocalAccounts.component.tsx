@@ -46,7 +46,14 @@ export const CertificationAuthorityLocalAccounts = (
     certificationAuthorityQuery.data
       ?.certification_authority_getCertificationAuthority;
 
-  if (certificationAuthority && localAccounts.length == 0) {
+  const showLocalAccountsContactInfo =
+    certificationAuthority?.showLocalAccountsContactInfo;
+
+  const showCertificationAuthorityContactInfo =
+    certificationAuthority &&
+    (localAccounts.length == 0 || !showLocalAccountsContactInfo);
+
+  if (showCertificationAuthorityContactInfo) {
     return (
       <div>
         <h4>Contact certificateur</h4>
@@ -58,34 +65,37 @@ export const CertificationAuthorityLocalAccounts = (
       </div>
     );
   }
-
-  return (
-    <div>
-      <h4>Contact(s) certificateur</h4>
-      <div className="grid grid-cols-2 gap-2">
-        {localAccounts.map((localAccount) => (
-          <div
-            key={localAccount.id}
-            className="border border-dsfrGray-200 p-6 flex flex-col gap-y-4"
-          >
-            <p className="mb-0 flex flex-row items-center font-bold text-lg">
-              {localAccount.account.firstname} {localAccount.account.lastname}
-            </p>
-            <p className="mb-0 flex flex-row items-center">
-              <span
-                className="fr-icon-mail-line fr-icon--sm mr-2"
-                aria-hidden="true"
-              />
-              <a
-                className="hover:underline bg-none"
-                href={`mailto:${localAccount.account.email}`}
-              >
-                {localAccount.account.email}
-              </a>
-            </p>
-          </div>
-        ))}
+  if (showLocalAccountsContactInfo) {
+    return (
+      <div>
+        <h4>Contact(s) certificateur</h4>
+        <div className="grid grid-cols-2 gap-2">
+          {localAccounts.map((localAccount) => (
+            <div
+              key={localAccount.id}
+              className="border border-dsfrGray-200 p-6 flex flex-col gap-y-4"
+            >
+              <p className="mb-0 flex flex-row items-center font-bold text-lg">
+                {localAccount.account.firstname} {localAccount.account.lastname}
+              </p>
+              <p className="mb-0 flex flex-row items-center">
+                <span
+                  className="fr-icon-mail-line fr-icon--sm mr-2"
+                  aria-hidden="true"
+                />
+                <a
+                  className="hover:underline bg-none"
+                  href={`mailto:${localAccount.account.email}`}
+                >
+                  {localAccount.account.email}
+                </a>
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 };

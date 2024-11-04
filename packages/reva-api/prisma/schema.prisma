@@ -1009,6 +1009,7 @@ model CertificationAuthority {
   Jury                                  Jury[]
   certificationAuthorityStructure       CertificationAuthorityStructure         @relation(fields: [certificationAuthorityStructureId], references: [id], onDelete: Restrict)
   certificationAuthorityStructureId     String                                  @map("certification_authority_structure_id") @db.Uuid
+  showLocalAccountsContactInfo          Boolean                                 @default(true) @map("show_local_accounts_contact_info")
 
   @@map("certification_authority")
 }
