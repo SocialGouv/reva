@@ -51,7 +51,7 @@ const keycloakPluginMock: FastifyPluginAsync = async (
             sub,
             email,
             realm_access: {
-              roles: [],
+              roles: ["candidate"],
             },
           };
           break;
