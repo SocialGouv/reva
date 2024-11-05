@@ -23,9 +23,9 @@ export const updateGoalsOfCandidacy = async ({
     throw new Error(`Candidature ${candidacyId} non trouvée`);
   }
 
-  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+  if (!(await canCandidateUpdateCandidacy({ candidacy }))) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
+      "Impossible de mettre à jour les objectifs après avoir confirmé le parcours",
     );
   }
 

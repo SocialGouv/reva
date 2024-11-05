@@ -16,20 +16,9 @@ import { gestionnaireMaisonMereAAP1 } from "../../../test/fixtures/people-organi
 import { logger } from "../../shared/logger";
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
+import { basicTrainingForm } from "../../../test/fixtures/training";
 
 let candidacy: Candidacy;
-
-const basicTrainingForm = {
-  certificateSkills: "My certificate skills",
-  otherTraining: "My other training",
-  individualHourCount: 1,
-  collectiveHourCount: 2,
-  additionalHourCount: 3,
-  basicSkillIds: [],
-  mandatoryTrainingIds: [],
-  isCertificationPartial: false,
-  candidacyFinancingMethodIds: [],
-};
 
 beforeEach(async () => {
   await createExpertFiliereOrganism();

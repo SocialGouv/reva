@@ -45,9 +45,9 @@ export const updateCertificationOfCandidacy = async ({
     );
   }
 
-  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+  if (!(await canCandidateUpdateCandidacy({ candidacy }))) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
+      "Impossible de changer de certification après avoir confirmé le parcours",
     );
   }
 

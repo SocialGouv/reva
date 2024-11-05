@@ -64,6 +64,7 @@ const expertFiliereOrganism = {
 } satisfies Partial<Organism>;
 
 const expertBrancheOrganism = {
+  id: randomUUID(),
   label: "Expert branch organism",
   siret: "5038235777",
   contactAdministrativeEmail: "expertBranche@example.com",
@@ -128,6 +129,13 @@ const adminAccount1 = {
   firstname: "Mimi",
   lastname: "Matty",
   email: "mimi@yolo.fr",
+};
+
+const candidateAccount = {
+  keycloakId: randomUUID(),
+  firstname: "John",
+  lastname: "Doe",
+  email: "john.doe@example.fr",
 };
 
 const gestionnaireMaisonMereAAP1 = {
@@ -219,6 +227,7 @@ const maisonMereAAPExpertBranche = {
 
 export {
   adminAccount1,
+  candidateAccount,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
   archiIperia1,

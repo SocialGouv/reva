@@ -35,6 +35,7 @@ export const selectOrganismForCandidacy = async ({
       candidate: true,
       candidacyStatuses: true,
       certificationId: true,
+      status: true,
     },
   });
 
@@ -45,9 +46,9 @@ export const selectOrganismForCandidacy = async ({
     );
   }
 
-  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+  if (!(await canCandidateUpdateCandidacy({ candidacy }))) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effetué",
+      "Impossible de changer d'organisme d'accompagnement après avoir confirmé le parcours",
     );
   }
 

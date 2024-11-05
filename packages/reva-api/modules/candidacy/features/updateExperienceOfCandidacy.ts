@@ -18,12 +18,23 @@ export const updateExperienceOfCandidacy = async ({
   userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+    select: {
+      status: true,
+    },
+  });
+
+  if (!candidacy) {
+    throw new Error("Aucune candidature n'a été trouvée");
+  }
+
   if (
     userRoles.includes("candidate") &&
-    !(await canCandidateUpdateCandidacy({ candidacyId }))
+    !(await canCandidateUpdateCandidacy({ candidacy }))
   ) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effectué",
+      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
     );
   }
 

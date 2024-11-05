@@ -10,6 +10,7 @@ import {
   maisonMereAAP2,
   maisonMereAAPExpertBranche,
   maisonMereAAPExpertFiliere,
+  expertBrancheOrganism,
 } from "../fixtures/people-organisms";
 
 import {
@@ -138,6 +139,12 @@ export const createExpertFiliereOrganism = async (): Promise<Organism> => {
   });
 
   return organism;
+};
+
+export const createExpertBrancheOrganism = async (): Promise<Organism> => {
+  return prismaClient.organism.create({
+    data: expertBrancheOrganism,
+  });
 };
 
 export const createCandidacyUnifvae = async () => {

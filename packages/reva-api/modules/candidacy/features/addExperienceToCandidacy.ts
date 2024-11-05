@@ -1,7 +1,6 @@
 import { ExperienceInput } from "../candidacy.types";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCandidacyById } from "./getCandidacyById";
 import { prismaClient } from "../../../prisma/client";
 
 export const addExperienceToCandidacy = async ({
@@ -17,7 +16,12 @@ export const addExperienceToCandidacy = async ({
   userKeycloakId?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
-  const candidacy = getCandidacyById({ candidacyId });
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+    select: {
+      status: true,
+    },
+  });
 
   if (!candidacy) {
     throw new Error("Aucune candidature n'a été trouvée");
@@ -25,10 +29,10 @@ export const addExperienceToCandidacy = async ({
 
   if (
     userRoles.includes("candidate") &&
-    !(await canCandidateUpdateCandidacy({ candidacyId }))
+    !(await canCandidateUpdateCandidacy({ candidacy }))
   ) {
     throw new Error(
-      "Impossible de mettre à jour la candidature une fois le premier entretien effectué",
+      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
     );
   }
 
