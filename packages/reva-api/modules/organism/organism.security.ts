@@ -38,6 +38,12 @@ export const resolversSecurityMap = {
   "Mutation.organism_updateMaisonMereAAPFinancingMethods":
     isAdminOrGestionnaireOfMaisonMereAAP,
 
+  "Mutation.organism_createOrUpdateRemoteOrganismGeneralInformation":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+
+  "Mutation.organism_createOrUpdateOnSiteOrganismGeneralInformation":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+
   "Organism.accounts":
     isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 

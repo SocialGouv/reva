@@ -24,22 +24,17 @@ const getOrganismQuery = graphql(`
   }
 `);
 
-const createOrUpdateInformationsCommercialesAndRemoteStatusMutation = graphql(`
-  mutation createOrUpdateInformationsCommercialesAndRemoteStatusMutation(
-    $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
-    $organismId: String!
-    $isRemote: Boolean!
+const createOrUpdateRemoteOrganismGeneralInformationMutation = graphql(`
+  mutation createOrUpdateRemoteOrganismGeneralInformationMutation(
+    $organismId: ID!
+    $maisonMereAAPId: ID!
+    $informationsCommerciales: CreateOrUpdateRemoteOrganismGeneralInformationInput!
     $remoteZones: [RemoteZone!]!
   ) {
-    organism_createOrUpdateInformationsCommerciales(
-      informationsCommerciales: $createOrUpdateInformationsCommercialesInput
-    ) {
-      id
-    }
-    organism_updateOrganismOnSiteAndRemoteStatus(
+    organism_createOrUpdateRemoteOrganismGeneralInformation(
       organismId: $organismId
-      isOnSite: false
-      isRemote: $isRemote
+      maisonMereAAPId: $maisonMereAAPId
+      informationsCommerciales: $informationsCommerciales
       remoteZones: $remoteZones
     ) {
       id
@@ -49,8 +44,10 @@ const createOrUpdateInformationsCommercialesAndRemoteStatusMutation = graphql(`
 
 export const useInformationRemotePage = ({
   organismId,
+  maisonMereAAPId,
 }: {
   organismId: string;
+  maisonMereAAPId: string;
 }) => {
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -70,26 +67,21 @@ export const useInformationRemotePage = ({
     mutationFn: ({
       organismId,
       informationsCommerciales,
-      isRemote,
       remoteZones,
     }: {
       organismId: string;
-      isRemote: boolean;
       remoteZones: RemoteZone[];
       informationsCommerciales: {
         nom: string;
       };
     }) =>
       graphqlClient.request(
-        createOrUpdateInformationsCommercialesAndRemoteStatusMutation,
+        createOrUpdateRemoteOrganismGeneralInformationMutation,
         {
           organismId,
-          isRemote,
+          maisonMereAAPId,
           remoteZones,
-          createOrUpdateInformationsCommercialesInput: {
-            organismId,
-            ...informationsCommerciales,
-          },
+          informationsCommerciales: informationsCommerciales,
         },
       ),
     onSuccess: () => {

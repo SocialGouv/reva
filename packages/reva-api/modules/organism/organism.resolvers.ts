@@ -25,12 +25,10 @@ import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./fe
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
 import { createAgencyInfo } from "./features/createAgencyInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
-import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
-import { getLLToEarthFromZip } from "./features/getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
@@ -57,8 +55,6 @@ import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
-import { updateOrganismLLToEarth } from "./features/updateOrganismLLToEarth";
-import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOnSiteAndRemoteStatus";
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateAgencyInfoInput,
@@ -70,6 +66,8 @@ import {
   UpdateOrganismAccountInput,
 } from "./organism.types";
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
+import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
+import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
 
 const unsafeResolvers = {
   Account: {
@@ -253,31 +251,27 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    organism_createOrUpdateInformationsCommerciales: async (
+    organism_createOrUpdateRemoteOrganismGeneralInformation: async (
       _parent: unknown,
       params: {
-        informationsCommerciales: OrganismInformationsCommerciales & {
-          id: string | null;
+        organismId: string;
+        informationsCommerciales: {
+          nom: string | null;
+          telephone: string | null;
+          siteInternet: string | null;
+          emailContact: string | null;
         };
+        remoteZones: RemoteZone[];
       },
-    ) => {
-      const organismUpdated = await createOrUpdateInformationsCommerciales({
-        informationsCommerciales: params.informationsCommerciales,
-      });
+    ) => createOrUpdateRemoteOrganismGeneralInformation(params),
 
-      const llToEarth = await getLLToEarthFromZip({
-        zip: organismUpdated.adresseCodePostal,
-      });
-
-      if (llToEarth) {
-        await updateOrganismLLToEarth({
-          organismId: params.informationsCommerciales.organismId,
-          llToEarth,
-        });
-      }
-
-      return organismUpdated;
-    },
+    organism_createOrUpdateOnSiteOrganismGeneralInformation: async (
+      _parent: unknown,
+      params: {
+        organismId: string;
+        informationsCommerciales: OrganismInformationsCommerciales;
+      },
+    ) => createOrUpdateOnSiteOrganismGeneralInformation(params),
 
     organism_updateFermePourAbsenceOuConges: async (
       _parent: unknown,
@@ -475,34 +469,6 @@ const unsafeResolvers = {
       }
 
       return decision;
-    },
-    organism_updateOrganismOnSiteAndRemoteStatus: async (
-      _parent: unknown,
-      params: {
-        organismId: string;
-        isOnSite: boolean;
-        isRemote: boolean;
-        remoteZones: RemoteZone[];
-      },
-      context: GraphqlContext,
-    ) => {
-      if (
-        context.auth.userInfo?.sub == undefined ||
-        (!(await isUserGestionnaireMaisonMereAAPOfOrganism({
-          userRoles: context.auth.userInfo.realm_access?.roles || [],
-          organismId: params.organismId,
-          userKeycloakId: context.auth.userInfo.sub,
-        })) &&
-          !isUserOwnerOfOrganism({
-            organismId: params.organismId,
-            userKeycloakId: context.auth.userInfo.sub,
-            userRoles: context.auth.userInfo.realm_access?.roles || [],
-          }))
-      ) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return updateOrganismOnSiteAndRemoteStatus(params);
     },
     organism_updateMaisonMereAccountSetup: async (
       _parent: unknown,

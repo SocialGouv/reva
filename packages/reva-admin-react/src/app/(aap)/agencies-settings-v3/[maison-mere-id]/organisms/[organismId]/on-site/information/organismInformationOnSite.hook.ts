@@ -1,7 +1,7 @@
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { CreateOrUpdateInformationsCommercialesInput } from "@/graphql/generated/graphql";
+import { CreateOrUpdateOnSiteOrganismGeneralInformationInput } from "@/graphql/generated/graphql";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -30,21 +30,16 @@ const getOrganismQuery = graphql(`
   }
 `);
 
-const createOrUpdateInformationsCommercialesMutation = graphql(`
-  mutation createOrUpdateInformationsCommercialesMutation(
-    $createOrUpdateInformationsCommercialesInput: CreateOrUpdateInformationsCommercialesInput!
-    $organismId: String!
+const createOrUpdateOnSiteOrganismGeneralInformationMutation = graphql(`
+  mutation createOrUpdateOnSiteOrganismGeneralInformationMutation(
+    $organismId: ID!
+    $maisonMereAAPId: ID!
+    $informationsCommerciales: CreateOrUpdateOnSiteOrganismGeneralInformationInput!
   ) {
-    organism_createOrUpdateInformationsCommerciales(
-      informationsCommerciales: $createOrUpdateInformationsCommercialesInput
-    ) {
-      id
-    }
-    organism_updateOrganismOnSiteAndRemoteStatus(
+    organism_createOrUpdateOnSiteOrganismGeneralInformation(
       organismId: $organismId
-      isOnSite: true
-      isRemote: false
-      remoteZones: []
+      maisonMereAAPId: $maisonMereAAPId
+      informationsCommerciales: $informationsCommerciales
     ) {
       id
     }
@@ -68,12 +63,16 @@ export const useOrganismInformationOnSite = () => {
 
   const { mutateAsync: createOrUpdateInformationsCommerciales } = useMutation({
     mutationFn: (
-      informationsCommerciales: CreateOrUpdateInformationsCommercialesInput,
+      informationsCommerciales: CreateOrUpdateOnSiteOrganismGeneralInformationInput,
     ) =>
-      graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
-        organismId,
-        createOrUpdateInformationsCommercialesInput: informationsCommerciales,
-      }),
+      graphqlClient.request(
+        createOrUpdateOnSiteOrganismGeneralInformationMutation,
+        {
+          organismId,
+          maisonMereAAPId,
+          informationsCommerciales,
+        },
+      ),
   });
 
   const organism = data?.organism_getOrganism;

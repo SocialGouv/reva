@@ -18,7 +18,6 @@ const InformationsOnSitePage = () => {
   } = useOrganismInformationOnSite();
   const handleSubmit = async (data: OrganismInformationFormData) => {
     const input = {
-      organismId,
       nom: data.nom,
       telephone: data.telephone,
       siteInternet: data.siteInternet,

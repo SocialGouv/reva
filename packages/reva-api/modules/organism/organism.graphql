@@ -182,8 +182,14 @@ input UpdateOrganismInput {
   website: String
 }
 
-input CreateOrUpdateInformationsCommercialesInput {
-  organismId: UUID!
+input CreateOrUpdateRemoteOrganismGeneralInformationInput {
+  nom: String
+  telephone: String
+  siteInternet: String
+  emailContact: String
+}
+
+input CreateOrUpdateOnSiteOrganismGeneralInformationInput {
   nom: String
   telephone: String
   siteInternet: String
@@ -193,22 +199,6 @@ input CreateOrUpdateInformationsCommercialesInput {
   adresseCodePostal: String
   adresseVille: String
   conformeNormesAccessbilite: ConformiteNormeAccessibilite
-}
-
-input CreateOrUpdateOrganismWithMaisonMereAAPInput {
-  nom: String!
-  address: String!
-  adresseInformationsComplementaires: String
-  zip: String!
-  city: String!
-  contactAdministrativeEmail: String!
-  contactAdministrativePhone: String!
-  website: String
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite!
-  firstname: String!
-  lastname: String!
-  email: String!
-  accountId: UUID
 }
 
 input CreateAgencyInfoInput {
@@ -295,9 +285,6 @@ type Mutation {
     organismId: ID!
     organismData: UpdateOrganismInput!
   ): Organism!
-  organism_createOrUpdateInformationsCommerciales(
-    informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
-  ): OrganismInformationsCommerciales!
   organism_updateFermePourAbsenceOuConges(
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
@@ -314,12 +301,6 @@ type Mutation {
   organism_updateLegalInformationValidationDecision(
     data: UpdateMaisonMereAAPLegalValidationDecisionInput
   ): MaisonMereAAP!
-  organism_updateOrganismOnSiteAndRemoteStatus(
-    organismId: String!
-    isOnSite: Boolean!
-    isRemote: Boolean!
-    remoteZones: [RemoteZone!]!
-  ): Organism!
 
   organism_createAgencyInfo(data: CreateAgencyInfoInput!): String!
   organism_acceptCgu: Boolean!
@@ -349,4 +330,17 @@ type Mutation {
     maisonMereAAPId: ID!
     isMCFCompatible: Boolean!
   ): MaisonMereAAP!
+
+  organism_createOrUpdateRemoteOrganismGeneralInformation(
+    organismId: ID!
+    maisonMereAAPId: ID!
+    informationsCommerciales: CreateOrUpdateRemoteOrganismGeneralInformationInput!
+    remoteZones: [RemoteZone!]!
+  ): Organism!
+
+  organism_createOrUpdateOnSiteOrganismGeneralInformation(
+    organismId: ID!
+    maisonMereAAPId: ID!
+    informationsCommerciales: CreateOrUpdateOnSiteOrganismGeneralInformationInput!
+  ): Organism!
 }

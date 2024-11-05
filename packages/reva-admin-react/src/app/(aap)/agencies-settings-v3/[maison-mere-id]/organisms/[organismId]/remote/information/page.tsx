@@ -27,7 +27,7 @@ const InformationsRemotePage = () => {
     getOrganismStatus,
     createOrUpdateInformationsCommercialesAndRemoteStatus,
     isAdmin,
-  } = useInformationRemotePage({ organismId });
+  } = useInformationRemotePage({ organismId, maisonMereAAPId });
 
   const queryClient = useQueryClient();
   const {
@@ -101,10 +101,8 @@ const InformationsRemotePage = () => {
       if (isRemoteSainteLucieSaintMartin) {
         remoteZones.push("SAINTE_LUCIE_SAINT_MARTIN");
       }
-
       await createOrUpdateInformationsCommercialesAndRemoteStatus.mutateAsync({
         organismId: organism?.id,
-        isRemote: true,
         remoteZones,
         informationsCommerciales,
       });
