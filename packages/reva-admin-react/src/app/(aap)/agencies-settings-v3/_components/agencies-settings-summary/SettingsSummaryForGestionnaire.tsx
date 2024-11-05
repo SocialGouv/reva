@@ -13,21 +13,18 @@ const getRemoteOrganism = ({
   organism: Organism;
   maisonMereAAP: MaisonMereAap;
 }) => {
-  // Utiliser l'agence actuelle si elle est configurée pour l'acompagnement à distance
-  if (organism?.isRemote) {
+  // Utiliser l'organisme actuel si il est configuré pour l'acompagnement à distance
+  if (organism?.modaliteAccompagnement === "A_DISTANCE") {
     return organism;
   }
 
-  // Sinon, vérifier parmi toutes les agences s'il y en a une configurée pour l'acompagnement à distance
+  // Sinon, vérifier parmi toutes les organismes s'il y en a un configuré pour l'acompagnement à distance
   const maisonMereAAPRemoteOrganism = maisonMereAAP?.organisms?.find(
-    (o) => o.isRemote,
+    (o) => o.modaliteAccompagnement === "A_DISTANCE",
   );
   if (maisonMereAAPRemoteOrganism) {
     return maisonMereAAPRemoteOrganism;
   }
-
-  // Si aucune agence n'est configurée pour l'acompagnement à distance, utiliser l'agence administratrice
-  return maisonMereAAP.organisms.find((o) => o.isHeadAgency);
 };
 
 export const SettingsSummaryForGestionnaire = ({
@@ -106,7 +103,9 @@ export const SettingsSummaryForGestionnaire = ({
         maisonMereAAPId={maisonMereAAP.id}
       />
       <AgenciesSettingsSectionOnSite
-        organisms={maisonMereAAP?.organisms.filter((o) => !o.isHeadAgency)} //on site organisms are everty organism that are not flagged as head agency
+        organisms={maisonMereAAP?.organisms.filter(
+          (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
+        )}
         maisonMereAAPId={maisonMereAAP.id}
         isEditable={!isAdmin}
       />

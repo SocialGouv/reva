@@ -17,7 +17,7 @@ const MaisonMereAAPQuery = graphql(`
         id
       }
       organisms {
-        isHeadAgency
+        modaliteAccompagnement
         accounts {
           id
         }
@@ -26,8 +26,6 @@ const MaisonMereAAPQuery = graphql(`
         }
         label
         id
-        isRemote
-        isOnSite
         isVisibleInCandidateSearchResults
         remoteZones
         accounts {
@@ -99,8 +97,8 @@ export const useMaisonMereAAP = (id: string) => {
 
   const maisonMereAAP = maisonMereAAPResponse?.organism_getMaisonMereAAPById;
 
-  const headAgencyOrganism = maisonMereAAP?.organisms?.find(
-    (organism) => organism.isHeadAgency,
+  const remoteOrganism = maisonMereAAP?.organisms?.find(
+    (organism) => organism.modaliteAccompagnement === "A_DISTANCE",
   );
 
   const gestionnaireAccountId = maisonMereAAP?.gestionnaire.id;
@@ -109,7 +107,7 @@ export const useMaisonMereAAP = (id: string) => {
     maisonMereAAPResponse,
     maisonMereAAPStatus,
     maisonMereAAP,
-    headAgencyOrganism,
+    remoteOrganism,
     gestionnaireAccountId,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,

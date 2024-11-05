@@ -41,12 +41,15 @@ type Organism {
   conventionCollectives: [ConventionCollective!]!
   llToEarth: String
   distanceKm: Float
-  isOnSite: Boolean!
-  isRemote: Boolean!
   remoteZones: [RemoteZone!]!
-  isHeadAgency: Boolean!
+  modaliteAccompagnement: OrganismModaliteAccompagnement!
+  modaliteAccompagnementRenseigneeEtValide: Boolean!
   isVisibleInCandidateSearchResults: Boolean!
   isMaisonMereMCFCompatible: Boolean
+}
+enum OrganismModaliteAccompagnement {
+  LIEU_ACCUEIL
+  A_DISTANCE
 }
 
 type OrganismOnDegree {

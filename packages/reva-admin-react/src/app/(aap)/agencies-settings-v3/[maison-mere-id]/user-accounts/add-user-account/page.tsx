@@ -11,8 +11,8 @@ import { useAddUserAccountPage } from "./addUserAccount.hook";
 
 const AddUserAccountPage = () => {
   const {
-    headAgency,
-    nonHeadAgencies,
+    remoteOrganism,
+    onsiteOrganisms,
     createUserAccount,
     isAdmin,
     maisonMereAAPId,
@@ -43,15 +43,15 @@ const AddUserAccountPage = () => {
       <UserAccountForm
         onSubmit={handleFormSubmit}
         remoteAgency={{
-          id: headAgency?.id,
+          id: remoteOrganism?.id,
           label:
-            headAgency?.informationsCommerciales?.nom ||
-            headAgency?.label ||
+            remoteOrganism?.informationsCommerciales?.nom ||
+            remoteOrganism?.label ||
             "",
         }}
-        onSiteAgencies={nonHeadAgencies.map((a) => ({
-          id: a.id,
-          label: a.informationsCommerciales?.nom || a.label,
+        onSiteAgencies={onsiteOrganisms.map((o) => ({
+          id: o.id,
+          label: o.informationsCommerciales?.nom || o.label,
         }))}
         backUrl={backUrl}
       />

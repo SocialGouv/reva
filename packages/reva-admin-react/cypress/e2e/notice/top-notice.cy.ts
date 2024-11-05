@@ -1,15 +1,15 @@
 import { stubQuery } from "../../utils/graphql";
 
 function interceptCandidacies({
-  fermePourAbsenceOuConges,
+  isVisibleInCandidateSearchResults,
   isCguAccepted,
 }: {
-  fermePourAbsenceOuConges: boolean;
+  isVisibleInCandidateSearchResults: boolean;
   isCguAccepted: boolean;
 }) {
   cy.fixture("visibility/organism.json").then((visibility) => {
-    visibility.data.account_getAccountForConnectedUser.organism.fermePourAbsenceOuConges =
-      fermePourAbsenceOuConges;
+    visibility.data.account_getAccountForConnectedUser.organism.isVisibleInCandidateSearchResults =
+      isVisibleInCandidateSearchResults;
 
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
@@ -41,7 +41,7 @@ context("for an head agency", () => {
   context("when latest cgu aren't accepted", () => {
     it("display a cgu notice", function () {
       interceptCandidacies({
-        fermePourAbsenceOuConges: false,
+        isVisibleInCandidateSearchResults: true,
         isCguAccepted: false,
       });
 
@@ -57,7 +57,7 @@ context("for an head agency", () => {
   context("when latest cgu are accepted", () => {
     it("should not display a cgu notice", function () {
       interceptCandidacies({
-        fermePourAbsenceOuConges: false,
+        isVisibleInCandidateSearchResults: true,
         isCguAccepted: true,
       });
 
@@ -71,7 +71,7 @@ context("for an head agency", () => {
 
     it("should not display a not-visible notice", function () {
       interceptCandidacies({
-        fermePourAbsenceOuConges: true,
+        isVisibleInCandidateSearchResults: false,
         isCguAccepted: true,
       });
 
@@ -88,7 +88,7 @@ context("for an head agency", () => {
 context("for an agency", () => {
   it("should not display a cgu notice, even if the head agency hasn't accepted the latest CGU", function () {
     interceptCandidacies({
-      fermePourAbsenceOuConges: false,
+      isVisibleInCandidateSearchResults: true,
       isCguAccepted: false,
     });
 
@@ -103,7 +103,7 @@ context("for an agency", () => {
 
   it("display a not-visible notice when agency is closed", function () {
     interceptCandidacies({
-      fermePourAbsenceOuConges: true,
+      isVisibleInCandidateSearchResults: false,
       isCguAccepted: false,
     });
 

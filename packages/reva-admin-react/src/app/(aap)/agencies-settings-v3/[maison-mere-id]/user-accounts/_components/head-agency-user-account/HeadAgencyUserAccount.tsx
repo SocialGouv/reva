@@ -13,8 +13,8 @@ const HeadAgencyUserAccount = () => {
   const router = useRouter();
   const {
     userAccount,
-    headAgency,
-    nonHeadAgencies,
+    remoteOrganism,
+    onsiteOrganisms,
     agenciesInfoIsSuccess,
     updateUserAccount,
     isAdmin,
@@ -47,16 +47,17 @@ const HeadAgencyUserAccount = () => {
       firstname: userAccount?.firstname || "",
       lastname: userAccount?.lastname || "",
       organismId: userAccount?.organism?.id,
-      modalitesAccompagnement: userAccount?.organism?.isHeadAgency
-        ? ("REMOTE" as const)
-        : ("ONSITE" as const),
+      modalitesAccompagnement:
+        userAccount?.organism?.modaliteAccompagnement === "A_DISTANCE"
+          ? ("REMOTE" as const)
+          : ("ONSITE" as const),
     }),
     [
       userAccount?.email,
       userAccount?.firstname,
       userAccount?.lastname,
       userAccount?.organism?.id,
-      userAccount?.organism?.isHeadAgency,
+      userAccount?.organism?.modaliteAccompagnement,
     ],
   );
 
@@ -75,15 +76,15 @@ const HeadAgencyUserAccount = () => {
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}
         remoteAgency={{
-          id: headAgency?.id,
+          id: remoteOrganism?.id,
           label:
-            headAgency?.informationsCommerciales?.nom ||
-            headAgency?.label ||
+            remoteOrganism?.informationsCommerciales?.nom ||
+            remoteOrganism?.label ||
             "",
         }}
-        onSiteAgencies={nonHeadAgencies.map((a) => ({
-          id: a.id,
-          label: a.informationsCommerciales?.nom || a.label,
+        onSiteAgencies={onsiteOrganisms.map((o) => ({
+          id: o.id,
+          label: o.informationsCommerciales?.nom || o.label,
         }))}
         backUrl={backUrl}
         FooterComponent={

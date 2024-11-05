@@ -1,22 +1,19 @@
 import { stubQuery } from "../../utils/graphql";
 
 function visitSettings({
-  isHeadAgency,
-  isRemote,
-  isOnSite,
+  modaliteAccompagnement,
+  modaliteAccompagnementRenseigneeEtValide,
   isVisibleInCandidateSearchResults,
 }: {
-  isHeadAgency: boolean;
-  isRemote: boolean;
-  isOnSite: boolean;
+  modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
+  modaliteAccompagnementRenseigneeEtValide: boolean;
   isVisibleInCandidateSearchResults: boolean;
 }) {
   cy.fixture("account/agency-settings.json").then((settings) => {
-    settings.data.account_getAccountForConnectedUser.organism.isHea = isRemote;
-    settings.data.account_getAccountForConnectedUser.organism.isOnSite =
-      isOnSite;
-    settings.data.account_getAccountForConnectedUser.organism.isHeadAgency =
-      isHeadAgency;
+    settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnement =
+      modaliteAccompagnement;
+    settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnementRenseigneeEtValide =
+      modaliteAccompagnementRenseigneeEtValide;
     settings.data.account_getAccountForConnectedUser.organism.isVisibleInCandidateSearchResults =
       isVisibleInCandidateSearchResults;
 
@@ -47,9 +44,8 @@ function visitSettings({
 context("Agency settings page", () => {
   it("do not display general information and user account list sections", function () {
     visitSettings({
-      isHeadAgency: true,
-      isRemote: true,
-      isOnSite: false,
+      modaliteAccompagnement: "A_DISTANCE",
+      modaliteAccompagnementRenseigneeEtValide: true,
       isVisibleInCandidateSearchResults: true,
     });
     cy.wait("@getAgencySettingsInfo");
@@ -62,9 +58,8 @@ context("Agency settings page", () => {
   context("for a remote agency", () => {
     it("display a remote and user accounts section, no on-site section", function () {
       visitSettings({
-        isHeadAgency: true,
-        isRemote: true,
-        isOnSite: false,
+        modaliteAccompagnement: "A_DISTANCE",
+        modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getAgencySettingsInfo");
@@ -76,9 +71,8 @@ context("Agency settings page", () => {
 
     it("display a remote section with a 'visible badge' when agency is opened for new candidacies", function () {
       visitSettings({
-        isHeadAgency: true,
-        isRemote: true,
-        isOnSite: false,
+        modaliteAccompagnement: "A_DISTANCE",
+        modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getAgencySettingsInfo");
@@ -89,9 +83,8 @@ context("Agency settings page", () => {
 
     it("display a remote section with a 'invisible badge' when agency is opened for new candidacies", function () {
       visitSettings({
-        isHeadAgency: true,
-        isRemote: true,
-        isOnSite: false,
+        modaliteAccompagnement: "A_DISTANCE",
+        modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: false,
       });
       cy.wait("@getAgencySettingsInfo");
@@ -104,9 +97,8 @@ context("Agency settings page", () => {
   context("for an on-site agency", () => {
     it("display a on-site and user account sections and no remote section", function () {
       visitSettings({
-        isHeadAgency: false,
-        isRemote: false,
-        isOnSite: true,
+        modaliteAccompagnement: "LIEU_ACCUEIL",
+        modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getAgencySettingsInfo");

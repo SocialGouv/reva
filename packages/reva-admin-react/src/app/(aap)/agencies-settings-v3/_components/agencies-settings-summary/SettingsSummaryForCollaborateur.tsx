@@ -16,13 +16,13 @@ export const SettingsSummaryForCollaborateur = () => {
         à votre connexion.
       </p>
       <div className="flex flex-col gap-8 mt-4">
-        {organism?.isHeadAgency && (
+        {organism?.modaliteAccompagnement === "A_DISTANCE" && (
           <AgencySettingsSummarySectionRemote
             organism={organism}
             maisonMereAAPId={maisonMereAAPId}
           />
         )}
-        {!organism?.isHeadAgency && (
+        {organism?.modaliteAccompagnement === "LIEU_ACCUEIL" && (
           <EnhancedSectionCard
             data-test="on-site-agency"
             title="Accompagnement en présentiel"
@@ -74,13 +74,13 @@ export const SettingsSummaryForCollaborateur = () => {
         >
           <div className="flex gap-x-6 items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b">
             <div className="flex gap-x-6">
-              {organism.isHeadAgency && (
+              {organism.modaliteAccompagnement == "A_DISTANCE" && (
                 <i
                   data-test="remote-badge"
                   className="fr-icon-headphone-fill fr-icon--sm"
                 ></i>
               )}
-              {!organism.isHeadAgency && (
+              {organism.modaliteAccompagnement === "LIEU_ACCUEIL" && (
                 <i
                   data-test="on-site-badge"
                   className="fr-icon-home-4-fill fr-icon--sm"

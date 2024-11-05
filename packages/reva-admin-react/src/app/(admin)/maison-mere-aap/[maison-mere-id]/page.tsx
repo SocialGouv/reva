@@ -13,7 +13,7 @@ const MaisonMereAapPage = () => {
     useParams();
   const {
     maisonMereAAP,
-    headAgencyOrganism,
+    remoteOrganism,
     gestionnaireAccountId,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
@@ -97,7 +97,7 @@ const MaisonMereAapPage = () => {
       </div>
       <SettingsSummaryForGestionnaire
         gestionnaireAccountId={gestionnaireAccountId}
-        organism={headAgencyOrganism as Organism}
+        organism={remoteOrganism as Organism}
         maisonMereAAP={maisonMereAAP as MaisonMereAap}
         isAdmin={isAdmin}
       />

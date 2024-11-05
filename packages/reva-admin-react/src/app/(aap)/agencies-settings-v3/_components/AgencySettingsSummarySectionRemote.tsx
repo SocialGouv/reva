@@ -12,13 +12,13 @@ export const AgencySettingsSummarySectionRemote = ({
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
     informationsCommerciales?: { nom?: string | null } | null;
-    isRemote: boolean;
+    modaliteAccompagnementRenseigneeEtValide: boolean;
   };
   maisonMereAAPId: string;
 }) => {
   if (!organism) return null;
 
-  const informationComplete = organism.isRemote;
+  const informationComplete = organism.modaliteAccompagnementRenseigneeEtValide;
 
   return (
     <EnhancedSectionCard

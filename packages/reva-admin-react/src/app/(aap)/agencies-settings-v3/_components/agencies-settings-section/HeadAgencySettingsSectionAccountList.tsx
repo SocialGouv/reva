@@ -12,9 +12,7 @@ export const HeadAgencySettingsSectionAccountList = ({
   gestionnaireAccountId: string;
   organisms: {
     accounts: Account[];
-    isRemote: boolean;
-    isOnSite: boolean;
-    isHeadAgency: boolean;
+    modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
   }[];
   isAdmin?: boolean;
 }) => (
@@ -30,13 +28,13 @@ export const HeadAgencySettingsSectionAccountList = ({
             className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
           >
             <div className="flex items-center gap-x-6">
-              {(organism.isRemote || organism.isHeadAgency) && (
+              {organism.modaliteAccompagnement === "A_DISTANCE" && (
                 <i
                   data-test="remote-badge"
                   className="fr-icon-headphone-fill fr-icon--sm"
                 ></i>
               )}
-              {organism.isOnSite && (
+              {organism.modaliteAccompagnement === "LIEU_ACCUEIL" && (
                 <i
                   data-test="on-site-badge"
                   className="fr-icon-home-4-fill fr-icon--sm"

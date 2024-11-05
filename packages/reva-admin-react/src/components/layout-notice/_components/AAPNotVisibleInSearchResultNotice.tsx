@@ -9,18 +9,7 @@ const getOrganismQuery = graphql(`
     account_getAccountForConnectedUser {
       organism {
         id
-        isOnSite
-        isRemote
-        fermePourAbsenceOuConges
-        managedDegrees {
-          id
-        }
-        domaines {
-          id
-        }
-        conventionCollectives {
-          id
-        }
+        isVisibleInCandidateSearchResults
       }
     }
   }
@@ -38,25 +27,8 @@ export const useAAPVisibilityCheck = () => {
   const organism =
     getOrganismResponse?.account_getAccountForConnectedUser?.organism;
 
-  let isVisibleInSearchResults = true;
-
-  if (organism) {
-    const {
-      isOnSite,
-      isRemote,
-      fermePourAbsenceOuConges,
-      managedDegrees,
-      domaines,
-      conventionCollectives,
-    } = organism;
-
-    isVisibleInSearchResults = !!(
-      (isOnSite || isRemote) &&
-      !fermePourAbsenceOuConges &&
-      managedDegrees.length &&
-      (domaines.length || conventionCollectives.length)
-    );
-  }
+  const isVisibleInSearchResults =
+    !!organism?.isVisibleInCandidateSearchResults;
 
   return { isVisibleInSearchResults, getOrganismisLoading };
 };

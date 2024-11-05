@@ -11,7 +11,7 @@ const getMaisonMereAAPAddUserAccountPageAdminQuery = graphql(`
       id
       organisms {
         id
-        isHeadAgency
+        modaliteAccompagnement
         label
         informationsCommerciales {
           nom
@@ -28,7 +28,7 @@ const getAgenciesInfoQuery = graphql(`
         id
         organisms {
           id
-          isHeadAgency
+          modaliteAccompagnement
           label
           informationsCommerciales {
             nom
@@ -95,12 +95,16 @@ export const useAddUserAccountPage = () => {
 
   const agencies = maisonMereAAP?.organisms || [];
 
-  const headAgency = agencies.find((a) => a.isHeadAgency);
-  const nonHeadAgencies = agencies.filter((a) => !a.isHeadAgency);
+  const remoteOrganism = agencies.find(
+    (o) => o.modaliteAccompagnement === "A_DISTANCE",
+  );
+  const onsiteOrganisms = agencies.filter(
+    (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
+  );
 
   return {
-    headAgency,
-    nonHeadAgencies,
+    remoteOrganism,
+    onsiteOrganisms,
     createUserAccount,
     isAdmin,
     maisonMereAAPId,

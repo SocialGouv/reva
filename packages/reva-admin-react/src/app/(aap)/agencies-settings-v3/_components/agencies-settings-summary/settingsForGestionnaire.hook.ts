@@ -9,8 +9,6 @@ const HeadAgencySettingsInfoQuery = graphql(`
       id
       organism {
         id
-        isOnSite
-        isRemote
         isVisibleInCandidateSearchResults
         remoteZones
         informationsCommerciales {
@@ -21,14 +19,12 @@ const HeadAgencySettingsInfoQuery = graphql(`
           isMCFCompatible
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
-            isHeadAgency
+            modaliteAccompagnement
             informationsCommerciales {
               nom
             }
             label
             id
-            isRemote
-            isOnSite
             isVisibleInCandidateSearchResults
             remoteZones
             accounts {

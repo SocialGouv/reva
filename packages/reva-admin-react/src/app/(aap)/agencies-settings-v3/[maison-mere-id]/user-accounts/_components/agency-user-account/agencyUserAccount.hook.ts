@@ -11,7 +11,7 @@ const getAgenciesInfoQuery = graphql(`
       email
       organism {
         id
-        isHeadAgency
+        modaliteAccompagnement
         label
         informationsCommerciales {
           nom

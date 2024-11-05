@@ -16,8 +16,8 @@
             "adresseVille": "Paris",
             "conformeNormesAccessbilite": "CONFORME"
           },
-          "isOnSite": true,
-          "isRemote": false
+          "modaliteAccompagnement": "LIEU_ACCUEIL",
+          "modaliteAccompagnementRenseigneeEtValide": true
         },
         {
           "id": "o2",
@@ -27,8 +27,8 @@
           "city": "Nantes",
           "contactAdministrativeEmail": "email2@exemple.com",
           "contactAdministrativePhone": "0222222222",
-          "isOnSite": false,
-          "isRemote": true
+          "modaliteAccompagnement": "A_DISTANCE",
+          "modaliteAccompagnementRenseigneeEtValide": true
         }
       ],
       "totalRows": 2

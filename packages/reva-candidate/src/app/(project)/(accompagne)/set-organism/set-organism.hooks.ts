@@ -22,10 +22,9 @@ const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
         label
         contactAdministrativeEmail
         contactAdministrativePhone
+        modaliteAccompagnement
         website
         distanceKm
-        isOnSite
-        isRemote
         isMaisonMereMCFCompatible
         informationsCommerciales {
           nom

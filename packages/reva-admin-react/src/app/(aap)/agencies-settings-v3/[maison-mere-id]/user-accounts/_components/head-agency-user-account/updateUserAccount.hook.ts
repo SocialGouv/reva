@@ -12,7 +12,7 @@ const getAgenciesInfoQuery = graphql(`
         id
         organisms {
           id
-          isHeadAgency
+          modaliteAccompagnement
           label
           informationsCommerciales {
             nom
@@ -25,7 +25,7 @@ const getAgenciesInfoQuery = graphql(`
             disabledAt
             organism {
               id
-              isHeadAgency
+              modaliteAccompagnement
             }
           }
         }
@@ -40,7 +40,7 @@ const getMaisonMereAAPUpdateUserAccountPageAdminQuery = graphql(`
       id
       organisms {
         id
-        isHeadAgency
+        modaliteAccompagnement
         label
         informationsCommerciales {
           nom
@@ -53,7 +53,7 @@ const getMaisonMereAAPUpdateUserAccountPageAdminQuery = graphql(`
           disabledAt
           organism {
             id
-            isHeadAgency
+            modaliteAccompagnement
           }
         }
       }
@@ -126,8 +126,12 @@ export const useUpdateUserAccountPage = ({
 
   const agencies = maisonMereAAP?.organisms || [];
 
-  const headAgency = agencies.find((a) => a.isHeadAgency);
-  const nonHeadAgencies = agencies.filter((a) => !a.isHeadAgency);
+  const remoteOrganism = agencies.find(
+    (o) => o.modaliteAccompagnement === "A_DISTANCE",
+  );
+  const onsiteOrganisms = agencies.filter(
+    (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
+  );
 
   const userAccount = agencies
     .flatMap((a) => a.accounts)
@@ -137,8 +141,8 @@ export const useUpdateUserAccountPage = ({
     agenciesInfoStatus === "success" || maisonMereAAPAdminStatus === "success";
 
   return {
-    headAgency,
-    nonHeadAgencies,
+    remoteOrganism,
+    onsiteOrganisms,
     userAccount,
     agenciesInfoIsSuccess,
     updateUserAccount,

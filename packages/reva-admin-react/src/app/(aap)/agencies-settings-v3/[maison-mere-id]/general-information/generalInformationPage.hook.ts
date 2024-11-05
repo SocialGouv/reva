@@ -79,7 +79,7 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
         email
       }
       organisms {
-        isHeadAgency
+        modaliteAccompagnement
         accounts {
           id
         }

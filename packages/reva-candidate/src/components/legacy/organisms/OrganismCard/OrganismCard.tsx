@@ -9,8 +9,8 @@ import { OrganismCardTitle } from "./OrganismCardTitle";
 
 const getMandatoryInfo = (organism: Organism) => {
   const { informationsCommerciales: ic } = organism;
-  const isOnSite = organism.isOnSite;
-  const isRemote = organism.isRemote;
+  const isOnSite = organism.modaliteAccompagnement === "LIEU_ACCUEIL";
+  const isRemote = organism.modaliteAccompagnement === "A_DISTANCE";
 
   return {
     label: ic?.nom || organism.label,

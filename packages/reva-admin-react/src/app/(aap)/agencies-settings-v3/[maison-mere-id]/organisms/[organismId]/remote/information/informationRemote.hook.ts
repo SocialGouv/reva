@@ -9,7 +9,6 @@ const getOrganismQuery = graphql(`
   query getOrganismForInformationRemotePage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
       id
-      isRemote
       remoteZones
       informationsCommerciales {
         id

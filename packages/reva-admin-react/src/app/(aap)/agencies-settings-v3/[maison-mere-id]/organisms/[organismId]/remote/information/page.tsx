@@ -56,7 +56,6 @@ const InformationsRemotePage = () => {
       isRemoteSainteLucieSaintMartin: organism?.remoteZones?.includes(
         "SAINTE_LUCIE_SAINT_MARTIN",
       ),
-      isNotRemote: !organism?.isRemote,
     } as InformationRemoteFormData);
   }, [organism, reset]);
 

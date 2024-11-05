@@ -12,10 +12,10 @@ const AgencySettingsInfoQuery = graphql(`
       organism {
         id
         label
-        isHeadAgency
+        modaliteAccompagnement
+        modaliteAccompagnementRenseigneeEtValide
         isVisibleInCandidateSearchResults
         remoteZones
-        isRemote
         informationsCommerciales {
           nom
         }

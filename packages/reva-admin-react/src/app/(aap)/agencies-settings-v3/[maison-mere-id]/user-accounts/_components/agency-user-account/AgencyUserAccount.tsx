@@ -14,16 +14,17 @@ const AgencyUserAccount = () => {
       firstname: userAccount?.firstname || "",
       lastname: userAccount?.lastname || "",
       organismId: userAccount?.organism?.id,
-      modalitesAccompagnement: userAccount?.organism?.isHeadAgency
-        ? ("REMOTE" as const)
-        : ("ONSITE" as const),
+      modalitesAccompagnement:
+        userAccount?.organism?.modaliteAccompagnement === "A_DISTANCE"
+          ? ("REMOTE" as const)
+          : ("ONSITE" as const),
     }),
     [
       userAccount?.email,
       userAccount?.firstname,
       userAccount?.lastname,
       userAccount?.organism?.id,
-      userAccount?.organism?.isHeadAgency,
+      userAccount?.organism?.modaliteAccompagnement,
     ],
   );
 
