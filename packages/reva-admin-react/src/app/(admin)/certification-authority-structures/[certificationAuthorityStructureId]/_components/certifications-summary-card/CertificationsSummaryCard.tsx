@@ -5,10 +5,8 @@ import { sortBy, sortedUniqBy } from "lodash";
 
 type Certification = {
   id: string;
-  domaines: Domaine[];
   conventionsCollectives: ConventionCollective[];
 };
-type Domaine = { id: string; label: string };
 type ConventionCollective = { id: string; label: string };
 
 export const CertificationsSummaryCard = ({
@@ -19,13 +17,7 @@ export const CertificationsSummaryCard = ({
   updateButtonHref?: string;
 }) => {
   const certificationCount = certifications.length;
-  const domaines = sortedUniqBy(
-    sortBy(
-      certifications.flatMap((c) => c.domaines),
-      "label",
-    ),
-    "label",
-  );
+
   const conventionCollectives = sortedUniqBy(
     sortBy(
       certifications.flatMap((c) => c.conventionsCollectives),
@@ -49,16 +41,6 @@ export const CertificationsSummaryCard = ({
           </Badge>
         </div>
       ) : null}
-      {domaines && (
-        <>
-          <p className="font-bold mt-6">Filières rattachées</p>
-          <div className="flex flex-wrap gap-2">
-            {domaines.map((d) => (
-              <Tag key={d.id}>{d.label}</Tag>
-            ))}
-          </div>
-        </>
-      )}
 
       {conventionCollectives && (
         <>

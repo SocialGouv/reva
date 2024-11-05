@@ -36,10 +36,6 @@ const getOrganismQuery = graphql(`
           label
         }
       }
-      domaines {
-        id
-        label
-      }
       formacodes {
         code
         label

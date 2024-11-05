@@ -77,15 +77,6 @@ const CertificationPage = () => {
           <br />
           <h2>Gestion de la certification</h2>
           <div className="grid grid-cols-2">
-            {!!certification.domaines.length && (
-              <Info title="Filières">
-                <ul className="list-disc list-inside">
-                  {certification.domaines.map((d) => (
-                    <li key={d.id}>{d.label}</li>
-                  ))}
-                </ul>
-              </Info>
-            )}
             {!!certification.conventionsCollectives.length && (
               <Info title="Branches">
                 <ul className="list-disc list-inside">

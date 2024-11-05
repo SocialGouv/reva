@@ -45,10 +45,6 @@ const getCertificationQuery = graphql(`
         id
         label
       }
-      domaines {
-        id
-        label
-      }
       competenceBlocs {
         id
         code
@@ -72,10 +68,6 @@ const getReferentialForCertificationQuery = graphql(`
       level
     }
     getTypeDiplomes {
-      id
-      label
-    }
-    getDomaines {
       id
       label
     }
@@ -191,7 +183,6 @@ export const useCertificationQueries = ({
       level: number;
       codeRncp: string;
       typeDiplomeId: string;
-      domaineIds: string[];
       conventionCollectiveIds: string[];
       availableAt: number;
       expiresAt: number;
@@ -207,7 +198,6 @@ export const useCertificationQueries = ({
       level: number;
       codeRncp: string;
       typeDiplomeId: string;
-      domaineIds: string[];
       conventionCollectiveIds: string[];
       availableAt: number;
       expiresAt: number;
@@ -231,7 +221,6 @@ export const useCertificationQueries = ({
     certification: getCertificationResponse?.getCertification,
     degrees: getReferentialResponse?.getDegrees,
     typeDiplomes: getReferentialResponse?.getTypeDiplomes,
-    domaines: getReferentialResponse?.getDomaines,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
     updateCertification,
     replaceCertification,

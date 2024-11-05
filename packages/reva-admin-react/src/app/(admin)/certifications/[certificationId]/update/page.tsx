@@ -18,7 +18,6 @@ const UpdateCertificationPage = () => {
     certification,
     typeDiplomes,
     degrees,
-    domaines,
     conventionCollectives,
     updateCertification,
   } = useCertificationQueries({
@@ -34,7 +33,6 @@ const UpdateCertificationPage = () => {
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
         typeDiplomeId: data.typeDiplomeId,
-        domaineIds: data.domaineId ? [data.domaineId] : [],
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
           : [],
@@ -55,27 +53,22 @@ const UpdateCertificationPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      {certification &&
-        typeDiplomes &&
-        domaines &&
-        conventionCollectives &&
-        degrees && (
-          <>
-            <BackButton href={`/certifications/${certificationId}`}>
-              Retour
-            </BackButton>
-            <h1> Modifier une certification</h1>
-            <FormOptionalFieldsDisclaimer />
-            <UpdateOrReplaceCertificationForm
-              certification={certification as Certification}
-              typeDiplomes={typeDiplomes}
-              domaines={domaines}
-              conventionCollectives={conventionCollectives}
-              degrees={degrees}
-              onSubmit={handleFormSubmit}
-            />
-          </>
-        )}
+      {certification && typeDiplomes && conventionCollectives && degrees && (
+        <>
+          <BackButton href={`/certifications/${certificationId}`}>
+            Retour
+          </BackButton>
+          <h1> Modifier une certification</h1>
+          <FormOptionalFieldsDisclaimer />
+          <UpdateOrReplaceCertificationForm
+            certification={certification as Certification}
+            typeDiplomes={typeDiplomes}
+            conventionCollectives={conventionCollectives}
+            degrees={degrees}
+            onSubmit={handleFormSubmit}
+          />
+        </>
+      )}
     </div>
   );
 };

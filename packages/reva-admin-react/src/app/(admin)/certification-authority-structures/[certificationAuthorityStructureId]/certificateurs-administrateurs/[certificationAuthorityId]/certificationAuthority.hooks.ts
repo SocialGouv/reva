@@ -30,10 +30,6 @@ const getCertificationAuthority = graphql(`
         label
         summary
         codeRncp
-        domaines {
-          id
-          label
-        }
         conventionsCollectives {
           id
           label

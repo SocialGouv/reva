@@ -13,10 +13,6 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         id
         codeRncp
         label
-        domaines {
-          id
-          label
-        }
         conventionsCollectives {
           id
           label

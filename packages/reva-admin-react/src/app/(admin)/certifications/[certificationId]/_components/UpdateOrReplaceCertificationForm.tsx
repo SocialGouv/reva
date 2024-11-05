@@ -16,7 +16,6 @@ const schema = z.object({
   typeDiplomeId: z.string(),
   degreeLevel: z.number(),
   conventionCollectiveId: z.string(),
-  domaineId: z.string(),
 });
 
 export type UpdateOrReplaceCertificationFormData = z.infer<typeof schema>;
@@ -33,21 +32,18 @@ const certificationToFormData = (
         typeDiplomeId: c.typeDiplome?.id || "",
         degreeLevel: c.degree?.level || -1,
         conventionCollectiveId: c.conventionsCollectives?.[0]?.id || "",
-        domaineId: c.domaines?.[0]?.id || "",
       }
     : undefined;
 
 const UpdateOrReplaceCertificationForm = ({
   certification,
   typeDiplomes,
-  domaines,
   conventionCollectives,
   degrees,
   onSubmit,
 }: {
   certification: Certification;
   typeDiplomes: { id: string; label: string }[];
-  domaines: { id: string; label: string }[];
   conventionCollectives: { id: string; label: string }[];
   degrees: { id: string; level: number; longLabel: string }[];
   onSubmit: (data: UpdateOrReplaceCertificationFormData) => void;
@@ -126,19 +122,6 @@ const UpdateOrReplaceCertificationForm = ({
         {typeDiplomes?.map((t) => (
           <option key={t.id} value={t.id}>
             {t.label}
-          </option>
-        ))}
-      </Select>
-      <Select
-        label="Filière de la certification"
-        nativeSelectProps={{
-          ...register("domaineId"),
-        }}
-      >
-        <option />
-        {domaines?.map((d) => (
-          <option key={d.id} value={d.id}>
-            {d.label}
           </option>
         ))}
       </Select>

@@ -17,7 +17,6 @@ const ReplaceCertificationPage = () => {
     certification,
     typeDiplomes,
     degrees,
-    domaines,
     conventionCollectives,
     replaceCertification,
   } = useCertificationQueries({
@@ -35,7 +34,6 @@ const ReplaceCertificationPage = () => {
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
         typeDiplomeId: data.typeDiplomeId,
-        domaineIds: data.domaineId ? [data.domaineId] : [],
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
           : [],
@@ -56,29 +54,22 @@ const ReplaceCertificationPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      {certification &&
-        typeDiplomes &&
-        domaines &&
-        conventionCollectives &&
-        degrees && (
-          <>
-            <BackButton href={`/certifications/${certificationId}`}>
-              Retour
-            </BackButton>
-            <h1> Remplacer une certification</h1>
-            <FormOptionalFieldsDisclaimer />
-            <UpdateOrReplaceCertificationForm
-              certification={
-                { ...certification, codeRncp: "" } as Certification
-              }
-              typeDiplomes={typeDiplomes}
-              domaines={domaines}
-              conventionCollectives={conventionCollectives}
-              degrees={degrees}
-              onSubmit={handleFormSubmit}
-            />
-          </>
-        )}
+      {certification && typeDiplomes && conventionCollectives && degrees && (
+        <>
+          <BackButton href={`/certifications/${certificationId}`}>
+            Retour
+          </BackButton>
+          <h1> Remplacer une certification</h1>
+          <FormOptionalFieldsDisclaimer />
+          <UpdateOrReplaceCertificationForm
+            certification={{ ...certification, codeRncp: "" } as Certification}
+            typeDiplomes={typeDiplomes}
+            conventionCollectives={conventionCollectives}
+            degrees={degrees}
+            onSubmit={handleFormSubmit}
+          />
+        </>
+      )}
     </div>
   );
 };
