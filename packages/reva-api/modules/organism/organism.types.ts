@@ -39,20 +39,6 @@ export interface OrganismInformationsCommerciales {
   conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
 }
 
-export interface CreateAgencyInput {
-  nom: string;
-  address: string;
-  adresseInformationsComplementaires?: string;
-  zip: string;
-  city: string;
-  contactAdministrativeEmail: string;
-  contactAdministrativePhone?: string;
-  website?: string;
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite;
-  degreeIds: string[];
-  domaineIds: string[];
-}
-
 export interface CreateAgencyInfoInput {
   nom: string;
   adresseNumeroEtNomDeRue: string;

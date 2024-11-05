@@ -219,19 +219,6 @@ input CreateAgencyInfoInput {
   siteInternet: String
   conformeNormesAccessibilite: ConformiteNormeAccessibilite!
 }
-input CreateAgencyInput {
-  nom: String!
-  address: String!
-  adresseInformationsComplementaires: String
-  zip: String!
-  city: String!
-  contactAdministrativeEmail: String!
-  contactAdministrativePhone: String!
-  website: String
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite!
-  degreeIds: [ID!]!
-  domaineIds: [ID!]!
-}
 
 input UpdateOrganismDegreesAndDomainesInput {
   organismId: ID!
@@ -331,7 +318,6 @@ type Mutation {
     remoteZones: [RemoteZone!]!
   ): Organism!
 
-  organism_createAgency(data: CreateAgencyInput!): String!
   organism_createAgencyInfo(data: CreateAgencyInfoInput!): String!
   organism_acceptCgu: Boolean!
   organism_updateMaisonMereAccountSetup(

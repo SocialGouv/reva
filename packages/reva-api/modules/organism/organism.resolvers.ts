@@ -23,7 +23,6 @@ import {
 import { acceptCgu } from "./features/acceptCgu";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
-import { createAgency } from "./features/createAgency";
 import { createAgencyInfo } from "./features/createAgencyInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
@@ -63,7 +62,6 @@ import { updateOrganismOnSiteAndRemoteStatus } from "./features/updateOrganismOn
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateAgencyInfoInput,
-  CreateAgencyInput,
   CreateOrganismAccountInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
@@ -316,33 +314,6 @@ const unsafeResolvers = {
         organismId,
         fermePourAbsenceOuConges,
       });
-    },
-    organism_createAgency: async (
-      _parent: unknown,
-      {
-        data,
-      }: {
-        data: CreateAgencyInput;
-      },
-      context: GraphqlContext,
-    ) => {
-      if (context.auth.userInfo?.sub == undefined) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
-      }
-
-      if (!context.auth.hasRole("gestion_maison_mere_aap")) {
-        throw new Error("Utilisateur non autorisé");
-      }
-      const keycloakId = context.auth.userInfo.sub;
-
-      const result = await createAgency({
-        params: data,
-        keycloakId,
-      });
-      return result;
     },
     organism_createAgencyInfo: async (
       _parent: unknown,
