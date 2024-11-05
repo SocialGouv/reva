@@ -1,5 +1,3 @@
-import { isBefore } from "date-fns";
-
 import { useQuery } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
@@ -258,13 +256,12 @@ export const useCandidacy = () => {
       (status) => status.status == "PARCOURS_CONFIRME",
     ) != -1 && !isCurrentlySubmitted;
 
-  // candidate can edit project if a training has not been sent and if the first appointment date has not passed
+  // Un candidat peut éditer son dossier de candidature tant qu'il n'a pas confirmé son parcours
   const canEditCandidacy =
-    (candidacyStatus === "PROJET" ||
-      candidacyStatus === "VALIDATION" ||
-      candidacyStatus === "PRISE_EN_CHARGE") &&
-    (!candidacy?.firstAppointmentOccuredAt ||
-      isBefore(new Date(), candidacy.firstAppointmentOccuredAt));
+    candidacyStatus === "PROJET" ||
+    candidacyStatus === "VALIDATION" ||
+    candidacyStatus === "PRISE_EN_CHARGE" ||
+    candidacyStatus === "PARCOURS_ENVOYE";
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
 

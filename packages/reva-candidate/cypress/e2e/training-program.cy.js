@@ -1,6 +1,75 @@
 import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Training Program", () => {
+  describe("Testing project modification before and after training confirmation", () => {
+    it("should be able to update his certification, organism, goals and experience when training sent and not confirmed", () => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate_login.json");
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacy",
+          "candidate2-training-sent.json",
+        );
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.get('[data-test="project-home-set-certification"]').should(
+        "be.enabled",
+      );
+      cy.get('[data-test="project-home-edit-organism"]').should("be.enabled");
+      cy.get('[data-test="project-home-edit-goals"]').should("be.enabled");
+      cy.get('[data-test="timeline-add-experience"]').should("be.enabled");
+    });
+
+    it("should not be able to update his certification, organism, goals and experience after training confirmation", () => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate_login.json");
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacy",
+          "candidate2-training-confirmed.json",
+        );
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.get('[data-test="project-home-set-certification"]').should(
+        "not.exist",
+      );
+      cy.get('[data-test="project-home-edit-organism"]').should("not.exist");
+      cy.get('[data-test="project-home-edit-goals"]').should("not.exist");
+      cy.get('[data-test="timeline-add-experience"]').should("not.exist");
+      cy.get('[data-test="view-training-program-button"]').should("exist");
+    });
+
+    it("should be able to update his certification, organism, goals and experience after training is confirmed then sent again", () => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate_login.json");
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacy",
+          "candidate2-training-confirmed-sent-again.json",
+        );
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.get('[data-test="project-home-set-certification"]').should(
+        "be.enabled",
+      );
+      cy.get('[data-test="project-home-edit-organism"]').should("be.enabled");
+      cy.get('[data-test="project-home-edit-goals"]').should("be.enabled");
+      cy.get('[data-test="timeline-add-experience"]').should("be.enabled");
+    });
+  });
+
   describe("Testing descriptions", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
