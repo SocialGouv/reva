@@ -25,7 +25,6 @@ import {
   OOS_DOMAIN,
   S3File,
   UploadedFile,
-  deleteFile,
   getDownloadLink,
   uploadFileToS3,
   uploadFilesToS3,
@@ -50,6 +49,7 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
+import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -721,33 +721,6 @@ export const getFeasibilityById = async ({
     return { ...feasibility };
   } else {
     throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
-  }
-};
-
-const deleteFeasibilityIDFile = async (feasibilityId: string) => {
-  const feasibility = await prismaClient.feasibility.findUnique({
-    where: { id: feasibilityId },
-    include: {
-      feasibilityUploadedPdf: true,
-    },
-  });
-
-  if (feasibility?.feasibilityUploadedPdf?.IDFileId) {
-    await prismaClient.file.delete({
-      where: {
-        id: feasibility.feasibilityUploadedPdf?.IDFileId,
-      },
-    });
-
-    const file = await prismaClient.file.findUnique({
-      where: {
-        id: feasibility.feasibilityUploadedPdf.IDFileId,
-      },
-    });
-
-    if (file) {
-      await deleteFile(file.path);
-    }
   }
 };
 

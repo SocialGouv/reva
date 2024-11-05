@@ -8,6 +8,7 @@ import {
 } from "../../../../modules/shared/file";
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { deleteFeasibilityIDFile } from "../../../feasibility/features/deleteFeasibilityIDFile";
 import {
   sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityIncompleteToCandidateAutonomeEmail,
@@ -204,17 +205,6 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
     const aapEmail = dff.feasibility.candidacy.organism
       ?.contactAdministrativeEmail as string;
 
-    sendFeasibilityDecisionTakenEmail({
-      candidateEmail,
-      aapEmail,
-      decision,
-      decisionComment,
-      certificationName,
-      certificationAuthorityLabel,
-      isAutonome,
-      candidacyId,
-    });
-
     if (decision === "INCOMPLETE") {
       await prismaClient.feasibility.update({
         where: {
@@ -227,6 +217,21 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
 
       await resetDFFSentToCandidateState(dff);
     }
+
+    if (decision === "ADMISSIBLE" || decision === "REJECTED") {
+      await deleteFeasibilityIDFile(feasibility.id);
+    }
+
+    sendFeasibilityDecisionTakenEmail({
+      candidateEmail,
+      aapEmail,
+      decision,
+      decisionComment,
+      certificationName,
+      certificationAuthorityLabel,
+      isAutonome,
+      candidacyId,
+    });
 
     return getDematerializedFeasibilityFileByCandidacyId({
       candidacyId,
