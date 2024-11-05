@@ -301,7 +301,7 @@ type Mutation {
   organism_updateFermePourAbsenceOuConges(
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
-  ): OrganismInformationsCommerciales!
+  ): Organism!
   organism_updateOrganismDegreesAndDomaines(
     data: UpdateOrganismDegreesAndDomainesInput!
   ): Organism
