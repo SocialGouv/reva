@@ -70,10 +70,6 @@ const particulierEmployeurCertifications = [
 ].map((label) => ({ label }));
 
 beforeAll(async () => {
-  const social = await prismaClient.domaine.findFirst({
-    where: { label: "Social" },
-  });
-
   const particulierEmployeur =
     await prismaClient.conventionCollective.findFirst({
       where: {
@@ -115,14 +111,6 @@ beforeAll(async () => {
 
   await prismaClient.organism.create({
     data: expertBrancheEtFiliereOrganism,
-  });
-
-  // Filière fixtures (also known as Domaine)
-  await prismaClient.organismOnDomaine.create({
-    data: {
-      domaineId: social?.id || "",
-      organismId: expertFiliere?.id || "",
-    },
   });
 
   // Branche fixtures (also known as Convention Collective)
@@ -171,18 +159,6 @@ test("should have 208 certifications available in total", async () => {
 /**
  * Test search certifications by an organism for reorientation purpose
  */
-
-test("should have only BTS certifications handle by expertFiliere", async () => {
-  const resp = await searchCertificationsForCandidate({
-    organism: expertFiliere,
-    searchText: "BTS",
-  });
-  const obj = resp.json();
-  // expertFiliere handle only "social" domaine, and only one BTS is in this domaine
-  expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
-    { label: "BTS Economie sociale et familiale - ESF" },
-  ]);
-});
 
 test("should have only certifications handle by expertBranche", async () => {
   const resp = await searchCertificationsForCandidate({

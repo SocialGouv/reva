@@ -90,7 +90,6 @@ export const validateSubscriptionRequest = async ({
     isActive: true,
     typology: "expertFiliere",
     llToEarth: null,
-    domaineIds: [],
     ccnIds: [],
     degreeIds: degrees.map((d) => d.id),
     qualiopiCertificateExpiresAt: new Date(),

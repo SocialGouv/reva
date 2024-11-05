@@ -22,16 +22,6 @@ export const activeFeaturesForConnectedUser = async ({
   return uniq([...commonFeatures, ...betaTestedFeatures]);
 };
 
-export const getFeatureByKey = async (key: string) => {
-  const feature = await prismaClient.feature.findFirst({
-    where: {
-      key,
-    },
-  });
-
-  return feature;
-};
-
 export const isFeatureActiveForUser = async ({
   userKeycloakId,
   feature,

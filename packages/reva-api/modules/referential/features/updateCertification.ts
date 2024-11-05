@@ -16,9 +16,6 @@ export const updateCertification = async ({
     isBefore(today, updateCertificationInput.expiresAt);
 
   const result = await prismaClient.$transaction([
-    prismaClient.certificationOnDomaine.deleteMany({
-      where: { certificationId: updateCertificationInput.certificationId },
-    }),
     prismaClient.certificationOnConventionCollective.deleteMany({
       where: { certificationId: updateCertificationInput.certificationId },
     }),
@@ -35,12 +32,6 @@ export const updateCertification = async ({
         },
         status: certificationAvailableNow ? "AVAILABLE" : "INACTIVE",
       },
-    }),
-    prismaClient.certificationOnDomaine.createMany({
-      data: updateCertificationInput.domaineIds.map((did) => ({
-        certificationId: updateCertificationInput.certificationId,
-        domaineId: did,
-      })),
     }),
     prismaClient.certificationOnConventionCollective.createMany({
       data: updateCertificationInput.conventionCollectiveIds.map((ccnId) => ({

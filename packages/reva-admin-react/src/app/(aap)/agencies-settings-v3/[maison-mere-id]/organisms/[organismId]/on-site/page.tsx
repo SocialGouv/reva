@@ -1,6 +1,5 @@
 "use client";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
@@ -11,15 +10,9 @@ import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 export default function OnSitePage() {
-  const { isFeatureActive } = useFeatureflipping();
-
   const { organism, organismId, organismName, maisonMereAAPId, isAdmin } =
     useOnSiteOrganism();
   if (!organism) return null;
-
-  const isDomainAndLevelsComplete =
-    organism.managedDegrees?.[0] &&
-    (organism.domaines?.[0] || organism.conventionCollectives?.[0]);
 
   const isFormacodesAndLevelsComplete =
     organism?.managedDegrees?.[0] &&
@@ -32,8 +25,6 @@ export default function OnSitePage() {
     organism.informationsCommerciales?.adresseCodePostal &&
     organism.informationsCommerciales?.telephone &&
     organism.informationsCommerciales?.emailContact;
-
-  const isFormacodeEnabled = isFeatureActive("AAP_SETTINGS_FORMACODE");
 
   return (
     <div className="flex flex-col w-full">
@@ -121,81 +112,43 @@ export default function OnSitePage() {
             )}
           </div>
         </EnhancedSectionCard>
-        {isFormacodeEnabled ? (
-          <EnhancedSectionCard
-            title="Domaines, branches et niveaux"
-            titleIconClass="fr-icon-award-fill"
-            isEditable
-            buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/formacodes-ccns-degrees`}
-            status={isFormacodesAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
-          >
-            {organism.formacodes?.[0] && (
-              <Accordion label="Domaines" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.formacodes?.map((formacode) => (
-                    <Tag key={formacode.code}>
-                      {`${formacode.code} ${formacode.label}`}
-                    </Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-            {organism.conventionCollectives?.[0] && (
-              <Accordion label="Branches" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.conventionCollectives?.map((ccn) => (
-                    <Tag key={ccn.id}>{ccn.label}</Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-            {organism.managedDegrees?.[0] && (
-              <Accordion label="Niveaux" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.managedDegrees?.map((d) => (
-                    <Tag key={d.id}>{d.degree.label}</Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-          </EnhancedSectionCard>
-        ) : (
-          <EnhancedSectionCard
-            title="Filières, branches et niveaux"
-            titleIconClass="fr-icon-award-fill"
-            isEditable
-            buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/domaines-ccns-degrees`}
-            status={isDomainAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
-          >
-            {organism.domaines?.[0] && (
-              <Accordion label="Filières" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.domaines?.map((d) => (
-                    <Tag key={d.id}>{d.label}</Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-            {organism.conventionCollectives?.[0] && (
-              <Accordion label="Branches" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.conventionCollectives?.map((ccn) => (
-                    <Tag key={ccn.id}>{ccn.label}</Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-            {organism.managedDegrees?.[0] && (
-              <Accordion label="Niveaux" defaultExpanded>
-                <div className="flex flex-wrap gap-2">
-                  {organism.managedDegrees?.map((d) => (
-                    <Tag key={d.id}>{d.degree.label}</Tag>
-                  ))}
-                </div>
-              </Accordion>
-            )}
-          </EnhancedSectionCard>
-        )}
+        <EnhancedSectionCard
+          title="Domaines, branches et niveaux"
+          titleIconClass="fr-icon-award-fill"
+          isEditable
+          buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/formacodes-ccns-degrees`}
+          status={isFormacodesAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
+        >
+          {organism.formacodes?.[0] && (
+            <Accordion label="Domaines" defaultExpanded>
+              <div className="flex flex-wrap gap-2">
+                {organism.formacodes?.map((formacode) => (
+                  <Tag key={formacode.code}>
+                    {`${formacode.code} ${formacode.label}`}
+                  </Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+          {organism.conventionCollectives?.[0] && (
+            <Accordion label="Branches" defaultExpanded>
+              <div className="flex flex-wrap gap-2">
+                {organism.conventionCollectives?.map((ccn) => (
+                  <Tag key={ccn.id}>{ccn.label}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+          {organism.managedDegrees?.[0] && (
+            <Accordion label="Niveaux" defaultExpanded>
+              <div className="flex flex-wrap gap-2">
+                {organism.managedDegrees?.map((d) => (
+                  <Tag key={d.id}>{d.degree.label}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+        </EnhancedSectionCard>
         <div className="flex flex-col mt-6">
           <OrganismVisibilityToggle organismId={organismId} />
         </div>

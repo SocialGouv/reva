@@ -1,5 +1,4 @@
 import { prismaClient } from "../../../prisma/client";
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 import { Organism, RemoteZone } from "../../organism/organism.types";
 import { getDepartmentById } from "../../referential/features/getDepartmentById";
@@ -63,14 +62,6 @@ export const searchOrganismsForCandidacy = async ({
   };
 };
 
-const isFormacodeFeatureActive = async (): Promise<boolean> => {
-  const isAapSettingsFormacodeActive = (
-    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
-  )?.isActive;
-
-  return !!isAapSettingsFormacodeActive;
-};
-
 const getRandomActiveOrganismForCertification = async ({
   certificationId,
   departmentId,
@@ -84,10 +75,8 @@ const getRandomActiveOrganismForCertification = async ({
   searchFilter: SearchOrganismFilter;
   limit: number;
 }) => {
-  let organismView = "active_organism_by_available_certification";
-  if (await isFormacodeFeatureActive()) {
-    organismView = `${organismView}_based_on_formacode`;
-  }
+  const organismView =
+    "active_organism_by_available_certification_based_on_formacode";
 
   let fromClause = Prisma.raw(`from organism o
     join ${organismView} ao on ao.organism_id = o.id
@@ -224,10 +213,8 @@ const getAAPsWithZipCode = async ({
     whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
   }
 
-  let organismView = "active_organism_by_available_certification";
-  if (await isFormacodeFeatureActive()) {
-    organismView = `${organismView}_based_on_formacode`;
-  }
+  const organismView =
+    "active_organism_by_available_certification_based_on_formacode";
 
   const prismaSqlOrganismView = Prisma.raw(organismView);
 

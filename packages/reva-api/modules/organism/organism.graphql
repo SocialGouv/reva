@@ -36,7 +36,6 @@ type Organism {
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
   accounts: [Account!]!
-  domaines: [Domaine!]!
   formacodes: [Formacode!]!
   conventionCollectives: [ConventionCollective!]!
   llToEarth: String
@@ -213,12 +212,6 @@ input CreateLieuAccueilInfoInput {
   conformeNormesAccessibilite: ConformiteNormeAccessibilite!
 }
 
-input UpdateOrganismDegreesAndDomainesInput {
-  organismId: ID!
-  degreeIds: [ID!]!
-  domaineIds: [ID!]!
-}
-
 input UpdateOrganismDegreesAndFormacodesInput {
   organismId: ID!
   degreeIds: [ID!]!
@@ -289,9 +282,6 @@ type Mutation {
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
   ): Organism!
-  organism_updateOrganismDegreesAndDomaines(
-    data: UpdateOrganismDegreesAndDomainesInput!
-  ): Organism
 
   organism_updateOrganismDegreesAndFormacodes(
     data: UpdateOrganismDegreesAndFormacodesInput!

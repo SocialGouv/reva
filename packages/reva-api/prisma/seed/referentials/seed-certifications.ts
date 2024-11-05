@@ -100,11 +100,7 @@ export async function seedCertifications(prisma: PrismaClient) {
         undefined,
       ],
     });
-    for (const {
-      certificationId,
-      conventionCollective,
-      domaine,
-    } of certificationRel) {
+    for (const { certificationId, conventionCollective } of certificationRel) {
       if (conventionCollective) {
         await tx.certificationOnConventionCollective.deleteMany({
           where: {
@@ -115,19 +111,6 @@ export async function seedCertifications(prisma: PrismaClient) {
           data: parseCsvList(conventionCollective).map((ccnId: string) => ({
             certificationId,
             ccnId,
-          })),
-        });
-      }
-      if (domaine) {
-        await tx.certificationOnDomaine.deleteMany({
-          where: {
-            certificationId,
-          },
-        });
-        await tx.certificationOnDomaine.createMany({
-          data: parseCsvList(domaine).map((domaineId: string) => ({
-            certificationId,
-            domaineId,
           })),
         });
       }

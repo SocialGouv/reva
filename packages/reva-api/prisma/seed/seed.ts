@@ -36,18 +36,6 @@ const executeSeed = async () => {
   await insertDropOutReasonsIfNone(prisma);
   await insertReorientationReasonsIfNone(prisma);
 
-  // Domaines : referentials/domaines.csv
-  await injectCsvRows<Prisma.DomaineCreateInput, Prisma.DomaineUpsertArgs>({
-    filePath: "./referentials/domaines.csv",
-    headersDefinition: ["label", "id", "code", undefined],
-    transform: ({ id, label, code }) => ({
-      where: { id },
-      create: { id, label, code },
-      update: { label },
-    }),
-    injectCommand: prisma.domaine.upsert,
-  });
-
   // Conventions collectives : referentials/conventions-collectives.csv
   await injectCsvRows<
     Prisma.ConventionCollectiveCreateInput,

@@ -18,7 +18,6 @@ export const createOrganism = async (data: {
   isActive: boolean;
   typology: OrganismTypology;
   ccnIds?: string[];
-  domaineIds?: string[];
   degreeIds?: string[];
   qualiopiCertificateExpiresAt: Date;
   llToEarth: string | null;
@@ -26,7 +25,7 @@ export const createOrganism = async (data: {
   modaliteAccompagnement: OrganismModaliteAccompagnement;
   modaliteAccompagnementRenseigneeEtValide: boolean;
 }) => {
-  const { domaineIds, degreeIds, ccnIds, ...otherData } = data;
+  const { degreeIds, ccnIds, ...otherData } = data;
   const organism = await prismaClient.organism.create({
     data: {
       ...otherData,
@@ -35,14 +34,6 @@ export const createOrganism = async (data: {
           data:
             ccnIds?.map((ccnId) => ({
               ccnId,
-            })) || [],
-        },
-      },
-      organismOnDomaine: {
-        createMany: {
-          data:
-            domaineIds?.map((domaineId) => ({
-              domaineId,
             })) || [],
         },
       },

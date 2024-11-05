@@ -11,7 +11,6 @@ type Certification {
   status: CertificationStatus!
   typeDiplome: TypeDiplome!
   degree: Degree!
-  domaines: [Domaine!]!
   conventionsCollectives: [ConventionCollective!]!
   availableAt: Timestamp!
   expiresAt: Timestamp!
@@ -67,12 +66,6 @@ type ReorientationReason {
   id: ID!
   label: String!
   disabled: Boolean!
-}
-
-type Domaine {
-  id: ID!
-  code: String!
-  label: String!
 }
 
 type ConventionCollective {
@@ -261,7 +254,6 @@ type Query {
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
   getDropOutReasons: [DropOutReason!]!
   getReorientationReasons: [ReorientationReason!]!
-  getDomaines: [Domaine!]!
   getConventionCollectives: [ConventionCollective!]!
   getTypeDiplomes: [TypeDiplome!]!
   getFCCertification(rncp: ID!): FCCertification
@@ -281,7 +273,6 @@ input UpdateCertificationInput {
   level: Int!
   codeRncp: String!
   typeDiplomeId: String!
-  domaineIds: [String!]!
   conventionCollectiveIds: [String!]!
   availableAt: Timestamp!
   expiresAt: Timestamp!

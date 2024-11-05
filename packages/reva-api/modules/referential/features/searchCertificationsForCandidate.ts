@@ -3,7 +3,6 @@ import { deburr } from "lodash";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification } from "../referential.types";
-import { getFeatureByKey } from "../../feature-flipping/feature-flipping.features";
 import { Prisma } from "@prisma/client";
 
 export const searchCertificationsForCandidate = async ({
@@ -28,13 +27,9 @@ export const searchCertificationsForCandidate = async ({
     .map((t) => t + ":*")
     .join("&");
 
-  let certificationView = organismId
-    ? "active_organism_by_available_certification"
-    : "available_certification";
-
-  if (await isFormacodeFeatureActive()) {
-    certificationView = `${certificationView}_based_on_formacode`;
-  }
+  const certificationView = organismId
+    ? "active_organism_by_available_certification_based_on_formacode"
+    : "available_certification_based_on_formacode";
 
   const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, ${certificationView} available_certification
     where c.id=available_certification.certification_id and status='AVAILABLE'`)} 
@@ -82,12 +77,4 @@ export const searchCertificationsForCandidate = async ({
     }),
   };
   return page;
-};
-
-const isFormacodeFeatureActive = async (): Promise<boolean> => {
-  const isAapSettingsFormacodeActive = (
-    await getFeatureByKey("AAP_SETTINGS_FORMACODE")
-  )?.isActive;
-
-  return !!isAapSettingsFormacodeActive;
 };

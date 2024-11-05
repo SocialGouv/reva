@@ -42,7 +42,6 @@ model Certification {
   organismsAndRegions                               OrganismsOnRegionsAndCertifications[]
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
-  certificationOnDomaine                            CertificationOnDomaine[]
   certificationOnConventionCollective               CertificationOnConventionCollective[]
   typeDiplome                                       TypeDiplome?                                        @relation(fields: [typeDiplomeId], references: [id])
   typeDiplomeId                                     String?                                             @map("type_diplome_id") @db.Uuid
@@ -56,8 +55,6 @@ model Certification {
   nextVersion                                       Certification?                                      @relation("replacement")
   competenceBlocs                                   CertificationCompetenceBloc[]
   feasibilityFormat                                 FeasibilityFormat                                   @default(UPLOADED_PDF) @map("feasibility_format")
-  AvailableCertification                            AvailableCertification?
-  ActiveOrganismByAvailableCertification            ActiveOrganismByAvailableCertification[]
   certificationAuthorityStructure                   CertificationAuthorityStructure?                    @relation(fields: [certificationAuthorityStructureId], references: [id])
   certificationAuthorityStructureId                 String?                                             @map("certification_authority_structure_id") @db.Uuid
   Candidacy                                         Candidacy[]
@@ -400,7 +397,6 @@ model Organism {
   updatedAt                          DateTime?                             @map("updated_at") @db.Timestamptz(6)
   FundingRequest                     FundingRequest[]
   typology                           OrganismTypology                      @map("typology")
-  organismOnDomaine                  OrganismOnDomaine[]
   organismOnConventionCollective     OrganismOnConventionCollective[]
   qualiopiCertificateExpiresAt       DateTime?                             @map("qualiopi_certificate_expires_at")
   website                            String?                               @db.VarChar(255)
@@ -416,9 +412,8 @@ model Organism {
   isRemote                 Boolean            @default(false) @map("is_remote")
   isHeadAgency             Boolean            @default(false) @map("is_head_agency")
 
-  ActiveOrganismByAvailableCertification ActiveOrganismByAvailableCertification[]
-  OrganismOnRemoteZone                   OrganismOnRemoteZone[]
-  organismOnFormacode                    OrganismOnFormacode[]
+  OrganismOnRemoteZone OrganismOnRemoteZone[]
+  organismOnFormacode  OrganismOnFormacode[]
 
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
@@ -852,26 +847,6 @@ enum OrganismTypology {
   expertBrancheEtFiliere
 }
 
-view AvailableCertification {
-  certification                 Certification            @relation(fields: [certificationId], references: [id])
-  certificationId               String                   @map("certification_id") @db.Uuid
-  certification_searchable_text Unsupported("tsvector")?
-
-  @@unique([certificationId])
-  @@map("available_certification")
-}
-
-view ActiveOrganismByAvailableCertification {
-  organism                      Organism                 @relation(fields: [organismId], references: [id], onDelete: Cascade)
-  certification                 Certification            @relation(fields: [certificationId], references: [id])
-  organismId                    String                   @map("organism_id") @db.Uuid
-  certificationId               String                   @map("certification_id") @db.Uuid
-  certification_searchable_text Unsupported("tsvector")?
-
-  @@unique([organismId, certificationId])
-  @@map("active_organism_by_available_certification")
-}
-
 view AvailableCertificationBasedOnFormacode {
   certification                 Certification            @relation(fields: [certificationId], references: [id])
   certificationId               String                   @map("certification_id") @db.Uuid
@@ -890,41 +865,6 @@ view ActiveOrganismByAvailableCertificationBasedOnFormacode {
 
   @@unique([organismId, certificationId])
   @@map("active_organism_by_available_certification_based_on_formacode")
-}
-
-model Domaine {
-  id                     String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                  String                   @db.VarChar(255)
-  code                   String                   @unique @db.VarChar(3)
-  organismOnDomaine      OrganismOnDomaine[]
-  certificationOnDomaine CertificationOnDomaine[]
-
-  @@map("domaine")
-}
-
-model OrganismOnDomaine {
-  domaine    Domaine   @relation(fields: [domaineId], references: [id])
-  domaineId  String    @map("domaine_id") @db.Uuid
-  organism   Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
-  organismId String    @map("organism_id") @db.Uuid
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
-
-  @@id([domaineId, organismId])
-  @@map("organism_on_domaine")
-}
-
-model CertificationOnDomaine {
-  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  domaine         Domaine       @relation(fields: [domaineId], references: [id])
-  domaineId       String        @map("domaine_id") @db.Uuid
-  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
-  certificationId String        @map("certification_id") @db.Uuid
-  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
-
-  @@unique([domaineId, certificationId])
-  @@map("certification_on_domaine")
 }
 
 model ConventionCollective {
@@ -1397,16 +1337,6 @@ model MaisonMereAAPOnConventionCollective {
 
   @@id([ccnId, maisonMereAAPId])
   @@map("maison_mere_aap_on_ccn")
-}
-
-model MaisonMereAAPOnDomaine {
-  domaineId       String    @map("domaine_id") @db.Uuid
-  maisonMereAAPId String    @map("maison_mere_aap_id") @db.Uuid
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime? @map("updated_at") @db.Timestamptz(6)
-
-  @@id([domaineId, maisonMereAAPId])
-  @@map("maison_mere_aap_on_domaine")
 }
 
 model CandidacyConventionCollective {

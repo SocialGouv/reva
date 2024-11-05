@@ -38,13 +38,6 @@ export const replaceCertification = async ({
       previousVersion: {
         connect: { id: replaceCertificationInput.certificationId },
       },
-      certificationOnDomaine: {
-        createMany: {
-          data: replaceCertificationInput.domaineIds.map((domaineId) => ({
-            domaineId,
-          })),
-        },
-      },
       certificationOnConventionCollective: {
         createMany: {
           data: replaceCertificationInput.conventionCollectiveIds.map(

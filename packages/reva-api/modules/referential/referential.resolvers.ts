@@ -8,7 +8,6 @@ import { getConventionsCollectivesByCertificationId } from "./features/getConven
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
-import { getDomainesByCertificationId } from "./features/getDomainesByCertificationId";
 import { getDropOutReasons } from "./features/getDropOutReasons";
 import { getGoals } from "./features/getGoals";
 import { getRegionById } from "./features/getRegionById";
@@ -46,8 +45,6 @@ const unsafeReferentialResolvers = {
     typeDiplome: ({ typeDiplomeId }: { typeDiplomeId: string }) =>
       getTypeDiplomeById({ typeDiplomeId }),
     degree: ({ level }: { level: number }) => getDegreeByLevel({ level }),
-    domaines: ({ id: certificationId }: { id: string }) =>
-      getDomainesByCertificationId({ certificationId }),
     conventionsCollectives: ({ id: certificationId }: { id: string }) =>
       getConventionsCollectivesByCertificationId({ certificationId }),
     competenceBlocs: ({
@@ -110,7 +107,6 @@ const unsafeReferentialResolvers = {
     getVulnerabilityIndicators,
     getDropOutReasons,
     getReorientationReasons,
-    getDomaines: () => prismaClient.domaine.findMany(),
     getConventionCollectives: () =>
       prismaClient.conventionCollective.findMany(),
     getTypeDiplomes,

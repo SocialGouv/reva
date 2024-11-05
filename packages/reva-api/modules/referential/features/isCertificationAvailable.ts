@@ -5,7 +5,9 @@ export const isCertificationAvailable = async ({
 }: {
   certificationId: string;
 }): Promise<boolean> => {
-  return !!(await prismaClient.availableCertification.findFirst({
-    where: { certificationId },
-  }));
+  return !!(await prismaClient.availableCertificationBasedOnFormacode.findFirst(
+    {
+      where: { certificationId },
+    },
+  ));
 };

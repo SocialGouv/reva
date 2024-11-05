@@ -38,7 +38,6 @@ import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMer
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
-import { getOrganismDomainesByOrganismId } from "./features/getOrganismDomainesByOrganismId";
 import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormacodesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
@@ -53,7 +52,6 @@ import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOr
 import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
-import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegreesAndDomaines";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { resolversSecurityMap } from "./organism.security";
 import {
@@ -91,10 +89,6 @@ const unsafeResolvers = {
       findOrganismOnDegreeByOrganismId({ organismId: organism.id }),
     accounts: ({ id: organismId }: Organism) =>
       getAccountsByOrganismId({
-        organismId,
-      }),
-    domaines: ({ id: organismId }: Organism) =>
-      getOrganismDomainesByOrganismId({
         organismId,
       }),
     formacodes: ({ id: organismId }: Organism) =>
@@ -354,17 +348,6 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    organism_updateOrganismDegreesAndDomaines: async (
-      _parent: unknown,
-      params: {
-        data: { organismId: string; degreeIds: string[]; domaineIds: string[] };
-      },
-    ) =>
-      updateOrganismDegreesAndDomaines({
-        organismId: params.data.organismId,
-        degreeIds: params.data.degreeIds,
-        domaineIds: params.data.domaineIds,
-      }),
     organism_updateOrganismDegreesAndFormacodes: async (
       _parent: unknown,
       params: {
