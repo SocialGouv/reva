@@ -93,7 +93,7 @@ const getRandomActiveOrganismForCertification = async ({
     join ${organismView} ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id
    left join organism_informations_commerciales as oic on oic.organism_id = o.id`);
-  let whereClause = Prisma.sql`where ao.certification_id=uuid(${certificationId}) and (o.is_remote or o.is_onsite)`;
+  let whereClause = Prisma.sql`where ao.certification_id=uuid(${certificationId}) and (o.modalite_accompagnement_renseignee_et_valide)`;
 
   if (searchText) {
     const words = searchText.split(/\s+/);
@@ -110,13 +110,13 @@ const getRandomActiveOrganismForCertification = async ({
     const candidacyDepartmentRemoteZone = await getRemoteZoneFromDepartment({
       departmentId,
     });
-    whereClause = Prisma.sql`${whereClause} and o.is_remote=true`;
+    whereClause = Prisma.sql`${whereClause} and o.modalite_accompagnement='A_DISTANCE'`;
     fromClause = Prisma.raw(
       `${fromClause.sql} join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`,
     );
   }
   if (searchFilter.distanceStatus === "ONSITE") {
-    whereClause = Prisma.sql`${whereClause} and o.is_onsite = true`;
+    whereClause = Prisma.sql`${whereClause} and o.modalite_accompagnement = 'LIEU_ACCUEIL'`;
   }
 
   const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
@@ -132,8 +132,8 @@ const getRandomActiveOrganismForCertification = async ({
                  o.contact_administrative_phone as "contactAdministrativePhone",
                  o.website,
                  o.siret,
-                 o.is_onsite as "isOnSite",
-                 o.is_remote as "isRemote",
+                 o.modalite_accompagnement as "modaliteAccompagnement",
+                 o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  ao.organism_id as "organismId"
             ${fromClause}
@@ -199,7 +199,8 @@ const getAAPsWithZipCode = async ({
 
   let whereClause = Prisma.sql`
   where o.id = ao.organism_id
-  and o.is_onsite = true
+  and o.modalite_accompagnement_renseignee_et_valide = true
+  and o.modalite_accompagnement = 'LIEU_ACCUEIL'
   and ao.certification_id=uuid(${certificationId})
   and o.ll_to_earth IS NOT NULL
   and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
@@ -238,8 +239,8 @@ const getAAPsWithZipCode = async ({
                  o.contact_administrative_phone as "contactAdministrativePhone",
                  o.website,
                  o.siret,
-                 o.is_onsite as "isOnSite",
-                 o.is_remote as "isRemote",
+                 o.modalite_accompagnement as "modaliteAccompagnement",
+                 o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  ao.organism_id as "organismId",
                   (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS "distanceKm"

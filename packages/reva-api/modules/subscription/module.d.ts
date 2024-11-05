@@ -46,12 +46,6 @@ interface SubscriptionRequestInput {
   status: SubscriptionRequestStatus;
 }
 
-interface DepartmentWithOrganismMethods {
-  departmentId: string;
-  isOnSite: boolean;
-  isRemote: boolean;
-}
-
 type SubscriptionRequest = Omit<
   SubscriptionRequestInput,
   "domaineIds",

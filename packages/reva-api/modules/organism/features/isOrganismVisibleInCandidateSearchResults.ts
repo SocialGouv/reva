@@ -28,7 +28,7 @@ export const isOrganismVisibleInCandidateSearchResults = async ({
 
   return (
     o.isActive &&
-    (o.isOnSite || o.isRemote) &&
+    o.modaliteAccompagnementRenseigneeEtValide &&
     !o.fermePourAbsenceOuConges &&
     o.managedDegrees.length &&
     (domainsLength || o.organismOnConventionCollective.length)
