@@ -94,8 +94,8 @@ export const validateSubscriptionRequest = async ({
     ccnIds: [],
     degreeIds: degrees.map((d) => d.id),
     qualiopiCertificateExpiresAt: new Date(),
-    isOnSite: false, //default agency is not on site since we don't have an address
-    isHeadAgency: true, // default agency is the head agency
+    modaliteAccompagnement: "A_DISTANCE",
+    modaliteAccompagnementRenseigneeEtValide: false,
   });
 
   logger.info(

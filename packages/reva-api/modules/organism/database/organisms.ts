@@ -1,3 +1,4 @@
+import { OrganismModaliteAccompagnement } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
 export const getOrganismById = async (organismId: string) =>
@@ -22,7 +23,8 @@ export const createOrganism = async (data: {
   qualiopiCertificateExpiresAt: Date;
   llToEarth: string | null;
   isOnSite?: boolean;
-  isHeadAgency?: boolean;
+  modaliteAccompagnement: OrganismModaliteAccompagnement;
+  modaliteAccompagnementRenseigneeEtValide: boolean;
 }) => {
   const { domaineIds, degreeIds, ccnIds, ...otherData } = data;
   const organism = await prismaClient.organism.create({

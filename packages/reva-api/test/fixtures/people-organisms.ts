@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 
 import {
   Gender,
+  Organism,
   StatutValidationInformationsJuridiquesMaisonMereAAP,
 } from "@prisma/client";
 
@@ -47,7 +48,9 @@ const organismIperia = {
   isActive: true,
   typology: "experimentation" as const,
   llToEarth: "(4622585.927620327, 437370.0268140378, 4372806.174258723)",
-};
+  modaliteAccompagnement: "LIEU_ACCUEIL",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 const expertFiliereOrganism = {
   id: randomUUID(),
@@ -56,7 +59,9 @@ const expertFiliereOrganism = {
   contactAdministrativeEmail: "expertFiliereOrganism@example.com",
   isActive: true,
   typology: "expertFiliere" as const,
-};
+  modaliteAccompagnement: "A_DISTANCE",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 const expertBrancheOrganism = {
   label: "Expert branch organism",
@@ -64,7 +69,9 @@ const expertBrancheOrganism = {
   contactAdministrativeEmail: "expertBranche@example.com",
   isActive: true,
   typology: "expertBranche" as const,
-};
+  modaliteAccompagnement: "A_DISTANCE",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 const expertBrancheEtFiliereOrganism = {
   label: "Expert branch organism",
@@ -72,17 +79,20 @@ const expertBrancheEtFiliereOrganism = {
   contactAdministrativeEmail: "expertBrancheEtFiliere@example.com",
   isActive: true,
   typology: "expertBrancheEtFiliere" as const,
-};
+  modaliteAccompagnement: "A_DISTANCE",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 const agencePrincipaleMaisonMere2 = {
   id: randomUUID(),
-  isHeadAgency: true,
   siret: "",
   label: "Agence principale Maison Mere 2",
   contactAdministrativeEmail: "distanciel.m2@example.com",
   isActive: true,
   typology: "expertBranche" as const,
-};
+  modaliteAccompagnement: "A_DISTANCE",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 const lieuAccueilMaisonMere2 = {
   id: randomUUID(),
@@ -91,7 +101,9 @@ const lieuAccueilMaisonMere2 = {
   contactAdministrativeEmail: "presentiel.m2@example.com",
   isActive: true,
   typology: "expertBranche" as const,
-};
+  modaliteAccompagnement: "LIEU_ACCUEIL",
+  modaliteAccompagnementRenseigneeEtValide: true,
+} satisfies Partial<Organism>;
 
 // Architectes
 

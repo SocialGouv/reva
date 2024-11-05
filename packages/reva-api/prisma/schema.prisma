@@ -422,9 +422,17 @@ model Organism {
 
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
+  modaliteAccompagnement                   OrganismModaliteAccompagnement @map("modalite_accompagnement")
+  modaliteAccompagnementRenseigneeEtValide Boolean                        @map("modalite_accompagnement_renseignee_et_valide")
+
   @@index([typology, isActive])
   @@index([maisonMereAAPId])
   @@map("organism")
+}
+
+enum OrganismModaliteAccompagnement {
+  A_DISTANCE
+  LIEU_ACCUEIL
 }
 
 enum RemoteZone {

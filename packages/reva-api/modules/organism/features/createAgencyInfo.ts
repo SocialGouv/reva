@@ -79,7 +79,8 @@ export const createAgencyInfo = async ({
       typology: typologie,
       qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
       llToEarth,
-      isOnSite: true,
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+      modaliteAccompagnementRenseigneeEtValide: true,
     });
 
     logger.info(

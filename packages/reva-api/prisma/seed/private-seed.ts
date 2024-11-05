@@ -94,6 +94,8 @@ async function main() {
                   siret: row.siret.trim().replace(" ", ""),
                   isActive: row.is_active.trim() === "1",
                   typology: "experimentation",
+                  modaliteAccompagnement: "LIEU_ACCUEIL",
+                  modaliteAccompagnementRenseigneeEtValide: true,
                 },
               });
             })),
