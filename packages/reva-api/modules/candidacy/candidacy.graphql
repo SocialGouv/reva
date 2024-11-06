@@ -275,11 +275,6 @@ input AdmissibilityInput {
   status: AdmissibilityStatus
 }
 
-input AdmissibilityInputFvae {
-  isAlreadyAdmissible: Boolean!
-  expiresAt: Timestamp
-}
-
 type Mutation {
   candidacy_submitCandidacy(candidacyId: ID!): Candidacy
   candidacy_addExperience(
