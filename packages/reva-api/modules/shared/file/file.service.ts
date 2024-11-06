@@ -92,9 +92,6 @@ export const uploadFile = async ({
     throw new Error("File type not allowed");
   }
 
-  console.log("typesFromMagicBytes", typesFromMagicBytes);
-  throw new Error("Just testing file types");
-
   const command = new PutObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
     Key: filePath,
