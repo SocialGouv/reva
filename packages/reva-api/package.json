@@ -73,6 +73,7 @@
     "jsonwebtoken": "^9.0.2",
     "keycloak-connect": "^24.0.2",
     "lodash": "^4.17.21",
+    "magic-bytes.js": "^1.10.0",
     "mercurius": "^15.1.0",
     "mjml": "^4.15.3",
     "pino": "^9.5.0",

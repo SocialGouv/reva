@@ -8,6 +8,7 @@ import {
 } from "../../../shared/file";
 import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 
 export const createOrUpdateSwornStatement = async ({
   input: { swornStatement },
@@ -50,12 +51,14 @@ export const createOrUpdateSwornStatement = async ({
       filePath: string;
       mimeType: string;
       name: string;
+      allowedFileTypes: string[];
     } = {
       id: fileId,
       data: swornStatementFile._buf,
       filePath: getFilePath({ candidacyId, fileId }),
       mimeType: swornStatementFile.mimetype,
       name: swornStatementFile.filename,
+      allowedFileTypes: allowFileTypeByDocumentType.swornStatementFile,
     };
 
     await uploadFilesToS3([fileAndId]);

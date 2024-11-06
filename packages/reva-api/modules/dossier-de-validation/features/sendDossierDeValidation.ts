@@ -9,6 +9,7 @@ import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertific
 import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 export const sendDossierDeValidation = async ({
   candidacyId,
@@ -73,6 +74,7 @@ export const sendDossierDeValidation = async ({
     filePath: dossierDeValidationFilePath,
     mimeType: dossierDeValidationFile.mimetype,
     data: dossierDeValidationFile._buf,
+    allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationFile,
   });
 
   const dossierDeValidationOtherFilesWithIds: {
@@ -86,6 +88,8 @@ export const sendDossierDeValidation = async ({
       filePath,
       mimeType: d.file.mimetype,
       data: d.file._buf,
+      allowedFileTypes:
+        allowFileTypeByDocumentType.dossierDeValidationOtherFiles,
     });
   }
 

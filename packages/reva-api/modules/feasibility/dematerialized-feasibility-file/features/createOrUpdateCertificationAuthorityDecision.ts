@@ -21,6 +21,7 @@ import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisi
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 const statusDecisionMapper = {
@@ -143,12 +144,15 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         filePath: string;
         mimeType: string;
         name: string;
+        allowedFileTypes: string[];
       } = {
         id: fileId,
         data: decisionUploadedFile._buf,
         filePath: getFilePath({ candidacyId, fileId }),
         mimeType: decisionUploadedFile.mimetype,
         name: decisionUploadedFile.filename,
+        allowedFileTypes:
+          allowFileTypeByDocumentType.certificationAuthorityDecisionFile,
       };
 
       await uploadFilesToS3([fileAndId]);

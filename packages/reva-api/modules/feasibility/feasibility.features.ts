@@ -50,6 +50,7 @@ import {
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
+import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -163,6 +164,7 @@ export const createFeasibility = async ({
     filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
     data: feasibilityFile._buf,
     mimeType: feasibilityFile.mimetype,
+    allowedFileTypes: allowFileTypeByDocumentType.feasibilityFile,
   };
   files.push(feasibilityFileInstance);
 
@@ -170,6 +172,7 @@ export const createFeasibility = async ({
     filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
     data: IDFile._buf,
     mimeType: IDFile.mimetype,
+    allowedFileTypes: allowFileTypeByDocumentType.IDFile,
   };
   files.push(IDFileInstance);
 
@@ -179,6 +182,7 @@ export const createFeasibility = async ({
       filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
       data: documentaryProofFile._buf,
       mimeType: documentaryProofFile.mimetype,
+      allowedFileTypes: allowFileTypeByDocumentType.documentaryProofFile,
     };
     files.push(documentaryProofFileInstance);
   }
@@ -189,6 +193,7 @@ export const createFeasibility = async ({
       filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
       data: certificateOfAttendanceFile._buf,
       mimeType: certificateOfAttendanceFile.mimetype,
+      allowedFileTypes: allowFileTypeByDocumentType.certificateOfAttendanceFile,
     };
     files.push(certificateOfAttendanceFileInstance);
   }
@@ -762,6 +767,7 @@ const validateFeasibility = async ({
         filePath: `candidacies/${feasibility.candidacyId}/feasibility/${v4()}`,
         data: infoFile._buf,
         mimeType: infoFile.mimetype,
+        allowedFileTypes: allowFileTypeByDocumentType.feasibilityDecisionFile,
       };
 
       await uploadFileToS3(infoFileInstance);
@@ -895,6 +901,7 @@ const rejectFeasibility = async ({
         filePath: `candidacies/${feasibility.candidacyId}/feasibility/${v4()}`,
         data: infoFile._buf,
         mimeType: infoFile.mimetype,
+        allowedFileTypes: allowFileTypeByDocumentType.feasibilityDecisionFile,
       };
 
       await uploadFileToS3(infoFileInstance);

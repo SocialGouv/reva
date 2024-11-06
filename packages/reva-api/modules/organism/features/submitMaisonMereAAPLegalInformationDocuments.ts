@@ -2,6 +2,7 @@ import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../../../prisma/client";
 import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 export const submitMaisonMereAAPLegalInformationDocuments = async (params: {
   maisonMereAAPId: string;
@@ -65,6 +66,8 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
         filePath,
         mimeType: file.mimetype,
         data: file._buf,
+        allowedFileTypes:
+          allowFileTypeByDocumentType.maisonMereAAPLegalInformationFile,
       });
     }
   }

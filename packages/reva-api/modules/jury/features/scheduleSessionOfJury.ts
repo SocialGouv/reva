@@ -8,6 +8,7 @@ import {
   sendJuryScheduledAAPEmail,
   sendJuryScheduledCandidateEmail,
 } from "../emails";
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;
@@ -108,6 +109,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       filePath: convocationFilePath,
       mimeType: convocationFile.mimetype,
       data: convocationFile._buf,
+      allowedFileTypes: allowFileTypeByDocumentType.juryConvocationFile,
     });
   }
 

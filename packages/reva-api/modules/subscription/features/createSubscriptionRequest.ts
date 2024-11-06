@@ -5,6 +5,7 @@ import {
   getUploadedFile,
   uploadFileToS3,
 } from "../../shared/file";
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 export const createSubscriptionRequest = async ({
   params,
@@ -52,6 +53,8 @@ export const createSubscriptionRequest = async ({
             subscriptionRequestId,
             fileId,
           }),
+          allowedFileTypes:
+            allowFileTypeByDocumentType.maisonMereAAPLegalInformationFile,
         });
       }
     }

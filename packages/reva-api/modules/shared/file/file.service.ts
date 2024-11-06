@@ -6,12 +6,18 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import filetype, { filetypemime } from "magic-bytes.js";
 
 import { buffer } from "stream/consumers";
 import { logger } from "../logger";
 import { UploadedFile } from "./file.interface";
 
-export type S3File = { filePath: string; mimeType: string; data: Buffer };
+export type S3File = {
+  filePath: string;
+  mimeType: string;
+  data: Buffer;
+  allowedFileTypes: string[];
+};
 
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
@@ -73,9 +79,21 @@ export const uploadFile = async ({
   filePath,
   mimeType,
   data,
+  allowedFileTypes,
 }: S3File): Promise<void> => {
   console.log(process.env.OUTSCALE_BUCKET_NAME);
   console.log(filePath);
+
+  const typesFromMagicBytes = filetypemime(data);
+  const isAllowed = allowedFileTypes.some((type) =>
+    typesFromMagicBytes.includes(type),
+  );
+  if (!isAllowed) {
+    throw new Error("File type not allowed");
+  }
+
+  console.log("typesFromMagicBytes", typesFromMagicBytes);
+  throw new Error("Just testing file types");
 
   const command = new PutObjectCommand({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
@@ -102,16 +120,23 @@ const uploadWithRetry = async ({
   filePath,
   mimeType,
   data,
+  allowedFileTypes,
   retry = 0,
 }: S3File & {
   retry?: number;
 }) => {
-  await uploadFile({ filePath, mimeType, data });
+  await uploadFile({ filePath, mimeType, data, allowedFileTypes });
 
   const exists = await fileExists(filePath);
   if (!exists && retry < 3) {
     await wait(1000);
-    await uploadWithRetry({ filePath, mimeType, data, retry: retry + 1 });
+    await uploadWithRetry({
+      filePath,
+      mimeType,
+      data,
+      allowedFileTypes,
+      retry: retry + 1,
+    });
   } else if (!exists) {
     throw new Error(
       `Une erreur est survenue lors de l'envoi de(s) fichier(s). Veuillez réessayer.`,
@@ -194,11 +219,17 @@ export const emptyUploadedFileStream = async (file?: GraphqlUploadedFile) => {
   }
 };
 
-export const uploadFileToS3 = ({ filePath, mimeType, data }: S3File) =>
+export const uploadFileToS3 = ({
+  filePath,
+  mimeType,
+  data,
+  allowedFileTypes,
+}: S3File) =>
   uploadWithRetry({
     filePath,
     mimeType,
     data,
+    allowedFileTypes,
   });
 
 export const uploadFilesToS3 = async (files: S3File[]) => {
@@ -208,6 +239,7 @@ export const uploadFilesToS3 = async (files: S3File[]) => {
         filePath: data.filePath,
         mimeType: data.mimeType,
         data: data.data,
+        allowedFileTypes: data.allowedFileTypes,
       });
     }
 

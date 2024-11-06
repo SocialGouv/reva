@@ -13,6 +13,7 @@ import {
 } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 
 export const createOrUpdateAttachments = async ({
   candidacyId,
@@ -143,6 +144,7 @@ export const createOrUpdateAttachments = async ({
         filePath,
         mimeType: file.mimetype,
         data: file._buf,
+        allowedFileTypes: allowFileTypeByDocumentType.feasibilityAttachmentFile,
       });
     }
 
