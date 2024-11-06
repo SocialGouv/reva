@@ -19,6 +19,7 @@ export const sendEmailWithLink = async ({
     | "confirmEmail"
     | "admin"
     | "agencies-settings/legal-information"
+    | "agencies-settings-v3"
     | "";
   customUrl?: string;
   app: "candidate" | "admin";
