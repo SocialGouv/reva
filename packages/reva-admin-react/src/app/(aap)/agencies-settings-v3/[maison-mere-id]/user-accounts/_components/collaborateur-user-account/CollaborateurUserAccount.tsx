@@ -5,7 +5,7 @@ import { useUpdateUserAccountPage } from "./collaborateurUserAccount.hook";
 import { UserAccountForm } from "./UserAccountForm";
 import { useMemo } from "react";
 
-const AgencyUserAccount = () => {
+const CollaborateurUserAccount = () => {
   const { userAccount, collaborateurOrganismsInfoStatus } =
     useUpdateUserAccountPage();
 
@@ -59,4 +59,4 @@ const AgencyUserAccount = () => {
   );
 };
 
-export default AgencyUserAccount;
+export default CollaborateurUserAccount;
