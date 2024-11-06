@@ -50,7 +50,7 @@ context("Agency settings page", () => {
     });
     cy.wait("@getAgencySettingsInfo");
     // Make  sure the page is ready before checking non-existence of the general information section
-    cy.get('[data-test="remote-agency"]').should("exist");
+    cy.get('[data-test="remote-organism"]').should("exist");
     cy.get('[data-test="general-information"]').should("not.exist");
     cy.get('[data-test="user-accounts"]').should("not.exist");
   });
@@ -63,10 +63,10 @@ context("Agency settings page", () => {
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getAgencySettingsInfo");
-      cy.get('[data-test="remote-agency"]').should("exist");
+      cy.get('[data-test="remote-organism"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
       cy.get('[data-test="on-site-agency"]').should("not.exist");
-      cy.get('[data-test="on-site-agencies"]').should("not.exist");
+      cy.get('[data-test="on-site-organisms"]').should("not.exist");
     });
 
     it("display a remote section with a 'visible badge' when agency is opened for new candidacies", function () {
@@ -76,9 +76,9 @@ context("Agency settings page", () => {
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getAgencySettingsInfo");
-      cy.get('[data-test="remote-agency"] [data-test="visible-badge"]').should(
-        "exist",
-      );
+      cy.get(
+        '[data-test="remote-organism"] [data-test="visible-badge"]',
+      ).should("exist");
     });
 
     it("display a remote section with a 'invisible badge' when agency is opened for new candidacies", function () {
@@ -89,7 +89,7 @@ context("Agency settings page", () => {
       });
       cy.wait("@getAgencySettingsInfo");
       cy.get(
-        '[data-test="remote-agency"] [data-test="invisible-badge"]',
+        '[data-test="remote-organism"] [data-test="invisible-badge"]',
       ).should("exist");
     });
   });
@@ -104,8 +104,8 @@ context("Agency settings page", () => {
       cy.wait("@getAgencySettingsInfo");
       cy.get('[data-test="on-site-agency"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
-      cy.get('[data-test="remote-agency"]').should("not.exist");
-      cy.get('[data-test="on-site-agencies"]').should("not.exist");
+      cy.get('[data-test="remote-organism"]').should("not.exist");
+      cy.get('[data-test="on-site-organisms"]').should("not.exist");
     });
   });
 });

@@ -1,8 +1,8 @@
 import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/settingsForCollaborateur.hook";
-import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { AAPSettingsSummarySectionRemote } from "../AAPSettingsSummarySectionRemote";
 
 export const SettingsSummaryForCollaborateur = () => {
   const { organism, account, maisonMereAAPId } = useAgencySettings();
@@ -17,7 +17,7 @@ export const SettingsSummaryForCollaborateur = () => {
       </p>
       <div className="flex flex-col gap-8 mt-4">
         {organism?.modaliteAccompagnement === "A_DISTANCE" && (
-          <AgencySettingsSummarySectionRemote
+          <AAPSettingsSummarySectionRemote
             organism={organism}
             maisonMereAAPId={maisonMereAAPId}
           />

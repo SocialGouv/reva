@@ -3,7 +3,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import { RemoteZone } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
-export const AgencySettingsSummarySectionRemote = ({
+export const AAPSettingsSummarySectionRemote = ({
   organism,
   maisonMereAAPId,
 }: {
@@ -22,7 +22,7 @@ export const AgencySettingsSummarySectionRemote = ({
 
   return (
     <EnhancedSectionCard
-      data-test="remote-agency"
+      data-test="remote-organism"
       title="Accompagnement à distance"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/remote`}
       isEditable={true}

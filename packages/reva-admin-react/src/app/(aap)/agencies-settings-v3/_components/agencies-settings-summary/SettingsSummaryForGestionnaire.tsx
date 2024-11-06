@@ -1,10 +1,10 @@
-import { AgenciesSettingsSectionOnSite } from "@/app/(aap)/agencies-settings-v3/_components/AgenciesSettingsSectionOnSite";
-import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
 import { GestionnaireMaisonMereAAPSettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/GestionnaireMaisonMereAAPSettingsSectionAccountList";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Account, MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
+import { AAPSettingsSectionOnSite } from "../AAPSettingsSectionOnSite";
+import { AAPSettingsSummarySectionRemote } from "../AAPSettingsSummarySectionRemote";
 
 const getRemoteOrganism = ({
   organism,
@@ -98,11 +98,11 @@ export const SettingsSummaryForGestionnaire = ({
           </Highlight>
         )}
       </EnhancedSectionCard>
-      <AgencySettingsSummarySectionRemote
+      <AAPSettingsSummarySectionRemote
         organism={remoteOrganism}
         maisonMereAAPId={maisonMereAAP.id}
       />
-      <AgenciesSettingsSectionOnSite
+      <AAPSettingsSectionOnSite
         organisms={maisonMereAAP?.organisms.filter(
           (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
         )}

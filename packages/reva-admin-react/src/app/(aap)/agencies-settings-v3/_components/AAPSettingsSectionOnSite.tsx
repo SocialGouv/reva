@@ -56,7 +56,7 @@ const OrganismRow = ({
   );
 };
 
-export const AgenciesSettingsSectionOnSite = ({
+export const AAPSettingsSectionOnSite = ({
   organisms = [],
   maisonMereAAPId,
   isEditable,
@@ -70,20 +70,20 @@ export const AgenciesSettingsSectionOnSite = ({
   maisonMereAAPId: string;
   isEditable?: boolean;
 }) => {
-  const isOnSiteAgencyComplete = !!organisms.length;
+  const informationComplete = !!organisms.length;
 
   return (
     <EnhancedSectionCard
-      data-test="on-site-agencies"
+      data-test="on-site-organisms"
       title="Accompagnement en présentiel"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/add-agency`}
       titleIconClass="fr-icon-home-4-fill"
       isEditable={isEditable}
       customButtonTitle={"Ajouter un lieu d'accueil"}
-      status={isOnSiteAgencyComplete ? "COMPLETED" : "TO_COMPLETE"}
+      status={informationComplete ? "COMPLETED" : "TO_COMPLETE"}
       CustomBadge={<div />}
     >
-      {!isOnSiteAgencyComplete && (
+      {!informationComplete && (
         <p className="md:w-4/5">
           Vous avez des collaborateurs qui font des accompagnements en
           présentiel ? Ajoutez les lieux d'accueil dans lesquels se rendront les

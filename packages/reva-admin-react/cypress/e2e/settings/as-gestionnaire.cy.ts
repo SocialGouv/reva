@@ -73,8 +73,8 @@ context("Gestionnaire AAP settings page", () => {
   it("should display remote and user account list section and no on-site section", function () {
     visitSettings({ informationsJuridiques: "A_JOUR" });
     cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
-    cy.get('[data-test="remote-agency"]').should("exist");
-    cy.get('[data-test="on-site-agencies"]').should("exist");
+    cy.get('[data-test="remote-organism"]').should("exist");
+    cy.get('[data-test="on-site-organisms"]').should("exist");
     cy.get('[data-test="on-site-agency"]').should("not.exist");
   });
 
