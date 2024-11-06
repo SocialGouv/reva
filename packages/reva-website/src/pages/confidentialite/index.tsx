@@ -451,6 +451,13 @@ const IndexConfidentialitePage = () => {
                   <TextCell>Mesure d’audience</TextCell>
                   <LinkCell url="https://fr.matomo.org/privacy-policy/" />
                 </tr>
+                <tr>
+                  <TextBoldCell>Crisp</TextBoldCell>
+                  <TextCell>Union européenne</TextCell>
+                  <TextCell>Consentement</TextCell>
+                  <TextCell>Support</TextCell>
+                  <LinkCell url="https://crisp.chat/fr/privacy/" />
+                </tr>
               </tbody>
             </table>
           </div>
