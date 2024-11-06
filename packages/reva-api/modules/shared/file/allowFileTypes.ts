@@ -5,7 +5,10 @@ const allowedFileTypesMap = {
 
 export const allowFileTypeByDocumentType = {
   feasibilityFile: [...allowedFileTypesMap.pdf],
-  feasibilityAttachmentFile: [...allowedFileTypesMap.pdf],
+  feasibilityAttachmentFile: [
+    ...allowedFileTypesMap.pdf,
+    ...allowedFileTypesMap.image,
+  ],
   IDFile: [...allowedFileTypesMap.image, ...allowedFileTypesMap.pdf],
   documentaryProofFile: [...allowedFileTypesMap.pdf],
   certificateOfAttendanceFile: [...allowedFileTypesMap.pdf],
