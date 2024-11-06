@@ -13,7 +13,6 @@ import {
 import { logger } from "../shared/logger";
 import {
   Admissibility,
-  AdmissibilityFvae,
   Candidacy,
   CandidacyBusinessEvent,
   CandidacyStatusFilter,
@@ -25,7 +24,6 @@ import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAdmissibilityByCandidacyId } from "./features/getAdmissibilityByCandidacyId";
-import { getAdmissibilityFvae } from "./features/getAdmissibilityFvae";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
@@ -38,7 +36,6 @@ import { submitCandidacy } from "./features/submitCandidacy";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAdmissibility } from "./features/updateAdmissibility";
-import { updateAdmissibilityFvae } from "./features/updateAdmissibilityFvae";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
@@ -67,8 +64,6 @@ const unsafeResolvers = {
   Candidacy: {
     admissibility: ({ id: candidacyId }: Candidacy) =>
       getAdmissibilityByCandidacyId({ candidacyId }),
-    admissibilityFvae: (parent: Candidacy) =>
-      getAdmissibilityFvae({ candidacyId: parent.id }),
     goals: async ({ id: candidacyId }: Candidacy) =>
       getCandidacyGoals({ candidacyId }),
     experiences: async ({ id: candidacyId }: Candidacy) =>
@@ -573,26 +568,6 @@ const unsafeResolvers = {
         userKeycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      }),
-    candidacy_updateAdmissibilityFvae: (
-      _: unknown,
-      {
-        candidacyId,
-        admissibility,
-      }: {
-        candidacyId: string;
-        admissibility: AdmissibilityFvae;
-      },
-      context: GraphqlContext,
-    ) =>
-      updateAdmissibilityFvae({
-        params: {
-          candidacyId,
-          ...admissibility,
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        },
       }),
     candidacy_setReadyForJuryEstimatedAt: async (
       _parent: unknown,

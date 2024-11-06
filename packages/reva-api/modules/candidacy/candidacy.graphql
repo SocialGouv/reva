@@ -67,7 +67,6 @@ type Candidacy {
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
   admissibility: Admissibility!
-  admissibilityFvae: AdmissibilityFvae
   reorientationReason: ReorientationReason
   financeModule: FinanceModule!
   feasibilityFormat: FeasibilityFormat!
@@ -141,11 +140,6 @@ type Admissibility {
   certifierRespondedAt: Timestamp
   responseAvailableToCandidateAt: Timestamp
   status: AdmissibilityStatus
-}
-
-type AdmissibilityFvae {
-  isAlreadyAdmissible: Boolean!
-  expiresAt: Timestamp
 }
 
 enum AdmissibilityStatus {
@@ -326,10 +320,6 @@ type Mutation {
     candidacyId: UUID!
     admissibility: AdmissibilityInput!
   ): Admissibility!
-  candidacy_updateAdmissibilityFvae(
-    candidacyId: UUID!
-    admissibility: AdmissibilityInputFvae!
-  ): AdmissibilityFvae!
   candidacy_setReadyForJuryEstimatedAt(
     candidacyId: UUID!
     readyForJuryEstimatedAt: Timestamp!

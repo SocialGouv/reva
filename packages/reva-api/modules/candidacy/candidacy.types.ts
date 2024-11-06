@@ -40,11 +40,6 @@ export interface Admissibility {
 
 type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
 
-export interface AdmissibilityFvae {
-  isAlreadyAdmissible: boolean;
-  expiresAt: Date | null;
-}
-
 export enum CandidacyBusinessEvent {
   SUBMITTED_CANDIDACY = "Submitted Candidacy",
   TOOK_OVER_CANDIDACY = "Took over candidacy",
