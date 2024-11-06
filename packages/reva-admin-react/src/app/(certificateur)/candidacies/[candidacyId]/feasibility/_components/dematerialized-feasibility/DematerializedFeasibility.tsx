@@ -189,7 +189,7 @@ export const DematerializedFeasibility = () => {
                   {
                     label: "Je considère ce dossier incomplet ou incorrect",
                     hintText:
-                      "Un dossier est incorrect ou incomplet s'il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n'est pas le bon, s'il manque des éléments ou si les pièces jointes sont inexploitables, erronnées etc... Il sera renvoyé à l'AAP qui devra le compléter ou le corriger rapidement.",
+                      "Un dossier est incorrect ou incomplet s'il manque des éléments nécessaires à son traitement (tels que des pièces jointes ou des informations dans le document), si le dossier n'est pas le bon, s'il manque des éléments ou si les pièces jointes sont inexploitables, erronées etc... Il sera renvoyé à l'AAP qui devra le compléter ou le corriger rapidement.",
                     nativeInputProps: {
                       value: "INCOMPLETE",
                       ...register("decision"),

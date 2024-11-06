@@ -72,7 +72,7 @@ export const FeasibilityCompletionForm = ({
             {
               label: <p className="mb-0 text-base">Ce dossier est incomplet</p>,
               hintText:
-                "Est considéré comme incomplet tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronnées, informations manquantes, mauvais dossier...). L’AAP aura accès à la modification du dossier du candidat pour apporter les informations complémentaires demandées.",
+                "Est considéré comme incomplet tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronées, informations manquantes, mauvais dossier...). L’AAP aura accès à la modification du dossier du candidat pour apporter les informations complémentaires demandées.",
               nativeInputProps: {
                 ...register("decision"),
                 value: "INCOMPLETE",

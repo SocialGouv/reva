@@ -74,7 +74,7 @@ export const FeasibilityFormAutonomous = ({
                 </p>
               ),
               hintText:
-                "Est considéré comme incomplet ou incorrect tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronnées, informations manquantes, mauvais dossier...). Le candidat aura accès à la modification de son dossier pour apporter les informations complémentaires demandées.",
+                "Est considéré comme incomplet ou incorrect tout dossier auquel manque des éléments nécessaires à son traitement (pièces jointes inexploitables ou erronées, informations manquantes, mauvais dossier...). Le candidat aura accès à la modification de son dossier pour apporter les informations complémentaires demandées.",
               nativeInputProps: {
                 ...register("decision"),
                 value: "INCOMPLETE",
