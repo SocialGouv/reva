@@ -152,18 +152,18 @@ const DossierDeValidationTab = () => {
             description={
               <>
                 <p>
-                  Le candidat (ou son AAP) vous transmettra son dossier de
-                  validation dès qu'il sera finalisé.
+                  Le candidat (ou son AAP) doit vous transmettre son dossier de
+                  validation une fois qu’il est finalisé.
                 </p>
                 <p className="mt-4">
-                  Une date de passage devant le jury devra alors lui être
-                  communiquée dans les 3 mois maximum suivant la réception du
-                  dossier.
+                  Le passage devant le jury devra alors avoir lieu dans un délai
+                  maximum de 3 mois à compter de la réception du dossier.
                 </p>
                 <p className="mt-4">
-                  Si vous n'exigez pas de remise d'un dossier de validation, le
-                  document transmis sera alors un courrier vous informant que le
-                  candidat sera prêt dans les 3 mois au passage devant le jury.
+                  Si vous ne demandez pas la transmission du dossier de
+                  validation avant le passage en jury du candidat, un courrier
+                  vous informant que le candidat sera prêt à se présenter devant
+                  le jury dans un délai de 3 mois vous sera transmis à la place.
                 </p>
               </>
             }
