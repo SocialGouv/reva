@@ -19,10 +19,6 @@ const getCandidacyById = graphql(`
         codeRncp
         label
       }
-      admissibilityFvae {
-        isAlreadyAdmissible
-        expiresAt
-      }
       candidate {
         id
         firstname
