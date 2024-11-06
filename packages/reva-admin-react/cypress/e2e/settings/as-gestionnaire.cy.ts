@@ -8,7 +8,7 @@ function visitSettings({
   informationsJuridiques?: StatutValidationInformationsJuridiquesMaisonMereAap;
   isMCFCompatible?: boolean | null;
 }) {
-  cy.fixture("account/head-agency-settings.json").then((settings) => {
+  cy.fixture("account/gestionnaire-settings.json").then((settings) => {
     settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP =
       informationsJuridiques;
     settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.isMCFCompatible =
@@ -25,11 +25,11 @@ function visitSettings({
         "visibility/organism.json",
       );
       stubQuery(req, "getGestionnaireMaisonMereAAPSettingsInfo", settings);
-      stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
+      stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
       stubQuery(
         req,
         "getMaisonMereCGUQuery",
-        "account/head-agency-cgu-new.json",
+        "account/gestionnaire-cgu-new.json",
       );
     });
   });
@@ -37,7 +37,7 @@ function visitSettings({
   cy.gestionnaire("/agencies-settings-v3/");
 }
 
-context("Head agency settings page", () => {
+context("Gestionnaire AAP settings page", () => {
   context("on the general information section", () => {
     it("display a 'to complete badge' when account not verified", function () {
       visitSettings({
@@ -79,7 +79,7 @@ context("Head agency settings page", () => {
   });
 
   context("on the account list section", () => {
-    it("the add button should be disabled when the head account is not verified", function () {
+    it("the add button should be disabled when the gestionnaire aap account is not verified", function () {
       visitSettings({ informationsJuridiques: "A_METTRE_A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
@@ -87,7 +87,7 @@ context("Head agency settings page", () => {
       );
     });
 
-    it("the add button should be enabled when the head account is up to date", function () {
+    it("the add button should be enabled when the gestionnaire aap account is up to date", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
@@ -95,7 +95,7 @@ context("Head agency settings page", () => {
       );
     });
 
-    it("display all accounts, except the head agency account, with info details", function () {
+    it("display all accounts, except the gestionnaire aap account, with info details", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] li').should("have.length", 3);

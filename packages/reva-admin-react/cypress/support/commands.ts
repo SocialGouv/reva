@@ -53,11 +53,11 @@ function auth({ url, token }: { url: string; token: string }) {
 }
 
 Cypress.Commands.add("collaborateur", (url = "/") => {
-  auth({ url, token: "auth/agency-token.json" });
+  auth({ url, token: "auth/collaborateur-token.json" });
 });
 
 Cypress.Commands.add("gestionnaire", (url = "/") => {
-  auth({ url, token: "auth/head-agency-token.json" });
+  auth({ url, token: "auth/gestionnaire-token.json" });
 });
 
 Cypress.Commands.add("admin", (url = "/") => {

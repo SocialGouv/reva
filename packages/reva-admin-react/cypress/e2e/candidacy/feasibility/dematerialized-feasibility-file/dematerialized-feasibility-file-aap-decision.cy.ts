@@ -10,14 +10,14 @@ function visitFeasibilityDecision() {
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
-      "account/head-agency-cgu-accepted.json",
+      "account/gestionnaire-cgu-accepted.json",
     );
     stubQuery(
       req,
       "getOrganismForAAPVisibilityCheck",
       "visibility/organism.json",
     );
-    stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
+    stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
 
     stubQuery(
       req,

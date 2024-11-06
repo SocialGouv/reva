@@ -26,14 +26,14 @@ function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE) {
       stubQuery(
         req,
         "getMaisonMereCGUQuery",
-        "account/head-agency-cgu-accepted.json",
+        "account/gestionnaire-cgu-accepted.json",
       );
       stubQuery(
         req,
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
-      stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
+      stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
       candidacy.data.getCandidacyById.feasibility = feasibility;
       stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
 

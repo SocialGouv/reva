@@ -18,7 +18,7 @@ function interceptCandidacies({
         "features/active-features.json",
       );
       stubQuery(req, "getOrganismForAAPVisibilityCheck", visibility);
-      stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
+      stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
       stubQuery(
         req,
         "getCandidacyByStatusCount",
@@ -30,14 +30,14 @@ function interceptCandidacies({
         req,
         "getMaisonMereCGUQuery",
         isCguAccepted
-          ? "account/head-agency-cgu-accepted.json"
-          : "account/head-agency-cgu-new.json",
+          ? "account/gestionnaire-cgu-accepted.json"
+          : "account/gestionnaire-cgu-new.json",
       );
     });
   });
 }
 
-context("for an head agency", () => {
+context("for an gestionnaire aap", () => {
   context("when latest cgu aren't accepted", () => {
     it("display a cgu notice", function () {
       interceptCandidacies({
@@ -85,8 +85,8 @@ context("for an head agency", () => {
   });
 });
 
-context("for an agency", () => {
-  it("should not display a cgu notice, even if the head agency hasn't accepted the latest CGU", function () {
+context("for an aap collaborateur", () => {
+  it("should not display a cgu notice, even if the gestionnaire aap hasn't accepted the latest CGU", function () {
     interceptCandidacies({
       isVisibleInCandidateSearchResults: true,
       isCguAccepted: false,
@@ -101,7 +101,7 @@ context("for an agency", () => {
     cy.get('[data-test="new-cgu-notice"]').should("not.exist");
   });
 
-  it("display a not-visible notice when agency is closed", function () {
+  it("display a not-visible notice when organism is closed", function () {
     interceptCandidacies({
       isVisibleInCandidateSearchResults: false,
       isCguAccepted: false,

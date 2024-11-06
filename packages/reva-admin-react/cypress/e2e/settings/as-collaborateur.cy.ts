@@ -9,7 +9,7 @@ function visitSettings({
   modaliteAccompagnementRenseigneeEtValide: boolean;
   isVisibleInCandidateSearchResults: boolean;
 }) {
-  cy.fixture("account/agency-settings.json").then((settings) => {
+  cy.fixture("account/collaborateur-settings.json").then((settings) => {
     settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnement =
       modaliteAccompagnement;
     settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnementRenseigneeEtValide =
@@ -29,11 +29,11 @@ function visitSettings({
         "visibility/organism.json",
       );
       stubQuery(req, "getAgencySettingsInfo", settings);
-      stubQuery(req, "getAccountInfo", "account/agency-info.json");
+      stubQuery(req, "getAccountInfo", "account/collaborateur-info.json");
       stubQuery(
         req,
         "getMaisonMereCGUQuery",
-        "account/head-agency-cgu-new.json",
+        "account/gestionnaire-cgu-new.json",
       );
     });
   });
