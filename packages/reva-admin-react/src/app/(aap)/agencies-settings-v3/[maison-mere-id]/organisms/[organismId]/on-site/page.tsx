@@ -18,7 +18,7 @@ export default function OnSitePage() {
     organism?.managedDegrees?.[0] &&
     (organism?.formacodes?.[0] || organism?.conventionCollectives?.[0]);
 
-  const isAgencyInformationComplete =
+  const isLieuAccueilInformationComplete =
     organism.informationsCommerciales?.nom &&
     organism.informationsCommerciales?.adresseNumeroEtNomDeRue &&
     organism.informationsCommerciales?.adresseVille &&
@@ -67,7 +67,9 @@ export default function OnSitePage() {
           title="Informations affichées aux candidats"
           titleIconClass="fr-icon-information-fill"
           isEditable
-          status={isAgencyInformationComplete ? "COMPLETED" : "TO_COMPLETE"}
+          status={
+            isLieuAccueilInformationComplete ? "COMPLETED" : "TO_COMPLETE"
+          }
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/information`}
         >
           <div className="flex flex-col gap-2">
