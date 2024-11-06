@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   UserAccountForm,
   UserAccountFormData,
-} from "../_components/head-agency-user-account/UserAccountForm";
+} from "../_components/gestionnaire-maison-mere-aap-user-account/UserAccountForm";
 import { useAddUserAccountPage } from "./addUserAccount.hook";
 
 const AddUserAccountPage = () => {

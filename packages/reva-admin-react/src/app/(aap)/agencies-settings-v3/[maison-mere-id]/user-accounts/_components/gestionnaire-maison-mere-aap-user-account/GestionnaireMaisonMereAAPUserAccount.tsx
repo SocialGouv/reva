@@ -8,7 +8,7 @@ import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
 import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
 import { DisableAccount } from "@/components/disable-account";
 
-const HeadAgencyUserAccount = () => {
+const GestionnaireMaisonMereAAPUserAccount = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();
   const router = useRouter();
   const {
@@ -97,4 +97,4 @@ const HeadAgencyUserAccount = () => {
   );
 };
 
-export default HeadAgencyUserAccount;
+export default GestionnaireMaisonMereAAPUserAccount;
