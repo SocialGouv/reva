@@ -1,12 +1,13 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useUpdateUserAccountPage } from "./agencyUserAccount.hook";
+import { useUpdateUserAccountPage } from "./collaborateurUserAccount.hook";
 import { UserAccountForm } from "./UserAccountForm";
 import { useMemo } from "react";
 
 const AgencyUserAccount = () => {
-  const { userAccount, agenciesInfoStatus } = useUpdateUserAccountPage();
+  const { userAccount, collaborateurOrganismsInfoStatus } =
+    useUpdateUserAccountPage();
 
   const defaultValues = useMemo(
     () => ({
@@ -29,7 +30,7 @@ const AgencyUserAccount = () => {
   );
 
   if (
-    agenciesInfoStatus !== "success" ||
+    collaborateurOrganismsInfoStatus !== "success" ||
     !userAccount ||
     !userAccount.organism
   ) {
@@ -45,7 +46,7 @@ const AgencyUserAccount = () => {
       <UserAccountForm
         defaultValues={defaultValues}
         emailFieldDisabled
-        agency={{
+        organism={{
           id: userAccount.organism.id,
           label: `${userAccount.organism.label} 
         ${`( ${

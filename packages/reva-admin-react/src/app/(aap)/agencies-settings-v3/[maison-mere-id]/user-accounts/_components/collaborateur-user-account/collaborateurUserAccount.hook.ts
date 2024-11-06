@@ -2,8 +2,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const getAgenciesInfoQuery = graphql(`
-  query getAgenciesInfoForUserAccountPage {
+const getCollaborateurOrganismsInfoQuery = graphql(`
+  query getCollaborateurOrganismsInfoForUserAccountPage {
     account_getAccountForConnectedUser {
       id
       firstname
@@ -27,15 +27,19 @@ const getAgenciesInfoQuery = graphql(`
 export const useUpdateUserAccountPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: agenciesInfo, status: agenciesInfoStatus } = useSuspenseQuery({
+  const {
+    data: collaborateurOrganismsInfo,
+    status: collaborateurOrganismsInfoStatus,
+  } = useSuspenseQuery({
     queryKey: ["organisms", "updateUserAccount"],
-    queryFn: () => graphqlClient.request(getAgenciesInfoQuery),
+    queryFn: () => graphqlClient.request(getCollaborateurOrganismsInfoQuery),
   });
 
-  const userAccount = agenciesInfo?.account_getAccountForConnectedUser;
+  const userAccount =
+    collaborateurOrganismsInfo?.account_getAccountForConnectedUser;
 
   return {
     userAccount,
-    agenciesInfoStatus,
+    collaborateurOrganismsInfoStatus,
   };
 };

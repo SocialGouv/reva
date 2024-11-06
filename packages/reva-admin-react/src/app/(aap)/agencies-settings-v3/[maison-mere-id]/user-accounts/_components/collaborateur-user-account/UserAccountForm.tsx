@@ -31,9 +31,9 @@ export type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
 
 export const UserAccountForm = ({
   defaultValues,
-  agency,
+  organism,
 }: {
-  agency: { id: string; label: string };
+  organism: { id: string; label: string };
   defaultValues?: UserAccountFormData;
   emailFieldDisabled?: boolean;
 }) => {
@@ -41,7 +41,7 @@ export const UserAccountForm = ({
     resolver: zodResolver(userAccountFormSchema),
     defaultValues: defaultValues || {
       modalitesAccompagnement: "REMOTE",
-      organismId: agency.id,
+      organismId: organism.id,
     },
   });
 
@@ -132,8 +132,8 @@ export const UserAccountForm = ({
               ...register("organismId"),
             }}
           >
-            <option key={agency.id} value={agency.id}>
-              {agency.label}
+            <option key={organism.id} value={organism.id}>
+              {organism.label}
             </option>
           </Select>
         </fieldset>
