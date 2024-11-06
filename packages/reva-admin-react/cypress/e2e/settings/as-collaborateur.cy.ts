@@ -28,7 +28,7 @@ function visitSettings({
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
-      stubQuery(req, "getAgencySettingsInfo", settings);
+      stubQuery(req, "getCollaborateurSettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/collaborateur-info.json");
       stubQuery(
         req,
@@ -41,68 +41,68 @@ function visitSettings({
   cy.collaborateur("/agencies-settings-v3/");
 }
 
-context("Agency settings page", () => {
+context("Collaborateur AAP settings page", () => {
   it("do not display general information and user account list sections", function () {
     visitSettings({
       modaliteAccompagnement: "A_DISTANCE",
       modaliteAccompagnementRenseigneeEtValide: true,
       isVisibleInCandidateSearchResults: true,
     });
-    cy.wait("@getAgencySettingsInfo");
+    cy.wait("@getCollaborateurSettingsInfo");
     // Make  sure the page is ready before checking non-existence of the general information section
     cy.get('[data-test="remote-organism"]').should("exist");
     cy.get('[data-test="general-information"]').should("not.exist");
     cy.get('[data-test="user-accounts"]').should("not.exist");
   });
 
-  context("for a remote agency", () => {
+  context("for a remote organism", () => {
     it("display a remote and user accounts section, no on-site section", function () {
       visitSettings({
         modaliteAccompagnement: "A_DISTANCE",
         modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgencySettingsInfo");
+      cy.wait("@getCollaborateurSettingsInfo");
       cy.get('[data-test="remote-organism"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
-      cy.get('[data-test="on-site-agency"]').should("not.exist");
+      cy.get('[data-test="on-site-organism"]').should("not.exist");
       cy.get('[data-test="on-site-organisms"]').should("not.exist");
     });
 
-    it("display a remote section with a 'visible badge' when agency is opened for new candidacies", function () {
+    it("display a remote section with a 'visible badge' when organism is opened for new candidacies", function () {
       visitSettings({
         modaliteAccompagnement: "A_DISTANCE",
         modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgencySettingsInfo");
+      cy.wait("@getCollaborateurSettingsInfo");
       cy.get(
         '[data-test="remote-organism"] [data-test="visible-badge"]',
       ).should("exist");
     });
 
-    it("display a remote section with a 'invisible badge' when agency is opened for new candidacies", function () {
+    it("display a remote section with a 'invisible badge' when organism is opened for new candidacies", function () {
       visitSettings({
         modaliteAccompagnement: "A_DISTANCE",
         modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: false,
       });
-      cy.wait("@getAgencySettingsInfo");
+      cy.wait("@getCollaborateurSettingsInfo");
       cy.get(
         '[data-test="remote-organism"] [data-test="invisible-badge"]',
       ).should("exist");
     });
   });
 
-  context("for an on-site agency", () => {
+  context("for an on-site organism", () => {
     it("display a on-site and user account sections and no remote section", function () {
       visitSettings({
         modaliteAccompagnement: "LIEU_ACCUEIL",
         modaliteAccompagnementRenseigneeEtValide: true,
         isVisibleInCandidateSearchResults: true,
       });
-      cy.wait("@getAgencySettingsInfo");
-      cy.get('[data-test="on-site-agency"]').should("exist");
+      cy.wait("@getCollaborateurSettingsInfo");
+      cy.get('[data-test="on-site-organism"]').should("exist");
       cy.get('[data-test="user-account"]').should("exist");
       cy.get('[data-test="remote-organism"]').should("not.exist");
       cy.get('[data-test="on-site-organisms"]').should("not.exist");

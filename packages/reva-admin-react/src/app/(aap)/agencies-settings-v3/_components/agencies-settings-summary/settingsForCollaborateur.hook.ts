@@ -3,8 +3,8 @@ import { graphql } from "@/graphql/generated";
 
 import { useQuery } from "@tanstack/react-query";
 
-const AgencySettingsInfoQuery = graphql(`
-  query getAgencySettingsInfo {
+const CollaborareurSettingsInfoQuery = graphql(`
+  query getCollaborateurSettingsInfo {
     account_getAccountForConnectedUser {
       maisonMereAAP {
         id
@@ -28,24 +28,27 @@ const AgencySettingsInfoQuery = graphql(`
   }
 `);
 
-export const useAgencySettings = () => {
+export const useCollaborateurSettings = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: agencySettingsResponse, status: agencySettingsStatus } =
-    useQuery({
-      queryKey: ["agencySettingsInfo"],
-      queryFn: () => graphqlClient.request(AgencySettingsInfoQuery),
-    });
+  const {
+    data: collaborateurSettingsResponse,
+    status: collaborateurSettingsStatus,
+  } = useQuery({
+    queryKey: ["collaborateurSettingsInfo"],
+    queryFn: () => graphqlClient.request(CollaborareurSettingsInfoQuery),
+  });
 
-  const account = agencySettingsResponse?.account_getAccountForConnectedUser;
+  const account =
+    collaborateurSettingsResponse?.account_getAccountForConnectedUser;
   const organism =
-    agencySettingsResponse?.account_getAccountForConnectedUser?.organism;
+    collaborateurSettingsResponse?.account_getAccountForConnectedUser?.organism;
 
   const maisonMereAAPId = account?.maisonMereAAP?.id;
 
   return {
-    agencySettingsResponse,
-    agencySettingsStatus,
+    collaborateurSettingsResponse,
+    collaborateurSettingsStatus,
     account,
     organism,
     maisonMereAAPId,

@@ -1,11 +1,11 @@
-import { useAgencySettings } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/settingsForCollaborateur.hook";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { AAPSettingsSummarySectionRemote } from "../AAPSettingsSummarySectionRemote";
+import { useCollaborateurSettings } from "./settingsForCollaborateur.hook";
 
 export const SettingsSummaryForCollaborateur = () => {
-  const { organism, account, maisonMereAAPId } = useAgencySettings();
+  const { organism, account, maisonMereAAPId } = useCollaborateurSettings();
 
   if (!account || !organism) return null;
 
@@ -24,7 +24,7 @@ export const SettingsSummaryForCollaborateur = () => {
         )}
         {organism?.modaliteAccompagnement === "LIEU_ACCUEIL" && (
           <EnhancedSectionCard
-            data-test="on-site-agency"
+            data-test="on-site-organism"
             title="Accompagnement en présentiel"
             buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"

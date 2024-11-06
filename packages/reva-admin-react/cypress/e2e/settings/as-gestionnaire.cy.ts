@@ -75,7 +75,7 @@ context("Gestionnaire AAP settings page", () => {
     cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
     cy.get('[data-test="remote-organism"]').should("exist");
     cy.get('[data-test="on-site-organisms"]').should("exist");
-    cy.get('[data-test="on-site-agency"]').should("not.exist");
+    cy.get('[data-test="on-site-organism"]').should("not.exist");
   });
 
   context("on the account list section", () => {
