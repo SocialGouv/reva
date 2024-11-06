@@ -33,15 +33,15 @@ export type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
 export const UserAccountForm = ({
   onSubmit,
   defaultValues,
-  remoteAgency,
-  onSiteAgencies,
+  remoteOrganism,
+  onSiteOrganisms,
   backUrl,
   disabled,
   FooterComponent,
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
-  remoteAgency: { id: string; label: string };
-  onSiteAgencies: { id: string; label: string }[];
+  remoteOrganism: { id: string; label: string };
+  onSiteOrganisms: { id: string; label: string }[];
   defaultValues?: UserAccountFormData;
   backUrl: string;
   disabled?: boolean;
@@ -51,7 +51,7 @@ export const UserAccountForm = ({
     resolver: zodResolver(userAccountFormSchema),
     defaultValues: defaultValues || {
       modalitesAccompagnement: "REMOTE",
-      organismId: remoteAgency.id,
+      organismId: remoteOrganism.id,
     },
   });
 
@@ -71,10 +71,10 @@ export const UserAccountForm = ({
     reset(
       defaultValues || {
         modalitesAccompagnement: "REMOTE",
-        organismId: remoteAgency.id,
+        organismId: remoteOrganism.id,
       },
     );
-  }, [defaultValues, remoteAgency.id, reset]);
+  }, [defaultValues, remoteOrganism.id, reset]);
 
   useEffect(() => {
     handleReset();
@@ -88,8 +88,8 @@ export const UserAccountForm = ({
     setValue(
       "organismId",
       newModaliteAccompagnement === "REMOTE"
-        ? remoteAgency.id
-        : onSiteAgencies[0].id,
+        ? remoteOrganism.id
+        : onSiteOrganisms[0].id,
     );
   };
 
@@ -154,7 +154,7 @@ export const UserAccountForm = ({
           <RadioButtons
             classes={{ content: "grid grid-cols-1 md:grid-cols-2" }}
             orientation="horizontal"
-            disabled={onSiteAgencies.length == 0 || disabled}
+            disabled={onSiteOrganisms.length == 0 || disabled}
             options={[
               {
                 label: "Accompagnement à distance",
@@ -185,9 +185,9 @@ export const UserAccountForm = ({
             }}
           >
             {modalitesAccompagnement === "REMOTE" ? (
-              <option value={remoteAgency.id}>{remoteAgency.label}</option>
+              <option value={remoteOrganism.id}>{remoteOrganism.label}</option>
             ) : (
-              onSiteAgencies.map((la) => (
+              onSiteOrganisms.map((la) => (
                 <option key={la.id} value={la.id}>
                   {la.label}
                 </option>

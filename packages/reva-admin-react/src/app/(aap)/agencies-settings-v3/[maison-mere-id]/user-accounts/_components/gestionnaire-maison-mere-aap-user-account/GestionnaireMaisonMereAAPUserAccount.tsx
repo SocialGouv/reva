@@ -14,7 +14,7 @@ const GestionnaireMaisonMereAAPUserAccount = () => {
   const {
     userAccount,
     remoteOrganism,
-    onsiteOrganisms,
+    onSiteOrganisms,
     agenciesInfoIsSuccess,
     updateUserAccount,
     isAdmin,
@@ -75,14 +75,14 @@ const GestionnaireMaisonMereAAPUserAccount = () => {
         disabled={!!userAccount?.disabledAt}
         onSubmit={handleFormSubmit}
         defaultValues={defaultValues}
-        remoteAgency={{
+        remoteOrganism={{
           id: remoteOrganism?.id,
           label:
             remoteOrganism?.informationsCommerciales?.nom ||
             remoteOrganism?.label ||
             "",
         }}
-        onSiteAgencies={onsiteOrganisms.map((o) => ({
+        onSiteOrganisms={onSiteOrganisms.map((o) => ({
           id: o.id,
           label: o.informationsCommerciales?.nom || o.label,
         }))}

@@ -12,7 +12,7 @@ import { useAddUserAccountPage } from "./addUserAccount.hook";
 const AddUserAccountPage = () => {
   const {
     remoteOrganism,
-    onsiteOrganisms,
+    onSiteOrganisms,
     createUserAccount,
     isAdmin,
     maisonMereAAPId,
@@ -42,14 +42,14 @@ const AddUserAccountPage = () => {
       <FormOptionalFieldsDisclaimer />
       <UserAccountForm
         onSubmit={handleFormSubmit}
-        remoteAgency={{
+        remoteOrganism={{
           id: remoteOrganism?.id,
           label:
             remoteOrganism?.informationsCommerciales?.nom ||
             remoteOrganism?.label ||
             "",
         }}
-        onSiteAgencies={onsiteOrganisms.map((o) => ({
+        onSiteOrganisms={onSiteOrganisms.map((o) => ({
           id: o.id,
           label: o.informationsCommerciales?.nom || o.label,
         }))}

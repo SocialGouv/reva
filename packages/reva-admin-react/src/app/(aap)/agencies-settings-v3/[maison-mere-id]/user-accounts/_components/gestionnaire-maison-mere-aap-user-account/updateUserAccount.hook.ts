@@ -129,7 +129,7 @@ export const useUpdateUserAccountPage = ({
   const remoteOrganism = agencies.find(
     (o) => o.modaliteAccompagnement === "A_DISTANCE",
   );
-  const onsiteOrganisms = agencies.filter(
+  const onSiteOrganisms = agencies.filter(
     (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
   );
 
@@ -142,7 +142,7 @@ export const useUpdateUserAccountPage = ({
 
   return {
     remoteOrganism,
-    onsiteOrganisms,
+    onSiteOrganisms,
     userAccount,
     agenciesInfoIsSuccess,
     updateUserAccount,

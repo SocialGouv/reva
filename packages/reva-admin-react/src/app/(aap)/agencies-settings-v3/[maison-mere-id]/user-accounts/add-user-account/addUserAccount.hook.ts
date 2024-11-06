@@ -98,13 +98,13 @@ export const useAddUserAccountPage = () => {
   const remoteOrganism = agencies.find(
     (o) => o.modaliteAccompagnement === "A_DISTANCE",
   );
-  const onsiteOrganisms = agencies.filter(
+  const onSiteOrganisms = agencies.filter(
     (o) => o.modaliteAccompagnement === "LIEU_ACCUEIL",
   );
 
   return {
     remoteOrganism,
-    onsiteOrganisms,
+    onSiteOrganisms,
     createUserAccount,
     isAdmin,
     maisonMereAAPId,
