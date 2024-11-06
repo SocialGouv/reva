@@ -39,7 +39,7 @@ export interface OrganismInformationsCommerciales {
   conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
 }
 
-export interface CreateAgencyInfoInput {
+export interface CreateLieuAccueilInfoInput {
   nom: string;
   adresseNumeroEtNomDeRue: string;
   adresseInformationsComplementaires?: string;

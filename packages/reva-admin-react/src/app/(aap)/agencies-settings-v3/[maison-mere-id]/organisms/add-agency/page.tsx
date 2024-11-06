@@ -7,10 +7,12 @@ import { OrganismInformationFormData } from "../_components/organismInformationF
 import { useAddAgencyPage } from "./addAgency.hook";
 
 const AddAgencyPage = () => {
-  const { createAgencyInfo, isAdmin } = useAddAgencyPage();
+  const { createLieuAccueilInfo, isAdmin } = useAddAgencyPage();
   const { "maison-mere-id": maisonMereAAPId } = useParams();
-  const handleCreateAgencyInfo = async (data: OrganismInformationFormData) => {
-    await createAgencyInfo({
+  const handleCreateLieuAccueilInfo = async (
+    data: OrganismInformationFormData,
+  ) => {
+    await createLieuAccueilInfo({
       ...data,
       conformeNormesAccessibilite:
         data.conformeNormesAccessibilite as ConformiteNormeAccessibilite,
@@ -18,7 +20,7 @@ const AddAgencyPage = () => {
   };
   return (
     <OrganismInformationForm
-      mutationOnSubmit={handleCreateAgencyInfo}
+      mutationOnSubmit={handleCreateLieuAccueilInfo}
       pathRedirection={
         isAdmin
           ? `/maison-mere-aap/${maisonMereAAPId}`

@@ -8,19 +8,19 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import { createOrganism } from "../database/organisms";
-import { CreateAgencyInfoInput } from "../organism.types";
+import { CreateLieuAccueilInfoInput } from "../organism.types";
 import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
 
-export const createAgencyInfo = async ({
+export const createLieuAccueilInfo = async ({
   keycloakId,
   params,
 }: {
   keycloakId: string;
-  params: CreateAgencyInfoInput;
+  params: CreateLieuAccueilInfoInput;
 }) => {
   try {
     const account = await getAccountByKeycloakId({

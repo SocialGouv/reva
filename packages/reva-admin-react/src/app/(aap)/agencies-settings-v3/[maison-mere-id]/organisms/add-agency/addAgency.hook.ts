@@ -1,15 +1,15 @@
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { CreateAgencyInfoInput } from "@/graphql/generated/graphql";
+import { CreateLieuAccueilInfoInput } from "@/graphql/generated/graphql";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const createAgencyInfoMutation = graphql(`
+const createLieuAccueilInfoMutation = graphql(`
   mutation createAgencyInfoMutationForAddAgencePage(
-    $data: CreateAgencyInfoInput!
+    $data: CreateLieuAccueilInfoInput!
   ) {
-    organism_createAgencyInfo(data: $data)
+    organism_createLieuAccueilInfo(data: $data)
   }
 `);
 
@@ -18,14 +18,14 @@ export const useAddAgencyPage = () => {
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
 
-  const { mutateAsync: createAgencyInfo } = useMutation({
-    mutationFn: (data: CreateAgencyInfoInput) =>
-      graphqlClient.request(createAgencyInfoMutation, {
+  const { mutateAsync: createLieuAccueilInfo } = useMutation({
+    mutationFn: (data: CreateLieuAccueilInfoInput) =>
+      graphqlClient.request(createLieuAccueilInfoMutation, {
         data,
       }),
     mutationKey: ["organism"],
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["organisms"] }),
   });
 
-  return { createAgencyInfo, isAdmin };
+  return { createLieuAccueilInfo, isAdmin };
 };

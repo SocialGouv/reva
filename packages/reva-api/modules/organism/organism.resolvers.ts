@@ -23,7 +23,7 @@ import {
 import { acceptCgu } from "./features/acceptCgu";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
-import { createAgencyInfo } from "./features/createAgencyInfo";
+import { createLieuAccueilInfo } from "./features/createLieuAccueilInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
@@ -57,7 +57,7 @@ import { updateOrganismDegreesAndDomaines } from "./features/updateOrganismDegre
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { resolversSecurityMap } from "./organism.security";
 import {
-  CreateAgencyInfoInput,
+  CreateLieuAccueilInfoInput,
   CreateOrganismAccountInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
@@ -309,12 +309,12 @@ const unsafeResolvers = {
         fermePourAbsenceOuConges,
       });
     },
-    organism_createAgencyInfo: async (
+    organism_createLieuAccueilInfo: async (
       _parent: unknown,
       {
         data,
       }: {
-        data: CreateAgencyInfoInput;
+        data: CreateLieuAccueilInfoInput;
       },
       context: GraphqlContext,
     ) => {
@@ -325,7 +325,7 @@ const unsafeResolvers = {
         );
       }
 
-      const result = await createAgencyInfo({
+      const result = await createLieuAccueilInfo({
         params: data,
         keycloakId: context.auth.userInfo.sub,
       });
@@ -560,7 +560,7 @@ const unsafeResolvers = {
               throw new Error("Utilisateur non autorisé");
             }
           }
-          //if user is a "aap" he can access his own organism/agency
+          //if user is a "aap" he can access his own organism
           else if (roles.includes("manage_candidacy")) {
             if (
               !isUserOwnerOfOrganism({
