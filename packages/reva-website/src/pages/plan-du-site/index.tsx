@@ -35,7 +35,7 @@ const SiteMapPage = () => {
           </ul>
         </li>
         <li>
-          <Link href="/cgu-candidat">CGU</Link>
+          <Link href="/cgu">CGU</Link>
         </li>
         <li>
           <Link href="/mentions-legales">Mentions légales</Link>

@@ -90,16 +90,8 @@ export const Footer = ({ className }: { className?: string }) => {
               </Link>
             </li>
             <li className="fr-footer__bottom-item">
-              <Link className="fr-footer__bottom-link" href="/cgu-candidat/">
-                CGU candidat
-              </Link>
-            </li>
-            <li className="fr-footer__bottom-item">
-              <Link
-                className="fr-footer__bottom-link"
-                href="/espace-professionnel/cgu/"
-              >
-                CGU structures professionnelles
+              <Link className="fr-footer__bottom-link" href="/cgu/">
+                CGU
               </Link>
             </li>
             <li className="fr-footer__bottom-item">

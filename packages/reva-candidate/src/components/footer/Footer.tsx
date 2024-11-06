@@ -84,7 +84,7 @@ export const Footer = () => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/../cgu-candidat/">
+            <Link className="fr-footer__bottom-link" href="/../cgu/">
               CGU
             </Link>
           </li>

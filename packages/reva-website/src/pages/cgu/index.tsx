@@ -1,8 +1,8 @@
 import { Cgu } from "@/components/cgu/Cgu";
 import { HardCodedCgu } from "@/components/cgu/HardCodedCgu";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
 import { GetCguQuery } from "@/graphql/generated/graphql";
 import { getCgu } from "@/utils/strapiQueries";
 import Head from "next/head";
@@ -21,7 +21,7 @@ const CguProPage = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
           professionnel en main
         </title>
       </Head>
-      <OrganismBackground>
+      <NeutralBackground>
         {showFromStrapi ? (
           <>
             <h1>{getCguResponse?.legals?.data[0]?.attributes?.titre}</h1>
@@ -43,7 +43,7 @@ const CguProPage = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
             <HardCodedCgu />
           </>
         )}
-      </OrganismBackground>
+      </NeutralBackground>
     </MainLayout>
   );
 };
