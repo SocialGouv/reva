@@ -4,10 +4,10 @@ import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
 import OrganismInformationForm from "../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../_components/organismInformationFormSchema";
-import { useAddAgencyPage } from "./addAgency.hook";
+import { useAddLieuAccueilPage } from "./addLieuAccueil.hook";
 
-const AddAgencyPage = () => {
-  const { createLieuAccueilInfo, isAdmin } = useAddAgencyPage();
+const AddLieuAccueilPage = () => {
+  const { createLieuAccueilInfo, isAdmin } = useAddLieuAccueilPage();
   const { "maison-mere-id": maisonMereAAPId } = useParams();
   const handleCreateLieuAccueilInfo = async (
     data: OrganismInformationFormData,
@@ -30,4 +30,4 @@ const AddAgencyPage = () => {
   );
 };
 
-export default AddAgencyPage;
+export default AddLieuAccueilPage;

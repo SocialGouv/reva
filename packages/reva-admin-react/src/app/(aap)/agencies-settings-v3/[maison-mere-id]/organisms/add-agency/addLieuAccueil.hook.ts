@@ -6,14 +6,14 @@ import { CreateLieuAccueilInfoInput } from "@/graphql/generated/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const createLieuAccueilInfoMutation = graphql(`
-  mutation createAgencyInfoMutationForAddAgencePage(
+  mutation createLieuAccueilInfoMutationForAddAgencePage(
     $data: CreateLieuAccueilInfoInput!
   ) {
     organism_createLieuAccueilInfo(data: $data)
   }
 `);
 
-export const useAddAgencyPage = () => {
+export const useAddLieuAccueilPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
