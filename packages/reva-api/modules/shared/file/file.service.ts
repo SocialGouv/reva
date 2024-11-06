@@ -6,7 +6,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import filetype, { filetypemime } from "magic-bytes.js";
+import { filetypemime } from "magic-bytes.js";
 
 import { buffer } from "stream/consumers";
 import { logger } from "../logger";
