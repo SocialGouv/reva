@@ -3,8 +3,8 @@ import { graphql } from "@/graphql/generated";
 
 import { useQuery } from "@tanstack/react-query";
 
-const HeadAgencyInfoQuery = graphql(`
-  query getHeadAgencyInfo {
+const GestionnaireMaisonMerAAPOrganismInfoQuery = graphql(`
+  query getGestionnaireMaisonMerAAPOrganismInfoQuery {
     account_getAccountForConnectedUser {
       organism {
         contactAdministrativeEmail
@@ -19,15 +19,19 @@ export const useOrganismInformationForm = () => {
 
   const { data: organismData } = useQuery({
     queryKey: ["organism"],
-    queryFn: () => graphqlClient.request(HeadAgencyInfoQuery),
+    queryFn: () =>
+      graphqlClient.request(GestionnaireMaisonMerAAPOrganismInfoQuery),
   });
 
-  const headAgencyPhone =
+  const gestionnaireMaisonMerAAPOrganismPhone =
     organismData?.account_getAccountForConnectedUser?.organism
       ?.contactAdministrativePhone;
-  const headAgencyEmail =
+  const gestionnaireMaisonMerAAPOrganismEmail =
     organismData?.account_getAccountForConnectedUser?.organism
       ?.contactAdministrativeEmail;
 
-  return { headAgencyPhone, headAgencyEmail };
+  return {
+    gestionnaireMaisonMerAAPOrganismPhone,
+    gestionnaireMaisonMerAAPOrganismEmail,
+  };
 };

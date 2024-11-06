@@ -43,7 +43,10 @@ const OrganismInformationForm = ({
     [defaultData],
   );
 
-  const { headAgencyPhone, headAgencyEmail } = useOrganismInformationForm();
+  const {
+    gestionnaireMaisonMerAAPOrganismPhone,
+    gestionnaireMaisonMerAAPOrganismEmail,
+  } = useOrganismInformationForm();
 
   const methods = useForm<OrganismInformationFormData>({
     defaultValues,
@@ -71,15 +74,15 @@ const OrganismInformationForm = ({
     handleReset();
   }, [handleReset]);
 
-  const handleCheckUseHeadAgencyInfo = (
+  const handleCheckUseGestionnaireMaisonMerAAPOrganismEmailInfo = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (e.target.checked) {
-      if (headAgencyPhone) {
-        setValue("telephone", headAgencyPhone);
+      if (gestionnaireMaisonMerAAPOrganismPhone) {
+        setValue("telephone", gestionnaireMaisonMerAAPOrganismPhone);
       }
-      if (headAgencyEmail) {
-        setValue("emailContact", headAgencyEmail);
+      if (gestionnaireMaisonMerAAPOrganismEmail) {
+        setValue("emailContact", gestionnaireMaisonMerAAPOrganismEmail);
       }
     } else {
       setValue("telephone", "");
@@ -180,7 +183,8 @@ const OrganismInformationForm = ({
                     label:
                       "Utiliser le téléphone et l'e-mail renseignés dans les informations générales.",
                     nativeInputProps: {
-                      onChange: handleCheckUseHeadAgencyInfo,
+                      onChange:
+                        handleCheckUseGestionnaireMaisonMerAAPOrganismEmailInfo,
                     },
                   },
                 ]}
