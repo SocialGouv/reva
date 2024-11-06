@@ -153,7 +153,7 @@ export const getWhereClauseFromStatusFilter = (
         ...whereClause,
         candidacyDropOut: null,
         status: {
-          in: ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_FAISABILITE_COMPLET"],
+          in: ["DOSSIER_FAISABILITE_ENVOYE", "DOSSIER_FAISABILITE_COMPLET"],
         },
       };
       break;
