@@ -13,6 +13,7 @@ import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCa
 import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { updateCertification } from "./updateCertification";
+import { resetTrainingInformation } from "../../training/features/resetTrainingInformation";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,
@@ -72,6 +73,17 @@ export const updateCertificationOfCandidacy = async ({
       candidacyId,
       organismId: null,
     });
+
+    if (candidacy.status === CandidacyStatusStep.PARCOURS_ENVOYE) {
+      await resetTrainingInformation({
+        candidacyId,
+        // We don't need to change the status, it will be done in the next step if relevant
+        updateStatusToValidation: false,
+        userKeycloakId,
+        userEmail,
+        userRoles,
+      });
+    }
 
     const hasActiveCandidacyInProject =
       candidacy.status === CandidacyStatusStep.PROJET;

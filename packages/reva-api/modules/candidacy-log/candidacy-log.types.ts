@@ -23,6 +23,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_ARCHIVED"
         | "CANDIDACY_UNARCHIVED"
         | "CANDIDACY_TAKEN_OVER"
+        | "TRAINING_INFO_RESET"
         | "TRAINING_FORM_SUBMITTED"
         | "TRAINING_FORM_CONFIRMED"
         | "CANDIDACY_DROPPED_OUT"

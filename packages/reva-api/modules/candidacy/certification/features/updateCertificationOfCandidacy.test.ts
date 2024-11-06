@@ -19,7 +19,7 @@ import {
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { certificationId2FromSeed } from "../../../../test/fixtures/candidacy";
 import { basicTrainingForm } from "../../../../test/fixtures/training";
-import { Candidacy } from "@prisma/client";
+import { Candidacy, CandidacyStatusStep } from "@prisma/client";
 
 let candidacyUnifvae: Candidacy;
 
@@ -125,4 +125,39 @@ test("a candidate should not be able to select a new certification after the tra
   expect(resp.json().errors?.[0].message).toEqual(
     "Impossible de changer de certification après avoir confirmé le parcours",
   );
+});
+
+test("should reset the training and status when selecting a new certification", async () => {
+  await submitTraining();
+  await updateCertification();
+
+  const candidacyId = candidacyUnifvae.id;
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+  });
+  const basicSkillsCount = await prismaClient.basicSkillOnCandidacies.count({
+    where: { candidacyId },
+  });
+  const trainingCount = await prismaClient.trainingOnCandidacies.count({
+    where: { candidacyId },
+  });
+  const financingMethodCount =
+    await prismaClient.candidacyOnCandidacyFinancingMethod.count({
+      where: { candidacyId },
+    });
+
+  expect(candidacy).toMatchObject({
+    status: CandidacyStatusStep.PROJET,
+    certificateSkills: null,
+    otherTraining: null,
+    individualHourCount: null,
+    collectiveHourCount: null,
+    additionalHourCount: null,
+    isCertificationPartial: null,
+    estimatedCost: null,
+  });
+
+  expect(basicSkillsCount).toEqual(0);
+  expect(trainingCount).toEqual(0);
+  expect(financingMethodCount).toEqual(0);
 });

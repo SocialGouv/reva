@@ -65,6 +65,8 @@ export const getCandidacyLogMessage = ({
           ? `Nouvelle ccn: ${details.ccn?.label} (${details.ccn?.idcc}).`
           : ""
       }`;
+    case "TRAINING_INFO_RESET":
+      return "Parcours candidat réinitialisé.";
     case "TRAINING_FORM_SUBMITTED":
       return "Parcours candidat envoyé.";
     case "TRAINING_FORM_CONFIRMED":
