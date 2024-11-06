@@ -2,7 +2,7 @@ import { Impersonate } from "@/components/impersonate";
 import { Account } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
-export const HeadAgencySettingsSectionAccountList = ({
+export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
   maisonMereAAPId,
   gestionnaireAccountId,
   organisms,

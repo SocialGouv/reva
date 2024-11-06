@@ -1,6 +1,6 @@
 import { AgenciesSettingsSectionOnSite } from "@/app/(aap)/agencies-settings-v3/_components/AgenciesSettingsSectionOnSite";
 import { AgencySettingsSummarySectionRemote } from "@/app/(aap)/agencies-settings-v3/_components/AgencySettingsSummarySectionRemote";
-import { HeadAgencySettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/HeadAgencySettingsSectionAccountList";
+import { GestionnaireMaisonMereAAPSettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/GestionnaireMaisonMereAAPSettingsSectionAccountList";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Account, MaisonMereAap, Organism } from "@/graphql/generated/graphql";
@@ -121,7 +121,7 @@ export const SettingsSummaryForGestionnaire = ({
         customButtonTitle={"Créer un compte"}
       >
         {hasOtherAccounts ? (
-          <HeadAgencySettingsSectionAccountList
+          <GestionnaireMaisonMereAAPSettingsSectionAccountList
             gestionnaireAccountId={gestionnaireAccountId}
             organisms={maisonMereAAP.organisms}
             maisonMereAAPId={maisonMereAAP.id}
