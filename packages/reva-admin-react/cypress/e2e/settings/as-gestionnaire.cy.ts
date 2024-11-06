@@ -24,7 +24,7 @@ function visitSettings({
         "getOrganismForAAPVisibilityCheck",
         "visibility/organism.json",
       );
-      stubQuery(req, "getHeadAgencySettingsInfo", settings);
+      stubQuery(req, "getGestionnaireMaisonMereAAPSettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/head-agency-info.json");
       stubQuery(
         req,
@@ -43,7 +43,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "A_METTRE_A_JOUR",
       });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="to-complete-badge"]',
       ).should("exist");
@@ -53,7 +53,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "EN_ATTENTE_DE_VERIFICATION",
       });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="completed-badge"]',
       ).should("exist");
@@ -63,7 +63,7 @@ context("Head agency settings page", () => {
       visitSettings({
         informationsJuridiques: "A_JOUR",
       });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="general-information"] [data-test="completed-badge"]',
       ).should("exist");
@@ -72,7 +72,7 @@ context("Head agency settings page", () => {
 
   it("should display remote and user account list section and no on-site section", function () {
     visitSettings({ informationsJuridiques: "A_JOUR" });
-    cy.wait("@getHeadAgencySettingsInfo");
+    cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
     cy.get('[data-test="remote-agency"]').should("exist");
     cy.get('[data-test="on-site-agencies"]').should("exist");
     cy.get('[data-test="on-site-agency"]').should("not.exist");
@@ -81,7 +81,7 @@ context("Head agency settings page", () => {
   context("on the account list section", () => {
     it("the add button should be disabled when the head account is not verified", function () {
       visitSettings({ informationsJuridiques: "A_METTRE_A_JOUR" });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
         "be.disabled",
       );
@@ -89,7 +89,7 @@ context("Head agency settings page", () => {
 
     it("the add button should be enabled when the head account is up to date", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
         "be.enabled",
       );
@@ -97,7 +97,7 @@ context("Head agency settings page", () => {
 
     it("display all accounts, except the head agency account, with info details", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get('[data-test="user-accounts"] li').should("have.length", 3);
       cy.get(
         '[data-test="user-accounts"] [data-test="account-2"] [data-test="on-site-badge"]',
@@ -116,7 +116,7 @@ context("Head agency settings page", () => {
   context("on the financing methods section", () => {
     it("display a 'to complete badge' when we don't know if the AAP is MCP compatible or not", function () {
       visitSettings({});
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="financing-methods"] [data-test="to-complete-badge"]',
       ).should("exist");
@@ -129,7 +129,7 @@ context("Head agency settings page", () => {
     });
     it("display a 'completed badge' when the AAP is MCP compatible ", function () {
       visitSettings({ isMCFCompatible: true });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="financing-methods"] [data-test="completed-badge"]',
       ).should("exist");
@@ -139,7 +139,7 @@ context("Head agency settings page", () => {
     });
     it("display a 'completed badge' when the AAP is not MCP compatible ", function () {
       visitSettings({ isMCFCompatible: false });
-      cy.wait("@getHeadAgencySettingsInfo");
+      cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
         '[data-test="financing-methods"] [data-test="completed-badge"]',
       ).should("exist");

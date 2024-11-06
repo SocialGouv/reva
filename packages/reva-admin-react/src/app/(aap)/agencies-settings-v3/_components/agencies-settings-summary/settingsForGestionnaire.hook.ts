@@ -3,8 +3,8 @@ import { graphql } from "@/graphql/generated";
 
 import { useQuery } from "@tanstack/react-query";
 
-const HeadAgencySettingsInfoQuery = graphql(`
-  query getHeadAgencySettingsInfo {
+const GestionnaireMaisonMereAAPSettingsInfoQuery = graphql(`
+  query getGestionnaireMaisonMereAAPSettingsInfo {
     account_getAccountForConnectedUser {
       id
       organism {
@@ -41,28 +41,33 @@ const HeadAgencySettingsInfoQuery = graphql(`
   }
 `);
 
-export const useHeadyAgencySettings = () => {
+export const useGestionnaireMaisonMereAAPSettings = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: headAgencySettingsResponse, status: headAgencySettingsStatus } =
-    useQuery({
-      queryKey: ["headAgencySettingsInfo"],
-      queryFn: () => graphqlClient.request(HeadAgencySettingsInfoQuery),
-    });
+  const {
+    data: gestionnaireMaisonMerAAPSettingsResponse,
+    status: gestionnaireMaisonMerAAPSettingsStatus,
+  } = useQuery({
+    queryKey: ["gestionnaireMaisonMerAAPSettingsInfo"],
+    queryFn: () =>
+      graphqlClient.request(GestionnaireMaisonMereAAPSettingsInfoQuery),
+  });
 
   const maisonMereAAP =
-    headAgencySettingsResponse?.account_getAccountForConnectedUser?.organism
-      ?.maisonMereAAP;
+    gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
+      ?.organism?.maisonMereAAP;
 
   const organism =
-    headAgencySettingsResponse?.account_getAccountForConnectedUser?.organism;
+    gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
+      ?.organism;
 
   const gestionnaireAccountId =
-    headAgencySettingsResponse?.account_getAccountForConnectedUser?.id;
+    gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
+      ?.id;
 
   return {
-    headAgencySettingsResponse,
-    headAgencySettingsStatus,
+    gestionnaireMaisonMerAAPSettingsResponse,
+    gestionnaireMaisonMerAAPSettingsStatus,
     maisonMereAAP,
     organism,
     gestionnaireAccountId,
