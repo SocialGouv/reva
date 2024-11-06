@@ -50,13 +50,6 @@ type AccountsPaginated {
 }
 
 type Query {
-  account_getAccounts(
-    offset: Int
-    limit: Int
-    groupFilter: AccountGroup
-    searchFilter: String
-  ): AccountsPaginated!
-  account_getAccount(id: ID!): Account
   account_getAccountForConnectedUser: Account
   account_getImpersonateUrl(input: GetImpersonateUrlInput!): String
 }

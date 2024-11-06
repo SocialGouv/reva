@@ -9,8 +9,3 @@ export interface Account {
   organismId: string | null;
   certificationAuthorityId: string | null;
 }
-
-export type AccountGroupFilter =
-  | "admin"
-  | "organism"
-  | "certification_authority";

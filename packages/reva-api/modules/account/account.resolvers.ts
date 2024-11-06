@@ -6,11 +6,8 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
-import { AccountGroupFilter } from "./account.types";
 import { createAccount } from "./features/createAccount";
-import { getAccountById } from "./features/getAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
-import { getAccounts } from "./features/getAccounts";
 import { getImpersonateUrl } from "./features/impersonate";
 import { updateAccountById } from "./features/updateAccount";
 import { disableAccountById } from "./features/disableAccount";
@@ -65,7 +62,7 @@ export const resolvers = {
         }
 
         const hasRole = context.auth.hasRole;
-        if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
+        if (!hasRole("admin")) {
           throw new Error("Utilisateur non autorisé");
         }
 
@@ -103,60 +100,6 @@ export const resolvers = {
     },
   },
   Query: {
-    account_getAccounts: async (
-      _parent: unknown,
-      params: {
-        limit?: number;
-        offset?: number;
-        groupFilter?: AccountGroupFilter;
-        searchFilter?: string;
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return getAccounts(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params,
-        );
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
-    account_getAccount: async (
-      _parent: unknown,
-      params: {
-        id: string;
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return getAccountById(params);
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
     account_getAccountForConnectedUser: async (
       _parent: unknown,
       _params: unknown,

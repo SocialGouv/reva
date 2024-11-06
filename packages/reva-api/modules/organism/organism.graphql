@@ -274,10 +274,6 @@ input UpdateMaisonMereLegalInformationInput {
 }
 
 type Mutation {
-  organism_updateOrganism(
-    organismId: ID!
-    organismData: UpdateOrganismInput!
-  ): Organism!
   organism_updateFermePourAbsenceOuConges(
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!

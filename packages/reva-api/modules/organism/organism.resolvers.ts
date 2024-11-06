@@ -49,7 +49,6 @@ import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccount
 import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLegalInformation";
 import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
-import { updateOrganismById } from "./features/updateOrganism";
 import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
@@ -213,38 +212,6 @@ const unsafeResolvers = {
       getConventionCollectiveById({ ccnId }),
   },
   Mutation: {
-    organism_updateOrganism: async (
-      _parent: unknown,
-      params: {
-        organismId: string;
-        organismData: {
-          label: string;
-          contactAdministrativeEmail: string;
-          contactAdministrativePhone: string | null;
-          website: string | null;
-        };
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return updateOrganismById(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params,
-        );
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
     organism_createOrUpdateRemoteOrganismGeneralInformation: async (
       _parent: unknown,
       params: {
