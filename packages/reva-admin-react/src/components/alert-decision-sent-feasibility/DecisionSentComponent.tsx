@@ -27,7 +27,7 @@ export const DecisionSentComponent = ({
   decisionComment?: string | null;
   history?: FeasibilityHistory[];
 }) => {
-  if (!decisionSentAt) {
+  if (!decisionSentAt || decision === "COMPLETE") {
     return null;
   }
 
