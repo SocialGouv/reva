@@ -14,21 +14,24 @@ const trainingFormSchema = z.object({
         message: "Ce champ doit être un entier supérieur ou égal à zéro",
       }),
     })
-    .min(0),
+    .min(0)
+    .max(10000, "La valeur de ce champ est trop élevée"),
   collectiveHourCount: z
     .number({
       errorMap: () => ({
         message: "Ce champ doit être un entier supérieur ou égal à zéro",
       }),
     })
-    .min(0),
+    .min(0)
+    .max(10000, "La valeur de ce champ est trop élevée"),
   additionalHourCount: z
     .number({
       errorMap: () => ({
         message: "Ce champ doit être un entier supérieur ou égal à zéro",
       }),
     })
-    .min(0),
+    .min(0)
+    .max(10000, "La valeur de ce champ est trop élevée"),
 
   mandatoryTrainings: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
@@ -46,6 +49,7 @@ const trainingFormSchema = z.object({
   }),
   estimatedCost: z
     .number({ errorMap: () => ({ message: "Merci de remplir ce champ" }) })
+    .max(1000000, "La valeur de ce champ est trop élevée")
     .optional(),
   candidacyFinancingMethods: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
