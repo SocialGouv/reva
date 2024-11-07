@@ -60,12 +60,19 @@ const FeasibilityDecision = ({
   className,
 }: FeasibilityHistory & {
   className?: string;
-}) => (
-  <div className={`grid md:grid-cols-2 ${className || ""}`}>
-    <Info title="Décision">{titleMap[decision as keyof typeof titleMap]}</Info>
-    <Info title="Décision prise le : ">
-      {decisionSentAt ? formatDate(decisionSentAt, "dd/MM/yyyy") : ""}
-    </Info>
-    <Info title="Commentaire : ">{decisionComment}</Info>
-  </div>
-);
+}) => {
+  if (decision === "COMPLETE") {
+    return null;
+  }
+  return (
+    <div className={`grid md:grid-cols-2 ${className || ""}`}>
+      <Info title="Décision">
+        {titleMap[decision as keyof typeof titleMap]}
+      </Info>
+      <Info title="Décision prise le : ">
+        {decisionSentAt ? formatDate(decisionSentAt, "dd/MM/yyyy") : ""}
+      </Info>
+      <Info title="Commentaire : ">{decisionComment}</Info>
+    </div>
+  );
+};
