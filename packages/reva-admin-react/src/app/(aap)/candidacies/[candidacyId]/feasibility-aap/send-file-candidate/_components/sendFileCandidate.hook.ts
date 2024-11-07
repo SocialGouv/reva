@@ -65,6 +65,11 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           }
           eligibilityRequirement
           eligibilityValidUntil
+          swornStatementFile {
+            name
+            previewUrl
+            mimeType
+          }
         }
         candidacy {
           individualHourCount

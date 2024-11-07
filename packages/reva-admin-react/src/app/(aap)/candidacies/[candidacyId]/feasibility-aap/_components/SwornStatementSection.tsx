@@ -4,11 +4,11 @@ import { useParams } from "next/navigation";
 
 export const SwornStatementSection = ({
   sentToCandidateAt,
-  swornStatementFileId,
+  isCompleted,
   isEditable,
 }: {
   sentToCandidateAt?: Date | null;
-  swornStatementFileId?: string | null;
+  isCompleted: boolean;
   isEditable: boolean;
 }) => {
   const { candidacyId } = useParams();
@@ -17,7 +17,7 @@ export const SwornStatementSection = ({
     <EnhancedSectionCard
       title="Attestation sur l'honneur"
       titleIconClass="fr-icon-success-fill"
-      status={swornStatementFileId ? "COMPLETED" : "TO_COMPLETE"}
+      status={isCompleted ? "COMPLETED" : "TO_COMPLETE"}
       isEditable={isEditable}
       disabled={!sentToCandidateAt}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}

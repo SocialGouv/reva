@@ -173,9 +173,7 @@ const AapFeasibilityPage = () => {
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
-            swornStatementFileId={
-              dematerializedFeasibilityFile?.swornStatementFileId
-            }
+            isCompleted={!!dematerializedFeasibilityFile?.swornStatementFile}
             isEditable={isFeasibilityEditable}
           />
 
