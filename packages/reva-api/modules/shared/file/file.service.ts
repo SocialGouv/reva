@@ -6,7 +6,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { filetypemime } from "magic-bytes.js";
+import { filetypeinfo } from "magic-bytes.js";
 
 import { buffer } from "stream/consumers";
 import { logger } from "../logger";
@@ -77,17 +77,22 @@ export const fileExists = async (filePath: string): Promise<boolean> => {
 
 export const uploadFile = async ({
   filePath,
-  mimeType,
   data,
   allowedFileTypes,
 }: S3File): Promise<void> => {
   console.log(process.env.OUTSCALE_BUCKET_NAME);
   console.log(filePath);
 
-  const typesFromMagicBytes = filetypemime(data);
+  const infoFromMagicBytes = filetypeinfo(data);
+
+  const typesFromMagicBytes = infoFromMagicBytes
+    .map((type) => type.mime)
+    .filter(Boolean);
+
   const isAllowed = allowedFileTypes.some((type) =>
     typesFromMagicBytes.includes(type),
   );
+
   if (!isAllowed) {
     throw new Error("File type not allowed");
   }
@@ -96,7 +101,7 @@ export const uploadFile = async ({
     Bucket: process.env.OUTSCALE_BUCKET_NAME,
     Key: filePath,
     Body: data,
-    ContentType: mimeType,
+    ContentType: infoFromMagicBytes[0].mime,
   });
 
   try {
