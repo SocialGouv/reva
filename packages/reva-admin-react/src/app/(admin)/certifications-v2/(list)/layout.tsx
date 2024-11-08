@@ -21,7 +21,7 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
       params.set("search", searchFilter);
     }
 
-    return `/certifications/?${params.toString()}`;
+    return `/certifications-v2/?${params.toString()}`;
   };
 
   const menuItem = (text: string, status: string | null) => ({
