@@ -4,8 +4,8 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export default function AddCertificationPage() {
   return (
-    <div>
-      <h1>Ajout d’une certification</h1>
+    <div data-test="add-certification-page">
+      <h1>Ajout d'une certification</h1>
       <p className="mb-12">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
         document avec les informations de France compétences et du Formacode.
@@ -14,6 +14,7 @@ export default function AddCertificationPage() {
       </p>
       <div className="flex flex-col gap-8">
         <EnhancedSectionCard
+          data-test="certification-description-card"
           title="Descriptif de la certification"
           status="TO_COMPLETE"
           titleIconClass="fr-icon-award-fill"
