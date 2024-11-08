@@ -53,7 +53,12 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
             },
             text: (
               <div className="w-full h-full flex justify-center bg-transparent">
-                <Button size="small" priority="secondary" className="mt-8">
+                <Button
+                  data-test="add-certification-button"
+                  size="small"
+                  priority="secondary"
+                  className="mt-8"
+                >
                   Ajouter une certification
                 </Button>
               </div>
