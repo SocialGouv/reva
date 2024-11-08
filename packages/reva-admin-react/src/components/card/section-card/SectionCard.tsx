@@ -39,7 +39,7 @@ export const SectionCard = ({
 }: CandidacySectionCardProps & HasButton) => {
   return (
     <GrayCard data-test={dataTest}>
-      <div className="flex justify-between items-center w-full mb-5">
+      <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-4 w-full">
           <h2
             className={`mb-0 sm:whitespace-nowrap ${disabled ? "text-neutral-400" : ""}`}
@@ -67,7 +67,7 @@ export const SectionCard = ({
           </div>
         </div>
       </div>
-      {children}
+      {children && <div className="flex flex-col mt-5">{children}</div>}
     </GrayCard>
   );
 };
