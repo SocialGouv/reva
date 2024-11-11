@@ -37,14 +37,19 @@ export default function AddCertificationPage() {
       </div>
       <hr className="mt-8" />
       <h2>Validation par le responsable des certifications</h2>
-      <p>
-        Lorsque la certification est prête, vous devez l’envoyer au responsable
-        des certifications pour validation. Si aucun responsable des
-        certifications n’existe pour le moment et qu’aucune validation n’est
-        possible, elle pourra être visible des AAP mais pas encore des
-        candidats.
-      </p>
-      <hr className="mb-6" />
+      <div className="flex">
+        <p className="mb-0">
+          Lorsque la certification est prête, vous devez l’envoyer au
+          responsable des certifications pour validation. Si aucun responsable
+          des certifications n’existe pour le moment et qu’aucune validation
+          n’est possible, elle pourra être visible des AAP mais pas encore des
+          candidats.
+        </p>
+        <Button disabled className="h-[40px] self-end">
+          Envoyer
+        </Button>
+      </div>
+      <hr className="mt-8 mb-6" />
       <Button
         priority="secondary"
         linkProps={{ href: "/certifications-v2", target: "_self" }}
