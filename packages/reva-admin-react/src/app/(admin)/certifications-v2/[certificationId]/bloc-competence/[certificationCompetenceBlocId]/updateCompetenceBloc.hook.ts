@@ -18,7 +18,9 @@ const getCompetenceBlocQuery = graphql(`
         label
       }
       certification {
+        id
         codeRncp
+        label
       }
     }
   }

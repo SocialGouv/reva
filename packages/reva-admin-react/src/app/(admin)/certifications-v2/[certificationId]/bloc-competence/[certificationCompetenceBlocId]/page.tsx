@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { useUpdateCompetenceBlocPage } from "./updateCompetenceBloc.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 type CertificationCompetenceBlocForPage = Exclude<
   ReturnType<typeof useUpdateCompetenceBlocPage>["competenceBloc"],
@@ -27,6 +28,21 @@ const PageContent = ({
   competenceBloc: CertificationCompetenceBlocForPage;
 }) => (
   <div data-test="update-certification-page">
+    <Breadcrumb
+      currentPageLabel={`${competenceBloc.code} - ${competenceBloc.label}`}
+      homeLinkProps={{
+        href: `/`,
+      }}
+      segments={[
+        {
+          label: competenceBloc.certification.label,
+          linkProps: {
+            href: `/certifications-v2/${competenceBloc.certification.id}`,
+          },
+        },
+      ]}
+    />
+
     <h1>
       {competenceBloc.code} - {competenceBloc.label}
     </h1>
