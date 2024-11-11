@@ -1,5 +1,5 @@
 import { stubQuery } from "../../../utils/graphql";
-import certificationRcnp12301 from "./fixtures/certification-rncp-12301.json";
+import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
 function interceptCertification() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -17,7 +17,7 @@ function interceptCertification() {
     stubQuery(
       req,
       "getCertificationForUpdateCertificationPage",
-      certificationRcnp12301,
+      certificationBPBoucher,
     );
   });
 }
@@ -26,7 +26,7 @@ context("when i access the update certification page ", () => {
   it("display the page with a correct title", function () {
     interceptCertification();
 
-    cy.admin("/certifications-v2/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6");
+    cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -34,16 +34,13 @@ context("when i access the update certification page ", () => {
 
     cy.get('[data-test="update-certification-page"]')
       .children("h1")
-      .should(
-        "have.text",
-        "Bac Pro Accompagnement, soins et services à la personne - en structure",
-      );
+      .should("have.text", "BP Boucher");
   });
 
   it("display the correct number of competence blocs and competences", function () {
     interceptCertification();
 
-    cy.admin("/certifications-v2/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6");
+    cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");

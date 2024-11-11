@@ -1,16 +1,16 @@
 {
   "data": {
     "getCertification": {
-      "id": "654c9471-6e2e-4ff2-a5d8-2069e78ea0d6",
-      "label": "Bac Pro Accompagnement, soins et services à la personne - en structure",
-      "codeRncp": "12301",
+      "id": "bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      "label": "BP Boucher",
+      "codeRncp": "37310",
       "status": "AVAILABLE",
-      "rncpExpiresAt": 1661983200000,
-      "rncpDeliveryDeadline": 1735599600000,
+      "rncpExpiresAt": 1788127200000,
+      "rncpDeliveryDeadline": null,
       "availableAt": 1688162400000,
       "typeDiplome": {
-        "id": "8f44da06-39b4-4515-920a-7dbe005d1d9c",
-        "label": "Bac Pro"
+        "id": "81d99804-1f46-4ced-924a-5479b58fd541",
+        "label": "Brevet Professionnel (BP)"
       },
       "degree": {
         "id": "0ee2104b-9bdc-4e44-b232-123cf2e3b9a1",
