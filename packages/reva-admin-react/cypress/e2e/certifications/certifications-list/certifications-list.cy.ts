@@ -29,6 +29,7 @@ context("when i access the certification list", () => {
     cy.wait("@getCertificationsForListPage");
     cy.get('[data-test="results"]').children().should("have.length", 3);
   });
+
   it("let me click on the 'add certification' button", function () {
     interceptCertifications();
 
@@ -41,6 +42,21 @@ context("when i access the certification list", () => {
     cy.url().should(
       "eq",
       "http://localhost:3003/admin2/certifications-v2/add-certification/",
+    );
+  });
+
+  it("let me click on the 'access certification' button", function () {
+    interceptCertifications();
+
+    cy.admin("/certifications-v2");
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getCertificationsForListPage");
+    cy.get('[data-test="access-certification-button"]').eq(1).click();
+    cy.url().should(
+      "eq",
+      "http://localhost:3003/admin2/certifications-v2/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6/",
     );
   });
 });

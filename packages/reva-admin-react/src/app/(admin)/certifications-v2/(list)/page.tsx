@@ -97,9 +97,10 @@ const CertificationListPage = () => {
                   {c.status === "AVAILABLE" ? "Disponible" : "Inactive"}
                 </Tag>
                 <Button
+                  data-test="access-certification-button"
                   className="mt-2 ml-auto"
                   linkProps={{
-                    href: `/certifications/${c.id}`,
+                    href: `/certifications-v2/${c.id}`,
                   }}
                 >
                   Accéder à la certification
