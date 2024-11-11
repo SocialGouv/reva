@@ -5,6 +5,7 @@ import { useUpdateCertificationPage } from "./updateCertification.hook";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { format } from "date-fns";
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -63,6 +64,33 @@ const PageContent = ({
             </Info>
           </div>
         </div>
+      </EnhancedSectionCard>
+      <EnhancedSectionCard
+        title="Blocs de compétences"
+        titleIconClass="fr-icon-survey-fill"
+      >
+        <p>
+          La modification de bloc est possible, mais doit rester exceptionnelle.
+          Merci de l’utiliser uniquement en cas d’erreur importante à modifier
+          (exemple : erreur sur l’intitulé).
+        </p>
+
+        <ul className="pl-0" data-test="competence-blocs-list">
+          {certification.competenceBlocs.map((bloc) => (
+            <Accordion
+              data-test="competence-bloc"
+              key={bloc.id}
+              label={`${bloc.code} - ${bloc.label}`}
+              defaultExpanded
+            >
+              <ul data-test="competences-list">
+                {bloc.competences.map((competence) => (
+                  <li key={competence.id}>{competence.label}</li>
+                ))}
+              </ul>
+            </Accordion>
+          ))}
+        </ul>
       </EnhancedSectionCard>
     </div>
     <hr className="mt-8" />

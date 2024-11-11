@@ -20,6 +20,15 @@ const getCertificationQuery = graphql(`
         id
         label
       }
+      competenceBlocs {
+        id
+        code
+        label
+        competences {
+          id
+          label
+        }
+      }
     }
   }
 `);
