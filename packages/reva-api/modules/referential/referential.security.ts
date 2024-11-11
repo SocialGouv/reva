@@ -13,4 +13,5 @@ export const referentialResolversSecurityMap = {
   ],
 
   "Query.getEtablissementAsAdmin": [hasRole(["admin"])],
+  "Query.getCertificationCompetenceBloc": [hasRole(["admin"])],
 };

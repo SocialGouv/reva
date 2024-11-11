@@ -267,6 +267,9 @@ type Query {
     filters: ActiveCertificationsFiltersInput
   ): [Certification!]!
   getCandidacyFinancingMethods: [CandidacyFinancingMethod!]!
+  getCertificationCompetenceBloc(
+    certificationCompetenceBlocId: ID!
+  ): CertificationCompetenceBloc!
 }
 
 input UpdateCertificationInput {
