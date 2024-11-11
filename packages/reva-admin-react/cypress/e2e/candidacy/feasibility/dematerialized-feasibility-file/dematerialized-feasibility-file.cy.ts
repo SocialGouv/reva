@@ -15,7 +15,7 @@ import {
   DFF_PARTIAL_ELIGIBILITY,
 } from "./dff-mocks";
 
-function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE) {
+function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE as object) {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(

@@ -101,6 +101,7 @@ type CertificationCompetenceBloc {
   isOptional: Boolean
   FCCompetences: String
   competences: [CertificationCompetence!]!
+  certification: Certification!
 }
 
 type CertificationCompetence {

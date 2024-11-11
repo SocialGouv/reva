@@ -16,7 +16,10 @@ type EnhancecCertificationCompetence = CertificationCompetence & {
   created?: boolean;
 };
 
-type EnhancecCertificationCompetenceBloc = CertificationCompetenceBloc & {
+type EnhancecCertificationCompetenceBloc = Omit<
+  CertificationCompetenceBloc,
+  "certification"
+> & {
   created?: boolean;
   competences: Array<EnhancecCertificationCompetence>;
 };
@@ -27,7 +30,7 @@ const UpdateCompetenceBlocsForm = ({
   onSubmit,
 }: {
   codeRncp: string;
-  blocs: CertificationCompetenceBloc[];
+  blocs: Omit<CertificationCompetenceBloc, "certification">[];
   onSubmit: (blocs: CompetenceBlocInput[]) => void;
 }) => {
   const { getFCCertification } = useFCCertificationQuery();

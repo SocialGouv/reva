@@ -59,6 +59,8 @@ const unsafeReferentialResolvers = {
   CertificationCompetenceBloc: {
     competences: ({ id: certificationCompetenceBlocId }: { id: string }) =>
       getCertificationCompetencesByBlocId({ certificationCompetenceBlocId }),
+    certification: ({ certificationId }: { certificationId: string }) =>
+      getCertificationById({ certificationId }),
   },
   Department: {
     region: ({ regionId }: { regionId: string }) =>
