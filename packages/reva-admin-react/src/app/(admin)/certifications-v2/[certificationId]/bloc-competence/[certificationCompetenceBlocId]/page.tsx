@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useUpdateCompetenceBlocPage } from "./updateCompetenceBloc.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 type CertificationCompetenceBlocForPage = Exclude<
   ReturnType<typeof useUpdateCompetenceBlocPage>["competenceBloc"],
@@ -35,5 +36,21 @@ const PageContent = ({
       vous souhaitez les modifier, il est préférable de contacter directement
       France compétences.
     </p>
+    <GrayCard as="div" className="gap-6">
+      <h2>
+        Informations France compétences liées au code RNCP{" "}
+        {competenceBloc.certification.codeRncp}
+      </h2>
+      <dl>
+        <dd>Intitulé du bloc de compétences</dd>
+        <dt className="font-medium">
+          {competenceBloc.code} - {competenceBloc.label}
+        </dt>
+      </dl>
+      <dl>
+        <dd>Compétences</dd>
+        <dt className="font-medium">{competenceBloc.FCCompetences}</dt>
+      </dl>
+    </GrayCard>
   </div>
 );

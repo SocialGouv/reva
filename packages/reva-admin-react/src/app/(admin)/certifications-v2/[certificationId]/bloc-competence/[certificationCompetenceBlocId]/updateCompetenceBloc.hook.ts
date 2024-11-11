@@ -12,9 +12,13 @@ const getCompetenceBlocQuery = graphql(`
       id
       label
       code
+      FCCompetences
       competences {
         id
         label
+      }
+      certification {
+        codeRncp
       }
     }
   }

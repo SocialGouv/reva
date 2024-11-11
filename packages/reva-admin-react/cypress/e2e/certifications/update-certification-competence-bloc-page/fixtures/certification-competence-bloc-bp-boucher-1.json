@@ -4,6 +4,7 @@
       "id": "008a6fab-55ad-4412-ab17-56bc4b8e2fd0",
       "label": "Préparation, présentation, décoration et vente en boucherie",
       "code": "RNCP37310BC01",
+      "FCCompetences": "* Réaliser les opérations de préparations des viandes * Mettre en valeur les produits notamment l’intégralité de la carcasse dans une démarche de développement durable * Vendre les produits au client en argumentant et en proposant des conseils culinaires * Communiquer sur l’étiquetage, la conservation, la traçabilité, les signes officiels de qualité et l’origine des viandes",
       "competences": [
         {
           "id": "b8786018-6d24-4538-9622-f4ac62eb1742",
@@ -21,7 +22,10 @@
           "id": "5aad9206-27a0-4afa-ac28-06d30bab6504",
           "label": "Communiquer sur l’étiquetage, la conservation, la traçabilité, les signes officiels de qualité et l’origine des viandes"
         }
-      ]
+      ],
+      "certification": {
+        "codeRncp": "37310"
+      }
     }
   }
 }
