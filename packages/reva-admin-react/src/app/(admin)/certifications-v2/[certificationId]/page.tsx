@@ -77,18 +77,28 @@ const PageContent = ({
 
         <ul className="pl-0" data-test="competence-blocs-list">
           {certification.competenceBlocs.map((bloc) => (
-            <Accordion
+            <li
               data-test="competence-bloc"
+              className="flex items-start justify-between gap-6"
               key={bloc.id}
-              label={`${bloc.code} - ${bloc.label}`}
-              defaultExpanded
             >
-              <ul data-test="competences-list">
-                {bloc.competences.map((competence) => (
-                  <li key={competence.id}>{competence.label}</li>
-                ))}
-              </ul>
-            </Accordion>
+              <Accordion label={`${bloc.code} - ${bloc.label}`} defaultExpanded>
+                <ul data-test="competences-list">
+                  {bloc.competences.map((competence) => (
+                    <li key={competence.id}>{competence.label}</li>
+                  ))}
+                </ul>
+              </Accordion>
+              <Button
+                data-test="update-competence-bloc-button"
+                priority="tertiary no outline"
+                linkProps={{
+                  href: `/certifications-v2/${certification.id}/bloc-competence/${bloc.id}`,
+                }}
+              >
+                Modifier
+              </Button>
+            </li>
           ))}
         </ul>
       </EnhancedSectionCard>

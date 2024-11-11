@@ -61,4 +61,23 @@ context("when i access the update certification page ", () => {
       '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]:nth-child(2) [data-test="competences-list"] > li',
     ).should("have.length", 2);
   });
+
+  it("let me click on the 'update competence bloc' button of the first competence bloc and lead me to its update page ", function () {
+    interceptCertification();
+
+    cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getCertificationForUpdateCertificationPage");
+
+    cy.get(
+      '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]:first-child [data-test="update-competence-bloc-button"]',
+    ).click();
+
+    cy.url().should(
+      "eq",
+      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+    );
+  });
 });
