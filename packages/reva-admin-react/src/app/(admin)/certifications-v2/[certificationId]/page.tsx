@@ -31,7 +31,7 @@ const PageContent = ({
 }) => (
   <div data-test="update-certification-page">
     <h1>{certification.label}</h1>
-    <p className="mb-12">
+    <p className="mb-12 text-xl">
       Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
       document avec les informations de France compétences et du Formacode.
       Ensuite, vous pourrez renseigner une structure certificatrice et (à

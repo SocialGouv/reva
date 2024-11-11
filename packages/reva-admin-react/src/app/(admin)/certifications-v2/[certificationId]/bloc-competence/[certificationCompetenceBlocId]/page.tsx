@@ -47,7 +47,7 @@ const PageContent = ({
       {competenceBloc.code} - {competenceBloc.label}
     </h1>
     <FormOptionalFieldsDisclaimer />
-    <p className="mb-12">
+    <p className="mb-12 text-xl">
       Retrouvez toutes les informations récupérées à partir du code RNCP. Si
       vous souhaitez les modifier, il est préférable de contacter directement
       France compétences.

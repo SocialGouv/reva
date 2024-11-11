@@ -6,7 +6,7 @@ export default function AddCertificationPage() {
   return (
     <div data-test="add-certification-page">
       <h1>Ajout d'une certification</h1>
-      <p className="mb-12">
+      <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
         document avec les informations de France compétences et du Formacode.
         Ensuite, vous pourrez renseigner une structure certificatrice et (à
