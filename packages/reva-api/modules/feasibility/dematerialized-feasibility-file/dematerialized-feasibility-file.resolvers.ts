@@ -72,11 +72,21 @@ const unsafeResolvers = {
       getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls({
         dematerializedFeasibilityFileId,
       }),
-    isReadyToBeSentToCandidate: (
-      dematerializedFeasibilityFile: DematerializedFeasibilityFile,
-    ) =>
+    isReadyToBeSentToCandidate: ({
+      attachmentsPartComplete,
+      certificationPartComplete,
+      competenceBlocsPartCompletion,
+      prerequisitesPartComplete,
+      aapDecision,
+      eligibilityRequirement,
+    }: DematerializedFeasibilityFile) =>
       checkIsDFFReadyToBeSentToCandidateById({
-        dematerializedFeasibilityFile,
+        attachmentsPartComplete,
+        certificationPartComplete,
+        competenceBlocsPartCompletion,
+        prerequisitesPartComplete,
+        aapDecision,
+        eligibilityRequirement,
       }),
     isReadyToBeSentToCertificationAuthority: (
       dematerializedFeasibilityFile: DematerializedFeasibilityFile,

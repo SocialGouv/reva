@@ -1,19 +1,26 @@
-import { DematerializedFeasibilityFile } from "@prisma/client";
+import {
+  CompetenceBlocsPartCompletionEnum,
+  DFFDecision,
+  DFFEligibilityRequirement,
+} from "@prisma/client";
+
+export type CheckIsDFFReadyToBeSentToCandidateByIdArgs = {
+  attachmentsPartComplete: boolean;
+  certificationPartComplete: boolean;
+  competenceBlocsPartCompletion: CompetenceBlocsPartCompletionEnum;
+  prerequisitesPartComplete: boolean;
+  aapDecision: DFFDecision | null;
+  eligibilityRequirement: DFFEligibilityRequirement | null;
+};
 
 export const checkIsDFFReadyToBeSentToCandidateById = async ({
-  dematerializedFeasibilityFile,
-}: {
-  dematerializedFeasibilityFile: DematerializedFeasibilityFile;
-}) => {
-  const {
-    attachmentsPartComplete,
-    certificationPartComplete,
-    competenceBlocsPartCompletion,
-    prerequisitesPartComplete,
-    aapDecision,
-    eligibilityRequirement,
-  } = dematerializedFeasibilityFile;
-
+  attachmentsPartComplete,
+  certificationPartComplete,
+  competenceBlocsPartCompletion,
+  prerequisitesPartComplete,
+  aapDecision,
+  eligibilityRequirement,
+}: CheckIsDFFReadyToBeSentToCandidateByIdArgs) => {
   let isDFFReadyToBeSentToCandidate =
     attachmentsPartComplete &&
     certificationPartComplete &&
