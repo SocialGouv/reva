@@ -57,7 +57,6 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
                   data-test="add-certification-button"
                   size="small"
                   priority="secondary"
-                  className="mt-8"
                 >
                   Ajouter une certification
                 </Button>
