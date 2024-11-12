@@ -88,11 +88,25 @@ const unsafeResolvers = {
         aapDecision,
         eligibilityRequirement,
       }),
-    isReadyToBeSentToCertificationAuthority: (
-      dematerializedFeasibilityFile: DematerializedFeasibilityFile,
-    ) =>
+    isReadyToBeSentToCertificationAuthority: ({
+      attachmentsPartComplete,
+      certificationPartComplete,
+      competenceBlocsPartCompletion,
+      prerequisitesPartComplete,
+      aapDecision,
+      eligibilityRequirement,
+      swornStatementFileId,
+      candidateConfirmationAt,
+    }: DematerializedFeasibilityFile) =>
       checkIsDFFReadyToBeSentToCertificationAuthorityById({
-        dematerializedFeasibilityFile,
+        attachmentsPartComplete,
+        certificationPartComplete,
+        competenceBlocsPartCompletion,
+        prerequisitesPartComplete,
+        aapDecision,
+        eligibilityRequirement,
+        swornStatementFileId,
+        candidateConfirmationAt,
       }),
     swornStatementFile: ({
       swornStatementFileId,
