@@ -14,6 +14,7 @@ import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 import { updateCandidacyOrganism } from "./updateCandidacyOrganism";
 import { CandidacyStatusStep } from "@prisma/client";
 import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const selectOrganismForCandidacy = async ({
   candidacyId,
@@ -67,6 +68,13 @@ export const selectOrganismForCandidacy = async ({
         userKeycloakId,
         userEmail,
         userRoles,
+      });
+    }
+
+    if (candidacy.status === CandidacyStatusStep.PRISE_EN_CHARGE) {
+      await updateCandidacyStatus({
+        candidacyId,
+        status: CandidacyStatusStep.VALIDATION,
       });
     }
 

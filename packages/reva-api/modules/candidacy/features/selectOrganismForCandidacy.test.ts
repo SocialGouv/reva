@@ -125,6 +125,18 @@ test("a candidate should not be able to select a new organism after the training
   );
 });
 
+test("should reset the status to validation when selecting a new organism and status is prise_en_charge", async () => {
+  await selectNewOrganism();
+
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyUnifvae.id },
+  });
+
+  expect(candidacy).toMatchObject({
+    status: CandidacyStatusStep.VALIDATION,
+  });
+});
+
 test("should reset the training and update the status when selecting a new organism", async () => {
   await submitTraining();
   await selectNewOrganism();
