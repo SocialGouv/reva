@@ -1,47 +1,33 @@
 import {
-  adminAccount1,
+  agencePrincipaleMaisonMere2,
+  candidateJPL,
+  collaborateurMaisonMereAapAccount2,
+  expertFiliereOrganism,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
-  archiIperia1,
-  archiIperia2,
-  candidateJPL,
-  candidateMPB,
-  expertBrancheEtFiliereOrganism,
-  expertBrancheOrganism,
-  expertFiliereOrganism,
-  organismIperia,
+  lieuAccueilMaisonMere2,
   maisonMereAAP1,
   maisonMereAAP2,
-  agencePrincipaleMaisonMere2,
-  lieuAccueilMaisonMere2,
-  collaborateurMaisonMereAapAccount2,
-  maisonMereAAPExpertFiliere,
   maisonMereAAPExpertBranche,
+  maisonMereAAPExpertFiliere,
 } from "../fixtures/people-organisms";
 
-import { prismaClient } from "../../prisma/client";
 import {
   Account,
-  Candidate,
-  Organism,
-  MaisonMereAAP,
-  Department,
   CandidacyStatusStep,
+  Candidate,
+  Department,
+  MaisonMereAAP,
+  Organism,
 } from "@prisma/client";
+import { prismaClient } from "../../prisma/client";
+import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
+import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
+import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
   basicSkill2Label,
-  training1Label,
 } from "../fixtures/skillAndTraining";
-import { feasibilityAdmissible } from "../fixtures/feasibility";
-import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
-import { fundingRequestSample } from "../fixtures/funding-request";
-
-export const createAdminAccount1 = async (): Promise<Account> => {
-  return prismaClient.account.create({
-    data: adminAccount1,
-  });
-};
 
 export const createGestionnaireMaisonMereAapAccount1 =
   async (): Promise<Account> => {
@@ -69,18 +55,6 @@ export const createGestionnaireMaisonMereAapAccount2 =
     });
   };
 
-export const createArchitectIperia1 = async (): Promise<Account> => {
-  return prismaClient.account.create({
-    data: archiIperia1,
-  });
-};
-
-export const createArchitectIperia2 = async (): Promise<Account> => {
-  return prismaClient.account.create({
-    data: archiIperia2,
-  });
-};
-
 export const createCandidateJPL = async (): Promise<Candidate> => {
   const parisDepartment = (await prismaClient.department.findFirst({
     where: { code: "75" },
@@ -88,24 +62,6 @@ export const createCandidateJPL = async (): Promise<Candidate> => {
 
   return prismaClient.candidate.create({
     data: { ...candidateJPL, departmentId: parisDepartment?.id },
-  });
-};
-
-export const createCandidateMPB = async (): Promise<Candidate> => {
-  const parisDepartment = (await prismaClient.department.findFirst({
-    where: { code: "75" },
-  })) as Department;
-  return prismaClient.candidate.create({
-    data: {
-      ...candidateMPB,
-      departmentId: parisDepartment?.id,
-    },
-  });
-};
-
-export const createOrganismIperia = async (): Promise<Organism> => {
-  return prismaClient.organism.create({
-    data: organismIperia,
   });
 };
 
@@ -183,19 +139,6 @@ export const createExpertFiliereOrganism = async (): Promise<Organism> => {
 
   return organism;
 };
-
-export const createExpertBrancheOrganism = async (): Promise<Organism> => {
-  return prismaClient.organism.create({
-    data: expertBrancheOrganism,
-  });
-};
-
-export const createExpertBrancheEtFiliereOrganism =
-  async (): Promise<Organism> => {
-    return prismaClient.organism.create({
-      data: expertBrancheEtFiliereOrganism,
-    });
-  };
 
 export const createCandidacyUnifvae = async () => {
   const mancheDepartment = (await prismaClient.department.findFirst({
@@ -286,35 +229,29 @@ export const createCandidacyUnireva = async () => {
   });
 };
 
-export const createFundingRequest = async () => {
-  const basicSkillId1 = (
-    await prismaClient.basicSkill.findFirstOrThrow({
-      where: {
-        label: basicSkill1Label,
-      },
-    })
-  ).id;
-
-  const trainingId1 = (
-    await prismaClient.training.findFirstOrThrow({
-      where: {
-        label: training1Label,
-      },
-    })
-  ).id;
-
-  return prismaClient.fundingRequestUnifvae.create({
+export const createFeasibilityWithDematerializedFeasibilityFile = async (
+  candidacyId: string,
+) => {
+  return prismaClient.feasibility.create({
     data: {
-      ...fundingRequestSample,
-      candidacyId: candidacyUnifvae.id,
-      certificateSkills: "",
-      otherTraining: "",
-      basicSkills: {
-        createMany: { data: [{ basicSkillId: basicSkillId1 }] },
+      certificationAuthority: {
+        create: {
+          label: "dummy",
+          certificationAuthorityStructureId:
+            certificationAuthorityStructureFixtures.UIMM.id,
+        },
       },
-      mandatoryTrainings: {
-        createMany: { data: [{ trainingId: trainingId1 }] },
+      dematerializedFeasibilityFile: {
+        create: {},
       },
+      candidacy: {
+        connect: {
+          id: candidacyId,
+        },
+      },
+    },
+    include: {
+      dematerializedFeasibilityFile: true,
     },
   });
 };
