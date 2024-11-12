@@ -2,7 +2,6 @@
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -26,7 +25,7 @@ const schema = z
   .object({
     firstAppointmentOccuredAt: z.string({
       required_error:
-        "Cette information est obligatoire pour continuer le parcours. Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée.",
+        "Cette information est obligatoire pour continuer le parcours.",
     }),
     candidacyCreatedAt: z.string(),
   })
@@ -207,11 +206,6 @@ const MeetingsPage = () => {
           />
 
           <input type="hidden" {...register("candidacyCreatedAt")} />
-
-          <SmallNotice>
-            Le candidat pourra modifier sa candidature jusqu'à cette date,
-            au-delà de laquelle toute modification sera bloquée.
-          </SmallNotice>
           <div className="flex flex-col md:flex-row gap-4 items-center self-center md:self-end mt-10">
             <Button disabled={isSubmitting}>Enregistrer</Button>
           </div>
