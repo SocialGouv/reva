@@ -14,6 +14,13 @@ enum CertificationStatus {
   AVAILABLE
 }
 
+enum CertificationStatusV2 {
+  BROUILLON
+  A_VALIDER_PAR_CERTIFICATEUR
+  VALIDE_PAR_CERTIFICATEUR
+  INACTIVE
+}
+
 enum ExperienceDuration {
   unknown
   lessThanOneYear
@@ -38,6 +45,7 @@ model Certification {
   abilities                                         String?
   summary                                           String?
   status                                            CertificationStatus                                 @default(INACTIVE)
+  statusV2                                          CertificationStatusV2                               @default(BROUILLON) @map("status_v2")
   rncpId                                            String                                              @map("rncp_id") @db.VarChar(255)
   organismsAndRegions                               OrganismsOnRegionsAndCertifications[]
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
