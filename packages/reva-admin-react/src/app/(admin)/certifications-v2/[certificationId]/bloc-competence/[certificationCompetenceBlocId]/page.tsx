@@ -4,6 +4,7 @@ import { useUpdateCompetenceBlocPage } from "./updateCompetenceBloc.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { CompetenceBlocForm } from "../_components/CompetenceBlocForm";
 
 type CertificationCompetenceBlocForPage = Exclude<
   ReturnType<typeof useUpdateCompetenceBlocPage>["competenceBloc"],
@@ -68,5 +69,11 @@ const PageContent = ({
         <dt className="font-medium">{competenceBloc.FCCompetences}</dt>
       </dl>
     </GrayCard>
+    <CompetenceBlocForm
+      className="mt-6"
+      backUrl={`/certifications-v2/${competenceBloc.certification.id}`}
+      defaultValues={competenceBloc}
+      onSubmit={async (f) => console.log({ f })}
+    />
   </div>
 );
