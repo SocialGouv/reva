@@ -1,4 +1,5 @@
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -46,10 +47,11 @@ export const CompetenceBlocForm = ({
     formState: { isDirty, isSubmitting, errors },
   } = methods;
 
-  const { fields: competencesFields } = useFieldArray({
-    control,
-    name: "competences",
-  });
+  const { fields: competencesFields, append: appendCompetenceField } =
+    useFieldArray({
+      control,
+      name: "competences",
+    });
 
   const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));
   return (
@@ -63,7 +65,10 @@ export const CompetenceBlocForm = ({
           ...register("label"),
         }}
       />
-      <div className="flex flex-col gap-2 mt-6 pl-4">
+      <div
+        className="flex flex-col gap-2 mt-6 mb-2 pl-4"
+        data-test="competence-list"
+      >
         {competencesFields.map((c, cIndex) => (
           <Input
             className="mb-0"
@@ -77,6 +82,17 @@ export const CompetenceBlocForm = ({
           />
         ))}
       </div>
+      <Button
+        data-test="add-competence-button"
+        priority="tertiary no outline"
+        iconId="fr-icon-add-line"
+        iconPosition="left"
+        onClick={() =>
+          appendCompetenceField({ label: "", index: competencesFields.length })
+        }
+      >
+        Ajouter une compétence
+      </Button>
       <FormButtons
         backUrl={backUrl}
         formState={{
