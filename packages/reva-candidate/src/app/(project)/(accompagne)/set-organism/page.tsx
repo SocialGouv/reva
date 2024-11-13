@@ -40,6 +40,7 @@ export default function SetOrganism() {
     string | undefined
   >();
   const [organismSearchPmr, setOrganismSearchPmr] = useState<boolean>(false);
+  const [organismSearchMcf, setOrganismSearchMcf] = useState<boolean>(false);
 
   const { getRandomOrganismsForCandidacy, selectOrganism } = useSetOrganism({
     candidacyId: candidacy.id || "",
@@ -52,6 +53,7 @@ export default function SetOrganism() {
           : undefined,
       pmr: organismSearchPmr,
       zip: organismSearchZip,
+      isMcfCompatible: organismSearchMcf,
     },
   });
 
@@ -108,7 +110,14 @@ export default function SetOrganism() {
       data-test={`certificates`}
       displayBackToHome
     >
-      <h2 className="mt-6 mb-2">Choisissez votre accompagnateur</h2>
+      <h1 className="mt-6 mb-2">Choix de l'accompagnateur</h1>
+      <p className="text-xl my-6">
+        Choisissez votre accompagnateur parmi toute la liste. Vous pouvez
+        choisir de réaliser votre accompagnement à distance ou sur site. Si vous
+        souhaitez utiliser votre Compte Personnel de Formation (CPF) pour
+        financer votre parcours, choisissez un accompagnateur référencé sur Mon
+        Compte Formation (MCF).
+      </p>
 
       <div className="mt-6 lg:mb-14 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
         <h3>Recherchez par nom</h3>
@@ -127,6 +136,7 @@ export default function SetOrganism() {
               setOrganismSearchRemote(filters.organismSearchRemote);
               setOrganismSearchZip(filters.organismSearchZip);
               setOrganismSearchPmr(filters.organismSearchPmr);
+              setOrganismSearchMcf(filters.organismSearchMcf);
             }}
             filters={{
               organismSearchText,
@@ -134,6 +144,7 @@ export default function SetOrganism() {
               organismSearchOnsite,
               organismSearchZip,
               organismSearchPmr,
+              organismSearchMcf,
             }}
           />
         </div>

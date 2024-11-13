@@ -4,6 +4,8 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
 
 import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const tagFilledStyle = (isSelected: boolean) =>
   isSelected
@@ -15,12 +17,18 @@ const modalDistanceInfo = createModal({
   isOpenedByDefault: false,
 });
 
+const modalMcfInfo = createModal({
+  id: "mcf-organism-info",
+  isOpenedByDefault: false,
+});
+
 interface filters {
   organismSearchText: string;
   organismSearchRemote: boolean;
   organismSearchOnsite: boolean;
   organismSearchZip?: string;
   organismSearchPmr: boolean;
+  organismSearchMcf: boolean;
 }
 
 export const OrganismFilters = ({
@@ -38,114 +46,170 @@ export const OrganismFilters = ({
   return (
     <div className="mt-8 lg:mt-0 w-full flex flex-col">
       <h2>Filtres :</h2>
-      <div className="px-4 py-4 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
+      {/* <div className="px-4 py-4 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
         Modalités d’accompagnement
+      </div> */}
+      <div className="mb-4">
+        <Accordion
+          label="Modalités d’accompagnement"
+          defaultExpanded
+          className=""
+        >
+          <div className="-mb-6">
+            <Button
+              data-test="button-select-onsite"
+              priority="tertiary no outline"
+              title="Choisir sur site"
+              onClick={() => {
+                onSearch({
+                  ...filters,
+                  organismSearchOnsite: !organismSearchOnsite,
+                  organismSearchRemote: false,
+                });
+              }}
+              className="p-2"
+            >
+              <Tag
+                iconId="fr-icon-building-fill"
+                className={tagFilledStyle(organismSearchOnsite)}
+              >
+                Sur site
+              </Tag>
+            </Button>
+            <Button
+              data-test="button-select-remote"
+              priority="tertiary no outline"
+              title="Choisir à distance"
+              onClick={() => {
+                onSearch({
+                  ...filters,
+                  organismSearchOnsite: false,
+                  organismSearchRemote: !organismSearchRemote,
+                });
+              }}
+              className="p-2"
+            >
+              <Tag
+                iconId="fr-icon-customer-service-fill"
+                className={tagFilledStyle(organismSearchRemote)}
+              >
+                À distance
+              </Tag>
+            </Button>
+            <Button
+              data-test="button-open-modal-distance"
+              priority="tertiary no outline"
+              title="Quelle option à distance choisir ?"
+              iconId="fr-icon-information-fill"
+              onClick={() => modalDistanceInfo.open()}
+            >
+              <span className="text-dsfrBlue-500 text-sm font-bold">
+                Quelle option choisir ?
+              </span>
+            </Button>
+            <modalDistanceInfo.Component
+              title="Comment bien choisir entre “sur site” et “à distance” ?"
+              size="large"
+            >
+              <p className="my-4">
+                Les accompagnements <strong>sur site </strong>
+                sont réalisés directement dans les locaux de l’organisme
+                sélectionné.
+              </p>
+              <p>
+                Les accompagnements <strong>à distance</strong> se déroulent
+                essentiellement par téléphone ou sur internet, via des outils de
+                visio-conférence.
+              </p>
+            </modalDistanceInfo.Component>
+            <OrganismDistanceFilter
+              disabled={!searchHasOnSiteSelected}
+              onChangeSearchZip={(zip) => {
+                onSearch({
+                  ...filters,
+                  organismSearchZip: zip,
+                });
+              }}
+              onChangeSearchPmr={(pmr) => {
+                onSearch({
+                  ...filters,
+                  organismSearchPmr: pmr,
+                });
+              }}
+              zip={zip}
+              setZip={setZip}
+              pmr={pmr}
+              setPmr={setPmr}
+            />
+          </div>
+        </Accordion>
+        <Accordion label="Référencement MCF" defaultExpanded>
+          <div className="-mb-6">
+            <Button
+              data-test="button-open-modal-mcf"
+              priority="tertiary no outline"
+              title="Quelle option à distance choisir ?"
+              iconId="fr-icon-information-fill"
+              onClick={() => modalMcfInfo.open()}
+              className="mb-4"
+            >
+              <span className="text-dsfrBlue-500 text-sm font-bold">
+                Qu’est ce que MCF ?
+              </span>
+            </Button>
+            <modalMcfInfo.Component
+              title="Qu’est ce que MCF ?"
+              size="medium"
+              iconId="fr-icon-information-fill"
+              className="[&_h1>span]:mr-2" // add space bewteen icon and title
+            >
+              <p className="my-4">
+                Mon Compte Formation (MCF) est un service public français
+                permettant de financer des formations professionnelles.
+              </p>
+            </modalMcfInfo.Component>
+            <Checkbox
+              small
+              options={[
+                {
+                  label:
+                    "Afficher les accompagnateurs référencés sur Mon Compte Formation (MCF)",
+                  nativeInputProps: {
+                    checked: filters.organismSearchMcf,
+                    onChange: (e) => {
+                      console.log("onChange", e.target.checked);
+                      onSearch({
+                        ...filters,
+                        organismSearchMcf: e.target.checked,
+                      });
+                    },
+                  },
+                },
+              ]}
+            />
+          </div>
+        </Accordion>
       </div>
-      <div>
+
+      {/* <hr /> */}
+      <div className="flex justify-center">
         <Button
-          data-test="button-select-onsite"
           priority="tertiary no outline"
-          title="Choisir sur site"
           onClick={() => {
             onSearch({
-              ...filters,
-              organismSearchOnsite: !organismSearchOnsite,
               organismSearchRemote: false,
-            });
-          }}
-          className="p-2"
-        >
-          <Tag
-            iconId="fr-icon-building-fill"
-            className={tagFilledStyle(organismSearchOnsite)}
-          >
-            Sur site
-          </Tag>
-        </Button>
-        <Button
-          data-test="button-select-remote"
-          priority="tertiary no outline"
-          title="Choisir à distance"
-          onClick={() => {
-            onSearch({
-              ...filters,
               organismSearchOnsite: false,
-              organismSearchRemote: !organismSearchRemote,
+              organismSearchPmr: false,
+              organismSearchZip: "",
+              organismSearchText: "",
+              organismSearchMcf: false,
             });
+            setZip("");
+            setPmr(false);
           }}
-          className="p-2"
         >
-          <Tag
-            iconId="fr-icon-customer-service-fill"
-            className={tagFilledStyle(organismSearchRemote)}
-          >
-            À distance
-          </Tag>
+          Réinitialiser les filtres
         </Button>
-        <Button
-          data-test="button-open-modal-distance"
-          priority="tertiary no outline"
-          title="Quelle option à distance choisir ?"
-          iconId="fr-icon-information-fill"
-          onClick={() => modalDistanceInfo.open()}
-        >
-          <span className="text-dsfrBlue-500 text-sm font-bold">
-            Quelle option choisir ?
-          </span>
-        </Button>
-        <modalDistanceInfo.Component
-          title="Comment bien choisir entre “sur site” et “à distance” ?"
-          size="large"
-        >
-          <p className="my-4">
-            Les accompagnements <strong>sur site </strong>
-            sont réalisés directement dans les locaux de l’organisme
-            sélectionné.
-          </p>
-          <p>
-            Les accompagnements <strong>à distance</strong> se déroulent
-            essentiellement par téléphone ou sur internet, via des outils de
-            visio-conférence.
-          </p>
-        </modalDistanceInfo.Component>
-        <OrganismDistanceFilter
-          disabled={!searchHasOnSiteSelected}
-          onChangeSearchZip={(zip) => {
-            onSearch({
-              ...filters,
-              organismSearchZip: zip,
-            });
-          }}
-          onChangeSearchPmr={(pmr) => {
-            onSearch({
-              ...filters,
-              organismSearchPmr: pmr,
-            });
-          }}
-          zip={zip}
-          setZip={setZip}
-          pmr={pmr}
-          setPmr={setPmr}
-        />
-        <hr />
-        <div className="flex justify-center">
-          <Button
-            priority="secondary"
-            onClick={() => {
-              onSearch({
-                organismSearchRemote: false,
-                organismSearchOnsite: false,
-                organismSearchPmr: false,
-                organismSearchZip: "",
-                organismSearchText: "",
-              });
-              setZip("");
-              setPmr(false);
-            }}
-          >
-            Réinitialiser les filtres
-          </Button>
-        </div>
       </div>
     </div>
   );
