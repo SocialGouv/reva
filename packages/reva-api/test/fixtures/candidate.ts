@@ -1,10 +1,10 @@
-import { Gender } from "@prisma/client";
+import { Candidate, Gender } from "@prisma/client";
 
 const GENDER_MAN = "man" as Gender;
 const GENDER_WOMAN = "woman" as Gender;
 const DATE_NOW = new Date();
 
-export const CANDIDATE_MAN = {
+export const CANDIDATE_MAN: Candidate = {
   id: "00000000-0000-0000-0000-000000000001",
   firstname: "John",
   lastname: "Doe",
@@ -18,9 +18,23 @@ export const CANDIDATE_MAN = {
   vulnerabilityIndicatorId: null,
   createdAt: DATE_NOW,
   updatedAt: null,
+  departmentId: "00000000-0000-0000-0000-000000000004",
+  birthDepartmentId: null,
+  birthdate: new Date("1975-03-15"),
+  birthCity: "Lyon",
+  countryId: null,
+  nationality: "Française",
+  highestDegreeLabel: "CAP",
+  niveauDeFormationLePlusEleveDegreeId: null,
+  street: "42 rue des Roses",
+  city: "Lyon",
+  zip: "69001",
+  addressComplement: "Bâtiment A",
+  givenName: "John Paul Robert",
 };
 
-export const CANDIDATE_WOMAN = {
+export const CANDIDATE_WOMAN: Candidate = {
+  id: "00000000-0000-0000-0000-000000000005",
   firstname: "Jane",
   lastname: "Doe",
   email: "jane.doe@test.com",
@@ -33,4 +47,17 @@ export const CANDIDATE_WOMAN = {
   vulnerabilityIndicatorId: null,
   createdAt: DATE_NOW,
   updatedAt: null,
+  departmentId: "00000000-0000-0000-0000-000000000004",
+  birthDepartmentId: null,
+  birthdate: new Date("1980-01-01"),
+  birthCity: "Paris",
+  countryId: null,
+  nationality: "Française",
+  highestDegreeLabel: "Baccalauréat",
+  niveauDeFormationLePlusEleveDegreeId: null,
+  street: "123 rue des Lilas",
+  city: "Paris",
+  zip: "75001",
+  addressComplement: "Appartement 4B",
+  givenName: "Jane Betty Catherine",
 };
