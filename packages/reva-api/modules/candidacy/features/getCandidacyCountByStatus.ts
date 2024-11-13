@@ -112,7 +112,7 @@ export const getCandidacyCountByStatus = async ({
     );
 
     //search on department
-    fromClause = Prisma.sql`${fromClause} left join department on candidacy.department_id = department.id`;
+    fromClause = Prisma.sql`${fromClause} left join department on candidate.department_id = department.id`;
     searchClauses.push(
       getSearchFilterClause({
         table: "department",

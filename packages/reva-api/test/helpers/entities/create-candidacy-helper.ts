@@ -17,9 +17,6 @@ export const createCandidacyHelper = async (args?: {
   const { candidacyArgs, candidacyActiveStatus } = args ?? {};
 
   const certification = await createCertificationHelper();
-  const department = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
   const candidate = await createCandidateHelper();
 
   const organism = candidacyArgs?.organismId
@@ -54,7 +51,6 @@ export const createCandidacyHelper = async (args?: {
       financeModule: FinanceModule.unifvae,
       isCertificationPartial: false,
       status: candidacyActiveStatus ?? CandidacyStatusStep.PARCOURS_CONFIRME,
-      departmentId: department?.id ?? "",
       basicSkills: {
         createMany: {
           data: [
@@ -94,7 +90,6 @@ export const createCandidacyHelper = async (args?: {
       candidate: true,
       candidacyDropOut: true,
       candidacyStatuses: true,
-      department: true,
     },
   });
 };

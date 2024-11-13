@@ -22,7 +22,6 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
             isActive: true,
           },
         },
-        department: true,
         experiences: true,
         goals: true,
         candidacyDropOut: {

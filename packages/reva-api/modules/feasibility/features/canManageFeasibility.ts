@@ -68,7 +68,9 @@ export const canManageFeasibility = async ({
           certificationAuthorityId:
             certificationAuthorityLocalAccount.certificationAuthorityId,
           candidacy: {
-            departmentId: { in: departmentIds },
+            candidate: {
+              departmentId: { in: departmentIds },
+            },
           },
         },
       }));

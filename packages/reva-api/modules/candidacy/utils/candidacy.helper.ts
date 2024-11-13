@@ -182,9 +182,15 @@ export const candidacySearchWord = (word: string) => {
   const containsFilter = buildContainsFilterClause(word);
   return {
     OR: [
-      { candidate: candidateSearchWord(word) },
+      {
+        candidate: {
+          OR: [
+            candidateSearchWord(word),
+            { department: containsFilter("label") },
+          ],
+        },
+      },
       { organism: containsFilter("label") },
-      { department: containsFilter("label") },
       {
         certification: {
           OR: [containsFilter("label"), containsFilter("rncpTypeDiplome")],

@@ -8,6 +8,7 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { startOfTomorrow, startOfYesterday } from "date-fns";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 let juries: Awaited<ReturnType<typeof createJuryHelper>>[] = [];
 
@@ -441,8 +442,12 @@ test("should count 1 candidacy with a scheduled jury when searching by departmen
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
 
@@ -483,8 +488,12 @@ test("should return 1 candidacy when searching by department for admin user", as
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
 

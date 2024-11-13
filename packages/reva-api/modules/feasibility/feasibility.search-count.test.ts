@@ -9,6 +9,7 @@ import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create
 import { archiveCandidacy } from "../candidacy/features/archiveCandidacy";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { prismaClient } from "../../prisma/client";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 let feasibilities: Awaited<
   ReturnType<typeof createFeasibilityUploadedPdfHelper>
@@ -1009,8 +1010,12 @@ test("should count 1 feasibility when searching by department for admin user", a
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
   });
 
@@ -1058,8 +1063,12 @@ test("should return 1 feasibility when searching by department for admin user", 
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
   });
 

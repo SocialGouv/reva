@@ -7,6 +7,7 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createDossierDeValidationHelper } from "../../test/helpers/entities/create-dossier-de-validation-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 let dossiersDeValidation: Awaited<
   ReturnType<typeof createDossierDeValidationHelper>
@@ -486,8 +487,12 @@ test("should count 1 dossier de validation when searching by department for admi
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
 
@@ -530,8 +535,12 @@ test("should return 1 dossier de validation when searching by department for adm
     throw new Error("Department not found");
   }
 
+  const candidate = await createCandidateHelper({
+    departmentId: department.id,
+  });
+
   const candidacy = await createCandidacyHelper({
-    candidacyArgs: { departmentId: department.id },
+    candidacyArgs: { candidateId: candidate.id },
     candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
   });
 

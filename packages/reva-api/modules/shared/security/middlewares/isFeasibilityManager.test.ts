@@ -9,6 +9,7 @@ import { createCertificationAuthorityHelper } from "../../../../test/helpers/ent
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+import { createCandidateHelper } from "../../../../test/helpers/entities/create-candidate-helper";
 
 const getActiveFeasibilityByCandidacyId = async ({
   candidacyId,
@@ -50,7 +51,7 @@ describe("isFeasibilityManager", () => {
       if (
         !certificationAuthority?.id ||
         !certificationAuthority.Account[0].id ||
-        !candidacy.departmentId
+        !candidacy.candidate?.departmentId
       ) {
         throw new Error("Required IDs are undefined");
       }
@@ -66,7 +67,7 @@ describe("isFeasibilityManager", () => {
           },
           certificationAuthorityLocalAccountOnDepartment: {
             create: {
-              departmentId: candidacy.departmentId,
+              departmentId: candidacy.candidate.departmentId,
             },
           },
         },
@@ -119,6 +120,10 @@ describe("isFeasibilityManager", () => {
         },
       });
 
+      if (!candidacy.candidate?.departmentId) {
+        throw new Error("Candidate department ID is undefined");
+      }
+
       await prismaClient.certificationAuthorityLocalAccount.create({
         data: {
           certificationAuthorityId: certificationAuthority.id,
@@ -130,7 +135,7 @@ describe("isFeasibilityManager", () => {
           },
           certificationAuthorityLocalAccountOnDepartment: {
             create: {
-              departmentId: candidacy.departmentId ?? faker.string.uuid(),
+              departmentId: candidacy.candidate.departmentId,
             },
           },
         },
@@ -195,7 +200,7 @@ describe("isFeasibilityManager", () => {
       if (
         !certificationAuthority?.id ||
         !certificationAuthority.Account[0].id ||
-        !candidacy.departmentId
+        !candidacy.candidate?.departmentId
       ) {
         throw new Error("Required IDs are undefined");
       }
@@ -211,7 +216,7 @@ describe("isFeasibilityManager", () => {
           },
           certificationAuthorityLocalAccountOnDepartment: {
             create: {
-              departmentId: candidacy.departmentId,
+              departmentId: candidacy.candidate.departmentId,
             },
           },
         },
@@ -257,11 +262,17 @@ describe("isFeasibilityManager", () => {
           },
         },
       });
+
+      const differentDepartmentCandidate = await createCandidateHelper({
+        departmentId: department.id,
+      });
+
       const differentDepartmentCandidacy = await createCandidacyHelper({
         candidacyArgs: {
-          departmentId: department.id,
+          candidateId: differentDepartmentCandidate.id,
         },
       });
+
       await createFeasibilityUploadedPdfHelper({
         candidacyId: differentDepartmentCandidacy.id,
       });
@@ -314,9 +325,13 @@ describe("isFeasibilityManager", () => {
         },
       });
 
+      const candidate = await createCandidateHelper({
+        departmentId: differentDepartment.id,
+      });
+
       const candidacy = await createCandidacyHelper({
         candidacyArgs: {
-          departmentId: differentDepartment.id,
+          candidateId: candidate.id,
         },
       });
 

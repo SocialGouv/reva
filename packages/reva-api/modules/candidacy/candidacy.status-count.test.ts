@@ -12,6 +12,7 @@ import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create
 import { prismaClient } from "../../prisma/client";
 import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 afterEach(async () => {
   await clearDatabase();
@@ -449,11 +450,20 @@ describe.each(["ADMIN", "AAP"] as const)(
 
     test("should count the correct number of candidacy when searching for the right department label", async () => {
       //that candidacy should be visible to both profiles
-      const { department, organism } = await createCandidacyHelper();
+      const { candidate, organism } = await createCandidacyHelper();
+      const department = await prismaClient.department.findUnique({
+        where: { id: candidate?.departmentId },
+      });
+
+      const candidate2 = await createCandidateHelper({
+        departmentId: department?.id,
+      });
 
       //that candidacy should only be visible to the admin profile
       await createCandidacyHelper({
-        candidacyArgs: { departmentId: department?.id },
+        candidacyArgs: {
+          candidateId: candidate2.id,
+        },
       });
 
       await executeQueryAndAssertResults(

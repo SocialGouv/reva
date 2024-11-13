@@ -17,6 +17,7 @@ export const searchOrganismsForCandidacy = async ({
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
+      candidate: { select: { departmentId: true } },
       organism: true,
     },
   });
@@ -43,12 +44,12 @@ export const searchOrganismsForCandidacy = async ({
     organismsFound = result.rows;
     totalOrganismCount = result.totalRows;
   } else {
-    if (!candidacy.departmentId) {
-      throw new Error("Cette candidature n'est pas associée à un département");
+    if (!candidacy.candidate?.departmentId) {
+      throw new Error("Aucun département n'est associé");
     }
     const result = await getRandomActiveOrganismForCertification({
       certificationId: candidacy.certificationId || "",
-      departmentId: candidacy.departmentId,
+      departmentId: candidacy.candidate?.departmentId,
       searchText,
       searchFilter,
       limit: 50,
@@ -232,13 +233,13 @@ const getAAPsWithZipCode = async ({
 
   const organisms: Organism[] = await prismaClient.$queryRaw`
       SELECT DISTINCT o.id,
-                 o.label,
-                 o.legal_status as "labelStatus",
-                 o.contact_administrative_email as "contactAdministrativeEmail",
-                 o.contact_administrative_phone as "contactAdministrativePhone",
-                 o.website,
-                 o.siret,
-                 o.modalite_accompagnement as "modaliteAccompagnement",
+                      o.label,
+                      o.legal_status                                 as "labelStatus",
+                      o.contact_administrative_email                 as "contactAdministrativeEmail",
+                      o.contact_administrative_phone                 as "contactAdministrativePhone",
+                      o.website,
+                      o.siret,
+                      o.modalite_accompagnement                      as "modaliteAccompagnement",
                  o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  ao.organism_id as "organismId",
@@ -246,8 +247,8 @@ const getAAPsWithZipCode = async ({
       FROM organism o
        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
-       JOIN ${prismaSqlOrganismView} ao on ao.organism_id=o.id
-      ${whereClause}
+               JOIN ${prismaSqlOrganismView} ao on ao.organism_id = o.id
+          ${whereClause}
       ORDER BY "distanceKm" ASC
       LIMIT ${limit}
   `;

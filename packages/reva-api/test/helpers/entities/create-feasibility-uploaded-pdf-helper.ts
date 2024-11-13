@@ -29,7 +29,6 @@ export const createFeasibilityUploadedPdfHelper = async (
         include: {
           organism: { include: { accounts: true } },
           candidate: true,
-          department: true,
           certification: true,
         },
       },

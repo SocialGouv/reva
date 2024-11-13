@@ -105,7 +105,9 @@ export const canManageJury = async ({
   const authorized = !!(await prismaClient.candidacy.findFirst({
     where: {
       id: candidacyId,
-      departmentId: { in: departmentIds },
+      candidate: {
+        departmentId: { in: departmentIds },
+      },
       certificationId: { in: certificationIds },
     },
   }));

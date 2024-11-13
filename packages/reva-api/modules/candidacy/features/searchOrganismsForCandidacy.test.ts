@@ -428,28 +428,6 @@ describe("searchOrganismsForCandidacy", () => {
       const error = resp.json().errors[0];
       expect(error.message).toBe("Candidature non trouvée");
     });
-
-    test("should throw error when candidacy has no department", async () => {
-      const certification = await createCertificationHelper();
-      const candidacy = await createCandidacyHelper({
-        candidacyArgs: {
-          certificationId: certification?.id,
-          departmentId: null,
-        },
-      });
-
-      const resp = await searchOrganisms({
-        keycloakId: candidacy.candidate?.keycloakId ?? "",
-        candidacyId: candidacy.id,
-        searchFilter: {},
-      });
-
-      expect(resp.statusCode).toEqual(200);
-      const error = resp.json().errors[0];
-      expect(error.message).toBe(
-        "Cette candidature n'est pas associée à un département",
-      );
-    });
   });
 
   describe("Filtering edge cases", () => {
