@@ -54,12 +54,6 @@ export const injectGraphql = ({
   });
 };
 
-export const graphqlQueryPayload = (args: GraphqlRequestParameters) =>
-  graphqlRequestPayload("query")(args);
-
-export const graphqlMutationPayload = (args: GraphqlRequestParameters) =>
-  graphqlRequestPayload("mutation")(args);
-
 const graphqlRequestPayload =
   (requestType: GraphqlRequestType) =>
   (args: GraphqlRequestParameters): GraphqlRequest => {
