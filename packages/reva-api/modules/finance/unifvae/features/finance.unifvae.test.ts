@@ -7,15 +7,13 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 
 import {
+  CANDIDACY_UNIFVAE,
+  CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
+  DROP_OUT_SIX_MONTHS_AGO,
+  DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
   EXPERT_FILIERE_ORGANISM,
 } from "../../../../test/fixtures";
-import {
-  candidacyUnifvae,
-  candidacyUnireva,
-  dropOutSixMonthsAgo,
-  dropOutSixMonthsAgoMinusOneMinute,
-} from "../../../../test/fixtures/candidacy";
 import {
   fundingRequestSample,
   paymentRequestInputBase,
@@ -51,7 +49,7 @@ beforeAll(async () => {
   await createCandidateJPL();
   await createCandidacyUnifvae();
   await updateCandidacyCertification({
-    candidacyId: candidacyUnifvae.id,
+    candidacyId: CANDIDACY_UNIFVAE.id,
     certificationRncpId: "35830",
   });
   await createCandidacyUnireva();
@@ -94,7 +92,7 @@ const injectGraphqlPaymentRequestCreation = async () =>
       endpoint: "candidacy_createOrUpdatePaymentRequestUnifvae",
       returnFields: "{ id }",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         paymentRequest: {
           ...paymentRequestInputBase,
         },
@@ -108,11 +106,11 @@ const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
   proofReceivedByAdmin: boolean;
 }) =>
   prismaClient.candidacy.update({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
     data: {
       candidacyDropOut: {
         create: {
-          ...dropOutSixMonthsAgoMinusOneMinute,
+          ...DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
           dropOutReason: { connect: { label: "Autre" } },
           proofReceivedByAdmin,
         },
@@ -133,7 +131,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       returnFields:
         "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         fundingRequest: {
           ...fundingRequestSample,
         },
@@ -155,7 +153,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
 
   // Check candidacy status
   const status = await prismaClient.candidaciesStatus.findFirst({
-    where: { candidacyId: candidacyUnifvae.id, isActive: true },
+    where: { candidacyId: CANDIDACY_UNIFVAE.id, isActive: true },
   });
   expect(status?.status).toBe(CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE);
 
@@ -210,7 +208,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
       returnFields:
         "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
-        candidacyId: candidacyUnireva.id,
+        candidacyId: CANDIDACY_UNIREVA.id,
         fundingRequest: {
           ...fundingRequestSample,
         },
@@ -228,7 +226,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
 
 test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidacy certification", async () => {
   await updateCandidacyCertification({
-    candidacyId: candidacyUnifvae.id,
+    candidacyId: CANDIDACY_UNIFVAE.id,
     certificationRncpId: "37537",
   });
   const resp = await injectGraphql({
@@ -243,7 +241,7 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
       returnFields:
         "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         fundingRequest: {
           ...fundingRequestSample,
         },
@@ -274,10 +272,10 @@ test("should fail to create paymentRequestUnifvae when candidacy was drop out le
   );
 
   await prismaClient.candidacy.update({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
     data: {
       candidacyDropOut: {
-        update: dropOutSixMonthsAgo,
+        update: DROP_OUT_SIX_MONTHS_AGO,
       },
     },
   });

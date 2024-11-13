@@ -14,8 +14,11 @@ import {
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
-import { CANDIDATE_MAN, EXPERT_BRANCHE_ORGANISM } from "../../../test/fixtures";
-import { candidacyUnifvae } from "../../../test/fixtures/candidacy";
+import {
+  CANDIDACY_UNIFVAE,
+  CANDIDATE_MAN,
+  EXPERT_BRANCHE_ORGANISM,
+} from "../../../test/fixtures";
 import { basicTrainingForm } from "../../../test/fixtures/training";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
@@ -30,7 +33,7 @@ const selectNewOrganism = async () =>
       requestType: "mutation",
       endpoint: "candidacy_selectOrganism",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         organismId: EXPERT_BRANCHE_ORGANISM.id,
       },
       returnFields: "{id,organismId}",
@@ -48,7 +51,7 @@ const submitTraining = async () =>
       requestType: "mutation",
       endpoint: "training_submitTrainingForm",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         training: basicTrainingForm,
       },
       returnFields: "{id,status}",
@@ -66,7 +69,7 @@ const confirmTraining = async () =>
       requestType: "mutation",
       endpoint: "training_confirmTrainingForm",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
       },
       returnFields: "{id, status}",
     },
@@ -79,7 +82,7 @@ beforeEach(async () => {
   await createCandidacyUnifvae();
 
   await prismaClient.candidacy.update({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
     data: {
       status: "PRISE_EN_CHARGE",
       candidacyStatuses: {
@@ -106,7 +109,7 @@ test("a candidate should be able to select a new organism while a training is se
 
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_selectOrganism).toMatchObject({
-    id: candidacyUnifvae.id,
+    id: CANDIDACY_UNIFVAE.id,
     organismId: EXPERT_BRANCHE_ORGANISM.id,
   });
 });
@@ -126,7 +129,7 @@ test("should reset the status to validation when selecting a new organism and st
   await selectNewOrganism();
 
   const candidacy = await prismaClient.candidacy.findUnique({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
   });
 
   expect(candidacy).toMatchObject({
@@ -138,7 +141,7 @@ test("should reset the training and update the status when selecting a new organ
   await submitTraining();
   await selectNewOrganism();
 
-  const candidacyId = candidacyUnifvae.id;
+  const candidacyId = CANDIDACY_UNIFVAE.id;
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
   });

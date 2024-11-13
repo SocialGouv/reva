@@ -20,12 +20,13 @@ import {
 } from "@prisma/client";
 import { prismaClient } from "../../prisma/client";
 import {
+  CANDIDACY_UNIFVAE,
+  CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
   EXPERT_BRANCHE_ORGANISM,
   EXPERT_FILIERE_ORGANISM,
 } from "../../test/fixtures";
 import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
-import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
 import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
@@ -172,7 +173,7 @@ export const createCandidacyUnifvae = async () => {
 
   return prismaClient.candidacy.create({
     data: {
-      ...candidacyUnifvae,
+      ...CANDIDACY_UNIFVAE,
       departmentId: mancheDepartment?.id,
       basicSkills: {
         createMany: {
@@ -222,7 +223,7 @@ export const createCandidacyUnireva = async () => {
 
   return prismaClient.candidacy.create({
     data: {
-      ...candidacyUnireva,
+      ...CANDIDACY_UNIREVA,
       departmentId: mancheDepartment?.id,
       candidacyStatuses: {
         createMany: {

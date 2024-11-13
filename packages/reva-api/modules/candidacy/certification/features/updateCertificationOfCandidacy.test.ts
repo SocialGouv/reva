@@ -14,11 +14,7 @@ import {
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
-import { CANDIDATE_MAN } from "../../../../test/fixtures";
-import {
-  candidacyUnifvae,
-  certificationId2FromSeed,
-} from "../../../../test/fixtures/candidacy";
+import { CANDIDACY_UNIFVAE, CANDIDATE_MAN } from "../../../../test/fixtures";
 import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 
@@ -33,7 +29,7 @@ const submitTraining = async () =>
       requestType: "mutation",
       endpoint: "training_submitTrainingForm",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
         training: basicTrainingForm,
       },
       returnFields: "{id,status}",
@@ -51,7 +47,7 @@ const confirmTraining = async () =>
       requestType: "mutation",
       endpoint: "training_confirmTrainingForm",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
+        candidacyId: CANDIDACY_UNIFVAE.id,
       },
       returnFields: "{id, status}",
     },
@@ -68,8 +64,8 @@ const updateCertification = async () =>
       requestType: "mutation",
       endpoint: "candidacy_certification_updateCertification",
       arguments: {
-        candidacyId: candidacyUnifvae.id,
-        certificationId: certificationId2FromSeed,
+        candidacyId: CANDIDACY_UNIFVAE.id,
+        certificationId: CANDIDACY_UNIFVAE.certificationId,
       },
       returnFields: "",
     },
@@ -82,7 +78,7 @@ beforeEach(async () => {
   await createCandidacyUnifvae();
 
   await prismaClient.candidacy.update({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
     data: {
       status: "PRISE_EN_CHARGE",
       candidacyStatuses: {
@@ -108,10 +104,10 @@ test("a candidate should be able to select a new certification while a training 
   await updateCertification();
 
   const candidacy = await prismaClient.candidacy.findUnique({
-    where: { id: candidacyUnifvae.id },
+    where: { id: CANDIDACY_UNIFVAE.id },
   });
 
-  expect(candidacy?.certificationId).toEqual(certificationId2FromSeed);
+  expect(candidacy?.certificationId).toEqual(CANDIDACY_UNIFVAE.certificationId);
 });
 
 test("a candidate should not be able to select a new certification after the training is confirmed", async () => {
@@ -129,7 +125,7 @@ test("should reset the training and status when selecting a new certification", 
   await submitTraining();
   await updateCertification();
 
-  const candidacyId = candidacyUnifvae.id;
+  const candidacyId = CANDIDACY_UNIFVAE.id;
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
   });
