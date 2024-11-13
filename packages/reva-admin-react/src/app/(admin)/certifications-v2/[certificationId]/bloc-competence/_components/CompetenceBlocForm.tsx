@@ -55,6 +55,7 @@ export const CompetenceBlocForm = ({
   return (
     <form onSubmit={handleFormSubmit} className={`${className}`}>
       <Input
+        data-test="competence-bloc-label-input"
         label="Intitulé du bloc de compétences"
         state={errors.label ? "error" : "default"}
         stateRelatedMessage={errors.label?.message?.toString()}
