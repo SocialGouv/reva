@@ -47,11 +47,14 @@ export const CompetenceBlocForm = ({
     formState: { isDirty, isSubmitting, errors },
   } = methods;
 
-  const { fields: competencesFields, append: appendCompetenceField } =
-    useFieldArray({
-      control,
-      name: "competences",
-    });
+  const {
+    fields: competencesFields,
+    append: appendCompetence,
+    remove: removeCompetence,
+  } = useFieldArray({
+    control,
+    name: "competences",
+  });
 
   const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));
   return (
@@ -70,16 +73,26 @@ export const CompetenceBlocForm = ({
         data-test="competence-list"
       >
         {competencesFields.map((c, cIndex) => (
-          <Input
-            className="mb-0"
-            label=""
-            state={errors.competences?.[cIndex]?.label ? "error" : "default"}
-            stateRelatedMessage={errors.competences?.[
-              cIndex
-            ]?.label?.message?.toString()}
-            key={c.id}
-            nativeInputProps={{ ...register(`competences.${cIndex}.label`) }}
-          />
+          <div className="flex content-betwee gap-2" key={c.id}>
+            <Input
+              className="mb-0 w-full"
+              label=""
+              state={errors.competences?.[cIndex]?.label ? "error" : "default"}
+              stateRelatedMessage={errors.competences?.[
+                cIndex
+              ]?.label?.message?.toString()}
+              nativeInputProps={{ ...register(`competences.${cIndex}.label`) }}
+            />
+            <Button
+              data-test="remove-competence-button"
+              priority="tertiary no outline"
+              iconId="fr-icon-delete-line"
+              iconPosition="left"
+              onClick={() => removeCompetence(cIndex)}
+            >
+              Supprimer
+            </Button>
+          </div>
         ))}
       </div>
       <Button
@@ -88,7 +101,7 @@ export const CompetenceBlocForm = ({
         iconId="fr-icon-add-line"
         iconPosition="left"
         onClick={() =>
-          appendCompetenceField({ label: "", index: competencesFields.length })
+          appendCompetence({ label: "", index: competencesFields.length })
         }
       >
         Ajouter une compétence
