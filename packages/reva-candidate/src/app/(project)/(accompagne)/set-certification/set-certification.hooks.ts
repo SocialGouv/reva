@@ -37,22 +37,18 @@ const UPDATE_CERTIFICATION = graphql(`
   mutation candidacy_certification_updateCertification(
     $candidacyId: ID!
     $certificationId: ID!
-    $departmentId: ID!
   ) {
     candidacy_certification_updateCertification(
       candidacyId: $candidacyId
       certificationId: $certificationId
-      departmentId: $departmentId
     )
   }
 `);
 
 export const useSetCertification = ({
-  departmentId,
   searchText,
   currentPage,
 }: {
-  departmentId: string;
   searchText?: string;
   currentPage: number;
 }) => {
@@ -62,17 +58,11 @@ export const useSetCertification = ({
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
 
   const searchCertificationsForCandidate = useQuery({
-    queryKey: [
-      "searchCertificationsForCandidate",
-      departmentId,
-      searchText,
-      currentPage,
-    ],
+    queryKey: ["searchCertificationsForCandidate", searchText, currentPage],
     queryFn: () =>
       graphqlClient.request(SEARCH_CERTIFICATIONS_FOR_CANDIDATE, {
         offset,
         limit: RECORDS_PER_PAGE,
-        departmentId,
         searchText,
       }),
     gcTime: 0,
@@ -90,7 +80,6 @@ export const useSetCertification = ({
       graphqlClient.request(UPDATE_CERTIFICATION, {
         candidacyId,
         certificationId,
-        departmentId,
       }),
   });
 

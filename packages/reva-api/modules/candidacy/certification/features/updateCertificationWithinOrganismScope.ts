@@ -122,7 +122,6 @@ export const updateCertificationWithinOrganismScope = async ({
   await updateCertification({
     candidacyId,
     certificationId,
-    departmentId: candidacy.departmentId || "",
     author: hasRole("admin") ? "admin" : "organism",
     feasibilityFormat:
       candidacy.typeAccompagnement === "ACCOMPAGNE"

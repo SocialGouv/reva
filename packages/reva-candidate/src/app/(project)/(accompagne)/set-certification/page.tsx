@@ -16,10 +16,7 @@ import { PageLayout } from "@/layouts/page.layout";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-import {
-  DepartmentType,
-  SelectDepartment,
-} from "@/components/select-department/SelectDepartment.component";
+
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { Results } from "@/components/legacy/organisms/Results";
@@ -52,13 +49,8 @@ export default function SetCertification() {
 
   const { canEditCandidacy, candidate, refetch } = useCandidacy();
 
-  const [department, setDepartment] = useState<DepartmentType | undefined>(
-    candidate.department,
-  );
-
   const { searchCertificationsForCandidate, updateCertification } =
     useSetCertification({
-      departmentId: department?.id || "",
       searchText: searchFilter,
       currentPage,
     });
@@ -120,14 +112,6 @@ export default function SetCertification() {
             label="Sélectionnez le diplôme que vous voulez valider"
           />
 
-          <SelectDepartment
-            required
-            departmentId={department?.id}
-            onSelectDepartment={(department) => {
-              setDepartment(department);
-            }}
-          />
-
           <SearchBar
             label="Rechercher un diplôme"
             className="mb-8"
@@ -149,11 +133,7 @@ export default function SetCertification() {
           />
 
           <p className="mb-0" role="status">
-            {department
-              ? `Nombre de diplômes disponibles pour le département ${
-                  department.label
-                } : ${info?.totalRows}`
-              : null}
+            Nombre de diplômes disponibles : {info?.totalRows}
           </p>
 
           <div id="results" className="flex flex-col justify-center">

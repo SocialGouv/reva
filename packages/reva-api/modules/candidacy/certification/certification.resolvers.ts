@@ -19,7 +19,6 @@ const unsafeResolvers = {
       updateCertificationOfCandidacy({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
-        departmentId: payload.departmentId,
         userKeycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth?.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],

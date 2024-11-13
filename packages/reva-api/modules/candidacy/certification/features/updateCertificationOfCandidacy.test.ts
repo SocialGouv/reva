@@ -13,13 +13,14 @@ import {
 } from "../../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
-import { Candidacy, CandidacyStatusStep } from "@prisma/client";
+import { CandidacyStatusStep } from "@prisma/client";
 import { CANDIDATE_MAN } from "../../../../test/fixtures";
-import { certificationId2FromSeed } from "../../../../test/fixtures/candidacy";
+import {
+  candidacyUnifvae,
+  certificationId2FromSeed,
+} from "../../../../test/fixtures/candidacy";
 import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
-
-let candidacyUnifvae: Candidacy;
 
 const submitTraining = async () =>
   await injectGraphql({
@@ -68,7 +69,6 @@ const updateCertification = async () =>
       endpoint: "candidacy_certification_updateCertification",
       arguments: {
         candidacyId: candidacyUnifvae.id,
-        departmentId: candidacyUnifvae.departmentId,
         certificationId: certificationId2FromSeed,
       },
       returnFields: "",
@@ -79,7 +79,7 @@ beforeEach(async () => {
   await createExpertFiliereOrganism();
   await createExpertBrancheOrganism();
   await createCandidateJPL();
-  candidacyUnifvae = await createCandidacyUnifvae();
+  await createCandidacyUnifvae();
 
   await prismaClient.candidacy.update({
     where: { id: candidacyUnifvae.id },

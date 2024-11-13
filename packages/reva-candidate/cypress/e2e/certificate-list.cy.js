@@ -3,7 +3,6 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Certificate list", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
@@ -18,10 +17,6 @@ context("Certificate list", () => {
 
   it("should show only 2 certifications", function () {
     cy.get('[data-test="project-home-set-certification"]').click();
-    cy.wait("@getDepartments");
-    cy.get("[data-test='certificates-select-department']")
-      .children("select")
-      .select("Région 2");
 
     cy.wait("@searchCertificationsForCandidate");
 

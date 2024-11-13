@@ -18,14 +18,12 @@ import { resetTrainingInformation } from "../../training/features/resetTrainingI
 export const updateCertificationOfCandidacy = async ({
   candidacyId,
   certificationId,
-  departmentId,
   userKeycloakId,
   userEmail,
   userRoles,
 }: {
   candidacyId: string;
   certificationId: string;
-  departmentId: string;
   userKeycloakId?: string;
   userEmail?: string;
   userRoles: KeyCloakUserRole[];
@@ -61,7 +59,6 @@ export const updateCertificationOfCandidacy = async ({
     await updateCertification({
       candidacyId,
       certificationId,
-      departmentId,
       author: "candidate",
       feasibilityFormat:
         candidacy.typeAccompagnement === "ACCOMPAGNE"

@@ -13,7 +13,6 @@ type Mutation {
   candidacy_certification_updateCertification(
     candidacyId: ID!
     certificationId: ID!
-    departmentId: ID!
   ): Void
   candidacy_certification_updateCertificationWithinOrganismScope(
     candidacyId: ID!

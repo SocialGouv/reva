@@ -84,7 +84,7 @@ const confirmRegistration = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  // if the candidate has selected a certification during its registration, we assign it if it's available in his department
+  // if the candidate has selected a certification during its registration, we assign it if it's available
   if (
     certificationId &&
     (await isCertificationAvailable({
@@ -100,7 +100,6 @@ const confirmRegistration = async ({
       candidacyId: candidacy.id,
       author: "candidate",
       certificationId,
-      departmentId: candidateRegistrationInput.departmentId,
       feasibilityFormat:
         candidacy.typeAccompagnement === "ACCOMPAGNE"
           ? certification.feasibilityFormat
