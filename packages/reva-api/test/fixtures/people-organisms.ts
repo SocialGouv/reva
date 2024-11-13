@@ -25,38 +25,6 @@ const lieuAccueilMaisonMere2 = {
   modaliteAccompagnementRenseigneeEtValide: true,
 } satisfies Partial<Organism>;
 
-// Architectes
-
-const archiIperia1 = {
-  keycloakId: "00000000-0000-0000-0000-000000000008",
-  firstname: "Gérard",
-  lastname: "Jambon",
-  email: "gege.bonbon@gmail.com",
-};
-
-const archiIperia2 = {
-  keycloakId: "00000000-0000-0000-0000-000000000009",
-  firstname: "Antoine",
-  lastname: "Camembert",
-  email: "toinou.kipu@hotmail.fr",
-};
-
-// Admins
-
-const adminAccount1 = {
-  keycloakId: "00000000-0000-0000-0000-000000000010",
-  firstname: "Mimi",
-  lastname: "Matty",
-  email: "mimi@yolo.fr",
-};
-
-const candidateAccount = {
-  keycloakId: "00000000-0000-0000-0000-000000000011",
-  firstname: "John",
-  lastname: "Doe",
-  email: "john.doe@example.fr",
-};
-
 const gestionnaireMaisonMereAAP1 = {
   id: "00000000-0000-0000-0000-000000000012",
   keycloakId: "00000000-0000-0000-0000-000000000013",
@@ -90,7 +58,6 @@ const maisonMereAAP1 = {
   statutJuridique: "ASSOCIATION_LOI_1901" as const,
   typologie: "expertFiliere" as const,
   dateExpirationCertificationQualiopi: new Date(),
-  // gestionnaireAccountId: account.id,
   statutValidationInformationsJuridiquesMaisonMereAAP:
     StatutValidationInformationsJuridiquesMaisonMereAAP.A_JOUR,
   cguVersion: null,
@@ -121,7 +88,6 @@ const maisonMereAAPExpertFiliere = {
   statutJuridique: "ASSOCIATION_LOI_1901" as const,
   typologie: "expertFiliere" as const,
   dateExpirationCertificationQualiopi: new Date(),
-  // gestionnaireAccountId: account.id,
   statutValidationInformationsJuridiquesMaisonMereAAP:
     StatutValidationInformationsJuridiquesMaisonMereAAP.A_JOUR,
   cguVersion: null,
@@ -145,11 +111,7 @@ const maisonMereAAPExpertBranche = {
 };
 
 export {
-  adminAccount1,
   agencePrincipaleMaisonMere2,
-  archiIperia1,
-  archiIperia2,
-  candidateAccount,
   collaborateurMaisonMereAapAccount2,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
