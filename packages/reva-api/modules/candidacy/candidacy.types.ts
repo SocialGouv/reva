@@ -4,6 +4,7 @@ export interface CandidacyDropOut {
   status: CandidacyStatusStep;
   otherReasonContent?: string | null;
 }
+
 export interface Candidacy {
   id: string;
   isCertificationPartial?: boolean | null;
@@ -29,17 +30,6 @@ type Duration =
   | "moreThanFiveYears"
   | "moreThanTenYears";
 
-export interface Admissibility {
-  id: string;
-  isCandidateAlreadyAdmissible: boolean;
-  reportSentAt: Date | null;
-  certifierRespondedAt: Date | null;
-  responseAvailableToCandidateAt: Date | null;
-  status: AdmissibilityStatus | null;
-}
-
-type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
-
 export enum CandidacyBusinessEvent {
   SUBMITTED_CANDIDACY = "Submitted Candidacy",
   TOOK_OVER_CANDIDACY = "Took over candidacy",
@@ -55,13 +45,13 @@ export enum CandidacyBusinessEvent {
   SELECTED_ORGANISM = "Selected organism",
   SUBMITTED_TRAINING_FORM = "Submitted training form",
   CONFIRMED_TRAINING_FORM = "Confirmed training form",
-  UPDATED_ADMISSIBILITY = "Updated admissibility",
   DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
   CANCELED_DROPPED_OUT_CANDIDACY = "Canceled dropped out candidacy",
   VALIDATED_DROPPED_OUT_CANDIDACY = "Validated dropped out candidacy",
   UPDATED_EXAM_INFO = "Updated exam information",
   CREATED_FUNDING_REQUEST_UNIFVAE = "Created a funding request (unifvae)",
 }
+
 export const candidacyStatusFilters = [
   "ACTIVE_HORS_ABANDON",
   "ABANDON",
