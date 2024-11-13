@@ -1,6 +1,7 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 import { prismaClient } from "../../../../prisma/client";
+
 const log = debug("gql:security");
 
 export const isFeasibilityManager =
@@ -54,9 +55,9 @@ export const isFeasibilityManager =
                       id: true,
                     },
                   },
-                  department: {
+                  candidate: {
                     select: {
-                      id: true,
+                      departmentId: true,
                     },
                   },
                 },
@@ -94,8 +95,8 @@ export const isFeasibilityManager =
       const candidacyCertificationId =
         candidacyFeasibility.candidacy.certification?.id;
 
-      const candidacyDepartmentId =
-        candidacyFeasibility.candidacy.department?.id;
+      const candidateDepartmentId =
+        candidacyFeasibility.candidacy.candidate?.departmentId;
 
       const candidacyCertificationAuthorityId =
         candidacyFeasibility.certificationAuthorityId;
@@ -110,7 +111,7 @@ export const isFeasibilityManager =
         );
       const matchDepartment =
         certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnDepartment.some(
-          (d) => d.departmentId === candidacyDepartmentId,
+          (d) => d.departmentId === candidateDepartmentId,
         );
 
       if (
