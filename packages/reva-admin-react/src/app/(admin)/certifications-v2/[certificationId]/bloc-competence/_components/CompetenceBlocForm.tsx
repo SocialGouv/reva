@@ -85,6 +85,7 @@ export const CompetenceBlocForm = ({
             />
             <Button
               data-test="remove-competence-button"
+              type="button"
               priority="tertiary no outline"
               iconId="fr-icon-delete-line"
               iconPosition="left"
@@ -97,6 +98,7 @@ export const CompetenceBlocForm = ({
       </div>
       <Button
         data-test="add-competence-button"
+        type="button"
         priority="tertiary no outline"
         iconId="fr-icon-add-line"
         iconPosition="left"
