@@ -273,6 +273,10 @@ type Query {
   ): CertificationCompetenceBloc!
 }
 
+input AddCertificationInput {
+  codeRncp: String!
+}
+
 input UpdateCertificationInput {
   certificationId: ID!
   label: String!
@@ -322,4 +326,5 @@ type Mutation {
   referential_updateCertificationCompetenceBloc(
     input: UpdateCompetenceBlocInput!
   ): CertificationCompetenceBloc
+  referential_addCertification(input: AddCertificationInput!): Certification!
 }

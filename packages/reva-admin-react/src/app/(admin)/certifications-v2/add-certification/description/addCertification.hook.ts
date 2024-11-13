@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getFCCertificationQuery = graphql(`
   query getFCCertificationForAddCertificationPage($rncp: ID!) {
@@ -26,6 +26,14 @@ const getFCCertificationQuery = graphql(`
   }
 `);
 
+const addCertificatioMutation = graphql(`
+  mutation addCertificatioMutation($input: AddCertificationInput!) {
+    referential_addCertification(input: $input) {
+      id
+    }
+  }
+`);
+
 export const useAddCertificationPage = ({ rncp }: { rncp: string }) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -46,5 +54,12 @@ export const useAddCertificationPage = ({ rncp }: { rncp: string }) => {
 
   const certification = getCertificationQueryResponse?.getFCCertification;
 
-  return { certification, getCertificationQueryStatus };
+  const addCertification = useMutation({
+    mutationFn: (input: { codeRncp: string }) =>
+      graphqlClient.request(addCertificatioMutation, {
+        input,
+      }),
+  });
+
+  return { certification, getCertificationQueryStatus, addCertification };
 };

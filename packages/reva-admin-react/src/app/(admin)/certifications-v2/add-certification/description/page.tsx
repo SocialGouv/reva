@@ -3,10 +3,10 @@ import { ReactNode } from "react";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,17 +15,19 @@ import { useAddCertificationPage } from "./addCertification.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const zodSchema = z.object({
-  rncp: z.string().min(3, "obligatoire"),
+  rncp: z.string().min(1, "Champs requis"),
 });
 
 type CompanySiretStepFormSchema = z.infer<typeof zodSchema>;
 
 export default function CertificationDescriptionPage() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     watch,
   } = useForm<CompanySiretStepFormSchema>({
     resolver: zodResolver(zodSchema),
@@ -34,13 +36,19 @@ export default function CertificationDescriptionPage() {
 
   const rncp = watch("rncp");
 
-  const { certification } = useAddCertificationPage({ rncp });
+  const { certification, addCertification } = useAddCertificationPage({ rncp });
 
   const handleFormSubmit = handleSubmit(async (_data) => {
     try {
-      console.warn("Do something");
+      const {
+        referential_addCertification: { id: newCertificationId },
+      } = await addCertification.mutateAsync({
+        codeRncp: rncp,
+      });
 
       successToast("La certification a bien été ajoutée");
+
+      router.push(`/certifications-v2/${newCertificationId}`);
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -69,16 +77,6 @@ export default function CertificationDescriptionPage() {
             }}
             className="md:w-1/4 mb-0"
           />
-          {errors.rncp ? (
-            <Alert
-              className="hidden md:block w-full "
-              title={`Certifiction non trouvée pour le code RNCP ${rncp}`}
-              severity="error"
-              description={errors.rncp?.message}
-            />
-          ) : (
-            <div className="hidden md:block w-full" />
-          )}
         </form>
         <EnhancedSectionCard
           data-test="fc-certification-description-card"
@@ -121,7 +119,7 @@ export default function CertificationDescriptionPage() {
         </EnhancedSectionCard>
       </div>
 
-      <div className="flex flex-row justify-end mt-12">
+      <div className="flex flex-row justify-end mt-12 gap-2">
         <Button
           priority="secondary"
           linkProps={{

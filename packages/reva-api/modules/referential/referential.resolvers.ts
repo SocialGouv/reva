@@ -40,6 +40,7 @@ import { getActiveCertifications } from "./features/getActiveCertifications";
 import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
 import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
+import { addCertification } from "./features/addCertification";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -160,6 +161,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCompetenceBlocInput },
     ) => updateCertificationCompetenceBloc(input),
+    referential_addCertification: (
+      _parent: unknown,
+      { input }: { input: { codeRncp: string } },
+    ) => addCertification(input),
   },
 };
 

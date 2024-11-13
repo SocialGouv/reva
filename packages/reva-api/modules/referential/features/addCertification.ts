@@ -1,18 +1,17 @@
 import { prismaClient } from "../../../prisma/client";
+
 import { RNCPCertification, RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 
-export const updateCertificationWithRncpFiledsAndSubDomains = async (params: {
-  codeRncp: string;
-}) => {
+export const addCertification = async (params: { codeRncp: string }) => {
   const { codeRncp } = params;
 
-  const certification = await prismaClient.certification.findFirst({
+  const existingCertification = await prismaClient.certification.findFirst({
     where: { rncpId: codeRncp },
   });
-  if (!certification) {
+  if (existingCertification) {
     throw new Error(
-      `La certification avec le code rncp ${codeRncp} n'existe pas`,
+      `La certification avec le code rncp ${codeRncp} existe déjà`,
     );
   }
 
@@ -24,14 +23,36 @@ export const updateCertificationWithRncpFiledsAndSubDomains = async (params: {
     );
   }
 
-  // Update certification from based on RNCP
-  await prismaClient.certification.update({
-    where: { id: certification.id },
+  const label = rncpCertification.INTITULE;
+  const level = getLevelFromRNCPCertification(rncpCertification);
+  const rncpTypeDiplomeLabel = rncpCertification.ABREGE?.LIBELLE;
+  if (!rncpTypeDiplomeLabel) {
+    throw new Error("Type de diplôme RNCP non renseigné");
+  }
+  const typeDiplome = await prismaClient.typeDiplome.findFirst({
+    where: { label: rncpTypeDiplomeLabel },
+  });
+
+  const availableAt = new Date();
+  const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
+
+  const certification = await prismaClient.certification.create({
     data: {
-      rncpLabel: rncpCertification.INTITULE,
-      rncpLevel: getLevelFromRNCPCertification(rncpCertification),
-      rncpTypeDiplome: rncpCertification.ABREGE?.LIBELLE,
-      rncpExpiresAt: new Date(rncpCertification.DATE_FIN_ENREGISTREMENT),
+      statusV2: "BROUILLON",
+      feasibilityFormat: "DEMATERIALIZED",
+      rncpId: codeRncp,
+      label,
+      level,
+      typeDiplome: typeDiplome
+        ? { connect: { id: typeDiplome.id } }
+        : { create: { label: rncpTypeDiplomeLabel } },
+      availableAt,
+      expiresAt,
+      // RNCP Fields
+      rncpLabel: label,
+      rncpLevel: level,
+      rncpTypeDiplome: rncpTypeDiplomeLabel,
+      rncpExpiresAt: expiresAt,
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,
@@ -64,11 +85,6 @@ export const updateCertificationWithRncpFiledsAndSubDomains = async (params: {
     }
   }
 
-  // Remove all links by certificationId
-  await prismaClient.certificationOnFormacode.deleteMany({
-    where: { certificationId: certification.id },
-  });
-
   // Create all links
   await prismaClient.certificationOnFormacode.createMany({
     data: subDomains.map((subDomain) => ({
@@ -76,6 +92,8 @@ export const updateCertificationWithRncpFiledsAndSubDomains = async (params: {
       certificationId: certification.id,
     })),
   });
+
+  return certification;
 };
 
 const getLevelFromRNCPCertification = (

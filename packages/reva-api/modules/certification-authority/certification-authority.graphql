@@ -46,7 +46,7 @@ type CertificationAuthorityPaginated {
 
 type Certification {
   certificationAuthorities: [CertificationAuthority!]!
-  certificationAuthorityStructure: CertificationAuthorityStructure!
+  certificationAuthorityStructure: CertificationAuthorityStructure
 }
 
 enum CertificationAuthorityOrLocalAccountType {

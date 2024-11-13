@@ -88,11 +88,14 @@ const unsafeResolvers = {
     certificationAuthorityStructure: ({
       certificationAuthorityStructureId,
     }: {
-      certificationAuthorityStructureId: string;
+      certificationAuthorityStructureId?: string;
     }) =>
-      getCertificationAuthorityStructureById({
-        certificationAuthorityStructureId: certificationAuthorityStructureId,
-      }),
+      certificationAuthorityStructureId
+        ? getCertificationAuthorityStructureById({
+            certificationAuthorityStructureId:
+              certificationAuthorityStructureId,
+          })
+        : null,
   },
   CertificationAuthorityStructure: {
     certifications: ({ id: certificationStructureId }: { id: string }) =>
