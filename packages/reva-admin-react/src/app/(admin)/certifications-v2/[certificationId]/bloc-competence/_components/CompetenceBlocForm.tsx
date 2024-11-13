@@ -68,8 +68,10 @@ export const CompetenceBlocForm = ({
           <Input
             className="mb-0"
             label=""
-            state={errors.label ? "error" : "default"}
-            stateRelatedMessage={errors.label?.message?.toString()}
+            state={errors.competences?.[cIndex]?.label ? "error" : "default"}
+            stateRelatedMessage={errors.competences?.[
+              cIndex
+            ]?.label?.message?.toString()}
             key={c.id}
             nativeInputProps={{ ...register(`competences.${cIndex}.label`) }}
           />
