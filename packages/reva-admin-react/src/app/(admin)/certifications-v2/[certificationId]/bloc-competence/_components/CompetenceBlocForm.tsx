@@ -6,17 +6,11 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const competenceBlocFormSchema = z.object({
-  label: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
+  label: z.string().min(1, "Merci de remplir ce champ").default(""),
   competences: z
     .object({
       id: z.string().optional(),
-      label: z
-        .string()
-        .min(2, "Ce champ doit contenir au moins 2 caractères")
-        .default(""),
+      label: z.string().min(1, "Merci de remplir ce champ").default(""),
       index: z.number(),
     })
     .array(),
