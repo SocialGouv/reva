@@ -65,7 +65,7 @@ export interface UpdateCertificationInput {
   expiresAt: Date;
 }
 
-interface CompetenceInput {
+export interface CompetenceInput {
   id?: string;
   index: number;
   label: string;
@@ -81,4 +81,10 @@ interface CompetenceBlocInput {
 export interface UpdateCompetenceBlocsInput {
   certificationId: string;
   blocs: CompetenceBlocInput[];
+}
+
+export interface UpdateCompetenceBlocInput {
+  id: string;
+  label: string;
+  competences: CompetenceInput[];
 }

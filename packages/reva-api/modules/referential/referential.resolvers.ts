@@ -24,6 +24,7 @@ import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CertificationStatus,
   UpdateCertificationInput,
+  UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
 } from "./referential.types";
 import { RNCPReferential } from "./rncp";
@@ -38,6 +39,7 @@ import { getAvailableFormacodes } from "./features/getFormacodes";
 import { getActiveCertifications } from "./features/getActiveCertifications";
 import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
 import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
+import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -154,6 +156,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCompetenceBlocsInput },
     ) => updateCompetenceBlocsByCertificationId(input),
+    referential_updateCertificationCompetenceBloc: (
+      _parent: unknown,
+      { input }: { input: UpdateCompetenceBlocInput },
+    ) => updateCertificationCompetenceBloc(input),
   },
 };
 
