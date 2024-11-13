@@ -16,6 +16,9 @@ export const canAccessCandidacy = async ({
 
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
+    include: {
+      candidate: { select: { departmentId: true } },
+    },
   });
 
   if (!candidacy) {
@@ -120,7 +123,7 @@ export const canAccessCandidacy = async ({
 
     const candidacyCertificationId = candidacy.certificationId;
 
-    const candidacyDepartmentId = candidacy.departmentId;
+    const candidateDepartmentId = candidacy.candidate?.departmentId;
 
     const candidacyCertificationAuthorityId =
       candidacyFeasibility.certificationAuthorityId;
@@ -135,7 +138,7 @@ export const canAccessCandidacy = async ({
       );
     const matchDepartment =
       certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnDepartment.some(
-        (d) => d.departmentId === candidacyDepartmentId,
+        (d) => d.departmentId === candidateDepartmentId,
       );
 
     return matchCertificationAuthority && matchCertification && matchDepartment;

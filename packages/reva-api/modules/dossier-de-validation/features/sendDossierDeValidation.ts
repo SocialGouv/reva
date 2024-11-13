@@ -31,9 +31,8 @@ export const sendDossierDeValidation = async ({
     include: {
       candidacyDropOut: true,
       candidacyStatuses: { where: { isActive: true } },
-      candidate: true,
+      candidate: { select: { email: true, departmentId: true } },
       Feasibility: { where: { isActive: true } },
-      department: true,
     },
   });
   if (!candidacy) {
@@ -143,16 +142,16 @@ export const sendDossierDeValidation = async ({
   });
 
   const candidacyCertificationId = candidacy?.certificationId;
-  const candidacyDepartmentId = candidacy.departmentId;
+  const candidateDepartmentId = candidacy?.candidate?.departmentId;
 
-  if (candidacyCertificationId && candidacyDepartmentId) {
+  if (candidacyCertificationId && candidateDepartmentId) {
     const certificationAuthorityLocalAccounts =
       await getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment(
         {
           certificationAuthorityId:
             dossierDeValidation.certificationAuthorityId,
           certificationId: candidacyCertificationId,
-          departmentId: candidacyDepartmentId,
+          departmentId: candidateDepartmentId,
         },
       );
     const certificationAuthority = dossierDeValidation.certificationAuthority;

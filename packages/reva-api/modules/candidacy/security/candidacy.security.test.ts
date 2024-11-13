@@ -200,7 +200,7 @@ beforeAll(async () => {
         accountId: certificationAuthorityLocalAccountAccount.id,
         certificationAuthorityLocalAccountOnDepartment: {
           create: {
-            department: { connect: { id: candidacy.departmentId as string } },
+            department: { connect: { id: candidate.departmentId as string } },
           },
         },
         certificationAuthorityLocalAccountOnCertification: {

@@ -108,7 +108,7 @@ export const createFeasibility = async ({
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
-      department: true,
+      candidate: { select: { departmentId: true } },
     },
   });
 
@@ -279,15 +279,15 @@ export const createFeasibility = async ({
   });
 
   const candidacyCertificationId = candidacy?.certificationId;
-  const candidacyDepartmentId = candidacy?.departmentId;
+  const candidateDepartmentId = candidacy?.candidate?.departmentId;
 
-  if (candidacyCertificationId && candidacyDepartmentId) {
+  if (candidacyCertificationId && candidateDepartmentId) {
     const certificationAuthority = await getCertificationAuthorityById(
       certificationAuthorityId,
     );
     if (!certificationAuthority) {
       logger.error(
-        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le département : ${candidacyDepartmentId}`,
+        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le département : ${candidateDepartmentId}`,
       );
     }
     //sending a mail notification to candidacy certification authority and related certification authority local accounts
@@ -297,7 +297,7 @@ export const createFeasibility = async ({
         {
           certificationAuthorityId,
           certificationId: candidacyCertificationId,
-          departmentId: candidacyDepartmentId,
+          departmentId: candidateDepartmentId,
         },
       );
     const emails = [];
@@ -533,7 +533,9 @@ const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole = ({
       certificationAuthorityId:
         certificationAuthorityLocalAccount?.certificationAuthorityId,
       candidacy: {
-        departmentId: { in: departmentIds },
+        candidate: {
+          departmentId: { in: departmentIds },
+        },
         certificationId: { in: certificationIds },
       },
     };
@@ -1251,7 +1253,9 @@ const canManageFeasibility = async ({
           certificationAuthorityId:
             certificationAuthorityLocalAccount.certificationAuthorityId,
           candidacy: {
-            departmentId: { in: departmentIds },
+            candidate: {
+              departmentId: { in: departmentIds },
+            },
           },
         },
       }));
