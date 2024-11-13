@@ -1,9 +1,9 @@
 import { Candidacy } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
+import { CANDIDATE_MAN } from "../../../test/fixtures/candidate";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { cancelDropOutCandidacy } from "./cancelDropOutCandidacy";
-import { candidateJPL } from "../../../test/fixtures/people-organisms";
 
 let parisDepartment,
   candidate,
@@ -17,7 +17,7 @@ beforeAll(async () => {
   });
 
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
   });
 
   dropoutReason = await prismaClient.dropOutReason.findFirst({

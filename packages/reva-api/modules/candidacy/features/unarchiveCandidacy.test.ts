@@ -1,19 +1,17 @@
 import {
-  Candidate,
   Candidacy,
+  Candidate,
+  Department,
   Organism,
   ReorientationReason,
-  Department,
 } from "@prisma/client";
-import { FunctionalCodeError } from "../../shared/error/functionalError";
-import { unarchiveCandidacy } from "./unarchiveCandidacy";
-import { prismaClient } from "../../../prisma/client";
-import {
-  organismIperia,
-  candidateJPL,
-} from "../../../test/fixtures/people-organisms";
 import { sub } from "date-fns";
+import { prismaClient } from "../../../prisma/client";
+import { CANDIDATE_MAN } from "../../../test/fixtures/candidate";
+import { organismIperia } from "../../../test/fixtures/people-organisms";
+import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
+import { unarchiveCandidacy } from "./unarchiveCandidacy";
 
 const reorientationReasonTable = [
   { label: "Droit commun" },
@@ -76,7 +74,7 @@ beforeAll(async () => {
   organism = await prismaClient.organism.create({ data: organismIperia });
 
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
   });
 
   candidacyPriseEnCharge = await prismaClient.candidacy.create({

@@ -13,11 +13,9 @@ import {
 import { FastifyInstance } from "fastify";
 
 import { prismaClient } from "../../prisma/client";
+import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
 import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
-import {
-  candidateJPL,
-  organismIperia,
-} from "../../test/fixtures/people-organisms";
+import { organismIperia } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -44,7 +42,7 @@ beforeAll(async () => {
   organism = await prismaClient.organism.create({ data: organismIperia });
 
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
   });
 
   candidacy = await prismaClient.candidacy.create({

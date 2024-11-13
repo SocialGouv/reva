@@ -3,23 +3,21 @@
  */
 
 import { prismaClient } from "../../../../prisma/client";
+import { gestionnaireMaisonMereAAP1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertBrancheOrganism,
   createExpertFiliereOrganism,
 } from "../../../../test/helpers/create-db-entity";
-import {
-  candidateJPL,
-  gestionnaireMaisonMereAAP1,
-} from "../../../../test/fixtures/people-organisms";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
-import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
-import { certificationId2FromSeed } from "../../../../test/fixtures/candidacy";
-import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { Candidacy, CandidacyStatusStep } from "@prisma/client";
+import { certificationId2FromSeed } from "../../../../test/fixtures/candidacy";
+import { CANDIDATE_MAN } from "../../../../test/fixtures/candidate";
+import { basicTrainingForm } from "../../../../test/fixtures/training";
+import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 
 let candidacyUnifvae: Candidacy;
 
@@ -46,7 +44,7 @@ const confirmTraining = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: candidateJPL.keycloakId,
+      keycloakId: CANDIDATE_MAN.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -63,7 +61,7 @@ const updateCertification = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: candidateJPL.keycloakId,
+      keycloakId: CANDIDATE_MAN.keycloakId,
     }),
     payload: {
       requestType: "mutation",

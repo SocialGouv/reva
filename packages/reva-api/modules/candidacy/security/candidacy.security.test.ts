@@ -15,14 +15,16 @@ import {
 
 import { prismaClient } from "../../../prisma/client";
 import {
-  candidateJPL,
-  candidateMPB,
+  CANDIDATE_MAN,
+  CANDIDATE_WOMAN,
+} from "../../../test/fixtures/candidate";
+import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
+import {
   expertBrancheEtFiliereOrganism,
   organismIperia,
 } from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
 
 let organism: Organism,
   candidate: Candidate,
@@ -111,11 +113,11 @@ beforeAll(async () => {
   });
 
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: ileDeFrance?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
   });
 
   randomCandidate = await prismaClient.candidate.create({
-    data: { ...candidateMPB, departmentId: ileDeFrance?.id || "" },
+    data: { ...CANDIDATE_WOMAN, departmentId: ileDeFrance?.id || "" },
   });
 
   const certification = await prismaClient.certification.findFirst({

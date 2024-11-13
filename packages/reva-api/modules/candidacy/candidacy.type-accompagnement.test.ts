@@ -5,14 +5,14 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
+import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertFiliereOrganism,
 } from "../../test/helpers/create-db-entity";
-import { candidateJPL } from "../../test/fixtures/people-organisms";
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 let candidacy: Candidacy;
@@ -45,7 +45,7 @@ test("candidate should be able to change it's type_accompagnement when the candi
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: candidateJPL.keycloakId,
+      keycloakId: CANDIDATE_MAN.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -83,7 +83,7 @@ test("candidate should NOT be able to change it's type_accompagnement when the c
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: candidateJPL.keycloakId,
+      keycloakId: CANDIDATE_MAN.keycloakId,
     }),
     payload: {
       requestType: "mutation",

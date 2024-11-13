@@ -1,9 +1,10 @@
 import { CandidacyStatusStep, FinanceModule } from "@prisma/client";
-import { candidateJPL, expertFiliereOrganism } from "./people-organisms";
 import { randomUUID } from "crypto";
 import { sub } from "date-fns";
+import { expertFiliereOrganism } from "./people-organisms";
+import { CANDIDATE_MAN } from "./candidate";
 
-export const certificationId1FromSeed = "51eef7ae-80c0-481b-946f-9d6e1b9fc70c";
+const certificationId1FromSeed = "51eef7ae-80c0-481b-946f-9d6e1b9fc70c";
 
 export const certificationId2FromSeed = "2f1c2d5f-8b24-471b-8824-b7f5cb4f7bb8";
 
@@ -11,7 +12,7 @@ export const candidacyUnifvae = {
   id: randomUUID(),
   organismId: expertFiliereOrganism.id,
   financeModule: FinanceModule.unifvae,
-  candidateId: candidateJPL.id,
+  candidateId: CANDIDATE_MAN.id,
   isCertificationPartial: false,
   certificationId: certificationId1FromSeed,
   status: CandidacyStatusStep.PARCOURS_CONFIRME,

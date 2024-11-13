@@ -10,11 +10,10 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
+import { CANDIDATE_MAN, CANDIDATE_WOMAN } from "../../test/fixtures/candidate";
 import {
-  candidateJPL,
-  candidateMPB,
-  expertFiliereOrganism,
   expertBrancheOrganism,
+  expertFiliereOrganism,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -55,10 +54,10 @@ beforeAll(async () => {
     },
   });
   candidate1 = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: ileDeFrance?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
   });
   candidate2 = await prismaClient.candidate.create({
-    data: { ...candidateMPB, departmentId: ileDeFrance?.id || "" },
+    data: { ...CANDIDATE_WOMAN, departmentId: ileDeFrance?.id || "" },
   });
   candidacyProject = await prismaClient.candidacy.create({
     data: {

@@ -4,10 +4,8 @@
 import { Candidacy, Candidate, Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import {
-  candidateJPL,
-  organismIperia,
-} from "../../test/fixtures/people-organisms";
+import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
+import { organismIperia } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -20,7 +18,7 @@ beforeAll(async () => {
 
   organism = await prismaClient.organism.create({ data: organismIperia });
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: ileDeFrance?.id || "" },
+    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
   });
   candidacy = await prismaClient.candidacy.create({
     data: {
@@ -109,10 +107,10 @@ test("a user can't modify the account information of another candidate", async (
 
 test("a candidate can modify his account information but not directly his email, it needs to be confirm via an email link", async () => {
   const newCandidate = {
-    firstname: "John",
-    lastname: "Doe",
+    firstname: "Updated Firstname",
+    lastname: "Updated Lastname",
     phone: "0612345678",
-    email: "jean-pat.ledru@gmail.com",
+    email: CANDIDATE_MAN.email,
   };
 
   const resp = await injectGraphql({

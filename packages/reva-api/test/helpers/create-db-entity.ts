@@ -1,7 +1,7 @@
 import {
   agencePrincipaleMaisonMere2,
-  candidateJPL,
   collaborateurMaisonMereAapAccount2,
+  expertBrancheOrganism,
   expertFiliereOrganism,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
@@ -10,7 +10,6 @@ import {
   maisonMereAAP2,
   maisonMereAAPExpertBranche,
   maisonMereAAPExpertFiliere,
-  expertBrancheOrganism,
 } from "../fixtures/people-organisms";
 
 import {
@@ -24,6 +23,7 @@ import {
 import { prismaClient } from "../../prisma/client";
 import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
+import { CANDIDATE_MAN } from "../fixtures/candidate";
 import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
@@ -62,7 +62,7 @@ export const createCandidateJPL = async (): Promise<Candidate> => {
   })) as Department;
 
   return prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: parisDepartment?.id },
+    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id },
   });
 };
 

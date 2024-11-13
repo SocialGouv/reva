@@ -6,29 +6,29 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
 
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-import {
-  createCandidacyUnifvae,
-  createCandidacyUnireva,
-  createCandidateJPL,
-  createExpertFiliereOrganism,
-} from "../../../../test/helpers/create-db-entity";
-import {
-  candidateJPL,
-  expertFiliereOrganism,
-  gestionnaireMaisonMereAAP1,
-} from "../../../../test/fixtures/people-organisms";
 import {
   candidacyUnifvae,
   candidacyUnireva,
   dropOutSixMonthsAgo,
   dropOutSixMonthsAgoMinusOneMinute,
 } from "../../../../test/fixtures/candidacy";
+import { CANDIDATE_MAN } from "../../../../test/fixtures/candidate";
 import {
   fundingRequestSample,
   paymentRequestInputBase,
 } from "../../../../test/fixtures/funding-request";
+import {
+  expertFiliereOrganism,
+  gestionnaireMaisonMereAAP1,
+} from "../../../../test/fixtures/people-organisms";
+import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
+import {
+  createCandidacyUnifvae,
+  createCandidacyUnireva,
+  createCandidateJPL,
+  createExpertFiliereOrganism,
+} from "../../../../test/helpers/create-db-entity";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
 const updateCandidacyCertification = async ({
   candidacyId,
@@ -161,7 +161,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
 
   // Check candidate
   const myCandidate = await prismaClient.candidate.findUniqueOrThrow({
-    where: { id: candidateJPL.id },
+    where: { id: CANDIDATE_MAN.id },
   });
   expect(myCandidate).toMatchObject({
     firstname2: fundingRequestSample.candidateSecondname,

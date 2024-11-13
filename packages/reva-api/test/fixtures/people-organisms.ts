@@ -1,43 +1,9 @@
-import { randomUUID } from "crypto";
-
 import {
-  Gender,
   Organism,
   StatutValidationInformationsJuridiquesMaisonMereAAP,
 } from "@prisma/client";
 
 // Candidates
-
-const candidateJPL = {
-  id: randomUUID(),
-  firstname: "Jean-Patrick",
-  lastname: "Ledru",
-  email: "jean-pat.ledru@gmail.com",
-  gender: "man" as Gender,
-  keycloakId: randomUUID(),
-  firstname2: "",
-  firstname3: "",
-  phone: "",
-  highestDegreeId: null,
-  vulnerabilityIndicatorId: null,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const candidateMPB = {
-  firstname: "Marie-Paule",
-  lastname: "Belle",
-  email: "mpb@gmail.com",
-  gender: "woman" as Gender,
-  keycloakId: randomUUID(),
-  firstname2: "",
-  firstname3: "",
-  phone: "",
-  highestDegreeId: null,
-  vulnerabilityIndicatorId: null,
-  createdAt: new Date(),
-  updatedAt: null,
-};
 
 // Organisms
 
@@ -53,7 +19,7 @@ const organismIperia = {
 } satisfies Partial<Organism>;
 
 const expertFiliereOrganism = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000004",
   label: "Expert filiere organism",
   siret: "5038235777",
   contactAdministrativeEmail: "expertFiliereOrganism@example.com",
@@ -64,7 +30,7 @@ const expertFiliereOrganism = {
 } satisfies Partial<Organism>;
 
 const expertBrancheOrganism = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000005",
   label: "Expert branch organism",
   siret: "5038235777",
   contactAdministrativeEmail: "expertBranche@example.com",
@@ -85,7 +51,7 @@ const expertBrancheEtFiliereOrganism = {
 } satisfies Partial<Organism>;
 
 const agencePrincipaleMaisonMere2 = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000006",
   siret: "",
   label: "Agence principale Maison Mere 2",
   contactAdministrativeEmail: "distanciel.m2@example.com",
@@ -96,7 +62,7 @@ const agencePrincipaleMaisonMere2 = {
 } satisfies Partial<Organism>;
 
 const lieuAccueilMaisonMere2 = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000007",
   siret: "",
   label: "Lieu Accueil Maison Mere 2",
   contactAdministrativeEmail: "presentiel.m2@example.com",
@@ -109,14 +75,14 @@ const lieuAccueilMaisonMere2 = {
 // Architectes
 
 const archiIperia1 = {
-  keycloakId: randomUUID(),
+  keycloakId: "00000000-0000-0000-0000-000000000008",
   firstname: "Gérard",
   lastname: "Jambon",
   email: "gege.bonbon@gmail.com",
 };
 
 const archiIperia2 = {
-  keycloakId: randomUUID(),
+  keycloakId: "00000000-0000-0000-0000-000000000009",
   firstname: "Antoine",
   lastname: "Camembert",
   email: "toinou.kipu@hotmail.fr",
@@ -125,45 +91,45 @@ const archiIperia2 = {
 // Admins
 
 const adminAccount1 = {
-  keycloakId: randomUUID(),
+  keycloakId: "00000000-0000-0000-0000-000000000010",
   firstname: "Mimi",
   lastname: "Matty",
   email: "mimi@yolo.fr",
 };
 
 const candidateAccount = {
-  keycloakId: randomUUID(),
+  keycloakId: "00000000-0000-0000-0000-000000000011",
   firstname: "John",
   lastname: "Doe",
   email: "john.doe@example.fr",
 };
 
 const gestionnaireMaisonMereAAP1 = {
-  id: randomUUID(),
-  keycloakId: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000012",
+  keycloakId: "00000000-0000-0000-0000-000000000013",
   firstname: "Peter",
   lastname: "Griffin",
   email: "peter@yolo.fr",
 };
 
 const gestionnaireMaisonMereAAP2 = {
-  id: randomUUID(),
-  keycloakId: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000014",
+  keycloakId: "00000000-0000-0000-0000-000000000015",
   firstname: "Marge",
   lastname: "Simpson",
   email: "marge@yolo.fr",
 };
 
 const collaborateurMaisonMereAapAccount2 = {
-  id: randomUUID(),
-  keycloakId: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000016",
+  keycloakId: "00000000-0000-0000-0000-000000000017",
   firstname: "Alice",
   lastname: "Doe",
   email: "alice.doe.m2@example.com",
 };
 
 const maisonMereAAP1 = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000018",
   phone: "0612345678",
   raisonSociale: "Maison Mere Organism1",
   siteWeb: "https://www.iperia.fr",
@@ -184,7 +150,7 @@ const maisonMereAAP1 = {
 
 const maisonMereAAP2 = {
   ...maisonMereAAP1,
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000019",
   siret: "12000015300029",
   raisonSociale: "Maison Mere Organism2",
   managerFirstname: "Alice",
@@ -194,7 +160,7 @@ const maisonMereAAP2 = {
 };
 
 const maisonMereAAPExpertFiliere = {
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000020",
   phone: "0612345678",
   raisonSociale: "Maison Mere ExpertFiliere",
   siteWeb: "https://www.iperia.fr",
@@ -215,7 +181,7 @@ const maisonMereAAPExpertFiliere = {
 
 const maisonMereAAPExpertBranche = {
   ...maisonMereAAPExpertFiliere,
-  id: randomUUID(),
+  id: "00000000-0000-0000-0000-000000000021",
   siret: "12000015300029",
   raisonSociale: "Maison Mere ExpertBranche",
   managerFirstname: "Alice",
@@ -227,22 +193,20 @@ const maisonMereAAPExpertBranche = {
 
 export {
   adminAccount1,
-  candidateAccount,
-  gestionnaireMaisonMereAAP1,
-  gestionnaireMaisonMereAAP2,
+  agencePrincipaleMaisonMere2,
   archiIperia1,
   archiIperia2,
-  candidateJPL,
-  candidateMPB,
+  candidateAccount,
+  collaborateurMaisonMereAapAccount2,
   expertBrancheEtFiliereOrganism,
   expertBrancheOrganism,
   expertFiliereOrganism,
-  organismIperia,
+  gestionnaireMaisonMereAAP1,
+  gestionnaireMaisonMereAAP2,
+  lieuAccueilMaisonMere2,
   maisonMereAAP1,
   maisonMereAAP2,
-  agencePrincipaleMaisonMere2,
-  lieuAccueilMaisonMere2,
-  collaborateurMaisonMereAapAccount2,
-  maisonMereAAPExpertFiliere,
   maisonMereAAPExpertBranche,
+  maisonMereAAPExpertFiliere,
+  organismIperia,
 };
