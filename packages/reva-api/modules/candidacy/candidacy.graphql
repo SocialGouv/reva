@@ -193,6 +193,7 @@ input SearchOrganismFilter {
   distanceStatus: DistanceStatus
   pmr: Boolean
   zip: String
+  isMcfCompatible: Boolean
 }
 
 type RamdomOrganisms {

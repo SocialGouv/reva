@@ -81,4 +81,5 @@ export interface SearchOrganismFilter {
   distanceStatus?: string;
   pmr?: boolean;
   zip?: string;
+  isMcfCompatible?: boolean;
 }
