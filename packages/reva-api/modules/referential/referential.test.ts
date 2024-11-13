@@ -5,22 +5,24 @@ import { Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
 import {
-  expertBrancheEtFiliereOrganism,
-  expertBrancheOrganism,
-  expertFiliereOrganism,
+  EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
+  EXPERT_BRANCHE_ORGANISM,
+  EXPERT_FILIERE_ORGANISM,
+} from "../../test/fixtures";
+import {
   gestionnaireMaisonMereAAP1,
-  maisonMereAAPExpertFiliere,
   gestionnaireMaisonMereAAP2,
   maisonMereAAPExpertBranche,
+  maisonMereAAPExpertFiliere,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import {
   createGestionnaireMaisonMereAapAccount1,
   createGestionnaireMaisonMereAapAccount2,
-  createMaisonMereAAPExpertFiliere,
   createMaisonMereAAPExpertBranche,
+  createMaisonMereAAPExpertFiliere,
 } from "../../test/helpers/create-db-entity";
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 
 async function attachOrganismToAllDegrees(organism: Organism | null) {
   const degrees = await prismaClient.degree.findMany();
@@ -84,7 +86,7 @@ beforeAll(async () => {
   await createMaisonMereAAPExpertBranche();
 
   expertFiliere = await prismaClient.organism.create({
-    data: expertFiliereOrganism,
+    data: EXPERT_FILIERE_ORGANISM,
   });
 
   await prismaClient.maisonMereAAP.update({
@@ -97,7 +99,7 @@ beforeAll(async () => {
   });
 
   expertBranche = await prismaClient.organism.create({
-    data: expertBrancheOrganism,
+    data: EXPERT_BRANCHE_ORGANISM,
   });
 
   await prismaClient.maisonMereAAP.update({
@@ -110,7 +112,7 @@ beforeAll(async () => {
   });
 
   await prismaClient.organism.create({
-    data: expertBrancheEtFiliereOrganism,
+    data: EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
   });
 
   // Branche fixtures (also known as Convention Collective)

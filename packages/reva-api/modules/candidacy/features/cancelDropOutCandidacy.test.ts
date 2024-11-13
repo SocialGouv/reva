@@ -1,7 +1,7 @@
 import { Candidacy } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
-import { CANDIDATE_MAN } from "../../../test/fixtures/candidate";
+import { CANDIDATE_MAN } from "../../../test/fixtures";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { cancelDropOutCandidacy } from "./cancelDropOutCandidacy";
 

@@ -1,8 +1,6 @@
 import {
   agencePrincipaleMaisonMere2,
   collaborateurMaisonMereAapAccount2,
-  expertBrancheOrganism,
-  expertFiliereOrganism,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
   lieuAccueilMaisonMere2,
@@ -21,9 +19,13 @@ import {
   Organism,
 } from "@prisma/client";
 import { prismaClient } from "../../prisma/client";
+import {
+  CANDIDATE_MAN,
+  EXPERT_BRANCHE_ORGANISM,
+  EXPERT_FILIERE_ORGANISM,
+} from "../../test/fixtures";
 import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 import { candidacyUnifvae, candidacyUnireva } from "../fixtures/candidacy";
-import { CANDIDATE_MAN } from "../fixtures/candidate";
 import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
@@ -128,13 +130,13 @@ export const createLieuAccueilMaisonMere2 = async (): Promise<Organism> => {
 
 export const createExpertFiliereOrganism = async (): Promise<Organism> => {
   const organism = await prismaClient.organism.create({
-    data: expertFiliereOrganism,
+    data: EXPERT_FILIERE_ORGANISM,
   });
 
   await prismaClient.account.create({
     data: {
       ...gestionnaireMaisonMereAAP1,
-      organismId: expertFiliereOrganism.id,
+      organismId: EXPERT_FILIERE_ORGANISM.id,
     },
   });
 
@@ -143,7 +145,7 @@ export const createExpertFiliereOrganism = async (): Promise<Organism> => {
 
 export const createExpertBrancheOrganism = async (): Promise<Organism> => {
   return prismaClient.organism.create({
-    data: expertBrancheOrganism,
+    data: EXPERT_BRANCHE_ORGANISM,
   });
 };
 

@@ -5,7 +5,7 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
+import { CANDIDATE_MAN } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,

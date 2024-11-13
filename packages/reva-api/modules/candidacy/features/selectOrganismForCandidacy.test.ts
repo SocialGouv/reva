@@ -3,10 +3,7 @@
  */
 
 import { prismaClient } from "../../../prisma/client";
-import {
-  expertBrancheOrganism,
-  gestionnaireMaisonMereAAP1,
-} from "../../../test/fixtures/people-organisms";
+import { gestionnaireMaisonMereAAP1 } from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
@@ -17,8 +14,8 @@ import {
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
+import { CANDIDATE_MAN, EXPERT_BRANCHE_ORGANISM } from "../../../test/fixtures";
 import { candidacyUnifvae } from "../../../test/fixtures/candidacy";
-import { CANDIDATE_MAN } from "../../../test/fixtures/candidate";
 import { basicTrainingForm } from "../../../test/fixtures/training";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
@@ -34,7 +31,7 @@ const selectNewOrganism = async () =>
       endpoint: "candidacy_selectOrganism",
       arguments: {
         candidacyId: candidacyUnifvae.id,
-        organismId: expertBrancheOrganism.id,
+        organismId: EXPERT_BRANCHE_ORGANISM.id,
       },
       returnFields: "{id,organismId}",
     },
@@ -110,7 +107,7 @@ test("a candidate should be able to select a new organism while a training is se
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_selectOrganism).toMatchObject({
     id: candidacyUnifvae.id,
-    organismId: expertBrancheOrganism.id,
+    organismId: EXPERT_BRANCHE_ORGANISM.id,
   });
 });
 

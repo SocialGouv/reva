@@ -7,20 +7,20 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 
 import {
+  CANDIDATE_MAN,
+  EXPERT_FILIERE_ORGANISM,
+} from "../../../../test/fixtures";
+import {
   candidacyUnifvae,
   candidacyUnireva,
   dropOutSixMonthsAgo,
   dropOutSixMonthsAgoMinusOneMinute,
 } from "../../../../test/fixtures/candidacy";
-import { CANDIDATE_MAN } from "../../../../test/fixtures/candidate";
 import {
   fundingRequestSample,
   paymentRequestInputBase,
 } from "../../../../test/fixtures/funding-request";
-import {
-  expertFiliereOrganism,
-  gestionnaireMaisonMereAAP1,
-} from "../../../../test/fixtures/people-organisms";
+import { gestionnaireMaisonMereAAP1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
@@ -177,8 +177,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
   expect(myFundReqBatch).toMatchObject({
     sent: false,
     content: {
-      SiretAP: expertFiliereOrganism.siret,
-      // Certification: ,
+      SiretAP: EXPERT_FILIERE_ORGANISM.siret,
       NomCandidat: myCandidate.lastname,
       PrenomCandidat1: myCandidate.firstname,
       PrenomCandidat2: myCandidate.firstname2,

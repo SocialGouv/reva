@@ -7,8 +7,10 @@ import {
 } from "@prisma/client";
 import { sub } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
-import { CANDIDATE_MAN } from "../../../test/fixtures/candidate";
-import { organismIperia } from "../../../test/fixtures/people-organisms";
+import {
+  CANDIDATE_MAN,
+  ORGANISM_EXPERIMENTATION,
+} from "../../../test/fixtures";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
@@ -71,7 +73,9 @@ beforeAll(async () => {
   parisDepartment = (await prismaClient.department.findFirst({
     where: { code: "75" },
   })) as Department;
-  organism = await prismaClient.organism.create({ data: organismIperia });
+  organism = await prismaClient.organism.create({
+    data: ORGANISM_EXPERIMENTATION,
+  });
 
   candidate = await prismaClient.candidate.create({
     data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },

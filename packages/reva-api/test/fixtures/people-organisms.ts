@@ -3,53 +3,6 @@ import {
   StatutValidationInformationsJuridiquesMaisonMereAAP,
 } from "@prisma/client";
 
-// Candidates
-
-// Organisms
-
-const organismIperia = {
-  label: "Iperia",
-  siret: "5038235679",
-  contactAdministrativeEmail: "josette@iperia.fr",
-  isActive: true,
-  typology: "experimentation" as const,
-  llToEarth: "(4622585.927620327, 437370.0268140378, 4372806.174258723)",
-  modaliteAccompagnement: "LIEU_ACCUEIL",
-  modaliteAccompagnementRenseigneeEtValide: true,
-} satisfies Partial<Organism>;
-
-const expertFiliereOrganism = {
-  id: "00000000-0000-0000-0000-000000000004",
-  label: "Expert filiere organism",
-  siret: "5038235777",
-  contactAdministrativeEmail: "expertFiliereOrganism@example.com",
-  isActive: true,
-  typology: "expertFiliere" as const,
-  modaliteAccompagnement: "A_DISTANCE",
-  modaliteAccompagnementRenseigneeEtValide: true,
-} satisfies Partial<Organism>;
-
-const expertBrancheOrganism = {
-  id: "00000000-0000-0000-0000-000000000005",
-  label: "Expert branch organism",
-  siret: "5038235777",
-  contactAdministrativeEmail: "expertBranche@example.com",
-  isActive: true,
-  typology: "expertBranche" as const,
-  modaliteAccompagnement: "A_DISTANCE",
-  modaliteAccompagnementRenseigneeEtValide: true,
-} satisfies Partial<Organism>;
-
-const expertBrancheEtFiliereOrganism = {
-  label: "Expert branch organism",
-  siret: "5038235777",
-  contactAdministrativeEmail: "expertBrancheEtFiliere@example.com",
-  isActive: true,
-  typology: "expertBrancheEtFiliere" as const,
-  modaliteAccompagnement: "A_DISTANCE",
-  modaliteAccompagnementRenseigneeEtValide: true,
-} satisfies Partial<Organism>;
-
 const agencePrincipaleMaisonMere2 = {
   id: "00000000-0000-0000-0000-000000000006",
   siret: "",
@@ -198,9 +151,6 @@ export {
   archiIperia2,
   candidateAccount,
   collaborateurMaisonMereAapAccount2,
-  expertBrancheEtFiliereOrganism,
-  expertBrancheOrganism,
-  expertFiliereOrganism,
   gestionnaireMaisonMereAAP1,
   gestionnaireMaisonMereAAP2,
   lieuAccueilMaisonMere2,
@@ -208,5 +158,4 @@ export {
   maisonMereAAP2,
   maisonMereAAPExpertBranche,
   maisonMereAAPExpertFiliere,
-  organismIperia,
 };

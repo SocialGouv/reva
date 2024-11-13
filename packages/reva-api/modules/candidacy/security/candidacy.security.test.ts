@@ -17,12 +17,10 @@ import { prismaClient } from "../../../prisma/client";
 import {
   CANDIDATE_MAN,
   CANDIDATE_WOMAN,
-} from "../../../test/fixtures/candidate";
+  EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
+  ORGANISM_EXPERIMENTATION,
+} from "../../../test/fixtures";
 import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
-import {
-  expertBrancheEtFiliereOrganism,
-  organismIperia,
-} from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
@@ -89,7 +87,7 @@ beforeAll(async () => {
   });
 
   organism = await prismaClient.organism.create({
-    data: { ...organismIperia, maisonMereAAPId: maisonMereAAp.id },
+    data: { ...ORGANISM_EXPERIMENTATION, maisonMereAAPId: maisonMereAAp.id },
   });
 
   aapAccount = await prismaClient.account.create({
@@ -101,7 +99,7 @@ beforeAll(async () => {
   });
 
   randomOrganism = await prismaClient.organism.create({
-    data: expertBrancheEtFiliereOrganism,
+    data: EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
   });
 
   randomAapAccount = await prismaClient.account.create({

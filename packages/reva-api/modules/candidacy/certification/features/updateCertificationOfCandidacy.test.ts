@@ -14,8 +14,8 @@ import {
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
 import { Candidacy, CandidacyStatusStep } from "@prisma/client";
+import { CANDIDATE_MAN } from "../../../../test/fixtures";
 import { certificationId2FromSeed } from "../../../../test/fixtures/candidacy";
-import { CANDIDATE_MAN } from "../../../../test/fixtures/candidate";
 import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 

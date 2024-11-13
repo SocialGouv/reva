@@ -4,8 +4,7 @@
 import { Candidacy, Candidate, Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
-import { organismIperia } from "../../test/fixtures/people-organisms";
+import { CANDIDATE_MAN, ORGANISM_EXPERIMENTATION } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -16,7 +15,9 @@ beforeAll(async () => {
     where: { code: "75" },
   });
 
-  organism = await prismaClient.organism.create({ data: organismIperia });
+  organism = await prismaClient.organism.create({
+    data: ORGANISM_EXPERIMENTATION,
+  });
   candidate = await prismaClient.candidate.create({
     data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
   });

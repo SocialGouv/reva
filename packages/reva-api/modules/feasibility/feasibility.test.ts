@@ -13,9 +13,8 @@ import {
 import { FastifyInstance } from "fastify";
 
 import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN } from "../../test/fixtures/candidate";
+import { CANDIDATE_MAN, ORGANISM_EXPERIMENTATION } from "../../test/fixtures";
 import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
-import { organismIperia } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -39,7 +38,9 @@ beforeAll(async () => {
     where: { code: "75" },
   })) as Department;
 
-  organism = await prismaClient.organism.create({ data: organismIperia });
+  organism = await prismaClient.organism.create({
+    data: ORGANISM_EXPERIMENTATION,
+  });
 
   candidate = await prismaClient.candidate.create({
     data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },

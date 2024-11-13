@@ -8,7 +8,7 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
-import { expertFiliereOrganism } from "../../../../test/fixtures/people-organisms";
+import { EXPERT_FILIERE_ORGANISM } from "../../../../test/fixtures";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 let certif: Certification | null = null,
@@ -25,7 +25,7 @@ const candidateSample = {
 
 beforeAll(async () => {
   aap = await prismaClient.organism.create({
-    data: expertFiliereOrganism,
+    data: EXPERT_FILIERE_ORGANISM,
   });
   certif = await prismaClient.certification.findFirst({
     where: { label: "CAP Boucher" },
