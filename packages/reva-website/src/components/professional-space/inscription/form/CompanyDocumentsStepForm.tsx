@@ -44,13 +44,13 @@ export const CompanyDocumentsStepForm = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const handleFormSubmit = handleSubmit(
-    ({
+    async ({
       attestationURSSAF,
       justificatifIdentiteDirigeant,
       lettreDeDelegation,
@@ -84,7 +84,7 @@ export const CompanyDocumentsStepForm = () => {
       }
 
       if (formValid) {
-        submitCompanyDocumentsStep({
+        await submitCompanyDocumentsStep({
           attestationURSSAF: attestationURSSAF?.[0] as File,
           justificatifIdentiteDirigeant:
             justificatifIdentiteDirigeant?.[0] as File,
@@ -190,7 +190,9 @@ export const CompanyDocumentsStepForm = () => {
             </>
           )}
           <div className="h-full flex items-end justify-end gap-2">
-            <Button>Envoyer le formulaire</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              Envoyer le formulaire
+            </Button>
           </div>
         </form>
       </div>

@@ -104,7 +104,9 @@ type ProfessionalSpaceSubscriptionContext =
     submitCguStep: (stepData: CguStepData) => void;
     submitCompanySiretStep: (stepData: CompanySiretStepData) => void;
     submitAccountInfoStep: (stepData: AccountInfoStepData) => void;
-    submitCompanyDocumentsStep: (stepData: CompanyDocumentsStep) => void;
+    submitCompanyDocumentsStep: (
+      stepData: CompanyDocumentsStep,
+    ) => Promise<void>;
   };
 
 const ProfessionalSpaceSubscriptionContext =
