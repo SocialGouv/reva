@@ -66,7 +66,6 @@ type Candidacy {
   candidacyStatuses: [CandidacyStatus!]!
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
-  admissibility: Admissibility!
   reorientationReason: ReorientationReason
   financeModule: FinanceModule!
   feasibilityFormat: FeasibilityFormat!
@@ -132,19 +131,6 @@ enum OrganismTypology {
   expertFiliere
   expertBranche
   expertBrancheEtFiliere
-}
-
-type Admissibility {
-  isCandidateAlreadyAdmissible: Boolean!
-  reportSentAt: Timestamp
-  certifierRespondedAt: Timestamp
-  responseAvailableToCandidateAt: Timestamp
-  status: AdmissibilityStatus
-}
-
-enum AdmissibilityStatus {
-  ADMISSIBLE
-  NOT_ADMISSIBLE
 }
 
 type CandidacyCountByStatus {
@@ -267,14 +253,6 @@ input DropOutInput {
   otherReasonContent: String
 }
 
-input AdmissibilityInput {
-  isCandidateAlreadyAdmissible: Boolean!
-  reportSentAt: Timestamp
-  certifierRespondedAt: Timestamp
-  responseAvailableToCandidateAt: Timestamp
-  status: AdmissibilityStatus
-}
-
 type Mutation {
   candidacy_submitCandidacy(candidacyId: ID!): Candidacy
   candidacy_addExperience(
@@ -311,10 +289,6 @@ type Mutation {
   candidacy_dropOut(candidacyId: UUID!, dropOut: DropOutInput!): Candidacy!
   candidacy_validateDropOut(candidacyId: UUID!): Candidacy!
   candidacy_cancelDropOutById(candidacyId: UUID!): Candidacy!
-  candidacy_updateAdmissibility(
-    candidacyId: UUID!
-    admissibility: AdmissibilityInput!
-  ): Admissibility!
   candidacy_setReadyForJuryEstimatedAt(
     candidacyId: UUID!
     readyForJuryEstimatedAt: Timestamp!

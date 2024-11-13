@@ -42,11 +42,8 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_validateDropOut": isAdmin,
   "Mutation.candidacy_cancelDropOutById": isAdmin,
-  "Mutation.candidacy_updateAdmissibility": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_createOrUpdatePaymentRequest":
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isOwnerOrCanManageCandidacy,
-
-  "Candidacy.admissibility": isAdminOrCandidacyCompanion,
 };
