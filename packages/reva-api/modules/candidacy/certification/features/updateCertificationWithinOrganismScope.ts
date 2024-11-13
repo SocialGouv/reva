@@ -30,7 +30,7 @@ export const updateCertificationWithinOrganismScope = async ({
     where: { id: candidacyId },
     select: {
       id: true,
-      departmentId: true,
+      candidate: { select: { departmentId: true } },
       organismId: true,
       candidacyDropOut: { select: { candidacyId: true } },
       typeAccompagnement: true,
@@ -50,7 +50,7 @@ export const updateCertificationWithinOrganismScope = async ({
     );
   }
 
-  if (!candidacy.departmentId || !candidacy.organismId) {
+  if (!candidacy.candidate?.departmentId || !candidacy.organismId) {
     throw new Error(
       "Impossible de modifier la certification d'une candidature sans département ou sans organisme",
     );
