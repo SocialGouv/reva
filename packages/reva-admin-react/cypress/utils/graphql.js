@@ -23,6 +23,8 @@ export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
 export const stubMutation = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    fixture && req.reply({ statusCode, fixture });
+    typeof fixture == "string" && fixture.endsWith(".json")
+      ? req.reply({ statusCode, fixture })
+      : req.reply(statusCode, fixture);
   }
 };
