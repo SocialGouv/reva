@@ -4,7 +4,11 @@ import { useUpdateCompetenceBlocPage } from "./updateCompetenceBloc.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { CompetenceBlocForm } from "../_components/CompetenceBlocForm";
+import {
+  CompetenceBlocForm,
+  CompetenceBlocFormData,
+} from "../_components/CompetenceBlocForm";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 type CertificationCompetenceBlocForPage = Exclude<
   ReturnType<typeof useUpdateCompetenceBlocPage>["competenceBloc"],
@@ -16,17 +20,31 @@ export default function UpdateCompetenceBlocPage() {
     certificationCompetenceBlocId: string;
   }>();
 
-  const { competenceBloc, getCompetenceBlocQueryStatus } =
-    useUpdateCompetenceBlocPage({ certificationCompetenceBlocId });
+  const {
+    competenceBloc,
+    getCompetenceBlocQueryStatus,
+    updateCertificationCompetenceBloc,
+  } = useUpdateCompetenceBlocPage({ certificationCompetenceBlocId });
+
+  const handleFormSubmit = async (data: CompetenceBlocFormData) => {
+    try {
+      await updateCertificationCompetenceBloc.mutateAsync(data);
+      successToast("modifications enregistrées");
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
   return getCompetenceBlocQueryStatus === "success" && competenceBloc ? (
-    <PageContent competenceBloc={competenceBloc} />
+    <PageContent competenceBloc={competenceBloc} onSubmit={handleFormSubmit} />
   ) : null;
 }
 
 const PageContent = ({
   competenceBloc,
+  onSubmit,
 }: {
   competenceBloc: CertificationCompetenceBlocForPage;
+  onSubmit(data: CompetenceBlocFormData): Promise<void>;
 }) => (
   <div data-test="update-certification-page">
     <Breadcrumb
@@ -72,8 +90,14 @@ const PageContent = ({
     <CompetenceBlocForm
       className="mt-6"
       backUrl={`/certifications-v2/${competenceBloc.certification.id}`}
-      defaultValues={competenceBloc}
-      onSubmit={async (f) => console.log({ f })}
+      defaultValues={{
+        ...competenceBloc,
+        competences: competenceBloc.competences.map((c, i) => ({
+          ...c,
+          index: i,
+        })),
+      }}
+      onSubmit={onSubmit}
     />
   </div>
 );

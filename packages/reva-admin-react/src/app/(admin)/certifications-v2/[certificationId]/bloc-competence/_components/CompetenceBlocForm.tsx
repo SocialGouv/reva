@@ -16,6 +16,7 @@ export const competenceBlocFormSchema = z.object({
         .string()
         .min(2, "Ce champ doit contenir au moins 2 caractères")
         .default(""),
+      index: z.number(),
     })
     .array(),
 });
@@ -46,8 +47,8 @@ export const CompetenceBlocForm = ({
   } = methods;
 
   const { fields: competencesFields } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormProvider)
-    name: "competences", // unique name for your Field Array
+    control,
+    name: "competences",
   });
 
   const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));

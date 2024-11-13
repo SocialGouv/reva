@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { UpdateCompetenceBlocInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCompetenceBlocQuery = graphql(`
   query getCompetenceBlocForUpdateCompetenceBlocPage(
@@ -19,9 +20,19 @@ const getCompetenceBlocQuery = graphql(`
       }
       certification {
         id
-        codeRncp
         label
+        codeRncp
       }
+    }
+  }
+`);
+
+const updateCertificationCompetenceBlocMutation = graphql(`
+  mutation updateCertificationCompetenceBlocForUpdateCertificationCompetenceBlocPage(
+    $input: UpdateCompetenceBlocInput!
+  ) {
+    referential_updateCertificationCompetenceBloc(input: $input) {
+      id
     }
   }
 `);
@@ -32,6 +43,7 @@ export const useUpdateCompetenceBlocPage = ({
   certificationCompetenceBlocId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     data: getCompetenceBlocResponse,
@@ -48,8 +60,23 @@ export const useUpdateCompetenceBlocPage = ({
       }),
   });
 
+  const updateCertificationCompetenceBloc = useMutation({
+    mutationFn: (input: UpdateCompetenceBlocInput) =>
+      graphqlClient.request(updateCertificationCompetenceBlocMutation, {
+        input: { id: certificationCompetenceBlocId, ...input },
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationCompetenceBlocId],
+      }),
+  });
+
   const competenceBloc =
     getCompetenceBlocResponse?.getCertificationCompetenceBloc;
 
-  return { competenceBloc, getCompetenceBlocQueryStatus };
+  return {
+    competenceBloc,
+    getCompetenceBlocQueryStatus,
+    updateCertificationCompetenceBloc,
+  };
 };
