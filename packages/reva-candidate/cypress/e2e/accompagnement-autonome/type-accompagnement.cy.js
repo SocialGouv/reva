@@ -1,22 +1,6 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Type accompagnement", () => {
-  it("should not show the type accompagnement in the timeline when the type_accompagnement is accompagne and the feature is inactive", function () {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-    });
-    cy.login();
-    cy.wait("@candidate_login");
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
-
-    cy.get('[data-test="type-accompagnement-timeline-element"]').should(
-      "not.exist",
-    );
-  });
-
   it("should show the type accompagnement in the timeline when the type_accompagnement is accompagne and the feature is active", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
