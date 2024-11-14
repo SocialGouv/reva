@@ -12,6 +12,8 @@ import {
   ACCOUNT_3,
   ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
   ACCOUNT_ORGANISM_EXPERT_FILIERE,
+  BASIC_SKILL_1,
+  BASIC_SKILL_2,
   CANDIDACY_UNIFVAE,
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
@@ -23,10 +25,6 @@ import {
   ORGANISM_EXPERT_BRANCHE,
   ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-import {
-  basicSkill1Label,
-  basicSkill2Label,
-} from "../fixtures/skillAndTraining";
 
 export const createGestionnaireMaisonMereAapAccount1 =
   async (): Promise<Account> => {
@@ -149,7 +147,7 @@ export const createCandidacyUnifvae = async () => {
   const basicSkillId1 = (
     await prismaClient.basicSkill.findFirstOrThrow({
       where: {
-        label: basicSkill1Label,
+        label: BASIC_SKILL_1,
       },
     })
   ).id;
@@ -157,7 +155,7 @@ export const createCandidacyUnifvae = async () => {
   const basicSkillId2 = (
     await prismaClient.basicSkill.findFirstOrThrow({
       where: {
-        label: basicSkill2Label,
+        label: BASIC_SKILL_2,
       },
     })
   ).id;
