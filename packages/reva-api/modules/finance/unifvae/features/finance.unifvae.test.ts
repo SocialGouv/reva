@@ -18,7 +18,7 @@ import {
 import {
   fundingRequestSample,
   paymentRequestInputBase,
-} from "../../../../test/fixtures/funding-request";
+} from "../../../../test/fixtures/funding-requests.fixture";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,

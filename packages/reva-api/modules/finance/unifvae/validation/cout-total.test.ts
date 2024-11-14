@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { fundingRequestFullCertOkHours } from "../../../../test/fixtures/funding-request";
+import { fundingRequestFullCertOkHours } from "../../../../test/fixtures/funding-requests.fixture";
 import { validateCoutTotal } from "./cout-total";
 
 test("Should yield an error when total cost > 3200", () => {

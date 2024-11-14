@@ -1,7 +1,7 @@
 import { FeasibilityStatus } from "@prisma/client";
 import { CERTIFICATION_AUTHORITY_STRUCTURES } from "./certifications.fixture";
 
-export const feasibilityAdmissible = {
+export const FEASIBILITY_PDF_ADMISSIBLE = {
   decision: FeasibilityStatus.ADMISSIBLE,
   certificationAuthority: {
     create: {

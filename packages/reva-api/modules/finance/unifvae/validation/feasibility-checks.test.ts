@@ -5,7 +5,7 @@ import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../../../test/fixtures";
 import {
   fundingRequestFullCertOkHours,
   fundingRequestNoHours,
-} from "../../../../test/fixtures/funding-request";
+} from "../../../../test/fixtures/funding-requests.fixture";
 import { validateFeasibilityChecks } from "./feasibility-checks";
 
 let candNoFeasibilty: Candidacy,

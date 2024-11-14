@@ -16,13 +16,13 @@ import {
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
   CERTIFICATION_AUTHORITY_STRUCTURES,
+  FEASIBILITY_PDF_ADMISSIBLE,
   MAISON_MERE_AAP_A_METTRE_A_JOUR,
   MAISON_MERE_AAP_EXPERT_BRANCHE,
   MAISON_MERE_AAP_EXPERT_FILIERE,
   ORGANISM_EXPERT_BRANCHE,
   ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
   basicSkill2Label,
@@ -201,7 +201,7 @@ export const createCandidacyUnifvae = async () => {
         },
       },
       Feasibility: {
-        create: feasibilityAdmissible,
+        create: FEASIBILITY_PDF_ADMISSIBLE,
       },
     },
   });
