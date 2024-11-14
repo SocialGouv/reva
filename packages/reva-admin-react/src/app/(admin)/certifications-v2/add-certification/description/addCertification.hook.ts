@@ -22,6 +22,16 @@ const getFCCertificationQuery = graphql(`
         CODE
         LIBELLE
       }
+      DOMAINS {
+        id
+        code
+        label
+        children {
+          id
+          code
+          label
+        }
+      }
     }
   }
 `);

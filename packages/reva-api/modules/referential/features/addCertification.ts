@@ -3,6 +3,7 @@ import { prismaClient } from "../../../prisma/client";
 
 import { RNCPCertification, RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
+import { getSubdomains } from "./getDomainsByFormacodes";
 
 export const addCertification = async (params: { codeRncp: string }) => {
   const { codeRncp } = params;
@@ -63,28 +64,10 @@ export const addCertification = async (params: { codeRncp: string }) => {
   // Link certification to sub domains
   const referential = await getFormacodes();
 
-  const subDomains: Formacode[] = [];
-
-  for (const rncpFormacode of rncpCertification.FORMACODES) {
-    const formacode = getFormacodeByCode(rncpFormacode.CODE, referential);
-
-    if (!formacode) {
-      throw new Error(
-        `Le formacode avec le code ${rncpFormacode.CODE} n'existe pas dans le référentiel RNCP`,
-      );
-    }
-
-    const parents = getParents(formacode, referential);
-    const subDomain = parents.find(
-      (formacode) => formacode.type == "SUB_DOMAIN",
-    );
-    if (
-      subDomain &&
-      subDomains.findIndex((domain) => domain.code == subDomain.code) == -1
-    ) {
-      subDomains.push(subDomain);
-    }
-  }
+  const subDomains: Formacode[] = getSubdomains(
+    rncpCertification.FORMACODES,
+    referential,
+  );
 
   // Create all links
   await prismaClient.certificationOnFormacode.createMany({
@@ -113,30 +96,6 @@ const getLevelFromRNCPCertification = (
       `Le niveau de la certification pour le code RNCP ${certification.ID_FICHE} n'a pas pu être formatté`,
     );
   }
-};
-
-const getFormacodeByCode = (
-  code: string,
-  referential: Formacode[],
-): Formacode | undefined => {
-  return referential.find((formacode) => formacode.code == code);
-};
-
-const getParent = (child: Formacode, referential: Formacode[]) => {
-  return referential.find((formacode) => formacode.code == child.parentCode);
-};
-
-const getParents = (
-  formacode: Formacode,
-  referential: Formacode[],
-): Formacode[] => {
-  const parent = getParent(formacode, referential);
-
-  if (parent) {
-    return [...getParents(parent, referential), formacode];
-  }
-
-  return [formacode];
 };
 
 const createDefaultBlocs = async (params: {

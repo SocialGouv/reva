@@ -27,7 +27,7 @@ import {
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
 } from "./referential.types";
-import { RNCPReferential } from "./rncp";
+import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
   findEtablissement,
   findEtablissementDiffusible,
@@ -44,6 +44,8 @@ import { addCertification } from "./features/addCertification";
 import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceBlocsByCertificationIdV2";
+import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
+import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -71,6 +73,15 @@ const unsafeReferentialResolvers = {
       }))
         ? getCompetenceBlocsByCertificationIdV2({ certificationId })
         : getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
+    domains: ({ id: certificationId }: { id: string }) =>
+      getDomainsByCertificationId({ certificationId }),
+  },
+  FCCertification: {
+    DOMAINS: ({
+      FORMACODES,
+    }: {
+      FORMACODES: RNCPCertification["FORMACODES"];
+    }) => getDomainsByFormacodes({ FORMACODES }),
   },
   CertificationCompetenceBloc: {
     competences: ({ id: certificationCompetenceBlocId }: { id: string }) =>

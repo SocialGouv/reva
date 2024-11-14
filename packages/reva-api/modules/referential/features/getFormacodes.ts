@@ -15,9 +15,9 @@ export async function getFormacodes(): Promise<Formacode[]> {
   const formacodes: Formacode[] = codes.map((formacode) => ({
     id: formacode.id,
     code: formacode.code,
-    label: formacode.label
-      .toLowerCase()
-      .replace(/^./, (str) => str.toUpperCase()),
+    label: formacode.parentCode
+      ? formacode.label.toLowerCase().replace(/^./, (str) => str.toUpperCase())
+      : formacode.label,
     type: formacode.type,
     parentCode: formacode.parentCode || undefined,
   }));

@@ -1,3 +1,16 @@
+type SubDomain {
+  id: ID!
+  code: ID!
+  label: String!
+}
+
+type Domain {
+  id: ID!
+  code: ID!
+  label: String!
+  children: [SubDomain!]!
+}
+
 type Certification {
   id: ID!
   label: String!
@@ -17,6 +30,7 @@ type Certification {
   competenceBlocs: [CertificationCompetenceBloc!]!
   rncpExpiresAt: Timestamp
   rncpDeliveryDeadline: Timestamp
+  domains: [Domain!]!
 }
 
 type Referential {
@@ -148,6 +162,7 @@ type FCCertification {
   DATE_LIMITE_DELIVRANCE: Timestamp
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
+  DOMAINS: [Domain!]!
 }
 
 type Country {

@@ -20,6 +20,16 @@ const getCertificationQuery = graphql(`
         id
         label
       }
+      domains {
+        id
+        code
+        label
+        children {
+          id
+          code
+          label
+        }
+      }
       competenceBlocs {
         id
         code

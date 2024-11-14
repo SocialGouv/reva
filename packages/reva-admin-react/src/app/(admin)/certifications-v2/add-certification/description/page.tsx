@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAddCertificationPage } from "./addCertification.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 const zodSchema = z.object({
   rncp: z.string().min(1, "Champs requis"),
@@ -67,7 +68,7 @@ export default function CertificationDescriptionPage() {
         <form
           id="fcCertificationForm"
           onSubmit={handleFormSubmit}
-          className="my-3 flex gap-8"
+          className="flex gap-8"
         >
           <Input
             data-test="fc-certification-description-input"
@@ -85,15 +86,19 @@ export default function CertificationDescriptionPage() {
           isEditable
         >
           {certification && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <h3
                 data-test="fc-certification-description-card-title"
-                className="mb-2"
+                className="mb-0"
               >
                 Descriptif de la certification avec France compétences
               </h3>
-              <Info title="Intitulé">{certification.INTITULE}</Info>
-              <div className="grid grid-cols-1 md:grid-cols-2">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Info className="col-span-1 md:col-span-2" title="Intitulé">
+                  {certification.INTITULE}
+                </Info>
+
                 <Info title="Niveau">
                   {certification?.NOMENCLATURE_EUROPE.INTITULE}
                 </Info>
@@ -117,7 +122,23 @@ export default function CertificationDescriptionPage() {
                 </Info>
               </div>
 
-              <h3 className="mb-2">Domaines et sous-domaines du Formacode </h3>
+              <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {certification.DOMAINS.length == 0 && (
+                  <div>Aucun formacode associé</div>
+                )}
+                {certification.DOMAINS.map((domain) => (
+                  <div key={domain.id} className="flex flex-col gap-2">
+                    <div>{domain.label}</div>
+                    {domain.children.map((subDomain) => (
+                      <Tag key={subDomain.id}>
+                        {`${subDomain.code} ${subDomain.label}`}
+                      </Tag>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </EnhancedSectionCard>
@@ -164,7 +185,7 @@ const Info = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <dl className={`m-2 ${className || ""}`}>
+  <dl className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { format } from "date-fns";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -47,9 +48,9 @@ const PageContent = ({
       >
         <div className="flex flex-col gap-4">
           <Info title="Code RNCP">{certification.codeRncp}</Info>
-          <h3 className="mb-2">Descriptif de la certification</h3>
+          <h3 className="mb-0">Descriptif de la certification</h3>
           <Info title="Intitulé">{certification.label}</Info>
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Info title="Niveau">{certification.degree.label}</Info>
             <Info title="Type">{certification.typeDiplome.label}</Info>
             <Info title="Date d’échéance">
@@ -62,6 +63,24 @@ const PageContent = ({
                 ? format(certification.rncpDeliveryDeadline, "dd/MM/yyyy")
                 : ""}
             </Info>
+          </div>
+
+          <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {certification.domains.length == 0 && (
+              <div>Aucun formacode associé</div>
+            )}
+            {certification.domains.map((domain) => (
+              <div key={domain.id} className="flex flex-col gap-2">
+                <div>{domain.label}</div>
+                {domain.children.map((subDomain) => (
+                  <Tag key={subDomain.id}>
+                    {`${subDomain.code} ${subDomain.label}`}
+                  </Tag>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </EnhancedSectionCard>
@@ -130,7 +149,7 @@ const Info = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <dl className={`m-2 ${className || ""}`}>
+  <dl className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>
