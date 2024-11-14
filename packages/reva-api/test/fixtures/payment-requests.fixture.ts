@@ -1,0 +1,15 @@
+export const PAYMENT_REQUEST = {
+  individualEffectiveHourCount: 0,
+  individualEffectiveCost: 0,
+  collectiveEffectiveHourCount: 0,
+  collectiveEffectiveCost: 0,
+  mandatoryTrainingsEffectiveHourCount: 0,
+  mandatoryTrainingsEffectiveCost: 0,
+  basicSkillsEffectiveHourCount: 0,
+  basicSkillsEffectiveCost: 0,
+  certificateSkillsEffectiveHourCount: 0,
+  certificateSkillsEffectiveCost: 0,
+  otherTrainingEffectiveHourCount: 0,
+  otherTrainingEffectiveCost: 0,
+  invoiceNumber: "Invoice-001",
+};

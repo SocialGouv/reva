@@ -3,7 +3,7 @@ import { Gender } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 import { generateFundingRequestUnifvaeBatchCsvStream } from "./fundingRequestUnifvae";
 
-const fundingRequestSample = {
+const FUNDING_REQUEST_SAMPLE = {
   candidateSecondname: "Lapin",
   candidateThirdname: "Piou",
   basicSkillsCost: 12.3,
@@ -29,7 +29,7 @@ beforeAll(async () => {
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
           fundingRequestBatchUnifvae: {
             create: {
               sent: false,
@@ -50,7 +50,7 @@ beforeAll(async () => {
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
           fundingRequestBatchUnifvae: {
             create: {
               sent: true,
@@ -71,7 +71,7 @@ beforeAll(async () => {
       financeModule: "unifvae",
       fundingRequestUnifvae: {
         create: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
           fundingRequestBatchUnifvae: {
             create: {
               sent: false,

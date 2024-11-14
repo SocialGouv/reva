@@ -30,7 +30,7 @@ const fundingRequestBase = {
   otherTrainingCost: new Decimal(1),
 };
 
-export const fundingRequestNoHours = {
+export const FUNDING_REQUEST_NO_HOURS = {
   companionId: dummyUuid,
   ...candidateInfo,
   ...fundingContactInfo,
@@ -49,7 +49,7 @@ export const fundingRequestNoHours = {
   isPartialCertification: false,
 };
 
-export const fundingRequestFullCertOkHours = {
+export const FUNDING_REQUEST_FULL_CERT_OK_HOURS = {
   ...fundingRequestBase,
   isPartialCertification: false,
   basicSkillsHourCount: new Decimal(1),
@@ -60,7 +60,7 @@ export const fundingRequestFullCertOkHours = {
   otherTrainingHourCount: new Decimal(1),
 };
 
-export const fundingRequestSample = {
+export const FUNDING_REQUEST_SAMPLE = {
   ...fundingRequestBase,
   basicSkillsCost: 12.3,
   basicSkillsHourCount: 2.5,
@@ -74,20 +74,4 @@ export const fundingRequestSample = {
   mandatoryTrainingsHourCount: 2,
   otherTrainingCost: 21.3,
   otherTrainingHourCount: 2.5,
-};
-
-export const paymentRequestInputBase = {
-  individualEffectiveHourCount: 0,
-  individualEffectiveCost: 0,
-  collectiveEffectiveHourCount: 0,
-  collectiveEffectiveCost: 0,
-  mandatoryTrainingsEffectiveHourCount: 0,
-  mandatoryTrainingsEffectiveCost: 0,
-  basicSkillsEffectiveHourCount: 0,
-  basicSkillsEffectiveCost: 0,
-  certificateSkillsEffectiveHourCount: 0,
-  certificateSkillsEffectiveCost: 0,
-  otherTrainingEffectiveHourCount: 0,
-  otherTrainingEffectiveCost: 0,
-  invoiceNumber: "Invoice-001",
 };

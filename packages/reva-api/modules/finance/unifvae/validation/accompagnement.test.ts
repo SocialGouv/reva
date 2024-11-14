@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { fundingRequestFullCertOkHours } from "../../../../test/fixtures/funding-requests.fixture";
+import { FUNDING_REQUEST_FULL_CERT_OK_HOURS } from "../../../../test/fixtures";
 import { validateAccompagnement } from "./accompagnement";
 
 test("Should yield an error when no cost associated to hour count for accompaniment", () => {
@@ -19,7 +19,7 @@ test("Should yield an error when no cost associated to hour count for accompanim
 
 test("Should be ok with only individual hours", () => {
   const errors = validateAccompagnement({
-    ...fundingRequestFullCertOkHours,
+    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     individualHourCount: new Decimal(2),
     individualCost: new Decimal(24.5),
   });
@@ -28,7 +28,7 @@ test("Should be ok with only individual hours", () => {
 
 test("Should be ok with individual + collective hours", () => {
   const errors = validateAccompagnement({
-    ...fundingRequestFullCertOkHours,
+    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     individualHourCount: new Decimal(2),
     individualCost: new Decimal(24.5),
     collectiveHourCount: new Decimal(3.5),

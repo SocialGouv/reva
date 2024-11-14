@@ -16,7 +16,7 @@ const fundingRequestBase = {
   otherTrainingCost: new Decimal(1),
 };
 
-const fundingRequestFullCertOkHours = {
+const FUNDING_REQUEST_FULL_CERT_OK_HOURS = {
   ...fundingRequestBase,
   isPartialCertification: false,
   basicSkillsHourCount: new Decimal(1),
@@ -29,7 +29,7 @@ const fundingRequestFullCertOkHours = {
 
 test("Should yield an error when a number is negative", () => {
   const errors = validHoursCountAndCosts({
-    ...fundingRequestFullCertOkHours,
+    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     individualCost: new Decimal(-3),
   });
   expect(errors.length).toBe(1);
@@ -39,7 +39,7 @@ test("Should yield an error when a number is negative", () => {
 
 test("Should yield an error when an hour count is not multiple of 0,5", () => {
   const errors = validHoursCountAndCosts({
-    ...fundingRequestFullCertOkHours,
+    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     basicSkillsHourCount: new Decimal(2.3),
     basicSkillsCost: new Decimal(34.12),
   });

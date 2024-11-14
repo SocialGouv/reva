@@ -1,11 +1,11 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
-import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../../../test/fixtures";
 import {
-  fundingRequestFullCertOkHours,
-  fundingRequestNoHours,
-} from "../../../../test/fixtures/funding-requests.fixture";
+  CERTIFICATION_AUTHORITY_STRUCTURES,
+  FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+  FUNDING_REQUEST_NO_HOURS,
+} from "../../../../test/fixtures";
 import { validateFeasibilityChecks } from "./feasibility-checks";
 
 let candNoFeasibilty: Candidacy,
@@ -109,7 +109,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility not sent", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candNoFeasibilty.id,
-      ...fundingRequestFullCertOkHours,
+      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     });
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
@@ -121,7 +121,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility decision is still pending", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyPending.id,
-      ...fundingRequestFullCertOkHours,
+      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     });
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
@@ -133,7 +133,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility rejected and funding request has disallowed items", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyRejected.id,
-      ...fundingRequestFullCertOkHours,
+      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     });
     console.log(errors);
     expect(errors.length).toEqual(6);
@@ -142,7 +142,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should succeed when feasibility rejected and request has only allowed items", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyValidated.id,
-      ...fundingRequestNoHours,
+      ...FUNDING_REQUEST_NO_HOURS,
     });
     expect(errors.length).toEqual(0);
   });
@@ -150,7 +150,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should succeed when feasibility validated", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyValidated.id,
-      ...fundingRequestFullCertOkHours,
+      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     });
     expect(errors.length).toEqual(0);
   });

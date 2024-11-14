@@ -13,12 +13,10 @@ import {
   CANDIDACY_UNIFVAE,
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
+  FUNDING_REQUEST_SAMPLE,
   ORGANISM_EXPERT_FILIERE,
+  PAYMENT_REQUEST,
 } from "../../../../test/fixtures";
-import {
-  fundingRequestSample,
-  paymentRequestInputBase,
-} from "../../../../test/fixtures/funding-requests.fixture";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
@@ -94,7 +92,7 @@ const injectGraphqlPaymentRequestCreation = async () =>
       arguments: {
         candidacyId: CANDIDACY_UNIFVAE.id,
         paymentRequest: {
-          ...paymentRequestInputBase,
+          ...PAYMENT_REQUEST,
         },
       },
     },
@@ -133,7 +131,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       arguments: {
         candidacyId: CANDIDACY_UNIFVAE.id,
         fundingRequest: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
         },
       },
       enumFields: ["candidateGender"],
@@ -146,7 +144,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
   expect(obj).toMatchObject({
     data: {
       candidacy_createFundingRequestUnifvae: {
-        ...fundingRequestSample,
+        ...FUNDING_REQUEST_SAMPLE,
       },
     },
   });
@@ -162,9 +160,9 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
     where: { id: CANDIDATE_MAN.id },
   });
   expect(myCandidate).toMatchObject({
-    firstname2: fundingRequestSample.candidateSecondname,
-    firstname3: fundingRequestSample.candidateThirdname,
-    gender: fundingRequestSample.candidateGender,
+    firstname2: FUNDING_REQUEST_SAMPLE.candidateSecondname,
+    firstname3: FUNDING_REQUEST_SAMPLE.candidateThirdname,
+    gender: FUNDING_REQUEST_SAMPLE.candidateGender,
   });
 
   // Check batch
@@ -210,7 +208,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
       arguments: {
         candidacyId: CANDIDACY_UNIREVA.id,
         fundingRequest: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
         },
       },
       enumFields: ["candidateGender"],
@@ -243,7 +241,7 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
       arguments: {
         candidacyId: CANDIDACY_UNIFVAE.id,
         fundingRequest: {
-          ...fundingRequestSample,
+          ...FUNDING_REQUEST_SAMPLE,
         },
       },
       enumFields: ["candidateGender"],
