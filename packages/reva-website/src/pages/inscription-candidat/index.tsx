@@ -5,7 +5,6 @@ import {
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
@@ -42,9 +41,6 @@ const askForRegistrationMutation = graphql(`
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId, searchText } = router.query;
-
-  const { isFeatureActive, status: featureFlippingServiceStatus } =
-    useFeatureflipping();
 
   const [certification, setCertification] = useState<Pick<
     Certification,
@@ -86,9 +82,6 @@ const OrientationCandidatPage = () => {
     updateCertification();
   }, [certificationId]);
 
-  if (featureFlippingServiceStatus === "LOADING") {
-    return null;
-  }
 
   return (
     <MainLayout>
