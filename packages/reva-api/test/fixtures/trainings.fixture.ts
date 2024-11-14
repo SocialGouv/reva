@@ -1,4 +1,4 @@
-export const basicTrainingForm = {
+export const TRAINING_INPUT = {
   certificateSkills: "My certificate skills",
   otherTraining: "My other training",
   individualHourCount: 1,

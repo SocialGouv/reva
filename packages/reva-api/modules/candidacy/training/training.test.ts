@@ -5,8 +5,10 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
-import { ACCOUNT_ORGANISM_EXPERT_FILIERE } from "../../../test/fixtures";
-import { basicTrainingForm } from "../../../test/fixtures/training";
+import {
+  ACCOUNT_ORGANISM_EXPERT_FILIERE,
+  TRAINING_INPUT,
+} from "../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
@@ -55,7 +57,7 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: candidacy.id,
-        training: basicTrainingForm,
+        training: TRAINING_INPUT,
       },
       returnFields: "{id}",
     },
@@ -95,7 +97,7 @@ test("AAP should be able to submit a basic training form when candidacy status i
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: candidacy.id,
-        training: basicTrainingForm,
+        training: TRAINING_INPUT,
       },
       returnFields: "{id,status}",
     },
@@ -136,7 +138,7 @@ test("AAP should not be able to submit a basic training form without an estimate
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: candidacy.id,
-        training: basicTrainingForm,
+        training: TRAINING_INPUT,
       },
       returnFields: "{id,status}",
     },
@@ -177,7 +179,7 @@ test("AAP should not be able to submit a basic training form without at least on
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: candidacy.id,
-        training: { ...basicTrainingForm, estimatedCost: 1000 },
+        training: { ...TRAINING_INPUT, estimatedCost: 1000 },
       },
       returnFields: "{id,status}",
     },
@@ -219,7 +221,7 @@ test("AAP should not be able to submit a basic training form without a text when
       arguments: {
         candidacyId: candidacy.id,
         training: {
-          ...basicTrainingForm,
+          ...TRAINING_INPUT,
           estimatedCost: 1000,
           candidacyFinancingMethodIds: [
             CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
@@ -266,7 +268,7 @@ test("AAP should be able to submit a basic training form when candidacy status i
       arguments: {
         candidacyId: candidacy.id,
         training: {
-          ...basicTrainingForm,
+          ...TRAINING_INPUT,
           estimatedCost: 1000,
           candidacyFinancingMethodIds: [
             CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,

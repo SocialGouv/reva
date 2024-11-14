@@ -8,7 +8,7 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../test/fixtures/certifications.fixture";
+import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 

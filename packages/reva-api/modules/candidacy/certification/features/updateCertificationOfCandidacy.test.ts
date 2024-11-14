@@ -18,8 +18,8 @@ import {
   ACCOUNT_ORGANISM_EXPERT_FILIERE,
   CANDIDACY_UNIFVAE,
   CANDIDATE_MAN,
+  TRAINING_INPUT,
 } from "../../../../test/fixtures";
-import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const submitTraining = async () =>
@@ -34,7 +34,7 @@ const submitTraining = async () =>
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: CANDIDACY_UNIFVAE.id,
-        training: basicTrainingForm,
+        training: TRAINING_INPUT,
       },
       returnFields: "{id,status}",
     },
