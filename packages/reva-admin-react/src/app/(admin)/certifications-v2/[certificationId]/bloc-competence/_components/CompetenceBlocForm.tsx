@@ -1,4 +1,5 @@
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SortableList } from "@/components/sortable-list";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,12 +48,23 @@ export const CompetenceBlocForm = ({
     fields: competencesFields,
     append: appendCompetence,
     remove: removeCompetence,
+    move: moveCompetences,
   } = useFieldArray({
     control,
     name: "competences",
   });
 
-  const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));
+  const handleFormSubmit = handleSubmit(
+    (d: CompetenceBlocFormData) => {
+      //Re index the competences since they could have been moved in the form
+      const reIndexCompetences = d.competences.map((c, index) => ({
+        ...c,
+        index,
+      }));
+      onSubmit({ ...d, competences: reIndexCompetences });
+    },
+    (e) => console.log(e),
+  );
   return (
     <form onSubmit={handleFormSubmit} className={`flex flex-col ${className}`}>
       <Input
@@ -68,29 +80,44 @@ export const CompetenceBlocForm = ({
         className="flex flex-col gap-2 mb-2 pl-4"
         data-test="competence-list"
       >
-        {competencesFields.map((c, cIndex) => (
-          <div className="flex content-betwee gap-2" key={c.id}>
-            <Input
-              className="mb-0 w-full"
-              label=""
-              state={errors.competences?.[cIndex]?.label ? "error" : "default"}
-              stateRelatedMessage={errors.competences?.[
-                cIndex
-              ]?.label?.message?.toString()}
-              nativeInputProps={{ ...register(`competences.${cIndex}.label`) }}
-            />
-            <Button
-              data-test="delete-competence-button"
-              type="button"
-              priority="tertiary no outline"
-              iconId="fr-icon-delete-line"
-              iconPosition="left"
-              onClick={() => removeCompetence(cIndex)}
+        <SortableList
+          items={competencesFields}
+          onItemMoved={moveCompetences}
+          renderItem={(c, cIndex) => (
+            <SortableList.Item
+              className="flex items-center gap-2"
+              id={c.id}
+              key={c.id}
             >
-              Supprimer
-            </Button>
-          </div>
-        ))}
+              <div className="flex content-betwee gap-2 w-full mt-2" key={c.id}>
+                <SortableList.DragHandle />
+                <Input
+                  className="mb-0 w-full"
+                  label=""
+                  state={
+                    errors.competences?.[cIndex]?.label ? "error" : "default"
+                  }
+                  stateRelatedMessage={errors.competences?.[
+                    cIndex
+                  ]?.label?.message?.toString()}
+                  nativeInputProps={{
+                    ...register(`competences.${cIndex}.label`),
+                  }}
+                />
+                <Button
+                  data-test="delete-competence-button"
+                  type="button"
+                  priority="tertiary no outline"
+                  iconId="fr-icon-delete-line"
+                  iconPosition="left"
+                  onClick={() => removeCompetence(cIndex)}
+                >
+                  Supprimer
+                </Button>
+              </div>
+            </SortableList.Item>
+          )}
+        />
       </div>
       <Button
         data-test="add-competence-button"
