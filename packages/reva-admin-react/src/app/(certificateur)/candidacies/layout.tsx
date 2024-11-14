@@ -7,7 +7,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { CertificationAuthority } from "./(components)/CertificationAuthority";
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory(
@@ -73,8 +72,6 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const { isAdmin } = useAuth();
 
   const { graphqlClient } = useGraphQlClient();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: [
@@ -170,89 +167,50 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const juryCountByCategory =
     getJuryCountByCategoryResponse?.jury_juryCountByCategory;
 
-  const feasibilityItems = isFeatureActive("FEASIBILITY_COMPLETION_STATUS")
-    ? [
-        menuItem({
-          text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ALL",
-          defaultMenuItem: true,
-        }),
-        menuItem({
-          text: `Nouveaux dossiers (${feasibilityCountByCategory?.PENDING || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "PENDING",
-        }),
-        menuItem({
-          text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "INCOMPLETE",
-        }),
-        menuItem({
-          text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.COMPLETE || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "COMPLETE",
-        }),
-        menuItem({
-          text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ADMISSIBLE",
-        }),
-        menuItem({
-          text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "REJECTED",
-        }),
+  const feasibilityItems = [
+    menuItem({
+      text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "ALL",
+      defaultMenuItem: true,
+    }),
+    menuItem({
+      text: `Nouveaux dossiers (${feasibilityCountByCategory?.PENDING || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "PENDING",
+    }),
+    menuItem({
+      text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "INCOMPLETE",
+    }),
+    menuItem({
+      text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.COMPLETE || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "COMPLETE",
+    }),
+    menuItem({
+      text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "ADMISSIBLE",
+    }),
+    menuItem({
+      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "REJECTED",
+    }),
 
-        menuItem({
-          text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ARCHIVED",
-        }),
-        menuItem({
-          text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "DROPPED_OUT",
-        }),
-      ]
-    : [
-        menuItem({
-          text: `Tous les dossiers actifs (${feasibilityCountByCategory?.ALL || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ALL",
-          defaultMenuItem: true,
-        }),
-        menuItem({
-          text: `Dossiers en attente de recevabilité (${feasibilityCountByCategory?.PENDING || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "PENDING",
-        }),
-        menuItem({
-          text: `Dossiers recevables (${feasibilityCountByCategory?.ADMISSIBLE || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ADMISSIBLE",
-        }),
-        menuItem({
-          text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "REJECTED",
-        }),
-        menuItem({
-          text: `Dossiers incomplets (${feasibilityCountByCategory?.INCOMPLETE || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "INCOMPLETE",
-        }),
-        menuItem({
-          text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "ARCHIVED",
-        }),
-        menuItem({
-          text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
-          path: "/candidacies/feasibilities",
-          category: "DROPPED_OUT",
-        }),
-      ];
+    menuItem({
+      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "ARCHIVED",
+    }),
+    menuItem({
+      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "DROPPED_OUT",
+    }),
+  ];
 
   const dossierDeValidationItems = [
     menuItem({
