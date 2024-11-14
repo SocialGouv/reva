@@ -41,6 +41,7 @@ import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMe
 import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 import { addCertification } from "./features/addCertification";
+import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -165,6 +166,12 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: { codeRncp: string } },
     ) => addCertification(input),
+    referential_deleteCertificationCompetenceBloc: (
+      _parent: unknown,
+      {
+        certificationCompetenceBlocId,
+      }: { certificationCompetenceBlocId: string },
+    ) => deleteCertificationCompetenceBloc({ certificationCompetenceBlocId }),
   },
 };
 
