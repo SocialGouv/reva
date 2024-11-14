@@ -99,8 +99,8 @@ export default function CandidaciesPage() {
               candidateFirstname={candidacy.candidate?.firstname || ""}
               candidateLastname={candidacy.candidate?.lastname || ""}
               certificationLabel={candidacy?.certification?.label}
-              departmentCode={candidacy.department?.code}
-              departmentLabel={candidacy.department?.label}
+              departmentCode={candidacy.candidate?.department?.code}
+              departmentLabel={candidacy.candidate?.department?.label}
               organismLabel={
                 candidacy.organism?.informationsCommerciales?.nom ||
                 candidacy.organism?.label
