@@ -9,9 +9,8 @@ import { CANDIDATE_MAN } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
-  createCandidateJPL,
+  createCandidateMan,
   createExpertFiliereOrganism,
-  createGestionnaireMaisonMereAapAccount1,
 } from "../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
@@ -19,9 +18,8 @@ import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 let candidacy: Candidacy;
 
 beforeEach(async () => {
-  await createGestionnaireMaisonMereAapAccount1();
   await createExpertFiliereOrganism();
-  await createCandidateJPL();
+  await createCandidateMan();
   candidacy = await createCandidacyUnifvae();
 });
 

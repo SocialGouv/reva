@@ -21,7 +21,7 @@ import { authorizationHeaderForUser } from "../../../../test/helpers/authorizati
 import {
   createCandidacyUnifvae,
   createCandidacyUnireva,
-  createCandidateJPL,
+  createCandidateMan,
   createExpertFiliereOrganism,
 } from "../../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -44,7 +44,7 @@ const updateCandidacyCertification = async ({
 
 beforeAll(async () => {
   await createExpertFiliereOrganism();
-  await createCandidateJPL();
+  await createCandidateMan();
   await createCandidacyUnifvae();
   await updateCandidacyCertification({
     candidacyId: CANDIDACY_UNIFVAE.id,

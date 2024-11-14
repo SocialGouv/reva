@@ -14,10 +14,9 @@ import {
 } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import {
-  createGestionnaireMaisonMereAapAccount1,
   createGestionnaireMaisonMereAapAccount2,
   createMaisonMereAAPExpertBranche,
-  createMaisonMereAAPExpertFiliere,
+  createMaisonMereExpertFiliere,
 } from "../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -76,10 +75,9 @@ beforeAll(async () => {
       },
     });
 
-  await createGestionnaireMaisonMereAapAccount1();
   await createGestionnaireMaisonMereAapAccount2();
 
-  await createMaisonMereAAPExpertFiliere();
+  await createMaisonMereExpertFiliere();
   await createMaisonMereAAPExpertBranche();
 
   expertFiliere = await prismaClient.organism.create({

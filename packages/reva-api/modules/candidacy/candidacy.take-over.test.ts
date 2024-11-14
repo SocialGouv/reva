@@ -2,7 +2,6 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 import {
-  Account,
   Candidacy,
   CandidacyStatusStep,
   Candidate,
@@ -11,60 +10,34 @@ import {
 
 import { prismaClient } from "../../prisma/client";
 
-import {
-  CANDIDATE_MAN,
-  CANDIDATE_WOMAN,
-  ORGANISM_EXPERT_BRANCHE,
-  ORGANISM_EXPERT_FILIERE,
-} from "../../test/fixtures";
+import { Account } from "modules/account/account.types";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import {
+  createCandidateMan,
+  createCandidateWoman,
+  createExpertFiliereOrganism,
+} from "../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
-let rightOrganism: Organism,
-  wrongOrganism: Organism,
-  candidate1: Candidate,
-  candidate2: Candidate,
+let organism: Organism,
+  organismAccount: Account,
+  candidateMan: Candidate,
+  candidateWoman: Candidate,
   candidacyProject: Candidacy,
-  candidacyValidated: Candidacy,
-  rightCandidacyManager: Account,
-  wrongCandidacyManager: Account;
-const rightCandidacyManagerKcId = "e4965f17-6c39-4ed2-8786-e504e320e476",
-  wrongCandidacyManagerKcId = "45cb2519-4b1e-4861-849a-087f80651b73";
+  candidacyValidated: Candidacy;
 
 beforeAll(async () => {
-  const ileDeFrance = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-  wrongOrganism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERT_FILIERE,
-  });
-  wrongCandidacyManager = await prismaClient.account.create({
-    data: {
-      email: "wrong@example.com",
-      keycloakId: wrongCandidacyManagerKcId,
-      organismId: wrongOrganism.id,
-    },
-  });
-  rightOrganism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERT_BRANCHE,
-  });
-  rightCandidacyManager = await prismaClient.account.create({
-    data: {
-      email: ORGANISM_EXPERT_BRANCHE.contactAdministrativeEmail,
-      keycloakId: rightCandidacyManagerKcId,
-      organismId: rightOrganism.id,
-    },
-  });
-  candidate1 = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
-  });
-  candidate2 = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_WOMAN, departmentId: ileDeFrance?.id || "" },
-  });
+  const res = await createExpertFiliereOrganism();
+  organism = res.organism;
+  organismAccount = res.account;
+
+  candidateMan = await createCandidateMan();
+  candidateWoman = await createCandidateWoman();
+
   candidacyProject = await prismaClient.candidacy.create({
     data: {
-      candidateId: candidate1.id,
-      organismId: rightOrganism.id,
+      candidateId: candidateMan.id,
+      organismId: organism.id,
       status: CandidacyStatusStep.PROJET,
       candidacyStatuses: {
         createMany: {
@@ -80,8 +53,8 @@ beforeAll(async () => {
   });
   candidacyValidated = await prismaClient.candidacy.create({
     data: {
-      candidateId: candidate2.id,
-      organismId: rightOrganism.id,
+      candidateId: candidateWoman.id,
+      organismId: organism.id,
       status: CandidacyStatusStep.VALIDATION,
       candidacyStatuses: {
         createMany: {
@@ -98,31 +71,6 @@ beforeAll(async () => {
         },
       },
     },
-  });
-});
-
-afterAll(async () => {
-  await prismaClient.candidaciesStatus.deleteMany({
-    where: {
-      candidacyId: { in: [candidacyProject.id, candidacyValidated.id] },
-    },
-  });
-  await prismaClient.candidacyLog.deleteMany({
-    where: {
-      candidacyId: { in: [candidacyProject.id, candidacyValidated.id] },
-    },
-  });
-  await prismaClient.candidacy.deleteMany({
-    where: { id: { in: [candidacyProject.id, candidacyValidated.id] } },
-  });
-  await prismaClient.candidate.deleteMany({
-    where: { id: { in: [candidate1.id, candidate2.id] } },
-  });
-  await prismaClient.organism.deleteMany({
-    where: { id: { in: [rightOrganism.id, wrongOrganism.id] } },
-  });
-  await prismaClient.account.deleteMany({
-    where: { id: { in: [rightCandidacyManager.id, wrongCandidacyManager.id] } },
   });
 });
 
@@ -169,7 +117,7 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: wrongCandidacyManagerKcId,
+      keycloakId: "00000000-0000-0000-0000-000000000000",
     }),
     payload: {
       requestType: "mutation",
@@ -188,7 +136,7 @@ test("candidacy_takeOver should do nothing when candidacy status is not validati
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: rightCandidacyManagerKcId,
+      keycloakId: organismAccount.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -209,7 +157,7 @@ test("candidacy_takeOver should update candidacy statuses when active status is 
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: rightCandidacyManagerKcId,
+      keycloakId: organismAccount.keycloakId,
     }),
     payload: {
       requestType: "mutation",

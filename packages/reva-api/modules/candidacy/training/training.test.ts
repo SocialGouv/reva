@@ -12,7 +12,7 @@ import {
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
-  createCandidateJPL,
+  createCandidateMan,
   createExpertFiliereOrganism,
 } from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
@@ -24,7 +24,7 @@ let candidacy: Candidacy;
 
 beforeEach(async () => {
   await createExpertFiliereOrganism();
-  await createCandidateJPL();
+  await createCandidateMan();
   candidacy = await createCandidacyUnifvae();
 });
 

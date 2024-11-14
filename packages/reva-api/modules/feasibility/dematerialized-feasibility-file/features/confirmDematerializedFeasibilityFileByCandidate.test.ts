@@ -8,10 +8,9 @@ import {
 } from "@prisma/client";
 import {
   createCandidacyUnifvae,
-  createCandidateJPL,
+  createCandidateMan,
   createExpertFiliereOrganism,
   createFeasibilityWithDematerializedFeasibilityFile,
-  createGestionnaireMaisonMereAapAccount1,
 } from "../../../../test/helpers/create-db-entity";
 import { confirmDematerializedFeasibilityFileByCandidate } from "./confirmDematerializedFeasibilityFileByCandidate";
 
@@ -25,9 +24,8 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
   let dff: DematerializedFeasibilityFile;
 
   beforeAll(async () => {
-    await createGestionnaireMaisonMereAapAccount1();
     await createExpertFiliereOrganism();
-    await createCandidateJPL();
+    await createCandidateMan();
     candidacy = await createCandidacyUnifvae();
 
     feasibility = (await createFeasibilityWithDematerializedFeasibilityFile(

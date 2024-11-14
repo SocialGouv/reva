@@ -29,15 +29,6 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.candidacyLog.deleteMany({
-    where: { candidacyId: candidacy.id },
-  });
-  await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
-  await prismaClient.candidate.delete({ where: { id: candidate.id } });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-});
-
 test("get existing Candidacy with admin user", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,

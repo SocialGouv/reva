@@ -6,10 +6,9 @@ import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
-  createCandidateJPL,
+  createCandidateMan,
   createExpertBrancheOrganism,
   createExpertFiliereOrganism,
-  createGestionnaireMaisonMereAapAccount1,
 } from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
@@ -77,10 +76,9 @@ const confirmTraining = async () =>
   });
 
 beforeEach(async () => {
-  await createGestionnaireMaisonMereAapAccount1();
   await createExpertFiliereOrganism();
   await createExpertBrancheOrganism();
-  await createCandidateJPL();
+  await createCandidateMan();
   await createCandidacyUnifvae();
 
   await prismaClient.candidacy.update({

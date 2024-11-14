@@ -17,6 +17,7 @@ import {
   CANDIDACY_UNIFVAE,
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
+  CANDIDATE_WOMAN,
   CERTIFICATION_AUTHORITY_STRUCTURES,
   FEASIBILITY_PDF_ADMISSIBLE,
   MAISON_MERE_AAP_A_METTRE_A_JOUR,
@@ -25,19 +26,6 @@ import {
   ORGANISM_EXPERT_BRANCHE,
   ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-
-export const createGestionnaireMaisonMereAapAccount1 =
-  async (): Promise<Account> => {
-    return prismaClient.account.upsert({
-      where: {
-        id: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id,
-      },
-      update: {},
-      create: {
-        ...ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
-      },
-    });
-  };
 
 export const createGestionnaireMaisonMereAapAccount2 =
   async (): Promise<Account> => {
@@ -61,7 +49,7 @@ export const createGestionnaireMaisonMereAapAccount3 =
     });
   };
 
-export const createCandidateJPL = async (): Promise<Candidate> => {
+export const createCandidateMan = async (): Promise<Candidate> => {
   const parisDepartment = (await prismaClient.department.findFirst({
     where: { code: "75" },
   })) as Department;
@@ -71,15 +59,14 @@ export const createCandidateJPL = async (): Promise<Candidate> => {
   });
 };
 
-export const createMaisonMereAAPExpertFiliere =
-  async (): Promise<MaisonMereAAP> => {
-    return prismaClient.maisonMereAAP.create({
-      data: {
-        ...MAISON_MERE_AAP_EXPERT_FILIERE,
-        gestionnaireAccountId: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id,
-      },
-    });
-  };
+export const createCandidateWoman = async (): Promise<Candidate> => {
+  const ileDeFranceDepartment = (await prismaClient.department.findFirst({
+    where: { code: "75" },
+  })) as Department;
+  return prismaClient.candidate.create({
+    data: { ...CANDIDATE_WOMAN, departmentId: ileDeFranceDepartment?.id },
+  });
+};
 
 export const createMaisonMereAAPExpertBranche =
   async (): Promise<MaisonMereAAP> => {
