@@ -42,6 +42,8 @@ import { getCertificationCompetenceBlocById } from "./features/getCertificationC
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 import { addCertification } from "./features/addCertification";
 import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
+import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceBlocsByCertificationIdV2";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -52,13 +54,23 @@ const unsafeReferentialResolvers = {
     degree: ({ level }: { level: number }) => getDegreeByLevel({ level }),
     conventionsCollectives: ({ id: certificationId }: { id: string }) =>
       getConventionsCollectivesByCertificationId({ certificationId }),
-    competenceBlocs: ({
-      id: certificationId,
-      rncpId,
-    }: {
-      id: string;
-      rncpId: string;
-    }) => getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
+    competenceBlocs: async (
+      {
+        id: certificationId,
+        rncpId,
+      }: {
+        id: string;
+        rncpId: string;
+      },
+      _payload: unknown,
+      { auth: { userInfo } }: GraphqlContext,
+    ) =>
+      (await isFeatureActiveForUser({
+        feature: "ANNUAIRE_CERTIFICATIONS_V2",
+        userKeycloakId: userInfo?.sub,
+      }))
+        ? getCompetenceBlocsByCertificationIdV2({ certificationId })
+        : getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
   },
   CertificationCompetenceBloc: {
     competences: ({ id: certificationCompetenceBlocId }: { id: string }) =>
