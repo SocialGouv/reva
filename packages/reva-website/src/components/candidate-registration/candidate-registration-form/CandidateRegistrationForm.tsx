@@ -121,6 +121,7 @@ export const CandidateRegistrationForm = ({
           <h2>Modalités de parcours</h2>
           <div className="grid grid-cols-1 md:grid-cols-2">
             <RadioButtons
+              data-testid="candidate-modalite-parcours-radio-buttons"
               className="!inline"
               legend="Que souhaitez-vous faire pour ce parcours ? "
               options={[

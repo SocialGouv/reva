@@ -118,7 +118,7 @@ describe("candidate registration", () => {
     cy.get('[data-testid="candidate-registration-form"]').should("exist");
   });
 
-  it.skip("should let me send a valid candidate registration form  ", () => {
+  it("should let me send a valid candidate registration form  ", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
       stubQuery(
@@ -161,9 +161,12 @@ describe("candidate registration", () => {
       .children("input")
       .type("edgar.podovsky@flatmail.com");
 
-    cy.get('[data-testid="candidate-registration-form-department-select"]')
+    cy.get('[data-testid="candidate-modalite-parcours-radio-buttons"] input[value="ACCOMPAGNE"]~label').click();
+
+      cy.get('[data-testid="candidate-registration-form-department-select"]')
       .children("select")
       .select("department1");
+
 
     cy.get('[data-testid="candidate-registration-submit-button"]').click();
 
