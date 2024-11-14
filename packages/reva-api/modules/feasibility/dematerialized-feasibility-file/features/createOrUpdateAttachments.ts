@@ -15,6 +15,8 @@ import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 
+const MAX_UPLOAD_SIZE = 15728640; // 15Mo
+
 export const createOrUpdateAttachments = async ({
   candidacyId,
   input: {
@@ -66,19 +68,6 @@ export const createOrUpdateAttachments = async ({
     }
     if (existingOtherAttachmentsFiles.length) {
       existingFiles.push(...existingOtherAttachmentsFiles);
-    }
-
-    if (existingFiles.length) {
-      await Promise.all(
-        existingFiles.map(({ file: { path } }) => deleteFile(path)),
-      );
-      await prismaClient.dFFAttachment.deleteMany({
-        where: {
-          id: {
-            in: existingFiles.map(({ id }) => id),
-          },
-        },
-      });
     }
 
     const idCardFile = await getUploadedFile(idCard);
@@ -137,6 +126,27 @@ export const createOrUpdateAttachments = async ({
           name: file.filename,
         });
       }
+    }
+
+    for (const { file } of fileAndIds) {
+      if (file._buf.length > MAX_UPLOAD_SIZE) {
+        throw new Error(
+          `Le fichier ${file.filename} est trop volumineux (${(file._buf.length / 1024 / 1024).toFixed(2)} Mo). La taille maximale autorisée est de ${MAX_UPLOAD_SIZE / 1024 / 1024} Mo.`,
+        );
+      }
+    }
+
+    if (existingFiles.length) {
+      await Promise.all(
+        existingFiles.map(({ file: { path } }) => deleteFile(path)),
+      );
+      await prismaClient.dFFAttachment.deleteMany({
+        where: {
+          id: {
+            in: existingFiles.map(({ id }) => id),
+          },
+        },
+      });
     }
 
     for (const { file, filePath } of fileAndIds) {

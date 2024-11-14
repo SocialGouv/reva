@@ -17,7 +17,7 @@ import {
 } from "./_components/attachments.hook";
 
 const ACCEPTED_FILE_TYPES = ".pdf, .jpg, .jpeg, .png" as const;
-const MAX_FILE_SIZE = "2Mo" as const;
+const MAX_FILE_SIZE = "15Mo" as const;
 const hintMessage = `Formats supportés : ${ACCEPTED_FILE_TYPES} avec un poids maximum de ${MAX_FILE_SIZE}`;
 
 const schema = z
