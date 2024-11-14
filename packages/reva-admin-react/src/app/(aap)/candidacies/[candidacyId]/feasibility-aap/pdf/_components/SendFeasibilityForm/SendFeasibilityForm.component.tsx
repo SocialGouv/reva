@@ -250,7 +250,9 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
             certificationId={
               candidacy.data?.getCandidacyById?.certification?.id
             }
-            departmentId={candidacy.data?.getCandidacyById?.department?.id}
+            departmentId={
+              candidacy.data?.getCandidacyById?.candidate?.department.id
+            }
           />
         )}
 

@@ -10,10 +10,9 @@ const getCandidacyQuery = graphql(`
         id
         firstname
         lastname
-      }
-      department {
-        id
-        label
+        department {
+          id
+        }
       }
       certification {
         id
