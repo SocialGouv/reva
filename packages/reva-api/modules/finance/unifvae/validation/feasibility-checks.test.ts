@@ -100,12 +100,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
     });
   });
 
-  afterAll(async () => {
-    await prismaClient.feasibility.deleteMany({});
-    await prismaClient.file.deleteMany({});
-    await prismaClient.candidacy.deleteMany({});
-  });
-
   test("Should fail when feasibility not sent", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candNoFeasibilty.id,

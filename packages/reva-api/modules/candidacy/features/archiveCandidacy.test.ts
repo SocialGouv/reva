@@ -112,18 +112,6 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.candidacy.delete({ where: { id: candidacyArchived.id } });
-  await prismaClient.candidacy.delete({
-    where: { id: candidacyWithReorientationReason.id },
-  });
-  await prismaClient.candidacy.delete({
-    where: { id: candidacyPriseEnCharge.id },
-  });
-  await prismaClient.candidate.delete({ where: { id: candidate.id } });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-});
-
 describe("archive candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
     await expect(async () => {

@@ -3,7 +3,6 @@
  */
 import { Account, MaisonMereAAP } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createGestionnaireMaisonMereAapAccount2,
@@ -13,7 +12,6 @@ import {
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 let account2: Account,
-  accountMaisonMereExpertFiliere: Account,
   maisonMereAAP: MaisonMereAAP,
   maisonMereAAP2: MaisonMereAAP;
 
@@ -21,28 +19,9 @@ beforeAll(async () => {
   account2 = await createGestionnaireMaisonMereAapAccount2();
 
   const maisonMereAAPExpertFiliere = await createMaisonMereExpertFiliere();
-  accountMaisonMereExpertFiliere = maisonMereAAPExpertFiliere.account;
   maisonMereAAP = maisonMereAAPExpertFiliere.maisonMereAAP;
 
   maisonMereAAP2 = await createMaisonMereAAP2();
-});
-
-afterAll(async () => {
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: maisonMereAAP.id },
-  });
-
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: maisonMereAAP2.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: account2.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: accountMaisonMereExpertFiliere.id },
-  });
 });
 
 test("API should respond with error unauthorized user", async () => {

@@ -72,32 +72,6 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: MAISON_MERE_AAP_EXPERT_FILIERE.id },
-  });
-
-  await prismaClient.organism.delete({
-    where: { id: ORGANISM_EXPERT_BRANCHE.id },
-  });
-
-  await prismaClient.organism.delete({
-    where: { id: ORGANISM_EXPERT_FILIERE.id },
-  });
-
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: ACCOUNT_2.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id },
-  });
-});
-
 test("find maison mere by its siret number", async () => {
   const response = await injectGraphqlGetMaisonMereAAPs({
     searchFilter: MAISON_MERE_AAP_A_METTRE_A_JOUR.siret,

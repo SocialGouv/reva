@@ -155,26 +155,6 @@ async function createPendingFeasibility(account: Account) {
   });
 }
 
-afterAll(async () => {
-  await prismaClient.file.delete({ where: { id: feasibilityFile.id } });
-  await prismaClient.candidacyLog.deleteMany({
-    where: { candidacyId: candidacy.id },
-  });
-  await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
-  await prismaClient.candidate.delete({ where: { id: candidate.id } });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.account.delete({
-    where: { id: account75A_firstChoice.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: account75A_secondChoice.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: account75B.id },
-  });
-  await prismaClient.certificationAuthority.deleteMany();
-});
-
 afterEach(async () => {
   await prismaClient.feasibility.deleteMany({});
 });

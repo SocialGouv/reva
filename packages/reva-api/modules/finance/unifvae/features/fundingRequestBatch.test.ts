@@ -88,23 +88,6 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.fundingRequestBatchUnifvae.deleteMany({});
-  await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany({
-    where: { fundingRequestUnifvaeId: fundReq?.id },
-  });
-  await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany({
-    where: { fundingRequestUnifvaeId: fundReq?.id },
-  });
-  await prismaClient.fundingRequestUnifvae.delete({
-    where: { id: (fundReq as FundingRequestUnifvae).id },
-  });
-  await prismaClient.candidacy.delete({
-    where: { id: (candidacy as Candidacy).id },
-  });
-  await prismaClient.organism.delete({ where: { id: (aap as Organism).id } });
-});
-
 test("Should create a nice batch", async () => {
   batch = await createBatchFromFundingRequestUnifvae(
     (fundReq as FundingRequestUnifvae).id,

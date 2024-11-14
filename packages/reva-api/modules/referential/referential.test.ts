@@ -5,7 +5,6 @@ import { Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
 import {
-  ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
   MAISON_MERE_AAP_EXPERT_BRANCHE,
   MAISON_MERE_AAP_EXPERT_FILIERE,
   ORGANISM_EXPERT_BRANCHE,
@@ -120,22 +119,6 @@ beforeAll(async () => {
       ccnId: particulierEmployeur?.id || "",
       organismId: expertBranche?.id || "",
     },
-  });
-});
-
-afterAll(async () => {
-  await prismaClient.organism.deleteMany({});
-
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: MAISON_MERE_AAP_EXPERT_FILIERE.id },
-  });
-
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: MAISON_MERE_AAP_EXPERT_BRANCHE.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id },
   });
 });
 

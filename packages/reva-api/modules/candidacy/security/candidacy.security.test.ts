@@ -6,8 +6,6 @@ import {
   Candidacy,
   Candidate,
   CertificationAuthority,
-  CertificationAuthorityLocalAccount,
-  Feasibility,
   File,
   MaisonMereAAP,
   Organism,
@@ -33,17 +31,13 @@ let organism: Organism,
   randomAapAccount: Account,
   maisonMereAAp: MaisonMereAAP,
   maisonMereAapManagerAccount: Account,
-  randomMaisonMereAAp: MaisonMereAAP,
   randomMaisonMereAapManagerAccount: Account,
   certificationAuthority: CertificationAuthority,
   certificationAuthorityAccount: Account,
   feasibilityFile: File,
-  feasibility: Feasibility,
   randomCertificationAuthority: CertificationAuthority,
   randomCertificationAuthorityAccount: Account,
-  certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount,
   certificationAuthorityLocalAccountAccount: Account,
-  randomCertificationAuthorityLocalAccount: CertificationAuthorityLocalAccount,
   randomCertificationAuthorityLocalAccountAccount: Account;
 
 beforeAll(async () => {
@@ -75,7 +69,7 @@ beforeAll(async () => {
     },
   });
 
-  randomMaisonMereAAp = await prismaClient.maisonMereAAP.create({
+  await prismaClient.maisonMereAAP.create({
     data: {
       gestionnaireAccountId: randomMaisonMereAapManagerAccount.id,
       raisonSociale: "maisonMere",
@@ -155,7 +149,7 @@ beforeAll(async () => {
     data: { name: "file", mimeType: "text/plain", path: "file" },
   });
 
-  feasibility = await prismaClient.feasibility.create({
+  await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
       feasibilityUploadedPdf: {
@@ -193,23 +187,22 @@ beforeAll(async () => {
     },
   );
 
-  certificationAuthorityLocalAccount =
-    await prismaClient.certificationAuthorityLocalAccount.create({
-      data: {
-        certificationAuthorityId: certificationAuthority.id,
-        accountId: certificationAuthorityLocalAccountAccount.id,
-        certificationAuthorityLocalAccountOnDepartment: {
-          create: {
-            department: { connect: { id: candidacy.departmentId as string } },
-          },
-        },
-        certificationAuthorityLocalAccountOnCertification: {
-          create: {
-            certification: { connect: { id: certification?.id as string } },
-          },
+  await prismaClient.certificationAuthorityLocalAccount.create({
+    data: {
+      certificationAuthorityId: certificationAuthority.id,
+      accountId: certificationAuthorityLocalAccountAccount.id,
+      certificationAuthorityLocalAccountOnDepartment: {
+        create: {
+          department: { connect: { id: candidacy.departmentId as string } },
         },
       },
-    });
+      certificationAuthorityLocalAccountOnCertification: {
+        create: {
+          certification: { connect: { id: certification?.id as string } },
+        },
+      },
+    },
+  });
 
   const randomDepartment = await prismaClient.department.findFirst({
     where: { code: "02" },
@@ -223,76 +216,21 @@ beforeAll(async () => {
       },
     });
 
-  randomCertificationAuthorityLocalAccount =
-    await prismaClient.certificationAuthorityLocalAccount.create({
-      data: {
-        certificationAuthorityId: certificationAuthority.id,
-        accountId: randomCertificationAuthorityLocalAccountAccount.id,
-        certificationAuthorityLocalAccountOnDepartment: {
-          create: {
-            department: { connect: { id: randomDepartment?.id as string } },
-          },
-        },
-        certificationAuthorityLocalAccountOnCertification: {
-          create: {
-            certification: { connect: { id: certification?.id as string } },
-          },
+  await prismaClient.certificationAuthorityLocalAccount.create({
+    data: {
+      certificationAuthorityId: certificationAuthority.id,
+      accountId: randomCertificationAuthorityLocalAccountAccount.id,
+      certificationAuthorityLocalAccountOnDepartment: {
+        create: {
+          department: { connect: { id: randomDepartment?.id as string } },
         },
       },
-    });
-});
-
-afterAll(async () => {
-  await prismaClient.account.delete({ where: { id: randomAapAccount.id } });
-  await prismaClient.organism.delete({ where: { id: randomOrganism.id } });
-
-  await prismaClient.certificationAuthorityLocalAccount.delete({
-    where: { id: certificationAuthorityLocalAccount.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: certificationAuthorityLocalAccountAccount.id },
-  });
-  await prismaClient.certificationAuthorityLocalAccount.delete({
-    where: { id: randomCertificationAuthorityLocalAccount.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: randomCertificationAuthorityLocalAccountAccount.id },
-  });
-
-  await prismaClient.feasibility.delete({
-    where: { id: feasibility.id },
-  });
-  await prismaClient.file.delete({
-    where: { id: feasibilityFile.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: certificationAuthorityAccount.id },
-  });
-  await prismaClient.certificationAuthority.delete({
-    where: { id: certificationAuthority.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: randomCertificationAuthorityAccount.id },
-  });
-  await prismaClient.certificationAuthority.delete({
-    where: { id: randomCertificationAuthority.id },
-  });
-
-  await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
-  await prismaClient.candidate.delete({ where: { id: candidate.id } });
-
-  await prismaClient.account.delete({ where: { id: aapAccount.id } });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-
-  await prismaClient.maisonMereAAP.delete({ where: { id: maisonMereAAp.id } });
-  await prismaClient.account.delete({
-    where: { id: maisonMereAapManagerAccount.id },
-  });
-  await prismaClient.maisonMereAAP.delete({
-    where: { id: randomMaisonMereAAp.id },
-  });
-  await prismaClient.account.delete({
-    where: { id: randomMaisonMereAapManagerAccount.id },
+      certificationAuthorityLocalAccountOnCertification: {
+        create: {
+          certification: { connect: { id: certification?.id as string } },
+        },
+      },
+    },
   });
 });
 

@@ -89,12 +89,6 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.fundingRequestBatchUnifvae.deleteMany({});
-  await prismaClient.fundingRequestUnifvae.deleteMany({});
-  await prismaClient.candidacy.deleteMany({});
-});
-
 test("Should generate a CSV stream with fundingRequest to be sent", async () => {
   const itemsToSend = await prismaClient.fundingRequestBatchUnifvae.findMany({
     where: { sent: false },

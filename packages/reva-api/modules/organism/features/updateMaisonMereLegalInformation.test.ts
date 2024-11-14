@@ -57,23 +57,6 @@ beforeAll(async () => {
   await createMaisonMereAAP2();
 });
 
-afterAll(async () => {
-  await prismaClient.maisonMereAAP.deleteMany({
-    where: {
-      id: {
-        in: [
-          MAISON_MERE_AAP_EXPERT_FILIERE.id,
-          MAISON_MERE_AAP_A_METTRE_A_JOUR.id,
-        ],
-      },
-    },
-  });
-
-  await prismaClient.account.deleteMany({
-    where: { id: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id },
-  });
-});
-
 test("should not allow a gestionnaire to update maison mere legal information", async () => {
   const response = await injectGraphql({
     fastify: (global as any).fastify,

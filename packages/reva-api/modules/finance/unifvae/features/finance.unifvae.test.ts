@@ -53,21 +53,6 @@ beforeAll(async () => {
   await createCandidacyUnireva();
 });
 
-afterAll(async () => {
-  await prismaClient.feasibility.deleteMany({});
-  await prismaClient.file.deleteMany({});
-  await prismaClient.candidaciesStatus.deleteMany();
-  await prismaClient.basicSkillOnCandidacies.deleteMany();
-  await prismaClient.candidacyLog.deleteMany();
-  await prismaClient.candidacy.deleteMany();
-  await prismaClient.account.updateMany({ data: { organismId: null } });
-  await prismaClient.organism.deleteMany();
-  await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
-  await prismaClient.maisonMereAAP.deleteMany();
-  await prismaClient.account.deleteMany();
-  await prismaClient.candidate.deleteMany();
-});
-
 afterEach(async () => {
   await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany();
   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
