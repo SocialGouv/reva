@@ -23,11 +23,13 @@ export const CompetenceBlocForm = ({
   defaultValues,
   backUrl,
   className = "",
+  onDeleteCompetenceBlocButtonClick,
 }: {
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
   defaultValues: Partial<CompetenceBlocFormData>;
   backUrl: string;
   className?: string;
+  onDeleteCompetenceBlocButtonClick?: () => void;
 }) => {
   const methods = useForm<CompetenceBlocFormData>({
     resolver: zodResolver(competenceBlocFormSchema),
@@ -52,7 +54,7 @@ export const CompetenceBlocForm = ({
 
   const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));
   return (
-    <form onSubmit={handleFormSubmit} className={`${className}`}>
+    <form onSubmit={handleFormSubmit} className={`flex flex-col ${className}`}>
       <Input
         data-test="competence-bloc-label-input"
         label="Intitulé du bloc de compétences"
@@ -63,7 +65,7 @@ export const CompetenceBlocForm = ({
         }}
       />
       <div
-        className="flex flex-col gap-2 mt-6 mb-2 pl-4"
+        className="flex flex-col gap-2 mb-2 pl-4"
         data-test="competence-list"
       >
         {competencesFields.map((c, cIndex) => (
@@ -78,7 +80,7 @@ export const CompetenceBlocForm = ({
               nativeInputProps={{ ...register(`competences.${cIndex}.label`) }}
             />
             <Button
-              data-test="remove-competence-button"
+              data-test="delete-competence-button"
               type="button"
               priority="tertiary no outline"
               iconId="fr-icon-delete-line"
@@ -102,6 +104,19 @@ export const CompetenceBlocForm = ({
       >
         Ajouter une compétence
       </Button>
+      <hr className="mt-6 mb-1" />
+      {onDeleteCompetenceBlocButtonClick && (
+        <Button
+          data-test="delete-competence-bloc-button"
+          type="button"
+          priority="tertiary no outline"
+          iconId="fr-icon-delete-line"
+          iconPosition="left"
+          onClick={onDeleteCompetenceBlocButtonClick}
+        >
+          Supprimer ce bloc
+        </Button>
+      )}
       <FormButtons
         backUrl={backUrl}
         formState={{

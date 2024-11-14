@@ -37,6 +37,18 @@ const updateCertificationCompetenceBlocMutation = graphql(`
   }
 `);
 
+const deleteCertificationCompetenceBlocMutation = graphql(`
+  mutation deleteCertificationCompetenceBlocForUpdateCompetenceBlocPage(
+    $certificationCompetenceBlocId: String!
+  ) {
+    referential_deleteCertificationCompetenceBloc(
+      certificationCompetenceBlocId: $certificationCompetenceBlocId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useUpdateCompetenceBlocPage = ({
   certificationCompetenceBlocId,
 }: {
@@ -71,6 +83,17 @@ export const useUpdateCompetenceBlocPage = ({
       }),
   });
 
+  const deleteCertificationCompetenceBloc = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(deleteCertificationCompetenceBlocMutation, {
+        certificationCompetenceBlocId,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationCompetenceBlocId],
+      }),
+  });
+
   const competenceBloc =
     getCompetenceBlocResponse?.getCertificationCompetenceBloc;
 
@@ -78,5 +101,6 @@ export const useUpdateCompetenceBlocPage = ({
     competenceBloc,
     getCompetenceBlocQueryStatus,
     updateCertificationCompetenceBloc,
+    deleteCertificationCompetenceBloc,
   };
 };

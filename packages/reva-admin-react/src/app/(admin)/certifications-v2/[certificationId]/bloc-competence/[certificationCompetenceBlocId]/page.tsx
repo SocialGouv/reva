@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUpdateCompetenceBlocPage } from "./updateCompetenceBloc.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
@@ -16,14 +16,18 @@ type CertificationCompetenceBlocForPage = Exclude<
 >;
 
 export default function UpdateCompetenceBlocPage() {
-  const { certificationCompetenceBlocId } = useParams<{
+  const { certificationId, certificationCompetenceBlocId } = useParams<{
+    certificationId: string;
     certificationCompetenceBlocId: string;
   }>();
+
+  const router = useRouter();
 
   const {
     competenceBloc,
     getCompetenceBlocQueryStatus,
     updateCertificationCompetenceBloc,
+    deleteCertificationCompetenceBloc,
   } = useUpdateCompetenceBlocPage({ certificationCompetenceBlocId });
 
   const handleFormSubmit = async (data: CompetenceBlocFormData) => {
@@ -34,17 +38,33 @@ export default function UpdateCompetenceBlocPage() {
       graphqlErrorToast(e);
     }
   };
+
+  const handleCompetenceBlocDeleteButtonClick = async () => {
+    try {
+      await deleteCertificationCompetenceBloc.mutateAsync();
+      successToast("modifications enregistrées");
+      router.push(`/certifications-v2/${certificationId}`);
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
   return getCompetenceBlocQueryStatus === "success" && competenceBloc ? (
-    <PageContent competenceBloc={competenceBloc} onSubmit={handleFormSubmit} />
+    <PageContent
+      competenceBloc={competenceBloc}
+      onSubmit={handleFormSubmit}
+      onDeleteCompetenceBlocButtonClick={handleCompetenceBlocDeleteButtonClick}
+    />
   ) : null;
 }
 
 const PageContent = ({
   competenceBloc,
   onSubmit,
+  onDeleteCompetenceBlocButtonClick,
 }: {
   competenceBloc: CertificationCompetenceBlocForPage;
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
+  onDeleteCompetenceBlocButtonClick?: () => void;
 }) => (
   <div data-test="update-certification-page">
     <Breadcrumb
@@ -98,6 +118,7 @@ const PageContent = ({
         })),
       }}
       onSubmit={onSubmit}
+      onDeleteCompetenceBlocButtonClick={onDeleteCompetenceBlocButtonClick}
     />
   </div>
 );
