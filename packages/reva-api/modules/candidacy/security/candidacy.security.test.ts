@@ -17,10 +17,10 @@ import { prismaClient } from "../../../prisma/client";
 import {
   CANDIDATE_MAN,
   CANDIDATE_WOMAN,
+  CERTIFICATION_AUTHORITY_STRUCTURES,
   ORGANISM_EXPERIMENTATION,
   ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
 } from "../../../test/fixtures";
-import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
@@ -139,7 +139,7 @@ beforeAll(async () => {
     data: {
       label: "certification authority",
       certificationAuthorityStructureId:
-        certificationAuthorityStructureFixtures.UIMM.id,
+        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
     },
   });
 
@@ -172,7 +172,7 @@ beforeAll(async () => {
       data: {
         label: "random certification authority",
         certificationAuthorityStructureId:
-          certificationAuthorityStructureFixtures.UIMM.id,
+          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
       },
     });
 

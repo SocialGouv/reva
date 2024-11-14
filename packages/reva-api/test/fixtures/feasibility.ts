@@ -1,5 +1,5 @@
-import { certificationAuthorityStructureFixtures } from "./certification";
 import { FeasibilityStatus } from "@prisma/client";
+import { CERTIFICATION_AUTHORITY_STRUCTURES } from "./certifications.fixture";
 
 export const feasibilityAdmissible = {
   decision: FeasibilityStatus.ADMISSIBLE,
@@ -7,7 +7,7 @@ export const feasibilityAdmissible = {
     create: {
       label: "dummy",
       certificationAuthorityStructureId:
-        certificationAuthorityStructureFixtures.UIMM.id,
+        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
     },
   },
   feasibilityUploadedPdf: {

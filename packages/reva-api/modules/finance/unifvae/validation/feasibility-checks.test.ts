@@ -1,12 +1,12 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
+import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../../../test/fixtures";
 import {
   fundingRequestFullCertOkHours,
   fundingRequestNoHours,
 } from "../../../../test/fixtures/funding-request";
 import { validateFeasibilityChecks } from "./feasibility-checks";
-import { certificationAuthorityStructureFixtures } from "../../../../test/fixtures/certification";
 
 let candNoFeasibilty: Candidacy,
   candFeasibiltyValidated: Candidacy,
@@ -25,7 +25,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 label: "dummy",
                 certificationAuthorityStructureId:
-                  certificationAuthorityStructureFixtures.UIMM.id,
+                  CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
               },
             },
 
@@ -53,7 +53,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 label: "dummy",
                 certificationAuthorityStructureId:
-                  certificationAuthorityStructureFixtures.UIMM.id,
+                  CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
               },
             },
             feasibilityUploadedPdf: {
@@ -80,7 +80,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
               create: {
                 label: "dummy",
                 certificationAuthorityStructureId:
-                  certificationAuthorityStructureFixtures.UIMM.id,
+                  CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
               },
             },
             feasibilityUploadedPdf: {

@@ -15,13 +15,13 @@ import {
   CANDIDACY_UNIFVAE,
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
+  CERTIFICATION_AUTHORITY_STRUCTURES,
   MAISON_MERE_AAP_A_METTRE_A_JOUR,
   MAISON_MERE_AAP_EXPERT_BRANCHE,
   MAISON_MERE_AAP_EXPERT_FILIERE,
   ORGANISM_EXPERT_BRANCHE,
   ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
 import { feasibilityAdmissible } from "../fixtures/feasibility";
 import {
   basicSkill1Label,
@@ -239,7 +239,7 @@ export const createFeasibilityWithDematerializedFeasibilityFile = async (
         create: {
           label: "dummy",
           certificationAuthorityStructureId:
-            certificationAuthorityStructureFixtures.UIMM.id,
+            CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
         },
       },
       dematerializedFeasibilityFile: {

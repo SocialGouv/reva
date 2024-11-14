@@ -13,8 +13,11 @@ import {
 import { FastifyInstance } from "fastify";
 
 import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN, ORGANISM_EXPERIMENTATION } from "../../test/fixtures";
-import { certificationAuthorityStructureFixtures } from "../../test/fixtures/certification";
+import {
+  CANDIDATE_MAN,
+  CERTIFICATION_AUTHORITY_STRUCTURES,
+  ORGANISM_EXPERIMENTATION,
+} from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
@@ -72,7 +75,7 @@ beforeAll(async () => {
     await prismaClient.certificationAuthority?.create({
       data: {
         certificationAuthorityStructureId:
-          certificationAuthorityStructureFixtures.UIMM.id,
+          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
         certificationAuthorityOnDepartment: {
           create: { departmentId: parisDepartment?.id || "" },
         },
@@ -87,7 +90,7 @@ beforeAll(async () => {
     await prismaClient.certificationAuthority?.create({
       data: {
         certificationAuthorityStructureId:
-          certificationAuthorityStructureFixtures.UIMM.id,
+          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
         certificationAuthorityOnDepartment: {
           create: { departmentId: parisDepartment?.id || "" },
         },
@@ -101,7 +104,7 @@ beforeAll(async () => {
   const authority75B = await prismaClient.certificationAuthority?.create({
     data: {
       certificationAuthorityStructureId:
-        certificationAuthorityStructureFixtures.UIMM.id,
+        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
       certificationAuthorityOnDepartment: {
         create: { departmentId: parisDepartment?.id || "" },
       },
