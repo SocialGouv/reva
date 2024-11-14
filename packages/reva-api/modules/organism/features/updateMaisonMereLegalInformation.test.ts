@@ -5,8 +5,7 @@ import * as updateAccount from "../../account/features/updateAccount";
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
-  createGestionnaireMaisonMereAapAccount2,
-  createMaisonMereAAP2,
+  createMaisonMereAAPAMettreAJour,
   createMaisonMereExpertFiliere,
 } from "../../../test/helpers/create-db-entity";
 import {
@@ -52,9 +51,8 @@ beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
   (global as any).fastify = app;
 
-  await createGestionnaireMaisonMereAapAccount2();
   await createMaisonMereExpertFiliere();
-  await createMaisonMereAAP2();
+  await createMaisonMereAAPAMettreAJour();
 });
 
 test("should not allow a gestionnaire to update maison mere legal information", async () => {

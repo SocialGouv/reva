@@ -13,7 +13,6 @@ import {
 } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import {
-  createGestionnaireMaisonMereAapAccount2,
   createMaisonMereAAPExpertBranche,
   createMaisonMereExpertFiliere,
 } from "../../test/helpers/create-db-entity";
@@ -73,8 +72,6 @@ beforeAll(async () => {
         label: "Particuliers employeurs et emploi à domicile",
       },
     });
-
-  await createGestionnaireMaisonMereAapAccount2();
 
   await createMaisonMereExpertFiliere();
   await createMaisonMereAAPExpertBranche();

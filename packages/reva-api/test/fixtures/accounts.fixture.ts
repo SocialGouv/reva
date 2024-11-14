@@ -20,7 +20,7 @@ export const ACCOUNT_MAISON_MERE_EXPERT_FILIERE: Account = {
   email: "peter@yolo.fr",
 };
 
-export const ACCOUNT_2: Account = {
+export const ACCOUNT_MAISON_MERE_EXPERT_BRANCHE: Account = {
   ...ACCOUNT_BASE,
   id: "00000000-0000-0000-0000-000000000014",
   keycloakId: "00000000-0000-0000-0000-000000000015",
@@ -29,17 +29,29 @@ export const ACCOUNT_2: Account = {
   email: "marge@yolo.fr",
 };
 
-export const ACCOUNT_3: Account = {
+export const ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR: Account = {
   ...ACCOUNT_BASE,
-  id: "00000000-0000-0000-0000-000000000016",
-  keycloakId: "00000000-0000-0000-0000-000000000017",
-  firstname: "Bart",
+  id: "00000000-0000-0000-0000-000000000020",
+  keycloakId: "00000000-0000-0000-0000-000000000021",
+  firstname: "Maggie",
   lastname: "Simpson",
-  email: "bart@yolo.fr",
+  email: "maggie@yolo.fr",
 };
 
 export const ACCOUNT_ORGANISM_EXPERT_FILIERE: Account = {
   ...ACCOUNT_BASE,
   id: "00000000-0000-0000-0000-000000000018",
   keycloakId: "00000000-0000-0000-0000-000000000019",
+  firstname: "Homer",
+  lastname: "Simpson",
+  email: "homer@yolo.fr",
+};
+
+export const ACCOUNT_ORGANISM_EXPERT_BRANCHE: Account = {
+  ...ACCOUNT_BASE,
+  id: "00000000-0000-0000-0000-000000000022",
+  keycloakId: "00000000-0000-0000-0000-000000000023",
+  firstname: "Bart",
+  lastname: "Simpson",
+  email: "bart@yolo.fr",
 };

@@ -8,9 +8,10 @@ import {
 } from "@prisma/client";
 import { prismaClient } from "../../prisma/client";
 import {
-  ACCOUNT_2,
-  ACCOUNT_3,
+  ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR,
+  ACCOUNT_MAISON_MERE_EXPERT_BRANCHE,
   ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
+  ACCOUNT_ORGANISM_EXPERT_BRANCHE,
   ACCOUNT_ORGANISM_EXPERT_FILIERE,
   BASIC_SKILL_1,
   BASIC_SKILL_2,
@@ -26,28 +27,6 @@ import {
   ORGANISM_EXPERT_BRANCHE,
   ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-
-export const createGestionnaireMaisonMereAapAccount2 =
-  async (): Promise<Account> => {
-    return prismaClient.account.upsert({
-      where: {
-        id: ACCOUNT_2.id,
-      },
-      update: {},
-      create: {
-        ...ACCOUNT_2,
-      },
-    });
-  };
-
-export const createGestionnaireMaisonMereAapAccount3 =
-  async (): Promise<Account> => {
-    return prismaClient.account.upsert({
-      where: { id: ACCOUNT_3.id },
-      update: {},
-      create: { ...ACCOUNT_3 },
-    });
-  };
 
 export const createCandidateMan = async (): Promise<Candidate> => {
   const parisDepartment = (await prismaClient.department.findFirst({
@@ -68,15 +47,23 @@ export const createCandidateWoman = async (): Promise<Candidate> => {
   });
 };
 
-export const createMaisonMereAAPExpertBranche =
-  async (): Promise<MaisonMereAAP> => {
-    return prismaClient.maisonMereAAP.create({
-      data: {
-        ...MAISON_MERE_AAP_EXPERT_BRANCHE,
-        gestionnaireAccountId: ACCOUNT_2.id,
-      },
-    });
-  };
+export const createMaisonMereAAPExpertBranche = async (): Promise<{
+  maisonMereAAP: MaisonMereAAP;
+  account: Account;
+}> => {
+  const account = await prismaClient.account.create({
+    data: ACCOUNT_MAISON_MERE_EXPERT_BRANCHE,
+  });
+
+  const maisonMereAAP = await prismaClient.maisonMereAAP.create({
+    data: {
+      ...MAISON_MERE_AAP_EXPERT_BRANCHE,
+      gestionnaireAccountId: account.id,
+    },
+  });
+
+  return { maisonMereAAP, account };
+};
 
 export const createMaisonMereExpertFiliere = async (): Promise<{
   maisonMereAAP: MaisonMereAAP;
@@ -96,13 +83,22 @@ export const createMaisonMereExpertFiliere = async (): Promise<{
   return { maisonMereAAP, account };
 };
 
-export const createMaisonMereAAP2 = async (): Promise<MaisonMereAAP> => {
-  return prismaClient.maisonMereAAP.create({
+export const createMaisonMereAAPAMettreAJour = async (): Promise<{
+  maisonMereAAP: MaisonMereAAP;
+  account: Account;
+}> => {
+  const account = await prismaClient.account.create({
+    data: ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR,
+  });
+
+  const maisonMereAAP = await prismaClient.maisonMereAAP.create({
     data: {
       ...MAISON_MERE_AAP_A_METTRE_A_JOUR,
-      gestionnaireAccountId: ACCOUNT_2.id,
+      gestionnaireAccountId: account.id,
     },
   });
+
+  return { maisonMereAAP, account };
 };
 
 export const createExpertFiliereOrganism = async (): Promise<{
@@ -120,10 +116,19 @@ export const createExpertFiliereOrganism = async (): Promise<{
   return { organism, account };
 };
 
-export const createExpertBrancheOrganism = async (): Promise<Organism> => {
-  return prismaClient.organism.create({
+export const createExpertBrancheOrganism = async (): Promise<{
+  organism: Organism;
+  account: Account;
+}> => {
+  const organism = await prismaClient.organism.create({
     data: ORGANISM_EXPERT_BRANCHE,
   });
+
+  const account = await prismaClient.account.create({
+    data: { ...ACCOUNT_ORGANISM_EXPERT_BRANCHE, organismId: organism.id },
+  });
+
+  return { organism, account };
 };
 
 export const createCandidacyUnifvae = async () => {

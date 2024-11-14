@@ -5,23 +5,22 @@ import { Account, MaisonMereAAP } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
-  createGestionnaireMaisonMereAapAccount2,
-  createMaisonMereAAP2,
+  createMaisonMereAAPAMettreAJour,
   createMaisonMereExpertFiliere,
 } from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
-let account2: Account,
+let accountMaisonMereAMettreAJour: Account,
   maisonMereAAP: MaisonMereAAP,
-  maisonMereAAP2: MaisonMereAAP;
+  maisonMereAAPAMettreAJour: MaisonMereAAP;
 
 beforeAll(async () => {
-  account2 = await createGestionnaireMaisonMereAapAccount2();
-
   const maisonMereAAPExpertFiliere = await createMaisonMereExpertFiliere();
   maisonMereAAP = maisonMereAAPExpertFiliere.maisonMereAAP;
 
-  maisonMereAAP2 = await createMaisonMereAAP2();
+  const maisonMereAAPAMettreAJourRes = await createMaisonMereAAPAMettreAJour();
+  maisonMereAAPAMettreAJour = maisonMereAAPAMettreAJourRes.maisonMereAAP;
+  accountMaisonMereAMettreAJour = maisonMereAAPAMettreAJourRes.account;
 });
 
 test("API should respond with error unauthorized user", async () => {
@@ -86,14 +85,14 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "gestion_maison_mere_aap",
-      keycloakId: account2.keycloakId,
+      keycloakId: accountMaisonMereAMettreAJour.keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAP2.id,
+          maisonMereAAPId: maisonMereAAPAMettreAJour.id,
           showAccountSetup: true,
         },
       },
@@ -106,7 +105,7 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
     response.json().data.organism_updateMaisonMereAccountSetup,
   ).not.toBeNull();
   expect(response.json().data.organism_updateMaisonMereAccountSetup.id).toBe(
-    maisonMereAAP2.id,
+    maisonMereAAPAMettreAJour.id,
   );
   expect(
     response.json().data.organism_updateMaisonMereAccountSetup.showAccountSetup,
@@ -125,7 +124,7 @@ test("API should error when user is not the manager of the MaisonMereAAP", async
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAP2.id,
+          maisonMereAAPId: maisonMereAAPAMettreAJour.id,
           showAccountSetup: true,
         },
       },

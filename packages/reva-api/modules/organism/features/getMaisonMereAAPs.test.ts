@@ -5,7 +5,7 @@
 import { StatutValidationInformationsJuridiquesMaisonMereAAP } from ".prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import {
-  ACCOUNT_2,
+  ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR,
   ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
   MAISON_MERE_AAP_A_METTRE_A_JOUR,
   MAISON_MERE_AAP_EXPERT_FILIERE,
@@ -16,9 +16,7 @@ import { authorizationHeaderForUser } from "../../../test/helpers/authorization-
 import {
   createExpertBrancheOrganism,
   createExpertFiliereOrganism,
-  createGestionnaireMaisonMereAapAccount2,
-  createGestionnaireMaisonMereAapAccount3,
-  createMaisonMereAAP2,
+  createMaisonMereAAPAMettreAJour,
   createMaisonMereExpertFiliere,
 } from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
@@ -51,10 +49,8 @@ const injectGraphqlGetMaisonMereAAPs = async ({
 };
 
 beforeAll(async () => {
-  await createGestionnaireMaisonMereAapAccount2();
-  await createGestionnaireMaisonMereAapAccount3();
   await createMaisonMereExpertFiliere();
-  await createMaisonMereAAP2();
+  await createMaisonMereAAPAMettreAJour();
 
   await createExpertBrancheOrganism();
   await createExpertFiliereOrganism();
@@ -105,7 +101,7 @@ test("find maison mere by admin email", async () => {
 
 test("find maison mere by collaborateur email", async () => {
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: ACCOUNT_2.email,
+    searchFilter: ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR.email,
   });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
