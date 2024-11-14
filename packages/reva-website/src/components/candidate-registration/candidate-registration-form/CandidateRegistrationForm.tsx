@@ -76,10 +76,6 @@ export const CandidateRegistrationForm = ({
 
   const validTypology = candidateTypology && !invalidTypology;
 
-  const isTypeAccompagnementCandidatFeatureActive = isFeatureActive(
-    "TYPE_ACCOMPAGNEMENT_CANDIDAT",
-  );
-
   const {
     register,
     handleSubmit,
@@ -106,7 +102,6 @@ export const CandidateRegistrationForm = ({
   }, []);
 
   const handleFormSubmit = handleSubmit((form) => {
-    if (isTypeAccompagnementCandidatFeatureActive) {
       if (!form.typeAccompagnement) {
         setError("typeAccompagnement", {
           type: "required",
@@ -114,9 +109,6 @@ export const CandidateRegistrationForm = ({
         });
       }
       onSubmit(form);
-    } else {
-      onSubmit({ ...form, typeAccompagnement: "ACCOMPAGNE" });
-    }
   });
 
   return (
@@ -125,7 +117,6 @@ export const CandidateRegistrationForm = ({
       className="flex flex-col gap-12"
       onSubmit={handleFormSubmit}
     >
-      {isFeatureActive("TYPE_ACCOMPAGNEMENT_CANDIDAT") && (
         <div>
           <h2>Modalités de parcours</h2>
           <div className="grid grid-cols-1 md:grid-cols-2">
@@ -176,7 +167,6 @@ export const CandidateRegistrationForm = ({
             </CallOut>
           </div>
         </div>
-      )}
       <div className="flex flex-col">
         <h2 className="font-bold mt-4">Quel est votre statut ?</h2>
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
