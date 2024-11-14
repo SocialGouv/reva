@@ -14,7 +14,8 @@
       },
       "DATE_FIN_ENREGISTREMENT": 1572476400000,
       "DATE_LIMITE_DELIVRANCE": null,
-      "FORMACODES": []
+      "FORMACODES": [],
+      "DOMAINS": []
     }
   }
 }
