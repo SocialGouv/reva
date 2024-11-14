@@ -1,0 +1,20 @@
+{
+  "data": {
+    "getFCCertification": {
+      "ID_FICHE": "6638",
+      "NUMERO_FICHE": "RNCP3890",
+      "INTITULE": "Génie civil et construction option bâtiment, travaux publics",
+      "ABREGE": {
+        "CODE": "Licence Professionnelle",
+        "LIBELLE": "Licence professionnelle"
+      },
+      "NOMENCLATURE_EUROPE": {
+        "NIVEAU": "NIV6",
+        "INTITULE": "Niveau 6"
+      },
+      "DATE_FIN_ENREGISTREMENT": 1572476400000,
+      "DATE_LIMITE_DELIVRANCE": null,
+      "FORMACODES": []
+    }
+  }
+}

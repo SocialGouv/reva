@@ -27,7 +27,9 @@ const getFCCertificationQuery = graphql(`
 `);
 
 const addCertificatioMutation = graphql(`
-  mutation addCertificatioMutation($input: AddCertificationInput!) {
+  mutation addFCCertificationForAddCertificationPage(
+    $input: AddCertificationInput!
+  ) {
     referential_addCertification(input: $input) {
       id
     }

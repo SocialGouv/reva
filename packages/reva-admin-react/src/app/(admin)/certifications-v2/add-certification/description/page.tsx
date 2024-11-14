@@ -70,6 +70,7 @@ export default function CertificationDescriptionPage() {
           className="my-3 flex gap-8"
         >
           <Input
+            data-test="fc-certification-description-input"
             label="Code RNCP"
             nativeInputProps={{
               ...register("rncp"),
@@ -85,7 +86,10 @@ export default function CertificationDescriptionPage() {
         >
           {certification && (
             <div className="flex flex-col gap-4">
-              <h3 className="mb-2">
+              <h3
+                data-test="fc-certification-description-card-title"
+                className="mb-2"
+              >
                 Descriptif de la certification avec France compétences
               </h3>
               <Info title="Intitulé">{certification.INTITULE}</Info>
