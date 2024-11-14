@@ -37,10 +37,10 @@ const getDossiersDeValidationQuery = graphql(`
           candidate {
             firstname
             lastname
-          }
-          department {
-            label
-            code
+            department {
+              label
+              code
+            }
           }
         }
         dossierDeValidationFile {

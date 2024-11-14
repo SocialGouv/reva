@@ -31,10 +31,10 @@ const getCandidacyCaducitesQuery = graphql(`
         candidate {
           firstname
           lastname
-        }
-        department {
-          code
-          label
+          department {
+            code
+            label
+          }
         }
         certification {
           label
@@ -121,7 +121,6 @@ const CaducitesPage = () => {
                 id: row.id,
                 certification: row.certification,
                 candidate: row.candidate,
-                department: row.department,
                 feasibility: row.feasibility,
               },
             })),

@@ -50,8 +50,6 @@ enum CandidacyStatusStep {
 type Candidacy {
   id: ID!
   candidate: Candidate
-  departmentId: ID
-  department: Department
   organismId: UUID
   organism: Organism
   experiences: [Experience!]!

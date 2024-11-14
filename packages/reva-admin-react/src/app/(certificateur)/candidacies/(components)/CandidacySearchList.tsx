@@ -10,8 +10,11 @@ type CandidacySearchResult<T> = T & {
   candidacy: {
     id: string;
     certification?: { label: string } | null;
-    candidate?: { firstname: string; lastname: string } | null;
-    department?: { code: string; label: string } | null;
+    candidate?: {
+      department?: { code: string; label: string } | null;
+      firstname: string;
+      lastname: string;
+    } | null;
   };
 };
 
@@ -44,7 +47,8 @@ export const CandidacySearchList = <T,>({
             </dd>
             <dt className="sr-only">Département</dt>
             <dd className="text-lg">
-              {r.candidacy.department?.label} ({r.candidacy.department?.code})
+              {r.candidacy.candidate?.department?.label} (
+              {r.candidacy.candidate?.department?.code})
             </dd>
           </dl>
           {children?.(r)}

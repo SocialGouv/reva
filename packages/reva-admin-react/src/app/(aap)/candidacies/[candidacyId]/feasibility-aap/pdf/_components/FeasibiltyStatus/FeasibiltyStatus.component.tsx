@@ -89,7 +89,9 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
             certificationId={
               candidacy.data?.getCandidacyById?.certification?.id
             }
-            departmentId={candidacy.data?.getCandidacyById?.department?.id}
+            departmentId={
+              candidacy.data?.getCandidacyById?.candidate?.department?.id
+            }
           />
         </>
       )}

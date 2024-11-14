@@ -32,16 +32,16 @@ const getFeasibilitiesQuery = graphql(`
         feasibilityFileSentAt
         candidacy {
           id
-          department {
-            code
-            label
-          }
           certification {
             label
           }
           candidate {
             firstname
             lastname
+            department {
+              code
+              label
+            }
           }
         }
       }

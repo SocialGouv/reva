@@ -6,7 +6,6 @@ import { prismaClient } from "../../prisma/client";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { getOrganismById } from "../organism/features/getOrganism";
-import { getDepartmentById } from "../referential/features/getDepartmentById";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import {
   FunctionalCodeError,
@@ -70,8 +69,6 @@ const unsafeResolvers = {
       getExperiencesByCandidacyId({ candidacyId }),
     candidate: async ({ candidateId }: { candidateId: string }) =>
       getCandidateById({ candidateId }),
-    department: ({ departmentId }: { departmentId: string }) =>
-      getDepartmentById({ id: departmentId }),
     organism: ({ organismId }: { organismId: string }) =>
       getOrganismById({ organismId }),
     candidacyStatuses: ({ id: candidacyId }: Candidacy) =>

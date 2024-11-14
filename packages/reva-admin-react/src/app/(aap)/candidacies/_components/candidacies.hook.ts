@@ -54,6 +54,10 @@ const getCandidaciesByStatus = graphql(`
         candidate {
           firstname
           lastname
+          department {
+            label
+            code
+          }
         }
         certification {
           label
@@ -63,10 +67,6 @@ const getCandidaciesByStatus = graphql(`
           informationsCommerciales {
             nom
           }
-        }
-        department {
-          label
-          code
         }
         financeModule
         candidacyStatuses {
