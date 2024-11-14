@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import type { ReactNode } from "react";
 import {
   DndContext,
@@ -7,7 +7,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import type { Active, UniqueIdentifier } from "@dnd-kit/core";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
@@ -24,20 +24,17 @@ interface BaseItem {
 
 interface Props<T extends BaseItem> {
   items: T[];
-  onChange(items: T[]): void;
-  renderItem(item: T): ReactNode;
+  onChange?(items: T[]): void;
+  onItemMoved?(fromIndex: number, toIndex: number): void;
+  renderItem(item: T, itemIndex: number): ReactNode;
 }
 
 export function SortableList<T extends BaseItem>({
   items,
   onChange,
+  onItemMoved,
   renderItem,
 }: Props<T>) {
-  const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(
-    () => items.find((item) => item.id === active?.id),
-    [active, items],
-  );
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -48,32 +45,26 @@ export function SortableList<T extends BaseItem>({
   return (
     <DndContext
       sensors={sensors}
-      onDragStart={({ active }) => {
-        setActive(active);
-      }}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over?.id) {
           const activeIndex = items.findIndex(({ id }) => id === active.id);
           const overIndex = items.findIndex(({ id }) => id === over.id);
 
-          onChange(arrayMove(items, activeIndex, overIndex));
+          onChange?.(arrayMove(items, activeIndex, overIndex));
+          onItemMoved?.(activeIndex, overIndex);
         }
-        setActive(null);
-      }}
-      onDragCancel={() => {
-        setActive(null);
       }}
     >
       <SortableContext items={items}>
         <div className="SortableList" role="application">
-          {items.map((item) => (
-            <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
+          {items.map((item, itemIndex) => (
+            <React.Fragment key={item.id}>
+              {renderItem(item, itemIndex)}
+            </React.Fragment>
           ))}
         </div>
       </SortableContext>
-      <SortableOverlay>
-        {activeItem ? renderItem(activeItem) : null}
-      </SortableOverlay>
+      <SortableOverlay />
     </DndContext>
   );
 }
