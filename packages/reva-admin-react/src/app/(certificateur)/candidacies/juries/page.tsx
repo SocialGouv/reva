@@ -37,10 +37,10 @@ const getJuriesQuery = graphql(`
           candidate {
             firstname
             lastname
-          }
-          department {
-            label
-            code
+            department {
+              label
+              code
+            }
           }
         }
         dateOfSession
