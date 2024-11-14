@@ -9,7 +9,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -70,8 +69,6 @@ const FeasibilitiesPage = () => {
   const category = searchParams.get("CATEGORY");
 
   const { replace } = useRouter();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -161,9 +158,7 @@ const FeasibilitiesPage = () => {
           searchFilter={searchFilter}
           searchResultsPage={feasibilityPage}
           searchResultLink={(candidacyId) =>
-            isFeatureActive("FEASIBILITY_COMPLETION_STATUS")
-              ? `/candidacies/${candidacyId}/feasibility-v2`
-              : `/candidacies/${candidacyId}/feasibility`
+            `/candidacies/${candidacyId}/feasibility`
           }
         >
           {(r) =>

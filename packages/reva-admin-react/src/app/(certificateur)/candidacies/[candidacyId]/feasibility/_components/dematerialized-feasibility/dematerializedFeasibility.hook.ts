@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
-  query feasibilityGetActiveFeasibilityByCandidacyIdV2($candidacyId: ID!) {
+  query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       decision
       decisionComment
@@ -66,6 +66,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         eligibilityValidUntil
       }
       candidacy {
+        status
         organism {
           label
           informationsCommerciales {
@@ -145,6 +146,9 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           city
           street
           zip
+        }
+        candidacyDropOut {
+          createdAt
         }
       }
     }

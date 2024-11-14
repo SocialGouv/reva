@@ -1,5 +1,4 @@
 "use client";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import Badge from "@codegouvfr/react-dsfr/Badge";
@@ -55,18 +54,8 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     text,
   });
 
-  const { isFeatureActive } = useFeatureflipping();
-
   const items = [
-    isFeatureActive("FEASIBILITY_COMPLETION_STATUS")
-      ? menuItem(
-          "Étude de faisabilité",
-          `/candidacies/${candidacyId}/feasibility-v2`,
-        )
-      : menuItem(
-          "Étude de faisabilité",
-          `/candidacies/${candidacyId}/feasibility`,
-        ),
+    menuItem("Étude de faisabilité", `/candidacies/${candidacyId}/feasibility`),
     menuItem(
       "Dossier de validation",
       `/candidacies/${candidacyId}/dossier-de-validation`,

@@ -2,7 +2,7 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
@@ -67,13 +67,14 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
 
 export const useFeasibilityUploadedPdf = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
   const { accessToken } = useKeycloakContext();
 
   const { data: getFeasibilityResponse } = useQuery({
-    queryKey: ["getCandidacyWithFeasibilityQuery", candidacyId],
+    queryKey: [candidacyId, "getCandidacyWithFeasibilityQuery"],
     queryFn: () =>
       graphqlClient.request(getCandidacyWithFeasibilityUploadedPdfQuery, {
         candidacyId,
@@ -84,7 +85,7 @@ export const useFeasibilityUploadedPdf = () => {
   const feasibility = candidacy?.feasibility;
 
   const submitFeasibilityDecision = async (data: {
-    decision: "ADMISSIBLE" | "REJECTED" | "INCOMPLETE";
+    decision: "ADMISSIBLE" | "REJECTED" | "COMPLETE" | "INCOMPLETE";
     comment: string;
     infoFile?: File;
   }) => {
@@ -104,6 +105,10 @@ export const useFeasibilityUploadedPdf = () => {
         body: formData,
       },
     );
+    queryClient.invalidateQueries({
+      queryKey: ["feasibilities"],
+    });
+    queryClient.invalidateQueries({ queryKey: [candidacyId] });
     return result;
   };
 
