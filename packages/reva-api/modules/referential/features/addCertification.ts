@@ -1,3 +1,4 @@
+import { CertificationCompetenceBloc } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
 import { RNCPCertification, RNCPReferential } from "../rncp";
@@ -93,6 +94,9 @@ export const addCertification = async (params: { codeRncp: string }) => {
     })),
   });
 
+  // Create default competence blocs
+  await createDefaultBlocs({ certificationId: certification.id, codeRncp });
+
   return certification;
 };
 
@@ -133,4 +137,53 @@ const getParents = (
   }
 
   return [formacode];
+};
+
+const createDefaultBlocs = async (params: {
+  certificationId: string;
+  codeRncp: string;
+}): Promise<CertificationCompetenceBloc[]> => {
+  const { certificationId, codeRncp } = params;
+
+  const rncpCertification =
+    await RNCPReferential.getInstance().findOneByRncp(codeRncp);
+
+  if (rncpCertification) {
+    for (const bloc of rncpCertification.BLOCS_COMPETENCES) {
+      const createdBloc = await prismaClient.certificationCompetenceBloc.create(
+        {
+          data: {
+            code: bloc.CODE,
+            label: bloc.LIBELLE,
+            isOptional: bloc.FACULTATIF,
+            FCCompetences: bloc.LISTE_COMPETENCES,
+            certificationId,
+          },
+        },
+      );
+
+      await prismaClient.certificationCompetence.createMany({
+        data: bloc.PARSED_COMPETENCES.map((competence, index) => ({
+          index,
+          label: competence,
+          blocId: createdBloc.id,
+        })),
+      });
+    }
+  }
+
+  const competenceBlocs: CertificationCompetenceBloc[] =
+    await prismaClient.certificationCompetenceBloc.findMany({
+      where: {
+        certificationId: certificationId,
+      },
+      include: {
+        competences: {
+          orderBy: { index: "asc" },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+  return competenceBlocs;
 };
