@@ -413,14 +413,10 @@ model Organism {
   maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
   maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
 
-  fermePourAbsenceOuConges Boolean            @default(false) @map("ferme_pour_absence_ou_conges")
+  fermePourAbsenceOuConges Boolean                @default(false) @map("ferme_pour_absence_ou_conges")
   managedDegrees           OrganismOnDegree[]
-  isOnSite                 Boolean            @default(false) @map("is_onsite")
-  isRemote                 Boolean            @default(false) @map("is_remote")
-  isHeadAgency             Boolean            @default(false) @map("is_head_agency")
-
-  OrganismOnRemoteZone OrganismOnRemoteZone[]
-  organismOnFormacode  OrganismOnFormacode[]
+  OrganismOnRemoteZone     OrganismOnRemoteZone[]
+  organismOnFormacode      OrganismOnFormacode[]
 
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 

@@ -77,9 +77,6 @@ const ORGANISM_BASE: Organism = {
   organismInformationsCommercialesId: null,
   maisonMereAAPId: null,
   fermePourAbsenceOuConges: false,
-  isOnSite: false,
-  isRemote: true,
-  isHeadAgency: true,
   modaliteAccompagnement: "A_DISTANCE",
   modaliteAccompagnementRenseigneeEtValide: true,
 };
