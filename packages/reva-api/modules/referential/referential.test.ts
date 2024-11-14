@@ -5,16 +5,13 @@ import { Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
 import {
-  EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
-  EXPERT_BRANCHE_ORGANISM,
-  EXPERT_FILIERE_ORGANISM,
+  ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
+  MAISON_MERE_AAP_EXPERT_BRANCHE,
+  MAISON_MERE_AAP_EXPERT_FILIERE,
+  ORGANISM_EXPERT_BRANCHE,
+  ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
+  ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
-import {
-  gestionnaireMaisonMereAAP1,
-  gestionnaireMaisonMereAAP2,
-  maisonMereAAPExpertBranche,
-  maisonMereAAPExpertFiliere,
-} from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import {
   createGestionnaireMaisonMereAapAccount1,
@@ -86,11 +83,11 @@ beforeAll(async () => {
   await createMaisonMereAAPExpertBranche();
 
   expertFiliere = await prismaClient.organism.create({
-    data: EXPERT_FILIERE_ORGANISM,
+    data: ORGANISM_EXPERT_FILIERE,
   });
 
   await prismaClient.maisonMereAAP.update({
-    where: { id: maisonMereAAPExpertFiliere.id },
+    where: { id: MAISON_MERE_AAP_EXPERT_FILIERE.id },
     data: {
       organismes: {
         connect: [{ id: expertFiliere.id }],
@@ -99,11 +96,11 @@ beforeAll(async () => {
   });
 
   expertBranche = await prismaClient.organism.create({
-    data: EXPERT_BRANCHE_ORGANISM,
+    data: ORGANISM_EXPERT_BRANCHE,
   });
 
   await prismaClient.maisonMereAAP.update({
-    where: { id: maisonMereAAPExpertBranche.id },
+    where: { id: MAISON_MERE_AAP_EXPERT_BRANCHE.id },
     data: {
       organismes: {
         connect: [{ id: expertBranche.id }],
@@ -112,7 +109,7 @@ beforeAll(async () => {
   });
 
   await prismaClient.organism.create({
-    data: EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
+    data: ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
   });
 
   // Branche fixtures (also known as Convention Collective)
@@ -132,19 +129,15 @@ afterAll(async () => {
   await prismaClient.organism.deleteMany({});
 
   await prismaClient.maisonMereAAP.delete({
-    where: { id: maisonMereAAPExpertFiliere.id },
+    where: { id: MAISON_MERE_AAP_EXPERT_FILIERE.id },
   });
 
   await prismaClient.maisonMereAAP.delete({
-    where: { id: maisonMereAAPExpertBranche.id },
+    where: { id: MAISON_MERE_AAP_EXPERT_BRANCHE.id },
   });
 
   await prismaClient.account.delete({
-    where: { id: gestionnaireMaisonMereAAP1.id },
-  });
-
-  await prismaClient.account.delete({
-    where: { id: gestionnaireMaisonMereAAP2.id },
+    where: { id: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.id },
   });
 });
 

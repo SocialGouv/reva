@@ -3,21 +3,22 @@
  */
 
 import { prismaClient } from "../../../prisma/client";
-import { gestionnaireMaisonMereAAP1 } from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertBrancheOrganism,
   createExpertFiliereOrganism,
+  createGestionnaireMaisonMereAapAccount1,
 } from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
 import {
+  ACCOUNT_ORGANISM_EXPERT_FILIERE,
   CANDIDACY_UNIFVAE,
   CANDIDATE_MAN,
-  EXPERT_BRANCHE_ORGANISM,
+  ORGANISM_EXPERT_BRANCHE,
 } from "../../../test/fixtures";
 import { basicTrainingForm } from "../../../test/fixtures/training";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
@@ -34,7 +35,7 @@ const selectNewOrganism = async () =>
       endpoint: "candidacy_selectOrganism",
       arguments: {
         candidacyId: CANDIDACY_UNIFVAE.id,
-        organismId: EXPERT_BRANCHE_ORGANISM.id,
+        organismId: ORGANISM_EXPERT_BRANCHE.id,
       },
       returnFields: "{id,organismId}",
     },
@@ -45,7 +46,7 @@ const submitTraining = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -76,6 +77,7 @@ const confirmTraining = async () =>
   });
 
 beforeEach(async () => {
+  await createGestionnaireMaisonMereAapAccount1();
   await createExpertFiliereOrganism();
   await createExpertBrancheOrganism();
   await createCandidateJPL();
@@ -110,7 +112,7 @@ test("a candidate should be able to select a new organism while a training is se
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_selectOrganism).toMatchObject({
     id: CANDIDACY_UNIFVAE.id,
-    organismId: EXPERT_BRANCHE_ORGANISM.id,
+    organismId: ORGANISM_EXPERT_BRANCHE.id,
   });
 });
 

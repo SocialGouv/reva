@@ -17,8 +17,8 @@ import { prismaClient } from "../../../prisma/client";
 import {
   CANDIDATE_MAN,
   CANDIDATE_WOMAN,
-  EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
   ORGANISM_EXPERIMENTATION,
+  ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
 } from "../../../test/fixtures";
 import { certificationAuthorityStructureFixtures } from "../../../test/fixtures/certification";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
@@ -99,7 +99,7 @@ beforeAll(async () => {
   });
 
   randomOrganism = await prismaClient.organism.create({
-    data: EXPERT_BRANCHE_ET_FILIERE_ORGANISM,
+    data: ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
   });
 
   randomAapAccount = await prismaClient.account.create({

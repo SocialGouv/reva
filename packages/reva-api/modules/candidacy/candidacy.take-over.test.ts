@@ -14,8 +14,8 @@ import { prismaClient } from "../../prisma/client";
 import {
   CANDIDATE_MAN,
   CANDIDATE_WOMAN,
-  EXPERT_BRANCHE_ORGANISM,
-  EXPERT_FILIERE_ORGANISM,
+  ORGANISM_EXPERT_BRANCHE,
+  ORGANISM_EXPERT_FILIERE,
 } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -36,21 +36,21 @@ beforeAll(async () => {
     where: { code: "75" },
   });
   wrongOrganism = await prismaClient.organism.create({
-    data: EXPERT_FILIERE_ORGANISM,
+    data: ORGANISM_EXPERT_FILIERE,
   });
   wrongCandidacyManager = await prismaClient.account.create({
     data: {
-      email: EXPERT_FILIERE_ORGANISM.contactAdministrativeEmail,
+      email: "wrong@example.com",
       keycloakId: wrongCandidacyManagerKcId,
       organismId: wrongOrganism.id,
     },
   });
   rightOrganism = await prismaClient.organism.create({
-    data: EXPERT_BRANCHE_ORGANISM,
+    data: ORGANISM_EXPERT_BRANCHE,
   });
   rightCandidacyManager = await prismaClient.account.create({
     data: {
-      email: EXPERT_BRANCHE_ORGANISM.contactAdministrativeEmail,
+      email: ORGANISM_EXPERT_BRANCHE.contactAdministrativeEmail,
       keycloakId: rightCandidacyManagerKcId,
       organismId: rightOrganism.id,
     },

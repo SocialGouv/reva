@@ -11,6 +11,7 @@ import {
   createCandidateJPL,
   createExpertFiliereOrganism,
   createFeasibilityWithDematerializedFeasibilityFile,
+  createGestionnaireMaisonMereAapAccount1,
 } from "../../../../test/helpers/create-db-entity";
 import { confirmDematerializedFeasibilityFileByCandidate } from "./confirmDematerializedFeasibilityFileByCandidate";
 
@@ -24,6 +25,7 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
   let dff: DematerializedFeasibilityFile;
 
   beforeAll(async () => {
+    await createGestionnaireMaisonMereAapAccount1();
     await createExpertFiliereOrganism();
     await createCandidateJPL();
     candidacy = await createCandidacyUnifvae();

@@ -5,18 +5,18 @@
 import { Candidacy } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
+import { ACCOUNT_ORGANISM_EXPERT_FILIERE } from "../../../test/fixtures";
+import { basicTrainingForm } from "../../../test/fixtures/training";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertFiliereOrganism,
 } from "../../../test/helpers/create-db-entity";
-import { gestionnaireMaisonMereAAP1 } from "../../../test/fixtures/people-organisms";
-import { logger } from "../../shared/logger";
-import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
+import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
-import { basicTrainingForm } from "../../../test/fixtures/training";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
+import { logger } from "../../shared/logger";
 
 let candidacy: Candidacy;
 
@@ -48,7 +48,7 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -88,7 +88,7 @@ test("AAP should be able to submit a basic training form when candidacy status i
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -129,7 +129,7 @@ test("AAP should not be able to submit a basic training form without an estimate
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -170,7 +170,7 @@ test("AAP should not be able to submit a basic training form without at least on
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -211,7 +211,7 @@ test("AAP should not be able to submit a basic training form without a text when
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -258,7 +258,7 @@ test("AAP should be able to submit a basic training form when candidacy status i
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",

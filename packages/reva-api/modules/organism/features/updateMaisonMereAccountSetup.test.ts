@@ -5,25 +5,24 @@ import { Account, MaisonMereAAP } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import {
-  createGestionnaireMaisonMereAapAccount1,
   createGestionnaireMaisonMereAapAccount2,
-  createMaisonMereAAP1,
   createMaisonMereAAP2,
+  createMaisonMereExpertFiliere,
 } from "../../../test/helpers/create-db-entity";
+import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
-let account: Account,
-  account2: Account,
+let account2: Account,
+  accountMaisonMereExpertFiliere: Account,
   maisonMereAAP: MaisonMereAAP,
   maisonMereAAP2: MaisonMereAAP;
 
 beforeAll(async () => {
-  account = await createGestionnaireMaisonMereAapAccount1();
-
   account2 = await createGestionnaireMaisonMereAapAccount2();
 
-  maisonMereAAP = await createMaisonMereAAP1();
+  const maisonMereAAPExpertFiliere = await createMaisonMereExpertFiliere();
+  accountMaisonMereExpertFiliere = maisonMereAAPExpertFiliere.account;
+  maisonMereAAP = maisonMereAAPExpertFiliere.maisonMereAAP;
 
   maisonMereAAP2 = await createMaisonMereAAP2();
 });
@@ -38,11 +37,11 @@ afterAll(async () => {
   });
 
   await prismaClient.account.delete({
-    where: { id: account.id },
+    where: { id: account2.id },
   });
 
   await prismaClient.account.delete({
-    where: { id: account2.id },
+    where: { id: accountMaisonMereExpertFiliere.id },
   });
 });
 

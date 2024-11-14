@@ -11,6 +11,7 @@ import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertFiliereOrganism,
+  createGestionnaireMaisonMereAapAccount1,
 } from "../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
@@ -18,6 +19,7 @@ import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 let candidacy: Candidacy;
 
 beforeEach(async () => {
+  await createGestionnaireMaisonMereAapAccount1();
   await createExpertFiliereOrganism();
   await createCandidateJPL();
   candidacy = await createCandidacyUnifvae();

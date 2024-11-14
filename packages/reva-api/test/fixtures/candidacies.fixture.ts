@@ -7,7 +7,7 @@ import {
 import { Decimal } from "@prisma/client/runtime/library";
 import { sub } from "date-fns";
 import { CANDIDATE_MAN } from "./candidates.fixture";
-import { EXPERT_FILIERE_ORGANISM } from "./organisms.fixture";
+import { ORGANISM_EXPERT_FILIERE } from "./organisms.fixture";
 
 const CERTIFICATION_ID_1 = "51eef7ae-80c0-481b-946f-9d6e1b9fc70c";
 const DATE_NOW = new Date();
@@ -19,7 +19,7 @@ const SIX_MONTHS_AGO_MINUS_ONE_MINUTE = sub(DATE_NOW, {
 
 const CANDIDACY_BASE: Candidacy = {
   id: "00000000-0000-0000-0000-000000000000",
-  organismId: EXPERT_FILIERE_ORGANISM.id,
+  organismId: ORGANISM_EXPERT_FILIERE.id,
   typology: CandidateTypology.BENEVOLE,
   typologyAdditional: null,
   ccnId: null,
@@ -69,12 +69,12 @@ const CANDIDACY_DROP_OUT_BASE = {
   updatedAt: null,
 };
 
-export const DROP_OUT_SIX_MONTHS_AGO = {
+export const CANDIDACY_DROP_OUT_SIX_MONTHS_AGO = {
   ...CANDIDACY_DROP_OUT_BASE,
   createdAt: SIX_MONTHS_AGO,
 };
 
-export const DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE = {
+export const CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE = {
   ...CANDIDACY_DROP_OUT_BASE,
   createdAt: SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
 };

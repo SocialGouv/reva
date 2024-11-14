@@ -3,18 +3,22 @@
  */
 
 import { prismaClient } from "../../../../prisma/client";
-import { gestionnaireMaisonMereAAP1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
   createCandidateJPL,
   createExpertBrancheOrganism,
   createExpertFiliereOrganism,
+  createGestionnaireMaisonMereAapAccount1,
 } from "../../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
-import { CANDIDACY_UNIFVAE, CANDIDATE_MAN } from "../../../../test/fixtures";
+import {
+  ACCOUNT_ORGANISM_EXPERT_FILIERE,
+  CANDIDACY_UNIFVAE,
+  CANDIDATE_MAN,
+} from "../../../../test/fixtures";
 import { basicTrainingForm } from "../../../../test/fixtures/training";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 
@@ -23,7 +27,7 @@ const submitTraining = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -72,6 +76,7 @@ const updateCertification = async () =>
   });
 
 beforeEach(async () => {
+  await createGestionnaireMaisonMereAapAccount1();
   await createExpertFiliereOrganism();
   await createExpertBrancheOrganism();
   await createCandidateJPL();

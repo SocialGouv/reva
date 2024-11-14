@@ -7,18 +7,18 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 
 import {
+  ACCOUNT_ORGANISM_EXPERT_FILIERE,
+  CANDIDACY_DROP_OUT_SIX_MONTHS_AGO,
+  CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
   CANDIDACY_UNIFVAE,
   CANDIDACY_UNIREVA,
   CANDIDATE_MAN,
-  DROP_OUT_SIX_MONTHS_AGO,
-  DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
-  EXPERT_FILIERE_ORGANISM,
+  ORGANISM_EXPERT_FILIERE,
 } from "../../../../test/fixtures";
 import {
   fundingRequestSample,
   paymentRequestInputBase,
 } from "../../../../test/fixtures/funding-request";
-import { gestionnaireMaisonMereAAP1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   createCandidacyUnifvae,
@@ -85,7 +85,7 @@ const injectGraphqlPaymentRequestCreation = async () =>
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -110,7 +110,7 @@ const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
     data: {
       candidacyDropOut: {
         create: {
-          ...DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
+          ...CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
           dropOutReason: { connect: { label: "Autre" } },
           proofReceivedByAdmin,
         },
@@ -123,7 +123,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -175,7 +175,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
   expect(myFundReqBatch).toMatchObject({
     sent: false,
     content: {
-      SiretAP: EXPERT_FILIERE_ORGANISM.siret,
+      SiretAP: ORGANISM_EXPERT_FILIERE.siret,
       NomCandidat: myCandidate.lastname,
       PrenomCandidat1: myCandidate.firstname,
       PrenomCandidat2: myCandidate.firstname2,
@@ -200,7 +200,7 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -233,7 +233,7 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: gestionnaireMaisonMereAAP1.keycloakId,
+      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -275,7 +275,7 @@ test("should fail to create paymentRequestUnifvae when candidacy was drop out le
     where: { id: CANDIDACY_UNIFVAE.id },
     data: {
       candidacyDropOut: {
-        update: DROP_OUT_SIX_MONTHS_AGO,
+        update: CANDIDACY_DROP_OUT_SIX_MONTHS_AGO,
       },
     },
   });
