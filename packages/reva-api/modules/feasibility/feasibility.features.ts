@@ -51,6 +51,7 @@ import {
 } from "./utils/feasibility.helper";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
 import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
+import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -277,6 +278,15 @@ export const createFeasibility = async ({
     candidacyId,
     status: "DOSSIER_FAISABILITE_ENVOYE",
   });
+
+  // If the candidacy is autonomous, we update the finance module to "hors_plateforme"
+  // It handles the case where the candidacy was created as 'accompagne' with a unifvae finance module and it switched to autonomous
+  if (candidacy.typeAccompagnement === "AUTONOME") {
+    await updateCandidacyFinanceModule({
+      candidacyId,
+      financeModule: "hors_plateforme",
+    });
+  }
 
   const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy?.departmentId;
