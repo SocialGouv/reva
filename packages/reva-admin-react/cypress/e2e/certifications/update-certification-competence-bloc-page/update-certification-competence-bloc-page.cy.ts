@@ -53,7 +53,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="update-certification-page"]')
+    cy.get('[data-test="update-certification-competence-bloc-page"]')
       .children("h1")
       .should(
         "have.text",

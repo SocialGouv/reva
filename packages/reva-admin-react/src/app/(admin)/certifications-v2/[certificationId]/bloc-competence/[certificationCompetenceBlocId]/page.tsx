@@ -66,7 +66,7 @@ const PageContent = ({
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
   onDeleteCompetenceBlocButtonClick?: () => void;
 }) => (
-  <div data-test="update-certification-page">
+  <div data-test="update-certification-competence-bloc-page">
     <Breadcrumb
       currentPageLabel={`${competenceBloc.code} - ${competenceBloc.label}`}
       homeLinkProps={{

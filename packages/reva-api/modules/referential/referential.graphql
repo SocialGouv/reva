@@ -328,6 +328,7 @@ input UpdateCompetenceBlocInput {
   competences: [CompetenceInput!]!
 }
 input CreateCompetenceBlocInput {
+  certificationId: ID!
   label: String!
   competences: [CompetenceInput!]!
 }
