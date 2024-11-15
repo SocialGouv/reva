@@ -1,8 +1,8 @@
 import { prismaClient } from "../prisma/client";
 
-import { updateCertificationWithRncpFiledsAndSubDomains } from "../modules/referential/features/updateCertificationWithRncpFiledsAndSubDomains";
+import { updateCertificationWithRncpFields } from "../modules/referential/features/updateCertificationWithRncpFields";
 
-const updateAvailableCertificationsWithRncpFiledsAndSubDomains = async () => {
+const updateAvailableCertificationsWithRncpFields = async () => {
   const certifications = await prismaClient.certification.findMany({
     where: { status: "AVAILABLE" },
     select: { id: true, rncpId: true },
@@ -10,7 +10,7 @@ const updateAvailableCertificationsWithRncpFiledsAndSubDomains = async () => {
 
   for (const { rncpId } of certifications) {
     try {
-      await updateCertificationWithRncpFiledsAndSubDomains({
+      await updateCertificationWithRncpFields({
         codeRncp: rncpId,
       });
     } catch (error) {
@@ -20,7 +20,7 @@ const updateAvailableCertificationsWithRncpFiledsAndSubDomains = async () => {
 };
 
 const main = async () => {
-  await updateAvailableCertificationsWithRncpFiledsAndSubDomains();
+  await updateAvailableCertificationsWithRncpFields();
 };
 
 main();

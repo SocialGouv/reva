@@ -2,7 +2,7 @@ import { prismaClient } from "../../../prisma/client";
 import { RNCPCertification, RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 
-export const updateCertificationWithRncpFiledsAndSubDomains = async (params: {
+export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
   codeRncp: string;
 }) => {
   const { codeRncp } = params;
