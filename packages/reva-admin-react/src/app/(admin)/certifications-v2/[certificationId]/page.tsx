@@ -119,6 +119,7 @@ const PageContent = ({
                 key={bloc.id}
               >
                 <Accordion
+                  className="flex-1"
                   label={`${bloc.code} - ${bloc.label}`}
                   defaultExpanded
                 >
