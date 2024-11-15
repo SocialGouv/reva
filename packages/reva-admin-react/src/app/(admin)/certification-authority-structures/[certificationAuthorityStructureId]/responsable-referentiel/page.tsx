@@ -64,7 +64,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
           ...data,
           certificationAuthorityStructureId,
         });
-        successToast("Le responsable du référentiel a été créé avec succès");
+        successToast("Le responsable de certifications a été créé avec succès");
         router.push(
           `/certification-authority-structures/${certificationAuthorityStructureId}`,
         );
@@ -100,11 +100,11 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
         certificationAuthorityStructureLabel={
           certificationAuthorityStructure?.label || "..."
         }
-        pageLabel="Responsable du référentiel"
+        pageLabel="Responsable de certifications"
       />
-      <h1>Responsable du référentiel</h1>
+      <h1>Responsable de certifications</h1>
       <p className="text-xl">
-        Le responsable du référentiel bénéficie d'un espace personnel sur la
+        Le responsable de certifications bénéficie d'un espace personnel sur la
         plateforme. Renseignez ses informations de connexion pour qu’il puisse
         commencer à travailler.
       </p>

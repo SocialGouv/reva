@@ -129,7 +129,7 @@ const CertificationAuthorityAdminComponent = ({
               }}
             />
             <Input
-              label="Nom du certificateur administrateur"
+              label="Nom du gestionnaire de candidatures"
               nativeInputProps={{
                 ...register("contactFullName"),
               }}

@@ -19,7 +19,7 @@ export default function ResponsableReferentielCard({
   if (!certificationRegistryManager) {
     return (
       <EnhancedSectionCard
-        title="Responsable du référentiel "
+        title="Responsable de certifications"
         titleIconClass="fr-icon-medal-fill"
         isEditable
         status="TO_COMPLETE"
@@ -27,8 +27,8 @@ export default function ResponsableReferentielCard({
       >
         <p className="pl-10 md:pr-48 mb-0">
           Il ajoute, modifie ou supprime des certifications proposées par la
-          structure certificatrice. L’ajout d’un responsable du référentiel est
-          obligatoire pour la gestion des certifications.
+          structure certificatrice. L’ajout d’un responsable de certifications
+          est obligatoire pour la gestion des certifications.
         </p>
       </EnhancedSectionCard>
     );
@@ -38,7 +38,7 @@ export default function ResponsableReferentielCard({
 
   return (
     <EnhancedSectionCard
-      title="Responsable du référentiel "
+      title="Responsable de certifications "
       titleIconClass="fr-icon-medal-fill"
       isEditable
       status="COMPLETED"

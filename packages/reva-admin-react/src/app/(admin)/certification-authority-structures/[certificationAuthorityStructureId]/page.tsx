@@ -86,7 +86,7 @@ const CertificationAuthorityStructurePage = () => {
           <h1>{certificationAuthorityStructure.label}</h1>
           <p className="text-xl">
             Retrouvez les informations liées à la structure certificatrice. Vous
-            devez ajouter le certificateur administrateur et le responsable du
+            devez ajouter le gestionnaire de candidatures et le responsable du
             référentiel depuis cet espace.
           </p>
           <div className="flex flex-col gap-6">
@@ -114,7 +114,7 @@ const CertificationAuthorityStructurePage = () => {
               }
             />
             <SectionCard
-              title="Certificateurs administrateurs"
+              title="Gestionnaire de candidatures"
               titleIconClass="fr-icon-clipboard-fill"
               buttonPriority="primary"
               buttonTitle="Ajouter un compte"
