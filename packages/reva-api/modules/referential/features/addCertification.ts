@@ -31,9 +31,12 @@ export const addCertification = async (params: { codeRncp: string }) => {
     );
   }
 
-  const label = rncpCertification.INTITULE;
   const level = getLevelFromRNCPCertification(rncpCertification);
   const rncpTypeDiplomeLabel = rncpCertification.ABREGE?.LIBELLE;
+
+  const label = rncpTypeDiplomeLabel
+    ? `${rncpTypeDiplomeLabel} - ${rncpCertification.INTITULE}`
+    : rncpCertification.INTITULE;
 
   const availableAt = new Date();
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
