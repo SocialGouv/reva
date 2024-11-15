@@ -77,11 +77,16 @@ const PageContent = ({
               {certification.domains.map((domain) => (
                 <div key={domain.id} className="flex flex-col gap-2">
                   <div>{domain.label}</div>
-                  {domain.children.map((subDomain) => (
-                    <Tag key={subDomain.id}>
-                      {`${subDomain.code} ${subDomain.label}`}
-                    </Tag>
-                  ))}
+                  <div
+                    key={domain.id}
+                    className="flex flex-row flex-wrap gap-2"
+                  >
+                    {domain.children.map((subDomain) => (
+                      <Tag key={subDomain.id}>
+                        {`${subDomain.code} ${subDomain.label}`}
+                      </Tag>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
