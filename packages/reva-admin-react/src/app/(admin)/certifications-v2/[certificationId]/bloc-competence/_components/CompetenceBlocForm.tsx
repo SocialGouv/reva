@@ -27,7 +27,7 @@ export const CompetenceBlocForm = ({
   onDeleteCompetenceBlocButtonClick,
 }: {
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
-  defaultValues: Partial<CompetenceBlocFormData>;
+  defaultValues?: Partial<CompetenceBlocFormData>;
   backUrl: string;
   className?: string;
   onDeleteCompetenceBlocButtonClick?: () => void;
