@@ -25,15 +25,15 @@ export const addCertification = async (params: { codeRncp: string }) => {
     );
   }
 
+  if (rncpCertification.FORMACODES.length == 0) {
+    throw new Error(
+      `La certification avec le code rncp ${codeRncp} n'est associée à aucun formacode`,
+    );
+  }
+
   const label = rncpCertification.INTITULE;
   const level = getLevelFromRNCPCertification(rncpCertification);
   const rncpTypeDiplomeLabel = rncpCertification.ABREGE?.LIBELLE;
-  if (!rncpTypeDiplomeLabel) {
-    throw new Error("Type de diplôme RNCP non renseigné");
-  }
-  const typeDiplome = await prismaClient.typeDiplome.findFirst({
-    where: { label: rncpTypeDiplomeLabel },
-  });
 
   const availableAt = new Date();
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
@@ -45,9 +45,6 @@ export const addCertification = async (params: { codeRncp: string }) => {
       rncpId: codeRncp,
       label,
       level,
-      typeDiplome: typeDiplome
-        ? { connect: { id: typeDiplome.id } }
-        : { create: { label: rncpTypeDiplomeLabel } },
       availableAt,
       expiresAt,
       // RNCP Fields
