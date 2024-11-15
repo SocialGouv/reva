@@ -52,7 +52,9 @@ export const getDomainsByCertificationId = async ({
       domains.push({
         id: parent.id,
         code: parent.code,
-        label: parent.label,
+        label: parent.label
+          .toLowerCase()
+          .replace(/^./, (str) => str.toUpperCase()),
         children: [subDomain],
       });
     }
