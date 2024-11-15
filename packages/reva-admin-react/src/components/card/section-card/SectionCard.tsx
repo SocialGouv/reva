@@ -1,19 +1,21 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
 type HasButton =
   | {
       hasButton: true;
       buttonTitle: string;
       buttonOnClick: () => void;
-      buttonPriority: "primary" | "secondary";
+      buttonPriority: ComponentProps<typeof Button>["priority"];
+      buttonIconId?: ComponentProps<typeof Button>["iconId"];
     }
   | {
       hasButton?: false;
       buttonTitle?: never;
       buttonOnClick?: never;
       buttonPriority?: never;
+      buttonIconId?: never;
     };
 
 interface CandidacySectionCardProps {
@@ -33,6 +35,7 @@ export const SectionCard = ({
   buttonOnClick,
   buttonTitle,
   buttonPriority,
+  buttonIconId,
   badge,
   disabled = false,
   "data-test": dataTest,
@@ -60,6 +63,12 @@ export const SectionCard = ({
                 onClick={buttonOnClick}
                 priority={buttonPriority}
                 disabled={disabled}
+                iconId={
+                  buttonIconId as Exclude<
+                    ComponentProps<typeof Button>["iconId"],
+                    undefined
+                  >
+                }
               >
                 {buttonTitle}
               </Button>
