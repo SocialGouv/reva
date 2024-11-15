@@ -22,6 +22,7 @@ import { updateCertification } from "./features/updateCertification";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
+  CreateCompetenceBlocInput,
   CertificationStatus,
   UpdateCertificationInput,
   UpdateCompetenceBlocInput,
@@ -46,6 +47,7 @@ import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.fea
 import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceBlocsByCertificationIdV2";
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
+import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -181,20 +183,24 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCompetenceBlocsInput },
     ) => updateCompetenceBlocsByCertificationId(input),
+    referential_createCertificationCompetenceBloc: (
+      _parent: unknown,
+      { input }: { input: CreateCompetenceBlocInput },
+    ) => createCertificationCompetenceBloc(input),
     referential_updateCertificationCompetenceBloc: (
       _parent: unknown,
       { input }: { input: UpdateCompetenceBlocInput },
     ) => updateCertificationCompetenceBloc(input),
-    referential_addCertification: (
-      _parent: unknown,
-      { input }: { input: { codeRncp: string } },
-    ) => addCertification(input),
     referential_deleteCertificationCompetenceBloc: (
       _parent: unknown,
       {
         certificationCompetenceBlocId,
       }: { certificationCompetenceBlocId: string },
     ) => deleteCertificationCompetenceBloc({ certificationCompetenceBlocId }),
+    referential_addCertification: (
+      _parent: unknown,
+      { input }: { input: { codeRncp: string } },
+    ) => addCertification(input),
   },
 };
 

@@ -88,3 +88,9 @@ export interface UpdateCompetenceBlocInput {
   label: string;
   competences: CompetenceInput[];
 }
+
+export interface CreateCompetenceBlocInput {
+  certificationId: string;
+  label: string;
+  competences: CompetenceInput[];
+}
