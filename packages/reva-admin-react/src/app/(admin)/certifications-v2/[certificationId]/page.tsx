@@ -141,7 +141,7 @@ const PageContent = ({
       <h2>Validation par le responsable des certifications</h2>
       <p>
         Lorsque la certification est prête, vous devez l’envoyer au responsable
-        des certifications pour validation. Si aucun responsable des
+        des certifications pour validation. Si aucun responsable de
         certifications n’existe pour le moment et qu’aucune validation n’est
         possible, elle pourra être visible des AAP mais pas encore des
         candidats.

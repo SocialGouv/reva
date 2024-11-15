@@ -24,7 +24,7 @@ export const createCertificationRegistryManager = async ({
 
   if (certificationRegistryManager) {
     throw new Error(
-      "Un responsable du référentiel existe déjà pour cette structure.",
+      "Un responsable de certifications existe déjà pour cette structure.",
     );
   }
 
@@ -47,7 +47,7 @@ export const createCertificationRegistryManager = async ({
 
   if (!account) {
     throw new Error(
-      "Impossible de créer le compte du responsable du référentiel",
+      "Impossible de créer le compte du responsable de certifications",
     );
   }
 
