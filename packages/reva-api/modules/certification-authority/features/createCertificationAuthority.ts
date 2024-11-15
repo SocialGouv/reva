@@ -9,7 +9,6 @@ export const createCertificationAuthority = async ({
   accountLastname,
   accountEmail,
   certificationAuthorityStructureId,
-  departmentIds,
   certificationIds,
 }: {
   label: string;
@@ -19,9 +18,12 @@ export const createCertificationAuthority = async ({
   accountLastname: string;
   accountEmail: string;
   certificationAuthorityStructureId: string;
-  departmentIds: string[];
   certificationIds: string[];
 }) => {
+  const allDepartements = await prismaClient.department.findMany({
+    select: { id: true },
+  });
+
   const newCertificationAuthority =
     await prismaClient.certificationAuthority.create({
       data: {
@@ -34,7 +36,9 @@ export const createCertificationAuthority = async ({
         },
         certificationAuthorityOnDepartment: {
           createMany: {
-            data: departmentIds.map((departmentId) => ({ departmentId })),
+            data: allDepartements.map((d) => ({
+              departmentId: d.id,
+            })),
           },
         },
         certificationAuthorityStructureId,

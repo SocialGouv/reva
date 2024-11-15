@@ -174,7 +174,6 @@ const unsafeResolvers = {
           contactEmail: string;
           contactFullName: string;
           certificationAuthorityStructureId: string;
-          departmentIds: string[];
           certificationIds: string[];
         };
       },

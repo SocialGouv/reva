@@ -81,7 +81,6 @@ input CreateCertificationAuthorityInput {
   accountLastname: String!
   accountEmail: String!
   certificationAuthorityStructureId: ID!
-  departmentIds: [ID!]!
   certificationIds: [ID!]!
 }
 
