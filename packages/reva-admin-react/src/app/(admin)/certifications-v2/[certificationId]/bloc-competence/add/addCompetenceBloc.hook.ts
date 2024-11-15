@@ -13,7 +13,7 @@ const getCertificationQuery = graphql(`
 `);
 
 const createCertificationCompetenceBlocMutation = graphql(`
-  mutation createCertificationCompetenceBlocForUpdateCertificationCompetenceBlocPage(
+  mutation createCertificationCompetenceBlocForAddCertificationCompetenceBlocPage(
     $input: CreateCompetenceBlocInput!
   ) {
     referential_createCertificationCompetenceBloc(input: $input) {

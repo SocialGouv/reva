@@ -48,7 +48,7 @@ const PageContent = ({
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
   certification: CertificationForPage;
 }) => (
-  <div data-test="create-certification-competence-bloc-page">
+  <div data-test="add-certification-competence-bloc-page">
     <Breadcrumb
       currentPageLabel="Ajouter un bloc de compétences"
       homeLinkProps={{
@@ -64,7 +64,7 @@ const PageContent = ({
       ]}
     />
 
-    <h1>Ajouter un bloc de compétences </h1>
+    <h1>Ajouter un bloc de compétences</h1>
     <FormOptionalFieldsDisclaimer />
     <p className="mb-12 text-xl">
       Ajoutez un bloc de compétences si vous constater une erreur dans la

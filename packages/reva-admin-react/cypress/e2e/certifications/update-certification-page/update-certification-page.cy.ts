@@ -62,7 +62,7 @@ context("when i access the update certification page ", () => {
     ).should("have.length", 2);
   });
 
-  it("let me click on the 'update competence bloc' button of the first competence bloc and lead me to its update page ", function () {
+  it("let me click on the 'update competence bloc' button of the first competence bloc and leads me to its update page ", function () {
     interceptCertification();
 
     cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
@@ -78,6 +78,24 @@ context("when i access the update certification page ", () => {
     cy.url().should(
       "eq",
       "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+    );
+  });
+
+  it("let me click on the 'add competence bloc' button and leads me to the create competence bloc page ", function () {
+    interceptCertification();
+
+    cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getCertificationForUpdateCertificationPage");
+
+    cy.get(
+      '[data-test="update-certification-page"] [data-test="action-button"] ',
+    ).click();
+    cy.url().should(
+      "eq",
+      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
     );
   });
 });
