@@ -18,6 +18,8 @@ import {
 
 const ACCEPTED_FILE_TYPES = ".pdf, .jpg, .jpeg, .png" as const;
 const MAX_FILE_SIZE = "15Mo" as const;
+const MAX_UPLOAD_SIZE = 15728640 as const; // 15Mo
+
 const hintMessage = `Formats supportés : ${ACCEPTED_FILE_TYPES} avec un poids maximum de ${MAX_FILE_SIZE}`;
 
 const schema = z
@@ -41,15 +43,64 @@ const schema = z
       }),
     ),
   })
-  .superRefine(({ idCard }, { addIssue }) => {
-    if (!idCard?.[0]) {
-      addIssue({
-        path: ["idCard"],
-        message: "Merci de remplir ce champ",
-        code: z.ZodIssueCode.custom,
-      });
-    }
-  });
+  .superRefine(
+    (
+      {
+        idCard,
+        equivalenceOrExemptionProof,
+        trainingCertificate,
+        additionalFiles,
+      },
+      { addIssue },
+    ) => {
+      if (!idCard?.[0]) {
+        addIssue({
+          path: ["idCard"],
+          message: "Merci de remplir ce champ",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+      if (idCard[0].size > MAX_UPLOAD_SIZE) {
+        addIssue({
+          path: ["idCard", 0],
+          message: "Le fichier est trop gros",
+          code: z.ZodIssueCode.custom,
+        });
+        if (
+          equivalenceOrExemptionProof &&
+          equivalenceOrExemptionProof[0] &&
+          equivalenceOrExemptionProof[0].size > MAX_UPLOAD_SIZE
+        ) {
+          addIssue({
+            path: ["equivalenceOrExemptionProof", 0],
+            message: "Le fichier est trop gros",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+        if (
+          trainingCertificate &&
+          trainingCertificate[0] &&
+          trainingCertificate[0].size > MAX_UPLOAD_SIZE
+        ) {
+          addIssue({
+            path: ["trainingCertificate", 0],
+            message: "Le fichier est trop gros",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+
+        additionalFiles.forEach((file, index) => {
+          if (file[0] && file[0].size > MAX_UPLOAD_SIZE) {
+            addIssue({
+              path: [`additionalFiles.${index}`, 0],
+              message: "Le fichier est trop gros",
+              code: z.ZodIssueCode.custom,
+            });
+          }
+        });
+      }
+    },
+  );
 
 type FormData = z.infer<typeof schema>;
 
@@ -171,6 +222,8 @@ export default function AttachmentsPage() {
     resetAdditionalFiles();
   }, [resetAdditionalFiles, resetField]);
 
+  console.log("errors", errors);
+
   return (
     <div className="flex flex-col">
       <h1>Pièces jointes</h1>
@@ -255,7 +308,9 @@ export default function AttachmentsPage() {
                 accept: ACCEPTED_FILE_TYPES,
               }}
               state={errors.additionalFiles?.[index] ? "error" : "default"}
-              stateRelatedMessage={errors.additionalFiles?.[index]?.message}
+              stateRelatedMessage={
+                errors.additionalFiles?.[index]?.[0]?.message
+              }
               dataTest={`additional-file-${index}`}
             />
           ))}
