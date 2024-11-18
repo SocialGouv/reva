@@ -120,7 +120,9 @@ const PageContent = ({
               >
                 <Accordion
                   className="flex-1"
-                  label={`${bloc.code} - ${bloc.label}`}
+                  label={
+                    bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label
+                  }
                   defaultExpanded
                 >
                   <ul data-test="competences-list">
