@@ -88,10 +88,6 @@ export const useUpdateCompetenceBlocPage = ({
       graphqlClient.request(deleteCertificationCompetenceBlocMutation, {
         certificationCompetenceBlocId,
       }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [certificationCompetenceBlocId],
-      }),
   });
 
   const competenceBloc =
