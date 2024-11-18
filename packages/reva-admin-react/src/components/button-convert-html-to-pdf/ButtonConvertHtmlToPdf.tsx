@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import html2pdf from "html2pdf.js";
 import { useState } from "react";
+import { errorToast } from "../toast/toast";
 export const ButtonConvertHtmlToPdf = ({
   label,
   elementId,
@@ -46,6 +47,9 @@ export const ButtonConvertHtmlToPdf = ({
           elementsToHide.forEach((el) => {
             (el as HTMLElement).classList.remove("hide-bg-for-pdf");
           });
+        })
+        .catch((error: unknown) => {
+          errorToast((error as Error).message ?? error);
         })
         .finally(() => {
           setIsLoading(false);
