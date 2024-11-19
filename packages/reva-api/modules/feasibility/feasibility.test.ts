@@ -1,168 +1,31 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import {
-  Account,
-  Candidacy,
-  Candidate,
-  Certification,
-  Department,
-  File,
-  Organism,
-} from "@prisma/client";
 import { FastifyInstance } from "fastify";
 
+import { randomUUID } from "crypto";
 import { prismaClient } from "../../prisma/client";
-import {
-  CANDIDATE_MAN,
-  CERTIFICATION_AUTHORITY_STRUCTURES,
-  ORGANISM_EXPERIMENTATION,
-} from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-
-const CERTIFICATOR1_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
-const CERTIFICATOR3_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
-const CERTIFICATOR2_KEYCLOAK_ID = "054fdfa8-2593-461c-85f5-39e4f189a4d2";
-
-let organism: Organism,
-  candidate: Candidate,
-  candidacy: Candidacy,
-  feasibilityFile: File,
-  certificationA: Certification,
-  certificationB: Certification,
-  parisDepartment: Department,
-  account75A_firstChoice: Account,
-  account75A_secondChoice: Account,
-  account75B: Account;
-
-beforeAll(async () => {
-  parisDepartment = (await prismaClient.department.findFirst({
-    where: { code: "75" },
-  })) as Department;
-
-  organism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERIMENTATION,
-  });
-
-  candidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
-  });
-
-  candidacy = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
-  feasibilityFile = await prismaClient.file.create({
-    data: {
-      name: "filename",
-      mimeType: "application/pdf",
-      path: "filename",
-    },
-  });
-
-  certificationA =
-    (await prismaClient.certification.findFirst()) as Certification;
-
-  certificationB = (
-    await prismaClient.certification.findMany()
-  )[1] as Certification;
-
-  const authority75A_firstChoice =
-    await prismaClient.certificationAuthority?.create({
-      data: {
-        certificationAuthorityStructureId:
-          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-        certificationAuthorityOnDepartment: {
-          create: { departmentId: parisDepartment?.id || "" },
-        },
-        certificationAuthorityOnCertification: {
-          create: { certificationId: certificationA?.id || "" },
-        },
-        label: "Une 1ere autorité certificatrice du 75 sur la certification A",
-      },
-    });
-
-  const authority75A_secondChoice =
-    await prismaClient.certificationAuthority?.create({
-      data: {
-        certificationAuthorityStructureId:
-          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-        certificationAuthorityOnDepartment: {
-          create: { departmentId: parisDepartment?.id || "" },
-        },
-        certificationAuthorityOnCertification: {
-          create: { certificationId: certificationA?.id || "" },
-        },
-        label: "Une 2e autorité certificatrice du 75 sur la certification A",
-      },
-    });
-
-  const authority75B = await prismaClient.certificationAuthority?.create({
-    data: {
-      certificationAuthorityStructureId:
-        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-      certificationAuthorityOnDepartment: {
-        create: { departmentId: parisDepartment?.id || "" },
-      },
-      certificationAuthorityOnCertification: {
-        create: { certificationId: certificationB?.id || "" },
-      },
-      label: "Une autorité certificatrice du 75 sur la certification B",
-    },
-  });
-
-  account75A_firstChoice = await prismaClient.account.create({
-    data: {
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
-      email: "certificator@vae.gouv.fr",
-      certificationAuthorityId: authority75A_firstChoice.id,
-    },
-  });
-
-  account75A_secondChoice = await prismaClient.account.create({
-    data: {
-      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
-      email: "certificator2@vae.gouv.fr",
-      certificationAuthorityId: authority75A_secondChoice.id,
-    },
-  });
-
-  account75B = await prismaClient.account.create({
-    data: {
-      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
-      email: "certificator3@vae.gouv.fr",
-      certificationAuthorityId: authority75B.id,
-    },
-  });
-});
-
-async function createPendingFeasibility(account: Account) {
-  return await prismaClient.feasibility.create({
-    data: {
-      candidacyId: candidacy.id,
-      feasibilityUploadedPdf: {
-        create: {
-          feasibilityFileId: feasibilityFile.id,
-        },
-      },
-      decision: "PENDING",
-      certificationAuthorityId: account.certificationAuthorityId ?? "",
-    },
-  });
-}
 
 afterEach(async () => {
   await prismaClient.feasibility.deleteMany({});
 });
 
 test("should count all (2) feasibilities for admin user", async () => {
-  await createPendingFeasibility(account75A_firstChoice);
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
-  await createPendingFeasibility(account75A_secondChoice);
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -184,14 +47,29 @@ test("should count all (2) feasibilities for admin user", async () => {
 });
 
 test("should count all (1) available feasibility for certificator user even if other exists on the same scope", async () => {
-  await createPendingFeasibility(account75A_firstChoice);
-  await createPendingFeasibility(account75A_secondChoice);
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+      certificationAuthorityId: certificationAuthority?.id,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: certificationAuthority?.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
@@ -207,13 +85,17 @@ test("should count all (1) available feasibility for certificator user even if o
 });
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
-  await createPendingFeasibility(account75A_firstChoice);
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
+      keycloakId: randomUUID(),
     }),
     payload: {
       requestType: "query",
@@ -229,13 +111,24 @@ test("should count no available feasibility for certificator user since he doesn
 });
 
 test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
-  const feasibility = await createPendingFeasibility(account75A_firstChoice);
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+      certificationAuthorityId: certificationAuthority?.id,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: certificationAuthority?.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
@@ -254,13 +147,17 @@ test("should return a feasibilty for certificator since he is allowed to handle 
 });
 
 test("should return a feasibility error for certificator 3 since he doesn't handle it", async () => {
-  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
+      keycloakId: randomUUID(),
     }),
     payload: {
       requestType: "query",
@@ -274,13 +171,24 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
 });
 
 test("should return all (1) available feasibility for certificateur user", async () => {
-  const feasibility = await createPendingFeasibility(account75A_firstChoice);
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+      certificationAuthorityId: certificationAuthority?.id,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: certificationAuthority?.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
@@ -299,7 +207,11 @@ test("should return all (1) available feasibility for certificateur user", async
 });
 
 test("should count 1 pending feasibility for admin user", async () => {
-  await createPendingFeasibility(account75A_firstChoice);
+  await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -346,14 +258,25 @@ const postFeasibilityDecision = ({
 };
 
 test("should validate a feasibility since certificator is allowed to do so", async () => {
-  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+      certificationAuthorityId: certificationAuthority?.id,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
     decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: certificationAuthority?.Account[0].keycloakId,
     }),
   });
 
@@ -367,42 +290,61 @@ test("should validate a feasibility since certificator is allowed to do so", asy
 });
 
 test("should not validate a feasibility since certificator 2 doesn't handle it, even if he is on the same scope as certificator 1", async () => {
-  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
     decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
+      keycloakId: randomUUID(),
     }),
   });
   expect(resp.statusCode).toBe(500);
 });
 
 test("should not validate a feasibility since certificator 3 doesn't handle it", async () => {
-  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
     decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
+      keycloakId: randomUUID(),
     }),
   });
   expect(resp.statusCode).toBe(500);
 });
 
 test("should reject a feasibility since certificator is allowed to do so", async () => {
-  const feasiblity = await createPendingFeasibility(account75A_firstChoice);
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+      certificationAuthorityId: certificationAuthority?.id,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
 
   const resp = await postFeasibilityDecision({
     feasibilityId: feasiblity.id,
     decision: "REJECTED",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: certificationAuthority?.Account[0].keycloakId,
     }),
   });
 
@@ -421,13 +363,17 @@ test("should reject a feasibility since certificator is allowed to do so", async
 });
 
 test("should not reject a feasibility since certificator 3 doesn't handle it", async () => {
-  const feasiblity = await createPendingFeasibility(account75B);
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      decision: "PENDING",
+    },
+  });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
+      keycloakId: randomUUID(),
     }),
     payload: {
       requestType: "query",

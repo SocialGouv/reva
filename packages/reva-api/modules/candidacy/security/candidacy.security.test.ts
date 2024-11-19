@@ -1,244 +1,26 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import {
-  Account,
-  Candidacy,
-  Candidate,
-  CertificationAuthority,
-  File,
-  MaisonMereAAP,
-  Organism,
-} from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
-import {
-  CANDIDATE_MAN,
-  CANDIDATE_WOMAN,
-  CERTIFICATION_AUTHORITY_STRUCTURES,
-  ORGANISM_EXPERIMENTATION,
-  ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
-} from "../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
+import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-
-let organism: Organism,
-  candidate: Candidate,
-  randomCandidate: Candidate,
-  candidacy: Candidacy,
-  aapAccount: Account,
-  randomOrganism: Organism,
-  randomAapAccount: Account,
-  maisonMereAAp: MaisonMereAAP,
-  maisonMereAapManagerAccount: Account,
-  randomMaisonMereAapManagerAccount: Account,
-  certificationAuthority: CertificationAuthority,
-  certificationAuthorityAccount: Account,
-  feasibilityFile: File,
-  randomCertificationAuthority: CertificationAuthority,
-  randomCertificationAuthorityAccount: Account,
-  certificationAuthorityLocalAccountAccount: Account,
-  randomCertificationAuthorityLocalAccountAccount: Account;
-
-beforeAll(async () => {
-  const ileDeFrance = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-
-  maisonMereAapManagerAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "79c6649e-3ff6-4e36-9651-c9e26d4a1f8d",
-      email: "maisonmere.email.com",
-    },
-  });
-  maisonMereAAp = await prismaClient.maisonMereAAP.create({
-    data: {
-      gestionnaireAccountId: maisonMereAapManagerAccount.id,
-      raisonSociale: "maisonMere",
-      dateExpirationCertificationQualiopi: new Date(),
-      statutJuridique: "ASSOCIATION_LOI_1901",
-      siret: "1234",
-      typologie: "expertFiliere",
-    },
-  });
-
-  randomMaisonMereAapManagerAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "56489671-7633-4a8b-a06c-b0930c001343",
-      email: "randommaisonmere.email.com",
-    },
-  });
-
-  await prismaClient.maisonMereAAP.create({
-    data: {
-      gestionnaireAccountId: randomMaisonMereAapManagerAccount.id,
-      raisonSociale: "maisonMere",
-      dateExpirationCertificationQualiopi: new Date(),
-      statutJuridique: "ASSOCIATION_LOI_1901",
-      siret: "1234",
-      typologie: "expertFiliere",
-    },
-  });
-
-  organism = await prismaClient.organism.create({
-    data: { ...ORGANISM_EXPERIMENTATION, maisonMereAAPId: maisonMereAAp.id },
-  });
-
-  aapAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "ac5d568d-c6ba-41e3-95f9-6fedc49dcd45",
-      email: "aap.email.com",
-      organismId: organism.id,
-    },
-  });
-
-  randomOrganism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERT_BRANCHE_ET_FILIERE,
-  });
-
-  randomAapAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "2d0498e3-5bd9-4ff0-857a-d4d34a119ced",
-      email: "randomaap.email.com",
-      organismId: randomOrganism.id,
-    },
-  });
-
-  candidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
-  });
-
-  randomCandidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_WOMAN, departmentId: ileDeFrance?.id || "" },
-  });
-
-  const certification = await prismaClient.certification.findFirst({
-    where: { label: "CAP Boucher" },
-  });
-
-  const department = await prismaClient.department.findFirst({
-    where: { code: "01" },
-  });
-
-  candidacy = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidate.id,
-      organismId: organism.id,
-      departmentId: department?.id,
-      certificationId: certification?.id,
-    },
-  });
-
-  certificationAuthority = await prismaClient.certificationAuthority.create({
-    data: {
-      label: "certification authority",
-      certificationAuthorityStructureId:
-        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-    },
-  });
-
-  certificationAuthorityAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "1a0b848e-e3a1-4c0d-b943-8c714fc59b25",
-      email: "certauth.email.com",
-      certificationAuthorityId: certificationAuthority.id,
-    },
-  });
-
-  feasibilityFile = await prismaClient.file.create({
-    data: { name: "file", mimeType: "text/plain", path: "file" },
-  });
-
-  await prismaClient.feasibility.create({
-    data: {
-      candidacyId: candidacy.id,
-      feasibilityUploadedPdf: {
-        create: {
-          feasibilityFileId: feasibilityFile.id,
-        },
-      },
-      certificationAuthorityId: certificationAuthority.id,
-    },
-  });
-
-  randomCertificationAuthority =
-    await prismaClient.certificationAuthority.create({
-      data: {
-        label: "random certification authority",
-        certificationAuthorityStructureId:
-          CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-      },
-    });
-
-  randomCertificationAuthorityAccount = await prismaClient.account.create({
-    data: {
-      keycloakId: "9097d59c-9630-42c0-9da8-17ea5f42c41c",
-      email: "randomcertauth.email.com",
-      certificationAuthorityId: randomCertificationAuthority.id,
-    },
-  });
-
-  certificationAuthorityLocalAccountAccount = await prismaClient.account.create(
-    {
-      data: {
-        keycloakId: "0a1228e0-148a-4280-964b-e2674b8ad5ae",
-        email: "certauthlocalaccount.email.com",
-      },
-    },
-  );
-
-  await prismaClient.certificationAuthorityLocalAccount.create({
-    data: {
-      certificationAuthorityId: certificationAuthority.id,
-      accountId: certificationAuthorityLocalAccountAccount.id,
-      certificationAuthorityLocalAccountOnDepartment: {
-        create: {
-          department: { connect: { id: candidacy.departmentId as string } },
-        },
-      },
-      certificationAuthorityLocalAccountOnCertification: {
-        create: {
-          certification: { connect: { id: certification?.id as string } },
-        },
-      },
-    },
-  });
-
-  const randomDepartment = await prismaClient.department.findFirst({
-    where: { code: "02" },
-  });
-
-  randomCertificationAuthorityLocalAccountAccount =
-    await prismaClient.account.create({
-      data: {
-        keycloakId: "09eb700b-92da-4705-8f8b-c1ce45b6b656",
-        email: "randomcertauthlocalaccount.email.com",
-      },
-    });
-
-  await prismaClient.certificationAuthorityLocalAccount.create({
-    data: {
-      certificationAuthorityId: certificationAuthority.id,
-      accountId: randomCertificationAuthorityLocalAccountAccount.id,
-      certificationAuthorityLocalAccountOnDepartment: {
-        create: {
-          department: { connect: { id: randomDepartment?.id as string } },
-        },
-      },
-      certificationAuthorityLocalAccountOnCertification: {
-        create: {
-          certification: { connect: { id: certification?.id as string } },
-        },
-      },
-    },
-  });
-});
+import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const getCandidacy = ({
   role,
+  candidacyId,
   keycloakId,
 }: {
   role: KeyCloakUserRole;
+  candidacyId: string;
   keycloakId?: string;
 }) =>
   injectGraphql({
@@ -250,13 +32,21 @@ const getCandidacy = ({
     payload: {
       requestType: "query",
       endpoint: "getCandidacyById",
-      arguments: { id: candidacy.id },
+      arguments: { id: candidacyId },
       returnFields: "{id}",
     },
   });
 
+afterEach(async () => {
+  await clearDatabase();
+});
+
 test("Admin should be able to access candidacy", async () => {
-  const resp = await getCandidacy({ role: "admin" });
+  const candidacy = await createCandidacyHelper();
+  const resp = await getCandidacy({
+    role: "admin",
+    candidacyId: candidacy.id,
+  });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.getCandidacyById).toMatchObject({
@@ -265,9 +55,11 @@ test("Admin should be able to access candidacy", async () => {
 });
 
 test("Candidate owning the candidacy should be able to access it", async () => {
+  const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "candidate",
-    keycloakId: candidate.keycloakId,
+    keycloakId: candidacy.candidate?.keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -277,9 +69,13 @@ test("Candidate owning the candidacy should be able to access it", async () => {
 });
 
 test("Random candidate should not be able to access the candidacy", async () => {
+  const candidacy = await createCandidacyHelper();
+  const randomCandidate = await createCandidateHelper();
+
   const resp = await getCandidacy({
     role: "candidate",
     keycloakId: randomCandidate.keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -289,9 +85,15 @@ test("Random candidate should not be able to access the candidacy", async () => 
 });
 
 test("Aap associated to the candidacy should be able to access it", async () => {
+  const organism = await createOrganismHelper();
+  const candidacy = await createCandidacyHelper({
+    organismId: organism.id,
+  });
+
   const resp = await getCandidacy({
     role: "manage_candidacy",
-    keycloakId: aapAccount.keycloakId,
+    keycloakId: organism.accounts[0].keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -301,9 +103,12 @@ test("Aap associated to the candidacy should be able to access it", async () => 
 });
 
 test("Random aap should not be able to access the candidacy", async () => {
+  const organism = await createOrganismHelper();
+  const candidacy = await createCandidacyHelper({});
   const resp = await getCandidacy({
     role: "manage_candidacy",
-    keycloakId: randomAapAccount.keycloakId,
+    keycloakId: organism.accounts[0].keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -313,9 +118,15 @@ test("Random aap should not be able to access the candidacy", async () => {
 });
 
 test("Maison mere manager of the aap associated to the candidacy should be able to access it", async () => {
+  const organism = await createOrganismHelper();
+  const candidacy = await createCandidacyHelper({
+    organismId: organism.id,
+  });
+
   const resp = await getCandidacy({
     role: "gestion_maison_mere_aap",
-    keycloakId: maisonMereAapManagerAccount.keycloakId,
+    keycloakId: organism.maisonMereAAP?.gestionnaire.keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -325,9 +136,12 @@ test("Maison mere manager of the aap associated to the candidacy should be able 
 });
 
 test("Random maison mere manager should not be able to access the candidacy", async () => {
+  const organism = await createOrganismHelper();
+  const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "gestion_maison_mere_aap",
-    keycloakId: randomMaisonMereAapManagerAccount.keycloakId,
+    keycloakId: organism.maisonMereAAP?.gestionnaire.keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -337,21 +151,33 @@ test("Random maison mere manager should not be able to access the candidacy", as
 });
 
 test("Certification authority manager of the feasibility file of the candidacy should be able to access it", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      certificationAuthorityId: certificationAuthority.id,
+    },
+  });
+
   const resp = await getCandidacy({
     role: "manage_certification_authority_local_account",
-    keycloakId: certificationAuthorityAccount.keycloakId,
+    keycloakId: certificationAuthority.Account[0].keycloakId,
+    candidacyId: feasibility.candidacyId,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.getCandidacyById).toMatchObject({
-    id: candidacy.id,
+    id: feasibility.candidacyId,
   });
 });
 
 test("Random Certification authority manager should not be able to access the candidacy", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+  const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "manage_certification_authority_local_account",
-    keycloakId: randomCertificationAuthorityAccount.keycloakId,
+    keycloakId: certificationAuthority.Account[0].keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
@@ -361,21 +187,63 @@ test("Random Certification authority manager should not be able to access the ca
 });
 
 test("Certification local account of the feasibility file of the candidacy should be able to access it", async () => {
+  const certificationAuthorityLocalAccount =
+    await createCertificationAuthorityLocalAccountHelper();
+
+  const certification = await createCertificationHelper({
+    certificationAuthorityStructureId:
+      certificationAuthorityLocalAccount.certificationAuthority
+        .certificationAuthorityStructureId,
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityArgs: {
+      certificationAuthorityId:
+        certificationAuthorityLocalAccount.certificationAuthorityId,
+    },
+    candidacyArgs: {
+      certificationId: certification.id,
+    },
+  });
+
+  const candidacy = feasibility.candidacy;
+  const departmentId = candidacy.departmentId;
+
+  await prismaClient.certificationAuthorityLocalAccountOnCertification.create({
+    data: {
+      certificationAuthorityLocalAccountId:
+        certificationAuthorityLocalAccount.id,
+      certificationId: certification.id,
+    },
+  });
+
+  await prismaClient.certificationAuthorityLocalAccountOnDepartment.create({
+    data: {
+      certificationAuthorityLocalAccountId:
+        certificationAuthorityLocalAccount.id,
+      departmentId: departmentId || "",
+    },
+  });
+
   const resp = await getCandidacy({
     role: "manage_feasibility",
-    keycloakId: certificationAuthorityLocalAccountAccount.keycloakId,
+    keycloakId: certificationAuthorityLocalAccount.account.keycloakId,
+    candidacyId: feasibility.candidacyId,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.getCandidacyById).toMatchObject({
-    id: candidacy.id,
+    id: feasibility.candidacyId,
   });
 });
 
 test("Random Certification local account should not be able to access the candidacy", async () => {
+  const certificationAuthorityLocalAccount =
+    await createCertificationAuthorityLocalAccountHelper();
+  const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "manage_feasibility",
-    keycloakId: randomCertificationAuthorityLocalAccountAccount.keycloakId,
+    keycloakId: certificationAuthorityLocalAccount.account.keycloakId,
+    candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();

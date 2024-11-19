@@ -29,6 +29,10 @@ export const sendGenericEmail = async ({
     ? to.map((t) => t.email).join(", ")
     : to.email;
 
+  if (process.env.NODE_ENV === "test") {
+    return "";
+  }
+
   if (process.env.NODE_ENV !== "production") {
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent);

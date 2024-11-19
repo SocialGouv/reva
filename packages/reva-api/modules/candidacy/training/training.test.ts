@@ -2,55 +2,27 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { Candidacy } from "@prisma/client";
-
-import { prismaClient } from "../../../prisma/client";
-import {
-  ACCOUNT_ORGANISM_EXPERT_FILIERE,
-  TRAINING_INPUT,
-} from "../../../test/fixtures";
+import { CandidacyStatusStep } from "@prisma/client";
+import { TRAINING_INPUT } from "../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import {
-  createCandidacyUnifvae,
-  createCandidateMan,
-  createExpertFiliereOrganism,
-} from "../../../test/helpers/create-db-entity";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
-import { logger } from "../../shared/logger";
-
-let candidacy: Candidacy;
-
-beforeEach(async () => {
-  await createExpertFiliereOrganism();
-  await createCandidateMan();
-  candidacy = await createCandidacyUnifvae();
-});
 
 afterEach(async () => {
   await clearDatabase();
 });
 
 test("AAP should not be able to submit a training form if its status is in 'PROJET'", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PROJET",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: { data: [{ status: "PROJET", isActive: true }] },
-      },
-    },
-  });
-
-  logger.info({ candidacy });
+  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -69,28 +41,17 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
 });
 
 test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'unifvae'", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
-    },
-  });
+  const candidacy = await createCandidacyHelper(
+    {},
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -109,29 +70,19 @@ test("AAP should be able to submit a basic training form when candidacy status i
 });
 
 test("AAP should not be able to submit a basic training form without an estimated costwhen candidacy financeModule is 'hors_plateforme'", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
+  const candidacy = await createCandidacyHelper(
+    {
       financeModule: "hors_plateforme",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
     },
-  });
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -150,29 +101,19 @@ test("AAP should not be able to submit a basic training form without an estimate
 });
 
 test("AAP should not be able to submit a basic training form without at least one financing method  when candidacy financeModule is 'hors_plateforme'", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
+  const candidacy = await createCandidacyHelper(
+    {
       financeModule: "hors_plateforme",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
     },
-  });
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -191,29 +132,19 @@ test("AAP should not be able to submit a basic training form without at least on
 });
 
 test("AAP should not be able to submit a basic training form without a text when the 'other source' financing method has been checked", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
+  const candidacy = await createCandidacyHelper(
+    {
       financeModule: "hors_plateforme",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
     },
-  });
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -238,29 +169,19 @@ test("AAP should not be able to submit a basic training form without a text when
 });
 
 test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'hors_plateforme'", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
+  const candidacy = await createCandidacyHelper(
+    {
       financeModule: "hors_plateforme",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
     },
-  });
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId: organismKeycloakId,
     }),
     payload: {
       requestType: "mutation",

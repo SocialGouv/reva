@@ -1,12 +1,17 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { FUNDING_REQUEST_FULL_CERT_OK_HOURS } from "../../../../test/fixtures";
+import { FUNDING_REQUEST_NO_HOURS } from "../../../../test/fixtures";
 import { validateCoutTotal } from "./cout-total";
 
 test("Should yield an error when total cost > 3200", () => {
   const errors = validateCoutTotal({
+    basicSkillsHourCount: new Decimal(1),
+    mandatoryTrainingsHourCount: new Decimal(1),
+    certificateSkillsHourCount: new Decimal(1),
+    otherTrainingHourCount: new Decimal(1),
+    collectiveHourCount: new Decimal(1),
+    individualHourCount: new Decimal(1),
     maximumTotalCostAllowed: new Decimal(3200),
-    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     individualCost: new Decimal(500),
     collectiveCost: new Decimal(500),
     basicSkillsCost: new Decimal(500),
@@ -20,8 +25,8 @@ test("Should yield an error when total cost > 3200", () => {
 
 test("Should be ok if total cost equals 3200", () => {
   const errors = validateCoutTotal({
+    ...FUNDING_REQUEST_NO_HOURS,
     maximumTotalCostAllowed: new Decimal(3200),
-    ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
     individualCost: new Decimal(500),
     collectiveCost: new Decimal(500),
     basicSkillsCost: new Decimal(500),

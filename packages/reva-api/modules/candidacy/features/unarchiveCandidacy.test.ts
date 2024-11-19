@@ -1,16 +1,14 @@
 import {
   Candidacy,
   Candidate,
-  Department,
   Organism,
+  OrganismTypology,
   ReorientationReason,
 } from "@prisma/client";
 import { sub } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
-import {
-  CANDIDATE_MAN,
-  ORGANISM_EXPERIMENTATION,
-} from "../../../test/fixtures";
+import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
+import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
@@ -60,8 +58,7 @@ let organism: Organism,
   candidacyPriseEnCharge: Candidacy,
   candidacyWithReorientationReason: Candidacy,
   candidacyArchived: Candidacy,
-  reorientationReason: ReorientationReason,
-  parisDepartment: Department;
+  reorientationReason: ReorientationReason;
 
 beforeAll(async () => {
   reorientationReason = (await prismaClient.reorientationReason.findUnique({
@@ -70,16 +67,10 @@ beforeAll(async () => {
     },
   })) as ReorientationReason;
 
-  parisDepartment = (await prismaClient.department.findFirst({
-    where: { code: "75" },
-  })) as Department;
-  organism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERIMENTATION,
+  organism = await createOrganismHelper({
+    typology: OrganismTypology.experimentation,
   });
-
-  candidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
-  });
+  candidate = await createCandidateHelper();
 
   candidacyPriseEnCharge = await prismaClient.candidacy.create({
     data: {

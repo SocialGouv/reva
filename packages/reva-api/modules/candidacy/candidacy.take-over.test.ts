@@ -5,34 +5,28 @@ import {
   Candidacy,
   CandidacyStatusStep,
   Candidate,
-  Organism,
+  Gender,
 } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
 
 import { Account } from "modules/account/account.types";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import {
-  createCandidateMan,
-  createCandidateWoman,
-  createExpertFiliereOrganism,
-} from "../../test/helpers/create-db-entity";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
+import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-
-let organism: Organism,
-  organismAccount: Account,
+let organismAccount: Account,
   candidateMan: Candidate,
   candidateWoman: Candidate,
   candidacyProject: Candidacy,
   candidacyValidated: Candidacy;
 
 beforeAll(async () => {
-  const res = await createExpertFiliereOrganism();
-  organism = res.organism;
-  organismAccount = res.account;
+  const organism = await createOrganismHelper();
+  organismAccount = organism.accounts[0];
 
-  candidateMan = await createCandidateMan();
-  candidateWoman = await createCandidateWoman();
+  candidateMan = await createCandidateHelper();
+  candidateWoman = await createCandidateHelper({ gender: Gender.woman });
 
   candidacyProject = await prismaClient.candidacy.create({
     data: {

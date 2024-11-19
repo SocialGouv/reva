@@ -45,7 +45,10 @@ export const sendEmailWithLink = async ({
     : `${baseUrl}/${actionPath}${token ? `?token=${token}` : ""}`;
   const emailContent = htmlContent(url);
 
-  if (process.env.NODE_ENV !== "production") {
+  if (
+    process.env.NODE_ENV !== "production" &&
+    process.env.NODE_ENV !== "test"
+  ) {
     logger.info("======= EMAIL URL =======");
     logger.info(url);
     logger.info("=========================");

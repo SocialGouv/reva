@@ -1,12 +1,12 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { FUNDING_REQUEST_FULL_CERT_OK_HOURS } from "../../../../test/fixtures";
+import { FUNDING_REQUEST_NO_HOURS } from "../../../../test/fixtures";
 import { valideForfaitHeures } from "./forfait-heures";
 
 describe("individualHourCount rules", () => {
   test("Should yield an error when full certification and > 30", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       individualHourCount: new Decimal(32),
     });
@@ -17,7 +17,7 @@ describe("individualHourCount rules", () => {
   });
   test("Should yield an error when partial certification and > 15", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       individualHourCount: new Decimal(16),
     });
@@ -28,7 +28,7 @@ describe("individualHourCount rules", () => {
   });
   test("Should return no error when full certification and <= 30", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       individualHourCount: new Decimal(30),
     });
@@ -36,7 +36,7 @@ describe("individualHourCount rules", () => {
   });
   test("Should return no error when partial certification and <= 15", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       individualHourCount: new Decimal(15),
     });
@@ -47,7 +47,7 @@ describe("individualHourCount rules", () => {
 describe("collectiveHourCount rules", () => {
   test("Should yield an error when full certification and > 20", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       collectiveHourCount: new Decimal(22),
     });
@@ -58,7 +58,7 @@ describe("collectiveHourCount rules", () => {
   });
   test("Should yield an error when partial certification and > 10", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       collectiveHourCount: new Decimal(12),
     });
@@ -69,7 +69,7 @@ describe("collectiveHourCount rules", () => {
   });
   test("Should return no error when full certification and <= 20", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       collectiveHourCount: new Decimal(10),
     });
@@ -77,7 +77,7 @@ describe("collectiveHourCount rules", () => {
   });
   test("Should return no error when partial certification and <= 10", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       collectiveHourCount: new Decimal(10),
     });
@@ -88,7 +88,7 @@ describe("collectiveHourCount rules", () => {
 describe("complementaryTraining hours sum rules", () => {
   test("Should yield 3 errors when full certification and sum > 70", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       basicSkillsHourCount: new Decimal(68),
       mandatoryTrainingsHourCount: new Decimal(1),
@@ -102,7 +102,7 @@ describe("complementaryTraining hours sum rules", () => {
   });
   test("Should yield 3 errors when partial certification and sum > 35", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       basicSkillsHourCount: new Decimal(33),
       mandatoryTrainingsHourCount: new Decimal(1),
@@ -116,7 +116,7 @@ describe("complementaryTraining hours sum rules", () => {
   });
   test("Should return no error when full certification and sum <= 70", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: false,
       basicSkillsHourCount: new Decimal(67),
       mandatoryTrainingsHourCount: new Decimal(1),
@@ -127,7 +127,7 @@ describe("complementaryTraining hours sum rules", () => {
   });
   test("Should return no error when partial certification and sum <= 35", () => {
     const errors = valideForfaitHeures({
-      ...FUNDING_REQUEST_FULL_CERT_OK_HOURS,
+      ...FUNDING_REQUEST_NO_HOURS,
       isCertificationPartial: true,
       basicSkillsHourCount: new Decimal(32),
       mandatoryTrainingsHourCount: new Decimal(1),

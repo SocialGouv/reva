@@ -4,120 +4,134 @@
 
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import {
-  createCandidacyUnifvae,
-  createCandidateMan,
-  createExpertBrancheOrganism,
-  createExpertFiliereOrganism,
-} from "../../../test/helpers/create-db-entity";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 import { CandidacyStatusStep } from "@prisma/client";
-import {
-  ACCOUNT_ORGANISM_EXPERT_FILIERE,
-  CANDIDACY_UNIFVAE,
-  CANDIDATE_MAN,
-  ORGANISM_EXPERT_BRANCHE,
-  TRAINING_INPUT,
-} from "../../../test/fixtures";
+import { TRAINING_INPUT } from "../../../test/fixtures";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
-const selectNewOrganism = async () =>
+const selectNewOrganism = async ({
+  keycloakId,
+  organismId,
+  candidacyId,
+}: {
+  keycloakId: string;
+  organismId: string;
+  candidacyId: string;
+}) =>
   await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: CANDIDATE_MAN.keycloakId,
+      keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_selectOrganism",
       arguments: {
-        candidacyId: CANDIDACY_UNIFVAE.id,
-        organismId: ORGANISM_EXPERT_BRANCHE.id,
+        candidacyId,
+        organismId,
       },
       returnFields: "{id,organismId}",
     },
   });
 
-const submitTraining = async () =>
+const submitTraining = async ({
+  keycloakId,
+  candidacyId,
+}: {
+  keycloakId: string;
+  candidacyId: string;
+}) =>
   await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: ACCOUNT_ORGANISM_EXPERT_FILIERE.keycloakId,
+      keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "training_submitTrainingForm",
       arguments: {
-        candidacyId: CANDIDACY_UNIFVAE.id,
+        candidacyId,
         training: TRAINING_INPUT,
       },
       returnFields: "{id,status}",
     },
   });
 
-const confirmTraining = async () =>
+const confirmTraining = async ({
+  keycloakId,
+  candidacyId,
+}: {
+  keycloakId: string;
+  candidacyId: string;
+}) =>
   await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: CANDIDATE_MAN.keycloakId,
+      keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "training_confirmTrainingForm",
       arguments: {
-        candidacyId: CANDIDACY_UNIFVAE.id,
+        candidacyId,
       },
       returnFields: "{id, status}",
     },
   });
-
-beforeEach(async () => {
-  await createExpertFiliereOrganism();
-  await createExpertBrancheOrganism();
-  await createCandidateMan();
-  await createCandidacyUnifvae();
-
-  await prismaClient.candidacy.update({
-    where: { id: CANDIDACY_UNIFVAE.id },
-    data: {
-      status: "PRISE_EN_CHARGE",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: false },
-            { status: "PRISE_EN_CHARGE", isActive: true },
-          ],
-        },
-      },
-    },
-  });
-});
 
 afterEach(async () => {
   await clearDatabase();
 });
 
 test("a candidate should be able to select a new organism while a training is sent", async () => {
-  await submitTraining();
-  const resp = await selectNewOrganism();
+  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const candidacyId = candidacy.id;
+  const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
+  const organismToSelect = await createOrganismHelper();
+
+  await submitTraining({
+    keycloakId: candidacy.organism?.accounts[0].keycloakId ?? "",
+    candidacyId,
+  });
+  const resp = await selectNewOrganism({
+    keycloakId: candidateKeycloakId,
+    organismId: organismToSelect.id,
+    candidacyId,
+  });
 
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_selectOrganism).toMatchObject({
-    id: CANDIDACY_UNIFVAE.id,
-    organismId: ORGANISM_EXPERT_BRANCHE.id,
+    id: candidacyId,
+    organismId: organismToSelect.id,
   });
 });
 
 test("a candidate should not be able to select a new organism after the training is confirmed", async () => {
-  await submitTraining();
-  await confirmTraining();
-  const resp = await selectNewOrganism();
+  const candidacy = await createCandidacyHelper();
+  const candidacyId = candidacy.id;
+  const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
+
+  const organismToSelect = await createOrganismHelper();
+  await submitTraining({
+    keycloakId: organismKeycloakId,
+    candidacyId,
+  });
+  await confirmTraining({
+    keycloakId: candidateKeycloakId,
+    candidacyId,
+  });
+  const resp = await selectNewOrganism({
+    keycloakId: candidateKeycloakId,
+    organismId: organismToSelect.id,
+    candidacyId,
+  });
 
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().errors?.[0].message).toEqual(
@@ -126,23 +140,50 @@ test("a candidate should not be able to select a new organism after the training
 });
 
 test("should reset the status to validation when selecting a new organism and status is prise_en_charge", async () => {
-  await selectNewOrganism();
+  const candidacy = await createCandidacyHelper(
+    {},
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+  );
+  const candidacyId = candidacy.id;
+  const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
+  const organism = await createOrganismHelper();
 
-  const candidacy = await prismaClient.candidacy.findUnique({
-    where: { id: CANDIDACY_UNIFVAE.id },
+  await selectNewOrganism({
+    keycloakId: candidateKeycloakId,
+    organismId: organism.id,
+    candidacyId,
   });
 
-  expect(candidacy).toMatchObject({
+  const candidacyUpdated = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+  });
+
+  expect(candidacyUpdated).toMatchObject({
     status: CandidacyStatusStep.VALIDATION,
   });
 });
 
 test("should reset the training and update the status when selecting a new organism", async () => {
-  await submitTraining();
-  await selectNewOrganism();
+  const candidacy = await createCandidacyHelper(
+    {},
+    CandidacyStatusStep.PARCOURS_ENVOYE,
+  );
+  const candidacyId = candidacy.id;
+  const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
+  const organism = await createOrganismHelper();
+  const organismKeycloakId = organism.accounts[0].keycloakId;
 
-  const candidacyId = CANDIDACY_UNIFVAE.id;
-  const candidacy = await prismaClient.candidacy.findUnique({
+  await submitTraining({
+    keycloakId: organismKeycloakId,
+    candidacyId,
+  });
+  await selectNewOrganism({
+    keycloakId: candidateKeycloakId,
+    organismId: organism.id,
+    candidacyId,
+  });
+
+  const candidacyUpdated = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
   });
 
@@ -157,7 +198,7 @@ test("should reset the training and update the status when selecting a new organ
       where: { candidacyId },
     });
 
-  expect(candidacy).toMatchObject({
+  expect(candidacyUpdated).toMatchObject({
     status: CandidacyStatusStep.VALIDATION,
     certificateSkills: null,
     otherTraining: null,

@@ -1,73 +1,28 @@
-import {
-  Account,
-  CertificationAuthority,
-  CertificationAuthorityLocalAccount,
-} from "@prisma/client";
-
-import { prismaClient } from "../../prisma/client";
-import { CERTIFICATION_AUTHORITY_STRUCTURES } from "../../test/fixtures";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { Account } from "@prisma/client";
 import { buildApp } from "../../infra/server/app";
+import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationAuthorityStructureHelper } from "../../test/helpers/entities/create-certification-authority-structure-helper";
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
-
 import * as createAccount from "../account/features/createAccount";
-
-const CERTIFICATION_AUTHORITY_KEYCLOAK_ID =
-  "3c6d4571-da18-49a3-90e5-cc83ae7446bf";
-
-const CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT_1_KEYCLOAK_ID =
-  "dc2b8b90-f8f8-4f89-93da-c236083762ba";
-
-let certificationAccountAutorityAccount = {} as Account;
-let certificationAuthority = {} as CertificationAuthority;
-let certificationAccountAutorityLocalAccount1Account = {} as Account;
-
-let certificationAuthorityLocalAccount1 =
-  {} as CertificationAuthorityLocalAccount;
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
   (global as any).fastify = app;
-
-  certificationAccountAutorityAccount = await prismaClient.account.create({
-    data: {
-      email: "certificationauth@gmail.com",
-      keycloakId: CERTIFICATION_AUTHORITY_KEYCLOAK_ID,
-    },
-  });
-  certificationAuthority = await prismaClient.certificationAuthority.create({
-    data: {
-      Account: { connect: { id: certificationAccountAutorityAccount.id } },
-      label: "certification authority",
-      certificationAuthorityStructureId:
-        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-    },
-  });
-
-  certificationAccountAutorityLocalAccount1Account =
-    await prismaClient.account.create({
-      data: {
-        email: "certificationauthoritylocalaccount1@gmail.com",
-        keycloakId: CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT_1_KEYCLOAK_ID,
-      },
-    });
-
-  certificationAuthorityLocalAccount1 =
-    await prismaClient.certificationAuthorityLocalAccount.create({
-      data: {
-        certificationAuthorityId: certificationAuthority.id,
-        accountId: certificationAccountAutorityLocalAccount1Account.id,
-      },
-    });
 });
 
 test("should return an exisiting certification local account list of 1 item for the certification authority", async () => {
+  const certificationAuthorityLocalAccount =
+    await createCertificationAuthorityLocalAccountHelper();
+
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: CERTIFICATION_AUTHORITY_KEYCLOAK_ID,
+      keycloakId:
+        certificationAuthorityLocalAccount.certificationAuthority.Account[0]
+          .keycloakId,
     }),
     payload: {
       requestType: "query",
@@ -81,13 +36,16 @@ test("should return an exisiting certification local account list of 1 item for 
   expect(
     obj.data.account_getAccountForConnectedUser.certificationAuthority
       .certificationAuthorityLocalAccounts,
-  ).toMatchObject([{ id: certificationAuthorityLocalAccount1.id }]);
+  ).toMatchObject([{ id: certificationAuthorityLocalAccount.id }]);
 });
 
 test("should create a certification authority", async () => {
   jest
     .spyOn(createAccount, "createAccount")
     .mockImplementation(() => Promise.resolve({} as Account));
+
+  const certificationAuthorityStructure =
+    await createCertificationAuthorityStructureHelper();
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -101,8 +59,7 @@ test("should create a certification authority", async () => {
       arguments: {
         input: {
           label: "Mon autorite de certification",
-          certificationAuthorityStructureId:
-            CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
+          certificationAuthorityStructureId: certificationAuthorityStructure.id,
           contactEmail: "testcontact.test@gmail.com",
           contactFullName: "Monieur test test",
           accountEmail: "testaccount.test@gmail.com",

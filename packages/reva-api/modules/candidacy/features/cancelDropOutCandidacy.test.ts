@@ -1,24 +1,17 @@
 import { Candidacy } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
-import { CANDIDATE_MAN } from "../../../test/fixtures";
+import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { cancelDropOutCandidacy } from "./cancelDropOutCandidacy";
 
-let parisDepartment,
-  candidate,
+let candidate,
   normalCandidacy: Candidacy,
   droppedoutCandidacy: Candidacy,
   dropoutReason;
 
 beforeAll(async () => {
-  parisDepartment = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-
-  candidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: parisDepartment?.id || "" },
-  });
+  candidate = await createCandidateHelper();
 
   dropoutReason = await prismaClient.dropOutReason.findFirst({
     where: { isActive: true },

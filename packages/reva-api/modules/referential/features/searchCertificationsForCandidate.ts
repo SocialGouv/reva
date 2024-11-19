@@ -1,9 +1,9 @@
 import { deburr } from "lodash";
 
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification } from "../referential.types";
-import { Prisma } from "@prisma/client";
 
 export const searchCertificationsForCandidate = async ({
   offset,

@@ -1,47 +1,21 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import {
-  Candidacy,
-  DematerializedFeasibilityFile,
-  Feasibility,
-} from "@prisma/client";
-import {
-  createCandidacyUnifvae,
-  createCandidateMan,
-  createExpertFiliereOrganism,
-  createFeasibilityWithDematerializedFeasibilityFile,
-} from "../../../../test/helpers/create-db-entity";
+import { createFeasibilityDematerializedHelper } from "../../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { confirmDematerializedFeasibilityFileByCandidate } from "./confirmDematerializedFeasibilityFileByCandidate";
 
-type FeasibilityWithDematerializedFeasibilityFile = Feasibility & {
-  dematerializedFeasibilityFile: DematerializedFeasibilityFile;
-};
-
 describe("confirmDematerializedFeasibilityFileByCandidate", () => {
-  let candidacy: Candidacy;
-  let feasibility: FeasibilityWithDematerializedFeasibilityFile;
-  let dff: DematerializedFeasibilityFile;
-
-  beforeAll(async () => {
-    await createExpertFiliereOrganism();
-    await createCandidateMan();
-    candidacy = await createCandidacyUnifvae();
-
-    feasibility = (await createFeasibilityWithDematerializedFeasibilityFile(
-      candidacy.id,
-    )) as FeasibilityWithDematerializedFeasibilityFile;
-    dff = feasibility.dematerializedFeasibilityFile;
-  });
-
   describe("When confirming a dematerialized feasibility file", () => {
     it("should update the file with candidate's decision comment and confirmation timestamp", async () => {
+      const feasibility = await createFeasibilityDematerializedHelper({});
+      const dematerializedFeasibilityFileId =
+        feasibility.dematerializedFeasibilityFile?.id ?? "";
       const input = {
         candidateDecisionComment: "This is my decision comment",
       };
 
       const result = await confirmDematerializedFeasibilityFileByCandidate({
-        dematerializedFeasibilityFileId: dff.id,
+        dematerializedFeasibilityFileId,
         input,
       });
 
@@ -54,12 +28,15 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
     });
 
     it("should allow confirmation without a decision comment", async () => {
+      const feasibility = await createFeasibilityDematerializedHelper({});
+      const dematerializedFeasibilityFileId =
+        feasibility.dematerializedFeasibilityFile?.id ?? "";
       const input = {
         candidateDecisionComment: "",
       };
 
       const result = await confirmDematerializedFeasibilityFileByCandidate({
-        dematerializedFeasibilityFileId: dff.id,
+        dematerializedFeasibilityFileId,
         input,
       });
 

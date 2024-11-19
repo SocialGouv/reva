@@ -1,29 +1,13 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import { Account, MaisonMereAAP } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import {
-  createMaisonMereAAPAMettreAJour,
-  createMaisonMereExpertFiliere,
-} from "../../../test/helpers/create-db-entity";
+import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
-let accountMaisonMereAMettreAJour: Account,
-  maisonMereAAP: MaisonMereAAP,
-  maisonMereAAPAMettreAJour: MaisonMereAAP;
-
-beforeAll(async () => {
-  const maisonMereAAPExpertFiliere = await createMaisonMereExpertFiliere();
-  maisonMereAAP = maisonMereAAPExpertFiliere.maisonMereAAP;
-
-  const maisonMereAAPAMettreAJourRes = await createMaisonMereAAPAMettreAJour();
-  maisonMereAAPAMettreAJour = maisonMereAAPAMettreAJourRes.maisonMereAAP;
-  accountMaisonMereAMettreAJour = maisonMereAAPAMettreAJourRes.account;
-});
-
 test("API should respond with error unauthorized user", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -35,7 +19,7 @@ test("API should respond with error unauthorized user", async () => {
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAP.id,
+          maisonMereAAPId: mmAap.id,
           showAccountSetup: true,
         },
       },
@@ -49,6 +33,7 @@ test("API should respond with error unauthorized user", async () => {
 });
 
 test("API should let admin update MaisonMereAccountSetup and return data", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -60,7 +45,7 @@ test("API should let admin update MaisonMereAccountSetup and return data", async
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAP.id,
+          maisonMereAAPId: mmAap.id,
           showAccountSetup: true,
         },
       },
@@ -73,7 +58,7 @@ test("API should let admin update MaisonMereAccountSetup and return data", async
     response.json().data.organism_updateMaisonMereAccountSetup,
   ).not.toBeNull();
   expect(response.json().data.organism_updateMaisonMereAccountSetup.id).toBe(
-    maisonMereAAP.id,
+    mmAap.id,
   );
   expect(
     response.json().data.organism_updateMaisonMereAccountSetup.showAccountSetup,
@@ -81,18 +66,20 @@ test("API should let admin update MaisonMereAccountSetup and return data", async
 });
 
 test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup and return data", async () => {
+  const mmAap = await createMaisonMereAapHelper();
+
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "gestion_maison_mere_aap",
-      keycloakId: accountMaisonMereAMettreAJour.keycloakId,
+      keycloakId: mmAap.gestionnaire.keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAPAMettreAJour.id,
+          maisonMereAAPId: mmAap.id,
           showAccountSetup: true,
         },
       },
@@ -105,7 +92,7 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
     response.json().data.organism_updateMaisonMereAccountSetup,
   ).not.toBeNull();
   expect(response.json().data.organism_updateMaisonMereAccountSetup.id).toBe(
-    maisonMereAAPAMettreAJour.id,
+    mmAap.id,
   );
   expect(
     response.json().data.organism_updateMaisonMereAccountSetup.showAccountSetup,
@@ -113,6 +100,7 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
 });
 
 test("API should error when user is not the manager of the MaisonMereAAP", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -124,7 +112,7 @@ test("API should error when user is not the manager of the MaisonMereAAP", async
       endpoint: "organism_updateMaisonMereAccountSetup",
       arguments: {
         data: {
-          maisonMereAAPId: maisonMereAAPAMettreAJour.id,
+          maisonMereAAPId: mmAap.id,
           showAccountSetup: true,
         },
       },

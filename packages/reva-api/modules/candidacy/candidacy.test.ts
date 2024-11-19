@@ -1,35 +1,16 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import { Candidacy, Candidate, Organism } from "@prisma/client";
 
+import { faker } from "@faker-js/faker/.";
 import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN, ORGANISM_EXPERIMENTATION } from "../../test/fixtures";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
-let organism: Organism, candidate: Candidate, candidacy: Candidacy;
-
-beforeAll(async () => {
-  const ileDeFrance = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-
-  organism = await prismaClient.organism.create({
-    data: ORGANISM_EXPERIMENTATION,
-  });
-  candidate = await prismaClient.candidate.create({
-    data: { ...CANDIDATE_MAN, departmentId: ileDeFrance?.id || "" },
-  });
-  candidacy = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-});
-
 test("get existing Candidacy with admin user", async () => {
+  const candidacy = await createCandidacyHelper();
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -47,11 +28,11 @@ test("get existing Candidacy with admin user", async () => {
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.getCandidacyById).toMatchObject({
-    organismId: organism.id,
+    organismId: candidacy.organismId,
     candidate: {
-      firstname: candidate.firstname,
-      lastname: candidate.lastname,
-      email: candidate.email,
+      firstname: candidacy.candidate?.firstname,
+      lastname: candidacy.candidate?.lastname,
+      email: candidacy.candidate?.email,
     },
   });
 });
@@ -75,17 +56,19 @@ test("get non existing candidacy should yield errors", async () => {
 });
 
 test("a user can't modify the account information of another candidate", async () => {
+  const candidate = await createCandidateHelper();
+  const anotherCandidate = await createCandidateHelper();
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: "20d793c8-4269-44fd-a454-c6b7ab8b4c8e",
+      keycloakId: candidate.keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_updateContact",
       arguments: {
-        candidateId: candidate.id,
+        candidateId: anotherCandidate.id,
         candidateData: { phone: "0612345678" },
       },
       returnFields: "{id}",
@@ -98,11 +81,11 @@ test("a user can't modify the account information of another candidate", async (
 });
 
 test("a candidate can modify his account information but not directly his email, it needs to be confirm via an email link", async () => {
+  const candidate = await createCandidateHelper();
   const newCandidate = {
     firstname: "Updated Firstname",
     lastname: "Updated Lastname",
     phone: "0612345678",
-    email: CANDIDATE_MAN.email,
   };
 
   const resp = await injectGraphql({
@@ -120,7 +103,7 @@ test("a candidate can modify his account information but not directly his email,
           firstname: newCandidate.firstname,
           lastname: newCandidate.lastname,
           phone: newCandidate.phone,
-          email: newCandidate.email,
+          email: faker.internet.email(),
         },
       },
       returnFields: "{id,firstname,lastname,phone,email}",
@@ -129,6 +112,7 @@ test("a candidate can modify his account information but not directly his email,
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_updateContact).toMatchObject({
     id: candidate.id,
+    email: candidate.email,
     ...newCandidate,
   });
 

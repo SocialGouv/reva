@@ -103,7 +103,6 @@ test("Should generate a CSV stream with fundingRequest to be sent", async () => 
   for await (const chunk of batchReadableStream) {
     output += (chunk as Buffer).toString();
   }
-  console.log(output);
   expect(output).toBe(`field1;field2;field3;field4
 123;abc, efg, l'alphabet;;0.5
 234;"formation ""géniale"", manger debout";3;`);

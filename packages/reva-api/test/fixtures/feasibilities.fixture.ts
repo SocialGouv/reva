@@ -1,24 +1,32 @@
-import { FeasibilityStatus } from "@prisma/client";
-import { CERTIFICATION_AUTHORITY_STRUCTURES } from "./certifications.fixture";
+import {
+  Feasibility,
+  FeasibilityFormat,
+  FeasibilityStatus,
+} from "@prisma/client";
+import { randomUUID } from "crypto";
 
-export const FEASIBILITY_PDF_ADMISSIBLE = {
+const FEASIBILITY_BASE: Feasibility = {
+  id: randomUUID(),
+  candidacyId: randomUUID(),
+  certificationAuthorityId: null,
   decision: FeasibilityStatus.ADMISSIBLE,
-  certificationAuthority: {
-    create: {
-      label: "dummy",
-      certificationAuthorityStructureId:
-        CERTIFICATION_AUTHORITY_STRUCTURES.UIMM.id,
-    },
-  },
-  feasibilityUploadedPdf: {
-    create: {
-      feasibilityFile: {
-        create: {
-          name: "dummyFile.ext",
-          mimeType: "pdf",
-          path: "dummyFile.ext",
-        },
-      },
-    },
-  },
+  decisionComment: null,
+  decisionFileId: null,
+  decisionSentAt: null,
+  feasibilityFileSentAt: null,
+  isActive: true,
+  createdAt: new Date(),
+  updatedAt: null,
+  feasibilityFormat: FeasibilityFormat.UPLOADED_PDF,
+};
+
+export const FEASIBILITY_ADMISSIBLE: Feasibility = {
+  ...FEASIBILITY_BASE,
+  id: randomUUID(),
+};
+
+export const FEASIBILITY_REJECTED: Feasibility = {
+  ...FEASIBILITY_BASE,
+  id: randomUUID(),
+  decision: FeasibilityStatus.REJECTED,
 };

@@ -3,22 +3,8 @@
  */
 
 import { StatutValidationInformationsJuridiquesMaisonMereAAP } from ".prisma/client";
-import { prismaClient } from "../../../prisma/client";
-import {
-  ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR,
-  ACCOUNT_MAISON_MERE_EXPERT_FILIERE,
-  MAISON_MERE_AAP_A_METTRE_A_JOUR,
-  MAISON_MERE_AAP_EXPERT_FILIERE,
-  ORGANISM_EXPERT_BRANCHE,
-  ORGANISM_EXPERT_FILIERE,
-} from "../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import {
-  createExpertBrancheOrganism,
-  createExpertFiliereOrganism,
-  createMaisonMereAAPAMettreAJour,
-  createMaisonMereExpertFiliere,
-} from "../../../test/helpers/create-db-entity";
+import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 const injectGraphqlGetMaisonMereAAPs = async ({
@@ -48,70 +34,55 @@ const injectGraphqlGetMaisonMereAAPs = async ({
   });
 };
 
-beforeAll(async () => {
-  await createMaisonMereExpertFiliere();
-  await createMaisonMereAAPAMettreAJour();
-
-  await createExpertBrancheOrganism();
-  await createExpertFiliereOrganism();
-
-  await prismaClient.maisonMereAAP.update({
-    where: { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
-    data: {
-      organismes: {
-        connect: [
-          { id: ORGANISM_EXPERT_BRANCHE.id },
-          { id: ORGANISM_EXPERT_FILIERE.id },
-        ],
-      },
-    },
-  });
-});
-
 test("find maison mere by its siret number", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: MAISON_MERE_AAP_A_METTRE_A_JOUR.siret,
+    searchFilter: mmAap.siret,
   });
 
   expect(response.json()).not.toHaveProperty("errors");
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
-    { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
+    { id: mmAap.id },
   ]);
 });
 
 test("find maison mere by some unordered key words from its raison social", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: MAISON_MERE_AAP_A_METTRE_A_JOUR.raisonSociale,
+    searchFilter: mmAap.raisonSociale,
   });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
-    { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
+    { id: mmAap.id },
   ]);
 });
 
 test("find maison mere by admin email", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: ACCOUNT_MAISON_MERE_EXPERT_FILIERE.email,
+    searchFilter: mmAap.gestionnaire.email,
   });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
-    { id: MAISON_MERE_AAP_EXPERT_FILIERE.id },
+    { id: mmAap.id },
   ]);
 });
 
 test("find maison mere by collaborateur email", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: ACCOUNT_MAISON_MERE_A_METTRE_A_JOUR.email,
+    searchFilter: mmAap.gestionnaire.email,
   });
 
   expect(response.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
-    { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
+    { id: mmAap.id },
   ]);
 });
 
 test("find maison mere by text filters and legal validation status", async () => {
+  const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: MAISON_MERE_AAP_A_METTRE_A_JOUR.raisonSociale,
+    searchFilter: mmAap.raisonSociale,
     legalValidationStatus:
       StatutValidationInformationsJuridiquesMaisonMereAAP.A_JOUR,
   });
@@ -121,12 +92,12 @@ test("find maison mere by text filters and legal validation status", async () =>
   );
 
   const response2 = await injectGraphqlGetMaisonMereAAPs({
-    searchFilter: MAISON_MERE_AAP_A_METTRE_A_JOUR.raisonSociale,
+    searchFilter: mmAap.raisonSociale,
     legalValidationStatus:
-      MAISON_MERE_AAP_A_METTRE_A_JOUR.statutValidationInformationsJuridiquesMaisonMereAAP,
+      mmAap.statutValidationInformationsJuridiquesMaisonMereAAP,
   });
 
   expect(response2.json().data.organism_getMaisonMereAAPs.rows).toMatchObject([
-    { id: MAISON_MERE_AAP_A_METTRE_A_JOUR.id },
+    { id: mmAap.id },
   ]);
 });

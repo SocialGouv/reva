@@ -2,50 +2,25 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { Candidacy } from "@prisma/client";
-
-import { prismaClient } from "../../prisma/client";
-import { CANDIDATE_MAN } from "../../test/fixtures";
+import { CandidacyStatusStep } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import {
-  createCandidacyUnifvae,
-  createCandidateMan,
-  createExpertFiliereOrganism,
-} from "../../test/helpers/create-db-entity";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-
-let candidacy: Candidacy;
-
-beforeEach(async () => {
-  await createExpertFiliereOrganism();
-  await createCandidateMan();
-  candidacy = await createCandidacyUnifvae();
-});
 
 afterEach(async () => {
   await clearDatabase();
 });
 
 test("candidate should be able to change it's type_accompagnement when the candidacy is still in project", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "PROJET",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [{ status: "PROJET", isActive: true }],
-        },
-      },
-    },
-  });
+  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: CANDIDATE_MAN.keycloakId,
+      keycloakId: candidateKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -63,27 +38,17 @@ test("candidate should be able to change it's type_accompagnement when the candi
 });
 
 test("candidate should NOT be able to change it's type_accompagnement when the candidacy is not in project", async () => {
-  await prismaClient.candidacy.update({
-    where: { id: candidacy.id },
-    data: {
-      status: "VALIDATION",
-      candidacyStatuses: {
-        deleteMany: {},
-        createMany: {
-          data: [
-            { status: "PROJET", isActive: false },
-            { status: "VALIDATION", isActive: true },
-          ],
-        },
-      },
-    },
-  });
+  const candidacy = await createCandidacyHelper(
+    {},
+    CandidacyStatusStep.VALIDATION,
+  );
+  const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
-      keycloakId: CANDIDATE_MAN.keycloakId,
+      keycloakId: candidateKeycloakId,
     }),
     payload: {
       requestType: "mutation",
