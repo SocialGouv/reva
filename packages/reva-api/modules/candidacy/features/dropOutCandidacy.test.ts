@@ -1,51 +1,13 @@
-import { Candidacy } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
-
-import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
+import { createCandidacyDropOutHelper } from "../../../test/helpers/entities/create-candidacy-drop-out-helper";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createDropOutReasonHelper } from "../../../test/helpers/entities/create-drop-out-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { dropOutCandidacy } from "./dropOutCandidacy";
 
-let candidate,
-  normalCandidacy: Candidacy,
-  droppedoutCandidacy: Candidacy,
-  dropoutReason;
-
-beforeAll(async () => {
-  candidate = await createCandidateHelper();
-
-  dropoutReason = await prismaClient.dropOutReason.findFirst({
-    where: { isActive: true },
-  });
-
-  normalCandidacy = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidate.id,
-      candidacyStatuses: {
-        create: [{ status: "PROJET", isActive: true }],
-      },
-    },
-  });
-
-  droppedoutCandidacy = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidate.id,
-      candidacyStatuses: {
-        create: [{ status: "PROJET", isActive: true }],
-      },
-    },
-  });
-
-  await prismaClient.candidacyDropOut.create({
-    data: {
-      candidacyId: droppedoutCandidacy.id,
-      status: "PARCOURS_ENVOYE",
-      dropOutReasonId: dropoutReason!.id,
-    },
-  });
-});
-
 describe("drop out candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
+    const dropoutReason = await createDropOutReasonHelper();
     await expect(async () => {
       await dropOutCandidacy({
         candidacyId: "wr0ng1d",
@@ -54,26 +16,31 @@ describe("drop out candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_ALREADY_DROPPED_OUT", async () => {
+    const dropoutReason = await createDropOutReasonHelper();
+    const candidacyDropOut = await createCandidacyDropOutHelper();
     await expect(async () => {
       await dropOutCandidacy({
-        candidacyId: droppedoutCandidacy.id,
+        candidacyId: candidacyDropOut.candidacy.id,
         dropOutReasonId: dropoutReason!.id,
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT);
   });
   test("should fail with CANDIDACY_INVALID_DROP_OUT_REASON error code", async () => {
+    const candidacy = await createCandidacyHelper();
     await expect(async () => {
       await dropOutCandidacy({
-        candidacyId: normalCandidacy.id,
+        candidacyId: candidacy.id,
         dropOutReasonId: "wr0ng1d",
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON);
   });
 
   test("should return candidacy with drop out reason", async () => {
-    const candidacy = await dropOutCandidacy({
-      candidacyId: normalCandidacy.id,
-      dropOutReasonId: dropoutReason!.id,
+    const dropoutReason = await createDropOutReasonHelper();
+    const candidacy = await createCandidacyHelper();
+    await dropOutCandidacy({
+      candidacyId: candidacy.id,
+      dropOutReasonId: dropoutReason.id,
     });
     const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
       where: {
@@ -84,6 +51,6 @@ describe("drop out candidacy", () => {
       },
     });
     expect(candidacyDropOut).not.toBeNull();
-    expect(candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason!.id);
+    expect(candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason.id);
   });
 });
