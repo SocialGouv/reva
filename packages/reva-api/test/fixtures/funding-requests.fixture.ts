@@ -17,7 +17,7 @@ const fundingContactInfo = {
   fundingContactPhone: faker.phone.number(),
 };
 
-const fundingRequestBase = {
+const FUNDING_REQUEST_BASE = {
   ...candidateInfo,
   ...fundingContactInfo,
   basicSkillsCost: faker.number.int({ min: 0, max: 1000 }),
@@ -83,7 +83,7 @@ export const FUNDING_REQUEST_NO_HOURS = {
 };
 
 export const FUNDING_REQUEST_FULL_CERT_OK_HOURS = {
-  ...fundingRequestBase,
+  ...FUNDING_REQUEST_BASE,
   isPartialCertification: false,
   basicSkillsHourCount: faker.number.int({
     min: 1,
@@ -134,7 +134,7 @@ export const FUNDING_REQUEST_FULL_CERT_OK_HOURS_DECIMAL = {
 };
 
 export const FUNDING_REQUEST_SAMPLE = {
-  ...fundingRequestBase,
+  ...FUNDING_REQUEST_BASE,
   basicSkillsCost: faker.number.int({
     min: 10,
     max: 1000,
