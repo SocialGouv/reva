@@ -39,6 +39,10 @@ const getCertificationQuery = graphql(`
           label
         }
       }
+      certificationAuthorityStructure {
+        id
+        label
+      }
     }
   }
 `);

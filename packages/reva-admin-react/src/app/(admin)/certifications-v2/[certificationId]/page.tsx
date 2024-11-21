@@ -32,6 +32,8 @@ const PageContent = ({
   certification: CertificationForPage;
 }) => {
   const router = useRouter();
+  const structureSummaryCardComplete =
+    !!certification.certificationAuthorityStructure;
   return (
     <div data-test="update-certification-page">
       <h1>{certification.label}</h1>
@@ -94,6 +96,7 @@ const PageContent = ({
         </EnhancedSectionCard>
         <SectionCard
           title="Blocs de compétences"
+          data-test="competence-blocs-summary-card"
           titleIconClass="fr-icon-survey-fill"
           hasButton
           buttonPriority="tertiary no outline"
@@ -144,6 +147,14 @@ const PageContent = ({
             ))}
           </ul>
         </SectionCard>
+        <EnhancedSectionCard
+          data-test="certification-structure-summary-card"
+          title="Structure certificatrice et gestionnaires"
+          titleIconClass="fr-icon-group-fill"
+          isEditable
+          status={structureSummaryCardComplete ? "COMPLETED" : "TO_COMPLETE"}
+          buttonOnClickHref={`/certifications-v2/${certification.id}/structure`}
+        />
       </div>
       <hr className="mt-8" />
       <h2>Validation par le responsable des certifications</h2>
