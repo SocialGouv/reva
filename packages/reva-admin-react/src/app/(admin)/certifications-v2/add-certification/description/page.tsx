@@ -100,12 +100,12 @@ export default function CertificationDescriptionPage() {
                 </Info>
 
                 <Info title="Niveau">
-                  {certification?.NOMENCLATURE_EUROPE.INTITULE}
+                  {certification?.NOMENCLATURE_EUROPE?.INTITULE || "Inconnu"}
                 </Info>
                 <Info title="Type">
                   {certification.ABREGE
                     ? `${certification.ABREGE.LIBELLE} (${certification.ABREGE.CODE})`
-                    : "Inconnue"}
+                    : "Inconnu"}
                 </Info>
                 <Info title="Date d’échéance">
                   {certification.DATE_FIN_ENREGISTREMENT
@@ -113,12 +113,12 @@ export default function CertificationDescriptionPage() {
                         certification.DATE_FIN_ENREGISTREMENT,
                         "dd/MM/yyyy",
                       )
-                    : ""}
+                    : "Inconnue"}
                 </Info>
                 <Info title="Date de dernière delivrance">
                   {certification.DATE_LIMITE_DELIVRANCE
                     ? format(certification.DATE_LIMITE_DELIVRANCE, "dd/MM/yyyy")
-                    : ""}
+                    : "Inconnue"}
                 </Info>
               </div>
 

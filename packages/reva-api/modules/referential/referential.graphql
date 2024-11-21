@@ -152,8 +152,8 @@ type FCCertification {
   NUMERO_FICHE: String!
   INTITULE: String!
   ABREGE: FCAbrege
-  NOMENCLATURE_EUROPE: FCNomenclatureEurope!
-  DATE_FIN_ENREGISTREMENT: Timestamp!
+  NOMENCLATURE_EUROPE: FCNomenclatureEurope
+  DATE_FIN_ENREGISTREMENT: Timestamp
   DATE_LIMITE_DELIVRANCE: Timestamp
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!

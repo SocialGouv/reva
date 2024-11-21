@@ -43,11 +43,11 @@ export type RNCPCertification = {
     CODE: string;
     LIBELLE: string;
   };
-  NOMENCLATURE_EUROPE: {
+  NOMENCLATURE_EUROPE?: {
     NIVEAU: string;
     INTITULE: string;
   };
-  DATE_FIN_ENREGISTREMENT: number;
+  DATE_FIN_ENREGISTREMENT?: number;
   DATE_LIMITE_DELIVRANCE?: number;
   BLOCS_COMPETENCES: {
     CODE: string;
@@ -109,15 +109,8 @@ export class RNCPReferential {
         fiches: any[];
       };
 
-      const certifications: RNCPCertification[] = data.fiches.reduce(
-        (acc, value) => {
-          const certification = mapToRNCPCertification(value);
-          if (certification) {
-            return [...acc, certification];
-          }
-          return acc;
-        },
-        [] as RNCPCertification[],
+      const certifications: RNCPCertification[] = data.fiches.map(
+        mapToRNCPCertification,
       );
 
       return {
@@ -244,7 +237,7 @@ function splitString(value: string): string[] {
   return [];
 }
 
-function mapToRNCPCertification(data: any): RNCPCertification | undefined {
+function mapToRNCPCertification(data: any): RNCPCertification {
   try {
     const certification: RNCPCertification = {
       ID_FICHE: data.ID_FICHE,
@@ -256,11 +249,15 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
             LIBELLE: data.ABREGE.LIBELLE,
           }
         : undefined,
-      NOMENCLATURE_EUROPE: {
-        NIVEAU: data.NOMENCLATURE_EUROPE.NIVEAU,
-        INTITULE: data.NOMENCLATURE_EUROPE.INTITULE,
-      },
-      DATE_FIN_ENREGISTREMENT: getDateFromString(data.DATE_FIN_ENREGISTREMENT),
+      NOMENCLATURE_EUROPE: data.NOMENCLATURE_EUROPE
+        ? {
+            NIVEAU: data.NOMENCLATURE_EUROPE.NIVEAU,
+            INTITULE: data.NOMENCLATURE_EUROPE.INTITULE,
+          }
+        : undefined,
+      DATE_FIN_ENREGISTREMENT: data.DATE_FIN_ENREGISTREMENT
+        ? getDateFromString(data.DATE_FIN_ENREGISTREMENT)
+        : undefined,
       DATE_LIMITE_DELIVRANCE: data.DATE_LIMITE_DELIVRANCE
         ? getDateFromString(data.DATE_LIMITE_DELIVRANCE)
         : undefined,
@@ -292,7 +289,9 @@ function mapToRNCPCertification(data: any): RNCPCertification | undefined {
     logger.error(error);
   }
 
-  return undefined;
+  throw new Error(
+    `La certification avec le code rncp ${data?.NUMERO_FICHE} n'a pas pu être parsée. Veuillez contacter le support technique.`,
+  );
 }
 
 function getDateFromString(value: string): number {

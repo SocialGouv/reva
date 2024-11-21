@@ -36,7 +36,7 @@ export const CertificationGeneralInformation = ({
       </Info>
       <div className="grid grid-cols-2">
         <Info title="Niveau de la certification">
-          {fcCertification.NOMENCLATURE_EUROPE.INTITULE}
+          {fcCertification.NOMENCLATURE_EUROPE?.INTITULE || "Inconnu"}
         </Info>
         <Info title="Type de la certification">
           {fcCertification.ABREGE
@@ -44,7 +44,9 @@ export const CertificationGeneralInformation = ({
             : "Inconnue"}
         </Info>
         <Info title="Date fin enregistrement">
-          {format(fcCertification.DATE_FIN_ENREGISTREMENT, "dd/MM/yyyy")}
+          {fcCertification.DATE_FIN_ENREGISTREMENT
+            ? format(fcCertification.DATE_FIN_ENREGISTREMENT, "dd/MM/yyyy")
+            : "Inconnue"}
         </Info>
         <Info title="Date limite délivrance">
           {fcCertification.DATE_LIMITE_DELIVRANCE

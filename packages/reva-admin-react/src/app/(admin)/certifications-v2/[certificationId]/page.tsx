@@ -58,16 +58,16 @@ const PageContent = ({
             <Info title="Intitulé">{certification.label}</Info>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Info title="Niveau">{certification.degree.label}</Info>
-              <Info title="Type">{certification.typeDiplome || ""}</Info>
+              <Info title="Type">{certification.typeDiplome || "Inconnu"}</Info>
               <Info title="Date d’échéance">
                 {certification.rncpExpiresAt
                   ? format(certification.rncpExpiresAt, "dd/MM/yyyy")
-                  : ""}
+                  : "Inconnue"}
               </Info>
               <Info title="Date de dernière delivrance">
                 {certification.rncpDeliveryDeadline
                   ? format(certification.rncpDeliveryDeadline, "dd/MM/yyyy")
-                  : ""}
+                  : "Inconnue"}
               </Info>
             </div>
 

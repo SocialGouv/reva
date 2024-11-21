@@ -39,6 +39,12 @@ export const addCertification = async (params: { codeRncp: string }) => {
     : rncpCertification.INTITULE;
 
   const availableAt = new Date();
+
+  if (!rncpCertification.DATE_FIN_ENREGISTREMENT) {
+    throw new Error(
+      `La certification avec le code rncp ${codeRncp} n'a pas de date de fin d'enregistrement`,
+    );
+  }
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
   const certification = await prismaClient.certification.create({
@@ -88,7 +94,7 @@ const getLevelFromRNCPCertification = (
 ): number => {
   try {
     const strLevel =
-      certification.NOMENCLATURE_EUROPE.INTITULE.split(" ").reverse()[0];
+      certification.NOMENCLATURE_EUROPE?.INTITULE.split(" ").reverse()[0] || "";
     const level = parseInt(strLevel, 10);
     return level;
   } catch {

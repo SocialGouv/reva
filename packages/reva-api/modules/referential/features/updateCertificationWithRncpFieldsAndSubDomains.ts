@@ -24,6 +24,12 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
     );
   }
 
+  if (!rncpCertification.DATE_FIN_ENREGISTREMENT) {
+    throw new Error(
+      `La certification avec le code rncp ${codeRncp} n'a pas de date de fin d'enregistrement`,
+    );
+  }
+
   // Update certification from based on RNCP
   await prismaClient.certification.update({
     where: { id: certification.id },
@@ -83,7 +89,7 @@ const getLevelFromRNCPCertification = (
 ): number => {
   try {
     const strLevel =
-      certification.NOMENCLATURE_EUROPE.INTITULE.split(" ").reverse()[0];
+      certification.NOMENCLATURE_EUROPE?.INTITULE.split(" ").reverse()[0] || "";
     const level = parseInt(strLevel, 10);
     return level;
   } catch {
