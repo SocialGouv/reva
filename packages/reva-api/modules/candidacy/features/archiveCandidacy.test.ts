@@ -1,108 +1,9 @@
-import {
-  Candidacy,
-  Candidate,
-  Organism,
-  OrganismTypology,
-  ReorientationReason,
-} from "@prisma/client";
+import { CandidacyStatusStep, ReorientationReason } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
-
-import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
-import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { archiveCandidacy } from "./archiveCandidacy";
 import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
-
-const reorientationReasonTable = [
-  { label: "Droit commun" },
-  {
-    label: "Architecte de parcours neutre",
-  },
-  {
-    label: "Une autre certification de France VAE",
-  },
-];
-
-const candidacyStatusesPriseEnCharge = [
-  {
-    status: "PROJET",
-    isActive: false,
-  },
-  {
-    status: "PRISE_EN_CHARGE",
-    isActive: true,
-  },
-];
-
-const candidacyStatusesArchive = [
-  {
-    status: "PROJET",
-    isActive: false,
-  },
-  {
-    status: "PRISE_EN_CHARGE",
-    isActive: false,
-  },
-  {
-    status: "ARCHIVE",
-    isActive: true,
-  },
-];
-
-let organism: Organism,
-  candidate: Candidate,
-  candidacyPriseEnCharge: Candidacy,
-  candidacyWithReorientationReason: Candidacy,
-  candidacyArchived: Candidacy,
-  reorientationReason: ReorientationReason;
-
-beforeAll(async () => {
-  reorientationReason = (await prismaClient.reorientationReason.findUnique({
-    where: {
-      label: reorientationReasonTable[1].label,
-    },
-  })) as ReorientationReason;
-
-  organism = await createOrganismHelper({
-    typology: OrganismTypology.experimentation,
-  });
-
-  candidate = await createCandidateHelper();
-
-  candidacyPriseEnCharge = await prismaClient.candidacy.create({
-    data: {
-      status: "PRISE_EN_CHARGE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: candidacyStatusesPriseEnCharge,
-      },
-    },
-  });
-
-  candidacyWithReorientationReason = await prismaClient.candidacy.create({
-    data: {
-      status: "PRISE_EN_CHARGE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: candidacyStatusesPriseEnCharge,
-      },
-      reorientationReasonId: reorientationReason?.id,
-    },
-  });
-
-  candidacyArchived = await prismaClient.candidacy.create({
-    data: {
-      status: "ARCHIVE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: candidacyStatusesArchive,
-      },
-    },
-  });
-});
 
 describe("archive candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
@@ -114,6 +15,10 @@ describe("archive candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_ALREADY_ARCHIVE", async () => {
+    const candidacyArchived = await createCandidacyHelper(
+      {},
+      CandidacyStatusStep.ARCHIVE,
+    );
     await expect(async () => {
       await archiveCandidacy({
         candidacyId: candidacyArchived.id,
@@ -122,9 +27,10 @@ describe("archive candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED);
   });
   test("should fail with CANDIDACY_INVALID_REORIENTATION_REASON error code", async () => {
+    const candidacy = await createCandidacyHelper();
     await expect(async () => {
       await archiveCandidacy({
-        candidacyId: candidacyPriseEnCharge.id,
+        candidacyId: candidacy.id,
         reorientationReasonId: "wr0ng1d",
       });
     }).rejects.toThrow(
@@ -133,29 +39,42 @@ describe("archive candidacy", () => {
   });
 
   test("should return an archived candidacy with reorientation reason", async () => {
-    const result = await archiveCandidacy({
-      candidacyId: candidacyWithReorientationReason.id,
+    const reorientationReason =
+      (await prismaClient.reorientationReason.findUnique({
+        where: {
+          label: "Architecte de parcours neutre",
+        },
+      })) as ReorientationReason;
+
+    const candidacy = await createCandidacyHelper();
+    const archivedCandidacy = await archiveCandidacy({
+      candidacyId: candidacy.id,
       reorientationReasonId: reorientationReason.id,
     });
-    const candidacy = result;
+
     const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
       candidacyId: candidacy.id,
     });
-    expect(candidacy.reorientationReasonId).not.toBeNull();
-    expect(candidacy.reorientationReasonId).toEqual(reorientationReason.id);
-    expect(candidacyStatuses).toMatchObject(candidacyStatusesArchive);
+    expect(archivedCandidacy.reorientationReasonId).not.toBeNull();
+    expect(archivedCandidacy.reorientationReasonId).toEqual(
+      reorientationReason.id,
+    );
+    const activeStatus = candidacyStatuses?.find((s) => s.isActive);
+    expect(activeStatus?.status).toBe("ARCHIVE");
   });
 
   test("should return an archived candidacy without reorientation reason", async () => {
-    const result = await archiveCandidacy({
-      candidacyId: candidacyPriseEnCharge.id,
+    const candidacy = await createCandidacyHelper();
+    const archivedCandidacy = await archiveCandidacy({
+      candidacyId: candidacy.id,
       reorientationReasonId: null,
     });
-    const candidacy = result;
+
     const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
       candidacyId: candidacy.id,
     });
-    expect(candidacy.reorientationReasonId).toBeNull();
-    expect(candidacyStatuses).toMatchObject(candidacyStatusesArchive);
+    expect(archivedCandidacy.reorientationReasonId).toBeNull();
+    const activeStatus = candidacyStatuses?.find((s) => s.isActive);
+    expect(activeStatus?.status).toBe("ARCHIVE");
   });
 });
