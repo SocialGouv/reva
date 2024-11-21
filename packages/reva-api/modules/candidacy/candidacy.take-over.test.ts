@@ -1,74 +1,14 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import {
-  Candidacy,
-  CandidacyStatusStep,
-  Candidate,
-  Gender,
-} from "@prisma/client";
 
-import { prismaClient } from "../../prisma/client";
-
-import { Account } from "modules/account/account.types";
+import { CandidacyStatusStep } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-let organismAccount: Account,
-  candidateMan: Candidate,
-  candidateWoman: Candidate,
-  candidacyProject: Candidacy,
-  candidacyValidated: Candidacy;
-
-beforeAll(async () => {
-  const organism = await createOrganismHelper();
-  organismAccount = organism.accounts[0];
-
-  candidateMan = await createCandidateHelper();
-  candidateWoman = await createCandidateHelper({ gender: Gender.woman });
-
-  candidacyProject = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidateMan.id,
-      organismId: organism.id,
-      status: CandidacyStatusStep.PROJET,
-      candidacyStatuses: {
-        createMany: {
-          data: [
-            {
-              isActive: true,
-              status: CandidacyStatusStep.PROJET,
-            },
-          ],
-        },
-      },
-    },
-  });
-  candidacyValidated = await prismaClient.candidacy.create({
-    data: {
-      candidateId: candidateWoman.id,
-      organismId: organism.id,
-      status: CandidacyStatusStep.VALIDATION,
-      candidacyStatuses: {
-        createMany: {
-          data: [
-            {
-              isActive: false,
-              status: CandidacyStatusStep.PROJET,
-            },
-            {
-              isActive: true,
-              status: CandidacyStatusStep.VALIDATION,
-            },
-          ],
-        },
-      },
-    },
-  });
-});
 
 test("candidacy_takeOver should fail when not authenticated", async function () {
+  const candidacy = await createCandidacyHelper();
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -78,7 +18,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacyProject.id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id }",
     },
   });
@@ -88,6 +28,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
 });
 
 test("candidacy_takeOver should fail when user is admin", async function () {
+  const candidacy = await createCandidacyHelper();
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -97,7 +38,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacyProject.id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id }",
     },
   });
@@ -107,6 +48,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
 });
 
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {
+  const candidacy = await createCandidacyHelper();
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -116,7 +58,7 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacyProject.id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id }",
     },
   });
@@ -126,16 +68,19 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
 });
 
 test("candidacy_takeOver should do nothing when candidacy status is not validation", async function () {
+  const candidacy = await createCandidacyHelper({
+    status: CandidacyStatusStep.PROJET,
+  });
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: organismAccount.keycloakId,
+      keycloakId: candidacy.organism?.accounts[0].keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacyProject.id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id,status }",
     },
   });
@@ -147,16 +92,19 @@ test("candidacy_takeOver should do nothing when candidacy status is not validati
 });
 
 test("candidacy_takeOver should update candidacy statuses when active status is validation", async function () {
+  const candidacy = await createCandidacyHelper({
+    status: CandidacyStatusStep.VALIDATION,
+  });
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: organismAccount.keycloakId,
+      keycloakId: candidacy.organism?.accounts[0].keycloakId,
     }),
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacyValidated.id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id }",
     },
   });
