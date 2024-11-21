@@ -22,7 +22,8 @@ import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializ
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
-const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+const adminBaseUrl =
+  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 const statusDecisionMapper = {
   ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
@@ -60,7 +61,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
     } else {
       sendFeasibilityIncompleteMailToAAP({
         email: aapEmail,
-        feasibilityUrl: `${baseUrl}/candidacies/${candidacyId}/feasibility`,
+        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacyId}/feasibility`,
         comment: decisionComment,
       });
     }
