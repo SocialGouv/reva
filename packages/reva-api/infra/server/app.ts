@@ -105,7 +105,7 @@ export const buildApp = async (
   app.register(strapiWebhookRoute, { prefix: "/api" });
 
   // keep MercuriusGQLUpload at the end to handle conflict with fastify.addContentTypeParser("multipart/form-data", ...)
-  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 10000000 });
+  app.register(MercuriusGQLUpload, { prefix: "/api", maxFileSize: 20971520 });
   app.register(mercuriusGraphQL, {
     prefix: "/api",
   });
