@@ -1,10 +1,11 @@
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
+import { Prisma } from "@prisma/client";
 import { buildApp } from "../../../infra/server/app";
+import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
+import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
 import * as IAM from "../../account/features/keycloak";
-import { prismaClient } from "../../../prisma/client";
-import { Prisma } from "@prisma/client";
 
 const subRequest = {
   id: "e9d5ddcf-fea3-4801-b25b-b79f1e0b7d65",
@@ -47,13 +48,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  await prismaClient.account.updateMany({ data: { organismId: null } });
-  await prismaClient.organism.deleteMany();
-  await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
-  await prismaClient.maisonMereAAP.deleteMany();
-  await prismaClient.account.deleteMany();
-  await prismaClient.subscriptionRequest.deleteMany();
-  await prismaClient.professionalCgu.deleteMany();
+  await clearDatabase();
 });
 
 test("It should validate a correct subscription request", async () => {
