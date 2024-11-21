@@ -66,39 +66,38 @@ const schema = z
           message: "Le fichier est trop gros",
           code: z.ZodIssueCode.custom,
         });
-        if (
-          equivalenceOrExemptionProof &&
-          equivalenceOrExemptionProof[0] &&
-          equivalenceOrExemptionProof[0].size > MAX_UPLOAD_SIZE
-        ) {
-          addIssue({
-            path: ["equivalenceOrExemptionProof", 0],
-            message: "Le fichier est trop gros",
-            code: z.ZodIssueCode.custom,
-          });
-        }
-        if (
-          trainingCertificate &&
-          trainingCertificate[0] &&
-          trainingCertificate[0].size > MAX_UPLOAD_SIZE
-        ) {
-          addIssue({
-            path: ["trainingCertificate", 0],
-            message: "Le fichier est trop gros",
-            code: z.ZodIssueCode.custom,
-          });
-        }
-
-        additionalFiles.forEach((file, index) => {
-          if (file[0] && file[0].size > MAX_UPLOAD_SIZE) {
-            addIssue({
-              path: [`additionalFiles.${index}`, 0],
-              message: "Le fichier est trop gros",
-              code: z.ZodIssueCode.custom,
-            });
-          }
+      }
+      if (
+        equivalenceOrExemptionProof &&
+        equivalenceOrExemptionProof[0] &&
+        equivalenceOrExemptionProof[0].size > MAX_UPLOAD_SIZE
+      ) {
+        addIssue({
+          path: ["equivalenceOrExemptionProof", 0],
+          message: "Le fichier est trop gros",
+          code: z.ZodIssueCode.custom,
         });
       }
+      if (
+        trainingCertificate &&
+        trainingCertificate[0] &&
+        trainingCertificate[0].size > MAX_UPLOAD_SIZE
+      ) {
+        addIssue({
+          path: ["trainingCertificate", 0],
+          message: "Le fichier est trop gros",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+      additionalFiles.forEach((file, index) => {
+        if (file[0] && file[0].size > MAX_UPLOAD_SIZE) {
+          addIssue({
+            path: [`additionalFiles.${index}`, 0],
+            message: "Le fichier est trop gros",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      });
     },
   );
 
@@ -221,8 +220,6 @@ export default function AttachmentsPage() {
     resetField("trainingCertificate");
     resetAdditionalFiles();
   }, [resetAdditionalFiles, resetField]);
-
-  console.log("errors", errors);
 
   return (
     <div className="flex flex-col">
