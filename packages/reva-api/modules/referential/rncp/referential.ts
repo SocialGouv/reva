@@ -127,12 +127,11 @@ export class RNCPReferential {
     } catch (error) {
       console.error(error);
       logger.error(error);
-    }
 
-    return {
-      nombreResultats: 0,
-      certifications: [],
-    };
+      throw new Error(
+        `L'API France compétences ne semble pas être disponible. Veuillez réessayer ultérieurement.`,
+      );
+    }
   }
 
   async findOneByRncp(rncp: string): Promise<RNCPCertification | undefined> {
