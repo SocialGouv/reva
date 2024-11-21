@@ -1,107 +1,49 @@
-import {
-  Candidacy,
-  Certification,
-  FundingRequestBatchUnifvae,
-  FundingRequestUnifvae,
-  Gender,
-  Organism,
-} from "@prisma/client";
-
-import { prismaClient } from "../../../../prisma/client";
-import { createOrganismHelper } from "../../../../test/helpers/entities/create-organism-helper";
+import { Gender } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
+import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
+import { createFundingRequestHelper } from "../../../../test/helpers/entities/create-funding-request-helper";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
-let certif: Certification | null = null,
-  aap: Organism | null = null,
-  candidacy: Candidacy | null = null,
-  fundReq: FundingRequestUnifvae | null,
-  batch: FundingRequestBatchUnifvae | null;
-
-const candidateSample = {
-  candidateFirstname: "John",
-  candidateLastname: "Mac Kayne",
-  candidateGender: "undisclosed" as Gender,
-};
-
-beforeAll(async () => {
-  aap = await createOrganismHelper();
-  certif = await prismaClient.certification.findFirst({
-    where: { label: "CAP Boucher" },
-  });
-  candidacy = await prismaClient.candidacy.create({
-    data: {
-      organismId: aap.id,
-      certificationId: (certif as Certification).id,
-    },
-  });
-  fundReq = await prismaClient.fundingRequestUnifvae.create({
-    data: {
-      candidacyId: (candidacy as Candidacy).id,
-      basicSkills: {
-        create: [
-          { basicSkill: { connect: { label: "Communication en français" } } },
-          {
-            basicSkill: {
-              connect: { label: "Usage et communication numérique" },
-            },
-          },
-        ],
-      },
-      mandatoryTrainings: {
-        create: [
-          {
-            training: {
-              connect: {
-                label: "Prévention et secours civiques de niveau 1 (PSC1)",
-              },
-            },
-          },
-          {
-            training: {
-              connect: {
-                label: "Premiers secours en équipe de niveau 1 (PSE1)",
-              },
-            },
-          },
-        ],
-      },
-      numAction: "zobilol123",
-      isPartialCertification: false,
-      ...candidateSample,
-      individualCost: 12,
-      individualHourCount: 12,
-      collectiveHourCount: 18,
-      collectiveCost: 8,
-      basicSkillsHourCount: 2.5,
-      basicSkillsCost: 10,
-      mandatoryTrainingsHourCount: 4,
-      mandatoryTrainingsCost: 20,
-      certificateSkillsHourCount: 2,
-      certificateSkillsCost: 13,
-      otherTrainingHourCount: 0,
-      otherTrainingCost: 0,
-      otherTraining: "Some other training(s)",
-      certificateSkills: "Some certification skills",
-    },
-  });
-});
-
 test("Should create a nice batch", async () => {
-  batch = await createBatchFromFundingRequestUnifvae(
-    (fundReq as FundingRequestUnifvae).id,
-  );
+  const candidacy = await createCandidacyHelper();
+  const fundingRequest = await createFundingRequestHelper({
+    candidacyId: candidacy.id,
+    candidateFirstname: candidacy.candidate?.firstname,
+    candidateLastname: candidacy.candidate?.lastname,
+    candidateSecondname: candidacy.candidate?.firstname2,
+    candidateThirdname: candidacy.candidate?.firstname3,
+    candidateGender: candidacy.candidate?.gender as Gender,
+    numAction: "mockNumAction",
+    isPartialCertification: false,
+    individualCost: new Decimal(12),
+    individualHourCount: new Decimal(12),
+    collectiveHourCount: new Decimal(18),
+    collectiveCost: new Decimal(8),
+    basicSkillsHourCount: new Decimal(2.5),
+    basicSkillsCost: new Decimal(10),
+    mandatoryTrainingsHourCount: new Decimal(4),
+    mandatoryTrainingsCost: new Decimal(20),
+    certificateSkillsHourCount: new Decimal(2),
+    certificateSkillsCost: new Decimal(13),
+    otherTrainingHourCount: new Decimal(0),
+    otherTrainingCost: new Decimal(0),
+    otherTraining: "Some other training(s)",
+    certificateSkills: "Some certification skills",
+  });
+
+  const batch = await createBatchFromFundingRequestUnifvae(fundingRequest.id);
   expect(batch).not.toBeNull();
   expect(batch.content).toMatchObject({
-    NumAction: "zobilol123",
+    NumAction: "mockNumAction",
     ForfaitPartiel: 0,
-    SiretAP: aap?.siret,
-    Certification: certif?.rncpId,
-    NomCandidat: candidateSample.candidateLastname,
-    PrenomCandidat1: candidateSample.candidateFirstname,
-    PrenomCandidat2: null,
-    PrenomCandidat3: null,
-    ActeFormatifComplémentaire_FormationObligatoire: "4,5",
-    ActeFormatifComplémentaire_SavoirsDeBase: "0,2",
+    SiretAP: candidacy.organism?.siret,
+    Certification: candidacy.certification?.rncpId,
+    NomCandidat: candidacy.candidate?.lastname,
+    PrenomCandidat1: candidacy.candidate?.firstname,
+    PrenomCandidat2: candidacy.candidate?.firstname2,
+    PrenomCandidat3: candidacy.candidate?.firstname3,
+    ActeFormatifComplémentaire_FormationObligatoire: "",
+    ActeFormatifComplémentaire_SavoirsDeBase: "",
     ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
       "Some certification skills",
     ActeFormatifComplémentaire_Autre: "Some other training(s)",
