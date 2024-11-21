@@ -23,6 +23,7 @@ module.exports = {
           "light-neutral-grey-1000": "#F6F6F6",
           "light-decisions-text-default-warning": "#B34000",
           "light-decisions-background-contrast-warning": "#FFE9E6",
+          "light-decisions-border-border-default-grey": "#DDDDDD",
         },
         neutral: {
           100: "#F6F6F6",

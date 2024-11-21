@@ -154,7 +154,36 @@ const PageContent = ({
           isEditable
           status={structureSummaryCardComplete ? "COMPLETED" : "TO_COMPLETE"}
           buttonOnClickHref={`/certifications-v2/${certification.id}/structure`}
-        />
+        >
+          {structureSummaryCardComplete && (
+            <>
+              <Info
+                title="Structure certificatrice"
+                data-test="certification-authority-structure-label"
+              >
+                {certification.certificationAuthorityStructure?.label}
+              </Info>
+              <h3 className="mt-4 mb-2">
+                Gestionnaires des candidatures liés à cette structure
+              </h3>
+              <ul
+                className="list-none"
+                data-test="certification-authority-list"
+              >
+                {certification.certificationAuthorityStructure?.certificationAuthorities?.map(
+                  (ca) => (
+                    <li
+                      key={ca.id}
+                      className="border-t border-light-decisions-border-border-default-grey font-bold pt-2 mb-1"
+                    >
+                      {ca.label}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </>
+          )}
+        </EnhancedSectionCard>
       </div>
       <hr className="mt-8" />
       <h2>Validation par le responsable des certifications</h2>
@@ -180,12 +209,14 @@ const Info = ({
   title,
   children,
   className,
+  "data-test": dataTest,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
+  "data-test"?: string;
 }) => (
-  <dl className={`${className || ""}`}>
+  <dl data-test={dataTest} className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

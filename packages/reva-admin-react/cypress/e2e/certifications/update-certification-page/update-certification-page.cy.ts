@@ -21,7 +21,27 @@ function interceptCertification({
         getCertification: {
           ...certificationBPBoucher.data.getCertification,
           certificationAuthorityStructure: withStructure
-            ? { id: "0ec61d50-a202-4222-95ff-d516b9cae503" }
+            ? {
+                id: "0ec61d50-a202-4222-95ff-d516b9cae503",
+                label: "Ministère de l'Education Nationale et de la Jeunesse",
+                certificationAuthorities: [
+                  {
+                    id: "47954f7a-1148-4280-842b-01eecf8ac52d",
+                    label:
+                      "Ministère de l'Education Nationale et de la Jeunesse - Auvergne - Rhône-Alpes",
+                  },
+                  {
+                    id: "39c45c3d-4785-4745-8f24-5cb11c47896e",
+                    label:
+                      "Ministère de l'Education Nationale et de la Jeunesse - Bourgogne - Franche-Comté",
+                  },
+                  {
+                    id: "dd2aaae3-3d59-45a0-8448-804d3f713bda",
+                    label:
+                      "Ministère de l'Education Nationale et de la Jeunesse - Bretagne",
+                  },
+                ],
+              }
             : undefined,
         },
       },
@@ -123,7 +143,7 @@ context("when i access the update certification page ", () => {
       ).should("exist");
     });
 
-    it("display a 'completed' badge on the certification structure summary card when the certification has no associated structure", function () {
+    it("display a 'completed' badge on the certification structure summary card when the certification has an associated structure", function () {
       interceptCertification({ withStructure: true });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
@@ -135,6 +155,37 @@ context("when i access the update certification page ", () => {
       cy.get(
         '[data-test="certification-structure-summary-card"] [data-test="completed-badge"]',
       ).should("exist");
+    });
+
+    it("display the structure label when the certification has an associated structure", function () {
+      interceptCertification({ withStructure: true });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="certification-structure-summary-card"] [data-test="certification-authority-structure-label"] dd',
+      ).should(
+        "have.text",
+        "Ministère de l'Education Nationale et de la Jeunesse",
+      );
+    });
+
+    it("display the list of certification authorities of the structure when the certification has an associated structure", function () {
+      interceptCertification({ withStructure: true });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="certification-structure-summary-card"] [data-test="certification-authority-list"] > li',
+      ).should("have.length", 3);
     });
 
     it("let me click on the 'completer' button and redirect me to the structure page", function () {
