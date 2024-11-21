@@ -77,6 +77,7 @@ export const createCandidacyHelper = async (
       },
       organism: { include: { accounts: true } },
       candidate: true,
+      candidacyDropOut: true,
     },
   });
 };
