@@ -4,9 +4,11 @@ import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 function interceptCertification({
   withStructure,
   withCertificationAuthoritiesAssociatedToStructure,
+  withCertificationRegistryManagerAssociatedToStructure,
 }: {
   withStructure?: boolean;
   withCertificationAuthoritiesAssociatedToStructure?: boolean;
+  withCertificationRegistryManagerAssociatedToStructure?: boolean;
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
@@ -48,6 +50,10 @@ function interceptCertification({
                         },
                       ]
                     : [],
+                certificationRegistryManager:
+                  withCertificationRegistryManagerAssociatedToStructure
+                    ? { id: "3881b52a-0de9-460d-a228-84ee27480880" }
+                    : undefined,
               }
             : undefined,
         },
@@ -216,6 +222,39 @@ context("when i access the update certification page ", () => {
       cy.get(
         '[data-test="certification-structure-summary-card"] [data-test="no-certification-authority-alert"]',
       ).should("exist");
+    });
+
+    it("display an alert  when the certification has an associated structure but no certification registry manager associated with it", function () {
+      interceptCertification({
+        withStructure: true,
+      });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="certification-structure-summary-card"] [data-test="no-certification-registry-manager-alert"]',
+      ).should("exist");
+    });
+
+    it("display no alert  when the certification has an associated structure and a certification registry manager associated with it", function () {
+      interceptCertification({
+        withStructure: true,
+        withCertificationRegistryManagerAssociatedToStructure: true,
+      });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="certification-structure-summary-card"] [data-test="no-certification-registry-manager-alert"]',
+      ).should("not.exist");
     });
 
     it("let me click on the 'completer' button and redirect me to the structure page", function () {

@@ -46,6 +46,9 @@ const getCertificationQuery = graphql(`
           id
           label
         }
+        certificationRegistryManager {
+          id
+        }
       }
     }
   }

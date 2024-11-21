@@ -164,6 +164,16 @@ const PageContent = ({
               >
                 {certification.certificationAuthorityStructure?.label}
               </Info>
+              {!certification.certificationAuthorityStructure
+                ?.certificationRegistryManager && (
+                <Alert
+                  data-test="no-certification-registry-manager-alert"
+                  className="mt-4"
+                  severity="warning"
+                  title="Cette structure certificatrice n’a aucun responsable des certifications pour le moment"
+                  description="Vous pouvez éditer et envoyer cette certification mais elle ne pourra être validée et publiée que par un responsable des certifications."
+                />
+              )}
               {certification.certificationAuthorityStructure
                 ?.certificationAuthorities.length ? (
                 <>
@@ -192,7 +202,7 @@ const PageContent = ({
                   className="mt-4"
                   severity="warning"
                   title="Il n’y a pas de gestionnaire des candidatures pour cette certification"
-                  description="Malgré cela, elle sera visible des candidats et des AAP dès sa validation par le responsable des certifications. Lors du premier dossier de faisabilité envoyé, et s’il n’y a toujours pas de gestionnaire des candidatures, le support sera averti du problème. "
+                  description="Malgré cela, elle sera visible des candidats et des AAP dès sa validation par le responsable des certifications. Lors du premier dossier de faisabilité envoyé, et s’il n’y a toujours pas de gestionnaire des candidatures, le support sera averti du problème."
                 />
               )}
             </>
