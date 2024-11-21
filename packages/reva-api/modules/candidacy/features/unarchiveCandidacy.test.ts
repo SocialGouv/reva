@@ -1,111 +1,9 @@
-import {
-  Candidacy,
-  Candidate,
-  Organism,
-  OrganismTypology,
-  ReorientationReason,
-} from "@prisma/client";
-import { sub } from "date-fns";
-import { prismaClient } from "../../../prisma/client";
-import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
-import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createReorientationReasonHelper } from "../../../test/helpers/entities/create-reorientation-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
-
-const reorientationReasonTable = [
-  { label: "Droit commun" },
-  {
-    label: "Architecte de parcours neutre",
-  },
-  {
-    label: "Une autre certification de France VAE",
-  },
-];
-
-const recentDate = new Date();
-const oldDate = sub(recentDate, { days: 10 });
-
-const candidacyStatusesArchive = [
-  {
-    status: "PROJET",
-    isActive: false,
-    createdAt: oldDate,
-  },
-  {
-    status: "PRISE_EN_CHARGE",
-    isActive: false,
-  },
-  {
-    status: "ARCHIVE",
-    isActive: true,
-  },
-];
-
-const unarchivedCandidacyStatuses = [
-  ...candidacyStatusesArchive.map((status) => ({
-    ...status,
-    isActive: false,
-  })),
-  {
-    status: "PRISE_EN_CHARGE",
-    isActive: true,
-  },
-];
-
-let organism: Organism,
-  candidate: Candidate,
-  candidacyPriseEnCharge: Candidacy,
-  candidacyWithReorientationReason: Candidacy,
-  candidacyArchived: Candidacy,
-  reorientationReason: ReorientationReason;
-
-beforeAll(async () => {
-  reorientationReason = (await prismaClient.reorientationReason.findUnique({
-    where: {
-      label: reorientationReasonTable[1].label,
-    },
-  })) as ReorientationReason;
-
-  organism = await createOrganismHelper({
-    typology: OrganismTypology.experimentation,
-  });
-  candidate = await createCandidateHelper();
-
-  candidacyPriseEnCharge = await prismaClient.candidacy.create({
-    data: {
-      status: "PRISE_EN_CHARGE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: unarchivedCandidacyStatuses,
-      },
-    },
-  });
-
-  candidacyWithReorientationReason = await prismaClient.candidacy.create({
-    data: {
-      status: "ARCHIVE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: candidacyStatusesArchive,
-      },
-      reorientationReasonId: reorientationReason?.id,
-    },
-  });
-
-  candidacyArchived = await prismaClient.candidacy.create({
-    data: {
-      status: "ARCHIVE",
-      candidateId: candidate.id,
-      organismId: organism.id,
-      candidacyStatuses: {
-        create: candidacyStatusesArchive,
-      },
-    },
-  });
-});
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 describe("unarchive candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
@@ -116,28 +14,46 @@ describe("unarchive candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_NOT_ARCHIVED", async () => {
+    const candidacy = await createCandidacyHelper();
     await expect(async () => {
       await unarchiveCandidacy({
-        candidacyId: candidacyPriseEnCharge.id,
+        candidacyId: candidacy.id,
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED);
   });
 
   test("should fail with CANDIDACY_IS_REORIENTATION", async () => {
+    const reorientationReason = await createReorientationReasonHelper();
+    const candidacy = await createCandidacyHelper(
+      {
+        reorientationReasonId: reorientationReason.id,
+      },
+      "ARCHIVE",
+    );
     await expect(async () => {
       await unarchiveCandidacy({
-        candidacyId: candidacyWithReorientationReason.id,
+        candidacyId: candidacy.id,
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_IS_REORIENTATION);
   });
 
   test("should return an unarchived candidacy", async () => {
-    const candidacy = await unarchiveCandidacy({
-      candidacyId: candidacyArchived.id,
+    const candidacy = await createCandidacyHelper();
+    const activeStatusBeforeArchive = candidacy.candidacyStatuses?.find(
+      (s) => s.isActive,
+    );
+    await updateCandidacyStatus({
+      candidacyId: candidacy.id,
+      status: "ARCHIVE",
+    });
+    await unarchiveCandidacy({
+      candidacyId: candidacy.id,
     });
     const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
       candidacyId: candidacy.id,
     });
-    expect(candidacyStatuses).toMatchObject(unarchivedCandidacyStatuses);
+    const activeStatus = candidacyStatuses?.find((status) => status.isActive);
+    expect(activeStatus).not.toBeNull();
+    expect(activeStatus?.status).toEqual(activeStatusBeforeArchive?.status);
   });
 });
