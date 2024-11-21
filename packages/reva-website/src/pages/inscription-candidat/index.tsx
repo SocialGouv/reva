@@ -24,10 +24,7 @@ const getCertificationQuery = graphql(`
       id
       label
       codeRncp
-      typeDiplome {
-        id
-        label
-      }
+      typeDiplome
     }
   }
 `);
@@ -82,7 +79,6 @@ const OrientationCandidatPage = () => {
     updateCertification();
   }, [certificationId]);
 
-
   return (
     <MainLayout>
       <Head>
@@ -94,11 +90,11 @@ const OrientationCandidatPage = () => {
           <p className="text-dsfrGray-mentionGrey mb-8">
             Tous les champs sont obligatoires
           </p>
-            <p className="mb-12">
-              Recherchez le diplôme que vous aimeriez obtenir en réalisant un
-              parcours VAE. Vous avez la possibilité de réaliser ce diplôme avec
-              un accompagnateur ou seul, en toute autonomie.
-            </p>
+          <p className="mb-12">
+            Recherchez le diplôme que vous aimeriez obtenir en réalisant un
+            parcours VAE. Vous avez la possibilité de réaliser ce diplôme avec
+            un accompagnateur ou seul, en toute autonomie.
+          </p>
           <div className="flex flex-col ml-0 gap-12">
             <fieldset className="mb-4 max-w-lg">
               <CertificateAutocompleteDsfr
@@ -125,7 +121,7 @@ const OrientationCandidatPage = () => {
                     className="basis-1/2 flex-grow"
                     label={certification.label}
                     rncpCode={certification.codeRncp}
-                    certificateType={certification.typeDiplome.label}
+                    certificateType={certification.typeDiplome || ""}
                   />
                   <Notice
                     className="basis-1/2"

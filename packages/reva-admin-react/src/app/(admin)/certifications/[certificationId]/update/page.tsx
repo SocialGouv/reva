@@ -14,15 +14,10 @@ const UpdateCertificationPage = () => {
   const { certificationId } = useParams<{ certificationId: string }>();
   const router = useRouter();
 
-  const {
-    certification,
-    typeDiplomes,
-    degrees,
-    conventionCollectives,
-    updateCertification,
-  } = useCertificationQueries({
-    certificationId,
-  });
+  const { certification, degrees, conventionCollectives, updateCertification } =
+    useCertificationQueries({
+      certificationId,
+    });
 
   const handleFormSubmit = async (
     data: UpdateOrReplaceCertificationFormData,
@@ -32,7 +27,6 @@ const UpdateCertificationPage = () => {
         label: data.label,
         level: data.degreeLevel,
         codeRncp: data.codeRncp,
-        typeDiplomeId: data.typeDiplomeId,
         conventionCollectiveIds: data.conventionCollectiveId
           ? [data.conventionCollectiveId]
           : [],
@@ -53,7 +47,7 @@ const UpdateCertificationPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      {certification && typeDiplomes && conventionCollectives && degrees && (
+      {certification && conventionCollectives && degrees && (
         <>
           <BackButton href={`/certifications/${certificationId}`}>
             Retour
@@ -62,7 +56,6 @@ const UpdateCertificationPage = () => {
           <FormOptionalFieldsDisclaimer />
           <UpdateOrReplaceCertificationForm
             certification={certification as Certification}
-            typeDiplomes={typeDiplomes}
             conventionCollectives={conventionCollectives}
             degrees={degrees}
             onSubmit={handleFormSubmit}

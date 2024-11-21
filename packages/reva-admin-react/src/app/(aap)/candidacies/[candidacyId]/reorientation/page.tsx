@@ -36,9 +36,7 @@ const getCertificationsQuery = graphql(`
         id
         label
         codeRncp
-        typeDiplome {
-          label
-        }
+        typeDiplome
       }
       info {
         totalRows
@@ -57,9 +55,7 @@ const getCandidacyQuery = graphql(`
         id
         label
         codeRncp
-        typeDiplome {
-          label
-        }
+        typeDiplome
       }
     }
   }
@@ -176,7 +172,7 @@ const ReorientationPage = () => {
           <CertificationCard
             label={candidacy?.certification?.label}
             codeRncp={candidacy?.certification?.codeRncp}
-            typeDiplomeLabel={candidacy?.certification?.typeDiplome.label}
+            typeDiplome={candidacy?.certification?.typeDiplome}
           />
         </div>
         {getCertificationsQueryStatus === "success" && (
@@ -196,7 +192,7 @@ const ReorientationPage = () => {
                   <div className="flex flex-row justify-between">
                     <div className="text-gray-500 text-sm">
                       <span className="fr-icon-checkbox-circle-line mr-1"></span>
-                      {c.typeDiplome.label}
+                      {c.typeDiplome}
                     </div>
                     <div className="text-gray-500 text-sm">{c.codeRncp}</div>
                   </div>
@@ -255,9 +251,7 @@ const ReorientationPage = () => {
                   <CertificationCard
                     label={candidacy?.certification?.label}
                     codeRncp={candidacy?.certification?.codeRncp}
-                    typeDiplomeLabel={
-                      candidacy?.certification?.typeDiplome.label
-                    }
+                    typeDiplome={candidacy?.certification?.typeDiplome}
                   />
                 </div>
 
@@ -272,7 +266,7 @@ const ReorientationPage = () => {
                   <CertificationCard
                     label={selectedCertification?.label}
                     codeRncp={selectedCertification?.codeRncp}
-                    typeDiplomeLabel={selectedCertification?.typeDiplome.label}
+                    typeDiplome={selectedCertification?.typeDiplome}
                   />
                 </div>
               </div>

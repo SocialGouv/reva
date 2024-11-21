@@ -32,9 +32,6 @@ export const replaceCertification = async ({
       availableAt: replaceCertificationInput.availableAt,
       expiresAt: replaceCertificationInput.expiresAt,
       status: certificationAvailableNow ? "AVAILABLE" : "INACTIVE",
-      typeDiplome: {
-        connect: { id: replaceCertificationInput.typeDiplomeId },
-      },
       previousVersion: {
         connect: { id: replaceCertificationInput.certificationId },
       },

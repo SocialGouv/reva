@@ -35,7 +35,7 @@ export const searchCertificationsForAdmin = async ({
           },
         },
         {
-          typeDiplome: { label: { contains: searchText, mode: "insensitive" } },
+          rncpTypeDiplome: { contains: searchText, mode: "insensitive" },
         },
       ],
     };

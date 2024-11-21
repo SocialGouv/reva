@@ -51,8 +51,6 @@ model Certification {
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
   certificationOnConventionCollective               CertificationOnConventionCollective[]
-  typeDiplome                                       TypeDiplome?                                        @relation(fields: [typeDiplomeId], references: [id])
-  typeDiplomeId                                     String?                                             @map("type_diplome_id") @db.Uuid
   certificationAuthorityOnCertification             CertificationAuthorityOnCertification[]
   searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
@@ -78,7 +76,6 @@ model Certification {
   AvailableCertificationBasedOnFormacode                 AvailableCertificationBasedOnFormacode?
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
-  @@index([typeDiplomeId])
   @@map("certification")
 }
 
@@ -912,14 +909,6 @@ model ExamInfo {
   updatedAt         DateTime?   @map("updated_at") @db.Timestamptz(6)
 
   @@map("exam_info")
-}
-
-model TypeDiplome {
-  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label         String          @db.VarChar(200)
-  Certification Certification[]
-
-  @@map("type_diplome")
 }
 
 model CertificationAuthorityStructure {

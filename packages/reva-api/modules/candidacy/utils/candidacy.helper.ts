@@ -170,10 +170,7 @@ export const candidacySearchWord = (word: string) => {
       { department: containsFilter("label") },
       {
         certification: {
-          OR: [
-            containsFilter("label"),
-            { typeDiplome: containsFilter("label") },
-          ],
+          OR: [containsFilter("label"), containsFilter("rncpTypeDiplome")],
         },
       },
     ],

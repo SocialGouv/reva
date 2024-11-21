@@ -32,10 +32,7 @@ const getCertificationQuery = graphql(`
       certificationAuthorityStructure {
         label
       }
-      typeDiplome {
-        id
-        label
-      }
+      typeDiplome
       degree {
         id
         longLabel
@@ -66,10 +63,6 @@ const getReferentialForCertificationQuery = graphql(`
       id
       longLabel
       level
-    }
-    getTypeDiplomes {
-      id
-      label
     }
     getConventionCollectives {
       id
@@ -192,7 +185,6 @@ export const useCertificationQueries = ({
       label: string;
       level: number;
       codeRncp: string;
-      typeDiplomeId: string;
       conventionCollectiveIds: string[];
       availableAt: number;
       expiresAt: number;
@@ -207,7 +199,6 @@ export const useCertificationQueries = ({
       label: string;
       level: number;
       codeRncp: string;
-      typeDiplomeId: string;
       conventionCollectiveIds: string[];
       availableAt: number;
       expiresAt: number;
@@ -230,7 +221,6 @@ export const useCertificationQueries = ({
   return {
     certification: getCertificationResponse?.getCertification,
     degrees: getReferentialResponse?.getDegrees,
-    typeDiplomes: getReferentialResponse?.getTypeDiplomes,
     conventionCollectives: getReferentialResponse?.getConventionCollectives,
     updateCertification,
     replaceCertification,

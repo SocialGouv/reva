@@ -22,7 +22,7 @@ type Certification {
   abilities: String
   codeRncp: String!
   status: CertificationStatus!
-  typeDiplome: TypeDiplome!
+  typeDiplome: String
   degree: Degree!
   conventionsCollectives: [ConventionCollective!]!
   availableAt: Timestamp!
@@ -87,11 +87,6 @@ type ReorientationReason {
 type ConventionCollective {
   id: ID!
   code: String!
-  label: String!
-}
-
-type TypeDiplome {
-  id: ID!
   label: String!
 }
 
@@ -273,7 +268,6 @@ type Query {
   getDropOutReasons: [DropOutReason!]!
   getReorientationReasons: [ReorientationReason!]!
   getConventionCollectives: [ConventionCollective!]!
-  getTypeDiplomes: [TypeDiplome!]!
   getFCCertification(rncp: ID!): FCCertification
   getCountries: [Country!]!
   getEtablissement(siret: ID!): EtablissementDiffusible
@@ -297,7 +291,6 @@ input UpdateCertificationInput {
   label: String!
   level: Int!
   codeRncp: String!
-  typeDiplomeId: String!
   conventionCollectiveIds: [String!]!
   availableAt: Timestamp!
   expiresAt: Timestamp!

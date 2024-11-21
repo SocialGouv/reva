@@ -12,10 +12,7 @@ const getCertificationQuery = graphql(`
       rncpExpiresAt
       rncpDeliveryDeadline
       availableAt
-      typeDiplome {
-        id
-        label
-      }
+      typeDiplome
       degree {
         id
         label

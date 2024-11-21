@@ -46,7 +46,7 @@ const CertificationPage = () => {
               {certification.degree.longLabel}
             </Info>
             <Info title="Type de la certification">
-              {certification.typeDiplome.label}
+              {certification.typeDiplome || ""}
             </Info>
             <Info title="Disponible à partir du">
               {format(certification.availableAt, "dd/MM/yyyy")}

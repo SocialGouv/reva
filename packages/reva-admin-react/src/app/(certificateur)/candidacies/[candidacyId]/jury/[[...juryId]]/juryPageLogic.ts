@@ -22,10 +22,7 @@ const getJuryByCandidacyIdQuery = graphql(`
         id
         label
         codeRncp
-        typeDiplome {
-          id
-          label
-        }
+        typeDiplome
       }
       jury {
         id

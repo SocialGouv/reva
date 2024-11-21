@@ -8,10 +8,7 @@
       "rncpExpiresAt": 1788127200000,
       "rncpDeliveryDeadline": null,
       "availableAt": 1688162400000,
-      "typeDiplome": {
-        "id": "81d99804-1f46-4ced-924a-5479b58fd541",
-        "label": "Brevet Professionnel (BP)"
-      },
+      "typeDiplome": "Brevet Professionnel (BP)",
       "degree": {
         "id": "0ee2104b-9bdc-4e44-b232-123cf2e3b9a1",
         "label": "Niveau 4 : Baccalauréat"

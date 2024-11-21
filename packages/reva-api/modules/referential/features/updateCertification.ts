@@ -27,9 +27,6 @@ export const updateCertification = async ({
         level: updateCertificationInput.level,
         availableAt: updateCertificationInput.availableAt,
         expiresAt: updateCertificationInput.expiresAt,
-        typeDiplome: {
-          connect: { id: updateCertificationInput.typeDiplomeId },
-        },
         status: certificationAvailableNow ? "AVAILABLE" : "INACTIVE",
       },
     }),

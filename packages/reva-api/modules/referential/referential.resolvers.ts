@@ -13,8 +13,6 @@ import { getGoals } from "./features/getGoals";
 import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
-import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
-import { getTypeDiplomes } from "./features/getTypeDiplomes";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 import { replaceCertification } from "./features/replaceCertification";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
@@ -53,8 +51,8 @@ const unsafeReferentialResolvers = {
   Certification: {
     codeRncp: ({ rncpId, codeRncp }: { rncpId: string; codeRncp: string }) =>
       codeRncp || rncpId,
-    typeDiplome: ({ typeDiplomeId }: { typeDiplomeId: string }) =>
-      getTypeDiplomeById({ typeDiplomeId }),
+    typeDiplome: ({ rncpTypeDiplome }: { rncpTypeDiplome: string }) =>
+      rncpTypeDiplome,
     degree: ({ level }: { level: number }) => getDegreeByLevel({ level }),
     conventionsCollectives: ({ id: certificationId }: { id: string }) =>
       getConventionsCollectivesByCertificationId({ certificationId }),
@@ -141,7 +139,6 @@ const unsafeReferentialResolvers = {
     getReorientationReasons,
     getConventionCollectives: () =>
       prismaClient.conventionCollective.findMany(),
-    getTypeDiplomes,
     getFCCertification: (_: unknown, { rncp }: { rncp: string }) =>
       RNCPReferential.getInstance().findOneByRncp(rncp),
     getCountries: () => prismaClient.country.findMany(),

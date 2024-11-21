@@ -51,21 +51,6 @@ const executeSeed = async () => {
     injectCommand: prisma.conventionCollective.upsert,
   });
 
-  // Types de diplôme : referentials/types-diplome.csv
-  await injectCsvRows<
-    Prisma.TypeDiplomeCreateInput,
-    Prisma.TypeDiplomeUpsertArgs
-  >({
-    filePath: "./referentials/types-diplome.csv",
-    headersDefinition: ["label", "id", undefined],
-    transform: ({ id, label }) => ({
-      where: { id },
-      create: { id, label },
-      update: { label },
-    }),
-    injectCommand: prisma.typeDiplome.upsert,
-  });
-
   await seedCertifications(prisma);
 
   await seedCandidacyConventionCollective(prisma);

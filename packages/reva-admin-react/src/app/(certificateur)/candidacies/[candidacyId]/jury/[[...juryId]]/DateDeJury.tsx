@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { add, endOfDay, format, isAfter, isBefore, startOfDay, sub } from "date-fns";
+import {
+  add,
+  endOfDay,
+  format,
+  isAfter,
+  isBefore,
+  startOfDay,
+  sub,
+} from "date-fns";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -44,8 +52,7 @@ const schema = z
     if (isBefore(date, endOfDay(sub(new Date(), { months: 6 })))) {
       ctx.addIssue({
         path: ["date"],
-        message:
-          "La date ne peut pas se trouver plus de 6 mois dans le passé",
+        message: "La date ne peut pas se trouver plus de 6 mois dans le passé",
         code: z.ZodIssueCode.custom,
       });
     }
@@ -164,7 +171,7 @@ export const DateDeJury = (): JSX.Element => {
         <div className="bg-gray-100 p-4 rounded-xl mb-12">
           <div className="flex flex-row items-center justify-between">
             <label className="text-gray-600 text-xs italic">
-              {candidacy?.certification?.typeDiplome.label}
+              {candidacy?.certification?.typeDiplome || ""}
             </label>
             <label className="text-gray-600 text-xs italic">
               {candidacy?.certification?.codeRncp}

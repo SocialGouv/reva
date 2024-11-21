@@ -24,9 +24,7 @@ const getCertificationAuthority = graphql(`
       }
       certifications {
         id
-        typeDiplome {
-          label
-        }
+        typeDiplome
         label
         summary
         codeRncp

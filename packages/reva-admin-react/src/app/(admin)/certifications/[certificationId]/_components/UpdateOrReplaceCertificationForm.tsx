@@ -13,7 +13,6 @@ const schema = z.object({
   label: z.string().min(1, "Merci de remplir ce champ"),
   expiresAt: z.string(),
   availableAt: z.string(),
-  typeDiplomeId: z.string(),
   degreeLevel: z.number(),
   conventionCollectiveId: z.string(),
 });
@@ -29,7 +28,6 @@ const certificationToFormData = (
         label: c.label || "",
         expiresAt: format(new Date(c.expiresAt || ""), "yyyy-MM-dd"),
         availableAt: format(new Date(c.availableAt || ""), "yyyy-MM-dd"),
-        typeDiplomeId: c.typeDiplome?.id || "",
         degreeLevel: c.degree?.level || -1,
         conventionCollectiveId: c.conventionsCollectives?.[0]?.id || "",
       }
@@ -37,13 +35,11 @@ const certificationToFormData = (
 
 const UpdateOrReplaceCertificationForm = ({
   certification,
-  typeDiplomes,
   conventionCollectives,
   degrees,
   onSubmit,
 }: {
   certification: Certification;
-  typeDiplomes: { id: string; label: string }[];
   conventionCollectives: { id: string; label: string }[];
   degrees: { id: string; level: number; longLabel: string }[];
   onSubmit: (data: UpdateOrReplaceCertificationFormData) => void;
@@ -110,18 +106,6 @@ const UpdateOrReplaceCertificationForm = ({
         {degrees?.map((d) => (
           <option key={d.id} value={d.level}>
             {d.longLabel}
-          </option>
-        ))}
-      </Select>
-      <Select
-        label="Type de la certification"
-        nativeSelectProps={{
-          ...register("typeDiplomeId"),
-        }}
-      >
-        {typeDiplomes?.map((t) => (
-          <option key={t.id} value={t.id}>
-            {t.label}
           </option>
         ))}
       </Select>

@@ -21,9 +21,7 @@ const getCandidacyQuery = graphql(`
         id
         label
         codeRncp
-        typeDiplome {
-          label
-        }
+        typeDiplome
       }
       certificationAuthorities {
         id
