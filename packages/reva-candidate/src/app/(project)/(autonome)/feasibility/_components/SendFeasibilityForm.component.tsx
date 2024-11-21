@@ -94,6 +94,11 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     name: "requirements",
   });
 
+  const requirementsFields = watch("requirements");
+  const areRequirementsChecked = requirementsFields.every(
+    (requirement) => requirement.checked,
+  );
+
   const CertificationContactCard = useMemo(() => {
     if (!certificationAuthorityId) {
       return null;
@@ -258,7 +263,8 @@ export const SendFeasibilityForm = (): React.ReactNode => {
               formState={{
                 isDirty: isDirty,
                 isSubmitting: isSubmitting,
-                canSubmit: certificationAuthorities.length > 0,
+                canSubmit:
+                  certificationAuthorities.length > 0 && areRequirementsChecked,
               }}
               backUrl="/"
               submitButtonLabel="Envoyer"
