@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@prisma/client";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createReorientationReasonHelper } from "../../../test/helpers/entities/create-reorientation-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
@@ -24,12 +25,12 @@ describe("unarchive candidacy", () => {
 
   test("should fail with CANDIDACY_IS_REORIENTATION", async () => {
     const reorientationReason = await createReorientationReasonHelper();
-    const candidacy = await createCandidacyHelper(
-      {
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: {
         reorientationReasonId: reorientationReason.id,
       },
-      "ARCHIVE",
-    );
+      candidacyActiveStatus: CandidacyStatusStep.ARCHIVE,
+    });
     await expect(async () => {
       await unarchiveCandidacy({
         candidacyId: candidacy.id,

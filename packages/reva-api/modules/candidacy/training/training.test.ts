@@ -15,7 +15,9 @@ afterEach(async () => {
 });
 
 test("AAP should not be able to submit a training form if its status is in 'PROJET'", async () => {
-  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PROJET,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
@@ -41,10 +43,9 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
 });
 
 test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'unifvae'", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
@@ -70,12 +71,12 @@ test("AAP should be able to submit a basic training form when candidacy status i
 });
 
 test("AAP should not be able to submit a basic training form without an estimated costwhen candidacy financeModule is 'hors_plateforme'", async () => {
-  const candidacy = await createCandidacyHelper(
-    {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
       financeModule: "hors_plateforme",
     },
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
@@ -101,12 +102,12 @@ test("AAP should not be able to submit a basic training form without an estimate
 });
 
 test("AAP should not be able to submit a basic training form without at least one financing method  when candidacy financeModule is 'hors_plateforme'", async () => {
-  const candidacy = await createCandidacyHelper(
-    {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
       financeModule: "hors_plateforme",
     },
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
@@ -132,12 +133,12 @@ test("AAP should not be able to submit a basic training form without at least on
 });
 
 test("AAP should not be able to submit a basic training form without a text when the 'other source' financing method has been checked", async () => {
-  const candidacy = await createCandidacyHelper(
-    {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
       financeModule: "hors_plateforme",
     },
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
@@ -169,12 +170,12 @@ test("AAP should not be able to submit a basic training form without a text when
 });
 
 test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'hors_plateforme'", async () => {
-  const candidacy = await createCandidacyHelper(
-    {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
       financeModule: "hors_plateforme",
     },
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({

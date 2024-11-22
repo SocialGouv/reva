@@ -19,10 +19,10 @@ export const createFeasibilityUploadedPdfHelper = async ({
   candidacyArgs?: Partial<Candidacy>;
   candidacyActiveStatus?: CandidacyStatusStep;
 }) => {
-  const candidacy = await createCandidacyHelper(
+  const candidacy = await createCandidacyHelper({
     candidacyArgs,
     candidacyActiveStatus,
-  );
+  });
   const file = await createFileHelper();
 
   return prismaClient.feasibility.create({

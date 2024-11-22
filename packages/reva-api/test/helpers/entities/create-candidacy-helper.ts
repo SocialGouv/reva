@@ -10,10 +10,12 @@ import { createCandidateHelper } from "./create-candidate-helper";
 import { createCertificationHelper } from "./create-certification-helper";
 import { createOrganismHelper } from "./create-organism-helper";
 
-export const createCandidacyHelper = async (
-  candidacyArgs?: Partial<Candidacy>,
-  candidacyActiveStatus?: CandidacyStatusStep,
-) => {
+export const createCandidacyHelper = async (args?: {
+  candidacyArgs?: Partial<Candidacy>;
+  candidacyActiveStatus?: CandidacyStatusStep;
+}) => {
+  const { candidacyArgs, candidacyActiveStatus } = args ?? {};
+
   const certification = await createCertificationHelper();
   const department = await prismaClient.department.findFirst({
     where: { code: "75" },

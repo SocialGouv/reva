@@ -90,7 +90,9 @@ afterEach(async () => {
 });
 
 test("a candidate should be able to select a new organism while a training is sent", async () => {
-  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PROJET,
+  });
   const candidacyId = candidacy.id;
   const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
   const organismToSelect = await createOrganismHelper();
@@ -140,10 +142,9 @@ test("a candidate should not be able to select a new organism after the training
 });
 
 test("should reset the status to validation when selecting a new organism and status is prise_en_charge", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.PRISE_EN_CHARGE,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
   const candidacyId = candidacy.id;
   const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
   const organism = await createOrganismHelper();
@@ -164,10 +165,9 @@ test("should reset the status to validation when selecting a new organism and st
 });
 
 test("should reset the training and update the status when selecting a new organism", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.PARCOURS_ENVOYE,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+  });
   const candidacyId = candidacy.id;
   const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
   const organism = await createOrganismHelper();

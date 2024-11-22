@@ -87,7 +87,9 @@ test("Random candidate should not be able to access the candidacy", async () => 
 test("Aap associated to the candidacy should be able to access it", async () => {
   const organism = await createOrganismHelper();
   const candidacy = await createCandidacyHelper({
-    organismId: organism.id,
+    candidacyArgs: {
+      organismId: organism.id,
+    },
   });
 
   const resp = await getCandidacy({
@@ -104,7 +106,7 @@ test("Aap associated to the candidacy should be able to access it", async () => 
 
 test("Random aap should not be able to access the candidacy", async () => {
   const organism = await createOrganismHelper();
-  const candidacy = await createCandidacyHelper({});
+  const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "manage_candidacy",
     keycloakId: organism.accounts[0].keycloakId,
@@ -120,7 +122,9 @@ test("Random aap should not be able to access the candidacy", async () => {
 test("Maison mere manager of the aap associated to the candidacy should be able to access it", async () => {
   const organism = await createOrganismHelper();
   const candidacy = await createCandidacyHelper({
-    organismId: organism.id,
+    candidacyArgs: {
+      organismId: organism.id,
+    },
   });
 
   const resp = await getCandidacy({

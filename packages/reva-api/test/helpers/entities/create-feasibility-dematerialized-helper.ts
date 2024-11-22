@@ -19,10 +19,10 @@ export const createFeasibilityDematerializedHelper = async ({
   candidacyArgs?: Partial<Candidacy>;
   candidacyActiveStatus?: CandidacyStatusStep;
 }) => {
-  const candidacy = await createCandidacyHelper(
+  const candidacy = await createCandidacyHelper({
     candidacyArgs,
     candidacyActiveStatus,
-  );
+  });
 
   return prismaClient.feasibility.create({
     data: {

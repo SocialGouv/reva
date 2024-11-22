@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyDropOutHelper } from "../../../test/helpers/entities/create-candidacy-drop-out-helper";
 
@@ -39,7 +40,9 @@ describe("cancel drop out candidacy", () => {
   });
 
   test("should return empty dropout reasons for the candidacy", async () => {
-    const candidacy = await createCandidacyHelper({}, "ARCHIVE");
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.ARCHIVE,
+    });
     const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
       where: {
         candidacyId: candidacy.id,

@@ -15,10 +15,9 @@ describe("archive candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
   test("should fail with CANDIDACY_ALREADY_ARCHIVE", async () => {
-    const candidacyArchived = await createCandidacyHelper(
-      {},
-      CandidacyStatusStep.ARCHIVE,
-    );
+    const candidacyArchived = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.ARCHIVE,
+    });
     await expect(async () => {
       await archiveCandidacy({
         candidacyId: candidacyArchived.id,

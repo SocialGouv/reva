@@ -13,7 +13,9 @@ afterEach(async () => {
 });
 
 test("candidate should be able to change it's type_accompagnement when the candidacy is still in project", async () => {
-  const candidacy = await createCandidacyHelper({}, CandidacyStatusStep.PROJET);
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PROJET,
+  });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
   const resp = await injectGraphql({
@@ -38,10 +40,9 @@ test("candidate should be able to change it's type_accompagnement when the candi
 });
 
 test("candidate should NOT be able to change it's type_accompagnement when the candidacy is not in project", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.VALIDATION,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.VALIDATION,
+  });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
   const resp = await injectGraphql({

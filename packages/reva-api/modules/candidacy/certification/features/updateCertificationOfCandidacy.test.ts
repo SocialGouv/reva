@@ -91,10 +91,9 @@ afterEach(async () => {
 });
 
 test("a candidate should be able to select a new certification while a training is sent", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.PARCOURS_ENVOYE,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+  });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
   const certification = await createCertificationHelper();
   await submitTraining({
@@ -137,10 +136,9 @@ test("a candidate should not be able to select a new certification after the tra
 });
 
 test("should reset the training and status when selecting a new certification", async () => {
-  const candidacy = await createCandidacyHelper(
-    {},
-    CandidacyStatusStep.PARCOURS_ENVOYE,
-  );
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+  });
   const candidacyId = candidacy.id;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
   const certification = await createCertificationHelper();

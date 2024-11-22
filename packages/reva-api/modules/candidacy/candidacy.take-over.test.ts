@@ -69,7 +69,7 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
 
 test("candidacy_takeOver should do nothing when candidacy status is not validation", async function () {
   const candidacy = await createCandidacyHelper({
-    status: CandidacyStatusStep.PROJET,
+    candidacyActiveStatus: CandidacyStatusStep.PROJET,
   });
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -93,7 +93,7 @@ test("candidacy_takeOver should do nothing when candidacy status is not validati
 
 test("candidacy_takeOver should update candidacy statuses when active status is validation", async function () {
   const candidacy = await createCandidacyHelper({
-    status: CandidacyStatusStep.VALIDATION,
+    candidacyActiveStatus: CandidacyStatusStep.VALIDATION,
   });
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
