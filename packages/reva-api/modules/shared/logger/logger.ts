@@ -1,6 +1,7 @@
 import pino from "pino";
 
 const datadogApiKey = process.env.DATADOG_API_KEY;
+const isTestEnv = process.env.NODE_ENV === "test";
 const pinoTransport = datadogApiKey
   ? pino.transport({
       targets: [
@@ -21,4 +22,7 @@ const pinoTransport = datadogApiKey
     })
   : undefined;
 
-export const logger = pino({ level: "info" }, pinoTransport);
+export const logger = pino(
+  { level: isTestEnv ? "silent" : "info" },
+  pinoTransport,
+);
