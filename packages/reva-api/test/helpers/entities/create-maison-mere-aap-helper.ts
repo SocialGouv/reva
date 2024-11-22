@@ -10,6 +10,8 @@ export const createMaisonMereAapHelper = async (
 
   return prismaClient.maisonMereAAP.create({
     data: {
+      isActive: true,
+      statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
       raisonSociale: faker.company.name(),
       siret: faker.string.nanoid(14),
       statutJuridique: LegalStatus.ASSOCIATION_LOI_1901,

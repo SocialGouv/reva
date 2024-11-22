@@ -91,7 +91,7 @@ test("should have 208 certifications available in total", async () => {
  * Test search certifications by an organism for reorientation purpose
  */
 
-test.skip("should have only certifications handle by expertBranche", async () => {
+test("should have only certifications handle by expertBranche", async () => {
   await createCertifications();
 
   const particulierEmployeur =

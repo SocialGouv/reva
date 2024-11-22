@@ -80,7 +80,9 @@ test("find maison mere by collaborateur email", async () => {
 });
 
 test("find maison mere by text filters and legal validation status", async () => {
-  const mmAap = await createMaisonMereAapHelper();
+  const mmAap = await createMaisonMereAapHelper({
+    statutValidationInformationsJuridiquesMaisonMereAAP: "A_METTRE_A_JOUR", //should not be found in results
+  });
   const response = await injectGraphqlGetMaisonMereAAPs({
     searchFilter: mmAap.raisonSociale,
     legalValidationStatus:
