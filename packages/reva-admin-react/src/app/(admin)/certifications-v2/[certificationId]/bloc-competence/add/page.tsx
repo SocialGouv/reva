@@ -67,9 +67,10 @@ const PageContent = ({
     <h1>Ajouter un bloc de compétences</h1>
     <FormOptionalFieldsDisclaimer />
     <p className="mb-12 text-xl">
-      Ajoutez un bloc de compétences si vous constater une erreur dans la
-      récupération des informations de France Compétence. Vous pourrez supprimer
-      ce bloc si vous constatez que vous vous êtes trompé.
+      Si vous avez constaté une erreur dans la récupération des informations de
+      France compétences, ajoutez le ou les bloc(s) manquant(s) ci-dessous.
+      Cette démarche est réversible, vous pouvez supprimer le ou les bloc(s) si
+      nécessaire.
     </p>
     <CompetenceBlocForm
       className="mt-6"
