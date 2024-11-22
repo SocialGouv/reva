@@ -2,7 +2,23 @@
   "data": {
     "getCertification": {
       "id": "bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
-      "label": "BP Boucher"
+      "label": "BP Boucher",
+      "certificationAuthorityStructure": {
+        "id": "0ec61d50-a202-4222-95ff-d516b9cae503",
+        "label": "Ministère de l'Education Nationale et de la Jeunesse"
+      }
+    },
+    "certification_authority_getCertificationAuthorityStructures": {
+      "rows": [
+        {
+          "id": "e8f214f1-3243-4dc6-8fe0-205d4cafd9d1",
+          "label": "IPERIA"
+        },
+        {
+          "id": "0ec61d50-a202-4222-95ff-d516b9cae503",
+          "label": "Ministère de l'Education Nationale et de la Jeunesse"
+        }
+      ]
     }
   }
 }

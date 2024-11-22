@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationStructureAndGestionnairesQuery = graphql(`
   query getCertificationStructureAndGestionnairesForUpdateCertificationStructurePage(
@@ -12,15 +12,23 @@ const getCertificationStructureAndGestionnairesQuery = graphql(`
       certificationAuthorityStructure {
         id
         label
-        certificationAuthorities {
-          id
-          label
-        }
       }
-      certificationAuthorities {
+    }
+    certification_authority_getCertificationAuthorityStructures(limit: 100) {
+      rows {
         id
         label
       }
+    }
+  }
+`);
+
+const updateCertificationStructureMutation = graphql(`
+  mutation updateCertificationStructureForUpdateCertificationStructurePage(
+    $input: UpdateCertificationStructureInput!
+  ) {
+    referential_updateCertificationStructure(input: $input) {
+      id
     }
   }
 `);
@@ -31,6 +39,7 @@ export const useUpdateCertificationStructurePage = ({
   certificationId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     data: getCertificationStructureAndGestionnairesResponse,
@@ -47,11 +56,32 @@ export const useUpdateCertificationStructurePage = ({
       }),
   });
 
+  const updateCertificationStructure = useMutation({
+    mutationFn: ({
+      certificationAuthorityStructureId,
+    }: {
+      certificationAuthorityStructureId: string;
+    }) =>
+      graphqlClient.request(updateCertificationStructureMutation, {
+        input: { certificationId, certificationAuthorityStructureId },
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationId],
+      }),
+  });
+
   const certification =
     getCertificationStructureAndGestionnairesResponse?.getCertification;
+
+  const availableStructures =
+    getCertificationStructureAndGestionnairesResponse
+      ?.certification_authority_getCertificationAuthorityStructures.rows || [];
 
   return {
     getCertificationStructureAndGestionnairesQueryStatus,
     certification,
+    availableStructures,
+    updateCertificationStructure,
   };
 };
