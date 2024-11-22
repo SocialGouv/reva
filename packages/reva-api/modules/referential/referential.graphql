@@ -325,7 +325,10 @@ input CreateCompetenceBlocInput {
   label: String!
   competences: [CompetenceInput!]!
 }
-
+input UpdateCertificationStructureInput {
+  certificationId: ID!
+  certificationAuthorityStructureId: String!
+}
 type Mutation {
   referential_updateCertification(
     input: UpdateCertificationInput!
@@ -346,4 +349,7 @@ type Mutation {
     certificationCompetenceBlocId: String!
   ): CertificationCompetenceBloc!
   referential_addCertification(input: AddCertificationInput!): Certification!
+  referential_updateCertificationStructure(
+    input: UpdateCertificationStructureInput
+  ): Certification!
 }

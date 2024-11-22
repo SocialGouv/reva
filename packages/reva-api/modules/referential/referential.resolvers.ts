@@ -25,6 +25,7 @@ import {
   UpdateCertificationInput,
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
+  UpdateCertificationStructureInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
@@ -46,6 +47,7 @@ import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceB
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
+import { updateCertificationStructureInput } from "./features/updateCertificationStructureInput";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -198,6 +200,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: { codeRncp: string } },
     ) => addCertification(input),
+    referential_updateCertificationStructure: (
+      _parent: unknown,
+      { input }: { input: UpdateCertificationStructureInput },
+    ) => updateCertificationStructureInput(input),
   },
 };
 

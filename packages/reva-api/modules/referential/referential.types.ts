@@ -93,3 +93,8 @@ export interface CreateCompetenceBlocInput {
   label: string;
   competences: CompetenceInput[];
 }
+
+export interface UpdateCertificationStructureInput {
+  certificationId: string;
+  certificationAuthorityStructureId: string;
+}
