@@ -21,14 +21,14 @@ type StructureForPage = Exclude<
   undefined
 >;
 
-export const certificationStructureFormSchema = z.object({
+const certificationStructureFormSchema = z.object({
   certificationAuthorityStructureId: z
     .string()
     .min(1, "Merci de remplir ce champ")
     .default(""),
 });
 
-export type CertificationStructureFormData = z.infer<
+type CertificationStructureFormData = z.infer<
   typeof certificationStructureFormSchema
 >;
 
