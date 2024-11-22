@@ -92,7 +92,7 @@ afterEach(async () => {
 
 test("a candidate should be able to select a new certification while a training is sent", async () => {
   const candidacy = await createCandidacyHelper({
-    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
   const certification = await createCertificationHelper();
@@ -112,7 +112,7 @@ test("a candidate should be able to select a new certification while a training 
   expect(candidacyUpdated?.certificationId).toEqual(certification.id);
 });
 
-test("a candidate should not be able to select a new certification after the training is confirmed", async () => {
+test("an organism should not be able to select a new certification after the training is confirmed", async () => {
   const candidacy = await createCandidacyHelper();
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
   await submitTraining({
@@ -137,7 +137,7 @@ test("a candidate should not be able to select a new certification after the tra
 
 test("should reset the training and status when selecting a new certification", async () => {
   const candidacy = await createCandidacyHelper({
-    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
   const candidacyId = candidacy.id;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";

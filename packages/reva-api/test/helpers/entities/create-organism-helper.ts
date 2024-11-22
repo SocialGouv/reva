@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker/.";
-import { Organism, OrganismTypology } from "@prisma/client";
+import { Prisma, OrganismTypology } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createAccountHelper } from "./create-account-helper";
 import { createMaisonMereAapHelper } from "./create-maison-mere-aap-helper";
 
 export const createOrganismHelper = async (
-  organismArgs?: Partial<Organism>,
+  organismArgs?: Partial<Prisma.OrganismUncheckedCreateInput>,
 ) => {
   const maisonMere = await createMaisonMereAapHelper({
     typologie: organismArgs?.typology ?? OrganismTypology.expertFiliere,

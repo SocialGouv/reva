@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import {
-  Certification,
+  Prisma,
   CertificationStatus,
   CertificationStatusV2,
   FeasibilityFormat,
@@ -9,7 +9,7 @@ import { prismaClient } from "../../../prisma/client";
 import { createCertificationAuthorityHelper } from "./create-certification-authority-helper";
 
 export const createCertificationHelper = async (
-  args?: Partial<Certification>,
+  args?: Partial<Prisma.CertificationUncheckedCreateInput>,
 ) => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
