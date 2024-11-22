@@ -7,7 +7,7 @@ import { confirmDematerializedFeasibilityFileByCandidate } from "./confirmDemate
 describe("confirmDematerializedFeasibilityFileByCandidate", () => {
   describe("When confirming a dematerialized feasibility file", () => {
     it("should update the file with candidate's decision comment and confirmation timestamp", async () => {
-      const feasibility = await createFeasibilityDematerializedHelper({});
+      const feasibility = await createFeasibilityDematerializedHelper();
       const dematerializedFeasibilityFileId =
         feasibility.dematerializedFeasibilityFile?.id ?? "";
       const input = {
@@ -28,7 +28,7 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
     });
 
     it("should allow confirmation without a decision comment", async () => {
-      const feasibility = await createFeasibilityDematerializedHelper({});
+      const feasibility = await createFeasibilityDematerializedHelper();
       const dematerializedFeasibilityFileId =
         feasibility.dematerializedFeasibilityFile?.id ?? "";
       const input = {
