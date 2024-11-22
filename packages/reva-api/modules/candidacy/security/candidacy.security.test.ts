@@ -158,9 +158,7 @@ test("Certification authority manager of the feasibility file of the candidacy s
   const certificationAuthority = await createCertificationAuthorityHelper();
 
   const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      certificationAuthorityId: certificationAuthority.id,
-    },
+    certificationAuthorityId: certificationAuthority.id,
   });
 
   const resp = await getCandidacy({
@@ -199,14 +197,15 @@ test("Certification local account of the feasibility file of the candidacy shoul
       certificationAuthorityLocalAccount.certificationAuthority
         .certificationAuthorityStructureId,
   });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      certificationAuthorityId:
-        certificationAuthorityLocalAccount.certificationAuthorityId,
-    },
+  const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    certificationAuthorityId:
+      certificationAuthorityLocalAccount.certificationAuthorityId,
+    candidacyId: candidacyInput.id,
   });
 
   const candidacy = feasibility.candidacy;

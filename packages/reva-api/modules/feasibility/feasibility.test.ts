@@ -6,6 +6,7 @@ import { FastifyInstance } from "fastify";
 import { randomUUID } from "crypto";
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -16,15 +17,11 @@ afterEach(async () => {
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({
@@ -50,19 +47,18 @@ test("should count all (1) available feasibility for certificator user even if o
   const certification = await createCertificationHelper({});
   const certificationAuthority =
     certification.certificationAuthorityStructure?.certificationAuthorities[0];
-  await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-      certificationAuthorityId: certificationAuthority?.id,
-    },
+  const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
   });
   await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
+    certificationAuthorityId: certificationAuthority?.id,
+    candidacyId: candidacy.id,
+  });
+  await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({
@@ -86,9 +82,7 @@ test("should count all (1) available feasibility for certificator user even if o
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
   await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({
@@ -114,14 +108,16 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   const certification = await createCertificationHelper({});
   const certificationAuthority =
     certification.certificationAuthorityStructure?.certificationAuthorities[0];
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-      certificationAuthorityId: certificationAuthority?.id,
-    },
+  const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
+  });
+
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
+    certificationAuthorityId: certificationAuthority?.id,
+    candidacyId: candidacy.id,
   });
 
   const resp = await injectGraphql({
@@ -148,9 +144,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
 
 test("should return a feasibility error for certificator 3 since he doesn't handle it", async () => {
   const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({
@@ -174,14 +168,15 @@ test("should return all (1) available feasibility for certificateur user", async
   const certification = await createCertificationHelper({});
   const certificationAuthority =
     certification.certificationAuthorityStructure?.certificationAuthorities[0];
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-      certificationAuthorityId: certificationAuthority?.id,
-    },
+  const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
+    certificationAuthorityId: certificationAuthority?.id,
+    candidacyId: candidacy.id,
   });
 
   const resp = await injectGraphql({
@@ -208,9 +203,7 @@ test("should return all (1) available feasibility for certificateur user", async
 
 test("should count 1 pending feasibility for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({
@@ -261,14 +254,15 @@ test("should validate a feasibility since certificator is allowed to do so", asy
   const certification = await createCertificationHelper({});
   const certificationAuthority =
     certification.certificationAuthorityStructure?.certificationAuthorities[0];
-  const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-      certificationAuthorityId: certificationAuthority?.id,
-    },
+  const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
+  });
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
+    certificationAuthorityId: certificationAuthority?.id,
+    candidacyId: candidacy.id,
   });
 
   const resp = await postFeasibilityDecision({
@@ -291,9 +285,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
 
 test("should not validate a feasibility since certificator 2 doesn't handle it, even if he is on the same scope as certificator 1", async () => {
   const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await postFeasibilityDecision({
@@ -309,9 +301,7 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
 
 test("should not validate a feasibility since certificator 3 doesn't handle it", async () => {
   const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await postFeasibilityDecision({
@@ -329,14 +319,15 @@ test("should reject a feasibility since certificator is allowed to do so", async
   const certification = await createCertificationHelper({});
   const certificationAuthority =
     certification.certificationAuthorityStructure?.certificationAuthorities[0];
-  const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-      certificationAuthorityId: certificationAuthority?.id,
-    },
+  const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
+  });
+  const feasiblity = await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
+    certificationAuthorityId: certificationAuthority?.id,
+    candidacyId: candidacy.id,
   });
 
   const resp = await postFeasibilityDecision({
@@ -364,9 +355,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
 
 test("should not reject a feasibility since certificator 3 doesn't handle it", async () => {
   const feasiblity = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      decision: "PENDING",
-    },
+    decision: "PENDING",
   });
 
   const resp = await injectGraphql({

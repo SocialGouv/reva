@@ -22,7 +22,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
 
   test("Should fail when feasibility decision is still pending", async () => {
     const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityArgs: { decision: "PENDING" },
+      decision: "PENDING",
     });
     const errors = await validateFeasibilityChecks({
       candidacyId: feasibility.candidacyId,
@@ -37,7 +37,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
 
   test("Should fail when feasibility rejected and funding request has disallowed items", async () => {
     const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityArgs: { decision: "REJECTED" },
+      decision: "REJECTED",
     });
     const errors = await validateFeasibilityChecks({
       candidacyId: feasibility.candidacyId,
@@ -48,7 +48,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
 
   test("Should succeed when feasibility rejected and request has only allowed items", async () => {
     const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityArgs: { decision: "REJECTED" },
+      decision: "REJECTED",
     });
     const errors = await validateFeasibilityChecks({
       candidacyId: feasibility.candidacyId,
@@ -59,7 +59,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
 
   test("Should succeed when feasibility validated", async () => {
     const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityArgs: { decision: "ADMISSIBLE" },
+      decision: "ADMISSIBLE",
     });
     const errors = await validateFeasibilityChecks({
       candidacyId: feasibility.candidacyId,

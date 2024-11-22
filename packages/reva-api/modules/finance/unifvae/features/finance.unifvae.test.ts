@@ -14,6 +14,7 @@ import {
   PAYMENT_REQUEST,
 } from "../../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "../../../../test/helpers/entities/create-candidate-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
@@ -83,13 +84,14 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
     phone: FUNDING_REQUEST_SAMPLE.fundingContactPhone,
     gender: FUNDING_REQUEST_SAMPLE.candidateGender,
   });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      feasibilityFileSentAt: new Date(),
-    },
+  const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       candidateId: candidate.id,
     },
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityFileSentAt: new Date(),
+    candidacyId: candidacyInput.id,
   });
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
@@ -145,13 +147,14 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
 });
 
 test("Should fail to create fundingRequestUnifvae when candidacy is not bound to Unifvae finance module", async () => {
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      feasibilityFileSentAt: new Date(),
-    },
+  const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       financeModule: "unireva",
     },
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityFileSentAt: new Date(),
+    candidacyId: candidacyInput.id,
   });
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
@@ -184,13 +187,14 @@ test("Should fail to create fundingRequestUnifvae when candidacy is not bound to
 
 test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidacy certification", async () => {
   const certification = await createCertificationHelper({ rncpId: "000000" });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
+  const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
-    feasibilityArgs: {
-      feasibilityFileSentAt: new Date(),
-    },
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    candidacyId: candidacyInput.id,
+    feasibilityFileSentAt: new Date(),
   });
   const candidacy = feasibility.candidacy;
 
@@ -224,11 +228,15 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
 });
 
 test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      feasibilityFileSentAt: new Date(),
+  const candidacyInput = await createCandidacyHelper({
+    candidacyArgs: {
+      financeModule: "unifvae",
     },
     candidacyActiveStatus: CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE,
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityFileSentAt: new Date(),
+    candidacyId: candidacyInput.id,
   });
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
@@ -269,11 +277,15 @@ test("should fail to create paymentRequestUnifvae when candidacy was drop out le
 });
 
 test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityArgs: {
-      feasibilityFileSentAt: new Date(),
+  const candidacyInput = await createCandidacyHelper({
+    candidacyArgs: {
+      financeModule: "unifvae",
     },
     candidacyActiveStatus: CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE,
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityFileSentAt: new Date(),
+    candidacyId: candidacyInput.id,
   });
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
