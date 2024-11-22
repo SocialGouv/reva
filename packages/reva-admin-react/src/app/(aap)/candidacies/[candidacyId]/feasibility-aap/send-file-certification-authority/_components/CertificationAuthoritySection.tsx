@@ -1,9 +1,52 @@
-export default function CertificationAuthoritySection({
-  certificationAuthorityLabel,
+import Select from "@codegouvfr/react-dsfr/Select";
+
+const CertificateursSelect = ({
+  certificationAuthorities,
+  certificationAuthoritySelectedId,
+  setCertificationAuthoritySelectedId,
 }: {
-  certificationAuthorityLabel?: string;
+  certificationAuthorities: { label: string; id: string }[];
+  certificationAuthoritySelectedId: string | undefined;
+  setCertificationAuthoritySelectedId: (id: string) => void;
+}) => {
+  return (
+    <Select
+      label={
+        <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
+          SÉLECTIONNEZ L'AUTORITÉ DE CERTIFICATION
+        </label>
+      }
+      nativeSelectProps={{
+        onChange: (event) =>
+          setCertificationAuthoritySelectedId(event.target.value),
+        value: certificationAuthoritySelectedId || "",
+        required: true,
+      }}
+    >
+      <>
+        <option disabled hidden value="">
+          Sélectionner
+        </option>
+        {certificationAuthorities.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.label}
+          </option>
+        ))}
+      </>
+    </Select>
+  );
+};
+
+export default function CertificationAuthoritySection({
+  certificationAuthorities,
+  certificationAuthoritySelectedId,
+  setCertificationAuthoritySelectedId,
+}: {
+  certificationAuthorities: { label: string; id: string }[];
+  certificationAuthoritySelectedId: string;
+  setCertificationAuthoritySelectedId: (id: string) => void;
 }) {
-  if (!certificationAuthorityLabel) {
+  if (!certificationAuthorities.length) {
     return null;
   }
 
@@ -13,7 +56,17 @@ export default function CertificationAuthoritySection({
         <span className="fr-icon-team-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Certificateur</h2>
       </div>
-      <p>{certificationAuthorityLabel}</p>
+      {certificationAuthorities.length === 1 ? (
+        <p>{certificationAuthorities[0].label}</p>
+      ) : (
+        <CertificateursSelect
+          certificationAuthorities={certificationAuthorities}
+          certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+          setCertificationAuthoritySelectedId={
+            setCertificationAuthoritySelectedId
+          }
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,10 @@
 "use client";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
@@ -10,6 +14,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import DffSummary from "../_components/DffSummary/DffSummary";
 import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
 import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
@@ -38,6 +43,19 @@ export default function SendFileCertificationAuthorityPage() {
     candidacy,
     feasibility,
   } = useSendFileCertificationAuthority();
+
+  const certificationAuthorities = useMemo(() => {
+    if (!candidacy?.certification?.certificationAuthorities) {
+      return [];
+    }
+    return candidacy.certification.certificationAuthorities;
+  }, [candidacy?.certification?.certificationAuthorities]);
+
+  const [
+    certificationAuthoritySelectedId,
+    setCertificationAuthoritySelectedId,
+  ] = useState<string>("");
+
   const decision = feasibility?.decision;
   const decisionSentAt = feasibility?.decisionSentAt;
   const decisionComment = feasibility?.decisionComment;
@@ -51,18 +69,19 @@ export default function SendFileCertificationAuthorityPage() {
     dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority;
 
   const handleSendFile = async () => {
-    if (
-      !dematerializedFeasibilityFile ||
-      !candidacy?.certification?.certificationAuthorities[0]
-    ) {
+    if (!dematerializedFeasibilityFile) {
+      return;
+    }
+
+    if (!certificationAuthoritySelectedId) {
+      errorToast("Veuillez sélectionner un certificateur");
       return;
     }
 
     try {
       await sendToCertificationAuthorityMutation({
         dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
-        certificationAuthorityId:
-          candidacy.certification.certificationAuthorities[0].id,
+        certificationAuthorityId: certificationAuthoritySelectedId,
       });
       successToast("Le dossier de faisabilité a été envoyé au certificateur");
       router.push(feasibilitySummaryUrl);
@@ -70,6 +89,15 @@ export default function SendFileCertificationAuthorityPage() {
       graphqlErrorToast(error);
     }
   };
+
+  useEffect(() => {
+    if (
+      !certificationAuthoritySelectedId &&
+      certificationAuthorities.length === 1
+    ) {
+      setCertificationAuthoritySelectedId(certificationAuthorities[0].id);
+    }
+  }, [certificationAuthorities, certificationAuthoritySelectedId]);
 
   return (
     <div>
@@ -97,8 +125,10 @@ export default function SendFileCertificationAuthorityPage() {
         }
       />
       <CertificationAuthoritySection
-        certificationAuthorityLabel={
-          candidacy?.certification?.certificationAuthorities[0]?.label
+        certificationAuthorities={certificationAuthorities}
+        certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+        setCertificationAuthoritySelectedId={
+          setCertificationAuthoritySelectedId
         }
       />
 
