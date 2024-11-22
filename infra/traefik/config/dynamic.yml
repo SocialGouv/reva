@@ -139,7 +139,7 @@ http:
 
     api-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/api`)"
-      service: api-production-2
+      service: api-production
       middlewares:
         - removeHeader
 
@@ -295,22 +295,16 @@ http:
         servers:
           - url: "https://reva-prod-admin-react.osc-secnum-fr1.scalingo.io/admin2/"
 
-    app-candidat-production-2:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/app/"
-
     app-candidate-production:
       loadBalancer:
         passHostHeader: false
         servers:
           - url: "https://reva-prod-candidate.osc-secnum-fr1.scalingo.io/candidat/"
 
-    api-production-2:
+    api-production:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/api"
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
 
     # --- END PRODUCTION  ---
