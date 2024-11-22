@@ -87,7 +87,6 @@ export const validateSubscriptionRequest = async ({
     website: subscriptionRequest.companyWebsite,
     siret: subscriptionRequest.companySiret ?? "",
     legalStatus: subscriptionRequest.companyLegalStatus,
-    isActive: true,
     typology: "expertFiliere",
     llToEarth: null,
     ccnIds: [],
@@ -140,7 +139,6 @@ export const validateSubscriptionRequest = async ({
   await assignMaisonMereAAPToOrganism({
     organismId: newOrganism.id,
     maisonMereAAPId: newMaisonMereAAP.id,
-    isActive: newMaisonMereAAP.isActive,
   });
 
   await prismaClient.subscriptionRequest.delete({

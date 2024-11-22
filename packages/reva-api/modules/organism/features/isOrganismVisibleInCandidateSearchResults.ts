@@ -8,6 +8,9 @@ export const isOrganismVisibleInCandidateSearchResults = async ({
   const o = await prismaClient.organism.findUnique({
     where: { id: organismId },
     include: {
+      maisonMereAAP: {
+        select: { isActive: true },
+      },
       managedDegrees: true,
       organismOnFormacode: true,
       organismOnConventionCollective: true,
@@ -20,7 +23,7 @@ export const isOrganismVisibleInCandidateSearchResults = async ({
   }
 
   return (
-    o.isActive &&
+    o.maisonMereAAP?.isActive &&
     o.modaliteAccompagnementRenseigneeEtValide &&
     !o.fermePourAbsenceOuConges &&
     o.managedDegrees.length &&

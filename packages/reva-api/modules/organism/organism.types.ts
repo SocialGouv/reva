@@ -6,7 +6,6 @@ export interface Organism {
   contactAdministrativeEmail: string;
   contactAdministrativePhone: string | null;
   website: string | null;
-  isActive: boolean;
   typology: OrganismTypology;
   qualiopiCertificateExpiresAt: Date | null;
   fermePourAbsenceOuConges: boolean;

@@ -15,7 +15,6 @@ export const createOrganism = async (data: {
   website: string;
   legalStatus: LegalStatus;
   siret: string;
-  isActive: boolean;
   typology: OrganismTypology;
   ccnIds?: string[];
   degreeIds?: string[];

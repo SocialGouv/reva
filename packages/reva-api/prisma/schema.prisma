@@ -393,7 +393,6 @@ model Organism {
   contactAdministrativeEmail         String                                @map("contact_administrative_email") @db.VarChar(255)
   contactAdministrativePhone         String?                               @map("contact_administrative_phone") @db.VarChar(50)
   siret                              String
-  isActive                           Boolean                               @default(false) @map("is_active")
   candidacies                        Candidacy[]
   accounts                           Account[]
   regionsAndCertifications           OrganismsOnRegionsAndCertifications[]
@@ -420,7 +419,6 @@ model Organism {
   modaliteAccompagnement                   OrganismModaliteAccompagnement @map("modalite_accompagnement")
   modaliteAccompagnementRenseigneeEtValide Boolean                        @map("modalite_accompagnement_renseignee_et_valide")
 
-  @@index([typology, isActive])
   @@index([maisonMereAAPId])
   @@map("organism")
 }

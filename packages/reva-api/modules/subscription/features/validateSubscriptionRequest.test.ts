@@ -97,6 +97,7 @@ test("It should validate a correct subscription request", async () => {
     raisonSociale: subRequest.companyName,
     siret: subRequest.companySiret,
     statutJuridique: subRequest.companyLegalStatus,
+    isActive: true,
     typologie: "expertFiliere",
   });
 
@@ -108,7 +109,6 @@ test("It should validate a correct subscription request", async () => {
     label: subRequest.companyName,
     legalStatus: subRequest.companyLegalStatus,
     contactAdministrativeEmail: subRequest.accountEmail,
-    isActive: true,
     typology: "expertFiliere",
   });
 

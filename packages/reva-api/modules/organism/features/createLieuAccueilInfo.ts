@@ -75,7 +75,6 @@ export const createLieuAccueilInfo = async ({
       website: siteInternet ?? "",
       siret,
       legalStatus: statutJuridique,
-      isActive: true,
       typology: typologie,
       qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
       llToEarth,
@@ -90,7 +89,6 @@ export const createLieuAccueilInfo = async ({
     await assignMaisonMereAAPToOrganism({
       organismId: newOrganism.id,
       maisonMereAAPId: maisonMereAAP.id,
-      isActive: maisonMereAAP.isActive,
     });
 
     await createOrUpdateInformationsCommerciales({

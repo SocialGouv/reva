@@ -17,7 +17,6 @@
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",
     "prisma:reset": "prisma migrate reset",
-    "prisma:private-seed": "tsx prisma/seed/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
