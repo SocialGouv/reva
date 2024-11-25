@@ -15,7 +15,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
       </p>
       <br />
       <a
-        href="https://metabase.vae.gouv.fr/public/dashboard/e5a2b59d-26b2-443b-a874-d4561f1322eb"
+        href="https://metabase.vae.gouv.fr/public/dashboard/31ce8d3e-1347-4aad-8a82-79a06de6b8a0"
         title="Voir tous les diplômes actuellement - nouvelle fenêtre"
         target="_blank"
       >
