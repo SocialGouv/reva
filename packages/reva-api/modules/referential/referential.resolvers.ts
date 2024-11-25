@@ -25,7 +25,7 @@ import {
   UpdateCertificationInput,
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
-  UpdateCertificationStructureInput,
+  UpdateCertificationStructureAndCertificationAuthoritiesInput,
   SendCertificationToRegistryManagerInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
@@ -48,7 +48,7 @@ import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceB
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
-import { updateCertificationStructure } from "./features/updateCertificationStructure";
+import { updateCertificationStructureAndCertificationAuthorities } from "./features/updateCertificationStructureAndCertificationAuthorities";
 import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
 
 const unsafeReferentialResolvers = {
@@ -207,10 +207,14 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: { codeRncp: string } },
     ) => addCertification(input),
-    referential_updateCertificationStructure: (
+    referential_updateCertificationStructureAndCertificationAuthorities: (
       _parent: unknown,
-      { input }: { input: UpdateCertificationStructureInput },
-    ) => updateCertificationStructure(input),
+      {
+        input,
+      }: {
+        input: UpdateCertificationStructureAndCertificationAuthoritiesInput;
+      },
+    ) => updateCertificationStructureAndCertificationAuthorities(input),
     referential_sendCertificationToRegistryManager: (
       _parent: unknown,
       { input }: { input: SendCertificationToRegistryManagerInput },

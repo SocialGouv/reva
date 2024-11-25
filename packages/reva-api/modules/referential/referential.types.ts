@@ -94,9 +94,10 @@ export interface CreateCompetenceBlocInput {
   competences: CompetenceInput[];
 }
 
-export interface UpdateCertificationStructureInput {
+export interface UpdateCertificationStructureAndCertificationAuthoritiesInput {
   certificationId: string;
   certificationAuthorityStructureId: string;
+  certificationAuthorityIds: string[];
 }
 
 export interface SendCertificationToRegistryManagerInput {

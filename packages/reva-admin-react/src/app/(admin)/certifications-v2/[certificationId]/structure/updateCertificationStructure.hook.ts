@@ -26,15 +26,19 @@ const getCertificationStructureAndGestionnairesQuery = graphql(`
   }
 `);
 
-const updateCertificationStructureMutation = graphql(`
-  mutation updateCertificationStructureForUpdateCertificationStructurePage(
-    $input: UpdateCertificationStructureInput!
-  ) {
-    referential_updateCertificationStructure(input: $input) {
-      id
+const updateCertificationStructureAndCertificationAuthoritiesMutation = graphql(
+  `
+    mutation updateCertificationStructureForUpdateCertificationStructurePage(
+      $input: UpdateCertificationStructureAndCertificationAuthoritiesInput!
+    ) {
+      referential_updateCertificationStructureAndCertificationAuthorities(
+        input: $input
+      ) {
+        id
+      }
     }
-  }
-`);
+  `,
+);
 
 export const useUpdateCertificationStructurePage = ({
   certificationId,
@@ -62,12 +66,21 @@ export const useUpdateCertificationStructurePage = ({
   const updateCertificationStructure = useMutation({
     mutationFn: ({
       certificationAuthorityStructureId,
+      certificationAuthorityIds,
     }: {
       certificationAuthorityStructureId: string;
+      certificationAuthorityIds: string[];
     }) =>
-      graphqlClient.request(updateCertificationStructureMutation, {
-        input: { certificationId, certificationAuthorityStructureId },
-      }),
+      graphqlClient.request(
+        updateCertificationStructureAndCertificationAuthoritiesMutation,
+        {
+          input: {
+            certificationId,
+            certificationAuthorityStructureId,
+            certificationAuthorityIds,
+          },
+        },
+      ),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: [certificationId],

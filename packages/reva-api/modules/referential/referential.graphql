@@ -336,9 +336,10 @@ input CreateCompetenceBlocInput {
   competences: [CompetenceInput!]!
 }
 
-input UpdateCertificationStructureInput {
+input UpdateCertificationStructureAndCertificationAuthoritiesInput {
   certificationId: ID!
   certificationAuthorityStructureId: String!
+  certificationAuthorityIds: [String!]!
 }
 
 input SendCertificationToRegistryManagerInput {
@@ -365,8 +366,8 @@ type Mutation {
     certificationCompetenceBlocId: String!
   ): CertificationCompetenceBloc!
   referential_addCertification(input: AddCertificationInput!): Certification!
-  referential_updateCertificationStructure(
-    input: UpdateCertificationStructureInput
+  referential_updateCertificationStructureAndCertificationAuthorities(
+    input: UpdateCertificationStructureAndCertificationAuthoritiesInput
   ): Certification!
   referential_sendCertificationToRegistryManager(
     input: SendCertificationToRegistryManagerInput

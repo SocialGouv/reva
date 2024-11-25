@@ -6,7 +6,8 @@
       "certificationAuthorityStructure": {
         "id": "0ec61d50-a202-4222-95ff-d516b9cae503",
         "label": "Ministère de l'Education Nationale et de la Jeunesse"
-      }
+      },
+      "certificationAuthorities": []
     },
     "certification_authority_getCertificationAuthorityStructures": {
       "rows": [

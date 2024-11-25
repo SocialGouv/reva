@@ -1,6 +1,7 @@
 import { stubMutation, stubQuery } from "../../../utils/graphql";
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 import updateCertificationStructureMutationResponse from "./fixtures/update-certification-structure-mutation-response.json";
+import certificationAuthoritiesEducNat from "./fixtures/certification-authorities-educ-nat.json";
 
 function interceptCertification() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -18,6 +19,11 @@ function interceptCertification() {
       req,
       "getCertificationStructureAndGestionnairesForUpdateCertificationStructurePage",
       certificationBPBoucher,
+    );
+    stubQuery(
+      req,
+      "getCertificationAuthoritiesForUpdateCertificationStructurePage",
+      certificationAuthoritiesEducNat,
     );
   });
 }
@@ -44,6 +50,7 @@ context("when i access the update certification page ", () => {
     cy.wait(
       "@getCertificationStructureAndGestionnairesForUpdateCertificationStructurePage",
     );
+    cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
 
     cy.get('[data-test="update-certification-structure-page"]')
       .children("h1")
@@ -61,9 +68,11 @@ context("when i access the update certification page ", () => {
     cy.wait(
       "@getCertificationStructureAndGestionnairesForUpdateCertificationStructurePage",
     );
+    cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
     cy.get(
       '[data-test="certification-authority-structure-select"] select',
     ).select("IPERIA");
+    cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
 
     cy.get("button").contains("Enregistrer").click();
 

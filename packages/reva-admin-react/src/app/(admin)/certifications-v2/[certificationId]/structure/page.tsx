@@ -21,7 +21,12 @@ export default function UpdateCertificationStructurePage() {
 
   const handleFormSubmit = async (data: CertificationStructureFormData) => {
     try {
-      await updateCertificationStructure.mutateAsync(data);
+      await updateCertificationStructure.mutateAsync({
+        ...data,
+        certificationAuthorityIds: data.certificationAuthorities
+          .filter(({ checked }) => checked)
+          .map(({ id }) => id),
+      });
       successToast("modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
