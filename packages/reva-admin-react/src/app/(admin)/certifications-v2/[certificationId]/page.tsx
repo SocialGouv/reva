@@ -174,8 +174,7 @@ const PageContent = ({
                   description="Vous pouvez éditer et envoyer cette certification mais elle ne pourra être validée et publiée que par un responsable des certifications."
                 />
               )}
-              {certification.certificationAuthorityStructure
-                ?.certificationAuthorities.length ? (
+              {certification.certificationAuthorities.length ? (
                 <>
                   <h3 className="mt-4 mb-2">
                     Gestionnaires des candidatures liés à cette structure
@@ -184,16 +183,14 @@ const PageContent = ({
                     className="list-none"
                     data-test="certification-authority-list"
                   >
-                    {certification.certificationAuthorityStructure?.certificationAuthorities?.map(
-                      (ca) => (
-                        <li
-                          key={ca.id}
-                          className="border-t border-light-decisions-border-border-default-grey font-bold pt-2 mb-1"
-                        >
-                          {ca.label}
-                        </li>
-                      ),
-                    )}
+                    {certification.certificationAuthorities.map((ca) => (
+                      <li
+                        key={ca.id}
+                        className="border-t border-light-decisions-border-border-default-grey font-bold pt-2 mb-1"
+                      >
+                        {ca.label}
+                      </li>
+                    ))}
                   </ul>
                 </>
               ) : (

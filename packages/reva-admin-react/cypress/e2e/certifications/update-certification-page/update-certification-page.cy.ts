@@ -3,11 +3,11 @@ import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
 function interceptCertification({
   withStructure,
-  withCertificationAuthoritiesAssociatedToStructure,
+  withCertificationAuthoritiesOfCertification,
   withCertificationRegistryManagerAssociatedToStructure,
 }: {
   withStructure?: boolean;
-  withCertificationAuthoritiesAssociatedToStructure?: boolean;
+  withCertificationAuthoritiesOfCertification?: boolean;
   withCertificationRegistryManagerAssociatedToStructure?: boolean;
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -26,30 +26,29 @@ function interceptCertification({
       data: {
         getCertification: {
           ...certificationBPBoucher.data.getCertification,
+          certificationAuthorities: withCertificationAuthoritiesOfCertification
+            ? [
+                {
+                  id: "47954f7a-1148-4280-842b-01eecf8ac52d",
+                  label:
+                    "Ministère de l'Education Nationale et de la Jeunesse - Auvergne - Rhône-Alpes",
+                },
+                {
+                  id: "39c45c3d-4785-4745-8f24-5cb11c47896e",
+                  label:
+                    "Ministère de l'Education Nationale et de la Jeunesse - Bourgogne - Franche-Comté",
+                },
+                {
+                  id: "dd2aaae3-3d59-45a0-8448-804d3f713bda",
+                  label:
+                    "Ministère de l'Education Nationale et de la Jeunesse - Bretagne",
+                },
+              ]
+            : [],
           certificationAuthorityStructure: withStructure
             ? {
                 id: "0ec61d50-a202-4222-95ff-d516b9cae503",
                 label: "Ministère de l'Education Nationale et de la Jeunesse",
-                certificationAuthorities:
-                  withCertificationAuthoritiesAssociatedToStructure
-                    ? [
-                        {
-                          id: "47954f7a-1148-4280-842b-01eecf8ac52d",
-                          label:
-                            "Ministère de l'Education Nationale et de la Jeunesse - Auvergne - Rhône-Alpes",
-                        },
-                        {
-                          id: "39c45c3d-4785-4745-8f24-5cb11c47896e",
-                          label:
-                            "Ministère de l'Education Nationale et de la Jeunesse - Bourgogne - Franche-Comté",
-                        },
-                        {
-                          id: "dd2aaae3-3d59-45a0-8448-804d3f713bda",
-                          label:
-                            "Ministère de l'Education Nationale et de la Jeunesse - Bretagne",
-                        },
-                      ]
-                    : [],
                 certificationRegistryManager:
                   withCertificationRegistryManagerAssociatedToStructure
                     ? { id: "3881b52a-0de9-460d-a228-84ee27480880" }
@@ -190,7 +189,7 @@ context("when i access the update certification page ", () => {
     it("display the list of certification authorities of the structure when the certification has an associated structure", function () {
       interceptCertification({
         withStructure: true,
-        withCertificationAuthoritiesAssociatedToStructure: true,
+        withCertificationAuthoritiesOfCertification: true,
       });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");

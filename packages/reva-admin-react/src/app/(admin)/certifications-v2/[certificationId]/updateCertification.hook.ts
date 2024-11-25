@@ -39,13 +39,13 @@ const getCertificationQuery = graphql(`
       certificationAuthorityStructure {
         id
         label
-        certificationAuthorities {
-          id
-          label
-        }
         certificationRegistryManager {
           id
         }
+      }
+      certificationAuthorities {
+        id
+        label
       }
     }
   }
