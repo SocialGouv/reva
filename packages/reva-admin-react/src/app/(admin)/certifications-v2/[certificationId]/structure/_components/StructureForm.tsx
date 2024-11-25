@@ -3,13 +3,17 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { useStructureForm } from "./structureForm.hook";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { useCallback, useEffect } from "react";
 
 type CertificationForForm = {
   id: string;
   label: string;
   certificationAuthorityStructure?: { id: string; label: string } | null;
+  certificationAuthorities: { id: string }[];
 };
 
 type StructureForForm = { id: string; label: string };
@@ -19,6 +23,9 @@ const certificationStructureFormSchema = z.object({
     .string()
     .min(1, "Merci de remplir ce champ")
     .default(""),
+  certificationAuthorities: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
 });
 
 export type CertificationStructureFormData = z.infer<
@@ -35,18 +42,66 @@ export const StructureForm = ({
   onSubmit(data: CertificationStructureFormData): Promise<void>;
 }) => {
   const {
+    control,
     register,
     handleSubmit,
     formState: { isDirty, isSubmitting },
+    reset,
   } = useForm<CertificationStructureFormData>({
     resolver: zodResolver(certificationStructureFormSchema),
     defaultValues: {
       certificationAuthorityStructureId:
         certification.certificationAuthorityStructure?.id,
+      certificationAuthorities: [],
     },
   });
 
+  const { certificationAuthorityStructureId } = useWatch({ control });
+
+  const {
+    availableCertificationAuthorities,
+    getCertificationAuthoritiesQueryStatus,
+  } = useStructureForm({ certificationAuthorityStructureId });
+
+  const {
+    fields: certificationAuthoritiesFields,
+    replace: replaceCertificationAuthorities,
+  } = useFieldArray({
+    control,
+    name: "certificationAuthorities",
+  });
+
+  const refreshCertificationAuthoritiesList = useCallback(() => {
+    const newCAs =
+      availableCertificationAuthorities?.map((aca) => ({
+        id: aca.id,
+        label: aca.label,
+        checked: !!certification.certificationAuthorities.find(
+          (ca) => ca.id === aca.id,
+        ),
+      })) || [];
+
+    replaceCertificationAuthorities(newCAs);
+  }, [
+    availableCertificationAuthorities,
+    certification.certificationAuthorities,
+    replaceCertificationAuthorities,
+  ]);
+
+  useEffect(() => {
+    refreshCertificationAuthoritiesList();
+  }, [
+    availableCertificationAuthorities,
+    certification.certificationAuthorities,
+    refreshCertificationAuthoritiesList,
+  ]);
+
   const handleFormSubmit = handleSubmit(onSubmit);
+
+  const handleReset = () => {
+    reset();
+    refreshCertificationAuthoritiesList();
+  };
 
   return (
     <div data-test="update-certification-structure-page">
@@ -73,7 +128,13 @@ export const StructureForm = ({
         candidatures. Il est également possible de la relier au gestionnaire des
         candidatures d’une autre structure.
       </p>
-      <form onSubmit={handleFormSubmit}>
+      <form
+        onSubmit={handleFormSubmit}
+        onReset={(e) => {
+          e.preventDefault();
+          handleReset();
+        }}
+      >
         <Select
           data-test="certification-authority-structure-select"
           label="Structure certificatrice"
@@ -88,6 +149,18 @@ export const StructureForm = ({
             </option>
           ))}
         </Select>
+        {getCertificationAuthoritiesQueryStatus === "success" && (
+          <Checkbox
+            legend="Gestionnaire(s) des candidatures"
+            options={certificationAuthoritiesFields.map((ca, caIndex) => ({
+              label: ca.label,
+              nativeInputProps: {
+                key: ca.id,
+                ...register(`certificationAuthorities.${caIndex}.checked`),
+              },
+            }))}
+          />
+        )}
         <FormButtons
           backUrl={`/certifications-v2/${certification.id}`}
           formState={{
