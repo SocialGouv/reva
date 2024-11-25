@@ -247,6 +247,7 @@ const PageContent = ({
               pas encore des candidats.
             </p>
             <Button
+              data-test="button-send"
               disabled={!certification.certificationAuthorityStructure}
               className="h-[40px] self-end"
               onClick={onClickSend}

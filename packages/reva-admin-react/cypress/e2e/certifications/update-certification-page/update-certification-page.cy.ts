@@ -5,10 +5,12 @@ function interceptCertification({
   withStructure,
   withCertificationAuthoritiesOfCertification,
   withCertificationRegistryManagerAssociatedToStructure,
+  withStatusV2,
 }: {
   withStructure?: boolean;
   withCertificationAuthoritiesOfCertification?: boolean;
   withCertificationRegistryManagerAssociatedToStructure?: boolean;
+  withStatusV2?: string;
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
@@ -26,6 +28,9 @@ function interceptCertification({
       data: {
         getCertification: {
           ...certificationBPBoucher.data.getCertification,
+          statusV2:
+            withStatusV2 ||
+            certificationBPBoucher.data.getCertification.statusV2,
           certificationAuthorities: withCertificationAuthoritiesOfCertification
             ? [
                 {
@@ -272,6 +277,30 @@ context("when i access the update certification page ", () => {
         "eq",
         "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
       );
+    });
+
+    it("let me check if button 'envoyer' is visible is statusV2 equal to 'BROUILLON'", function () {
+      interceptCertification({ withStatusV2: "BROUILLON" });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get('[data-test="button-send"]').should("exist");
+    });
+
+    it("let me check if button 'envoyer' is no more visible if statusV2 different from 'BROUILLON'", function () {
+      interceptCertification({ withStatusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
+
+      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get('[data-test="button-send"]').should("not.exist");
     });
   });
 });
