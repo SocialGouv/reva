@@ -2,9 +2,7 @@ export const menuUrlBuilder =
   ({ candidacyId }: { candidacyId: string }) =>
   ({ suffix }: { suffix: string }) => {
     const baseUrl =
-      process.env.ADMIN_REACT_BASE_URL ||
-      process.env.BASE_URL ||
-      "https://vae.gouv.fr";
+      process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
-    return `${baseUrl}/admin2/candidacies/${candidacyId}/${suffix}`;
+    return `${baseUrl}/candidacies/${candidacyId}/${suffix}`;
   };
