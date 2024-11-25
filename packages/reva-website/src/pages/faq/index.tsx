@@ -64,7 +64,7 @@ const FaqPage = ({
                   <li className="text-2xl mt-4" key={ss.id}>
                     {(s.attributes?.sous_section_faqs?.data?.length || 0) > 1 &&
                       ss.attributes?.titre}
-                    <div className="fr-accordions-group mt-4">
+                    <div className="mt-4">
                       {ss.attributes?.article_faqs?.data?.map((a) => (
                         <span key={a.id} id={`article-${a.id}`}>
                           <Accordion
