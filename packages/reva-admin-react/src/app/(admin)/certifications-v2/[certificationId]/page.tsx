@@ -9,6 +9,7 @@ import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -33,8 +34,25 @@ const PageContent = ({
   certification: CertificationForPage;
 }) => {
   const router = useRouter();
+
   const structureSummaryCardComplete =
     !!certification.certificationAuthorityStructure;
+
+  const { sendCertificationToRegistryManager } = useUpdateCertificationPage({
+    certificationId: certification.id,
+  });
+
+  const onClickSend = async () => {
+    try {
+      await sendCertificationToRegistryManager.mutateAsync();
+      successToast("La certification a bien été envoyée");
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
+
+  const isEditable = certification.statusV2 == "BROUILLON";
+
   return (
     <div data-test="update-certification-page">
       <h1>{certification.label}</h1>
@@ -49,7 +67,7 @@ const PageContent = ({
           data-test="certification-description-card"
           title="Descriptif de la certification"
           status="COMPLETED"
-          isEditable
+          isEditable={isEditable}
           titleIconClass="fr-icon-award-fill"
         >
           <div className="flex flex-col gap-4">
@@ -99,15 +117,19 @@ const PageContent = ({
           title="Blocs de compétences"
           data-test="competence-blocs-summary-card"
           titleIconClass="fr-icon-survey-fill"
-          hasButton
-          buttonPriority="tertiary no outline"
-          buttonTitle="Ajouter un bloc de compétences"
-          buttonIconId="fr-icon-add-line"
-          buttonOnClick={() =>
-            router.push(
-              `/certifications-v2/${certification.id}/bloc-competence/add`,
-            )
-          }
+          {...(() =>
+            isEditable
+              ? {
+                  hasButton: true,
+                  buttonPriority: "tertiary no outline",
+                  buttonTitle: "Ajouter un bloc de compétences",
+                  buttonIconId: "fr-icon-add-line",
+                  buttonOnClick: () =>
+                    router.push(
+                      `/certifications-v2/${certification.id}/bloc-competence/add`,
+                    ),
+                }
+              : { hasButton: false })()}
         >
           <p>
             La modification de bloc est possible, mais doit rester
@@ -135,15 +157,17 @@ const PageContent = ({
                     ))}
                   </ul>
                 </Accordion>
-                <Button
-                  data-test="update-competence-bloc-button"
-                  priority="tertiary no outline"
-                  linkProps={{
-                    href: `/certifications-v2/${certification.id}/bloc-competence/${bloc.id}`,
-                  }}
-                >
-                  Modifier
-                </Button>
+                {isEditable && (
+                  <Button
+                    data-test="update-competence-bloc-button"
+                    priority="tertiary no outline"
+                    linkProps={{
+                      href: `/certifications-v2/${certification.id}/bloc-competence/${bloc.id}`,
+                    }}
+                  >
+                    Modifier
+                  </Button>
+                )}
               </li>
             ))}
           </ul>
@@ -154,7 +178,11 @@ const PageContent = ({
           titleIconClass="fr-icon-group-fill"
           isEditable
           status={structureSummaryCardComplete ? "COMPLETED" : "TO_COMPLETE"}
-          buttonOnClickHref={`/certifications-v2/${certification.id}/structure`}
+          buttonOnClickHref={
+            isEditable
+              ? `/certifications-v2/${certification.id}/structure`
+              : undefined
+          }
         >
           {structureSummaryCardComplete && (
             <>
@@ -207,15 +235,28 @@ const PageContent = ({
         </EnhancedSectionCard>
       </div>
       <hr className="mt-8" />
-      <h2>Validation par le responsable des certifications</h2>
-      <p>
-        Lorsque la certification est prête, vous devez l’envoyer au responsable
-        des certifications pour validation. Si aucun responsable de
-        certifications n’existe pour le moment et qu’aucune validation n’est
-        possible, elle pourra être visible des AAP mais pas encore des
-        candidats.
-      </p>
-      <hr className="mb-6" />
+      {isEditable && (
+        <>
+          <h2>Validation par le responsable des certifications</h2>
+          <div className="flex">
+            <p className="mb-0">
+              Lorsque la certification est prête, vous devez l’envoyer au
+              responsable des certifications pour validation. Si aucun
+              responsable de certifications n’existe pour le moment et qu’aucune
+              validation n’est possible, elle pourra être visible des AAP mais
+              pas encore des candidats.
+            </p>
+            <Button
+              disabled={!certification.certificationAuthorityStructure}
+              className="h-[40px] self-end"
+              onClick={onClickSend}
+            >
+              Envoyer
+            </Button>
+          </div>
+          <hr className="mt-8 mb-6" />
+        </>
+      )}
       <Button
         priority="secondary"
         linkProps={{ href: "/certifications-v2", target: "_self" }}

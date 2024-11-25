@@ -22,6 +22,7 @@ type Certification {
   abilities: String
   codeRncp: String!
   status: CertificationStatus!
+  statusV2: CertificationStatusV2!
   typeDiplome: String
   degree: Degree!
   conventionsCollectives: [ConventionCollective!]!
@@ -94,6 +95,13 @@ enum CertificationStatus {
   INACTIVE
   SOON
   AVAILABLE
+}
+
+enum CertificationStatusV2 {
+  BROUILLON
+  A_VALIDER_PAR_CERTIFICATEUR
+  VALIDE_PAR_CERTIFICATEUR
+  INACTIVE
 }
 
 enum FinanceModule {
@@ -315,20 +323,28 @@ input UpdateCompetenceBlocsInput {
   certificationId: ID!
   blocs: [CompetenceBlocInput!]!
 }
+
 input UpdateCompetenceBlocInput {
   id: ID
   label: String!
   competences: [CompetenceInput!]!
 }
+
 input CreateCompetenceBlocInput {
   certificationId: ID!
   label: String!
   competences: [CompetenceInput!]!
 }
+
 input UpdateCertificationStructureInput {
   certificationId: ID!
   certificationAuthorityStructureId: String!
 }
+
+input SendCertificationToRegistryManagerInput {
+  certificationId: ID!
+}
+
 type Mutation {
   referential_updateCertification(
     input: UpdateCertificationInput!
@@ -351,5 +367,8 @@ type Mutation {
   referential_addCertification(input: AddCertificationInput!): Certification!
   referential_updateCertificationStructure(
     input: UpdateCertificationStructureInput
+  ): Certification!
+  referential_sendCertificationToRegistryManager(
+    input: SendCertificationToRegistryManagerInput
   ): Certification!
 }

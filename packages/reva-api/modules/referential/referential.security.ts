@@ -22,6 +22,9 @@ export const referentialResolversSecurityMap = {
     hasRole(["admin"]),
   ],
   "Mutation.referential_updateCertificationStructure": [hasRole(["admin"])],
+  "Mutation.referential_sendCertificationToRegistryManager": [
+    hasRole(["admin"]),
+  ],
 
   "Query.getEtablissementAsAdmin": [hasRole(["admin"])],
   "Query.getCertificationCompetenceBloc": [hasRole(["admin"])],

@@ -26,6 +26,7 @@ import {
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
   UpdateCertificationStructureInput,
+  SendCertificationToRegistryManagerInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
@@ -47,7 +48,8 @@ import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceB
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
-import { updateCertificationStructureInput } from "./features/updateCertificationStructureInput";
+import { updateCertificationStructure } from "./features/updateCertificationStructure";
+import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -208,7 +210,11 @@ const unsafeReferentialResolvers = {
     referential_updateCertificationStructure: (
       _parent: unknown,
       { input }: { input: UpdateCertificationStructureInput },
-    ) => updateCertificationStructureInput(input),
+    ) => updateCertificationStructure(input),
+    referential_sendCertificationToRegistryManager: (
+      _parent: unknown,
+      { input }: { input: SendCertificationToRegistryManagerInput },
+    ) => sendCertificationToRegistryManager(input),
   },
 };
 

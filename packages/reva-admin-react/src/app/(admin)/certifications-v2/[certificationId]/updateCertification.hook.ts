@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
   query getCertificationForUpdateCertificationPage($certificationId: ID!) {
@@ -9,6 +9,7 @@ const getCertificationQuery = graphql(`
       label
       codeRncp
       status
+      statusV2
       rncpExpiresAt
       rncpDeliveryDeadline
       availableAt
@@ -51,11 +52,22 @@ const getCertificationQuery = graphql(`
   }
 `);
 
+const sendCertificationToRegistryManagerMutation = graphql(`
+  mutation sendCertificationToRegistryManagerForUpdateCertificationStructurePage(
+    $input: SendCertificationToRegistryManagerInput!
+  ) {
+    referential_sendCertificationToRegistryManager(input: $input) {
+      id
+    }
+  }
+`);
+
 export const useUpdateCertificationPage = ({
   certificationId,
 }: {
   certificationId: string;
 }) => {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
 
   const {
@@ -75,5 +87,20 @@ export const useUpdateCertificationPage = ({
 
   const certification = getCertificationQueryResponse?.getCertification;
 
-  return { certification, getCertificationQueryStatus };
+  const sendCertificationToRegistryManager = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(sendCertificationToRegistryManagerMutation, {
+        input: { certificationId },
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationId],
+      }),
+  });
+
+  return {
+    certification,
+    getCertificationQueryStatus,
+    sendCertificationToRegistryManager,
+  };
 };

@@ -40,6 +40,8 @@ export const createCertificationRegistryManager = async ({
     });
   } catch (error) {
     const errorMessage = (error as FunctionalError).message;
+    console.log(errorMessage);
+
     if (errorMessage) {
       throw new Error(errorMessage);
     }

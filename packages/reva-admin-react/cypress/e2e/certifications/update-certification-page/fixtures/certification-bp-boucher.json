@@ -5,6 +5,7 @@
       "label": "BP Boucher",
       "codeRncp": "37310",
       "status": "AVAILABLE",
+      "statusV2": "BROUILLON",
       "rncpExpiresAt": 1788127200000,
       "rncpDeliveryDeadline": null,
       "availableAt": 1688162400000,

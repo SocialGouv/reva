@@ -1,7 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import { UpdateCertificationStructureInput } from "../referential.types";
 
-export const updateCertificationStructureInput = async ({
+export const updateCertificationStructure = async ({
   certificationId,
   certificationAuthorityStructureId,
 }: UpdateCertificationStructureInput) =>

@@ -98,3 +98,7 @@ export interface UpdateCertificationStructureInput {
   certificationId: string;
   certificationAuthorityStructureId: string;
 }
+
+export interface SendCertificationToRegistryManagerInput {
+  certificationId: string;
+}
