@@ -143,7 +143,12 @@ const unsafeReferentialResolvers = {
       prismaClient.conventionCollective.findMany(),
     getFCCertification: (_: unknown, { rncp }: { rncp: string }) =>
       RNCPReferential.getInstance().findOneByRncp(rncp),
-    getCountries: () => prismaClient.country.findMany(),
+    getCountries: () =>
+      prismaClient.country.findMany({
+        orderBy: {
+          label: "asc",
+        },
+      }),
     getEtablissement: (_: unknown, { siret }: { siret: string }) =>
       findEtablissementDiffusible({ siret }),
     getEtablissementAsAdmin: (_: unknown, { siret }: { siret: string }) =>
