@@ -138,8 +138,9 @@ export default function AttachmentsPage() {
     name: "additionalFiles",
   });
 
-  const remoteFiles = useMemo(
-    () => ({
+  const remoteFiles = useMemo(() => {
+    console.log("hello memo");
+    return {
       idCard: attachments?.find((attachment) => attachment?.type === "ID_CARD")
         ?.file,
       equivalenceOrExemptionProof: attachments?.find(
@@ -155,9 +156,32 @@ export default function AttachmentsPage() {
           name: attachment?.file?.name,
           file: attachment?.file,
         })),
-    }),
-    [attachments],
+    };
+  }, [attachments]);
+
+  const defaultIdFile = useMemo(
+    () => getFancyDefaultFile(remoteFiles.idCard),
+    [remoteFiles.idCard],
   );
+
+  const defaultEquivalenceOrExemptionProofFile = useMemo(
+    () => getFancyDefaultFile(remoteFiles.equivalenceOrExemptionProof),
+    [remoteFiles.equivalenceOrExemptionProof],
+  );
+
+  const defaultTrainingCertificateFile = useMemo(
+    () => getFancyDefaultFile(remoteFiles.trainingCertificate),
+    [remoteFiles.trainingCertificate],
+  );
+
+  const defaultAdditionalFiles = useMemo(() => {
+    return additionalFilesFields.map((field) =>
+      getFancyDefaultFile(
+        remoteFiles.additionalFiles.find((file) => file.name === field[0]?.name)
+          ?.file,
+      ),
+    );
+  }, [additionalFilesFields, remoteFiles.additionalFiles]);
 
   const resetAdditionalFiles = useCallback(() => {
     additionalFilesFields.forEach(() => removeAdditionalFiles(0));
@@ -243,7 +267,7 @@ export default function AttachmentsPage() {
             title="Pièce d'identité"
             description="Copie d'une pièce d'identité en cours de validité (la photo et les informations doivent être nettes). Le candidat devra montrer cette pièce lors du passage devant le jury et en aura besoin pour la délivrance éventuelle de la certification. Sont valables les cartes d'identité, les passeports et les cartes de séjour."
             hint={hintMessage}
-            defaultFile={getFancyDefaultFile(remoteFiles.idCard)}
+            defaultFile={defaultIdFile}
             nativeInputProps={{
               required: true,
               ...register("idCard"),
@@ -258,9 +282,7 @@ export default function AttachmentsPage() {
             title="Justificatif d'équivalence ou de dispense (optionnel)"
             description="Copie du ou des justificatifs ouvrant accès à une équivalence ou dispense en lien avec la certification visée."
             hint={hintMessage}
-            defaultFile={getFancyDefaultFile(
-              remoteFiles.equivalenceOrExemptionProof,
-            )}
+            defaultFile={defaultEquivalenceOrExemptionProofFile}
             nativeInputProps={{
               ...register("equivalenceOrExemptionProof"),
               accept: ACCEPTED_FILE_TYPES,
@@ -276,7 +298,7 @@ export default function AttachmentsPage() {
             title="Attestation ou certificat de formation (optionnel)"
             description="Attestation ou certificat de suivi de formation justifiant du prérequis demandé par la certification visée."
             hint={hintMessage}
-            defaultFile={getFancyDefaultFile(remoteFiles.trainingCertificate)}
+            defaultFile={defaultTrainingCertificateFile}
             nativeInputProps={{
               ...register("trainingCertificate"),
               accept: ACCEPTED_FILE_TYPES,
@@ -295,11 +317,7 @@ export default function AttachmentsPage() {
               onClickDelete={() => {
                 removeAdditionalFiles(index);
               }}
-              defaultFile={getFancyDefaultFile(
-                remoteFiles.additionalFiles.find(
-                  (file) => file.name === field[0]?.name,
-                )?.file,
-              )}
+              defaultFile={defaultAdditionalFiles[index]}
               nativeInputProps={{
                 ...register(`additionalFiles.${index}`),
                 accept: ACCEPTED_FILE_TYPES,

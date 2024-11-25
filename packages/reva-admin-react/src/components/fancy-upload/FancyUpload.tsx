@@ -81,8 +81,7 @@ export const FancyUpload = ({
     } catch (error) {
       console.error(error);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultFile?.mimeType, defaultFile?.name, defaultFile?.url]);
+  }, [defaultFile]);
 
   useEffect(() => {
     downloadFiles();
