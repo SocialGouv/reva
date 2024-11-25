@@ -33,13 +33,13 @@ const juryResultNotice: {
 export const ResultatTab = () => {
   const { candidacy } = useJuryAAP();
   const jury = candidacy?.jury;
-  const hasResult = jury?.result !== null;
+  const hasResult = jury?.result !== null && jury !== null;
 
   if (!hasResult) {
     return (
       <Alert
         description={
-          <div className="pl-2">
+          <div className="pl-2  mt-3 mb-4">
             <h6>En attente du résultat</h6>
             <dd>
               Le certificateur vous communiquera le résultat de votre candidat.
