@@ -8,8 +8,9 @@ import { format } from "date-fns";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
+import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -194,13 +195,7 @@ const PageContent = ({
               </Info>
               {!certification.certificationAuthorityStructure
                 ?.certificationRegistryManager && (
-                <Alert
-                  data-test="no-certification-registry-manager-alert"
-                  className="mt-4"
-                  severity="warning"
-                  title="Cette structure certificatrice n’a aucun responsable des certifications pour le moment"
-                  description="Vous pouvez éditer et envoyer cette certification mais elle ne pourra être validée et publiée que par un responsable des certifications."
-                />
+                <NoCertificationRegistryManagerAlert className="mt-4" />
               )}
               {certification.certificationAuthorities.length ? (
                 <>
@@ -222,13 +217,7 @@ const PageContent = ({
                   </ul>
                 </>
               ) : (
-                <Alert
-                  data-test="no-certification-authority-alert"
-                  className="mt-4"
-                  severity="warning"
-                  title="Il n’y a pas de gestionnaire des candidatures pour cette certification"
-                  description="Malgré cela, elle sera visible des candidats et des AAP dès sa validation par le responsable des certifications. Lors du premier dossier de faisabilité envoyé, et s’il n’y a toujours pas de gestionnaire des candidatures, le support sera averti du problème."
-                />
+                <NoCertificationAuthorityAlert className="mt-4" />
               )}
             </>
           )}

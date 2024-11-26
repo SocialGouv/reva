@@ -8,6 +8,8 @@ import { z } from "zod";
 import { useStructureForm } from "./structureForm.hook";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useCallback, useEffect } from "react";
+import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
+import { NoCertificationRegistryManagerAlert } from "./NoCertificationRegistryManagerAlert";
 
 type CertificationForForm = {
   id: string;
@@ -60,6 +62,7 @@ export const StructureForm = ({
 
   const {
     availableCertificationAuthorities,
+    certificationRegistryManagerPresent,
     getCertificationAuthoritiesQueryStatus,
   } = useStructureForm({ certificationAuthorityStructureId });
 
@@ -149,18 +152,24 @@ export const StructureForm = ({
             </option>
           ))}
         </Select>
-        {getCertificationAuthoritiesQueryStatus === "success" && (
-          <Checkbox
-            legend="Gestionnaire(s) des candidatures"
-            options={certificationAuthoritiesFields.map((ca, caIndex) => ({
-              label: ca.label,
-              nativeInputProps: {
-                key: ca.id,
-                ...register(`certificationAuthorities.${caIndex}.checked`),
-              },
-            }))}
-          />
+        {!certificationRegistryManagerPresent && (
+          <NoCertificationRegistryManagerAlert className="my-4" />
         )}
+        {getCertificationAuthoritiesQueryStatus === "success" &&
+          (certificationAuthoritiesFields.length ? (
+            <Checkbox
+              legend="Gestionnaire(s) des candidatures"
+              options={certificationAuthoritiesFields.map((ca, caIndex) => ({
+                label: ca.label,
+                nativeInputProps: {
+                  key: ca.id,
+                  ...register(`certificationAuthorities.${caIndex}.checked`),
+                },
+              }))}
+            />
+          ) : (
+            <NoCertificationAuthorityAlert className="my-4" />
+          ))}
         <FormButtons
           backUrl={`/certifications-v2/${certification.id}`}
           formState={{

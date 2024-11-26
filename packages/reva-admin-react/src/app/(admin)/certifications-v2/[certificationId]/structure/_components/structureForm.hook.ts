@@ -8,6 +8,9 @@ const getCertificationAuthoritiesQuery = graphql(`
   ) {
     certification_authority_getCertificationAuthorityStructure(id: $id) {
       id
+      certificationRegistryManager {
+        id
+      }
       certificationAuthorities {
         id
         label
@@ -44,8 +47,14 @@ export const useStructureForm = ({
       ?.certification_authority_getCertificationAuthorityStructure
       ?.certificationAuthorities || [];
 
+  const certificationRegistryManagerPresent =
+    getCertificationAuthoritiesResponse
+      ?.certification_authority_getCertificationAuthorityStructure
+      ?.certificationRegistryManager;
+
   return {
     getCertificationAuthoritiesQueryStatus,
     availableCertificationAuthorities,
+    certificationRegistryManagerPresent,
   };
 };
