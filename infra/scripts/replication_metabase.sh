@@ -29,3 +29,6 @@ backup_file_name="$( tar --list --file="${archive_name}" \
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
+# Restore the data:
+pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
+--dbname "${DATABASE_URL}" "/app/${backup_file_name}"
