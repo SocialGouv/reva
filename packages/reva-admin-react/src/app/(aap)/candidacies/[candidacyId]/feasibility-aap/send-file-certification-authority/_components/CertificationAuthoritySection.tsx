@@ -1,14 +1,20 @@
 import Select from "@codegouvfr/react-dsfr/Select";
 
+type CertificationAuthorityProps = {
+  certificationAuthorities: { label: string; id: string }[];
+  certificationAuthoritySelectedId: string;
+  setCertificationAuthoritySelectedId: (id: string) => void;
+  feasibilitySentToCertificationAuthorityLabel: string | undefined;
+};
+
 const CertificateursSelect = ({
   certificationAuthorities,
   certificationAuthoritySelectedId,
   setCertificationAuthoritySelectedId,
-}: {
-  certificationAuthorities: { label: string; id: string }[];
-  certificationAuthoritySelectedId: string | undefined;
-  setCertificationAuthoritySelectedId: (id: string) => void;
-}) => {
+}: Omit<
+  CertificationAuthorityProps,
+  "feasibilitySentToCertificationAuthorityLabel"
+>) => {
   return (
     <Select
       label={
@@ -37,15 +43,35 @@ const CertificateursSelect = ({
   );
 };
 
+const SectionContent = ({
+  certificationAuthorities,
+  certificationAuthoritySelectedId,
+  setCertificationAuthoritySelectedId,
+  feasibilitySentToCertificationAuthorityLabel,
+}: CertificationAuthorityProps) => {
+  if (feasibilitySentToCertificationAuthorityLabel) {
+    return <p>{feasibilitySentToCertificationAuthorityLabel}</p>;
+  }
+
+  if (certificationAuthorities.length === 1) {
+    return <p>{certificationAuthorities[0].label}</p>;
+  }
+
+  return (
+    <CertificateursSelect
+      certificationAuthorities={certificationAuthorities}
+      certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+      setCertificationAuthoritySelectedId={setCertificationAuthoritySelectedId}
+    />
+  );
+};
+
 export default function CertificationAuthoritySection({
   certificationAuthorities,
   certificationAuthoritySelectedId,
   setCertificationAuthoritySelectedId,
-}: {
-  certificationAuthorities: { label: string; id: string }[];
-  certificationAuthoritySelectedId: string;
-  setCertificationAuthoritySelectedId: (id: string) => void;
-}) {
+  feasibilitySentToCertificationAuthorityLabel,
+}: CertificationAuthorityProps) {
   if (!certificationAuthorities.length) {
     return null;
   }
@@ -56,17 +82,16 @@ export default function CertificationAuthoritySection({
         <span className="fr-icon-team-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Certificateur</h2>
       </div>
-      {certificationAuthorities.length === 1 ? (
-        <p>{certificationAuthorities[0].label}</p>
-      ) : (
-        <CertificateursSelect
-          certificationAuthorities={certificationAuthorities}
-          certificationAuthoritySelectedId={certificationAuthoritySelectedId}
-          setCertificationAuthoritySelectedId={
-            setCertificationAuthoritySelectedId
-          }
-        />
-      )}
+      <SectionContent
+        certificationAuthorities={certificationAuthorities}
+        certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+        setCertificationAuthoritySelectedId={
+          setCertificationAuthoritySelectedId
+        }
+        feasibilitySentToCertificationAuthorityLabel={
+          feasibilitySentToCertificationAuthorityLabel
+        }
+      />
     </div>
   );
 }
