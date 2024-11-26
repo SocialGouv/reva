@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo 'Running metabase production data replication script'
+
 archive_name="backup.tar.gz"
 
 # Install the Scalingo CLI tool in the container:
@@ -32,3 +34,6 @@ tar --extract --verbose --file="${archive_name}" --directory="/app/"
 # Restore the data:
 pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
 --dbname "${DATABASE_URL}" "/app/${backup_file_name}"
+
+echo 'Metabase production data replication script finished'
+
