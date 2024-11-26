@@ -122,17 +122,7 @@ export const getCandidacyCountByStatus = async ({
     searchClauses.push(
       getSearchFilterClause({
         table: "certification",
-        fields: ["label"],
-        words,
-      }),
-    );
-
-    //search on certification type (type diplome)
-    fromClause = Prisma.sql`${fromClause} left join type_diplome on certification.type_diplome_id = type_diplome.id`;
-    searchClauses.push(
-      getSearchFilterClause({
-        table: "type_diplome",
-        fields: ["label"],
+        fields: ["label", "rncp_type_diplome"],
         words,
       }),
     );
