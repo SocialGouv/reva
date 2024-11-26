@@ -276,12 +276,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       <nav
         role="navigation"
         aria-label="Menu latéral"
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 md:basis-[400px]"
       >
         {isAdmin && certificationAuthorityId && (
-          <CertificationAuthority
-            certificationAuthorityId={certificationAuthorityId}
-          />
+          <div className="mr-8">
+            <CertificationAuthority
+              certificationAuthorityId={certificationAuthorityId}
+            />
+          </div>
         )}
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
