@@ -103,3 +103,7 @@ export interface UpdateCertificationStructureAndCertificationAuthoritiesInput {
 export interface SendCertificationToRegistryManagerInput {
   certificationId: string;
 }
+
+export interface ResetCompetenceBlocsByCertificationIdInput {
+  certificationId: string;
+}

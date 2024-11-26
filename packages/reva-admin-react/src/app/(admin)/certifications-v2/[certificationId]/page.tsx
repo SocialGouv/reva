@@ -39,7 +39,10 @@ const PageContent = ({
   const structureSummaryCardComplete =
     !!certification.certificationAuthorityStructure;
 
-  const { sendCertificationToRegistryManager } = useUpdateCertificationPage({
+  const {
+    sendCertificationToRegistryManager,
+    resetCompetenceBlocsByCertification,
+  } = useUpdateCertificationPage({
     certificationId: certification.id,
   });
 
@@ -47,6 +50,17 @@ const PageContent = ({
     try {
       await sendCertificationToRegistryManager.mutateAsync();
       successToast("La certification a bien été envoyée");
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
+
+  const onClickReset = async () => {
+    try {
+      await resetCompetenceBlocsByCertification.mutateAsync();
+      successToast(
+        "Les blocs de compétences de la certification ont bien été réinitialisés",
+      );
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -63,7 +77,25 @@ const PageContent = ({
         Ensuite, vous pourrez renseigner une structure certificatrice et (à
         minima) un gestionnaire des candidatures.
       </p>
+
       <div className="flex flex-col gap-8">
+        {isEditable && (
+          <div
+            data-test="button-reset"
+            className="flex flex-row justify-end mt-2"
+          >
+            <Button
+              type="button"
+              iconId="fr-icon-refresh-line"
+              onClick={onClickReset}
+              priority="tertiary no outline"
+              title="Label button"
+            >
+              Réinitialiser depuis France Compétences
+            </Button>
+          </div>
+        )}
+
         <EnhancedSectionCard
           data-test="certification-description-card"
           title="Descriptif de la certification"

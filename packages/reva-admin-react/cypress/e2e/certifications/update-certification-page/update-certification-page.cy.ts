@@ -279,7 +279,7 @@ context("when i access the update certification page ", () => {
       );
     });
 
-    it("let me check if button 'envoyer' is visible is statusV2 equal to 'BROUILLON'", function () {
+    it("let me check if buttons 'envoyer' and 'réinitialiser' are visible is statusV2 equal to 'BROUILLON'", function () {
       interceptCertification({ withStatusV2: "BROUILLON" });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
@@ -289,9 +289,10 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get('[data-test="button-send"]').should("exist");
+      cy.get('[data-test="button-reset"]').should("exist");
     });
 
-    it("let me check if button 'envoyer' is no more visible if statusV2 different from 'BROUILLON'", function () {
+    it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if statusV2 different from 'BROUILLON'", function () {
       interceptCertification({ withStatusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
@@ -301,6 +302,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get('[data-test="button-send"]').should("not.exist");
+      cy.get('[data-test="button-reset"]').should("not.exist");
     });
   });
 });

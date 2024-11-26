@@ -62,6 +62,16 @@ const sendCertificationToRegistryManagerMutation = graphql(`
   }
 `);
 
+const resetCompetenceBlocsByCertificationIdMutation = graphql(`
+  mutation resetCompetenceBlocsByCertificationIdForUpdateCertificationStructurePage(
+    $input: ResetCompetenceBlocsByCertificationIdInput!
+  ) {
+    referential_resetCompetenceBlocsByCertificationId(input: $input) {
+      id
+    }
+  }
+`);
+
 export const useUpdateCertificationPage = ({
   certificationId,
 }: {
@@ -98,9 +108,21 @@ export const useUpdateCertificationPage = ({
       }),
   });
 
+  const resetCompetenceBlocsByCertification = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(resetCompetenceBlocsByCertificationIdMutation, {
+        input: { certificationId },
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationId],
+      }),
+  });
+
   return {
     certification,
     getCertificationQueryStatus,
     sendCertificationToRegistryManager,
+    resetCompetenceBlocsByCertification,
   };
 };

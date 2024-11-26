@@ -346,6 +346,10 @@ input SendCertificationToRegistryManagerInput {
   certificationId: ID!
 }
 
+input ResetCompetenceBlocsByCertificationIdInput {
+  certificationId: ID!
+}
+
 type Mutation {
   referential_updateCertification(
     input: UpdateCertificationInput!
@@ -371,5 +375,8 @@ type Mutation {
   ): Certification!
   referential_sendCertificationToRegistryManager(
     input: SendCertificationToRegistryManagerInput
+  ): Certification!
+  referential_resetCompetenceBlocsByCertificationId(
+    input: ResetCompetenceBlocsByCertificationIdInput
   ): Certification!
 }
