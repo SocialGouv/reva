@@ -1,0 +1,7 @@
+{
+  "jobs": [
+    {
+      "command": "0 3 * * * /app/metabase_production_data_replication.sh"
+    }
+  ]
+}
