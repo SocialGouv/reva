@@ -21,9 +21,7 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
-    "eslint": "eslint modules infra",
-    "lint": "npm run eslint",
-    "lint-staged": "lint-staged",
+    "lint": "eslint --color modules infra",
     "prettier": "prettier --write \"{infra,modules}/**/*.{ts,md}\""
   },
   "prisma": {
@@ -34,16 +32,6 @@
       "style": "module",
       "parser": "typescript"
     }
-  },
-  "lint-staged": {
-    "modules/**/*.{ts,md}": [
-      "prettier --write",
-      "eslint"
-    ],
-    "infra/**/*.{ts,md}": [
-      "prettier --write",
-      "eslint"
-    ]
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",
@@ -102,7 +90,6 @@
     "eslint-plugin-prettier": "^5.2.1",
     "import-sort-style-module": "^6.0.0",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.10",
     "nodemon": "^3.1.7",
     "pino-pretty": "^11.3.0",
     "prettier": "^3.3.3",
