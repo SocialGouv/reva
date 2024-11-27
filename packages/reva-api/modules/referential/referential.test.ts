@@ -4,24 +4,13 @@
 import { Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
+import { attachOrganismToAllDegreesHelper } from "../../test/helpers/attach-organism-to-all-degrees-helper";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { createOrganismOnConventionCollectiveHelper } from "../../test/helpers/entities/create-organism-on-convention-collective-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-
-async function attachOrganismToAllDegrees(organism: Organism | null) {
-  const degrees = await prismaClient.degree.findMany();
-  for (const degree of degrees) {
-    await prismaClient.organismOnDegree.create({
-      data: {
-        degreeId: degree?.id || "",
-        organismId: organism?.id || "",
-      },
-    });
-  }
-}
 
 const createCertifications = async () => {
   for (const cert of particulierEmployeurCertifications) {
@@ -78,8 +67,8 @@ test("should have 208 certifications available in total", async () => {
   const organismExpertBranche = await createOrganismHelper({
     typology: "expertBranche",
   });
-  await attachOrganismToAllDegrees(organismExpertFiliere);
-  await attachOrganismToAllDegrees(organismExpertBranche);
+  await attachOrganismToAllDegreesHelper(organismExpertFiliere);
+  await attachOrganismToAllDegreesHelper(organismExpertBranche);
   const resp = await searchCertificationsForCandidate({});
   const obj = resp.json();
   expect(
@@ -104,7 +93,7 @@ test("should have only certifications handle by expertBranche", async () => {
   const organismExpertBranche = await createOrganismHelper({
     typology: "expertBranche",
   });
-  await attachOrganismToAllDegrees(organismExpertBranche);
+  await attachOrganismToAllDegreesHelper(organismExpertBranche);
   await createOrganismOnConventionCollectiveHelper({
     ccnId: particulierEmployeur?.id || "",
     organismId: organismExpertBranche.id,
