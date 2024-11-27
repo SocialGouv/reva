@@ -28,6 +28,53 @@ const createCandidacies = async (
   }
 };
 
+const executeQueryAndAssertResults = async (
+  defaultAssertionOverride?: Partial<Record<CandidacyStatusFilter, number>>,
+) => {
+  const resultAssertion = {
+    ACTIVE_HORS_ABANDON: 0,
+    ABANDON: 0,
+    REORIENTEE: 0,
+    ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 0,
+    PARCOURS_CONFIRME_HORS_ABANDON: 0,
+    PRISE_EN_CHARGE_HORS_ABANDON: 0,
+    PARCOURS_ENVOYE_HORS_ABANDON: 0,
+    DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON: 0,
+    DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON: 0,
+    DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON: 0,
+    DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON: 0,
+    DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 0,
+    DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON: 0,
+    JURY_HORS_ABANDON: 0,
+    JURY_PROGRAMME_HORS_ABANDON: 0,
+    JURY_PASSE_HORS_ABANDON: 0,
+    DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON: 0,
+    DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: 0,
+    VALIDATION_HORS_ABANDON: 0,
+    PROJET_HORS_ABANDON: 0,
+    ...defaultAssertionOverride,
+  };
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "whatever",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "candidacy_candidacyCountByStatus",
+      returnFields:
+        "{ACTIVE_HORS_ABANDON, ABANDON, REORIENTEE, ARCHIVE_HORS_ABANDON_HORS_REORIENTATION, PARCOURS_CONFIRME_HORS_ABANDON, PRISE_EN_CHARGE_HORS_ABANDON, PARCOURS_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON, DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON, DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON, DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON, DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON, JURY_HORS_ABANDON, JURY_PROGRAMME_HORS_ABANDON, JURY_PASSE_HORS_ABANDON, DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON, DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON, VALIDATION_HORS_ABANDON, PROJET_HORS_ABANDON}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data.candidacy_candidacyCountByStatus).toMatchObject(
+    resultAssertion,
+  );
+};
+
 describe("Simple candidacy status counters", () => {
   const testData: [
     CandidacyStatusStep,
@@ -105,42 +152,9 @@ describe("Simple candidacy status counters", () => {
           count: 5,
         },
       ]);
-      const resp = await injectGraphql({
-        fastify: (global as any).fastify,
-        authorization: authorizationHeaderForUser({
-          role: "admin",
-          keycloakId: "whatever",
-        }),
-        payload: {
-          requestType: "query",
-          endpoint: "candidacy_candidacyCountByStatus",
-          returnFields:
-            "{ACTIVE_HORS_ABANDON, ABANDON, REORIENTEE, ARCHIVE_HORS_ABANDON_HORS_REORIENTATION, PARCOURS_CONFIRME_HORS_ABANDON, PRISE_EN_CHARGE_HORS_ABANDON, PARCOURS_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON, DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON, DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON, DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON, DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON, JURY_HORS_ABANDON, JURY_PROGRAMME_HORS_ABANDON, JURY_PASSE_HORS_ABANDON, DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON, DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON, VALIDATION_HORS_ABANDON, PROJET_HORS_ABANDON}",
-        },
-      });
-      expect(resp.statusCode).toEqual(200);
-      const obj = resp.json();
-      expect(obj.data.candidacy_candidacyCountByStatus).toMatchObject({
+
+      await executeQueryAndAssertResults({
         ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
-        ABANDON: 0,
-        REORIENTEE: 0,
-        ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 0,
-        PARCOURS_CONFIRME_HORS_ABANDON: 0,
-        PRISE_EN_CHARGE_HORS_ABANDON: 0,
-        PARCOURS_ENVOYE_HORS_ABANDON: 0,
-        DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON: 0,
-        DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON: 0,
-        DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON: 0,
-        DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON: 0,
-        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 0,
-        DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON: 0,
-        JURY_HORS_ABANDON: 0,
-        JURY_PROGRAMME_HORS_ABANDON: 0,
-        JURY_PASSE_HORS_ABANDON: 0,
-        DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON: 0,
-        DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: 0,
-        VALIDATION_HORS_ABANDON: 0,
-        PROJET_HORS_ABANDON: 0,
         [statusFilter]: 5,
       });
     },
