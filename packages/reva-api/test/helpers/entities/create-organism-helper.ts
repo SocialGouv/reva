@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker/.";
-import { Prisma, OrganismTypology } from "@prisma/client";
+import { OrganismTypology, Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createAccountHelper } from "./create-account-helper";
 import { createMaisonMereAapHelper } from "./create-maison-mere-aap-helper";
@@ -24,6 +24,19 @@ export const createOrganismHelper = async (
       accounts: {
         connect: {
           id: account.id,
+        },
+      },
+      organismInformationsCommerciales: {
+        create: {
+          adresseCodePostal: faker.location.zipCode(),
+          adresseInformationsComplementaires: faker.location.streetAddress(),
+          adresseNumeroEtNomDeRue: faker.location.streetAddress(),
+          adresseVille: faker.location.city(),
+          conformeNormesAccessbilite: "CONFORME",
+          emailContact: faker.internet.email(),
+          nom: faker.person.fullName(),
+          siteInternet: faker.internet.url(),
+          telephone: faker.phone.number(),
         },
       },
       ...organismArgs,

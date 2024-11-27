@@ -18,6 +18,8 @@ export const createMaisonMereAapHelper = async (
       typologie: "expertFiliere",
       dateExpirationCertificationQualiopi: faker.date.future(),
       gestionnaireAccountId: account.id,
+      cguVersion: 1,
+      cguAcceptedAt: faker.date.past(),
       ...mmArgs,
     },
     include: {
