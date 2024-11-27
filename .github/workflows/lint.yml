@@ -15,6 +15,7 @@ jobs:
         run: npm ci
       - name: Running ESLint
         run: npm run eslint -w reva-api
+
   eslint-reva-admin:
     runs-on: ubuntu-latest
     defaults:
@@ -31,6 +32,7 @@ jobs:
         run: npm ci
       - name: Running ESLint
         run: npm run lint
+
   eslint-reva-candidate:
     runs-on: ubuntu-latest
     defaults:
@@ -47,6 +49,7 @@ jobs:
         run: npm ci
       - name: Running ESLint
         run: npm run lint
+
   eslint-reva-website:
     runs-on: ubuntu-latest
     defaults:
