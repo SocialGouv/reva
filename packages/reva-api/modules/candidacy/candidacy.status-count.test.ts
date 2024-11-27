@@ -8,6 +8,7 @@ import { createCandidacyHelper } from "../../test/helpers/entities/create-candid
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { CandidacyStatusFilter } from "./candidacy.types";
+import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 
 afterEach(async () => {
   await clearDatabase();
@@ -17,13 +18,17 @@ const createCandidacies = async (
   statusAndCounts: {
     status: CandidacyStatusStep;
     count: number;
+    droppedOut?: boolean;
   }[],
 ) => {
-  for (const { status, count } of statusAndCounts) {
+  for (const { status, count, droppedOut } of statusAndCounts) {
     for (let i = 0; i < count; i++) {
-      await createCandidacyHelper({
+      const candidacy = await createCandidacyHelper({
         candidacyActiveStatus: status,
       });
+      if (droppedOut) {
+        await createCandidacyDropOutHelper({ candidacyId: candidacy.id });
+      }
     }
   }
 };
@@ -159,4 +164,19 @@ describe("Simple candidacy status counters", () => {
       });
     },
   );
+});
+
+test("should count 5 dropped out candidacies", async () => {
+  await createCandidacies([
+    {
+      status: CandidacyStatusStep.PRISE_EN_CHARGE,
+      count: 5,
+      droppedOut: true,
+    },
+  ]);
+
+  await executeQueryAndAssertResults({
+    ACTIVE_HORS_ABANDON: 0,
+    ABANDON: 5,
+  });
 });
