@@ -7,20 +7,17 @@
     "node": "20"
   },
   "scripts": {
+    "predev": "only-include-used-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3002",
+    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
     "build": "next build",
     "start": "next start",
-    "start-local": "next start -p 3002",
     "lint": "next lint",
-    "graphql:generate": "graphql-codegen",
-    "graphql:watch": "graphql-codegen --watch",
-    "predev": "only-include-used-icons && npm run graphql:generate",
-    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
+    "graphql:generate": "graphql-codegen --config codegen.ts",
+    "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",
-    "cypress": "cypress run",
-    "cypress:ci": "cypress run --config baseUrl=http://localhost:3002",
-    "start-server": "npm run build &&  npm run start-local",
-    "test:ci": "start-server-and-test start-server http://localhost:3002 cypress:ci"
+    "cypress:ci": "cypress run",
+    "test:ci": "start-server-and-test 'next start -p 3002' http://localhost:3002 cypress:ci"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.14.1",
