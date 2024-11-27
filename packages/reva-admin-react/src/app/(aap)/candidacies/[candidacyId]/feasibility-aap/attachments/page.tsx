@@ -63,7 +63,7 @@ const schema = z
       if (idCard[0].size > MAX_UPLOAD_SIZE) {
         addIssue({
           path: ["idCard", 0],
-          message: "Le fichier est trop gros",
+          message: `Le fichier choisi est trop volumineux. Choisissez un fichier inférieur à ${MAX_FILE_SIZE}`,
           code: z.ZodIssueCode.custom,
         });
       }
@@ -74,7 +74,7 @@ const schema = z
       ) {
         addIssue({
           path: ["equivalenceOrExemptionProof", 0],
-          message: "Le fichier est trop gros",
+          message: `Le fichier choisi est trop volumineux. Choisissez un fichier inférieur à ${MAX_FILE_SIZE}`,
           code: z.ZodIssueCode.custom,
         });
       }
@@ -85,7 +85,7 @@ const schema = z
       ) {
         addIssue({
           path: ["trainingCertificate", 0],
-          message: "Le fichier est trop gros",
+          message: `Le fichier choisi est trop volumineux. Choisissez un fichier inférieur à ${MAX_FILE_SIZE}`,
           code: z.ZodIssueCode.custom,
         });
       }
@@ -93,7 +93,7 @@ const schema = z
         if (file[0] && file[0].size > MAX_UPLOAD_SIZE) {
           addIssue({
             path: [`additionalFiles.${index}`, 0],
-            message: "Le fichier est trop gros",
+            message: `Le fichier choisi est trop volumineux. Choisissez un fichier inférieur à ${MAX_FILE_SIZE}`,
             code: z.ZodIssueCode.custom,
           });
         }
