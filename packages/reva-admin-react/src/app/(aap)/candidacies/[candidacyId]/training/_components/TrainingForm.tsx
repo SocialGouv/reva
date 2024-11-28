@@ -218,6 +218,7 @@ export const TrainingForm = ({
       <h2 className="text-lg">Nombre d'heures</h2>
       <div className="grid md:grid-cols-3 gap-x-6">
         <Input
+          disabled={disabled}
           label={
             <p className="text-xs mb-0 font-bold">
               NOMBRE D'HEURES D'ACCOMPAGNEMENT INDIVIDUEL
@@ -232,6 +233,7 @@ export const TrainingForm = ({
           stateRelatedMessage={errors.individualHourCount?.message}
         />
         <Input
+          disabled={disabled}
           label={
             <p className="text-xs mb-0 font-bold">
               NOMBRE D'HEURES D'ACCOMPAGNEMENT COLLECTIF
@@ -246,6 +248,7 @@ export const TrainingForm = ({
           stateRelatedMessage={errors.collectiveHourCount?.message}
         />
         <Input
+          disabled={disabled}
           label={
             <p className="text-xs mb-0 font-bold">
               NOMBRE D’HEURES DE FORMATIONS COMPLÉMENTAIRES
@@ -288,6 +291,7 @@ export const TrainingForm = ({
       <br />
       <div className="grid md:grid-cols-2 gap-6">
         <Input
+          disabled={disabled}
           textArea
           label={
             <p className="text-xs mb-0 font-bold">
@@ -305,6 +309,7 @@ export const TrainingForm = ({
         />
 
         <Input
+          disabled={disabled}
           textArea
           label={
             <p className="text-xs mb-0 font-bold">
