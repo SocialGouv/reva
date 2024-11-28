@@ -1,5 +1,9 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -8,6 +12,12 @@
         "args": "after-used",
         "argsIgnorePattern": "^_",
         "ignoreRestSiblings": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
       }
     ]
   }

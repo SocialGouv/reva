@@ -51,6 +51,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.16",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "start-server-and-test": "^2.0.8",

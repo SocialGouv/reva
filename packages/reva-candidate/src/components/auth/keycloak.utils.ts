@@ -1,5 +1,5 @@
-import { setCookie, deleteCookie, getCookie } from 'cookies-next';
-import { errorToast } from '../toast/toast';
+import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { errorToast } from "../toast/toast";
 
 const storageKey = "tokens";
 
