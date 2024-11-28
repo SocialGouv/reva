@@ -143,6 +143,24 @@ function splitString(value: string): string[] {
     "",
   );
 
+  // Jump line + UpperFirst regEx
+  const regExJumpline_R = new RegExp(/(?=\r\n\r\n)/g);
+  if (cleanedValue.match(regExJumpline_R)) {
+    let list: string[] = [];
+    list = cleanedValue.split(regExJumpline_R);
+    list = list.map((v) => v.replace(new RegExp(/^\r\n\r\n/), ""));
+    return list;
+  }
+
+  // Jump line + UpperFirst regEx
+  const regExJumpline_N = new RegExp(/(?=\n)/g);
+  if (cleanedValue.match(regExJumpline_N)) {
+    let list: string[] = [];
+    list = cleanedValue.split(regExJumpline_N);
+    list = list.map((v) => v.replace(new RegExp(/^\n/), ""));
+    return list;
+  }
+
   // Space + UpperFirst regEx
   const regEx1 = new RegExp(/( \* |\* )/g);
   if (cleanedValue.match(regEx1)) {
@@ -222,24 +240,6 @@ function splitString(value: string): string[] {
     let list: string[] = [];
     list = cleanedValue.split(regExSpaceUpperFirst);
     list = list.map((v) => v.replace(new RegExp(/^ /), ""));
-    return list;
-  }
-
-  // Jump line + UpperFirst regEx
-  const regExJumpline_R = new RegExp(/(?=\r\n\r\n)/g);
-  if (cleanedValue.match(regExJumpline_R)) {
-    let list: string[] = [];
-    list = cleanedValue.split(regExJumpline_R);
-    list = list.map((v) => v.replace(new RegExp(/^\r\n\r\n/), ""));
-    return list;
-  }
-
-  // Jump line + UpperFirst regEx
-  const regExJumpline_N = new RegExp(/(?=\n)/g);
-  if (cleanedValue.match(regExJumpline_N)) {
-    let list: string[] = [];
-    list = cleanedValue.split(regExJumpline_N);
-    list = list.map((v) => v.replace(new RegExp(/^\n/), ""));
     return list;
   }
 
