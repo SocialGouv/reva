@@ -163,6 +163,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       candidacyStatuses: true,
       candidacyDropOut: true,
       Feasibility: true,
+      certification: true,
     },
   });
   if (!candidacy) {
@@ -177,6 +178,13 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   ) {
     throw new Error('"isCertificationPartial" has not been set');
   }
+
+  if (!candidacy.certification) {
+    throw new Error(
+      "Impossible de créer la demande de paiement. La candidature n'a pas de certification associée",
+    );
+  }
+
   const activeCandidacyStatus = candidacy.candidacyStatuses?.filter(
     (s) => s.isActive,
   )?.[0].status;
@@ -229,13 +237,38 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   }
 
   //maximum total cost allowed for unifvae payment request depends on the funding request creation date
+  //and the type of certification
+
   const fundingRequestSentBefore20231219 = candidacy.candidacyStatuses.some(
     (cs) =>
       cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
       isBefore(cs.createdAt, new Date(2023, 11, 19)),
   );
 
-  const maximumTotalCostAllowed = fundingRequestSentBefore20231219
+  const fundingRequestSentBefore20240602 = candidacy.candidacyStatuses.some(
+    (cs) =>
+      cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
+      isBefore(cs.createdAt, new Date(2024, 5, 2)),
+  );
+
+  const DEAS_DEAP_AND_DEAES_RNCP_CODES = [
+    "4495",
+    "35830",
+    "4496",
+    "35832",
+    "25467",
+    "36004",
+  ];
+
+  const certificationIsDeasOrDeapOrDeaes =
+    DEAS_DEAP_AND_DEAES_RNCP_CODES.includes(candidacy.certification.rncpId);
+
+  //max total cost allowed is 4700 euros for funding request sent before 19/12/2023 or funding request sent before 02/06/2024 and certification is DEAS, DEAP or DEAES
+  const allowPaymentRequestOf4700Euros =
+    fundingRequestSentBefore20231219 ||
+    (fundingRequestSentBefore20240602 && certificationIsDeasOrDeapOrDeaes);
+
+  const maximumTotalCostAllowed = allowPaymentRequestOf4700Euros
     ? new Decimal(4700)
     : new Decimal(3200);
 
