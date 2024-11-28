@@ -2,7 +2,7 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { CandidacyStatusStep } from "@prisma/client";
+import { CandidacyStatusStep, Candidate, Certification } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -57,9 +57,13 @@ const createCandidacies = async (
   }
 };
 
-const executeQueryAndAssertResults = async (
-  defaultAssertionOverride?: Partial<Record<CandidacyStatusFilter, number>>,
-) => {
+const executeQueryAndAssertResults = async ({
+  searchFilter,
+  defaultAssertionOverride,
+}: {
+  searchFilter?: string;
+  defaultAssertionOverride?: Partial<Record<CandidacyStatusFilter, number>>;
+}) => {
   const resultAssertion = {
     ACTIVE_HORS_ABANDON: 0,
     ABANDON: 0,
@@ -92,6 +96,7 @@ const executeQueryAndAssertResults = async (
     }),
     payload: {
       requestType: "query",
+      arguments: searchFilter ? { searchFilter } : undefined,
       endpoint: "candidacy_candidacyCountByStatus",
       returnFields:
         "{ACTIVE_HORS_ABANDON, ABANDON, REORIENTEE, ARCHIVE_HORS_ABANDON_HORS_REORIENTATION, PARCOURS_CONFIRME_HORS_ABANDON, PRISE_EN_CHARGE_HORS_ABANDON, PARCOURS_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON, DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON, DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON, DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON, DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON, JURY_HORS_ABANDON, JURY_PROGRAMME_HORS_ABANDON, JURY_PASSE_HORS_ABANDON, DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON, DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON, VALIDATION_HORS_ABANDON, PROJET_HORS_ABANDON}",
@@ -104,91 +109,91 @@ const executeQueryAndAssertResults = async (
   );
 };
 
-describe("Simple candidacy status counters", () => {
-  const testData: [
-    CandidacyStatusStep,
-    CandidacyStatusFilter,
-    "ACTIVE" | "INACTIVE",
-  ][] = [
-    [CandidacyStatusStep.PROJET, "PROJET_HORS_ABANDON", "INACTIVE"],
-    [CandidacyStatusStep.VALIDATION, "VALIDATION_HORS_ABANDON", "ACTIVE"],
-    [
-      CandidacyStatusStep.PRISE_EN_CHARGE,
-      "PRISE_EN_CHARGE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.PARCOURS_ENVOYE,
-      "PARCOURS_ENVOYE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.PARCOURS_CONFIRME,
-      "PARCOURS_CONFIRME_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
-      "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
-      "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
-      "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
-      "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON",
-      "INACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-      "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE,
-      "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-    [
-      CandidacyStatusStep.DEMANDE_PAIEMENT_ENVOYEE,
-      "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON",
-      "ACTIVE",
-    ],
-  ];
-  test.each(testData)(
-    "should count 5 candidacies with status %s and status filter %s as %s for admin",
-    async (
-      status: CandidacyStatusStep,
-      statusFilter: CandidacyStatusFilter,
-      activeOrInactive: "ACTIVE" | "INACTIVE",
-    ) => {
-      await createCandidacies([
-        {
-          status,
-          count: 5,
-        },
-      ]);
+const testData: [
+  CandidacyStatusStep,
+  CandidacyStatusFilter,
+  "ACTIVE" | "INACTIVE",
+][] = [
+  [CandidacyStatusStep.PROJET, "PROJET_HORS_ABANDON", "INACTIVE"],
+  [CandidacyStatusStep.VALIDATION, "VALIDATION_HORS_ABANDON", "ACTIVE"],
+  [
+    CandidacyStatusStep.PRISE_EN_CHARGE,
+    "PRISE_EN_CHARGE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.PARCOURS_ENVOYE,
+    "PARCOURS_ENVOYE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.PARCOURS_CONFIRME,
+    "PARCOURS_CONFIRME_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
+    "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+    "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
+    "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+    "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
+    "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON",
+    "INACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+    "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE,
+    "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+  [
+    CandidacyStatusStep.DEMANDE_PAIEMENT_ENVOYEE,
+    "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON",
+    "ACTIVE",
+  ],
+];
+test.each(testData)(
+  "should count 5 candidacies with status %s and status filter %s as %s for admin",
+  async (
+    status: CandidacyStatusStep,
+    statusFilter: CandidacyStatusFilter,
+    activeOrInactive: "ACTIVE" | "INACTIVE",
+  ) => {
+    await createCandidacies([
+      {
+        status,
+        count: 5,
+      },
+    ]);
 
-      await executeQueryAndAssertResults({
+    await executeQueryAndAssertResults({
+      defaultAssertionOverride: {
         ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
         [statusFilter]: 5,
-      });
-    },
-  );
-});
+      },
+    });
+  },
+);
 
 test("should count 5 dropped out candidacies", async () => {
   await createCandidacies([
@@ -200,7 +205,7 @@ test("should count 5 dropped out candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    ABANDON: 5,
+    defaultAssertionOverride: { ABANDON: 5 },
   });
 });
 
@@ -213,7 +218,7 @@ test("should count 5 archived candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5,
+    defaultAssertionOverride: { ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5 },
   });
 });
 
@@ -227,7 +232,7 @@ test("should count 5 reoriented candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    REORIENTEE: 5,
+    defaultAssertionOverride: { REORIENTEE: 5 },
   });
 });
 
@@ -241,10 +246,12 @@ test("should count 5 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    ACTIVE_HORS_ABANDON: 5,
-    DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-    JURY_HORS_ABANDON: 5,
-    JURY_PROGRAMME_HORS_ABANDON: 5,
+    defaultAssertionOverride: {
+      ACTIVE_HORS_ABANDON: 5,
+      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+      JURY_HORS_ABANDON: 5,
+      JURY_PROGRAMME_HORS_ABANDON: 5,
+    },
   });
 });
 
@@ -258,9 +265,80 @@ test("should count 5 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    ACTIVE_HORS_ABANDON: 5,
-    DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-    JURY_HORS_ABANDON: 5,
-    JURY_PASSE_HORS_ABANDON: 5,
+    defaultAssertionOverride: {
+      ACTIVE_HORS_ABANDON: 5,
+      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+      JURY_HORS_ABANDON: 5,
+      JURY_PASSE_HORS_ABANDON: 5,
+    },
   });
 });
+
+test("should count 0 candidacy when searching for the wrong search criteria", async () => {
+  await createCandidacyHelper();
+
+  await executeQueryAndAssertResults({
+    searchFilter: "WRONG_CRITERIA",
+  });
+});
+
+test("should count 1 candidacy when searching for the right organism label", async () => {
+  const { organism } = await createCandidacyHelper();
+
+  await executeQueryAndAssertResults({
+    searchFilter: organism?.label,
+    defaultAssertionOverride: {
+      ACTIVE_HORS_ABANDON: 1,
+      PARCOURS_CONFIRME_HORS_ABANDON: 1,
+    },
+  });
+});
+
+test("should count 1 candidacy when searching for the right department label", async () => {
+  const { department } = await createCandidacyHelper();
+
+  await executeQueryAndAssertResults({
+    searchFilter: department?.label,
+    defaultAssertionOverride: {
+      ACTIVE_HORS_ABANDON: 1,
+      PARCOURS_CONFIRME_HORS_ABANDON: 1,
+    },
+  });
+});
+
+test.each(["label", "rncpTypeDiplome"] as const)(
+  "should count 1 candidacy when searching for the right candidate %s",
+  async (field: keyof Certification) => {
+    const { certification } = await createCandidacyHelper();
+
+    await executeQueryAndAssertResults({
+      searchFilter: certification?.[field] as string,
+      defaultAssertionOverride: {
+        ACTIVE_HORS_ABANDON: 1,
+        PARCOURS_CONFIRME_HORS_ABANDON: 1,
+      },
+    });
+  },
+);
+
+test.each([
+  "lastname",
+  "firstname",
+  "firstname2",
+  "firstname3",
+  "email",
+  "phone",
+] as const)(
+  "should count 1 candidacy when searching for the right candidate %s",
+  async (field: keyof Candidate) => {
+    const { candidate } = await createCandidacyHelper();
+
+    await executeQueryAndAssertResults({
+      searchFilter: candidate?.[field] as string,
+      defaultAssertionOverride: {
+        ACTIVE_HORS_ABANDON: 1,
+        PARCOURS_CONFIRME_HORS_ABANDON: 1,
+      },
+    });
+  },
+);
