@@ -7,7 +7,7 @@ export const createDropOutReasonHelper = async (
 ) =>
   prismaClient.dropOutReason.create({
     data: {
-      label: faker.lorem.word(),
+      label: faker.lorem.sentence(),
       ...args,
     },
   });
