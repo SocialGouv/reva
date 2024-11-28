@@ -81,6 +81,7 @@ export const createCandidacyHelper = async (args?: {
       candidate: true,
       candidacyDropOut: true,
       candidacyStatuses: true,
+      department: true,
     },
   });
 };
