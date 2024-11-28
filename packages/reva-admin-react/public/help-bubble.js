@@ -23,7 +23,7 @@
     },
     {
       label: "Calendrier des webinaires",
-      url: "https://fabnummas.notion.site/82b7cdf15d7b45d1830c8b1024ddfa8c?v=3a2fe0a672f34db9900d7f0bb3ab598f",
+      url: "https://fabnummas.notion.site/Calendrier-des-webinaires-b93fb857a9ab458e934802ebbc605073",
     },
   ];
 
