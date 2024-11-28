@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 import CandidateSection from "./_components/CandidateSection";
+import { CertificationAuthoritySection } from "./_components/CertificationAuthoritySection";
 import CertificationSection from "./_components/CertificationSection";
 import DecisionSection from "./_components/DecisionSection";
 import EligibilitySection from "./_components/EligibilitySection";
@@ -32,12 +33,14 @@ export default function DffSummary({
   dematerializedFeasibilityFile,
   candidacy,
   HasBeenSentComponent,
+  certificationAuthorityLabel,
   displayGiveYourDecisionSubtitle = false,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
   candidacy: Candidacy;
   HasBeenSentComponent?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
+  certificationAuthorityLabel?: string;
 }) {
   if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
@@ -129,6 +132,9 @@ export default function DffSummary({
         <AttachmentsSection
           attachments={attachments as DffAttachment[]}
           swornStatementFile={swornStatementFile}
+        />
+        <CertificationAuthoritySection
+          certificationAuthorityLabel={certificationAuthorityLabel}
         />
       </div>
     </div>

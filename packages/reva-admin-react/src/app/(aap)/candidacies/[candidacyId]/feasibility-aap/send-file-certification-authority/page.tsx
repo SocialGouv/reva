@@ -123,6 +123,7 @@ export default function SendFileCertificationAuthorityPage() {
             )
           ) : null
         }
+        certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
       />
       <CertificationAuthoritySection
         certificationAuthorities={certificationAuthorities}
@@ -130,9 +131,7 @@ export default function SendFileCertificationAuthorityPage() {
         setCertificationAuthoritySelectedId={
           setCertificationAuthoritySelectedId
         }
-        feasibilitySentToCertificationAuthorityLabel={
-          feasibility?.certificationAuthority?.label
-        }
+        feasibilityHasBeenSentToCertificationAuthority={!!feasibilityFileSentAt}
       />
 
       <div className="flex justify-between">

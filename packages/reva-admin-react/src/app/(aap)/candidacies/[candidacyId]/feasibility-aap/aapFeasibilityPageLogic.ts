@@ -35,6 +35,9 @@ const getCandidacyById = graphql(`
         decisionSentAt
         decisionComment
         feasibilityFileSentAt
+        certificationAuthority {
+          label
+        }
         history {
           id
           decision

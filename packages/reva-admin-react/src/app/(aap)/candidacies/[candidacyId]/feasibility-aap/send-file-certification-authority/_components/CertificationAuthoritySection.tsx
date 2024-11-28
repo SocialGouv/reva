@@ -4,7 +4,7 @@ type CertificationAuthorityProps = {
   certificationAuthorities: { label: string; id: string }[];
   certificationAuthoritySelectedId: string;
   setCertificationAuthoritySelectedId: (id: string) => void;
-  feasibilitySentToCertificationAuthorityLabel: string | undefined;
+  feasibilityHasBeenSentToCertificationAuthority: boolean;
 };
 
 const CertificateursSelect = ({
@@ -13,7 +13,7 @@ const CertificateursSelect = ({
   setCertificationAuthoritySelectedId,
 }: Omit<
   CertificationAuthorityProps,
-  "feasibilitySentToCertificationAuthorityLabel"
+  "feasibilityHasBeenSentToCertificationAuthority"
 >) => {
   return (
     <Select
@@ -43,36 +43,16 @@ const CertificateursSelect = ({
   );
 };
 
-const SectionContent = ({
-  certificationAuthorities,
-  certificationAuthoritySelectedId,
-  setCertificationAuthoritySelectedId,
-  feasibilitySentToCertificationAuthorityLabel,
-}: CertificationAuthorityProps) => {
-  if (feasibilitySentToCertificationAuthorityLabel) {
-    return <p>{feasibilitySentToCertificationAuthorityLabel}</p>;
-  }
-
-  if (certificationAuthorities.length === 1) {
-    return <p>{certificationAuthorities[0].label}</p>;
-  }
-
-  return (
-    <CertificateursSelect
-      certificationAuthorities={certificationAuthorities}
-      certificationAuthoritySelectedId={certificationAuthoritySelectedId}
-      setCertificationAuthoritySelectedId={setCertificationAuthoritySelectedId}
-    />
-  );
-};
-
 export default function CertificationAuthoritySection({
   certificationAuthorities,
   certificationAuthoritySelectedId,
   setCertificationAuthoritySelectedId,
-  feasibilitySentToCertificationAuthorityLabel,
+  feasibilityHasBeenSentToCertificationAuthority,
 }: CertificationAuthorityProps) {
-  if (!certificationAuthorities.length) {
+  if (
+    !certificationAuthorities.length ||
+    feasibilityHasBeenSentToCertificationAuthority
+  ) {
     return null;
   }
 
@@ -82,16 +62,17 @@ export default function CertificationAuthoritySection({
         <span className="fr-icon-team-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Certificateur</h2>
       </div>
-      <SectionContent
-        certificationAuthorities={certificationAuthorities}
-        certificationAuthoritySelectedId={certificationAuthoritySelectedId}
-        setCertificationAuthoritySelectedId={
-          setCertificationAuthoritySelectedId
-        }
-        feasibilitySentToCertificationAuthorityLabel={
-          feasibilitySentToCertificationAuthorityLabel
-        }
-      />
+      {certificationAuthorities.length === 1 ? (
+        <p>{certificationAuthorities[0].label}</p>
+      ) : (
+        <CertificateursSelect
+          certificationAuthorities={certificationAuthorities}
+          certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+          setCertificationAuthoritySelectedId={
+            setCertificationAuthoritySelectedId
+          }
+        />
+      )}
     </div>
   );
 }

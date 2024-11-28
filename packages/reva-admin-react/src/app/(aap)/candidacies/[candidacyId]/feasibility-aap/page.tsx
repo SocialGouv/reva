@@ -67,6 +67,7 @@ const AapFeasibilityPage = () => {
             history={feasibility.history}
           />
         }
+        certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
       />
     );
   }
