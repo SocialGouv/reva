@@ -93,16 +93,16 @@ export const useCertificationsPage = ({
 
   const certifications = useMemo(
     () =>
-      getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsForAdmin?.rows.map(
-        (c) => ({
+      getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsForAdmin?.rows
+        .map((c) => ({
           id: c.id,
           label: `${c.codeRncp} - ${c.label}`,
           selected:
             certificationAuthorityStructure?.certifications.some(
               (cert) => cert.id === c.id,
             ) || false,
-        }),
-      ).sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)),
+        }))
+        .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)),
     [
       certificationAuthorityStructure?.certifications,
       getCertificationAuthorityStructureAndCertificationsResponse

@@ -22,8 +22,8 @@ export const useUpdateMaisonMereAAPLegalValidationDecision = (
     useMutation({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["getMaisonMereAAP", maisonMereAAPId]
-        })
+          queryKey: ["getMaisonMereAAP", maisonMereAAPId],
+        });
       },
       mutationKey: [
         "updateMaisonMereAAPLegalValidationStatus",

@@ -1,9 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import {
-  useCertificationsPage,
-} from "./certifications.hooks";
+import { useCertificationsPage } from "./certifications.hooks";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
@@ -21,20 +19,25 @@ const CertificationAuthorityStructureCertificationsPage = () => {
     updateCertificationAuthorityStructureCertifications,
   } = useCertificationsPage({ certificationAuthorityStructureId });
 
-
-  const handleFormSubmit = useCallback(async (data: CertificationsFormData) => {
-    try {
-      await updateCertificationAuthorityStructureCertifications.mutateAsync({
-        certificationAuthorityStructureId,
-        certificationIds: data.certifications
-          .filter((c) => c.selected)
-          .map((c) => c.id),
-      });
-      successToast("Modifications enregistrées");
-    } catch (e) {
-      graphqlErrorToast(e);
-    }
-  }, [updateCertificationAuthorityStructureCertifications, certificationAuthorityStructureId]);
+  const handleFormSubmit = useCallback(
+    async (data: CertificationsFormData) => {
+      try {
+        await updateCertificationAuthorityStructureCertifications.mutateAsync({
+          certificationAuthorityStructureId,
+          certificationIds: data.certifications
+            .filter((c) => c.selected)
+            .map((c) => c.id),
+        });
+        successToast("Modifications enregistrées");
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    },
+    [
+      updateCertificationAuthorityStructureCertifications,
+      certificationAuthorityStructureId,
+    ],
+  );
 
   if (!certificationAuthorityStructure) {
     return null;

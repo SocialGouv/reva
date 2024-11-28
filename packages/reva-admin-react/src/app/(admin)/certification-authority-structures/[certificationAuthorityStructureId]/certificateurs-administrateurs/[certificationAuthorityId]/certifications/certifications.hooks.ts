@@ -108,7 +108,9 @@ export const useCertificationsPage = ({
         .sort((c) =>
           certificationAuthority?.certificationAuthorityStructure?.certifications.some(
             (ca) => ca.id === c.id,
-          ) ? -1 : 1,
+          )
+            ? -1
+            : 1,
         ),
     [
       certificationAuthority?.certificationAuthorityStructure?.certifications,

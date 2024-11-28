@@ -5,7 +5,6 @@ export const CandidacyBackButton = ({
 }: {
   candidacyId: string;
 }) => {
-
   return (
     <Button
       className="mb-6"

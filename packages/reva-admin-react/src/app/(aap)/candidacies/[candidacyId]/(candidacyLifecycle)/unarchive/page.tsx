@@ -12,8 +12,7 @@ const CandidacyUnarchiveComponent = ({
 }: {
   candidacy: NonNullable<CandidacyForUnarchive>;
 }) => {
-  const { canBeRestored } =
-    useCandidacyStatus(candidacy);
+  const { canBeRestored } = useCandidacyStatus(candidacy);
 
   if (!canBeRestored) {
     return (
