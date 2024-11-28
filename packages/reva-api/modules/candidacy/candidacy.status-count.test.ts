@@ -10,6 +10,7 @@ import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { CandidacyStatusFilter } from "./candidacy.types";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { prismaClient } from "../../prisma/client";
+import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
 
 afterEach(async () => {
   await clearDatabase();
@@ -21,9 +22,16 @@ const createCandidacies = async (
     count: number;
     droppedOut?: boolean;
     reoriented?: boolean;
+    jury?: "WITH_RESULT_DATE" | "WITHOUT_RESULT_DATE";
   }[],
 ) => {
-  for (const { status, count, droppedOut, reoriented } of statusAndCounts) {
+  for (const {
+    status,
+    count,
+    droppedOut,
+    reoriented,
+    jury,
+  } of statusAndCounts) {
     let reorientation = null;
     if (reoriented) {
       reorientation = await prismaClient.reorientationReason.findFirst();
@@ -38,6 +46,12 @@ const createCandidacies = async (
       });
       if (droppedOut) {
         await createCandidacyDropOutHelper({ candidacyId: candidacy.id });
+      }
+      if (jury) {
+        await createJuryHelper({
+          candidacyId: candidacy.id,
+          dateOfResult: jury === "WITH_RESULT_DATE" ? new Date() : null,
+        });
       }
     }
   }
@@ -214,5 +228,39 @@ test("should count 5 reoriented candidacies", async () => {
 
   await executeQueryAndAssertResults({
     REORIENTEE: 5,
+  });
+});
+
+test("should count 5 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
+  await createCandidacies([
+    {
+      status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+      jury: "WITHOUT_RESULT_DATE",
+      count: 5,
+    },
+  ]);
+
+  await executeQueryAndAssertResults({
+    ACTIVE_HORS_ABANDON: 5,
+    DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+    JURY_HORS_ABANDON: 5,
+    JURY_PROGRAMME_HORS_ABANDON: 5,
+  });
+});
+
+test("should count 5 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
+  await createCandidacies([
+    {
+      status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+      jury: "WITH_RESULT_DATE",
+      count: 5,
+    },
+  ]);
+
+  await executeQueryAndAssertResults({
+    ACTIVE_HORS_ABANDON: 5,
+    DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+    JURY_HORS_ABANDON: 5,
+    JURY_PASSE_HORS_ABANDON: 5,
   });
 });
