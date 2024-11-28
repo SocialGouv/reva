@@ -9,7 +9,6 @@ export const updateCertificationAuthorityCertifications = async ({
   certificationAuthorityId: string;
   certificationIds: string[];
 }): Promise<CertificationAuthority> => {
-
   const result = await prismaClient.$transaction([
     //delete old certifications associations and create the new ones
     prismaClient.certificationAuthorityOnCertification.deleteMany({
@@ -33,4 +32,4 @@ export const updateCertificationAuthorityCertifications = async ({
     }),
   ]);
   return result[3] as CertificationAuthority;
-}
+};

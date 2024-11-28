@@ -18,7 +18,7 @@ const hourFields = [
   "otherTrainingHourCount",
 ] as const;
 
-type HourFields = { [Key in typeof hourFields[number]]: Decimal };
+type HourFields = { [Key in (typeof hourFields)[number]]: Decimal };
 
 export const validateFeasibilityChecks = async (
   input: {

@@ -17,7 +17,7 @@ const start = async () => {
       host: "0.0.0.0",
     });
     server.log.info(
-      `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`
+      `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`,
     );
   } catch (err) {
     server.log.error(err);

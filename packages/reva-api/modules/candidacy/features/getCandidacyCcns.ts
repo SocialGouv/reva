@@ -59,9 +59,8 @@ export const getCandidacyCcns = async (
   }
 
   const rows = await prismaClient.candidacyConventionCollective.findMany(query);
-  const count = await prismaClient.candidacyConventionCollective.count(
-    queryCount,
-  );
+  const count =
+    await prismaClient.candidacyConventionCollective.count(queryCount);
 
   return {
     rows: rows,

@@ -32,9 +32,8 @@ const createDefaultBlocs = async (
 ): Promise<CertificationCompetenceBloc[]> => {
   const { certificationId, rncpId } = params;
 
-  const rncpCertification = await RNCPReferential.getInstance().findOneByRncp(
-    rncpId,
-  );
+  const rncpCertification =
+    await RNCPReferential.getInstance().findOneByRncp(rncpId);
 
   if (rncpCertification) {
     for (const bloc of rncpCertification.BLOCS_COMPETENCES) {
