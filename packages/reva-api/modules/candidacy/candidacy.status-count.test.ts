@@ -9,6 +9,7 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { CandidacyStatusFilter } from "./candidacy.types";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
+import { prismaClient } from "../../prisma/client";
 
 afterEach(async () => {
   await clearDatabase();
@@ -19,12 +20,21 @@ const createCandidacies = async (
     status: CandidacyStatusStep;
     count: number;
     droppedOut?: boolean;
+    reoriented?: boolean;
   }[],
 ) => {
-  for (const { status, count, droppedOut } of statusAndCounts) {
+  for (const { status, count, droppedOut, reoriented } of statusAndCounts) {
+    let reorientation = null;
+    if (reoriented) {
+      reorientation = await prismaClient.reorientationReason.findFirst();
+    }
+
     for (let i = 0; i < count; i++) {
       const candidacy = await createCandidacyHelper({
         candidacyActiveStatus: status,
+        candidacyArgs: {
+          reorientationReasonId: reoriented ? reorientation?.id : undefined,
+        },
       });
       if (droppedOut) {
         await createCandidacyDropOutHelper({ candidacyId: candidacy.id });
@@ -176,7 +186,33 @@ test("should count 5 dropped out candidacies", async () => {
   ]);
 
   await executeQueryAndAssertResults({
-    ACTIVE_HORS_ABANDON: 0,
     ABANDON: 5,
+  });
+});
+
+test("should count 5 archived candidacies", async () => {
+  await createCandidacies([
+    {
+      status: CandidacyStatusStep.ARCHIVE,
+      count: 5,
+    },
+  ]);
+
+  await executeQueryAndAssertResults({
+    ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5,
+  });
+});
+
+test("should count 5 reoriented candidacies", async () => {
+  await createCandidacies([
+    {
+      status: CandidacyStatusStep.ARCHIVE,
+      count: 5,
+      reoriented: true,
+    },
+  ]);
+
+  await executeQueryAndAssertResults({
+    REORIENTEE: 5,
   });
 });
