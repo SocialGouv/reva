@@ -47,6 +47,7 @@ export const warningToast = (message: string) =>
     <Alert severity="warning" title={message} className="bg-white" />
   ));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const graphqlErrorToast = (error: any) => {
   const message = error?.response?.errors
     ?.map((e: { message?: string }) => e?.message)

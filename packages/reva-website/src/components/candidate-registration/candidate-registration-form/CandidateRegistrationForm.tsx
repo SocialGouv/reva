@@ -102,13 +102,13 @@ export const CandidateRegistrationForm = ({
   }, []);
 
   const handleFormSubmit = handleSubmit((form) => {
-      if (!form.typeAccompagnement) {
-        setError("typeAccompagnement", {
-          type: "required",
-          message: "Merci de remplir ce champ",
-        });
-      }
-      onSubmit(form);
+    if (!form.typeAccompagnement) {
+      setError("typeAccompagnement", {
+        type: "required",
+        message: "Merci de remplir ce champ",
+      });
+    }
+    onSubmit(form);
   });
 
   return (
@@ -117,57 +117,56 @@ export const CandidateRegistrationForm = ({
       className="flex flex-col gap-12"
       onSubmit={handleFormSubmit}
     >
-        <div>
-          <h2>Modalités de parcours</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2">
-            <RadioButtons
-              data-testid="candidate-modalite-parcours-radio-buttons"
-              className="!inline"
-              legend="Que souhaitez-vous faire pour ce parcours ? "
-              options={[
-                {
-                  label: "Je souhaite réaliser ma VAE avec un accompagnateur",
-                  nativeInputProps: {
-                    value: "ACCOMPAGNE",
-                    ...register("typeAccompagnement"),
-                  },
+      <div>
+        <h2>Modalités de parcours</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <RadioButtons
+            data-testid="candidate-modalite-parcours-radio-buttons"
+            className="!inline"
+            legend="Que souhaitez-vous faire pour ce parcours ? "
+            options={[
+              {
+                label: "Je souhaite réaliser ma VAE avec un accompagnateur",
+                nativeInputProps: {
+                  value: "ACCOMPAGNE",
+                  ...register("typeAccompagnement"),
                 },
-                {
-                  label: "Je souhaite réaliser ma VAE en autonomie",
-                  nativeInputProps: {
-                    value: "AUTONOME",
-                    ...register("typeAccompagnement"),
-                  },
+              },
+              {
+                label: "Je souhaite réaliser ma VAE en autonomie",
+                nativeInputProps: {
+                  value: "AUTONOME",
+                  ...register("typeAccompagnement"),
                 },
-              ]}
-              state={errors.typeAccompagnement ? "error" : "default"}
-              stateRelatedMessage={
-                errors.typeAccompagnement && "Veuillez sélectionner une option"
-              }
-            />
-            <CallOut
-              title="À quoi sert un accompagnateur ?"
-              classes={{ title: "pb-2" }}
+              },
+            ]}
+            state={errors.typeAccompagnement ? "error" : "default"}
+            stateRelatedMessage={
+              errors.typeAccompagnement && "Veuillez sélectionner une option"
+            }
+          />
+          <CallOut
+            title="À quoi sert un accompagnateur ?"
+            classes={{ title: "pb-2" }}
+          >
+            C’est un expert de la VAE qui vous aide à chaque grande étape de
+            votre parcours : rédaction du dossier de faisabilité, communication
+            avec le certificateur, préparation au passage devant le jury, etc.
+            <br />
+            <br />
+            <strong>Bon à savoir :</strong> ces accompagnements peuvent être en
+            partie financés par votre{" "}
+            <Link
+              href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+              target="_blank"
             >
-              C’est un expert de la VAE qui vous aide à chaque grande étape de
-              votre parcours : rédaction du dossier de faisabilité,
-              communication avec le certificateur, préparation au passage devant
-              le jury, etc.
-              <br />
-              <br />
-              <strong>Bon à savoir :</strong> ces accompagnements peuvent être
-              en partie financés par votre{" "}
-              <Link
-                href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
-                target="_blank"
-              >
-                Compte Personnel de Formation
-              </Link>
-              . À noter : si vous faites votre parcours en autonomie, il est
-              possible que des frais soient à votre charge (jury, formation…).
-            </CallOut>
-          </div>
+              Compte Personnel de Formation
+            </Link>
+            . À noter : si vous faites votre parcours en autonomie, il est
+            possible que des frais soient à votre charge (jury, formation…).
+          </CallOut>
         </div>
+      </div>
       <div className="flex flex-col">
         <h2 className="font-bold mt-4">Quel est votre statut ?</h2>
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">

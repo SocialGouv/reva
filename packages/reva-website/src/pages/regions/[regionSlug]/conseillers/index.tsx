@@ -18,16 +18,12 @@ const getRegionsBySlugQuery = graphql(`
           nom
           slug
           prcs
-          departements(sort: "code", pagination:  {
-             limit: 200
-          }) {
+          departements(sort: "code", pagination: { limit: 200 }) {
             data {
               attributes {
                 nom
                 code
-                prcs(pagination:  {
-                   limit: 200
-                }) {
+                prcs(pagination: { limit: 200 }) {
                   data {
                     id
                     attributes {
@@ -61,17 +57,21 @@ const RegionAdvisorsPage = ({
   getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionAdvisorsPageQuery;
 }) => {
   const region = getRegionsBySlugResponse?.regions?.data[0];
-  const prcs = useMemo(() => region?.attributes?.departements?.data
-    ?.map((d) =>
-      d.attributes?.prcs?.data?.map((p) => [
-        `${d.attributes?.nom} (${d.attributes?.code})`,
-        p.attributes?.nom,
-        p.attributes?.adresse,
-        p.attributes?.telephone,
-        p.attributes?.email,
-      ]),
-    )
-    ?.flat(), [region]);
+  const prcs = useMemo(
+    () =>
+      region?.attributes?.departements?.data
+        ?.map((d) =>
+          d.attributes?.prcs?.data?.map((p) => [
+            `${d.attributes?.nom} (${d.attributes?.code})`,
+            p.attributes?.nom,
+            p.attributes?.adresse,
+            p.attributes?.telephone,
+            p.attributes?.email,
+          ]),
+        )
+        ?.flat(),
+    [region],
+  );
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
