@@ -26,19 +26,22 @@ export const searchOrganismsForCandidacy = async ({
   }
 
   let organismsFound: Organism[];
+  let totalOrganismCount: number;
 
   if (
     searchFilter.zip &&
     searchFilter.zip.length === 5 &&
     searchFilter?.distanceStatus === "ONSITE"
   ) {
-    organismsFound = await getAAPsWithZipCode({
+    const result = await getAAPsWithZipCode({
       certificationId: candidacy.certificationId || "",
       zip: searchFilter.zip,
       pmr: searchFilter.pmr,
       limit: 50,
       searchText,
     });
+    organismsFound = result.rows;
+    totalOrganismCount = result.totalRows;
   } else {
     if (!candidacy.departmentId) {
       throw new Error("Cette candidature n'est pas associée à un département");
@@ -54,10 +57,11 @@ export const searchOrganismsForCandidacy = async ({
     organismsFound = result.rows
       .filter((r) => r.id !== candidacy?.organism?.id)
       .slice(0, 50);
+    totalOrganismCount = result.totalRows;
   }
 
   return {
-    totalRows: organismsFound?.length ?? 0,
+    totalRows: totalOrganismCount,
     rows: organismsFound,
   };
 };
@@ -157,7 +161,7 @@ const getAAPsWithZipCode = async ({
   limit: number;
   pmr?: boolean;
   searchText?: string;
-}) => {
+}): Promise<{ rows: Organism[]; totalRows: number }> => {
   const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
   const res = await fetch(query);
   const {
@@ -174,7 +178,7 @@ const getAAPsWithZipCode = async ({
   } = await res.json();
 
   if (!features?.length || !certificationId) {
-    return [];
+    return { rows: [], totalRows: 0 };
   }
 
   const [
@@ -244,11 +248,20 @@ const getAAPsWithZipCode = async ({
       LIMIT ${limit}
   `;
 
-  if (!organisms?.length) {
-    return [];
-  }
+  const count = Number(
+    (
+      await prismaClient.$queryRaw<{ count: number }[]>`
+        SELECT count(DISTINCT o.id)
+        FROM organism o
+        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
+        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
+        JOIN ${prismaSqlOrganismView} ao on ao.organism_id=o.id
+        ${whereClause}
+`
+    )[0].count,
+  );
 
-  return organisms;
+  return { rows: organisms || [], totalRows: count };
 };
 
 const getRemoteZoneFromDepartment = async ({
