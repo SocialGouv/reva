@@ -21,7 +21,16 @@ export const createCandidacyHelper = async (args?: {
     where: { code: "75" },
   });
   const candidate = await createCandidateHelper();
-  const organism = await createOrganismHelper();
+
+  const organism = candidacyArgs?.organismId
+    ? await prismaClient.organism.findUnique({
+        where: { id: candidacyArgs?.organismId },
+      })
+    : await createOrganismHelper();
+
+  if (!organism) {
+    throw Error("Organism not found");
+  }
 
   const basicSkillId1 = (
     await prismaClient.basicSkill.findFirstOrThrow({
