@@ -48,11 +48,11 @@ const getBlocDeCompetencesQuery = graphql(`
           }
         }
         blocsDeCompetences(blocDeCompetencesId: $blocDeCompetencesId) {
+          text
           certificationCompetenceBloc {
             id
             code
             label
-            text
             competences {
               id
               label
@@ -116,6 +116,7 @@ const CompetenciesBlockPage = () => {
     dematerializedFile?.blocsDeCompetences?.[0]?.certificationCompetenceBloc;
 
   const competencesFromBlock = block?.competences;
+  const blockText = dematerializedFile?.blocsDeCompetences?.[0]?.text;
 
   const defaultValues = useMemo(
     () => ({
@@ -126,12 +127,12 @@ const CompetenciesBlockPage = () => {
           (ccd) => ccd.certificationCompetence.id === c.id,
         )?.state,
       })),
-      blocText: block?.text || "",
+      blocText: blockText || "",
     }),
     [
       competencesFromBlock,
       dematerializedFile?.certificationCompetenceDetails,
-      block,
+      blockText,
     ],
   );
 
