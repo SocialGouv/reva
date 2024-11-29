@@ -19,6 +19,7 @@ import { useSetOrganism } from "./set-organism.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 const RECORDS_PER_PAGE = 10;
+const MAX_RECORDS = 50;
 
 interface State {
   rows: Organism[];
@@ -177,7 +178,7 @@ export default function SetOrganism() {
               totalRows: organisms?.totalRows || 0,
             }}
           />
-          <div className="mt-6 w-full flex flex-row items-center justify-center">
+          <div className="mt-4 w-full flex flex-row items-center justify-center">
             {state.hasMore ? (
               <Button
                 data-test="project-organisms-refresh-organisms"
@@ -192,7 +193,13 @@ export default function SetOrganism() {
                 Afficher plus d’organismes
               </Button>
             ) : (
-              <div />
+              stateOffset === MAX_RECORDS && (
+                <p className="mt-0 text-lg">
+                  Vous n’avez pas trouvé d’accompagnateur ? Utilisez des filtres
+                  pour préciser votre recherche ou tapez le nom d’un
+                  accompagnateur précis dans la barre de recherche.
+                </p>
+              )
             )}
           </div>
         </div>
