@@ -64,13 +64,13 @@ export default function CandidateSection({
         />
         <h2>
           {genderLabel}
-          {lastname} {firstname}
+          {givenName ? givenName : lastname} {firstname}
           {firstname2 ? `, ${firstname2}` : ""}
           {firstname3 ? `, ${firstname3}` : ""}
         </h2>
       </div>
       <p className="mb-2">
-        <span>{givenName ? `${bornLabel} ${givenName},` : bornLabel}</span>
+        {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
         {birthdate && <span> le {format(birthdate, "dd/MM/yyyy")} </span>}
         <span>
           à {birthCity ? `${birthCity},` : ""}{" "}
