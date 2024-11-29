@@ -42,6 +42,15 @@ export const createOrUpdateEligibilityRequirement = async ({
         dffCertificationCompetenceDetails: {
           deleteMany: {},
         },
+        dffCertificationCompetenceBlocs: {
+          updateMany: {
+            where: {},
+            data: {
+              text: "",
+              complete: false,
+            },
+          },
+        },
         competenceBlocsPartCompletion: "TO_COMPLETE",
       },
     });
