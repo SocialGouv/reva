@@ -16,51 +16,53 @@ afterEach(async () => {
   await clearDatabase();
 });
 
-const createCandidacies = async (
-  statusAndCounts: {
-    status: CandidacyStatusStep;
-    count: number;
-    droppedOut?: boolean;
-    reoriented?: boolean;
-    jury?: "WITH_RESULT_DATE" | "WITHOUT_RESULT_DATE";
-  }[],
-) => {
-  for (const {
-    status,
-    count,
-    droppedOut,
-    reoriented,
-    jury,
-  } of statusAndCounts) {
-    let reorientation = null;
-    if (reoriented) {
-      reorientation = await prismaClient.reorientationReason.findFirst();
-    }
-
-    for (let i = 0; i < count; i++) {
-      const candidacy = await createCandidacyHelper({
-        candidacyActiveStatus: status,
-        candidacyArgs: {
-          reorientationReasonId: reoriented ? reorientation?.id : undefined,
-        },
-      });
-      if (droppedOut) {
-        await createCandidacyDropOutHelper({ candidacyId: candidacy.id });
-      }
-      if (jury) {
-        await createJuryHelper({
-          candidacyId: candidacy.id,
-          dateOfResult: jury === "WITH_RESULT_DATE" ? new Date() : null,
-        });
-      }
-    }
+const createCandidacies = async ({
+  status,
+  count,
+  droppedOut,
+  reoriented,
+  jury,
+}: {
+  status: CandidacyStatusStep;
+  count: number;
+  droppedOut?: boolean;
+  reoriented?: boolean;
+  jury?: "WITH_RESULT_DATE" | "WITHOUT_RESULT_DATE";
+}) => {
+  const candidacies = [];
+  let reorientation = null;
+  if (reoriented) {
+    reorientation = await prismaClient.reorientationReason.findFirst();
   }
+  for (let i = 0; i < count; i++) {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: status,
+      candidacyArgs: {
+        reorientationReasonId: reoriented ? reorientation?.id : undefined,
+      },
+    });
+    if (droppedOut) {
+      await createCandidacyDropOutHelper({ candidacyId: candidacy.id });
+    }
+    if (jury) {
+      await createJuryHelper({
+        candidacyId: candidacy.id,
+        dateOfResult: jury === "WITH_RESULT_DATE" ? new Date() : null,
+      });
+    }
+    candidacies.push(candidacy);
+  }
+  return candidacies;
 };
 
 const executeQueryAndAssertResults = async ({
+  keycloakId,
+  role,
   searchFilter,
   defaultAssertionOverride,
 }: {
+  keycloakId?: string;
+  role: KeyCloakUserRole;
   searchFilter?: string;
   defaultAssertionOverride?: Partial<Record<CandidacyStatusFilter, number>>;
 }) => {
@@ -91,8 +93,8 @@ const executeQueryAndAssertResults = async ({
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
-      role: "admin",
-      keycloakId: "whatever",
+      role,
+      keycloakId: keycloakId || "whatever",
     }),
     payload: {
       requestType: "query",
@@ -109,7 +111,7 @@ const executeQueryAndAssertResults = async ({
   );
 };
 
-const testData: [
+const simpleStatusesTestData: [
   CandidacyStatusStep,
   CandidacyStatusFilter,
   "ACTIVE" | "INACTIVE",
@@ -172,173 +174,175 @@ const testData: [
     "ACTIVE",
   ],
 ];
-test.each(testData)(
-  "should count 5 candidacies with status %s and status filter %s as %s for admin",
-  async (
-    status: CandidacyStatusStep,
-    statusFilter: CandidacyStatusFilter,
-    activeOrInactive: "ACTIVE" | "INACTIVE",
-  ) => {
-    await createCandidacies([
-      {
+
+describe("Candidacy status count tests for admin", () => {
+  test.each(simpleStatusesTestData)(
+    "should count 5 candidacies with status %s and status filter %s as %s",
+    async (
+      status: CandidacyStatusStep,
+      statusFilter: CandidacyStatusFilter,
+      activeOrInactive: "ACTIVE" | "INACTIVE",
+    ) => {
+      await createCandidacies({
         status,
         count: 5,
-      },
-    ]);
+      });
 
-    await executeQueryAndAssertResults({
-      defaultAssertionOverride: {
-        ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
-        [statusFilter]: 5,
-      },
-    });
-  },
-);
+      await executeQueryAndAssertResults({
+        role: "admin",
+        defaultAssertionOverride: {
+          ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
+          [statusFilter]: 5,
+        },
+      });
+    },
+  );
 
-test("should count 5 dropped out candidacies", async () => {
-  await createCandidacies([
-    {
+  test("should count 5 dropped out candidacies", async () => {
+    await createCandidacies({
       status: CandidacyStatusStep.PRISE_EN_CHARGE,
       count: 5,
       droppedOut: true,
-    },
-  ]);
+    });
 
-  await executeQueryAndAssertResults({
-    defaultAssertionOverride: { ABANDON: 5 },
+    await executeQueryAndAssertResults({
+      role: "admin",
+      defaultAssertionOverride: { ABANDON: 5 },
+    });
   });
-});
 
-test("should count 5 archived candidacies", async () => {
-  await createCandidacies([
-    {
+  test("should count 5 archived candidacies", async () => {
+    await createCandidacies({
       status: CandidacyStatusStep.ARCHIVE,
       count: 5,
-    },
-  ]);
+    });
 
-  await executeQueryAndAssertResults({
-    defaultAssertionOverride: { ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5 },
+    await executeQueryAndAssertResults({
+      role: "admin",
+      defaultAssertionOverride: { ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5 },
+    });
   });
-});
 
-test("should count 5 reoriented candidacies", async () => {
-  await createCandidacies([
-    {
+  test("should count 5 reoriented candidacies", async () => {
+    await createCandidacies({
       status: CandidacyStatusStep.ARCHIVE,
       count: 5,
       reoriented: true,
-    },
-  ]);
+    });
 
-  await executeQueryAndAssertResults({
-    defaultAssertionOverride: { REORIENTEE: 5 },
+    await executeQueryAndAssertResults({
+      role: "admin",
+      defaultAssertionOverride: { REORIENTEE: 5 },
+    });
   });
-});
 
-test("should count 5 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
-  await createCandidacies([
-    {
+  test("should count 5 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
+    await createCandidacies({
       status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       jury: "WITHOUT_RESULT_DATE",
       count: 5,
-    },
-  ]);
+    });
 
-  await executeQueryAndAssertResults({
-    defaultAssertionOverride: {
-      ACTIVE_HORS_ABANDON: 5,
-      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-      JURY_HORS_ABANDON: 5,
-      JURY_PROGRAMME_HORS_ABANDON: 5,
-    },
+    await executeQueryAndAssertResults({
+      role: "admin",
+      defaultAssertionOverride: {
+        ACTIVE_HORS_ABANDON: 5,
+        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+        JURY_HORS_ABANDON: 5,
+        JURY_PROGRAMME_HORS_ABANDON: 5,
+      },
+    });
   });
-});
 
-test("should count 5 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
-  await createCandidacies([
-    {
+  test("should count 5 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
+    await createCandidacies({
       status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       jury: "WITH_RESULT_DATE",
       count: 5,
-    },
-  ]);
-
-  await executeQueryAndAssertResults({
-    defaultAssertionOverride: {
-      ACTIVE_HORS_ABANDON: 5,
-      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-      JURY_HORS_ABANDON: 5,
-      JURY_PASSE_HORS_ABANDON: 5,
-    },
-  });
-});
-
-test("should count 0 candidacy when searching for the wrong search criteria", async () => {
-  await createCandidacyHelper();
-
-  await executeQueryAndAssertResults({
-    searchFilter: "WRONG_CRITERIA",
-  });
-});
-
-test("should count 1 candidacy when searching for the right organism label", async () => {
-  const { organism } = await createCandidacyHelper();
-
-  await executeQueryAndAssertResults({
-    searchFilter: organism?.label,
-    defaultAssertionOverride: {
-      ACTIVE_HORS_ABANDON: 1,
-      PARCOURS_CONFIRME_HORS_ABANDON: 1,
-    },
-  });
-});
-
-test("should count 1 candidacy when searching for the right department label", async () => {
-  const { department } = await createCandidacyHelper();
-
-  await executeQueryAndAssertResults({
-    searchFilter: department?.label,
-    defaultAssertionOverride: {
-      ACTIVE_HORS_ABANDON: 1,
-      PARCOURS_CONFIRME_HORS_ABANDON: 1,
-    },
-  });
-});
-
-test.each(["label", "rncpTypeDiplome"] as const)(
-  "should count 1 candidacy when searching for the right candidate %s",
-  async (field: keyof Certification) => {
-    const { certification } = await createCandidacyHelper();
+    });
 
     await executeQueryAndAssertResults({
-      searchFilter: certification?.[field] as string,
+      role: "admin",
+      defaultAssertionOverride: {
+        ACTIVE_HORS_ABANDON: 5,
+        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+        JURY_HORS_ABANDON: 5,
+        JURY_PASSE_HORS_ABANDON: 5,
+      },
+    });
+  });
+
+  test("should count 0 candidacy when searching for the wrong search criteria", async () => {
+    await createCandidacyHelper();
+
+    await executeQueryAndAssertResults({
+      role: "admin",
+      searchFilter: "WRONG_CRITERIA",
+    });
+  });
+
+  test("should count 1 candidacy when searching for the right organism label", async () => {
+    const { organism } = await createCandidacyHelper();
+
+    await executeQueryAndAssertResults({
+      role: "admin",
+      searchFilter: organism?.label,
       defaultAssertionOverride: {
         ACTIVE_HORS_ABANDON: 1,
         PARCOURS_CONFIRME_HORS_ABANDON: 1,
       },
     });
-  },
-);
+  });
 
-test.each([
-  "lastname",
-  "firstname",
-  "firstname2",
-  "firstname3",
-  "email",
-  "phone",
-] as const)(
-  "should count 1 candidacy when searching for the right candidate %s",
-  async (field: keyof Candidate) => {
-    const { candidate } = await createCandidacyHelper();
+  test("should count 1 candidacy when searching for the right department label", async () => {
+    const { department } = await createCandidacyHelper();
 
     await executeQueryAndAssertResults({
-      searchFilter: candidate?.[field] as string,
+      role: "admin",
+      searchFilter: department?.label,
       defaultAssertionOverride: {
         ACTIVE_HORS_ABANDON: 1,
         PARCOURS_CONFIRME_HORS_ABANDON: 1,
       },
     });
-  },
-);
+  });
+
+  test.each(["label", "rncpTypeDiplome"] as const)(
+    "should count 1 candidacy when searching for the right candidate %s",
+    async (field: keyof Certification) => {
+      const { certification } = await createCandidacyHelper();
+
+      await executeQueryAndAssertResults({
+        role: "admin",
+        searchFilter: certification?.[field] as string,
+        defaultAssertionOverride: {
+          ACTIVE_HORS_ABANDON: 1,
+          PARCOURS_CONFIRME_HORS_ABANDON: 1,
+        },
+      });
+    },
+  );
+
+  test.each([
+    "lastname",
+    "firstname",
+    "firstname2",
+    "firstname3",
+    "email",
+    "phone",
+  ] as const)(
+    "should count 1 candidacy when searching for the right candidate %s",
+    async (field: keyof Candidate) => {
+      const { candidate } = await createCandidacyHelper();
+
+      await executeQueryAndAssertResults({
+        role: "admin",
+        searchFilter: candidate?.[field] as string,
+        defaultAssertionOverride: {
+          ACTIVE_HORS_ABANDON: 1,
+          PARCOURS_CONFIRME_HORS_ABANDON: 1,
+        },
+      });
+    },
+  );
+});
