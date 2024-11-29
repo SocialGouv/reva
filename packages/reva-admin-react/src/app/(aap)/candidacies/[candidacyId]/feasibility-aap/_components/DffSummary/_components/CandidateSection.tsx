@@ -62,15 +62,13 @@ export default function CandidateSection({
           data-html2canvas-ignore="true"
         />
         <h2>
-          {genderLabel} {lastname} {firstname}
+          {genderLabel} {givenName ? givenName : lastname} {firstname}
           {firstname2 ? `, ${firstname2}` : ""}
           {firstname3 ? `, ${firstname3}` : ""}
         </h2>
       </div>
       <p className="mb-2 flex gap-2">
-        <span>
-          {givenName ? `${bornLabel} : ${givenName},` : `${bornLabel}`}
-        </span>
+        {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
         {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
         <span>
           à {birthCity ? `${birthCity},` : ""}{" "}
