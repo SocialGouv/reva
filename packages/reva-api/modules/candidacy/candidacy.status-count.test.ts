@@ -11,6 +11,7 @@ import { CandidacyStatusFilter } from "./candidacy.types";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { prismaClient } from "../../prisma/client";
 import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
+import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 
 afterEach(async () => {
   await clearDatabase();
@@ -29,6 +30,7 @@ const createCandidacies = async ({
   reoriented?: boolean;
   jury?: "WITH_RESULT_DATE" | "WITHOUT_RESULT_DATE";
 }) => {
+  const organism = await createOrganismHelper();
   const candidacies = [];
   let reorientation = null;
   if (reoriented) {
@@ -38,6 +40,7 @@ const createCandidacies = async ({
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: status,
       candidacyArgs: {
+        organismId: organism.id,
         reorientationReasonId: reoriented ? reorientation?.id : undefined,
       },
     });
@@ -52,7 +55,7 @@ const createCandidacies = async ({
     }
     candidacies.push(candidacy);
   }
-  return candidacies;
+  return { candidacies, organism };
 };
 
 const executeQueryAndAssertResults = async ({
@@ -175,174 +178,379 @@ const simpleStatusesTestData: [
   ],
 ];
 
-describe("Candidacy status count tests for admin", () => {
-  test.each(simpleStatusesTestData)(
-    "should count 5 candidacies with status %s and status filter %s as %s",
-    async (
-      status: CandidacyStatusStep,
-      statusFilter: CandidacyStatusFilter,
-      activeOrInactive: "ACTIVE" | "INACTIVE",
-    ) => {
+describe.each(["ADMIN", "AAP"] as const)(
+  "Candidacy status count tests for %s",
+  (userProfile) => {
+    test.each(simpleStatusesTestData)(
+      "should count the correct number of candidacies with status %s and status filter %s as %s",
+      async (
+        status: CandidacyStatusStep,
+        statusFilter: CandidacyStatusFilter,
+        activeOrInactive: "ACTIVE" | "INACTIVE",
+      ) => {
+        //these candidacies should be visible to both profiles
+        const { organism } = await createCandidacies({
+          status,
+          count: 5,
+        });
+
+        //these candidacies should only be visible to the admin profile
+        await createCandidacies({
+          status,
+          count: 5,
+        });
+
+        await executeQueryAndAssertResults(
+          userProfile === "ADMIN" //Admin profile
+            ? {
+                role: "admin",
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 10 : 0,
+                  [statusFilter]: 10,
+                },
+              }
+            : {
+                role: "manage_candidacy", //AAP profile
+                keycloakId: organism?.accounts[0].keycloakId,
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
+                  [statusFilter]: 5,
+                },
+              },
+        );
+      },
+    );
+
+    test("should count the correct number dropped out candidacies", async () => {
+      //these candidacies should be visible to both profiles
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.PRISE_EN_CHARGE,
+        count: 5,
+        droppedOut: true,
+      });
+
+      //these candidacies should only be visible to the admin profile
       await createCandidacies({
-        status,
+        status: CandidacyStatusStep.PRISE_EN_CHARGE,
+        count: 5,
+        droppedOut: true,
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              defaultAssertionOverride: { ABANDON: 10 },
+            }
+          : {
+              role: "manage_candidacy", // AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              defaultAssertionOverride: { ABANDON: 5 },
+            },
+      );
+    });
+
+    test("should count the correct number of archived candidacies", async () => {
+      //these candidacies should be visible to both profiles
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.ARCHIVE,
         count: 5,
       });
 
-      await executeQueryAndAssertResults({
-        role: "admin",
-        defaultAssertionOverride: {
-          ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
-          [statusFilter]: 5,
-        },
+      //these candidacies should only be visible to the admin profile
+      await createCandidacies({
+        status: CandidacyStatusStep.ARCHIVE,
+        count: 5,
       });
-    },
-  );
 
-  test("should count 5 dropped out candidacies", async () => {
-    await createCandidacies({
-      status: CandidacyStatusStep.PRISE_EN_CHARGE,
-      count: 5,
-      droppedOut: true,
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              defaultAssertionOverride: {
+                ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 10,
+              },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              defaultAssertionOverride: {
+                ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5,
+              },
+            },
+      );
     });
 
-    await executeQueryAndAssertResults({
-      role: "admin",
-      defaultAssertionOverride: { ABANDON: 5 },
-    });
-  });
-
-  test("should count 5 archived candidacies", async () => {
-    await createCandidacies({
-      status: CandidacyStatusStep.ARCHIVE,
-      count: 5,
-    });
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      defaultAssertionOverride: { ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5 },
-    });
-  });
-
-  test("should count 5 reoriented candidacies", async () => {
-    await createCandidacies({
-      status: CandidacyStatusStep.ARCHIVE,
-      count: 5,
-      reoriented: true,
-    });
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      defaultAssertionOverride: { REORIENTEE: 5 },
-    });
-  });
-
-  test("should count 5 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
-    await createCandidacies({
-      status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-      jury: "WITHOUT_RESULT_DATE",
-      count: 5,
-    });
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      defaultAssertionOverride: {
-        ACTIVE_HORS_ABANDON: 5,
-        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-        JURY_HORS_ABANDON: 5,
-        JURY_PROGRAMME_HORS_ABANDON: 5,
-      },
-    });
-  });
-
-  test("should count 5 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
-    await createCandidacies({
-      status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-      jury: "WITH_RESULT_DATE",
-      count: 5,
-    });
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      defaultAssertionOverride: {
-        ACTIVE_HORS_ABANDON: 5,
-        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
-        JURY_HORS_ABANDON: 5,
-        JURY_PASSE_HORS_ABANDON: 5,
-      },
-    });
-  });
-
-  test("should count 0 candidacy when searching for the wrong search criteria", async () => {
-    await createCandidacyHelper();
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      searchFilter: "WRONG_CRITERIA",
-    });
-  });
-
-  test("should count 1 candidacy when searching for the right organism label", async () => {
-    const { organism } = await createCandidacyHelper();
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      searchFilter: organism?.label,
-      defaultAssertionOverride: {
-        ACTIVE_HORS_ABANDON: 1,
-        PARCOURS_CONFIRME_HORS_ABANDON: 1,
-      },
-    });
-  });
-
-  test("should count 1 candidacy when searching for the right department label", async () => {
-    const { department } = await createCandidacyHelper();
-
-    await executeQueryAndAssertResults({
-      role: "admin",
-      searchFilter: department?.label,
-      defaultAssertionOverride: {
-        ACTIVE_HORS_ABANDON: 1,
-        PARCOURS_CONFIRME_HORS_ABANDON: 1,
-      },
-    });
-  });
-
-  test.each(["label", "rncpTypeDiplome"] as const)(
-    "should count 1 candidacy when searching for the right candidate %s",
-    async (field: keyof Certification) => {
-      const { certification } = await createCandidacyHelper();
-
-      await executeQueryAndAssertResults({
-        role: "admin",
-        searchFilter: certification?.[field] as string,
-        defaultAssertionOverride: {
-          ACTIVE_HORS_ABANDON: 1,
-          PARCOURS_CONFIRME_HORS_ABANDON: 1,
-        },
+    test("should count the correct number of reoriented candidacies", async () => {
+      //these candidacies should be visible to both profiles
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.ARCHIVE,
+        count: 5,
+        reoriented: true,
       });
-    },
-  );
 
-  test.each([
-    "lastname",
-    "firstname",
-    "firstname2",
-    "firstname3",
-    "email",
-    "phone",
-  ] as const)(
-    "should count 1 candidacy when searching for the right candidate %s",
-    async (field: keyof Candidate) => {
-      const { candidate } = await createCandidacyHelper();
-
-      await executeQueryAndAssertResults({
-        role: "admin",
-        searchFilter: candidate?.[field] as string,
-        defaultAssertionOverride: {
-          ACTIVE_HORS_ABANDON: 1,
-          PARCOURS_CONFIRME_HORS_ABANDON: 1,
-        },
+      //these candidacies should only be visible to the admin profile
+      await createCandidacies({
+        status: CandidacyStatusStep.ARCHIVE,
+        count: 5,
+        reoriented: true,
       });
-    },
-  );
-});
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              defaultAssertionOverride: { REORIENTEE: 10 },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              defaultAssertionOverride: { REORIENTEE: 5 },
+            },
+      );
+    });
+
+    test("should count the correct number of 'JURY_PROGRAMME_HORS_ABANDON' candidacies", async () => {
+      //these candidacies should be visible to both profiles
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        jury: "WITHOUT_RESULT_DATE",
+        count: 5,
+      });
+
+      //these candidacies should only be visible to the admin profile
+      await createCandidacies({
+        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        jury: "WITHOUT_RESULT_DATE",
+        count: 5,
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 10,
+                DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 10,
+                JURY_HORS_ABANDON: 10,
+                JURY_PROGRAMME_HORS_ABANDON: 10,
+              },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 5,
+                DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+                JURY_HORS_ABANDON: 5,
+                JURY_PROGRAMME_HORS_ABANDON: 5,
+              },
+            },
+      );
+    });
+
+    test("should count the correct number of 'JURY_PASSE_HORS_ABANDON' candidacies", async () => {
+      //these candidacies should be visible to both profiles
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        jury: "WITH_RESULT_DATE",
+        count: 5,
+      });
+
+      //these candidacies should only be visible to the admin profile
+      await createCandidacies({
+        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        jury: "WITH_RESULT_DATE",
+        count: 5,
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 10,
+                DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 10,
+                JURY_HORS_ABANDON: 10,
+                JURY_PASSE_HORS_ABANDON: 10,
+              },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 5,
+                DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
+                JURY_HORS_ABANDON: 5,
+                JURY_PASSE_HORS_ABANDON: 5,
+              },
+            },
+      );
+    });
+
+    test("should count 0 candidacy when searching for the wrong search criteria", async () => {
+      const { organism } = await createCandidacies({
+        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        count: 1,
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              searchFilter: "WRONG_CRITERIA",
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              searchFilter: "WRONG_CRITERIA",
+            },
+      );
+    });
+
+    test("should count the correct number of candidacy when searching for the right organism label", async () => {
+      //that candidacy should be visible to both profiles
+      const { organism } = await createCandidacyHelper();
+
+      if (!organism) {
+        throw new Error("Organism not created");
+      }
+
+      const organismWithSameLabel = await createOrganismHelper({
+        label: organism.label,
+      });
+
+      //that candidacy should only be visible to the admin profile
+      await createCandidacyHelper({
+        candidacyArgs: { organismId: organismWithSameLabel.id },
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              searchFilter: organism?.label,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 2,
+                PARCOURS_CONFIRME_HORS_ABANDON: 2,
+              },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              searchFilter: organism?.label,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 1,
+                PARCOURS_CONFIRME_HORS_ABANDON: 1,
+              },
+            },
+      );
+    });
+
+    test("should count the correct number of candidacy when searching for the right department label", async () => {
+      //that candidacy should be visible to both profiles
+      const { department, organism } = await createCandidacyHelper();
+
+      //that candidacy should only be visible to the admin profile
+      await createCandidacyHelper({
+        candidacyArgs: { departmentId: department?.id },
+      });
+
+      await executeQueryAndAssertResults(
+        userProfile === "ADMIN" //Admin profile
+          ? {
+              role: "admin",
+              searchFilter: department?.label,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 2,
+                PARCOURS_CONFIRME_HORS_ABANDON: 2,
+              },
+            }
+          : {
+              role: "manage_candidacy", //AAP profile
+              keycloakId: organism?.accounts[0].keycloakId,
+              searchFilter: department?.label,
+              defaultAssertionOverride: {
+                ACTIVE_HORS_ABANDON: 1,
+                PARCOURS_CONFIRME_HORS_ABANDON: 1,
+              },
+            },
+      );
+    });
+
+    test.each(["label", "rncpTypeDiplome"] as const)(
+      "should count the correct number of candidacy when searching for the right candidate %s",
+      async (field: keyof Certification) => {
+        //that candidacy should be visible to both profiles
+        const { certification, organism } = await createCandidacyHelper();
+
+        //that candidacy should only be visible to the admin profile
+        await createCandidacyHelper({
+          candidacyArgs: { certificationId: certification?.id },
+        });
+
+        await executeQueryAndAssertResults(
+          userProfile === "ADMIN" //Admin profile
+            ? {
+                role: "admin",
+                searchFilter: certification?.[field] as string,
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: 2,
+                  PARCOURS_CONFIRME_HORS_ABANDON: 2,
+                },
+              }
+            : {
+                role: "manage_candidacy", //AAP profile
+                keycloakId: organism?.accounts[0].keycloakId,
+                searchFilter: certification?.[field] as string,
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: 1,
+                  PARCOURS_CONFIRME_HORS_ABANDON: 1,
+                },
+              },
+        );
+      },
+    );
+
+    test.each([
+      "lastname",
+      "firstname",
+      "firstname2",
+      "firstname3",
+      "email",
+      "phone",
+    ] as const)(
+      "should count the correct number of candidacies when searching for the right candidate %s",
+      async (field: keyof Candidate) => {
+        //that candidacy should be visible to both profiles
+        const { candidate, organism } = await createCandidacyHelper();
+
+        //that candidacy should only be visible to the admin profile
+        await createCandidacyHelper({
+          candidacyArgs: { candidateId: candidate?.id },
+        });
+
+        await executeQueryAndAssertResults(
+          userProfile === "ADMIN" //Admin profile
+            ? {
+                role: "admin",
+                searchFilter: candidate?.[field] as string,
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: 2,
+                  PARCOURS_CONFIRME_HORS_ABANDON: 2,
+                },
+              }
+            : {
+                role: "manage_candidacy", //AAP profile
+                keycloakId: organism?.accounts[0].keycloakId,
+                searchFilter: candidate?.[field] as string,
+                defaultAssertionOverride: {
+                  ACTIVE_HORS_ABANDON: 1,
+                  PARCOURS_CONFIRME_HORS_ABANDON: 1,
+                },
+              },
+        );
+      },
+    );
+  },
+);
