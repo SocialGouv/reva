@@ -111,7 +111,9 @@ export default function SetOrganism() {
       data-test={`certificates`}
       displayBackToHome
     >
-      <h1 className="mt-6 mb-2">Choix de l'accompagnateur</h1>
+      <h1 className="mt-6 mb-2" id="page-title">
+        Choix de l'accompagnateur
+      </h1>
       <p className="text-xl my-6">
         Choisissez votre accompagnateur parmi toute la liste. Vous pouvez
         choisir de réaliser votre accompagnement à distance ou sur site. Si vous
@@ -194,11 +196,19 @@ export default function SetOrganism() {
               </Button>
             ) : (
               stateOffset === MAX_RECORDS && (
-                <p className="mt-0 text-lg">
-                  Vous n’avez pas trouvé d’accompagnateur ? Utilisez des filtres
-                  pour préciser votre recherche ou tapez le nom d’un
-                  accompagnateur précis dans la barre de recherche.
-                </p>
+                <div className="flex flex-col md:flex-row items-start">
+                  <p className="mt-0 text-lg">
+                    Vous n’avez pas trouvé d’accompagnateur ? Utilisez des
+                    filtres pour préciser votre recherche ou tapez le nom d’un
+                    accompagnateur précis dans la barre de recherche.
+                  </p>
+                  <a
+                    href="#page-title"
+                    className="text-nowrap md:ml-6 fr-link fr-icon-arrow-up-fill fr-link--icon-left"
+                  >
+                    Haut de page
+                  </a>
+                </div>
               )
             )}
           </div>
