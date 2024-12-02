@@ -157,8 +157,7 @@ test("should count active juries by status for admin user searched by rncp type 
     payload: {
       requestType: "query",
       endpoint: "jury_juryCountByCategory",
-      returnFields: "{SCsppppppppppppppppppppppppppppppppppppjurjury../../
-  cloconsole.log('first', first)oobbjj;""SSSSCCCCHEDULED,PASSED}",
+      returnFields: "{SCHEDULED,PASSED}",
       arguments: {
         searchFilter: juries[0].candidacy.certification?.rncpTypeDiplome,
       },
