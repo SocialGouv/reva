@@ -63,11 +63,11 @@ const CreateCertificationAuthorityPage = () => {
         certificationAuthorityStructureLabel={
           certificationAuthorityStructure.label
         }
-        pageLabel="Ajouter un gestionnaire de candidatures"
+        pageLabel="Ajouter un gestionnaire des candidatures"
       />
-      <h1>Ajouter un gestionnaire de candidatures</h1>
+      <h1>Ajouter un gestionnaire des candidatures</h1>
       <p className="text-xl">
-        Le gestionnaire de candidatures bénéficie d’ un espace personnel sur la
+        Le gestionnaire des candidatures bénéficie d’ un espace personnel sur la
         plateforme. Renseignez ses informations de connexion pour qu’il puisse
         commencer à travailler.
       </p>
@@ -83,7 +83,8 @@ const CreateCertificationAuthorityPage = () => {
             className="col-span-2"
             nativeInputProps={{
               ...register("label"),
-              placeholder: "[Nom de l’antenne du gestionnaire de candidatures]",
+              placeholder:
+                "[Nom de l’antenne du gestionnaire des candidatures]",
             }}
             state={errors.label ? "error" : "default"}
             stateRelatedMessage={errors.label?.message}
