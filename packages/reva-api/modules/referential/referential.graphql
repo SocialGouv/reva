@@ -23,6 +23,7 @@ type Certification {
   codeRncp: String!
   status: CertificationStatus!
   statusV2: CertificationStatusV2!
+  visible: Boolean!
   typeDiplome: String
   degree: Degree!
   conventionsCollectives: [ConventionCollective!]!
@@ -267,6 +268,13 @@ type Query {
     limit: Int
     searchText: String
     status: CertificationStatus
+  ): CertificationPage!
+  searchCertificationsV2ForAdmin(
+    offset: Int
+    limit: Int
+    searchText: String
+    status: CertificationStatusV2
+    visible: Boolean
   ): CertificationPage!
   getCertification(certificationId: ID!): Certification!
   getRegions: [Region!]!

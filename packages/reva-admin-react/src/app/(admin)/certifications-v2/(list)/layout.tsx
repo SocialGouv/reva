@@ -1,18 +1,23 @@
 "use client";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
+import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 
 const CertificationListLayout = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams();
-  const statusParam = searchParams.get("status");
+  const statusParam = searchParams.get("status") || undefined;
   const searchFilter = searchParams.get("search") || "";
+  const visibleParam = searchParams.get("visible") || undefined;
 
-  const hrefSideMenu = (status: string | null) => {
+  const hrefSideMenu = (status?: string, visible?: "true" | "false") => {
     const params = new URLSearchParams();
     if (status) {
       params.set("status", status);
+    }
+
+    if (visible) {
+      params.set("visible", visible);
     }
 
     params.set("page", "1");
@@ -24,14 +29,31 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
     return `/certifications-v2/?${params.toString()}`;
   };
 
-  const menuItem = (text: string, status: string | null) => ({
-    isActive: status === statusParam,
+  const menuItem = (
+    text: string,
+    status?: string,
+    visible?: "true" | "false",
+  ): SideMenuProps.Item => ({
+    isActive: status === statusParam && visible === visibleParam,
     linkProps: {
-      href: hrefSideMenu(status),
+      href: hrefSideMenu(status, visible),
       target: "_self",
     },
     text,
   });
+
+  const items: SideMenuProps.Item[] = [
+    menuItem("Toutes les certifications"),
+    {
+      ...menuItem("Publiées", "VALIDE_PAR_CERTIFICATEUR"),
+      items: [
+        menuItem("Visibles", "VALIDE_PAR_CERTIFICATEUR", "true"),
+        menuItem("Invisibles", "VALIDE_PAR_CERTIFICATEUR", "false"),
+      ],
+    },
+    menuItem("Envoyées pour validation", "A_VALIDER_PAR_CERTIFICATEUR"),
+    menuItem("Brouillons", "BROUILLON"),
+  ];
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-6">
@@ -42,9 +64,7 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
         sticky
         fullHeight
         items={[
-          menuItem("Toutes les certifications", null),
-          menuItem("Certifications disponibles", "AVAILABLE"),
-          menuItem("Certifications inactives", "INACTIVE"),
+          ...items,
           {
             isActive: false,
             linkProps: {

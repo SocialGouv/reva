@@ -46,6 +46,7 @@ model Certification {
   summary                                           String?
   status                                            CertificationStatus                                 @default(INACTIVE)
   statusV2                                          CertificationStatusV2                               @default(BROUILLON) @map("status_v2")
+  visible                                           Boolean                                             @default(false)
   rncpId                                            String                                              @map("rncp_id") @db.VarChar(255)
   organismsAndRegions                               OrganismsOnRegionsAndCertifications[]
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)

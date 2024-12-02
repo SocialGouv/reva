@@ -1,12 +1,14 @@
 {
   "data": {
-    "searchCertificationsForAdmin": {
+    "searchCertificationsV2ForAdmin": {
       "rows": [
         {
           "id": "994b9bc4-e9f5-42c3-8556-f2494d11ebb4",
           "label": "Bac Pro Accompagnement, soins et services à la personne - à domicile",
           "codeRncp": "12296",
           "status": "INACTIVE",
+          "statusV2": "INACTIVE",
+          "visible": false,
           "certificationAuthorityStructure": {
             "label": "Structure certificatrice inconnue"
           },
@@ -17,6 +19,8 @@
           "label": "Bac Pro Accompagnement, soins et services à la personne - en structure",
           "codeRncp": "12301",
           "status": "AVAILABLE",
+          "statusV2": "VALIDE_PAR_CERTIFICATEUR",
+          "visible": true,
           "certificationAuthorityStructure": {
             "label": "Structure certificatrice inconnue"
           },
@@ -27,6 +31,8 @@
           "label": "Bac Professionnel Accompagnement, soins et services à la personnes Option A : à domicile",
           "codeRncp": "12296",
           "status": "AVAILABLE",
+          "statusV2": "VALIDE_PAR_CERTIFICATEUR",
+          "visible": true,
           "certificationAuthorityStructure": {
             "label": "Ministère de l'Education Nationale et de la Jeunesse"
           },

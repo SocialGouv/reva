@@ -14,7 +14,7 @@ function interceptCertifications() {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
-    stubQuery(req, "getCertificationsForListPage", certifications);
+    stubQuery(req, "getCertificationsV2ForListPage", certifications);
   });
 }
 
@@ -26,7 +26,7 @@ context("when i access the certification list", () => {
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
-    cy.wait("@getCertificationsForListPage");
+    cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-test="results"]').children().should("have.length", 3);
   });
 
@@ -37,7 +37,7 @@ context("when i access the certification list", () => {
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
-    cy.wait("@getCertificationsForListPage");
+    cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-test="add-certification-button"]').click();
     cy.url().should(
       "eq",
@@ -52,7 +52,7 @@ context("when i access the certification list", () => {
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
-    cy.wait("@getCertificationsForListPage");
+    cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-test="access-certification-button"]').eq(1).click();
     cy.url().should(
       "eq",
