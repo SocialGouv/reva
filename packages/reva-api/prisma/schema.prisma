@@ -915,7 +915,8 @@ model CertificationAuthorityStructure {
   certifications              Certification[]
   oldCertificationAuthorities CertificationAuthority[] @relation("old_certification_authority_on_certification_authority_structure")
 
-  certificationRegistryManager CertificationRegistryManager?
+  certificationRegistryManager                                     CertificationRegistryManager?
+  certificationAuthorityStructureOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
 
   @@map("certification_authority_structure")
 }
@@ -937,9 +938,23 @@ model CertificationAuthority {
   oldCertificationAuthorityStructure    CertificationAuthorityStructure         @relation(fields: [oldCertificationAuthorityStructureId], references: [id], onDelete: Restrict, name: "old_certification_authority_on_certification_authority_structure")
   oldCertificationAuthorityStructureId  String                                  @map("certification_authority_structure_id") @db.Uuid
 
-  showLocalAccountsContactInfo Boolean @default(true) @map("show_local_accounts_contact_info")
+  showLocalAccountsContactInfo                            Boolean                                                   @default(true) @map("show_local_accounts_contact_info")
+  certificationAuthorityOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
 
   @@map("certification_authority")
+}
+
+model CertificationAuthorityOnCertificationAuthorityStructure {
+  id                                String                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthority            CertificationAuthority          @relation(map: "ca_on_cas_ca", fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
+  certificationAuthorityId          String                          @map("certification_authority_id") @db.Uuid
+  certificationAuthorityStructure   CertificationAuthorityStructure @relation(map: "ca_on_cas_cas", fields: [certificationAuthorityStructureId], references: [id], onDelete: Cascade)
+  certificationAuthorityStructureId String                          @map("certification_authority_structure_id") @db.Uuid
+  createdAt                         DateTime                        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                         DateTime?                       @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityId, certificationAuthorityStructureId])
+  @@map("certification_authority_on_certification_authority_structure")
 }
 
 model CertificationRegistryManager {
