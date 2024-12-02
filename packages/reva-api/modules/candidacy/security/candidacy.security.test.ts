@@ -195,7 +195,7 @@ test("Certification local account of the feasibility file of the candidacy shoul
   const certification = await createCertificationHelper({
     certificationAuthorityStructureId:
       certificationAuthorityLocalAccount.certificationAuthority
-        .certificationAuthorityStructureId,
+        .oldCertificationAuthorityStructureId,
   });
   const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {

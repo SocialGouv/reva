@@ -80,7 +80,7 @@ export const createCandidacyHelper = async (args?: {
         include: {
           certificationAuthorityStructure: {
             include: {
-              certificationAuthorities: { include: { Account: true } },
+              oldCertificationAuthorities: { include: { Account: true } },
               certificationRegistryManager: { include: { account: true } },
             },
           },

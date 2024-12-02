@@ -53,10 +53,10 @@ const unsafeResolvers = {
         certificationAuthorityId: parent.id,
       }),
     certificationAuthorityStructure: ({
-      certificationAuthorityStructureId,
+      oldCertificationAuthorityStructureId,
     }: CertificationAuthority) =>
       getCertificationAuthorityStructureById({
-        certificationAuthorityStructureId,
+        certificationAuthorityStructureId: oldCertificationAuthorityStructureId,
       }),
     account: (parent: CertificationAuthority) =>
       getAccountByCertificationAuthorityId({

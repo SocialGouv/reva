@@ -910,10 +910,11 @@ model ExamInfo {
 }
 
 model CertificationAuthorityStructure {
-  id                           String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                        String                        @unique @db.VarChar(200)
-  certifications               Certification[]
-  certificationAuthorities     CertificationAuthority[]
+  id                          String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                       String                   @unique @db.VarChar(200)
+  certifications              Certification[]
+  oldCertificationAuthorities CertificationAuthority[] @relation("old_certification_authority_on_certification_authority_structure")
+
   certificationRegistryManager CertificationRegistryManager?
 
   @@map("certification_authority_structure")
@@ -933,9 +934,10 @@ model CertificationAuthority {
   certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
   DossierDeValidation                   DossierDeValidation[]
   Jury                                  Jury[]
-  certificationAuthorityStructure       CertificationAuthorityStructure         @relation(fields: [certificationAuthorityStructureId], references: [id], onDelete: Restrict)
-  certificationAuthorityStructureId     String                                  @map("certification_authority_structure_id") @db.Uuid
-  showLocalAccountsContactInfo          Boolean                                 @default(true) @map("show_local_accounts_contact_info")
+  oldCertificationAuthorityStructure    CertificationAuthorityStructure         @relation(fields: [oldCertificationAuthorityStructureId], references: [id], onDelete: Restrict, name: "old_certification_authority_on_certification_authority_structure")
+  oldCertificationAuthorityStructureId  String                                  @map("certification_authority_structure_id") @db.Uuid
+
+  showLocalAccountsContactInfo Boolean @default(true) @map("show_local_accounts_contact_info")
 
   @@map("certification_authority")
 }

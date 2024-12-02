@@ -10,5 +10,5 @@ export async function getCertificationAuthoritiesByStructureId(
         id: structureId,
       },
     })
-    .certificationAuthorities();
+    .oldCertificationAuthorities();
 }

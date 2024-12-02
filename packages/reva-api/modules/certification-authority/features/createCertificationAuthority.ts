@@ -41,7 +41,7 @@ export const createCertificationAuthority = async ({
             })),
           },
         },
-        certificationAuthorityStructureId,
+        oldCertificationAuthorityStructureId: certificationAuthorityStructureId,
         label,
         contactEmail,
         contactFullName,

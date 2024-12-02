@@ -46,7 +46,8 @@ test("should count all (2) feasibilities for admin user", async () => {
 test("should count all (1) available feasibility for certificator user even if other exists on the same scope", async () => {
   const certification = await createCertificationHelper({});
   const certificationAuthority =
-    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+    certification.certificationAuthorityStructure
+      ?.oldCertificationAuthorities[0];
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
@@ -107,7 +108,8 @@ test("should count no available feasibility for certificator user since he doesn
 test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
   const certification = await createCertificationHelper({});
   const certificationAuthority =
-    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+    certification.certificationAuthorityStructure
+      ?.oldCertificationAuthorities[0];
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
@@ -167,7 +169,8 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
 test("should return all (1) available feasibility for certificateur user", async () => {
   const certification = await createCertificationHelper({});
   const certificationAuthority =
-    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+    certification.certificationAuthorityStructure
+      ?.oldCertificationAuthorities[0];
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
@@ -253,7 +256,8 @@ const postFeasibilityDecision = ({
 test("should validate a feasibility since certificator is allowed to do so", async () => {
   const certification = await createCertificationHelper({});
   const certificationAuthority =
-    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+    certification.certificationAuthorityStructure
+      ?.oldCertificationAuthorities[0];
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
@@ -318,7 +322,8 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
 test("should reject a feasibility since certificator is allowed to do so", async () => {
   const certification = await createCertificationHelper({});
   const certificationAuthority =
-    certification.certificationAuthorityStructure?.certificationAuthorities[0];
+    certification.certificationAuthorityStructure
+      ?.oldCertificationAuthorities[0];
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,

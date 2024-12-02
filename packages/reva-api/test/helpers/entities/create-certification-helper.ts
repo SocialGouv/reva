@@ -34,13 +34,13 @@ export const createCertificationHelper = async (
       rncpExpiresAt: faker.date.future(),
       rncpDeliveryDeadline: faker.date.future(),
       certificationAuthorityStructureId:
-        certificationAuthority.certificationAuthorityStructure.id,
+        certificationAuthority.oldCertificationAuthorityStructure.id,
       ...args,
     },
     include: {
       certificationAuthorityStructure: {
         include: {
-          certificationAuthorities: {
+          oldCertificationAuthorities: {
             include: { Account: true },
           },
           certificationRegistryManager: {
