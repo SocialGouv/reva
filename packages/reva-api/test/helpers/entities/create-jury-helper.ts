@@ -19,14 +19,19 @@ export const createJuryHelper = async (args?: Partial<Jury>) => {
 
   return prismaClient.jury.create({
     data: {
-      isActive: true,
+      isActive: args?.isActive ?? true,
       candidacyId: candidacy.id,
       certificationAuthorityId: certificationAuthority.id,
       dateOfSession: new Date(),
       ...args,
     },
     include: {
-      candidacy: true,
+      candidacy: {
+        include: {
+          candidate: true,
+          certification: true,
+        },
+      },
     },
   });
 };
