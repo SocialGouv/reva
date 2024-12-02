@@ -1,6 +1,9 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:import/recommended",
@@ -14,7 +17,9 @@
       "typescript": true,
       "node": true
     },
-    "import/ignore": ["node_modules"]
+    "import/ignore": [
+      "node_modules"
+    ]
   },
   "rules": {
     "import/no-unused-modules": [
@@ -36,12 +41,6 @@
         "destructuredArrayIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true
-      }
-    ],
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
       }
     ]
   }

@@ -13,12 +13,6 @@
         "argsIgnorePattern": "^_",
         "ignoreRestSiblings": true
       }
-    ],
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
     ]
   }
 }
