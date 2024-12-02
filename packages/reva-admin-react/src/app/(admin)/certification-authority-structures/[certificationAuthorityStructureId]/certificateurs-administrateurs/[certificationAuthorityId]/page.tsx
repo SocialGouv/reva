@@ -122,14 +122,14 @@ const CertificationAuthorityAdminComponent = ({
         <form onSubmit={handleFormSubmit} id="certificationAuthorityForm">
           <div className="grid grid-cols-2 w-full gap-x-4">
             <Input
-              label="Nom de la structure"
+              label="Gestionnaire de candidatures"
               className="col-span-2"
               nativeInputProps={{
                 ...register("label"),
               }}
             />
             <Input
-              label="Nom du gestionnaire de candidatures"
+              label="Nom et prénom ou Service"
               nativeInputProps={{
                 ...register("contactFullName"),
               }}
