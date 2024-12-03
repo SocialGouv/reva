@@ -14,7 +14,8 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
     certification_authority_getCertificationAuthority(id: $id) {
       id
       label
-      certificationAuthorityStructure {
+      certificationAuthorityStructures {
+        id
         label
         certifications {
           id
@@ -106,14 +107,14 @@ export const useCertificationsPage = ({
             ) || false,
         }))
         .sort((c) =>
-          certificationAuthority?.certificationAuthorityStructure?.certifications.some(
-            (ca) => ca.id === c.id,
+          certificationAuthority?.certificationAuthorityStructures?.some(
+            (cas) => cas?.certifications.some((ca) => ca.id === c.id),
           )
             ? -1
             : 1,
         ),
     [
-      certificationAuthority?.certificationAuthorityStructure?.certifications,
+      certificationAuthority?.certificationAuthorityStructures,
       certificationAuthority?.certifications,
       getCertificationAuthorityAndCertificationsResponse
         ?.searchCertificationsForAdmin?.rows,

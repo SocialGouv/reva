@@ -33,7 +33,7 @@ const getCertificationAuthority = graphql(`
           label
         }
       }
-      certificationAuthorityStructure {
+      certificationAuthorityStructures {
         id
         label
       }

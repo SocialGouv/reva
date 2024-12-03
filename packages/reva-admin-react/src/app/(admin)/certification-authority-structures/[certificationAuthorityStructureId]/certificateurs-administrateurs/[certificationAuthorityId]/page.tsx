@@ -14,6 +14,7 @@ import {
   useCertificationAuthority,
   useCertificationAuthorityForm,
 } from "./certificationAuthority.hooks";
+import { useParams } from "next/navigation";
 
 type FormData = z.infer<typeof schema>;
 
@@ -29,10 +30,12 @@ const schema = z.object({
 
 const CertificationAuthorityAdminComponent = ({
   certificationAuthority,
+  certificationAuthorityStructureId,
 }: {
   certificationAuthority: NonNullable<
     ReturnType<typeof useCertificationAuthority>["certificationAuthority"]
   >;
+  certificationAuthorityStructureId: string;
 }) => {
   const { updateCertificationAuthority } = useCertificationAuthorityForm();
 
@@ -86,11 +89,11 @@ const CertificationAuthorityAdminComponent = ({
   return (
     <div className="flex flex-col flex-1">
       <CertificationAuthorityStructureBreadcrumb
-        certificationAuthorityStructureId={
-          certificationAuthority.certificationAuthorityStructure.id
-        }
+        certificationAuthorityStructureId={certificationAuthorityStructureId}
         certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructure.label
+          certificationAuthority.certificationAuthorityStructures.find(
+            (s) => s.id === certificationAuthorityStructureId,
+          )?.label || "inconnu"
         }
         pageLabel={certificationAuthority.label}
       />
@@ -146,15 +149,15 @@ const CertificationAuthorityAdminComponent = ({
         </form>
         <InterventionAreaSummaryCard
           regions={regionsAndDepartments}
-          updateButtonHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}
+          updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}
         />
         <CertificationsSummaryCard
           certifications={certificationAuthority.certifications}
-          updateButtonHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/certifications`}
+          updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/certifications`}
         />
         <AccountsSummaryCard
           accounts={certificationAuthority.certificationAuthorityLocalAccounts}
-          hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs`}
+          hrefPrefix={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs`}
         />
       </div>
       <div className="flex flex-row justify-end mt-4 gap-x-4">
@@ -162,7 +165,7 @@ const CertificationAuthorityAdminComponent = ({
           className="mr-auto"
           priority="secondary"
           linkProps={{
-            href: `/certification-authority-structures/${certificationAuthority.certificationAuthorityStructure.id}`,
+            href: `/certification-authority-structures/${certificationAuthorityStructureId}`,
           }}
         >
           Retour
@@ -188,6 +191,10 @@ const CertificationAuthorityAdminPage = () => {
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthority();
 
+  const { certificationAuthorityStructureId } = useParams<{
+    certificationAuthorityStructureId: string;
+  }>();
+
   if (
     !certificationAuthority ||
     getCertificationAuthorityStatus !== "success"
@@ -198,6 +205,7 @@ const CertificationAuthorityAdminPage = () => {
   return (
     <CertificationAuthorityAdminComponent
       certificationAuthority={certificationAuthority}
+      certificationAuthorityStructureId={certificationAuthorityStructureId}
     />
   );
 };

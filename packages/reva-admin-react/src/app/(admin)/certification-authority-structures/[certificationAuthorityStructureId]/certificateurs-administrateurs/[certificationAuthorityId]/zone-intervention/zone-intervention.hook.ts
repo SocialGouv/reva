@@ -14,7 +14,8 @@ const getCertificationAuthorityQuery = graphql(`
       label
       contactFullName
       contactEmail
-      certificationAuthorityStructure {
+      certificationAuthorityStructures {
+        id
         label
       }
       departments {

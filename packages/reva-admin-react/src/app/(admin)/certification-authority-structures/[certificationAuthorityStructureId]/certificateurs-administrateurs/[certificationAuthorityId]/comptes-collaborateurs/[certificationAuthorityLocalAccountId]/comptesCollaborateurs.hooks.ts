@@ -36,7 +36,7 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       certificationAuthority {
         id
         label
-        certificationAuthorityStructure {
+        certificationAuthorityStructures {
           id
           label
         }

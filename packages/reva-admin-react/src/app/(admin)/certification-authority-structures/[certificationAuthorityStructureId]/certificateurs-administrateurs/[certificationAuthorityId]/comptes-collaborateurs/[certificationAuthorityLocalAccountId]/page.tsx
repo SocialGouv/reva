@@ -54,8 +54,9 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               certificationAuthorityStructureId
             }
             certificationAuthorityStructureLabel={
-              certificationAuthorityLocalAccount.certificationAuthority
-                .certificationAuthorityStructure.label
+              certificationAuthorityLocalAccount.certificationAuthority.certificationAuthorityStructures.find(
+                (s) => s.id === certificationAuthorityStructureId,
+              )?.label || "inconnu"
             }
             certificationAuthorityId={
               certificationAuthorityLocalAccount.certificationAuthority.id

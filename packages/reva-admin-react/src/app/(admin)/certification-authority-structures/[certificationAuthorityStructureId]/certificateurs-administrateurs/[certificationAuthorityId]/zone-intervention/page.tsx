@@ -49,7 +49,9 @@ const CertificationAuthorityComponent = ({
       <CertificationAuthorityStructureBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
         certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructure.label
+          certificationAuthority.certificationAuthorityStructures.find(
+            (s) => s.id === certificationAuthorityStructureId,
+          )?.label || "inconnu"
         }
         certificationAuthorityId={certificationAuthorityId}
         certificationAuthoritylabel={certificationAuthority.label}

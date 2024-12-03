@@ -8,7 +8,7 @@ type CertificationAuthority {
   regions: [Region!]!
   certifications: [Certification!]!
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
-  certificationAuthorityStructure: CertificationAuthorityStructure!
+  certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!
 }
 
