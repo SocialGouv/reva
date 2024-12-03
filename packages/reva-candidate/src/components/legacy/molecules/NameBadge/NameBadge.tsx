@@ -14,7 +14,7 @@ export const BasicNameBadge = ({
   const As = as;
   return (
     <As
-      className={`text-3xl text-dsfrBlue-500 font-bold ${className}`}
+      className={`text-3xl text-dsfrGray-800 font-bold ${className}`}
       data-test={dataTest}
     >
       {children}

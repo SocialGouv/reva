@@ -10,7 +10,7 @@ export default function CandidacyDropOutPage() {
         src="/candidat/fvae_logo.svg"
         alt="France VAE"
       />
-      <h1 className="text-dsfrBlue-500">
+      <h1 className="text-dsfrGray-800">
         Votre accompagnateur a déclaré votre abandon de candidature
       </h1>
       <p>

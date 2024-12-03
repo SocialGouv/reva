@@ -15,7 +15,7 @@ export default function LogoutConfirmation() {
       title="Confirmation de déconnexion"
     >
       <div>
-        <h1 className="text-3xl font-bold text-dsfrBlue-500">
+        <h1 className="text-3xl font-bold text-dsfrGray-800">
           Vous êtes bien déconnecté du service France VAE
         </h1>
         <Button
