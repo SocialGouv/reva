@@ -133,8 +133,9 @@ const FundingPage = () => {
         candidacy?.fundingRequestUnifvae?.fundingContactEmail ?? "",
       fundingContactPhone:
         candidacy?.fundingRequestUnifvae?.fundingContactPhone ?? "",
+      confirmation: isReadOnly,
     }),
-    [candidacy, candidacyFundingRequest],
+    [candidacy, candidacyFundingRequest, isReadOnly],
   );
 
   const methods = useForm<CandidacyFundingFormData>({
