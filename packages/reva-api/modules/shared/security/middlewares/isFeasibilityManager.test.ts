@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker/.";
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "../../../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -37,11 +38,9 @@ const ERROR_MESSAGES = {
 
 describe("isFeasibilityManager", () => {
   describe("manage_feasibility role", () => {
-    test("should allow access when user manages the certification authority of the feasibility", async () => {
+    test("should allow access when user manages the feasibility", async () => {
       const certification = await createCertificationHelper();
-      const certificationAuthority =
-        certification.certificationAuthorityStructure
-          ?.oldCertificationAuthorities[0];
+      const certificationAuthority = await createCertificationAuthorityHelper();
       const candidacy = await createCandidacyHelper({
         candidacyArgs: {
           certificationId: certification.id,
@@ -87,7 +86,7 @@ describe("isFeasibilityManager", () => {
       expect(resp.json()).not.toHaveProperty("errors");
     });
 
-    test("should deny access when user does not manage the certification authority", async () => {
+    test("should deny access when user doesn't manage the feasibility", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper();
 
       const resp = await getActiveFeasibilityByCandidacyId({
@@ -124,15 +123,8 @@ describe("isFeasibilityManager", () => {
     });
 
     test("should deny access when feasibility is not active", async () => {
-      const certification = await createCertificationHelper();
-      const certificationAuthority =
-        certification.certificationAuthorityStructure
-          ?.oldCertificationAuthorities[0];
-      const candidacy = await createCandidacyHelper({
-        candidacyArgs: {
-          certificationId: certification.id,
-        },
-      });
+      const certificationAuthority = await createCertificationAuthorityHelper();
+      const candidacy = await createCandidacyHelper();
 
       await createFeasibilityUploadedPdfHelper({
         certificationAuthorityId: certificationAuthority?.id,
@@ -154,11 +146,9 @@ describe("isFeasibilityManager", () => {
   });
 
   describe("manage_feasibility role with certification and department checks", () => {
-    test("should allow access when user matches certification, authority and department", async () => {
+    test("should allow access when user matches certification and department", async () => {
       const certification = await createCertificationHelper();
-      const certificationAuthority =
-        certification.certificationAuthorityStructure
-          ?.oldCertificationAuthorities[0];
+      const certificationAuthority = await createCertificationAuthorityHelper();
       const candidacy = await createCandidacyHelper({
         candidacyArgs: {
           certificationId: certification.id,
@@ -204,16 +194,13 @@ describe("isFeasibilityManager", () => {
       expect(resp.json()).not.toHaveProperty("errors");
     });
 
-    test("should deny access when certification does not match", async () => {
+    test("should deny access when certification authority does not match", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper();
-      const differentCertification = await createCertificationHelper();
+      const certificationAuthority = await createCertificationAuthorityHelper();
 
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: feasibility.candidacyId,
-        keycloakId:
-          differentCertification.certificationAuthorityStructure
-            ?.oldCertificationAuthorities[0].Account[0].keycloakId ??
-          faker.string.uuid(),
+        keycloakId: certificationAuthority.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
@@ -242,14 +229,11 @@ describe("isFeasibilityManager", () => {
         candidacyId: differentDepartmentCandidacy.id,
       });
 
-      const certificationAuthority = await createCertificationHelper();
+      const certificationAuthority = await createCertificationAuthorityHelper();
 
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: differentDepartmentCandidacy.id,
-        keycloakId:
-          certificationAuthority.certificationAuthorityStructure
-            ?.oldCertificationAuthorities[0].Account[0].keycloakId ??
-          faker.string.uuid(),
+        keycloakId: certificationAuthority.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
@@ -258,14 +242,11 @@ describe("isFeasibilityManager", () => {
 
     test("should deny access when certification authority does not match", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper();
-      const differentAuthority = await createCertificationHelper();
+      const differentAuthority = await createCertificationAuthorityHelper();
 
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: feasibility.candidacyId,
-        keycloakId:
-          differentAuthority.certificationAuthorityStructure
-            ?.oldCertificationAuthorities[0].Account[0].keycloakId ??
-          faker.string.uuid(),
+        keycloakId: differentAuthority.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
@@ -273,15 +254,8 @@ describe("isFeasibilityManager", () => {
     });
 
     test("should deny access when feasibility is not active", async () => {
-      const certification = await createCertificationHelper();
-      const certificationAuthority =
-        certification.certificationAuthorityStructure
-          ?.oldCertificationAuthorities[0];
-      const candidacy = await createCandidacyHelper({
-        candidacyArgs: {
-          certificationId: certification.id,
-        },
-      });
+      const certificationAuthority = await createCertificationAuthorityHelper();
+      const candidacy = await createCandidacyHelper();
 
       await createFeasibilityUploadedPdfHelper({
         certificationAuthorityId: certificationAuthority?.id,
@@ -302,8 +276,7 @@ describe("isFeasibilityManager", () => {
     });
 
     test("should deny access when only certification authority matches", async () => {
-      const certification = await createCertificationHelper();
-      const differentCertification = await createCertificationHelper();
+      const certificationAuthority = await createCertificationAuthorityHelper();
       const differentDepartment = await prismaClient.department.create({
         data: {
           code: faker.string.numeric(3),
@@ -319,24 +292,18 @@ describe("isFeasibilityManager", () => {
 
       const candidacy = await createCandidacyHelper({
         candidacyArgs: {
-          certificationId: differentCertification.id,
           departmentId: differentDepartment.id,
         },
       });
 
       await createFeasibilityUploadedPdfHelper({
-        certificationAuthorityId:
-          certification.certificationAuthorityStructure
-            ?.oldCertificationAuthorities[0].id,
+        certificationAuthorityId: certificationAuthority.id,
         candidacyId: candidacy.id,
       });
 
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: candidacy.id,
-        keycloakId:
-          certification.certificationAuthorityStructure
-            ?.oldCertificationAuthorities[0].Account[0].keycloakId ??
-          faker.string.uuid(),
+        keycloakId: certificationAuthority.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
