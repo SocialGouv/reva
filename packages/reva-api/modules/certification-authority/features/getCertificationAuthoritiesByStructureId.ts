@@ -10,5 +10,12 @@ export async function getCertificationAuthoritiesByStructureId(
         id: structureId,
       },
     })
-    .oldCertificationAuthorities();
+    .certificationAuthorityOnCertificationAuthorityStructure({
+      include: { certificationAuthority: true },
+      orderBy: { certificationAuthority: { label: "asc" } },
+    })
+    .then(
+      (caocass) =>
+        caocass?.map((caocas) => caocas.certificationAuthority) || [],
+    );
 }

@@ -15,6 +15,11 @@ export const createCertificationAuthorityHelper = async (
       contactFullName: faker.person.fullName(),
       label: faker.company.name(),
       oldCertificationAuthorityStructureId: certificationAuthorityStructure.id,
+      certificationAuthorityOnCertificationAuthorityStructure: {
+        create: {
+          certificationAuthorityStructureId: certificationAuthorityStructure.id,
+        },
+      },
       ...certificationAuthorityArgs,
       Account: {
         create: {
@@ -26,7 +31,9 @@ export const createCertificationAuthorityHelper = async (
       },
     },
     include: {
-      oldCertificationAuthorityStructure: true,
+      certificationAuthorityOnCertificationAuthorityStructure: {
+        include: { certificationAuthorityStructure: true },
+      },
       Account: true,
     },
   });

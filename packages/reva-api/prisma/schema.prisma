@@ -916,8 +916,8 @@ model CertificationAuthorityStructure {
   certifications              Certification[]
   oldCertificationAuthorities CertificationAuthority[] @relation("old_certification_authority_on_certification_authority_structure")
 
-  certificationRegistryManager                                     CertificationRegistryManager?
-  certificationAuthorityStructureOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
+  certificationRegistryManager                            CertificationRegistryManager?
+  certificationAuthorityOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
 
   @@map("certification_authority_structure")
 }
