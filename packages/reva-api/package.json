@@ -21,7 +21,7 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
-    "lint": "eslint --color modules infra"
+    "lint": "eslint --color modules infra test scripts prisma/seed"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed/seed.ts"

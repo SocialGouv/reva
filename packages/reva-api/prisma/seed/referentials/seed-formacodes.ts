@@ -228,7 +228,7 @@ function readCsvRows<T>({
   });
 }
 
-export async function seedFormacode() {
+async function seedFormacode() {
   const prisma = new PrismaClient();
 
   await prisma.$transaction(

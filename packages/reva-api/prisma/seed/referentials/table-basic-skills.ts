@@ -8,7 +8,8 @@ export async function insertBasicSkillsIfNone(prisma: PrismaClient) {
       data: [
         { label: "Usage et communication numérique" },
         {
-          label: "Utilisation des règles de base de calcul et du raisonnement mathématique",
+          label:
+            "Utilisation des règles de base de calcul et du raisonnement mathématique",
         },
         { label: "Communication en français" },
       ],
