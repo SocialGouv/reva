@@ -113,6 +113,7 @@ export const PICTOGRAMS = {
   internet: generateSvg(internet),
   mailSend: generateSvg(mailSend),
   search: generateSvg(search),
+  searchLG: generateSvg(search, { width: 98, height: 98 }),
   contract: generateSvg(contract),
   documentDownload: generateSvg(documentDownload),
   documentSignature: generateSvg(documentSignature),
