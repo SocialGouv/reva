@@ -1467,7 +1467,6 @@ model DFFCertificationCompetenceDetails {
   dematerializedFeasibilityFileId String                                 @map("dematerialized_feasibility_file_id") @db.Uuid
   certificationCompetenceId       String                                 @map("certification_competence_id") @db.Uuid
   certificationCompetence         CertificationCompetence                @relation(fields: [certificationCompetenceId], references: [id])
-  text                            String?
   createdAt                       DateTime                               @default(now()) @map("created_at") @db.Timestamptz(6)
   state                           DFFCertificationCompetenceDetailsState @default(YES)
 
