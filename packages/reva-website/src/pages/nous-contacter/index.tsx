@@ -3,7 +3,7 @@ import Head from "next/head";
 
 const IndexNousContacterPage = () => {
   return (
-    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
+    <MainLayout>
       <Head>
         <title>Nous contacter - France VAE</title>
       </Head>

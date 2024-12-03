@@ -10,7 +10,7 @@ import { ReactNode } from "react";
 
 const IndexConfidentialitePage = () => {
   return (
-    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden font-light">
+    <MainLayout className="overflow-x-hidden font-light">
       <Head>
         <title>Politique de confidentialité - France VAE</title>
       </Head>
