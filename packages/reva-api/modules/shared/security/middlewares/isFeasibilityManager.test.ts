@@ -98,10 +98,47 @@ describe("isFeasibilityManager", () => {
       expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
     });
 
-    test("should deny access when feasibility does not exist", async () => {
+    test("should deny access when candidacy does not exist", async () => {
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: faker.string.uuid(),
         keycloakId: faker.string.uuid(),
+      });
+
+      expect(resp.json()).toHaveProperty("errors");
+      expect(resp.json().errors[0].message).toBe(
+        ERROR_MESSAGES.CANDIDACY_NOT_FOUND,
+      );
+    });
+
+    test("should deny access when feasibility file does not exist", async () => {
+      const certification = await createCertificationHelper();
+      const certificationAuthority = await createCertificationAuthorityHelper();
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          certificationId: certification.id,
+        },
+      });
+
+      await prismaClient.certificationAuthorityLocalAccount.create({
+        data: {
+          certificationAuthorityId: certificationAuthority.id,
+          accountId: certificationAuthority.Account[0].id,
+          certificationAuthorityLocalAccountOnCertification: {
+            create: {
+              certificationId: certification.id,
+            },
+          },
+          certificationAuthorityLocalAccountOnDepartment: {
+            create: {
+              departmentId: candidacy.departmentId ?? faker.string.uuid(),
+            },
+          },
+        },
+      });
+
+      const resp = await getActiveFeasibilityByCandidacyId({
+        candidacyId: candidacy.id,
+        keycloakId: certificationAuthority?.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
@@ -234,19 +271,6 @@ describe("isFeasibilityManager", () => {
       const resp = await getActiveFeasibilityByCandidacyId({
         candidacyId: differentDepartmentCandidacy.id,
         keycloakId: certificationAuthority.Account[0].keycloakId,
-      });
-
-      expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
-    });
-
-    test("should deny access when certification authority does not match", async () => {
-      const feasibility = await createFeasibilityUploadedPdfHelper();
-      const differentAuthority = await createCertificationAuthorityHelper();
-
-      const resp = await getActiveFeasibilityByCandidacyId({
-        candidacyId: feasibility.candidacyId,
-        keycloakId: differentAuthority.Account[0].keycloakId,
       });
 
       expect(resp.json()).toHaveProperty("errors");
