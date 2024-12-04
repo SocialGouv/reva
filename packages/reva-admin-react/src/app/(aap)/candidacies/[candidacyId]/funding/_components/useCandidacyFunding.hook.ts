@@ -49,6 +49,9 @@ const getCandidacyByIdFunding = graphql(`
         status
         isActive
       }
+      feasibility {
+        decision
+      }
       candidacyDropOut {
         createdAt
       }

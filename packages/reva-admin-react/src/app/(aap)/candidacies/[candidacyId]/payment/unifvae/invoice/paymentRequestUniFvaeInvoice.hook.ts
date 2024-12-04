@@ -12,6 +12,9 @@ const getCandidacyQuery = graphql(`
         lastname
         gender
       }
+      feasibility {
+        decision
+      }
       certification {
         label
       }

@@ -1,5 +1,6 @@
 import { Candidacy } from "@/graphql/generated/graphql";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 export const ParcoursPersonnaliseBlock = ({
@@ -17,7 +18,9 @@ export const ParcoursPersonnaliseBlock = ({
     formState: { errors },
   } = useFormContext();
 
-  const forfaitCost = 300;
+  const forfaitCost = useMemo(() => {
+    return candidacy?.feasibility?.decision === "REJECTED" ? 200 : 300;
+  }, [candidacy]);
   const individualHourCount = watch("individualHourCount") || 0;
   const individualCost = watch("individualCost") || 0;
   const collectiveHourCount = watch("collectiveHourCount") || 0;
@@ -59,8 +62,12 @@ export const ParcoursPersonnaliseBlock = ({
         <span>Forfait</span>
         <span className="font-medium">Forfait d’étude de faisabilité</span>
         <span className="font-medium">200€ net</span>
-        <span className="font-medium">Forfait entretien post-jury</span>
-        <span className="font-medium">100€ net</span>
+        {candidacy.feasibility?.decision !== "REJECTED" && (
+          <>
+            <span className="font-medium">Forfait entretien post-jury</span>
+            <span className="font-medium">100€ net</span>
+          </>
+        )}
         <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
           <span className="fr-icon-warning-fill fr-icon--sm mr-1" aria-hidden />
           Le forfait de faisabilité ne pourra être demandé que si l’étude a été

@@ -110,7 +110,9 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     otherTrainingEffectiveCost,
   } = useWatch({ control });
 
-  const feasibilityPackageCostTotal = 300;
+  const feasibilityPackageCostTotal = useMemo(() => {
+    return candidacy?.feasibility?.decision === "REJECTED" ? 200 : 300;
+  }, [candidacy]);
 
   const supportHourCountTotal =
     (individualEffectiveHourCount || 0) + (collectiveEffectiveHourCount || 0);
@@ -272,8 +274,14 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                 Forfait d’étude de faisabilité
               </span>
               <span className="font-medium">200€ net</span>
-              <span className="font-medium">Forfait entretien post-jury</span>
-              <span className="font-medium">100€ net</span>
+              {candidacy.feasibility?.decision !== "REJECTED" && (
+                <>
+                  <span className="font-medium">
+                    Forfait entretien post-jury
+                  </span>
+                  <span className="font-medium">100€ net</span>
+                </>
+              )}
               <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
                 <span
                   className="fr-icon-warning-fill fr-icon--sm mr-1"
