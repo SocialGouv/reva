@@ -1,7 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import { useState } from "react";
 
 import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
@@ -26,7 +25,7 @@ interface filters {
   organismSearchText: string;
   organismSearchRemote: boolean;
   organismSearchOnsite: boolean;
-  organismSearchZip?: string;
+  organismSearchZip: string;
   organismSearchPmr: boolean;
   organismSearchMcf: boolean;
 }
@@ -38,10 +37,7 @@ export const OrganismFilters = ({
   onSearch: (filters: filters) => void;
   filters: filters;
 }) => {
-  const [zip, setZip] = useState("");
-  const [pmr, setPmr] = useState(false);
   const { organismSearchRemote, organismSearchOnsite } = filters;
-  const searchHasOnSiteSelected = organismSearchOnsite;
 
   return (
     <div className="mt-8 lg:mt-0 w-full flex flex-col">
@@ -123,7 +119,7 @@ export const OrganismFilters = ({
               </p>
             </modalDistanceInfo.Component>
             <OrganismDistanceFilter
-              disabled={!searchHasOnSiteSelected}
+              disabled={!organismSearchOnsite}
               onChangeSearchZip={(zip) => {
                 onSearch({
                   ...filters,
@@ -136,10 +132,7 @@ export const OrganismFilters = ({
                   organismSearchPmr: pmr,
                 });
               }}
-              zip={zip}
-              setZip={setZip}
-              pmr={pmr}
-              setPmr={setPmr}
+              filters={filters}
             />
           </div>
         </Accordion>
@@ -204,8 +197,6 @@ export const OrganismFilters = ({
               organismSearchText: "",
               organismSearchMcf: false,
             });
-            setZip("");
-            setPmr(false);
           }}
         >
           Réinitialiser les filtres
