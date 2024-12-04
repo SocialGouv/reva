@@ -38,9 +38,7 @@ export default function SetOrganism() {
     useState<boolean>(false);
   const [organismSearchRemote, setOrganismSearchRemote] =
     useState<boolean>(false);
-  const [organismSearchZip, setOrganismSearchZip] = useState<
-    string | undefined
-  >();
+  const [organismSearchZip, setOrganismSearchZip] = useState<string>("");
   const [organismSearchPmr, setOrganismSearchPmr] = useState<boolean>(false);
   const [organismSearchMcf, setOrganismSearchMcf] = useState<boolean>(false);
 

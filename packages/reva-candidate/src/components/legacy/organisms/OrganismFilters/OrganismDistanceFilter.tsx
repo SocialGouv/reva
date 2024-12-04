@@ -1,36 +1,37 @@
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+interface filters {
+  organismSearchZip: string;
+  organismSearchPmr: boolean;
+}
 
 interface OrganismDistanceFilterProps {
   onChangeSearchZip: (zip: string) => void;
   onChangeSearchPmr: (pmr: boolean) => void;
+  filters: filters;
   disabled: boolean;
-  zip: string;
-  setZip: (zip: string) => void;
-  pmr: boolean;
-  setPmr: (pmr: boolean) => void;
 }
 
 export const OrganismDistanceFilter = ({
   onChangeSearchZip,
   onChangeSearchPmr,
+  filters,
   disabled,
-  zip,
-  setZip,
-  pmr,
-  setPmr,
 }: OrganismDistanceFilterProps) => {
-  useEffect(() => {
-    if (zip.length === 0 || zip.length === 5) {
-      onChangeSearchZip(zip);
+  const [zip, setZip] = useState(filters.organismSearchZip);
+
+  const handleChangeZip = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newZip = e.target.value;
+    setZip(newZip);
+    if (newZip.length == 0 || newZip.length == 5) {
+      onChangeSearchZip(newZip);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zip]);
+  };
 
   const handleChangePmr = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeSearchPmr(e.target.checked);
-    setPmr(e.target.checked);
   };
 
   return (
@@ -50,7 +51,7 @@ export const OrganismDistanceFilter = ({
               if (!/^\d{0,5}$/.test(e.target.value)) {
                 return;
               }
-              setZip(e.target.value);
+              handleChangeZip(e);
             },
             value: zip,
           }}
@@ -65,7 +66,7 @@ export const OrganismDistanceFilter = ({
               nativeInputProps: {
                 disabled,
                 onChange: handleChangePmr,
-                checked: pmr,
+                checked: filters.organismSearchPmr,
               },
             },
           ]}
