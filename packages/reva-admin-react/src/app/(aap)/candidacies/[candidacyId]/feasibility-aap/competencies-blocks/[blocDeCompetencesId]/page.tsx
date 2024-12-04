@@ -28,7 +28,7 @@ const schema = z.object({
       }),
     })
     .array(),
-  blocText: z.string().min(1, "Merci de remplir ce champ"),
+  blocText: z.string().trim().min(1, "Merci de remplir ce champ"),
 });
 
 type FormData = z.infer<typeof schema>;
