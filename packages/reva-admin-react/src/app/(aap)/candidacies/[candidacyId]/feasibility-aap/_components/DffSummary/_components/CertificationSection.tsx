@@ -43,6 +43,7 @@ export default function CertificationSection({
       ),
     };
   }, [prerequisites]);
+
   const noPrerequisites = !prerequisites?.length;
 
   return (

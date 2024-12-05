@@ -201,7 +201,7 @@ const CompetenciesBlockPage = () => {
             }}
           >
             {competencesFields?.map((c, i) => (
-              <>
+              <div key={c.competenceId}>
                 <p className="text-lg font-medium">{c.label}</p>
                 <RadioButtons
                   stateRelatedMessage={errors?.competences?.[i]?.state?.message}
@@ -231,7 +231,7 @@ const CompetenciesBlockPage = () => {
                     },
                   ]}
                 />
-              </>
+              </div>
             ))}
             <Input
               textArea

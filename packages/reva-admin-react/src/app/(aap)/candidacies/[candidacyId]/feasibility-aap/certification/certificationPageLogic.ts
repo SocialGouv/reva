@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyById = graphql(`
@@ -47,6 +47,7 @@ const updateFeasibilityCertificationMutation = graphql(`
 `);
 
 export const useCertificationPageLogic = () => {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -75,6 +76,14 @@ export const useCertificationPageLogic = () => {
         input,
         candidacyId,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          candidacyId,
+          "getCandidacyByIdForAapFeasibilityCertificationPage",
+        ],
+      });
+    },
   });
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;

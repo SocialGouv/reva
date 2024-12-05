@@ -1,4 +1,3 @@
-import { DematerializedFeasibilityFile } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyCertificationCompletion } from "../../../candidacy/features/updateCandidacyCertificationCompletion";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
@@ -12,82 +11,15 @@ export const createOrUpdateCertificationInfo = async ({
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
   candidacyId: string;
-}): Promise<DematerializedFeasibilityFile> => {
+}) => {
   const currentFile = await getDematerializedFeasibilityFileByCandidacyId({
     candidacyId,
   });
 
-  const data = {
-    firstForeignLanguage: input.firstForeignLanguage,
-    secondForeignLanguage: input.secondForeignLanguage,
-    option: input.option,
-    dffCertificationCompetenceBlocs: {
-      createMany: {
-        data: input.blocDeCompetencesIds.map((bcid) => ({
-          certificationCompetenceBlocId: bcid,
-        })),
-      },
-    },
-  };
-
-  let dff: DematerializedFeasibilityFile;
-  if (currentFile) {
-    //delete previous dff certification / competenceBloc associations before recreating them
-    await prismaClient.dFFCertificationCompetenceBloc.deleteMany({
-      where: { dematerializedFeasibilityFileId: currentFile.id },
-    });
-
-    dff = await prismaClient.dematerializedFeasibilityFile.update({
-      where: { id: currentFile.id },
-      data: {
-        ...data,
-        certificationPartComplete: true,
-      },
-    });
-
-    //delete all dFFCertificationCompetenceDetails were competences are not parts of the newly selected competence blocs
-    await prismaClient.dFFCertificationCompetenceDetails.deleteMany({
-      where: {
-        dematerializedFeasibilityFileId: currentFile.id,
-        certificationCompetence: {
-          blocId: { notIn: input.blocDeCompetencesIds.map((bcid) => bcid) },
-        },
-      },
-    });
-
-    //recompute the competence blocs details section completion indicator
-    await updateCompetenceBlocsPartCompletion({
-      dematerializedFeasibilityFileId: currentFile.id,
-    });
-
-    if (currentFile.sentToCandidateAt) {
-      await resetDFFSentToCandidateState(currentFile);
-    }
+  if (!currentFile) {
+    await createCertificationInfo({ input, candidacyId });
   } else {
-    const [_, feasibility] = await prismaClient.$transaction([
-      prismaClient.feasibility.updateMany({
-        where: { candidacyId },
-        data: { isActive: false },
-      }),
-      prismaClient.feasibility.create({
-        data: {
-          candidacyId,
-          feasibilityFormat: "DEMATERIALIZED",
-          dematerializedFeasibilityFile: {
-            create: {
-              ...data,
-              certificationPartComplete: true,
-            },
-          },
-        },
-        include: {
-          dematerializedFeasibilityFile: true,
-        },
-      }),
-    ]);
-
-    dff =
-      feasibility.dematerializedFeasibilityFile as DematerializedFeasibilityFile;
+    await updateCertificationInfo({ input, candidacyId });
   }
 
   await updateCandidacyCertificationCompletion({
@@ -99,5 +31,149 @@ export const createOrUpdateCertificationInfo = async ({
     await resetDFFSentToCandidateState(currentFile);
   }
 
-  return dff;
+  const updatedFile = await getDematerializedFeasibilityFileByCandidacyId({
+    candidacyId,
+  });
+
+  return updatedFile;
+};
+
+const createCertificationInfo = async ({
+  input,
+  candidacyId,
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
+  candidacyId: string;
+}) => {
+  await validateIfCompetenceBlocsArePartOfCandidacyCertification(
+    candidacyId,
+    input.blocDeCompetencesIds,
+  );
+
+  await prismaClient.$transaction([
+    prismaClient.feasibility.updateMany({
+      where: { candidacyId },
+      data: { isActive: false },
+    }),
+    prismaClient.feasibility.create({
+      data: {
+        candidacyId,
+        feasibilityFormat: "DEMATERIALIZED",
+        dematerializedFeasibilityFile: {
+          create: {
+            firstForeignLanguage: input.firstForeignLanguage,
+            secondForeignLanguage: input.secondForeignLanguage,
+            option: input.option,
+            dffCertificationCompetenceBlocs: {
+              createMany: {
+                data: input.blocDeCompetencesIds.map((bcid) => ({
+                  certificationCompetenceBlocId: bcid,
+                })),
+              },
+            },
+            certificationPartComplete: true,
+          },
+        },
+      },
+      include: {
+        dematerializedFeasibilityFile: true,
+      },
+    }),
+  ]);
+};
+
+const updateCertificationInfo = async ({
+  input,
+  candidacyId,
+}: {
+  input: DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput;
+  candidacyId: string;
+}) => {
+  const currentFile = await getDematerializedFeasibilityFileByCandidacyId({
+    candidacyId,
+  });
+
+  if (!currentFile) {
+    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+  }
+
+  await validateIfCompetenceBlocsArePartOfCandidacyCertification(
+    candidacyId,
+    input.blocDeCompetencesIds,
+  );
+
+  const currentBlocIds = currentFile.dffCertificationCompetenceBlocs.map(
+    ({ certificationCompetenceBlocId }) => certificationCompetenceBlocId,
+  );
+  const nextBlocIds = [...input.blocDeCompetencesIds];
+  const addedBlocIds = nextBlocIds.filter(
+    (id) => currentBlocIds.indexOf(id) == -1,
+  );
+
+  // delete unused dFFCertificationCompetenceBloc
+  await prismaClient.dFFCertificationCompetenceBloc.deleteMany({
+    where: {
+      dematerializedFeasibilityFileId: currentFile.id,
+      certificationCompetenceBlocId: {
+        notIn: nextBlocIds,
+      },
+    },
+  });
+
+  // delete all dFFCertificationCompetenceDetails based on dFFCertificationCompetenceBloc
+  await prismaClient.dFFCertificationCompetenceDetails.deleteMany({
+    where: {
+      dematerializedFeasibilityFileId: currentFile.id,
+      certificationCompetence: {
+        blocId: { notIn: nextBlocIds },
+      },
+    },
+  });
+
+  await prismaClient.dematerializedFeasibilityFile.update({
+    where: { id: currentFile.id },
+    data: {
+      firstForeignLanguage: input.firstForeignLanguage,
+      secondForeignLanguage: input.secondForeignLanguage,
+      option: input.option,
+      dffCertificationCompetenceBlocs: {
+        createMany: {
+          data: addedBlocIds.map((bcid) => ({
+            certificationCompetenceBlocId: bcid,
+          })),
+        },
+      },
+      certificationPartComplete: true,
+    },
+  });
+
+  // recompute the competence blocs details section completion indicator
+  await updateCompetenceBlocsPartCompletion({
+    dematerializedFeasibilityFileId: currentFile.id,
+  });
+};
+
+const validateIfCompetenceBlocsArePartOfCandidacyCertification = async (
+  candidacyId: string,
+  blocIds: string[],
+) => {
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+    include: { certification: { include: { competenceBlocs: true } } },
+  });
+
+  if (!candidacy) {
+    throw new Error("Candidature non trouvée");
+  }
+
+  const competenceBlocIds =
+    candidacy.certification?.competenceBlocs.map(({ id }) => id) || [];
+
+  for (const blocId of blocIds) {
+    if (competenceBlocIds.indexOf(blocId) == -1) {
+      throw new Error(
+        "Le bloc sélectionné n'appartient pas à la certification",
+      );
+    }
+  }
 };

@@ -10,7 +10,7 @@ export const AttachmentsSection = ({
 }: {
   attachmentsPartComplete?: boolean;
   isEditable: boolean;
-  attachments: DffAttachment[];
+  attachments?: DffAttachment[];
 }) => {
   const { candidacyId } = useParams();
   return (
@@ -22,7 +22,7 @@ export const AttachmentsSection = ({
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/attachments`}
       data-test="attachments-section"
     >
-      {!!attachments.length &&
+      {!!attachments?.length &&
         attachments.map(({ id, file }) => {
           return (
             file.previewUrl && (
