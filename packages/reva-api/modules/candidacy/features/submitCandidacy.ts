@@ -58,11 +58,17 @@ export const submitCandidacy = async ({
       `Impossible de trouver l'organisme pour la candidature ${candidacy.id}`,
     );
   }
-  await sendNewCandidacyEmail({ email: organism.contactAdministrativeEmail });
+  await sendNewCandidacyEmail({
+    email:
+      organism.organismInformationsCommerciales?.emailContact ??
+      organism.contactAdministrativeEmail,
+  });
   await sendConfirmationCandidacySubmissionEmail({
     email: candidate.email as string,
     organismName: organism.label,
-    organismEmail: organism.contactAdministrativeEmail,
+    organismEmail:
+      organism.organismInformationsCommerciales?.emailContact ??
+      organism.contactAdministrativeEmail,
     candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
   });
   return updatedCandidacy;
