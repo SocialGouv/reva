@@ -40,6 +40,7 @@ export const CompetenceBlocForm = ({
   const {
     register,
     control,
+    reset,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
   } = methods;
@@ -66,7 +67,14 @@ export const CompetenceBlocForm = ({
     (e) => console.log(e),
   );
   return (
-    <form onSubmit={handleFormSubmit} className={`flex flex-col ${className}`}>
+    <form
+      onSubmit={handleFormSubmit}
+      className={`flex flex-col ${className}`}
+      onReset={(e) => {
+        e.preventDefault();
+        reset();
+      }}
+    >
       <Input
         data-test="competence-bloc-label-input"
         label="Intitulé du bloc de compétences"
