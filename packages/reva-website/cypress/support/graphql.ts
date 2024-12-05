@@ -6,7 +6,7 @@ import { CyHttpMessages } from "cypress/types/net-stubbing";
 // Utility to match GraphQL mutation based on the operation name
 export const hasOperationName = (
   req: CyHttpMessages.IncomingHttpRequest,
-  operationName: string
+  operationName: string,
 ) => {
   const { body } = req;
   return (
@@ -19,7 +19,7 @@ export const stubQuery = (
   req: CyHttpMessages.IncomingHttpRequest,
   operationName: string,
   fixture: string,
-  statusCode = 200
+  statusCode = 200,
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
@@ -32,7 +32,7 @@ export const stubMutation = (
   req: CyHttpMessages.IncomingHttpRequest,
   operationName: string,
   fixture: string,
-  statusCode = 200
+  statusCode = 200,
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;

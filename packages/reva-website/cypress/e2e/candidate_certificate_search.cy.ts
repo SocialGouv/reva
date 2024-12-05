@@ -6,7 +6,7 @@ describe("candidate certificate search", () => {
       stubQuery(
         req,
         "activeFeaturesForConnectedUser",
-        "active_features_empty.json"
+        "active_features_empty.json",
       );
     });
   });
@@ -16,7 +16,7 @@ describe("candidate certificate search", () => {
       stubQuery(
         req,
         "searchCertificationsQuery",
-        "candidate_certificate_search.json"
+        "candidate_certificate_search.json",
       );
     });
 
@@ -38,7 +38,7 @@ describe("candidate certificate search", () => {
       stubQuery(
         req,
         "searchCertificationsQuery",
-        "candidate_certificate_search.json"
+        "candidate_certificate_search.json",
       );
     });
 
@@ -56,7 +56,7 @@ describe("candidate certificate search", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
     );
   });
 
@@ -65,7 +65,7 @@ describe("candidate certificate search", () => {
       stubQuery(
         req,
         "searchCertificationsQuery",
-        "candidate_certificate_search_empty.json"
+        "candidate_certificate_search_empty.json",
       );
     });
 
@@ -83,7 +83,7 @@ describe("candidate certificate search", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3002/inscription-candidat/?certificationId=&searchText=chaudronnier"
+      "http://localhost:3002/inscription-candidat/?certificationId=&searchText=chaudronnier",
     );
   });
 });

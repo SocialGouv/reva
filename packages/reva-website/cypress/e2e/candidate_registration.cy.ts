@@ -68,9 +68,7 @@ describe("candidate registration", () => {
 
     cy.wait("@getDepartments");
 
-    [
-      "SALARIE_PUBLIC",
-    ].forEach((typology) => {
+    ["SALARIE_PUBLIC"].forEach((typology) => {
       cy.get('[data-testid="candidate-typology-select"]')
         .children("select")
         .select(typology);
@@ -161,12 +159,13 @@ describe("candidate registration", () => {
       .children("input")
       .type("edgar.podovsky@flatmail.com");
 
-    cy.get('[data-testid="candidate-modalite-parcours-radio-buttons"] input[value="ACCOMPAGNE"]~label').click();
+    cy.get(
+      '[data-testid="candidate-modalite-parcours-radio-buttons"] input[value="ACCOMPAGNE"]~label',
+    ).click();
 
-      cy.get('[data-testid="candidate-registration-form-department-select"]')
+    cy.get('[data-testid="candidate-registration-form-department-select"]')
       .children("select")
       .select("department1");
-
 
     cy.get('[data-testid="candidate-registration-submit-button"]').click();
 

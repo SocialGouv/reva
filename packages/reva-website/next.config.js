@@ -16,6 +16,9 @@ const nextConfig = {
 
     return config;
   },
+  eslint: {
+    dirs: ["pages", "app", "components", "lib", "src", "cypress"],
+  },
 };
 
 module.exports = nextConfig;
