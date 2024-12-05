@@ -9,7 +9,7 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -19,7 +19,13 @@ const schema = z.object({
   completion: z.enum(["PARTIAL", "COMPLETE"], {
     invalid_type_error: "Merci de remplir ce champ",
   }),
-  competenceBlocs: z.any().array(),
+  competenceBlocs: z
+    .object({
+      competenceBlocId: z.string(),
+      label: z.string(),
+      checked: z.boolean(),
+    })
+    .array(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -48,12 +54,12 @@ const CertificationPage = () => {
       completion: candidacy?.isCertificationPartial
         ? ("PARTIAL" as const)
         : ("COMPLETE" as const),
-      competenceBlocs: certification?.competenceBlocs?.map((b) => ({
-        competenceBlocId: b.id,
-        label: b.code ? `${b.code} - ${b.label}` : b.label,
+      competenceBlocs: certification?.competenceBlocs?.map((bloc) => ({
+        competenceBlocId: bloc.id,
+        label: bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label,
         checked:
           dematerializedFeasibilityFile?.blocsDeCompetences.some(
-            (bc) => bc.certificationCompetenceBloc.id === b.id,
+            (bc) => bc.certificationCompetenceBloc.id === bloc.id,
           ) || candidacy?.isCertificationPartial === false,
       })),
     }),
@@ -74,18 +80,14 @@ const CertificationPage = () => {
     reset,
     formState: { isDirty, isSubmitting, errors },
     setValue,
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
 
   const completion = useWatch({ name: "completion", control });
-
-  const { fields: competenceBlocFields, update: updateCompetenceBlocs } =
-    useFieldArray({
-      control,
-      name: "competenceBlocs",
-    });
+  const competenceBlocFields = watch("competenceBlocs", []);
 
   const resetForm = useCallback(
     () => reset(defaultValues),
@@ -94,68 +96,61 @@ const CertificationPage = () => {
 
   useEffect(resetForm, [resetForm]);
 
-  const handleFormSubmit = handleSubmit(async (data) => {
-    try {
-      await updateFeasibilityCertification.mutateAsync({
-        option: data.option,
-        firstForeignLanguage: data.firstForeignLanguage,
-        secondForeignLanguage: data.secondForeignlanguage,
-        completion: data.completion,
-        blocDeCompetencesIds: data.competenceBlocs
-          .filter((bc) => bc.checked)
-          .map((bc) => bc.competenceBlocId),
-      });
-      successToast("Modifications enregistrées");
-      router.push(feasibilitySummaryUrl);
-    } catch (e) {
-      graphqlErrorToast(e);
-    }
-  });
+  const handleFormSubmit = handleSubmit(
+    async (data) => {
+      try {
+        await updateFeasibilityCertification.mutateAsync({
+          option: data.option,
+          firstForeignLanguage: data.firstForeignLanguage,
+          secondForeignLanguage: data.secondForeignlanguage,
+          completion: data.completion,
+          blocDeCompetencesIds: data.competenceBlocs
+            .filter((bloc) => bloc.checked)
+            .map((bloc) => bloc.competenceBlocId),
+        });
+        successToast("Modifications enregistrées");
+        router.push(feasibilitySummaryUrl);
+      } catch (error) {
+        graphqlErrorToast(error);
+      }
+    },
+    (error) => {
+      console.error(error);
+    },
+  );
 
   const handleCertificationCompletionChange = useCallback(
     (completion: "PARTIAL" | "COMPLETE") => {
       switch (completion) {
         case "COMPLETE": {
-          if (competenceBlocFields.some((cbf) => !cbf.checked)) {
-            competenceBlocFields.forEach((cbf, i) =>
-              updateCompetenceBlocs(i, { ...cbf, checked: true }),
-            );
-          }
+          setValue(
+            "competenceBlocs",
+            competenceBlocFields.map((bloc) => ({ ...bloc, checked: true })),
+          );
           break;
         }
         case "PARTIAL": {
-          if (competenceBlocFields.some((cbf) => cbf.checked)) {
-            competenceBlocFields.forEach((cbf, i) =>
-              updateCompetenceBlocs(i, { ...cbf, checked: false }),
-            );
-          }
+          setValue(
+            "competenceBlocs",
+            competenceBlocFields.map((bloc) => ({ ...bloc, checked: false })),
+          );
           break;
         }
       }
     },
-    [competenceBlocFields, updateCompetenceBlocs],
+    [competenceBlocFields, setValue],
   );
 
   const handleCompetenceBlocChange = useCallback(
     (index: number, checked: boolean) => {
-      updateCompetenceBlocs(index, { ...competenceBlocFields[index], checked });
-
       const allChecked = competenceBlocFields.every((bloc, i) =>
         i === index ? checked : bloc.checked,
       );
 
       setValue("completion", allChecked ? "COMPLETE" : "PARTIAL");
     },
-    [competenceBlocFields, updateCompetenceBlocs, setValue],
+    [competenceBlocFields, setValue],
   );
-
-  useEffect(() => {
-    competenceBlocFields.forEach((_, index) => {
-      register(`competenceBlocs.${index}.checked`, {
-        onChange: (e) => handleCompetenceBlocChange(index, e.target.checked),
-      });
-    });
-  }, [competenceBlocFields, register, handleCompetenceBlocChange]);
 
   return (
     <div className="flex flex-col">
@@ -249,11 +244,14 @@ const CertificationPage = () => {
               </span>
             }
             disabled={!completion}
-            options={competenceBlocFields.map((b, bIndex) => ({
-              label: b.label,
+            options={competenceBlocFields.map((bloc, blocIndex) => ({
+              label: bloc.label,
               nativeInputProps: {
-                key: competenceBlocFields[bIndex].id,
-                ...register(`competenceBlocs.${bIndex}.checked`),
+                key: bloc.competenceBlocId,
+                ...register(`competenceBlocs.${blocIndex}.checked`, {
+                  onChange: (e) =>
+                    handleCompetenceBlocChange(blocIndex, e.target.checked),
+                }),
               },
             }))}
             data-test="competence-blocs-checkbox"
@@ -261,7 +259,12 @@ const CertificationPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
             formState={{
-              isDirty: isDirty || candidacy?.isCertificationPartial === false,
+              isDirty: isDirty,
+              canSubmit:
+                completion == "PARTIAL" &&
+                competenceBlocFields.every((bloc) => !bloc.checked)
+                  ? false
+                  : true,
               isSubmitting,
             }}
           />

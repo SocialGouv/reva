@@ -48,6 +48,7 @@ type Prerequisite {
   label: String!
   state: PrerequisiteState!
 }
+
 input PrerequisiteInput {
   id: ID
   label: String!

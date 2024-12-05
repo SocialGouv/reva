@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const feasibilityWithDematerializedFeasibilityFileByCandidacyId = graphql(`
@@ -36,6 +36,7 @@ const createOrUpdatePrerequisites = graphql(`
 `);
 
 export const usePrerequisites = () => {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -63,6 +64,14 @@ export const usePrerequisites = () => {
         input,
         candidacyId,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          candidacyId,
+          "dematerializedFeasibilityFileWithPrerequisitesByCandidacyId",
+        ],
+      });
+    },
   });
 
   const prerequisites =

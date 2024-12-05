@@ -39,7 +39,7 @@ export const CompetenciesBlocksSection = ({
   isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
   certificationCompetenceDetails: CertificationCompetenceDetails[];
-  blocsDeCompetences: DffCertificationCompetenceBloc[];
+  blocsDeCompetences?: DffCertificationCompetenceBloc[];
   disabled: boolean;
   disabledNoticeText: string;
   isEligibilityRequirementPartial: boolean;
@@ -60,7 +60,7 @@ export const CompetenciesBlocksSection = ({
       disabled={disabled}
       data-test="competencies-blocks-section"
     >
-      {!!blocsDeCompetences.length && (
+      {!!blocsDeCompetences?.length && (
         <ul className="list-none flex flex-col">
           {blocsDeCompetences?.map((bloc, index) => (
             <li

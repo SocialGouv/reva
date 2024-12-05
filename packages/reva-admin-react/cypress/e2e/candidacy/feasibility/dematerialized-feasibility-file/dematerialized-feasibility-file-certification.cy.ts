@@ -58,7 +58,7 @@ describe("Dematerialized Feasibility File Certification Page", () => {
       cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
-          cy.get("button").should("not.be.disabled");
+          cy.get("button").should("be.disabled");
         });
 
       cy.get('input[type="checkbox"]').should("be.checked");
@@ -84,7 +84,7 @@ describe("Dematerialized Feasibility File Certification Page", () => {
       cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
-          cy.get("button").should("not.be.disabled");
+          cy.get("button").should("be.disabled");
         });
     });
 
