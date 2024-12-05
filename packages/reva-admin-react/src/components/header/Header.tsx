@@ -14,6 +14,7 @@ export const Header = () => {
     isGestionnaireMaisonMereAAP,
     isCertificationAuthority,
     isAdminCertificationAuthority,
+    isCertificationRegistryManager,
   } = useAuth();
   const { authenticated, logout } = useKeycloakContext();
   const { isFeatureActive } = useFeatureflipping();
@@ -70,6 +71,17 @@ export const Header = () => {
           ),
         },
       ],
+    },
+  ];
+
+  const registryManagerTabs = [
+    {
+      text: "Gestion des certifications",
+      linkProps: {
+        href: "/responsable-certifications",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/responsable-certifications"),
     },
   ];
 
@@ -138,6 +150,7 @@ export const Header = () => {
               },
             ]
           : []),
+        ...(isCertificationRegistryManager ? registryManagerTabs : []),
       ]
     : [
         {
@@ -179,6 +192,11 @@ export const Header = () => {
         },
       ]}
       navigation={navigation}
+      serviceTitle={
+        isCertificationRegistryManager
+          ? "Espace Responsable des certifications"
+          : ""
+      }
     />
   );
 };

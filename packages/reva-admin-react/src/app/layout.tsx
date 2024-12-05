@@ -113,6 +113,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     isOrganism,
     isGestionnaireMaisonMereAAP,
     isAdminCertificationAuthority,
+    isCertificationRegistryManager,
   } = useAuth();
 
   useEffect(() => {
@@ -135,7 +136,11 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     if (isOrganism || isGestionnaireMaisonMereAAP) {
       return "lg:bg-organism";
     }
-    if (isCertificationAuthority || isAdminCertificationAuthority) {
+    if (
+      isCertificationAuthority ||
+      isAdminCertificationAuthority ||
+      isCertificationRegistryManager
+    ) {
       return "lg:bg-certification-authority";
     }
     return "lg:bg-unknown";
