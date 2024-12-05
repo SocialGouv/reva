@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Image from "next/image";
 
-const attachedCertifications = [];
+const attachedCertifications = [1];
 const certificationsToValidate = [];
 
 const NoCertifications = () => {
