@@ -1,4 +1,4 @@
-import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
+import Image from "next/image";
 
 const attachedCertifications = [];
 
@@ -18,7 +18,14 @@ const NoCertifications = () => {
           plusieurs certifications, vous les retrouverez ici très prochainement.
         </p>
       </div>
-      <div className="m-auto">{PICTOGRAMS.successLg}</div>
+      <div className="m-auto">
+        <Image
+          src="/admin2/components/success.svg"
+          alt="Success pictogram"
+          width={282}
+          height={319}
+        />
+      </div>
     </div>
   );
 };
@@ -47,7 +54,14 @@ export default function RegistryManagerHomepage() {
           plusieurs certifications, vous les retrouverez ici très prochainement.
         </p>
       </div>
-      <div className="m-auto">{PICTOGRAMS.successLg}</div>
+      <div className="m-auto">
+        <Image
+          src="/admin2/components/success.svg"
+          alt="Success pictogram"
+          width={282}
+          height={319}
+        />
+      </div>
     </div>
   );
 }
