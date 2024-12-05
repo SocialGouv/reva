@@ -6,6 +6,9 @@ import { useParams } from "next/navigation";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAAPFeasibilityPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      individualHourCount
+      collectiveHourCount
+      additionalHourCount
       isCertificationPartial
       experiences {
         id
