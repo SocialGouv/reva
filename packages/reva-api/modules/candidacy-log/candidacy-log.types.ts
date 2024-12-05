@@ -20,7 +20,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "GOALS_UPDATED"
         | "CONTACT_INFO_UPDATED"
         | "CANDIDACY_DELETED"
-        | "CANDIDACY_ARCHIVED"
         | "CANDIDACY_UNARCHIVED"
         | "CANDIDACY_TAKEN_OVER"
         | "TRAINING_INFO_RESET"
@@ -40,6 +39,12 @@ export type CandidacyLogEventTypeAndDetails =
         | "PAYMENT_REQUEST_CONFIRMED"
         | "TYPE_ACCOMPAGNEMENT_UPDATED";
       details?: undefined;
+    }
+  | {
+      eventType: "CANDIDACY_ARCHIVED";
+      details?: {
+        label: string;
+      };
     }
   | {
       eventType: "CERTIFICATION_UPDATED";
