@@ -1,0 +1,33 @@
+{
+  "data": {
+    "getCertificationCompetenceBloc": {
+      "id": "008a6fab-55ad-4412-ab17-56bc4b8e2fd0",
+      "label": "Préparation, présentation, décoration et vente en boucherie",
+      "code": "RNCP37310BC01",
+      "FCCompetences": "* Réaliser les opérations de préparations des viandes * Mettre en valeur les produits notamment l’intégralité de la carcasse dans une démarche de développement durable * Vendre les produits au client en argumentant et en proposant des conseils culinaires * Communiquer sur l’étiquetage, la conservation, la traçabilité, les signes officiels de qualité et l’origine des viandes",
+      "competences": [
+        {
+          "id": "b8786018-6d24-4538-9622-f4ac62eb1742",
+          "label": "Réaliser les opérations de préparations des viandes"
+        },
+        {
+          "id": "2cbb6688-7b80-416f-940a-e348246484f8",
+          "label": "Mettre en valeur les produits notamment l’intégralité de la carcasse dans une démarche de développement durable"
+        },
+        {
+          "id": "2c829da9-ed10-48a3-ae1b-2f7db433c6d8",
+          "label": "Vendre les produits au client en argumentant et en proposant des conseils culinaires"
+        },
+        {
+          "id": "5aad9206-27a0-4afa-ac28-06d30bab6504",
+          "label": "Communiquer sur l’étiquetage, la conservation, la traçabilité, les signes officiels de qualité et l’origine des viandes"
+        }
+      ],
+      "certification": {
+        "id": "bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+        "codeRncp": "37310",
+        "label": "BP Boucher"
+      }
+    }
+  }
+}
