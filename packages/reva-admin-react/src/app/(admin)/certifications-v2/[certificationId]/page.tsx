@@ -5,12 +5,11 @@ import { useUpdateCertificationPage } from "./updateCertification.hook";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { format } from "date-fns";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { SectionCard } from "@/components/card/section-card/SectionCard";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
 import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
+import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -146,65 +145,20 @@ const PageContent = ({
             </div>
           </div>
         </EnhancedSectionCard>
-        <SectionCard
-          title="Blocs de compétences"
-          data-test="competence-blocs-summary-card"
-          titleIconClass="fr-icon-survey-fill"
-          {...(() =>
-            isEditable
-              ? {
-                  hasButton: true,
-                  buttonPriority: "tertiary no outline",
-                  buttonTitle: "Ajouter un bloc de compétences",
-                  buttonIconId: "fr-icon-add-line",
-                  buttonOnClick: () =>
-                    router.push(
-                      `/certifications-v2/${certification.id}/bloc-competence/add`,
-                    ),
-                }
-              : { hasButton: false })()}
-        >
-          <p>
-            La modification de bloc est possible, mais doit rester
-            exceptionnelle. Merci de l’utiliser uniquement en cas d’erreur
-            importante à modifier (exemple : erreur sur l’intitulé).
-          </p>
-
-          <ul className="pl-0" data-test="competence-blocs-list">
-            {certification.competenceBlocs.map((bloc) => (
-              <li
-                data-test="competence-bloc"
-                className="flex items-start justify-between gap-6"
-                key={bloc.id}
-              >
-                <Accordion
-                  className="flex-1"
-                  label={
-                    bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label
-                  }
-                  defaultExpanded
-                >
-                  <ul data-test="competences-list">
-                    {bloc.competences.map((competence) => (
-                      <li key={competence.id}>{competence.label}</li>
-                    ))}
-                  </ul>
-                </Accordion>
-                {isEditable && (
-                  <Button
-                    data-test="update-competence-bloc-button"
-                    priority="tertiary no outline"
-                    linkProps={{
-                      href: `/certifications-v2/${certification.id}/bloc-competence/${bloc.id}`,
-                    }}
-                  >
-                    Modifier
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-        </SectionCard>
+        <CertificationCompetenceBlocsSummaryCard
+          isEditable={isEditable}
+          competenceBlocs={certification.competenceBlocs}
+          onAddBlocCompetenceButtonClick={() =>
+            router.push(
+              `/certifications-v2/${certification.id}/bloc-competence/add`,
+            )
+          }
+          onUpdateCompetenceBlocButtonClick={(blocId) =>
+            router.push(
+              `/certifications-v2/${certification.id}/bloc-competence/${blocId}`,
+            )
+          }
+        />
         <EnhancedSectionCard
           data-test="certification-structure-summary-card"
           title="Structure certificatrice et gestionnaires"
