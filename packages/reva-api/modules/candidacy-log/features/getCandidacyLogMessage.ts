@@ -43,7 +43,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_DELETED":
       return "Candidature supprimée.";
     case "CANDIDACY_ARCHIVED":
-      return "Candidature archivée.";
+      return `Candidature archivée. ${details?.label ? `Informations complémentaires: ${details.label}` : ""}`;
     case "CANDIDACY_UNARCHIVED":
       return "Candidature désarchivée.";
     case "APPOINTMENT_INFO_UPDATED":
