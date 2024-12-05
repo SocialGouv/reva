@@ -1,6 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useUpdateCertificationPage } from "./updateCertification.hook";
+import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import { useRouter } from "next/navigation";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -24,6 +26,7 @@ const PageContent = ({
 }: {
   certification: CertificationForPage;
 }) => {
+  const router = useRouter();
   return (
     <div data-test="certification-registry-manager-update-certification-page">
       <h1>
@@ -35,6 +38,20 @@ const PageContent = ({
         validée et visible sur la plateforme, ces informations seront affichées
         aux AAP et aux candidats.
       </p>
+      <CertificationCompetenceBlocsSummaryCard
+        isEditable
+        competenceBlocs={certification.competenceBlocs}
+        onAddBlocCompetenceButtonClick={() =>
+          router.push(
+            `/responsable-certifications/certifications/${certification.id}/bloc-competence/add`,
+          )
+        }
+        onUpdateCompetenceBlocButtonClick={(blocId) =>
+          router.push(
+            `/responsable-certifications/certifications/${certification.id}/bloc-competence/${blocId}`,
+          )
+        }
+      />
     </div>
   );
 };
