@@ -35,7 +35,7 @@ export const sendDVReportedToOrganismEmail = ({
     to: { email },
     app: "admin",
     htmlContent,
-    customUrl: `/candidacies/${candadicyId}`,
+    customUrl: `/candidacies/${candadicyId}/dossier-de-validation-aap`,
     subject: "Un dossier de validation a été signalé",
   });
 };
