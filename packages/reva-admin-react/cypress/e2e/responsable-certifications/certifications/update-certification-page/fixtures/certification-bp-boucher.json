@@ -1,0 +1,60 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      "label": "BP Boucher",
+      "codeRncp": "37310",
+      "status": "AVAILABLE",
+      "statusV2": "BROUILLON",
+      "rncpExpiresAt": 1788127200000,
+      "rncpDeliveryDeadline": null,
+      "availableAt": 1688162400000,
+      "typeDiplome": "Brevet Professionnel (BP)",
+      "degree": {
+        "id": "0ee2104b-9bdc-4e44-b232-123cf2e3b9a1",
+        "label": "Niveau 4 : Baccalauréat"
+      },
+      "domains": [],
+      "competenceBlocs": [
+        {
+          "id": "008a6fab-55ad-4412-ab17-56bc4b8e2fd0",
+          "code": "B1",
+          "label": "Préparation, présentation, décoration et vente en boucherie",
+          "competences": [
+            {
+              "id": "b8786018-6d24-4538-9622-f4ac62eb1742",
+              "label": "Réaliser les opérations de préparations des viandes"
+            },
+            {
+              "id": "2cbb6688-7b80-416f-940a-e348246484f8",
+              "label": "Mettre en valeur les produits notamment l’intégralité de la carcasse dans une démarche de développement durable"
+            },
+            {
+              "id": "2c829da9-ed10-48a3-ae1b-2f7db433c6d8",
+              "label": "Vendre les produits au client en argumentant et en proposant des conseils culinaires"
+            },
+            {
+              "id": "5aad9206-27a0-4afa-ac28-06d30bab6504",
+              "label": "Communiquer sur l’étiquetage, la conservation, la traçabilité, les signes officiels de qualité et l’origine des viandes"
+            }
+          ]
+        },
+        {
+          "id": "cc8f1e74-fcd8-4d8b-b03f-97b3012b015d",
+          "code": "B2",
+          "label": "Application des règles relatives à l'alimentation et à l'hygiène, aux locaux et équipements du laboratoire et de l'unité de vente en boucherie",
+          "competences": [
+            {
+              "id": "40300ce1-e877-44e1-af0b-ec3db3ba7eb8",
+              "label": "Analyser des situations professionnelles nécessitant la connaissance des animaux de boucherie et leurs produits, l’environnement professionnel du boucher et les techniques professionnelles de la boucherie"
+            },
+            {
+              "id": "a8e39ba6-9463-48b2-aa99-f8ce1b83904c",
+              "label": "Appliquer les règles relatives à l’alimentation, à l’hygiène, aux locaux et équipements dans l’environnement professionnel du boucher et de la boucherie"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

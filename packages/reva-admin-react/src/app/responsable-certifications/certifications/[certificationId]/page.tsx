@@ -25,7 +25,7 @@ const PageContent = ({
   certification: CertificationForPage;
 }) => {
   return (
-    <div data-test="update-certification-page">
+    <div data-test="certification-registry-manager-update-certification-page">
       <h1>
         {certification.codeRncp} - {certification.label}
       </h1>
