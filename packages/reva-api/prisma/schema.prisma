@@ -167,6 +167,7 @@ model Candidacy {
   typeAccompagnement                         CandidacyTypeAccompagnement           @default(ACCOMPAGNE) @map("type_accompagnement")
   candidacyOnCandidacyFinancingMethod        CandidacyOnCandidacyFinancingMethod[]
   estimatedCost                              Decimal?                              @map("estimated_cost") @db.Decimal(10, 2)
+  lastActivityDate                           DateTime?                             @map("last_activity_date") @db.Timestamptz(6)
 
   @@index([organismId])
   @@index([candidateId])
