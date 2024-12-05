@@ -5,7 +5,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import {
   CompetenceBlocForm,
   CompetenceBlocFormData,
-} from "../_components/CompetenceBlocForm";
+} from "../../../../../../components/certifications/competence-bloc-form/CompetenceBlocForm";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useAddCompetenceBlocPage } from "./addCompetenceBloc.hook";
 
