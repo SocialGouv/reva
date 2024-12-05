@@ -5,12 +5,12 @@ function interceptCertification({
   withStructure,
   withCertificationAuthoritiesOfCertification,
   withCertificationRegistryManagerAssociatedToStructure,
-  withStatusV2,
+  statusV2,
 }: {
   withStructure?: boolean;
   withCertificationAuthoritiesOfCertification?: boolean;
   withCertificationRegistryManagerAssociatedToStructure?: boolean;
-  withStatusV2?: string;
+  statusV2?: string;
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
@@ -29,8 +29,7 @@ function interceptCertification({
         getCertification: {
           ...certificationBPBoucher.data.getCertification,
           statusV2:
-            withStatusV2 ||
-            certificationBPBoucher.data.getCertification.statusV2,
+            statusV2 || certificationBPBoucher.data.getCertification.statusV2,
           certificationAuthorities: withCertificationAuthoritiesOfCertification
             ? [
                 {
@@ -280,7 +279,7 @@ context("when i access the update certification page ", () => {
     });
 
     it("let me check if buttons 'envoyer' and 'réinitialiser' are visible is statusV2 equal to 'BROUILLON'", function () {
-      interceptCertification({ withStatusV2: "BROUILLON" });
+      interceptCertification({ statusV2: "BROUILLON" });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
@@ -293,7 +292,7 @@ context("when i access the update certification page ", () => {
     });
 
     it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if statusV2 different from 'BROUILLON'", function () {
-      interceptCertification({ withStatusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
+      interceptCertification({ statusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
 
       cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
