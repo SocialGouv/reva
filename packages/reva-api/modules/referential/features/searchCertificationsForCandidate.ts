@@ -27,17 +27,9 @@ export const searchCertificationsForCandidate = async ({
     .map((t) => t + ":*")
     .join("&");
 
-  const certificationView = organismId
-    ? "active_organism_by_available_certification_based_on_formacode"
-    : "available_certification_based_on_formacode";
-
-  const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, ${certificationView} available_certification
-    where c.id=available_certification.certification_id and status='AVAILABLE'`)} 
-      ${
-        organismId
-          ? Prisma.sql` and available_certification.organism_id=uuid(${organismId})`
-          : Prisma.empty
-      }
+  const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, active_organism_by_available_certification_based_on_formacode available_certification
+    where c.id=available_certification.certification_id`)} 
+      ${Prisma.sql` and available_certification.organism_id=uuid(${organismId})`}
       ${
         searchTextInTsQueryFormat
           ? Prisma.sql` and certification_searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
@@ -45,8 +37,8 @@ export const searchCertificationsForCandidate = async ({
       }`;
 
   const allCertificationsQuery = Prisma.sql`
-      from certification c
-      where c.status='AVAILABLE'
+      from certification c, available_certification_based_on_formacode available_certification
+      where c.id=available_certification.certification_id
       ${
         searchTextInTsQueryFormat
           ? Prisma.sql` and searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`

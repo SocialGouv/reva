@@ -24,6 +24,7 @@ export const createCertificationHelper = async (
       summary: faker.lorem.sentence(),
       status: CertificationStatus.AVAILABLE,
       statusV2: CertificationStatusV2.VALIDE_PAR_CERTIFICATEUR,
+      visible: true,
       availableAt: faker.date.past(),
       expiresAt: faker.date.future(),
       feasibilityFormat: FeasibilityFormat.UPLOADED_PDF,
