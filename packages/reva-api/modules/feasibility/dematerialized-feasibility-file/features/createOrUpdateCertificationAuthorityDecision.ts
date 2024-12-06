@@ -6,6 +6,7 @@ import {
   getUploadedFile,
   uploadFilesToS3,
 } from "../../../../modules/shared/file";
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { deleteFeasibilityIDFile } from "../../../feasibility/features/deleteFeasibilityIDFile";
@@ -17,11 +18,12 @@ import {
   sendFeasibilityValidatedToCandidateAccompagneEmail,
   sendFeasibilityValidatedToCandidateAutonomeEmail,
 } from "../../emails";
+import { updateCandidacyLastActivityDateToNow } from "../../features/updateCandidacyLastActivityDateToNow";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
-import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
+
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
@@ -96,6 +98,10 @@ const sendFeasibilityDecisionTakenEmail = async ({
         certificationName,
       });
     }
+
+    await updateCandidacyLastActivityDateToNow({
+      candidacyId,
+    });
   }
 };
 
