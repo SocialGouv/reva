@@ -1,5 +1,14 @@
-import { hasRole } from "../shared/security/middlewares";
+import { isCertificationRegistryManagerOfCertification } from "../certification-authority/security/isCertificationRegistryManagerOfCertification.security";
+import { hasRole, whenHasRole } from "../shared/security/middlewares";
 import { defaultSecurity, isAnyone } from "../shared/security/presets";
+
+const isAdminOrCertificationRegistryManagerOfCertification = [
+  hasRole(["admin", "manage_certification_registry"]),
+  whenHasRole(
+    "manage_certification_registry",
+    isCertificationRegistryManagerOfCertification,
+  ),
+];
 
 export const referentialResolversSecurityMap = {
   "Mutation.*": defaultSecurity,
