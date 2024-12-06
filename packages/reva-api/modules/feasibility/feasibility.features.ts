@@ -9,6 +9,7 @@ import {
 } from "@prisma/client";
 
 import { v4 } from "uuid";
+import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../prisma/client";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
@@ -16,6 +17,7 @@ import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloak
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCertificationByCandidacyId } from "../candidacy/certification/features/getCertificationByCandidacyId";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
+import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
@@ -38,20 +40,18 @@ import {
   sendFeasibilityIncompleteToCandidateAutonomeEmail,
   sendFeasibilityRejectedToCandidateAccompagneEmail,
   sendFeasibilityRejectedToCandidateAutonomeEmail,
-  sendFeasibilityValidatedToCandidateAccompagneEmail,
-  sendFeasibilityValidatedToCandidateAutonomeEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./emails";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
+import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
+import { validateFeasibility } from "./features/validateFeasibility";
 import {
   FeasibilityStatusFilter,
   excludeArchivedAndDroppedOutCandidacy,
   excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
-import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
-import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
+import { canManageFeasibility } from "./features/canManageFeasibility";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -739,140 +739,6 @@ export const getFeasibilityById = async ({
   }
 };
 
-const validateFeasibility = async ({
-  feasibilityId,
-  comment,
-  hasRole,
-  keycloakId,
-  userEmail,
-  userRoles,
-  infoFile,
-}: {
-  feasibilityId: string;
-  comment?: string;
-  hasRole: (role: string) => boolean;
-  keycloakId: string;
-  userEmail: string;
-  userRoles: KeyCloakUserRole[];
-  infoFile?: UploadedFile;
-}) => {
-  const feasibility = await prismaClient.feasibility.findUnique({
-    where: { id: feasibilityId },
-  });
-
-  if (!feasibility) {
-    throw new Error("Dossier de faisabilité introuvable");
-  }
-
-  const authorized = await canManageFeasibility({
-    hasRole,
-    feasibility,
-    keycloakId,
-  });
-
-  if (hasRole("admin") || authorized) {
-    let infoFileInstance: S3File | undefined;
-    if (infoFile) {
-      infoFileInstance = {
-        filePath: `candidacies/${feasibility.candidacyId}/feasibility/${v4()}`,
-        data: infoFile._buf,
-        mimeType: infoFile.mimetype,
-        allowedFileTypes: allowFileTypeByDocumentType.feasibilityDecisionFile,
-      };
-
-      await uploadFileToS3(infoFileInstance);
-    }
-
-    const updatedFeasibility = await prismaClient.feasibility.update({
-      where: { id: feasibilityId },
-      data: {
-        decision: "ADMISSIBLE",
-        decisionComment: comment,
-        decisionSentAt: new Date(),
-        decisionFile:
-          infoFile && infoFileInstance
-            ? {
-                create: {
-                  mimeType: infoFile.mimetype,
-                  name: infoFile.filename,
-                  path: infoFileInstance?.filePath,
-                },
-              }
-            : undefined,
-      },
-      include: {
-        candidacy: {
-          include: {
-            certification: {
-              select: { label: true },
-            },
-            candidate: {
-              select: {
-                email: true,
-              },
-            },
-            organism: { select: { contactAdministrativeEmail: true } },
-          },
-        },
-        certificationAuthority: true,
-      },
-    });
-
-    await updateCandidacyStatus({
-      candidacyId: feasibility?.candidacyId || "",
-      status: "DOSSIER_FAISABILITE_RECEVABLE",
-    });
-
-    const isAutonome =
-      updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
-    const certificationName =
-      updatedFeasibility.candidacy.certification?.label ||
-      "certification inconnue";
-    const certificationAuthorityLabel =
-      updatedFeasibility.certificationAuthority?.label ||
-      "certificateur inconnu";
-    if (isAutonome) {
-      sendFeasibilityValidatedToCandidateAutonomeEmail({
-        email: updatedFeasibility.candidacy.candidate?.email as string,
-        certificationName,
-        comment,
-        certificationAuthorityLabel,
-        infoFile,
-      });
-    } else {
-      sendFeasibilityValidatedToCandidateAccompagneEmail({
-        email: updatedFeasibility.candidacy.candidate?.email as string,
-        certificationName,
-        comment,
-        certificationAuthorityLabel,
-        infoFile,
-      });
-
-      if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
-        sendFeasibilityDecisionTakenToAAPEmail({
-          email:
-            updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
-        });
-      }
-    }
-
-    // Delete ID File from feasibility
-    await deleteFeasibilityIDFile(feasibilityId);
-
-    await logCandidacyAuditEvent({
-      candidacyId: feasibility.candidacyId,
-      userKeycloakId: keycloakId,
-      userEmail,
-      userRoles,
-      eventType: "FEASIBILITY_VALIDATED",
-    });
-    return updatedFeasibility;
-  } else {
-    throw new Error("Utilisateur non autorisé");
-  }
-};
-
 const rejectFeasibility = async ({
   feasibilityId,
   comment,
@@ -1195,80 +1061,6 @@ const isCandidacyOwner = async (
   }
 
   return true;
-};
-
-const canManageFeasibility = async ({
-  hasRole,
-  feasibility,
-  keycloakId,
-}: {
-  hasRole(role: string): boolean;
-  feasibility: Feasibility | null;
-  keycloakId: string;
-}) => {
-  if (feasibility == null) {
-    throw new Error("Ce dossier est introuvable");
-  }
-
-  //admins can manage everything
-  if (hasRole("admin")) {
-    return true;
-  } else if (hasRole("manage_feasibility")) {
-    //certification authority admin account
-    if (hasRole("manage_certification_authority_local_account")) {
-      //is user account attached to a certification authority which manage the candidacy certification ?
-      return !!(await prismaClient.account.findFirst({
-        where: {
-          keycloakId,
-          certificationAuthorityId: feasibility.certificationAuthorityId,
-        },
-        select: { id: true },
-      }));
-    }
-    //certification authority local account
-    //check if candidacy department and certification are in the local account access perimeter
-    else {
-      const account = await getAccountByKeycloakId({ keycloakId });
-      if (!account) {
-        throw new Error("Compte utilisateur non trouvé");
-      }
-      const certificationAuthorityLocalAccount =
-        await getCertificationAuthorityLocalAccountByAccountId({
-          accountId: account.id,
-        });
-
-      if (!certificationAuthorityLocalAccount) {
-        throw new Error(
-          "Compte local de l'autorité de certification non trouvé",
-        );
-      }
-
-      if (
-        certificationAuthorityLocalAccount.certificationAuthorityId !==
-        feasibility.certificationAuthorityId
-      ) {
-        throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
-      }
-
-      const departmentIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId,
-        );
-
-      return !!(await prismaClient.feasibility.findFirst({
-        where: {
-          id: feasibility.id,
-          certificationAuthorityId:
-            certificationAuthorityLocalAccount.certificationAuthorityId,
-          candidacy: {
-            departmentId: { in: departmentIds },
-          },
-        },
-      }));
-    }
-  }
-
-  return false;
 };
 
 export const canUserManageCandidacy = async ({
