@@ -73,9 +73,15 @@ export const useUpdateCompetenceBlocPage = ({
   });
 
   const updateCertificationCompetenceBloc = useMutation({
-    mutationFn: (input: UpdateCompetenceBlocInput) =>
+    mutationFn: (
+      input: Omit<UpdateCompetenceBlocInput, "id" | "certificationId">,
+    ) =>
       graphqlClient.request(updateCertificationCompetenceBlocMutation, {
-        input: { id: certificationCompetenceBlocId, ...input },
+        input: {
+          ...input,
+          certificationId: competenceBloc?.certification.id || "",
+          id: certificationCompetenceBlocId,
+        },
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({

@@ -333,7 +333,8 @@ input UpdateCompetenceBlocsInput {
 }
 
 input UpdateCompetenceBlocInput {
-  id: ID
+  certificationId: ID!
+  id: ID!
   label: String!
   competences: [CompetenceInput!]!
 }

@@ -23,9 +23,8 @@ export const referentialResolversSecurityMap = {
   "Mutation.referential_createCertificationCompetenceBloc": [
     hasRole(["admin"]),
   ],
-  "Mutation.referential_updateCertificationCompetenceBloc": [
-    hasRole(["admin"]),
-  ],
+  "Mutation.referential_updateCertificationCompetenceBloc":
+    isAdminOrCertificationRegistryManagerOfCertification,
   "Mutation.referential_addCertification": [hasRole(["admin"])],
   "Mutation.referential_deleteCertificationCompetenceBloc": [
     hasRole(["admin"]),
