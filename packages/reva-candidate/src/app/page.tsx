@@ -20,7 +20,7 @@ const WelcomeMessage = () => (
   </p>
 );
 
-const ActualisationSection = ({
+const ActualisationWarning = ({
   lastActivityDate,
 }: {
   lastActivityDate: number;
@@ -76,13 +76,16 @@ export default function Home() {
   }
 
   const lastActiveStatus = candidacy?.status;
+  const isLastActiveStatusValidForActualisationWarning =
+    lastActiveStatus === "DOSSIER_FAISABILITE_RECEVABLE" ||
+    lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE";
 
-  const displayActualisationSection =
+  const displayActualisationWarning =
     candidacy?.lastActivityDate &&
     candidacy?.feasibility?.decision === "ADMISSIBLE" &&
     candidacyActualisationFeatureIsActive &&
     shouldDisplayActualisationWarning &&
-    lastActiveStatus !== "DOSSIER_DE_VALIDATION_ENVOYE";
+    isLastActiveStatusValidForActualisationWarning;
 
   return (
     <PageLayout data-test={`project-home-ready`}>
@@ -93,8 +96,8 @@ export default function Home() {
         firstname={candidate.firstname}
         lastname={candidate.lastname}
       />
-      {displayActualisationSection ? (
-        <ActualisationSection
+      {displayActualisationWarning ? (
+        <ActualisationWarning
           lastActivityDate={candidacy.lastActivityDate as number}
         />
       ) : (
