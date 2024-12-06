@@ -1,6 +1,12 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Type accompagnement", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    });
+  });
+
   it("should show the type accompagnement in the timeline when the type_accompagnement is accompagne and the feature is active", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");

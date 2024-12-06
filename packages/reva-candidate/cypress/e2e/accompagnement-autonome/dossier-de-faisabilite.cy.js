@@ -1,6 +1,12 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Accompagnement autonome - Dossier de faisabilité", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    });
+  });
+
   it("should show an active and editable feasibility element in the timeline when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
     cy.fixture("candidate1-certification-titre-2-selected.json").then(
       (candidate) => {

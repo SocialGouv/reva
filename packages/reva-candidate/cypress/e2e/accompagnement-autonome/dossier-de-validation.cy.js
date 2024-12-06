@@ -1,6 +1,12 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Accompagnement autonome - Dossier de validation", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    });
+  });
+
   context("Inactive dossier de validation", () => {
     it("should show an inactive dossier de validation element in the timeline when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
       cy.fixture("candidate1-certification-titre-2-selected.json").then(
