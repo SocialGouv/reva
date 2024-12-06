@@ -1,5 +1,5 @@
 import { hasRole } from "../shared/security/middlewares";
-import { defaultSecurity } from "../shared/security/presets";
+import { defaultSecurity, isAnyone } from "../shared/security/presets";
 
 export const referentialResolversSecurityMap = {
   "Mutation.*": defaultSecurity,
@@ -31,5 +31,5 @@ export const referentialResolversSecurityMap = {
   ],
 
   "Query.getEtablissementAsAdmin": [hasRole(["admin"])],
-  "Query.getCertificationCompetenceBloc": [hasRole(["admin"])],
+  "Query.getCertificationCompetenceBloc": isAnyone,
 };
