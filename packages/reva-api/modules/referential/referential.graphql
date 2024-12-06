@@ -376,7 +376,8 @@ type Mutation {
     input: UpdateCompetenceBlocInput!
   ): CertificationCompetenceBloc
   referential_deleteCertificationCompetenceBloc(
-    certificationCompetenceBlocId: String!
+    certificationId: ID!
+    certificationCompetenceBlocId: ID!
   ): CertificationCompetenceBloc!
   referential_addCertification(input: AddCertificationInput!): Certification!
   referential_updateCertificationStructureAndCertificationAuthorities(

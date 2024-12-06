@@ -39,9 +39,11 @@ const updateCertificationCompetenceBlocMutation = graphql(`
 
 const deleteCertificationCompetenceBlocMutation = graphql(`
   mutation deleteCertificationCompetenceBlocForUpdateCompetenceBlocPage(
-    $certificationCompetenceBlocId: String!
+    $certificationId: ID!
+    $certificationCompetenceBlocId: ID!
   ) {
     referential_deleteCertificationCompetenceBloc(
+      certificationId: $certificationId
       certificationCompetenceBlocId: $certificationCompetenceBlocId
     ) {
       id
@@ -92,6 +94,7 @@ export const useUpdateCompetenceBlocPage = ({
   const deleteCertificationCompetenceBloc = useMutation({
     mutationFn: () =>
       graphqlClient.request(deleteCertificationCompetenceBlocMutation, {
+        certificationId: competenceBloc?.certification.id || "",
         certificationCompetenceBlocId,
       }),
   });
