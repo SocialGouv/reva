@@ -71,6 +71,7 @@ type Candidacy {
   feasibilityFormat: FeasibilityFormat!
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
+  lastActivityDate: Timestamp
 }
 enum TypeAccompagnement {
   ACCOMPAGNE

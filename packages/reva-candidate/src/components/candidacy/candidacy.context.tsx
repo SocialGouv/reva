@@ -51,6 +51,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         typeAccompagnement
         status
         firstAppointmentOccuredAt
+        lastActivityDate
         candidacyDropOut {
           createdAt
         }
