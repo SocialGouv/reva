@@ -133,8 +133,9 @@ const CandidacySummaryPage = () => {
                 </dt>
                 <dd>
                   {candidate.birthdate &&
-                    format(candidate.birthdate, "dd/MM/yyyy")}{" "}
-                  {candidate.department.label} ({candidate.department.code}){" "}
+                    `${format(candidate.birthdate, "dd/MM/yyyy")} `}
+                  {candidate.birthDepartment &&
+                    `${candidate.birthDepartment.label} (${candidate.birthDepartment.code}) `}
                   {candidate.nationality}
                 </dd>
                 <dt className="sr-only">Téléphone</dt>
