@@ -61,11 +61,11 @@ export const CompetenciesBlocksSection = ({
       data-test="competencies-blocks-section"
     >
       {!!blocsDeCompetences?.length && (
-        <ul className="list-none flex flex-col">
-          {blocsDeCompetences?.map((bloc, index) => (
+        <ul className="list-none flex flex-col gap-2">
+          {blocsDeCompetences?.map((bloc) => (
             <li
               key={bloc.certificationCompetenceBloc.id}
-              className="flex justify-between items-start pb-0 gap-6"
+              className="flex flex-row justify-between items-start pb-0 gap-6"
             >
               <CertificationCompetenceAccordion
                 key={bloc.certificationCompetenceBloc.id}
@@ -73,11 +73,10 @@ export const CompetenciesBlocksSection = ({
                 competenceBlocText={bloc.text}
                 competenceDetails={certificationCompetenceDetails}
                 hideAccordionContent={isEligibilityRequirementPartial}
-                isFirstRow={index === 0}
               />
               {!disabled && isEditable && (
                 <Button
-                  className="w-[120px] mt-4 flex-none"
+                  className="w-[120px] flex-none mt-1 border-t-[1px]"
                   priority={bloc.complete ? "secondary" : "primary"}
                   linkProps={{
                     href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,

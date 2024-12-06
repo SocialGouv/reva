@@ -59,15 +59,9 @@ const BadgeState = ({
   return null;
 };
 
-const CertificationCompetenceRow = ({
-  label,
-  isFirstRow,
-}: {
-  label: string;
-  isFirstRow: boolean;
-}) => (
+const CertificationCompetenceRow = ({ label }: { label: string }) => (
   <div
-    className={`px-4 py-3 text-dsfr-blue-france-sun-113 font-medium border-b-[1px] border-neutral-200 ${isFirstRow ? "border-t-[1px]" : ""}`}
+    className={`px-4 py-3 text-dsfr-blue-france-sun-113 font-medium border-b-[1px] border-neutral-200`}
   >
     {label}
   </div>
@@ -77,14 +71,12 @@ export const CertificationCompetenceAccordion = ({
   competenceBloc,
   competenceBlocText,
   competenceDetails,
-  isFirstRow,
   defaultExpanded = false,
   hideAccordionContent = false,
 }: {
   competenceBloc: CertificationCompetenceBloc;
   competenceBlocText?: string | null;
   competenceDetails: CertificationCompetenceDetails[];
-  isFirstRow: boolean;
   defaultExpanded?: boolean;
   hideAccordionContent?: boolean;
 }) => {
@@ -93,7 +85,7 @@ export const CertificationCompetenceAccordion = ({
     : competenceBloc.label;
 
   if (hideAccordionContent) {
-    return <CertificationCompetenceRow label={label} isFirstRow={isFirstRow} />;
+    return <CertificationCompetenceRow label={label} />;
   }
 
   return (

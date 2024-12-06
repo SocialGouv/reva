@@ -92,7 +92,7 @@ export default function CertificationSection({
       <h5 className="mb-0">Blocs de compétences</h5>
 
       <div className="mb-8 mt-4">
-        {blocsDeCompetences?.map((bc, index) => (
+        {blocsDeCompetences?.map((bc) => (
           <CertificationCompetenceAccordion
             key={bc.certificationCompetenceBloc.id}
             defaultExpanded
@@ -100,7 +100,6 @@ export default function CertificationSection({
             competenceBlocText={bc.text}
             competenceDetails={certificationCompetenceDetails}
             hideAccordionContent={isEligibilityRequirementPartial}
-            isFirstRow={index === 0}
           />
         ))}
       </div>
