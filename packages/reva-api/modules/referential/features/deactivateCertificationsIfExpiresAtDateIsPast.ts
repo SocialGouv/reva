@@ -5,8 +5,8 @@ import { prismaClient } from "../../../prisma/client";
 export const deactivateCertificationsIfExpiresAtDateIsPast = () =>
   prismaClient.certification.updateMany({
     where: {
-      status: "AVAILABLE",
+      visible: true,
       expiresAt: { lte: startOfToday() },
     },
-    data: { status: "INACTIVE" },
+    data: { status: "INACTIVE", visible: false },
   });

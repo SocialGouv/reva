@@ -5,9 +5,10 @@ import { prismaClient } from "../../../prisma/client";
 export const makeCertificationsAvailableIfAvailableAtDateIsPast = () =>
   prismaClient.certification.updateMany({
     where: {
-      status: { not: "AVAILABLE" },
+      visible: false,
+      statusV2: "VALIDE_PAR_CERTIFICATEUR",
       availableAt: { lte: startOfToday() },
       expiresAt: { gt: startOfToday() },
     },
-    data: { status: "AVAILABLE" },
+    data: { status: "AVAILABLE", visible: true },
   });
