@@ -8,7 +8,7 @@ import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/P
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { addMonths, format, subWeeks } from "date-fns";
+import { addMonths, format, isAfter, subWeeks } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,11 +25,8 @@ const ActualisationSection = ({
 }: {
   lastActivityDate: number;
 }) => {
-  // La candidature sera considérée comme caduque après cette date, 5 mois et 2 semaines après la dernière actualisation
-  const thresholdDate = format(
-    subWeeks(addMonths(lastActivityDate, 6), 2),
-    "dd/MM/yyyy",
-  );
+  // La candidature sera considérée comme caduque après cette date, 6 mois après la dernière actualisation
+  const thresholdDate = format(addMonths(lastActivityDate, 6), "dd/MM/yyyy");
 
   return (
     <div className="mt-12 flex flex-col gap-4">
@@ -71,10 +68,21 @@ export default function Home() {
     router.push("/candidacy-dropout");
   }
 
+  let shouldDisplayActualisationWarning: boolean = false;
+  if (candidacy?.lastActivityDate) {
+    // On affiche le message d'actualisation à partir de 5 mois et 2 semaines après la dernière activité
+    const thresholdDate = subWeeks(addMonths(candidacy.lastActivityDate, 6), 2);
+    shouldDisplayActualisationWarning = isAfter(new Date(), thresholdDate);
+  }
+
+  const lastActiveStatus = candidacy?.status;
+
   const displayActualisationSection =
     candidacy?.lastActivityDate &&
     candidacy?.feasibility?.decision === "ADMISSIBLE" &&
-    candidacyActualisationFeatureIsActive;
+    candidacyActualisationFeatureIsActive &&
+    shouldDisplayActualisationWarning &&
+    lastActiveStatus !== "DOSSIER_DE_VALIDATION_ENVOYE";
 
   return (
     <PageLayout data-test={`project-home-ready`}>
