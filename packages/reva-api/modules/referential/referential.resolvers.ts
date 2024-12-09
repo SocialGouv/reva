@@ -3,7 +3,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { prismaClient } from "../../prisma/client";
 import { getCertificationById } from "./features/getCertificationById";
 import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
-import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
@@ -45,7 +44,6 @@ import { getCertificationCompetenceBlocById } from "./features/getCertificationC
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 import { addCertification } from "./features/addCertification";
 import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceBlocsByCertificationIdV2";
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
@@ -66,20 +64,12 @@ const unsafeReferentialResolvers = {
     competenceBlocs: async (
       {
         id: certificationId,
-        rncpId,
       }: {
         id: string;
         rncpId: string;
       },
       _payload: unknown,
-      { auth: { userInfo } }: GraphqlContext,
-    ) =>
-      (await isFeatureActiveForUser({
-        feature: "ANNUAIRE_CERTIFICATIONS_V2",
-        userKeycloakId: userInfo?.sub,
-      }))
-        ? getCompetenceBlocsByCertificationIdV2({ certificationId })
-        : getCompetenceBlocsByCertificationId({ certificationId, rncpId }),
+    ) => getCompetenceBlocsByCertificationIdV2({ certificationId }),
     domains: ({ id: certificationId }: { id: string }) =>
       getDomainsByCertificationId({ certificationId }),
   },

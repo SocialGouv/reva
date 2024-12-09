@@ -1,0 +1,3 @@
+DELETE FROM "features"
+WHERE
+    key = 'ANNUAIRE_CERTIFICATIONS_V2';

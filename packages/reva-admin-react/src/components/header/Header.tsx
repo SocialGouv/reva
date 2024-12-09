@@ -4,7 +4,6 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 export const Header = () => {
   const currentPathname = usePathname();
@@ -17,7 +16,6 @@ export const Header = () => {
     isCertificationRegistryManager,
   } = useAuth();
   const { authenticated, logout } = useKeycloakContext();
-  const { isFeatureActive } = useFeatureflipping();
 
   const candidaciesLabel = isAdmin
     ? "Certificateurs/Candidatures"
@@ -27,14 +25,10 @@ export const Header = () => {
     {
       text: "Certifications",
       linkProps: {
-        href: isFeatureActive("ANNUAIRE_CERTIFICATIONS_V2")
-          ? "/certifications-v2"
-          : "/certifications",
+        href: "/certifications-v2",
         target: "_self",
       },
-      isActive: isFeatureActive("ANNUAIRE_CERTIFICATIONS_V2")
-        ? currentPathname.startsWith("/certifications-v2")
-        : currentPathname.startsWith("/certifications"),
+      isActive: currentPathname.startsWith("/certifications-v2"),
     },
     {
       text: "Vérifications",
