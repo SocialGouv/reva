@@ -129,6 +129,10 @@ export const updateCandidate = async ({
 
   return prismaClient.candidate.update({
     where: { id },
-    data: candidateInput,
+    data: {
+      ...candidateInput,
+      birthDepartmentId:
+        countrySelected.label == "France" ? birthDepartmentId : undefined,
+    },
   });
 };

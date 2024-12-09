@@ -28,6 +28,10 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           label
         }
       }
+      country {
+        id
+        label
+      }
       nationality
       gender
       phone
