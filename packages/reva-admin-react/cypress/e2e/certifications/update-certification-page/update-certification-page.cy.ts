@@ -69,7 +69,7 @@ context("when i access the update certification page ", () => {
   it("display the page with a correct title", function () {
     interceptCertification();
 
-    cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+    cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -84,7 +84,7 @@ context("when i access the update certification page ", () => {
     it("display the correct number of competence blocs and competences", function () {
       interceptCertification();
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -109,7 +109,7 @@ context("when i access the update certification page ", () => {
     it("let me click on the 'update competence bloc' button of the first competence bloc and leads me to its update page ", function () {
       interceptCertification();
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -121,14 +121,14 @@ context("when i access the update certification page ", () => {
 
       cy.url().should(
         "eq",
-        "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+        "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
       );
     });
 
     it("let me click on the 'add competence bloc' button and leads me to the create competence bloc page ", function () {
       interceptCertification();
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -139,7 +139,7 @@ context("when i access the update certification page ", () => {
       ).click();
       cy.url().should(
         "eq",
-        "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
+        "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
       );
     });
   });
@@ -148,7 +148,7 @@ context("when i access the update certification page ", () => {
     it("display a 'to complete' badge on the certification structure summary card when the certification has no associated structure", function () {
       interceptCertification();
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -162,7 +162,7 @@ context("when i access the update certification page ", () => {
     it("display a 'completed' badge on the certification structure summary card when the certification has an associated structure", function () {
       interceptCertification({ withStructure: true });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -176,7 +176,7 @@ context("when i access the update certification page ", () => {
     it("display the structure label when the certification has an associated structure", function () {
       interceptCertification({ withStructure: true });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -196,7 +196,7 @@ context("when i access the update certification page ", () => {
         withCertificationAuthoritiesOfCertification: true,
       });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -213,7 +213,7 @@ context("when i access the update certification page ", () => {
     it("display an alert  when the certification has an associated structure but no certification authorities associated with it", function () {
       interceptCertification({ withStructure: true });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -232,7 +232,7 @@ context("when i access the update certification page ", () => {
         withStructure: true,
       });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -249,7 +249,7 @@ context("when i access the update certification page ", () => {
         withCertificationRegistryManagerAssociatedToStructure: true,
       });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -263,7 +263,7 @@ context("when i access the update certification page ", () => {
     it("let me click on the 'completer' button and redirect me to the structure page", function () {
       interceptCertification();
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -274,14 +274,14 @@ context("when i access the update certification page ", () => {
       ).click();
       cy.url().should(
         "eq",
-        "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
+        "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
       );
     });
 
     it("let me check if buttons 'envoyer' and 'réinitialiser' are visible is statusV2 equal to 'BROUILLON'", function () {
       interceptCertification({ statusV2: "BROUILLON" });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
@@ -294,7 +294,7 @@ context("when i access the update certification page ", () => {
     it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if statusV2 different from 'BROUILLON'", function () {
       interceptCertification({ statusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
 
-      cy.admin("/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");

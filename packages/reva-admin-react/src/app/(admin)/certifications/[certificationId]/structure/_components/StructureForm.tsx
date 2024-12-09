@@ -117,7 +117,7 @@ export const StructureForm = ({
           {
             label: certification.label,
             linkProps: {
-              href: `/certifications-v2/${certification.id}`,
+              href: `/certifications/${certification.id}`,
             },
           },
         ]}
@@ -171,7 +171,7 @@ export const StructureForm = ({
             <NoCertificationAuthorityAlert className="my-4" />
           ))}
         <FormButtons
-          backUrl={`/certifications-v2/${certification.id}`}
+          backUrl={`/certifications/${certification.id}`}
           formState={{
             isDirty,
             isSubmitting,

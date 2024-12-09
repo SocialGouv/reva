@@ -150,12 +150,12 @@ const PageContent = ({
           competenceBlocs={certification.competenceBlocs}
           onAddBlocCompetenceButtonClick={() =>
             router.push(
-              `/certifications-v2/${certification.id}/bloc-competence/add`,
+              `/certifications/${certification.id}/bloc-competence/add`,
             )
           }
           onUpdateCompetenceBlocButtonClick={(blocId) =>
             router.push(
-              `/certifications-v2/${certification.id}/bloc-competence/${blocId}`,
+              `/certifications/${certification.id}/bloc-competence/${blocId}`,
             )
           }
         />
@@ -167,7 +167,7 @@ const PageContent = ({
           status={structureSummaryCardComplete ? "COMPLETED" : "TO_COMPLETE"}
           buttonOnClickHref={
             isEditable
-              ? `/certifications-v2/${certification.id}/structure`
+              ? `/certifications/${certification.id}/structure`
               : undefined
           }
         >
@@ -235,7 +235,7 @@ const PageContent = ({
       )}
       <Button
         priority="secondary"
-        linkProps={{ href: "/certifications-v2", target: "_self" }}
+        linkProps={{ href: "/certifications", target: "_self" }}
       >
         Retour
       </Button>

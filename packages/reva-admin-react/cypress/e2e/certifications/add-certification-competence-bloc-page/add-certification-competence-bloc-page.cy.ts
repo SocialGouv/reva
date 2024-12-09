@@ -37,7 +37,7 @@ context("when i access the add certification page ", () => {
     interceptCertificationCompetenceBloc();
 
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -52,7 +52,7 @@ context("when i access the add certification page ", () => {
     interceptCertificationCompetenceBloc();
     interceptCreateCertificationCompetenceBlocMutation();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -71,7 +71,7 @@ context("when i access the add certification page ", () => {
   it("let me add a new competence to the competence bloc", function () {
     interceptCertificationCompetenceBloc();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -85,7 +85,7 @@ context("when i access the add certification page ", () => {
   it("let me delete a competence from the competence bloc", function () {
     interceptCertificationCompetenceBloc();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");

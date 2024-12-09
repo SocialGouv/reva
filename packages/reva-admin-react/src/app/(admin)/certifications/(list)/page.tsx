@@ -107,7 +107,7 @@ const CertificationListPage = () => {
                   data-test="access-certification-button"
                   className="mt-2 ml-auto"
                   linkProps={{
-                    href: `/certifications-v2/${c.id}`,
+                    href: `/certifications/${c.id}`,
                   }}
                 >
                   Accéder à la certification

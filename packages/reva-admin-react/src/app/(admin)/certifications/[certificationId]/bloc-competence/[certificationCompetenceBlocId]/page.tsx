@@ -43,7 +43,7 @@ export default function UpdateCompetenceBlocPage() {
     try {
       await deleteCertificationCompetenceBloc.mutateAsync();
       successToast("modifications enregistrées");
-      router.push(`/certifications-v2/${certificationId}`);
+      router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -76,7 +76,7 @@ const PageContent = ({
         {
           label: competenceBloc.certification.label,
           linkProps: {
-            href: `/certifications-v2/${competenceBloc.certification.id}`,
+            href: `/certifications/${competenceBloc.certification.id}`,
           },
         },
       ]}
@@ -109,7 +109,7 @@ const PageContent = ({
     </GrayCard>
     <CompetenceBlocForm
       className="mt-6"
-      backUrl={`/certifications-v2/${competenceBloc.certification.id}`}
+      backUrl={`/certifications/${competenceBloc.certification.id}`}
       defaultValues={{
         ...competenceBloc,
         competences: competenceBloc.competences.map((c, i) => ({

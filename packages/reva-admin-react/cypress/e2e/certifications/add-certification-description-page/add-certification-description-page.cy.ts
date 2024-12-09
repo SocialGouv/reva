@@ -42,7 +42,7 @@ context("when i access the add certification description page ", () => {
   it("display the page with a correct title", function () {
     interceptCertification();
 
-    cy.admin("/certifications-v2/add-certification/description");
+    cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -55,7 +55,7 @@ context("when i access the add certification description page ", () => {
   it("should focus on rncp code input when submit form with empty code", function () {
     interceptCertification();
 
-    cy.admin("/certifications-v2/add-certification/description");
+    cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -71,7 +71,7 @@ context("when i access the add certification description page ", () => {
     interceptCertification();
     interceptGetFCCertificationQuery();
 
-    cy.admin("/certifications-v2/add-certification/description");
+    cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -92,7 +92,7 @@ context("when i access the add certification description page ", () => {
     interceptCertification();
     interceptAddFCCertificationMutation();
 
-    cy.admin("/certifications-v2/add-certification/description");
+    cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -107,7 +107,7 @@ context("when i access the add certification description page ", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3003/admin2/certifications-v2/381f2b55-90cd-435a-ba32-53b7c9dc5f9b/",
+      "http://localhost:3003/admin2/certifications/381f2b55-90cd-435a-ba32-53b7c9dc5f9b/",
     );
   });
 });

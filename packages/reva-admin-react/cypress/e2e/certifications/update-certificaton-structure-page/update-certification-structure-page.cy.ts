@@ -43,7 +43,7 @@ context("when i access the update certification page ", () => {
     interceptCertification();
 
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -61,7 +61,7 @@ context("when i access the update certification page ", () => {
     interceptCertification();
     interceptUpdateCertificationStructureMutation();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/structure/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");

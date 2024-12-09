@@ -19,7 +19,7 @@ export default function AddCertificationPage() {
           status="TO_COMPLETE"
           titleIconClass="fr-icon-award-fill"
           isEditable
-          buttonOnClickHref="/certifications-v2/add-certification/description"
+          buttonOnClickHref="/certifications/add-certification/description"
         />
         <EnhancedSectionCard
           title="Blocs de compétences"
@@ -32,7 +32,7 @@ export default function AddCertificationPage() {
           disabled
           isEditable
           customButtonTitle="Compléter"
-          buttonOnClickHref="/certifications-v2/add-certification/structure"
+          buttonOnClickHref="/certifications/add-certification/structure"
         />
       </div>
       <hr className="mt-8" />
@@ -52,7 +52,7 @@ export default function AddCertificationPage() {
       <hr className="mt-8 mb-6" />
       <Button
         priority="secondary"
-        linkProps={{ href: "/certifications-v2", target: "_self" }}
+        linkProps={{ href: "/certifications", target: "_self" }}
       >
         Retour
       </Button>

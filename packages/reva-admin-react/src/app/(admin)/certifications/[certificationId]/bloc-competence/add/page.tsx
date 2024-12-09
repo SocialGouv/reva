@@ -31,7 +31,7 @@ export default function AddCompetenceBlocPage() {
     try {
       await createCertificationCompetenceBloc.mutateAsync(data);
       successToast("modifications enregistrées");
-      router.push(`/certifications-v2/${certificationId}`);
+      router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -58,7 +58,7 @@ const PageContent = ({
         {
           label: certification.label,
           linkProps: {
-            href: `/certifications-v2/${certification.id}`,
+            href: `/certifications/${certification.id}`,
           },
         },
       ]}
@@ -74,7 +74,7 @@ const PageContent = ({
     </p>
     <CompetenceBlocForm
       className="mt-6"
-      backUrl={`/certifications-v2/${certification.id}`}
+      backUrl={`/certifications/${certification.id}`}
       onSubmit={onSubmit}
     />
   </div>

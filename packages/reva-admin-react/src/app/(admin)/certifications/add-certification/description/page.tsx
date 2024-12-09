@@ -49,7 +49,7 @@ export default function CertificationDescriptionPage() {
 
       successToast("La certification a bien été ajoutée");
 
-      router.push(`/certifications-v2/${newCertificationId}`);
+      router.push(`/certifications/${newCertificationId}`);
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -153,7 +153,7 @@ export default function CertificationDescriptionPage() {
         <Button
           priority="secondary"
           linkProps={{
-            href: "/certifications-v2/add-certification",
+            href: "/certifications/add-certification",
             target: "_self",
           }}
         >

@@ -25,10 +25,10 @@ export const Header = () => {
     {
       text: "Certifications",
       linkProps: {
-        href: "/certifications-v2",
+        href: "/certifications",
         target: "_self",
       },
-      isActive: currentPathname.startsWith("/certifications-v2"),
+      isActive: currentPathname.startsWith("/certifications"),
     },
     {
       text: "Vérifications",

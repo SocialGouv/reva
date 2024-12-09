@@ -26,7 +26,7 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
       params.set("search", searchFilter);
     }
 
-    return `/certifications-v2/?${params.toString()}`;
+    return `/certifications/?${params.toString()}`;
   };
 
   const menuItem = (
@@ -68,7 +68,7 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
           {
             isActive: false,
             linkProps: {
-              href: "/certifications-v2/add-certification",
+              href: "/certifications/add-certification",
               target: "_self",
             },
             text: (

@@ -47,7 +47,7 @@ context("when i access the update certification page ", () => {
     interceptCertificationCompetenceBloc();
 
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -64,7 +64,7 @@ context("when i access the update certification page ", () => {
   it("dont let me submit the form if no edit has been made", function () {
     interceptCertificationCompetenceBloc();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -77,7 +77,7 @@ context("when i access the update certification page ", () => {
     interceptCertificationCompetenceBloc();
     interceptUpdateCertificationCompetenceBlocMutation();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -96,7 +96,7 @@ context("when i access the update certification page ", () => {
   it("let me add a new competence to the competence bloc", function () {
     interceptCertificationCompetenceBloc();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -112,7 +112,7 @@ context("when i access the update certification page ", () => {
   it("let me delete a competence from the competence bloc", function () {
     interceptCertificationCompetenceBloc();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -129,7 +129,7 @@ context("when i access the update certification page ", () => {
     interceptCertificationCompetenceBloc();
     interceptDeleteCertificationCompetenceBlocMutation();
     cy.admin(
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
     );
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getMaisonMereCGUQuery");
@@ -141,7 +141,7 @@ context("when i access the update certification page ", () => {
 
     cy.url().should(
       "eq",
-      "http://localhost:3003/admin2/certifications-v2/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/",
     );
   });
 });

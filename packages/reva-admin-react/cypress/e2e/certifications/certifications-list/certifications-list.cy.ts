@@ -22,7 +22,7 @@ context("when i access the certification list", () => {
   it("display a list of 3 certifications", function () {
     interceptCertifications();
 
-    cy.admin("/certifications-v2");
+    cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -33,7 +33,7 @@ context("when i access the certification list", () => {
   it("let me click on the 'add certification' button", function () {
     interceptCertifications();
 
-    cy.admin("/certifications-v2");
+    cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -41,14 +41,14 @@ context("when i access the certification list", () => {
     cy.get('[data-test="add-certification-button"]').click();
     cy.url().should(
       "eq",
-      "http://localhost:3003/admin2/certifications-v2/add-certification/",
+      "http://localhost:3003/admin2/certifications/add-certification/",
     );
   });
 
   it("let me click on the 'access certification' button", function () {
     interceptCertifications();
 
-    cy.admin("/certifications-v2");
+    cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
@@ -56,7 +56,7 @@ context("when i access the certification list", () => {
     cy.get('[data-test="access-certification-button"]').eq(1).click();
     cy.url().should(
       "eq",
-      "http://localhost:3003/admin2/certifications-v2/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6/",
+      "http://localhost:3003/admin2/certifications/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6/",
     );
   });
 });
