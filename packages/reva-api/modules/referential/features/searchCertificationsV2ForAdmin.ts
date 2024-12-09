@@ -50,7 +50,7 @@ export const searchCertificationsV2ForAdmin = async ({
     };
   }
 
-  if (visible) {
+  if (typeof visible == "boolean") {
     whereClause = {
       ...whereClause,
       visible,
