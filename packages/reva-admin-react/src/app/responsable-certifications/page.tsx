@@ -1,4 +1,4 @@
-// import { ReactNode } from "react";
+"use client";
 import Image from "next/image";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { redirect } from "next/navigation";
