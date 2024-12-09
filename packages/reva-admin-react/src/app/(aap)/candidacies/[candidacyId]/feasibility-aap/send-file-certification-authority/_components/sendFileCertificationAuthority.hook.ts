@@ -146,6 +146,10 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
                 label
               }
             }
+            country {
+              id
+              label
+            }
             nationality
             gender
             phone

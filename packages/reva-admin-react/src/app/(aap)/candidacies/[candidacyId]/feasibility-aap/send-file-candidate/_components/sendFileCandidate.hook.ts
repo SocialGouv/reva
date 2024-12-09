@@ -131,6 +131,10 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
                 label
               }
             }
+            country {
+              id
+              label
+            }
             nationality
             gender
             phone

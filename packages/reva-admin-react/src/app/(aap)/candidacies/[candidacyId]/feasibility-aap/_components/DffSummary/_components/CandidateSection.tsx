@@ -41,6 +41,7 @@ export default function CandidateSection({
     birthdate,
     birthCity,
     birthDepartment,
+    country,
     nationality,
     phone,
     street,
@@ -53,6 +54,8 @@ export default function CandidateSection({
 
   const genderLabel = gender ? getGenderPrefix(gender) : "";
   const bornLabel = gender ? getGenderBornLabel(gender) : "";
+
+  const isFrance = country ? country?.label == "France" : false;
 
   return (
     <div>
@@ -71,10 +74,11 @@ export default function CandidateSection({
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
         {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
         <span>
-          à {birthCity ? `${birthCity},` : ""}{" "}
-          {birthDepartment
-            ? `${birthDepartment?.label} (${birthDepartment?.code})`
+          à {birthCity}
+          {country && isFrance && birthDepartment
+            ? `${birthCity ? ", " : ""}${birthDepartment.label} (${birthDepartment.code})`
             : ""}
+          {country && !isFrance && `${birthCity ? ", " : ""}${country.label}`}
         </span>
       </p>
       {nationality && <p>Nationalité {nationality}</p>}

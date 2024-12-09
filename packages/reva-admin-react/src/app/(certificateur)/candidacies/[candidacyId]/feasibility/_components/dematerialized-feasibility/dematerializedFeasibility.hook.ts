@@ -140,6 +140,10 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
               label
             }
           }
+          country {
+            id
+            label
+          }
           nationality
           gender
           phone
