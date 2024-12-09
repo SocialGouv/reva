@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getCompetenceBlocsByCertificationIdV2 = async ({
+export const getCompetenceBlocsByCertificationId = async ({
   certificationId,
 }: {
   certificationId: string;

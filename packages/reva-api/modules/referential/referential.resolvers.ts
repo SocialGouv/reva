@@ -44,7 +44,7 @@ import { getCertificationCompetenceBlocById } from "./features/getCertificationC
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 import { addCertification } from "./features/addCertification";
 import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
-import { getCompetenceBlocsByCertificationIdV2 } from "./features/getCompetenceBlocsByCertificationIdV2";
+import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
@@ -69,7 +69,7 @@ const unsafeReferentialResolvers = {
         rncpId: string;
       },
       _payload: unknown,
-    ) => getCompetenceBlocsByCertificationIdV2({ certificationId }),
+    ) => getCompetenceBlocsByCertificationId({ certificationId }),
     domains: ({ id: certificationId }: { id: string }) =>
       getDomainsByCertificationId({ certificationId }),
   },
