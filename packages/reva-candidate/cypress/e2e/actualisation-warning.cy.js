@@ -1,4 +1,4 @@
-import { addDays, subDays, subMonths, subWeeks } from "date-fns";
+import { addDays, addWeeks, subDays, subMonths } from "date-fns";
 import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Actualisation Warning", () => {
@@ -118,7 +118,7 @@ context("Actualisation Warning", () => {
         name: "activity date is before threshold (5 months, 1 week and 6 days)",
         lastActivityDate: () => {
           const date = new Date();
-          return addDays(subWeeks(subMonths(date, 6), 2), 1).getTime();
+          return addDays(addWeeks(subMonths(date, 6), 2), 1).getTime();
         },
         shouldShowWarning: false,
       },
@@ -126,15 +126,15 @@ context("Actualisation Warning", () => {
         name: "activity date is exactly at threshold (5 months, 2 weeks)",
         lastActivityDate: () => {
           const date = new Date();
-          return subWeeks(subMonths(date, 6), 2).getTime();
+          return addWeeks(subMonths(date, 6), 2).getTime();
         },
         shouldShowWarning: true,
       },
       {
-        name: "activity date is after threshold (5 months, 2 weeks - 1 day)",
+        name: "activity date is after threshold (5 months, 2 weeks and 1 day)",
         lastActivityDate: () => {
           const date = new Date();
-          return subDays(subWeeks(subMonths(date, 6), 2), 1).getTime();
+          return subDays(addWeeks(subMonths(date, 6), 2), 1).getTime();
         },
         shouldShowWarning: true,
       },
