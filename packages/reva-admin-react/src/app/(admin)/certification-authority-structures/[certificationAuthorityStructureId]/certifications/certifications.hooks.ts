@@ -20,7 +20,7 @@ const getCertificationAuthorityStructureAndCertificationsQuery = graphql(`
         label
       }
     }
-    searchCertificationsV2ForAdmin(limit: 500, offset: 0) {
+    searchCertificationsForAdmin(limit: 500, offset: 0) {
       rows {
         id
         codeRncp
@@ -93,7 +93,7 @@ export const useCertificationsPage = ({
 
   const certifications = useMemo(
     () =>
-      getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsV2ForAdmin?.rows
+      getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsForAdmin?.rows
         .map((c) => ({
           id: c.id,
           label: `${c.codeRncp} - ${c.label}`,
@@ -106,7 +106,7 @@ export const useCertificationsPage = ({
     [
       certificationAuthorityStructure?.certifications,
       getCertificationAuthorityStructureAndCertificationsResponse
-        ?.searchCertificationsV2ForAdmin?.rows,
+        ?.searchCertificationsForAdmin?.rows,
     ],
   );
 

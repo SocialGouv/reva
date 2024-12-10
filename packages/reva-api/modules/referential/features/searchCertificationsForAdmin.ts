@@ -4,7 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification, CertificationStatusV2 } from "../referential.types";
 
-export const searchCertificationsV2ForAdmin = async ({
+export const searchCertificationsForAdmin = async ({
   offset,
   limit,
   searchText,

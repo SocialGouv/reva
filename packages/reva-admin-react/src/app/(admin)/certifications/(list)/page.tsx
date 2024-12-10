@@ -17,7 +17,7 @@ const getCertificationsQuery = graphql(`
     $status: CertificationStatusV2
     $visible: Boolean
   ) {
-    searchCertificationsV2ForAdmin(
+    searchCertificationsForAdmin(
       limit: 10
       offset: $offset
       searchText: $searchFilter
@@ -72,7 +72,7 @@ const CertificationListPage = () => {
   });
 
   const certificationPage =
-    getCertificationsResponse?.searchCertificationsV2ForAdmin;
+    getCertificationsResponse?.searchCertificationsForAdmin;
 
   return (
     certificationPage && (

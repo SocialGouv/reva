@@ -14,7 +14,7 @@ import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 import { replaceCertification } from "./features/replaceCertification";
-import { searchCertificationsV2ForAdmin } from "./features/searchCertificationsV2ForAdmin";
+import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
 import { updateCertification } from "./features/updateCertification";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
@@ -114,8 +114,8 @@ const unsafeReferentialResolvers = {
         searchText?: string;
       },
     ) => searchCertificationsForCandidate(payload),
-    searchCertificationsV2ForAdmin: (_: any, payload: any) =>
-      searchCertificationsV2ForAdmin({
+    searchCertificationsForAdmin: (_: any, payload: any) =>
+      searchCertificationsForAdmin({
         offset: payload.offset,
         limit: payload.limit,
         searchText: payload.searchText,

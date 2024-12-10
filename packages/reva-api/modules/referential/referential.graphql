@@ -255,7 +255,7 @@ type Query {
     organismId: UUID
     searchText: String
   ): CertificationPage!
-  searchCertificationsV2ForAdmin(
+  searchCertificationsForAdmin(
     offset: Int
     limit: Int
     searchText: String
