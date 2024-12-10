@@ -76,14 +76,7 @@ context("Candidacy with department certification selected", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
 
-    cy.login(
-      { token: "abc" },
-      {
-        onBeforeLoad(win) {
-          cy.stub(win.Math, "random").returns(0);
-        },
-      },
-    );
+    cy.login();
 
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
