@@ -13,7 +13,7 @@ const isAdminOrCertificationRegistryManagerOfCertification = [
 export const referentialResolversSecurityMap = {
   "Mutation.*": defaultSecurity,
 
-  "Query.searchCertificationsForAdmin": [hasRole(["admin"])],
+  "Query.searchCertificationsV2ForAdmin": [hasRole(["admin"])],
 
   "Mutation.referential_updateCertification": [hasRole(["admin"])],
   "Mutation.referential_replaceCertification": [hasRole(["admin"])],
