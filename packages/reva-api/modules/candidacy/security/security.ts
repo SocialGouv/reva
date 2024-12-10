@@ -4,8 +4,8 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrManager,
   isCandidacyCompanion,
-  isOwnerOfCandidate,
   isOwnerOfCandidacy,
+  isOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
@@ -46,4 +46,5 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isOwnerOrCanManageCandidacy,
+  "Mutation.candidacy_updateLastActivityDate": isOwnerOfCandidacy,
 };

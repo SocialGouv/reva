@@ -4,8 +4,10 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidateById } from "../candidate/features/getCandidateById";
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
+import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -22,10 +24,17 @@ import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
+import { getCandidacies } from "./features/getCandicacies";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
+import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
+import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
+import { getCandidacyFinancingMethodById } from "./features/getCandidacyFinancingMethodById";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
+import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features/getCandidacyOnCandidacyFinancingMethodsByCandidacyId";
+import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
+import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -34,10 +43,13 @@ import { submitCandidacy } from "./features/submitCandidacy";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
+import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
+import { updateLastActivityDate } from "./features/updateLastActivityDate";
+import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import {
   sendCandidacyArchivedEmailToCertificateur,
@@ -45,17 +57,6 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
-import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
-import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
-import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
-import { getDropOutReasonById } from "./features/getDropOutReasonById";
-import { getCandidacies } from "./features/getCandicacies";
-import { getCandidateById } from "../candidate/features/getCandidateById";
-import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
-import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
-import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features/getCandidacyOnCandidacyFinancingMethodsByCandidacyId";
-import { getCandidacyFinancingMethodById } from "./features/getCandidacyFinancingMethodById";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -594,6 +595,13 @@ const unsafeResolvers = {
       });
       return result;
     },
+    candidacy_updateLastActivityDate: async (
+      _parent: unknown,
+      payload: {
+        candidacyId: string;
+        readyForJuryEstimatedAt: Date;
+      },
+    ) => updateLastActivityDate(payload),
   },
 };
 

@@ -299,4 +299,8 @@ type Mutation {
     candidacyId: UUID!
     typeAccompagnement: TypeAccompagnement!
   ): Candidacy!
+  candidacy_updateLastActivityDate(
+    candidacyId: UUID!
+    readyForJuryEstimatedAt: Timestamp!
+  ): Candidacy!
 }
