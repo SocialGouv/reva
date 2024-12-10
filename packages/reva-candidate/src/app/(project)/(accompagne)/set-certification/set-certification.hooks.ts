@@ -21,7 +21,7 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
         label
         summary
         codeRncp
-        status
+        statusV2
       }
       info {
         totalRows

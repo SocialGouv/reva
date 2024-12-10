@@ -21,7 +21,6 @@ type Certification {
   accessibleJobType: String
   abilities: String
   codeRncp: String!
-  status: CertificationStatus!
   statusV2: CertificationStatusV2!
   visible: Boolean!
   typeDiplome: String

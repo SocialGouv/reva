@@ -28,7 +28,6 @@ const getCertificationsQuery = graphql(`
         id
         label
         codeRncp
-        status
         statusV2
         visible
         certificationAuthorityStructure {

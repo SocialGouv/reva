@@ -15,7 +15,7 @@ import {
   updateSelectedValueForAllItemsBasedOnItem,
   updateSelectedValueForAllItemsBasedOnValue,
 } from "@/components/tree-select";
-import { CertificationStatus } from "@/graphql/generated/graphql";
+import { CertificationStatusV2 } from "@/graphql/generated/graphql";
 import { treeSelectItemsToSelectedDepartmentIds } from "@/utils";
 
 export type LocalAccount = {
@@ -319,16 +319,19 @@ function getDefaultItemsCertifications(
   certifications: {
     id: string;
     label: string;
-    status: CertificationStatus;
+    statusV2: CertificationStatusV2;
     codeRncp: string;
   }[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = certifications
-    .filter((c) => c.status === "AVAILABLE" || c.status === "INACTIVE")
+    .filter(
+      (c) =>
+        c.statusV2 === "VALIDE_PAR_CERTIFICATEUR" || c.statusV2 === "INACTIVE",
+    )
     .map((certification) => ({
       id: certification.id,
       label: `${certification.codeRncp} - ${certification.label}${
-        certification.status === "INACTIVE" ? " (ancienne version)" : ""
+        certification.statusV2 === "INACTIVE" ? " (ancienne version)" : ""
       }`,
       selected: false,
     }));

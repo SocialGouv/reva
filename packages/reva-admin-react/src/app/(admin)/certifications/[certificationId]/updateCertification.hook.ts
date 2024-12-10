@@ -8,7 +8,6 @@ const getCertificationQuery = graphql(`
       id
       label
       codeRncp
-      status
       statusV2
       rncpExpiresAt
       rncpDeliveryDeadline
