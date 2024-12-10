@@ -14,7 +14,9 @@ export const referentialResolversSecurityMap = {
   "Mutation.*": defaultSecurity,
 
   "Query.searchCertificationsForAdmin": [hasRole(["admin"])],
-
+  "Query.searchCertificationsV2ForRegistryManager": [
+    hasRole(["admin", "manage_certification_registry"]),
+  ],
   "Mutation.referential_updateCertification": [hasRole(["admin"])],
   "Mutation.referential_replaceCertification": [hasRole(["admin"])],
   "Mutation.referential_updateCompetenceBlocsByCertificationId": [

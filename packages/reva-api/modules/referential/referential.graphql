@@ -262,6 +262,13 @@ type Query {
     status: CertificationStatusV2
     visible: Boolean
   ): CertificationPage!
+  searchCertificationsV2ForRegistryManager(
+    offset: Int
+    limit: Int
+    searchText: String
+    status: CertificationStatusV2
+    visible: Boolean
+  ): CertificationPage!
   getCertification(certificationId: ID!): Certification!
   getRegions: [Region!]!
   getDepartments: [Department!]!

@@ -49,6 +49,7 @@ import { createCertificationCompetenceBloc } from "./features/createCertificatio
 import { updateCertificationStructureAndCertificationAuthorities } from "./features/updateCertificationStructureAndCertificationAuthorities";
 import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
 import { resetCompetenceBlocsByCertificationId } from "./features/resetCompetenceBlocsByCertificationId";
+import { searchCertificationsV2ForRegistryManager } from "./features/searchCertificationsV2ForRegistryManager";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -116,6 +117,19 @@ const unsafeReferentialResolvers = {
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
       searchCertificationsForAdmin({
+        offset: payload.offset,
+        limit: payload.limit,
+        searchText: payload.searchText,
+        status: payload.status,
+        visible: payload.visible,
+      }),
+    searchCertificationsV2ForRegistryManager: (
+      _: any,
+      payload: any,
+      context: GraphqlContext,
+    ) =>
+      searchCertificationsV2ForRegistryManager({
+        userKeycloakId: context.auth.userInfo?.sub || "",
         offset: payload.offset,
         limit: payload.limit,
         searchText: payload.searchText,
