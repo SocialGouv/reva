@@ -17,13 +17,14 @@ context("Empty candidacy", () => {
 });
 
 context("Candidacy with department certification selected", () => {
-  it("list all available organisms", function () {
+  beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
       stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
+
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@candidate_getCandidateWithCandidacy");
@@ -31,7 +32,9 @@ context("Candidacy with department certification selected", () => {
 
     cy.get('[data-test="project-home-edit-organism').click();
     cy.wait("@getRandomOrganismsForCandidacy");
+  });
 
+  it("list all available organisms", function () {
     cy.get('[data-test="project-organisms-organism-o1"]').within(() => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
         "have.text",
@@ -69,23 +72,7 @@ context("Candidacy with department certification selected", () => {
 
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
-      stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-    });
-
-    cy.login();
-
-    cy.wait("@candidate_login");
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
-
-    cy.get('[data-test="project-home-edit-organism').click();
-    cy.wait("@getRandomOrganismsForCandidacy");
-
-    cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacy",
