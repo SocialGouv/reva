@@ -29,7 +29,6 @@ const getCertificationsQuery = graphql(`
       limit: 10
       offset: $offset
       searchText: $searchFilter
-      status: AVAILABLE
       organismId: $organismId
     ) {
       rows {

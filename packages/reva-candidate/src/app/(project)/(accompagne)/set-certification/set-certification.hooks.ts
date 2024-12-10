@@ -14,7 +14,6 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
       offset: $offset
       limit: $limit
       searchText: $searchText
-      status: AVAILABLE
     ) {
       rows {
         id

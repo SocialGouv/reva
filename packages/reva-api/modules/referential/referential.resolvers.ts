@@ -21,7 +21,6 @@ import { updateCompetenceBlocsByCertificationId } from "./features/updateCompete
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CreateCompetenceBlocInput,
-  CertificationStatus,
   UpdateCertificationInput,
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
@@ -114,7 +113,6 @@ const unsafeReferentialResolvers = {
         limit?: number;
         organismId?: string;
         searchText?: string;
-        status: CertificationStatus;
       },
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>

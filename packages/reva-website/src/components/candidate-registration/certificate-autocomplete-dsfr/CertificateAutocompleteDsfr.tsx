@@ -8,10 +8,7 @@ import request from "graphql-request";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQuery($searchText: String!) {
-    searchCertificationsForCandidate(
-      searchText: $searchText
-      status: AVAILABLE
-    ) {
+    searchCertificationsForCandidate(searchText: $searchText) {
       rows {
         id
         label

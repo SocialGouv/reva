@@ -13,13 +13,13 @@ export interface DropOutReason {
   label: string;
 }
 
-export const CertificationStatus = {
+const CertificationStatus = {
   INACTIVE: "INACTIVE",
   SOON: "SOON",
   AVAILABLE: "AVAILABLE",
 };
 
-export type CertificationStatus =
+type CertificationStatus =
   (typeof CertificationStatus)[keyof typeof CertificationStatus];
 
 export const CertificationStatusV2 = {

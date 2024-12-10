@@ -91,12 +91,6 @@ type ConventionCollective {
   label: String!
 }
 
-enum CertificationStatus {
-  INACTIVE
-  SOON
-  AVAILABLE
-}
-
 enum CertificationStatusV2 {
   BROUILLON
   A_VALIDER_PAR_CERTIFICATEUR
@@ -260,7 +254,6 @@ type Query {
     limit: Int
     organismId: UUID
     searchText: String
-    status: CertificationStatus
   ): CertificationPage!
   searchCertificationsForAdmin(
     offset: Int
