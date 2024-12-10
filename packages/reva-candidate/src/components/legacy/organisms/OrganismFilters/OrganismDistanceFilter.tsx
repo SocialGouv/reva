@@ -40,6 +40,7 @@ export const OrganismDistanceFilter = ({
           Où souhaitez-vous réaliser votre accompagnement ?
         </legend>
         <Input
+          data-test="input-wrapper-zip"
           label=""
           disabled={disabled}
           nativeInputProps={{
@@ -55,6 +56,7 @@ export const OrganismDistanceFilter = ({
           }}
         />
         <Checkbox
+          data-test="checkbox-wrapper-pmr"
           className="mt-8"
           options={[
             {

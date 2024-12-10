@@ -70,6 +70,24 @@ context("Candidacy with department certification selected", () => {
     });
   });
 
+  it("on site filters should be enabled only when on site is selected", function () {
+    cy.get('[data-test="input-wrapper-zip"] input').should("be.disabled");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("be.disabled");
+
+    cy.get('[data-test="button-select-onsite"]').click();
+
+    cy.get('[data-test="input-wrapper-zip"] input').should("not.be.disabled");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
+      "not.be.disabled",
+    );
+
+    cy.get('[data-test="input-wrapper-zip"] input').type("44000");
+    cy.get('[data-test="button-select-remote"]').click();
+
+    cy.get('[data-test="input-wrapper-zip"] input').should("be.disabled");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("be.disabled");
+  });
+
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
