@@ -87,6 +87,7 @@ export default function CertificationsLayout({
             {
               text: "Validées",
               items: validatedManuItems,
+              expandedByDefault: true,
             },
             ...toValidateMenuItems,
           ]}
