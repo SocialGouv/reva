@@ -57,6 +57,7 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { getCandidacyIsObsolete } from "./features/getCandidacyIsObsolete";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -83,6 +84,8 @@ const unsafeResolvers = {
       getCandidacyDropOutByCandidacyId({ candidacyId }),
     candidacyOnCandidacyFinancingMethods: ({ id: candidacyId }: Candidacy) =>
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
+    isObsolete: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyIsObsolete({ candidacyId }),
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({
