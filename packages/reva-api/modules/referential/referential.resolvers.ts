@@ -13,14 +13,11 @@ import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
-import { replaceCertification } from "./features/replaceCertification";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
-import { updateCertification } from "./features/updateCertification";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CreateCompetenceBlocInput,
-  UpdateCertificationInput,
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
   UpdateCertificationStructureAndCertificationAuthoritiesInput,
@@ -182,14 +179,6 @@ const unsafeReferentialResolvers = {
     ) => getCertificationCompetenceBlocById({ certificationCompetenceBlocId }),
   },
   Mutation: {
-    referential_updateCertification: (
-      _parent: unknown,
-      { input }: { input: UpdateCertificationInput },
-    ) => updateCertification({ updateCertificationInput: input }),
-    referential_replaceCertification: (
-      _parent: unknown,
-      { input }: { input: UpdateCertificationInput },
-    ) => replaceCertification({ replaceCertificationInput: input }),
     referential_updateCompetenceBlocsByCertificationId: (
       _parent: unknown,
       { input }: { input: UpdateCompetenceBlocsInput },

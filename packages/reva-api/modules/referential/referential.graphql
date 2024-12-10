@@ -295,16 +295,6 @@ input AddCertificationInput {
   codeRncp: String!
 }
 
-input UpdateCertificationInput {
-  certificationId: ID!
-  label: String!
-  level: Int!
-  codeRncp: String!
-  conventionCollectiveIds: [String!]!
-  availableAt: Timestamp!
-  expiresAt: Timestamp!
-}
-
 input CompetenceInput {
   id: ID
   index: Int!
@@ -353,12 +343,6 @@ input ResetCompetenceBlocsByCertificationIdInput {
 }
 
 type Mutation {
-  referential_updateCertification(
-    input: UpdateCertificationInput!
-  ): Certification!
-  referential_replaceCertification(
-    input: UpdateCertificationInput!
-  ): Certification!
   referential_updateCompetenceBlocsByCertificationId(
     input: UpdateCompetenceBlocsInput!
   ): [CertificationCompetenceBloc!]!

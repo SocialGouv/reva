@@ -66,16 +66,6 @@ export interface ReorientationReason {
   disabled: boolean;
 }
 
-export interface UpdateCertificationInput {
-  certificationId: string;
-  label: string;
-  level: number;
-  codeRncp: string;
-  conventionCollectiveIds: string[];
-  availableAt: Date;
-  expiresAt: Date;
-}
-
 export interface CompetenceInput {
   id?: string;
   index: number;
