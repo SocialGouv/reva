@@ -17,7 +17,7 @@ export const resetCompetenceBlocsByCertificationId = async (params: {
     );
   }
 
-  if (certification.statusV2 != "BROUILLON") {
+  if (certification.status != "BROUILLON") {
     throw new Error(
       "Le statut de la certification doit être à l'état 'Brouillon'",
     );

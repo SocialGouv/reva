@@ -1,10 +1,5 @@
 import { faker } from "@faker-js/faker";
-import {
-  Prisma,
-  CertificationStatus,
-  CertificationStatusV2,
-  FeasibilityFormat,
-} from "@prisma/client";
+import { Prisma, CertificationStatus, FeasibilityFormat } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCertificationAuthorityHelper } from "./create-certification-authority-helper";
 
@@ -22,8 +17,7 @@ export const createCertificationHelper = async (
       accessibleJobType: faker.lorem.word(),
       abilities: null,
       summary: faker.lorem.sentence(),
-      status: CertificationStatus.AVAILABLE,
-      statusV2: CertificationStatusV2.VALIDE_PAR_CERTIFICATEUR,
+      status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
       visible: true,
       availableAt: faker.date.past(),
       expiresAt: faker.date.future(),

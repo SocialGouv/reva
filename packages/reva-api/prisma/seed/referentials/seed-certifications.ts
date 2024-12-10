@@ -63,7 +63,8 @@ export async function seedCertifications(prisma: PrismaClient) {
             label,
             level: parseInt(level),
             summary,
-            status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+            status:
+              isActive === "checked" ? "VALIDE_PAR_CERTIFICATEUR" : "INACTIVE",
             visible: isActive === "checked",
             availableAt: new Date(),
             expiresAt: new Date(),

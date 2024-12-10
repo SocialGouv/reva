@@ -5,12 +5,12 @@ function interceptCertification({
   withStructure,
   withCertificationAuthoritiesOfCertification,
   withCertificationRegistryManagerAssociatedToStructure,
-  statusV2,
+  status,
 }: {
   withStructure?: boolean;
   withCertificationAuthoritiesOfCertification?: boolean;
   withCertificationRegistryManagerAssociatedToStructure?: boolean;
-  statusV2?: string;
+  status?: string;
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
@@ -28,8 +28,7 @@ function interceptCertification({
       data: {
         getCertification: {
           ...certificationBPBoucher.data.getCertification,
-          statusV2:
-            statusV2 || certificationBPBoucher.data.getCertification.statusV2,
+          status: status || certificationBPBoucher.data.getCertification.status,
           certificationAuthorities: withCertificationAuthoritiesOfCertification
             ? [
                 {
@@ -278,8 +277,8 @@ context("when i access the update certification page ", () => {
       );
     });
 
-    it("let me check if buttons 'envoyer' and 'réinitialiser' are visible is statusV2 equal to 'BROUILLON'", function () {
-      interceptCertification({ statusV2: "BROUILLON" });
+    it("let me check if buttons 'envoyer' and 'réinitialiser' are visible is status equal to 'BROUILLON'", function () {
+      interceptCertification({ status: "BROUILLON" });
 
       cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");
@@ -291,8 +290,8 @@ context("when i access the update certification page ", () => {
       cy.get('[data-test="button-reset"]').should("exist");
     });
 
-    it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if statusV2 different from 'BROUILLON'", function () {
-      interceptCertification({ statusV2: "A_VALIDER_PAR_CERTIFICATEUR" });
+    it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if status different from 'BROUILLON'", function () {
+      interceptCertification({ status: "A_VALIDER_PAR_CERTIFICATEUR" });
 
       cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
       cy.wait("@activeFeaturesForConnectedUser");

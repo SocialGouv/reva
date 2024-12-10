@@ -21,7 +21,7 @@ type Certification {
   accessibleJobType: String
   abilities: String
   codeRncp: String!
-  statusV2: CertificationStatusV2!
+  status: CertificationStatus!
   visible: Boolean!
   typeDiplome: String
   degree: Degree!
@@ -91,7 +91,7 @@ type ConventionCollective {
   label: String!
 }
 
-enum CertificationStatusV2 {
+enum CertificationStatus {
   BROUILLON
   A_VALIDER_PAR_CERTIFICATEUR
   VALIDE_PAR_CERTIFICATEUR
@@ -259,14 +259,14 @@ type Query {
     offset: Int
     limit: Int
     searchText: String
-    status: CertificationStatusV2
+    status: CertificationStatus
     visible: Boolean
   ): CertificationPage!
   searchCertificationsV2ForRegistryManager(
     offset: Int
     limit: Int
     searchText: String
-    status: CertificationStatusV2
+    status: CertificationStatus
     visible: Boolean
   ): CertificationPage!
   getCertification(certificationId: ID!): Certification!

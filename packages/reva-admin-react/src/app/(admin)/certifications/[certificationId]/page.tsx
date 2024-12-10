@@ -65,7 +65,7 @@ const PageContent = ({
     }
   };
 
-  const isEditable = certification.statusV2 == "BROUILLON";
+  const isEditable = certification.status == "BROUILLON";
 
   return (
     <div data-test="update-certification-page">

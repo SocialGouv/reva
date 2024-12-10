@@ -4,7 +4,7 @@ import { updateCertificationWithRncpFieldsAndSubDomains } from "../modules/refer
 
 const updateAvailableCertificationsWithRncpFieldsAndSubDomains = async () => {
   const certifications = await prismaClient.certification.findMany({
-    where: { status: "AVAILABLE" },
+    where: { visible: true },
     select: { id: true, rncpId: true },
   });
 

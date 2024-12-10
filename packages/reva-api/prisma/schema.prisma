@@ -9,12 +9,6 @@ datasource db {
 }
 
 enum CertificationStatus {
-  INACTIVE
-  SOON
-  AVAILABLE
-}
-
-enum CertificationStatusV2 {
   BROUILLON
   A_VALIDER_PAR_CERTIFICATEUR
   VALIDE_PAR_CERTIFICATEUR
@@ -44,8 +38,7 @@ model Certification {
   accessibleJobType                                 String?                                             @map("accessible_job_type")
   abilities                                         String?
   summary                                           String?
-  status                                            CertificationStatus                                 @default(INACTIVE)
-  statusV2                                          CertificationStatusV2                               @default(BROUILLON) @map("status_v2")
+  status                                            CertificationStatus                                 @default(BROUILLON) @map("status")
   visible                                           Boolean                                             @default(false)
   rncpId                                            String                                              @map("rncp_id") @db.VarChar(255)
   organismsAndRegions                               OrganismsOnRegionsAndCertifications[]

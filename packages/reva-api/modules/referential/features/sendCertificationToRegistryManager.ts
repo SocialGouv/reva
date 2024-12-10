@@ -24,7 +24,7 @@ export const sendCertificationToRegistryManager = async ({
     );
   }
 
-  if (certification.statusV2 != "BROUILLON") {
+  if (certification.status != "BROUILLON") {
     throw new Error(
       "Le statut de la certification doit être à l'état 'Brouillon'",
     );
@@ -32,7 +32,7 @@ export const sendCertificationToRegistryManager = async ({
 
   const updatedCertification = await prismaClient.certification.update({
     where: { id: certification.id },
-    data: { statusV2: "A_VALIDER_PAR_CERTIFICATEUR" },
+    data: { status: "A_VALIDER_PAR_CERTIFICATEUR" },
   });
 
   return updatedCertification;

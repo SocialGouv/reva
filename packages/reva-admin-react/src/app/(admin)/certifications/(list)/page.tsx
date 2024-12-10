@@ -3,7 +3,7 @@ import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
-import { CertificationStatusV2 } from "@/graphql/generated/graphql";
+import { CertificationStatus } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -14,7 +14,7 @@ const getCertificationsQuery = graphql(`
   query getCertificationsV2ForListPage(
     $offset: Int
     $searchFilter: String
-    $status: CertificationStatusV2
+    $status: CertificationStatus
     $visible: Boolean
   ) {
     searchCertificationsForAdmin(
@@ -28,7 +28,7 @@ const getCertificationsQuery = graphql(`
         id
         label
         codeRncp
-        statusV2
+        status
         visible
         certificationAuthorityStructure {
           label
@@ -66,7 +66,7 @@ const CertificationListPage = () => {
       graphqlClient.request(getCertificationsQuery, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         searchFilter,
-        status: status as CertificationStatusV2,
+        status: status as CertificationStatus,
         visible,
       }),
   });
@@ -95,7 +95,7 @@ const CertificationListPage = () => {
                 <div className="flex flex-row justify-between items-center">
                   <span className="text-gray-500 text-sm">{c.codeRncp}</span>
                   <BadgeCertificationStatus
-                    status={c.statusV2}
+                    status={c.status}
                     visible={c.visible}
                   />
                 </div>
@@ -124,7 +124,7 @@ const BadgeCertificationStatus = ({
   status,
   visible,
 }: {
-  status: CertificationStatusV2;
+  status: CertificationStatus;
   visible: boolean;
 }) => (
   <>

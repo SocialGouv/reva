@@ -49,7 +49,7 @@ export const addCertification = async (params: { codeRncp: string }) => {
 
   const certification = await prismaClient.certification.create({
     data: {
-      statusV2: "BROUILLON",
+      status: "BROUILLON",
       feasibilityFormat: "DEMATERIALIZED",
       rncpId: codeRncp,
       label,

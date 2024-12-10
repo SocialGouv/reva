@@ -4,7 +4,7 @@ import { updateCertificationWithRncpFields } from "../modules/referential/featur
 
 const updateAvailableCertificationsWithRncpFields = async () => {
   const certifications = await prismaClient.certification.findMany({
-    where: { status: "AVAILABLE" },
+    where: { visible: true },
     select: { id: true, rncpId: true },
   });
 

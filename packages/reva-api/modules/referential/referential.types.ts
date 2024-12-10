@@ -14,23 +14,14 @@ export interface DropOutReason {
 }
 
 const CertificationStatus = {
-  INACTIVE: "INACTIVE",
-  SOON: "SOON",
-  AVAILABLE: "AVAILABLE",
-};
-
-type CertificationStatus =
-  (typeof CertificationStatus)[keyof typeof CertificationStatus];
-
-export const CertificationStatusV2 = {
   BROUILLON: "BROUILLON",
   A_VALIDER_PAR_CERTIFICATEUR: "A_VALIDER_PAR_CERTIFICATEUR",
   VALIDE_PAR_CERTIFICATEUR: "VALIDE_PAR_CERTIFICATEUR",
   INACTIVE: "INACTIVE",
 };
 
-export type CertificationStatusV2 =
-  (typeof CertificationStatusV2)[keyof typeof CertificationStatusV2];
+export type CertificationStatus =
+  (typeof CertificationStatus)[keyof typeof CertificationStatus];
 
 export interface Certification {
   id: string;
@@ -43,7 +34,6 @@ export interface Certification {
   abilities: string | null;
   codeRncp: string;
   status: CertificationStatus;
-  statusV2: CertificationStatusV2;
   visible: boolean | null;
 }
 

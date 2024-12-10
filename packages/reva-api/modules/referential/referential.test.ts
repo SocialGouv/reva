@@ -16,7 +16,6 @@ const createCertifications = async () => {
   for (const cert of particulierEmployeurCertifications) {
     await createCertificationHelper({
       label: cert.label,
-      status: "AVAILABLE",
     });
   }
 };

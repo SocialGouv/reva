@@ -16,7 +16,7 @@ export const getActiveCertifications = async (filters?: {
         where: {
           formacodeId: { in: domaines },
           certification: {
-            status: "AVAILABLE",
+            visible: true,
             level: { in: levels },
             certificationOnConventionCollective: {
               none: {},
@@ -54,7 +54,7 @@ export const getActiveCertifications = async (filters?: {
       await prismaClient.certificationOnConventionCollective.findMany({
         where: {
           certification: {
-            status: "AVAILABLE",
+            visible: true,
             level: { in: levels },
           },
         },

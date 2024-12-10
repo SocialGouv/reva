@@ -2,7 +2,7 @@ import { $Enums, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
-import { Certification, CertificationStatusV2 } from "../referential.types";
+import { Certification, CertificationStatus } from "../referential.types";
 
 export const searchCertificationsForAdmin = async ({
   offset,
@@ -14,7 +14,7 @@ export const searchCertificationsForAdmin = async ({
   offset?: number;
   limit?: number;
   searchText?: string;
-  status?: CertificationStatusV2;
+  status?: CertificationStatus;
   visible?: boolean;
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
@@ -46,7 +46,7 @@ export const searchCertificationsForAdmin = async ({
   if (status) {
     whereClause = {
       ...whereClause,
-      statusV2: status as $Enums.CertificationStatusV2,
+      status: status as $Enums.CertificationStatus,
     };
   }
 
