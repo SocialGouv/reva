@@ -89,7 +89,7 @@ export const SearchList = <T,>({
         totalPages={searchResultsPage.info.totalPages}
         currentPage={searchResultsPage.info.currentPage}
         baseHref={pathname}
-        className="mx-auto"
+        className="mx-auto my-12"
         baseParams={searchParamsWithoutPage}
       />
     </div>
