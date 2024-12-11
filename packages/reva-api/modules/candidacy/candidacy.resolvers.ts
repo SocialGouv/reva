@@ -608,7 +608,7 @@ const unsafeResolvers = {
   },
 };
 
-export const resolvers = composeResolvers(
+export const candidacyResolvers = composeResolvers(
   unsafeResolvers,
   resolversSecurityMap,
 );

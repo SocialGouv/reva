@@ -3,6 +3,7 @@ import * as path from "path";
 import { loadFilesSync } from "@graphql-tools/load-files";
 import { mergeResolvers, mergeTypeDefs } from "@graphql-tools/merge";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import { NoSchemaIntrospectionCustomRule } from "graphql";
 import {
   TimestampResolver,
   TimestampTypeDefinition,
@@ -12,7 +13,6 @@ import {
   VoidTypeDefinition,
 } from "graphql-scalars";
 import mercurius, { MercuriusOptions } from "mercurius";
-import { NoSchemaIntrospectionCustomRule } from "graphql";
 
 import { GraphQLUpload } from "graphql-upload-minimal";
 import { loaders as accountLoaders } from "./account/account.loaders";
@@ -20,7 +20,8 @@ import { resolvers as accountResolvers } from "./account/account.resolvers";
 import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
 import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
 import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
-import * as candidacy from "./candidacy/candidacy.resolvers";
+import { candidacyContestationCaduciteResolvers } from "./candidacy/candidacy-contestation-caducite/candidacy-contestation-caducite.resolvers";
+import { candidacyResolvers } from "./candidacy/candidacy.resolvers";
 import { certificationResolvers } from "./candidacy/certification/certification.resolvers";
 import { trainingResolvers } from "./candidacy/training/training.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
@@ -49,7 +50,7 @@ const typeDefs = loadFilesSync(
 );
 
 const resolvers = mergeResolvers([
-  candidacy.resolvers,
+  candidacyResolvers,
   referentialResolvers,
   accountResolvers,
   candidateResolvers,
@@ -68,6 +69,7 @@ const resolvers = mergeResolvers([
   feasibilityUploadedPdfResolvers,
   trainingResolvers,
   certificationResolvers,
+  candidacyContestationCaduciteResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

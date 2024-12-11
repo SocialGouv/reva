@@ -1,0 +1,25 @@
+type CandidacyContestationCaducite {
+  id: ID!
+  candidacyId: ID!
+  contestationSentAt: Timestamp!
+  contestationReason: String!
+  contestationDecision: CertificationAuthorityContestationDecision!
+}
+
+enum CertificationAuthorityContestationDecision {
+  DECISION_PENDING
+  CADUCITE_INVALIDATED
+  CADUCITE_CONFIRMED
+}
+
+type Candidacy {
+  candidacyContestationsCaducite: [CandidacyContestationCaducite]
+}
+
+type Mutation {
+  candidacy_contestation_caducite_create_contestation(
+    candidacyId: ID!
+    contestationReason: String!
+    readyForJuryEstimatedAt: Timestamp!
+  ): CandidacyContestationCaducite
+}
