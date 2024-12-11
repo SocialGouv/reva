@@ -59,6 +59,14 @@ const PageContent = ({
           data-test="prerequisites-summary-card"
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
+          hasButton
+          buttonTitle="Modifier"
+          buttonPriority="secondary"
+          buttonOnClick={() =>
+            router.push(
+              `/responsable-certifications/certifications/${certification.id}/prerequisites`,
+            )
+          }
         >
           {certification.prerequisites.length ? (
             <ul className="ml-10" data-test="prerequisite-list">
