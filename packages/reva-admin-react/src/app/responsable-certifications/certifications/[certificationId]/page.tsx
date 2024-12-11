@@ -60,7 +60,13 @@ const PageContent = ({
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
         >
-          {certification.prerequisites.length ? null : (
+          {certification.prerequisites.length ? (
+            <ul className="ml-10" data-test="prerequisite-list">
+              {certification.prerequisites.map((p) => (
+                <li key={p.id}>{p.label}</li>
+              ))}
+            </ul>
+          ) : (
             <p className="ml-10 mb-0" data-test="no-prerequisite-message">
               Aucun prérequis renseigné pour cette certification.
             </p>

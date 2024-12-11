@@ -1,7 +1,11 @@
 import { stubQuery } from "../../../../utils/graphql";
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
-function interceptCertification() {
+function interceptCertification({
+  withPrerequisites,
+}: {
+  withPrerequisites?: boolean;
+}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
@@ -21,6 +25,18 @@ function interceptCertification() {
         data: {
           getCertification: {
             ...certificationBPBoucher.data.getCertification,
+            prerequisites: withPrerequisites
+              ? [
+                  {
+                    id: "71ba9727-eb22-47a1-8731-89263348bf63",
+                    label: "Prerequisite 1",
+                  },
+                  {
+                    id: "2a7f19b0-510f-44cc-b0f6-8648ea0f6cd1",
+                    label: "Prerequisite 2",
+                  },
+                ]
+              : [],
           },
         },
       },
@@ -30,7 +46,7 @@ function interceptCertification() {
 
 context("when i access the update certification page ", () => {
   it("display the page with a correct title", function () {
-    interceptCertification();
+    interceptCertification({});
 
     cy.admin(
       "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -51,7 +67,7 @@ context("when i access the update certification page ", () => {
 
   context("Competence blocs summary card", () => {
     it("display the correct number of competence blocs and competences", function () {
-      interceptCertification();
+      interceptCertification({});
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -80,7 +96,7 @@ context("when i access the update certification page ", () => {
     });
 
     it("let me click on the 'update competence bloc' button of the first competence bloc and leads me to its update page ", function () {
-      interceptCertification();
+      interceptCertification({});
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -103,7 +119,7 @@ context("when i access the update certification page ", () => {
     });
 
     it("let me click on the 'add competence bloc' button and leads me to the create competence bloc page ", function () {
-      interceptCertification();
+      interceptCertification({});
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -125,8 +141,8 @@ context("when i access the update certification page ", () => {
     });
   });
   context("prerequisites summary card", () => {
-    it("display the a default message when the certification has no prerequisite", function () {
-      interceptCertification();
+    it("display a default message when the certification has no prerequisite", function () {
+      interceptCertification({});
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -141,6 +157,23 @@ context("when i access the update certification page ", () => {
       cy.get(
         '[data-test="prerequisites-summary-card"] [data-test="no-prerequisite-message"]',
       ).should("exist");
+    });
+    it("display a lost pf prerequisites if the certification has them", function () {
+      interceptCertification({ withPrerequisites: true });
+
+      cy.admin(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="prerequisites-summary-card"] [data-test="prerequisite-list"] > li',
+      ).should("have.length", 2);
     });
   });
 });
