@@ -1,4 +1,4 @@
-import { hasRole, whenHasRole } from "../shared/security/middlewares";
+import { hasRole } from "../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminOrCertificationRegistryManagerOfCertification,
