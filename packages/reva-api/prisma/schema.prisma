@@ -161,6 +161,7 @@ model Candidacy {
   candidacyOnCandidacyFinancingMethod        CandidacyOnCandidacyFinancingMethod[]
   estimatedCost                              Decimal?                              @map("estimated_cost") @db.Decimal(10, 2)
   lastActivityDate                           DateTime?                             @map("last_activity_date") @db.Timestamptz(6)
+  CandidacyContestationCaducite              CandidacyContestationCaducite[]
 
   @@index([organismId])
   @@index([candidateId])
@@ -1625,4 +1626,22 @@ model CandidacyOnCandidacyFinancingMethod {
 
   @@unique([candidacyId, candidacyFinancingMethodId])
   @@map("candidacy_on_candidacy_financing_method")
+}
+
+model CandidacyContestationCaducite {
+  id                                         String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId                                String                                      @map("candidacy_id") @db.Uuid
+  candidacy                                  Candidacy                                   @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  contestationReason                         String                                      @map("contestation_reason")
+  certificationAuthorityContestationDecision CertificationAuthorityContestationDecision? @map("certification_authority_contestation_decision")
+  contestationSentAt                         DateTime                                    @default(now()) @map("contestation_sent_at") @db.Timestamptz(6)
+  updatedAt                                  DateTime?                                   @map("updated_at") @db.Timestamptz(6)
+
+  @@index([candidacyId])
+  @@map("candidacy_contestation_caducite")
+}
+
+enum CertificationAuthorityContestationDecision {
+  CADUCITE_INVALIDATED // When contestation is accepted - "invalidation de la caducité"
+  CADUCITE_CONFIRMED // When contestation is rejected - "confirmation de la caducité"
 }
