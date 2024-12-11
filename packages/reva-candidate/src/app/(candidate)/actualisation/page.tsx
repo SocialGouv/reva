@@ -11,6 +11,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isBefore } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -79,6 +80,7 @@ const HasBeenUpdatedComponent = ({
 export default function ActualisationPage() {
   const [hasBeenUpdated, setHasBeenUpdated] = useState(false);
   const { isFeatureActive } = useFeatureFlipping();
+  const router = useRouter();
   const candidacyActualisationFeatureIsActive = isFeatureActive(
     "candidacy_actualisation",
   );
@@ -132,6 +134,7 @@ export default function ActualisationPage() {
   useEffect(resetForm, [resetForm]);
 
   if (!candidacyActualisationFeatureIsActive) {
+    router.push("/");
     return null;
   }
 
