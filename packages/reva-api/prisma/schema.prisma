@@ -162,7 +162,7 @@ model Candidacy {
   candidacyOnCandidacyFinancingMethod        CandidacyOnCandidacyFinancingMethod[]
   estimatedCost                              Decimal?                              @map("estimated_cost") @db.Decimal(10, 2)
   lastActivityDate                           DateTime?                             @map("last_activity_date") @db.Timestamptz(6)
-  CandidacyContestationCaducite              CandidacyContestationCaducite[]
+  candidacyContestationCaducite              CandidacyContestationCaducite[]
 
   @@index([organismId])
   @@index([candidateId])
