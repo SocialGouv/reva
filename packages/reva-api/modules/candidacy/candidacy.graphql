@@ -72,7 +72,7 @@ type Candidacy {
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
   lastActivityDate: Timestamp
-  isObsolete: Boolean!
+  isCaduque: Boolean!
 }
 enum TypeAccompagnement {
   ACCOMPAGNE

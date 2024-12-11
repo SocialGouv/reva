@@ -1,7 +1,7 @@
 import { addMonths, isBefore } from "date-fns";
 import { getCandidacyById } from "./getCandidacyById";
 
-export const getCandidacyIsObsolete = async ({
+export const getCandidacyIsCaduque = async ({
   candidacyId,
 }: {
   candidacyId: string;

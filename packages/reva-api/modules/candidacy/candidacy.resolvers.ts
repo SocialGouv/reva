@@ -32,6 +32,7 @@ import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus"
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
 import { getCandidacyFinancingMethodById } from "./features/getCandidacyFinancingMethodById";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
+import { getCandidacyIsCaduque } from "./features/getCandidacyIsCaduque";
 import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features/getCandidacyOnCandidacyFinancingMethodsByCandidacyId";
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
@@ -57,7 +58,6 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { getCandidacyIsObsolete } from "./features/getCandidacyIsObsolete";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -84,8 +84,8 @@ const unsafeResolvers = {
       getCandidacyDropOutByCandidacyId({ candidacyId }),
     candidacyOnCandidacyFinancingMethods: ({ id: candidacyId }: Candidacy) =>
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
-    isObsolete: ({ id: candidacyId }: Candidacy) =>
-      getCandidacyIsObsolete({ candidacyId }),
+    isCaduque: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyIsCaduque({ candidacyId }),
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({
