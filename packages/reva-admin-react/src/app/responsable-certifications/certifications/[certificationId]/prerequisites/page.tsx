@@ -31,15 +31,15 @@ const PageContent = ({
 }) => (
   <div data-test="update-certification-prerequisites-page">
     <Breadcrumb
-      currentPageLabel={`${certification.codeRncp} - ${certification.label}`}
+      currentPageLabel={"Prérequis Obligatoires"}
       homeLinkProps={{
         href: `/`,
       }}
       segments={[
         {
-          label: "Prérequis Obligatoires",
+          label: `${certification.codeRncp} - ${certification.label}`,
           linkProps: {
-            href: `/responsable-certifications/certifications/${certification.id}/prerequisites`,
+            href: `/responsable-certifications/certifications/${certification.id}`,
           },
         },
       ]}
