@@ -1,8 +1,9 @@
-import { hasRole } from "../shared/security/middlewares";
+import { hasRole, whenHasRole } from "../shared/security/middlewares";
 import {
   defaultSecurity,
   isAdmin,
   isAdminOrCertificationAuthority,
+  isAdminOrCertificationRegistryManagerOfCertification,
   isAdminOrManager,
   isAnyone,
 } from "../shared/security/presets";
@@ -45,7 +46,8 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_updateCertificationAuthorityDepartments":
     isAdmin,
 
-  "Certification.certificationAuthorityStructure": isAdmin,
+  "Certification.certificationAuthorityStructure":
+    isAdminOrCertificationRegistryManagerOfCertification,
 
   "CertificationAuthority.certificationAuthorityStructure": isAdmin,
   "CertificationAuthority.account": isAdmin,

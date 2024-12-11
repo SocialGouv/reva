@@ -9,6 +9,7 @@ import {
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
 import { isUserOwnerOfCandidate } from "./middlewares/isUserOwnerOfCandidate";
+import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
 
 export const isAdminOrManager = [hasRole(["admin", "manage_candidacy"])];
 
@@ -54,4 +55,12 @@ export const isOwnerOrCanManageCandidacy = [
   hasRole(["admin", "manage_candidacy", "candidate"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
   whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+];
+
+export const isAdminOrCertificationRegistryManagerOfCertification = [
+  hasRole(["admin", "manage_certification_registry"]),
+  whenHasRole(
+    "manage_certification_registry",
+    isCertificationRegistryManagerOfCertification,
+  ),
 ];
