@@ -2,9 +2,8 @@
 import Image from "next/image";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { redirect } from "next/navigation";
-
-const attachedCertifications = [1];
-const certificationsToValidate = [1];
+import { CertificationStatus } from "@/graphql/generated/graphql";
+import { useCertifications } from "./certifications.hooks";
 
 const NoCertifications = () => {
   return (
@@ -34,7 +33,14 @@ const NoCertifications = () => {
   );
 };
 
-const CertificationsToValidate = () => {
+const CertificationsToValidate = ({
+  certifications,
+}: {
+  certifications: {
+    label: string;
+    codeRncp: string;
+  }[];
+}) => {
   return (
     <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto">
       <div className="col-span-2 m-auto">
@@ -44,12 +50,15 @@ const CertificationsToValidate = () => {
         <p className="text-lg">
           Vous pouvez dès à présent compléter et valider les certifications
           suivantes :
-          <ul>
-            <li>Certif 1</li>
-            <li>Certif 2</li>
+          <ul className="mt-6">
+            {certifications.map((certification) => (
+              <li key={certification.codeRncp}>
+                RNCP{certification.codeRncp} - {certification.label}
+              </li>
+            ))}
           </ul>
         </p>
-        <p className="text-sm">
+        <p className="text-sm mb-0">
           Vous avez demandé à France VAE d’ajouter d’autres certifications ?
           Retrouvez-les dans votre espace très prochainement !
         </p>
@@ -70,12 +79,35 @@ const CertificationsToValidate = () => {
 };
 
 export default function RegistryManagerHomepage() {
-  if (attachedCertifications.length === 0) {
+  const { certificationPage, getCertificationsQueryStatus } = useCertifications(
+    {},
+  );
+  const {
+    certificationPage: certificationToValidatePage,
+    getCertificationsQueryStatus: getCertificationsToValidateQueryStatus,
+  } = useCertifications({
+    status: "A_VALIDER_PAR_CERTIFICATEUR" as CertificationStatus,
+  });
+
+  if (
+    getCertificationsToValidateQueryStatus === "pending" ||
+    getCertificationsQueryStatus === "pending" ||
+    !certificationPage ||
+    !certificationToValidatePage
+  ) {
+    return null;
+  }
+
+  if (certificationPage?.rows.length === 0) {
     return <NoCertifications />;
   }
 
-  if (certificationsToValidate.length > 0) {
-    return <CertificationsToValidate />;
+  if (certificationToValidatePage?.rows.length > 0) {
+    return (
+      <CertificationsToValidate
+        certifications={certificationToValidatePage.rows}
+      />
+    );
   }
 
   return redirect("certifications");

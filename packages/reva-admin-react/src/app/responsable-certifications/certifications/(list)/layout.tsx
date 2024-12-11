@@ -1,6 +1,7 @@
 "use client";
-import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
-import { usePathname, useSearchParams } from "next/navigation";
+import { CertificationStatus } from "@/graphql/generated/graphql";
+import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
+import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 
 export default function CertificationsLayout({
@@ -8,65 +9,51 @@ export default function CertificationsLayout({
 }: {
   children: ReactNode;
 }) {
-  const currentPathname = usePathname();
   const searchParams = useSearchParams();
 
+  const statusParam = searchParams.get("status") || undefined;
   const searchFilter = searchParams.get("search") || "";
+  const visibleParam = searchParams.get("visible") || undefined;
 
-  const hrefSideMenu = (path: string, category: string) => {
+  const hrefSideMenu = (status?: string, visible?: "true" | "false") => {
     const params = new URLSearchParams();
+    if (status) {
+      params.set("status", status);
+    }
+
+    if (visible) {
+      params.set("visible", visible);
+    }
+
     params.set("page", "1");
-    params.set("CATEGORY", category);
 
     if (searchFilter) {
       params.set("search", searchFilter);
     }
 
-    return `${path}/?${params.toString()}`;
+    return `/responsable-certifications/certifications/?${params.toString()}`;
   };
 
-  const menuItem = ({
-    text,
-    path,
-    category,
-    defaultMenuItem,
-  }: {
-    text: string;
-    path: string;
-    category: string;
-    defaultMenuItem?: boolean;
-  }) => ({
-    isActive:
-      (currentPathname.startsWith(path) &&
-        searchParams.get("CATEGORY") === category) ||
-      (!searchParams.get("CATEGORY") && defaultMenuItem),
+  const menuItem = (
+    text: string,
+    status?: CertificationStatus,
+    visible?: "true" | "false",
+  ): SideMenuProps.Item => ({
+    isActive: status === statusParam && visible === visibleParam,
     linkProps: {
-      href: hrefSideMenu(path, category),
+      href: hrefSideMenu(status, visible),
       target: "_self",
     },
     text,
   });
 
   const validatedManuItems = [
-    menuItem({
-      text: "Visibles",
-      path: "/responsable-certifications/certifications/",
-      category: "VISIBLE",
-    }),
-    menuItem({
-      text: "Invisibles",
-      path: "/responsable-certifications/certifications/",
-      category: "INVISIBLE",
-    }),
+    menuItem("Visibles", "VALIDE_PAR_CERTIFICATEUR", "true"),
+    menuItem("Invisibles", "VALIDE_PAR_CERTIFICATEUR", "false"),
   ];
 
   const toValidateMenuItems = [
-    menuItem({
-      text: "À valider",
-      path: "/responsable-certifications/certifications/",
-      category: "TO_VALIDATE",
-      defaultMenuItem: true,
-    }),
+    menuItem("À valider", "A_VALIDER_PAR_CERTIFICATEUR"),
   ];
 
   return (
