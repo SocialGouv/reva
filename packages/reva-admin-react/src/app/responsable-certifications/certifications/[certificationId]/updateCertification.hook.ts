@@ -19,6 +19,10 @@ const getCertificationQuery = graphql(`
           label
         }
       }
+      prerequisites {
+        id
+        label
+      }
     }
   }
 `);

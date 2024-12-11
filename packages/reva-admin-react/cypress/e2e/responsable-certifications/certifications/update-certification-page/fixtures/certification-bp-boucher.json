@@ -14,6 +14,7 @@
         "label": "Niveau 4 : Baccalauréat"
       },
       "domains": [],
+      "prerequisites": [],
       "competenceBlocs": [
         {
           "id": "008a6fab-55ad-4412-ab17-56bc4b8e2fd0",
@@ -51,7 +52,8 @@
               "id": "a8e39ba6-9463-48b2-aa99-f8ce1b83904c",
               "label": "Appliquer les règles relatives à l’alimentation, à l’hygiène, aux locaux et équipements dans l’environnement professionnel du boucher et de la boucherie"
             }
-          ]
+          ],
+          "prerequisites": []
         }
       ]
     }

@@ -124,4 +124,23 @@ context("when i access the update certification page ", () => {
       );
     });
   });
+  context("prerequisites summary card", () => {
+    it("display the a default message when the certification has no prerequisite", function () {
+      interceptCertification();
+
+      cy.admin(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="prerequisites-summary-card"] [data-test="no-prerequisite-message"]',
+      ).should("exist");
+    });
+  });
 });
