@@ -57,6 +57,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         firstAppointmentOccuredAt
         lastActivityDate
         readyForJuryEstimatedAt
+        isCaduque
         candidacyDropOut {
           createdAt
         }
