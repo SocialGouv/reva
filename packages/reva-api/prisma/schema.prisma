@@ -69,6 +69,7 @@ model Certification {
 
   AvailableCertificationBasedOnFormacode                 AvailableCertificationBasedOnFormacode?
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
+  certificationPrerequisite                              CertificationPrerequisite[]
 
   @@map("certification")
 }
@@ -1472,6 +1473,15 @@ enum PrerequisiteState {
   ACQUIRED
   IN_PROGRESS
   RECOMMENDED
+}
+
+model CertificationPrerequisite {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label           String        @db.Text
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  certificationId String        @map("certification_id") @db.Uuid
+
+  @@map("certification_prerequisite")
 }
 
 model DFFPrerequisite {

@@ -32,8 +32,13 @@ type Certification {
   rncpExpiresAt: Timestamp
   rncpDeliveryDeadline: Timestamp
   domains: [Domain!]!
+  prerequisites: [CertificationPrerequisite!]!
 }
 
+type CertificationPrerequisite {
+  id: ID!
+  label: String!
+}
 type Referential {
   goals: [Goal!]!
 }

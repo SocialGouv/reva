@@ -47,6 +47,7 @@ import { updateCertificationStructureAndCertificationAuthorities } from "./featu
 import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
 import { resetCompetenceBlocsByCertificationId } from "./features/resetCompetenceBlocsByCertificationId";
 import { searchCertificationsV2ForRegistryManager } from "./features/searchCertificationsV2ForRegistryManager";
+import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -68,6 +69,8 @@ const unsafeReferentialResolvers = {
     ) => getCompetenceBlocsByCertificationId({ certificationId }),
     domains: ({ id: certificationId }: { id: string }) =>
       getDomainsByCertificationId({ certificationId }),
+    prerequisites: ({ id: certificationId }: { id: string }) =>
+      getCertificationPrerequisitesByCertificationId({ certificationId }),
   },
   FCCertification: {
     DOMAINS: ({
