@@ -259,7 +259,9 @@ const CertificationPage = () => {
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
             formState={{
-              isDirty: isDirty,
+              isDirty:
+                isDirty ||
+                !dematerializedFeasibilityFile?.certificationPartComplete,
               canSubmit:
                 completion == "PARTIAL" &&
                 competenceBlocFields.every((bloc) => !bloc.checked)
