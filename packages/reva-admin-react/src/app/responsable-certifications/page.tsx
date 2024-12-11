@@ -7,7 +7,10 @@ import { useCertifications } from "./certifications.hooks";
 
 const NoCertifications = () => {
   return (
-    <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto">
+    <div
+      className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto"
+      data-test="no-certifications"
+    >
       <div className="col-span-2 m-auto">
         <h1 className="">
           Bienvenue sur votre espace Responsable des certifications !
@@ -37,12 +40,16 @@ const CertificationsToValidate = ({
   certifications,
 }: {
   certifications: {
+    id: string;
     label: string;
     codeRncp: string;
   }[];
 }) => {
   return (
-    <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto">
+    <div
+      className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto"
+      data-test="certifications-to-validate"
+    >
       <div className="col-span-2 m-auto">
         <h1 className="">
           Bienvenue sur votre espace Responsable des certifications !
@@ -52,7 +59,7 @@ const CertificationsToValidate = ({
           suivantes :
           <ul className="mt-6">
             {certifications.map((certification) => (
-              <li key={certification.codeRncp}>
+              <li key={certification.id} data-testid={certification.id}>
                 RNCP{certification.codeRncp} - {certification.label}
               </li>
             ))}

@@ -12,7 +12,10 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 
 const NoCertificationsToValidate = () => {
   return (
-    <div className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto">
+    <div
+      className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
+      data-test="no-certifications-to-validate"
+    >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification à valider</h1>
         <p className="text-lg">
@@ -35,7 +38,10 @@ const NoCertificationsToValidate = () => {
 
 const NoVisibleCertifications = () => {
   return (
-    <div className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto">
+    <div
+      className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
+      data-test="no-visible-certifications"
+    >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification visible</h1>
         <p className="text-lg mb-0">
@@ -66,7 +72,10 @@ const NoVisibleCertifications = () => {
 
 const NoInvisibleCertifications = () => {
   return (
-    <div className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto">
+    <div
+      className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
+      data-test="no-invisible-certifications"
+    >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification invisible</h1>
         <p className="text-lg mb-0">
