@@ -7,4 +7,5 @@ export const getCertificationPrerequisitesByCertificationId = async ({
 }) =>
   prismaClient.certificationPrerequisite.findMany({
     where: { certificationId },
+    orderBy: { index: "asc" },
   });

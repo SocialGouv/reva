@@ -38,6 +38,7 @@ type Certification {
 type CertificationPrerequisite {
   id: ID!
   label: String!
+  index: Int!
 }
 type Referential {
   goals: [Goal!]!

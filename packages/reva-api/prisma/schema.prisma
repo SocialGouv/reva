@@ -96,7 +96,6 @@ model CertificationCompetence {
   createdAt                         DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
   label                             String                              @db.VarChar
   index                             Int?                                @db.Integer
-  //
   blocId                            String                              @map("bloc_id") @db.Uuid
   bloc                              CertificationCompetenceBloc         @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
@@ -1478,6 +1477,7 @@ enum PrerequisiteState {
 model CertificationPrerequisite {
   id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label           String        @db.Text
+  index           Int           @db.Integer
   certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
   certificationId String        @map("certification_id") @db.Uuid
 
