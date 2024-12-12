@@ -69,7 +69,7 @@ model Certification {
 
   AvailableCertificationBasedOnFormacode                 AvailableCertificationBasedOnFormacode?
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
-  certificationPrerequisite                              CertificationPrerequisite[]
+  prerequisites                                          CertificationPrerequisite[]
 
   @@map("certification")
 }

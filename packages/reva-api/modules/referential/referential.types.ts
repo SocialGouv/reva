@@ -99,3 +99,8 @@ export interface SendCertificationToRegistryManagerInput {
 export interface ResetCompetenceBlocsByCertificationIdInput {
   certificationId: string;
 }
+
+export interface UpdateCertificationPrerequisitesInput {
+  certificationId: string;
+  prerequisites: { label: string; index: number }[];
+}

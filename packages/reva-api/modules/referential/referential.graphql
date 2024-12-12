@@ -347,6 +347,14 @@ input SendCertificationToRegistryManagerInput {
 input ResetCompetenceBlocsByCertificationIdInput {
   certificationId: ID!
 }
+input UpdateCertificationPrerequisitesInput {
+  certificationId: ID!
+  prerequisites: [CertificationPrerequisiteInput!]!
+}
+input CertificationPrerequisiteInput {
+  label: String!
+  index: Int!
+}
 
 type Mutation {
   referential_updateCompetenceBlocsByCertificationId(
@@ -371,5 +379,8 @@ type Mutation {
   ): Certification!
   referential_resetCompetenceBlocsByCertificationId(
     input: ResetCompetenceBlocsByCertificationIdInput
+  ): Certification!
+  referential_updateCertificationPrerequisites(
+    input: UpdateCertificationPrerequisitesInput
   ): Certification!
 }
