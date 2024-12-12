@@ -9,6 +9,7 @@ import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { isFundingRequestEnabledForCertification } from "../../../candidacy-menu/features/isFundingRequestEnabledForCertification";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
@@ -22,6 +23,13 @@ export const createFundingRequestUnifvae = async ({
   userEmail?: string;
   userRoles: KeyCloakUserRole[];
 }) => {
+  const fundingRequestDisabled = await isFeatureActiveForUser({
+    feature: "FUNDING_REQUEST_DISABLED",
+  });
+  if (fundingRequestDisabled) {
+    throw new Error("La demande de prise en charge est désactivée");
+  }
+
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     select: {
