@@ -32,6 +32,7 @@ type Certification {
   rncpExpiresAt: Timestamp
   rncpDeliveryDeadline: Timestamp
   domains: [Domain!]!
+  fcPrerequisites: String
   prerequisites: [CertificationPrerequisite!]!
 }
 
