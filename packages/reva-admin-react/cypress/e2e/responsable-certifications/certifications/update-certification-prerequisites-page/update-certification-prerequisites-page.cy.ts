@@ -63,7 +63,7 @@ context("when i access the update certification page ", () => {
     cy.get("button").contains("Enregistrer").should("be.disabled");
   });
 
-  it.only("let me update a certification prerequisites and submit the form", function () {
+  it("let me update a certification prerequisites and submit the form", function () {
     interceptCertification();
     interceptUpdateCertificationPrerequisitesMutation();
     cy.admin(
