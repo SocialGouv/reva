@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useUpdatePrerequisitesPage } from "./updatePrerequisites.hook";
+import { PrerequisitesForm } from "./(components)/prerequisites-form/PrerequisitesForm";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdatePrerequisitesPage>["certification"],
@@ -53,5 +54,13 @@ const PageContent = ({
       depuis France compétences et, si nécessaire, procédez à des corrections
       (ordre des prérequis, fautes de frappe...).
     </p>
+    <PrerequisitesForm
+      onSubmit={async (d) => console.log({ d })}
+      defaultValues={{
+        noPrerequisites: !certification.prerequisites.length,
+        prerequisites: certification.prerequisites,
+      }}
+      backUrl={`/responsable-certifications/certifications/${certification.id}`}
+    />
   </div>
 );

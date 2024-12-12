@@ -10,6 +10,11 @@ const getCertificationQuery = graphql(`
       id
       codeRncp
       label
+      prerequisites {
+        id
+        label
+        index
+      }
     }
   }
 `);
