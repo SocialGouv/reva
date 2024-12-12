@@ -1,6 +1,6 @@
-import { ActualisationWarning } from "./ActualisationWarning";
-import { CaduqueWarning } from "./CaduqueWarning";
-import { WelcomeMessage } from "./WelcomeMessage";
+import { ActualisationBanner } from "./ActualisationBanner";
+import { CaduqueBanner } from "./CaduqueBanner";
+import { WelcomeBanner } from "./WelcomeBanner";
 
 export const CandidacyBanner = ({
   displayCaduqueWarning,
@@ -12,12 +12,12 @@ export const CandidacyBanner = ({
   lastActivityDate: number;
 }) => {
   if (displayCaduqueWarning) {
-    return <CaduqueWarning />;
+    return <CaduqueBanner />;
   }
 
   if (displayActualisationWarning) {
-    return <ActualisationWarning lastActivityDate={lastActivityDate} />;
+    return <ActualisationBanner lastActivityDate={lastActivityDate} />;
   }
 
-  return <WelcomeMessage />;
+  return <WelcomeBanner />;
 };

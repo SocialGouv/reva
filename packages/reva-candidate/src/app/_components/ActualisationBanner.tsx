@@ -3,7 +3,7 @@ import { addMonths, format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
-export const ActualisationWarning = ({
+export const ActualisationBanner = ({
   lastActivityDate,
 }: {
   lastActivityDate: number;
@@ -12,10 +12,7 @@ export const ActualisationWarning = ({
   const thresholdDate = format(addMonths(lastActivityDate, 6), "dd/MM/yyyy");
 
   return (
-    <div
-      className="mt-12 flex flex-col gap-4"
-      data-test="actualisation-warning"
-    >
+    <div className="mt-12 flex flex-col gap-4" data-test="actualisation-banner">
       <div className="static w-full border-b-[4px] border-b-[#FFA180] px-8 py-8 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] flex flex-col items-center text-start lg:relative lg:h-[85px] lg:flex-row">
         <Image
           src="/candidat/images/image-home-character-young-man-glasses.png"
@@ -36,7 +33,7 @@ export const ActualisationWarning = ({
         </div>
       </div>
       <Link href="/actualisation" className="self-end">
-        <Button data-test="actualisation-warning-button">S'actualiser</Button>
+        <Button data-test="actualisation-banner-button">S'actualiser</Button>
       </Link>
     </div>
   );
