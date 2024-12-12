@@ -23,6 +23,66 @@ context("Candidacy Banner Display Logic", () => {
     });
   });
 
+  describe("Pending Contestation Caducite Banner", () => {
+    it("should display pending contestation banner and hide other banners when candidacy has pending contestation", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+          [
+            {
+              certificationAuthorityContestationDecision: "DECISION_PENDING",
+              contestationSentAt: new Date().getTime(),
+            },
+          ];
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="pending-contestation-caducite-banner"]').should(
+        "exist",
+      );
+      cy.get('[data-test="caduque-banner"]').should("not.exist");
+      cy.get('[data-test="actualisation-banner"]').should("not.exist");
+      cy.get('[data-test="welcome-banner"]').should("not.exist");
+    });
+
+    it("should display the correct contestation sent date", () => {
+      const contestationDate = new Date(2023, 0, 15).getTime();
+
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+          [
+            {
+              certificationAuthorityContestationDecision: "DECISION_PENDING",
+              contestationSentAt: contestationDate,
+            },
+          ];
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="pending-contestation-caducite-banner"]').should(
+        "contain",
+        "15/01/2023",
+      );
+    });
+  });
+
   describe("Caduque Banner", () => {
     VALID_STATUSES.forEach((status) => {
       it(`should display caduque banner and hide other banners when candidacy is caduque with ${status} status`, () => {
