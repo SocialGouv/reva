@@ -77,16 +77,13 @@ const CertificationListPage = () => {
   return (
     certificationPage && (
       <div className="flex flex-col w-full">
-        <h1>Gestion des certifications</h1>
+        <h1>Certifications</h1>
+        <p>
+          Retrouvez ici les certifications liées aux différentes structures
+          certificatrices enregistrées sur France VAE.{" "}
+        </p>
         {getCertificationsQueryStatus === "success" && (
           <SearchList
-            title={`Certifications ${
-              status
-                ? status === "AVAILABLE"
-                  ? "disponibles"
-                  : "inactives"
-                : ""
-            }`}
             searchFilter={searchFilter}
             searchResultsPage={certificationPage}
           >
