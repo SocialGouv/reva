@@ -1,12 +1,16 @@
-import { Feasibility } from "@prisma/client";
+import { CandidacyStatusStep, Feasibility } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { createFileHelper } from "./create-file-helper";
 
 export const createFeasibilityUploadedPdfHelper = async (
   feasibilityArgs?: Partial<Feasibility>,
+  candidacyActiveStatus?: CandidacyStatusStep,
 ) => {
-  const candidacy = await createCandidacyHelper();
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus:
+      candidacyActiveStatus ?? "DOSSIER_FAISABILITE_ENVOYE",
+  });
   const file = await createFileHelper();
 
   return prismaClient.feasibility.create({

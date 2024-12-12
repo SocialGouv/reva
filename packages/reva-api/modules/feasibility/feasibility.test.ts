@@ -52,6 +52,7 @@ test("should count all (1) available feasibility for certificator user even if o
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
+      status: "DOSSIER_FAISABILITE_ENVOYE",
     },
   });
   await createFeasibilityUploadedPdfHelper({
@@ -178,6 +179,7 @@ test("should return all (1) available feasibility for certificateur user", async
     candidacyArgs: {
       certificationId: certification.id,
     },
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
   });
   const feasibility = await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
