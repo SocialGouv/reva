@@ -74,7 +74,8 @@ const HasContestedComponent = () => {
 export default function ContestationPage() {
   const [hasContested, setHasContested] = useState(false);
   const router = useRouter();
-  const { isFeatureActive } = useFeatureFlipping();
+  const { isFeatureActive, status: featureFlippingStatus } =
+    useFeatureFlipping();
   const candidacyActualisationFeatureIsActive = isFeatureActive(
     "candidacy_actualisation",
   );
@@ -128,7 +129,10 @@ export default function ContestationPage() {
 
   useEffect(resetForm, [resetForm]);
 
-  if (!candidacyActualisationFeatureIsActive) {
+  if (
+    !candidacyActualisationFeatureIsActive &&
+    featureFlippingStatus === "INITIALIZED"
+  ) {
     router.push("/");
     return null;
   }

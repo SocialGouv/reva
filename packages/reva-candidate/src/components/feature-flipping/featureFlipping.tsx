@@ -1,9 +1,9 @@
-import { graphql } from "@/graphql/generated";
-import { create } from "zustand";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { GraphQLClient } from "graphql-request";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+import { GraphQLClient } from "graphql-request";
 import { useEffect } from "react";
+import { create } from "zustand";
 
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {
@@ -34,7 +34,8 @@ const useFeatureFlippingStore = create<{
 }));
 
 export const useFeatureFlipping = () => {
-  const { activeFeatures, isFeatureActive, init } = useFeatureFlippingStore();
+  const { activeFeatures, isFeatureActive, init, status } =
+    useFeatureFlippingStore();
   const { graphqlClient } = useGraphQlClient();
   const { authenticated } = useKeycloakContext();
 
@@ -44,5 +45,5 @@ export const useFeatureFlipping = () => {
     }
   }, [authenticated, graphqlClient, init]);
 
-  return { activeFeatures, isFeatureActive };
+  return { activeFeatures, isFeatureActive, status };
 };

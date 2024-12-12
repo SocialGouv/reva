@@ -79,7 +79,8 @@ const HasBeenUpdatedComponent = ({
 
 export default function ActualisationPage() {
   const [hasBeenUpdated, setHasBeenUpdated] = useState(false);
-  const { isFeatureActive } = useFeatureFlipping();
+  const { isFeatureActive, status: featureFlippingStatus } =
+    useFeatureFlipping();
   const router = useRouter();
   const candidacyActualisationFeatureIsActive = isFeatureActive(
     "candidacy_actualisation",
@@ -133,7 +134,10 @@ export default function ActualisationPage() {
 
   useEffect(resetForm, [resetForm]);
 
-  if (!candidacyActualisationFeatureIsActive) {
+  if (
+    !candidacyActualisationFeatureIsActive &&
+    featureFlippingStatus === "INITIALIZED"
+  ) {
     router.push("/");
     return null;
   }
