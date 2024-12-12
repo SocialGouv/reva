@@ -1,3 +1,8 @@
+import {
+  CertificationJuryFrequency,
+  CertificationJuryModality,
+} from "@prisma/client";
+
 export const CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID =
   "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
 
@@ -103,4 +108,15 @@ export interface ResetCompetenceBlocsByCertificationIdInput {
 export interface UpdateCertificationPrerequisitesInput {
   certificationId: string;
   prerequisites: { label: string; index: number }[];
+}
+
+export interface UpdateCertificationDescriptionInput {
+  certificationId: string;
+  languages: number;
+  juryModalities: CertificationJuryModality[];
+  juryFrequency?: CertificationJuryFrequency;
+  juryFrequencyOther?: string;
+  juryPlace?: string;
+  availableAt: Date;
+  expiresAt: Date;
 }

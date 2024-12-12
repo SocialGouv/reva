@@ -24,6 +24,7 @@ import {
   SendCertificationToRegistryManagerInput,
   ResetCompetenceBlocsByCertificationIdInput,
   UpdateCertificationPrerequisitesInput,
+  UpdateCertificationDescriptionInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
@@ -50,6 +51,7 @@ import { resetCompetenceBlocsByCertificationId } from "./features/resetCompetenc
 import { searchCertificationsV2ForRegistryManager } from "./features/searchCertificationsV2ForRegistryManager";
 import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
 import { updateCertificationPrerequisites } from "./features/updateCertificationPrerequisites";
+import { updateCertificationDescription } from "./features/updateCertificationDescription";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -226,6 +228,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: UpdateCertificationPrerequisitesInput },
     ) => updateCertificationPrerequisites(input),
+    referential_updateCertificationDescription: (
+      _parent: unknown,
+      { input }: { input: UpdateCertificationDescriptionInput },
+    ) => updateCertificationDescription(input),
   },
 };
 

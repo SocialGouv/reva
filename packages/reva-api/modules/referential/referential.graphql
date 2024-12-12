@@ -11,6 +11,19 @@ type Domain {
   children: [SubDomain!]!
 }
 
+enum CertificationJuryModality {
+  PRESENTIEL
+  A_DISTANCE
+  MISE_EN_SITUATION_PROFESSIONNELLE
+  ORAL
+}
+
+enum CertificationJuryFrequency {
+  MONTHLY
+  TRIMESTERLY
+  YEARLY
+}
+
 type Certification {
   id: ID!
   label: String!
@@ -34,6 +47,11 @@ type Certification {
   domains: [Domain!]!
   fcPrerequisites: String
   prerequisites: [CertificationPrerequisite!]!
+  languages: Int
+  juryModalities: [CertificationJuryModality!]!
+  juryFrequency: CertificationJuryFrequency
+  juryFrequencyOther: String
+  juryPlace: String
 }
 
 type CertificationPrerequisite {
@@ -348,13 +366,26 @@ input SendCertificationToRegistryManagerInput {
 input ResetCompetenceBlocsByCertificationIdInput {
   certificationId: ID!
 }
+
 input UpdateCertificationPrerequisitesInput {
   certificationId: ID!
   prerequisites: [CertificationPrerequisiteInput!]!
 }
+
 input CertificationPrerequisiteInput {
   label: String!
   index: Int!
+}
+
+input UpdateCertificationDescriptionInput {
+  certificationId: ID!
+  languages: Int!
+  juryModalities: [CertificationJuryModality!]!
+  juryFrequency: CertificationJuryFrequency
+  juryFrequencyOther: String
+  juryPlace: String
+  availableAt: Timestamp
+  expiresAt: Timestamp
 }
 
 type Mutation {
@@ -383,5 +414,8 @@ type Mutation {
   ): Certification!
   referential_updateCertificationPrerequisites(
     input: UpdateCertificationPrerequisitesInput
+  ): Certification!
+  referential_updateCertificationDescription(
+    input: UpdateCertificationDescriptionInput
   ): Certification!
 }

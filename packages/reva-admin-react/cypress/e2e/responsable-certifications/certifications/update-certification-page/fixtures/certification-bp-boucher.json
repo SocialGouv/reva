@@ -4,11 +4,15 @@
       "id": "bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       "label": "BP Boucher",
       "codeRncp": "37310",
-      "status": "BROUILLON",
+      "status": "A_VALIDER_PAR_CERTIFICATEUR",
       "rncpExpiresAt": 1788127200000,
       "rncpDeliveryDeadline": null,
       "availableAt": 1688162400000,
-      "typeDiplome": "Brevet Professionnel (BP)",
+      "languages": null,
+      "juryModalities": [],
+      "juryFrequency": null,
+      "juryFrequencyOther": null,
+      "juryPlace": null,
       "degree": {
         "id": "0ee2104b-9bdc-4e44-b232-123cf2e3b9a1",
         "label": "Niveau 4 : Baccalauréat"

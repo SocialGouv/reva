@@ -29,6 +29,19 @@ enum FeasibilityFormat {
   DEMATERIALIZED
 }
 
+enum CertificationJuryModality {
+  PRESENTIEL
+  A_DISTANCE
+  MISE_EN_SITUATION_PROFESSIONNELLE
+  ORAL
+}
+
+enum CertificationJuryFrequency {
+  MONTHLY
+  TRIMESTERLY
+  YEARLY
+}
+
 model Certification {
   id                                                String                                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                             String                                              @db.VarChar(255)
@@ -50,6 +63,11 @@ model Certification {
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
   expiresAt                                         DateTime                                            @map("expires_at") @db.Timestamptz(6)
+  languages                                         Int?
+  juryModalities                                    CertificationJuryModality[]                         @default([]) @map("jury_modalities")
+  juryFrequency                                     CertificationJuryFrequency?                         @map("jury_frequency")
+  juryFrequencyOther                                String?                                             @map("jury_frequency_other")
+  juryPlace                                         String?                                             @map("jury_place")
   previousVersionCertificationId                    String?                                             @unique @map("previous_version_certification_id") @db.Uuid
   previousVersion                                   Certification?                                      @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                       Certification?                                      @relation("replacement")

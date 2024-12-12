@@ -36,7 +36,7 @@ const getFCCertificationQuery = graphql(`
   }
 `);
 
-const addCertificatioMutation = graphql(`
+const addCertificationMutation = graphql(`
   mutation addFCCertificationForAddCertificationPage(
     $input: AddCertificationInput!
   ) {
@@ -68,7 +68,7 @@ export const useAddCertificationPage = ({ rncp }: { rncp: string }) => {
 
   const addCertification = useMutation({
     mutationFn: (input: { codeRncp: string }) =>
-      graphqlClient.request(addCertificatioMutation, {
+      graphqlClient.request(addCertificationMutation, {
         input,
       }),
   });

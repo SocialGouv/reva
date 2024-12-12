@@ -1,9 +1,10 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { UpdateCertificationDescriptionInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
-  query getCertificationForCertificationRegistryManagerUpdateCertificationPage(
+  query getCertificationForCertificationRegistryManagerUpdateCertificationDescriptionPage(
     $certificationId: ID!
   ) {
     getCertification(certificationId: $certificationId) {
@@ -35,29 +36,27 @@ const getCertificationQuery = graphql(`
           label
         }
       }
-      competenceBlocs {
-        id
-        code
-        label
-        competences {
-          id
-          label
-        }
-      }
-      prerequisites {
-        id
-        label
-      }
     }
   }
 `);
 
-export const useUpdateCertificationPage = ({
+const updateCertificationDescriptionMutation = graphql(`
+  mutation updateCertificationDescriptionForCertificationRegistryManagerUpdateCertificationDescriptionPage(
+    $input: UpdateCertificationDescriptionInput!
+  ) {
+    referential_updateCertificationDescription(input: $input) {
+      id
+    }
+  }
+`);
+
+export const useUpdateCertificationDescriptionPage = ({
   certificationId,
 }: {
   certificationId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     data: getCertificationQueryResponse,
@@ -66,7 +65,7 @@ export const useUpdateCertificationPage = ({
     queryKey: [
       certificationId,
       "certifications",
-      "getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      "getCertificationForCertificationRegistryManagerUpdateCertificationDescriptionPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationQuery, {
@@ -76,8 +75,20 @@ export const useUpdateCertificationPage = ({
 
   const certification = getCertificationQueryResponse?.getCertification;
 
+  const updateCertificationDescription = useMutation({
+    mutationFn: (input: UpdateCertificationDescriptionInput) =>
+      graphqlClient.request(updateCertificationDescriptionMutation, {
+        input,
+      }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationId],
+      }),
+  });
+
   return {
     certification,
     getCertificationQueryStatus,
+    updateCertificationDescription,
   };
 };
