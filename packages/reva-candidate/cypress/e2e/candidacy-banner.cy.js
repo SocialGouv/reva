@@ -51,6 +51,30 @@ context("Candidacy Banner Display Logic", () => {
         cy.get('[data-test="actualisation-banner"]').should("not.exist");
         cy.get('[data-test="welcome-banner"]').should("not.exist");
       });
+
+      it(`should redirect to contestation page when clicking contest button`, () => {
+        cy.fixture("candidate1.json").then((candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+            status;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+            {
+              decision: ADMISSIBLE_DECISION,
+            };
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          });
+        });
+
+        cy.login();
+        cy.wait("@candidate_login");
+        cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@activeFeaturesForConnectedUser");
+
+        cy.get('[data-test="caduque-banner-button"]').click();
+        cy.url().should("include", "/contestation");
+      });
     });
   });
 
@@ -109,6 +133,32 @@ context("Candidacy Banner Display Logic", () => {
         });
       },
     );
+
+    it("should redirect to actualisation page when clicking actualisation button", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
+          subDays(addWeeks(subMonths(new Date(), 6), 2), 1).getTime();
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          VALID_STATUSES[0];
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+          {
+            decision: ADMISSIBLE_DECISION,
+          };
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = false;
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="actualisation-banner-button"]').click();
+      cy.url().should("include", "/actualisation");
+    });
   });
 
   describe("Welcome Banner", () => {
