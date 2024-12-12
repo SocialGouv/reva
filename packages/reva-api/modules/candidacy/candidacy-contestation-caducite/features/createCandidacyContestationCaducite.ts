@@ -27,15 +27,18 @@ export const createCandidacyContestationCaducite = async ({
     throw new Error("La candidature n'a pas été trouvée");
   }
 
-  const contestationPending = candidacy.candidacyContestationCaducite.find(
-    (contestation) =>
-      contestation.certificationAuthorityContestationDecision ===
-      CertificationAuthorityContestationDecision.DECISION_PENDING,
-  );
+  const hasConfirmedOrPendingContestation =
+    candidacy.candidacyContestationCaducite.find(
+      (contestation) =>
+        contestation.certificationAuthorityContestationDecision ===
+          CertificationAuthorityContestationDecision.CADUCITE_CONFIRMED ||
+        contestation.certificationAuthorityContestationDecision ===
+          CertificationAuthorityContestationDecision.DECISION_PENDING,
+    );
 
-  if (contestationPending) {
+  if (hasConfirmedOrPendingContestation) {
     throw new Error(
-      "Une contestation est déjà en cours pour cette candidature",
+      "La caducité de la candidature a été confirmée ou est en attente de décision",
     );
   }
 
