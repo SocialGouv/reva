@@ -201,29 +201,15 @@ const FundingPage = () => {
       <h1>Demande de prise en charge</h1>
       <Alert
         severity="info"
-        title="Suspension temporaire de l'accès aux demandes de financement"
+        title="Fin de la prise en charge financière via France VAE"
         description={
           <span>
             <p>
-              L'accès aux demandes de financement est actuellement suspendu.
-              Cette suspension demeure en vigueur jusqu'à la réouverture du
-              service pour les nouvelles candidatures et la validation des
-              Conditions Générales d'Utilisation (CGU) par les Architectes
-              Accompagnateurs de parcours.
+              Suite à l'épuisement des fonds alloués par l'État dans le cadre de
+              la phase de préfiguration, aucune nouvelle prise en charge
+              financière ne peut être effectuée via France VAE.
             </p>
-            <p>
-              Nous prévoyons que les nouvelles CGU seront disponibles dans les
-              prochains jours.
-            </p>
-            <p>
-              Nous vous remercions de votre compréhension et de votre patience
-              pendant cette période de transition.
-            </p>
-            <p>
-              Nous vous invitons à consulter régulièrement notre site pour les
-              mises à jour et pour soumettre vos demandes dès la reprise du
-              service.
-            </p>
+            <p>Communication officielle à venir.</p>
           </span>
         }
       />
