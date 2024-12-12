@@ -70,6 +70,7 @@ model Certification {
   AvailableCertificationBasedOnFormacode                 AvailableCertificationBasedOnFormacode?
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
   prerequisites                                          CertificationPrerequisite[]
+  fcPrerequisites                                        String?                                                  @map("fc_prerequisites") @db.VarChar
 
   @@map("certification")
 }
