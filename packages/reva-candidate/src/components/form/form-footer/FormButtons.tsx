@@ -18,6 +18,7 @@ export const FormButtons = ({
   return (
     <div
       className={`flex gap-4 items-center justify-between mt-10 ${className || ""}`}
+      data-test="form-buttons"
     >
       {backUrl && (
         <Button priority="secondary" linkProps={{ href: backUrl }}>
