@@ -19,12 +19,12 @@
         {
           "id": "b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1",
           "label": "Prérequis 1",
-          "order": 0
+          "index": 0
         },
         {
           "id": "b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2",
           "label": "Prérequis 2",
-          "order": 2
+          "index": 1
         }
       ]
     }
