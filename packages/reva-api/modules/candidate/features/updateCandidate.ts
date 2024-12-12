@@ -60,12 +60,11 @@ export const updateCandidate = async ({
     throw new Error(`Le pays n'existe pas`);
   }
 
-  const isDifferentZipCode =
-    candidateToUpdate.zip &&
-    candidateToUpdate.zip !== candidateInput.zip &&
-    candidateToUpdate.zip?.match(/^(\d{5}|)$/);
+  const isNewZip =
+    candidateToUpdate.zip === null ||
+    candidateToUpdate.zip !== candidateInput.zip;
 
-  if (isDifferentZipCode) {
+  if (isNewZip && candidateToUpdate.zip?.match(/^(\d{5}|)$/)) {
     const departmentCode = candidateInput.zip?.slice(0, 2);
 
     const department = await prismaClient.department.findUnique({
