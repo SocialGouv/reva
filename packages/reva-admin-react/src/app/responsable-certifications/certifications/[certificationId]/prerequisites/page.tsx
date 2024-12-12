@@ -9,6 +9,7 @@ import {
 } from "./(components)/prerequisites-form/PrerequisitesForm";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdatePrerequisitesPage>["certification"],
@@ -83,6 +84,19 @@ const PageContent = ({
       depuis France compétences et, si nécessaire, procédez à des corrections
       (ordre des prérequis, fautes de frappe...).
     </p>
+    <GrayCard as="div" className="mb-8">
+      <h2>
+        Informations France compétences liées au RNCP {certification.codeRncp}
+      </h2>
+
+      <dl>
+        <dd>Prérequis à la validation de la certification</dd>
+        <dt className="font-medium">
+          {certification.fcPrerequisites ||
+            "Aucun prérequis renseigné pour cette certification."}
+        </dt>
+      </dl>
+    </GrayCard>
     <PrerequisitesForm
       onSubmit={onSubmit}
       defaultValues={{

@@ -11,6 +11,7 @@ const getCertificationQuery = graphql(`
       id
       codeRncp
       label
+      fcPrerequisites
       prerequisites {
         id
         label
