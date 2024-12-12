@@ -194,22 +194,22 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       path: "/candidacies/feasibilities",
       category: "ADMISSIBLE",
     }),
-    menuItem({
-      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
-      path: "/candidacies/feasibilities",
-      category: "REJECTED",
-    }),
+    // menuItem({
+    //   text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
+    //   path: "/candidacies/feasibilities",
+    //   category: "REJECTED",
+    // }),
 
-    menuItem({
-      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
-      path: "/candidacies/feasibilities",
-      category: "ARCHIVED",
-    }),
-    menuItem({
-      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
-      path: "/candidacies/feasibilities",
-      category: "DROPPED_OUT",
-    }),
+    // menuItem({
+    //   text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
+    //   path: "/candidacies/feasibilities",
+    //   category: "ARCHIVED",
+    // }),
+    // menuItem({
+    //   text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
+    //   path: "/candidacies/feasibilities",
+    //   category: "DROPPED_OUT",
+    // }),
   ];
 
   const dossierDeValidationItems = [
@@ -269,6 +269,22 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       text: "Jury",
       expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
     },
+    menuItem({
+      text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "REJECTED",
+    }),
+
+    menuItem({
+      text: `Dossiers supprimés (${feasibilityCountByCategory?.ARCHIVED || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "ARCHIVED",
+    }),
+    menuItem({
+      text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
+      path: "/candidacies/feasibilities",
+      category: "DROPPED_OUT",
+    }),
   ];
 
   return (
