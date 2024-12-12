@@ -64,6 +64,15 @@ export const addCertification = async (params: { codeRncp: string }) => {
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,
+      fcPrerequisites: rncpCertification.PREREQUIS.LISTE_PREREQUIS,
+      prerequisites: {
+        createMany: {
+          data: rncpCertification.PREREQUIS.PARSED_PREREQUIS.map((p, i) => ({
+            label: p,
+            index: i,
+          })),
+        },
+      },
     },
   });
 
@@ -84,7 +93,10 @@ export const addCertification = async (params: { codeRncp: string }) => {
   });
 
   // Create default competence blocs
-  await createDefaultBlocs({ certificationId: certification.id, codeRncp });
+  await createDefaultBlocs({
+    certificationId: certification.id,
+    rncpCertification,
+  });
 
   return certification;
 };
@@ -104,15 +116,13 @@ const getLevelFromRNCPCertification = (
   }
 };
 
-const createDefaultBlocs = async (params: {
+const createDefaultBlocs = async ({
+  certificationId,
+  rncpCertification,
+}: {
   certificationId: string;
-  codeRncp: string;
+  rncpCertification: RNCPCertification;
 }): Promise<CertificationCompetenceBloc[]> => {
-  const { certificationId, codeRncp } = params;
-
-  const rncpCertification =
-    await RNCPReferential.getInstance().findOneByRncp(codeRncp);
-
   if (rncpCertification) {
     for (const bloc of rncpCertification.BLOCS_COMPETENCES) {
       const createdBloc = await prismaClient.certificationCompetenceBloc.create(
