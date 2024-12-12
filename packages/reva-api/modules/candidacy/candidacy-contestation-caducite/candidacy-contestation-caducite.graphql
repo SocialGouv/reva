@@ -3,7 +3,7 @@ type CandidacyContestationCaducite {
   candidacyId: ID!
   contestationSentAt: Timestamp!
   contestationReason: String!
-  contestationDecision: CertificationAuthorityContestationDecision!
+  certificationAuthorityContestationDecision: CertificationAuthorityContestationDecision!
 }
 
 enum CertificationAuthorityContestationDecision {
