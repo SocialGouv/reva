@@ -61,6 +61,7 @@ export type RNCPCertification = {
     CODE: string;
     LIBELLE: string;
   }[];
+  PREREQUIS: { LISTE_PREREQUIS: string; PARSED_PREREQUIS: string[] };
 };
 
 export class RNCPReferential {
@@ -290,6 +291,12 @@ function mapToRNCPCertification(data: any): RNCPCertification {
           LIBELLE: formacode.LIBELLE,
         };
       }),
+      PREREQUIS: {
+        LISTE_PREREQUIS: data.PREREQUIS_VALIDATION_CERTIFICATION,
+        PARSED_PREREQUIS: splitString(
+          (data.PREREQUIS_VALIDATION_CERTIFICATION as string) || "",
+        ),
+      },
     };
 
     return certification;
