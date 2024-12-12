@@ -1,14 +1,12 @@
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SortableList } from "@/components/sortable-list";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const prerequisitesFormSchema = z.object({
-  noPrerequisites: z.boolean().default(false),
   prerequisites: z
     .object({
       id: z.string().optional(),
@@ -63,7 +61,7 @@ export const PrerequisitesForm = ({
         ...c,
         index,
       }));
-      onSubmit({ ...d, prerequisites: reIndexPrerequisites });
+      onSubmit({ prerequisites: reIndexPrerequisites });
     },
     (e) => console.log(e),
   );
@@ -76,15 +74,7 @@ export const PrerequisitesForm = ({
         reset();
       }}
     >
-      <Checkbox
-        options={[
-          {
-            label:
-              "Il n’y a aucun prérequis obligatoire pour cette certification.",
-            nativeInputProps: { ...register("noPrerequisites") },
-          },
-        ]}
-      />
+      <p className="mb-0">Prérequis:</p>
       <div
         className="flex flex-col gap-2 mb-2 pl-4"
         data-test="prerequisite-list"

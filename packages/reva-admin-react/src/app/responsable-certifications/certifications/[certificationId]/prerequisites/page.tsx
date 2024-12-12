@@ -31,14 +31,12 @@ export default function UpdatePrerequisitesPage() {
 
   const handleFormSubmit = async (data: PrerequisitesFormData) => {
     try {
-      const input = data.noPrerequisites
-        ? { prerequisites: [] }
-        : {
-            prerequisites: data.prerequisites.map((p) => ({
-              label: p.label,
-              index: p.index,
-            })), //remove id added by react-hook-form useFieldArray
-          };
+      const input = {
+        prerequisites: data.prerequisites.map((p) => ({
+          label: p.label,
+          index: p.index,
+        })), //remove id added by react-hook-form useFieldArray
+      };
       await updateCertificationPrerequisites.mutateAsync(input);
       successToast("modifications enregistrées");
       router.push(
@@ -88,7 +86,6 @@ const PageContent = ({
     <PrerequisitesForm
       onSubmit={onSubmit}
       defaultValues={{
-        noPrerequisites: !certification.prerequisites.length,
         prerequisites: certification.prerequisites,
       }}
       backUrl={`/responsable-certifications/certifications/${certification.id}`}
