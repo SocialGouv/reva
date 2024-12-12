@@ -153,7 +153,8 @@ export default function RegistryManagerHomepage() {
 
   if (
     status === "A_VALIDER_PAR_CERTIFICATEUR" &&
-    certificationPage.rows.length === 0
+    certificationPage.rows.length === 0 &&
+    searchFilter === ""
   ) {
     return <NoCertificationsToValidate />;
   }
@@ -161,7 +162,8 @@ export default function RegistryManagerHomepage() {
   if (
     status === "VALIDE_PAR_CERTIFICATEUR" &&
     visible &&
-    certificationPage.rows.length === 0
+    certificationPage.rows.length === 0 &&
+    searchFilter === ""
   ) {
     return <NoVisibleCertifications />;
   }
@@ -169,7 +171,8 @@ export default function RegistryManagerHomepage() {
   if (
     status === "VALIDE_PAR_CERTIFICATEUR" &&
     !visible &&
-    certificationPage.rows.length === 0
+    certificationPage.rows.length === 0 &&
+    searchFilter === ""
   ) {
     return <NoInvisibleCertifications />;
   }
