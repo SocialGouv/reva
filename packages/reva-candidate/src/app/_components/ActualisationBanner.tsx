@@ -6,10 +6,13 @@ import Link from "next/link";
 export const ActualisationBanner = ({
   lastActivityDate,
 }: {
-  lastActivityDate: number;
+  lastActivityDate: number | undefined | null;
 }) => {
   // La candidature sera considérée comme caduque après cette date, 6 mois après la dernière actualisation
-  const thresholdDate = format(addMonths(lastActivityDate, 6), "dd/MM/yyyy");
+  const thresholdDate = format(
+    addMonths(lastActivityDate as number, 6),
+    "dd/MM/yyyy",
+  );
 
   return (
     <div className="mt-12 flex flex-col gap-4" data-test="actualisation-banner">

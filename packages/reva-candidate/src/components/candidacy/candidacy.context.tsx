@@ -205,6 +205,10 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             eligibilityValidUntil
           }
         }
+        candidacyContestationsCaducite {
+          contestationSentAt
+          certificationAuthorityContestationDecision
+        }
       }
     }
   }
