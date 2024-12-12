@@ -13,7 +13,7 @@ const PostLoginPage = () => {
     if (isCertificationAuthority) {
       router.replace("/candidacies/feasibilities");
     } else if (isCertificationRegistryManager) {
-      router.replace("/certifications");
+      router.replace("/responsable-certifications");
     } else {
       router.replace("/candidacies");
     }
