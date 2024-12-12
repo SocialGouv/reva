@@ -1,9 +1,49 @@
+/**
+ * @jest-environment ./test/fastify-test-env.ts
+ */
+
 import { faker } from "@faker-js/faker/.";
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
+import { addDays, subDays } from "date-fns";
 import { prismaClient } from "../../../../prisma/client";
+import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createCandidacyContestationCaducite } from "./createCandidacyContestationCaducite";
+
+const VALID_CONTESTATION_REASON = "Valid contestation reason";
+const FUTURE_DATE = addDays(new Date(), 30);
+const PAST_DATE = subDays(new Date(), 1);
+
+const createContestationMutation = async ({
+  keycloakId,
+  candidacyId,
+  contestationReason,
+  readyForJuryEstimatedAt,
+}: {
+  keycloakId: string;
+  candidacyId: string;
+  contestationReason: string;
+  readyForJuryEstimatedAt: Date;
+}) =>
+  await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_contestation_caducite_create_contestation",
+      arguments: {
+        candidacyId,
+        contestationReason,
+        readyForJuryEstimatedAt,
+      },
+      returnFields: "{id,contestationReason}",
+    },
+  });
 
 describe("createCandidacyContestationCaducite", () => {
   beforeEach(async () => {
@@ -13,13 +53,11 @@ describe("createCandidacyContestationCaducite", () => {
   describe("Input validation", () => {
     test("should fail when contestationReason is empty", async () => {
       const candidacy = await createCandidacyHelper();
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
 
       const createContestationPromise = createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
         contestationReason: "",
-        readyForJuryEstimatedAt: futureDate,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -29,13 +67,11 @@ describe("createCandidacyContestationCaducite", () => {
 
     test("should fail when readyForJuryEstimatedAt is in the past", async () => {
       const candidacy = await createCandidacyHelper();
-      const pastDate = new Date();
-      pastDate.setDate(pastDate.getDate() - 1);
 
       const createContestationPromise = createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
-        contestationReason: "Valid reason",
-        readyForJuryEstimatedAt: pastDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: PAST_DATE,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -46,13 +82,10 @@ describe("createCandidacyContestationCaducite", () => {
 
   describe("Candidacy validation", () => {
     test("should fail when candidacy does not exist", async () => {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
-
       const createContestationPromise = createCandidacyContestationCaducite({
         candidacyId: faker.string.uuid(),
-        contestationReason: "Valid reason",
-        readyForJuryEstimatedAt: futureDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -62,13 +95,11 @@ describe("createCandidacyContestationCaducite", () => {
 
     test("should fail when a contestation is pending", async () => {
       const candidacy = await createCandidacyHelper();
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
           candidacyId: candidacy.id,
-          contestationReason: "Initial contestation",
+          contestationReason: VALID_CONTESTATION_REASON,
           certificationAuthorityContestationDecision:
             CertificationAuthorityContestationDecision.DECISION_PENDING,
         },
@@ -76,8 +107,8 @@ describe("createCandidacyContestationCaducite", () => {
 
       const createContestationPromise = createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
-        contestationReason: "Another contestation",
-        readyForJuryEstimatedAt: futureDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -87,13 +118,11 @@ describe("createCandidacyContestationCaducite", () => {
 
     test("should fail when caducity has been confirmed", async () => {
       const candidacy = await createCandidacyHelper();
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
           candidacyId: candidacy.id,
-          contestationReason: "Initial contestation",
+          contestationReason: VALID_CONTESTATION_REASON,
           certificationAuthorityContestationDecision:
             CertificationAuthorityContestationDecision.CADUCITE_CONFIRMED,
         },
@@ -101,8 +130,8 @@ describe("createCandidacyContestationCaducite", () => {
 
       const createContestationPromise = createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
-        contestationReason: "Another contestation",
-        readyForJuryEstimatedAt: futureDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -114,37 +143,33 @@ describe("createCandidacyContestationCaducite", () => {
   describe("Successful creation", () => {
     test("should successfully create a contestation and update readyForJuryEstimatedAt", async () => {
       const candidacy = await createCandidacyHelper();
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
 
       const result = await createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
-        contestationReason: "Valid contestation reason",
-        readyForJuryEstimatedAt: futureDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       expect(result).toMatchObject({
         candidacyId: candidacy.id,
-        contestationReason: "Valid contestation reason",
+        contestationReason: VALID_CONTESTATION_REASON,
       });
 
       const updatedCandidacy = await prismaClient.candidacy.findUnique({
         where: { id: candidacy.id },
       });
       expect(updatedCandidacy?.readyForJuryEstimatedAt?.getTime()).toBe(
-        futureDate.getTime(),
+        FUTURE_DATE.getTime(),
       );
     });
 
     test("should allow new contestation when previous one was invalidated", async () => {
       const candidacy = await createCandidacyHelper();
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 30);
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
           candidacyId: candidacy.id,
-          contestationReason: "Initial contestation",
+          contestationReason: VALID_CONTESTATION_REASON,
           certificationAuthorityContestationDecision:
             CertificationAuthorityContestationDecision.CADUCITE_INVALIDATED,
         },
@@ -152,14 +177,51 @@ describe("createCandidacyContestationCaducite", () => {
 
       const result = await createCandidacyContestationCaducite({
         candidacyId: candidacy.id,
-        contestationReason: "New valid contestation",
-        readyForJuryEstimatedAt: futureDate,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
       });
 
       expect(result).toMatchObject({
         candidacyId: candidacy.id,
-        contestationReason: "New valid contestation",
+        contestationReason: VALID_CONTESTATION_REASON,
       });
+    });
+  });
+
+  describe("Security", () => {
+    test("should allow candidate to create contestation for their own candidacy", async () => {
+      const candidacy = await createCandidacyHelper();
+
+      const resp = await createContestationMutation({
+        keycloakId: candidacy.candidate?.keycloakId ?? "",
+        candidacyId: candidacy.id,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
+      });
+
+      expect(resp.statusCode).toEqual(200);
+      expect(
+        resp.json().data.candidacy_contestation_caducite_create_contestation,
+      ).toMatchObject({
+        contestationReason: VALID_CONTESTATION_REASON,
+      });
+    });
+
+    test("should not allow candidate to create contestation for another candidacy", async () => {
+      const candidacy = await createCandidacyHelper();
+      const otherCandidacy = await createCandidacyHelper();
+
+      const resp = await createContestationMutation({
+        keycloakId: candidacy.candidate?.keycloakId ?? "",
+        candidacyId: otherCandidacy.id,
+        contestationReason: VALID_CONTESTATION_REASON,
+        readyForJuryEstimatedAt: FUTURE_DATE,
+      });
+
+      expect(resp.statusCode).toEqual(200);
+      expect(resp.json().errors?.[0].message).toEqual(
+        "Vous n'êtes pas autorisé à accéder à cette candidature",
+      );
     });
   });
 });
