@@ -124,6 +124,14 @@ export const getCandidacyLogMessage = ({
       }`;
     case "TYPE_ACCOMPAGNEMENT_UPDATED":
       return `Type d'accompagnement modifié. Nouveau type d'accompagnement ${details?.typeAccompagnement}`;
+    case "CANDIDACY_ACTUALISATION":
+      return "Candidature actualisée.";
+    case "CADUCITE_CONTESTED":
+      return "Contestation de la caducité de la candidature.";
+    case "CADUCITE_INVALIDATED":
+      return "Invalidation de la caducité de la candidature.";
+    case "CADUCITE_CONFIRMED":
+      return "Confirmation de la caducité de la candidature.";
     default:
       return "Évenement inconnu";
   }

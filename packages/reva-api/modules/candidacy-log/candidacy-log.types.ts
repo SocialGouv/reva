@@ -37,7 +37,11 @@ export type CandidacyLogEventTypeAndDetails =
         | "FUNDING_REQUEST_CREATED"
         | "PAYMENT_REQUEST_CREATED_OR_UPDATED"
         | "PAYMENT_REQUEST_CONFIRMED"
-        | "TYPE_ACCOMPAGNEMENT_UPDATED";
+        | "TYPE_ACCOMPAGNEMENT_UPDATED"
+        | "CANDIDACY_ACTUALISATION"
+        | "CADUCITE_CONTESTED"
+        | "CADUCITE_INVALIDATED"
+        | "CADUCITE_CONFIRMED";
       details?: undefined;
     }
   | {
