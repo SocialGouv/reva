@@ -23,6 +23,40 @@ context("Candidacy Banner Display Logic", () => {
     });
   });
 
+  describe("Contestation Caducite Confirmed Banner", () => {
+    it("should display confirmed contestation banner and hide other banners when candidacy has confirmed contestation", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+          [
+            {
+              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
+              contestationSentAt: new Date().getTime(),
+            },
+          ];
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="contestation-caducite-confirmed-banner"]').should(
+        "exist",
+      );
+      cy.get('[data-test="pending-contestation-caducite-banner"]').should(
+        "not.exist",
+      );
+      cy.get('[data-test="caduque-banner"]').should("not.exist");
+      cy.get('[data-test="actualisation-banner"]').should("not.exist");
+      cy.get('[data-test="welcome-banner"]').should("not.exist");
+    });
+  });
+
   describe("Pending Contestation Caducite Banner", () => {
     it("should display pending contestation banner and hide other banners when candidacy has pending contestation", () => {
       cy.fixture("candidate1.json").then((candidate) => {
