@@ -12,8 +12,7 @@ import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/p
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
-import { deactivateCertificationsIfExpiresAtDateIsPast } from "../modules/referential/features/deactivateCertificationsIfExpiresAtDateIsPast";
-import { makeCertificationsAvailableIfAvailableAtDateIsPast } from "../modules/referential/features/makeCertificationsAvailableIfAvailableAtDateIsPast";
+import { setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate } from "../modules/referential/features/setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
 
@@ -110,8 +109,7 @@ CronJob.from({
       batchKey: "batch.activate-or-deactivate-certifications",
       batchCallback: async () => {
         logger.info("Running activate-or-deactivate-certifications batch");
-        await makeCertificationsAvailableIfAvailableAtDateIsPast();
-        await deactivateCertificationsIfExpiresAtDateIsPast();
+        await setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate();
       },
     }),
   start: true,
