@@ -1,13 +1,18 @@
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
 import { isBefore, startOfToday } from "date-fns";
+import { logCandidacyAuditEvent } from "../../../../modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "../../../../prisma/client";
 import { CreateCandidacyContestationCaduciteInput } from "../candidacy-contestation-caducite.types";
 
 export const createCandidacyContestationCaducite = async ({
-  candidacyId,
-  contestationReason,
-  readyForJuryEstimatedAt,
-}: CreateCandidacyContestationCaduciteInput) => {
+  input,
+  context,
+}: {
+  input: CreateCandidacyContestationCaduciteInput;
+  context: GraphqlContext;
+}) => {
+  const { candidacyId, contestationReason, readyForJuryEstimatedAt } = input;
+
   if (!contestationReason) {
     throw new Error("La raison de la contestation est obligatoire");
   }
@@ -47,6 +52,14 @@ export const createCandidacyContestationCaducite = async ({
     data: {
       readyForJuryEstimatedAt,
     },
+  });
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "CADUCITE_CONTESTED",
+    userKeycloakId: context.auth.userInfo?.sub,
+    userEmail: context.auth.userInfo?.email,
+    userRoles: context.auth.userInfo?.realm_access?.roles || [],
   });
 
   return prismaClient.candidacyContestationCaducite.create({

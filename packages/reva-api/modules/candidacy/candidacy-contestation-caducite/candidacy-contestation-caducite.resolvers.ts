@@ -15,7 +15,8 @@ const unsafeResolvers = {
     candidacy_contestation_caducite_create_contestation: (
       _: unknown,
       input: CreateCandidacyContestationCaduciteInput,
-    ) => createCandidacyContestationCaducite(input),
+      context: GraphqlContext,
+    ) => createCandidacyContestationCaducite({ input, context }),
   },
 };
 
