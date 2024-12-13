@@ -4,12 +4,12 @@ import { updateCertificationWithPrerequisitesFromFC } from "../modules/referenti
 
 const updateAllCertificationsWithPrerequisitesFromFC = async () => {
   const certifications = await prismaClient.certification.findMany({
-    where: { visible: true },
     select: { id: true, rncpId: true },
   });
 
   for (const { rncpId } of certifications) {
     try {
+      console.log("Processing certification with rncpId", rncpId);
       await updateCertificationWithPrerequisitesFromFC({
         codeRncp: rncpId,
       });
