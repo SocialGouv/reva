@@ -600,11 +600,12 @@ const unsafeResolvers = {
     },
     candidacy_updateLastActivityDate: async (
       _parent: unknown,
-      payload: {
+      input: {
         candidacyId: string;
         readyForJuryEstimatedAt: Date;
       },
-    ) => updateLastActivityDate(payload),
+      context: GraphqlContext,
+    ) => updateLastActivityDate({ input, context }),
   },
 };
 
