@@ -55,6 +55,43 @@ context("Candidacy Banner Display Logic", () => {
       cy.get('[data-test="actualisation-banner"]').should("not.exist");
       cy.get('[data-test="welcome-banner"]').should("not.exist");
     });
+
+    it("should display confirmed contestation banner when candidacy has both invalidated and confirmed contestations", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+          [
+            {
+              certificationAuthorityContestationDecision:
+                "CADUCITE_INVALIDATED",
+              contestationSentAt: new Date().getTime(),
+            },
+            {
+              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
+              contestationSentAt: new Date().getTime(),
+            },
+          ];
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="contestation-caducite-confirmed-banner"]').should(
+        "exist",
+      );
+      cy.get('[data-test="pending-contestation-caducite-banner"]').should(
+        "not.exist",
+      );
+      cy.get('[data-test="caduque-banner"]').should("not.exist");
+      cy.get('[data-test="actualisation-banner"]').should("not.exist");
+      cy.get('[data-test="welcome-banner"]').should("not.exist");
+    });
   });
 
   describe("Pending Contestation Caducite Banner", () => {
@@ -63,6 +100,40 @@ context("Candidacy Banner Display Logic", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
           [
+            {
+              certificationAuthorityContestationDecision: "DECISION_PENDING",
+              contestationSentAt: new Date().getTime(),
+            },
+          ];
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        });
+      });
+
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@candidate_getCandidateWithCandidacy");
+      cy.wait("@activeFeaturesForConnectedUser");
+
+      cy.get('[data-test="pending-contestation-caducite-banner"]').should(
+        "exist",
+      );
+      cy.get('[data-test="caduque-banner"]').should("not.exist");
+      cy.get('[data-test="actualisation-banner"]').should("not.exist");
+      cy.get('[data-test="welcome-banner"]').should("not.exist");
+    });
+
+    it("should display pending contestation banner when candidacy has both invalidated and pending contestations", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+          [
+            {
+              certificationAuthorityContestationDecision:
+                "CADUCITE_INVALIDATED",
+              contestationSentAt: new Date().getTime(),
+            },
             {
               certificationAuthorityContestationDecision: "DECISION_PENDING",
               contestationSentAt: new Date().getTime(),
@@ -130,6 +201,41 @@ context("Candidacy Banner Display Logic", () => {
             {
               decision: ADMISSIBLE_DECISION,
             };
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          });
+        });
+
+        cy.login();
+        cy.wait("@candidate_login");
+        cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@activeFeaturesForConnectedUser");
+
+        cy.get('[data-test="caduque-banner"]').should("exist");
+        cy.get('[data-test="actualisation-banner"]').should("not.exist");
+        cy.get('[data-test="welcome-banner"]').should("not.exist");
+      });
+
+      it(`should display caduque banner when candidacy has invalidated contestation with ${status} status`, () => {
+        cy.fixture("candidate1.json").then((candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
+            subMonths(new Date(), 6).getTime();
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+            status;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+            {
+              decision: ADMISSIBLE_DECISION,
+            };
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+            [
+              {
+                certificationAuthorityContestationDecision:
+                  "CADUCITE_INVALIDATED",
+                contestationSentAt: new Date().getTime(),
+              },
+            ];
 
           cy.intercept("POST", "/api/graphql", (req) => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
@@ -225,6 +331,45 @@ context("Candidacy Banner Display Logic", () => {
             cy.get('[data-test="welcome-banner"]').should("exist");
           }
         });
+
+        it(`should ${shouldShowBanner ? "display" : "hide"} actualisation banner when candidacy has invalidated contestation and ${name}`, () => {
+          cy.fixture("candidate1.json").then((candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
+              lastActivityDate();
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              VALID_STATUSES[0];
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+              {
+                decision: ADMISSIBLE_DECISION,
+              };
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = false;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
+              [
+                {
+                  certificationAuthorityContestationDecision:
+                    "CADUCITE_INVALIDATED",
+                  contestationSentAt: new Date().getTime(),
+                },
+              ];
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+            });
+          });
+
+          cy.login();
+          cy.wait("@candidate_login");
+          cy.wait("@candidate_getCandidateWithCandidacy");
+          cy.wait("@activeFeaturesForConnectedUser");
+
+          if (shouldShowBanner) {
+            cy.get('[data-test="actualisation-banner"]').should("exist");
+            cy.get('[data-test="welcome-banner"]').should("not.exist");
+          } else {
+            cy.get('[data-test="actualisation-banner"]').should("not.exist");
+            cy.get('[data-test="welcome-banner"]').should("exist");
+          }
+        });
       },
     );
 
@@ -283,6 +428,34 @@ context("Candidacy Banner Display Logic", () => {
           candidate.data.candidate_getCandidateWithCandidacy.candidacy = {
             ...candidate.data.candidate_getCandidateWithCandidacy.candidacy,
             ...candidacy,
+          };
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          });
+        });
+
+        cy.login();
+        cy.wait("@candidate_login");
+        cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@activeFeaturesForConnectedUser");
+
+        cy.get('[data-test="welcome-banner"]').should("exist");
+        cy.get('[data-test="actualisation-banner"]').should("not.exist");
+        cy.get('[data-test="caduque-banner"]').should("not.exist");
+      });
+
+      it(`should display welcome banner when candidacy has invalidated contestation and ${name}`, () => {
+        cy.fixture("candidate1.json").then((candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy = {
+            ...candidate.data.candidate_getCandidateWithCandidacy.candidacy,
+            ...candidacy,
+            candidacyContestationsCaducite: [
+              {
+                certificationAuthorityContestationDecision:
+                  "CADUCITE_INVALIDATED",
+                contestationSentAt: new Date().getTime(),
+              },
+            ],
           };
           cy.intercept("POST", "/api/graphql", (req) => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
