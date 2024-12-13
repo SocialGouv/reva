@@ -11,10 +11,28 @@ import { createCandidacyHelper } from "../../../../test/helpers/entities/create-
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createCandidacyContestationCaducite } from "./createCandidacyContestationCaducite";
+import { randomUUID } from "crypto";
 
 const VALID_CONTESTATION_REASON = "Valid contestation reason";
 const FUTURE_DATE = addDays(new Date(), 30);
 const PAST_DATE = subDays(new Date(), 1);
+const CONTEXT = {
+  auth: {
+    userInfo: {
+      sub: randomUUID(),
+      email: "test@test.com",
+      email_verified: true,
+      preferred_username: "test",
+      realm_access: { roles: ["candidate" as KeyCloakUserRole] },
+    },
+    hasRole: (_role: string) => true,
+  },
+  app: {
+    keycloak: {
+      hasRole: (_role: string) => true,
+    },
+  },
+};
 
 const createContestationMutation = async ({
   keycloakId,
@@ -55,9 +73,12 @@ describe("createCandidacyContestationCaducite", () => {
       const candidacy = await createCandidacyHelper();
 
       const createContestationPromise = createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: "",
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: "",
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -69,9 +90,12 @@ describe("createCandidacyContestationCaducite", () => {
       const candidacy = await createCandidacyHelper();
 
       const createContestationPromise = createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: PAST_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: PAST_DATE,
+        },
+        context: CONTEXT,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -83,9 +107,12 @@ describe("createCandidacyContestationCaducite", () => {
   describe("Candidacy validation", () => {
     test("should fail when candidacy does not exist", async () => {
       const createContestationPromise = createCandidacyContestationCaducite({
-        candidacyId: faker.string.uuid(),
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: faker.string.uuid(),
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -106,9 +133,12 @@ describe("createCandidacyContestationCaducite", () => {
       });
 
       const createContestationPromise = createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -129,9 +159,12 @@ describe("createCandidacyContestationCaducite", () => {
       });
 
       const createContestationPromise = createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       await expect(createContestationPromise).rejects.toThrow(
@@ -145,9 +178,12 @@ describe("createCandidacyContestationCaducite", () => {
       const candidacy = await createCandidacyHelper();
 
       const result = await createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       expect(result).toMatchObject({
@@ -176,9 +212,12 @@ describe("createCandidacyContestationCaducite", () => {
       });
 
       const result = await createCandidacyContestationCaducite({
-        candidacyId: candidacy.id,
-        contestationReason: VALID_CONTESTATION_REASON,
-        readyForJuryEstimatedAt: FUTURE_DATE,
+        input: {
+          candidacyId: candidacy.id,
+          contestationReason: VALID_CONTESTATION_REASON,
+          readyForJuryEstimatedAt: FUTURE_DATE,
+        },
+        context: CONTEXT,
       });
 
       expect(result).toMatchObject({

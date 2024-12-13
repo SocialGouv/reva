@@ -1,5 +1,24 @@
+import { randomUUID } from "crypto";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { updateLastActivityDate } from "./updateLastActivityDate";
+
+const CONTEXT = {
+  auth: {
+    userInfo: {
+      sub: randomUUID(),
+      email: "test@test.com",
+      email_verified: true,
+      preferred_username: "test",
+      realm_access: { roles: ["candidate" as KeyCloakUserRole] },
+    },
+    hasRole: (_role: string) => true,
+  },
+  app: {
+    keycloak: {
+      hasRole: (_role: string) => true,
+    },
+  },
+};
 
 describe("updateLastActivityDate", () => {
   test("should fail when readyForJuryEstimatedAt is in the past", async () => {
@@ -9,8 +28,11 @@ describe("updateLastActivityDate", () => {
 
     await expect(async () => {
       await updateLastActivityDate({
-        candidacyId: candidacy.id,
-        readyForJuryEstimatedAt: pastDate,
+        input: {
+          candidacyId: candidacy.id,
+          readyForJuryEstimatedAt: pastDate,
+        },
+        context: CONTEXT,
       });
     }).rejects.toThrow(
       "La date de préparation pour le jury ne peut être dans le passé",
@@ -23,8 +45,11 @@ describe("updateLastActivityDate", () => {
 
     await expect(async () => {
       await updateLastActivityDate({
-        candidacyId: "non-existent-id",
-        readyForJuryEstimatedAt: futureDate,
+        input: {
+          candidacyId: "non-existent-id",
+          readyForJuryEstimatedAt: futureDate,
+        },
+        context: CONTEXT,
       });
     }).rejects.toThrow();
   });
@@ -35,8 +60,11 @@ describe("updateLastActivityDate", () => {
     futureDate.setDate(futureDate.getDate() + 30);
 
     const updatedCandidacy = await updateLastActivityDate({
-      candidacyId: candidacy.id,
-      readyForJuryEstimatedAt: futureDate,
+      input: {
+        candidacyId: candidacy.id,
+        readyForJuryEstimatedAt: futureDate,
+      },
+      context: CONTEXT,
     });
 
     expect(updatedCandidacy.readyForJuryEstimatedAt?.getTime()).toBe(
