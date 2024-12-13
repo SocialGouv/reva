@@ -253,7 +253,7 @@ const PageContent = ({
   );
 
   return (
-    <div data-test="add-fc-certification-page">
+    <div data-test="certification-registry-manager-update-certification-description-page">
       <h1>Descriptif de la certification</h1>
       <p className="mb-12 text-xl">
         Complétez ou modifiez les informations concernant cette certification.
@@ -269,7 +269,9 @@ const PageContent = ({
           titleIconClass="fr-icon-award-fill"
         >
           <div className="flex flex-col gap-4">
-            <Info title="Code RNCP">{certification.codeRncp}</Info>
+            <Info data_test="rncp-code-title" title="Code RNCP">
+              {certification.codeRncp}
+            </Info>
             <h3 className="mb-0">Descriptif de la certification</h3>
             <Info title="Intitulé">{certification.label}</Info>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -479,12 +481,14 @@ const Info = ({
   title,
   children,
   className,
+  data_test,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
+  data_test?: string;
 }) => (
-  <dl className={`${className || ""}`}>
+  <dl data-test={data_test} className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>
