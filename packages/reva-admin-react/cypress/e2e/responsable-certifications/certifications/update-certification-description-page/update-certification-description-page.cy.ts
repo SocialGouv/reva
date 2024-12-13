@@ -42,14 +42,10 @@ context("when i access the update certification description page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateCertificationDescriptionPage",
     );
 
-    cy.get(
-      '[data-test="certification-registry-manager-update-certification-description-page"]',
-    )
-      .children("h1")
-      .should("have.text", "Descriptif de la certification");
-
-    cy.get('[data-test="rncp-code-title"]')
-      .children("dd")
-      .should("have.text", "37310");
+    cy.get('[data-test="certification-description-card"]')
+      .children("div")
+      .children("div")
+      .children("h2")
+      .should("have.text", "Informations liées au code RNCP 37310");
   });
 });

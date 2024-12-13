@@ -81,6 +81,8 @@ model Certification {
   rncpLevel            Int?      @map("rncp_level")
   rncpTypeDiplome      String?   @map("rncp_type_diplome") @db.VarChar(255)
   rncpExpiresAt        DateTime? @map("rncp_expires_at") @db.Timestamptz(6)
+  rncpPublishedAt      DateTime? @map("rncp_published_at") @db.Timestamptz(6)
+  rncpEffectiveAt      DateTime? @map("rncp_effective_at") @db.Timestamptz(6)
   rncpDeliveryDeadline DateTime? @map("rncp_delivery_deadline") @db.Timestamptz(6)
 
   certificationOnFormacode CertificationOnFormacode[]

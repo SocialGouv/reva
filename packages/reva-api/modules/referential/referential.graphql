@@ -43,6 +43,8 @@ type Certification {
   expiresAt: Timestamp!
   competenceBlocs: [CertificationCompetenceBloc!]!
   rncpExpiresAt: Timestamp
+  rncpPublishedAt: Timestamp
+  rncpEffectiveAt: Timestamp
   rncpDeliveryDeadline: Timestamp
   domains: [Domain!]!
   fcPrerequisites: String
@@ -182,6 +184,8 @@ type FCCertification {
   NOMENCLATURE_EUROPE: FCNomenclatureEurope
   DATE_FIN_ENREGISTREMENT: Timestamp
   DATE_LIMITE_DELIVRANCE: Timestamp
+  DATE_EFFET: Timestamp
+  DATE_DE_PUBLICATION: Timestamp
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
   DOMAINS: [Domain!]!

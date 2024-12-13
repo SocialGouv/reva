@@ -264,25 +264,23 @@ const PageContent = ({
       <div className="flex flex-col gap-8">
         <EnhancedSectionCard
           data-test="certification-description-card"
-          title="Descriptif de la certification"
+          title={`Informations liées au code RNCP ${certification.codeRncp}`}
           status="TO_COMPLETE"
-          titleIconClass="fr-icon-award-fill"
         >
           <div className="flex flex-col gap-4">
-            <Info data_test="rncp-code-title" title="Code RNCP">
-              {certification.codeRncp}
-            </Info>
-            <h3 className="mb-0">Descriptif de la certification</h3>
+            <h3 className="mb-0">
+              Descriptif de la certification dans France compétences
+            </h3>
             <Info title="Intitulé">{certification.label}</Info>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Info title="Niveau">{certification.degree.label}</Info>
               <Info title="Type">{certification.typeDiplome || "Inconnu"}</Info>
-              <Info title="Date d’échéance">
-                {certification.rncpExpiresAt
-                  ? format(certification.rncpExpiresAt, "dd/MM/yyyy")
+              <Info title="Date de publication">
+                {certification.rncpPublishedAt
+                  ? format(certification.rncpPublishedAt, "dd/MM/yyyy")
                   : "Inconnue"}
               </Info>
-              <Info title="Date de dernière delivrance">
+              <Info title="Date d'échéance">
                 {certification.rncpDeliveryDeadline
                   ? format(certification.rncpDeliveryDeadline, "dd/MM/yyyy")
                   : "Inconnue"}
@@ -481,14 +479,12 @@ const Info = ({
   title,
   children,
   className,
-  data_test,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
-  data_test?: string;
 }) => (
-  <dl data-test={data_test} className={`${className || ""}`}>
+  <dl className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

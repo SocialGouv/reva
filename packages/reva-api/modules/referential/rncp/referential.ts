@@ -49,6 +49,8 @@ export type RNCPCertification = {
   };
   DATE_FIN_ENREGISTREMENT?: number;
   DATE_LIMITE_DELIVRANCE?: number;
+  DATE_EFFET?: number;
+  DATE_DE_PUBLICATION?: number;
   BLOCS_COMPETENCES: {
     CODE: string;
     LIBELLE: string;
@@ -270,6 +272,12 @@ function mapToRNCPCertification(data: any): RNCPCertification {
         : undefined,
       DATE_LIMITE_DELIVRANCE: data.DATE_LIMITE_DELIVRANCE
         ? getDateFromString(data.DATE_LIMITE_DELIVRANCE)
+        : undefined,
+      DATE_EFFET: data.DATE_EFFET
+        ? getDateFromString(data.DATE_EFFET)
+        : undefined,
+      DATE_DE_PUBLICATION: data.DATE_DE_PUBLICATION
+        ? getDateFromString(data.DATE_DE_PUBLICATION)
         : undefined,
       BLOCS_COMPETENCES: ((data.BLOCS_COMPETENCES || []) as any[])
         .map((bloc) => {

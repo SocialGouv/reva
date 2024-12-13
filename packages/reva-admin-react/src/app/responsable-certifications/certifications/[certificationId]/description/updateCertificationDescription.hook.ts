@@ -13,6 +13,8 @@ const getCertificationQuery = graphql(`
       codeRncp
       status
       rncpExpiresAt
+      rncpPublishedAt
+      rncpEffectiveAt
       rncpDeliveryDeadline
       availableAt
       expiresAt

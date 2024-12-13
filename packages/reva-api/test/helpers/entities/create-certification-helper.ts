@@ -28,6 +28,8 @@ export const createCertificationHelper = async (
       rncpTypeDiplome: "HyperDoctorat" as const,
       rncpExpiresAt: faker.date.future(),
       rncpDeliveryDeadline: faker.date.future(),
+      rncpPublishedAt: faker.date.future(),
+      rncpEffectiveAt: faker.date.future(),
       certificationAuthorityStructureId:
         certificationAuthority
           .certificationAuthorityOnCertificationAuthorityStructure[0]

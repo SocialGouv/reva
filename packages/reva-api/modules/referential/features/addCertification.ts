@@ -64,6 +64,12 @@ export const addCertification = async (params: { codeRncp: string }) => {
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,
+      rncpPublishedAt: rncpCertification.DATE_DE_PUBLICATION
+        ? new Date(rncpCertification.DATE_DE_PUBLICATION)
+        : null,
+      rncpEffectiveAt: rncpCertification.DATE_EFFET
+        ? new Date(rncpCertification.DATE_EFFET)
+        : null,
       fcPrerequisites: rncpCertification.PREREQUIS.LISTE_PREREQUIS,
       prerequisites: {
         createMany: {

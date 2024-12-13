@@ -7,6 +7,8 @@
       "status": "A_VALIDER_PAR_CERTIFICATEUR",
       "rncpExpiresAt": 1788127200000,
       "rncpDeliveryDeadline": null,
+      "rncpPublishedAt": null,
+      "rncpEffectiveAt": null,
       "availableAt": 1688162400000,
       "expiresAt": null,
       "typeDiplome": null,

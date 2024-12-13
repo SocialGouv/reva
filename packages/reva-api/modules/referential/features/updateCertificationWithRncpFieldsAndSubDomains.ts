@@ -41,6 +41,12 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,
+      rncpPublishedAt: rncpCertification.DATE_DE_PUBLICATION
+        ? new Date(rncpCertification.DATE_DE_PUBLICATION)
+        : null,
+      rncpEffectiveAt: rncpCertification.DATE_EFFET
+        ? new Date(rncpCertification.DATE_EFFET)
+        : null,
     },
   });
 
