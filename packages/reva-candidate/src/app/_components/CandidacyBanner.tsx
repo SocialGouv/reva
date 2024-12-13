@@ -3,6 +3,7 @@ import { useFeatureFlipping } from "@/components/feature-flipping/featureFlippin
 import { addMonths, isAfter, subWeeks } from "date-fns";
 import { ActualisationBanner } from "./ActualisationBanner";
 import { CaduqueBanner } from "./CaduqueBanner";
+import { ContestationCaduciteConfirmedBanner } from "./ContestationCaduciteConfirmedBanner";
 import { PendingContestationCaduciteBanner } from "./PendingContestationCaduciteBanner";
 import { WelcomeBanner } from "./WelcomeBanner";
 
@@ -40,9 +41,9 @@ export const CandidacyBanner = () => {
     isLastActiveStatusValidForActualisationBanner
   );
 
-  const displayCaduqueBanner = !!(
-    candidacy?.isCaduque && candidacyActualisationFeatureIsActive
-  );
+  const candidacyIsCaduque = !!candidacy?.isCaduque;
+  const displayCaduqueBanner =
+    candidacyIsCaduque && candidacyActualisationFeatureIsActive;
 
   const pendingContestationCaducite = candidacyContestationsCaducite?.find(
     (contestation) =>
@@ -51,11 +52,24 @@ export const CandidacyBanner = () => {
   );
   const hasPendingContestationCaducite = !!pendingContestationCaducite;
 
-  const displayContestationCaduciteHasBeenSent = !!(
-    candidacy?.isCaduque &&
+  const displayContestationCaduciteHasBeenSent =
+    candidacyIsCaduque &&
     candidacyActualisationFeatureIsActive &&
-    hasPendingContestationCaducite
+    hasPendingContestationCaducite;
+
+  const hasConfirmedCaducite = !!candidacyContestationsCaducite?.some(
+    (contestation) =>
+      contestation?.certificationAuthorityContestationDecision ===
+      "CADUCITE_CONFIRMED",
   );
+  const displayContestationCaduciteConfirmed =
+    candidacyIsCaduque &&
+    candidacyActualisationFeatureIsActive &&
+    hasConfirmedCaducite;
+
+  if (displayContestationCaduciteConfirmed) {
+    return <ContestationCaduciteConfirmedBanner />;
+  }
 
   if (displayContestationCaduciteHasBeenSent) {
     return (
