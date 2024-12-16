@@ -34,6 +34,9 @@ export default function UpdateCompetenceBlocPage() {
     try {
       await updateCertificationCompetenceBloc.mutateAsync(data);
       successToast("modifications enregistrées");
+      router.push(
+        `/responsable-certifications/certifications/${certificationId}`,
+      );
     } catch (e) {
       graphqlErrorToast(e);
     }

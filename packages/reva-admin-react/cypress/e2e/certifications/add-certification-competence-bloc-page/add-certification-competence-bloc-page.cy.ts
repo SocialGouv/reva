@@ -66,6 +66,10 @@ context("when i access the add certification page ", () => {
     cy.wait(
       "@createCertificationCompetenceBlocForAddCertificationCompetenceBlocPage",
     );
+    cy.url().should(
+      "eq",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/",
+    );
   });
 
   it("let me add a new competence to the competence bloc", function () {
