@@ -38,7 +38,7 @@ function interceptUpdateCertificationStructureMutation() {
   });
 }
 
-context("when i access the update certification page ", () => {
+context("when i access the update certification structure page ", () => {
   it("display the page with a correct title", function () {
     interceptCertification();
 
@@ -57,7 +57,7 @@ context("when i access the update certification page ", () => {
       .should("have.text", "Structure certificatrice et gestionnaires");
   });
 
-  it("let me update a competence bloc and submit the form", function () {
+  it("let me update the certification structure and submit the form", function () {
     interceptCertification();
     interceptUpdateCertificationStructureMutation();
     cy.admin(
@@ -77,5 +77,10 @@ context("when i access the update certification page ", () => {
     cy.get("button").contains("Enregistrer").click();
 
     cy.wait("@updateCertificationStructureForUpdateCertificationStructurePage");
+
+    cy.url().should(
+      "eq",
+      "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/",
+    );
   });
 });

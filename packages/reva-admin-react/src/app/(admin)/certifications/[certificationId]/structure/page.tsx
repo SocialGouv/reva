@@ -6,11 +6,14 @@ import {
   CertificationStructureFormData,
   StructureForm,
 } from "./_components/StructureForm";
+import { useRouter } from "next/navigation";
 
 export default function UpdateCertificationStructurePage() {
   const { certificationId } = useParams<{
     certificationId: string;
   }>();
+
+  const router = useRouter();
 
   const {
     certification,
@@ -28,6 +31,7 @@ export default function UpdateCertificationStructurePage() {
           .map(({ id }) => id),
       });
       successToast("modifications enregistrées");
+      router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);
     }
