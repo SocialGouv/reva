@@ -9,7 +9,6 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
-import { SectionCard } from "../../../../components/card/section-card/SectionCard";
 import { SmallNotice } from "../../../../components/small-notice/SmallNotice";
 
 import { useUpdateCertificationPage } from "./updateCertification.hook";
@@ -199,7 +198,7 @@ const PageContent = ({
         </EnhancedSectionCard>
 
         <CertificationCompetenceBlocsSummaryCard
-          isEditable
+          isEditable={isEditable}
           competenceBlocs={certification.competenceBlocs}
           onAddBlocCompetenceButtonClick={() =>
             router.push(
@@ -212,18 +211,13 @@ const PageContent = ({
             )
           }
         />
-        <SectionCard
+        <EnhancedSectionCard
           data-test="prerequisites-summary-card"
+          isEditable={isEditable}
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
-          hasButton
-          buttonTitle="Modifier"
-          buttonPriority="secondary"
-          buttonOnClick={() =>
-            router.push(
-              `/responsable-certifications/certifications/${certification.id}/prerequisites`,
-            )
-          }
+          customButtonTitle="Modifier"
+          buttonOnClickHref={`/responsable-certifications/certifications/${certification.id}/prerequisites`}
         >
           {certification.prerequisites.length ? (
             <ul className="ml-10" data-test="prerequisite-list">
@@ -242,7 +236,7 @@ const PageContent = ({
             l'ordre des prérequis ou corriger des fautes de frappe en cliquant
             sur le bouton “Modifier”.
           </SmallNotice>
-        </SectionCard>
+        </EnhancedSectionCard>
       </div>
     </div>
   );
