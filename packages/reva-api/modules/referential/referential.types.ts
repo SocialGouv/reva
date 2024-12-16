@@ -120,3 +120,7 @@ export interface UpdateCertificationDescriptionInput {
   availableAt: Date;
   expiresAt: Date;
 }
+
+export interface ValidateCertificationInput {
+  certificationId: string;
+}

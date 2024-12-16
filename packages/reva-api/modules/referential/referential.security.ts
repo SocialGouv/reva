@@ -37,6 +37,9 @@ export const referentialResolversSecurityMap = {
   "Mutation.referential_updateCertificationDescription":
     isAdminOrCertificationRegistryManagerOfCertification,
 
+  "Mutation.referential_validateCertification":
+    isAdminOrCertificationRegistryManagerOfCertification,
+
   "Query.getEtablissementAsAdmin": [hasRole(["admin"])],
   "Query.getCertificationCompetenceBloc": isAnyone,
 };

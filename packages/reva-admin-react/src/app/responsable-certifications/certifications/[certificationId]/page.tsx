@@ -5,18 +5,22 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { SmallNotice } from "../../../../components/small-notice/SmallNotice";
 
-import { useUpdateCertificationPage } from "./updateCertification.hook";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import {
   CertificationJuryFrequency,
   CertificationJuryModality,
 } from "@/graphql/generated/graphql";
+
+import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -28,10 +32,14 @@ export default function UpdateCertificationForCertificationRegistryManagerPage()
     certificationId: string;
   }>();
 
-  const { certification, getCertificationQueryStatus } =
+  const { certification, getCertificationQueryStatus, validateCertification } =
     useUpdateCertificationPage({ certificationId });
+
   return getCertificationQueryStatus === "success" && certification ? (
-    <PageContent certification={certification} />
+    <PageContent
+      certification={certification}
+      validateCertification={validateCertification}
+    />
   ) : null;
 }
 
@@ -70,10 +78,19 @@ const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   },
 ] as const;
 
+const modal = createModal({
+  id: "validate-certification",
+  isOpenedByDefault: false,
+});
+
 const PageContent = ({
   certification,
+  validateCertification,
 }: {
   certification: CertificationForPage;
+  validateCertification: ReturnType<
+    typeof useUpdateCertificationPage
+  >["validateCertification"];
 }) => {
   const router = useRouter();
 
@@ -232,7 +249,88 @@ const PageContent = ({
             sur le bouton “Modifier”.
           </SmallNotice>
         </EnhancedSectionCard>
+
+        {isEditable && (
+          <>
+            <div className=" h-[1px] w-[100%] bg-dsfr-light-decisions-border-border-default-grey" />
+
+            <div>
+              <h2 className="mb-4">Validation de la certification</h2>
+              <p>
+                Une fois toutes les informations relues, complétées et/ou
+                modifiées, vous pouvez valider cette certification. Si des
+                informations ont été enregistrées par erreur, contactez l’équipe
+                support France VAE. Si vous repérez une erreur qui implique une
+                mise à jour des informations enregistrées au RNCP, contactez
+                France compétences.
+              </p>
+            </div>
+          </>
+        )}
       </div>
+
+      {isEditable && (
+        <div
+          className={`flex gap-4 items-center justify-between mt-10`}
+          data-test="form-buttons"
+        >
+          <div className="flex gap-x-2 ml-auto">
+            <Button
+              type="button"
+              disabled={!isDescriptionComplete}
+              onClick={modal.open}
+            >
+              Valider cette certification
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <modal.Component
+        className="modal-validate-certification"
+        title={
+          <div>
+            <span
+              className="fr-icon-success-fill mr-2"
+              aria-hidden="true"
+            ></span>
+            Validation de la certification
+          </div>
+        }
+        size="large"
+        buttons={[
+          {
+            type: "button",
+            priority: "secondary",
+            children: "Modifier",
+          },
+          {
+            type: "button",
+            priority: "primary",
+            onClick: async () => {
+              try {
+                await validateCertification.mutateAsync({
+                  certificationId: certification.id,
+                });
+                successToast("La certification a été validée avec succès");
+              } catch (error) {
+                graphqlErrorToast(error);
+              }
+            },
+            children: "Valider",
+          },
+        ]}
+      >
+        <div className="flex flex-col gap-4">
+          Assurez-vous que les informations suivantes soient correctes avant de
+          valider :
+          <div>
+            <label className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification.codeRncp}`}</label>
+            <h6 className="mb-0">{certification.label}</h6>
+          </div>
+          {`Elle sera visible sur la plateforme France VAE du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}.`}
+        </div>
+      </modal.Component>
     </div>
   );
 };
