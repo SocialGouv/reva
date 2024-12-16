@@ -1,4 +1,7 @@
-import { CertificationCompetenceBloc } from "@prisma/client";
+import {
+  CertificationCompetenceBloc,
+  CertificationStatus,
+} from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 
@@ -38,8 +41,20 @@ export const updateCompetenceBlocsByCertificationId = async (
       },
     },
   });
+
   if (!certification) {
     throw new Error(`Certification non trouvée`);
+  }
+
+  const allowedStatus: CertificationStatus[] = [
+    "BROUILLON",
+    "A_VALIDER_PAR_CERTIFICATEUR",
+  ];
+
+  if (!allowedStatus.includes(certification?.status)) {
+    throw new Error(
+      "Le statut de la certification ne permet pas de modifier les blocs de compétences",
+    );
   }
 
   // Delete all blocs that has not been found in Params['blocs']

@@ -201,9 +201,14 @@ const unsafeReferentialResolvers = {
     referential_deleteCertificationCompetenceBloc: (
       _parent: unknown,
       {
+        certificationId,
         certificationCompetenceBlocId,
-      }: { certificationCompetenceBlocId: string },
-    ) => deleteCertificationCompetenceBloc({ certificationCompetenceBlocId }),
+      }: { certificationId: string; certificationCompetenceBlocId: string },
+    ) =>
+      deleteCertificationCompetenceBloc({
+        certificationId,
+        certificationCompetenceBlocId,
+      }),
     referential_addCertification: (
       _parent: unknown,
       { input }: { input: { codeRncp: string } },
