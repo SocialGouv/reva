@@ -27,7 +27,6 @@ export default function UpdateCompetenceBlocPage() {
     competenceBloc,
     getCompetenceBlocQueryStatus,
     updateCertificationCompetenceBloc,
-    deleteCertificationCompetenceBloc,
   } = useUpdateCompetenceBlocPage({ certificationCompetenceBlocId });
 
   const handleFormSubmit = async (data: CompetenceBlocFormData) => {
@@ -42,34 +41,17 @@ export default function UpdateCompetenceBlocPage() {
     }
   };
 
-  const handleCompetenceBlocDeleteButtonClick = async () => {
-    try {
-      await deleteCertificationCompetenceBloc.mutateAsync();
-      successToast("modifications enregistrées");
-      router.push(
-        `/responsable-certifications/certifications/${certificationId}`,
-      );
-    } catch (e) {
-      graphqlErrorToast(e);
-    }
-  };
   return getCompetenceBlocQueryStatus === "success" && competenceBloc ? (
-    <PageContent
-      competenceBloc={competenceBloc}
-      onSubmit={handleFormSubmit}
-      onDeleteCompetenceBlocButtonClick={handleCompetenceBlocDeleteButtonClick}
-    />
+    <PageContent competenceBloc={competenceBloc} onSubmit={handleFormSubmit} />
   ) : null;
 }
 
 const PageContent = ({
   competenceBloc,
   onSubmit,
-  onDeleteCompetenceBlocButtonClick,
 }: {
   competenceBloc: CertificationCompetenceBlocForPage;
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
-  onDeleteCompetenceBlocButtonClick?: () => void;
 }) => (
   <div data-test="certification-registry-manager-update-certification-competence-bloc-page">
     <Breadcrumb
@@ -123,7 +105,6 @@ const PageContent = ({
         })),
       }}
       onSubmit={onSubmit}
-      onDeleteCompetenceBlocButtonClick={onDeleteCompetenceBlocButtonClick}
     />
   </div>
 );

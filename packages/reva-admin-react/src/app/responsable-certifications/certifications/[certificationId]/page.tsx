@@ -200,11 +200,6 @@ const PageContent = ({
         <CertificationCompetenceBlocsSummaryCard
           isEditable={isEditable}
           competenceBlocs={certification.competenceBlocs}
-          onAddBlocCompetenceButtonClick={() =>
-            router.push(
-              `/responsable-certifications/certifications/${certification.id}/bloc-competence/add`,
-            )
-          }
           onUpdateCompetenceBlocButtonClick={(blocId) =>
             router.push(
               `/responsable-certifications/certifications/${certification.id}/bloc-competence/${blocId}`,

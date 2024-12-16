@@ -15,7 +15,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
     label: string;
     competences: { id: string; label: string }[];
   }[];
-  onAddBlocCompetenceButtonClick: () => void;
+  onAddBlocCompetenceButtonClick?: () => void;
   onUpdateCompetenceBlocButtonClick: (blocId: string) => void;
 }) => (
   <SectionCard
@@ -23,7 +23,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
     data-test="competence-blocs-summary-card"
     titleIconClass="fr-icon-survey-fill"
     {...(() =>
-      isEditable
+      isEditable && onAddBlocCompetenceButtonClick
         ? {
             hasButton: true,
             buttonPriority: "tertiary no outline",

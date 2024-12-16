@@ -139,18 +139,20 @@ export const CompetenceBlocForm = ({
       >
         Ajouter une compétence
       </Button>
-      <hr className="mt-6 mb-1" />
       {onDeleteCompetenceBlocButtonClick && (
-        <Button
-          data-test="delete-competence-bloc-button"
-          type="button"
-          priority="tertiary no outline"
-          iconId="fr-icon-delete-line"
-          iconPosition="left"
-          onClick={onDeleteCompetenceBlocButtonClick}
-        >
-          Supprimer ce bloc
-        </Button>
+        <>
+          <hr className="mt-6 mb-1" />
+          <Button
+            data-test="delete-competence-bloc-button"
+            type="button"
+            priority="tertiary no outline"
+            iconId="fr-icon-delete-line"
+            iconPosition="left"
+            onClick={onDeleteCompetenceBlocButtonClick}
+          >
+            Supprimer ce bloc
+          </Button>
+        </>
       )}
       <FormButtons
         backUrl={backUrl}

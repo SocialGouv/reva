@@ -32,16 +32,6 @@ function interceptUpdateCertificationCompetenceBlocMutation() {
   });
 }
 
-function interceptDeleteCertificationCompetenceBlocMutation() {
-  cy.intercept("POST", "/api/graphql", (req) => {
-    stubMutation(
-      req,
-      "deleteCertificationCompetenceBlocForCertificationRegistryManagerUpdateCompetenceBlocPage",
-      updateCertificationBlocMutationResponse,
-    );
-  });
-}
-
 context("when i access the update certification page ", () => {
   it("display the page with a correct title", function () {
     interceptCertificationCompetenceBloc();
@@ -139,29 +129,5 @@ context("when i access the update certification page ", () => {
     cy.get('[data-test="delete-competence-button"]').eq(1).click();
 
     cy.get('[data-test="competence-list"] input').should("have.length", 3);
-  });
-
-  it("let me delete a competence bloc", function () {
-    interceptCertificationCompetenceBloc();
-    interceptDeleteCertificationCompetenceBlocMutation();
-    cy.admin(
-      "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
-    );
-    cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getMaisonMereCGUQuery");
-    cy.wait(
-      "@getCompetenceBlocForCertificationRegistryManagerUpdateCompetenceBlocPage",
-    );
-
-    cy.get('[data-test="delete-competence-bloc-button"]').click();
-
-    cy.wait(
-      "@deleteCertificationCompetenceBlocForCertificationRegistryManagerUpdateCompetenceBlocPage",
-    );
-
-    cy.url().should(
-      "eq",
-      "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/",
-    );
   });
 });

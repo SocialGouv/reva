@@ -117,28 +117,6 @@ context("when i access the update certification page ", () => {
         "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/008a6fab-55ad-4412-ab17-56bc4b8e2fd0/",
       );
     });
-
-    it("let me click on the 'add competence bloc' button and leads me to the create competence bloc page ", function () {
-      interceptCertification({});
-
-      cy.admin(
-        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
-      );
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
-      cy.wait("@getMaisonMereCGUQuery");
-      cy.wait(
-        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
-      );
-
-      cy.get(
-        '[data-test="competence-blocs-summary-card"] [data-test="action-button"] ',
-      ).click();
-      cy.url().should(
-        "eq",
-        "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/bloc-competence/add/",
-      );
-    });
   });
   context("prerequisites summary card", () => {
     it("display a default message when the certification has no prerequisite", function () {
