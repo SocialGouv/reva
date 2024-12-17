@@ -29,6 +29,7 @@ const departments = [
   { label: "Eure", code: "27", codeRegion: "28" },
   { label: "Eure-et-Loir", code: "28", codeRegion: "24" },
   { label: "Finistère", code: "29", codeRegion: "53" },
+  { label: "Corse", code: "20", codeRegion: "94" },
   { label: "Corse-du-Sud", code: "2A", codeRegion: "94" },
   { label: "Haute-Corse", code: "2B", codeRegion: "94" },
   { label: "Gard", code: "30", codeRegion: "76" },

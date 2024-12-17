@@ -1,4 +1,4 @@
-import { Candidate } from "@prisma/client";
+import { Candidate, Department } from "@prisma/client";
 import { isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
@@ -65,15 +65,11 @@ export const updateCandidate = async ({
     candidateToUpdate.zip !== candidateInput.zip;
 
   if (isNewZip && candidateToUpdate.zip?.match(/^(\d{5}|)$/)) {
-    const departmentCode = candidateInput.zip?.slice(0, 2);
-
-    const department = await prismaClient.department.findUnique({
-      where: { code: departmentCode },
-    });
-
+    const department = await getDepartmentFromZipCode(candidateToUpdate.zip);
     if (!department) {
       throw new Error(`Le département n'existe pas`);
     }
+
     candidateInput.departmentId = department.id;
   }
 
@@ -134,4 +130,30 @@ export const updateCandidate = async ({
         countrySelected.label == "France" ? birthDepartmentId : undefined,
     },
   });
+};
+
+const getDepartmentFromZipCode = async (
+  zipCode: string,
+): Promise<Department | undefined> => {
+  const zipWith2Digits = zipCode?.slice(0, 2);
+
+  const departmentWith2Digits = await prismaClient.department.findUnique({
+    where: { code: zipWith2Digits },
+  });
+
+  if (departmentWith2Digits) {
+    return departmentWith2Digits;
+  }
+
+  const zipWith3Digits = zipCode?.slice(0, 3);
+
+  const departmentWith3Digits = await prismaClient.department.findUnique({
+    where: { code: zipWith3Digits },
+  });
+
+  if (departmentWith3Digits) {
+    return departmentWith3Digits;
+  }
+
+  return undefined;
 };
