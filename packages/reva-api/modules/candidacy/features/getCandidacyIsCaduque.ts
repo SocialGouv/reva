@@ -1,5 +1,7 @@
-import { addMonths, isBefore } from "date-fns";
+import { addDays, isBefore } from "date-fns";
 import { getCandidacyById } from "./getCandidacyById";
+
+const CADUQUITE_THRESHOLD_DAYS = 183;
 
 export const getCandidacyIsCaduque = async ({
   candidacyId,
@@ -12,7 +14,10 @@ export const getCandidacyIsCaduque = async ({
     return false;
   }
 
-  const sixMonthsFromLastActivity = addMonths(candidacy.lastActivityDate, 6);
+  const sixMonthsFromLastActivity = addDays(
+    candidacy.lastActivityDate,
+    CADUQUITE_THRESHOLD_DAYS,
+  );
 
   return isBefore(sixMonthsFromLastActivity, new Date());
 };
