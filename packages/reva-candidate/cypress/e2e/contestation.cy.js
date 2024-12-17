@@ -8,6 +8,8 @@ const DATE_INPUT = '[data-test="contestation-date-input"] input';
 const SUBMIT_BUTTON = '[data-test="form-buttons"] button[type="submit"]';
 const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';
 const CONTINUE_BUTTON = '[data-test="contestation-continue-button"]';
+const HAS_BEEN_CREATED_COMPONENT =
+  '[data-test="contestation-has-been-created"]';
 
 context("Contestation Page", () => {
   beforeEach(() => {
@@ -115,7 +117,7 @@ context("Contestation Page", () => {
 
       cy.wait("@createContestation");
 
-      cy.contains("Votre contestation est enregistrée").should("be.visible");
+      cy.get(HAS_BEEN_CREATED_COMPONENT).should("be.visible");
       cy.get(CONTINUE_BUTTON).should("be.visible");
     });
 
