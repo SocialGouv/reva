@@ -55,7 +55,7 @@ const HasBeenUpdatedComponent = ({
   readyForJuryEstimatedAt: string;
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-test="actualisation-has-been-updated">
       <h1>Votre actualisation est enregistrée</h1>
       <p className="text-xl">
         Vous pouvez désormais continuer votre parcours ! Rendez-vous dans votre

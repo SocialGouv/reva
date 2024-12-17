@@ -8,7 +8,8 @@ const DATE_INPUT = '[data-test="actualisation-date-input"] input';
 const SUBMIT_BUTTON = '[data-test="form-buttons"] button[type="submit"]';
 const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';
 const CONTINUE_BUTTON = '[data-test="actualisation-continue-button"]';
-
+const HAS_BEEN_UPDATED_COMPONENT =
+  '[data-test="actualisation-has-been-updated"]';
 context("Actualisation Page", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
@@ -122,7 +123,7 @@ context("Actualisation Page", () => {
 
       cy.wait("@updateLastActivityDate");
 
-      cy.contains("Votre actualisation est enregistrée").should("be.visible");
+      cy.get(HAS_BEEN_UPDATED_COMPONENT).should("be.visible");
       cy.get(CONTINUE_BUTTON).should("be.visible");
     });
 
