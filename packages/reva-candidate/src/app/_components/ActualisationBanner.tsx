@@ -28,7 +28,7 @@ export const ActualisationBanner = ({
             pourrez plus continuer votre parcours.
           </>
         }
-        imageSrc="/candidat/images/image-home-character-young-man-glasses.png"
+        imageSrc="/candidat/images/image-hourglass.png"
         imgAlt="Homme portant des lunettes"
       />
       <Link href="/actualisation" className="self-end">
