@@ -1,11 +1,12 @@
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { addMonths, isAfter, subWeeks } from "date-fns";
+import { addDays, isAfter } from "date-fns";
 import { ActualisationBanner } from "./ActualisationBanner";
 import { CaduqueBanner } from "./CaduqueBanner";
 import { ContestationCaduciteConfirmedBanner } from "./ContestationCaduciteConfirmedBanner";
 import { PendingContestationCaduciteBanner } from "./PendingContestationCaduciteBanner";
 import { WelcomeBanner } from "./WelcomeBanner";
+import { ACTUALISATION_THRESHOLD_DAYS } from "./banner-thresholds";
 
 export const CandidacyBanner = () => {
   const { candidacy } = useCandidacy();
@@ -16,9 +17,9 @@ export const CandidacyBanner = () => {
 
   let todayIsAfterActualisationBannerThresholdDate: boolean = false;
   if (candidacy?.lastActivityDate) {
-    const actualisationBannerThresholdDate = subWeeks(
-      addMonths(candidacy.lastActivityDate, 6),
-      2,
+    const actualisationBannerThresholdDate = addDays(
+      candidacy.lastActivityDate,
+      ACTUALISATION_THRESHOLD_DAYS,
     );
     todayIsAfterActualisationBannerThresholdDate = isAfter(
       new Date(),

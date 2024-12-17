@@ -1,4 +1,4 @@
-import { addDays, addWeeks, subDays, subMonths } from "date-fns";
+import { subDays } from "date-fns";
 import { stubMutation, stubQuery } from "../utils/graphql";
 
 const VALID_STATUSES = [
@@ -10,6 +10,29 @@ const ADMISSIBLE_DECISION = "ADMISSIBLE";
 const PROJET_STATUS = "PROJET";
 
 const ACTUALISATION_FEATURE = "candidacy_actualisation";
+
+const CADUCITE_THRESHOLD_DAYS = 183;
+const ACTUALISATION_THRESHOLD_DAYS = 166;
+
+const CADUCITE_THRESHOLD_TIME = subDays(
+  new Date(),
+  CADUCITE_THRESHOLD_DAYS,
+).getTime();
+
+const ACTUALISATION_THRESHOLD_TIME = subDays(
+  new Date(),
+  ACTUALISATION_THRESHOLD_DAYS,
+).getTime();
+
+const ACTUALISATION_THRESHOLD_TIME_ONE_DAY_BEFORE = subDays(
+  new Date(),
+  ACTUALISATION_THRESHOLD_DAYS + 1,
+).getTime();
+
+const ACTUALISATION_THRESHOLD_TIME_ONE_DAY_AFTER = subDays(
+  new Date(),
+  ACTUALISATION_THRESHOLD_DAYS - 1,
+).getTime();
 
 context("Candidacy Banner Display Logic", () => {
   beforeEach(() => {
@@ -194,7 +217,7 @@ context("Candidacy Banner Display Logic", () => {
         cy.fixture("candidate1.json").then((candidate) => {
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-            subMonths(new Date(), 6).getTime();
+            CADUCITE_THRESHOLD_TIME;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
             status;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
@@ -221,7 +244,7 @@ context("Candidacy Banner Display Logic", () => {
         cy.fixture("candidate1.json").then((candidate) => {
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-            subMonths(new Date(), 6).getTime();
+            CADUCITE_THRESHOLD_TIME;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
             status;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
@@ -282,19 +305,17 @@ context("Candidacy Banner Display Logic", () => {
     const actualisationTestCases = [
       {
         name: "last activity is before 5.5 month threshold (5 months, 1 week and 6 days)",
-        lastActivityDate: () =>
-          addDays(addWeeks(subMonths(new Date(), 6), 2), 1).getTime(),
+        lastActivityDate: () => ACTUALISATION_THRESHOLD_TIME_ONE_DAY_AFTER,
         shouldShowBanner: false,
       },
       {
         name: "last activity is exactly at 5.5 month threshold (5 months, 2 weeks)",
-        lastActivityDate: () => addWeeks(subMonths(new Date(), 6), 2).getTime(),
+        lastActivityDate: () => ACTUALISATION_THRESHOLD_TIME,
         shouldShowBanner: true,
       },
       {
         name: "last activity exceeds 5.5 month threshold (5 months, 2 weeks and 1 day)",
-        lastActivityDate: () =>
-          subDays(addWeeks(subMonths(new Date(), 6), 2), 1).getTime(),
+        lastActivityDate: () => ACTUALISATION_THRESHOLD_TIME_ONE_DAY_BEFORE,
         shouldShowBanner: true,
       },
     ];
@@ -376,7 +397,7 @@ context("Candidacy Banner Display Logic", () => {
     it("should redirect to actualisation page when clicking actualisation button", () => {
       cy.fixture("candidate1.json").then((candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-          subDays(addWeeks(subMonths(new Date(), 6), 2), 1).getTime();
+          ACTUALISATION_THRESHOLD_TIME_ONE_DAY_BEFORE;
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           VALID_STATUSES[0];
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
@@ -487,7 +508,7 @@ context("Candidacy Banner Display Logic", () => {
       cy.fixture("candidate1.json").then((candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-          subMonths(new Date(), 6).getTime();
+          CADUCITE_THRESHOLD_TIME;
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);

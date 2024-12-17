@@ -1,7 +1,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
-import { addMonths, format } from "date-fns";
+import { addDays, format } from "date-fns";
 import Link from "next/link";
 import { Banner } from "./Banner";
+import { CADUQUITE_THRESHOLD_DAYS } from "./banner-thresholds";
 
 export const ActualisationBanner = ({
   lastActivityDate,
@@ -10,7 +11,7 @@ export const ActualisationBanner = ({
 }) => {
   // La candidature sera considérée comme caduque après cette date, 6 mois après la dernière actualisation
   const thresholdDate = format(
-    addMonths(lastActivityDate as number, 6),
+    addDays(lastActivityDate as number, CADUQUITE_THRESHOLD_DAYS),
     "dd/MM/yyyy",
   );
 
