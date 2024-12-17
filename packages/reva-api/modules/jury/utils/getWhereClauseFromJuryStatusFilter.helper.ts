@@ -9,13 +9,19 @@ export const getWhereClauseFromJuryStatusFilter = (
   let whereClause: Prisma.JuryWhereInput = { isActive: true };
   const excludeArchivedAndDroppedOutCandidacy: Prisma.JuryWhereInput = {
     candidacy: {
-      candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
+      status: {
+        not: "ARCHIVE",
+      },
       candidacyDropOut: { is: null },
     },
   };
   switch (statusFilter) {
+    case undefined:
     case "ALL":
-      // Default
+      whereClause = {
+        ...whereClause,
+        ...excludeArchivedAndDroppedOutCandidacy,
+      };
       break;
     case "SCHEDULED":
       whereClause = {
