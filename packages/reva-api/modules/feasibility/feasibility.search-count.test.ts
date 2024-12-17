@@ -1,13 +1,14 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { archiveCandidacy } from "../candidacy/features/archiveCandidacy";
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
+import { prismaClient } from "../../prisma/client";
 
 let feasibilities: Awaited<
   ReturnType<typeof createFeasibilityUploadedPdfHelper>
@@ -19,7 +20,7 @@ let candidacyToArchive: Awaited<
   ReturnType<typeof createFeasibilityUploadedPdfHelper>
 >;
 
-beforeAll(async () => {
+beforeEach(async () => {
   feasibilities = await Promise.all([
     createFeasibilityUploadedPdfHelper({
       decision: "PENDING",
@@ -85,8 +86,8 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.feasibility.deleteMany({});
+afterEach(async () => {
+  await clearDatabase();
 });
 
 test("should count 1 feasibility by email for admin user", async () => {
@@ -1022,4 +1023,53 @@ test("should get all DROPPED_OUT feasibilities for admin user", async () => {
   expect(feasibilitiesResp.statusCode).toEqual(200);
   const feasibilityObj = feasibilitiesResp.json();
   expect(feasibilityObj.data.feasibilities.rows.length).toEqual(1);
+});
+
+test("should count 1 feasibility when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+  });
+
+  await createFeasibilityUploadedPdfHelper({
+    candidacyId: candidacy.id,
+    decision: "ADMISSIBLE",
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibilityCountByCategory",
+      returnFields:
+        "{ALL,PENDING,ADMISSIBLE,REJECTED,COMPLETE,INCOMPLETE,ARCHIVED,DROPPED_OUT}",
+      arguments: {
+        searchFilter: "pas-de-calais",
+      },
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data.feasibilityCountByCategory).toMatchObject({
+    ALL: 1,
+    PENDING: 0,
+    ADMISSIBLE: 1,
+    REJECTED: 0,
+    INCOMPLETE: 0,
+    COMPLETE: 0,
+    ARCHIVED: 0,
+    DROPPED_OUT: 0,
+  });
 });
