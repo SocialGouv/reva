@@ -5,7 +5,7 @@ import { seedCandidacyConventionCollective } from "./referentials/seed-candidacy
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
-import { insertDepartmentsIfNone } from "./referentials/table-departments";
+import { upsertDepartments } from "./referentials/table-departments";
 import { insertDropOutReasonsIfNone } from "./referentials/table-dropout-reasons";
 import { upsertGoals } from "./referentials/table-goals";
 import { upsertRegions } from "./referentials/table-regions";
@@ -28,7 +28,7 @@ async function main() {
 const executeSeed = async () => {
   await upsertGoals(prisma);
   await upsertRegions(prisma);
-  await insertDepartmentsIfNone(prisma);
+  await upsertDepartments(prisma);
   await insertBasicSkillsIfNone(prisma);
   await insertDegreesIfNone(prisma);
   await upsertTrainings(prisma);

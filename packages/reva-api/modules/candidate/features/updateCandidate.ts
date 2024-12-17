@@ -65,7 +65,7 @@ export const updateCandidate = async ({
     candidateToUpdate.zip !== candidateInput.zip;
 
   if (isNewZip && candidateToUpdate.zip?.match(/^(\d{5}|)$/)) {
-    const department = await getDepartmentFromZipCode(candidateToUpdate.zip);
+    const department = await getDepartmentFromZipCode(candidateInput.zip || "");
     if (!department) {
       throw new Error(`Le département n'existe pas`);
     }
@@ -76,7 +76,6 @@ export const updateCandidate = async ({
   const today = new Date();
 
   const dateSelected = new Date(Number(candidate.birthdate));
-  console.log("dateSelected", dateSelected);
   const sixteenYearsAgo = sub(today, { years: 16 });
   const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
     dateSelected,
@@ -135,22 +134,39 @@ export const updateCandidate = async ({
 const getDepartmentFromZipCode = async (
   zipCode: string,
 ): Promise<Department | undefined> => {
-  const zipWith2Digits = zipCode?.slice(0, 2);
+  // Check for Corse
+  if (zipCode.startsWith("20")) {
+    const parsedZipCode = parseInt(zipCode, 10);
+    const corseDepartment = await prismaClient.department.findUnique({
+      where: { code: parsedZipCode < 20200 ? "2A" : "2B" },
+    });
+    if (corseDepartment) {
+      return corseDepartment;
+    }
+  }
 
+  // Check full digits (used for 97150)
+  const departmentWillFullDigits = await prismaClient.department.findUnique({
+    where: { code: zipCode },
+  });
+  if (departmentWillFullDigits) {
+    return departmentWillFullDigits;
+  }
+
+  // Check 2 digits
+  const zipWith2Digits = zipCode?.slice(0, 2);
   const departmentWith2Digits = await prismaClient.department.findUnique({
     where: { code: zipWith2Digits },
   });
-
   if (departmentWith2Digits) {
     return departmentWith2Digits;
   }
 
+  // Check 3 digits
   const zipWith3Digits = zipCode?.slice(0, 3);
-
   const departmentWith3Digits = await prismaClient.department.findUnique({
     where: { code: zipWith3Digits },
   });
-
   if (departmentWith3Digits) {
     return departmentWith3Digits;
   }

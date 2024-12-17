@@ -29,7 +29,6 @@ const departments = [
   { label: "Eure", code: "27", codeRegion: "28" },
   { label: "Eure-et-Loir", code: "28", codeRegion: "24" },
   { label: "Finistère", code: "29", codeRegion: "53" },
-  { label: "Corse", code: "20", codeRegion: "94" },
   { label: "Corse-du-Sud", code: "2A", codeRegion: "94" },
   { label: "Haute-Corse", code: "2B", codeRegion: "94" },
   { label: "Gard", code: "30", codeRegion: "76" },
@@ -99,28 +98,29 @@ const departments = [
   { label: "Val-de-Marne", code: "94", codeRegion: "11" },
   { label: "Val-d'Oise", code: "95", codeRegion: "11" },
   { label: "Guadeloupe", code: "971", codeRegion: "01" },
+  { label: "Sainte-Lucie / Saint-Martin", code: "97150", codeRegion: "07" },
   { label: "Martinique", code: "972", codeRegion: "02" },
   { label: "Guyane", code: "973", codeRegion: "03" },
   { label: "La Réunion", code: "974", codeRegion: "04" },
   { label: "Mayotte", code: "976", codeRegion: "06" },
 ];
 
-export const insertDepartmentsIfNone = async (prisma: PrismaClient) => {
-  const countDepartments = await prisma.department.count();
-
-  if (countDepartments === 0) {
-    for (const department of departments) {
-      await prisma.department.create({
-        data: {
-          code: department.code,
-          label: department.label,
-          region: {
-            connect: {
-              code: department.codeRegion,
-            },
+export const upsertDepartments = async (prisma: PrismaClient) => {
+  for (const department of departments) {
+    await prisma.department.upsert({
+      where: {
+        code: department.code,
+      },
+      update: {},
+      create: {
+        code: department.code,
+        label: department.label,
+        region: {
+          connect: {
+            code: department.codeRegion,
           },
         },
-      });
-    }
+      },
+    });
   }
 };
