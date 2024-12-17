@@ -210,7 +210,7 @@ test("Certification local account of the feasibility file of the candidacy shoul
   });
 
   const candidacy = feasibility.candidacy;
-  const departmentId = candidacy.departmentId;
+  const departmentId = candidacy.candidate?.departmentId;
 
   await prismaClient.certificationAuthorityLocalAccountOnCertification.create({
     data: {

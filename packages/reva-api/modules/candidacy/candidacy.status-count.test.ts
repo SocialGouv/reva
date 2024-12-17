@@ -449,7 +449,10 @@ describe.each(["ADMIN", "AAP"] as const)(
 
     test("should count the correct number of candidacy when searching for the right department label", async () => {
       //that candidacy should be visible to both profiles
-      const { department, organism } = await createCandidacyHelper();
+      const { candidate, organism } = await createCandidacyHelper();
+      const department = await prismaClient.department.findUnique({
+        where: { id: candidate?.departmentId },
+      });
 
       //that candidacy should only be visible to the admin profile
       await createCandidacyHelper({
