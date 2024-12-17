@@ -91,6 +91,7 @@ model Certification {
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
   prerequisites                                          CertificationPrerequisite[]
   fcPrerequisites                                        String?                                                  @map("fc_prerequisites") @db.VarChar
+  additionalInfo                                         CertificationAdditionalInfo?
 
   @@map("certification")
 }
@@ -122,6 +123,23 @@ model CertificationCompetence {
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
   @@map("certification_competence")
+}
+
+model CertificationAdditionalInfo {
+  id                                String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  linkToReferential                 String        @map("link_to_referential")
+  linkToCorrespondenceTable         String?       @map("link_to_corresponence_table")
+  dossierDeValidationTemplateFileId String        @map("dossier_de_validation_file_id") @db.Uuid
+  dossierDeValidationTemplate       File          @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  linkToJuryGuide                   String?       @map("link_to_jury_guide")
+  certificationExpertContactDetails String?       @map("certification_expert_contact_details")
+  usefulResources                   String?       @map("useful_resources")
+  commentsForAAP                    String?       @map("comments_for_aap")
+  certificationId                   String        @unique @map("certification_id") @db.Uuid
+  certification                     Certification @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+
+  @@map("certification_additional_info")
 }
 
 enum FinanceModule {
@@ -1206,6 +1224,7 @@ model File {
   linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequest            SubscriptionRequest[]                    @relation("sr_justificatif_identite_delegataire_file")
   linkedAsDFFAttachment                                                       DFFAttachment?                           @relation("dff_attachment")
   linkedAsSwornStatementFile                                                  DematerializedFeasibilityFile?           @relation("sworn_statement_file")
+  linkedAsCertificationAdditionalInfo                                         CertificationAdditionalInfo[]
 
   @@map("file")
 }

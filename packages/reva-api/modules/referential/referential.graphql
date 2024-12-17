@@ -54,6 +54,17 @@ type Certification {
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
   juryPlace: String
+  additionalInfo: CertificationAdditionalInfo
+}
+
+type CertificationAdditionalInfo {
+  linkToReferential: String!
+  linkToCorrespondenceTable: String
+  dossierDeValidationTemplate: File!
+  linkToJuryGuide: String
+  certificationExpertContactDetails: String
+  usefulResources: String
+  commentsForAAP: String
 }
 
 type CertificationPrerequisite {

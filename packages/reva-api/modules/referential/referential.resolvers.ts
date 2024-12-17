@@ -54,6 +54,7 @@ import { getCertificationPrerequisitesByCertificationId } from "./features/getCe
 import { updateCertificationPrerequisites } from "./features/updateCertificationPrerequisites";
 import { updateCertificationDescription } from "./features/updateCertificationDescription";
 import { validateCertification } from "./features/validateCertification";
+import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -77,6 +78,8 @@ const unsafeReferentialResolvers = {
       getDomainsByCertificationId({ certificationId }),
     prerequisites: ({ id: certificationId }: { id: string }) =>
       getCertificationPrerequisitesByCertificationId({ certificationId }),
+    additionalInfo: ({ id: certificationId }: { id: string }) =>
+      getAdditionalInfoByCertificationId({ certificationId }),
   },
   FCCertification: {
     DOMAINS: ({
