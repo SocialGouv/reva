@@ -92,8 +92,15 @@ export const AuthenticatedLink = ({
     }, 250);
   };
   return (
-    <a href="#" title={title} onClick={handleClick} className={className || ""}>
-      {text}
-    </a>
+    <div className="max-w-screen-md truncate">
+      <a
+        href="#"
+        title={title}
+        onClick={handleClick}
+        className={className || ""}
+      >
+        {text}
+      </a>
+    </div>
   );
 };
