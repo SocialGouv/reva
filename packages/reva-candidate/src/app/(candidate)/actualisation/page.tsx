@@ -10,6 +10,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isBefore } from "date-fns";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -55,24 +56,35 @@ const HasBeenUpdatedComponent = ({
   readyForJuryEstimatedAt: string;
 }) => {
   return (
-    <div className="flex flex-col" data-test="actualisation-has-been-updated">
-      <h1>Votre actualisation est enregistrée</h1>
-      <p className="text-xl">
-        Vous pouvez désormais continuer votre parcours ! Rendez-vous dans votre
-        espace pour connaître les prochaines étapes.
-      </p>
-      <p className="text-xl">
-        Pour information, votre date prévisionnelle de dépot du dossier de
-        validation est le{" "}
-        {format(new Date(readyForJuryEstimatedAt), "dd/MM/yyyy")}.
-      </p>
-      <div>
-        <Link href="/">
-          <Button data-test="actualisation-continue-button">
-            Continuer mon parcours
-          </Button>
-        </Link>
+    <div
+      className="flex justify-between w-full"
+      data-test="actualisation-has-been-updated"
+    >
+      <div className="flex flex-col justify-center">
+        <h1>Votre actualisation est enregistrée</h1>
+        <p className="text-xl">
+          Vous pouvez désormais continuer votre parcours ! Rendez-vous dans
+          votre espace pour connaître les prochaines étapes.
+        </p>
+        <p className="text-xl">
+          Pour information, votre date prévisionnelle de dépot du dossier de
+          validation est le{" "}
+          {format(new Date(readyForJuryEstimatedAt), "dd/MM/yyyy")}.
+        </p>
+        <div>
+          <Link href="/">
+            <Button data-test="actualisation-continue-button">
+              Continuer mon parcours
+            </Button>
+          </Link>
+        </div>
       </div>
+      <Image
+        src="/candidat/images/image-calendar.png"
+        alt="Actualisation réussie"
+        width={282}
+        height={319}
+      />
     </div>
   );
 };
