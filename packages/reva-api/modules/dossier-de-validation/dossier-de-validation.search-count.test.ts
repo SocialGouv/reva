@@ -5,12 +5,14 @@ import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createDossierDeValidationHelper } from "../../test/helpers/entities/create-dossier-de-validation-helper";
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 
 let dossiersDeValidation: Awaited<
   ReturnType<typeof createDossierDeValidationHelper>
 >[] = [];
 
-beforeAll(async () => {
+beforeEach(async () => {
   dossiersDeValidation = await Promise.all([
     createDossierDeValidationHelper({
       decision: "PENDING",
@@ -42,8 +44,8 @@ beforeAll(async () => {
   ]);
 });
 
-afterAll(async () => {
-  await prismaClient.dossierDeValidation.deleteMany({});
+afterEach(async () => {
+  await clearDatabase();
 });
 
 test("should count 1 dossier de validation by email for admin user", async () => {
@@ -469,4 +471,52 @@ test("should get all (3) INCOMPLETE dossiers de validation by status for admin u
   expect(
     ddvObj.data.dossierDeValidation_getDossiersDeValidation.rows.length,
   ).toEqual(2);
+});
+
+/** ----------------------------------------------------------------- */
+/**                     TEST DEPARTMENT SEARCH FILTER                 */
+/** ----------------------------------------------------------------- */
+
+test("should count 1 dossier de validation when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
+  });
+
+  await createDossierDeValidationHelper({
+    candidacyId: candidacy.id,
+    decision: "PENDING",
+  });
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "dossierDeValidation_dossierDeValidationCountByCategory",
+      returnFields: "{ALL,PENDING,INCOMPLETE}",
+      arguments: {
+        searchFilter: "pas-de-calais",
+      },
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(
+    obj.data.dossierDeValidation_dossierDeValidationCountByCategory,
+  ).toMatchObject({
+    ALL: 1,
+    PENDING: 1,
+    INCOMPLETE: 0,
+  });
 });
