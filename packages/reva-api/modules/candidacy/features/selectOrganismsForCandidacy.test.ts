@@ -52,6 +52,10 @@ const searchOrganisms = async ({
     },
   });
 
+const ccnServicePersonne = {
+  ccn: { connect: { code: "3127" } },
+};
+
 afterEach(async () => {
   await clearDatabase();
 });
@@ -155,15 +159,9 @@ describe("searchOrganismsForCandidacy", () => {
 
   describe("Distance status filtering", () => {
     test("should filter organisms by distance status REMOTE", async () => {
-      const certification = await createCertificationHelper();
-      const ccn = await prismaClient.conventionCollective.findFirst();
-      if (!certification || !ccn) {
-        throw new Error("Certification or CCN not found");
-      }
-      await prismaClient.certificationOnConventionCollective.create({
-        data: {
-          certificationId: certification.id,
-          ccnId: ccn.id,
+      const certification = await createCertificationHelper({
+        certificationOnConventionCollective: {
+          create: ccnServicePersonne,
         },
       });
 
@@ -399,7 +397,12 @@ describe("searchOrganismsForCandidacy", () => {
     });
 
     test("should not return organisms when remote zone doesn't match", async () => {
-      const certification = await createCertificationHelper();
+      const certification = await createCertificationHelper({
+        certificationOnConventionCollective: {
+          create: ccnServicePersonne,
+        },
+      });
+
       const organism = await createOrganismHelper({
         modaliteAccompagnement: "A_DISTANCE",
       });
