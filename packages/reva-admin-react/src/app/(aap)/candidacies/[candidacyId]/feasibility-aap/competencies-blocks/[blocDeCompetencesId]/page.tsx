@@ -15,7 +15,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 
 import { useCallback, useEffect, useMemo } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -140,17 +140,14 @@ const CompetenciesBlockPage = () => {
     register,
     handleSubmit,
     reset,
-    control,
+    watch,
     formState: { isSubmitting, isDirty, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
 
-  const { fields: competencesFields } = useFieldArray({
-    control,
-    name: "competences",
-  });
+  const competencesFields = watch("competences");
 
   const resetForm = useCallback(
     () => reset(defaultValues),
@@ -211,22 +208,25 @@ const CompetenciesBlockPage = () => {
                     {
                       label: "Oui",
                       nativeInputProps: {
-                        ...register(`competences.${i}.state`),
                         value: "YES",
+                        checked: c.state == "YES",
+                        ...register(`competences.${i}.state`),
                       },
                     },
                     {
                       label: "Non",
                       nativeInputProps: {
-                        ...register(`competences.${i}.state`),
                         value: "NO",
+                        checked: c.state == "NO",
+                        ...register(`competences.${i}.state`),
                       },
                     },
                     {
                       label: "Partiellement",
                       nativeInputProps: {
-                        ...register(`competences.${i}.state`),
                         value: "PARTIALLY",
+                        checked: c.state == "PARTIALLY",
+                        ...register(`competences.${i}.state`),
                       },
                     },
                   ]}
