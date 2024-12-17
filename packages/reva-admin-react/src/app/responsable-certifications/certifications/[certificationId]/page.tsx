@@ -250,6 +250,20 @@ const PageContent = ({
           </SmallNotice>
         </EnhancedSectionCard>
 
+        <EnhancedSectionCard
+          data-test="additional-info-summary-card"
+          isEditable={isEditable}
+          title="Ressources complémentaires"
+          titleIconClass="fr-icon-info-fill"
+          status={certification.additionalInfo ? "COMPLETED" : "TO_COMPLETE"}
+          buttonOnClickHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
+        >
+          <SmallNotice className="mt-1">
+            Transmettez aux AAP et aux candidats des ressources qui faciliteront
+            le déroulé de l’accompagnement et du parcours VAE.
+          </SmallNotice>
+        </EnhancedSectionCard>
+
         {isEditable && (
           <>
             <div className=" h-[1px] w-[100%] bg-dsfr-light-decisions-border-border-default-grey" />
