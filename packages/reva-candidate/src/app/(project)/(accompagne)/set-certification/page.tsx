@@ -9,7 +9,6 @@ import {
 } from "next/navigation";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Notice } from "@codegouvfr/react-dsfr/Notice";
 
 import { PageLayout } from "@/layouts/page.layout";
 
@@ -29,8 +28,6 @@ import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 export default function SetCertification() {
   const router = useRouter();
-  const { candidacy } = useCandidacy();
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
@@ -93,10 +90,6 @@ export default function SetCertification() {
   const selectedCertification = rows?.find(
     (certification) => certification.id == selectedCertificationId,
   );
-
-  const showFundingNotice =
-    candidacy.financeModule === "hors_plateforme" &&
-    candidacy.typeAccompagnement === "ACCOMPAGNE";
 
   return (
     <PageLayout
@@ -189,36 +182,6 @@ export default function SetCertification() {
           <div className="mb-12 h-5 px-1.5 bg-[#e8edff] rounded justify-center items-center leading-tight inline-flex text-[#0063cb] text-xs font-bold uppercase ">
             VAE EN AUTONOMIE ou accompagnée
           </div>
-          {showFundingNotice && (
-            <Notice
-              className="my-6 max-w-xl"
-              title={
-                <span>
-                  <p className="inline">
-                    Ce diplôme peut être financé par votre Compte Personnel de
-                    Formation (
-                    <Link
-                      href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
-                      target="_blank"
-                    >
-                      CPF
-                    </Link>
-                    ).
-                  </p>
-                  <p className="mt-4">
-                    Vous pouvez dès à présent consulter vos droits sur la
-                    plateforme{" "}
-                    <Link
-                      href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/droits"
-                      target="_blank"
-                    >
-                      Mon Compte Formation
-                    </Link>
-                  </p>
-                </span>
-              }
-            />
-          )}
           <p>
             <a
               data-test="certification-more-info-link"
