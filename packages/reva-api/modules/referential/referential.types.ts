@@ -125,7 +125,7 @@ export interface ValidateCertificationInput {
   certificationId: string;
 }
 
-export interface CertificationAdditionalInfo {
+interface CertificationAdditionalInfo {
   linkToReferential: string;
   linkToCorrespondenceTable?: string;
   dossierDeValidationTemplate: GraphqlUploadedFile;
