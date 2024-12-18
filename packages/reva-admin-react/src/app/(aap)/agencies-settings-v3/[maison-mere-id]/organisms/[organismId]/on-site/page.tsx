@@ -103,7 +103,8 @@ export default function OnSitePage() {
                 Site internet
               </Link>
             )}
-            {organism.informationsCommerciales?.conformeNormesAccessbilite && (
+            {organism.informationsCommerciales?.conformeNormesAccessbilite ===
+              "CONFORME" && (
               <Highlight
                 classes={{
                   content: "mb-0",
