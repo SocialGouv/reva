@@ -76,6 +76,11 @@ context("Candidacy with department certification selected", () => {
 
     cy.get('[data-test="button-select-onsite"]').click();
 
+    cy.get('[data-test="button-select-onsite"]').should(
+      "have.attr",
+      "aria-pressed",
+      "true",
+    );
     cy.get('[data-test="input-wrapper-zip"] input').should("not.be.disabled");
     cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
       "not.be.disabled",
@@ -98,6 +103,54 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="button-select-onsite"]').click();
     cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
   });
+
+  it("on site filters can be reset", function () {
+    cy.get('[data-test="button-select-onsite"]').click();
+    cy.get('[data-test="button-select-onsite"]').should(
+      "have.attr",
+      "aria-pressed",
+      "true",
+    );
+    cy.get('[data-test="input-wrapper-zip"] input').type("44000");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
+      force: true,
+    });
+
+    cy.get('[data-test="button-reset-filters"]').click();
+    cy.get('[data-test="button-select-onsite"]').should(
+      "have.attr",
+      "aria-pressed",
+      "false",
+    );
+    cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("not.be.checked");
+  });
+
+  it("remote filters can be reset", function () {
+    cy.get('[data-test="button-select-remote"]').click();
+    cy.get('[data-test="button-select-remote"]').should(
+      "have.attr",
+      "aria-pressed",
+      "true",
+    );
+
+    cy.get('[data-test="button-reset-filters"]').click();
+    cy.get('[data-test="button-select-remote"]').should(
+      "have.attr",
+      "aria-pressed",
+      "false",
+    );
+  });
+
+  it("mcf filter can be reset", function () {
+    cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
+      force: true,
+    });
+
+    cy.get('[data-test="button-reset-filters"]').click();
+    cy.get('[data-test="checkbox-wrapper-mcf"] input').should("not.be.checked");
+  });
+
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");

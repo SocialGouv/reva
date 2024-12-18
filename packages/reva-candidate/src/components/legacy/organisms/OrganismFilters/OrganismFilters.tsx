@@ -54,6 +54,7 @@ export const OrganismFilters = ({
           <div className="-mb-6">
             <Button
               data-test="button-select-onsite"
+              aria-pressed={organismSearchOnsite}
               priority="tertiary no outline"
               title="Choisir sur site"
               onClick={() => {
@@ -74,6 +75,7 @@ export const OrganismFilters = ({
             </Button>
             <Button
               data-test="button-select-remote"
+              aria-pressed={organismSearchRemote}
               priority="tertiary no outline"
               title="Choisir à distance"
               onClick={() => {
@@ -162,6 +164,7 @@ export const OrganismFilters = ({
               </p>
             </modalMcfInfo.Component>
             <Checkbox
+              data-test="checkbox-wrapper-mcf"
               small
               options={[
                 {
@@ -187,6 +190,7 @@ export const OrganismFilters = ({
       {/* <hr /> */}
       <div className="flex justify-center">
         <Button
+          data-test="button-reset-filters"
           priority="tertiary no outline"
           onClick={() => {
             onSearch({
