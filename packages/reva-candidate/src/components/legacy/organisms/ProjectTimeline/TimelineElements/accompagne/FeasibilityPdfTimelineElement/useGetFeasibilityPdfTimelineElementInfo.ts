@@ -42,11 +42,25 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
       );
 
+    const hasConfirmedCaducite = candidacy.candidacyContestationsCaducite?.find(
+      (contestation) =>
+        contestation?.certificationAuthorityContestationDecision ===
+        "CADUCITE_CONFIRMED",
+    );
+
     const PENDING = feasibility.decision === "PENDING";
     const INCOMPLETE = feasibility.decision === "INCOMPLETE";
     const ADMISSIBLE = feasibility.decision === "ADMISSIBLE";
     const REJECTED = feasibility.decision === "REJECTED";
     const COMPLETE = feasibility.decision === "COMPLETE";
+
+    if (hasConfirmedCaducite) {
+      return {
+        text: "Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici.",
+        status: "active",
+        icon: INFORMATION_ICON,
+      };
+    }
 
     if (pendingContestationCaducite) {
       return {
