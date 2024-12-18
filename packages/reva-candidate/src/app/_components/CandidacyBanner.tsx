@@ -34,15 +34,16 @@ export const CandidacyBanner = () => {
     lastActiveStatus === "DOSSIER_FAISABILITE_RECEVABLE" ||
     lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE";
 
+  const candidacyIsCaduque = !!candidacy?.isCaduque;
   const displayActualisationBanner = !!(
     candidacy?.lastActivityDate &&
+    !candidacyIsCaduque &&
     candidacy?.feasibility?.decision === "ADMISSIBLE" &&
     candidacyActualisationFeatureIsActive &&
     todayIsAfterActualisationBannerThresholdDate &&
     isLastActiveStatusValidForActualisationBanner
   );
 
-  const candidacyIsCaduque = !!candidacy?.isCaduque;
   const displayCaduqueBanner =
     candidacyIsCaduque && candidacyActualisationFeatureIsActive;
 
