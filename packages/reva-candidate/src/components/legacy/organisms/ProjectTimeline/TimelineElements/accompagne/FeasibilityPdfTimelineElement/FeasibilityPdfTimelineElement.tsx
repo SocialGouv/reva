@@ -5,26 +5,14 @@ import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/A
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { getFeasibilityPdfTimelineElementInfo } from "./getFeasibilityPdfTimelineElementInfo";
-import { Feasibility } from "@/graphql/generated/graphql";
+import { useGetFeasibilityPdfTimelineElementInfo } from "./useGetFeasibilityPdfTimelineElementInfo";
 
 export const FeasibilityPdfTimelineElement = () => {
   const { candidacy } = useCandidacy();
 
   const { feasibility } = candidacy;
 
-  const hasPendingOrConfirmedCaducity =
-    !!candidacy.candidacyContestationsCaducite?.some(
-      (c) =>
-        c?.certificationAuthorityContestationDecision ===
-          "CADUCITE_CONFIRMED" ||
-        c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
-    );
-
-  const { icon, status, text } = getFeasibilityPdfTimelineElementInfo({
-    feasibility: feasibility as Feasibility | null,
-    hasPendingOrConfirmedCaducity,
-  });
+  const { icon, status, text } = useGetFeasibilityPdfTimelineElementInfo();
 
   const REJECTED = feasibility?.decision === "REJECTED";
 
