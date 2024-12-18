@@ -14,10 +14,10 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
-import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 import { useSetOrganism } from "./set-organism.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { NoResults } from "@/app/_components/NoResults";
 
 const RECORDS_PER_PAGE = 10;
 const MAX_RECORDS = 50;
@@ -160,16 +160,7 @@ export default function SetOrganism() {
                     : `Résultats filtrés : ${organisms.totalRows} accompagnateurs`}
                 </p>
               ) : (
-                <div className="min-h-80 h-full flex flex-col items-center">
-                  <div className="my-12">{PICTOGRAMS.searchLG}</div>
-                  <h3>Aucun résultat trouvé</h3>
-                  <div className="max-w-md [&_p]:text-lg  text-center text-balance leading-relaxed">
-                    <p>
-                      Nous ne trouvons pas d’accompagnateurs qui correspondent
-                      aux critères sélectionnés.
-                    </p>
-                  </div>
-                </div>
+                <NoOrganisms organismSearchText={organismSearchText} />
               )}
             </>
           )}
@@ -260,5 +251,35 @@ const Organisms: React.FC<PropsOrganisms> = ({
         {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
       </div>
     </div>
+  );
+};
+
+const NoOrganisms = ({
+  organismSearchText,
+}: {
+  organismSearchText?: string;
+}) => {
+  if (organismSearchText) {
+    return (
+      <NoResults title={`Pas de résultats pour "${organismSearchText}"`}>
+        <p>
+          Nous ne trouvons pas d’accompagnateurs portant ce nom dans la liste
+          des organismes référencés chez France VAE.
+        </p>
+        <p>
+          Vous pouvez vérifier le nom saisi ou essayer les filtres pour affiner
+          les résultats.
+        </p>
+      </NoResults>
+    );
+  }
+
+  return (
+    <NoResults title="Aucun résultat trouvé">
+      <p>
+        Nous ne trouvons pas d’accompagnateurs sur votre diplôme avec les
+        critères sélectionnés.
+      </p>
+    </NoResults>
   );
 };
