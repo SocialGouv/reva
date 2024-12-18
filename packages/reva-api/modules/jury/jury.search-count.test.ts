@@ -474,3 +474,44 @@ test("should count 1 candidacy with a scheduled jury when searching by departmen
   const feasibilityObj = juryResp.json();
   expect(feasibilityObj.data.jury_getJuries.rows.length).toEqual(1);
 });
+
+test("should return 1 candidacy when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
+  });
+
+  await createJuryHelper({
+    dateOfSession: new Date("2025-01-01"),
+    isActive: true,
+    candidacyId: candidacy.id,
+  });
+
+  const juryResp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "jury_getJuries",
+      returnFields: "{rows{id}}",
+      enumFields: ["categoryFilter"],
+      arguments: {
+        searchFilter: "pas-de-calais",
+      },
+    },
+  });
+  expect(juryResp.statusCode).toEqual(200);
+  const juryObj = juryResp.json();
+  expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
+});
