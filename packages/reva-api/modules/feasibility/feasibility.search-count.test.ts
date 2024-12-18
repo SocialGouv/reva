@@ -1025,6 +1025,7 @@ test("should get all DROPPED_OUT feasibilities for admin user", async () => {
   expect(feasibilityObj.data.feasibilities.rows.length).toEqual(1);
 });
 
+// Search by deparment label
 test("should count 1 feasibility when searching by department for admin user", async () => {
   const department = await prismaClient.department.findUnique({
     where: { code: "62" },
@@ -1072,4 +1073,41 @@ test("should count 1 feasibility when searching by department for admin user", a
     ARCHIVED: 0,
     DROPPED_OUT: 0,
   });
+});
+
+test("should return 1 feasibility when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+  });
+
+  await createFeasibilityUploadedPdfHelper({
+    candidacyId: candidacy.id,
+    decision: "ADMISSIBLE",
+  });
+
+  const feasibilitiesResp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibilities",
+      returnFields: "{rows{id}}",
+      arguments: { searchFilter: "pas-de-calais" },
+    },
+  });
+  expect(feasibilitiesResp.statusCode).toEqual(200);
+  const feasibilityObj = feasibilitiesResp.json();
+  expect(feasibilityObj.data.feasibilities.rows.length).toEqual(1);
 });
