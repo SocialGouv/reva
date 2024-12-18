@@ -5,10 +5,12 @@ import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 let juries: Awaited<ReturnType<typeof createJuryHelper>>[] = [];
 
-beforeAll(async () => {
+beforeEach(async () => {
   const tomorrow = new Date("2025-01-01");
   // tomorrow.setDate(tomorrow.getDate() + 1);
   const yesterday = new Date("2024-11-31");
@@ -50,8 +52,8 @@ beforeAll(async () => {
   ]);
 });
 
-afterAll(async () => {
-  await prismaClient.jury.deleteMany({});
+afterEach(async () => {
+  await clearDatabase();
 });
 
 test("should count 1 jury by email for admin user", async () => {
@@ -425,4 +427,50 @@ test("should get all (2) PASSED juries by status for admin user", async () => {
   expect(juryResp.statusCode).toEqual(200);
   const juryObj = juryResp.json();
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(2);
+});
+
+/** ----------------------------------------------------------------- */
+/**                     TEST DEPARTMENT SEARCH FILTER                 */
+/** ----------------------------------------------------------------- */
+
+test("should count 1 candidacy with a scheduled jury when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
+  });
+
+  await createJuryHelper({
+    dateOfSession: new Date("2025-01-01"),
+    isActive: true,
+    candidacyId: candidacy.id,
+  });
+
+  const juryResp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "jury_getJuries",
+      returnFields: "{rows{id}}",
+      enumFields: ["categoryFilter"],
+      arguments: {
+        searchFilter: "pas-de-calais",
+        categoryFilter: "SCHEDULED",
+      },
+    },
+  });
+  expect(juryResp.statusCode).toEqual(200);
+  const feasibilityObj = juryResp.json();
+  expect(feasibilityObj.data.jury_getJuries.rows.length).toEqual(1);
 });
