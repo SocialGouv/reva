@@ -26,95 +26,90 @@ export function useGetSelfServiceFeasibilityFileTimelineInfo(): GetSelfServiceFe
   const PENDING = feasibility?.decision === "PENDING";
   const INCOMPLETE = feasibility?.decision === "INCOMPLETE";
   const REJECTED = feasibility?.decision === "REJECTED";
+  const hasCertification = !!candidacy.certification;
 
-  if (
-    candidacy.status === "PROJET" &&
-    !feasibility &&
-    candidacy.certification
-  ) {
-    return {
-      status: "editable",
-      badge: ToCompleteBadge,
-      notice: null,
-    };
+  switch (true) {
+    case candidacy.status === "PROJET" && !feasibility && hasCertification:
+      return {
+        status: "editable",
+        badge: ToCompleteBadge,
+        notice: null,
+      };
+
+    case PENDING:
+      return {
+        status: "readonly",
+        badge: (
+          <Badge
+            severity="info"
+            data-test="feasibility-timeline-element-pending-badge"
+          >
+            Envoyé
+          </Badge>
+        ),
+        notice: (
+          <TimelineNotice
+            icon="fr-icon-time-fill"
+            text="Votre dossier est étudié par votre certificateur. En cas d'erreur ou d'oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais. Vous recevrez une réponse dans un délai de 2 mois. S'il est considéré comme incomplet, vous devrez le modifier et le renvoyer."
+          />
+        ),
+      };
+
+    case INCOMPLETE:
+      return {
+        status: "editable",
+        badge: ToCompleteBadge,
+        notice: (
+          <TimelineNotice
+            icon="fr-icon-info-fill"
+            text="Selon le certificateur, votre dossier est incomplet. Cliquez sur « Compléter » pour consulter ses remarques et rajouter le ou les éléments manquants avant de renvoyer votre dossier de faisabilité."
+          />
+        ),
+      };
+
+    case ADMISSIBLE:
+      return {
+        status: "readonly",
+        badge: (
+          <Badge
+            severity="success"
+            data-test="feasibility-timeline-element-admissible-badge"
+          >
+            Recevable
+          </Badge>
+        ),
+        notice: (
+          <TimelineNotice
+            icon="fr-icon-info-fill"
+            text="Félicitations, votre dossier est recevable ! Vous pouvez poursuivre votre parcours VAE."
+          />
+        ),
+      };
+
+    case REJECTED:
+      return {
+        status: "readonly",
+        badge: (
+          <Badge
+            severity="error"
+            data-test="feasibility-timeline-element-rejected-badge"
+          >
+            Non-recevable
+          </Badge>
+        ),
+        notice: (
+          <TimelineNotice
+            icon="fr-icon-info-fill"
+            text="Votre certificateur a estimé que votre dossier n'est pas recevable pour la suite de votre VAE."
+          />
+        ),
+      };
+
+    default:
+      return {
+        status: "readonly",
+        badge: null,
+        notice: null,
+      };
   }
-
-  if (PENDING) {
-    return {
-      status: "readonly",
-      badge: (
-        <Badge
-          severity="info"
-          data-test="feasibility-timeline-element-pending-badge"
-        >
-          Envoyé
-        </Badge>
-      ),
-      notice: (
-        <TimelineNotice
-          icon="fr-icon-time-fill"
-          text="Votre dossier est étudié par votre certificateur. En cas d'erreur ou d'oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais. Vous recevrez une réponse dans un délai de 2 mois. S'il est considéré comme incomplet, vous devrez le modifier et le renvoyer."
-        />
-      ),
-    };
-  }
-
-  if (INCOMPLETE) {
-    return {
-      status: "editable",
-      badge: ToCompleteBadge,
-      notice: (
-        <TimelineNotice
-          icon="fr-icon-info-fill"
-          text="Selon le certificateur, votre dossier est incomplet. Cliquez sur « Compléter » pour consulter ses remarques et rajouter le ou les éléments manquants avant de renvoyer votre dossier de faisabilité."
-        />
-      ),
-    };
-  }
-
-  if (ADMISSIBLE) {
-    return {
-      status: "readonly",
-      badge: (
-        <Badge
-          severity="success"
-          data-test="feasibility-timeline-element-admissible-badge"
-        >
-          Recevable
-        </Badge>
-      ),
-      notice: (
-        <TimelineNotice
-          icon="fr-icon-info-fill"
-          text="Félicitations, votre dossier est recevable ! Vous pouvez poursuivre votre parcours VAE."
-        />
-      ),
-    };
-  }
-
-  if (REJECTED) {
-    return {
-      status: "readonly",
-      badge: (
-        <Badge
-          severity="error"
-          data-test="feasibility-timeline-element-rejected-badge"
-        >
-          Non-recevable
-        </Badge>
-      ),
-      notice: (
-        <TimelineNotice
-          icon="fr-icon-info-fill"
-          text="Votre certificateur a estimé que votre dossier n'est pas recevable pour la suite de votre VAE."
-        />
-      ),
-    };
-  }
-
-  return {
-    status: "readonly",
-    badge: null,
-    notice: null,
-  };
 }
