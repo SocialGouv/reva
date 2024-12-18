@@ -520,3 +520,45 @@ test("should count 1 dossier de validation when searching by department for admi
     INCOMPLETE: 0,
   });
 });
+
+test("should return 1 dossier de validation when searching by department for admin user", async () => {
+  const department = await prismaClient.department.findUnique({
+    where: { code: "62" },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { departmentId: department.id },
+    candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
+  });
+
+  await createDossierDeValidationHelper({
+    candidacyId: candidacy.id,
+    decision: "PENDING",
+  });
+
+  const ddvResp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "dossierDeValidation_getDossiersDeValidation",
+      returnFields: "{rows{id}}",
+      enumFields: ["categoryFilter"],
+      arguments: {
+        searchFilter: "pas-de-calais",
+      },
+    },
+  });
+  expect(ddvResp.statusCode).toEqual(200);
+  const ddvObj = ddvResp.json();
+  expect(
+    ddvObj.data.dossierDeValidation_getDossiersDeValidation.rows.length,
+  ).toEqual(1);
+});
