@@ -22,6 +22,9 @@ const InformationWithIcon = ({ children, title }: InformationWithIconProps) => (
 
 interface GetFeasibilityTimelineElementInfoProps {
   feasibility?: Feasibility | null;
+  isCaduque: boolean;
+  hasActiveDossierDeValidation: boolean;
+  isCandidacyActualisationFeatureActive: boolean;
 }
 
 interface GetFeasibilityTimelineElementInfoResult {
@@ -30,8 +33,11 @@ interface GetFeasibilityTimelineElementInfoResult {
   badgeStatus: React.ReactNode;
 }
 
-export const getFeasibilityTimelineElementInfo = ({
+export const getFeasibilityDematTimelineElementInfo = ({
   feasibility,
+  isCaduque,
+  hasActiveDossierDeValidation,
+  isCandidacyActualisationFeatureActive,
 }: GetFeasibilityTimelineElementInfoProps): GetFeasibilityTimelineElementInfoResult => {
   const dematerializedFile = feasibility?.dematerializedFeasibilityFile;
 
@@ -40,6 +46,25 @@ export const getFeasibilityTimelineElementInfo = ({
       informationComponent: null,
       status: "disabled",
       badgeStatus: null,
+    };
+  }
+
+  if (isCaduque && isCandidacyActualisationFeatureActive) {
+    return {
+      informationComponent: (
+        <InformationWithIcon title="Le dossier constitué à cette étape vous permettra d'accéder à votre accompagnement VAE.">
+          <div className="italic">
+            <p className="mb-0 text-sm">
+              Parce que vous ne vous êtes pas actualisé à temps, votre
+              recevabilité est désormais caduque. Cela signifie que votre
+              parcours VAE s'arrête ici. Vous pouvez contester cette décision en
+              cliquant sur le bouton “Contester”.
+            </p>
+          </div>
+        </InformationWithIcon>
+      ),
+      status: hasActiveDossierDeValidation ? "editable" : "active",
+      badgeStatus: <Badge severity="warning">Non recevable</Badge>,
     };
   }
 

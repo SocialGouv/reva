@@ -5,13 +5,19 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Feasibility } from "@/graphql/generated/graphql";
-import { getFeasibilityTimelineElementInfo } from "./getFeasibilityTimelineElementInfo";
+import { getFeasibilityDematTimelineElementInfo } from "./getFeasibilityDematTimelineElementInfo";
 
 export const FeasibilityDematTimelineElement = () => {
   const router = useRouter();
 
   const { candidacy } = useCandidacy();
+
+  const { isFeatureActive } = useFeatureFlipping();
+  const isCandidacyActualisationFeatureActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const { feasibility } = candidacy;
   const dematerializedFeasibilityFile =
@@ -19,10 +25,15 @@ export const FeasibilityDematTimelineElement = () => {
 
   const candidateHasConfirmedFeasibilityFile =
     !!dematerializedFeasibilityFile?.candidateConfirmationAt;
+  const isCaduque = candidacy.isCaduque;
+  const hasActiveDossierDeValidation = !!candidacy.activeDossierDeValidation;
 
   const { informationComponent, status, badgeStatus } =
-    getFeasibilityTimelineElementInfo({
+    getFeasibilityDematTimelineElementInfo({
       feasibility: feasibility as Feasibility | null,
+      isCaduque,
+      hasActiveDossierDeValidation,
+      isCandidacyActualisationFeatureActive,
     });
 
   const buttonPriority = candidateHasConfirmedFeasibilityFile
