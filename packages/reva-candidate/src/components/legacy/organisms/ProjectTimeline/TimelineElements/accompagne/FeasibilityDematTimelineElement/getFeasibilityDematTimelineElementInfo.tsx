@@ -33,6 +33,12 @@ interface GetFeasibilityTimelineElementInfoResult {
   badgeStatus: React.ReactNode;
 }
 
+const TEXT_DEFAULT =
+  "Le dossier constitué à cette étape vous permettra d'accéder à votre accompagnement VAE.";
+
+const TEXT_WHEN_ADMISSIBLE =
+  "Lorsqu'il est recevable, le dossier de faisabilité vous permet d'accéder à votre parcours VAE.";
+
 export const getFeasibilityDematTimelineElementInfo = ({
   feasibility,
   isCaduque,
@@ -40,33 +46,6 @@ export const getFeasibilityDematTimelineElementInfo = ({
   isCandidacyActualisationFeatureActive,
 }: GetFeasibilityTimelineElementInfoProps): GetFeasibilityTimelineElementInfoResult => {
   const dematerializedFile = feasibility?.dematerializedFeasibilityFile;
-
-  if (!dematerializedFile) {
-    return {
-      informationComponent: null,
-      status: "disabled",
-      badgeStatus: null,
-    };
-  }
-
-  if (isCaduque && isCandidacyActualisationFeatureActive) {
-    return {
-      informationComponent: (
-        <InformationWithIcon title="Le dossier constitué à cette étape vous permettra d'accéder à votre accompagnement VAE.">
-          <div className="italic">
-            <p className="mb-0 text-sm">
-              Parce que vous ne vous êtes pas actualisé à temps, votre
-              recevabilité est désormais caduque. Cela signifie que votre
-              parcours VAE s'arrête ici. Vous pouvez contester cette décision en
-              cliquant sur le bouton “Contester”.
-            </p>
-          </div>
-        </InformationWithIcon>
-      ),
-      status: hasActiveDossierDeValidation ? "editable" : "active",
-      badgeStatus: <Badge severity="warning">Non recevable</Badge>,
-    };
-  }
 
   const certificationDecisions = ["ADMISSIBLE", "REJECTED", "INCOMPLETE"];
   const decision = feasibility?.decision;
@@ -86,15 +65,40 @@ export const getFeasibilityDematTimelineElementInfo = ({
     !hasSwornStatement && candidateHasConfirmedDematerializedFile;
   const isPendingCertificationAuthority =
     !!feasibility?.feasibilityFileSentAt &&
-    !certificationDecisions.includes(decision);
+    !certificationDecisions.includes(decision as string);
 
   const formatDate = (date: number) => format(date, "dd/MM/yyyy");
 
   switch (true) {
+    case !dematerializedFile:
+      return {
+        informationComponent: null,
+        status: "disabled",
+        badgeStatus: null,
+      };
+
+    case isCaduque && isCandidacyActualisationFeatureActive:
+      return {
+        informationComponent: (
+          <InformationWithIcon title={TEXT_DEFAULT}>
+            <div className="italic">
+              <p className="mb-0 text-sm">
+                Parce que vous ne vous êtes pas actualisé à temps, votre
+                recevabilité est désormais caduque. Cela signifie que votre
+                parcours VAE s'arrête ici. Vous pouvez contester cette décision
+                en cliquant sur le bouton “Contester”.
+              </p>
+            </div>
+          </InformationWithIcon>
+        ),
+        status: hasActiveDossierDeValidation ? "editable" : "active",
+        badgeStatus: <Badge severity="warning">Non recevable</Badge>,
+      };
+
     case decision === "ADMISSIBLE":
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d’accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <div className="italic">
               <p className="mb-0 text-sm">
                 Votre dossier de faisabilité a été jugé recevable par le
@@ -114,7 +118,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
     case decision === "REJECTED":
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d’accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <div className="italic">
               <p className="text-sm">
                 Votre dossier de faisabilité n&apos;a pas été accepté par le
@@ -122,7 +126,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
               </p>
               <p className="text-sm">
                 <b>Commentaire du certificateur :</b>
-                <br />”{decisionComment}” -{" "}
+                <br />“{decisionComment}” -{" "}
                 {formatDate(decisionSentAt as number)}
               </p>
               <p className="text-sm mb-0">
@@ -141,7 +145,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
     case isPendingCertificationAuthority:
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d’accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <p className="italic mb-0 text-sm">
               Votre dossier de faisabilité a été transmis au certificateur. Vous
               recevrez une réponse dans un délai de 2 mois maximum, par e-mail
@@ -157,10 +161,10 @@ export const getFeasibilityDematTimelineElementInfo = ({
     case isPendingAAP:
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d'accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <div className="italic">
               <p className="mb-0 text-sm">
-                Vous avez transmis votre attestation sur l’honneur le{" "}
+                Vous avez transmis votre attestation sur l'honneur le{" "}
                 {formatDate(
                   dematerializedFile.swornStatementFile?.createdAt as number,
                 )}
@@ -168,7 +172,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
               </p>
               <p className="mb-0 text-sm">
                 Votre accompagnateur va envoyer votre dossier au certificateur
-                afin qu’il puisse se prononcer sur votre recevabilité.
+                afin qu'il puisse se prononcer sur votre recevabilité.
               </p>
             </div>
           </InformationWithIcon>
@@ -184,21 +188,21 @@ export const getFeasibilityDematTimelineElementInfo = ({
     case isPendingSwornDeclaration:
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d'accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <p className="italic mb-0 text-sm">
-              L’accompagnateur doit maintenant télécharger votre attestation sur
-              l’honneur et l’ajouter à votre dossier de faisabilité.
+              L'accompagnateur doit maintenant télécharger votre attestation sur
+              l'honneur et l'ajouter à votre dossier de faisabilité.
             </p>
           </InformationWithIcon>
         ),
         status: "active",
-        badgeStatus: <Badge severity="info">En attente de l’attestation</Badge>,
+        badgeStatus: <Badge severity="info">En attente de l'attestation</Badge>,
       };
 
     case isPendingCandidate:
       return {
         informationComponent: (
-          <InformationWithIcon title="Le dossier constitué à cette étape vous permettra d’accéder à votre accompagnement VAE.">
+          <InformationWithIcon title={TEXT_DEFAULT}>
             <p className="italic mb-0 text-sm">
               Votre dossier de faisabilité vous a été transmis le{" "}
               {formatDate(sentToCandidateAt as number)}. Vérifiez les
@@ -217,7 +221,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
     case decision === "INCOMPLETE":
       return {
         informationComponent: (
-          <InformationWithIcon title="Lorsqu'il est recevable, le dossier de faisabilité vous permet d’accéder à votre parcours VAE.">
+          <InformationWithIcon title={TEXT_WHEN_ADMISSIBLE}>
             <div className="italic">
               <p className="text-sm">
                 Votre dossier de faisabilité a été déclaré incomplet par le
@@ -246,7 +250,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
     default:
       return {
         informationComponent: (
-          <InformationWithIcon title="Le dossier constitué à cette étape vous permettra d’accéder à votre accompagnement VAE.">
+          <InformationWithIcon title={TEXT_DEFAULT}>
             <div className="flex flex-col gap-1 italic">
               <p className="mb-0 text-sm">
                 Votre accompagnateur est en train de finaliser la
