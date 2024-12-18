@@ -1,7 +1,4 @@
-import { format } from "date-fns";
 import { redirect } from "next/navigation";
-
-import Alert from "@codegouvfr/react-dsfr/Alert";
 
 import {
   Candidate,
@@ -21,6 +18,7 @@ import EligibilitySection from "./components/EligibilitySection";
 import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
+import { BannerSummary } from "./components/BannerSummary";
 
 export function DffSummary({
   candidateDecisionComment,
@@ -62,6 +60,7 @@ export function DffSummary({
     additionalHourCount,
     individualHourCount,
     collectiveHourCount,
+    isCaduque,
   } = candidacy;
 
   const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
@@ -70,25 +69,10 @@ export function DffSummary({
 
   return (
     <div className="flex flex-col" id="dff-to-print">
-      {sentToCertificationAuthorityAt ? (
-        <Alert
-          description={`Dossier envoyé au certificateur le ${format(
-            sentToCertificationAuthorityAt,
-            "dd/MM/yyyy",
-          )}`}
-          severity="success"
-          title=""
-          className="mb-12"
-        />
-      ) : (
-        <p className="text-xl mb-12">
-          Vous avez en partie rempli ce dossier avec votre accompagnateur.
-          Vérifiez les informations puis validez votre dossier en envoyant une
-          attestation sur l’honneur à votre accompagnateur. Il se chargera
-          ensuite de le transmettre au certificateur qui se prononcera sur la
-          recevabilité.
-        </p>
-      )}
+      <BannerSummary
+        sentToCertificationAuthorityAt={sentToCertificationAuthorityAt}
+        isCaduque={isCaduque}
+      />
 
       <EligibilitySection
         eligibilityRequirement={
