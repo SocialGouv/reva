@@ -1,22 +1,41 @@
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
-export function BannerSummary({
-  sentToCertificationAuthorityAt,
-  isCaduque,
-}: {
-  sentToCertificationAuthorityAt?: number | null;
-  isCaduque: boolean;
-}) {
+export function BannerSummary() {
   const router = useRouter();
   const { isFeatureActive } = useFeatureFlipping();
+  const { feasibility, candidacy } = useCandidacy();
+  const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
+  const isCaduque = candidacy.isCaduque;
 
   const isCandidacyActualisationFeatureActive = isFeatureActive(
     "candidacy_actualisation",
   );
+  const hasPendingContestationCaducite =
+    candidacy.candidacyContestationsCaducite?.find(
+      (contestation) =>
+        contestation?.certificationAuthorityContestationDecision ===
+        "DECISION_PENDING",
+    );
+
+  if (hasPendingContestationCaducite) {
+    return (
+      <Alert
+        description={`Votre contestation a été faite le ${format(
+          hasPendingContestationCaducite.contestationSentAt as number,
+          "dd/MM/yyyy",
+        )}. Elle a été envoyée à votre certificateur qui y répondra dans les
+          meilleurs délais.`}
+        severity="warning"
+        title=""
+        className="my-12"
+      />
+    );
+  }
 
   if (isCaduque && isCandidacyActualisationFeatureActive) {
     return (

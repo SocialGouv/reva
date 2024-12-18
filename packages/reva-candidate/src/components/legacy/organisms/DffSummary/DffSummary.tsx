@@ -11,6 +11,7 @@ import {
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
+import { BannerSummary } from "./components/BannerSummary";
 import CandidateSection from "./components/CandidateSection";
 import CertificationSection from "./components/CertificationSection";
 import DecisionSection from "./components/DecisionSection";
@@ -18,7 +19,6 @@ import EligibilitySection from "./components/EligibilitySection";
 import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
-import { BannerSummary } from "./components/BannerSummary";
 
 export function DffSummary({
   candidateDecisionComment,
@@ -60,19 +60,14 @@ export function DffSummary({
     additionalHourCount,
     individualHourCount,
     collectiveHourCount,
-    isCaduque,
   } = candidacy;
 
-  const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
   return (
     <div className="flex flex-col" id="dff-to-print">
-      <BannerSummary
-        sentToCertificationAuthorityAt={sentToCertificationAuthorityAt}
-        isCaduque={isCaduque}
-      />
+      <BannerSummary />
 
       <EligibilitySection
         eligibilityRequirement={
