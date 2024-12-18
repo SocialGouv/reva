@@ -26,6 +26,7 @@ import {
   UpdateCertificationPrerequisitesInput,
   UpdateCertificationDescriptionInput,
   ValidateCertificationInput,
+  UpdateCertificationAdditionalInfoInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
@@ -55,6 +56,8 @@ import { updateCertificationPrerequisites } from "./features/updateCertification
 import { updateCertificationDescription } from "./features/updateCertificationDescription";
 import { validateCertification } from "./features/validateCertification";
 import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
+import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
+import { getFileNameAndUrl } from "./features/getDvTemplateNameAndUrl";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -80,6 +83,13 @@ const unsafeReferentialResolvers = {
       getCertificationPrerequisitesByCertificationId({ certificationId }),
     additionalInfo: ({ id: certificationId }: { id: string }) =>
       getAdditionalInfoByCertificationId({ certificationId }),
+  },
+  CertificationAdditionalInfo: {
+    dossierDeValidationTemplate: ({
+      dossierDeValidationTemplateFileId,
+    }: {
+      dossierDeValidationTemplateFileId: string;
+    }) => getFileNameAndUrl({ fileId: dossierDeValidationTemplateFileId }),
   },
   FCCertification: {
     DOMAINS: ({
@@ -246,6 +256,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: ValidateCertificationInput },
     ) => validateCertification(input),
+    referential_updateCertificationAdditionalInfo: (
+      _parent: unknown,
+      { input }: { input: UpdateCertificationAdditionalInfoInput },
+    ) => updateCertificationAdditionalInfo(input),
   },
 };
 

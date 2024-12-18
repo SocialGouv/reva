@@ -124,3 +124,19 @@ export interface UpdateCertificationDescriptionInput {
 export interface ValidateCertificationInput {
   certificationId: string;
 }
+
+export interface CertificationAdditionalInfo {
+  linkToReferential: string;
+  linkToCorrespondenceTable?: string;
+  dossierDeValidationTemplate: GraphqlUploadedFile;
+  linkToJuryGuide?: string;
+  certificationExpertContactDetails?: string;
+  usefulResources?: string;
+  commentsForAAP?: string;
+  dossierDeValidationTemplateFileId: string;
+}
+
+export interface UpdateCertificationAdditionalInfoInput {
+  certificationId: string;
+  additionalInfo: CertificationAdditionalInfo;
+}

@@ -5,8 +5,8 @@ export const getAdditionalInfoByCertificationId = ({
 }: {
   certificationId: string;
 }) =>
-  prismaClient.certification
-    .findUnique({
-      where: { id: certificationId },
-    })
-    .additionalInfo();
+  prismaClient.certificationAdditionalInfo.findUnique({
+    where: {
+      certificationId,
+    },
+  });
