@@ -27,7 +27,11 @@ export function useGetSelfServiceFeasibilityFileTimelineInfo(): GetSelfServiceFe
   const INCOMPLETE = feasibility?.decision === "INCOMPLETE";
   const REJECTED = feasibility?.decision === "REJECTED";
 
-  if (candidacy.status === "PROJET" && !feasibility) {
+  if (
+    candidacy.status === "PROJET" &&
+    !feasibility &&
+    candidacy.certification
+  ) {
     return {
       status: "editable",
       badge: ToCompleteBadge,
