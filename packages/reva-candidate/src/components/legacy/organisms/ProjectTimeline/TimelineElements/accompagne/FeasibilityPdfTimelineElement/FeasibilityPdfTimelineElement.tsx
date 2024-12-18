@@ -5,54 +5,39 @@ import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/A
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { getFeasibilityPdfTimelineElementInfo } from "./getFeasibilityPdfTimelineElementInfo";
+import { Feasibility } from "@/graphql/generated/graphql";
 
 export const FeasibilityPdfTimelineElement = () => {
   const { candidacy } = useCandidacy();
 
   const { feasibility } = candidacy;
 
-  const PENDING = feasibility?.decision === "PENDING";
-  const INCOMPLETE = feasibility?.decision === "INCOMPLETE";
-  const ADMISSIBLE = feasibility?.decision === "ADMISSIBLE";
+  const hasPendingOrConfirmedCaducity =
+    !!candidacy.candidacyContestationsCaducite?.some(
+      (c) =>
+        c?.certificationAuthorityContestationDecision ===
+          "CADUCITE_CONFIRMED" ||
+        c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
+    );
+
+  const { icon, status, text } = getFeasibilityPdfTimelineElementInfo({
+    feasibility: feasibility as Feasibility | null,
+    hasPendingOrConfirmedCaducity,
+  });
+
   const REJECTED = feasibility?.decision === "REJECTED";
-  const COMPLETE = feasibility?.decision === "COMPLETE";
-
-  let text = `Si le dossier de faisabilité est jugé recevable par le certificateur, alors vous pourrez démarrer l’étape du Dossier de validation, avec l’accompagnement et les éventuelles formations prévues au moment de la Définition du parcours pédagogique.`;
-
-  if (PENDING || INCOMPLETE) {
-    text = `Votre dossier de faisabilité a été transmis au certificateur. Vous recevrez une réponse dans un délai de 2 mois maximum, par e-mail et dans certains cas en plus par courrier. Votre accompagnateur sera lui aussi informé de la décision du certificateur.`;
-  }
-
-  if (ADMISSIBLE && feasibility.decisionSentAt) {
-    text = `Votre dossier de faisabilité a été jugé recevable par le certificateur le ${format(
-      feasibility.decisionSentAt,
-      "dd/MM/yyyy",
-    )}. Votre accompagnateur va prendre contact avec vous prochainement pour démarrer votre accompagnement.`;
-  }
-
-  if (REJECTED) {
-    text = `Votre dossier de faisabilité n’a pas été accepté par le certificateur, cela met donc fin à votre parcours France VAE.`;
-  }
-
-  const icon =
-    PENDING || INCOMPLETE ? "fr-icon-time-fill" : "fr-icon-information-fill";
 
   return (
     <TimelineElement
       title="Recevabilité"
-      status={
-        ADMISSIBLE || REJECTED
-          ? "readonly"
-          : PENDING || COMPLETE || INCOMPLETE
-            ? "active"
-            : "disabled"
-      }
+      status={status}
       description={
         !!feasibility ? (
           <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
             À partir de vos expériences et de votre projet, votre accompagnateur
             prépare un dossier de faisabilité. Ce dossier sera ensuite transmis
-            au certificateur pour l’obtention de la recevabilité, nécessaire
+            au certificateur pour l'obtention de la recevabilité, nécessaire
             pour démarrer votre parcours.
           </p>
         ) : undefined
@@ -81,9 +66,9 @@ export const FeasibilityPdfTimelineElement = () => {
                     )}
 
                   <p className="text-sm italic">
-                    Pour plus d’informations, vous pouvez contacter votre
-                    accompagnateur en lui écrivant à l’e-mail indiqué dans
-                    l’étape “Mon accompagnateur” ci-dessus.
+                    Pour plus d'informations, vous pouvez contacter votre
+                    accompagnateur en lui écrivant à l'e-mail indiqué dans
+                    l'étape “Mon accompagnateur” ci-dessus.
                   </p>
                 </>
               )}
