@@ -25,14 +25,6 @@ export const useGetFeasibilityPdfTimelineElementInfo =
       "candidacy_actualisation",
     );
 
-    const _hasPendingOrConfirmedCaducity =
-      !!candidacy.candidacyContestationsCaducite?.some(
-        (c) =>
-          c?.certificationAuthorityContestationDecision ===
-            "CADUCITE_CONFIRMED" ||
-          c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
-      );
-
     const isCaduque = candidacy.isCaduque;
     const hasActiveDossierDeValidation = !!candidacy.activeDossierDeValidation;
 
@@ -44,11 +36,29 @@ export const useGetFeasibilityPdfTimelineElementInfo =
       };
     }
 
+    const pendingContestationCaducite =
+      candidacy.candidacyContestationsCaducite?.find(
+        (c) =>
+          c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
+      );
+
     const PENDING = feasibility.decision === "PENDING";
     const INCOMPLETE = feasibility.decision === "INCOMPLETE";
     const ADMISSIBLE = feasibility.decision === "ADMISSIBLE";
     const REJECTED = feasibility.decision === "REJECTED";
     const COMPLETE = feasibility.decision === "COMPLETE";
+
+    if (pendingContestationCaducite) {
+      return {
+        text: `Votre contestation a été faite le ${format(
+          pendingContestationCaducite.contestationSentAt,
+          "dd/MM/yyyy",
+        )}. Elle a été envoyée à votre certificateur qui y répondra dans les
+          meilleurs délais.`,
+        status: "active",
+        icon: TIME_ICON,
+      };
+    }
 
     if (isCaduque && candidacyActualisationFeatureIsActive) {
       return {

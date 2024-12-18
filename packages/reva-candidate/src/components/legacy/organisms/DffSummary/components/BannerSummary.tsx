@@ -44,7 +44,7 @@ export function BannerSummary() {
     return (
       <Alert
         description={`Votre contestation a été faite le ${format(
-          hasPendingContestationCaducite.contestationSentAt as number,
+          hasPendingContestationCaducite.contestationSentAt,
           "dd/MM/yyyy",
         )}. Elle a été envoyée à votre certificateur qui y répondra dans les
           meilleurs délais.`}
