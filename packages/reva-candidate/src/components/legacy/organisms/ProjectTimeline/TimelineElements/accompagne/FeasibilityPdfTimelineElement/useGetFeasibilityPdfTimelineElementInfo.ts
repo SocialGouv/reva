@@ -42,7 +42,7 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           c?.certificationAuthorityContestationDecision === "DECISION_PENDING",
       );
 
-    const hasConfirmedCaducite = candidacy.candidacyContestationsCaducite?.find(
+    const hasConfirmedCaducite = candidacy.candidacyContestationsCaducite?.some(
       (contestation) =>
         contestation?.certificationAuthorityContestationDecision ===
         "CADUCITE_CONFIRMED",
@@ -54,80 +54,75 @@ export const useGetFeasibilityPdfTimelineElementInfo =
     const REJECTED = feasibility.decision === "REJECTED";
     const COMPLETE = feasibility.decision === "COMPLETE";
 
-    if (hasConfirmedCaducite) {
-      return {
-        text: "Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici.",
-        status: "active",
-        icon: INFORMATION_ICON,
-      };
-    }
+    switch (true) {
+      case hasConfirmedCaducite:
+        return {
+          text: "Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici.",
+          status: "active",
+          icon: INFORMATION_ICON,
+        };
 
-    if (pendingContestationCaducite) {
-      return {
-        text: `Votre contestation a été faite le ${format(
-          pendingContestationCaducite.contestationSentAt,
-          "dd/MM/yyyy",
-        )}. Elle a été envoyée à votre certificateur qui y répondra dans les
+      case !!pendingContestationCaducite:
+        return {
+          text: `Votre contestation a été faite le ${format(
+            pendingContestationCaducite.contestationSentAt,
+            "dd/MM/yyyy",
+          )}. Elle a été envoyée à votre certificateur qui y répondra dans les
           meilleurs délais.`,
-        status: "active",
-        icon: TIME_ICON,
-      };
-    }
+          status: "active",
+          icon: TIME_ICON,
+        };
 
-    if (isCaduque && candidacyActualisationFeatureIsActive) {
-      return {
-        text: "Parce que vous ne vous êtes pas actualisé à temps, votre recevabilité est désormais caduque. Cela signifie que votre parcours VAE s'arrête ici. Vous pouvez contester cette décision en cliquant sur le bouton “Contester”.",
-        status: hasActiveDossierDeValidation ? "editable" : "active",
-        icon: INFORMATION_ICON,
-      };
-    }
+      case isCaduque && candidacyActualisationFeatureIsActive:
+        return {
+          text: "Parce que vous ne vous êtes pas actualisé à temps, votre recevabilité est désormais caduque. Cela signifie que votre parcours VAE s'arrête ici. Vous pouvez contester cette décision en cliquant sur le bouton “Contester”.",
+          status: hasActiveDossierDeValidation ? "editable" : "active",
+          icon: INFORMATION_ICON,
+        };
 
-    if (PENDING) {
-      return {
-        text: DF_HAS_BEEN_SENT_TEXT,
-        status: "active",
-        icon: TIME_ICON,
-      };
-    }
+      case PENDING:
+        return {
+          text: DF_HAS_BEEN_SENT_TEXT,
+          status: "active",
+          icon: TIME_ICON,
+        };
 
-    if (INCOMPLETE) {
-      return {
-        text: DF_HAS_BEEN_SENT_TEXT,
-        status: "active",
-        icon: TIME_ICON,
-      };
-    }
+      case INCOMPLETE:
+        return {
+          text: DF_HAS_BEEN_SENT_TEXT,
+          status: "active",
+          icon: TIME_ICON,
+        };
 
-    if (ADMISSIBLE && feasibility.decisionSentAt) {
-      return {
-        text: `Votre dossier de faisabilité a été jugé recevable par le certificateur le ${format(
-          feasibility.decisionSentAt,
-          "dd/MM/yyyy",
-        )}. Votre accompagnateur va prendre contact avec vous prochainement pour démarrer votre accompagnement.`,
-        status: "readonly",
-        icon: INFORMATION_ICON,
-      };
-    }
+      case ADMISSIBLE && !!feasibility.decisionSentAt:
+        return {
+          text: `Votre dossier de faisabilité a été jugé recevable par le certificateur le ${format(
+            feasibility.decisionSentAt,
+            "dd/MM/yyyy",
+          )}. Votre accompagnateur va prendre contact avec vous prochainement pour démarrer votre accompagnement.`,
+          status: "readonly",
+          icon: INFORMATION_ICON,
+        };
 
-    if (REJECTED) {
-      return {
-        text: "Votre dossier de faisabilité n'a pas été accepté par le certificateur, cela met donc fin à votre parcours France VAE.",
-        status: "readonly",
-        icon: INFORMATION_ICON,
-      };
-    }
+      case REJECTED:
+        return {
+          text: "Votre dossier de faisabilité n'a pas été accepté par le certificateur, cela met donc fin à votre parcours France VAE.",
+          status: "readonly",
+          icon: INFORMATION_ICON,
+        };
 
-    if (COMPLETE) {
-      return {
-        text: DEFAULT_TEXT,
-        status: "active",
-        icon: INFORMATION_ICON,
-      };
-    }
+      case COMPLETE:
+        return {
+          text: DEFAULT_TEXT,
+          status: "active",
+          icon: INFORMATION_ICON,
+        };
 
-    return {
-      text: DEFAULT_TEXT,
-      status: "disabled",
-      icon: INFORMATION_ICON,
-    };
+      default:
+        return {
+          text: DEFAULT_TEXT,
+          status: "disabled",
+          icon: INFORMATION_ICON,
+        };
+    }
   };
