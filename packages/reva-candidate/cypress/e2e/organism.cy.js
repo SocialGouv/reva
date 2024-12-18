@@ -88,6 +88,16 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="checkbox-wrapper-pmr"] input').should("be.disabled");
   });
 
+  it("zip value is reset when on site is deselected", function () {
+    cy.get('[data-test="button-select-onsite"]').click();
+    cy.get('[data-test="input-wrapper-zip"] input').type("44000");
+
+    cy.get('[data-test="button-select-remote"]').click();
+    cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
+
+    cy.get('[data-test="button-select-onsite"]').click();
+    cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
+  });
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
