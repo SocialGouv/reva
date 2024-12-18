@@ -283,7 +283,7 @@ describe("searchOrganismsForCandidacy", () => {
   });
 
   describe("PMR accessibility filtering", () => {
-    test("should filter organisms by PMR accessibility", async () => {
+    test("should filter organisms by PMR accessibility when searching by zipcode", async () => {
       const certification = await createCertificationHelper();
       const ccn = await prismaClient.conventionCollective.findFirst();
       if (!certification || !ccn) {
@@ -313,6 +313,89 @@ describe("searchOrganismsForCandidacy", () => {
         searchFilter: {
           pmr: true,
           zip: "75001",
+        },
+      });
+
+      expect(resp.statusCode).toEqual(200);
+      const results = resp.json().data.getRandomOrganismsForCandidacy;
+      expect(results.totalRows).toBe(1);
+    });
+
+    test("should not find an organisms when searching for PMR accessibility whith an onSite organism not PMR compatible without entering a zipcode", async () => {
+      const certification = await createCertificationHelper();
+      const ccn = await prismaClient.conventionCollective.findFirst();
+      if (!certification || !ccn) {
+        throw new Error("Certification or CCN not found");
+      }
+      await prismaClient.certificationOnConventionCollective.create({
+        data: {
+          certificationId: certification.id,
+          ccnId: ccn.id,
+        },
+      });
+
+      const organism = await createOrganismHelper({
+        modaliteAccompagnement: "LIEU_ACCUEIL",
+        organismInformationsCommerciales: {
+          create: { conformeNormesAccessbilite: "NON_CONFORME" },
+        },
+      });
+
+      await attachOrganismToAllDegreesHelper(organism);
+      await attachOrganismToAllConventionCollectiveHelper(organism);
+
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          certificationId: certification?.id,
+        },
+      });
+
+      const resp = await searchOrganisms({
+        keycloakId: candidacy.candidate?.keycloakId ?? "",
+        candidacyId: candidacy.id,
+        searchFilter: {
+          distanceStatus: "ONSITE",
+          pmr: true,
+        },
+      });
+
+      expect(resp.statusCode).toEqual(200);
+      const results = resp.json().data.getRandomOrganismsForCandidacy;
+      expect(results.totalRows).toBe(0);
+    });
+
+    test("should find an organism with PMR accessibility when searching for an onSite organism PMR compatible without entering a zipcode", async () => {
+      const certification = await createCertificationHelper();
+      const ccn = await prismaClient.conventionCollective.findFirst();
+      if (!certification || !ccn) {
+        throw new Error("Certification or CCN not found");
+      }
+      await prismaClient.certificationOnConventionCollective.create({
+        data: {
+          certificationId: certification.id,
+          ccnId: ccn.id,
+        },
+      });
+
+      const organism = await createOrganismHelper({
+        modaliteAccompagnement: "LIEU_ACCUEIL",
+      });
+
+      await attachOrganismToAllDegreesHelper(organism);
+      await attachOrganismToAllConventionCollectiveHelper(organism);
+
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          certificationId: certification?.id,
+        },
+      });
+
+      const resp = await searchOrganisms({
+        keycloakId: candidacy.candidate?.keycloakId ?? "",
+        candidacyId: candidacy.id,
+        searchFilter: {
+          distanceStatus: "ONSITE",
+          pmr: true,
         },
       });
 
