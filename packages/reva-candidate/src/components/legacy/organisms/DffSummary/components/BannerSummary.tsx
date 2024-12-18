@@ -15,12 +15,30 @@ export function BannerSummary() {
   const isCandidacyActualisationFeatureActive = isFeatureActive(
     "candidacy_actualisation",
   );
+
+  const hasConfirmedCaducite = candidacy.candidacyContestationsCaducite?.find(
+    (contestation) =>
+      contestation?.certificationAuthorityContestationDecision ===
+      "CADUCITE_CONFIRMED",
+  );
+
   const hasPendingContestationCaducite =
     candidacy.candidacyContestationsCaducite?.find(
       (contestation) =>
         contestation?.certificationAuthorityContestationDecision ===
         "DECISION_PENDING",
     );
+
+  if (hasConfirmedCaducite) {
+    return (
+      <Alert
+        description="Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici."
+        severity="warning"
+        title=""
+        className="my-12"
+      />
+    );
+  }
 
   if (hasPendingContestationCaducite) {
     return (
