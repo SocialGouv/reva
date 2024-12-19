@@ -57,8 +57,8 @@ export const sendGenericEmail = async ({
     );
     logger.info(`email sent to ${emailAddresses}`);
     return `email sent to ${emailAddresses}`;
-  } catch (e) {
-    logger.error("error", e);
-    return "error";
+  } catch (e: any) {
+    logger.error(`error sending email to ${emailAddresses}: ${e}`);
+    return e;
   }
 };
