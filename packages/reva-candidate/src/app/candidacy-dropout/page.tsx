@@ -14,7 +14,7 @@ export default function CandidacyDropOutPage() {
         Votre accompagnateur a déclaré votre abandon de candidature
       </h1>
       <p>
-        Nous vous informons que, dans le cadre de votre parcours de VAE, votre
+        Nous vous informons que, dans le cadre de votre parcours VAE, votre
         conseiller a placé votre candidature en abandon.
       </p>
       <p>

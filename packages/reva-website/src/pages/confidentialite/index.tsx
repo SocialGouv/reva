@@ -67,9 +67,7 @@ const IndexConfidentialitePage = () => {
               suivre la confiance et la motivation de la personne candidate dans
               leurs parcours et dans le dispositif France VAE ;
             </li>
-            <li>
-              Permettre d’identifier les financeurs d’un parcours de VAE ;
-            </li>
+            <li>Permettre d’identifier les financeurs d’un parcours VAE ;</li>
             <li>
               Reconnaître les expériences et compétences de l’utilisateur
               candidat ;

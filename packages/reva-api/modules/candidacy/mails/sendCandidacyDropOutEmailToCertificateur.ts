@@ -42,7 +42,7 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
     templateMail({
       content: `
       <p>Bonjour,</p>
-      <p>Nous vous informons que ${candidateFullName} a abandonné son parcours de VAE. Pour retrouver la candidature en question, cliquez sur le lien ci-dessous.</p>
+      <p>Nous vous informons que ${candidateFullName} a abandonné son parcours VAE. Pour retrouver la candidature en question, cliquez sur le lien ci-dessous.</p>
       <p>L'équipe France VAE.</p>
     `,
       labelCTA: "Accéder à la candidature",

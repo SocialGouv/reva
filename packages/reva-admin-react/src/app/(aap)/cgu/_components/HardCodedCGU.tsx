@@ -131,7 +131,7 @@ export const HardCodedCgu = () => (
       réalisé par le candidat à la VAE que s'il obtient une décision de
       recevabilité.
     </p>
-    <p>Le parcours de VAE est détaillé dans le dossier de faisabilité avec :</p>
+    <p>Le parcours VAE est détaillé dans le dossier de faisabilité avec :</p>
     <p>- la durée et le type d'accompagnement (individuel et collectif) ;</p>
     <p>- les actes formatifs complémentaires ; </p>
     <p>
@@ -161,7 +161,7 @@ export const HardCodedCgu = () => (
     </p>
     <p>
       <u>Abandon actif</u> : La décision prise par un candidat de mettre fin à
-      son parcours de VAE avant le passage devant le jury, entraînant la fin du
+      son parcours VAE avant le passage devant le jury, entraînant la fin du
       projet de VAE. Cette décision est expresse, recueillie par la plateforme
       ou par un acteur de la VAE (AAP, Certificateurs, etc.).
     </p>
@@ -207,7 +207,7 @@ export const HardCodedCgu = () => (
       Le portail de la Validation des acquis de l'expérience (VAE) a pour objet
       de fournir l'information sur la VAE, d'assurer l'interface entre les
       acteurs de la VAE et de permettre l'accomplissement des démarches du
-      parcours de VAE par toute personne qui le souhaite après création d'un
+      parcours VAE par toute personne qui le souhaite après création d'un
       compte, sous réserve du respect des obligations relatives à la procédure
       et des présentes conditions générales d'utilisation.
     </p>
