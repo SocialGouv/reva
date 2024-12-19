@@ -4,25 +4,24 @@ import {
   successToast,
 } from "@/components/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 
-import { useFeasibilityPage } from "../feasibility.hook";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { UploadForm } from "./UploadForm";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-import { FeasibilityHistory } from "@/graphql/generated/graphql";
-import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
-import Tooltip from "@/components/tooltip/Tooltip";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { BackButton } from "@/components/legacy/molecules/BackButton";
+import Tooltip from "@/components/tooltip/Tooltip";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useFeasibilityPage } from "../feasibility.hook";
+import { FeasibilityBanner } from "./FeasibilityBanner";
+import { UploadForm } from "./UploadForm";
 
 const schema = z.object({
   certificationAuthorityId: z.string(),
@@ -186,20 +185,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     }
   });
 
-  const feasibilityHistory: FeasibilityHistory[] = feasibility?.history || [];
-
   return (
     <div className="mt-12">
-      {candidacy.feasibility?.decision && (
-        <FeasibilityDecisionDisplay
-          decision={candidacy.feasibility.decision}
-          feasibilityHistory={feasibilityHistory}
-          decisionComment={candidacy.feasibility.decisionComment}
-          decisionSentAt={candidacy.feasibility.decisionSentAt}
-          decisionFile={candidacy.feasibility.decisionFile}
-          feasibilityFileSentAt={candidacy.feasibility.feasibilityFileSentAt}
-        />
-      )}
+      <FeasibilityBanner />
       <form
         onSubmit={handleFormSubmit}
         onReset={(e) => {

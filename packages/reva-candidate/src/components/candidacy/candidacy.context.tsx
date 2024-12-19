@@ -204,6 +204,12 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             eligibilityRequirement
             eligibilityValidUntil
           }
+          history {
+            id
+            decision
+            decisionSentAt
+            decisionComment
+          }
         }
         candidacyContestationsCaducite {
           contestationSentAt
