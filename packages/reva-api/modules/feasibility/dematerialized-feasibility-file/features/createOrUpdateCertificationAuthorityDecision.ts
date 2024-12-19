@@ -4,6 +4,7 @@ import {
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
+  UploadedFile,
   uploadFilesToS3,
 } from "../../../../modules/shared/file";
 import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
@@ -42,6 +43,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
   certificationAuthorityLabel,
   isAutonome,
   candidacyId,
+  decisionUploadedFile,
 }: {
   candidateEmail: string;
   aapEmail: string;
@@ -51,6 +53,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
   certificationAuthorityLabel: string;
   isAutonome: boolean;
   candidacyId: string;
+  decisionUploadedFile?: UploadedFile;
 }) => {
   if (decision === "INCOMPLETE") {
     if (isAutonome) {
@@ -89,6 +92,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
         comment: decisionComment,
         certificationAuthorityLabel,
         certificationName,
+        infoFile: decisionUploadedFile,
       });
     } else {
       sendFeasibilityValidatedToCandidateAccompagneEmail({
@@ -96,6 +100,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
         comment: decisionComment,
         certificationAuthorityLabel,
         certificationName,
+        infoFile: decisionUploadedFile,
       });
     }
 
@@ -142,8 +147,9 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
     }
 
     let decisionFileForDb = null;
+    let decisionUploadedFile;
     if (decisionFile) {
-      const decisionUploadedFile = await getUploadedFile(decisionFile);
+      decisionUploadedFile = await getUploadedFile(decisionFile);
       const fileId = uuidV4();
       const fileAndId: {
         id: string;
@@ -242,6 +248,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       certificationAuthorityLabel,
       isAutonome,
       candidacyId,
+      decisionUploadedFile,
     });
 
     return getDematerializedFeasibilityFileByCandidacyId({
