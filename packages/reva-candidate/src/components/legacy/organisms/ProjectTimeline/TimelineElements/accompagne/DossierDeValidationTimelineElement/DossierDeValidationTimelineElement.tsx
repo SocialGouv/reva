@@ -1,39 +1,20 @@
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useGetDossierDeValidationTimelineInfo } from "./useGetDossierDeValidationTimelineInfo";
 
 export const DossierDeValidationTimelineElement = () => {
   const { candidacy } = useCandidacy();
 
-  const { activeDossierDeValidation: dossierDeValidation, feasibility } =
-    candidacy;
-
-  const PENDING = dossierDeValidation?.decision === "PENDING";
-  const INCOMPLETE = dossierDeValidation?.decision === "INCOMPLETE";
-
-  let text =
-    "Pensez à prévenir votre accompagnateur quand vous avez terminé la rédaction de votre dossier de validation. Ce dernier se chargera de le transmettre au certificateur.";
-
-  if (PENDING || INCOMPLETE) {
-    text = `Votre dossier de validation a été transmis au certificateur.`;
-  }
-
-  const icon = !dossierDeValidation
-    ? "fr-icon-time-fill"
-    : "fr-icon-information-fill";
+  const { feasibility } = candidacy;
+  const { status, icon, text } = useGetDossierDeValidationTimelineInfo();
 
   const FEASIBILITY_ADMISSIBLE = feasibility?.decision === "ADMISSIBLE";
 
   return (
     <TimelineElement
       title="Dossier de validation"
-      status={
-        PENDING || INCOMPLETE
-          ? "readonly"
-          : FEASIBILITY_ADMISSIBLE
-            ? "active"
-            : "disabled"
-      }
+      status={status}
       description={
         FEASIBILITY_ADMISSIBLE ? (
           <p className="text-sm text-dsfrGray-500 mt-4 mb-0" role="status">
