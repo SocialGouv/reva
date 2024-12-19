@@ -137,7 +137,7 @@ export const DematerializedFeasibility = () => {
       />
 
       {organism && (
-        <CallOut title="Architecte accompagnateur de parcours en charge du dossier :">
+        <CallOut title="Architecte Accompagnateur de Parcours en charge du dossier :">
           <div className="my-4 flex flex-col">
             <span>{organism.label}</span>
             <span>

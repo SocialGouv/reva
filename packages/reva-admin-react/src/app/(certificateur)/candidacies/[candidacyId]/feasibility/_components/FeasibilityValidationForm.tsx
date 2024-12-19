@@ -56,7 +56,7 @@ export const FeasibilityValidationForm = ({
           <h2>Décision concernant le dossier</h2>
         </legend>
         <RadioButtons
-          legend="Sélectionnez si ce dossier est recevable ou non recevable. La décision et les motifs associés à celle-ci seront transmis au candidat et à son architecte accompagnateur de parcours."
+          legend="Sélectionnez si ce dossier est recevable ou non recevable. La décision et les motifs associés à celle-ci seront transmis au candidat et à son Architecte Accompagnateur de Parcours."
           options={[
             {
               label: (

@@ -201,7 +201,7 @@ const CandidacySummaryPage = () => {
               <GrayCard>
                 <div className="flex flex-row justify-between mb-5">
                   <span className="text-2xl font-bold">
-                    Son architecte de parcours
+                    Son Architecte Accompagnateur de Parcours
                   </span>
 
                   {candidacy.organism?.maisonMereAAP?.id && (

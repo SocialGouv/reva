@@ -32,7 +32,7 @@ const AccompagnementDemarche = () => {
         Un accompagnement dès le début de votre démarche
       </h2>
       <p className="my-0 text-[20px] leading-8">
-        Avec France VAE, un architecte-accompagnateur de parcours (professionnel
+        Avec France VAE, un Architecte Accompagnateur de Parcours (professionnel
         spécialisé dans l'accompagnement VAE) vous aide tout au long de votre
         VAE, depuis le diagnostic de vos compétences en début de parcours
         jusqu'au bilan après le passage devant le jury.

@@ -60,8 +60,8 @@ const JuryPage = (_props: Props) => {
           <div className="flex flex-col">
             <p className="text-gray-600">
               Le dossier de validation est en cours de rédaction. Il vous sera
-              transmis par le candidat ou son architecte accompagnateur de
-              parcours afin que vous puissiez programmer son passage devant le
+              transmis par le candidat ou son Architecte Accompagnateur de
+              Parcours afin que vous puissiez programmer son passage devant le
               jury.
             </p>
           </div>

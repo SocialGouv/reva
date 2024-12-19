@@ -83,7 +83,7 @@ export default function CandidaciesPage() {
           <h1>Espace pro administrateur</h1>
           <p>
             En tant qu'administrateur, vous pouvez gérer toutes les candidatures
-            et faire une recherche par architecte de parcours.
+            et faire une recherche par Architecte Accompagnateur de Parcours.
           </p>
         </div>
       )}

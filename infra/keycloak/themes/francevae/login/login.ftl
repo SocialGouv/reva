@@ -116,7 +116,7 @@
                             </div>
                             
                             <hr>
-                            <h3>Vous n’avez pas de compte architecte accompagnateur de parcours ?</h3>
+                            <h3>Vous n’avez pas de compte Architecte Accompagnateur de Parcours ?</h3>
                             <div class="fr-btns-group">
                                 <a class="fr-btn fr-btn--secondary" href="${properties.revaUrlCreateAAPAccount}">
                                     Créez votre compte

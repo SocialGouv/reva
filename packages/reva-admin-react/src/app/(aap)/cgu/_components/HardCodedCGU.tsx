@@ -65,7 +65,7 @@ export const HardCodedCgu = () => (
       par les certificateurs.
     </p>
     <p>
-      <u>Architecte accompagnateur de parcours (AAP)</u> : Toute personne
+      <u>Architecte Accompagnateur de Parcours (AAP)</u> : Toute personne
       salariée ou agent d'un organisme d'accompagnement chargée d'accompagner le
       candidat à la VAE dans le cadre de son parcours.
     </p>
@@ -125,7 +125,7 @@ export const HardCodedCgu = () => (
     </p>
     <p>
       <u>Parcours prévisionnel de VAE</u> : Contenu pédagogique proposé par
-      l'architecte-accompagnateur de parcours au candidat après analyse de son
+      l'Architecte Accompagnateur de Parcours au candidat après analyse de son
       projet de VAE et que le candidat devra réaliser afin de valider les
       conditions exigées lors de l'entretien avec le jury. Il ne peut être
       réalisé par le candidat à la VAE que s'il obtient une décision de
@@ -187,10 +187,10 @@ export const HardCodedCgu = () => (
       certificateur que le candidat remplit avec ses motivations, ses
       formations, son parcours professionnel, ses activités notamment bénévoles,
       non salariées et salariées, en lien avec la certification visée. Le
-      candidat peut bénéficier de l'aide pédagogique d'un
-      architecte-accompagnateur de parcours pour expliquer ses activités. Le
-      dossier de validation sert de support au jury pour interroger le candidat
-      sur ses activités et ses pratiques professionnelles.
+      candidat peut bénéficier de l'aide pédagogique d'un Architecte
+      Accompagnateur de Parcours pour expliquer ses activités. Le dossier de
+      validation sert de support au jury pour interroger le candidat sur ses
+      activités et ses pratiques professionnelles.
     </p>
     <p>
       <u>Résultat du jury</u> : Le sens et le contenu de l'avis prononcé par le
@@ -239,7 +239,7 @@ export const HardCodedCgu = () => (
       et suivre son parcours étape par étape.
     </p>
     <p>
-      Le candidat peut changer d'organisme Architecte accompagnateur de parcours
+      Le candidat peut changer d'organisme Architecte Accompagnateur de Parcours
       tant que le premier rendez-vous avec celui-ci n'est pas réalisé.
     </p>
     <p>
@@ -280,7 +280,7 @@ export const HardCodedCgu = () => (
       Après l'envoi de son dossier de faisabilité au certificateur via la
       plateforme France VAE, le candidat reçoit un mail lui indiquant le
       résultat de sa demande de recevabilité ainsi qu'une notification dans son
-      espace candidat. L'Architecte-accompagnateur de parcours en est informé
+      espace candidat. L'Architecte Accompagnateur de Parcours en est informé
       également via son espace.
     </p>
     <p>
@@ -474,7 +474,7 @@ export const HardCodedCgu = () => (
       <em>Abandon constaté</em>
     </p>
     <p>
-      L'architecte accompagnateur de parcours engage une procédure d'arrêt de
+      L'Architecte Accompagnateur de Parcours engage une procédure d'arrêt de
       parcours après un contact avec le candidat ou 3 tentatives consécutives
       infructueuses de contact. Ce constat ne peut intervenir qu'après 6 mois
       d'inactivité constatée du candidat si ce dernier a obtenu une recevabilité

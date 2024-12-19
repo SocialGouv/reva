@@ -141,7 +141,7 @@ export const FeasibilityUploadedPdf = () => {
           {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
             <GrayCard>
               <h5 className="text-2xl font-bold mb-4">
-                Architecte accompagnateur de parcours
+                Architecte Accompagnateur de Parcours
               </h5>
               <h6 className="text-xl font-bold mb-4">
                 {candidacy.organism?.label}

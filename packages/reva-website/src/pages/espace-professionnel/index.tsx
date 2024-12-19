@@ -99,7 +99,7 @@ const InterfaceProfessionnels = () => (
       >
         Découvrir les étapes d’accompagnement d’un candidat
       </Button>
-      <Notice title="France VAE offre un outil élaboré en partenariat avec des architectes de parcours, dont l’optimisation continue est basée sur vos retours." />
+      <Notice title="France VAE offre un outil élaboré en partenariat avec des Architectes Accompagnateurs de Parcours, dont l’optimisation continue est basée sur vos retours." />
     </div>
     <div className="relative min-h-[300px] mt-10 lg:mt-0 basis-1/2">
       <Image

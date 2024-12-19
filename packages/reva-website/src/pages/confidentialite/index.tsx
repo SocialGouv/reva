@@ -58,7 +58,7 @@ const IndexConfidentialitePage = () => {
             </li>
             <li>
               Permettre aux personnes utilisatrices d’être accompagnées par un
-              organisme spécialisé (architecte accompagnateur de parcours) dans
+              organisme spécialisé (Architecte Accompagnateur de Parcours) dans
               la définition de leur projet, la description de leurs expériences,
               la rédaction du dossier professionnel et la préparation au jury ;
             </li>
