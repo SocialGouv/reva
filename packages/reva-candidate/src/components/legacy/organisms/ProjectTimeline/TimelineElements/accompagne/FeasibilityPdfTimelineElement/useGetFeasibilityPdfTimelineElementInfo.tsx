@@ -1,12 +1,14 @@
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { TimeLineElementStatus } from "@/components/legacy/molecules/Timeline/Timeline";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 
 interface GetFeasibilityTimelineElementInfoResult {
   text: string;
   status: TimeLineElementStatus;
   icon: string;
+  badge?: React.ReactNode;
 }
 
 const DEFAULT_TEXT =
@@ -17,6 +19,8 @@ const DF_HAS_BEEN_SENT_TEXT =
 const INFORMATION_ICON = "fr-icon-information-fill";
 const TIME_ICON = "fr-icon-time-fill";
 
+const BadgeNonRecevable = <Badge severity="warning">Non recevable</Badge>;
+
 export const useGetFeasibilityPdfTimelineElementInfo =
   (): GetFeasibilityTimelineElementInfoResult => {
     const { feasibility, candidacy } = useCandidacy();
@@ -26,7 +30,6 @@ export const useGetFeasibilityPdfTimelineElementInfo =
     );
 
     const isCaduque = candidacy.isCaduque;
-    const hasActiveDossierDeValidation = !!candidacy.activeDossierDeValidation;
 
     if (!feasibility) {
       return {
@@ -60,6 +63,7 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           text: "Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici.",
           status: "active",
           icon: INFORMATION_ICON,
+          badge: BadgeNonRecevable,
         };
 
       case !!pendingContestationCaducite:
@@ -71,13 +75,15 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           meilleurs délais.`,
           status: "active",
           icon: TIME_ICON,
+          badge: BadgeNonRecevable,
         };
 
       case isCaduque && candidacyActualisationFeatureIsActive:
         return {
           text: "Parce que vous ne vous êtes pas actualisé à temps, votre recevabilité est désormais caduque. Cela signifie que votre parcours VAE s'arrête ici. Vous pouvez contester cette décision en cliquant sur le bouton “Contester”.",
-          status: hasActiveDossierDeValidation ? "editable" : "active",
+          status: "active",
           icon: INFORMATION_ICON,
+          badge: BadgeNonRecevable,
         };
 
       case PENDING:

@@ -12,7 +12,8 @@ export const FeasibilityPdfTimelineElement = () => {
 
   const { feasibility } = candidacy;
 
-  const { icon, status, text } = useGetFeasibilityPdfTimelineElementInfo();
+  const { icon, status, text, badge } =
+    useGetFeasibilityPdfTimelineElementInfo();
 
   const REJECTED = feasibility?.decision === "REJECTED";
 
@@ -30,6 +31,7 @@ export const FeasibilityPdfTimelineElement = () => {
           </p>
         ) : undefined
       }
+      badge={badge}
     >
       {!!feasibility && (
         <>
