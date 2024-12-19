@@ -33,14 +33,14 @@ export const sendFeasibilityValidatedToCandidateAccompagneEmail = async ({
       content: `
       <p>Bonjour,</p>
       <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certificationName}</em>.</p>
-      <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE. Nous vous invitons à prendre contact avec votre architecte de parcours afin d’organiser la suite.</p>
+      <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE. Nous vous invitons à prendre contact avec votre accompagnateur afin d’organiser la suite.</p>
       ${commentInfo}
       <br/>
       <p>Si un relevé de recevabilité est joint à ce mail, nous vous conseillons de le télécharger et de le conserver. Pour rappel, vous pouvez aussi le retrouver dans votre compte candidat.</p>
       <p><strong>Attention : dossier plagié = certification refusée ?</strong></p>
       <p>Vous allez bientôt commencer à rédiger votre dossier de validation. Conformément à <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048699565">l’article R6412-7 du Code du Travail</a>, le ministère ou l'organisme certificateur peut refuser de délivrer ou retirer la certification professionnelle si le dossier contient des éléments plagiés ou frauduleux. Le candidat aura toutefois la possibilité de présenter ses observations avant toute décision.</p>
       <br/>
-      <p>Nous vous invitons à prendre contact avec votre architecte de parcours afin d’organiser la suite.</p>
+      <p>Nous vous invitons à prendre contact avec votre accompagnateur afin d’organiser la suite.</p>
       <p>L'équipe France VAE.</p>
     `,
     }),
