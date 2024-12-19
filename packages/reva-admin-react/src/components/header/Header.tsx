@@ -72,7 +72,7 @@ export const Header = () => {
     {
       text: "Gestion des certifications",
       linkProps: {
-        href: "/responsable-certifications",
+        href: "/responsable-certifications/certifications",
         target: "_self",
       },
       isActive: currentPathname.startsWith("/responsable-certifications"),
