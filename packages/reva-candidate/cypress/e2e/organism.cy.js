@@ -104,52 +104,66 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
   });
 
-  it("on site filters can be reset", function () {
-    cy.get('[data-test="button-select-onsite"]').click();
-    cy.get('[data-test="button-select-onsite"]').should(
-      "have.attr",
-      "aria-pressed",
-      "true",
-    );
-    cy.get('[data-test="input-wrapper-zip"] input').type("44000");
-    cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
-      force: true,
-    });
+  // TODO page no-result :
+  // - ajouter un test pour s'assurer que le bouton reset ne s'affiche que si on utilise des filtres (pas le moteur de recherche)
+  // - faire passer les tests en mockant l'absence de résultat
+  ["no-results-button-reset-filters", "sidebar-button-reset-filters"].forEach(
+    (filterButton) => {
+      it(`on site filters can be reset with ${filterButton}`, function () {
+        cy.get('[data-test="button-select-onsite"]').click();
+        cy.get('[data-test="button-select-onsite"]').should(
+          "have.attr",
+          "aria-pressed",
+          "true",
+        );
+        cy.get('[data-test="input-wrapper-zip"] input').type("44000");
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
+          force: true,
+        });
 
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="button-select-onsite"]').should(
-      "have.attr",
-      "aria-pressed",
-      "false",
-    );
-    cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
-    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("not.be.checked");
-  });
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="button-select-onsite"]').should(
+          "have.attr",
+          "aria-pressed",
+          "false",
+        );
+        cy.get('[data-test="input-wrapper-zip"] input').should(
+          "have.value",
+          "",
+        );
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
+          "not.be.checked",
+        );
+      });
 
-  it("remote filters can be reset", function () {
-    cy.get('[data-test="button-select-remote"]').click();
-    cy.get('[data-test="button-select-remote"]').should(
-      "have.attr",
-      "aria-pressed",
-      "true",
-    );
+      it(`remote filters can be reset with ${filterButton}`, function () {
+        cy.get('[data-test="button-select-remote"]').click();
+        cy.get('[data-test="button-select-remote"]').should(
+          "have.attr",
+          "aria-pressed",
+          "true",
+        );
 
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="button-select-remote"]').should(
-      "have.attr",
-      "aria-pressed",
-      "false",
-    );
-  });
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="button-select-remote"]').should(
+          "have.attr",
+          "aria-pressed",
+          "false",
+        );
+      });
 
-  it("mcf filter can be reset", function () {
-    cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
-      force: true,
-    });
+      it(`mcf filter can be reset ${filterButton}`, function () {
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
+          force: true,
+        });
 
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="checkbox-wrapper-mcf"] input').should("not.be.checked");
-  });
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').should(
+          "not.be.checked",
+        );
+      });
+    },
+  );
 
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {

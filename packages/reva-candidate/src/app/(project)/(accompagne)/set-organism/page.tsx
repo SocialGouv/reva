@@ -42,6 +42,14 @@ export default function SetOrganism() {
   const [organismSearchPmr, setOrganismSearchPmr] = useState<boolean>(false);
   const [organismSearchMcf, setOrganismSearchMcf] = useState<boolean>(false);
 
+  const resetFilters = () => {
+    setOrganismSearchOnsite(false);
+    setOrganismSearchRemote(false);
+    setOrganismSearchZip("");
+    setOrganismSearchPmr(false);
+    setOrganismSearchMcf(false);
+  };
+
   const { getRandomOrganismsForCandidacy, selectOrganism } = useSetOrganism({
     candidacyId: candidacy.id || "",
     searchText: organismSearchText,
@@ -160,7 +168,10 @@ export default function SetOrganism() {
                     : `Résultats filtrés : ${organisms.totalRows} accompagnateurs`}
                 </p>
               ) : (
-                <NoOrganisms organismSearchText={organismSearchText} />
+                <NoOrganisms
+                  organismSearchText={organismSearchText}
+                  resetFilters={resetFilters}
+                />
               )}
             </>
           )}
@@ -256,8 +267,10 @@ const Organisms: React.FC<PropsOrganisms> = ({
 
 const NoOrganisms = ({
   organismSearchText,
+  resetFilters,
 }: {
   organismSearchText?: string;
+  resetFilters: () => void;
 }) => {
   if (organismSearchText) {
     return (
@@ -280,6 +293,12 @@ const NoOrganisms = ({
         Nous ne trouvons pas d’accompagnateurs sur votre diplôme avec les
         critères sélectionnés.
       </p>
+      <Button
+        data-test="no-results-button-reset-filters"
+        onClick={resetFilters}
+      >
+        Réinitialiser les filtres
+      </Button>
     </NoResults>
   );
 };

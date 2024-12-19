@@ -190,7 +190,7 @@ export const OrganismFilters = ({
       {/* <hr /> */}
       <div className="flex justify-center">
         <Button
-          data-test="button-reset-filters"
+          data-test="sidebar-button-reset-filters"
           priority="tertiary no outline"
           onClick={() => {
             onSearch({
