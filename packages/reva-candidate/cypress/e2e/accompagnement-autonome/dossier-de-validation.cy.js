@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Accompagnement autonome - Dossier de validation", () => {
@@ -50,6 +52,8 @@ context("Accompagnement autonome - Dossier de validation", () => {
             "AUTONOME";
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
             "DOSSIER_FAISABILITE_RECEVABLE";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+            format(new Date(), "yyyy-MM-dd");
 
           cy.intercept("POST", "/api/graphql", (req) => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
