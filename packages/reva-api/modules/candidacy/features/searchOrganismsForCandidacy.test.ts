@@ -377,12 +377,22 @@ describe("searchOrganismsForCandidacy", () => {
         },
       });
 
-      const organism = await createOrganismHelper({
+      const pmrOrganism = await createOrganismHelper({
         modaliteAccompagnement: "LIEU_ACCUEIL",
       });
 
-      await attachOrganismToAllDegreesHelper(organism);
-      await attachOrganismToAllConventionCollectiveHelper(organism);
+      await attachOrganismToAllDegreesHelper(pmrOrganism);
+      await attachOrganismToAllConventionCollectiveHelper(pmrOrganism);
+
+      const nonPmrOrganism = await createOrganismHelper({
+        modaliteAccompagnement: "LIEU_ACCUEIL",
+        organismInformationsCommerciales: {
+          create: { conformeNormesAccessbilite: "NON_CONFORME" },
+        },
+      });
+
+      await attachOrganismToAllDegreesHelper(nonPmrOrganism);
+      await attachOrganismToAllConventionCollectiveHelper(nonPmrOrganism);
 
       const candidacy = await createCandidacyHelper({
         candidacyArgs: {
@@ -402,6 +412,7 @@ describe("searchOrganismsForCandidacy", () => {
       expect(resp.statusCode).toEqual(200);
       const results = resp.json().data.getRandomOrganismsForCandidacy;
       expect(results.totalRows).toBe(1);
+      expect(results.rows[0].id).toBe(pmrOrganism.id);
     });
   });
 
