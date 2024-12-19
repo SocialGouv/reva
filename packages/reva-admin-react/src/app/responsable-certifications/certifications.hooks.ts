@@ -50,7 +50,7 @@ export const useCertifications = ({
   visible?: boolean;
 }) => {
   const { graphqlClient } = useGraphQlClient();
-  console.log("visible", visible);
+
   const {
     data: getCertificationsResponse,
     status: getCertificationsQueryStatus,
