@@ -125,7 +125,7 @@ export default function AddExperience() {
             }}
           >
             <option value="" disabled hidden>
-              Sélectionnez une option
+              Sélectionner une option
             </option>
             {durationOptions.map((o) => (
               <option key={o.value} value={o.value}>

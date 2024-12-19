@@ -57,7 +57,7 @@ export const ExperiencesTimelineElement = () => {
                 router.push("/experiences/add");
               }}
             >
-              Ajoutez une expérience
+              Ajouter
             </Button>
           )}
         </div>

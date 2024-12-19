@@ -79,9 +79,7 @@ export const OrganismTimelineElement = () => {
                 router.push("/set-organism");
               }}
             >
-              {organism
-                ? "Modifiez votre organisme d'accompagnement"
-                : "Choisir votre organisme d'accompagnement"}
+              {organism ? "Modifier" : "Choisir"}
             </Button>
           )}
         </div>
