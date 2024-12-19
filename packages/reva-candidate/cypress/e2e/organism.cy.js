@@ -16,7 +16,7 @@ context("Empty candidacy", () => {
   });
 });
 
-context("Candidacy with department certification selected", () => {
+context("Candidacy with certification selected", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
@@ -104,53 +104,6 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
   });
 
-  it("on site filters can be reset", function () {
-    cy.get('[data-test="button-select-onsite"]').click();
-    cy.get('[data-test="button-select-onsite"]').should(
-      "have.attr",
-      "aria-pressed",
-      "true",
-    );
-    cy.get('[data-test="input-wrapper-zip"] input').type("44000");
-    cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
-      force: true,
-    });
-
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="button-select-onsite"]').should(
-      "have.attr",
-      "aria-pressed",
-      "false",
-    );
-    cy.get('[data-test="input-wrapper-zip"] input').should("have.value", "");
-    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("not.be.checked");
-  });
-
-  it("remote filters can be reset", function () {
-    cy.get('[data-test="button-select-remote"]').click();
-    cy.get('[data-test="button-select-remote"]').should(
-      "have.attr",
-      "aria-pressed",
-      "true",
-    );
-
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="button-select-remote"]').should(
-      "have.attr",
-      "aria-pressed",
-      "false",
-    );
-  });
-
-  it("mcf filter can be reset", function () {
-    cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
-      force: true,
-    });
-
-    cy.get('[data-test="button-reset-filters"]').click();
-    cy.get('[data-test="checkbox-wrapper-mcf"] input').should("not.be.checked");
-  });
-
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
@@ -179,4 +132,106 @@ context("Candidacy with department certification selected", () => {
       "0111111111",
     );
   });
+});
+
+context("Candidacy with no organism results", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
+      stubQuery(req, "getRandomOrganismsForCandidacy", {
+        data: {
+          getRandomOrganismsForCandidacy: {
+            rows: [],
+            totalRows: 0,
+          },
+        },
+      });
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    });
+
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@activeFeaturesForConnectedUser");
+
+    cy.get('[data-test="project-home-edit-organism').click();
+    cy.wait("@getRandomOrganismsForCandidacy");
+  });
+
+  it(`search by name with no result should return a empty state but with no filter reset button`, function () {
+    cy.get('[data-test="search-bar-input"]').type("abcd {enter}");
+    cy.wait("@getRandomOrganismsForCandidacy");
+
+    cy.get('[data-test="no-results-for-search-by-name"]').should("exist");
+    cy.get(`[data-test="no-results-button-reset-filters"]`).should("not.exist");
+  });
+
+  it(`filters with no result should return a empty state with a filter reset button`, function () {
+    cy.get('[data-test="button-select-onsite"]').click();
+    cy.wait("@getRandomOrganismsForCandidacy");
+
+    cy.get('[data-test="no-results-for-filters"]').should("exist");
+    cy.get(`[data-test="no-results-button-reset-filters"]`).should("exist");
+  });
+
+  ["no-results-button-reset-filters", "sidebar-button-reset-filters"].forEach(
+    (filterButton) => {
+      it(`on site filters can be reset with ${filterButton}`, function () {
+        cy.get('[data-test="button-select-onsite"]').click();
+        cy.get('[data-test="button-select-onsite"]').should(
+          "have.attr",
+          "aria-pressed",
+          "true",
+        );
+        cy.get('[data-test="input-wrapper-zip"] input').type("44000");
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
+          force: true,
+        });
+
+        cy.wait("@getRandomOrganismsForCandidacy");
+
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="button-select-onsite"]').should(
+          "have.attr",
+          "aria-pressed",
+          "false",
+        );
+        cy.get('[data-test="input-wrapper-zip"] input').should(
+          "have.value",
+          "",
+        );
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
+          "not.be.checked",
+        );
+      });
+
+      it(`remote filters can be reset with ${filterButton}`, function () {
+        cy.get('[data-test="button-select-remote"]').click();
+        cy.get('[data-test="button-select-remote"]').should(
+          "have.attr",
+          "aria-pressed",
+          "true",
+        );
+
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="button-select-remote"]').should(
+          "have.attr",
+          "aria-pressed",
+          "false",
+        );
+      });
+
+      it(`mcf filter can be reset with ${filterButton}`, function () {
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
+          force: true,
+        });
+
+        cy.get(`[data-test="${filterButton}"]`).click();
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').should(
+          "not.be.checked",
+        );
+      });
+    },
+  );
 });

@@ -32,6 +32,7 @@ export const SearchBar = ({
       <input
         className="fr-input"
         placeholder={label}
+        data-test="search-bar-input"
         type="search"
         value={searchFilter}
         onChange={(event) => {
