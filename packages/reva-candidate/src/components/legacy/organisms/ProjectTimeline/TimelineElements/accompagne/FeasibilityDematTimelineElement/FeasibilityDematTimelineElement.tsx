@@ -26,13 +26,11 @@ export const FeasibilityDematTimelineElement = () => {
   const candidateHasConfirmedFeasibilityFile =
     !!dematerializedFeasibilityFile?.candidateConfirmationAt;
   const isCaduque = candidacy.isCaduque;
-  const hasActiveDossierDeValidation = !!candidacy.activeDossierDeValidation;
 
   const { informationComponent, status, badgeStatus } =
     getFeasibilityDematTimelineElementInfo({
       feasibility: feasibility as Feasibility | null,
       isCaduque,
-      hasActiveDossierDeValidation,
       isCandidacyActualisationFeatureActive,
     });
 

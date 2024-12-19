@@ -23,7 +23,6 @@ const InformationWithIcon = ({ children, title }: InformationWithIconProps) => (
 interface GetFeasibilityTimelineElementInfoProps {
   feasibility?: Feasibility | null;
   isCaduque: boolean;
-  hasActiveDossierDeValidation: boolean;
   isCandidacyActualisationFeatureActive: boolean;
 }
 
@@ -42,7 +41,6 @@ const TEXT_WHEN_ADMISSIBLE =
 export const getFeasibilityDematTimelineElementInfo = ({
   feasibility,
   isCaduque,
-  hasActiveDossierDeValidation,
   isCandidacyActualisationFeatureActive,
 }: GetFeasibilityTimelineElementInfoProps): GetFeasibilityTimelineElementInfoResult => {
   const dematerializedFile = feasibility?.dematerializedFeasibilityFile;
@@ -91,7 +89,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
             </div>
           </InformationWithIcon>
         ),
-        status: hasActiveDossierDeValidation ? "editable" : "active",
+        status: "active",
         badgeStatus: <Badge severity="warning">Non recevable</Badge>,
       };
 
