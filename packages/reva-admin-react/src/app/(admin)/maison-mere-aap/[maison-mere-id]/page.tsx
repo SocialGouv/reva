@@ -71,7 +71,7 @@ const MaisonMereAapPage = () => {
           <ToggleSwitch
             label=""
             defaultChecked={maisonMereAAP.isActive}
-            inputTitle="Activer toutes les agences de la maison mère"
+            inputTitle="Activer tous les lieux d'accueil de la maison mère"
             onChange={(checked) => handleIsActiveChange(checked)}
           />
           <span className="text-xs text-dsfrGray-mentionGrey">
