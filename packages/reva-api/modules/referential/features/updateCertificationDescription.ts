@@ -18,9 +18,11 @@ export const updateCertificationDescription = async ({
     throw new Error("La certification n'a pas été trouvée");
   }
 
+  //Temporirarily to allow admins to update existing active certifications
   const allowedStatus: CertificationStatus[] = [
     "BROUILLON",
     "A_VALIDER_PAR_CERTIFICATEUR",
+    "VALIDE_PAR_CERTIFICATEUR",
   ];
 
   if (!allowedStatus.includes(certification?.status)) {

@@ -240,7 +240,7 @@ context("when i access the update certification page ", () => {
         .should("not.be.disabled");
     });
 
-    it("validate button should not be visible if certification has been validate", function () {
+    it.skip("validate button should not be visible if certification has been validate", function () {
       interceptCertification({
         withDescription: true,
         withStatus: "VALIDE_PAR_CERTIFICATEUR",

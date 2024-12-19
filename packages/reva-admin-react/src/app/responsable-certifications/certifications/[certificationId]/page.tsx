@@ -94,7 +94,9 @@ const PageContent = ({
 }) => {
   const router = useRouter();
 
-  const isEditable = certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
+  //Temporirarilry set isEditable to true to allow admins to update existing certifications
+  //const isEditable = certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
+  const isEditable = true;
 
   const isDescriptionComplete =
     typeof certification.languages === "number" &&
