@@ -90,7 +90,7 @@ export const getFeasibilityDematTimelineElementInfo = ({
           </InformationWithIcon>
         ),
         status: "active",
-        badgeStatus: <Badge severity="warning">Non recevable</Badge>,
+        badgeStatus: <Badge severity="warning">Non valable</Badge>,
       };
 
     case decision === "ADMISSIBLE":

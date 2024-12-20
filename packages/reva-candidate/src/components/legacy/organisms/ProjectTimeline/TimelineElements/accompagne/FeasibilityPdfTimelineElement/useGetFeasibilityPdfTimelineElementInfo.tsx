@@ -19,7 +19,7 @@ const DF_HAS_BEEN_SENT_TEXT =
 const INFORMATION_ICON = "fr-icon-information-fill";
 const TIME_ICON = "fr-icon-time-fill";
 
-const BadgeNonRecevable = <Badge severity="warning">Non recevable</Badge>;
+const BadgeNonRecevable = <Badge severity="warning">Non valable</Badge>;
 
 export const useGetFeasibilityPdfTimelineElementInfo =
   (): GetFeasibilityTimelineElementInfoResult => {

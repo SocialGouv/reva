@@ -15,12 +15,12 @@ interface GetSelfServiceFeasibilityFileTimelineInfo {
   button: ReactNode;
 }
 
-const NonRecevableBadge = (
+const NonValableBadge = (
   <Badge
     severity="warning"
-    data-test="feasibility-timeline-element-non-recevable-badge"
+    data-test="feasibility-timeline-element-non-valable-badge"
   >
-    Non recevable
+    Non valable
   </Badge>
 );
 
@@ -88,7 +88,7 @@ export function useGetSelfServiceFeasibilityFileTimelineInfo(): GetSelfServiceFe
     case hasConfirmedCaducite:
       return {
         status: "active",
-        badge: NonRecevableBadge,
+        badge: NonValableBadge,
         notice: (
           <TimelineNotice
             icon="fr-icon-info-fill"
@@ -101,7 +101,7 @@ export function useGetSelfServiceFeasibilityFileTimelineInfo(): GetSelfServiceFe
     case !!pendingContestationCaducite:
       return {
         status: "active",
-        badge: NonRecevableBadge,
+        badge: NonValableBadge,
         notice: (
           <TimelineNotice
             icon="fr-icon-time-fill"
@@ -117,7 +117,7 @@ export function useGetSelfServiceFeasibilityFileTimelineInfo(): GetSelfServiceFe
     case isCaduque && candidacyActualisationFeatureIsActive:
       return {
         status: "active",
-        badge: NonRecevableBadge,
+        badge: NonValableBadge,
         notice: (
           <TimelineNotice
             icon="fr-icon-info-fill"
