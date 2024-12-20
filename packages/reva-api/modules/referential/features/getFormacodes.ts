@@ -29,7 +29,9 @@ export async function getAvailableFormacodes(): Promise<Formacode[]> {
   const formacodes: Formacode[] = await getFormacodes();
 
   const certifications = await prismaClient.certification.findMany({
-    where: { visible: true },
+    where: {
+      OR: [{ visible: true }, { status: "A_VALIDER_PAR_CERTIFICATEUR" }],
+    },
     include: { certificationOnFormacode: true },
   });
 
