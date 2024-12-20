@@ -31,9 +31,20 @@ backup_file_name="$( tar --list --file="${archive_name}" \
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
+echo "Dropping public schema"
+psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA public CASCADE"
+
+echo "Creating public schema"
+psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA public"
+
+
+
 # Restore the data:
+echo "Importing dump"
 pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
 --dbname "${DATABASE_URL}" "/app/${backup_file_name}"
 
-echo 'Metabase production data replication script finished'
+echo "Running post import sql scripts"
+psql --dbname "${DATABASE_URL}" -a -f post_dump_restore_scripts/create_metabase_specific_tables.sql
 
+echo 'Metabase production data replication script finished'
