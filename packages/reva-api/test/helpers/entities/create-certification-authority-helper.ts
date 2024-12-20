@@ -14,7 +14,6 @@ export const createCertificationAuthorityHelper = async (
       contactEmail: faker.internet.email(),
       contactFullName: faker.person.fullName(),
       label: faker.company.name(),
-      oldCertificationAuthorityStructureId: certificationAuthorityStructure.id,
       certificationAuthorityOnCertificationAuthorityStructure: {
         create: {
           certificationAuthorityStructureId: certificationAuthorityStructure.id,

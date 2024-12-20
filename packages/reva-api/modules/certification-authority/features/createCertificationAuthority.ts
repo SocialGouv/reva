@@ -41,7 +41,6 @@ export const createCertificationAuthority = async ({
             })),
           },
         },
-        oldCertificationAuthorityStructureId: certificationAuthorityStructureId,
         certificationAuthorityOnCertificationAuthorityStructure: {
           create: {
             certificationAuthorityStructureId:
