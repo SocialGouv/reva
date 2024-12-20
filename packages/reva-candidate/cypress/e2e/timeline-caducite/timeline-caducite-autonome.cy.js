@@ -336,8 +336,6 @@ function setupCandidacyState({ isCaduque, lastActivityDate, contestations }) {
         candidate,
       );
     });
-
-    cy.visit("/");
   });
 }
 
