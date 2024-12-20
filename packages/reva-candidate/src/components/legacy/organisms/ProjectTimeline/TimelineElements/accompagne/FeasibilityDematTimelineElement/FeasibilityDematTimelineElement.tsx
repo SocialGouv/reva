@@ -5,19 +5,12 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { Feasibility } from "@/graphql/generated/graphql";
-import { getFeasibilityDematTimelineElementInfo } from "./getFeasibilityDematTimelineElementInfo";
+import { useGetFeasibilityDematTimelineElementInfo } from "./useGetFeasibilityDematTimelineElementInfo";
 
 export const FeasibilityDematTimelineElement = () => {
   const router = useRouter();
 
   const { candidacy } = useCandidacy();
-
-  const { isFeatureActive } = useFeatureFlipping();
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const { feasibility } = candidacy;
   const dematerializedFeasibilityFile =
@@ -25,14 +18,9 @@ export const FeasibilityDematTimelineElement = () => {
 
   const candidateHasConfirmedFeasibilityFile =
     !!dematerializedFeasibilityFile?.candidateConfirmationAt;
-  const isCaduque = candidacy.isCaduque;
 
   const { informationComponent, status, badgeStatus } =
-    getFeasibilityDematTimelineElementInfo({
-      feasibility: feasibility as Feasibility | null,
-      isCaduque,
-      isCandidacyActualisationFeatureActive,
-    });
+    useGetFeasibilityDematTimelineElementInfo();
 
   const buttonPriority = candidateHasConfirmedFeasibilityFile
     ? "secondary"
@@ -42,13 +30,18 @@ export const FeasibilityDematTimelineElement = () => {
     : "Vérifier votre dossier";
 
   return (
-    <TimelineElement title="Recevabilité" status={status} badge={badgeStatus}>
+    <TimelineElement
+      title="Recevabilité"
+      status={status}
+      badge={badgeStatus}
+      data-test="feasibility-timeline-element"
+    >
       {!!dematerializedFeasibilityFile && (
         <>
           {informationComponent}
           {!!dematerializedFeasibilityFile.sentToCandidateAt && (
             <Button
-              data-test="vérifier-votre-dossier-de-faisabilité"
+              data-test="feasibility-timeline-element-check-button"
               className="mt-4"
               priority={buttonPriority}
               nativeButtonProps={{
