@@ -1,15 +1,33 @@
 import { subDays } from "date-fns";
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
-const CADUCITE_THRESHOLD_MONTHS = 6;
-const CANDIDACY_ACTUALISATION_FEATURE = "candidacy_actualisation";
+const CADUCITE_THRESHOLD_DAYS = 183;
+const ACTUALISATION_THRESHOLD_DAYS = 166;
+const ACTUALISATION_THRESHOLD_DAYS_BEFORE = 165;
+
+const CADUCITE_THRESHOLD_TIME = subDays(
+  new Date(),
+  CADUCITE_THRESHOLD_DAYS,
+).getTime();
+
+const ACTUALISATION_THRESHOLD_TIME = subDays(
+  new Date(),
+  ACTUALISATION_THRESHOLD_DAYS,
+).getTime();
+
+const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
+  new Date(),
+  ACTUALISATION_THRESHOLD_DAYS_BEFORE,
+).getTime();
+
+const DATE_NOW = Date.now();
 
 describe("Timeline caducité - Accompagné PDF", () => {
-  describe("Feature flipping tests", () => {
-    it("should handle candidacy actualisation feature being disabled", () => {
+  describe("Feature activation", () => {
+    it("should hide all caducité elements when feature is disabled", () => {
       setupTest({
         isCaduque: true,
-        lastActivityDate: subDays(new Date(), CADUCITE_THRESHOLD_MONTHS * 30),
+        lastActivityDate: CADUCITE_THRESHOLD_TIME,
         isFeatureActive: false,
       });
 
@@ -24,12 +42,14 @@ describe("Timeline caducité - Accompagné PDF", () => {
         hasNonRecevableBadge: false,
         hasReviewButton: false,
       });
+
+      verifyDossierValidationElement();
     });
 
-    it("should handle candidacy actualisation feature being enabled", () => {
+    it("should show caducité elements when feature is enabled", () => {
       setupTest({
         isCaduque: true,
-        lastActivityDate: subDays(new Date(), CADUCITE_THRESHOLD_MONTHS * 30),
+        lastActivityDate: CADUCITE_THRESHOLD_TIME,
       });
 
       verifyBannerState({
@@ -43,18 +63,20 @@ describe("Timeline caducité - Accompagné PDF", () => {
         hasNonRecevableBadge: true,
         hasReviewButton: false,
       });
+
+      verifyDossierValidationElement();
     });
   });
 
-  describe("When candidacy is active (not caduque)", () => {
+  describe("Active candidacy state", () => {
     beforeEach(() => {
       setupTest({
         isCaduque: false,
-        lastActivityDate: new Date(),
+        lastActivityDate: DATE_NOW,
       });
     });
 
-    it("should display active candidacy state with all banners hidden", () => {
+    it("should hide all banners", () => {
       verifyBannerState({
         caduqueBanner: false,
         pendingContestationBanner: false,
@@ -63,125 +85,153 @@ describe("Timeline caducité - Accompagné PDF", () => {
       });
     });
 
-    it("should display feasibility element in normal state", () => {
+    it("should display feasibility element without warning", () => {
       verifyFeasibilityElement({
         hasNonRecevableBadge: false,
         hasReviewButton: false,
       });
+
+      verifyDossierValidationElement();
+    });
+  });
+
+  describe("Inactivity periods", () => {
+    describe("Less than 166 days", () => {
+      beforeEach(() => {
+        setupTest({
+          isCaduque: false,
+          lastActivityDate: ACTUALISATION_THRESHOLD_TIME_BEFORE,
+        });
+      });
+
+      it("should only show welcome message", () => {
+        verifyBannerState({
+          caduqueBanner: false,
+          pendingContestationBanner: false,
+          confirmedContestationBanner: false,
+          actualisationBanner: false,
+        });
+
+        verifyDossierValidationElement();
+      });
     });
 
-    it("should display dossier validation element in normal state", () => {
-      verifyDossierValidationElement({
-        hasUpdateButton: false,
+    describe("Between 166 and 182 days", () => {
+      beforeEach(() => {
+        setupTest({
+          isCaduque: false,
+          lastActivityDate: ACTUALISATION_THRESHOLD_TIME,
+        });
+      });
+
+      it("should display actualisation banner", () => {
+        verifyBannerState({
+          caduqueBanner: false,
+          pendingContestationBanner: false,
+          confirmedContestationBanner: false,
+          actualisationBanner: true,
+        });
+
+        verifyDossierValidationElement();
       });
     });
   });
 
-  describe("When candidacy becomes caduque", () => {
-    beforeEach(() => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: subDays(new Date(), CADUCITE_THRESHOLD_MONTHS * 30),
+  describe("Caducité states", () => {
+    describe("Initial caducité", () => {
+      beforeEach(() => {
+        setupTest({
+          isCaduque: true,
+          lastActivityDate: CADUCITE_THRESHOLD_TIME,
+        });
+      });
+
+      it("should display caducité warning", () => {
+        verifyBannerState({
+          caduqueBanner: true,
+          pendingContestationBanner: false,
+          confirmedContestationBanner: false,
+          actualisationBanner: false,
+        });
+      });
+
+      it("should show non-recevable warning on feasibility", () => {
+        verifyFeasibilityElement({
+          hasNonRecevableBadge: true,
+          hasReviewButton: false,
+        });
+
+        verifyDossierValidationElement();
       });
     });
 
-    it("should display caduque warning state", () => {
-      verifyBannerState({
-        caduqueBanner: true,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
+    describe("Pending contestation", () => {
+      const contestationDate = DATE_NOW;
+
+      beforeEach(() => {
+        setupTest({
+          isCaduque: true,
+          lastActivityDate: CADUCITE_THRESHOLD_TIME,
+          contestations: [
+            {
+              certificationAuthorityContestationDecision: "DECISION_PENDING",
+              contestationSentAt: contestationDate,
+            },
+          ],
+        });
+      });
+
+      it("should display pending contestation banner", () => {
+        verifyBannerState({
+          caduqueBanner: false,
+          pendingContestationBanner: true,
+          confirmedContestationBanner: false,
+          actualisationBanner: false,
+        });
+      });
+
+      it("should maintain non-recevable warning", () => {
+        verifyFeasibilityElement({
+          hasNonRecevableBadge: true,
+          hasReviewButton: false,
+        });
+
+        verifyDossierValidationElement();
       });
     });
 
-    it("should display feasibility element with non-recevable warning", () => {
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: true,
-        hasReviewButton: false,
+    describe("Confirmed caducité", () => {
+      const contestationDate = DATE_NOW;
+
+      beforeEach(() => {
+        setupTest({
+          isCaduque: true,
+          lastActivityDate: CADUCITE_THRESHOLD_TIME,
+          contestations: [
+            {
+              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
+              contestationSentAt: contestationDate,
+            },
+          ],
+        });
       });
-    });
 
-    it("should display dossier validation element in disabled state", () => {
-      verifyDossierValidationElement({
-        hasUpdateButton: false,
+      it("should display confirmation banner", () => {
+        verifyBannerState({
+          caduqueBanner: false,
+          pendingContestationBanner: false,
+          confirmedContestationBanner: true,
+          actualisationBanner: false,
+        });
       });
-    });
-  });
 
-  describe("When candidacy has pending contestation", () => {
-    const contestationDate = new Date();
+      it("should maintain non-recevable warning", () => {
+        verifyFeasibilityElement({
+          hasNonRecevableBadge: true,
+          hasReviewButton: false,
+        });
 
-    beforeEach(() => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: subDays(new Date(), CADUCITE_THRESHOLD_MONTHS * 30),
-        contestations: [
-          {
-            certificationAuthorityContestationDecision: "DECISION_PENDING",
-            contestationSentAt: contestationDate,
-          },
-        ],
-      });
-    });
-
-    it("should display pending contestation state", () => {
-      verifyBannerState({
-        caduqueBanner: false,
-        pendingContestationBanner: true,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
-    });
-
-    it("should maintain non-recevable warning during contestation", () => {
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: true,
-        hasReviewButton: false,
-      });
-    });
-
-    it("should display dossier validation element in pending state", () => {
-      verifyDossierValidationElement({
-        hasUpdateButton: false,
-      });
-    });
-  });
-
-  describe("When candidacy has confirmed caducite", () => {
-    const contestationDate = new Date();
-
-    beforeEach(() => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: subDays(new Date(), CADUCITE_THRESHOLD_MONTHS * 30),
-        contestations: [
-          {
-            certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-            contestationSentAt: contestationDate,
-          },
-        ],
-      });
-    });
-
-    it("should display final caducite confirmation state", () => {
-      verifyBannerState({
-        caduqueBanner: false,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: true,
-        actualisationBanner: false,
-      });
-    });
-
-    it("should maintain non-recevable warning after confirmation", () => {
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: true,
-        hasReviewButton: false,
-      });
-    });
-
-    it("should display dossier validation element in final disabled state", () => {
-      verifyDossierValidationElement({
-        hasUpdateButton: false,
+        verifyDossierValidationElement();
       });
     });
   });
@@ -198,7 +248,7 @@ function setupTest({
     stubQuery(req, "activeFeaturesForConnectedUser", {
       data: {
         activeFeaturesForConnectedUser: isFeatureActive
-          ? [CANDIDACY_ACTUALISATION_FEATURE]
+          ? ["candidacy_actualisation"]
           : [],
       },
     });
@@ -214,10 +264,11 @@ function setupTest({
     candidacy.id = "1";
     candidacy.isCaduque = isCaduque;
     candidacy.feasibilityFormat = "UPLOADED_PDF";
-    candidacy.lastActivityDate = lastActivityDate;
+    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
     candidacy.status = "DOSSIER_FAISABILITE_RECEVABLE";
     candidacy.feasibility = {
       decision: "ADMISSIBLE",
+      decisionSentAt: DATE_NOW,
       feasibilityFormat: "UPLOADED_PDF",
     };
     candidacy.typeAccompagnement = "ACCOMPAGNE";
@@ -262,12 +313,12 @@ function verifyFeasibilityElement({ hasNonRecevableBadge, hasReviewButton }) {
   });
 }
 
-function verifyDossierValidationElement({ hasUpdateButton }) {
+function verifyDossierValidationElement() {
   cy.get(
     '[data-test="dossier-de-validation-accompagne-timeline-element"]',
   ).within(() => {
     cy.get(
       '[data-test="dossier-de-validation-accompagne-timeline-element-update-button"]',
-    ).should(hasUpdateButton ? "exist" : "not.exist");
+    ).should("not.exist");
   });
 }
