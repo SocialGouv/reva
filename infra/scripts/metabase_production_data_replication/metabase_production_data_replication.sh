@@ -47,4 +47,8 @@ pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
 echo "Running post import sql scripts"
 psql --dbname "${DATABASE_URL}" -a -f post_dump_restore_scripts/create_metabase_specific_tables.sql
 
+echo "Granting access rights to metabase user"
+psql --dbname "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA public TO ${METABASE_DB_USER}"
+psql --dbname "${DATABASE_URL}" -c "GRANT SELECT on ALL TABLES IN SCHEMA public TO ${METABASE_DB_USER}"
+
 echo 'Metabase production data replication script finished'
