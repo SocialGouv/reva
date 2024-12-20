@@ -25,6 +25,7 @@ export const DossierDeValidationTimelineElement = () => {
           </p>
         ) : undefined
       }
+      data-test="dossier-de-validation-accompagne-timeline-element"
     >
       {FEASIBILITY_ADMISSIBLE && (
         <>

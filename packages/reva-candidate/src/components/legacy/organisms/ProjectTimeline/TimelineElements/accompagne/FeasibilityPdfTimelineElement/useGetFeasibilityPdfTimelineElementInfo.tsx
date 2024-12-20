@@ -19,7 +19,14 @@ const DF_HAS_BEEN_SENT_TEXT =
 const INFORMATION_ICON = "fr-icon-information-fill";
 const TIME_ICON = "fr-icon-time-fill";
 
-const BadgeNonRecevable = <Badge severity="warning">Non valable</Badge>;
+const BadgeNonValable = (
+  <Badge
+    severity="warning"
+    data-test="feasibility-timeline-element-non-valable-badge"
+  >
+    Non valable
+  </Badge>
+);
 
 export const useGetFeasibilityPdfTimelineElementInfo =
   (): GetFeasibilityTimelineElementInfoResult => {
@@ -63,7 +70,7 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           text: "Après étude de votre contestation, le certificateur a décidé que votre recevabilité n'était plus valable. Cela signifie que votre parcours VAE s'arrête ici.",
           status: "active",
           icon: INFORMATION_ICON,
-          badge: BadgeNonRecevable,
+          badge: BadgeNonValable,
         };
 
       case !!pendingContestationCaducite:
@@ -75,7 +82,7 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           meilleurs délais.`,
           status: "active",
           icon: TIME_ICON,
-          badge: BadgeNonRecevable,
+          badge: BadgeNonValable,
         };
 
       case isCaduque && candidacyActualisationFeatureIsActive:
@@ -83,7 +90,7 @@ export const useGetFeasibilityPdfTimelineElementInfo =
           text: "Parce que vous ne vous êtes pas actualisé à temps, votre recevabilité est désormais caduque. Cela signifie que votre parcours VAE s'arrête ici. Vous pouvez contester cette décision en cliquant sur le bouton “Contester”.",
           status: "active",
           icon: INFORMATION_ICON,
-          badge: BadgeNonRecevable,
+          badge: BadgeNonValable,
         };
 
       case PENDING:

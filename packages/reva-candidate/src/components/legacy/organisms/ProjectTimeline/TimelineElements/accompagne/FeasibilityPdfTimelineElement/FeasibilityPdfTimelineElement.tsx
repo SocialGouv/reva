@@ -32,6 +32,7 @@ export const FeasibilityPdfTimelineElement = () => {
         ) : undefined
       }
       badge={badge}
+      data-test="feasibility-timeline-element"
     >
       {!!feasibility && (
         <>
