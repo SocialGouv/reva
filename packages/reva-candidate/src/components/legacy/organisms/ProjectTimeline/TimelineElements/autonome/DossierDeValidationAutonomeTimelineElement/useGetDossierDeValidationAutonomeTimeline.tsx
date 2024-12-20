@@ -14,9 +14,17 @@ interface UseGetDossierDeValidationAutonomeTimelineInfo {
 const EDITABLE_STATUSES = [
   "DOSSIER_FAISABILITE_RECEVABLE",
   "DOSSIER_DE_VALIDATION_SIGNALE",
+  "DEMANDE_FINANCEMENT_ENVOYE",
 ];
 
-const ToCompleteBadge = <Badge severity="warning">À compléter</Badge>;
+const ToCompleteBadge = (
+  <Badge
+    severity="warning"
+    data-test="dossier-de-validation-autonome-to-complete-badge"
+  >
+    À compléter
+  </Badge>
+);
 
 export function useGetDossierDeValidationAutonomeTimelineInfo(): UseGetDossierDeValidationAutonomeTimelineInfo {
   const { candidacy } = useCandidacy();
@@ -64,7 +72,14 @@ export function useGetDossierDeValidationAutonomeTimelineInfo(): UseGetDossierDe
     case isReadOnly:
       return {
         status: "readonly",
-        badge: <Badge severity="success">Envoyé</Badge>,
+        badge: (
+          <Badge
+            severity="success"
+            data-test="dossier-de-validation-autonome-sent-badge"
+          >
+            Envoyé
+          </Badge>
+        ),
         notice: (
           <TimelineNotice
             icon="fr-icon-info-fill"
