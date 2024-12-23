@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import fvaeWarning from "./assets/fvae_warning.png";
 import Image from "next/image";
 
-export const DropOutAlert = ({
+export const DropOutWarning = ({
   dropOutDate,
   className,
 }: {
@@ -10,6 +10,7 @@ export const DropOutAlert = ({
   className?: string;
 }) => (
   <div
+    data-test="drop-out-warning"
     className={`flex flex-col gap-4 md:gap-0 md:flex-row items-center min-h-[160px] ${className || ""}`}
   >
     <Image
