@@ -26,7 +26,7 @@ export const sendEmailWithLink = async ({
   htmlContent: (url: string) => { html: string };
   subject?: string;
   attachment?: { name: string; content: string }[];
-}) => {
+}): Promise<string> => {
   let appPath = "no_app_defined";
   switch (app) {
     case "candidate":
@@ -54,6 +54,7 @@ export const sendEmailWithLink = async ({
     logger.info("=========================");
     return "result";
   }
+
   return sendGenericEmail({
     htmlContent: emailContent.html,
     to,

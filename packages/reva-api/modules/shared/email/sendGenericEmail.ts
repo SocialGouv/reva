@@ -30,7 +30,7 @@ export const sendGenericEmail = async ({
     : to.email;
 
   if (process.env.NODE_ENV === "test") {
-    return "";
+    return `email sent to ${emailAddresses}`;
   }
 
   if (process.env.NODE_ENV !== "production") {
