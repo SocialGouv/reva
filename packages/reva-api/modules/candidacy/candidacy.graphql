@@ -86,6 +86,7 @@ type CandidacyDropOut {
   proofReceivedByAdmin: Boolean!
   status: CandidacyStatusStep!
   validatedAt: Timestamp
+  dropOutConfirmedByCandidate: Boolean!
 }
 
 type CandidacyConventionCollective {
