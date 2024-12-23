@@ -21,6 +21,7 @@ import {
 } from "@/graphql/generated/graphql";
 
 import { useUpdateCertificationPage } from "./updateCertification.hook";
+import { useAuth } from "@/components/auth/auth";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -94,9 +95,12 @@ const PageContent = ({
 }) => {
   const router = useRouter();
 
+  const { isAdmin } = useAuth();
   //Temporirarilry set isEditable to true to allow admins to update existing certifications
-  //const isEditable = certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
-  const isEditable = true;
+
+  const isEditable = isAdmin
+    ? true
+    : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
 
   const isDescriptionComplete =
     typeof certification.languages === "number" &&
