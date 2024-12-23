@@ -39,6 +39,7 @@ module.exports = {
           800: "#161616",
         },
         dsfrOrange: { 500: "#f94608" },
+        fvae: { "hard-red": "#FFA180" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],

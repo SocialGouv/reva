@@ -9,6 +9,7 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useRouter } from "next/navigation";
 import { CandidacyBanner } from "./_components/CandidacyBanner";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { DropOutAlert } from "./_components/drop-out-alert/DropOutAlert";
 
 export default function Home() {
   const { candidate, candidacy } = useCandidacy();
@@ -42,7 +43,13 @@ export default function Home() {
         firstname={candidate.firstname}
         lastname={candidate.lastname}
       />
-      <CandidacyBanner />
+      {candidacy.candidacyDropOut && (
+        <DropOutAlert
+          className="mb-16"
+          dropOutDate={new Date(candidacy.candidacyDropOut.createdAt)}
+        />
+      )}
+      {!candidacy.candidacyDropOut && <CandidacyBanner />}
       <ProjectTimeline className="mt-8" />
     </PageLayout>
   );
