@@ -1,8 +1,27 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
+import { randomUUID } from "crypto";
 import { createFeasibilityDematerializedHelper } from "../../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { confirmDematerializedFeasibilityFileByCandidate } from "./confirmDematerializedFeasibilityFileByCandidate";
+
+const CONTEXT = {
+  auth: {
+    userInfo: {
+      sub: randomUUID(),
+      email: "test@test.com",
+      email_verified: true,
+      preferred_username: "test",
+      realm_access: { roles: ["manage_candidacy" as KeyCloakUserRole] },
+    },
+    hasRole: (_role: string) => true,
+  },
+  app: {
+    keycloak: {
+      hasRole: (_role: string) => true,
+    },
+  },
+};
 
 describe("confirmDematerializedFeasibilityFileByCandidate", () => {
   describe("When confirming a dematerialized feasibility file", () => {
@@ -17,6 +36,7 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
       const result = await confirmDematerializedFeasibilityFileByCandidate({
         dematerializedFeasibilityFileId,
         input,
+        context: CONTEXT,
       });
 
       expect(result).toBeDefined();
@@ -38,6 +58,7 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
       const result = await confirmDematerializedFeasibilityFileByCandidate({
         dematerializedFeasibilityFileId,
         input,
+        context: CONTEXT,
       });
 
       expect(result).toBeDefined();
@@ -54,6 +75,7 @@ describe("confirmDematerializedFeasibilityFileByCandidate", () => {
         confirmDematerializedFeasibilityFileByCandidate({
           dematerializedFeasibilityFileId: "non-existent-id",
           input,
+          context: CONTEXT,
         }),
       ).rejects.toThrow();
     });
