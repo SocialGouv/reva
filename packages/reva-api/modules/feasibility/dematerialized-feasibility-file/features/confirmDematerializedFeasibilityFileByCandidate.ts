@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "../dematerialized-feasibility-file.types";
 import {
@@ -9,9 +10,11 @@ import {
 export const confirmDematerializedFeasibilityFileByCandidate = async ({
   dematerializedFeasibilityFileId,
   input,
+  context,
 }: {
   dematerializedFeasibilityFileId: string;
   input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput;
+  context: GraphqlContext;
 }) => {
   const dff = await prismaClient.dematerializedFeasibilityFile.update({
     where: { id: dematerializedFeasibilityFileId },
@@ -24,6 +27,7 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
         select: {
           candidacy: {
             select: {
+              id: true,
               organism: {
                 select: {
                   organismInformationsCommerciales: {
@@ -68,6 +72,14 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
       });
     }
   }
+
+  await logCandidacyAuditEvent({
+    candidacyId: dff.feasibility.candidacy.id,
+    eventType: "DFF_VALIDATED_BY_CANDIDATE",
+    userKeycloakId: context.auth.userInfo?.sub,
+    userEmail: context.auth.userInfo?.email,
+    userRoles: context.auth.userInfo?.realm_access?.roles || [],
+  });
 
   return dff;
 };

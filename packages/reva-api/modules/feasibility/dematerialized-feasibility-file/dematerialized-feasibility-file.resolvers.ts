@@ -222,10 +222,12 @@ const unsafeResolvers = {
         dematerializedFeasibilityFileId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput;
       },
+      context: GraphqlContext,
     ) =>
       confirmDematerializedFeasibilityFileByCandidate({
         dematerializedFeasibilityFileId,
         input,
+        context,
       }),
 
     dematerialized_feasibility_file_createOrUpdateEligibilityRequirement: (

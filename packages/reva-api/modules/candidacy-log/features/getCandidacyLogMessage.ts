@@ -134,6 +134,8 @@ export const getCandidacyLogMessage = ({
       return "Confirmation de la caducité de la candidature.";
     case "DFF_SENT_TO_CANDIDATE":
       return "Dossier de faisabilité envoyé au candidat pour validation.";
+    case "DFF_VALIDATED_BY_CANDIDATE":
+      return "Dossier de faisabilité validé par le candidat.";
     default:
       return "Évenement inconnu";
   }
