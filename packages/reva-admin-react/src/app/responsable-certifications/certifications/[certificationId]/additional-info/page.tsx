@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { File as GQLFile } from "@/graphql/generated/graphql";
 import { useMemo } from "react";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 export default function CertificationAdditionalInfoPage() {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -115,18 +116,22 @@ const AdditionalInfoForm = ({
   });
 
   const onFormSubmit = async (data: FormData) => {
-    const dossierDeValidationTemplate =
-      data.dossierDeValidationTemplate?.[0] ?? null;
-    await updateCertificationAdditionalInfo({
-      certificationId: certification.id,
-      additionalInfo: {
-        ...data,
-        dossierDeValidationTemplate,
-      },
-    });
-    router.push(
-      `/responsable-certifications/certifications/${certification.id}`,
-    );
+    try {
+      const dossierDeValidationTemplate =
+        data.dossierDeValidationTemplate?.[0] ?? null;
+      await updateCertificationAdditionalInfo({
+        certificationId: certification.id,
+        additionalInfo: {
+          ...data,
+          dossierDeValidationTemplate,
+        },
+      });
+      router.push(
+        `/responsable-certifications/certifications/${certification.id}`,
+      );
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
   };
 
   return (
