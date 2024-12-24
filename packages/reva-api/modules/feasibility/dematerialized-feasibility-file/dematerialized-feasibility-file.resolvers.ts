@@ -183,7 +183,8 @@ const unsafeResolvers = {
       {
         dematerializedFeasibilityFileId,
       }: { candidacyId: string; dematerializedFeasibilityFileId: string },
-    ) => sendDFFToCandidate({ dematerializedFeasibilityFileId }),
+      context: GraphqlContext,
+    ) => sendDFFToCandidate({ dematerializedFeasibilityFileId, context }),
 
     dematerialized_feasibility_file_createOrUpdateSwornStatement: (
       _parent: unknown,

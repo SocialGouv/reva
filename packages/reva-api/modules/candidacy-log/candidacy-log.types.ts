@@ -41,7 +41,8 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_ACTUALISATION"
         | "CADUCITE_CONTESTED"
         | "CADUCITE_INVALIDATED"
-        | "CADUCITE_CONFIRMED";
+        | "CADUCITE_CONFIRMED"
+        | "DFF_SENT_TO_CANDIDATE";
       details?: undefined;
     }
   | {
