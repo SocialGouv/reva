@@ -136,6 +136,8 @@ export const getCandidacyLogMessage = ({
       return "Dossier de faisabilité envoyé au candidat pour validation.";
     case "DFF_VALIDATED_BY_CANDIDATE":
       return "Dossier de faisabilité validé par le candidat.";
+    case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
+      return "Dossier de faisabilité envoyé au certificateur.";
     default:
       return "Évenement inconnu";
   }

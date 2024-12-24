@@ -201,7 +201,8 @@ const unsafeResolvers = {
         dematerializedFeasibilityFileId: string;
         certificationAuthorityId: string;
       },
-    ) => sendDFFToCertificationAuthority(params),
+      context: GraphqlContext,
+    ) => sendDFFToCertificationAuthority({ ...params, context }),
 
     dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision:
       (

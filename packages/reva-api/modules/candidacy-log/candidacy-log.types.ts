@@ -43,7 +43,8 @@ export type CandidacyLogEventTypeAndDetails =
         | "CADUCITE_INVALIDATED"
         | "CADUCITE_CONFIRMED"
         | "DFF_SENT_TO_CANDIDATE"
-        | "DFF_VALIDATED_BY_CANDIDATE";
+        | "DFF_VALIDATED_BY_CANDIDATE"
+        | "DFF_SENT_TO_CERTIFICATION_AUTHORITY";
       details?: undefined;
     }
   | {
