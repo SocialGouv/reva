@@ -205,9 +205,11 @@ const PageContent = ({
       startOfVisibility: certification.availableAt
         ? format(certification.availableAt, "yyyy-MM-dd")
         : undefined,
-      endOfVisibility: certification.rncpExpiresAt
-        ? format(certification.rncpExpiresAt, "yyyy-MM-dd")
-        : undefined,
+      endOfVisibility: certification.expiresAt
+        ? format(certification.expiresAt, "yyyy-MM-dd")
+        : certification.rncpExpiresAt
+          ? format(certification.rncpExpiresAt, "yyyy-MM-dd")
+          : undefined,
     },
   });
 
