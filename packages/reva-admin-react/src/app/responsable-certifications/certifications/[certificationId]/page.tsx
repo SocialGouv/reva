@@ -110,6 +110,9 @@ const PageContent = ({
     certification.availableAt &&
     certification.expiresAt;
 
+  const canValidateCertification =
+    isDescriptionComplete && certification.additionalInfo;
+
   return (
     <div data-test="certification-registry-manager-update-certification-page">
       <h1>
@@ -297,7 +300,7 @@ const PageContent = ({
           <div className="flex gap-x-2 ml-auto">
             <Button
               type="button"
-              disabled={!isDescriptionComplete}
+              disabled={!canValidateCertification}
               onClick={modal.open}
             >
               Valider cette certification

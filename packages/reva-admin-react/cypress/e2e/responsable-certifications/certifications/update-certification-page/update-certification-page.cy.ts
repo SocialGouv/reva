@@ -5,10 +5,12 @@ import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 function interceptCertification({
   withPrerequisites,
   withDescription,
+  withadditionalInfo,
   withStatus,
 }: {
   withPrerequisites?: boolean;
   withDescription?: boolean;
+  withadditionalInfo?: boolean;
   withStatus?: CertificationStatus;
 }) {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -54,6 +56,9 @@ function interceptCertification({
                     juryPlace: null,
                   }
                 : {})(),
+            additionalInfo: withadditionalInfo
+              ? { linkToReferential: "https://www.google.fr" }
+              : undefined,
             status:
               withStatus || certificationBPBoucher.data.getCertification.status,
           },
@@ -201,7 +206,7 @@ context("when i access the update certification page ", () => {
 
   context("validate certification", () => {
     it("validate button should be disable if description has not been complete", function () {
-      interceptCertification({});
+      interceptCertification({ withadditionalInfo: true });
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -220,8 +225,11 @@ context("when i access the update certification page ", () => {
         .should("be.disabled");
     });
 
-    it("validate button should be enable if description has been complete", function () {
-      interceptCertification({ withDescription: true });
+    it("validate button should be enable if description and additional information sections are complete", function () {
+      interceptCertification({
+        withDescription: true,
+        withadditionalInfo: true,
+      });
 
       cy.admin(
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
@@ -243,6 +251,7 @@ context("when i access the update certification page ", () => {
     it.skip("validate button should not be visible if certification has been validate", function () {
       interceptCertification({
         withDescription: true,
+        withadditionalInfo: true,
         withStatus: "VALIDE_PAR_CERTIFICATEUR",
       });
 
