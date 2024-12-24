@@ -5,7 +5,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -83,6 +83,7 @@ const AdditionalInfoForm = ({
     } | null;
   };
 }) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -123,6 +124,9 @@ const AdditionalInfoForm = ({
         dossierDeValidationTemplate,
       },
     });
+    router.push(
+      `/responsable-certifications/certifications/${certification.id}`,
+    );
   };
 
   return (
