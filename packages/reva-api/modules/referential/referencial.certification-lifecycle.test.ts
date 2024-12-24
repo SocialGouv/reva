@@ -1,5 +1,7 @@
+import { CertificationStatus } from "@prisma/client";
 import { buildApp } from "../../infra/server/app";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFormaCodeHelper } from "../../test/helpers/entities/create-formacode-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
@@ -50,3 +52,56 @@ it("should create a new certification in the 'BROUILLON' status", async () => {
     "BROUILLON",
   );
 });
+
+it("should send a certification to the certification registry manager if the certification status is 'BROUILLON'", async () => {
+  const certification = await createCertificationHelper({
+    status: "BROUILLON",
+  });
+  const response = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "referential_sendCertificationToRegistryManager",
+      arguments: { input: { certificationId: certification.id } },
+      returnFields: "{status}",
+    },
+  });
+  expect(response.json()).not.toHaveProperty("errors");
+  expect(
+    response.json().data.referential_sendCertificationToRegistryManager.status,
+  ).toBe("A_VALIDER_PAR_CERTIFICATEUR");
+});
+
+test.each([
+  "A_VALIDER_PAR_CERTIFICATEUR",
+  "VALIDE_PAR_CERTIFICATEUR",
+  "INACTIVE",
+] satisfies CertificationStatus[])(
+  "should throw an error when trying to send a certification to the certification registry manager when the certification status is  %s",
+  async (status) => {
+    const certification = await createCertificationHelper({
+      status,
+    });
+    const response = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "referential_sendCertificationToRegistryManager",
+        arguments: { input: { certificationId: certification.id } },
+        returnFields: "{status}",
+      },
+    });
+    expect(response.json()).toHaveProperty("errors");
+    expect(response.json().errors[0].message).toBe(
+      "Le statut de la certification doit être à l'état 'Brouillon'",
+    );
+  },
+);
