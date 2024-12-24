@@ -1,4 +1,4 @@
-import { CandidacyStatusStep, FeasibilityDecision } from "@prisma/client";
+import { FeasibilityDecision } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 import {
   deleteFile,
@@ -9,6 +9,7 @@ import {
 } from "../../../../modules/shared/file";
 import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { deleteFeasibilityIDFile } from "../../../feasibility/features/deleteFeasibilityIDFile";
 import {
@@ -28,12 +29,25 @@ import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
-const statusDecisionMapper = {
-  ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
-  REJECTED: "DOSSIER_FAISABILITE_NON_RECEVABLE",
-  INCOMPLETE: "DOSSIER_FAISABILITE_INCOMPLET",
-  COMPLETE: "DOSSIER_FAISABILITE_COMPLET",
-};
+const decisionMapper = {
+  ADMISSIBLE: {
+    status: "DOSSIER_FAISABILITE_RECEVABLE",
+    log: "FEASIBILITY_VALIDATED",
+  },
+  REJECTED: {
+    status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    log: "FEASIBILITY_REJECTED",
+  },
+  INCOMPLETE: {
+    status: "DOSSIER_FAISABILITE_INCOMPLET",
+    log: "FEASIBILITY_MARKED_AS_INCOMPLETE",
+  },
+  COMPLETE: {
+    status: "DOSSIER_FAISABILITE_COMPLET",
+    log: "FEASIBILITY_MARKED_AS_COMPLETE",
+  },
+} as const;
+
 const sendFeasibilityDecisionTakenEmail = async ({
   candidateEmail,
   aapEmail,
@@ -113,9 +127,11 @@ const sendFeasibilityDecisionTakenEmail = async ({
 export const createOrUpdateCertificationAuthorityDecision = async ({
   candidacyId,
   input,
+  context,
 }: {
   candidacyId: string;
   input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput;
+  context: GraphqlContext;
 }) => {
   try {
     const dff = await getDematerializedFeasibilityFileWithDetailsByCandidacyId({
@@ -204,7 +220,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
 
       await updateCandidacyStatus({
         candidacyId,
-        status: statusDecisionMapper[decision] as CandidacyStatusStep,
+        status: decisionMapper[decision].status,
         tx,
       });
     });
@@ -249,6 +265,14 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       isAutonome,
       candidacyId,
       decisionUploadedFile,
+    });
+
+    await logCandidacyAuditEvent({
+      candidacyId,
+      eventType: decisionMapper[decision].log,
+      userKeycloakId: context.auth.userInfo?.sub,
+      userEmail: context.auth.userInfo?.email,
+      userRoles: context.auth.userInfo?.realm_access?.roles || [],
     });
 
     return getDematerializedFeasibilityFileByCandidacyId({

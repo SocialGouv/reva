@@ -211,7 +211,8 @@ const unsafeResolvers = {
           candidacyId: string;
           input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput;
         },
-      ) => createOrUpdateCertificationAuthorityDecision(params),
+        context: GraphqlContext,
+      ) => createOrUpdateCertificationAuthorityDecision({ ...params, context }),
 
     dematerialized_feasibility_file_confirmCandidate: (
       _parent: unknown,
