@@ -10,15 +10,7 @@ export const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput
   {
     candidacy: {
       candidacyDropOut: { is: null },
-      status: {
-        in: [
-          "DOSSIER_FAISABILITE_ENVOYE",
-          "DOSSIER_FAISABILITE_COMPLET",
-          "DOSSIER_FAISABILITE_INCOMPLET",
-          "DOSSIER_FAISABILITE_RECEVABLE",
-          "DOSSIER_FAISABILITE_NON_RECEVABLE",
-        ],
-      },
+      status: { not: "ARCHIVE" },
     },
   };
 
@@ -29,14 +21,7 @@ export const excludeRejectedArchivedDraftAndDroppedOutCandidacy: Prisma.Feasibil
       decision: { in: ["REJECTED", "DRAFT"] },
     },
     candidacy: {
-      status: {
-        in: [
-          "DOSSIER_FAISABILITE_ENVOYE",
-          "DOSSIER_FAISABILITE_COMPLET",
-          "DOSSIER_FAISABILITE_INCOMPLET",
-          "DOSSIER_FAISABILITE_RECEVABLE",
-        ],
-      },
+      status: { not: "ARCHIVE" },
       candidacyDropOut: { is: null },
     },
   };
