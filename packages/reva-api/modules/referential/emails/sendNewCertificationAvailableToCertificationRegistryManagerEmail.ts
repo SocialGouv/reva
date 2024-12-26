@@ -9,13 +9,17 @@ export const sendNewCertificationAvailableToCertificationRegistryManagerEmail =
         templateMail({
           content: `
              Bonjour,
-             <p>Vous avez fait la demande d’ajout d’une certification auprès de France VAE. Celle-ci est désormais disponible dans 
+             <p>Vous avez fait la demande d’ajout d’une certification auprès de France VAE.</p>
+             <p>Celle-ci est désormais disponible dans 
              votre espace et attend votre validation : </p>
              `,
           labelCTA: "Voir les certifications à valider",
           url,
-          bottomLine:
-            "Nous vous invitons à apporter les modifications en vue de sa mise en conformité et à le renvoyer au certificateur dans les meilleurs délais.",
+          bottomLine: `
+            <p>Rappel : vous devez relire les éléments récupérés via France compétences et remplir les informations manquantes avant de valider la certification. </p>
+            <p>Nous restons disponibles si vous avez la moindre question.</p>
+            <p>L’équipe France VAE</p>
+            `,
         }),
       );
 
