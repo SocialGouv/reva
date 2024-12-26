@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+import { sendNewCertificationAvailableToCertificationRegistryManagerEmail } from "../emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
 import { SendCertificationToRegistryManagerInput } from "../referential.types";
 
 export const sendCertificationToRegistryManager = async ({
@@ -10,7 +11,11 @@ export const sendCertificationToRegistryManager = async ({
     },
     include: {
       competenceBlocs: true,
-      certificationAuthorityStructure: true,
+      certificationAuthorityStructure: {
+        include: {
+          certificationRegistryManager: { include: { account: true } },
+        },
+      },
     },
   });
 
@@ -34,6 +39,16 @@ export const sendCertificationToRegistryManager = async ({
     where: { id: certification.id },
     data: { status: "A_VALIDER_PAR_CERTIFICATEUR" },
   });
+
+  const certificationRegistryManagerEmail =
+    certification.certificationAuthorityStructure.certificationRegistryManager
+      ?.account?.email;
+
+  if (certificationRegistryManagerEmail) {
+    await sendNewCertificationAvailableToCertificationRegistryManagerEmail({
+      email: certificationRegistryManagerEmail,
+    });
+  }
 
   return updatedCertification;
 };
