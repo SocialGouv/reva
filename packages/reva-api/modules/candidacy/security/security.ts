@@ -2,6 +2,7 @@ import {
   defaultSecurity,
   isAdmin,
   isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
   isAdminOrManager,
   isCandidacyCompanion,
   isOwnerOfCandidacy,
@@ -17,6 +18,7 @@ export const resolversSecurityMap = {
   "Query.getCandidacies": isAdminOrManager,
 
   "Query.getCandidacyById": [canAccessCandidacy],
+  "Query.candidacy_getCandidacyCaducites": isAdminOrCertificationAuthority,
 
   "Mutation.*": defaultSecurity, // forbidden
 

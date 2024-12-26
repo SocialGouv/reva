@@ -187,6 +187,11 @@ enum CandidacyStatusFilter {
   PROJET_HORS_ABANDON
 }
 
+enum CandidacyCaduciteStatus {
+  CADUQUE
+  CONTESTATION
+}
+
 enum DistanceStatus {
   ONSITE
   REMOTE
@@ -203,6 +208,12 @@ type RamdomOrganisms {
   rows: [Organism!]
   totalRows: Int!
 }
+
+type CandidacyCaducitePaginated {
+  rows: [Candidacy!]!
+  info: PaginationInfo!
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -226,6 +237,12 @@ type Query {
     limit: Int
     searchFilter: String
   ): CandidacyConventionCollectivePaginated!
+  candidacy_getCandidacyCaducites(
+    offset: Int
+    limit: Int
+    searchFilter: String
+    status: CandidacyCaduciteStatus!
+  ): CandidacyCaducitePaginated!
 }
 
 # MUTATIONS

@@ -83,3 +83,8 @@ export interface SearchOrganismFilter {
   zip?: string;
   isMcfCompatible?: boolean;
 }
+
+export enum CandidacyCaduciteStatus {
+  CADUQUE = "CADUQUE",
+  CONTESTATION = "CONTESTATION",
+}

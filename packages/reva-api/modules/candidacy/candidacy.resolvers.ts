@@ -16,6 +16,7 @@ import { logger } from "../shared/logger";
 import {
   Candidacy,
   CandidacyBusinessEvent,
+  CandidacyCaduciteStatus,
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
@@ -26,6 +27,7 @@ import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidacy } from "./features/getCandidacy";
+import { getCandidacyCaducites } from "./features/getCandidacyCaducites";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
@@ -181,6 +183,15 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+    candidacy_getCandidacyCaducites: async (
+      _: unknown,
+      params: {
+        offset?: number;
+        limit?: number;
+        searchFilter?: string;
+        status: CandidacyCaduciteStatus;
+      },
+    ) => getCandidacyCaducites(params),
   },
   Mutation: {
     candidacy_submitCandidacy: async (
