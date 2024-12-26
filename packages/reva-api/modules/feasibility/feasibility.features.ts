@@ -43,6 +43,7 @@ import {
   sendNewFeasibilitySubmittedEmail,
 } from "./emails";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
+import { canManageFeasibility } from "./features/canManageFeasibility";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
 import { validateFeasibility } from "./features/validateFeasibility";
 import {
@@ -51,7 +52,6 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacy,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { canManageFeasibility } from "./features/canManageFeasibility";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -405,6 +405,8 @@ export const getActiveFeasibilityCountByCategory = async ({
     ARCHIVED: 0,
     DROPPED_OUT: 0,
     DRAFT: 0,
+    CADUQUE: 0,
+    CONTESTATION: 0,
   };
 
   if (!hasRole("admin") && !hasRole("manage_feasibility")) {
