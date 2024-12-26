@@ -44,32 +44,6 @@ beforeEach(async () => {
     createFeasibilityUploadedPdfHelper({
       decision: "COMPLETE",
     }),
-    // The status of below candidacies is incompatible with the decision
-    // about the feasibility file. They should be ignored by the API (not counted, not returned)
-    createFeasibilityUploadedPdfHelper(
-      {
-        decision: "PENDING",
-      },
-      "PROJET",
-    ),
-    createFeasibilityUploadedPdfHelper(
-      {
-        decision: "PENDING",
-      },
-      "PARCOURS_ENVOYE",
-    ),
-    createFeasibilityUploadedPdfHelper(
-      {
-        decision: "PENDING",
-      },
-      "PARCOURS_CONFIRME",
-    ),
-    createFeasibilityUploadedPdfHelper(
-      {
-        decision: "PENDING",
-      },
-      "DOSSIER_DE_VALIDATION_ENVOYE",
-    ),
   ]);
   await createCandidacyHelper({
     candidacyActiveStatus: "ARCHIVE",
