@@ -1,14 +1,10 @@
 import { addDays, isBefore } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
+import {
+  CADUCITE_THRESHOLD_DAYS,
+  CADUCITE_VALID_STATUSES,
+} from "../../shared/candidacy/candidacyCaducite";
 import { getCandidacyById } from "./getCandidacyById";
-
-const CADUQUITE_THRESHOLD_DAYS = 183;
-
-const VALID_STATUSES = [
-  "DOSSIER_FAISABILITE_RECEVABLE",
-  "DOSSIER_DE_VALIDATION_SIGNALE",
-  "DEMANDE_FINANCEMENT_ENVOYE",
-];
 
 export const getCandidacyIsCaduque = async ({
   candidacyId,
@@ -32,12 +28,12 @@ export const getCandidacyIsCaduque = async ({
 
   const sixMonthsFromLastActivity = addDays(
     candidacy.lastActivityDate,
-    CADUQUITE_THRESHOLD_DAYS,
+    CADUCITE_THRESHOLD_DAYS,
   );
 
   const lastActiveStatus = candidacy?.status;
   const isLastActiveStatusValidForActualisationBanner =
-    VALID_STATUSES.includes(lastActiveStatus);
+    CADUCITE_VALID_STATUSES.includes(lastActiveStatus);
 
   const lastActivityHasNotBeenUpdatedInSixMonths = isBefore(
     sixMonthsFromLastActivity,
