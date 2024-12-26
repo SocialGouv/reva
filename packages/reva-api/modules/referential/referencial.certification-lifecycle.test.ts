@@ -7,6 +7,8 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import { RNCPReferential } from "./rncp/referential";
+import * as SendNewCertificationAvailableToCertificationRegistryManagerEmailModule from "./emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
+
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
   (global as any).fastify = app;
@@ -57,6 +59,14 @@ it("should send a certification to the certification registry manager if the cer
   const certification = await createCertificationHelper({
     status: "BROUILLON",
   });
+
+  const certificationRegistryManagerMailSpy = jest
+    .spyOn(
+      SendNewCertificationAvailableToCertificationRegistryManagerEmailModule,
+      "sendNewCertificationAvailableToCertificationRegistryManagerEmail",
+    )
+    .mockImplementation(() => Promise.resolve(""));
+
   const response = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -74,6 +84,7 @@ it("should send a certification to the certification registry manager if the cer
   expect(
     response.json().data.referential_sendCertificationToRegistryManager.status,
   ).toBe("A_VALIDER_PAR_CERTIFICATEUR");
+  expect(certificationRegistryManagerMailSpy).toHaveBeenCalled();
 });
 
 test.each([
