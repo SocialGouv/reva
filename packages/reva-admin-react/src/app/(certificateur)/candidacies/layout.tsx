@@ -1,4 +1,6 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
@@ -6,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { CertificationAuthority } from "./(components)/CertificationAuthority";
-import { useAuth } from "@/components/auth/auth";
 
 const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory(
@@ -25,6 +26,8 @@ const getFeasibilityCountByCategoryQuery = graphql(`
       INCOMPLETE
       ARCHIVED
       DROPPED_OUT
+      CADUQUE
+      CONTESTATION
     }
   }
 `);
@@ -72,6 +75,10 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const { isAdmin } = useAuth();
 
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: [
@@ -258,6 +265,20 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       path: "/candidacies/feasibilities",
       category: "REJECTED",
     }),
+    ...(isCandidacyActualisationActive
+      ? [
+          menuItem({
+            text: `Recevabilités caduques (${feasibilityCountByCategory?.CADUQUE || 0})`,
+            path: "/candidacies/caducites",
+            category: "CADUQUE",
+          }),
+          menuItem({
+            text: `Contestations caducité (${feasibilityCountByCategory?.CONTESTATION || 0})`,
+            path: "/candidacies/caducites",
+            category: "CONTESTATION",
+          }),
+        ]
+      : []),
     menuItem({
       text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
       path: "/candidacies/feasibilities",
