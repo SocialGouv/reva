@@ -63,6 +63,7 @@ export default function CandidacyDropOutDecisionPage() {
               hintText:
                 "Ce choix est irréversible. Vous ne pourrez plus reprendre votre parcours.",
               nativeInputProps: {
+                className: "drop-out-confirmation-radio-button",
                 value: "DROP_OUT_CONFIRMED",
                 ...register("dropOutConfirmed"),
               },
