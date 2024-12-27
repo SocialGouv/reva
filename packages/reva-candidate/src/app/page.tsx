@@ -47,6 +47,9 @@ export default function Home() {
         <DropOutWarning
           className="mb-16"
           dropOutDate={new Date(candidacy.candidacyDropOut.createdAt)}
+          onDecisionButtonClick={() =>
+            router.push("/candidacy-dropout-decision")
+          }
         />
       )}
       {!candidacy.candidacyDropOut && <CandidacyBanner />}

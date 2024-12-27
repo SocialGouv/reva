@@ -45,6 +45,20 @@ context("Candidacy dropout warning", () => {
 
           cy.get('[data-test="drop-out-warning"]').should("exist");
         });
+
+        it("should let me click the decision button and lead me to the decision page", function () {
+          interceptCandidacy({ droppedOut: true });
+          cy.login();
+          cy.wait("@candidate_login");
+          cy.wait("@candidate_getCandidateWithCandidacy");
+          cy.wait("@activeFeaturesForConnectedUser");
+
+          cy.get('[data-test="drop-out-warning-decision-button"]').click();
+          cy.url().should(
+            "eq",
+            "http://localhost:3004/candidat/candidacy-dropout-decision/",
+          );
+        });
       });
       context("When the candidacy has  not been dropped out", () => {
         it("should not show the warning", function () {

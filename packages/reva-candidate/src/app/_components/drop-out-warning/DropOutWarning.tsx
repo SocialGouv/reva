@@ -1,31 +1,43 @@
 import { format } from "date-fns";
 import fvaeWarning from "./assets/fvae_warning.png";
 import Image from "next/image";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 export const DropOutWarning = ({
   dropOutDate,
   className,
+  onDecisionButtonClick,
 }: {
   dropOutDate: Date;
   className?: string;
+  onDecisionButtonClick?: () => void;
 }) => (
   <div
     data-test="drop-out-warning"
-    className={`flex flex-col gap-4 md:gap-0 md:flex-row items-center min-h-[160px] ${className || ""}`}
+    className={`flex flex-col ${className || ""}`}
   >
-    <Image
-      className="z-10"
-      alt="main levée devant un panneau d'interdiction"
-      style={{
-        width: "132px",
-        height: "154px",
-      }}
-      src={fvaeWarning}
-    />
-    <div className="md:-ml-16 p-6 md:pl-24 border-b-4 border-fvae-hard-red shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-      Votre accompagnateur a déclaré l’abandon de votre parcours VAE le{" "}
-      {format(dropOutDate, "dd/MM/yyyy")}. Vous avez 6 mois pour enregistrer
-      votre décision : accepter l’abandon ou continuer votre parcours.
+    <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center min-h-[160px]">
+      <Image
+        className="z-10"
+        alt="main levée devant un panneau d'interdiction"
+        style={{
+          width: "132px",
+          height: "154px",
+        }}
+        src={fvaeWarning}
+      />
+      <div className="md:-ml-16 p-6 md:pl-24 border-b-4 border-fvae-hard-red shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+        Votre accompagnateur a déclaré l’abandon de votre parcours VAE le{" "}
+        {format(dropOutDate, "dd/MM/yyyy")}. Vous avez 6 mois pour enregistrer
+        votre décision : accepter l’abandon ou continuer votre parcours.
+      </div>
     </div>
+    <Button
+      data-test="drop-out-warning-decision-button"
+      className="ml-auto -mt-3"
+      onClick={onDecisionButtonClick}
+    >
+      Enregistrer ma décision
+    </Button>
   </div>
 );
