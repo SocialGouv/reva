@@ -60,6 +60,7 @@ import {
   sendCandidacyDropOutEmailToCertificateur,
 } from "./mails";
 import { resolversSecurityMap } from "./security/security";
+import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandidateCandidacyDropoutDecision";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -617,6 +618,13 @@ const unsafeResolvers = {
       },
       context: GraphqlContext,
     ) => updateLastActivityDate({ input, context }),
+    candidacy_updateCandidateCandidacyDropoutDecision: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        dropOutConfirmed: Date;
+      },
+    ) => updateCandidateCandidacyDropoutDecision(input),
   },
 };
 

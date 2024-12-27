@@ -322,4 +322,8 @@ type Mutation {
     candidacyId: UUID!
     readyForJuryEstimatedAt: Timestamp!
   ): Candidacy!
+  candidacy_updateCandidateCandidacyDropoutDecision(
+    candidacyId: UUID!
+    dropOutConfirmed: Boolean!
+  ): Candidacy!
 }
