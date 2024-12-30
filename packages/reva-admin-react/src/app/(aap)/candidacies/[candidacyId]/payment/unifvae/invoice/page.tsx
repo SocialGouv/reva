@@ -186,6 +186,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       {!paymentRequestAlreadySent &&
         candidacy?.candidacyDropOut &&
         !candidacy.candidacyDropOut.proofReceivedByAdmin &&
+        !candidacy.candidacyDropOut.dropOutConfirmedByCandidate &&
         isAfter(
           candidacy?.candidacyDropOut?.createdAt,
           sub(new Date(), { months: 6 }),
