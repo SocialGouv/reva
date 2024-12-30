@@ -13,7 +13,12 @@ export default function CandidacyDropOutConfirmationPage() {
           Vous avez confirmé l’abandon de votre parcours VAE. Votre
           accompagnateur a été informé de votre décision.
         </p>
-        <Button linkProps={{ href: "/" }}>Revenir à mon espace</Button>
+        <Button
+          data-test="candidacy-dropout-confirmation-back-button"
+          linkProps={{ href: "/" }}
+        >
+          Revenir à mon espace
+        </Button>
       </div>
       <Image
         className="z-10 hidden md:block"
