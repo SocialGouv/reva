@@ -14,6 +14,7 @@ const CANDIDACY_DROP_OUT_BASE = {
   dropOutReasonId: undefined,
   otherReasonContent: null,
   proofReceivedByAdmin: false,
+  dropOutConfirmedByCandidate: false,
   validatedAt: null,
   updatedAt: null,
 };

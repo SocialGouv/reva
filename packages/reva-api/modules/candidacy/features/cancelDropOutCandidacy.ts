@@ -40,6 +40,10 @@ export const cancelDropOutCandidacy = async (
     );
   }
 
+  if (candidacy.candidacyDropOut.dropOutConfirmedByCandidate) {
+    throw new Error(`Le candidat a déjà confirmé l'abandon de la candidature`);
+  }
+
   try {
     const candidacyDropOut = await prismaClient.candidacyDropOut.delete({
       where: {

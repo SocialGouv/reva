@@ -56,9 +56,11 @@ const injectGraphqlPaymentRequestCreation = async ({
 
 const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
   proofReceivedByAdmin,
+  dropOutConfirmedByCandidate,
   candidacyId,
 }: {
-  proofReceivedByAdmin: boolean;
+  proofReceivedByAdmin?: boolean;
+  dropOutConfirmedByCandidate?: boolean;
   candidacyId: string;
 }) =>
   prismaClient.candidacy.update({
@@ -69,6 +71,7 @@ const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
           ...CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
           dropOutReason: { connect: { label: "Autre" } },
           proofReceivedByAdmin,
+          dropOutConfirmedByCandidate,
         },
       },
     },
@@ -295,6 +298,33 @@ test("should allow the creation of paymentRequestUnifvae when candidacy was drop
 
   await dropOutCandidacySixMonthsAgoMinusOneMinute({
     proofReceivedByAdmin: true,
+    candidacyId: candidacy.id,
+  });
+
+  const resp = await injectGraphqlPaymentRequestCreation({
+    keycloakId: organismKeycloakId,
+    candidacyId: candidacy.id,
+  });
+  const obj = resp.json();
+  expect(obj).not.toHaveProperty("errors");
+});
+
+test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the candidate has confirmed his dropout", async () => {
+  const candidacyInput = await createCandidacyHelper({
+    candidacyArgs: {
+      financeModule: "unifvae",
+    },
+    candidacyActiveStatus: CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE,
+  });
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    feasibilityFileSentAt: new Date(),
+    candidacyId: candidacyInput.id,
+  });
+  const candidacy = feasibility.candidacy;
+  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
+
+  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+    dropOutConfirmedByCandidate: true,
     candidacyId: candidacy.id,
   });
 
