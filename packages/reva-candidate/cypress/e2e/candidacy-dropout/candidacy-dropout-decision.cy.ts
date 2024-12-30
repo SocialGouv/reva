@@ -66,4 +66,17 @@ context("Candidacy dropout decision page", () => {
         "candidacy-dropout-decision/dropout-confirmation/",
     );
   });
+  it("should let me cancel my drop out and redirect me to the homepage", function () {
+    interceptCandidacy();
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.visit("/candidacy-dropout-decision/");
+    cy.wait("@getCandidacyForDropOutDecisionPage");
+    cy.get(".drop-out-cancelation-radio-button~label").click();
+    cy.get("button[type=submit]").click();
+    cy.wait("@updateCandidateCandidacyDropoutDecision");
+    cy.url().should("eq", Cypress.config().baseUrl);
+  });
 });

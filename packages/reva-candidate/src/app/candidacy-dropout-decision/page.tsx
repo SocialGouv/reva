@@ -78,6 +78,7 @@ export default function CandidacyDropOutDecisionPage() {
               hintText:
                 "Votre recevabilité est toujours valable. Reprenez là où vous en êtes ! ",
               nativeInputProps: {
+                className: "drop-out-cancelation-radio-button",
                 value: "DROP_OUT_CANCELED",
                 ...register("dropOutConfirmed"),
               },
