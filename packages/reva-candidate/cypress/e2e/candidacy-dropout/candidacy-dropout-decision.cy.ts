@@ -49,7 +49,7 @@ context("Candidacy dropout decision page", () => {
     cy.get('[data-test="candidacy-dropout-decision-page"]').should("exist");
     cy.get("h1").should("contain.text", "Abandon du parcours VAE");
   });
-  it("should let me validate my drop out", function () {
+  it("should let me validate my drop out and lead me to the confirmation page", function () {
     interceptCandidacy();
     cy.login();
     cy.wait("@candidate_login");
@@ -60,5 +60,10 @@ context("Candidacy dropout decision page", () => {
     cy.get(".drop-out-confirmation-radio-button~label").click();
     cy.get("button[type=submit]").click();
     cy.wait("@updateCandidateCandidacyDropoutDecision");
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl +
+        "candidacy-dropout-decision/dropout-confirmation/",
+    );
   });
 });

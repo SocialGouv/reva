@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useDropOutDecisionPage } from "./dropOutDecision.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   dropOutConfirmed: z.enum(["DROP_OUT_CONFIRMED", "DROP_OUT_CANCELED"], {
@@ -18,6 +19,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function CandidacyDropOutDecisionPage() {
+  const router = useRouter();
   const { candidacy, updateCandidateCandidacyDropoutDecision } =
     useDropOutDecisionPage();
   const {
@@ -36,6 +38,9 @@ export default function CandidacyDropOutDecisionPage() {
           candidacyId: candidacy?.id,
           dropOutConfirmed,
         });
+        dropOutConfirmed
+          ? router.push("/candidacy-dropout-decision/dropout-confirmation")
+          : router.push("/");
       }
     } catch (e) {
       graphqlErrorToast(e);
