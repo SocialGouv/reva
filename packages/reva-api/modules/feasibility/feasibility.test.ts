@@ -1,18 +1,25 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
+import { randomUUID } from "crypto";
 import { FastifyInstance } from "fastify";
 
-import { randomUUID } from "crypto";
-import { prismaClient } from "../../prisma/client";
+import { buildApp } from "../../infra/server/app";
+import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
+
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import * as FILE from "../shared/file/file.service";
+import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
 
-afterEach(async () => {
-  await prismaClient.feasibility.deleteMany({});
+beforeAll(async () => {
+  const app = await buildApp({ keycloakPluginMock });
+  (global as any).fastify = app;
+});
+
+beforeEach(async () => {
+  await clearDatabase();
 });
 
 test("should count all (2) feasibilities for admin user", async () => {
@@ -385,4 +392,81 @@ test("should not reject a feasibility since certificator 3 doesn't handle it", a
   });
 
   expect(resp.json()).toHaveProperty("errors");
+});
+
+const postFeasibility = ({
+  candidacyId,
+  certificationAuthorityId,
+  authorization,
+}: {
+  candidacyId: string;
+  certificationAuthorityId: string;
+  authorization: ReturnType<typeof authorizationHeaderForUser>;
+}) => {
+  const formData = new FormData();
+  formData.append("candidacyId", candidacyId);
+  formData.append("certificationAuthorityId", certificationAuthorityId);
+
+  formData.append(
+    "feasibilityFile",
+    new File([], "test.pdf", { type: "application/pdf" }),
+  );
+  formData.append(
+    "IDFile",
+    new File([], "test.pdf", { type: "application/pdf" }),
+  );
+
+  const fastify = (global as any).fastify as FastifyInstance;
+
+  return fastify.inject({
+    method: "POST",
+    url: `api/feasibility/upload-feasibility-file`,
+    headers: {
+      authorization,
+      "content-type": "multipart/form-data",
+    },
+    body: formData,
+  });
+};
+
+test("should validate upload of feasibility file", async () => {
+  jest.spyOn(FILE, "uploadFilesToS3").mockImplementation();
+
+  const sendNewFeasibilitySubmittedEmaillMock = jest.spyOn(
+    SEND_NEW_FEASIBILITY_EMAIL,
+    "sendNewFeasibilitySubmittedEmail",
+  );
+
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure
+      ?.certificationAuthorityOnCertificationAuthorityStructure[0]
+      ?.certificationAuthority;
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
+      certificationId: certification.id,
+      status: "PARCOURS_CONFIRME",
+    },
+    candidacyActiveStatus: "PARCOURS_CONFIRME",
+  });
+
+  const resp = await postFeasibility({
+    candidacyId: candidacy.id,
+    certificationAuthorityId: certificationAuthority!.id,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: candidacy.organism?.accounts[0].keycloakId,
+    }),
+  });
+
+  const emails = [];
+  if (certificationAuthority?.contactEmail) {
+    emails.push(certificationAuthority?.contactEmail);
+  }
+
+  expect(
+    await sendNewFeasibilitySubmittedEmaillMock.mock.results[0].value,
+  ).toBe(`email sent to ${emails.map((email) => email).join(", ")}`);
+
+  expect(resp.statusCode).toEqual(200);
 });
