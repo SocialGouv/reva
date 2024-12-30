@@ -1,6 +1,4 @@
 import { graphqlErrorToast } from "@/components/toast/toast";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,13 +6,12 @@ import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { ActiveDropoutReasons, useDropout } from "./useDropout";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { useMemo } from "react";
 
 const schema = z.object({
   otherReasonContent: z.string().optional(),
   dropOutReasonId: z.string().min(1, "Merci de remplir ce champ"),
-  hasConfirmedWrittenConsent: z
-    .boolean()
-    .refine((val) => val, "Merci de remplir ce champ"),
 });
 
 export const DropoutForm = ({
@@ -24,27 +21,41 @@ export const DropoutForm = ({
 }) => {
   const router = useRouter();
   const { candidacyId, dropoutCandidacyById } = useDropout();
-  const form = useForm({
-    defaultValues: {
+
+  const defaultValues = useMemo(
+    () => ({
       otherReasonContent: "",
       dropOutReasonId: "",
-      hasConfirmedWrittenConsent: false,
-    },
+    }),
+    [],
+  );
+
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm({
+    defaultValues,
     resolver: zodResolver(schema),
     mode: "all",
     reValidateMode: "onChange",
   });
 
   const dropOutReasonId = useWatch({
-    control: form.control,
+    control: control,
     name: "dropOutReasonId",
   });
 
   return (
     <>
       <form
-        className="flex flex-col gap-y-2 mt-6"
-        onSubmit={form.handleSubmit(async (data) => {
+        className="flex flex-col"
+        onReset={() => {
+          reset(defaultValues);
+        }}
+        onSubmit={handleSubmit(async (data) => {
           try {
             await dropoutCandidacyById.mutateAsync({
               dropoutReasonId: data.dropOutReasonId,
@@ -58,13 +69,16 @@ export const DropoutForm = ({
         })}
       >
         <Select
-          state={form.formState.errors.dropOutReasonId ? "error" : "default"}
-          stateRelatedMessage={form.formState.errors.dropOutReasonId?.message}
+          className="m-0"
+          state={errors.dropOutReasonId ? "error" : "default"}
+          stateRelatedMessage={errors.dropOutReasonId?.message}
           label="Quelle est la raison de l'abandon ?"
-          nativeSelectProps={form.register("dropOutReasonId")}
+          nativeSelectProps={{
+            ...register("dropOutReasonId"),
+          }}
         >
-          <option value="" disabled>
-            Choisir une raison
+          <option value="" hidden>
+            Sélectionner une option
           </option>
           {activeDropoutReasons.map((reason) => (
             <option key={reason.id} value={reason.id}>
@@ -77,30 +91,15 @@ export const DropoutForm = ({
             label="Autre raison (optionnel)"
             textArea
             hintText="Texte de description libre"
-            nativeTextAreaProps={form.register("otherReasonContent")}
+            nativeTextAreaProps={register("otherReasonContent")}
           />
         )}
 
-        <Checkbox
-          state={
-            form.formState.errors.hasConfirmedWrittenConsent
-              ? "error"
-              : "default"
-          }
-          stateRelatedMessage={
-            form.formState.errors.hasConfirmedWrittenConsent?.message
-          }
-          options={[
-            {
-              label:
-                "Je certifie avoir une trace écrite du candidat confirmant son choix d’abandonner.",
-              nativeInputProps: form.register("hasConfirmedWrittenConsent"),
-            },
-          ]}
+        <FormButtons
+          backUrl={`/candidacies/${candidacyId}/summary/`}
+          formState={{ isSubmitting, isDirty }}
+          submitButtonLabel="Déclarer l'abandon du candidat"
         />
-        <Button className="self-end" disabled={form.formState.isSubmitting}>
-          Déclarer l'abandon du candidat
-        </Button>
       </form>
     </>
   );

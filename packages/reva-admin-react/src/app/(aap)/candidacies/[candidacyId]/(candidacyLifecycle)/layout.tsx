@@ -1,6 +1,7 @@
 "use client";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 const CandidacyLifecycleLayout = ({
@@ -10,9 +11,14 @@ const CandidacyLifecycleLayout = ({
   children: ReactNode;
   params: { candidacyId: string };
 }) => {
+  const path = usePathname();
+
+  const isDropOutPath = path.endsWith("/drop-out/");
+
   return (
     <>
-      <CandidacyBackButton candidacyId={candidacyId} /> {children}
+      {!isDropOutPath && <CandidacyBackButton candidacyId={candidacyId} />}
+      {children}
     </>
   );
 };

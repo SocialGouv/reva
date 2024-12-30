@@ -109,28 +109,12 @@ const CandidacyDropoutComponent = ({
 
   return (
     <>
-      <Alert
-        title=""
-        severity="warning"
-        className="my-4"
-        description={
-          <>
-            <p>
-              Si vous déclarez l’abandon du candidat il ne pourra plus
-              re-candidater dans le cadre de France VAE.
-            </p>
-            <p>
-              Si le dossier du candidat que vous souhaitez mettre en abandon est
-              constitué depuis moins de 6 mois, vous devez vous assurer d’avoir
-              le justificatif du candidat confirmant son choix d’abandon.
-            </p>
-            <p>
-              Si le cas d’abandon n’est pas listé ci-dessous, privilégiez la
-              suppression de la candidature.
-            </p>
-          </>
-        }
-      />
+      <p className="m-0">
+        Si vous déclarez l’abandon du candidat, il ne pourra plus déposer de
+        dossier sur le même diplôme durant cette année civile. Le candidat devra
+        valider l’abandon depuis son espace ou, sans réponse sous 6 mois, il
+        sera automatiquement acté.
+      </p>
       <DropoutForm activeDropoutReasons={activeDropoutReasons} />
     </>
   );
@@ -145,7 +129,7 @@ const CandidacyDropoutPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-dsfrBlack-500 text-4xl mb-1">Abandon du candidat</h1>
+      <h1 className="text-dsfrBlack-500 text-4xl m-0">Abandon du candidat</h1>
 
       <CandidacyDropoutComponent
         candidacy={candidacy}
