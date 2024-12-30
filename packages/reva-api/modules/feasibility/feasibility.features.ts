@@ -395,7 +395,9 @@ export const getActiveFeasibilityCountByCategory = async ({
   searchFilter?: string;
   certificationAuthorityId?: string;
 }) => {
-  const feasibilityCountByCategory: Record<FeasibilityStatusFilter, number> = {
+  type FeasibilityCountByCategoryType = Record<FeasibilityStatusFilter, number>;
+
+  let feasibilityCountByCategory: FeasibilityCountByCategoryType = {
     ALL: 0,
     PENDING: 0,
     COMPLETE: 0,
@@ -434,76 +436,71 @@ export const getActiveFeasibilityCountByCategory = async ({
     });
   }
 
-  await Promise.all(
+  const feasibilityCountByCategoryArray = await Promise.all(
     (Object.keys(feasibilityCountByCategory) as FeasibilityStatusFilter[]).map(
       async (statusFilter) => {
+        let whereClause: Prisma.FeasibilityWhereInput = {};
+
+        if (!hasRole("admin") && hasRole("manage_feasibility")) {
+          whereClause = {
+            ...whereClause,
+            ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+              {
+                account,
+                isCertificationAuthorityLocalAccount,
+                certificationAuthorityLocalAccount,
+              },
+            ),
+          };
+        } else if (hasRole("admin") && certificationAuthorityAccount) {
+          whereClause = {
+            ...whereClause,
+            ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+              {
+                account: certificationAuthorityAccount,
+                isCertificationAuthorityLocalAccount: false,
+                certificationAuthorityLocalAccount: null,
+              },
+            ),
+          };
+        }
+
+        let candidacyClause: Prisma.CandidacyWhereInput =
+          whereClause?.candidacy || {};
+
+        candidacyClause = {
+          ...candidacyClause,
+          ...getWhereClauseFromStatusFilter(statusFilter).candidacy,
+          ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
+        };
+
+        whereClause = {
+          ...whereClause,
+          ...getWhereClauseFromStatusFilter(statusFilter),
+          candidacy: candidacyClause,
+        };
+
         try {
-          const value: number = await new Promise((resolve, reject) => {
-            {
-              let whereClause: Prisma.FeasibilityWhereInput = {};
-
-              if (!hasRole("admin") && hasRole("manage_feasibility")) {
-                whereClause = {
-                  ...whereClause,
-                  ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
-                    {
-                      account,
-                      isCertificationAuthorityLocalAccount,
-                      certificationAuthorityLocalAccount,
-                    },
-                  ),
-                };
-              } else if (hasRole("admin") && certificationAuthorityAccount) {
-                whereClause = {
-                  ...whereClause,
-                  ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
-                    {
-                      account: certificationAuthorityAccount,
-                      isCertificationAuthorityLocalAccount: false,
-                      certificationAuthorityLocalAccount: null,
-                    },
-                  ),
-                };
-              }
-
-              let candidacyClause: Prisma.CandidacyWhereInput =
-                whereClause?.candidacy || {};
-
-              candidacyClause = {
-                ...candidacyClause,
-                ...getWhereClauseFromStatusFilter(statusFilter).candidacy,
-                ...getWhereClauseFromSearchFilter(
-                  candidacySearchWord,
-                  searchFilter,
-                ),
-              };
-
-              whereClause = {
-                ...whereClause,
-                ...getWhereClauseFromStatusFilter(statusFilter),
-                candidacy: candidacyClause,
-              };
-
-              prismaClient.feasibility
-                .count({
-                  where: whereClause,
-                })
-                .then((value) => {
-                  resolve(value);
-                })
-                .catch(() => {
-                  reject();
-                });
-            }
+          const value = await prismaClient.feasibility.count({
+            where: whereClause,
           });
 
-          feasibilityCountByCategory[statusFilter] = value;
+          return { [statusFilter]: value };
         } catch (error) {
           console.error(error);
         }
+
+        return { [statusFilter]: 0 };
       },
     ),
   );
+
+  for (const feasibilityCountByCategoryItem of feasibilityCountByCategoryArray) {
+    feasibilityCountByCategory = {
+      ...feasibilityCountByCategory,
+      ...feasibilityCountByCategoryItem,
+    };
+  }
 
   return feasibilityCountByCategory;
 };
