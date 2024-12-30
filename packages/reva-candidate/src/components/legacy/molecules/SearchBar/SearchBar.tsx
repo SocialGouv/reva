@@ -34,7 +34,15 @@ export const SearchBar = ({
         placeholder={label}
         type="search"
         value={searchFilter}
-        onChange={(event) => setSearchFilter(event.currentTarget.value)}
+        onChange={(event) => {
+          const { value } = event.currentTarget;
+
+          if (defaultSearchFilter != "" && value == "") {
+            onSearchFilterChange("");
+          } else {
+            setSearchFilter(event.currentTarget.value);
+          }
+        }}
       />
       <button
         className="fr-btn !bg-dsfrBlue-500"
