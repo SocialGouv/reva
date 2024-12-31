@@ -138,6 +138,10 @@ export const getCandidacyLogMessage = ({
       return "Dossier de faisabilité validé par le candidat.";
     case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
       return "Dossier de faisabilité envoyé au certificateur.";
+    case "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE":
+      return "Abandon de la candidature confirmé par le candidat";
+    case "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE":
+      return "Annulation de l'abandon de la candidature par le candidat";
     default:
       return "Évenement inconnu";
   }

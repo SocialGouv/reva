@@ -624,7 +624,16 @@ const unsafeResolvers = {
         candidacyId: string;
         dropOutConfirmed: Date;
       },
-    ) => updateCandidateCandidacyDropoutDecision(input),
+      context: GraphqlContext,
+    ) =>
+      updateCandidateCandidacyDropoutDecision({
+        ...input,
+        userInfo: {
+          userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          userEmail: context.auth.userInfo?.email,
+        },
+      }),
   },
 };
 
