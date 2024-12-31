@@ -39,20 +39,21 @@ export const FeasibilityDematTimelineElement = () => {
       {!!dematerializedFeasibilityFile && (
         <>
           {informationComponent}
-          {!!dematerializedFeasibilityFile.sentToCandidateAt && (
-            <Button
-              data-test="feasibility-timeline-element-check-button"
-              className="mt-4"
-              priority={buttonPriority}
-              nativeButtonProps={{
-                onClick: () => {
-                  router.push("/validate-feasibility");
-                },
-              }}
-            >
-              {buttonLabel}
-            </Button>
-          )}
+          {!!dematerializedFeasibilityFile.sentToCandidateAt &&
+            !candidacy.candidacyDropOut && (
+              <Button
+                data-test="feasibility-timeline-element-check-button"
+                className="mt-4"
+                priority={buttonPriority}
+                nativeButtonProps={{
+                  onClick: () => {
+                    router.push("/validate-feasibility");
+                  },
+                }}
+              >
+                {buttonLabel}
+              </Button>
+            )}
         </>
       )}
     </TimelineElement>

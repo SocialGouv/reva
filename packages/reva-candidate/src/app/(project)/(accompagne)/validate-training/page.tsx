@@ -122,6 +122,8 @@ export default function ValidateTraining() {
       (status) => status.status == "PARCOURS_CONFIRME",
     ) != -1 && !isCurrentlySubmitted;
 
+  const isCandidacyDropOut = !!candidacy.candidacyDropOut;
+
   const {
     additionalHourCount,
     basicSkills,
@@ -312,7 +314,9 @@ export default function ValidateTraining() {
           </span>
         </TrainingSection>
       )}
-      {!isTrainingConfirmed && <TrainingValidationForm />}
+      {!isTrainingConfirmed && !isCandidacyDropOut && (
+        <TrainingValidationForm />
+      )}
       {isTrainingConfirmed && (
         <Button priority="secondary" linkProps={{ href: "/" }}>
           Retour

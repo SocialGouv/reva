@@ -17,7 +17,7 @@ export const TypeAccompagnementTimelineElement = () => {
     status = "editable";
   }
 
-  if (candidacy.status !== "PROJET") {
+  if (candidacy.status !== "PROJET" || candidacy.candidacyDropOut) {
     status = "readonly";
   }
 

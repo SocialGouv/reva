@@ -15,8 +15,8 @@ export const FeasibilityAppointmentTimelineElement = () => {
   if (candidacyStatus == "PROJET") {
     status = "disabled";
   } else if (
-    candidacyStatus != "VALIDATION" &&
-    candidacyStatus != "PRISE_EN_CHARGE"
+    (candidacyStatus != "VALIDATION" && candidacyStatus != "PRISE_EN_CHARGE") ||
+    candidacy.candidacyDropOut
   ) {
     status = "readonly";
   }

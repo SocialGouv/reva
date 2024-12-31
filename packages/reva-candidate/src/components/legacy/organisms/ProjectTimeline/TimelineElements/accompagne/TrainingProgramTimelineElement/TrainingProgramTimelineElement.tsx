@@ -12,17 +12,19 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 export const TrainingProgramTimelineElement = () => {
   const router = useRouter();
 
-  const { candidacyStatus } = useCandidacy();
+  const { candidacyStatus, candidacy } = useCandidacy();
 
   let status: TimeLineElementStatus = "readonly";
-  if (candidacyStatus == "PARCOURS_ENVOYE") {
-    status = "active";
-  } else if (
-    candidacyStatus == "PROJET" ||
-    candidacyStatus == "VALIDATION" ||
-    candidacyStatus == "PRISE_EN_CHARGE"
-  ) {
-    status = "disabled";
+  if (!candidacy.candidacyDropOut) {
+    if (candidacyStatus == "PARCOURS_ENVOYE") {
+      status = "active";
+    } else if (
+      candidacyStatus == "PROJET" ||
+      candidacyStatus == "VALIDATION" ||
+      candidacyStatus == "PRISE_EN_CHARGE"
+    ) {
+      status = "disabled";
+    }
   }
 
   return (
