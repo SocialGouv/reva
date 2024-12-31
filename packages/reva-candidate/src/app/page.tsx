@@ -24,14 +24,11 @@ export default function Home() {
     return null;
   }
 
-  if (candidacy?.candidacyDropOut) {
-    if (candidateDropOutConfirmationFeatureActive) {
-      if (candidacy.candidacyDropOut.dropOutConfirmedByCandidate) {
-        router.push("/candidacy-dropout");
-      }
-    } else {
-      router.push("/candidacy-dropout");
-    }
+  if (
+    candidacy?.candidacyDropOut &&
+    !candidateDropOutConfirmationFeatureActive
+  ) {
+    router.push("/candidacy-dropout");
   }
 
   return (
