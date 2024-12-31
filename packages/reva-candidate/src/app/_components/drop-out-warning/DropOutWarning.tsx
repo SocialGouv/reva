@@ -7,10 +7,12 @@ export const DropOutWarning = ({
   dropOutDate,
   className,
   onDecisionButtonClick,
+  dropOutConfirmedByCandidate,
 }: {
   dropOutDate: Date;
   className?: string;
   onDecisionButtonClick?: () => void;
+  dropOutConfirmedByCandidate?: boolean;
 }) => (
   <div
     data-test="drop-out-warning"
@@ -28,16 +30,20 @@ export const DropOutWarning = ({
       />
       <div className="md:-ml-16 p-6 md:pl-24 border-b-4 border-fvae-hard-red shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
         Votre accompagnateur a déclaré l’abandon de votre parcours VAE le{" "}
-        {format(dropOutDate, "dd/MM/yyyy")}. Vous avez 6 mois pour enregistrer
-        votre décision : accepter l’abandon ou continuer votre parcours.
+        {format(dropOutDate, "dd/MM/yyyy")}.{" "}
+        {dropOutConfirmedByCandidate
+          ? "Vous avez confirmé cette décision."
+          : "Vous avez 6 mois pour enregistrer votre décision : accepter l’abandon ou continuer votre parcours."}
       </div>
     </div>
-    <Button
-      data-test="drop-out-warning-decision-button"
-      className="ml-auto -mt-3"
-      onClick={onDecisionButtonClick}
-    >
-      Enregistrer ma décision
-    </Button>
+    {!dropOutConfirmedByCandidate && (
+      <Button
+        data-test="drop-out-warning-decision-button"
+        className="ml-auto -mt-3"
+        onClick={onDecisionButtonClick}
+      >
+        Enregistrer ma décision
+      </Button>
+    )}
   </div>
 );
