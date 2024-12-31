@@ -10,9 +10,20 @@ const getCertificationQuery = graphql(`
       codeRncp
       status
       rncpExpiresAt
+      rncpPublishedAt
+      rncpEffectiveAt
       rncpDeliveryDeadline
       availableAt
+      expiresAt
       typeDiplome
+      languages
+      juryModalities
+      juryFrequency
+      juryFrequencyOther
+      juryPlace
+      additionalInfo {
+        linkToReferential
+      }
       degree {
         id
         label
@@ -35,6 +46,10 @@ const getCertificationQuery = graphql(`
           id
           label
         }
+      }
+      prerequisites {
+        id
+        label
       }
       certificationAuthorityStructure {
         id

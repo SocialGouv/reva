@@ -10,6 +10,10 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
 import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import {
+  CertificationJuryFrequency,
+  CertificationJuryModality,
+} from "@/graphql/generated/graphql";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -27,6 +31,41 @@ export default function UpdateCertificationPage() {
     <PageContent certification={certification} />
   ) : null;
 }
+
+const EvaluationModalities: { id: CertificationJuryModality; label: string }[] =
+  [
+    {
+      id: "PRESENTIEL",
+      label: "Présentiel",
+    },
+    {
+      id: "A_DISTANCE",
+      label: "À distance",
+    },
+    {
+      id: "MISE_EN_SITUATION_PROFESSIONNELLE",
+      label: "Mise en situation professionnelle",
+    },
+    {
+      id: "ORAL",
+      label: "Oral",
+    },
+  ];
+
+const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
+  {
+    id: "MONTHLY",
+    label: "Tous les mois",
+  },
+  {
+    id: "TRIMESTERLY",
+    label: "Trimestrielle",
+  },
+  {
+    id: "YEARLY",
+    label: "1 fois / an",
+  },
+] as const;
 
 const PageContent = ({
   certification,
@@ -98,31 +137,64 @@ const PageContent = ({
         <EnhancedSectionCard
           data-test="certification-description-card"
           title="Descriptif de la certification"
-          status="COMPLETED"
-          isEditable={isEditable}
           titleIconClass="fr-icon-award-fill"
         >
           <div className="flex flex-col gap-4">
-            <Info title="Code RNCP">{certification.codeRncp}</Info>
-            <h3 className="mb-0">Descriptif de la certification</h3>
-            <Info title="Intitulé">{certification.label}</Info>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Info title="Visibilité sur France VAE">
+              {certification.availableAt && certification.expiresAt ? (
+                <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}`}</div>
+              ) : (
+                "À compléter"
+              )}
+            </Info>
+
+            <div>
+              <label className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification.codeRncp}`}</label>
+              <h3 className="mb-0">{certification.label}</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Info title="Niveau">{certification.degree.label}</Info>
-              <Info title="Type">{certification.typeDiplome || "Inconnu"}</Info>
-              <Info title="Date d’échéance">
-                {certification.rncpExpiresAt
-                  ? format(certification.rncpExpiresAt, "dd/MM/yyyy")
+              <Info title="Type de certification">
+                {certification.typeDiplome || "Inconnu"}
+              </Info>
+              <Info title="Date de publication">
+                {certification.rncpPublishedAt
+                  ? format(certification.rncpPublishedAt, "dd/MM/yyyy")
                   : "Inconnue"}
               </Info>
-              <Info title="Date de dernière delivrance">
+              <Info title="Date d’échéance">
                 {certification.rncpDeliveryDeadline
                   ? format(certification.rncpDeliveryDeadline, "dd/MM/yyyy")
                   : "Inconnue"}
               </Info>
             </div>
 
-            <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
+            <h3 className="mb-0">Jury</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Info title="Fréquence des jurys">
+                {certification.juryFrequencyOther ||
+                  JuryFrequencies.find(
+                    ({ id }) => id == certification.juryFrequency,
+                  )?.label ||
+                  "À compléter"}
+              </Info>
+              <Info title="Modalités d'évaluation :">
+                {certification.juryModalities.length > 0
+                  ? certification.juryModalities.reduce(
+                      (acc, modality) =>
+                        `${acc}${acc && ","} ${EvaluationModalities.find(({ id }) => id == modality)?.label}`,
+                      "",
+                    )
+                  : "À compléter"}
+              </Info>
+              {certification.juryPlace && (
+                <Info title="Lieu où se déroulera le passage : ">
+                  {certification.juryPlace}
+                </Info>
+              )}
+            </div>
 
+            <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {certification.domains.length == 0 && (
                 <div>Aucun formacode associé</div>
@@ -145,6 +217,7 @@ const PageContent = ({
             </div>
           </div>
         </EnhancedSectionCard>
+
         <CertificationCompetenceBlocsSummaryCard
           isEditable={isEditable}
           competenceBlocs={certification.competenceBlocs}
@@ -159,6 +232,25 @@ const PageContent = ({
             )
           }
         />
+
+        <EnhancedSectionCard
+          data-test="prerequisites-summary-card"
+          title="Prérequis obligatoires"
+          titleIconClass="fr-icon-success-fill"
+        >
+          {certification.prerequisites.length ? (
+            <ul className="ml-10" data-test="prerequisite-list">
+              {certification.prerequisites.map((p) => (
+                <li key={p.id}>{p.label}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="ml-10 mb-0" data-test="no-prerequisite-message">
+              Aucun prérequis renseigné pour cette certification.
+            </p>
+          )}
+        </EnhancedSectionCard>
+
         <EnhancedSectionCard
           data-test="certification-structure-summary-card"
           title="Structure certificatrice et gestionnaires"
