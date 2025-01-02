@@ -79,7 +79,7 @@ export const useUpdateAdditionalInfoPage = ({
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);
       }
-      successToast("Ressources complémentaires mises à jour avec succès");
+      successToast("Modification enregistrée");
     } catch (e) {
       graphqlErrorToast(e);
     }
