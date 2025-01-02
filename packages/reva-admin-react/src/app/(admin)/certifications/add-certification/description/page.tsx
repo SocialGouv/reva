@@ -47,7 +47,7 @@ export default function CertificationDescriptionPage() {
         codeRncp: rncp,
       });
 
-      successToast("La certification a bien été ajoutée");
+      successToast("Modification enregistrée");
 
       router.push(`/certifications/${newCertificationId}`);
     } catch (error) {
