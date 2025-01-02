@@ -74,9 +74,9 @@ const PageContent = ({
     </h1>
     <FormOptionalFieldsDisclaimer />
     <p className="mb-12 text-xl">
-      Retrouvez toutes les informations récupérées à partir du code RNCP. Si
-      vous souhaitez les modifier, il est préférable de contacter directement
-      France compétences.
+      Si vous avez repéré un problème de mise en page ou une faute de frappe,
+      vous pouvez procéder aux modifications. Pour des modifications plus
+      importantes, adressez-vous directement à France compétences.
     </p>
     <GrayCard as="div" className="gap-6">
       <h2>
