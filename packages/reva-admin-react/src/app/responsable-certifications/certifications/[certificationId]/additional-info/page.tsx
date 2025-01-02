@@ -174,10 +174,16 @@ const AdditionalInfoForm = ({
       <h2>Contact d’un expert de la certification (le cas échéant)</h2>
       <Input
         label="Personne ou Service concerné (optionnel) :"
-        textArea
-        nativeTextAreaProps={{
+        className="max-w-sm"
+        nativeInputProps={{
           ...register("certificationExpertContactDetails"),
         }}
+      />
+      <h2>Informations facultatives</h2>
+      <Input
+        label="Ressources pour aider au parcours VAE (optionnel) :"
+        textArea
+        nativeTextAreaProps={{ ...register("usefulResources") }}
       />
       <Input
         label="Remarques à transmettre à l’AAP (optionnel) :"
