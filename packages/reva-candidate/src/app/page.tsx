@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { CandidacyBanner } from "./_components/CandidacyBanner";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { DropOutWarning } from "./_components/drop-out-warning/DropOutWarning";
+import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 export default function Home() {
   const { candidate, candidacy } = useCandidacy();
@@ -44,9 +45,13 @@ export default function Home() {
         <DropOutWarning
           className="mb-16"
           dropOutDate={new Date(candidacy.candidacyDropOut.createdAt)}
-          dropOutConfirmedByCandidate={
-            candidacy.candidacyDropOut.dropOutConfirmedByCandidate
-          }
+          dropOutConfirmed={isDropOutConfirmed({
+            dropOutConfirmedByCandidate:
+              candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
+            proofReceivedByAdmin:
+              candidacy.candidacyDropOut.proofReceivedByAdmin,
+            dropOutDate: new Date(candidacy.candidacyDropOut.createdAt),
+          })}
           onDecisionButtonClick={() =>
             router.push("/candidacy-dropout-decision")
           }

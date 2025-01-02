@@ -61,6 +61,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         candidacyDropOut {
           createdAt
           dropOutConfirmedByCandidate
+          proofReceivedByAdmin
         }
         candidacyStatuses {
           id

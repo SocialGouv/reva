@@ -1,0 +1,17 @@
+import { isAfter, addMonths } from "date-fns";
+
+const isDropOutGracePeriodOver = ({ dropOutDate }: { dropOutDate: Date }) =>
+  isAfter(new Date(), addMonths(dropOutDate, 6));
+
+export const isDropOutConfirmed = ({
+  dropOutConfirmedByCandidate,
+  proofReceivedByAdmin,
+  dropOutDate,
+}: {
+  dropOutConfirmedByCandidate: boolean;
+  proofReceivedByAdmin: boolean;
+  dropOutDate: Date;
+}) =>
+  dropOutConfirmedByCandidate ||
+  proofReceivedByAdmin ||
+  isDropOutGracePeriodOver({ dropOutDate });
