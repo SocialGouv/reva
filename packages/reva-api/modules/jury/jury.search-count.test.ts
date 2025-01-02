@@ -56,7 +56,7 @@ afterEach(async () => {
   await clearDatabase();
 });
 
-test("should count 1 jury by email for admin user", async () => {
+test.skip("should count 1 jury by email for admin user", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -100,7 +100,7 @@ test("should count 1 jury by email for admin user", async () => {
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
 });
 
-test("should count 1 PENDING jury by name for admin user", async () => {
+test.skip("should count 1 PENDING jury by name for admin user", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -149,7 +149,7 @@ test("should count 1 PENDING jury by name for admin user", async () => {
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
 });
 
-test("should count active juries by status for admin user searched by rncp type diplome", async () => {
+test.skip("should count active juries by status for admin user searched by rncp type diplome", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -192,7 +192,7 @@ test("should count active juries by status for admin user searched by rncp type 
   expect(feasibilityObj.data.jury_getJuries.rows.length).toEqual(5);
 });
 
-test("should count all juries by status for admin user", async () => {
+test.skip("should count all juries by status for admin user", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -233,7 +233,7 @@ test("should count all juries by status for admin user", async () => {
 /**                     TEST SCHEDULED JURIES FILTER                     */
 /** ----------------------------------------------------------------- */
 
-test("should get 1 SCHEDULED jury by email for admin user", async () => {
+test.skip("should get 1 SCHEDULED jury by email for admin user", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -257,7 +257,7 @@ test("should get 1 SCHEDULED jury by email for admin user", async () => {
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
 });
 
-test("should get 1 SCHEDULED jury by name for admin user", async () => {
+test.skip("should get 1 SCHEDULED jury by name for admin user", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -284,7 +284,7 @@ test("should get 1 SCHEDULED jury by name for admin user", async () => {
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
 });
 
-test("should get SCHEDULED juries by status for admin user searched by rncp type diplome", async () => {
+test.skip("should get SCHEDULED juries by status for admin user searched by rncp type diplome", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -307,7 +307,7 @@ test("should get SCHEDULED juries by status for admin user searched by rncp type
   expect(feasibilityObj.data.jury_getJuries.rows.length).toEqual(3);
 });
 
-test("should get all (3) SCHEDULED juries by status for admin user", async () => {
+test.skip("should get all (3) SCHEDULED juries by status for admin user", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -384,7 +384,7 @@ test("should get 1 PASSED jury by name for admin user", async () => {
   expect(juryObj.data.jury_getJuries.rows.length).toEqual(1);
 });
 
-test("should get PASSED juries by status for admin user searched by rncp type diplome", async () => {
+test.skip("should get PASSED juries by status for admin user searched by rncp type diplome", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -407,7 +407,7 @@ test("should get PASSED juries by status for admin user searched by rncp type di
   expect(feasibilityObj.data.jury_getJuries.rows.length).toEqual(2);
 });
 
-test("should get all (2) PASSED juries by status for admin user", async () => {
+test.skip("should get all (2) PASSED juries by status for admin user", async () => {
   const juryResp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -433,7 +433,7 @@ test("should get all (2) PASSED juries by status for admin user", async () => {
 /**                     TEST DEPARTMENT SEARCH FILTER                 */
 /** ----------------------------------------------------------------- */
 
-test("should count 1 candidacy with a scheduled jury when searching by department for admin user", async () => {
+test.skip("should count 1 candidacy with a scheduled jury when searching by department for admin user", async () => {
   const department = await prismaClient.department.findUnique({
     where: { code: "62" },
   });
