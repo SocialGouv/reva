@@ -1,9 +1,8 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
 import { graphql } from "@/graphql/generated";
 import { UpdateCertificationAdditionalInfoInput } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationQuery = graphql(`
   query getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage(
@@ -47,6 +46,7 @@ export const useUpdateAdditionalInfoPage = ({
   certificationId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
   const urqlClient = useUrqlClient();
 
   const {
@@ -66,10 +66,8 @@ export const useUpdateAdditionalInfoPage = ({
 
   const certification = getCertificationQueryResponse?.getCertification;
 
-  const updateCertificationAdditionalInfo = async (
-    input: UpdateCertificationAdditionalInfoInput,
-  ) => {
-    try {
+  const updateCertificationAdditionalInfo = useMutation({
+    mutationFn: async (input: UpdateCertificationAdditionalInfoInput) => {
       const result = await urqlClient.mutation(
         updateCertificationAdditionalInfoMutation,
         {
@@ -79,11 +77,12 @@ export const useUpdateAdditionalInfoPage = ({
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);
       }
-      successToast("Modification enregistrée");
-    } catch (e) {
-      graphqlErrorToast(e);
-    }
-  };
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [certificationId],
+      }),
+  });
 
   return {
     certification,
