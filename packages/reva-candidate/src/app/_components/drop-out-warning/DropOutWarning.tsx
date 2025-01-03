@@ -29,10 +29,10 @@ export const DropOutWarning = ({
         src={fvaeWarning}
       />
       <div className="md:-ml-16 p-6 md:pl-24 border-b-4 border-fvae-hard-red shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-        Votre accompagnateur a déclaré l’abandon de votre parcours VAE le{" "}
+        Votre parcours est en abandon depuis le{" "}
         {format(dropOutDate, "dd/MM/yyyy")}.{" "}
         {dropOutConfirmed
-          ? "Vous avez confirmé cette décision."
+          ? "Cela fait suite soit à la décision de votre accompagnateur (que vous avez confirmée) soit à un délai d'inactivité de plus de 6 mois."
           : "Vous avez 6 mois pour enregistrer votre décision : accepter l’abandon ou continuer votre parcours."}
       </div>
     </div>
