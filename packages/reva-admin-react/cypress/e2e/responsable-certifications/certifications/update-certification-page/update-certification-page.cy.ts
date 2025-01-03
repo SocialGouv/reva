@@ -168,7 +168,7 @@ context("when i access the update certification page ", () => {
       ).should("exist");
     });
 
-    it("display a lost pf prerequisites if the certification has them", function () {
+    it("display a list of prerequisites if the certification has them", function () {
       interceptCertification({ withPrerequisites: true });
 
       cy.admin(
@@ -206,6 +206,73 @@ context("when i access the update certification page ", () => {
       cy.url().should(
         "eq",
         "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/prerequisites/",
+      );
+    });
+  });
+
+  context("additional info summary card", () => {
+    it("display a default message when the certification has no additional info", function () {
+      interceptCertification({});
+
+      cy.admin(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="additional-info-summary-card"] [data-test="no-additional-info-message"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="additional-info-summary-card"] [data-test="additional-info-content"]',
+      ).should("not.exist");
+    });
+
+    it("display the addtional info if the certification has them", function () {
+      interceptCertification({ withadditionalInfo: true });
+
+      cy.admin(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="additional-info-summary-card"] [data-test="additional-info-content"]',
+      ).should("exist");
+      cy.get(
+        '[data-test="additional-info-summary-card"] [data-test="no-additional-info-message"]',
+      ).should("not.exist");
+    });
+
+    it("let me click on the 'update' button of the addtional info summary card and leads me to the correct page", function () {
+      interceptCertification({});
+
+      cy.admin(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="additional-info-summary-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "eq",
+        "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/additional-info/",
       );
     });
   });

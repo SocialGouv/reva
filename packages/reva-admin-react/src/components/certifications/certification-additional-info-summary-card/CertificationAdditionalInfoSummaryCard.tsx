@@ -32,7 +32,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
     buttonOnClickHref={updateButtonHref}
   >
     {certificationAdditionalInfo ? (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4" data-test="additional-info-content">
         <section className="flex flex-col gap-4">
           <h3 className="mb-0">Documentation sur la certification :</h3>
           {certificationAdditionalInfo.linkToReferential && (
@@ -105,7 +105,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
         </section>
       </div>
     ) : (
-      <SmallNotice className="mt-1">
+      <SmallNotice className="mt-1" data-test="no-additional-info-message">
         Transmettez aux AAP et aux candidats des ressources qui faciliteront le
         déroulé de l’accompagnement et du parcours VAE.
       </SmallNotice>
