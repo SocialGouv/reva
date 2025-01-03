@@ -4,6 +4,7 @@ import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
+import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./mails/sendCandidacyDropOutConfirmedEmailToAap";
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
@@ -15,7 +16,14 @@ afterEach(async () => {
 });
 
 describe("candidate drop out decision", () => {
-  test("should mark the drop out as confirmed when the candidate confirms it", async () => {
+  test("should mark the drop out as confirmed when the candidate confirms it and sent an email to the aap", async () => {
+    const sendCandidacyDropOutConfirmedEmailToAapSpy = jest
+      .spyOn(
+        SendCandidacyDropOutConfirmedEmailToAapModule,
+        "sendCandidacyDropOutConfirmedEmailToAap",
+      )
+      .mockImplementation(() => Promise.resolve(""));
+
     const candidacyDropOut = await createCandidacyDropOutHelper();
     const resp = await injectGraphql({
       fastify: (global as any).fastify,
@@ -43,7 +51,17 @@ describe("candidate drop out decision", () => {
     ).toMatchObject({
       candidacyDropOut: { dropOutConfirmedByCandidate: true },
     });
+    expect(sendCandidacyDropOutConfirmedEmailToAapSpy).toHaveBeenCalledWith({
+      aapEmail:
+        candidacyDropOut.candidacy.organism?.organismInformationsCommerciales
+          ?.emailContact,
+      aapLabel:
+        candidacyDropOut.candidacy.organism?.organismInformationsCommerciales
+          ?.nom,
+      candidateFullName: `${candidacyDropOut.candidacy.candidate?.firstname} ${candidacyDropOut.candidacy.candidate?.lastname}`,
+    });
   });
+
   test("should delete the candidacy drop out when  the candidate cancel the drop out", async () => {
     const candidacyDropOut = await createCandidacyDropOutHelper();
     const resp = await injectGraphql({
@@ -73,6 +91,7 @@ describe("candidate drop out decision", () => {
       candidacyDropOut: null,
     });
   });
+
   test("should not be allowed to cancel a drop out if it has already been confirmed", async () => {
     const candidacyDropOut = await createCandidacyDropOutHelper({
       dropOutConfirmedByCandidate: true,

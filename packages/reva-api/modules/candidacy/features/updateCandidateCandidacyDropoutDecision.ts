@@ -1,5 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { sendCandidacyDropOutConfirmedEmailToAap } from "../mails/sendCandidacyDropOutConfirmedEmailToAap";
 
 export const updateCandidateCandidacyDropoutDecision = async ({
   candidacyId,
@@ -16,6 +17,14 @@ export const updateCandidateCandidacyDropoutDecision = async ({
 }) => {
   const dropOut = await prismaClient.candidacyDropOut.findUnique({
     where: { candidacyId },
+    include: {
+      candidacy: {
+        include: {
+          candidate: true,
+          organism: { include: { organismInformationsCommerciales: true } },
+        },
+      },
+    },
   });
 
   if (!dropOut) {
@@ -40,6 +49,28 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       eventType: "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE",
       ...userInfo,
     });
+
+    const aapEmail =
+      dropOut.candidacy?.organism?.organismInformationsCommerciales
+        ?.emailContact ||
+      dropOut.candidacy?.organism?.contactAdministrativeEmail;
+
+    const aapLabel =
+      dropOut.candidacy.organism?.organismInformationsCommerciales?.nom ||
+      dropOut.candidacy.organism?.label;
+
+    const candidateFullName =
+      dropOut.candidacy.candidate?.firstname +
+      " " +
+      dropOut.candidacy.candidate?.lastname;
+
+    if (aapEmail && aapLabel) {
+      await sendCandidacyDropOutConfirmedEmailToAap({
+        aapEmail,
+        aapLabel,
+        candidateFullName,
+      });
+    }
     return candidacy;
   } else {
     const candidacy = await prismaClient.candidacy.update({
