@@ -1,6 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { sendCandidacyDropOutConfirmedEmailToAap } from "../mails/sendCandidacyDropOutConfirmedEmailToAap";
+import { sendCandidacyDropOutConfirmedEmailToCandidate } from "../mails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
 export const updateCandidateCandidacyDropoutDecision = async ({
   candidacyId,
@@ -71,6 +72,15 @@ export const updateCandidateCandidacyDropoutDecision = async ({
         candidateFullName,
       });
     }
+
+    const candidateEmail = dropOut.candidacy.candidate?.email;
+    if (candidateEmail) {
+      await sendCandidacyDropOutConfirmedEmailToCandidate({
+        candidateEmail,
+        candidateFullName,
+      });
+    }
+
     return candidacy;
   } else {
     const candidacy = await prismaClient.candidacy.update({

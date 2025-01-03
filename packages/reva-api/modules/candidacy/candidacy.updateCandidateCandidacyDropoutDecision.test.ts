@@ -5,6 +5,7 @@ import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./mails/sendCandidacyDropOutConfirmedEmailToAap";
+import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./mails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
@@ -21,6 +22,13 @@ describe("candidate drop out decision", () => {
       .spyOn(
         SendCandidacyDropOutConfirmedEmailToAapModule,
         "sendCandidacyDropOutConfirmedEmailToAap",
+      )
+      .mockImplementation(() => Promise.resolve(""));
+
+    const sendCandidacyDropOutConfirmedEmailToCandidateSpy = jest
+      .spyOn(
+        SendCandidacyDropOutConfirmedEmailToCandidateModule,
+        "sendCandidacyDropOutConfirmedEmailToCandidate",
       )
       .mockImplementation(() => Promise.resolve(""));
 
@@ -58,6 +66,13 @@ describe("candidate drop out decision", () => {
       aapLabel:
         candidacyDropOut.candidacy.organism?.organismInformationsCommerciales
           ?.nom,
+      candidateFullName: `${candidacyDropOut.candidacy.candidate?.firstname} ${candidacyDropOut.candidacy.candidate?.lastname}`,
+    });
+
+    expect(
+      sendCandidacyDropOutConfirmedEmailToCandidateSpy,
+    ).toHaveBeenCalledWith({
+      candidateEmail: candidacyDropOut.candidacy.candidate?.email,
       candidateFullName: `${candidacyDropOut.candidacy.candidate?.firstname} ${candidacyDropOut.candidacy.candidate?.lastname}`,
     });
   });
