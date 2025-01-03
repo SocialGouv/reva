@@ -57,7 +57,13 @@ function interceptCertification({
                   }
                 : {})(),
             additionalInfo: withadditionalInfo
-              ? { linkToReferential: "https://www.google.fr" }
+              ? {
+                  linkToReferential: "https://www.google.fr",
+                  dossierDeValidationTemplate: {
+                    name: "Template de dossier de validation",
+                    previewUrl: "https://www.google.fr",
+                  },
+                }
               : undefined,
             status:
               withStatus || certificationBPBoucher.data.getCertification.status,

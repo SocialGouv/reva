@@ -22,6 +22,7 @@ import {
 
 import { useUpdateCertificationPage } from "./updateCertification.hook";
 import { useAuth } from "@/components/auth/auth";
+import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -259,19 +260,11 @@ const PageContent = ({
           </SmallNotice>
         </EnhancedSectionCard>
 
-        <EnhancedSectionCard
-          data-test="additional-info-summary-card"
+        <CertificationAdditionalInfoSummaryCard
           isEditable={isEditable}
-          title="Ressources complémentaires"
-          titleIconClass="fr-icon-info-fill"
-          status={certification.additionalInfo ? "COMPLETED" : "TO_COMPLETE"}
-          buttonOnClickHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
-        >
-          <SmallNotice className="mt-1">
-            Transmettez aux AAP et aux candidats des ressources qui faciliteront
-            le déroulé de l’accompagnement et du parcours VAE.
-          </SmallNotice>
-        </EnhancedSectionCard>
+          updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
+          certificationAdditionalInfo={certification.additionalInfo}
+        />
 
         {isEditable && (
           <>
