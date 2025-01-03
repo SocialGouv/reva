@@ -329,6 +329,9 @@ const PageContent = ({
                   certificationId: certification.id,
                 });
                 successToast("La certification a été validée avec succès");
+                router.push(
+                  "/responsable-certifications/certifications/?status=VALIDE_PAR_CERTIFICATEUR&visible=true",
+                );
               } catch (error) {
                 graphqlErrorToast(error);
               }
