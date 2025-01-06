@@ -23,6 +23,15 @@ const getCertificationQuery = graphql(`
       juryPlace
       additionalInfo {
         linkToReferential
+        linkToCorrespondenceTable
+        dossierDeValidationTemplate {
+          name
+          previewUrl
+        }
+        linkToJuryGuide
+        certificationExpertContactDetails
+        usefulResources
+        commentsForAAP
       }
       degree {
         id

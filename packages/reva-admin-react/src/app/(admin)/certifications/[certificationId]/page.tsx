@@ -14,6 +14,7 @@ import {
   CertificationJuryFrequency,
   CertificationJuryModality,
 } from "@/graphql/generated/graphql";
+import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -250,6 +251,12 @@ const PageContent = ({
             </p>
           )}
         </EnhancedSectionCard>
+
+        <CertificationAdditionalInfoSummaryCard
+          isEditable={isEditable}
+          updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
+          certificationAdditionalInfo={certification.additionalInfo}
+        />
 
         <EnhancedSectionCard
           data-test="certification-structure-summary-card"
