@@ -222,9 +222,12 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }),
   ];
 
+  const juryCount =
+    (juryCountByCategory?.SCHEDULED || 0) + (juryCountByCategory?.PASSED || 0);
+
   const juryItems = [
     menuItem({
-      text: `Tous`,
+      text: `Tous (${juryCount})`,
       path: "/candidacies/juries",
       category: "ALL",
     }),
@@ -243,21 +246,21 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const menuItems = [
     {
       items: feasibilityItems,
-      text: "Dossiers de faisabilité",
+      text: `Dossiers de faisabilité (${feasibilityCountByCategory?.ALL || 0})`,
       expandedByDefault: currentPathname.startsWith(
         "/candidacies/feasibilities",
       ),
     },
     {
       items: dossierDeValidationItems,
-      text: "Dossiers de validation",
+      text: `Dossiers de validation (${dossierDeValidationCountByCategory?.ALL || 0})`,
       expandedByDefault: currentPathname.startsWith(
         "/candidacies/dossiers-de-validation",
       ),
     },
     {
       items: juryItems,
-      text: "Jury",
+      text: `Jury (${juryCount})`,
       expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
     },
     menuItem({
