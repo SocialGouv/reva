@@ -13,22 +13,40 @@ export type FeasibilityStatusFilter =
   | "CADUQUE"
   | "CONTESTATION";
 
-export const excludeArchivedAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
+export const excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses: Prisma.FeasibilityWhereInput =
   {
     candidacy: {
       candidacyDropOut: { is: null },
-      status: { not: "ARCHIVE" },
+      status: {
+        not: {
+          in: [
+            "ARCHIVE",
+            "CERTIFICATION",
+            "DOSSIER_DE_VALIDATION_ENVOYE",
+            "DOSSIER_DE_VALIDATION_SIGNALE",
+          ],
+        },
+      },
     },
   };
 
-export const excludeRejectedArchivedDraftAndDroppedOutCandidacy: Prisma.FeasibilityWhereInput =
+export const excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses: Prisma.FeasibilityWhereInput =
   {
     NOT: {
       isActive: true,
       decision: { in: ["REJECTED", "DRAFT"] },
     },
     candidacy: {
-      status: { not: "ARCHIVE" },
+      status: {
+        not: {
+          in: [
+            "ARCHIVE",
+            "CERTIFICATION",
+            "DOSSIER_DE_VALIDATION_ENVOYE",
+            "DOSSIER_DE_VALIDATION_SIGNALE",
+          ],
+        },
+      },
       candidacyDropOut: { is: null },
     },
   };
@@ -42,7 +60,7 @@ export const getWhereClauseFromStatusFilter = (
     case "ALL":
       whereClause = {
         ...whereClause,
-        ...excludeRejectedArchivedDraftAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses,
       };
       break;
     case "PENDING":
@@ -53,7 +71,7 @@ export const getWhereClauseFromStatusFilter = (
       whereClause = {
         ...whereClause,
         decision: statusFilter,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses,
       };
       break;
 

@@ -48,8 +48,8 @@ import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
 import { validateFeasibility } from "./features/validateFeasibility";
 import {
   FeasibilityStatusFilter,
-  excludeArchivedAndDroppedOutCandidacy,
-  excludeRejectedArchivedDraftAndDroppedOutCandidacy,
+  excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses,
+  excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 
@@ -579,7 +579,7 @@ export const getActiveFeasibilities = async ({
     case "ALL":
       queryWhereClause = {
         ...queryWhereClause,
-        ...excludeRejectedArchivedDraftAndDroppedOutCandidacy,
+        ...excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses,
       };
       break;
     case "ARCHIVED":
@@ -599,7 +599,7 @@ export const getActiveFeasibilities = async ({
     default:
       queryWhereClause = {
         ...queryWhereClause,
-        ...excludeArchivedAndDroppedOutCandidacy,
+        ...excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses,
         decision: categoryFilter as FeasibilityStatus,
       };
       break;
