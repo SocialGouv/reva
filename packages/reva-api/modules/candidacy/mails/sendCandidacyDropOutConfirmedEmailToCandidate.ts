@@ -25,6 +25,6 @@ export const sendCandidacyDropOutConfirmedEmailToCandidate = async ({
   return sendGenericEmail({
     to: { email: candidateEmail },
     htmlContent: htmlContent.html,
-    subject: "Confirmation de votre abandon de parcours VAE ",
+    subject: "Confirmation de votre abandon de parcours VAE",
   });
 };
