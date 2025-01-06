@@ -15,6 +15,7 @@ import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/featur
 import { setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate } from "../modules/referential/features/setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
+import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
@@ -144,6 +145,25 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running batch.delete-expired-candidacies batch");
         await deleteExpiredCandidacies();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send emails for candidacies drop out that are not confirmed and are more than 6 months old
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_EMAILS_FOR_AUTO_CONFIRMED_CANDIDACY_DROP_OUTS ||
+    EVERY_DAY_AT_2_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-emails-for-auto-confirmed-candidacy-drop-outs",
+      batchCallback: async () => {
+        logger.info(
+          "Running batch.send-emails-for-auto-confirmed-candidacy-drop-outs",
+        );
+        await sendAutoCandidacyDropOutConfirmationEmails();
       },
     }),
   start: true,
