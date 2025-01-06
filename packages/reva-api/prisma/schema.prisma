@@ -713,17 +713,18 @@ model DropOutReason {
 }
 
 model CandidacyDropOut {
-  candidacy                   Candidacy           @relation(fields: [candidacyId], references: [id])
-  candidacyId                 String              @unique @map("candidacy_id") @db.Uuid
-  dropOutReason               DropOutReason       @relation(fields: [dropOutReasonId], references: [id])
-  dropOutReasonId             String              @map("drop_out_reason_id") @db.Uuid
-  status                      CandidacyStatusStep
-  otherReasonContent          String?             @map("other_reason_content")
-  proofReceivedByAdmin        Boolean             @default(false) @map("proof_received_by_admin")
-  dropOutConfirmedByCandidate Boolean             @default(false) @map("drop_out_confirmed_by_candidate")
-  createdAt                   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                   DateTime?           @map("updated_at") @db.Timestamptz(6)
-  validatedAt                 DateTime?           @map("validated_at") @db.Timestamptz(6)
+  candidacy                         Candidacy           @relation(fields: [candidacyId], references: [id])
+  candidacyId                       String              @unique @map("candidacy_id") @db.Uuid
+  dropOutReason                     DropOutReason       @relation(fields: [dropOutReasonId], references: [id])
+  dropOutReasonId                   String              @map("drop_out_reason_id") @db.Uuid
+  status                            CandidacyStatusStep
+  otherReasonContent                String?             @map("other_reason_content")
+  proofReceivedByAdmin              Boolean             @default(false) @map("proof_received_by_admin")
+  dropOutConfirmedByCandidate       Boolean             @default(false) @map("drop_out_confirmed_by_candidate")
+  createdAt                         DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                         DateTime?           @map("updated_at") @db.Timestamptz(6)
+  validatedAt                       DateTime?           @map("validated_at") @db.Timestamptz(6)
+  autoDropOutConfirmationEmailsSent Boolean             @default(false) @map("auto_drop_out_confirmation_emails_sent")
 
   @@id([candidacyId])
   @@map("candidacy_drop_out")
