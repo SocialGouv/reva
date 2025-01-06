@@ -2,6 +2,7 @@ import { subMonths } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
 import { sendAutoCandidacyDropOutConfirmationEmailToAap } from "../mails/sendAutoCandidacyDropOutConfirmationEmailToAap";
 import { logger } from "../../shared/logger/logger";
+import { sendAutoCandidacyDropOutConfirmationEmailToCandidate } from "../mails/sendAutoCandidacyDropOutConfirmationEmailToCandidate";
 
 export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
   const candidacyDropOutsToSendEmailsFor =
@@ -42,6 +43,14 @@ export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
         await sendAutoCandidacyDropOutConfirmationEmailToAap({
           aapEmail,
           aapLabel,
+          candidateFullName,
+        });
+      }
+
+      const candidateEmail = dropOut.candidacy.candidate?.email;
+      if (candidateEmail) {
+        await sendAutoCandidacyDropOutConfirmationEmailToCandidate({
+          candidateEmail,
           candidateFullName,
         });
       }
