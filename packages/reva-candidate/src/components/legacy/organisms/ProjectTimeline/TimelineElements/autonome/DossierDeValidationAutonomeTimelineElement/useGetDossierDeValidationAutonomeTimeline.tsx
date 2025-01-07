@@ -87,6 +87,12 @@ export function useGetDossierDeValidationAutonomeTimelineInfo(): UseGetDossierDe
           />
         ),
       };
+    case isEditable:
+      return {
+        status: "active",
+        badge: ToCompleteBadge,
+        notice: null,
+      };
     default:
       return {
         status: "disabled",
