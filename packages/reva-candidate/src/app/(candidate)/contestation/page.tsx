@@ -69,6 +69,7 @@ const HasContestedComponent = () => {
         alt="Contestation réussie"
         width={282}
         height={319}
+        className="hidden md:block"
       />
     </div>
   );

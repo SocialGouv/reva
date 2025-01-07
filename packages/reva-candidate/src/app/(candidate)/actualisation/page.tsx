@@ -84,6 +84,7 @@ const HasBeenUpdatedComponent = ({
         alt="Actualisation réussie"
         width={282}
         height={319}
+        className="hidden md:block"
       />
     </div>
   );
