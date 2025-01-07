@@ -1,0 +1,18 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "1504d576-82e5-449d-9597-1350fbdbfa50",
+      "label": "CQP Technicien de service maintenance en ascenseurs",
+      "codeRncp": "36923",
+      "additionalInfo": {
+        "linkToReferential": "Test infos",
+        "linkToCorrespondenceTable": "https://example.com/correspondencetable",
+        "dossierDeValidationTemplate": null,
+        "linkToJuryGuide": "https://example.com/juryguide",
+        "certificationExpertContactDetails": "Mr Certification",
+        "usefulResources": "very useful",
+        "commentsForAAP": "AAP comment"
+      }
+    }
+  }
+}

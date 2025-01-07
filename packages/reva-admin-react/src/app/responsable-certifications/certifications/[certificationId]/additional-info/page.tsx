@@ -23,7 +23,7 @@ export default function CertificationAdditionalInfoPage() {
   }
 
   return (
-    <div>
+    <div data-test="update-certification-additional-info-page">
       <Breadcrumb
         currentPageLabel="Ressources complémetaires"
         segments={[
@@ -139,6 +139,7 @@ const AdditionalInfoForm = ({
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <h2>Documentation sur la certification</h2>
       <Input
+        data-test="referential-link-input"
         label="Lien vers les référentiels d’activités et de compétences :"
         state={errors.linkToReferential ? "error" : "default"}
         stateRelatedMessage={errors.linkToReferential?.message}
@@ -158,6 +159,7 @@ const AdditionalInfoForm = ({
 
       <h2>Documentation sur le dossier de validation et le jury</h2>
       <FancyUpload
+        dataTest="dossier-de-validation-template-upload"
         title="Trame du dossier de validation"
         hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
         state={errors.dossierDeValidationTemplate?.[0] ? "error" : "default"}
