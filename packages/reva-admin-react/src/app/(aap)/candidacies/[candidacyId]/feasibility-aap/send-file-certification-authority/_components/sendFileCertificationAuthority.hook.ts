@@ -54,7 +54,6 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
               id
               code
               label
-              isOptional
               FCCompetences
               competences {
                 id

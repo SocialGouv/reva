@@ -173,7 +173,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
                 id
                 code
                 label
-                isOptional
                 FCCompetences
                 competences {
                   id

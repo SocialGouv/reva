@@ -70,7 +70,6 @@ export interface CompetenceInput {
 interface CompetenceBlocInput {
   id?: string;
   label: string;
-  isOptional?: boolean;
   competences: CompetenceInput[];
 }
 

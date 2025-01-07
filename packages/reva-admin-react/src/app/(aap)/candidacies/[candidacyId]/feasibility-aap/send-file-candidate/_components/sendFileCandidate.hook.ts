@@ -41,7 +41,6 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
               id
               code
               label
-              isOptional
               FCCompetences
               competences {
                 id

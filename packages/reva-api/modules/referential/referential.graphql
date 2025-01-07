@@ -148,7 +148,6 @@ type CertificationCompetenceBloc {
   code: String
   label: String!
   text: String
-  isOptional: Boolean
   FCCompetences: String
   competences: [CertificationCompetence!]!
   certification: Certification!
@@ -170,7 +169,6 @@ type BlocCompetence {
   LISTE_COMPETENCES: String!
   PARSED_COMPETENCES: [String!]!
   MODALITES_EVALUATION: String
-  FACULTATIF: Boolean
 }
 
 type FCFormacode {
@@ -346,7 +344,6 @@ input CompetenceBlocInput {
   id: ID
   code: String
   label: String!
-  isOptional: Boolean
   FCCompetences: String
   competences: [CompetenceInput!]!
 }

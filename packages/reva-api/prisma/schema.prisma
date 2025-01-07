@@ -101,7 +101,6 @@ model CertificationCompetenceBloc {
   createdAt                      DateTime                         @default(now()) @map("created_at") @db.Timestamptz(6)
   code                           String?                          @unique @db.VarChar(255)
   label                          String                           @db.VarChar
-  isOptional                     Boolean?                         @map("is_optional") @db.Boolean
   //
   certificationId                String                           @map("certification_id") @db.Uuid
   certification                  Certification                    @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: NoAction)

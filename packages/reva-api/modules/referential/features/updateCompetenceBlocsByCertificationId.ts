@@ -15,7 +15,6 @@ type Bloc = {
   id?: string;
   code?: string;
   label: string;
-  isOptional?: boolean;
   FCCompetences?: string;
   competences: Competence[];
 };
@@ -72,7 +71,6 @@ export const updateCompetenceBlocsByCertificationId = async (
       data: {
         code: bloc.code,
         label: bloc.label,
-        isOptional: bloc.isOptional,
         FCCompetences: bloc.FCCompetences,
         certificationId,
       },
@@ -99,7 +97,6 @@ export const updateCompetenceBlocsByCertificationId = async (
         where: { id: bloc.id },
         data: {
           label: inputBloc.label,
-          isOptional: inputBloc.isOptional,
         },
       });
 

@@ -4,31 +4,6 @@ import { logger } from "../../shared/logger";
 
 const URL = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
 
-/*
-const DEFAULT_CERTIFICATIONS = [
-  "492",
-  "1120",
-  "28048",
-  "32208",
-  "34177",
-  "34826",
-  "35506",
-  "35830",
-  "35832",
-  "36004",
-  "36661",
-  "36805",
-  "36836",
-  "37106",
-  "37274",
-  "37675",
-  "37676",
-  "37679",
-  "37780",
-  "38362",
-];
-*/
-
 export type FindParams = {
   STATUT?: "ACTIF" | "INACTIF";
   INTITULE?: string;
@@ -57,7 +32,6 @@ export type RNCPCertification = {
     LISTE_COMPETENCES: string;
     PARSED_COMPETENCES: string[];
     MODALITES_EVALUATION?: string;
-    FACULTATIF?: boolean;
   }[];
   FORMACODES: {
     CODE: string;
@@ -289,7 +263,6 @@ function mapToRNCPCertification(data: any): RNCPCertification {
               (bloc.LISTE_COMPETENCES as string) || "",
             ),
             MODALITES_EVALUATION: bloc.MODALITES_EVALUATION,
-            FACULTATIF: bloc.LIBELLE?.toLowerCase().includes("facultatif"),
           };
         })
         .sort((a, b) => (a.CODE > b.CODE ? 1 : -1)),

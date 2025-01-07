@@ -39,7 +39,6 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
             id
             code
             label
-            isOptional
             FCCompetences
             competences {
               id

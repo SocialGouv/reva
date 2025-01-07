@@ -55,7 +55,6 @@ const createDefaultBlocs = async (params: {
           data: {
             code: bloc.CODE,
             label: bloc.LIBELLE,
-            isOptional: bloc.FACULTATIF,
             FCCompetences: bloc.LISTE_COMPETENCES,
             certificationId,
           },
