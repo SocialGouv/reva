@@ -75,8 +75,7 @@ export default function CandidacyDropOutDecisionPage() {
             },
             {
               label: "Je continue mon parcours VAE",
-              hintText:
-                "Votre recevabilité est toujours valable. Reprenez là où vous en êtes ! ",
+              hintText: "Reprenez là où vous en êtes ! ",
               nativeInputProps: {
                 className: "drop-out-cancelation-radio-button",
                 value: "DROP_OUT_CANCELED",
