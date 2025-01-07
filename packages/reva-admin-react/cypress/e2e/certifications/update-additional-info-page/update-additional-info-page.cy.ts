@@ -71,7 +71,8 @@ context("when i access the update certification info page ", () => {
 
     cy.get('[data-test="referential-link-input"] input').clear();
 
-    cy.get("button").contains("Enregistrer").click();
+    // Need force because the uplaod components has inconsistent behavior in setting the isDirty prop and disabling the submit button
+    cy.get("button").contains("Enregistrer").click({ force: true });
     cy.get('[data-test="referential-link-input"]')
       .children("input")
       .should("have.focus");
