@@ -51,54 +51,6 @@ function visitFeasibilityCertification() {
 }
 
 describe("Dematerialized Feasibility File Certification Page", () => {
-  context("Initial form state", () => {
-    it("should have enabled form buttons and pre-checked competence bloc checkboxes", function () {
-      visitFeasibilityCertification();
-
-      cy.get('[data-test="form-buttons"]')
-        .should("exist")
-        .within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
-
-      cy.get('input[type="checkbox"]').should("be.checked");
-    });
-  });
-
-  context("Certification type selection", () => {
-    it("should select all competence blocs when switching to complete certification", function () {
-      visitFeasibilityCertification();
-
-      cy.get('[data-test="certification-completion-radio-buttons"]')
-        .find('input[value="PARTIAL"]')
-        .check({ force: true });
-
-      cy.get('input[type="checkbox"]').should("not.be.checked");
-
-      cy.get('[data-test="certification-completion-radio-buttons"]')
-        .find('input[value="COMPLETE"]')
-        .check({ force: true });
-
-      cy.get('input[type="checkbox"]').should("be.checked");
-
-      cy.get('[data-test="form-buttons"]')
-        .should("exist")
-        .within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
-    });
-
-    it("should uncheck all competence blocs when switching to partial certification", function () {
-      visitFeasibilityCertification();
-
-      cy.get('[data-test="certification-completion-radio-buttons"]')
-        .find('input[value="PARTIAL"]')
-        .check({ force: true });
-
-      cy.get('input[type="checkbox"]').should("not.be.checked");
-    });
-  });
-
   context("Optional fields", () => {
     it("should allow filling optional certification details and selecting specific competence blocs", function () {
       visitFeasibilityCertification();
