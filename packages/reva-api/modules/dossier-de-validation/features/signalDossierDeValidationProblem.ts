@@ -80,6 +80,11 @@ export const signalDossierDeValidationProblem = async ({
     status: "DOSSIER_DE_VALIDATION_SIGNALE",
   });
 
+  await prismaClient.candidacy.update({
+    where: { id: dossierDeValidation.candidacyId },
+    data: { lastActivityDate: new Date() },
+  });
+
   const isAutonome = candidacy?.typeAccompagnement === "AUTONOME";
 
   if (isAutonome) {
