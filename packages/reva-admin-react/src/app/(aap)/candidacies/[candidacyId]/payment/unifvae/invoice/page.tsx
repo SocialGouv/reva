@@ -195,8 +195,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
             data-test="payment-request-not-available"
             className="my-4"
             severity="error"
-            title="La demande de paiement n’est pas encore disponible"
-            description="Vous y aurez accès 6 mois après la mise en abandon du candidat."
+            title="La demande de paiement n’est pas disponible"
+            description="Vous y aurez accès 6 mois après la mise en abandon du candidat ou si le candidat valide l'abandon depuis son espace."
           />
         )}
       <Alert
