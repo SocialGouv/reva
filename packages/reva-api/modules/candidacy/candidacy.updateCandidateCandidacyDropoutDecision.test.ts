@@ -1,3 +1,4 @@
+import { startOfDay, startOfToday } from "date-fns";
 import { buildApp } from "../../infra/server/app";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
@@ -92,7 +93,8 @@ describe("candidate drop out decision", () => {
           dropOutConfirmed: false,
         },
         endpoint: "candidacy_updateCandidateCandidacyDropoutDecision",
-        returnFields: "{  candidacyDropOut { dropOutConfirmedByCandidate } }",
+        returnFields:
+          "{lastActivityDate candidacyDropOut { dropOutConfirmedByCandidate } }",
       },
     });
     expect(resp.statusCode).toEqual(200);
@@ -105,6 +107,12 @@ describe("candidate drop out decision", () => {
     ).toMatchObject({
       candidacyDropOut: null,
     });
+    expect(
+      startOfDay(
+        obj.data.candidacy_updateCandidateCandidacyDropoutDecision
+          .lastActivityDate,
+      ),
+    ).toEqual(startOfToday());
   });
 
   test("should not be allowed to cancel a drop out if it has already been confirmed", async () => {
