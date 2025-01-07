@@ -3,7 +3,8 @@ import { PrismaClient } from "@prisma/client";
 export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
   const dropOutReasonCount = await prisma.dropOutReason.count();
 
-  if (dropOutReasonCount === 0) {
+  // Drop out reason with value 'Financement du jury' is added by a migration
+  if (dropOutReasonCount === 1) {
     await prisma.dropOutReason.createMany({
       data: [
         { label: "Reprise d’emploi" },
@@ -19,15 +20,9 @@ export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
         { label: "Avis architecte de parcours défavorable" },
         { label: "Report du projet à plus tard" },
         { label: "Non réponse du candidat après 3 relances" },
+        // { label: "Financement du jury" },
         { label: "Autre" },
       ],
-    });
-  } else {
-    await prisma.dropOutReason.updateMany({
-      where: {
-        label: "Le parcours REVA / VAE ne répond pas à mes objectifs",
-      },
-      data: { label: "Le parcours France VAE ne répond pas à mes objectifs" },
     });
   }
 }
