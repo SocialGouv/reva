@@ -2,6 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 import { injectCsvRows } from "./read-csv";
 import { seedCandidacyConventionCollective } from "./referentials/seed-candidacy-convention-collective";
+import { seedFormacodes } from "./referentials/seed-formacodes";
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
@@ -50,6 +51,8 @@ const executeSeed = async () => {
     }),
     injectCommand: prisma.conventionCollective.upsert,
   });
+
+  await seedFormacodes(prisma);
 
   await seedCertifications(prisma);
 

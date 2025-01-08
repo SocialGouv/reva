@@ -228,8 +228,8 @@ function readCsvRows<T>({
   });
 }
 
-async function seedFormacode() {
-  const prisma = new PrismaClient();
+export async function seedFormacodes(prisma: PrismaClient) {
+  await prisma.formacode.deleteMany();
 
   await prisma.$transaction(
     async (tx) => {
@@ -242,5 +242,3 @@ async function seedFormacode() {
     { maxWait: 5000, timeout: 15000 },
   );
 }
-
-seedFormacode();
