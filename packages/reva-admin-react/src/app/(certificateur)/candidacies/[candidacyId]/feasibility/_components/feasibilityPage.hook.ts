@@ -18,7 +18,7 @@ export const useFeasibilityPageLogic = () => {
   }>();
 
   const { data: getFeasibilityResponse } = useQuery({
-    queryKey: ["getCandidacyWithFeasibilityQuery", candidacyId],
+    queryKey: [candidacyId, "getCandidacyWithFeasibilityQuery"],
     queryFn: () =>
       graphqlClient.request(getCandidacyWithFeasibilityQuery, {
         candidacyId,
