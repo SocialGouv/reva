@@ -20,6 +20,10 @@ const getCandidacyQuery = graphql(`
       jury {
         dateOfSession
       }
+      candidacyContestationsCaducite {
+        certificationAuthorityContestationDecision
+      }
+      isCaduque
     }
   }
 `);
@@ -32,18 +36,24 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidacyResponse } = useQuery({
-    queryKey: ["getCandidacy", candidacyId],
+    queryKey: [candidacyId, "getCandidacyQuery"],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
         candidacyId,
       }),
   });
 
-  const candidate = getCandidacyResponse?.getCandidacyById?.candidate;
-  const juryDateOfSession =
-    getCandidacyResponse?.getCandidacyById?.jury?.dateOfSession;
-  const typeAccompagnement =
-    getCandidacyResponse?.getCandidacyById?.typeAccompagnement;
+  const candidacy = getCandidacyResponse?.getCandidacyById;
+  const candidate = candidacy?.candidate;
+  const juryDateOfSession = candidacy?.jury?.dateOfSession;
+  const typeAccompagnement = candidacy?.typeAccompagnement;
+  const isCaduque = candidacy?.isCaduque;
+  const hasPendingCaduciteContestation =
+    candidacy?.candidacyContestationsCaducite?.some(
+      (caducite) =>
+        caducite?.certificationAuthorityContestationDecision ===
+        "DECISION_PENDING",
+    );
 
   const menuItem = (text: string | ReactNode, path: string) => ({
     isActive: currentPathname.startsWith(path),
@@ -79,7 +89,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
       <SideMenu
         title={
           <>
-            <div className="flex items-center pt-1.5">
+            <div className="flex items-center pt-1.5 mb-4">
               <span className="fr-icon-user-fill fr-icon mr-2" />
               <p className="font-bold text-xl capitalize">
                 {`${candidate?.firstname || ""} ${
@@ -88,8 +98,18 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
               </p>
             </div>
             {typeAccompagnement === "AUTONOME" && (
-              <Badge severity="new" className="mt-8">
+              <Badge severity="new" className="mt-4">
                 Candidat en autonomie
+              </Badge>
+            )}
+            {isCaduque && !hasPendingCaduciteContestation && (
+              <Badge severity="error" className="mt-4">
+                Recevabilité caduque
+              </Badge>
+            )}
+            {hasPendingCaduciteContestation && (
+              <Badge severity="warning" className="mt-4">
+                Contestation caducité
               </Badge>
             )}
           </>
