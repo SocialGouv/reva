@@ -27,11 +27,7 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
           certificationAuthority: true,
         },
       },
-      organism: {
-        include: {
-          organismInformationsCommerciales: true,
-        },
-      },
+      organism: true,
       candidate: true,
     },
   });
@@ -103,11 +99,10 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     candidacyActiveFeasibility?.certificationAuthority;
 
   const organismEmail =
-    candidacy.organism?.organismInformationsCommerciales?.emailContact ??
+    candidacy.organism?.emailContact ??
     candidacy.organism?.contactAdministrativeEmail;
-  const organismName =
-    candidacy.organism?.organismInformationsCommerciales?.nom ??
-    (candidacy.organism?.label as string);
+  const organismName = (candidacy.organism?.nomPublic ??
+    candidacy.organism?.label) as string;
   const previousCertificationAuthorityName =
     previousCertificationAuthority?.contactFullName ??
     (previousCertificationAuthority?.label as string);

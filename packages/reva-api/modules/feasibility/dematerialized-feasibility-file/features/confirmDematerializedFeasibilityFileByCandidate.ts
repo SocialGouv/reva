@@ -30,12 +30,9 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
               id: true,
               organism: {
                 select: {
-                  organismInformationsCommerciales: {
-                    select: {
-                      nom: true,
-                    },
-                  },
+                  emailContact: true,
                   contactAdministrativeEmail: true,
+                  nomPublic: true,
                 },
               },
               candidate: {
@@ -51,10 +48,10 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
     },
   });
 
-  const aapName =
-    dff.feasibility.candidacy?.organism?.organismInformationsCommerciales?.nom;
+  const aapName = dff.feasibility.candidacy?.organism?.nomPublic;
   const candidateName = `${dff.feasibility.candidacy?.candidate?.firstname} ${dff.feasibility.candidacy?.candidate?.lastname}`;
   const aapEmail =
+    dff.feasibility.candidacy?.organism?.emailContact ??
     dff.feasibility.candidacy?.organism?.contactAdministrativeEmail;
 
   if (aapName && candidateName && aapEmail) {

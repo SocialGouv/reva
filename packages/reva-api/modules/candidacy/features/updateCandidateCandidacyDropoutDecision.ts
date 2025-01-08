@@ -22,7 +22,7 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       candidacy: {
         include: {
           candidate: true,
-          organism: { include: { organismInformationsCommerciales: true } },
+          organism: true,
         },
       },
     },
@@ -52,12 +52,11 @@ export const updateCandidateCandidacyDropoutDecision = async ({
     });
 
     const aapEmail =
-      dropOut.candidacy?.organism?.organismInformationsCommerciales
-        ?.emailContact ||
+      dropOut.candidacy?.organism?.emailContact ||
       dropOut.candidacy?.organism?.contactAdministrativeEmail;
 
     const aapLabel =
-      dropOut.candidacy.organism?.organismInformationsCommerciales?.nom ||
+      dropOut.candidacy.organism?.nomPublic ||
       dropOut.candidacy.organism?.label;
 
     const candidateFullName =

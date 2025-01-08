@@ -10,11 +10,7 @@ export const getReferentOrganismFromCandidacyId = async ({
     const candidacy = await prismaClient.candidacy.findUnique({
       where: { id: candidacyId },
       include: {
-        organism: {
-          include: {
-            organismInformationsCommerciales: true,
-          },
-        },
+        organism: true,
       },
     });
 
