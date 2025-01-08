@@ -253,7 +253,7 @@ const PageContent = ({
         </EnhancedSectionCard>
 
         <CertificationAdditionalInfoSummaryCard
-          isEditable={isEditable}
+          isAdmin
           updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
           certificationAdditionalInfo={certification.additionalInfo}
         />

@@ -4,11 +4,13 @@ import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import Link from "next/link";
 
 export const CertificationAdditionalInfoSummaryCard = ({
+  isAdmin,
   isEditable,
   updateButtonHref,
   certificationAdditionalInfo,
 }: {
-  isEditable: boolean;
+  isAdmin?: boolean;
+  isEditable?: boolean;
   updateButtonHref: string;
   certificationAdditionalInfo?: {
     linkToReferential: string;
@@ -25,7 +27,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
 }) => (
   <EnhancedSectionCard
     data-test="additional-info-summary-card"
-    isEditable={isEditable}
+    isEditable={isAdmin ? false : isEditable}
     title="Ressources complémentaires"
     titleIconClass="fr-icon-info-fill"
     status={certificationAdditionalInfo ? "COMPLETED" : "TO_COMPLETE"}
@@ -104,11 +106,11 @@ export const CertificationAdditionalInfoSummaryCard = ({
           </dl>
         </section>
       </div>
-    ) : (
+    ) : !isAdmin ? (
       <SmallNotice className="mt-1" data-test="no-additional-info-message">
         Transmettez aux AAP et aux candidats des ressources qui faciliteront le
         déroulé de l’accompagnement et du parcours VAE.
       </SmallNotice>
-    )}
+    ) : null}
   </EnhancedSectionCard>
 );
