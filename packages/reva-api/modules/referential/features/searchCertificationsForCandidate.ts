@@ -37,8 +37,8 @@ export const searchCertificationsForCandidate = async ({
       }`;
 
   const allCertificationsQuery = Prisma.sql`
-      from certification c, available_certification_based_on_formacode available_certification
-      where c.id=available_certification.certification_id
+      from certification c
+      where c.visible=true
       ${
         searchTextInTsQueryFormat
           ? Prisma.sql` and searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
