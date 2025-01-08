@@ -22,4 +22,8 @@ type Mutation {
     contestationReason: String!
     readyForJuryEstimatedAt: Timestamp!
   ): CandidacyContestationCaducite
+  candidacy_contestation_caducite_update_certification_authority_contestation_decision(
+    candidacyId: ID!
+    certificationAuthorityContestationDecision: CertificationAuthorityContestationDecision!
+  ): CandidacyContestationCaducite
 }
