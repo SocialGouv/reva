@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
   query getCandidacyWithFeasibilityUploadedPdfQuery($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      id
       certification {
         label
       }
@@ -61,6 +62,12 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
         }
       }
       feasibilityFormat
+      isCaduque
+      lastActivityDate
+      candidacyContestationsCaducite {
+        contestationSentAt
+        certificationAuthorityContestationDecision
+      }
     }
   }
 `);
@@ -74,7 +81,7 @@ export const useFeasibilityUploadedPdf = () => {
   const { accessToken } = useKeycloakContext();
 
   const { data: getFeasibilityResponse } = useQuery({
-    queryKey: [candidacyId, "getCandidacyWithFeasibilityQuery"],
+    queryKey: [candidacyId, "getCandidacyWithFeasibilityUploadedPdfQuery"],
     queryFn: () =>
       graphqlClient.request(getCandidacyWithFeasibilityUploadedPdfQuery, {
         candidacyId,

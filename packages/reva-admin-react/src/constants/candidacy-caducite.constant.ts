@@ -1,0 +1,1 @@
+export const CADUCITE_THRESHOLD_DAYS = 183;

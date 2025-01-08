@@ -1,12 +1,12 @@
 import { BackButton } from "@/components/back-button/BackButton";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast } from "@/components/toast/toast";
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import { useRouter } from "next/navigation";
-import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
-import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import FeasibilityDecisionDisplay from "../FeasibilityDecisionDisplay";
+import { useRouter } from "next/navigation";
+import { FeasibilityBanner } from "../FeasibilityBanner";
 import {
   FeasibilityCompletionForm,
   FeasibilityCompletionFormData,
@@ -15,11 +15,13 @@ import {
   FeasibilityValidationForm,
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
+import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacy, feasibility, submitFeasibilityDecision } =
     useFeasibilityUploadedPdf();
   const router = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
 
   const handleCompletionFormSubmit = async (
     data: FeasibilityCompletionFormData,
@@ -74,6 +76,24 @@ export const FeasibilityUploadedPdf = () => {
   const documentaryProofFile = uploadedPdf?.documentaryProofFile;
   const certificateOfAttendanceFile = uploadedPdf?.certificateOfAttendanceFile;
 
+  const pendingCaduciteContestation =
+    candidacy?.candidacyContestationsCaducite?.find(
+      (candidacyContestation) =>
+        candidacyContestation?.certificationAuthorityContestationDecision ===
+        "DECISION_PENDING",
+    );
+
+  const hasConfirmedCaduciteContestation =
+    !!candidacy?.candidacyContestationsCaducite?.some(
+      (candidacyContestation) =>
+        candidacyContestation?.certificationAuthorityContestationDecision ===
+        "CADUCITE_CONFIRMED",
+    );
+
+  const isCandidacyActualisationFeatureActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
+
   return (
     <div className="flex flex-col flex-1 mb-2 w-full">
       <BackButton href="/candidacies/feasibilities">
@@ -83,11 +103,24 @@ export const FeasibilityUploadedPdf = () => {
         <div className="flex flex-col gap-8">
           <div>
             <h1 className="mb-12">Dossier de faisabilité</h1>
-            <FeasibilityDecisionDisplay
+            <FeasibilityBanner
               decision={feasibility.decision}
               decisionComment={feasibility.decisionComment}
               decisionSentAt={feasibility.decisionSentAt}
               feasibilityHistory={feasibility.history}
+              isCaduque={candidacy.isCaduque}
+              lastActivityDate={candidacy.lastActivityDate}
+              candidacyId={candidacy.id}
+              hasPendingCaduciteContestation={!!pendingCaduciteContestation}
+              isCandidacyActualisationFeatureActive={
+                isCandidacyActualisationFeatureActive
+              }
+              pendingCaduciteContestationSentAt={
+                pendingCaduciteContestation?.contestationSentAt
+              }
+              hasConfirmedCaduciteContestation={
+                hasConfirmedCaduciteContestation
+              }
             />
             <h2 className="mb-6 mt-12">Certification visée</h2>
             <p className="text-lg font-bold mb-0">
