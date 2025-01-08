@@ -14,7 +14,6 @@ export const isOrganismVisibleInCandidateSearchResults = async ({
       managedDegrees: true,
       organismOnFormacode: true,
       organismOnConventionCollective: true,
-      organismInformationsCommerciales: true,
     },
   });
 

@@ -32,7 +32,6 @@ type Organism {
   website: String
   typology: OrganismTypology!
   fermePourAbsenceOuConges: Boolean!
-  informationsCommerciales: OrganismInformationsCommerciales
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
   accounts: [Account!]!
@@ -45,6 +44,15 @@ type Organism {
   modaliteAccompagnementRenseigneeEtValide: Boolean!
   isVisibleInCandidateSearchResults: Boolean!
   isMaisonMereMCFCompatible: Boolean
+  nomPublic: String
+  telephone: String
+  siteInternet: String
+  emailContact: String
+  adresseNumeroEtNomDeRue: String
+  adresseInformationsComplementaires: String
+  adresseCodePostal: String
+  adresseVille: String
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite
 }
 enum OrganismModaliteAccompagnement {
   LIEU_ACCUEIL
@@ -147,20 +155,6 @@ enum ConformiteNormeAccessibilite {
   CONFORME
   NON_CONFORME
   ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC
-}
-
-type OrganismInformationsCommerciales {
-  id: UUID!
-  organismId: UUID!
-  nom: String
-  telephone: String
-  siteInternet: String
-  emailContact: String
-  adresseNumeroEtNomDeRue: String
-  adresseInformationsComplementaires: String
-  adresseCodePostal: String
-  adresseVille: String
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite
 }
 
 type Query {

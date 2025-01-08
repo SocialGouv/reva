@@ -16,7 +16,7 @@ export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
       include: {
         candidacy: {
           include: {
-            organism: { include: { organismInformationsCommerciales: true } },
+            organism: true,
             candidate: true,
           },
         },
@@ -26,12 +26,11 @@ export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
   for (const dropOut of candidacyDropOutsToSendEmailsFor) {
     try {
       const aapEmail =
-        dropOut.candidacy?.organism?.organismInformationsCommerciales
-          ?.emailContact ||
+        dropOut.candidacy?.organism?.emailContact ||
         dropOut.candidacy?.organism?.contactAdministrativeEmail;
 
       const aapLabel =
-        dropOut.candidacy.organism?.organismInformationsCommerciales?.nom ||
+        dropOut.candidacy.organism?.nomPublic ||
         dropOut.candidacy.organism?.label;
 
       const candidateFullName =
