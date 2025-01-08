@@ -142,6 +142,10 @@ export const getCandidacyLogMessage = ({
       return "Abandon de la candidature confirmé par le candidat";
     case "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE":
       return "Annulation de l'abandon de la candidature par le candidat";
+    case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_CONFIRMED":
+      return "La caducité de la candidature est confirmée.";
+    case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED":
+      return "La caducité de la candidature est invalidée.";
     default:
       return "Évenement inconnu";
   }
