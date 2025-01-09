@@ -30,11 +30,8 @@ export const sendDossierDeValidation = async ({
     where: { id: candidacyId },
     include: {
       candidacyDropOut: true,
-      candidacyStatuses: { where: { isActive: true } },
       candidate: true,
       Feasibility: { where: { isActive: true } },
-      department: true,
-      Jury: true,
     },
   });
   if (!candidacy) {
@@ -43,7 +40,7 @@ export const sendDossierDeValidation = async ({
   if (candidacy.candidacyDropOut) {
     throw new Error("La candidature a été abandonnée");
   }
-  if (candidacy.candidacyStatuses?.[0]?.status === "ARCHIVE") {
+  if (candidacy.status === "ARCHIVE") {
     throw new Error("La candidature a été supprimée");
   }
   if (candidacy.Feasibility?.[0]?.decision !== FeasibilityStatus.ADMISSIBLE) {

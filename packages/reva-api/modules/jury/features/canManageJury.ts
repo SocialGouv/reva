@@ -17,7 +17,6 @@ export const canManageJury = async ({
     where: { id: candidacyId },
     include: {
       candidacyDropOut: true,
-      candidacyStatuses: { where: { isActive: true } },
       Feasibility: {
         where: { isActive: true },
       },
@@ -32,7 +31,7 @@ export const canManageJury = async ({
     throw new Error("La candidature a été abandonnée");
   }
 
-  if (candidacy.candidacyStatuses?.[0]?.status === "ARCHIVE") {
+  if (candidacy.status === "ARCHIVE") {
     throw new Error("La candidature a été supprimée");
   }
 
