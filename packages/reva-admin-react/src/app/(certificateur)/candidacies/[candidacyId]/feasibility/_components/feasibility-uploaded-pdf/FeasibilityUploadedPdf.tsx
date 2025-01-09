@@ -83,13 +83,6 @@ export const FeasibilityUploadedPdf = () => {
         "DECISION_PENDING",
     );
 
-  const hasConfirmedCaduciteContestation =
-    !!candidacy?.candidacyContestationsCaducite?.some(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "CADUCITE_CONFIRMED",
-    );
-
   const isCandidacyActualisationFeatureActive = isFeatureActive(
     "candidacy_actualisation",
   );
@@ -117,9 +110,6 @@ export const FeasibilityUploadedPdf = () => {
               }
               pendingCaduciteContestationSentAt={
                 pendingCaduciteContestation?.contestationSentAt
-              }
-              hasConfirmedCaduciteContestation={
-                hasConfirmedCaduciteContestation
               }
             />
             <h2 className="mb-6 mt-12">Certification visée</h2>

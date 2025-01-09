@@ -1,12 +1,12 @@
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
-import { CADUCITE_THRESHOLD_DAYS } from "@/constants/candidacy-caducite.constant";
 import {
   FeasibilityDecision,
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import Link from "next/link";
 
 interface Props {
@@ -18,7 +18,6 @@ interface Props {
   lastActivityDate?: number | null;
   candidacyId: string;
   hasPendingCaduciteContestation: boolean;
-  hasConfirmedCaduciteContestation: boolean;
   isCandidacyActualisationFeatureActive: boolean;
   pendingCaduciteContestationSentAt?: number | null;
 }
@@ -34,24 +33,8 @@ export function FeasibilityBanner({
   hasPendingCaduciteContestation,
   isCandidacyActualisationFeatureActive,
   pendingCaduciteContestationSentAt,
-  hasConfirmedCaduciteContestation,
 }: Props) {
   switch (true) {
-    case isCandidacyActualisationFeatureActive &&
-      hasConfirmedCaduciteContestation &&
-      !!lastActivityDate:
-      return (
-        <Alert
-          className="mb-12"
-          severity="error"
-          data-test="feasibility-caduque"
-          title={`Recevabilité caduque depuis le ${format(
-            addDays(lastActivityDate, CADUCITE_THRESHOLD_DAYS),
-            "dd/MM/yyyy",
-          )}`}
-          description="Le candidat n'est plus actif (<6 mois d'inactivité) et n'a pas procédé à son actualisation. Sa recevabilité est donc caduque."
-        />
-      );
     case isCandidacyActualisationFeatureActive &&
       hasPendingCaduciteContestation &&
       !!pendingCaduciteContestationSentAt:
@@ -84,7 +67,7 @@ export function FeasibilityBanner({
           severity="error"
           data-test="feasibility-caduque"
           title={`Recevabilité caduque depuis le ${format(
-            addDays(lastActivityDate, CADUCITE_THRESHOLD_DAYS),
+            dateThresholdCandidacyIsCaduque(lastActivityDate),
             "dd/MM/yyyy",
           )}`}
           description="Le candidat n'est plus actif (<6 mois d'inactivité) et n'a pas procédé à son actualisation. Sa recevabilité est donc caduque."
