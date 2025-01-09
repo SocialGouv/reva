@@ -65,6 +65,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         eligibilityValidUntil
       }
       candidacy {
+        id
         status
         organism {
           label
@@ -152,6 +153,12 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         }
         candidacyDropOut {
           createdAt
+        }
+        isCaduque
+        lastActivityDate
+        candidacyContestationsCaducite {
+          contestationSentAt
+          certificationAuthorityContestationDecision
         }
       }
     }

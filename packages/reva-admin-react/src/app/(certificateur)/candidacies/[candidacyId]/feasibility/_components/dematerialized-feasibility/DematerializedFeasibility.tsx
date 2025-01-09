@@ -1,19 +1,23 @@
-import DffSummary from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/_components/DffSummary/DffSummary";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
+import { DffSummary } from "@/components/dff-summary/DffSummary";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
   FeasibilityDecision,
+  FeasibilityHistory,
 } from "@/graphql/generated/graphql";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import {
-  createOrUpdateCertificationAuthorityDecision,
-  useDematerializedFeasibility,
-} from "./dematerializedFeasibility.hook";
 import {
   FeasibilityCompletionForm,
   FeasibilityCompletionFormData,
@@ -22,11 +26,88 @@ import {
   FeasibilityValidationForm,
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
+import {
+  createOrUpdateCertificationAuthorityDecision,
+  useDematerializedFeasibility,
+} from "./dematerializedFeasibility.hook";
+
+const FeasibilityBanner = ({
+  isWaitingForDecision,
+  feasibilityDecisionSentAt,
+  feasibilityDecision,
+  feasibilityDecisionComment,
+  feasibilityHistory,
+  dateSinceCandidacyIsCaduque,
+  pendingCaduciteContestationSentAt,
+  candidacyId,
+  isCandidacyActualisationFeatureActive,
+}: {
+  isWaitingForDecision: boolean;
+  feasibilityDecisionSentAt: Date | null;
+  feasibilityDecision: FeasibilityDecision;
+  feasibilityDecisionComment?: string | null;
+  feasibilityHistory: FeasibilityHistory[];
+  dateSinceCandidacyIsCaduque: Date | null;
+  pendingCaduciteContestationSentAt: number | null;
+  candidacyId: string;
+  isCandidacyActualisationFeatureActive: boolean;
+}) => {
+  if (
+    pendingCaduciteContestationSentAt &&
+    isCandidacyActualisationFeatureActive
+  ) {
+    return (
+      <div className="flex flex-col mb-6">
+        <Alert
+          className="mb-4"
+          severity="warning"
+          data-test="feasibility-caducite-contestation"
+          title={`Contestation envoyée le ${format(
+            pendingCaduciteContestationSentAt,
+            "dd/MM/yyyy",
+          )}`}
+          description="Le candidat conteste la caducité de sa recevabilité. Consultez les raisons transmises par le candidat et décidez si, oui ou non, vous souhaitez restaurer la recevabilité."
+        />
+        <Link
+          href={`/candidacies/${candidacyId}/feasibility/caducite-contestation`}
+          className="self-end "
+        >
+          <Button>Consulter</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
+    return (
+      <BannerIsCaduque
+        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+      />
+    );
+  }
+
+  if (!isWaitingForDecision) {
+    return (
+      <DecisionSentComponent
+        decisionSentAt={feasibilityDecisionSentAt}
+        decision={feasibilityDecision}
+        decisionComment={feasibilityDecisionComment}
+        history={feasibilityHistory}
+      />
+    );
+  }
+
+  return null;
+};
 
 export const DematerializedFeasibility = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const { dematerializedFeasibilityFile, candidacy, feasibility } =
     useDematerializedFeasibility();
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationFeatureActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
   const urqlClient = useUrqlClient();
   const queryClient = useQueryClient();
 
@@ -112,6 +193,25 @@ export const DematerializedFeasibility = () => {
 
   const organism = candidacy.organism;
 
+  const feasibilityDecisionSentAt = feasibility?.decisionSentAt
+    ? new Date(feasibility.decisionSentAt)
+    : null;
+
+  const dateSinceCandidacyIsCaduque = candidacy.isCaduque
+    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
+    : null;
+
+  const pendingCaduciteContestation =
+    candidacy?.candidacyContestationsCaducite?.find(
+      (candidacyContestation) =>
+        candidacyContestation?.certificationAuthorityContestationDecision ===
+        "DECISION_PENDING",
+    );
+
+  const pendingCaduciteContestationSentAt = pendingCaduciteContestation
+    ? pendingCaduciteContestation.contestationSentAt
+    : null;
+
   return (
     <>
       <DffSummary
@@ -119,19 +219,22 @@ export const DematerializedFeasibility = () => {
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
         candidacy={candidacy as Candidacy}
-        HasBeenSentComponent={
-          !waitingForDecision && (
-            <DecisionSentComponent
-              decisionSentAt={
-                feasibility?.decisionSentAt
-                  ? new Date(feasibility.decisionSentAt)
-                  : null
-              }
-              decision={feasibility?.decision as FeasibilityDecision}
-              decisionComment={feasibility?.decisionComment}
-              history={feasibility?.history}
-            />
-          )
+        FeasibilityBanner={
+          <FeasibilityBanner
+            isWaitingForDecision={waitingForDecision}
+            feasibilityDecisionSentAt={feasibilityDecisionSentAt}
+            feasibilityDecision={feasibility?.decision as FeasibilityDecision}
+            feasibilityDecisionComment={feasibility?.decisionComment}
+            feasibilityHistory={feasibility?.history as FeasibilityHistory[]}
+            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+            pendingCaduciteContestationSentAt={
+              pendingCaduciteContestationSentAt
+            }
+            candidacyId={candidacyId}
+            isCandidacyActualisationFeatureActive={
+              isCandidacyActualisationFeatureActive
+            }
+          />
         }
         displayGiveYourDecisionSubtitle
       />
