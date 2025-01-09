@@ -2,8 +2,8 @@
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { errorToast, successToast } from "@/components/toast/toast";
-import { CADUCITE_THRESHOLD_DAYS } from "@/constants/candidacy-caducite.constant";
 import { CertificationAuthorityContestationDecision } from "@/graphql/generated/graphql";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -110,9 +110,8 @@ export default function CaduciteContestationPage() {
             Caducité depuis le :{" "}
             <span className="font-medium">
               {format(
-                addDays(
+                dateThresholdCandidacyIsCaduque(
                   candidacy?.lastActivityDate as number,
-                  CADUCITE_THRESHOLD_DAYS,
                 ),
                 "dd/MM/yyyy",
               )}
