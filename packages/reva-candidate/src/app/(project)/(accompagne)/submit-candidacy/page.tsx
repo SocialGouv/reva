@@ -58,7 +58,7 @@ export default function SubmitCandidacy() {
           onClick: onSubmitCandidacy,
         }}
       >
-        Envoyez votre candidature
+        Envoyer
       </Button>
     </PageLayout>
   );

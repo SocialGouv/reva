@@ -55,7 +55,7 @@ export const ProjectSubmissionTimelineElement = () => {
               },
             }}
           >
-            Envoyez votre candidature
+            Envoyer
           </Button>
         </>
       )}
