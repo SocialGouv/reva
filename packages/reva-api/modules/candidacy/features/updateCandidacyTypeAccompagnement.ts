@@ -45,6 +45,16 @@ export const updateCandidacyTypeAccompagnement = async ({
       organism: { disconnect: true },
       goals: { deleteMany: { candidacyId } },
       experiences: { deleteMany: { candidacyId } },
+      basicSkills: { deleteMany: { candidacyId } },
+      trainings: { deleteMany: { candidacyId } },
+      candidacyOnCandidacyFinancingMethod: { deleteMany: { candidacyId } },
+      certificateSkills: null,
+      otherTraining: null,
+      individualHourCount: null,
+      collectiveHourCount: null,
+      additionalHourCount: null,
+      isCertificationPartial: null,
+      estimatedCost: null,
       feasibilityFormat:
         typeAccompagnement === "AUTONOME"
           ? "UPLOADED_PDF"
