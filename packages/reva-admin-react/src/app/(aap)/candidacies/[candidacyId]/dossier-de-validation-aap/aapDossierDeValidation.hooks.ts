@@ -11,6 +11,9 @@ const getCandidacyQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       readyForJuryEstimatedAt
+      jury {
+        result
+      }
       activeDossierDeValidation {
         id
         decision

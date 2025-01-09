@@ -34,6 +34,7 @@ export const sendDossierDeValidation = async ({
       candidate: true,
       Feasibility: { where: { isActive: true } },
       department: true,
+      Jury: true,
     },
   });
   if (!candidacy) {
@@ -55,11 +56,43 @@ export const sendDossierDeValidation = async ({
           "DOSSIER_FAISABILITE_RECEVABLE",
           "DOSSIER_FAISABILITE_NON_RECEVABLE",
           "DOSSIER_DE_VALIDATION_SIGNALE",
+          "DOSSIER_DE_VALIDATION_ENVOYE",
         ]
-      : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
-  if (!validStatuses.includes(candidacy.candidacyStatuses?.[0]?.status)) {
+      : [
+          "DEMANDE_FINANCEMENT_ENVOYE",
+          "DEMANDE_PAIEMENT_ENVOYEE",
+          "DOSSIER_DE_VALIDATION_SIGNALE",
+          "DOSSIER_DE_VALIDATION_ENVOYE",
+        ];
+  if (!validStatuses.includes(candidacy.status)) {
     throw new Error(
-      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DOSSIER_DE_VALIDATION_SIGNALE ",
+      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DEMANDE_PAIEMENT_ENVOYE ou DOSSIER_DE_VALIDATION_SIGNALE ou DOSSIER_DE_VALIDATION_ENVOYE",
+    );
+  }
+
+  const jury = await prismaClient.jury.findFirst({
+    where: { candidacyId: candidacy.id, isActive: true },
+  });
+
+  const failedJuryResults = [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
+
+  const hasFailedJuryResult =
+    jury?.result && failedJuryResults.includes(jury.result);
+
+  const hasAlreadySentDossierValidation = [
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+    "DEMANDE_PAIEMENT_ENVOYEE",
+  ].includes(candidacy.status);
+
+  if (hasAlreadySentDossierValidation && !hasFailedJuryResult) {
+    throw new Error(
+      "Seul un candidat ayant échoué totalement ou partiellement au jury peut renvoyer un dossier de validation",
     );
   }
 
@@ -137,10 +170,20 @@ export const sendDossierDeValidation = async ({
     },
   });
 
-  await updateCandidacyStatus({
-    candidacyId,
-    status: "DOSSIER_DE_VALIDATION_ENVOYE",
-  });
+  if (!hasAlreadySentDossierValidation) {
+    await updateCandidacyStatus({
+      candidacyId,
+      status: "DOSSIER_DE_VALIDATION_ENVOYE",
+    });
+  }
+
+  // The candidate send a new DV and will be able to pass the jury again
+  if (hasFailedJuryResult) {
+    await prismaClient.jury.updateMany({
+      where: { candidacyId },
+      data: { isActive: false },
+    });
+  }
 
   const candidacyCertificationId = candidacy?.certificationId;
   const candidacyDepartmentId = candidacy.departmentId;

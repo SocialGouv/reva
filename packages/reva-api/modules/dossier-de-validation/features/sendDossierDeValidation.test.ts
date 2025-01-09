@@ -9,6 +9,8 @@ import { createCertificationHelper } from "../../../test/helpers/entities/create
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import * as SEND_NEW_DV_TO_CA_EMAIL from "../emails/sendNewDVToCertificationAuthoritiesEmail";
 import * as SEND_NEW_DV_TO_CANDIDATE_EMAIL from "../emails/sendDVSentToCandidateEmail";
+import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
+import { CandidacyStatusStep } from "@prisma/client";
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
@@ -46,6 +48,15 @@ const postDossierDeValidation = ({
   });
 };
 
+const createCertificationWithcertificationAuthority = async () => {
+  const certification = await createCertificationHelper({});
+  const certificationAuthority =
+    certification.certificationAuthorityStructure
+      ?.certificationAuthorityOnCertificationAuthorityStructure[0]
+      ?.certificationAuthority;
+  return { certification, certificationAuthority };
+};
+
 test("should validate upload of dossier de validation", async () => {
   jest.spyOn(FILE, "uploadFileToS3").mockImplementation();
 
@@ -59,11 +70,8 @@ test("should validate upload of dossier de validation", async () => {
     "sendDVSentToCandidateEmail",
   );
 
-  const certification = await createCertificationHelper({});
-  const certificationAuthority =
-    certification.certificationAuthorityStructure
-      ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-      ?.certificationAuthority;
+  const { certification, certificationAuthority } =
+    await createCertificationWithcertificationAuthority();
 
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
@@ -101,4 +109,114 @@ test("should validate upload of dossier de validation", async () => {
   );
 
   expect(resp.statusCode).toEqual(200);
+});
+
+[
+  CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+  CandidacyStatusStep.DEMANDE_PAIEMENT_ENVOYEE,
+].forEach((candidacyActiveStatus) => {
+  test(`when status is ${candidacyActiveStatus} it should prevent sending again a DV when no jury result`, async () => {
+    const { certification, certificationAuthority } =
+      await createCertificationWithcertificationAuthority();
+
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: {
+        certificationId: certification.id,
+      },
+      candidacyActiveStatus,
+    });
+
+    const feasibility = await createFeasibilityUploadedPdfHelper({
+      decision: "ADMISSIBLE",
+      certificationAuthorityId: certificationAuthority?.id,
+      candidacyId: candidacy.id,
+    });
+
+    const resp = await postDossierDeValidation({
+      candidacyId: feasibility.candidacyId,
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      }),
+    });
+
+    expect(resp.statusCode).toEqual(500);
+    expect(resp.body).toMatch(
+      "Seul un candidat ayant échoué totalement ou partiellement au jury peut renvoyer un dossier de validation",
+    );
+  });
+
+  test("when status is ${candidacyActiveStatus} should prevent sending again a DV when FULL_SUCCESS_OF_FULL_CERTIFICATION jury result", async () => {
+    const { certification, certificationAuthority } =
+      await createCertificationWithcertificationAuthority();
+
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: {
+        certificationId: certification.id,
+      },
+      candidacyActiveStatus,
+    });
+
+    const feasibility = await createFeasibilityUploadedPdfHelper({
+      decision: "ADMISSIBLE",
+      certificationAuthorityId: certificationAuthority?.id,
+      candidacyId: candidacy.id,
+    });
+
+    await createJuryHelper({
+      candidacyId: candidacy.id,
+      result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+    });
+
+    const resp = await postDossierDeValidation({
+      candidacyId: feasibility.candidacyId,
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      }),
+    });
+
+    expect(resp.statusCode).toEqual(500);
+    expect(resp.body).toMatch(
+      "Seul un candidat ayant échoué totalement ou partiellement au jury peut renvoyer un dossier de validation",
+    );
+  });
+
+  [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  ].forEach((result) =>
+    test(`when status is ${candidacyActiveStatus} should allow sending again a DV when ${result} jury result`, async () => {
+      const { certification, certificationAuthority } =
+        await createCertificationWithcertificationAuthority();
+
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          certificationId: certification.id,
+        },
+        candidacyActiveStatus,
+      });
+
+      const feasibility = await createFeasibilityUploadedPdfHelper({
+        decision: "ADMISSIBLE",
+        certificationAuthorityId: certificationAuthority?.id,
+        candidacyId: candidacy.id,
+      });
+
+      await createJuryHelper({
+        candidacyId: candidacy.id,
+        result,
+      });
+
+      const resp = await postDossierDeValidation({
+        candidacyId: feasibility.candidacyId,
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+          keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+        }),
+      });
+
+      expect(resp.statusCode).toEqual(200);
+    }),
+  );
 });
