@@ -3,6 +3,7 @@ import { prismaClient } from "../../../prisma/client";
 import { getCandidacyById } from "./getCandidacyById";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
+import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
 
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,
@@ -19,10 +20,12 @@ export const updateCandidacyTypeAccompagnement = async ({
 
   if (
     candidacy.typeAccompagnement === "ACCOMPAGNE" &&
-    candidacy.status !== "PROJET"
+    isCandidacyStatusEqualOrAboveGivenStatus(candidacy.status)(
+      "PARCOURS_CONFIRME",
+    )
   ) {
     throw new Error(
-      "Impossible de modifier le type d'accompagnement une fois la candidature envoyée",
+      "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
     );
   }
 
