@@ -6,6 +6,7 @@ import {
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export const TypeAccompagnementTimelineElement = () => {
   const { candidacy } = useCandidacy();
@@ -17,7 +18,14 @@ export const TypeAccompagnementTimelineElement = () => {
     status = "editable";
   }
 
-  if (candidacy.status !== "PROJET" || candidacy.candidacyDropOut) {
+  const allowedStatus: CandidacyStatusStep[] = [
+    "PROJET",
+    "VALIDATION",
+    "PRISE_EN_CHARGE",
+    "PARCOURS_ENVOYE",
+  ];
+
+  if (!allowedStatus.includes(candidacy.status) || candidacy.candidacyDropOut) {
     status = "readonly";
   }
 
