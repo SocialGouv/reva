@@ -156,6 +156,8 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             street
             zip
           }
+          isCaduque
+          lastActivityDate
         }
       }
     }

@@ -1,5 +1,8 @@
 "use client";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
+import { DffSummary } from "@/components/dff-summary/DffSummary";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import {
   errorToast,
   graphqlErrorToast,
@@ -10,12 +13,12 @@ import {
   DematerializedFeasibilityFile,
   FeasibilityDecision,
 } from "@/graphql/generated/graphql";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import DffSummary from "../_components/DffSummary/DffSummary";
 import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
 import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
 
@@ -32,10 +35,60 @@ const HasBeenSentComponent = ({
   />
 );
 
+const FeasibilityBanner = ({
+  feasibilityFileSentAt,
+  feasibilityIsPending,
+  decisionSentAt,
+  decision,
+  decisionComment,
+  dateSinceCandidacyIsCaduque,
+  isCandidacyActualisationFeatureActive,
+}: {
+  feasibilityFileSentAt?: number | null;
+  feasibilityIsPending: boolean;
+  decisionSentAt?: number | null;
+  decision: FeasibilityDecision;
+  decisionComment?: string | null;
+  dateSinceCandidacyIsCaduque: Date | null;
+  isCandidacyActualisationFeatureActive: boolean;
+}) => {
+  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
+    return (
+      <BannerIsCaduque
+        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+      />
+    );
+  }
+
+  if (feasibilityFileSentAt) {
+    if (feasibilityIsPending) {
+      return (
+        <HasBeenSentComponent
+          sentToCertificationAuthorityAt={new Date(feasibilityFileSentAt)}
+        />
+      );
+    } else {
+      return (
+        <DecisionSentComponent
+          decisionSentAt={decisionSentAt ? new Date(decisionSentAt) : null}
+          decision={decision as FeasibilityDecision}
+          decisionComment={decisionComment}
+        />
+      );
+    }
+  }
+
+  return null;
+};
+
 export default function SendFileCertificationAuthorityPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationFeatureActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const {
     dematerializedFeasibilityFile,
@@ -67,6 +120,9 @@ export default function SendFileCertificationAuthorityPage() {
     !feasibilityHasBeenSent || feasibilityIsIncomplete;
   const isReadyToBeSentToCertificationAuthority =
     dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority;
+  const dateSinceCandidacyIsCaduque = candidacy?.isCaduque
+    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
+    : null;
 
   const handleSendFile = async () => {
     if (!dematerializedFeasibilityFile) {
@@ -106,22 +162,18 @@ export default function SendFileCertificationAuthorityPage() {
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
         candidacy={candidacy as Candidacy}
-        HasBeenSentComponent={
-          feasibilityFileSentAt ? (
-            feasibilityIsPending ? (
-              <HasBeenSentComponent
-                sentToCertificationAuthorityAt={new Date(feasibilityFileSentAt)}
-              />
-            ) : (
-              <DecisionSentComponent
-                decisionSentAt={
-                  decisionSentAt ? new Date(decisionSentAt) : null
-                }
-                decision={decision as FeasibilityDecision}
-                decisionComment={decisionComment}
-              />
-            )
-          ) : null
+        FeasibilityBanner={
+          <FeasibilityBanner
+            feasibilityFileSentAt={feasibilityFileSentAt}
+            feasibilityIsPending={feasibilityIsPending}
+            decisionSentAt={decisionSentAt}
+            decision={decision as FeasibilityDecision}
+            decisionComment={decisionComment}
+            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+            isCandidacyActualisationFeatureActive={
+              isCandidacyActualisationFeatureActive
+            }
+          />
         }
         certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
       />
