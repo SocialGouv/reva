@@ -65,6 +65,20 @@ const AapDossierDeValidationPage = () => {
     }
   };
 
+  // When the candidacy has a failed jury result,
+  // the user can submit another dossier de validation
+  const failedJuryResults = [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
+
+  const hasFailedJuryResult =
+    candidacy?.jury?.result &&
+    failedJuryResults.includes(candidacy.jury.result);
+
   const dossierDeValidationActiveAndNotIncomplete =
     dossierDeValidation?.decision !== "INCOMPLETE";
   return (
@@ -73,6 +87,7 @@ const AapDossierDeValidationPage = () => {
       <h1 className="mb-0">Dossier de validation</h1>
 
       {getCandidacyStatus === "success" &&
+      !hasFailedJuryResult &&
       dossierDeValidation &&
       dossierDeValidationActiveAndNotIncomplete ? (
         <ReadOnlyDossierDeValidationView
