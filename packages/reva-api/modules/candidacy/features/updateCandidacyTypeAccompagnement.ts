@@ -61,6 +61,10 @@ export const updateCandidacyTypeAccompagnement = async ({
         additionalHourCount: null,
         isCertificationPartial: null,
         estimatedCost: null,
+        firstAppointmentOccuredAt: null,
+        typology: "NON_SPECIFIE",
+        typologyAdditional: null,
+        ccn: { disconnect: true },
         feasibilityFormat:
           typeAccompagnement === "AUTONOME"
             ? "UPLOADED_PDF"
