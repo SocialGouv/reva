@@ -1,7 +1,8 @@
-import { CandidacyTypeAccompagnement } from "@prisma/client";
+import { Candidacy, CandidacyTypeAccompagnement } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { getCandidacyById } from "./getCandidacyById";
 import { getCertificationById } from "../../referential/features/getCertificationById";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,
@@ -9,7 +10,7 @@ export const updateCandidacyTypeAccompagnement = async ({
 }: {
   candidacyId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
-}) => {
+}): Promise<Candidacy> => {
   const candidacy = await getCandidacyById({ candidacyId });
 
   if (!candidacy) {
@@ -38,27 +39,30 @@ export const updateCandidacyTypeAccompagnement = async ({
     certificationId: candidacy.certificationId,
   });
 
-  return prismaClient.candidacy.update({
-    where: { id: candidacyId },
-    data: {
-      typeAccompagnement,
-      organism: { disconnect: true },
-      goals: { deleteMany: { candidacyId } },
-      experiences: { deleteMany: { candidacyId } },
-      basicSkills: { deleteMany: { candidacyId } },
-      trainings: { deleteMany: { candidacyId } },
-      candidacyOnCandidacyFinancingMethod: { deleteMany: { candidacyId } },
-      certificateSkills: null,
-      otherTraining: null,
-      individualHourCount: null,
-      collectiveHourCount: null,
-      additionalHourCount: null,
-      isCertificationPartial: null,
-      estimatedCost: null,
-      feasibilityFormat:
-        typeAccompagnement === "AUTONOME"
-          ? "UPLOADED_PDF"
-          : certification?.feasibilityFormat,
-    },
+  return prismaClient.$transaction(async (tx) => {
+    await updateCandidacyStatus({ candidacyId, status: "PROJET", tx });
+    return tx.candidacy.update({
+      where: { id: candidacyId },
+      data: {
+        typeAccompagnement,
+        organism: { disconnect: true },
+        goals: { deleteMany: { candidacyId } },
+        experiences: { deleteMany: { candidacyId } },
+        basicSkills: { deleteMany: { candidacyId } },
+        trainings: { deleteMany: { candidacyId } },
+        candidacyOnCandidacyFinancingMethod: { deleteMany: { candidacyId } },
+        certificateSkills: null,
+        otherTraining: null,
+        individualHourCount: null,
+        collectiveHourCount: null,
+        additionalHourCount: null,
+        isCertificationPartial: null,
+        estimatedCost: null,
+        feasibilityFormat:
+          typeAccompagnement === "AUTONOME"
+            ? "UPLOADED_PDF"
+            : certification?.feasibilityFormat,
+      },
+    });
   });
 };
