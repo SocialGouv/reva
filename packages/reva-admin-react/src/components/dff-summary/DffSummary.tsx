@@ -29,16 +29,16 @@ const ButtonConvertHtmlToPdf = dynamic(
   { ssr: false },
 );
 
-export default function DffSummary({
+export function DffSummary({
   dematerializedFeasibilityFile,
   candidacy,
-  HasBeenSentComponent,
+  FeasibilityBanner,
   certificationAuthorityLabel,
   displayGiveYourDecisionSubtitle = false,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
   candidacy: Candidacy;
-  HasBeenSentComponent?: React.ReactNode;
+  FeasibilityBanner?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
   certificationAuthorityLabel?: string;
 }) {
@@ -90,7 +90,7 @@ export default function DffSummary({
         </p>
       )}
 
-      {HasBeenSentComponent}
+      {FeasibilityBanner}
 
       <div className="flex flex-col gap-3">
         <EligibilitySection
