@@ -1,6 +1,9 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
+import { DffSummary } from "@/components/dff-summary/DffSummary";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import {
   Candidacy,
   Certification,
@@ -9,19 +12,54 @@ import {
   DfFileAapDecision,
   DffAttachment,
   DffCertificationCompetenceBloc,
+  FeasibilityDecision,
+  FeasibilityHistory,
   Prerequisite,
 } from "@/graphql/generated/graphql";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import { AttachmentsSection } from "./_components/AttachmentsSection";
 import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
 import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { DecisionSection } from "./_components/DecisionSection";
-import DffSummary from "./_components/DffSummary/DffSummary";
 import { EligibilitySection } from "./_components/EligibilitySection";
 import { PrerequisitesSection } from "./_components/PrerequisitesSection";
 import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementSection } from "./_components/SwornStatementSection";
+
+const FeasibilityBanner = ({
+  decisionSentAt,
+  decision,
+  decisionComment,
+  history,
+  dateSinceCandidacyIsCaduque,
+  isCandidacyActualisationFeatureActive,
+}: {
+  decisionSentAt: Date | null;
+  decision: FeasibilityDecision;
+  decisionComment?: string | null;
+  history?: FeasibilityHistory[];
+  dateSinceCandidacyIsCaduque: Date | null;
+  isCandidacyActualisationFeatureActive: boolean;
+}) => {
+  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
+    return (
+      <BannerIsCaduque
+        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+      />
+    );
+  }
+
+  return (
+    <DecisionSentComponent
+      decisionSentAt={decisionSentAt}
+      decision={decision}
+      decisionComment={decisionComment}
+      history={history}
+    />
+  );
+};
 
 const AapFeasibilityPage = () => {
   const {
@@ -32,6 +70,10 @@ const AapFeasibilityPage = () => {
     isCertificationPartial,
     candidacy,
   } = useAapFeasibilityPageLogic();
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationFeatureActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
   const isFeasibilityEditable =
@@ -44,6 +86,10 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
+  const dateSinceCandidacyIsCaduque = candidacy?.isCaduque
+    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
+    : null;
+
   if (!feasibility) {
     return null;
   }
@@ -55,8 +101,8 @@ const AapFeasibilityPage = () => {
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
         }
         candidacy={candidacy as Candidacy}
-        HasBeenSentComponent={
-          <DecisionSentComponent
+        FeasibilityBanner={
+          <FeasibilityBanner
             decisionSentAt={
               feasibility.decisionSentAt
                 ? new Date(feasibility.decisionSentAt)
@@ -65,6 +111,10 @@ const AapFeasibilityPage = () => {
             decision={feasibility.decision}
             decisionComment={feasibility.decisionComment}
             history={feasibility.history}
+            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+            isCandidacyActualisationFeatureActive={
+              isCandidacyActualisationFeatureActive
+            }
           />
         }
         certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
