@@ -1,6 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import {
+  CADUCITE_THRESHOLD_DAYS,
+  CADUCITE_VALID_STATUSES,
+} from "../../shared/candidacy/candidacyCaducite";
+import {
   CandidacyStatusFilter,
   candidacyStatusFilters,
 } from "../candidacy.types";
@@ -197,6 +201,10 @@ const getSQLSelectSumClauseFromStatusFilter = (
     case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
       return getSumClause(
         `candidacy.status in ('DOSSIER_FAISABILITE_ENVOYE','DOSSIER_FAISABILITE_COMPLET') and candidacyDropOut.candidacy_id is null`,
+      );
+    case "CADUQUE":
+      return getSumClause(
+        `candidacy.status in (${CADUCITE_VALID_STATUSES.map((s) => `'${s}'`).join(", ")}) and candidacyDropOut.candidacy_id is null and DATE_PART('day', NOW() - candidacy.last_activity_date) > ${CADUCITE_THRESHOLD_DAYS}`,
       );
   }
 };

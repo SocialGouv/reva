@@ -248,7 +248,10 @@ export const getActiveCandidacyMenu = async ({
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
-    if (isStatusEqualOrAbove(minimumStatusForPaymentRequest)) {
+    if (
+      isStatusEqualOrAbove(minimumStatusForPaymentRequest) ||
+      candidacyIsCaduque
+    ) {
       menuEntryStatus =
         activeCandidacyStatus === minimumStatusForPaymentRequest
           ? "ACTIVE_WITH_EDIT_HINT"

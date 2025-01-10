@@ -1,6 +1,11 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
+import { subDays } from "date-fns";
 import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
+import {
+  CADUCITE_THRESHOLD_DAYS,
+  CADUCITE_VALID_STATUSES,
+} from "../../shared/candidacy/candidacyCaducite";
 import { buildContainsFilterClause } from "../../shared/search/search";
 import { CandidacyStatusFilter } from "../candidacy.types";
 
@@ -154,6 +159,18 @@ export const getWhereClauseFromStatusFilter = (
         candidacyDropOut: null,
         status: {
           in: ["DOSSIER_FAISABILITE_ENVOYE", "DOSSIER_FAISABILITE_COMPLET"],
+        },
+      };
+      break;
+    case "CADUQUE":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        status: {
+          in: CADUCITE_VALID_STATUSES,
+        },
+        lastActivityDate: {
+          lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
         },
       };
       break;
