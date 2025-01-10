@@ -12,6 +12,7 @@ import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import * as FILE from "../shared/file/file.service";
 import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
+import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });
@@ -91,6 +92,8 @@ test("should count all (1) available feasibility for certificator user even if o
 });
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
   await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
   });
@@ -99,7 +102,7 @@ test("should count no available feasibility for certificator user since he doesn
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: randomUUID(),
+      keycloakId: certificationAuthority.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
