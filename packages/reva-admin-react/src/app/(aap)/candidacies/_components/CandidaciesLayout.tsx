@@ -23,6 +23,9 @@ const CandidacyLayoutSideMenu = ({
 
   const { isAdmin } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const hrefSideMenu = (status: CandidacyStatusFilter) => {
     const params = new URLSearchParams();
@@ -173,6 +176,17 @@ const CandidacyLayoutSideMenu = ({
       },
       isActive: isActive("ABANDON"),
     },
+    ...(isCandidacyActualisationActive
+      ? [
+          {
+            text: `Toutes les candidatures caduques (${candidaciesByStatusCount?.CADUQUE || 0})`,
+            linkProps: {
+              href: hrefSideMenu("CADUQUE"),
+            },
+            isActive: isActive("CADUQUE"),
+          },
+        ]
+      : []),
     {
       text: `Toutes les candidatures réorientées ${getCounterText("REORIENTEE")}`,
       linkProps: {
