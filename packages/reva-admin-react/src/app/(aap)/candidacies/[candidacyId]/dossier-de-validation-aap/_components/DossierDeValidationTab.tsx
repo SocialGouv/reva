@@ -6,7 +6,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useCallback } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const dossierDeValidationSchema = z.object({
@@ -173,6 +173,7 @@ export const DossierDeValidationTab = ({
         ]}
         state={errors.dossierDeValidationChecked ? "error" : "default"}
         stateRelatedMessage={errors.dossierDeValidationChecked?.message}
+        className="mr-0"
       />
       <FormButtons
         formState={{ isDirty, isSubmitting }}
