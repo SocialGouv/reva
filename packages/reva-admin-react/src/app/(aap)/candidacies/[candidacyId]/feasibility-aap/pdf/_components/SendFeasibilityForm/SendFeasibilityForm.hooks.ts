@@ -5,7 +5,7 @@ import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidacyQuery = graphql(`
-  query getCandidacyForFeasibility($candidacyId: ID!) {
+  query getCandidacySendFeasibilityForm($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
       candidate {
@@ -124,7 +124,7 @@ export const useSendFeasibilityForm = (candidacyId: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [candidacyId, "getCandidacyForFeasibility"],
+        queryKey: [candidacyId, "getCandidacySendFeasibilityForm"],
       });
     },
   });
