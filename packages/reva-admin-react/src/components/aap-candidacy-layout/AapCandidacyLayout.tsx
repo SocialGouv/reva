@@ -1,11 +1,13 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -27,6 +29,7 @@ const getCandidacyMenuQuery = graphql(`
       }
     }
     getCandidacyById(id: $candidacyId) {
+      isCaduque
       candidate {
         lastname
         firstname
@@ -40,6 +43,10 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     candidacyId: string;
   }>();
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidacyActualisationActive = isFeatureActive(
+    "candidacy_actualisation",
+  );
 
   const { data: getCandidacyMenuResponse } = useQuery({
     queryKey: [candidacyId, "getCandidacyMenu"],
@@ -60,6 +67,8 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
 
   const candidate = getCandidacyMenuResponse?.getCandidacyById?.candidate;
 
+  const isCaduque = getCandidacyMenuResponse?.getCandidacyById?.isCaduque;
+
   return (
     <div className="flex flex-col md:flex-row w-full">
       <CandidacyLayoutSideMenu>
@@ -67,9 +76,12 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
             {candidate?.firstname?.toLowerCase()}{" "}
-            {candidate?.lastname?.toLowerCase()}
+            {candidate?.lastname?.toLowerCase()} XR
           </span>
         </div>
+        {isCaduque && isCandidacyActualisationActive && (
+          <Badge severity="error">Recevabilité caduque</Badge>
+        )}
         <ul className="mb-6">
           {menuHeaderEntries?.map((e) => (
             <MenuEntry key={e.label} menuEntry={e} />
