@@ -1,5 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
+import { getActivejuryByCandidacyId } from "../../jury/features/getActiveJuryByCandidacyId";
+import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -7,9 +10,7 @@ import {
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
-import { getCertificationById } from "../../referential/features/getCertificationById";
 import { isFundingRequestEnabledForCertification } from "./isFundingRequestEnabledForCertification";
-import { getActivejuryByCandidacyId } from "../../jury/features/getActiveJuryByCandidacyId";
 
 export const getActiveCandidacyMenu = async ({
   candidacy,
@@ -25,6 +26,10 @@ export const getActiveCandidacyMenu = async ({
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus,
   );
+
+  const candidacyIsCaduque = await getCandidacyIsCaduque({
+    candidacyId: candidacy.id,
+  });
 
   const jury = await getActivejuryByCandidacyId({ candidacyId: candidacy.id });
 
@@ -203,7 +208,8 @@ export const getActiveCandidacyMenu = async ({
       if (
         editableStatus.some((s) =>
           isCandidacyStatusAdvancedEnoughToEditDossierDeValidation(s),
-        )
+        ) &&
+        !candidacyIsCaduque
       ) {
         menuEntryStatus =
           editableStatus.includes(activeCandidacyStatus) ||
