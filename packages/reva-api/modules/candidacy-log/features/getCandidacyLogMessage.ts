@@ -146,6 +146,8 @@ export const getCandidacyLogMessage = ({
       return "La caducité de la candidature est confirmée.";
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED":
       return "La caducité de la candidature est invalidée.";
+    case "ADMIN_CUSTOM_ACTION":
+      return `Action exceptionnelle effectuée par un administrateur: ${details?.message}`;
     default:
       return "Évenement inconnu";
   }

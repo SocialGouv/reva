@@ -109,6 +109,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "TYPE_ACCOMPAGNEMENT_UPDATED";
       details: { typeAccompagnement: string };
+    }
+  | {
+      eventType: "ADMIN_CUSTOM_ACTION";
+      details: { message: string };
     };
 
 export type CandidacyLog = {
