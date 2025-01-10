@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { FastifyInstance } from "fastify";
 
 import { buildApp } from "../../infra/server/app";
@@ -157,7 +156,9 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   expect(resp.json()).not.toHaveProperty("errors");
 });
 
-test("should return a feasibility error for certificator 3 since he doesn't handle it", async () => {
+test("should return a feasibility error when accessing it since the certificator doesn't handle it", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
   const feasiblity = await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
   });
@@ -166,7 +167,7 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: randomUUID(),
+      keycloakId: certificationAuthority.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
@@ -303,7 +304,9 @@ test("should validate a feasibility since certificator is allowed to do so", asy
   });
 });
 
-test("should not validate a feasibility since certificator 2 doesn't handle it, even if he is on the same scope as certificator 1", async () => {
+test("should not validate a feasibility since  the certificator doesn't handle it", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper({});
+
   const feasiblity = await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
   });
@@ -313,13 +316,15 @@ test("should not validate a feasibility since certificator 2 doesn't handle it, 
     decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: randomUUID(),
+      keycloakId: certificationAuthority.Account[0].keycloakId,
     }),
   });
   expect(resp.statusCode).toBe(500);
 });
 
-test("should not validate a feasibility since certificator 3 doesn't handle it", async () => {
+test("should not validate a feasibility since the certificator doesn't handle it", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper({});
+
   const feasiblity = await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
   });
@@ -329,7 +334,7 @@ test("should not validate a feasibility since certificator 3 doesn't handle it",
     decision: "ADMISSIBLE",
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: randomUUID(),
+      keycloakId: certificationAuthority.Account[0].keycloakId,
     }),
   });
   expect(resp.statusCode).toBe(500);
@@ -375,7 +380,9 @@ test("should reject a feasibility since certificator is allowed to do so", async
   });
 });
 
-test("should not reject a feasibility since certificator 3 doesn't handle it", async () => {
+test("should not reject a feasibility since the certificator doesn't handle it", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
   const feasiblity = await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",
   });
@@ -384,7 +391,7 @@ test("should not reject a feasibility since certificator 3 doesn't handle it", a
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
-      keycloakId: randomUUID(),
+      keycloakId: certificationAuthority.Account[0].keycloakId,
     }),
     payload: {
       requestType: "query",
