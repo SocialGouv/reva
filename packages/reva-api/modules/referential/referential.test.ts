@@ -60,14 +60,7 @@ afterEach(async () => {
 /**
  * Test search certifications by a candidate
  */
-//non functioning test. Was returning 208 certifications when test setup was linking it to 2 branch organisms linked to 0 certifications
-test.skip("should have 208 certifications available in total", async () => {
-  const organismExpertFiliere = await createOrganismHelper();
-  const organismExpertBranche = await createOrganismHelper({
-    typology: "expertBranche",
-  });
-  await attachOrganismToAllDegreesHelper(organismExpertFiliere);
-  await attachOrganismToAllDegreesHelper(organismExpertBranche);
+test("should have 208 certifications available in total", async () => {
   const resp = await searchCertificationsForCandidate({});
   const obj = resp.json();
   expect(
