@@ -25,10 +25,7 @@ export const ReadOnlyDossierDeValidationView = (props: Props) => {
         description="Le dossier de validation a été envoyé. Retrouvez ci-dessous les documents qui le composent."
       />
 
-      <DossierDeValidationCard
-        key={dossierDeValidation.id}
-        dossierDeValidation={dossierDeValidation}
-      />
+      <DossierDeValidationCard dossierDeValidation={dossierDeValidation} />
     </div>
   );
 };

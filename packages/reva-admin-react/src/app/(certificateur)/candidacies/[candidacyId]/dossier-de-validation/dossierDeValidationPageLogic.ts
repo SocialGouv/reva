@@ -12,15 +12,35 @@ const getCandidacyWithDossierDeValidationQuery = graphql(`
       activeDossierDeValidation {
         id
         decision
-        isActive
+        decisionSentAt
+        decisionComment
         dossierDeValidationSentAt
         dossierDeValidationFile {
-          url
           name
+          url
+          previewUrl
         }
         dossierDeValidationOtherFiles {
-          url
           name
+          url
+          previewUrl
+        }
+      }
+      historyDossierDeValidation {
+        id
+        decision
+        decisionSentAt
+        decisionComment
+        dossierDeValidationSentAt
+        dossierDeValidationFile {
+          name
+          url
+          previewUrl
+        }
+        dossierDeValidationOtherFiles {
+          name
+          url
+          previewUrl
         }
       }
     }
@@ -46,16 +66,19 @@ export const useDossierDeValidationPageLogic = () => {
 
   const candidacy = getDossierDeValidationResponse?.getCandidacyById;
   const dossierDeValidation = candidacy?.activeDossierDeValidation;
+  const historyDossierDeValidation =
+    candidacy?.historyDossierDeValidation || [];
+
   const readyForJuryEstimatedAt = candidacy?.readyForJuryEstimatedAt;
 
   const canSignalProblem =
     candidacy?.status === "DOSSIER_DE_VALIDATION_ENVOYE" &&
-    dossierDeValidation?.decision === "PENDING" &&
-    dossierDeValidation?.isActive;
+    dossierDeValidation?.decision === "PENDING";
 
   return {
     getDossierDeValidationStatus,
     dossierDeValidation,
+    historyDossierDeValidation,
     candidacy,
     readyForJuryEstimatedAt,
     canSignalProblem,

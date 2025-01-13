@@ -4,8 +4,9 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { format } from "date-fns";
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { FileLink } from "../../(components)/FileLink";
 import { BackButton } from "@/components/back-button/BackButton";
+import { HistoryDossierDeValidationView } from "./_components/HistoryDossierDeValidationView";
+import { DossierDeValidationCard } from "./_components/DossierDeValidationCard";
 
 const DossierDeValidationPage = () => {
   return (
@@ -88,6 +89,7 @@ const ReadyForJuryEstimatedDateTab = () => {
 const DossierDeValidationTab = () => {
   const {
     dossierDeValidation,
+    historyDossierDeValidation,
     candidacy,
     getDossierDeValidationStatus,
     canSignalProblem,
@@ -97,41 +99,40 @@ const DossierDeValidationTab = () => {
 
   return (
     showContent && (
-      <div className="flex flex-col flex-1 mb-2 overflow-auto">
+      <div className="flex flex-col gap-10 flex-1 mb-2 overflow-auto">
+        {dossierDeValidation && (
+          <h6 className="font-normal m-0">
+            Voici les documents du dossier de validation du candidat.
+          </h6>
+        )}
+
+        <HistoryDossierDeValidationView
+          historyDossierDeValidation={historyDossierDeValidation.map(
+            (dossierDeValidation) => ({
+              id: dossierDeValidation.id,
+              sentAt: dossierDeValidation.dossierDeValidationSentAt,
+              file: dossierDeValidation.dossierDeValidationFile,
+              otherFiles: dossierDeValidation.dossierDeValidationOtherFiles,
+              decision: dossierDeValidation.decision,
+              decisionSentAt: dossierDeValidation.decisionSentAt,
+              decisionComment: dossierDeValidation.decisionComment,
+            }),
+          )}
+        />
+
         {dossierDeValidation ? (
-          <div className="flex flex-col">
-            <p className="text-gray-600 mb-12">
-              Voici les documents du dossier de validation du candidat.
-            </p>
-            <p className="text-xs">
-              <span className="uppercase text-xs font-bold align-text-top">
-                dossier déposé le :{" "}
-              </span>
-              <span className="text-base">
-                {format(
-                  dossierDeValidation.dossierDeValidationSentAt,
-                  "dd/MM/yyyy",
-                )}
-              </span>
-            </p>
-            <p>
-              <span className="uppercase text-xs font-bold">
-                contenu du dossier :
-              </span>
-              <ul>
-                <li>
-                  <FileLink
-                    text={dossierDeValidation.dossierDeValidationFile.name}
-                    url={dossierDeValidation.dossierDeValidationFile.url}
-                  />
-                </li>
-                {dossierDeValidation.dossierDeValidationOtherFiles.map((f) => (
-                  <li key={f.url} className="mt-2">
-                    <FileLink text={f.name} url={f.url} />
-                  </li>
-                ))}
-              </ul>
-            </p>
+          <>
+            <DossierDeValidationCard
+              dossierDeValidation={{
+                id: dossierDeValidation.id,
+                sentAt: dossierDeValidation.dossierDeValidationSentAt,
+                file: dossierDeValidation.dossierDeValidationFile,
+                otherFiles: dossierDeValidation.dossierDeValidationOtherFiles,
+                decision: dossierDeValidation.decision,
+                decisionSentAt: dossierDeValidation.decisionSentAt,
+                decisionComment: dossierDeValidation.decisionComment,
+              }}
+            />
 
             {canSignalProblem && (
               <Button
@@ -144,7 +145,7 @@ const DossierDeValidationTab = () => {
                 Signaler un problème
               </Button>
             )}
-          </div>
+          </>
         ) : (
           <Alert
             severity="info"
