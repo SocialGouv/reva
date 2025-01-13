@@ -18,6 +18,7 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "vulnerability_indicator",
   "candidacy_financing_method",
   "formacode",
+  "country",
 ];
 
 export const clearDatabase = async () => {
