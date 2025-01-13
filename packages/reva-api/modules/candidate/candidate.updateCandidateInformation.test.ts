@@ -199,4 +199,81 @@ describe("candidate information update", () => {
     expect(sendNewEmailCandidateEmailSpy).not.toHaveBeenCalled();
     expect(sendPreviousEmailCandidateEmailSpy).not.toHaveBeenCalled();
   });
+
+  test("should update the candidate department when the zip code is updated", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const updatedCandidateFields = await getDefaultUpdatedCandidateFields();
+
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: {
+            id: candidacy.candidateId,
+            ...updatedCandidateFields,
+          },
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ department { label } }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
+      department: { label: "Loire-Atlantique" },
+    });
+  });
+
+  test("should be able to update a candidate zipcode with an overseas terrtory zip code", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const updatedCandidateFields = {
+      ...(await getDefaultUpdatedCandidateFields()),
+      zip: "97100",
+    };
+
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: {
+            id: candidacy.candidateId,
+            ...updatedCandidateFields,
+          },
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ department { label } }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
+      department: { label: "Guadeloupe" },
+    });
+  });
 });
