@@ -31,7 +31,7 @@ const AapDossierDeValidationPage = () => {
   const {
     candidacy,
     dossierDeValidation,
-    dossierDeValidationProblems,
+    historyDossierDeValidation,
     getCandidacyStatus,
     setReadyForJuryEstimatedAt,
     sendDossierDeValidation,
@@ -91,13 +91,26 @@ const AapDossierDeValidationPage = () => {
       dossierDeValidation &&
       dossierDeValidationActiveAndNotIncomplete ? (
         <ReadOnlyDossierDeValidationView
-          dossierDeValidationSentAt={
-            new Date(dossierDeValidation.dossierDeValidationSentAt)
-          }
-          dossierDeValidationFile={dossierDeValidation.dossierDeValidationFile}
-          dossierDeValidationOtherFiles={
-            dossierDeValidation.dossierDeValidationOtherFiles
-          }
+          dossierDeValidation={{
+            id: dossierDeValidation.id,
+            sentAt: dossierDeValidation.dossierDeValidationSentAt,
+            file: dossierDeValidation.dossierDeValidationFile,
+            otherFiles: dossierDeValidation.dossierDeValidationOtherFiles,
+            decision: dossierDeValidation.decision,
+            decisionSentAt: dossierDeValidation.decisionSentAt,
+            decisionComment: dossierDeValidation.decisionComment,
+          }}
+          historyDossierDeValidation={historyDossierDeValidation.map(
+            (dossierDeValidation) => ({
+              id: dossierDeValidation.id,
+              sentAt: dossierDeValidation.dossierDeValidationSentAt,
+              file: dossierDeValidation.dossierDeValidationFile,
+              otherFiles: dossierDeValidation.dossierDeValidationOtherFiles,
+              decision: dossierDeValidation.decision,
+              decisionSentAt: dossierDeValidation.decisionSentAt,
+              decisionComment: dossierDeValidation.decisionComment,
+            }),
+          )}
         />
       ) : (
         <Tabs
@@ -119,15 +132,32 @@ const AapDossierDeValidationPage = () => {
               isDefault: !!candidacy?.readyForJuryEstimatedAt,
               content: (
                 <DossierDeValidationTab
-                  dossierDeValidationIncomplete={
-                    dossierDeValidation?.decision === "INCOMPLETE"
-                  }
-                  dossierDeValidationSentAt={
-                    dossierDeValidation?.dossierDeValidationSentAt
-                      ? new Date(dossierDeValidation?.dossierDeValidationSentAt)
+                  dossierDeValidation={
+                    dossierDeValidation
+                      ? {
+                          id: dossierDeValidation.id,
+                          sentAt: dossierDeValidation.dossierDeValidationSentAt,
+                          file: dossierDeValidation.dossierDeValidationFile,
+                          otherFiles:
+                            dossierDeValidation.dossierDeValidationOtherFiles,
+                          decision: dossierDeValidation.decision,
+                          decisionSentAt: dossierDeValidation.decisionSentAt,
+                          decisionComment: dossierDeValidation.decisionComment,
+                        }
                       : undefined
                   }
-                  dossierDeValidationProblems={dossierDeValidationProblems}
+                  historyDossierDeValidation={historyDossierDeValidation.map(
+                    (dossierDeValidation) => ({
+                      id: dossierDeValidation.id,
+                      sentAt: dossierDeValidation.dossierDeValidationSentAt,
+                      file: dossierDeValidation.dossierDeValidationFile,
+                      otherFiles:
+                        dossierDeValidation.dossierDeValidationOtherFiles,
+                      decision: dossierDeValidation.decision,
+                      decisionSentAt: dossierDeValidation.decisionSentAt,
+                      decisionComment: dossierDeValidation.decisionComment,
+                    }),
+                  )}
                   onFormSubmit={handleDossierDeValidationFormSubmit}
                 />
               ),
@@ -138,4 +168,5 @@ const AapDossierDeValidationPage = () => {
     </div>
   );
 };
+
 export default AapDossierDeValidationPage;

@@ -19,19 +19,33 @@ const getCandidacyQuery = graphql(`
         decision
         decisionSentAt
         decisionComment
-        history {
-          id
-          decisionSentAt
-          decisionComment
-        }
         dossierDeValidationSentAt
         dossierDeValidationFile {
           name
           url
+          previewUrl
         }
         dossierDeValidationOtherFiles {
           name
           url
+          previewUrl
+        }
+      }
+      historyDossierDeValidation {
+        id
+        decision
+        decisionSentAt
+        decisionComment
+        dossierDeValidationSentAt
+        dossierDeValidationFile {
+          name
+          url
+          previewUrl
+        }
+        dossierDeValidationOtherFiles {
+          name
+          url
+          previewUrl
         }
       }
     }
@@ -80,18 +94,8 @@ export const useAapDossierDeValidationPage = () => {
 
   const dossierDeValidation = candidacy?.activeDossierDeValidation;
 
-  const dossierDeValidationProblems =
-    dossierDeValidation?.history?.map((h) => ({
-      decisionSentAt: new Date(h.decisionSentAt || 0),
-      decisionComment: h.decisionComment || "",
-    })) || [];
-
-  if (dossierDeValidation?.decision === "INCOMPLETE") {
-    dossierDeValidationProblems.unshift({
-      decisionSentAt: new Date(dossierDeValidation.decisionSentAt || 0),
-      decisionComment: dossierDeValidation.decisionComment || "",
-    });
-  }
+  const historyDossierDeValidation =
+    candidacy?.historyDossierDeValidation || [];
 
   const sendDossierDeValidation = async (data: DossierDeValidationFormData) => {
     const formData = new FormData();
@@ -133,7 +137,7 @@ export const useAapDossierDeValidationPage = () => {
   return {
     candidacy,
     dossierDeValidation,
-    dossierDeValidationProblems,
+    historyDossierDeValidation,
     getCandidacyStatus,
     setReadyForJuryEstimatedAt,
     sendDossierDeValidation,

@@ -26,6 +26,7 @@ enum DossierDeValidationCategoryFilter {
 
 type Candidacy {
   activeDossierDeValidation: DossierDeValidation
+  historyDossierDeValidation: [DossierDeValidation!]!
 }
 
 type DossierDeValidationPage {

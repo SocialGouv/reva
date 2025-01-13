@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { dossierDeValidationResolversSecurityMap } from "./dossier-de-validation.security";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
+import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
 import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
 import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
@@ -49,6 +50,8 @@ const unsafeResolvers = {
   Candidacy: {
     activeDossierDeValidation: ({ id }: { id: string }) =>
       getActiveDossierDeValidationByCandidacyId({ candidacyId: id }),
+    historyDossierDeValidation: ({ id }: { id: string }) =>
+      getHistoryDossierDeValidationByCandidacyId({ candidacyId: id }),
   },
   Query: {
     dossierDeValidation_getDossierDeValidationById: (
