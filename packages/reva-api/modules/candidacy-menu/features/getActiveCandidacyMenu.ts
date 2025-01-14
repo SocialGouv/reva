@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { getCandidacyHasConfirmedCaducite } from "../../candidacy/features/getCandidacyHasConfirmedCaducite";
 import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
 import { getActivejuryByCandidacyId } from "../../jury/features/getActiveJuryByCandidacyId";
 import { getCertificationById } from "../../referential/features/getCertificationById";
@@ -27,9 +28,17 @@ export const getActiveCandidacyMenu = async ({
     activeCandidacyStatus,
   );
 
+  let candidacyHasConfirmedCaducite = false;
+
   const candidacyIsCaduque = await getCandidacyIsCaduque({
     candidacyId: candidacy.id,
   });
+
+  if (candidacyIsCaduque) {
+    candidacyHasConfirmedCaducite = await getCandidacyHasConfirmedCaducite({
+      candidacyId: candidacy.id,
+    });
+  }
 
   const jury = await getActivejuryByCandidacyId({ candidacyId: candidacy.id });
 
@@ -250,7 +259,7 @@ export const getActiveCandidacyMenu = async ({
 
     if (
       isStatusEqualOrAbove(minimumStatusForPaymentRequest) ||
-      candidacyIsCaduque
+      candidacyHasConfirmedCaducite
     ) {
       menuEntryStatus =
         activeCandidacyStatus === minimumStatusForPaymentRequest
