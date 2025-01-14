@@ -29,7 +29,7 @@ const OrganismInformationForm = ({
 
   const defaultValues: OrganismInformationFormData = useMemo(
     () => ({
-      nom: defaultData?.nom ?? "",
+      nomPublic: defaultData?.nomPublic ?? "",
       adresseNumeroEtNomDeRue: defaultData?.adresseNumeroEtNomDeRue ?? "",
       adresseInformationsComplementaires: "",
       adresseCodePostal: defaultData?.adresseCodePostal ?? "",
@@ -111,9 +111,9 @@ const OrganismInformationForm = ({
               <Input
                 className="col-span-3"
                 label="Nom du lieu d’accueil (affiché aux candidats)"
-                nativeInputProps={{ ...register("nom") }}
-                state={errors.nom ? "error" : "default"}
-                stateRelatedMessage={errors.nom?.message?.toString()}
+                nativeInputProps={{ ...register("nomPublic") }}
+                state={errors.nomPublic ? "error" : "default"}
+                stateRelatedMessage={errors.nomPublic?.message?.toString()}
               />
 
               <Input

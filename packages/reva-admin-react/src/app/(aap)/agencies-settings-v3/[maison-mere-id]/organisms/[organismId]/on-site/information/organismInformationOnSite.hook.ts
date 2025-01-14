@@ -11,18 +11,16 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       label
-      informationsCommerciales {
-        id
-        nom
-        telephone
-        siteInternet
-        emailContact
-        adresseNumeroEtNomDeRue
-        adresseInformationsComplementaires
-        adresseCodePostal
-        adresseVille
-        conformeNormesAccessbilite
-      }
+      id
+      nomPublic
+      telephone
+      siteInternet
+      emailContact
+      adresseNumeroEtNomDeRue
+      adresseInformationsComplementaires
+      adresseCodePostal
+      adresseVille
+      conformeNormesAccessibilite
       maisonMereAAP {
         raisonSociale
       }
@@ -76,14 +74,12 @@ export const useOrganismInformationOnSite = () => {
   });
 
   const organism = data?.organism_getOrganism;
-  const informationsCommerciales = organism?.informationsCommerciales;
 
   return {
     organism,
     isLoading,
     organismId,
     maisonMereAAPId,
-    informationsCommerciales,
     createOrUpdateInformationsCommerciales,
     isAdmin,
   };

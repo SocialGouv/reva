@@ -21,9 +21,7 @@ const OrganismRow = ({
     id: string;
     label: string;
     isVisibleInCandidateSearchResults: boolean;
-    informationsCommerciales?: {
-      nom?: string | null;
-    } | null;
+    nomPublic?: string | null;
   };
   index: number;
   maisonMereAAPId: string;
@@ -35,9 +33,7 @@ const OrganismRow = ({
       }`}
     >
       <div className="flex items-center gap-2">
-        <p className="mb-0 ">
-          {organism.informationsCommerciales?.nom || organism.label}
-        </p>
+        <p className="mb-0 ">{organism.nomPublic || organism.label}</p>
         <VisibilityBadge
           isVisible={!!organism.isVisibleInCandidateSearchResults}
         />
@@ -65,7 +61,7 @@ export const AAPSettingsSectionOnSite = ({
     id: string;
     label: string;
     isVisibleInCandidateSearchResults: boolean;
-    informationsCommerciales?: { nom?: string | null } | null;
+    nomPublic?: string | null;
   }[];
   maisonMereAAPId: string;
   isEditable?: boolean;

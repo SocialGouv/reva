@@ -50,8 +50,7 @@ const CollaborateurUserAccount = () => {
           id: userAccount.organism.id,
           label: `${userAccount.organism.label} 
         ${`( ${
-          userAccount.organism.informationsCommerciales?.nom ||
-          "Nom commercial non renseignés"
+          userAccount.organism.nomPublic || "Nom commercial non renseignés"
         } )`}`,
         }}
       />

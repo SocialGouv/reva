@@ -69,12 +69,10 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         status
         organism {
           label
-          informationsCommerciales {
-            telephone
-            emailContact
-            adresseCodePostal
-            adresseVille
-          }
+          telephone
+          emailContact
+          adresseCodePostal
+          adresseVille
         }
         certificationAuthorities {
           label

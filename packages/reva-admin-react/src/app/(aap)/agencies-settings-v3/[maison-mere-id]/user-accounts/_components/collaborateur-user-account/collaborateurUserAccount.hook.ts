@@ -13,9 +13,7 @@ const getCollaborateurOrganismsInfoQuery = graphql(`
         id
         modaliteAccompagnement
         label
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
       }
       maisonMereAAP {
         id

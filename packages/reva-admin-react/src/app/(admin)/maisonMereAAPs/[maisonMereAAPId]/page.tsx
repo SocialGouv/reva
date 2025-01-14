@@ -65,9 +65,7 @@ const getMaisonMereAAP = graphql(`
       organisms {
         id
         label
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
         fermePourAbsenceOuConges
         managedDegrees {
           id
@@ -149,9 +147,7 @@ const MaisonMereAAPPage = () => {
           <ol className="grid grid-cols-1 md:grid-cols-2">
             {maisonMereAAP.organisms.map((o) => (
               <li key={o.id} className="ml-4">
-                <h3 className="text-lg font-bold">
-                  {o.informationsCommerciales?.nom || o.label}
-                </h3>
+                <h3 className="text-lg font-bold">{o.nomPublic || o.label}</h3>
                 <Info title="Fermée pour absence ou congés:">
                   <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
                 </Info>

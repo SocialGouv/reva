@@ -13,7 +13,7 @@ export const organismInformationFormSchema = z.object({
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
-  nom: z
+  nomPublic: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const informationRemoteFormSchema = z
   .object({
-    nom: z.string(),
+    nomPublic: z.string(),
     telephone: z.string().optional(),
     siteInternet: z.string().optional(),
     emailContact: z
@@ -34,7 +34,7 @@ export const informationRemoteFormSchema = z
         isRemoteLaReunion,
         isRemoteMartinique,
         isRemoteMayotte,
-        nom,
+        nomPublic,
         emailContact,
         telephone,
       },
@@ -57,8 +57,8 @@ export const informationRemoteFormSchema = z
       };
       [
         {
-          fieldName: "nom",
-          fieldValue: nom,
+          fieldName: "nomPublic",
+          fieldValue: nomPublic,
         },
         {
           fieldName: "emailContact",

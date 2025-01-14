@@ -19,9 +19,7 @@
           },
           "organism": {
             "label": "Organisme Lorem Ipsum",
-            "informationsCommerciales": {
-              "nom": "Organisme Lorem Ipsum"
-            }
+            "nomPublic": "Organisme Lorem Ipsum"
           },
           "department": {
             "label": "Paris",
@@ -46,9 +44,7 @@
           },
           "organism": {
             "label": "Organisme Lorem Ipsum",
-            "informationsCommerciales": {
-              "nom": "Agence de Colombes"
-            }
+            "nomPublic": "Agence de Colombes"
           },
           "department": {
             "label": "Ain",

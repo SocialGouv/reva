@@ -11,7 +11,7 @@ export const AAPSettingsSummarySectionRemote = ({
     id: string;
     isVisibleInCandidateSearchResults: boolean;
     remoteZones: RemoteZone[];
-    informationsCommerciales?: { nom?: string | null } | null;
+    nomPublic?: string | null;
     modaliteAccompagnementRenseigneeEtValide: boolean;
   };
   maisonMereAAPId: string;
@@ -47,9 +47,7 @@ export const AAPSettingsSummarySectionRemote = ({
       )}
       <div className="pl-10 flex flex-col gap-4">
         <ul className="list-none pl-0 flex flex-col gap-2">
-          <div className="font-bold mb-2">
-            {organism?.informationsCommerciales?.nom}
-          </div>
+          <div className="font-bold mb-2">{organism.nomPublic}</div>
           {organism.remoteZones.map((r) => (
             <li key={r}>{getRemoteZoneLabel(r)}</li>
           ))}

@@ -13,9 +13,7 @@ const getMaisonMereAAPAddUserAccountPageAdminQuery = graphql(`
         id
         modaliteAccompagnement
         label
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
       }
     }
   }
@@ -30,9 +28,7 @@ const getAgenciesInfoQuery = graphql(`
           id
           modaliteAccompagnement
           label
-          informationsCommerciales {
-            nom
-          }
+          nomPublic
         }
       }
     }

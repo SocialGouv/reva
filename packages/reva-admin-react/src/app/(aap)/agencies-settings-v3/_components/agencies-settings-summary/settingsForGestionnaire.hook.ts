@@ -11,18 +11,14 @@ const GestionnaireMaisonMereAAPSettingsInfoQuery = graphql(`
         id
         isVisibleInCandidateSearchResults
         remoteZones
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
         maisonMereAAP {
           id
           isMCFCompatible
           statutValidationInformationsJuridiquesMaisonMereAAP
           organisms {
             modaliteAccompagnement
-            informationsCommerciales {
-              nom
-            }
+            nomPublic
             label
             id
             isVisibleInCandidateSearchResults

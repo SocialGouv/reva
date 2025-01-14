@@ -244,11 +244,10 @@ export const DematerializedFeasibility = () => {
           <div className="my-4 flex flex-col">
             <span>{organism.label}</span>
             <span>
-              {organism.informationsCommerciales?.adresseCodePostal}{" "}
-              {organism.informationsCommerciales?.adresseVille}
+              {organism.adresseCodePostal} {organism.adresseVille}
             </span>
-            <span>{organism.informationsCommerciales?.telephone}</span>
-            <span>{organism.informationsCommerciales?.emailContact}</span>
+            <span>{organism.telephone}</span>
+            <span>{organism.emailContact}</span>
           </div>
         </CallOut>
       )}
