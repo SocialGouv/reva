@@ -1,5 +1,3 @@
-import { randomUUID } from "crypto";
-
 import { prismaClient } from "../../../prisma/client";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 import {
@@ -46,7 +44,7 @@ export const createLieuAccueilInfo = async ({
     }
     const {
       adresseInformationsComplementaires,
-      nom,
+      nomPublic,
       adresseNumeroEtNomDeRue,
       adresseCodePostal,
       adresseVille,
@@ -92,10 +90,10 @@ export const createLieuAccueilInfo = async ({
     });
 
     await createOrUpdateInformationsCommerciales({
+      organismId: newOrganism.id,
       informationsCommerciales: {
-        organismId: newOrganism.id,
         siteInternet: siteInternet ?? "",
-        nom,
+        nomPublic,
         adresseCodePostal,
         adresseVille,
         adresseNumeroEtNomDeRue,
@@ -103,8 +101,7 @@ export const createLieuAccueilInfo = async ({
           adresseInformationsComplementaires ?? "",
         emailContact,
         telephone,
-        conformeNormesAccessbilite: conformeNormesAccessibilite,
-        id: randomUUID(),
+        conformeNormesAccessibilite,
       },
     });
 

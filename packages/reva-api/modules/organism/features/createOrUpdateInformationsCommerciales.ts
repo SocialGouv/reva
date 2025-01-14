@@ -3,13 +3,12 @@ import { OrganismInformationsCommerciales } from "../organism.types";
 
 export const createOrUpdateInformationsCommerciales = ({
   informationsCommerciales,
+  organismId,
 }: {
-  informationsCommerciales: OrganismInformationsCommerciales & {
-    id: string | null;
-  };
+  informationsCommerciales: OrganismInformationsCommerciales;
+  organismId: string;
 }) =>
-  prismaClient.organismInformationsCommerciales.upsert({
-    where: { organismId: informationsCommerciales.organismId },
-    create: informationsCommerciales,
-    update: informationsCommerciales,
+  prismaClient.organism.update({
+    where: { id: organismId },
+    data: informationsCommerciales,
   });

@@ -61,12 +61,8 @@ describe("candidate drop out decision", () => {
       candidacyDropOut: { dropOutConfirmedByCandidate: true },
     });
     expect(sendCandidacyDropOutConfirmedEmailToAapSpy).toHaveBeenCalledWith({
-      aapEmail:
-        candidacyDropOut.candidacy.organism?.organismInformationsCommerciales
-          ?.emailContact,
-      aapLabel:
-        candidacyDropOut.candidacy.organism?.organismInformationsCommerciales
-          ?.nom,
+      aapEmail: candidacyDropOut.candidacy.organism?.emailContact,
+      aapLabel: candidacyDropOut.candidacy.organism?.nomPublic,
       candidateFullName: `${candidacyDropOut.candidacy.candidate?.firstname} ${candidacyDropOut.candidacy.candidate?.lastname}`,
     });
 

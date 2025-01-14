@@ -11,14 +11,12 @@ export const createOrUpdateOnSiteOrganismGeneralInformation = async ({
   informationsCommerciales: OrganismInformationsCommerciales;
 }) => {
   const organismUpdated = await prismaClient.$transaction(async (tx) => {
-    const organismUpdated = await tx.organismInformationsCommerciales.upsert({
-      where: { organismId: organismId },
-      create: { ...informationsCommerciales, organismId },
-      update: informationsCommerciales,
-    });
-    await tx.organism.update({
+    const organismUpdated = await tx.organism.update({
       where: { id: organismId },
-      data: { modaliteAccompagnementRenseigneeEtValide: true },
+      data: {
+        modaliteAccompagnementRenseigneeEtValide: true,
+        ...informationsCommerciales,
+      },
     });
 
     return organismUpdated;

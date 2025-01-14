@@ -85,8 +85,7 @@ const getRandomActiveOrganismForCertification = async ({
 
   let fromClause = Prisma.raw(`from organism o
     join ${organismView} ao on ao.organism_id = o.id
-    join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id
-   left join organism_informations_commerciales as oic on oic.organism_id = o.id`);
+    join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id`);
   let whereClause = Prisma.sql`where ao.certification_id=uuid(${certificationId}) and (o.modalite_accompagnement_renseignee_et_valide)`;
 
   if (searchText) {
@@ -118,7 +117,7 @@ const getRandomActiveOrganismForCertification = async ({
   }
 
   if (searchFilter.pmr) {
-    whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" = 'CONFORME' `;
+    whereClause = Prisma.sql`${whereClause} and o.conforme_norme_accessibilite = 'CONFORME' `;
   }
 
   const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
@@ -129,6 +128,14 @@ const getRandomActiveOrganismForCertification = async ({
   const results = await prismaClient.$queryRaw<Organism[]>`
           select o.id,
                  o.label,
+                 o.nom_public as "nomPublic",
+                 o.email_contact as "emailContact",
+                 o.telephone as telephone,
+                 o.site_internet as "siteInternet",
+                 o.adresse_numero_et_nom_de_rue as "adresseNumeroEtNomDeRue",
+                 o.adresse_code_postal as "adresseCodePostal",
+                 o.adresse_ville as "adresseVille",
+                 o.adresse_informations_complementaires as "adresseInformationsComplementaires",
                  o.legal_status as "labelStatus",
                  o.contact_administrative_email as "contactAdministrativeEmail",
                  o.contact_administrative_phone as "contactAdministrativePhone",
@@ -205,20 +212,20 @@ const getAAPsWithZipCode = async ({
   and o.modalite_accompagnement = 'LIEU_ACCUEIL'
   and ao.certification_id=uuid(${certificationId})
   and o.ll_to_earth IS NOT NULL
-  and (oic."adresse_numero_et_nom_de_rue" IS NOT NULL or oic."adresse_numero_et_nom_de_rue" != '')
-  and (oic."adresse_code_postal" IS NOT NULL or oic."adresse_code_postal" != '')
-  and (oic."adresse_ville" IS NOT NULL or oic."adresse_ville" != '')
+  and (o.adresse_numero_et_nom_de_rue IS NOT NULL or o.adresse_numero_et_nom_de_rue != '')
+  and (o.adresse_code_postal IS NOT NULL or o.adresse_code_postal != '')
+  and (o.adresse_ville IS NOT NULL or o.adresse_ville != '')
   `;
 
   if (searchText) {
     const searchTextWithWildCards = `%${searchText}%`;
-    whereClause = Prisma.sql`${whereClause} and (unaccent(o.label) ilike unaccent(${searchTextWithWildCards}) or unaccent(oic.nom) ilike unaccent(${searchTextWithWildCards}))`;
+    whereClause = Prisma.sql`${whereClause} and (unaccent(o.label) ilike unaccent(${searchTextWithWildCards}) or unaccent(o.nom_public) ilike unaccent(${searchTextWithWildCards}))`;
   }
 
   if (pmr) {
-    whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" = 'CONFORME' `;
+    whereClause = Prisma.sql`${whereClause} and o.conforme_norme_accessibilite = 'CONFORME' `;
   } else {
-    whereClause = Prisma.sql`${whereClause} and oic."conformeNormesAccessbilite" != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
+    whereClause = Prisma.sql`${whereClause} and o.conforme_norme_accessibilite != 'ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC'`;
   }
 
   const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
@@ -233,19 +240,26 @@ const getAAPsWithZipCode = async ({
 
   const organisms: Organism[] = await prismaClient.$queryRaw`
       SELECT DISTINCT o.id,
-                      o.label,
-                      o.legal_status                                 as "labelStatus",
-                      o.contact_administrative_email                 as "contactAdministrativeEmail",
-                      o.contact_administrative_phone                 as "contactAdministrativePhone",
-                      o.website,
-                      o.siret,
-                      o.modalite_accompagnement                      as "modaliteAccompagnement",
+                 o.label,
+                 o.nom_public as "nomPublic",
+                 o.email_contact as "emailContact",
+                 o.telephone as telephone,
+                 o.site_internet as "siteInternet",
+                 o.adresse_numero_et_nom_de_rue as "adresseNumeroEtNomDeRue",
+                 o.adresse_code_postal as "adresseCodePostal",
+                 o.adresse_ville as "adresseVille",
+                 o.adresse_informations_complementaires as "adresseInformationsComplementaires",
+                 o.legal_status as "labelStatus",
+                 o.contact_administrative_email as "contactAdministrativeEmail",
+                 o.contact_administrative_phone as "contactAdministrativePhone",
+                 o.website,
+                 o.siret,
+                 o.modalite_accompagnement as "modaliteAccompagnement",
                  o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  ao.organism_id as "organismId",
                   (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS "distanceKm"
       FROM organism o
-       JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
        JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
                JOIN ${prismaSqlOrganismView} ao on ao.organism_id = o.id
           ${whereClause}
@@ -258,7 +272,6 @@ const getAAPsWithZipCode = async ({
       await prismaClient.$queryRaw<{ count: number }[]>`
         SELECT count(DISTINCT o.id)
         FROM organism o
-        JOIN organism_informations_commerciales oic ON o.id = oic.organism_id
         JOIN maison_mere_aap mm ON mm.id = o.maison_mere_aap_id
         JOIN ${prismaSqlOrganismView} ao on ao.organism_id=o.id
         ${whereClause}

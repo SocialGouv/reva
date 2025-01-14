@@ -29,7 +29,7 @@ export const createCandidacyDropOutHelper = async (
       candidacy: {
         include: {
           candidate: true,
-          organism: { include: { organismInformationsCommerciales: true } },
+          organism: true,
         },
       },
       dropOutReason: true,
