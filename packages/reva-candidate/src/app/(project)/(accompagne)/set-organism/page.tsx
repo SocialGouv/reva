@@ -17,7 +17,7 @@ import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/O
 
 import { useSetOrganism } from "./set-organism.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { NoResults } from "@/app/_components/NoResults";
+import { NoResults } from "@/components/no-results/NoResults";
 
 const RECORDS_PER_PAGE = 10;
 const MAX_RECORDS = 50;
