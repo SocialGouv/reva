@@ -35,32 +35,26 @@ type SearchResponse = {
         llToEarth: null,
         OR: [
           {
-            organismInformationsCommerciales: {
-              adresseCodePostal: {
-                not: "",
-              },
+            adresseCodePostal: {
+              not: "",
             },
           },
         ],
       },
-      include: {
-        organismInformationsCommerciales: true,
-      },
     });
 
     for (const organism of organisms) {
-      const { organismInformationsCommerciales } = organism;
-      const zipCode = organismInformationsCommerciales?.adresseCodePostal;
+      const { adresseCodePostal } = organism;
 
-      if (!zipCode) continue;
+      if (!adresseCodePostal) continue;
 
       const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zipCode}&limit=1"`,
+        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${adresseCodePostal}&limit=1"`,
       );
 
       const { features }: SearchResponse = await res.json();
       if (!features.length) {
-        console.error(`No feature found for zip code ${zipCode}`);
+        console.error(`No feature found for zip code ${adresseCodePostal}`);
         continue;
       }
       const [
