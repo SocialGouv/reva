@@ -10,12 +10,10 @@
           "city": "Paris",
           "contactAdministrativeEmail": "email@exemple.com",
           "contactAdministrativePhone": "0111111111",
-          "informationsCommerciales": {
-            "adresseNumeroEtNomDeRue": "1 rue de l'exemple",
-            "adresseCodePostal": "75000",
-            "adresseVille": "Paris",
-            "conformeNormesAccessbilite": "CONFORME"
-          },
+          "adresseNumeroEtNomDeRue": "1 rue de l'exemple",
+          "adresseCodePostal": "75000",
+          "adresseVille": "Paris",
+          "conformeNormesAccessibilite": "CONFORME",
           "modaliteAccompagnement": "LIEU_ACCUEIL",
           "modaliteAccompagnementRenseigneeEtValide": true
         },

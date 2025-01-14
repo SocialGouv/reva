@@ -1,9 +1,15 @@
-import { OrganismInformationsCommerciales } from "@/graphql/generated/graphql";
+import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 
 export const OrganismCardInformationsCommerciales = ({
-  informationsCommerciales: ic,
+  organism: o,
 }: {
-  informationsCommerciales?: OrganismInformationsCommerciales;
+  organism?: {
+    adresseInformationsComplementaires?: string | null;
+    adresseCodePostal?: string | null;
+    adresseVille?: string | null;
+    adresseNumeroEtNomDeRue?: string | null;
+    conformeNormesAccessibilite?: ConformiteNormeAccessibilite | null;
+  };
 }) => {
   return (
     <div>
@@ -12,20 +18,20 @@ export const OrganismCardInformationsCommerciales = ({
           className="fr-icon-home-4-line fr-icon--sm"
           aria-hidden="true"
         ></span>
-        {ic &&
-        (ic.adresseNumeroEtNomDeRue ||
-          ic.adresseInformationsComplementaires ||
-          ic.adresseCodePostal ||
-          ic.adresseVille) ? (
+        {o &&
+        (o.adresseNumeroEtNomDeRue ||
+          o.adresseInformationsComplementaires ||
+          o.adresseCodePostal ||
+          o.adresseVille) ? (
           <address
             data-test="project-organisms-organism-address"
             className="not-italic"
           >
-            {ic.adresseNumeroEtNomDeRue}
-            {ic.adresseNumeroEtNomDeRue && <br />}
-            {ic.adresseInformationsComplementaires}
-            {ic.adresseInformationsComplementaires && <br />}
-            {ic.adresseCodePostal} {ic.adresseVille}
+            {o.adresseNumeroEtNomDeRue}
+            {o.adresseNumeroEtNomDeRue && <br />}
+            {o.adresseInformationsComplementaires}
+            {o.adresseInformationsComplementaires && <br />}
+            {o.adresseCodePostal} {o.adresseVille}
           </address>
         ) : (
           <address className="text-gray-500 text-sm mt-0.5">
@@ -33,7 +39,7 @@ export const OrganismCardInformationsCommerciales = ({
           </address>
         )}
       </div>
-      {ic?.conformeNormesAccessbilite === "CONFORME" && (
+      {o?.conformeNormesAccessibilite === "CONFORME" && (
         <p className="text-sm mt-0.5 mb-0">
           <span
             className="fr-icon-wheelchair-fill fr-icon--xs mr-3"

@@ -26,17 +26,15 @@ const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
         website
         distanceKm
         isMaisonMereMCFCompatible
-        informationsCommerciales {
-          nom
-          telephone
-          siteInternet
-          emailContact
-          adresseNumeroEtNomDeRue
-          adresseInformationsComplementaires
-          adresseCodePostal
-          adresseVille
-          conformeNormesAccessbilite
-        }
+        nomPublic
+        telephone
+        siteInternet
+        emailContact
+        adresseNumeroEtNomDeRue
+        adresseInformationsComplementaires
+        adresseCodePostal
+        adresseVille
+        conformeNormesAccessibilite
       }
       totalRows
     }
