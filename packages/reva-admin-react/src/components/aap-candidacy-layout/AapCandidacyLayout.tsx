@@ -76,7 +76,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
             {candidate?.firstname?.toLowerCase()}{" "}
-            {candidate?.lastname?.toLowerCase()} XR
+            {candidate?.lastname?.toLowerCase()}
           </span>
         </div>
         {isCaduque && isCandidacyActualisationActive && (
