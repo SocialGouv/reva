@@ -1,15 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `organism_informations_commerciales_id` on the `organism` table. All the data in the column will be lost.
-  - You are about to drop the `organism_informations_commerciales` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "organism_informations_commerciales" DROP CONSTRAINT "organism_informations_commerciales_organism_id_fkey";
-
 -- AlterTable
-ALTER TABLE "organism" DROP COLUMN "organism_informations_commerciales_id",
+ALTER TABLE "organism"
 ADD COLUMN     "adresse_code_postal" VARCHAR(255),
 ADD COLUMN     "adresse_informations_complementaires" VARCHAR(255),
 ADD COLUMN     "adresse_numero_et_nom_de_rue" VARCHAR(255),
@@ -45,6 +35,3 @@ UPDATE organism SET (
   )
 FROM organism_informations_commerciales oic
 WHERE oic.organism_id = organism.id;
-
--- DropTable
-DROP TABLE "organism_informations_commerciales";
