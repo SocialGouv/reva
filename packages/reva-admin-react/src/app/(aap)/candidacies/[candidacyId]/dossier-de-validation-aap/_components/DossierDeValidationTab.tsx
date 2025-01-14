@@ -90,7 +90,11 @@ export const DossierDeValidationTab = (props: Props) => {
 
       <div className="flex flex-col gap-10">
         <HistoryDossierDeValidationView
-          historyDossierDeValidation={historyDossierDeValidation}
+          historyDossierDeValidation={
+            dossierDeValidation && dossierDeValidation.decision == "PENDING"
+              ? [...historyDossierDeValidation, dossierDeValidation]
+              : historyDossierDeValidation
+          }
         />
 
         {dossierDeValidation?.decision == "INCOMPLETE" && (

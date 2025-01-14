@@ -46,9 +46,8 @@ export const DossierDeValidationCard = (props: Props) => {
         </p>
       )}
 
-      <p className="m-0">
-        Contenu du dossier :
-        <br />
+      <div>
+        <p className="p-0 m-0">Contenu du dossier :</p>
         {file.previewUrl && (
           <FancyPreview
             key={file.url}
@@ -58,7 +57,6 @@ export const DossierDeValidationCard = (props: Props) => {
             title={file.name}
           />
         )}
-        <br />
         {otherFiles
           .filter((file) => !!file.previewUrl)
           .map((file) => (
@@ -70,7 +68,7 @@ export const DossierDeValidationCard = (props: Props) => {
               title={file.name}
             />
           ))}
-      </p>
+      </div>
     </div>
   );
 };

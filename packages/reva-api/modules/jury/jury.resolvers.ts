@@ -8,6 +8,7 @@ import {
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
+import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { getExamInfo } from "./features/getExamInfo";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { updateExamInfo } from "./features/updateExamInfo";
@@ -24,6 +25,9 @@ const unsafeResolvers = {
     },
     jury: async (parent: Candidacy) => {
       return getActivejuryByCandidacyId({ candidacyId: parent.id });
+    },
+    historyJury: async (parent: Candidacy) => {
+      return getHistoryJuryByCandidacyId({ candidacyId: parent.id });
     },
   },
   Jury: {

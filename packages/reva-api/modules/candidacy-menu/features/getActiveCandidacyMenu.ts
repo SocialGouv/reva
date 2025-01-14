@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { getCandidacyHasConfirmedCaducite } from "../../candidacy/features/getCandidacyHasConfirmedCaducite";
 import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
-import { getActivejuryByCandidacyId } from "../../jury/features/getActiveJuryByCandidacyId";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   CandidacyMenuEntry,
@@ -39,8 +38,6 @@ export const getActiveCandidacyMenu = async ({
       candidacyId: candidacy.id,
     });
   }
-
-  const jury = await getActivejuryByCandidacyId({ candidacyId: candidacy.id });
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
@@ -203,14 +200,6 @@ export const getActiveCandidacyMenu = async ({
             ]
           : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
 
-      const failedJuryResults = [
-        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-        "FAILURE",
-        "CANDIDATE_EXCUSED",
-        "CANDIDATE_ABSENT",
-      ];
-
       const isCandidacyStatusAdvancedEnoughToEditDossierDeValidation =
         isCandidacyStatusEqualOrAboveGivenStatus(activeCandidacyStatus);
 
@@ -220,11 +209,9 @@ export const getActiveCandidacyMenu = async ({
         ) &&
         !candidacyIsCaduque
       ) {
-        menuEntryStatus =
-          editableStatus.includes(activeCandidacyStatus) ||
-          (jury?.result && failedJuryResults.includes(jury.result))
-            ? "ACTIVE_WITH_EDIT_HINT"
-            : "ACTIVE_WITHOUT_HINT";
+        menuEntryStatus = editableStatus.includes(activeCandidacyStatus)
+          ? "ACTIVE_WITH_EDIT_HINT"
+          : "ACTIVE_WITHOUT_HINT";
       }
 
       url = buildUrl({

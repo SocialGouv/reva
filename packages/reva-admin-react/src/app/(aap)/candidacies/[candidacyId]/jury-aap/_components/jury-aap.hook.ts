@@ -6,7 +6,19 @@ import { useParams } from "next/navigation";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAAPJuryPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      id
       jury {
+        id
+        dateOfSession
+        timeSpecified
+        addressOfSession
+        informationOfSession
+        result
+        dateOfResult
+        informationOfResult
+      }
+      historyJury {
+        id
         dateOfSession
         timeSpecified
         addressOfSession

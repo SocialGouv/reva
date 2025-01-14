@@ -36,6 +36,7 @@ type Jury {
 type Candidacy {
   examInfo: ExamInfo!
   jury: Jury
+  historyJury: [Jury!]!
 }
 
 enum ExamResult {

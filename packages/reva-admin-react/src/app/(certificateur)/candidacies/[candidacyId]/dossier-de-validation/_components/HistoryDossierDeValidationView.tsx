@@ -15,10 +15,7 @@ export const HistoryDossierDeValidationView = (props: Props) => {
     <Accordion label="Voir les précédents dossiers de validation">
       <div className="flex flex-col gap-6">
         {historyDossierDeValidation.map((dossierDeValidation) => (
-          <div
-            key={dossierDeValidation.id}
-            className="border-b border-neutral-300 last:border-none"
-          >
+          <div key={dossierDeValidation.id}>
             <DossierDeValidationCard
               dossierDeValidation={dossierDeValidation}
             />
