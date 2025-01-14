@@ -102,8 +102,7 @@ export default function CandidaciesPage() {
               departmentCode={candidacy.candidate?.department?.code}
               departmentLabel={candidacy.candidate?.department?.label}
               organismLabel={
-                candidacy.organism?.informationsCommerciales?.nom ||
-                candidacy.organism?.label
+                candidacy.organism?.nomPublic || candidacy.organism?.label
               }
               candidacySentAt={
                 candidacy.candidacyStatuses.some(

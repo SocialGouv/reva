@@ -14,9 +14,7 @@ const getAgenciesInfoQuery = graphql(`
           id
           modaliteAccompagnement
           label
-          informationsCommerciales {
-            nom
-          }
+          nomPublic
           accounts {
             id
             firstname
@@ -42,9 +40,7 @@ const getMaisonMereAAPUpdateUserAccountPageAdminQuery = graphql(`
         id
         modaliteAccompagnement
         label
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
         accounts {
           id
           firstname

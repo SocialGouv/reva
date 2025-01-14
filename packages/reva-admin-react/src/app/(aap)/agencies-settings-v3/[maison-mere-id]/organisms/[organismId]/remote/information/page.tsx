@@ -41,7 +41,7 @@ const InformationsRemotePage = () => {
 
   const handleReset = useCallback(() => {
     reset({
-      ...organism?.informationsCommerciales,
+      ...organism,
       isRemoteFranceMetropolitaine: organism?.remoteZones?.includes(
         "FRANCE_METROPOLITAINE",
       ),
@@ -163,9 +163,9 @@ const InformationsRemotePage = () => {
               <Input
                 className="col-span-3"
                 label="Nom de la structure (affiché aux candidats)"
-                state={errors.nom ? "error" : "default"}
-                stateRelatedMessage={errors.nom?.message}
-                nativeInputProps={{ ...register("nom") }}
+                state={errors.nomPublic ? "error" : "default"}
+                stateRelatedMessage={errors.nomPublic?.message}
+                nativeInputProps={{ ...register("nomPublic") }}
               />
               <Input
                 label="Téléphone"

@@ -20,13 +20,10 @@ const getOrganismQuery = graphql(`
         raisonSociale
       }
       id
-      informationsCommerciales {
-        id
-        nom
-        telephone
-        siteInternet
-        emailContact
-      }
+      nomPublic
+      telephone
+      siteInternet
+      emailContact
       remoteZones
       modaliteAccompagnementRenseigneeEtValide
       managedDegrees {
@@ -117,18 +114,15 @@ export default function RemotePage() {
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/information`}
         >
           <div className="flex flex-col gap-2">
-            <div className="font-bold">
-              {organism?.informationsCommerciales?.nom}
-            </div>
+            <div className="font-bold">{organism?.nomPublic}</div>
             <div>
-              {organism?.informationsCommerciales?.telephone}{" "}
-              {organism?.informationsCommerciales?.emailContact}
+              {organism?.telephone} {organism?.emailContact}
             </div>
-            {organism?.informationsCommerciales?.siteInternet && (
+            {organism?.siteInternet && (
               <Link
                 className="fr-link mr-auto"
                 target="_blank"
-                href={organism?.informationsCommerciales?.siteInternet}
+                href={organism?.siteInternet}
               >
                 Site internet
               </Link>

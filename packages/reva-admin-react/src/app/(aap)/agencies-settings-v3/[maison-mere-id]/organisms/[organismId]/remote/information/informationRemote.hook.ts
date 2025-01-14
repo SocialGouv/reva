@@ -10,13 +10,10 @@ const getOrganismQuery = graphql(`
     organism_getOrganism(id: $organismId) {
       id
       remoteZones
-      informationsCommerciales {
-        id
-        nom
-        telephone
-        siteInternet
-        emailContact
-      }
+      nomPublic
+      telephone
+      siteInternet
+      emailContact
       maisonMereAAP {
         raisonSociale
       }
@@ -72,7 +69,7 @@ export const useInformationRemotePage = ({
       organismId: string;
       remoteZones: RemoteZone[];
       informationsCommerciales: {
-        nom: string;
+        nomPublic: string;
       };
     }) =>
       graphqlClient.request(

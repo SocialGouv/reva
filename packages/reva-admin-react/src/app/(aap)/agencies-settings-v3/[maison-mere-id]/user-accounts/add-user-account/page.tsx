@@ -44,14 +44,11 @@ const AddUserAccountPage = () => {
         onSubmit={handleFormSubmit}
         remoteOrganism={{
           id: remoteOrganism?.id,
-          label:
-            remoteOrganism?.informationsCommerciales?.nom ||
-            remoteOrganism?.label ||
-            "",
+          label: remoteOrganism?.nomPublic || remoteOrganism?.label || "",
         }}
         onSiteOrganisms={onSiteOrganisms.map((o) => ({
           id: o.id,
-          label: o.informationsCommerciales?.nom || o.label,
+          label: o.nomPublic || o.label,
         }))}
         backUrl={backUrl}
       />

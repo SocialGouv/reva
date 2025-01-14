@@ -19,12 +19,12 @@ export default function OnSitePage() {
     (organism?.formacodes?.[0] || organism?.conventionCollectives?.[0]);
 
   const isLieuAccueilInformationComplete =
-    organism.informationsCommerciales?.nom &&
-    organism.informationsCommerciales?.adresseNumeroEtNomDeRue &&
-    organism.informationsCommerciales?.adresseVille &&
-    organism.informationsCommerciales?.adresseCodePostal &&
-    organism.informationsCommerciales?.telephone &&
-    organism.informationsCommerciales?.emailContact;
+    organism.nomPublic &&
+    organism.adresseNumeroEtNomDeRue &&
+    organism.adresseVille &&
+    organism.adresseCodePostal &&
+    organism.telephone &&
+    organism.emailContact;
 
   return (
     <div className="flex flex-col w-full">
@@ -73,38 +73,29 @@ export default function OnSitePage() {
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/information`}
         >
           <div className="flex flex-col gap-2">
-            <div className="font-bold">
-              {organism.informationsCommerciales?.nom}
-            </div>
+            <div className="font-bold">{organism.nomPublic}</div>
             <div>
-              {organism.informationsCommerciales?.adresseNumeroEtNomDeRue}{" "}
-              {organism.informationsCommerciales?.adresseCodePostal}{" "}
-              {organism.informationsCommerciales?.adresseVille}
+              {organism.adresseNumeroEtNomDeRue} {organism.adresseCodePostal}{" "}
+              {organism.adresseVille}
               <br />
-              {organism.informationsCommerciales
-                ?.adresseInformationsComplementaires && (
+              {organism.adresseInformationsComplementaires && (
                 <>
-                  {
-                    organism.informationsCommerciales
-                      ?.adresseInformationsComplementaires
-                  }
+                  {organism.adresseInformationsComplementaires}
                   <br />
                 </>
               )}
-              {organism.informationsCommerciales?.telephone}{" "}
-              {organism.informationsCommerciales?.emailContact}
+              {organism.telephone} {organism.emailContact}
             </div>
-            {organism.informationsCommerciales?.siteInternet && (
+            {organism.siteInternet && (
               <Link
                 className="fr-link mr-auto"
                 target="_blank"
-                href={organism.informationsCommerciales?.siteInternet}
+                href={organism.siteInternet}
               >
                 Site internet
               </Link>
             )}
-            {organism.informationsCommerciales?.conformeNormesAccessbilite ===
-              "CONFORME" && (
+            {organism.conformeNormesAccessibilite === "CONFORME" && (
               <Highlight
                 classes={{
                   content: "mb-0",

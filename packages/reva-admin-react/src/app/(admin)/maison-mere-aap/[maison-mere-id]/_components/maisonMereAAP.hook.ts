@@ -21,9 +21,7 @@ const MaisonMereAAPQuery = graphql(`
         accounts {
           id
         }
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
         label
         id
         isVisibleInCandidateSearchResults

@@ -10,7 +10,6 @@ import { useOrganismInformationOnSite } from "./organismInformationOnSite.hook";
 const InformationsOnSitePage = () => {
   const {
     organism,
-    informationsCommerciales,
     organismId,
     createOrUpdateInformationsCommerciales,
     maisonMereAAPId,
@@ -18,7 +17,7 @@ const InformationsOnSitePage = () => {
   } = useOrganismInformationOnSite();
   const handleSubmit = async (data: OrganismInformationFormData) => {
     const input = {
-      nom: data.nom,
+      nomPublic: data.nomPublic,
       telephone: data.telephone,
       siteInternet: data.siteInternet,
       emailContact: data.emailContact,
@@ -27,32 +26,30 @@ const InformationsOnSitePage = () => {
         data.adresseInformationsComplementaires,
       adresseCodePostal: data.adresseCodePostal,
       adresseVille: data.adresseVille,
-      conformeNormesAccessbilite:
+      conformeNormesAccessibilite:
         data.conformeNormesAccessibilite as ConformiteNormeAccessibilite,
     };
 
     await createOrUpdateInformationsCommerciales(input);
   };
 
-  const organismName =
-    organism?.informationsCommerciales?.nom || organism?.label;
+  const organismName = organism?.nomPublic || organism?.label;
 
   const defaultData = useMemo(
     () => ({
-      adresseNumeroEtNomDeRue:
-        informationsCommerciales?.adresseNumeroEtNomDeRue ?? "",
+      adresseNumeroEtNomDeRue: organism?.adresseNumeroEtNomDeRue ?? "",
       adresseInformationsComplementaires:
-        informationsCommerciales?.adresseInformationsComplementaires ?? "",
-      adresseCodePostal: informationsCommerciales?.adresseCodePostal ?? "",
-      adresseVille: informationsCommerciales?.adresseVille ?? "",
-      nom: informationsCommerciales?.nom ?? "",
-      telephone: informationsCommerciales?.telephone ?? "",
-      siteInternet: informationsCommerciales?.siteInternet ?? "",
-      emailContact: informationsCommerciales?.emailContact ?? "",
+        organism?.adresseInformationsComplementaires ?? "",
+      adresseCodePostal: organism?.adresseCodePostal ?? "",
+      adresseVille: organism?.adresseVille ?? "",
+      nomPublic: organism?.nomPublic ?? "",
+      telephone: organism?.telephone ?? "",
+      siteInternet: organism?.siteInternet ?? "",
+      emailContact: organism?.emailContact ?? "",
       conformeNormesAccessibilite:
-        informationsCommerciales?.conformeNormesAccessbilite as OrganismInformationFormData["conformeNormesAccessibilite"],
+        organism?.conformeNormesAccessibilite as OrganismInformationFormData["conformeNormesAccessibilite"],
     }),
-    [informationsCommerciales],
+    [organism],
   );
   if (!organism) {
     return null;

@@ -16,9 +16,7 @@ const CollaborareurSettingsInfoQuery = graphql(`
         modaliteAccompagnementRenseigneeEtValide
         isVisibleInCandidateSearchResults
         remoteZones
-        informationsCommerciales {
-          nom
-        }
+        nomPublic
       }
       id
       firstname
