@@ -17,7 +17,8 @@ import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/O
 
 import { useSetOrganism } from "./set-organism.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { NoResults } from "@/components/no-results/NoResults";
+import { EmptyState } from "@/components/empty-state/EmptyState";
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 const RECORDS_PER_PAGE = 10;
 const MAX_RECORDS = 50;
@@ -261,7 +262,10 @@ const NoOrganisms = ({
 }) => {
   if (organismSearchText) {
     return (
-      <NoResults title={`Pas de résultats pour "${organismSearchText}"`}>
+      <EmptyState
+        title={`Pas de résultats pour "${organismSearchText}"`}
+        pictogram={PICTOGRAMS.searchLG}
+      >
         <p>
           Nous ne trouvons pas d’accompagnateurs portant ce nom dans la liste
           des organismes référencés chez France VAE.
@@ -270,16 +274,16 @@ const NoOrganisms = ({
           Vous pouvez vérifier le nom saisi ou essayer les filtres pour affiner
           les résultats.
         </p>
-      </NoResults>
+      </EmptyState>
     );
   }
 
   return (
-    <NoResults title="Aucun résultat trouvé">
+    <EmptyState title="Aucun résultat trouvé" pictogram={PICTOGRAMS.searchLG}>
       <p>
         Nous ne trouvons pas d’accompagnateurs sur votre diplôme avec les
         critères sélectionnés.
       </p>
-    </NoResults>
+    </EmptyState>
   );
 };
