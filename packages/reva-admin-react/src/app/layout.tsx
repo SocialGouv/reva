@@ -26,7 +26,6 @@ import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
 
 import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 import {
-  HELP_BUBBLE_URL,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
   KEYCLOAK_URL,
@@ -40,6 +39,7 @@ import Script from "next/script";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useCrisp } from "@/components/crisp/useCrisp";
 import { useEffect } from "react";
+import { HelpBubble } from "@/components/help-bubble/HelpBubble";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -60,7 +60,6 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       <head>
         <StartDsfr />
         <DsfrHead />
-        {HELP_BUBBLE_URL && <Script src={HELP_BUBBLE_URL} />}
         {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
         <title>France VAE</title>
       </head>
@@ -70,6 +69,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
               <LayoutContent>{children}</LayoutContent>
+              <HelpBubble className="fixed bottom-[82px] md:bottom-[100px] right-3.5 md:right-6 z-[1000]" />
             </QueryClientProvider>
           </KeycloakProvider>
         </DsfrProvider>
