@@ -336,9 +336,7 @@ describe("searchOrganismsForCandidacy", () => {
 
       const organism = await createOrganismHelper({
         modaliteAccompagnement: "LIEU_ACCUEIL",
-        organismInformationsCommerciales: {
-          create: { conformeNormesAccessbilite: "NON_CONFORME" },
-        },
+        conformeNormesAccessibilite: "NON_CONFORME",
       });
 
       await attachOrganismToAllDegreesHelper(organism);
@@ -386,9 +384,7 @@ describe("searchOrganismsForCandidacy", () => {
 
       const nonPmrOrganism = await createOrganismHelper({
         modaliteAccompagnement: "LIEU_ACCUEIL",
-        organismInformationsCommerciales: {
-          create: { conformeNormesAccessbilite: "NON_CONFORME" },
-        },
+        conformeNormesAccessibilite: "NON_CONFORME",
       });
 
       await attachOrganismToAllDegreesHelper(nonPmrOrganism);
@@ -542,19 +538,15 @@ describe("searchOrganismsForCandidacy", () => {
     test("should not return organisms when PMR accessibility doesn't match", async () => {
       const certification = await createCertificationHelper();
       const organism = await createOrganismHelper({
-        organismInformationsCommerciales: {
-          create: {
-            adresseCodePostal: faker.location.zipCode(),
-            adresseInformationsComplementaires: faker.location.streetAddress(),
-            adresseNumeroEtNomDeRue: faker.location.streetAddress(),
-            adresseVille: faker.location.city(),
-            conformeNormesAccessbilite: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
-            emailContact: faker.internet.email(),
-            nom: faker.person.fullName(),
-            siteInternet: faker.internet.url(),
-            telephone: faker.phone.number(),
-          },
-        },
+        adresseCodePostal: faker.location.zipCode(),
+        adresseInformationsComplementaires: faker.location.streetAddress(),
+        adresseNumeroEtNomDeRue: faker.location.streetAddress(),
+        adresseVille: faker.location.city(),
+        conformeNormesAccessibilite: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
+        emailContact: faker.internet.email(),
+        nomPublic: faker.person.fullName(),
+        siteInternet: faker.internet.url(),
+        telephone: faker.phone.number(),
       });
 
       await attachOrganismToAllDegreesHelper(organism);

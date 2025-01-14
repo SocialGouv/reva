@@ -1,7 +1,6 @@
 import {
   MaisonMereAAPLegalInformationDocumentsDecisionEnum,
   Organism,
-  OrganismInformationsCommerciales,
   StatutValidationInformationsJuridiquesMaisonMereAAP,
 } from "@prisma/client";
 import mercurius from "mercurius";
@@ -61,6 +60,7 @@ import {
   UpdateMaisonMereLegalInformationInput,
   UpdateOrganimsAccountAndOrganismInput,
   UpdateOrganismAccountInput,
+  OrganismInformationsCommerciales,
 } from "./organism.types";
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
 import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
@@ -217,7 +217,7 @@ const unsafeResolvers = {
       params: {
         organismId: string;
         informationsCommerciales: {
-          nom: string | null;
+          nomPublic: string | null;
           telephone: string | null;
           siteInternet: string | null;
           emailContact: string | null;

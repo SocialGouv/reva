@@ -52,7 +52,7 @@ type Organism {
   adresseInformationsComplementaires: String
   adresseCodePostal: String
   adresseVille: String
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite
+  conformeNormesAccessibilite: ConformiteNormeAccessibilite
 }
 enum OrganismModaliteAccompagnement {
   LIEU_ACCUEIL
@@ -176,14 +176,14 @@ input UpdateOrganismInput {
 }
 
 input CreateOrUpdateRemoteOrganismGeneralInformationInput {
-  nom: String
+  nomPublic: String
   telephone: String
   siteInternet: String
   emailContact: String
 }
 
 input CreateOrUpdateOnSiteOrganismGeneralInformationInput {
-  nom: String
+  nomPublic: String
   telephone: String
   siteInternet: String
   emailContact: String
@@ -191,11 +191,11 @@ input CreateOrUpdateOnSiteOrganismGeneralInformationInput {
   adresseInformationsComplementaires: String
   adresseCodePostal: String
   adresseVille: String
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite
+  conformeNormesAccessibilite: ConformiteNormeAccessibilite
 }
 
 input CreateLieuAccueilInfoInput {
-  nom: String!
+  nomPublic: String!
   adresseNumeroEtNomDeRue: String!
   adresseInformationsComplementaires: String
   adresseCodePostal: String!

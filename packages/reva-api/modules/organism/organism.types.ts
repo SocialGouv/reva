@@ -25,9 +25,7 @@ type ConformiteNormeAccessibilite =
 type LegalInformationValidationDecisionType = "VALIDE" | "DEMANDE_DE_PRECISION";
 
 export interface OrganismInformationsCommerciales {
-  id: string;
-  organismId: string;
-  nom: string | null;
+  nomPublic: string | null;
   telephone: string | null;
   siteInternet: string | null;
   emailContact: string | null;
@@ -35,11 +33,11 @@ export interface OrganismInformationsCommerciales {
   adresseInformationsComplementaires: string | null;
   adresseCodePostal: string | null;
   adresseVille: string | null;
-  conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
+  conformeNormesAccessibilite: ConformiteNormeAccessibilite | null;
 }
 
 export interface CreateLieuAccueilInfoInput {
-  nom: string;
+  nomPublic: string;
   adresseNumeroEtNomDeRue: string;
   adresseInformationsComplementaires?: string;
   adresseCodePostal: string;

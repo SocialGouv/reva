@@ -35,7 +35,6 @@ import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.re
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { juryResolvers } from "./jury/jury.resolvers";
-import { organismLoaders } from "./organism/organism.loaders";
 import { organismResolvers } from "./organism/organism.resolvers";
 import { referentialLoaders } from "./referential/referential.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
@@ -90,7 +89,6 @@ export const graphqlConfiguration: MercuriusOptions = {
   graphiql: !!process.env.GRAPHIQL,
   loaders: {
     ...accountLoaders,
-    ...organismLoaders,
     ...certificationAuthorityLoaders,
     ...referentialLoaders,
     ...candidacyLogLoaders,

@@ -8,7 +8,7 @@ export const createOrUpdateRemoteOrganismGeneralInformation = async ({
 }: {
   organismId: string;
   informationsCommerciales: {
-    nom: string | null;
+    nomPublic: string | null;
     telephone: string | null;
     siteInternet: string | null;
     emailContact: string | null;
@@ -16,14 +16,12 @@ export const createOrUpdateRemoteOrganismGeneralInformation = async ({
   remoteZones: RemoteZone[];
 }) =>
   prismaClient.$transaction(async (tx) => {
-    const organismUpdated = await tx.organismInformationsCommerciales.upsert({
-      where: { organismId: organismId },
-      create: { ...informationsCommerciales, organismId },
-      update: informationsCommerciales,
-    });
-    await tx.organism.update({
+    const organismUpdated = await tx.organism.update({
       where: { id: organismId },
-      data: { modaliteAccompagnementRenseigneeEtValide: true },
+      data: {
+        modaliteAccompagnementRenseigneeEtValide: true,
+        ...informationsCommerciales,
+      },
     });
     await tx.organismOnRemoteZone.deleteMany({ where: { organismId } });
     await tx.organismOnRemoteZone.createMany({
