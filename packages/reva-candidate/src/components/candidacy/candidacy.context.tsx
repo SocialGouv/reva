@@ -98,12 +98,9 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           label
           contactAdministrativeEmail
           contactAdministrativePhone
-          informationsCommerciales {
-            id
-            nom
-            emailContact
-            telephone
-          }
+          nomPublic
+          emailContact
+          telephone
         }
         financeModule
         additionalHourCount

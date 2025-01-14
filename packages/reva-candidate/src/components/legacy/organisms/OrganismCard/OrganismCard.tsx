@@ -8,15 +8,15 @@ import { OrganismCardInformationsCommerciales } from "./OrganismCardInformations
 import { OrganismCardTitle } from "./OrganismCardTitle";
 
 const getMandatoryInfo = (organism: Organism) => {
-  const { informationsCommerciales: ic } = organism;
+  const { nomPublic, siteInternet, emailContact, telephone } = organism;
   const isOnSite = organism.modaliteAccompagnement === "LIEU_ACCUEIL";
   const isRemote = organism.modaliteAccompagnement === "A_DISTANCE";
 
   return {
-    label: ic?.nom || organism.label,
-    website: ic?.siteInternet || organism.website,
-    email: ic?.emailContact || organism.contactAdministrativeEmail,
-    phone: ic?.telephone || organism.contactAdministrativePhone,
+    label: nomPublic || organism.label,
+    website: siteInternet || organism.website,
+    email: emailContact || organism.contactAdministrativeEmail,
+    phone: telephone || organism.contactAdministrativePhone,
     isOnSite,
     isRemote,
   };
@@ -41,10 +41,8 @@ export const OrganismCard = ({
         website={mandatoryInfo.website ?? undefined}
       />
       <div className="flex flex-col gap-y-3">
-        {organism.informationsCommerciales && (
-          <OrganismCardInformationsCommerciales
-            informationsCommerciales={organism.informationsCommerciales}
-          />
+        {organism && (
+          <OrganismCardInformationsCommerciales organism={organism} />
         )}
         <OrganismCardDescription
           email={mandatoryInfo.email}

@@ -27,13 +27,9 @@ export const OrganismTimelineElement = () => {
 
   const organismDisplayInfo = organism
     ? {
-        label: organism.informationsCommerciales?.nom || organism.label,
-        email:
-          organism.informationsCommerciales?.emailContact ||
-          organism.contactAdministrativeEmail,
-        phone:
-          organism.informationsCommerciales?.telephone ||
-          organism?.contactAdministrativePhone,
+        label: organism.nomPublic || organism.label,
+        email: organism.emailContact || organism.contactAdministrativeEmail,
+        phone: organism.telephone || organism?.contactAdministrativePhone,
       }
     : undefined;
 
