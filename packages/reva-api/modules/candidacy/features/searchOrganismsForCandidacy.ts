@@ -92,7 +92,7 @@ const getRandomActiveOrganismForCertification = async ({
     const words = searchText.split(/\s+/);
     const conditions = words.map((word) => {
       const wordWithWildcards = "%" + word + "%";
-      return Prisma.sql`(unaccent(o.label) ilike unaccent(${wordWithWildcards}) or unaccent(oic.nom) ilike unaccent(${wordWithWildcards}))`;
+      return Prisma.sql`(unaccent(o.label) ilike unaccent(${wordWithWildcards}) or unaccent(o.nom_public) ilike unaccent(${wordWithWildcards}))`;
     });
 
     const conditionsString = Prisma.join(conditions, " and ");
