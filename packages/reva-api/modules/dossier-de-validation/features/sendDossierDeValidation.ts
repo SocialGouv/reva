@@ -63,7 +63,7 @@ export const sendDossierDeValidation = async ({
         ];
   if (!validStatuses.includes(candidacy.status)) {
     throw new Error(
-      "Le statut de la candidature doit être DEMANDE_FINANCEMENT_ENVOYE ou DEMANDE_PAIEMENT_ENVOYE ou DOSSIER_DE_VALIDATION_SIGNALE ou DOSSIER_DE_VALIDATION_ENVOYE",
+      `Le statut de la candidature doit être ${validStatuses.join(" ou ")}`,
     );
   }
 
