@@ -15,6 +15,7 @@ beforeAll(async () => {
 
 afterEach(async () => {
   await clearDatabase();
+  await jest.clearAllMocks();
 });
 
 describe("candidate drop out decision", () => {

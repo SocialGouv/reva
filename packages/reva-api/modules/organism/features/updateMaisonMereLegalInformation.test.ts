@@ -45,6 +45,10 @@ beforeAll(async () => {
   (global as any).fastify = app;
 });
 
+afterEach(async () => {
+  await jest.clearAllMocks();
+});
+
 test("should not allow a gestionnaire to update maison mere legal information", async () => {
   const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({

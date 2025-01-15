@@ -16,6 +16,7 @@ beforeAll(async () => {
 
 afterEach(async () => {
   await clearDatabase();
+  await jest.clearAllMocks();
 });
 
 it("should create a new certification in the 'BROUILLON' status", async () => {

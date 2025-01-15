@@ -21,6 +21,10 @@ beforeEach(async () => {
   await clearDatabase();
 });
 
+afterEach(async () => {
+  await jest.clearAllMocks();
+});
+
 const postDossierDeValidation = ({
   candidacyId,
   authorization,

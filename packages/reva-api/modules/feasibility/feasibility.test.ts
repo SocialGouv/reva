@@ -22,6 +22,10 @@ beforeEach(async () => {
   await clearDatabase();
 });
 
+afterEach(async () => {
+  await jest.clearAllMocks();
+});
+
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
     decision: "PENDING",

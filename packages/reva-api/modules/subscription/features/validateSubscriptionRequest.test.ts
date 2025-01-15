@@ -51,6 +51,10 @@ beforeEach(async () => {
   await clearDatabase();
 });
 
+afterEach(async () => {
+  await jest.clearAllMocks();
+});
+
 test("It should validate a correct subscription request", async () => {
   jest.spyOn(IAM, "getAccount").mockImplementation(() => Promise.resolve(null));
 

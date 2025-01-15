@@ -12,6 +12,10 @@ beforeAll(async () => {
   (global as any).fastify = app;
 });
 
+afterEach(async () => {
+  await jest.clearAllMocks();
+});
+
 test("should return an exisiting certification local account list of 1 item for the certification authority", async () => {
   const certificationAuthorityLocalAccount =
     await createCertificationAuthorityLocalAccountHelper();
