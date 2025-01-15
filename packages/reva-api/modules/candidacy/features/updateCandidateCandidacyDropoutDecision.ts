@@ -1,7 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { sendCandidacyDropOutConfirmedEmailToAap } from "../mails/sendCandidacyDropOutConfirmedEmailToAap";
-import { sendCandidacyDropOutConfirmedEmailToCandidate } from "../mails/sendCandidacyDropOutConfirmedEmailToCandidate";
+import { sendCandidacyDropOutConfirmedEmailToAap } from "../emails/sendCandidacyDropOutConfirmedEmailToAap";
+import { sendCandidacyDropOutConfirmedEmailToCandidate } from "../emails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
 export const updateCandidateCandidacyDropoutDecision = async ({
   candidacyId,

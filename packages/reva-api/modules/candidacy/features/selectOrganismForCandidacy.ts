@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getOrganismById } from "../../organism/features/getOrganism";
@@ -9,11 +10,10 @@ import { logger } from "../../shared/logger";
 import {
   sendNewOrganismCandidateNewCandidacyEmail,
   sendPreviousOrganismCandidateChangeOrganismEmail,
-} from "../mails";
+} from "../emails";
+import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 import { updateCandidacyOrganism } from "./updateCandidacyOrganism";
-import { CandidacyStatusStep } from "@prisma/client";
-import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const selectOrganismForCandidacy = async ({

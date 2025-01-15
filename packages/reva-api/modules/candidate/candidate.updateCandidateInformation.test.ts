@@ -1,13 +1,13 @@
+import { Country, Department } from "@prisma/client";
 import { buildApp } from "../../infra/server/app";
+import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { prismaClient } from "../../prisma/client";
-import { Country, Department } from "@prisma/client";
-import * as SendNewEmailCandidateEmailModule from "../candidacy/mails/sendNewEmailCandidateEmail";
-import * as SendPreviousEmailCandidateEmailModule from "../candidacy/mails/sendPreviousEmailCandidateEmail";
+import * as SendNewEmailCandidateEmailModule from "../candidacy/emails/sendNewEmailCandidateEmail";
+import * as SendPreviousEmailCandidateEmailModule from "../candidacy/emails/sendPreviousEmailCandidateEmail";
 
 const mockAdminKeycloakUuid = "1b0e7046-ca61-4259-b716-785f36ab79b2";
 

@@ -19,6 +19,11 @@ import {
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
+import {
+  sendCandidacyArchivedEmailToCertificateur,
+  sendCandidacyDropOutEmailToCandidate,
+  sendCandidacyDropOutEmailToCertificateur,
+} from "./emails";
 import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
@@ -47,19 +52,14 @@ import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
+import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandidateCandidacyDropoutDecision";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
 import { updateLastActivityDate } from "./features/updateLastActivityDate";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
-import {
-  sendCandidacyArchivedEmailToCertificateur,
-  sendCandidacyDropOutEmailToCandidate,
-  sendCandidacyDropOutEmailToCertificateur,
-} from "./mails";
 import { resolversSecurityMap } from "./security/security";
-import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandidateCandidacyDropoutDecision";
 
 const unsafeResolvers = {
   Candidacy: {

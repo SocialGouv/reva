@@ -5,8 +5,8 @@ import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
-import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./mails/sendCandidacyDropOutConfirmedEmailToAap";
-import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./mails/sendCandidacyDropOutConfirmedEmailToCandidate";
+import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";
+import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
 beforeAll(async () => {
   const app = await buildApp({ keycloakPluginMock });

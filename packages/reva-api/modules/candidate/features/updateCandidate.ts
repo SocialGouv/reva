@@ -6,7 +6,7 @@ import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidac
 import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
-} from "../../candidacy/mails";
+} from "../../candidacy/emails";
 import { generateJwt } from "../../candidate/auth.helper";
 import { CandidateUpdateInput } from "../../candidate/candidate.types";
 

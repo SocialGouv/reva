@@ -1,14 +1,14 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { getCandidateById } from "../../candidate/features/getCandidateById";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   sendConfirmationCandidacySubmissionEmail,
   sendNewCandidacyEmail,
-} from "../mails";
+} from "../emails";
 import { getCandidacyById } from "./getCandidacyById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
-import { getCandidateById } from "../../candidate/features/getCandidateById";
 
 export const submitCandidacy = async ({
   candidacyId,

@@ -1,8 +1,8 @@
 import { subMonths } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
-import { sendAutoCandidacyDropOutConfirmationEmailToAap } from "../mails/sendAutoCandidacyDropOutConfirmationEmailToAap";
 import { logger } from "../../shared/logger/logger";
-import { sendAutoCandidacyDropOutConfirmationEmailToCandidate } from "../mails/sendAutoCandidacyDropOutConfirmationEmailToCandidate";
+import { sendAutoCandidacyDropOutConfirmationEmailToAap } from "../emails/sendAutoCandidacyDropOutConfirmationEmailToAap";
+import { sendAutoCandidacyDropOutConfirmationEmailToCandidate } from "../emails/sendAutoCandidacyDropOutConfirmationEmailToCandidate";
 
 export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
   const candidacyDropOutsToSendEmailsFor =
