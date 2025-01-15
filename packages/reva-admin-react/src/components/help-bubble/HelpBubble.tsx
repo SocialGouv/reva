@@ -3,8 +3,9 @@ import helpIcon from "./assets/help.svg";
 import closeIcon from "./assets/close.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "../auth/auth";
 
-const helpLinks = [
+const aapHelpLinks = [
   {
     label: "Nouvelles fonctionnalités",
     url: "https://www.notion.so/fabnummas/Nouveaut-s-produit-42e539695d68436abe32fcf4b146c192?pvs=4",
@@ -31,9 +32,32 @@ const helpLinks = [
   },
 ];
 
+const certificationAuthorityHelpLinks = [
+  {
+    label: "Nouvelles fonctionnalités",
+    url: "https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
+  },
+  {
+    label: "Espace documentaire",
+    url: "https://fabnummas.notion.site/Espace-documentaire-des-certificateurs-France-VAE-659cdc012ab24c788cefbda97441510b?pvs=4",
+  },
+  {
+    label: "FAQ",
+    url: "https://vae.gouv.fr/faq/",
+  },
+];
+
 export const HelpBubble = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const toggle = useCallback(() => setOpen(!open), [open]);
+
+  const { isCertificationAuthority, isCertificationRegistryManager } =
+    useAuth();
+
+  const helpLinks =
+    isCertificationAuthority || isCertificationRegistryManager
+      ? certificationAuthorityHelpLinks
+      : aapHelpLinks;
 
   return (
     <div className={`flex flex-col ${className || ""}`}>
