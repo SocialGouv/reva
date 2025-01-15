@@ -20,8 +20,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { FileLink } from "../../../(components)/FileLink";
 import { useJuryPageLogic } from "./juryPageLogic";
+import { DateDeJuryCard } from "./DateDeJuryCard";
+import { HistoryDateDeJuryView } from "./HistoryDateDeJuryView";
 
 const schema = z
   .object({
@@ -141,6 +142,7 @@ export const DateDeJury = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
 
   const jury = candidacy?.jury;
+  const historyJury = candidacy?.historyJury;
 
   const editable = candidacy?.jury
     ? isBefore(new Date(), startOfDay(candidacy?.jury.dateOfSession)) &&
@@ -148,163 +150,137 @@ export const DateDeJury = (): JSX.Element => {
     : false;
 
   return (
-    <div className="flex flex-col">
-      <>
-        <h5 className="text-xl font-bold">
-          Attribution d’une date de passage en jury au candidat
-        </h5>
+    <>
+      <h3>Date de passage devant le jury à programmer</h3>
+
+      <div className="flex flex-col gap-10">
         {!jury && (
-          <p className="text-gray-600">
-            Une convocation officielle devra être émise à destination du
-            candidat. Elle peut être ajoutée en pièce jointe ci-dessous (le
-            candidat l’aura dans son e-mail récapitulatif) ou transmise par
-            courrier papier par vos soins.
+          <p className="m-0 text-gray-600">
+            Vous devez désormais envoyer au candidat sa date de passage. Vous
+            pouvez également lui faire parvenir une convocation officielle
+            depuis cet espace ou par voie postale.
           </p>
         )}
-      </>
 
-      <>
-        <label className="text-xs font-bold py-2">
-          Certification concernée
-        </label>
-
-        <div className="bg-gray-100 p-4 rounded-xl mb-12">
-          <div className="flex flex-row items-center justify-between">
-            <label className="text-gray-600 text-xs italic">
-              {candidacy?.certification?.typeDiplome || ""}
-            </label>
-            <label className="text-gray-600 text-xs italic">
-              {candidacy?.certification?.codeRncp}
-            </label>
-          </div>
-          <label className="text-lg font-bold">
-            {candidacy?.certification?.label}
-          </label>
-        </div>
-      </>
-
-      {!getCandidacy.isLoading && jury && !editing && (
-        <>
-          <div className="flex flex-row items-start justify-between gap-4">
-            <Card
-              label="Date"
-              value={format(new Date(jury?.dateOfSession), "yyyy-MM-dd")}
-            />
-
-            <Card
-              label="Heure de convocation"
-              value={
-                jury?.timeSpecified
-                  ? format(new Date(jury?.dateOfSession), "HH:mm")
-                  : "Non renseigné"
-              }
-            />
-
-            <Card label="Lieu" value={jury.addressOfSession} />
-          </div>
-
-          <Card
-            label="Information complémentaire liée à la session"
-            value={jury.informationOfSession}
+        {historyJury && (
+          <HistoryDateDeJuryView
+            historyJury={historyJury.map((jury) => ({
+              id: jury.id,
+              dateOfSession: jury.dateOfSession,
+              timeSpecified: jury.timeSpecified,
+              addressOfSession: jury.addressOfSession,
+              informationOfSession: jury.informationOfSession,
+              convocationFile: jury.convocationFile,
+            }))}
           />
+        )}
 
-          {jury.convocationFile && (
-            <FileLink
-              text={jury.convocationFile.name}
-              url={jury.convocationFile.url}
-            />
-          )}
+        <div className="flex flex-col gap-2">
+          <h6 className="m-0 font-normal">Certification concernée :</h6>
 
-          {editable && (
-            <div className="flex flex-row items-end justify-between gap-4">
-              <Button
-                priority="secondary"
-                className="ml-auto mt-8 text-right"
-                onClick={() => setEditing(true)}
-              >
-                Modifier
-              </Button>
+          <div className="flex flex-col gap-3 p-6 border">
+            <div className="flex flex-row gap-2 items-center text-gray-600">
+              <span className="fr-icon fr-icon--sm fr-icon-award-line" />
+              <label className="text-gray-600 text-xs">
+                RNCP {candidacy?.certification?.codeRncp}
+              </label>
             </div>
-          )}
-        </>
-      )}
-
-      {!getCandidacy.isLoading && (!jury || editing) && (
-        <form onSubmit={handleFormSubmit}>
-          <h5 className="text-xl font-bold mb-4">Date de jury</h5>
-          <div className="flex flex-row items-start gap-4">
-            <Input
-              label="Date"
-              nativeInputProps={{
-                ...register("date"),
-                type: "date",
-              }}
-              state={errors.date ? "error" : "default"}
-              stateRelatedMessage={errors.date?.message}
-            />
-            <Input
-              label="Heure de convocation (Optionnel)"
-              nativeInputProps={{
-                type: "time",
-                ...register("time"),
-                defaultValue: jury?.timeOfSession || "",
-              }}
-            />
-            <Input
-              className="flex-1"
-              label="Lieu (Optionnel)"
-              nativeInputProps={{
-                ...register("address"),
-                defaultValue: jury?.addressOfSession || "",
-              }}
-            />
-            <input type="hidden" {...register("dossierValidationUpdatedAt")} />
+            <label className="text-lg font-bold">
+              {candidacy?.certification?.label}
+            </label>
           </div>
-          <Input
-            label="Information complémentaire liée à la session (Optionnel)"
-            nativeInputProps={{
-              ...register("information"),
-              defaultValue: jury?.informationOfSession || "",
-            }}
-          />
-          <FancyUpload
-            title="Joindre la convocation officielle (optionnel)"
-            description=""
-            hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
-            nativeInputProps={{
-              ...register("convocationFile"),
-            }}
-            state={errors.convocationFile ? "error" : "default"}
-            stateRelatedMessage={errors.convocationFile?.[0]?.message}
-          />
+        </div>
 
-          <div className="flex flex-row items-end justify-end mt-8 gap-4">
-            {editing && (
-              <Button priority="secondary" onClick={() => setEditing(false)}>
-                Annuler
-              </Button>
+        {!getCandidacy.isLoading && jury && !editing && (
+          <>
+            <DateDeJuryCard
+              jury={{
+                id: jury.id,
+                dateOfSession: jury.dateOfSession,
+                timeSpecified: jury.timeSpecified,
+                addressOfSession: jury.addressOfSession,
+                informationOfSession: jury.informationOfSession,
+                convocationFile: jury.convocationFile,
+              }}
+            />
+
+            {editable && (
+              <div className="flex flex-row items-end justify-between gap-4">
+                <Button
+                  priority="secondary"
+                  className="ml-auto mt-8 text-right"
+                  onClick={() => setEditing(true)}
+                >
+                  Modifier
+                </Button>
+              </div>
             )}
+          </>
+        )}
 
-            <Button disabled={isSubmitting || !isValid}>Envoyer</Button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
-};
+        {!getCandidacy.isLoading && (!jury || editing) && (
+          <form onSubmit={handleFormSubmit}>
+            <div className="flex flex-row items-start gap-4">
+              <Input
+                label="Date"
+                nativeInputProps={{
+                  ...register("date"),
+                  type: "date",
+                }}
+                state={errors.date ? "error" : "default"}
+                stateRelatedMessage={errors.date?.message}
+              />
+              <Input
+                label="Heure de convocation (Optionnel)"
+                nativeInputProps={{
+                  type: "time",
+                  ...register("time"),
+                  defaultValue: jury?.timeOfSession || "",
+                }}
+              />
+              <Input
+                className="flex-1"
+                label="Lieu (Optionnel)"
+                nativeInputProps={{
+                  ...register("address"),
+                  defaultValue: jury?.addressOfSession || "",
+                }}
+              />
+              <input
+                type="hidden"
+                {...register("dossierValidationUpdatedAt")}
+              />
+            </div>
+            <Input
+              label="Information complémentaire liée à la session (Optionnel)"
+              nativeInputProps={{
+                ...register("information"),
+                defaultValue: jury?.informationOfSession || "",
+              }}
+            />
+            <FancyUpload
+              title="Joindre la convocation officielle (optionnel)"
+              description=""
+              hint="Format supporté : PDF uniquement avec un poids maximum de 15 Mo"
+              nativeInputProps={{
+                ...register("convocationFile"),
+              }}
+              state={errors.convocationFile ? "error" : "default"}
+              stateRelatedMessage={errors.convocationFile?.[0]?.message}
+            />
 
-interface CardProps {
-  label: string;
-  value?: string | null;
-}
+            <div className="flex flex-row items-end justify-end mt-8 gap-4">
+              {editing && (
+                <Button priority="secondary" onClick={() => setEditing(false)}>
+                  Annuler
+                </Button>
+              )}
 
-const Card = (props: CardProps): JSX.Element => {
-  const { label, value } = props;
-
-  return (
-    <div className="flex flex-col mb-6">
-      <span className="uppercase font-bold text-xs">{label}</span>
-      <span className="text-base">{value || "Non renseigné"}</span>
-    </div>
+              <Button disabled={isSubmitting || !isValid}>Envoyer</Button>
+            </div>
+          </form>
+        )}
+      </div>
+    </>
   );
 };

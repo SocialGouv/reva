@@ -51,39 +51,30 @@ export const ReadyForJuryEstimatedDateTab = ({
 
   return (
     <form
-      className="flex flex-col overflow-auto"
       onSubmit={handleFormSubmit}
       onReset={(e) => {
         e.preventDefault();
         handleReset();
       }}
     >
-      <p>
-        Sauf mention contraire “(optionnel)” dans le label, tous les champs sont
-        obligatoires.
-      </p>
-      <p>La date prévisionnelle correspond :</p>
-      <ul className="mt-0">
-        <li>
-          à la date à laquelle le candidat aura finalisé son dossier de
-          validation pour les certifications du Ministère du Travail et des
-          Branches Professionnelles
-        </li>
-        <li>
-          à la date de dépôt du dossier de validation pour les autres
-          certifications
-        </li>
-      </ul>
-      <br />
-      <Input
-        className="max-w-xs"
-        label="Date prévisonnelle"
-        hintText="Date au format 31/12/2022"
-        nativeInputProps={{
-          type: "date",
-          ...register("readyForJuryEstimatedAt"),
-        }}
-      />
+      <div className="flex flex-col overflow-auto gap-10">
+        <p className="m-0">
+          La date prévisionnelle est une estimation et sert principalement à
+          anticiper le passage devant le jury. Elle n’est pas engageante pour le
+          candidat.
+        </p>
+
+        <Input
+          className="max-w-xs"
+          label="Date prévisonnelle"
+          hintText="Date au format 31/12/2022"
+          nativeInputProps={{
+            type: "date",
+            ...register("readyForJuryEstimatedAt"),
+          }}
+        />
+      </div>
+
       <FormButtons formState={{ isDirty, isSubmitting }} />
     </form>
   );

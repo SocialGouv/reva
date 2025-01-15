@@ -40,20 +40,23 @@ const ReadyForJuryEstimatedDateTab = () => {
 
   return (
     showContent && (
-      <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col gap-10 overflow-auto">
         {readyForJuryEstimatedAt ? (
           <>
-            <p className="text-gray-600 mb-12">
-              Afin de faciliter la tenue du jury pour le candidat, l’AAP a
-              renseigné la date prévisionnelle à laquelle son candidat sera
-              potentiellement prêt pour son passage devant le jury.
-            </p>
-            <span className="uppercase font-bold text-sm">
-              date prévisionnelle
-            </span>
-            <span className="text-base">
-              {format(readyForJuryEstimatedAt, "dd/MM/yyyy")}
-            </span>
+            <h6 className="font-normal m-0">
+              Pour faciliter l'organisation du jury, l’AAP a indiqué une date
+              prévisionnelle de dépôt du dossier de validation. Cette date vous
+              permet d’estimer la période à laquelle le candidat sera prêt pour
+              un passage devant le jury.
+            </h6>
+            <div className="flex flex-col gap-2">
+              <span className="uppercase font-bold text-sm">
+                date prévisionnelle
+              </span>
+              <span className="text-base">
+                {format(readyForJuryEstimatedAt, "dd/MM/yyyy")}
+              </span>
+            </div>
           </>
         ) : (
           <Alert
@@ -102,7 +105,8 @@ const DossierDeValidationTab = () => {
       <div className="flex flex-col gap-10 flex-1 mb-2 overflow-auto">
         {dossierDeValidation && (
           <h6 className="font-normal m-0">
-            Voici les documents du dossier de validation du candidat.
+            Retrouvez ici les documents liés au dossier de validation du
+            candidat.
           </h6>
         )}
 
@@ -149,24 +153,20 @@ const DossierDeValidationTab = () => {
         ) : (
           <Alert
             severity="info"
-            title="Attente du dossier de validation"
+            title="En attente du dossier de validation"
             description={
-              <>
-                <p>
-                  Le candidat (ou son AAP) doit vous transmettre son dossier de
-                  validation une fois qu’il est finalisé.
-                </p>
-                <p className="mt-4">
-                  Le passage devant le jury devra alors avoir lieu dans un délai
-                  maximum de 3 mois à compter de la réception du dossier.
-                </p>
-                <p className="mt-4">
-                  Si vous ne demandez pas la transmission du dossier de
-                  validation avant le passage en jury du candidat, un courrier
-                  vous informant que le candidat sera prêt à se présenter devant
-                  le jury dans un délai de 3 mois vous sera transmis à la place.
-                </p>
-              </>
+              <p>
+                Le dossier de validation est en cours de rédaction. Une fois
+                terminé, le candidat ou l’AAP vous le transmettra et vous
+                pourrez programmer son passage devant le jury (dans un délai
+                maximum de 3 mois à compter de la réception du dossier).
+                <br />
+                <br />
+                Si vous n’exigez pas la transmission du dossier de validation,
+                un courrier vous informant que le candidat sera prêt à se
+                présenter devant le jury dans un délai de 3 mois vous sera
+                transmis à la place.
+              </p>
             }
           />
         )}

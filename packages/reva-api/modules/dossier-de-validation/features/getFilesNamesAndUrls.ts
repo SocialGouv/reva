@@ -15,11 +15,10 @@ export const getFilesNamesAndUrls = async ({
   if (fileIds.length) {
     const files = await prismaClient.file.findMany({
       where: { id: { in: fileIds } },
-      select: { name: true, id: true, path: true },
     });
 
     return files.map(async (file) => {
-      const downloadUrl = await getDownloadLink(file?.path);
+      const downloadUrl = await getDownloadLink(file.path);
 
       const previewUrl = downloadUrl?.replace(
         OOS_DOMAIN,
@@ -27,11 +26,13 @@ export const getFilesNamesAndUrls = async ({
       );
 
       return {
-        name: file?.name || "",
+        name: file.name,
+        mimeType: file.mimeType,
         url: file
           ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/dossier-de-validation/file/${file.id}`
           : "",
         previewUrl,
+        createdAt: file.createdAt,
       };
     });
   } else {

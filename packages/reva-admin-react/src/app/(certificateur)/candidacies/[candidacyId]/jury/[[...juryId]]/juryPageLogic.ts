@@ -37,6 +37,23 @@ const getJuryByCandidacyIdQuery = graphql(`
         convocationFile {
           name
           url
+          previewUrl
+        }
+      }
+      historyJury {
+        id
+        dateOfSession
+        timeOfSession
+        timeSpecified
+        addressOfSession
+        informationOfSession
+        result
+        dateOfResult
+        informationOfResult
+        convocationFile {
+          name
+          url
+          previewUrl
         }
       }
     }
@@ -58,6 +75,7 @@ const updateJuryResultMutation = graphql(`
       convocationFile {
         name
         url
+        previewUrl
       }
     }
   }

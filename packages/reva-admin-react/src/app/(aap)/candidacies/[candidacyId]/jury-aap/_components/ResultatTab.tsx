@@ -33,11 +33,11 @@ export const ResultatTab = () => {
 
         <Alert
           description={
-            <div className="pl-2  mt-3 mb-4">
-              <h6>En attente du résultat</h6>
+            <div className="pl-2 mt-3 mb-4">
+              <h6>Le résultat vous sera bientôt communiqué </h6>
               <dd>
-                Le certificateur vous communiquera le résultat de votre
-                candidat.
+                Une fois le passage devant le jury effectué, le certificateur
+                vous fera parvenir le résultat.
               </dd>
             </div>
           }
@@ -49,47 +49,49 @@ export const ResultatTab = () => {
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <h2 className="m-0">Résultat à l'issue de l'entretien avec le jury</h2>
+    <>
+      {" "}
+      <h2>Résultat suite au passage devant le jury</h2>
+      <div className="flex flex-col gap-10">
+        <HistoryResultatView
+          historyJury={historyJury.map((jury) => ({
+            id: jury.id,
+            dateOfSession: jury.dateOfSession,
+            // Only jury with result are in jury history
+            result: jury.result!,
+            informationOfResult: jury.informationOfResult,
+          }))}
+        />
 
-      <HistoryResultatView
-        historyJury={historyJury.map((jury) => ({
-          id: jury.id,
-          dateOfSession: jury.dateOfSession,
-          // Only jury with result are in jury history
-          result: jury.result!,
-          informationOfResult: jury.informationOfResult,
-        }))}
-      />
+        <ResultatCard
+          jury={{
+            id: jury.id,
+            dateOfSession: jury.dateOfSession,
+            result: jury.result,
+            informationOfResult: jury.informationOfResult,
+          }}
+        />
 
-      <ResultatCard
-        jury={{
-          id: jury.id,
-          dateOfSession: jury.dateOfSession,
-          result: jury.result,
-          informationOfResult: jury.informationOfResult,
-        }}
-      />
-
-      {jury.result != "FULL_SUCCESS_OF_FULL_CERTIFICATION" &&
-        jury.result != "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" && (
-          <CallOut
-            buttonProps={{
-              children: "Accéder au dossier de validation",
-              onClick: () => {
-                router.push(
-                  `/candidacies/${candidacy.id}/dossier-de-validation-aap/`,
-                );
-              },
-            }}
-            title="Le candidat peut renvoyer un dossier de validation"
-          >
-            Suite à ce résultat, le candidat peut repasser devant le jury. Il
-            devra, en amont, retravailler sur son dossier de validation. Vous
-            devrez le renvoyer au certificateur qui pourra lui transmettre une
-            nouvelle date de passage devant le jury.
-          </CallOut>
-        )}
-    </div>
+        {jury.result != "FULL_SUCCESS_OF_FULL_CERTIFICATION" &&
+          jury.result != "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" && (
+            <CallOut
+              buttonProps={{
+                children: "Accéder au dossier de validation",
+                onClick: () => {
+                  router.push(
+                    `/candidacies/${candidacy.id}/dossier-de-validation-aap/`,
+                  );
+                },
+              }}
+              title="Le candidat peut renvoyer un dossier de validation"
+            >
+              Suite à ce résultat, le candidat peut repasser devant le jury. Il
+              devra, en amont, retravailler sur son dossier de validation. Vous
+              devrez le renvoyer au certificateur qui pourra lui transmettre une
+              nouvelle date de passage devant le jury.
+            </CallOut>
+          )}
+      </div>
+    </>
   );
 };

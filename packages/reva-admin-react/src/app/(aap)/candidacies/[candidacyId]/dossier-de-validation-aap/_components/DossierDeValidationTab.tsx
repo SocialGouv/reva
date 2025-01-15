@@ -71,24 +71,20 @@ export const DossierDeValidationTab = (props: Props) => {
   const handleFormSubmit = handleSubmit(onFormSubmit);
   return (
     <form
-      className="flex flex-col flex-1 mb-2 overflow-auto"
+      className="flex flex-col flex-1 overflow-auto"
       onSubmit={handleFormSubmit}
       onReset={(e) => {
         e.preventDefault();
         handleReset();
       }}
     >
-      <p>
-        Sauf mention contraire “(optionnel)” dans le label, tous les champs sont
-        obligatoires.
-      </p>
-      <p>
-        Le dossier de validation doit être rédigé par le candidat. Des pièces
-        supplémentaires peuvent être ajoutées selon les attendus du
-        certificateur (ex : attestation de premiers secours).
-      </p>
-
       <div className="flex flex-col gap-10">
+        <p className="m-0">
+          Le dossier de validation doit être rédigé par le candidat. Des pièces
+          supplémentaires peuvent être ajoutées selon les attendus du
+          certificateur (ex : attestation de premiers secours).
+        </p>
+
         <HistoryDossierDeValidationView
           historyDossierDeValidation={
             dossierDeValidation && dossierDeValidation.decision == "PENDING"
@@ -172,7 +168,7 @@ export const DossierDeValidationTab = (props: Props) => {
 
       <FormButtons
         formState={{ isDirty, isSubmitting }}
-        submitButtonLabel="Enregistrer et envoyer"
+        submitButtonLabel="Envoyer"
       />
     </form>
   );

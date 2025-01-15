@@ -14,6 +14,9 @@ import { JuryResult } from "@/graphql/generated/graphql";
 
 import { useJuryPageLogic } from "./juryPageLogic";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
+import { ResultatCard } from "./ResultatCard";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { HistoryResultatView } from "./HistoryResultatView";
 
 const modal = createModal({
   id: "confirm-result",
@@ -61,7 +64,7 @@ const schema = z.object({
 
 type ResultatFormData = z.infer<typeof schema>;
 
-export const Resultat = (): JSX.Element => {
+export const Resultat = (): JSX.Element | null => {
   const { getCandidacy, updateJuryResult } = useJuryPageLogic();
 
   const candidacy = getCandidacy.data?.getCandidacyById;
@@ -98,129 +101,147 @@ export const Resultat = (): JSX.Element => {
     }
   };
 
-  const result = candidacy?.jury?.result;
+  if (getCandidacy.isLoading || !candidacy) {
+    return null;
+  }
+
+  const jury = candidacy?.jury;
+  const historyJury = candidacy?.historyJury;
+
+  const result = jury?.result;
 
   const editable = candidacy?.jury
     ? isAfter(new Date(), startOfDay(candidacy?.jury.dateOfSession)) && !result
     : false;
 
   return (
-    <div className="flex flex-col">
-      <>
-        <h5>Résultat à l'issue de l'entretien avec le jury</h5>
+    <>
+      <h3>Résultat suite au passage devant le jury</h3>
+
+      <div className="flex flex-col gap-10">
         {!result && (
-          <p className="text-gray-600">
-            Sélectionner l'option de résultat qui convient. Le résultat est
-            envoyé par e-mail à l’AAP et au candidat. Un document officiel devra
-            être envoyé au candidat.
+          <p className="m-0 text-gray-600">
+            Sélectionnez le résultat à communiquer par e-mail au candidat et à
+            l’AAP. Vous devrez également envoyer un document officiel au
+            candidat.
           </p>
         )}
-      </>
 
-      {!getCandidacy.isLoading && result && (
-        <div className="flex flex-col gap-4 mt-12">
-          <h5 className="text-base font-bold">
-            {`${format(
-              candidacy.jury?.dateOfResult || "",
-              "dd/MM/yyyy",
-            )} - Résultat :`}
-          </h5>
-
-          {juryResultNotice[result] == "error" ? (
-            <CustomErrorBadge label={juryResultLabels[result]} />
-          ) : (
-            <Badge severity={juryResultNotice[result]}>
-              {juryResultLabels[result]}
-            </Badge>
-          )}
-
-          {candidacy.jury?.informationOfResult && (
-            <label className="text-base">
-              {`“${candidacy.jury.informationOfResult}”`}
-            </label>
-          )}
-        </div>
-      )}
-
-      {!getCandidacy.isLoading && !result && (
-        <form onSubmit={handleFormSubmit}>
-          <RadioButtons
-            legend="Résultat"
-            className="m-0 p-0 mb-12"
-            options={Object.keys(juryResultLabels).map((key) => {
-              const label = juryResultLabels[key as JuryResult];
-
-              return {
-                label: label,
-                nativeInputProps: {
-                  value: key,
-                  ...register("result"),
-                  disabled: !editable,
-                },
-              };
-            })}
-            state={errors.result ? "error" : "default"}
-            stateRelatedMessage={
-              errors.result ? "Veuillez sélectionner une option" : undefined
-            }
+        {historyJury && (
+          <HistoryResultatView
+            historyJury={historyJury.map((jury) => ({
+              id: jury.id,
+              dateOfSession: jury.dateOfSession,
+              // Only jury with result are in jury history
+              result: jury.result!,
+              informationOfResult: jury.informationOfResult,
+            }))}
           />
+        )}
 
-          <Input
-            label="Commentaires (optionnel) :"
-            nativeTextAreaProps={register("informationOfResult")}
-            textArea
-            hintText="Indiquer ici toutes les réserves, consignes ou attendus éventuels."
-            disabled={!editable}
-          />
+        {!getCandidacy.isLoading && result && (
+          <>
+            <ResultatCard
+              jury={{
+                id: jury.id,
+                dateOfSession: jury.dateOfSession,
+                result: result,
+                informationOfResult: jury.informationOfResult,
+              }}
+            />
 
-          <div className="flex flex-row items-end">
-            <Button
-              className="ml-auto mt-8 text-right"
-              disabled={isSubmitting || !isValid || !editable}
-            >
-              Envoyer
-            </Button>
-          </div>
-        </form>
-      )}
+            {jury.result != "FULL_SUCCESS_OF_FULL_CERTIFICATION" &&
+              jury.result != "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" && (
+                <CallOut title="Le candidat peut renvoyer un dossier de validation">
+                  Suite à ce résultat, le candidat peut repasser devant le jury.
+                  Il devra, en amont, retravailler sur son dossier de validation
+                  et vous le renvoyer. Une fois reçu, vous pourrez lui
+                  transmettre une nouvelle date de passage devant le jury.
+                </CallOut>
+              )}
+          </>
+        )}
 
-      <>
-        <modal.Component
-          title="Confirmer le choix du résultat"
-          className="modal-confirm-jury-result"
-          buttons={[
-            {
-              priority: "secondary",
-              children: "Modifier",
-            },
-            {
-              priority: "primary",
-              onClick: submitData,
-              children: "Confirmer",
-            },
-          ]}
-        >
-          <div className="flex flex-col gap-4">
-            <h5 className="text-base font-bold mt-4">
-              {`${format(new Date(), "dd/MM/yyyy")} - Résultat :`}
-            </h5>
+        {!getCandidacy.isLoading && !result && (
+          <form onSubmit={handleFormSubmit}>
+            <RadioButtons
+              legend="Résultat"
+              className="m-0 p-0 mb-12"
+              options={Object.keys(juryResultLabels).map((key) => {
+                const label = juryResultLabels[key as JuryResult];
 
-            {juryResultNotice[formData.result] == "error" ? (
-              <CustomErrorBadge label={juryResultLabels[formData.result]} />
-            ) : (
-              <Badge severity={juryResultNotice[formData.result]}>
-                {juryResultLabels[formData.result]}
-              </Badge>
-            )}
+                return {
+                  label: label,
+                  nativeInputProps: {
+                    value: key,
+                    ...register("result"),
+                    disabled: !editable,
+                  },
+                };
+              })}
+              state={errors.result ? "error" : "default"}
+              stateRelatedMessage={
+                errors.result ? "Veuillez sélectionner une option" : undefined
+              }
+            />
 
-            {formData?.informationOfResult && (
-              <label className="text-base">
-                {`“${formData.informationOfResult}”`}
-              </label>
-            )}
-          </div>
-        </modal.Component>
-      </>
-    </div>
+            <Input
+              label="Commentaires (optionnel) :"
+              nativeTextAreaProps={register("informationOfResult")}
+              textArea
+              hintText="Indiquer ici toutes les réserves, consignes ou attendus éventuels."
+              disabled={!editable}
+            />
+
+            <div className="flex flex-row items-end">
+              <Button
+                className="ml-auto mt-8 text-right"
+                disabled={isSubmitting || !isValid || !editable}
+              >
+                Envoyer
+              </Button>
+            </div>
+          </form>
+        )}
+
+        <>
+          <modal.Component
+            title="Confirmer le choix du résultat"
+            className="modal-confirm-jury-result"
+            buttons={[
+              {
+                priority: "secondary",
+                children: "Modifier",
+              },
+              {
+                priority: "primary",
+                onClick: submitData,
+                children: "Confirmer",
+              },
+            ]}
+          >
+            <div className="flex flex-col gap-4">
+              <h5 className="text-base font-bold mt-4">
+                {`${format(new Date(), "dd/MM/yyyy")} - Résultat :`}
+              </h5>
+
+              {juryResultNotice[formData.result] == "error" ? (
+                <CustomErrorBadge label={juryResultLabels[formData.result]} />
+              ) : (
+                <Badge severity={juryResultNotice[formData.result]}>
+                  {juryResultLabels[formData.result]}
+                </Badge>
+              )}
+
+              {formData?.informationOfResult && (
+                <label className="text-base">
+                  {`“${formData.informationOfResult}”`}
+                </label>
+              )}
+            </div>
+          </modal.Component>
+        </>
+      </div>
+    </>
   );
 };

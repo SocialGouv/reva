@@ -1,3 +1,8 @@
+import {
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+  getDownloadLink,
+  OOS_DOMAIN,
+} from "../../shared/file";
 import { prismaClient } from "../../../prisma/client";
 
 export const getFilesNamesAndUrls = async ({
@@ -10,14 +15,26 @@ export const getFilesNamesAndUrls = async ({
   if (fileIds.length) {
     const files = await prismaClient.file.findMany({
       where: { id: { in: fileIds } },
-      select: { name: true, id: true },
     });
-    return files.map((f) => ({
-      name: f?.name || "",
-      url: f
-        ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/jury/file/${f.id}`
-        : "",
-    }));
+
+    return files.map(async (file) => {
+      const downloadUrl = await getDownloadLink(file.path);
+
+      const previewUrl = downloadUrl?.replace(
+        OOS_DOMAIN,
+        FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+      );
+
+      return {
+        name: file.name,
+        mimeType: file.mimeType,
+        url: file
+          ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/jury/file/${file.id}`
+          : "",
+        previewUrl,
+        createdAt: file.createdAt,
+      };
+    });
   } else {
     return [];
   }
