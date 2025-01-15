@@ -200,6 +200,7 @@ model Candidacy {
   estimatedCost                              Decimal?                              @map("estimated_cost") @db.Decimal(10, 2)
   lastActivityDate                           DateTime?                             @map("last_activity_date") @db.Timestamptz(6)
   candidacyContestationCaducite              CandidacyContestationCaducite[]
+  CandidacyEmail                             CandidacyEmail[]
 
   @@index([organismId])
   @@index([candidateId])
@@ -1704,4 +1705,20 @@ enum CertificationAuthorityContestationDecision {
   DECISION_PENDING
   CADUCITE_INVALIDATED // When contestation is accepted - "invalidation de la caducité"
   CADUCITE_CONFIRMED // When contestation is rejected - "confirmation de la caducité"
+}
+
+enum CandidacyEmailType {
+  CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_AAP
+  CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_CANDIDATE
+  CANDIDACY_IS_CADUQUE_NOTICE_TO_AAP
+}
+
+model CandidacyEmail {
+  id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId String             @map("candidacy_id") @db.Uuid
+  candidacy   Candidacy          @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  emailType   CandidacyEmailType @map("email_type")
+  sentAt      DateTime           @default(now()) @map("sent_at") @db.Timestamptz(6)
+
+  @@map("candidacy_email")
 }
