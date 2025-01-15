@@ -30,6 +30,7 @@ const getCandidacyMenuQuery = graphql(`
     }
     getCandidacyById(id: $candidacyId) {
       isCaduque
+      financeModule
       candidate {
         lastname
         firstname
@@ -65,20 +66,25 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const menuFooterEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.menuFooter;
 
-  const candidate = getCandidacyMenuResponse?.getCandidacyById?.candidate;
+  const candidacy = getCandidacyMenuResponse?.getCandidacyById;
 
-  const isCaduque = getCandidacyMenuResponse?.getCandidacyById?.isCaduque;
+  const candidate = candidacy?.candidate;
+
+  const isCaduque = candidacy?.isCaduque;
 
   return (
     <div className="flex flex-col md:flex-row w-full">
       <CandidacyLayoutSideMenu>
-        <div className="flex text-xl font-bold mt-2 md:mt-0 mb-8">
+        <div className="flex text-xl font-bold mt-2 md:mt-0 mb-2">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
             {candidate?.firstname?.toLowerCase()}{" "}
             {candidate?.lastname?.toLowerCase()}
           </span>
         </div>
+        <CandidacyModalities
+          fundable={candidacy?.financeModule !== "hors_plateforme"}
+        />
         {isCaduque && isCandidacyActualisationActive && (
           <Badge severity="error">Recevabilité caduque</Badge>
         )}
@@ -110,6 +116,18 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     </div>
   );
 };
+
+const CandidacyModalities = ({ fundable }: { fundable: boolean }) => (
+  <div>
+    <Badge
+      severity={fundable ? "info" : "new"}
+      small
+      data-test={fundable ? "badge-fundable" : "badge-not-fundable"}
+    >
+      {fundable ? "finançable france vae" : "finançable droit commun"}
+    </Badge>
+  </div>
+);
 
 const MenuEntry = ({
   menuEntry,
