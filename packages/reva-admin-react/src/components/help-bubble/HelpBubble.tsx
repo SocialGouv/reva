@@ -63,7 +63,7 @@ export const HelpBubble = ({ className }: { className?: string }) => {
     <div className={`flex flex-col ${className || ""}`}>
       {open ? (
         <div className="flex flex-col items-start w-[320px] bg-white rounded-2xl p-6 pt-4 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-          <h1 className="text-xl font-bold mb-0">Notre aide en ligne</h1>
+          <h2 className="text-xl font-bold mb-0">Notre aide en ligne</h2>
           <ul className="list-none pl-0">
             {helpLinks.map(({ label, url }) => (
               <li key={url}>
