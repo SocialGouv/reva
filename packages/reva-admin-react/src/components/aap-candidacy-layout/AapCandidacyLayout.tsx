@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
-import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
+import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -123,58 +123,6 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         )}
       </CandidacyLayoutSideMenu>
       <div className="w-full">{children}</div>
-    </div>
-  );
-};
-
-const CandidacyModalities = ({
-  fundable,
-  modaliteAccompagnement,
-}: {
-  fundable: boolean;
-  modaliteAccompagnement: OrganismModaliteAccompagnement | undefined;
-}) => {
-  const FundableBadge = () => (
-    <Badge
-      className={fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"}
-      small
-      noIcon
-      data-test={fundable ? "badge-fundable" : "badge-not-fundable"}
-    >
-      {fundable ? "finançable France VAE" : "financement droit commun"}
-    </Badge>
-  );
-
-  if (!modaliteAccompagnement) {
-    return <FundableBadge />;
-  }
-
-  const accompagnementConfigMap = {
-    A_DISTANCE: {
-      dataTest: "badge-remote",
-      className: "fr-badge--green-tilleul-verveine",
-      value: "À distance",
-    },
-    LIEU_ACCUEIL: {
-      dataTest: "badge-on-site",
-      className: "fr-badge--beige-gris-galet",
-      value: "Sur site",
-    },
-  };
-
-  const accompagnementConfig = accompagnementConfigMap[modaliteAccompagnement];
-
-  return (
-    <div className="flex flex-wrap gap-3">
-      <FundableBadge />
-      <Badge
-        small
-        noIcon
-        className={accompagnementConfig.className}
-        data-test={accompagnementConfig.dataTest}
-      >
-        {accompagnementConfig.value}
-      </Badge>
     </div>
   );
 };
