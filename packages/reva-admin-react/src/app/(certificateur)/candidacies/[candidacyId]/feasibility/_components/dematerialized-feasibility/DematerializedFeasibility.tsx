@@ -1,4 +1,5 @@
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
 import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
@@ -41,6 +42,7 @@ const FeasibilityBanner = ({
   pendingCaduciteContestationSentAt,
   candidacyId,
   isCandidacyActualisationFeatureActive,
+  hasConfirmedCaduciteContestation,
 }: {
   isWaitingForDecision: boolean;
   feasibilityDecisionSentAt: Date | null;
@@ -51,7 +53,20 @@ const FeasibilityBanner = ({
   pendingCaduciteContestationSentAt: number | null;
   candidacyId: string;
   isCandidacyActualisationFeatureActive: boolean;
+  hasConfirmedCaduciteContestation: boolean;
 }) => {
+  if (
+    hasConfirmedCaduciteContestation &&
+    isCandidacyActualisationFeatureActive &&
+    dateSinceCandidacyIsCaduque
+  ) {
+    return (
+      <BannerCaduciteConfirmed
+        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+      />
+    );
+  }
+
   if (
     pendingCaduciteContestationSentAt &&
     isCandidacyActualisationFeatureActive
@@ -208,6 +223,13 @@ export const DematerializedFeasibility = () => {
         "DECISION_PENDING",
     );
 
+  const hasConfirmedCaduciteContestation =
+    !!candidacy?.candidacyContestationsCaducite?.find(
+      (candidacyContestation) =>
+        candidacyContestation?.certificationAuthorityContestationDecision ===
+        "CADUCITE_CONFIRMED",
+    );
+
   const pendingCaduciteContestationSentAt = pendingCaduciteContestation
     ? pendingCaduciteContestation.contestationSentAt
     : null;
@@ -234,6 +256,7 @@ export const DematerializedFeasibility = () => {
             isCandidacyActualisationFeatureActive={
               isCandidacyActualisationFeatureActive
             }
+            hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
           />
         }
         displayGiveYourDecisionSubtitle
