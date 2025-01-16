@@ -28,8 +28,10 @@ export const CandidacyCard = ({
   return (
     <WhiteCard key={candidacyId}>
       <div className="flex flex-col gap-2">
-        <Badge severity={fundable ? "info" : "new"} className="ml-auto">
-          {fundable ? "finançable france vae" : "finançable droit commun"}
+        <Badge
+          className={`ml-auto ${fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"}`}
+        >
+          {fundable ? "finançable france vae" : "financement droit commun"}
         </Badge>
         <h3 className="mb-2 text-lg">{certificationLabel}</h3>
       </div>
