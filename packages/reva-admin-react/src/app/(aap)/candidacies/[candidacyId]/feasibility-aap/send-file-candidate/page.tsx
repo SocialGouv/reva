@@ -1,13 +1,10 @@
 "use client";
-import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
 } from "@/graphql/generated/graphql";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -16,21 +13,9 @@ import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 
 const FeasibilityBanner = ({
   sentToCandidateAt,
-  dateSinceCandidacyIsCaduque,
-  isCandidacyActualisationFeatureActive,
 }: {
   sentToCandidateAt: Date | null;
-  dateSinceCandidacyIsCaduque: Date | null;
-  isCandidacyActualisationFeatureActive: boolean;
 }) => {
-  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
-    return (
-      <BannerIsCaduque
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
   if (sentToCandidateAt) {
     return (
       <Alert
@@ -61,10 +46,6 @@ export default function SendFileCandidatePage() {
   } = useSendFileCandidate();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const handleSendFile = async () => {
     try {
@@ -81,9 +62,6 @@ export default function SendFileCandidatePage() {
   const sentToCandidateAt = dematerializedFeasibilityFile?.sentToCandidateAt
     ? new Date(dematerializedFeasibilityFile?.sentToCandidateAt)
     : null;
-  const dateSinceCandidacyIsCaduque = candidacy?.isCaduque
-    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
-    : null;
 
   return (
     <>
@@ -93,13 +71,7 @@ export default function SendFileCandidatePage() {
         }
         candidacy={candidacy as Candidacy}
         FeasibilityBanner={
-          <FeasibilityBanner
-            sentToCandidateAt={sentToCandidateAt}
-            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-            isCandidacyActualisationFeatureActive={
-              isCandidacyActualisationFeatureActive
-            }
-          />
+          <FeasibilityBanner sentToCandidateAt={sentToCandidateAt} />
         }
       />
 
