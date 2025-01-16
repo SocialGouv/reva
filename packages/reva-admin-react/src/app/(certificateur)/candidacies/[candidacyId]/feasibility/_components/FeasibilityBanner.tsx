@@ -20,6 +20,7 @@ interface Props {
   hasPendingCaduciteContestation: boolean;
   isCandidacyActualisationFeatureActive: boolean;
   pendingCaduciteContestationSentAt?: number | null;
+  hasConfirmedCaduciteContestation: boolean;
 }
 
 export function FeasibilityBanner({
@@ -33,8 +34,24 @@ export function FeasibilityBanner({
   hasPendingCaduciteContestation,
   isCandidacyActualisationFeatureActive,
   pendingCaduciteContestationSentAt,
+  hasConfirmedCaduciteContestation,
 }: Props) {
   switch (true) {
+    case isCandidacyActualisationFeatureActive &&
+      hasConfirmedCaduciteContestation &&
+      !!lastActivityDate:
+      return (
+        <Alert
+          className="mb-12"
+          severity="error"
+          data-test="feasibility-caducite-contestation-confirmed"
+          title={`Recevabilité caduque depuis le ${format(
+            lastActivityDate,
+            "dd/MM/yyyy",
+          )}`}
+          description="Le candidat n'a pas procédé à son actualisation (démarche à effectuer tous les 6 mois). Sa recevabilité est donc caduque."
+        />
+      );
     case isCandidacyActualisationFeatureActive &&
       hasPendingCaduciteContestation &&
       !!pendingCaduciteContestationSentAt:
@@ -70,7 +87,7 @@ export function FeasibilityBanner({
             dateThresholdCandidacyIsCaduque(lastActivityDate),
             "dd/MM/yyyy",
           )}`}
-          description="Le candidat n'est plus actif (<6 mois d'inactivité) et n'a pas procédé à son actualisation. Sa recevabilité est donc caduque."
+          description="Le candidat n'a pas procédé à son actualisation (démarche à effectuer tous les 6 mois). Sa recevabilité est donc caduque. S'il le souhaite, il peut contester la caducité. Vous devrez alors réévaluer cette décision."
         />
       );
     case decision === "REJECTED":
