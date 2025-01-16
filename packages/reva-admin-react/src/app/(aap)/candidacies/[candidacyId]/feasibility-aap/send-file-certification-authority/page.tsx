@@ -1,6 +1,5 @@
 "use client";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import {
@@ -13,7 +12,6 @@ import {
   DematerializedFeasibilityFile,
   FeasibilityDecision,
 } from "@/graphql/generated/graphql";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
@@ -41,25 +39,14 @@ const FeasibilityBanner = ({
   decisionSentAt,
   decision,
   decisionComment,
-  dateSinceCandidacyIsCaduque,
-  isCandidacyActualisationFeatureActive,
 }: {
   feasibilityFileSentAt?: number | null;
   feasibilityIsPending: boolean;
   decisionSentAt?: number | null;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
-  dateSinceCandidacyIsCaduque: Date | null;
   isCandidacyActualisationFeatureActive: boolean;
 }) => {
-  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
-    return (
-      <BannerIsCaduque
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
   if (feasibilityFileSentAt) {
     if (feasibilityIsPending) {
       return (
@@ -120,9 +107,6 @@ export default function SendFileCertificationAuthorityPage() {
     !feasibilityHasBeenSent || feasibilityIsIncomplete;
   const isReadyToBeSentToCertificationAuthority =
     dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority;
-  const dateSinceCandidacyIsCaduque = candidacy?.isCaduque
-    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
-    : null;
 
   const handleSendFile = async () => {
     if (!dematerializedFeasibilityFile) {
@@ -169,7 +153,6 @@ export default function SendFileCertificationAuthorityPage() {
             decisionSentAt={decisionSentAt}
             decision={decision as FeasibilityDecision}
             decisionComment={decisionComment}
-            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
             isCandidacyActualisationFeatureActive={
               isCandidacyActualisationFeatureActive
             }
