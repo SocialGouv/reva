@@ -4,12 +4,12 @@ import { format, isAfter, isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { isFundingRequestEnabledForCertification } from "../../../candidacy-menu/features/isFundingRequestEnabledForCertification";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { isFundingRequestEnabledForCertification } from "../../../candidacy-menu/features/isFundingRequestEnabledForCertification";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
@@ -172,6 +172,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       candidacyDropOut: true,
       Feasibility: true,
       certification: true,
+      candidacyContestationCaducite: true,
     },
   });
   if (!candidacy) {
@@ -197,9 +198,14 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     (s) => s.isActive,
   )?.[0].status;
   const isCandidacyDroppedOut = !!candidacy.candidacyDropOut;
+  const hasConfirmedCandidacyCaducite =
+    !!candidacy.candidacyContestationCaducite?.find(
+      (c) =>
+        c.certificationAuthorityContestationDecision === "CADUCITE_CONFIRMED",
+    );
 
   // If the candidate has not dropped out ...
-  if (!isCandidacyDroppedOut) {
+  if (!isCandidacyDroppedOut && !hasConfirmedCandidacyCaducite) {
     const feasibilityRejected =
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
     // Either the feasibility has been rejected and thus the active candidacy status must be "DEMANDE_FINANCEMENT_ENVOYE" ...
