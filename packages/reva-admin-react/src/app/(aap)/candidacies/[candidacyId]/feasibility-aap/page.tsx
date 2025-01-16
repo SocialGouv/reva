@@ -1,6 +1,7 @@
 "use client";
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
 import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
@@ -35,6 +36,7 @@ const FeasibilityBanner = ({
   history,
   dateSinceCandidacyIsCaduque,
   isCandidacyActualisationFeatureActive,
+  hasConfirmedCaduciteContestation,
 }: {
   decisionSentAt: Date | null;
   decision: FeasibilityDecision;
@@ -42,7 +44,20 @@ const FeasibilityBanner = ({
   history?: FeasibilityHistory[];
   dateSinceCandidacyIsCaduque: Date | null;
   isCandidacyActualisationFeatureActive: boolean;
+  hasConfirmedCaduciteContestation: boolean;
 }) => {
+  if (
+    dateSinceCandidacyIsCaduque &&
+    isCandidacyActualisationFeatureActive &&
+    hasConfirmedCaduciteContestation
+  ) {
+    return (
+      <BannerCaduciteConfirmed
+        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
+      />
+    );
+  }
+
   if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
     return (
       <BannerIsCaduque
@@ -90,6 +105,13 @@ const AapFeasibilityPage = () => {
     ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
     : null;
 
+  const hasConfirmedCaduciteContestation =
+    !!candidacy?.candidacyContestationsCaducite?.find(
+      (candidacyContestation) =>
+        candidacyContestation?.certificationAuthorityContestationDecision ===
+        "CADUCITE_CONFIRMED",
+    );
+
   if (!feasibility) {
     return null;
   }
@@ -115,6 +137,7 @@ const AapFeasibilityPage = () => {
             isCandidacyActualisationFeatureActive={
               isCandidacyActualisationFeatureActive
             }
+            hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
           />
         }
         certificationAuthorityLabel={feasibility?.certificationAuthority?.label}

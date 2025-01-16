@@ -104,6 +104,9 @@ const getCandidacyById = graphql(`
       }
       isCaduque
       lastActivityDate
+      candidacyContestationsCaducite {
+        certificationAuthorityContestationDecision
+      }
     }
   }
 `);
