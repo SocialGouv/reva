@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -49,7 +50,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     "candidacy_actualisation",
   );
 
-  const { data: getCandidacyMenuResponse } = useQuery({
+  const { data: getCandidacyMenuResponse, isLoading } = useQuery({
     queryKey: [candidacyId, "getCandidacyMenu"],
     queryFn: () =>
       graphqlClient.request(getCandidacyMenuQuery, {
@@ -71,6 +72,10 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   const candidate = candidacy?.candidate;
 
   const isCaduque = candidacy?.isCaduque;
+
+  if (isLoading) {
+    return <Skeleton />;
+  }
 
   return (
     <div className="flex flex-col md:flex-row w-full">
