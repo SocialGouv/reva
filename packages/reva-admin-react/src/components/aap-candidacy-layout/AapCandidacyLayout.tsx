@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
+import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -32,6 +33,9 @@ const getCandidacyMenuQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       isCaduque
       financeModule
+      organism {
+        modaliteAccompagnement
+      }
       candidate {
         lastname
         firstname
@@ -89,6 +93,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         </div>
         <CandidacyModalities
           fundable={candidacy?.financeModule !== "hors_plateforme"}
+          modaliteAccompagnement={candidacy?.organism?.modaliteAccompagnement}
         />
         {isCaduque && isCandidacyActualisationActive && (
           <Badge severity="error">Recevabilité caduque</Badge>
@@ -122,17 +127,57 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const CandidacyModalities = ({ fundable }: { fundable: boolean }) => (
-  <div>
+const CandidacyModalities = ({
+  fundable,
+  modaliteAccompagnement,
+}: {
+  fundable: boolean;
+  modaliteAccompagnement: OrganismModaliteAccompagnement | undefined;
+}) => {
+  const FundableBadge = () => (
     <Badge
-      severity={fundable ? "info" : "new"}
+      className={fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"}
       small
+      noIcon
       data-test={fundable ? "badge-fundable" : "badge-not-fundable"}
     >
-      {fundable ? "finançable france vae" : "finançable droit commun"}
+      {fundable ? "finançable France VAE" : "financement droit commun"}
     </Badge>
-  </div>
-);
+  );
+
+  if (!modaliteAccompagnement) {
+    return <FundableBadge />;
+  }
+
+  const accompagnementConfigMap = {
+    A_DISTANCE: {
+      dataTest: "badge-remote",
+      className: "fr-badge--green-tilleul-verveine",
+      value: "À distance",
+    },
+    LIEU_ACCUEIL: {
+      dataTest: "badge-on-site",
+      className: "fr-badge--beige-gris-galet",
+      value: "Sur site",
+    },
+  };
+
+  const accompagnementConfig = accompagnementConfigMap[modaliteAccompagnement];
+
+  return (
+    <div className="flex flex-wrap gap-3">
+      <FundableBadge />
+      <Badge
+        small
+        noIcon
+        className={accompagnementConfig.className}
+        data-test={accompagnementConfig.dataTest}
+      >
+        {accompagnementConfig.value}
+      </Badge>
+    </div>
+  );
+};
 
 const MenuEntry = ({
   menuEntry,

@@ -52,6 +52,9 @@
       "candidate": {
         "lastname": "Alice",
         "firstname": "Doe"
+      },
+      "organism": {
+        "modaliteAccompagnement": "A_DISTANCE"
       }
     }
   }

@@ -1,12 +1,18 @@
 import { stubQuery } from "../../utils/graphql";
-import { FeasibilityFormat, FinanceModule } from "@/graphql/generated/graphql";
+import {
+  FeasibilityFormat,
+  FinanceModule,
+  OrganismModaliteAccompagnement,
+} from "@/graphql/generated/graphql";
 
 function visitSummary({
   feasibilityFormat,
   financeModule,
+  modaliteAccompagnement,
 }: {
   feasibilityFormat: FeasibilityFormat;
   financeModule: FinanceModule;
+  modaliteAccompagnement: OrganismModaliteAccompagnement;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
     cy.fixture("candidacy/candidacy-menu.json").then((candidacyMenu) => {
@@ -14,6 +20,8 @@ function visitSummary({
       candidacy.data.getCandidacyById.financeModule = financeModule;
       candidacyMenu.data.getCandidacyById.feasibilityFormat = feasibilityFormat;
       candidacyMenu.data.getCandidacyById.financeModule = financeModule;
+      candidacyMenu.data.getCandidacyById.organism.modaliteAccompagnement =
+        modaliteAccompagnement;
 
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
@@ -49,6 +57,7 @@ feasibilityFormats.forEach((feasibilityFormat) => {
       visitSummary({
         feasibilityFormat,
         financeModule: "hors_plateforme",
+        modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacySummaryById");
       cy.get('[data-test="funding-request-not-available-alert"]').should(
@@ -60,9 +69,30 @@ feasibilityFormats.forEach((feasibilityFormat) => {
       visitSummary({
         feasibilityFormat,
         financeModule: "hors_plateforme",
+        modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
       cy.get('[data-test="badge-not-fundable"]').should("exist");
+    });
+
+    it("display a specific badge when accompagnement is on site", function () {
+      visitSummary({
+        feasibilityFormat,
+        financeModule: "hors_plateforme",
+        modaliteAccompagnement: "LIEU_ACCUEIL",
+      });
+      cy.wait("@getCandidacyMenuAndCandidateInfos");
+      cy.get('[data-test="badge-on-site"]').should("exist");
+    });
+
+    it("display a specific badge when accompagnement is remote", function () {
+      visitSummary({
+        feasibilityFormat,
+        financeModule: "hors_plateforme",
+        modaliteAccompagnement: "A_DISTANCE",
+      });
+      cy.wait("@getCandidacyMenuAndCandidateInfos");
+      cy.get('[data-test="badge-remote"]').should("exist");
     });
   });
 });
@@ -72,6 +102,7 @@ context("Candidacy summary page", () => {
     visitSummary({
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
     cy.get('[data-test="candidate-information"]').should("exist");
@@ -84,6 +115,7 @@ context("Candidacy summary page", () => {
     visitSummary({
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
     cy.get('[data-test="candidate-information"] button').should("exist");
@@ -94,6 +126,7 @@ context("Candidacy summary page", () => {
     visitSummary({
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
     cy.get(
