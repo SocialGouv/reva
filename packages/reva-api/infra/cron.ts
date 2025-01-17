@@ -6,6 +6,8 @@ import { CronJob } from "cron";
 import dotenv from "dotenv";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
+import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
+import { sendEmailsForAutoCandidacyCaducite } from "../modules/candidacy/features/sendEmailsForAutoCandidacyCaducite";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
@@ -15,12 +17,12 @@ import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/featur
 import { setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate } from "../modules/referential/features/setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
-import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
+const EVERY_DAY_AT_3_AM = "0 3 * * *";
 
 const fundingRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
@@ -164,6 +166,23 @@ CronJob.from({
           "Running batch.send-emails-for-auto-confirmed-candidacy-drop-outs",
         );
         await sendAutoCandidacyDropOutConfirmationEmails();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send emails for candidacies that are about to become or have become caduque
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_EMAILS_FOR_AUTO_CANDIDACY_CADUCIE_CRONTIME ||
+    EVERY_DAY_AT_3_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-emails-for-auto-candidacy-caducite",
+      batchCallback: async () => {
+        logger.info("Running batch.send-emails-for-auto-candidacy-caducite");
+        await sendEmailsForAutoCandidacyCaducite();
       },
     }),
   start: true,
