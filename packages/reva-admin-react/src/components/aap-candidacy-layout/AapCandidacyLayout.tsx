@@ -1,15 +1,14 @@
 "use client";
+import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
-import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
-import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -75,7 +74,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
 
   const candidate = candidacy?.candidate;
 
-  const isCaduque = candidacy?.isCaduque;
+  const isCaduque = !!candidacy?.isCaduque;
 
   if (isLoading) {
     return <Skeleton />;
@@ -94,10 +93,10 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         <CandidacyModalities
           fundable={candidacy?.financeModule !== "hors_plateforme"}
           modaliteAccompagnement={candidacy?.organism?.modaliteAccompagnement}
+          isCaduque={isCaduque}
+          isCandidacyActualisationActive={isCandidacyActualisationActive}
         />
-        {isCaduque && isCandidacyActualisationActive && (
-          <Badge severity="error">Recevabilité caduque</Badge>
-        )}
+
         <ul className="mb-6">
           {menuHeaderEntries?.map((e) => (
             <MenuEntry key={e.label} menuEntry={e} />

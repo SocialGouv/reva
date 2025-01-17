@@ -17,9 +17,13 @@ const accompagnementConfigMap = {
 export const CandidacyModalities = ({
   fundable,
   modaliteAccompagnement,
+  isCaduque,
+  isCandidacyActualisationActive,
 }: {
   fundable: boolean;
   modaliteAccompagnement: OrganismModaliteAccompagnement | undefined;
+  isCaduque: boolean;
+  isCandidacyActualisationActive: boolean;
 }) => {
   const FundableBadge = () => (
     <Badge
@@ -49,6 +53,9 @@ export const CandidacyModalities = ({
       >
         {accompagnementConfig.value}
       </Badge>
+      {isCaduque && isCandidacyActualisationActive && (
+        <Badge severity="error">Recevabilité caduque</Badge>
+      )}
     </div>
   );
 };
