@@ -16,17 +16,17 @@ const getUserProfileText = ({
   switch (userProfile) {
     case "ADMIN":
       if (!user.firstname && !user.lastname) {
-        return "Administrateur";
+        return "un administrateur";
       }
-      return `Administrateur (${toUpper(
+      return `un administrateur (${toUpper(
         truncate(user.firstname, { length: 2, omission: "." }),
       )} ${capitalize(toLower(user.lastname))})`;
     case "AAP":
-      return "AAP";
+      return "son AAP";
     case "CERTIFICATEUR":
-      return "Certificateur";
+      return "son certificateur";
     case "CANDIDAT":
-      return "Candidat";
+      return "le candidat";
   }
 };
 
@@ -50,16 +50,16 @@ export const DayLog = ({
       <Tag className="rounded-bl-none">{day}</Tag>
       <ul className="-mt-1 mb-0 pt-6 border-l-2 border-[#eee]">
         {logs.map((log) => (
-          <li key={log.id} className="flex gap-x-4 mb-4">
-            <div className="flex-auto">
-              <strong>
+          <li key={log.id} className="flex gap-x-4 mb-2">
+            <div className="flex-auto text-sm">
+              {log.message} par{" "}
+              <span className="font-semibold">
                 {getUserProfileText({
                   userProfile: log.userProfile,
                   user: log.user,
-                })}{" "}
-                :{" "}
-              </strong>
-              {log.message}
+                })}
+              </span>
+              .
             </div>
             <div className="flex-none mt-1 text-xs text-neutral-500">
               {format(log.createdAt, "HH:mm")}
