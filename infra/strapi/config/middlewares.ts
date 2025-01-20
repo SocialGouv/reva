@@ -8,7 +8,10 @@ export default [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          "script-src": ["https://cdn.ckeditor.com"],
+          "script-src": [
+            "https://cdn.ckeditor.com",
+            "https://grateful-event-39c5178d33.strapiapp.com",
+          ],
         },
       },
     },
