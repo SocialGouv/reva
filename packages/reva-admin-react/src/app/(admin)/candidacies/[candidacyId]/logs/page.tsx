@@ -2,14 +2,10 @@
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import {
-  CandidacyLogUser,
-  CandidacyLogUserProfile,
-} from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { capitalize, toLower, toUpper, truncate } from "lodash";
 import { useParams } from "next/navigation";
+import { CandidacyLog, DayLog } from "./DayLog";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {
@@ -50,31 +46,24 @@ const CandidacyLogsPage = () => {
         candidacyId,
       }),
   });
+
   const candidacy = getCandidacyLogsResponse?.getCandidacyById;
   const candidate = candidacy?.candidate;
-  const candidacyLogs = candidacy?.candidacyLogs;
+  const candidacyLogs = candidacy?.candidacyLogs || [];
 
-  const getUserProfileText = ({
-    userProfile,
-    user,
-  }: {
-    userProfile: CandidacyLogUserProfile;
-    user: CandidacyLogUser;
-  }) => {
-    switch (userProfile) {
-      case "ADMIN":
-        return `Administrateur (${toUpper(
-          truncate(user.firstname, { length: 2, omission: "." }),
-        )} ${capitalize(toLower(user.lastname))})`;
-      case "AAP":
-        return "AAP";
-      case "CERTIFICATEUR":
-        return "Certificateur";
-      case "CANDIDAT":
-        return "Candidat";
-    }
-    return "Inconnu";
-  };
+  const logsGroupedByDay = candidacyLogs.reduce(
+    (acc: Record<string, CandidacyLog[]>, log) => {
+      const dayKey = format(log.createdAt, "dd/MM/yyyy");
+
+      if (!acc[dayKey]) {
+        acc[dayKey] = [];
+      }
+      acc[dayKey].push(log);
+
+      return acc;
+    },
+    {},
+  );
 
   return (
     candidacy && (
@@ -86,24 +75,14 @@ const CandidacyLogsPage = () => {
         <p className="text-xl text-gray-700 font-bold mb-11">
           {candidacy.certification?.label}
         </p>
-        <ul>
-          {candidacyLogs?.map((l) => (
-            <li key={l.id} className="flex flex-col my-2">
-              <span className="text-sm font-bold">
-                {format(l.createdAt, "dd/MM/yyyy - HH:mm")}
-              </span>
-              <span>
-                <strong>
-                  {getUserProfileText({
-                    userProfile: l.userProfile,
-                    user: l.user,
-                  })}{" "}
-                  :{" "}
-                </strong>
-                {l.message}
-              </span>
-            </li>
-          ))}
+        <ul className="list-none">
+          {Object.keys(logsGroupedByDay).map((day) => {
+            return (
+              <li key={day}>
+                <DayLog day={day} logs={logsGroupedByDay[day]} />
+              </li>
+            );
+          })}
         </ul>
       </div>
     )
