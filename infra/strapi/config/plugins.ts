@@ -4,6 +4,7 @@ module.exports = ({ env }) => ({
       apolloServer: {
         introspection: true,
       },
+      v4CompatibilityMode: true,
     },
   },
   "preview-button": {

@@ -1,36 +1,35 @@
 {
   "name": "strapi",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "A Strapi application",
-  "scripts": {
-    "develop": "strapi develop",
-    "start": "strapi start",
-    "build": "strapi build",
-    "strapi": "strapi"
-  },
-  "dependencies": {
-    "@ckeditor/strapi-plugin-ckeditor": "^0.1.0",
-    "@strapi/plugin-graphql": "4.25.19",
-    "@strapi/plugin-i18n": "4.25.19",
-    "@strapi/plugin-users-permissions": "4.25.19",
-    "@strapi/strapi": "4.25.19",
-    "better-sqlite3": "8.6.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^5.2.0",
-    "strapi-plugin-preview-button": "^2.2.2",
-    "styled-components": "^5.2.1"
-  },
+  "license": "MIT",
   "author": {
     "name": "A Strapi developer"
   },
-  "strapi": {
-    "uuid": "55e85fe6-ae49-4d25-9991-2494c22b6d81"
+  "scripts": {
+    "build": "strapi build",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@ckeditor/strapi-plugin-ckeditor": "1.0.2",
+    "@strapi/plugin-graphql": "5.7.0",
+    "@strapi/plugin-users-permissions": "5.7.0",
+    "@strapi/strapi": "5.7.0",
+    "better-sqlite3": "11.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "strapi-plugin-preview-button": "^3.0.0",
+    "styled-components": "^6.0.0"
   },
   "engines": {
     "node": ">=16.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "strapi": {
+    "uuid": "55e85fe6-ae49-4d25-9991-2494c22b6d81"
+  }
 }
