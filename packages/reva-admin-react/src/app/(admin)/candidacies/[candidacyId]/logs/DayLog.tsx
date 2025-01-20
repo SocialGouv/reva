@@ -15,6 +15,9 @@ const getUserProfileText = ({
 }) => {
   switch (userProfile) {
     case "ADMIN":
+      if (!user.firstname && !user.lastname) {
+        return "Administrateur";
+      }
       return `Administrateur (${toUpper(
         truncate(user.firstname, { length: 2, omission: "." }),
       )} ${capitalize(toLower(user.lastname))})`;
