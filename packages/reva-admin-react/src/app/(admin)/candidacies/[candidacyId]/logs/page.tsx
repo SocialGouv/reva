@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import { CandidacyLog, DayLog } from "./DayLog";
+import { fr } from "date-fns/locale";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {
@@ -53,7 +54,7 @@ const CandidacyLogsPage = () => {
 
   const logsGroupedByDay = candidacyLogs.reduce(
     (acc: Record<string, CandidacyLog[]>, log) => {
-      const dayKey = format(log.createdAt, "dd/MM/yyyy");
+      const dayKey = format(log.createdAt, "do MMMM yyyy", { locale: fr });
 
       if (!acc[dayKey]) {
         acc[dayKey] = [];
@@ -75,7 +76,7 @@ const CandidacyLogsPage = () => {
         <p className="text-xl text-gray-700 font-bold mb-11">
           {candidacy.certification?.label}
         </p>
-        <ul className="list-none">
+        <ul className="list-none pl-0">
           {Object.keys(logsGroupedByDay).map((day) => {
             return (
               <li key={day}>

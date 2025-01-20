@@ -4,6 +4,7 @@ import {
   CandidacyLogUserProfile,
 } from "@/graphql/generated/graphql";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const getUserProfileText = ({
   userProfile,
@@ -43,10 +44,10 @@ export const DayLog = ({
 }) => {
   return (
     <div className="mb-6">
-      <h2 className="text-base font-medium mb-4">{day}</h2>
-      <ul className="border-l-2 border-gray-100">
+      <Tag className="rounded-bl-none">{day}</Tag>
+      <ul className="-mt-1 mb-0 py-4 border-l-2 border-[#eee]">
         {logs.map((log) => (
-          <li key={log.id} className="flex flex-col my-2">
+          <li key={log.id} className="flex flex-col">
             <span className="text-sm font-bold">
               {format(log.createdAt, "HH:mm")}
             </span>
