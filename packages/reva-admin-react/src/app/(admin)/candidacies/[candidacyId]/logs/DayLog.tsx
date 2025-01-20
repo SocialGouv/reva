@@ -43,15 +43,12 @@ export const DayLog = ({
   logs: CandidacyLog[];
 }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-6 max-w-2xl">
       <Tag className="rounded-bl-none">{day}</Tag>
-      <ul className="-mt-1 mb-0 py-4 border-l-2 border-[#eee]">
+      <ul className="-mt-1 mb-0 pt-6 border-l-2 border-[#eee]">
         {logs.map((log) => (
-          <li key={log.id} className="flex flex-col">
-            <span className="text-sm font-bold">
-              {format(log.createdAt, "HH:mm")}
-            </span>
-            <span>
+          <li key={log.id} className="flex gap-x-4 mb-4">
+            <div className="flex-auto">
               <strong>
                 {getUserProfileText({
                   userProfile: log.userProfile,
@@ -60,7 +57,10 @@ export const DayLog = ({
                 :{" "}
               </strong>
               {log.message}
-            </span>
+            </div>
+            <div className="flex-none mt-1 text-xs text-neutral-500">
+              {format(log.createdAt, "HH:mm")}
+            </div>
           </li>
         ))}
       </ul>
