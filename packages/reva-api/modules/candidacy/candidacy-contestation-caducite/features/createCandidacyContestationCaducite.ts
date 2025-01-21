@@ -3,6 +3,7 @@ import { isBefore, startOfToday } from "date-fns";
 import { logCandidacyAuditEvent } from "../../../../modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "../../../../prisma/client";
 import { CreateCandidacyContestationCaduciteInput } from "../candidacy-contestation-caducite.types";
+import { sendCandidacyContestationCaduciteCreatedEmailToCertificationAuthority } from "../emails/sendCandidacyContestationCaduciteCreatedEmailToCertificationAuthority";
 
 export const createCandidacyContestationCaducite = async ({
   input,
@@ -25,10 +26,24 @@ export const createCandidacyContestationCaducite = async ({
     where: {
       id: candidacyId,
     },
-    include: { candidacyContestationCaducite: true },
+    include: {
+      candidate: true,
+      candidacyContestationCaducite: true,
+    },
   });
 
   if (!candidacy) {
+    throw new Error("La candidature n'a pas été trouvée");
+  }
+
+  const activeFeasibility = await prismaClient.feasibility.findFirst({
+    where: { candidacyId, isActive: true },
+    include: {
+      certificationAuthority: true,
+    },
+  });
+
+  if (!activeFeasibility) {
     throw new Error("La candidature n'a pas été trouvée");
   }
 
@@ -54,6 +69,29 @@ export const createCandidacyContestationCaducite = async ({
     },
   });
 
+  const contestation = await prismaClient.candidacyContestationCaducite.create({
+    data: {
+      candidacyId,
+      contestationReason,
+    },
+  });
+
+  const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
+  const certificationAuthorityName =
+    activeFeasibility.certificationAuthority?.contactFullName || "";
+  const certificationAuthorityEmail =
+    activeFeasibility.certificationAuthority?.contactEmail;
+
+  if (certificationAuthorityEmail) {
+    await sendCandidacyContestationCaduciteCreatedEmailToCertificationAuthority(
+      {
+        candidateFullName,
+        certificationAuthorityName,
+        certificationAuthorityEmail,
+      },
+    );
+  }
+
   await logCandidacyAuditEvent({
     candidacyId,
     eventType: "CADUCITE_CONTESTED",
@@ -62,10 +100,5 @@ export const createCandidacyContestationCaducite = async ({
     userRoles: context.auth.userInfo?.realm_access?.roles || [],
   });
 
-  return prismaClient.candidacyContestationCaducite.create({
-    data: {
-      candidacyId,
-      contestationReason,
-    },
-  });
+  return contestation;
 };
