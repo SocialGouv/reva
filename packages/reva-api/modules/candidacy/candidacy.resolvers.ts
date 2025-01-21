@@ -189,7 +189,13 @@ const unsafeResolvers = {
         searchFilter?: string;
         status: CandidacyCaduciteStatus;
       },
-    ) => getCandidacyCaducites(params),
+      context: GraphqlContext,
+    ) =>
+      getCandidacyCaducites({
+        ...params,
+        hasRole: context.auth.hasRole,
+        keycloakId: context.auth.userInfo?.sub || "",
+      }),
   },
   Mutation: {
     candidacy_submitCandidacy: async (

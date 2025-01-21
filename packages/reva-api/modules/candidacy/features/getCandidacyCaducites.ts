@@ -1,6 +1,8 @@
 import { Candidacy, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
+import { getCertificationAuthorityLocalAccountByAccountId } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "../../feasibility/features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 import {
   CADUCITE_THRESHOLD_DAYS,
   CADUCITE_VALID_STATUSES,
@@ -15,11 +17,15 @@ export const getCandidacyCaducites = async ({
   limit = 10,
   searchFilter,
   status,
+  hasRole,
+  keycloakId,
 }: {
   offset?: number;
   limit?: number;
   searchFilter?: string;
   status: CandidacyCaduciteStatus;
+  hasRole: (role: string) => boolean;
+  keycloakId: string;
 }): Promise<PaginatedListResult<Candidacy>> => {
   if (!status || !["CADUQUE", "CONTESTATION"].includes(status)) {
     throw new Error("Statut de caducité invalide");
@@ -59,6 +65,40 @@ export const getCandidacyCaducites = async ({
         status: { not: "ARCHIVE" },
       };
       break;
+  }
+
+  if (hasRole("manage_feasibility")) {
+    const account = await prismaClient.account.findFirstOrThrow({
+      where: { keycloakId },
+    });
+
+    const isCertificationAuthorityLocalAccount = !hasRole(
+      "manage_certification_authority_local_account",
+    );
+
+    const certificationAuthorityLocalAccount =
+      isCertificationAuthorityLocalAccount
+        ? await getCertificationAuthorityLocalAccountByAccountId({
+            accountId: account.id,
+          })
+        : null;
+
+    queryWhereClause = {
+      ...queryWhereClause,
+      Feasibility: {
+        every: {
+          ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+            {
+              account,
+              isCertificationAuthorityLocalAccount,
+              certificationAuthorityLocalAccount,
+            },
+          ),
+        },
+      },
+    };
+  } else if (!hasRole("admin")) {
+    throw new Error("Utilisateur non autorisé");
   }
 
   if (searchFilter && searchFilter.length > 0) {
