@@ -4,14 +4,15 @@
 
 import { faker } from "@faker-js/faker/.";
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
+import { randomUUID } from "crypto";
 import { addDays, subDays } from "date-fns";
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
+import { createFeasibilityDematerializedHelper } from "../../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createCandidacyContestationCaducite } from "./createCandidacyContestationCaducite";
-import { randomUUID } from "crypto";
 
 const VALID_CONTESTATION_REASON = "Valid contestation reason";
 const FUTURE_DATE = addDays(new Date(), 30);
@@ -121,7 +122,8 @@ describe("createCandidacyContestationCaducite", () => {
     });
 
     test("should fail when a contestation is pending", async () => {
-      const candidacy = await createCandidacyHelper();
+      const feasibility = await createFeasibilityDematerializedHelper();
+      const candidacy = feasibility.candidacy;
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
@@ -147,7 +149,8 @@ describe("createCandidacyContestationCaducite", () => {
     });
 
     test("should fail when caducity has been confirmed", async () => {
-      const candidacy = await createCandidacyHelper();
+      const feasibility = await createFeasibilityDematerializedHelper();
+      const candidacy = feasibility.candidacy;
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
@@ -175,7 +178,8 @@ describe("createCandidacyContestationCaducite", () => {
 
   describe("Successful creation", () => {
     test("should successfully create a contestation and update readyForJuryEstimatedAt", async () => {
-      const candidacy = await createCandidacyHelper();
+      const feasibility = await createFeasibilityDematerializedHelper();
+      const candidacy = feasibility.candidacy;
 
       const result = await createCandidacyContestationCaducite({
         input: {
@@ -200,7 +204,8 @@ describe("createCandidacyContestationCaducite", () => {
     });
 
     test("should allow new contestation when previous one was invalidated", async () => {
-      const candidacy = await createCandidacyHelper();
+      const feasibility = await createFeasibilityDematerializedHelper();
+      const candidacy = feasibility.candidacy;
 
       await prismaClient.candidacyContestationCaducite.create({
         data: {
@@ -229,7 +234,8 @@ describe("createCandidacyContestationCaducite", () => {
 
   describe("Security", () => {
     test("should allow candidate to create contestation for their own candidacy", async () => {
-      const candidacy = await createCandidacyHelper();
+      const feasibility = await createFeasibilityDematerializedHelper();
+      const candidacy = feasibility.candidacy;
 
       const resp = await createContestationMutation({
         keycloakId: candidacy.candidate?.keycloakId ?? "",
