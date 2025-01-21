@@ -1,14 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  add,
-  endOfDay,
-  format,
-  isAfter,
-  isBefore,
-  startOfDay,
-  sub,
-} from "date-fns";
+import { add, endOfDay, format, isAfter, isBefore, startOfDay } from "date-fns";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -45,14 +37,6 @@ const schema = z
       ctx.addIssue({
         path: ["date"],
         message: "La date doit être inférieure à 2 ans",
-        code: z.ZodIssueCode.custom,
-      });
-    }
-
-    if (isBefore(date, endOfDay(sub(new Date(), { months: 6 })))) {
-      ctx.addIssue({
-        path: ["date"],
-        message: "La date ne peut pas se trouver plus de 6 mois dans le passé",
         code: z.ZodIssueCode.custom,
       });
     }
