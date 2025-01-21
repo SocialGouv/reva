@@ -27,6 +27,8 @@ export const sendCandidacyCaduciteSoonWarningEmailToCandidate = async ({
         <p>Si vous avez des questions ou si vous rencontrez des difficultés, vous pouvez consulter notre <a href="https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw">tutoriel candidat</a> ou nous contacter à l'adresse support@vae.gouv.fr.</p>
         <p>À très vite !</p>
         <p>L'équipe France VAE</p>
+        <br/>
+        <p><em>Procédure d'actualisation conforme aux dispositions de <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048699561">l'article R. 6412-4 du Code du travail</a> modifié par <a href="https://www.legifrance.gouv.fr/jorf/article_jo/JORFARTI000048679311">l'article 2 du décret n° 2023-1275 du 27 décembre 2023 relatif à la validation des acquis de l'expérience</a></em></p>
         `,
       }),
     );
