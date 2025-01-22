@@ -23,22 +23,22 @@ const articlesQuery = graphql(`
 const Articles = () => {
   const { graphqlStrapiClient } = useGraphQlStrapiClient();
 
-  const laVaeCestQuoiId = "6";
-  const etapesParcoursFranceVaeId = "4";
-  const pourquoiFaireUneVaeId = "14";
-  const articleIds = [
-    laVaeCestQuoiId,
-    pourquoiFaireUneVaeId,
-    etapesParcoursFranceVaeId,
+  const laVaeCestQuoiSlug = "la-vae-cest-quoi";
+  const etapesParcoursFranceVaeSlug = "etapes-parcours-france-vae";
+  const pourquoiFaireUneVaeSlug = "pourquoi-faire-une-vae";
+  const articleSlugs = [
+    laVaeCestQuoiSlug,
+    pourquoiFaireUneVaeSlug,
+    etapesParcoursFranceVaeSlug,
   ];
 
   const { data: articles } = useQuery({
-    queryKey: ["getArticles", articleIds],
+    queryKey: ["getArticles", articleSlugs],
     queryFn: () =>
       graphqlStrapiClient.request(articlesQuery, {
         filters: {
-          documentId: {
-            in: articleIds,
+          slug: {
+            in: articleSlugs,
           },
         },
       }),
