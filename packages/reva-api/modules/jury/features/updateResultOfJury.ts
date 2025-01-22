@@ -71,6 +71,31 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     },
   });
 
+  console.log("result vvvvv");
+  console.log(juryInfo.result);
+
+  // When the candidacy has a failed jury result,
+  // the user can submit another dossier de validation
+  // So we need to reset the "ready for jury estimated date"
+  const failedJuryResults = [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
+
+  if (failedJuryResults.includes(juryInfo.result)) {
+    await prismaClient.candidacy.update({
+      where: {
+        id: jury.candidacyId,
+      },
+      data: {
+        readyForJuryEstimatedAt: null,
+      },
+    });
+  }
+
   const { candidacy } = jury;
 
   if (candidacy.candidate) {
