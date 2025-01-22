@@ -69,6 +69,21 @@ module.exports = ({ env }) => ({
             url: `${env("WEBSITE_URL")}/regions`,
           },
         },
+        {
+          uid: "api::legal.legal",
+          draft: {
+            alwaysVisible: true,
+            url: `${env("WEBSITE_URL")}/websiteapi/preview`,
+            query: {
+              type: "legal",
+              slug: "{slug}",
+              secret: env("STRAPI_PREVIEW_SECRET"),
+            },
+          },
+          published: {
+            url: `${env("WEBSITE_URL")}/legal/{slug}`,
+          },
+        },
       ],
     },
   },
