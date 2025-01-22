@@ -1,9 +1,9 @@
-import { ArticleDAideEntity } from "@/graphql/generated/graphql";
+import { ArticleDAide } from "@/graphql/generated/graphql";
 import Card from "@codegouvfr/react-dsfr/Card";
 
-export const ArticleCard = ({ article }: { article: ArticleDAideEntity }) => {
-  if (!article.attributes) return null;
-  const { vignette, titre, description, slug } = article.attributes;
+export const ArticleCard = ({ article }: { article: ArticleDAide }) => {
+  if (!article) return null;
+  const { vignette, titre, description, slug } = article;
   return (
     <div className="container">
       <Card
@@ -11,8 +11,8 @@ export const ArticleCard = ({ article }: { article: ArticleDAideEntity }) => {
         border
         enlargeLink
         desc={description}
-        imageAlt={vignette?.data?.attributes?.alternativeText as string}
-        imageUrl={vignette?.data?.attributes?.url as string}
+        imageAlt={vignette?.alternativeText as string}
+        imageUrl={vignette?.url as string}
         linkProps={{
           href: `/savoir-plus/articles/${slug}`,
         }}
