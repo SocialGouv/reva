@@ -11,7 +11,7 @@ const RegionsPage = ({
   getRegionsResponse: GetRegionsQuery;
   preview: boolean;
 }) => {
-  const regions = getRegionsResponse.regions?.data || [];
+  const regions = getRegionsResponse.regions || [];
   return (
     <MainLayout preview={preview}>
       <Head>
@@ -28,13 +28,11 @@ const RegionsPage = ({
 
         <ul className="list-none flex flex-col items-center md:flex-row flex-wrap gap-6 pl-0">
           {regions.map((r) => (
-            <li key={r.attributes?.slug}>
+            <li key={r?.slug}>
               <RegionCard
-                name={r.attributes?.nom || ""}
-                slug={r.attributes?.slug || ""}
-                thumbnailUrl={
-                  r.attributes?.vignette.data?.attributes?.url || ""
-                }
+                name={r?.nom || ""}
+                slug={r?.slug || ""}
+                thumbnailUrl={r?.vignette?.url || ""}
               />
             </li>
           ))}

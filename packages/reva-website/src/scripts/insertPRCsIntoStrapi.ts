@@ -9,13 +9,9 @@ const STRAPI_GRAPHQL_API_URL = "http://127.0.0.1:1337/graphql";
 const getDepartmentsQuery = graphql(`
   query getDepartmentsQuery {
     departements(pagination: { page: 1, pageSize: 200 }) {
-      data {
-        id
-        attributes {
-          nom
-          code
-        }
-      }
+      documentId
+      nom
+      code
     }
   }
 `);
@@ -28,25 +24,17 @@ const getDepartments = async () => {
       Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`,
     },
   );
-  return departements?.data;
+  return departements;
 };
 
 const createPrcsMutation = graphql(`
   mutation createPrcs($data: PrcInput!) {
     createPrc(data: $data) {
-      data {
-        id
-        attributes {
-          nom
-          departement {
-            data {
-              id
-              attributes {
-                nom
-              }
-            }
-          }
-        }
+      documentId
+      nom
+      departement {
+        documentId
+        nom
       }
     }
   }
@@ -56,15 +44,14 @@ const createPrcs = async () => {
   const departments = await getDepartments();
   for (const prc of prcs) {
     const departement = departments?.find(
-      (department) =>
-        department?.attributes?.code === prc["Département"].toString(),
+      (department) => department?.code === prc["Département"].toString(),
     );
     console.log(
       "Creating PRC",
       prc["Nom du PRC"],
       "in departement",
       prc["Département"],
-      departement?.attributes?.nom,
+      departement?.nom,
     );
     if (!departement) {
       console.error("Departement not found", prc["Département"]);
@@ -80,7 +67,7 @@ const createPrcs = async () => {
           telephone: prc["Téléphone"].toString(),
           region: prc["Région"],
           mandataire: prc["Mandataire"],
-          departement: departement?.id,
+          departement: departement?.documentId,
           publishedAt: new Date(),
         },
       },
@@ -93,7 +80,7 @@ const createPrcs = async () => {
       prc["Nom du PRC"],
       "in departement",
       prc["Département"],
-      departement?.id,
+      departement?.documentId,
     );
   }
 };

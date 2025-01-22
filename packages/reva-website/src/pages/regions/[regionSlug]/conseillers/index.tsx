@@ -13,39 +13,23 @@ const getRegionsBySlugQuery = graphql(`
     $filters: RegionFiltersInput!
   ) {
     regions(filters: $filters) {
-      data {
-        attributes {
+      nom
+      slug
+      prcs
+      departements(sort: "code", pagination: { limit: 200 }) {
+        nom
+        code
+        prcs(pagination: { limit: 200 }) {
+          documentId
           nom
-          slug
-          prcs
-          departements(sort: "code", pagination: { limit: 200 }) {
-            data {
-              attributes {
-                nom
-                code
-                prcs(pagination: { limit: 200 }) {
-                  data {
-                    id
-                    attributes {
-                      nom
-                      adresse
-                      email
-                      telephone
-                      mandataire
-                    }
-                  }
-                }
-              }
-            }
-          }
-          vignette {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
+          adresse
+          email
+          telephone
+          mandataire
         }
+      }
+      vignette {
+        url
       }
     }
   }
@@ -56,17 +40,17 @@ const RegionAdvisorsPage = ({
 }: {
   getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionAdvisorsPageQuery;
 }) => {
-  const region = getRegionsBySlugResponse?.regions?.data[0];
+  const region = getRegionsBySlugResponse?.regions[0];
   const prcs = useMemo(
     () =>
-      region?.attributes?.departements?.data
-        ?.map((d) =>
-          d.attributes?.prcs?.data?.map((p) => [
-            `${d.attributes?.nom} (${d.attributes?.code})`,
-            p.attributes?.nom,
-            p.attributes?.adresse,
-            p.attributes?.telephone,
-            p.attributes?.email,
+      region?.departements
+        .map((d) =>
+          d?.prcs?.map((p) => [
+            `${d?.nom} (${d?.code})`,
+            p?.nom,
+            p?.adresse,
+            p?.telephone,
+            p?.email,
           ]),
         )
         ?.flat(),
@@ -75,12 +59,12 @@ const RegionAdvisorsPage = ({
   return region ? (
     <MainLayout className="fr-container pt-16 pb-12">
       <Head>
-        <title>{`Vos conseillers VAE en ${region.attributes?.nom}`}</title>
+        <title>{`Vos conseillers VAE en ${region?.nom}`}</title>
       </Head>
       <div className="flex justify-between align-top">
-        <h1>Vos conseillers VAE en {region.attributes?.nom}</h1>
+        <h1>Vos conseillers VAE en {region?.nom}</h1>
         <Image
-          src={region.attributes?.vignette.data?.attributes?.url || ""}
+          src={region?.vignette.url || ""}
           width={140}
           height={88}
           alt="logo de la région"

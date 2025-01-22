@@ -31,47 +31,45 @@ const FaqPage = ({
           Questions fréquentes
         </h1>
         <div className="flex flex-wrap justify-start md:justify-center gap-6 md:gap-16">
-          {sections.sectionFaqs?.data?.map((s) => (
+          {sections.sectionFaqs?.map((s) => (
             <Tile
-              key={s.id}
+              key={s?.documentId}
               enlargeLinkOrButton
               orientation="horizontal"
               linkProps={{
-                href: `#section-${s.id}`,
+                href: `#section-${s?.documentId}`,
               }}
               className="max-h-[100px]"
               title={
                 <span className="flex items-center gap-8 -mt-5 mr-8">
-                  {s.attributes?.pictogramme && (
-                    <span>{PICTOGRAMS[s.attributes?.pictogramme]}</span>
-                  )}
-                  <span>{s.attributes?.titre}</span>
+                  {s?.pictogramme && <span>{PICTOGRAMS[s?.pictogramme]}</span>}
+                  <span>{s?.titre}</span>
                 </span>
               }
             />
           ))}
         </div>
         <div className="flex flex-col py-4 mt-0 md:mt-12">
-          {sections.sectionFaqs?.data?.map((s) => (
+          {sections.sectionFaqs?.map((s) => (
             <div
-              key={s.id}
-              id={`section-${s.id}`}
+              key={s?.documentId}
+              id={`section-${s?.documentId}`}
               className="font-bold text-3xl text-black mb-12"
             >
-              {s.attributes?.titre}
+              {s?.titre}
               <ul className="list-none p-0">
-                {s.attributes?.sous_section_faqs?.data?.map((ss) => (
-                  <li className="text-2xl mt-4" key={ss.id}>
-                    {(s.attributes?.sous_section_faqs?.data?.length || 0) > 1 &&
-                      ss.attributes?.titre}
+                {s?.sous_section_faqs?.map((ss) => (
+                  <li className="text-2xl mt-4" key={ss?.documentId}>
+                    {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}
                     <div className="mt-4">
-                      {ss.attributes?.article_faqs?.data?.map((a) => (
-                        <span key={a.id} id={`article-${a.id}`}>
+                      {ss?.article_faqs?.map((a) => (
+                        <span
+                          key={a?.documentId}
+                          id={`article-${a?.documentId}`}
+                        >
                           <Accordion
                             label={
-                              <p className="text-blue-900">
-                                {a.attributes?.question}
-                              </p>
+                              <p className="text-blue-900">{a?.question}</p>
                             }
                             className="text-gray-700 font-normal"
                           >
@@ -79,7 +77,7 @@ const FaqPage = ({
                               className="ck-content"
                               dangerouslySetInnerHTML={{
                                 __html:
-                                  a.attributes?.reponse?.replaceAll(
+                                  a?.reponse?.replaceAll(
                                     "<a",
                                     "<a target='_'",
                                   ) || "",

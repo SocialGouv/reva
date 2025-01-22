@@ -102,13 +102,9 @@ export const CguStep = ({
           </legend>
           {showFromStrapi ? (
             <Cgu
-              cguHtml={
-                getCguResponse?.legals?.data[0]?.attributes?.contenu ?? ""
-              }
-              chapo={getCguResponse?.legals?.data[0]?.attributes?.chapo ?? ""}
-              updatedAt={
-                getCguResponse?.legals?.data[0]?.attributes?.dateDeMiseAJour
-              }
+              cguHtml={getCguResponse?.legals[0]?.contenu ?? ""}
+              chapo={getCguResponse?.legals[0]?.chapo ?? ""}
+              updatedAt={getCguResponse?.legals[0]?.dateDeMiseAJour}
             />
           ) : (
             <HardCodedCgu />
