@@ -24,15 +24,11 @@ const CguProPage = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
       <NeutralBackground>
         {showFromStrapi ? (
           <>
-            <h1>{getCguResponse?.legals?.data[0]?.attributes?.titre}</h1>
+            <h1>{getCguResponse?.legals[0]?.titre}</h1>
             <Cgu
-              cguHtml={
-                getCguResponse?.legals?.data[0]?.attributes?.contenu ?? ""
-              }
-              chapo={getCguResponse?.legals?.data[0]?.attributes?.chapo ?? ""}
-              updatedAt={
-                getCguResponse?.legals?.data[0]?.attributes?.dateDeMiseAJour
-              }
+              cguHtml={getCguResponse?.legals[0]?.contenu ?? ""}
+              chapo={getCguResponse?.legals[0]?.chapo ?? ""}
+              updatedAt={getCguResponse?.legals[0]?.dateDeMiseAJour}
             />
           </>
         ) : (
