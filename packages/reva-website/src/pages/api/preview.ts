@@ -29,6 +29,9 @@ export default async function handler(
     case "region":
       contentPath = `/regions/${req.query.slug}`;
       break;
+    case "legal":
+      contentPath = `/legal/${req.query.slug}`;
+      break;
     default:
       return res.status(401).json({
         message: "La preview n'est pas disponible pour ce type de contenu",
