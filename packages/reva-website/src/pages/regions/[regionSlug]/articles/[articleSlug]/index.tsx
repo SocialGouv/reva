@@ -14,17 +14,21 @@ const RegionArticlePage = ({
   regionSlug?: string;
   preview?: boolean;
 }) => {
-  const article = getArticleRegionsBySlugResponse?.articleRegions?.data[0];
+  console.log(
+    "getArticleRegionsBySlugResponse",
+    getArticleRegionsBySlugResponse,
+  );
+  const article = getArticleRegionsBySlugResponse?.articleRegions[0];
   return article && regionSlug ? (
     <MainLayout className="fr-container pt-16 pb-12" preview={preview}>
       <Head>
-        <title>{article.attributes?.titre}</title>
+        <title>{article?.titre}</title>
       </Head>
       <BackButton regionSlug={regionSlug} className="mb-12" />
-      <h1 className="mb-12">{article.attributes?.titre}</h1>
+      <h1 className="mb-12">{article?.titre}</h1>
       <Image
         className="mb-12"
-        src={article.attributes?.vignette.data?.attributes?.url || ""}
+        src={article?.vignette?.url || ""}
         width={800}
         height={446}
         alt="Vignette de l'article"
@@ -32,9 +36,7 @@ const RegionArticlePage = ({
       <div
         className="mb-12 ck-content"
         dangerouslySetInnerHTML={{
-          __html:
-            article.attributes?.contenu?.replaceAll("<a", "<a target='_'") ||
-            "",
+          __html: article?.contenu?.replaceAll("<a", "<a target='_'") || "",
         }}
       />
 

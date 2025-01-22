@@ -12,13 +12,9 @@ console.log("process.env.STRAPI_API_TOKEN", process.env.STRAPI_API_TOKEN);
 const createDepartmentMutation = graphql(`
   mutation createStrapiDepartment($data: DepartementInput!) {
     createDepartement(data: $data) {
-      data {
-        id
-        attributes {
-          nom
-          code
-        }
-      }
+      documentId
+      nom
+      code
     }
   }
 `);

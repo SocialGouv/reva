@@ -2,7 +2,7 @@
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
-  ArticleDAideEntity,
+  ArticleDAide,
   GetSectionDAidesQuery,
 } from "@/graphql/generated/graphql";
 import { getSectionDAides } from "@/utils/strapiQueries";
@@ -18,7 +18,7 @@ const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line" aria-hidden="true" />
 );
 
-const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
+const HelpSection = ({ articles }: { articles: ArticleDAide[] }) => {
   const [
     numberOfArticlesToDisplayInitially,
     setNumberOfArticlesToDisplayInitially,
@@ -51,23 +51,21 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
 
   return (
     <div className="flex flex-col md:flex-row flex-wrap gap-8 items-center lg:items-start">
-      {articlesToDisplay.map(({ id, attributes }) => {
-        const isLongTitle = (attributes?.titre?.length ?? 0) > 40;
+      {articlesToDisplay.map(({ documentId, ...article }) => {
+        const isLongTitle = (article?.titre?.length ?? 0) > 40;
 
         return (
           <HelpArticle
-            key={id}
-            title={attributes?.titre || ""}
-            description={truncate(attributes?.description || "", {
+            key={documentId}
+            title={article?.titre || ""}
+            description={truncate(article?.description || "", {
               length: isLongTitle
                 ? textArticleToTruncate.forLongTitle
                 : textArticleToTruncate.forShortTitle,
             })}
-            thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
-            thumbnailAlt={
-              attributes?.vignette?.data?.attributes?.alternativeText || ""
-            }
-            url={`/savoir-plus/articles/${attributes?.slug}`}
+            thumbnailUrl={article?.vignette.url || ""}
+            thumbnailAlt={article?.vignette.alternativeText || ""}
+            url={`/savoir-plus/articles/${article?.slug}`}
           />
         );
       })}
@@ -159,21 +157,21 @@ const SavoirPlusPage = ({
             </div>
           </div>
           <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
-            {sections?.sectionDAides?.data.map((sa, index) => {
-              const articles = sa.attributes?.article_d_aides?.data;
+            {sections?.sectionDAides?.map((sa, index) => {
+              const articles = sa?.article_d_aides;
               if (!articles?.length) return null;
 
               return (
                 <Accordion
                   label={
                     <span className="text-2xl text-dsfrBlue-franceSun">
-                      {sa.attributes?.titre || ""}
+                      {sa?.titre || ""}
                     </span>
                   }
                   defaultExpanded={!index}
-                  key={sa.id}
+                  key={sa?.documentId}
                 >
-                  <HelpSection articles={articles as ArticleDAideEntity[]} />
+                  <HelpSection articles={articles as ArticleDAide[]} />
                 </Accordion>
               );
             })}
