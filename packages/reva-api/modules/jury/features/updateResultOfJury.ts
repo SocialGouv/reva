@@ -71,9 +71,6 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     },
   });
 
-  console.log("result vvvvv");
-  console.log(juryInfo.result);
-
   // When the candidacy has a failed jury result,
   // the user can submit another dossier de validation
   // So we need to reset the "ready for jury estimated date"
