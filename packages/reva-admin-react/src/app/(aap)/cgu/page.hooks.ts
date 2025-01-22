@@ -29,15 +29,11 @@ const acceptMaisonMereCGUMutation = graphql(`
 const getCguQuery = graphql(`
   query getCgu {
     legals(filters: { nom: { eq: "CGU" } }) {
-      data {
-        id
-        attributes {
-          titre
-          contenu
-          chapo
-          dateDeMiseAJour
-        }
-      }
+      documentId
+      titre
+      contenu
+      chapo
+      dateDeMiseAJour
     }
   }
 `);
@@ -59,7 +55,7 @@ export const useAppCgu = () => {
       ),
   });
 
-  const cguResponse = getCguResponse?.data?.legals?.data[0]?.attributes;
+  const cguResponse = getCguResponse?.data?.legals[0];
 
   const acceptMaisonMereCgu = useMutation({
     mutationFn: () => graphqlClient.request(acceptMaisonMereCGUMutation),
