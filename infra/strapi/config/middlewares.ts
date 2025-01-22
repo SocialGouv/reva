@@ -11,6 +11,7 @@ export default [
           "script-src": [
             "https://cdn.ckeditor.com",
             "https://grateful-event-39c5178d33.strapiapp.com",
+            "https://strapi.vae.gouv.fr",
           ],
         },
       },
