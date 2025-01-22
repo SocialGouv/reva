@@ -96,12 +96,12 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   const { candidacy } = jury;
 
   if (candidacy.candidate) {
-    sendJuryResultCandidateEmail({
+    await sendJuryResultCandidateEmail({
       email: candidacy.candidate.email,
     });
 
     if (candidacy.organism?.contactAdministrativeEmail) {
-      sendJuryResultAAPEmail({
+      await sendJuryResultAAPEmail({
         candidacyId: candidacy.id,
         email: candidacy.organism?.contactAdministrativeEmail,
         candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
