@@ -4,33 +4,22 @@ import { graphql } from "@/graphql/generated";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import Head from "next/head";
 import request from "graphql-request";
-import { LegalEntity } from "@/graphql/generated/graphql";
+import { Legal } from "@/graphql/generated/graphql";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 const getLegalArticle = graphql(`
-  query getLegalArticle($nom: String!, $publicationState: PublicationState!) {
-    legals(
-      filters: { nom: { eq: $nom } }
-      publicationState: $publicationState
-    ) {
-      data {
-        id
-        attributes {
-          titre
-          contenu
-          chapo
-          dateDeMiseAJour
-        }
-      }
+  query getLegalArticle($nom: String!, $publicationState: PublicationStatus!) {
+    legals(filters: { nom: { eq: $nom } }, status: $publicationState) {
+      documentId
+      titre
+      contenu
+      chapo
+      dateDeMiseAJour
     }
   }
 `);
 
-const LegalDocumentationPage = ({
-  legalArticle,
-}: {
-  legalArticle: LegalEntity;
-}) => {
+const LegalDocumentationPage = ({ legalArticle }: { legalArticle: Legal }) => {
   if (!legalArticle) {
     return null;
   }
@@ -38,20 +27,20 @@ const LegalDocumentationPage = ({
     <MainLayout>
       <Head>
         <title>
-          {legalArticle?.attributes?.titre} - France VAE | Prenez votre avenir
-          professionnel en main
+          {legalArticle?.titre} - France VAE | Prenez votre avenir professionnel
+          en main
         </title>
       </Head>
       <NeutralBackground>
-        <h1>{legalArticle?.attributes?.titre}</h1>
-        {legalArticle.attributes?.chapo &&
+        <h1>{legalArticle?.titre}</h1>
+        {legalArticle.chapo &&
           !(
-            legalArticle.attributes?.chapo.length === 1 &&
-            legalArticle.attributes?.chapo[0].children[0].text === ""
+            legalArticle.chapo.length === 1 &&
+            legalArticle.chapo[0].children[0].text === ""
           ) && (
             <>
               <BlocksRenderer
-                content={legalArticle.attributes?.chapo}
+                content={legalArticle.chapo}
                 blocks={{
                   paragraph: ({ children }) => (
                     <p className="text-xl leading-relaxed mb-0">{children}</p>
@@ -63,7 +52,7 @@ const LegalDocumentationPage = ({
           )}
         <div
           dangerouslySetInnerHTML={{
-            __html: legalArticle?.attributes?.contenu ?? "",
+            __html: legalArticle?.contenu ?? "",
           }}
         />
       </NeutralBackground>
@@ -84,9 +73,9 @@ export async function getServerSideProps({
     getLegalArticle,
     {
       nom: slug,
-      publicationState: preview ? "PREVIEW" : "LIVE",
+      publicationState: preview ? "DRAFT" : "PUBLISHED",
     },
   );
-  const legalArticle = getLegalArticleResponse?.legals?.data[0] ?? null;
+  const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
   return { props: { legalArticle } };
 }
