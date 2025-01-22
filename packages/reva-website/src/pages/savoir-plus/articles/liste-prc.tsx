@@ -17,8 +17,8 @@ const ListePrcPage = ({
   prcsResponse: GetPrCsQuery;
   articleResponse: GetArticleDAideQuery;
 }) => {
-  const prcs = prcsResponse?.prcs?.data;
-  const article = articleResponse?.articleDAides?.data[0];
+  const prcs = prcsResponse?.prcs;
+  const article = articleResponse?.articleDAides[0];
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -28,9 +28,7 @@ const ListePrcPage = ({
     if (searchFilter) {
       const subFilter = searchFilter.substring(0, 2);
       return prcs?.filter((prc) =>
-        prc.attributes?.departement?.data?.attributes?.code?.startsWith(
-          subFilter,
-        ),
+        prc?.departement?.code?.startsWith(subFilter),
       );
     } else {
       return prcs;
@@ -41,38 +39,29 @@ const ListePrcPage = ({
   return (
     <>
       <Head>
-        <title>France VAE | {article.attributes?.titre ?? ""}</title>
+        <title>France VAE | {article.titre ?? ""}</title>
         <meta charSet="UTF-8" />
-        <meta
-          name="description"
-          content={article.attributes?.description ?? ""}
-        />
+        <meta name="description" content={article.description ?? ""} />
         <meta name="keywords" content="Gouvernement, France, VAE, France VAE" />
         <meta name="author" content="France VAE" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           property="og:url"
-          content={`https://vae.gouv.fr/savoir-plus/articles/${article.attributes?.slug}`}
+          content={`https://vae.gouv.fr/savoir-plus/articles/${article.slug}`}
         />
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content={`France VAE | ${article.attributes?.titre ?? ""}`}
+          content={`France VAE | ${article.titre ?? ""}`}
         />
-        <meta
-          property="og:description"
-          content={article.attributes?.description ?? ""}
-        />
-        <meta
-          property="og:image"
-          content={article.attributes?.vignette.data?.attributes?.url ?? ""}
-        />
+        <meta property="og:description" content={article.description ?? ""} />
+        <meta property="og:image" content={article.vignette.url ?? ""} />
       </Head>
       <MainLayout>
         {
           <div className="flex flex-col sm:flex-row w-full gap-8 sm:gap-16 fr-container p-32 pt-16">
             <div>
-              <h1 className="font-bold mb-12">{article.attributes?.titre}</h1>
+              <h1 className="font-bold mb-12">{article.titre}</h1>
               <div className="py-8 px-10 shadow-lifted mb-12 border-b-fvaeOrange border-b-4">
                 <p className="text-[32px] font-bold">
                   Recherchez un conseiller proche de chez vous
@@ -98,10 +87,11 @@ const ListePrcPage = ({
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {displayedPrcs?.map((prc) => (
-                  <div key={prc.id} className="flex flex-col border p-6 gap-2">
-                    <h1 className="text-2xl font-bold mb-4">
-                      {prc.attributes?.nom}
-                    </h1>
+                  <div
+                    key={prc?.documentId}
+                    className="flex flex-col border p-6 gap-2"
+                  >
+                    <h1 className="text-2xl font-bold mb-4">{prc?.nom}</h1>
                     <div>
                       <span
                         className="fr-icon-home-4-line fr-icon--sm mr-2"
@@ -109,10 +99,9 @@ const ListePrcPage = ({
                         aria-label="Adresse"
                         title="Adresse"
                       ></span>
-                      {prc.attributes?.adresse}
+                      {prc?.adresse}
                       <br />
-                      {prc.attributes?.departement?.data?.attributes?.nom} (
-                      {prc.attributes?.departement?.data?.attributes?.code})
+                      {prc?.departement?.nom} ({prc?.departement?.code})
                     </div>
                     <div>
                       <span
@@ -121,9 +110,9 @@ const ListePrcPage = ({
                         aria-label="Email"
                         title="Email"
                       ></span>
-                      {prc.attributes?.email}
+                      {prc?.email}
                     </div>
-                    {prc.attributes?.mandataire && (
+                    {prc?.mandataire && (
                       <div>
                         <span
                           className="fr-icon-team-line fr-icon--sm mr-2"
@@ -131,7 +120,7 @@ const ListePrcPage = ({
                           aria-label="Mandataire"
                           title="Mandataire"
                         ></span>
-                        {prc.attributes?.mandataire}
+                        {prc?.mandataire}
                       </div>
                     )}
                     <div>
@@ -141,7 +130,7 @@ const ListePrcPage = ({
                         aria-label="Téléphone"
                         title="Téléphone"
                       ></span>
-                      {prc.attributes?.telephone}
+                      {prc?.telephone}
                     </div>
                   </div>
                 ))}

@@ -21,9 +21,9 @@ export default async function handler(
     case "article-region":
       contentPath = `/regions/${req.query.slug}`;
       const article = await getArticleRegionById(req.query.id as string);
-      const region = article.articleRegion?.data?.attributes?.regions?.data[0];
-      contentPath = region?.attributes?.slug
-        ? `/regions/${region.attributes.slug}/articles/${req.query.slug}`
+      const region = article.articleRegion?.regions[0];
+      contentPath = region?.slug
+        ? `/regions/${region?.slug}/articles/${req.query.slug}`
         : "/regions/";
       break;
     case "region":

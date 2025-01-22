@@ -11,39 +11,30 @@ const ArticleAidePage = ({
   articles: GetArticleDAideQuery;
   preview: boolean;
 }) => {
-  const article = articles?.articleDAides?.data[0];
+  const article = articles?.articleDAides[0];
 
   if (!article) return null;
 
   return (
     <>
       <Head>
-        <title>France VAE | {article.attributes?.titre ?? ""}</title>
+        <title>France VAE | {article?.titre ?? ""}</title>
         <meta charSet="UTF-8" />
-        <meta
-          name="description"
-          content={article.attributes?.description ?? ""}
-        />
+        <meta name="description" content={article?.description ?? ""} />
         <meta name="keywords" content="Gouvernement, France, VAE, France VAE" />
         <meta name="author" content="France VAE" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           property="og:url"
-          content={`https://vae.gouv.fr/savoir-plus/articles/${article.attributes?.slug}`}
+          content={`https://vae.gouv.fr/savoir-plus/articles/${article?.slug}`}
         />
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content={`France VAE | ${article.attributes?.titre ?? ""}`}
+          content={`France VAE | ${article?.titre ?? ""}`}
         />
-        <meta
-          property="og:description"
-          content={article.attributes?.description ?? ""}
-        />
-        <meta
-          property="og:image"
-          content={article.attributes?.vignette.data?.attributes?.url ?? ""}
-        />
+        <meta property="og:description" content={article?.description ?? ""} />
+        <meta property="og:image" content={article?.vignette?.url ?? ""} />
       </Head>
       <MainLayout preview={preview}>
         {
@@ -60,16 +51,13 @@ const ArticleAidePage = ({
             </Button>
             <div className="flex flex-col max-w-4xl">
               <h1 className="font-bold mb-16" style={{ fontSize: "40px" }}>
-                {article.attributes?.titre}
+                {article?.titre}
               </h1>
               <div
                 className="ck-content"
                 dangerouslySetInnerHTML={{
                   __html:
-                    article.attributes?.contenu?.replaceAll(
-                      "<a",
-                      "<a target='_'",
-                    ) || "",
+                    article?.contenu?.replaceAll("<a", "<a target='_'") || "",
                 }}
               />
             </div>

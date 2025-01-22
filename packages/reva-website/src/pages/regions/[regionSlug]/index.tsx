@@ -13,41 +13,38 @@ const RegionHomePage = ({
   getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionHomePageQuery;
   preview?: boolean;
 }) => {
-  const region = getRegionsBySlugResponse?.regions?.data[0];
-  const [firstArticle, ...otherArticles] =
-    region?.attributes?.article_regions?.data || [];
+  const region = getRegionsBySlugResponse?.regions[0];
+  const [firstArticle, ...otherArticles] = region?.article_regions || [];
   return region ? (
     <MainLayout className="fr-container pt-6 md:pt-16 pb-12" preview={preview}>
       <Head>
-        <title>{`La VAE en ${region.attributes?.nom}`}</title>
+        <title>{`La VAE en ${region.nom}`}</title>
       </Head>
       <div className="flex flex-col md:flex-row-reverse justify-between align-top mb-6 md:mb-12 gap-4">
         <Image
-          src={region.attributes?.vignette.data?.attributes?.url || ""}
+          src={region.vignette.url || ""}
           width={140}
           height={88}
           alt="logo de la région"
         />
-        <h1>La VAE en {region.attributes?.nom}</h1>
+        <h1>La VAE en {region.nom}</h1>
       </div>
       {firstArticle && (
         <Card
           className="mb-12 "
           background
           border
-          desc={firstArticle.attributes?.resume}
+          desc={firstArticle.resume}
           enlargeLink
           horizontal
           imageAlt="Vignette de l'article"
-          imageUrl={
-            firstArticle.attributes?.vignette.data?.attributes?.url || ""
-          }
+          imageUrl={firstArticle.vignette.url || ""}
           classes={{ imgTag: "!object-left-top" }}
           linkProps={{
-            href: `/regions/${region.attributes?.slug}/articles/${firstArticle.attributes?.slug}`,
+            href: `/regions/${region.slug}/articles/${firstArticle.slug}`,
           }}
           ratio="33/66"
-          title={firstArticle.attributes?.titre}
+          title={firstArticle.titre}
           titleAs="h2"
         />
       )}
@@ -62,9 +59,9 @@ const RegionHomePage = ({
         </p>
         <Button
           linkProps={{
-            href: region.attributes?.urlExternePRCs
-              ? region.attributes.urlExternePRCs
-              : `/regions/${region.attributes?.slug}/conseillers`,
+            href: region.urlExternePRCs
+              ? region.urlExternePRCs
+              : `/regions/${region.slug}/conseillers`,
           }}
         >
           Consultez la liste des conseillers
@@ -76,17 +73,17 @@ const RegionHomePage = ({
           <div className="flex flex-wrap gap-6">
             {otherArticles.map((a) => (
               <Card
-                key={a.attributes?.slug}
+                key={a?.slug}
                 className="w-[585px]"
                 background
                 border
                 enlargeLink
                 imageAlt="Vignette de l'article"
-                imageUrl={a.attributes?.vignette.data?.attributes?.url || ""}
+                imageUrl={a?.vignette.url || ""}
                 linkProps={{
-                  href: `/regions/${region.attributes?.slug}/articles/${a.attributes?.slug}`,
+                  href: `/regions/${region.slug}/articles/${a?.slug}`,
                 }}
-                title={a.attributes?.titre}
+                title={a?.titre}
               />
             ))}
           </div>
