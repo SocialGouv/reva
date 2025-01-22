@@ -10,7 +10,7 @@ env:
   DATABASE_URL: postgresql://reva:password@localhost:5444/reva?schema=public
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: https://reva.incubateur.net/api/graphql
   NEXT_PUBLIC_FEATURE_CANDIDATE_ORIENTATION: true
-  NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
+  NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://grateful-event-39c5178d33.strapiapp.com"
   NEXT_PUBLIC_KEYCLOAK_REALM: reva
   NEXT_PUBLIC_KEYCLOAK_URL: https://auth.reva.incubateur.net/
   NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: reva-admin
