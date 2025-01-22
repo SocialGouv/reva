@@ -76,12 +76,12 @@ module.exports = ({ env }) => ({
             url: `${env("WEBSITE_URL")}/websiteapi/preview`,
             query: {
               type: "legal",
-              slug: "{slug}",
+              slug: "{nom}",
               secret: env("STRAPI_PREVIEW_SECRET"),
             },
           },
           published: {
-            url: `${env("WEBSITE_URL")}/legal/{slug}`,
+            url: `${env("WEBSITE_URL")}/legal/{nom}`,
           },
         },
       ],
