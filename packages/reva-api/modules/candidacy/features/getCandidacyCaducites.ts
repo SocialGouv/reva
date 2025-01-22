@@ -5,7 +5,7 @@ import { getCertificationAuthorityLocalAccountByAccountId } from "../../certific
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "../../feasibility/features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 import {
   CADUCITE_THRESHOLD_DAYS,
-  CADUCITE_VALID_STATUSES,
+  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
@@ -37,13 +37,10 @@ export const getCandidacyCaducites = async ({
     case "CADUQUE":
       queryWhereClause = {
         ...queryWhereClause,
+        ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
         lastActivityDate: {
           lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
         },
-        status: {
-          in: CADUCITE_VALID_STATUSES,
-        },
-        candidacyDropOut: { is: null },
         candidacyContestationCaducite: {
           none: {
             certificationAuthorityContestationDecision: {

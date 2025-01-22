@@ -1,50 +1,29 @@
-import { addDays, isBefore } from "date-fns";
+import { subDays } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
 import {
   CADUCITE_THRESHOLD_DAYS,
-  CADUCITE_VALID_STATUSES,
+  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
-import { getCandidacyById } from "./getCandidacyById";
 
 export const getCandidacyIsCaduque = async ({
   candidacyId,
 }: {
   candidacyId: string;
 }): Promise<boolean> => {
-  const candidacy = await getCandidacyById({
-    candidacyId,
-  });
-
-  if (!candidacy?.lastActivityDate) {
-    return false;
-  }
-
-  const feasibility = await prismaClient.feasibility.findFirst({
-    where: {
-      candidacyId,
-      isActive: true,
-    },
-  });
-
-  const sixMonthsFromLastActivity = addDays(
-    candidacy.lastActivityDate,
+  const dateThresholdCandidacyIsCaduque = subDays(
+    new Date(),
     CADUCITE_THRESHOLD_DAYS,
   );
 
-  const lastActiveStatus = candidacy?.status;
-  const isLastActiveStatusValidForActualisationBanner =
-    CADUCITE_VALID_STATUSES.includes(lastActiveStatus);
+  const candidacy = await prismaClient.candidacy.findFirst({
+    where: {
+      id: candidacyId,
+      ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
+      lastActivityDate: {
+        lte: dateThresholdCandidacyIsCaduque,
+      },
+    },
+  });
 
-  const lastActivityHasNotBeenUpdatedInSixMonths = isBefore(
-    sixMonthsFromLastActivity,
-    new Date(),
-  );
-
-  const isFeasibilityDecisionValid = feasibility?.decision === "ADMISSIBLE";
-
-  return (
-    isLastActiveStatusValidForActualisationBanner &&
-    lastActivityHasNotBeenUpdatedInSixMonths &&
-    isFeasibilityDecisionValid
-  );
+  return !!candidacy;
 };

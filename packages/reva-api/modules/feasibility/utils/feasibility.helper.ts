@@ -2,7 +2,7 @@ import { FeasibilityStatus, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
 import {
   CADUCITE_THRESHOLD_DAYS,
-  CADUCITE_VALID_STATUSES,
+  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
 
 export type FeasibilityStatusFilter =
@@ -96,13 +96,10 @@ export const getWhereClauseFromStatusFilter = (
         ...whereClause,
         decision: "ADMISSIBLE",
         candidacy: {
+          ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
           lastActivityDate: {
             lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
           },
-          status: {
-            in: CADUCITE_VALID_STATUSES,
-          },
-          candidacyDropOut: { is: null },
           candidacyContestationCaducite: {
             none: {
               certificationAuthorityContestationDecision: {

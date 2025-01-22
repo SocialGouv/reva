@@ -3,6 +3,7 @@ import { prismaClient } from "../../../prisma/client";
 import {
   CADUCITE_THRESHOLD_DAYS,
   CADUCITE_VALID_STATUSES,
+  CADUCITE_VALID_STATUSES_WITH_INCOMPLETE_DOSSIER_DE_VALIDATION,
 } from "../../shared/candidacy/candidacyCaducite";
 import {
   CandidacyStatusFilter,
@@ -204,7 +205,30 @@ const getSQLSelectSumClauseFromStatusFilter = (
       );
     case "CADUQUE":
       return getSumClause(
-        `candidacy.status in (${CADUCITE_VALID_STATUSES.map((s) => `'${s}'`).join(", ")}) and candidacyDropOut.candidacy_id is null and DATE_PART('day', NOW() - candidacy.last_activity_date) > ${CADUCITE_THRESHOLD_DAYS}`,
+        `(
+          (
+            candidacy.status in (${CADUCITE_VALID_STATUSES_WITH_INCOMPLETE_DOSSIER_DE_VALIDATION.map(
+              (status) => `'${status}'`,
+            ).join(", ")})
+            and exists (
+              select 1 from "dossier_de_validation" ddv
+              where ddv.candidacy_id = candidacy.id
+              and ddv.is_active = true
+              and ddv.decision = 'INCOMPLETE'
+            )
+          )
+          or candidacy.status in (${CADUCITE_VALID_STATUSES.map(
+            (status) => `'${status}'`,
+          ).join(", ")})
+        )
+        and exists (
+          select 1 from "feasibility" f
+          where f.candidacy_id = candidacy.id
+          and f.is_active = true
+          and f.decision = 'ADMISSIBLE'
+        )
+        and candidacyDropOut.candidacy_id is null
+        and DATE_PART('day', NOW() - candidacy.last_activity_date) > ${CADUCITE_THRESHOLD_DAYS}`,
       );
   }
 };

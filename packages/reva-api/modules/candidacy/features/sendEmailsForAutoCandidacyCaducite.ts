@@ -5,22 +5,11 @@ import { prismaClient } from "../../../prisma/client";
 import {
   ACTUALISATION_THRESHOLD_DAYS,
   CADUCITE_THRESHOLD_DAYS,
-  CADUCITE_VALID_STATUSES,
+  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
 import { sendCandidacyCaduciteSoonWarningEmailToAap } from "../emails/sendCandidacyCaduciteSoonWarningEmailToAap";
 import { sendCandidacyCaduciteSoonWarningEmailToCandidate } from "../emails/sendCandidacyCaduciteSoonWarningEmailToCandidate";
 import { sendCandidacyIsCaduqueEmailToAap } from "../emails/sendCandidacyIsCaduqueEmailToAap";
-
-const WHERE_CLAUSE_FOR_CANDIDACY_CADUQUE_AND_SOON = {
-  status: { in: CADUCITE_VALID_STATUSES },
-  Feasibility: {
-    some: {
-      isActive: true,
-      decision: "ADMISSIBLE",
-    },
-  },
-  candidacyDropOut: null,
-} as const;
 
 export const sendEmailsForAutoCandidacyCaducite = async () => {
   const dateThresholdCandidacyIsCaduque = subDays(
@@ -43,7 +32,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
     const candidaciesToSendEmailIsCaduciteSoonWarningToCandidate =
       await prismaClient.candidacy.findMany({
         where: {
-          ...WHERE_CLAUSE_FOR_CANDIDACY_CADUQUE_AND_SOON,
+          ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
           lastActivityDate: {
             lte: dateThresholdActualisation,
             gt: dateThresholdCandidacyIsCaduque,
@@ -96,7 +85,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
     const candidaciesToSendEmailIsCaduciteSoonWarningToAap =
       await prismaClient.candidacy.findMany({
         where: {
-          ...WHERE_CLAUSE_FOR_CANDIDACY_CADUQUE_AND_SOON,
+          ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
           lastActivityDate: {
             lte: dateThresholdActualisation,
             gt: dateThresholdCandidacyIsCaduque,
@@ -162,7 +151,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
     const candidaciesToSendEmailIsCaduqueToAap =
       await prismaClient.candidacy.findMany({
         where: {
-          ...WHERE_CLAUSE_FOR_CANDIDACY_CADUQUE_AND_SOON,
+          ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
           lastActivityDate: {
             lte: dateThresholdCandidacyIsCaduque,
           },

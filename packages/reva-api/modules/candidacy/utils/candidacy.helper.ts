@@ -4,7 +4,7 @@ import { subDays } from "date-fns";
 import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
 import {
   CADUCITE_THRESHOLD_DAYS,
-  CADUCITE_VALID_STATUSES,
+  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
 import { buildContainsFilterClause } from "../../shared/search/search";
 import { CandidacyStatusFilter } from "../candidacy.types";
@@ -164,11 +164,8 @@ export const getWhereClauseFromStatusFilter = (
       break;
     case "CADUQUE":
       whereClause = {
+        ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
         ...whereClause,
-        candidacyDropOut: null,
-        status: {
-          in: CADUCITE_VALID_STATUSES,
-        },
         lastActivityDate: {
           lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
         },
