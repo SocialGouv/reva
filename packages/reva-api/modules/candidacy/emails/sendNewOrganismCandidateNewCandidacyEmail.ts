@@ -4,8 +4,10 @@ import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendNewOrganismCandidateNewCandidacyEmail = async ({
   email,
+  candidacyId,
 }: {
   email: string;
+  candidacyId: string;
 }) => {
   const htmlContent = (url: string) =>
     mjml2html(
@@ -24,6 +26,7 @@ export const sendNewOrganismCandidateNewCandidacyEmail = async ({
     to: { email },
     htmlContent,
     subject: "Une nouvelle candidature est arrivée",
+    customUrl: `/candidacies/${candidacyId}/summary/`,
     app: "admin",
   });
 };

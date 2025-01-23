@@ -60,6 +60,7 @@ export const submitCandidacy = async ({
   }
   await sendNewCandidacyEmail({
     email: organism.emailContact ?? organism.contactAdministrativeEmail,
+    candidacyId: candidacy.id,
   });
   await sendConfirmationCandidacySubmissionEmail({
     email: candidate.email as string,

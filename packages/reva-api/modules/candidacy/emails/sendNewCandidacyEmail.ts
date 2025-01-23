@@ -2,7 +2,13 @@ import mjml2html from "mjml";
 
 import { sendEmailWithLink, templateMail } from "../../shared/email";
 
-export const sendNewCandidacyEmail = ({ email }: { email: string }) => {
+export const sendNewCandidacyEmail = ({
+  email,
+  candidacyId,
+}: {
+  email: string;
+  candidacyId: string;
+}) => {
   const htmlContent = (url: string) =>
     mjml2html(
       templateMail({
@@ -22,6 +28,7 @@ export const sendNewCandidacyEmail = ({ email }: { email: string }) => {
   return sendEmailWithLink({
     to: { email },
     htmlContent,
+    customUrl: `/candidacies/${candidacyId}/summary/`,
     subject: "Une nouvelle candidature est arrivée",
     app: "admin",
   });

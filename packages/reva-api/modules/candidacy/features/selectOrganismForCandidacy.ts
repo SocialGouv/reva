@@ -119,6 +119,7 @@ export const selectOrganismForCandidacy = async ({
 
       sendNewOrganismCandidateNewCandidacyEmail({
         email: newOrganism.contactAdministrativeEmail,
+        candidacyId: candidacyId,
       });
     }
 
