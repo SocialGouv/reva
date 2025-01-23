@@ -42,7 +42,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
               emailType:
                 CandidacyEmailType.CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_CANDIDATE,
               sentAt: {
-                lte: dateThresholdActualisation,
+                gte: dateThresholdActualisation,
               },
             },
           },
@@ -95,7 +95,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
               emailType:
                 CandidacyEmailType.CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_AAP,
               sentAt: {
-                lte: dateThresholdActualisation,
+                gte: dateThresholdActualisation,
               },
             },
           },
@@ -159,7 +159,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
             none: {
               emailType: CandidacyEmailType.CANDIDACY_IS_CADUQUE_NOTICE_TO_AAP,
               sentAt: {
-                lte: dateThresholdCandidacyIsCaduque,
+                gte: dateThresholdCandidacyIsCaduque,
               },
             },
           },
