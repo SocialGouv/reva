@@ -49,6 +49,7 @@
       ]
     },
     "getCandidacyById": {
+      "isCaduque": false,
       "candidate": {
         "lastname": "Alice",
         "firstname": "Doe"
