@@ -23,6 +23,7 @@ const getCandidacyLogsQuery = graphql(`
         id
         createdAt
         message
+        details
         userProfile
         user {
           firstname

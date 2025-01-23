@@ -12,7 +12,9 @@ const unsafeResolvers = {
   },
   CandidacyLog: {
     message: (candidacyLog: CandidacyLog) =>
-      getCandidacyLogMessage({ candidacyLog }),
+      getCandidacyLogMessage({ candidacyLog }).message,
+    details: (candidacyLog: CandidacyLog) =>
+      getCandidacyLogMessage({ candidacyLog }).details,
   },
 };
 

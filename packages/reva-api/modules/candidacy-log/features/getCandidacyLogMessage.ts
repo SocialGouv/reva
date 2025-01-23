@@ -1,152 +1,230 @@
 import { format } from "date-fns";
-
 import { CandidacyLog } from "../candidacy-log.types";
+
+type LogMessage = {
+  message: string;
+  details?: string;
+};
+
+function log(message: string, details?: string): LogMessage {
+  return { message, details };
+}
 
 export const getCandidacyLogMessage = ({
   candidacyLog,
 }: {
   candidacyLog: CandidacyLog;
-}) => {
+}): LogMessage => {
   const { eventType, details } = candidacyLog;
 
   switch (eventType) {
     case "CANDIDATE_CONTACT_INFORMATION_UPDATED":
-      return "Informations de contact du candidat modifiées";
+      return log("Informations de contact du candidat modifiées");
+
     case "CANDIDATE_CIVIL_INFORMATION_UPDATED":
-      return "Informations civiles du candidat modifiées";
+      return log("Informations civiles du candidat modifiées");
+
     case "CANDIDATE_UPDATED":
-      return "Informations du compte candidat modifiées";
+      return log("Informations du compte candidat modifiées");
+
     case "CANDIDATE_REGISTRATION_CONFIRMED":
-      return "Compte candidat créé";
+      return log("Compte candidat créé");
+
     case "CANDIDATE_PROFILE_UPDATED":
-      return "Profil du candidat modifié";
+      return log("Profil du candidat modifié");
+
     case "DOSSIER_DE_VALIDATION_SENT":
-      return "Dossier de validation envoyé";
+      return log("Dossier de validation envoyé");
+
     case "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED":
-      return "Dossier de validation signalé";
+      return log("Dossier de validation signalé");
+
     case "CANDIDACY_SUBMITTED":
-      return "Candidature envoyée";
+      return log("Candidature envoyée");
+
     case "CERTIFICATION_UPDATED":
-      return `Certification modifiée. ${
-        details
-          ? `Nouvelle certification : ${details.certification.label} (${details.certification.codeRncp})`
-          : ""
-      }`;
+      return details
+        ? log(
+            "Certification modifiée",
+            `Nouvelle certification : ${details.certification.label} (${details.certification.codeRncp})`,
+          )
+        : log("Certification modifiée");
+
     case "EXPERIENCE_ADDED":
-      return "Expérience ajoutée";
+      return log("Expérience ajoutée");
+
     case "EXPERIENCE_UPDATED":
-      return "Expérience modifiée";
+      return log("Expérience modifiée");
+
     case "GOALS_UPDATED":
-      return "Objectifs modifiés";
+      return log("Objectifs modifiés");
+
     case "CONTACT_INFO_UPDATED":
-      return "Informations de contact modifiées";
+      return log("Informations de contact modifiées");
+
     case "CANDIDACY_DELETED":
-      return "Candidature supprimée";
+      return log("Candidature supprimée");
+
     case "CANDIDACY_ARCHIVED":
-      return `Candidature archivée. ${details?.label ? `Informations complémentaires : ${details.label}` : ""}`;
+      return details?.label
+        ? log(
+            "Candidature archivée",
+            `Informations complémentaires : ${details.label}`,
+          )
+        : log("Candidature archivée");
+
     case "CANDIDACY_UNARCHIVED":
-      return "Candidature désarchivée";
+      return log("Candidature désarchivée");
+
     case "APPOINTMENT_INFO_UPDATED":
-      return `Date du premier rendez-vous pédagogique saisie. Date : ${format(
-        details.firstAppointmentOccuredAt,
-        "dd/MM/yyyy",
-      )}`;
+      return log(
+        "Date du premier rendez-vous pédagogique saisie",
+        `Date de rendez-vous : ${format(details.firstAppointmentOccuredAt, "dd/MM/yyyy")}`,
+      );
+
     case "CANDIDACY_TAKEN_OVER":
-      return "Candidature prise en charge";
+      return log("Candidature prise en charge");
+
     case "ORGANISM_SELECTED":
-      return `Organisme d'accompagnement sélectionné. ${
-        details ? `Organisme : ${details.organism.label}` : ""
-      }`;
+      return details
+        ? log(
+            "Organisme d'accompagnement sélectionné",
+            `Organisme : ${details.organism.label}`,
+          )
+        : log("Organisme d'accompagnement sélectionné");
+
     case "TYPOLOGY_AND_CCN_INFO_UPDATED":
-      return `Informations de typologie et de convention collective candidat modifiées. Nouvelle typologie: ${
-        details.typology
-      }. ${
-        details.ccn ? `Ccn : ${details.ccn?.label} (${details.ccn?.idcc}).` : ""
-      }`;
+      return log(
+        "Informations de typologie et de convention collective modifiées",
+        `Typologie : ${details.typology} ${
+          details.ccn ? `— ${details.ccn.label} (${details.ccn.idcc}).` : ""
+        }`.trim(),
+      );
+
     case "TRAINING_INFO_RESET":
-      return "Parcours candidat réinitialisé";
+      return log("Parcours candidat réinitialisé");
+
     case "TRAINING_FORM_SUBMITTED":
-      return "Parcours candidat envoyé";
+      return log("Parcours candidat envoyé");
+
     case "TRAINING_FORM_CONFIRMED":
-      return "Parcours candidat confirmé";
+      return log("Parcours candidat confirmé");
+
     case "CANDIDACY_DROPPED_OUT":
-      return "Candidature abandonnée";
+      return log("Candidature abandonnée");
+
     case "CANDIDACY_DROP_OUT_VALIDATED":
-      return "Validation de l'abandon de la candidature";
+      return log("Validation de l'abandon de la candidature");
+
     case "CANDIDACY_DROP_OUT_CANCELED":
-      return "Annulation de l'abandon de la candidature";
+      return log("Annulation de l'abandon de la candidature");
+
     case "READY_FOR_JURY_ESTIMATED_DATE_UPDATED":
-      return `Date prévisionnelle de finalisation ou de dépôt du dossier de validation saisie. Date prévisionnelle : ${format(
-        details.readyForJuryEstimatedAt,
-        "dd/MM/yyyy",
-      )}`;
+      return log(
+        "Date prévisionnelle de finalisation ou de dépôt du dossier de validation saisie",
+        `Date prévisionnelle : ${format(details.readyForJuryEstimatedAt, "dd/MM/yyyy")}`,
+      );
+
     case "FEASIBILITY_SENT":
-      return "Dossier de faisabilité envoyé";
+      return log("Dossier de faisabilité envoyé");
+
     case "FEASIBILITY_MARKED_AS_COMPLETE":
-      return "Dossier de faisabilité complet";
+      return log("Dossier de faisabilité complet");
+
     case "FEASIBILITY_MARKED_AS_INCOMPLETE":
-      return "Dossier de faisabilité marqué incomplet";
+      return log("Dossier de faisabilité marqué incomplet");
+
     case "FEASIBILITY_REJECTED":
-      return "Dossier de faisabilité rejeté";
+      return log("Dossier de faisabilité rejeté");
+
     case "FEASIBILITY_VALIDATED":
-      return "Dossier de faisabilité validé";
+      return log("Dossier de faisabilité validé");
+
     case "FUNDING_REQUEST_CREATED":
-      return "Demande de financement envoyée";
+      return log("Demande de financement envoyée");
+
     case "PAYMENT_REQUEST_CREATED_OR_UPDATED":
-      return "Demande de paiement créée ou modifiée";
+      return log("Demande de paiement créée ou modifiée");
+
     case "PAYMENT_REQUEST_CONFIRMED":
-      return "Demande de paiement confirmée";
+      return log("Demande de paiement confirmée");
+
     case "JURY_EXAM_INFO_UPDATED":
-      return `Informations jury modifiées. Résultat: ${details.examResult}. ${
-        details.estimatedExamDate
-          ? `Date d'examen prévue:  ${format(
-              details.estimatedExamDate,
-              "dd/MM/yyyy",
-            )}.`
-          : ""
-      } ${
-        details.actualExamDate
-          ? `Date d'examen:  ${format(details.actualExamDate, "dd/MM/yyyy")}.`
-          : ""
-      }`;
+      return log(
+        "Informations jury modifiées",
+        `Résultat : ${details.examResult}. ${
+          details.estimatedExamDate
+            ? `Date d'examen prévue : ${format(details.estimatedExamDate, "dd/MM/yyyy")}.`
+            : ""
+        } ${
+          details.actualExamDate
+            ? `Date d'examen: ${format(details.actualExamDate, "dd/MM/yyyy")}.`
+            : ""
+        }`.trim(),
+      );
+
     case "JURY_RESULT_UPDATED":
-      return `Résultat du jury saisi. Résultat: ${details.result}.`;
+      return log("Résultat du jury saisi", `Résultat : ${details.result}.`);
+
     case "JURY_SESSION_SCHEDULED":
-      return `Date de passage en jury au candidat attribuée. Date de passage: ${format(
-        details.dateOfSession,
-        "dd/MM/yyyy",
-      )}. ${
-        details.timeOfSession
-          ? `Heure de passage: ${details.timeOfSession}`
-          : ""
-      }`;
+      return log(
+        "Date de passage en jury attribuée au candidat",
+        `Date de passage : ${format(details.dateOfSession, "dd/MM/yyyy")}. ${
+          details.timeOfSession
+            ? `Heure de passage : ${details.timeOfSession}.`
+            : ""
+        }`.trim(),
+      );
+
     case "TYPE_ACCOMPAGNEMENT_UPDATED":
-      return `Type d'accompagnement modifié. Nouveau type d'accompagnement ${details?.typeAccompagnement}`;
+      return details?.typeAccompagnement
+        ? log(
+            "Type d'accompagnement modifié",
+            `Nouveau type d'accompagnement ${details.typeAccompagnement}`,
+          )
+        : log("Type d'accompagnement modifié");
+
     case "CANDIDACY_ACTUALISATION":
-      return "Candidature actualisée";
+      return log("Candidature actualisée");
+
     case "CADUCITE_CONTESTED":
-      return "Caducité de la candidature contestée";
+      return log("Caducité de la candidature contestée");
+
     case "CADUCITE_INVALIDATED":
-      return "Caducité de la candidature invalidée";
+      return log("Caducité de la candidature invalidée");
+
     case "CADUCITE_CONFIRMED":
-      return "Caducité de la candidature confirmée";
+      return log("Caducité de la candidature confirmée");
+
     case "DFF_SENT_TO_CANDIDATE":
-      return "Demande de validation du dossier de faisabilité envoyée au candidat";
+      return log(
+        "Demande de validation du dossier de faisabilité envoyée au candidat",
+      );
+
     case "DFF_VALIDATED_BY_CANDIDATE":
-      return "Dossier de faisabilité validé";
+      return log("Dossier de faisabilité validé");
+
     case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
-      return "Dossier de faisabilité envoyé au certificateur";
+      return log("Dossier de faisabilité envoyé au certificateur");
+
     case "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE":
-      return "Abandon de la candidature confirmé";
+      return log("Abandon de la candidature confirmé");
+
     case "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE":
-      return "Annulation de l'abandon de la candidature";
+      return log("Annulation de l'abandon de la candidature");
+
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_CONFIRMED":
-      return "Caducité de la candidature confirmée";
+      return log("Caducité de la candidature confirmée");
+
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED":
-      return "Caducité de la candidature invalidée";
+      return log("Caducité de la candidature invalidée");
+
     case "ADMIN_CUSTOM_ACTION":
-      return `Action exceptionnelle effectuée : ${details?.message}`;
+      return details?.message
+        ? log("Action exceptionnelle effectuée", details.message)
+        : log("Action exceptionnelle effectuée");
+
     default:
-      return "Évenement inconnu";
+      return log("Événement inconnu");
   }
 };

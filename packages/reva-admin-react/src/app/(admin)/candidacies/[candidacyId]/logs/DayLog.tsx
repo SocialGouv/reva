@@ -4,7 +4,6 @@ import {
   CandidacyLogUserProfile,
 } from "@/graphql/generated/graphql";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const getUserProfileText = ({
   userProfile,
@@ -36,6 +35,7 @@ export type CandidacyLog = {
   userProfile: CandidacyLogUserProfile;
   user: CandidacyLogUser;
   message: string;
+  details?: string | null;
 };
 
 export const DayLog = ({
@@ -47,23 +47,30 @@ export const DayLog = ({
 }) => {
   return (
     <div className="mb-6 max-w-2xl">
-      <Tag className="rounded-bl-none">{day}</Tag>
-      <ul className="-mt-1 mb-0 pt-6 border-l-2 border-[#eee]">
+      <h2 className="text-xl border-b pb-3 mb-3">{day}</h2>
+      <ul className="list-none mb-10 p-0">
         {logs.map((log) => (
-          <li key={log.id} className="flex gap-x-4 mb-2">
-            <div className="flex-auto text-sm">
-              {log.message} par{" "}
-              <span className="font-semibold">
-                {getUserProfileText({
-                  userProfile: log.userProfile,
-                  user: log.user,
-                })}
-              </span>
-              .
+          <li key={log.id} className="mb-4">
+            <div className="flex gap-x-20">
+              <div className="flex-auto text-balance">
+                {log.message} par{" "}
+                <span className="font-semibold">
+                  {getUserProfileText({
+                    userProfile: log.userProfile,
+                    user: log.user,
+                  })}
+                </span>
+                .
+              </div>
+              <div className="flex-none mt-1 text-xs text-neutral-500">
+                {format(log.createdAt, "HH:mm")}
+              </div>
             </div>
-            <div className="flex-none mt-1 text-xs text-neutral-500">
-              {format(log.createdAt, "HH:mm")}
-            </div>
+            {log.details && (
+              <p className="mb-0 mt-2 px-3 py-2 rounded bg-neutral-100 text-sm  text-neutral-800 font-medium max-w-lg">
+                {log.details}
+              </p>
+            )}
           </li>
         ))}
       </ul>
