@@ -54,7 +54,9 @@ export const CandidacyModalities = ({
         {accompagnementConfig.value}
       </Badge>
       {isCaduque && isCandidacyActualisationActive && (
-        <Badge severity="error">Recevabilité caduque</Badge>
+        <Badge severity="error" data-test="caduque-badge">
+          Recevabilité caduque
+        </Badge>
       )}
     </div>
   );
