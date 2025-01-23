@@ -110,14 +110,14 @@ export const selectOrganismForCandidacy = async ({
       certification &&
       isValidStatus
     ) {
-      sendPreviousOrganismCandidateChangeOrganismEmail({
+      await sendPreviousOrganismCandidateChangeOrganismEmail({
         email: organism.contactAdministrativeEmail,
         candidateFullName: `${candidate.firstname} ${candidate.lastname}`,
         certificationName: certification.label,
         date: firstAppointmentOccuredAt,
       });
 
-      sendNewOrganismCandidateNewCandidacyEmail({
+      await sendNewOrganismCandidateNewCandidacyEmail({
         email: newOrganism.contactAdministrativeEmail,
         candidacyId: candidacyId,
       });
