@@ -17,7 +17,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDATE_UPDATED":
       return "Informations du compte candidat modifiées";
     case "CANDIDATE_REGISTRATION_CONFIRMED":
-      return "Création du compte candidat";
+      return "Compte candidat créé";
     case "CANDIDATE_PROFILE_UPDATED":
       return "Profil du candidat modifié";
     case "DOSSIER_DE_VALIDATION_SENT":
@@ -29,7 +29,7 @@ export const getCandidacyLogMessage = ({
     case "CERTIFICATION_UPDATED":
       return `Certification modifiée. ${
         details
-          ? `Nouvelle certification: ${details.certification.label} (${details.certification.codeRncp})`
+          ? `Nouvelle certification : ${details.certification.label} (${details.certification.codeRncp})`
           : ""
       }`;
     case "EXPERIENCE_ADDED":
@@ -43,27 +43,25 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_DELETED":
       return "Candidature supprimée";
     case "CANDIDACY_ARCHIVED":
-      return `Candidature archivée. ${details?.label ? `Informations complémentaires: ${details.label}` : ""}`;
+      return `Candidature archivée. ${details?.label ? `Informations complémentaires : ${details.label}` : ""}`;
     case "CANDIDACY_UNARCHIVED":
       return "Candidature désarchivée";
     case "APPOINTMENT_INFO_UPDATED":
-      return `Date du premier rendez-vous pédagogique modifiée. Nouvelle date ${format(
+      return `Date du premier rendez-vous pédagogique saisie. Date : ${format(
         details.firstAppointmentOccuredAt,
         "dd/MM/yyyy",
       )}`;
     case "CANDIDACY_TAKEN_OVER":
       return "Candidature prise en charge";
     case "ORGANISM_SELECTED":
-      return `Organisme d'accompagnement modifié. ${
-        details ? `Nouvel organisme : ${details.organism.label}` : ""
+      return `Organisme d'accompagnement sélectionné. ${
+        details ? `Organisme : ${details.organism.label}` : ""
       }`;
     case "TYPOLOGY_AND_CCN_INFO_UPDATED":
       return `Informations de typologie et de convention collective candidat modifiées. Nouvelle typologie: ${
         details.typology
       }. ${
-        details.ccn
-          ? `Nouvelle ccn: ${details.ccn?.label} (${details.ccn?.idcc}).`
-          : ""
+        details.ccn ? `Ccn : ${details.ccn?.label} (${details.ccn?.idcc}).` : ""
       }`;
     case "TRAINING_INFO_RESET":
       return "Parcours candidat réinitialisé";
@@ -78,7 +76,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_DROP_OUT_CANCELED":
       return "Annulation de l'abandon de la candidature";
     case "READY_FOR_JURY_ESTIMATED_DATE_UPDATED":
-      return `Date prévisionenelle de finalisation ou de dépôt du dossier de validation modifiée. Nouvelle date ${format(
+      return `Date prévisionnelle de finalisation ou de dépôt du dossier de validation saisie. Date prévisionnelle : ${format(
         details.readyForJuryEstimatedAt,
         "dd/MM/yyyy",
       )}`;
@@ -112,9 +110,9 @@ export const getCandidacyLogMessage = ({
           : ""
       }`;
     case "JURY_RESULT_UPDATED":
-      return `Résultats jury modifiés. Résultat: ${details.result}.`;
+      return `Résultat du jury saisi. Résultat: ${details.result}.`;
     case "JURY_SESSION_SCHEDULED":
-      return `Attribution d’une date de passage en jury au candidat. Date de passage: ${format(
+      return `Date de passage en jury au candidat attribuée. Date de passage: ${format(
         details.dateOfSession,
         "dd/MM/yyyy",
       )}. ${
@@ -127,27 +125,27 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_ACTUALISATION":
       return "Candidature actualisée";
     case "CADUCITE_CONTESTED":
-      return "Contestation de la caducité de la candidature";
+      return "Caducité de la candidature contestée";
     case "CADUCITE_INVALIDATED":
-      return "Invalidation de la caducité de la candidature";
+      return "Caducité de la candidature invalidée";
     case "CADUCITE_CONFIRMED":
-      return "Confirmation de la caducité de la candidature";
+      return "Caducité de la candidature confirmée";
     case "DFF_SENT_TO_CANDIDATE":
-      return "Dossier de faisabilité envoyé au candidat pour validation";
+      return "Demande de validation du dossier de faisabilité envoyée au candidat";
     case "DFF_VALIDATED_BY_CANDIDATE":
-      return "Dossier de faisabilité validé par le candidat";
+      return "Dossier de faisabilité validé";
     case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
       return "Dossier de faisabilité envoyé au certificateur";
     case "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE":
-      return "Abandon de la candidature confirmé par le candidat";
+      return "Abandon de la candidature confirmé";
     case "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE":
-      return "Annulation de l'abandon de la candidature par le candidat";
+      return "Annulation de l'abandon de la candidature";
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_CONFIRMED":
-      return "La caducité de la candidature est confirmée";
+      return "Caducité de la candidature confirmée";
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED":
-      return "La caducité de la candidature est invalidée";
+      return "Caducité de la candidature invalidée";
     case "ADMIN_CUSTOM_ACTION":
-      return `Action exceptionnelle effectuée: ${details?.message}`;
+      return `Action exceptionnelle effectuée : ${details?.message}`;
     default:
       return "Évenement inconnu";
   }

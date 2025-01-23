@@ -22,9 +22,9 @@ const getUserProfileText = ({
         truncate(user.firstname, { length: 2, omission: "." }),
       )} ${capitalize(toLower(user.lastname))})`;
     case "AAP":
-      return "son AAP";
+      return "un AAP";
     case "CERTIFICATEUR":
-      return "son certificateur";
+      return "un certificateur";
     case "CANDIDAT":
       return "le candidat";
   }
