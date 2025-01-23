@@ -31,13 +31,13 @@ export const signalDossierDeValidationProblem = async ({
 
   if (!dossierDeValidation.isActive) {
     throw new Error(
-      "Impossible de signaler un problème sur ce dossier. Il est inactif",
+      "Impossible de demander une correction sur ce dossier. Il est inactif",
     );
   }
 
   if (dossierDeValidation.decision !== "PENDING") {
     throw new Error(
-      "Impossible de signaler un problème sur ce dossier. Il n'est pas en cours",
+      "Impossible de demander une correction sur ce dossier. Il n'est pas en cours",
     );
   }
 
@@ -47,7 +47,7 @@ export const signalDossierDeValidationProblem = async ({
 
   if (candidacyStatus.status !== "DOSSIER_DE_VALIDATION_ENVOYE") {
     throw new Error(
-      "Impossible de signaler un problème sur ce dossier. Le statut de la candidature est invalide",
+      "Impossible de demander une correction sur ce dossier. Le statut de la candidature est invalide",
     );
   }
 

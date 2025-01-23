@@ -50,8 +50,7 @@ const DossierDeValidationProblemPage = () => {
         >
           Retour au dossier
         </BackButton>
-        <h1>Dossier de validation</h1>
-        <h2>Signaler un problème</h2>
+        <h1>Correction du dossier de validation</h1>
         <form className="flex flex-col w-full" onSubmit={handleFormSubmit}>
           <div className="flex items-center gap-2 mb-8">
             <span className="uppercase text-xs font-bold">
