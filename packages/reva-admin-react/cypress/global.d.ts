@@ -16,5 +16,10 @@ declare namespace Cypress {
      * Logs-in as a collaborateur
      */
     collaborateur(url?: string): void;
+
+    /**
+     * Logs-in as a certificateur
+     */
+    certificateur(url?: string): void;
   }
 }

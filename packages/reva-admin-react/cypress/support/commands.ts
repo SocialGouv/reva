@@ -63,3 +63,7 @@ Cypress.Commands.add("gestionnaire", (url = "/") => {
 Cypress.Commands.add("admin", (url = "/") => {
   auth({ url, token: "auth/admin-token.json" });
 });
+
+Cypress.Commands.add("certificateur", (url = "/") => {
+  auth({ url, token: "auth/certificateur-token.json" });
+});
