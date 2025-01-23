@@ -146,7 +146,7 @@ const DossierDeValidationTab = () => {
                   href: `/candidacies/${candidacy?.id}/dossier-de-validation/problem`,
                 }}
               >
-                Signaler un problème
+                Demander une correction
               </Button>
             )}
           </>
