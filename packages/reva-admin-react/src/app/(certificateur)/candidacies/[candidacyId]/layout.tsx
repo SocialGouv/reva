@@ -103,12 +103,20 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
               </Badge>
             )}
             {isCaduque && !hasPendingCaduciteContestation && (
-              <Badge severity="error" className="mt-4">
+              <Badge
+                severity="error"
+                className="mt-4"
+                data-test="caduque-badge"
+              >
                 Recevabilité caduque
               </Badge>
             )}
             {hasPendingCaduciteContestation && (
-              <Badge severity="warning" className="mt-4">
+              <Badge
+                severity="warning"
+                className="mt-4"
+                data-test="contestation-badge"
+              >
                 Contestation caducité
               </Badge>
             )}

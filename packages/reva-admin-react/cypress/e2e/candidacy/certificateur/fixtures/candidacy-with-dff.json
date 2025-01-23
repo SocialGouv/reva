@@ -1,0 +1,302 @@
+{
+  "data": {
+    "feasibility_getActiveFeasibilityByCandidacyId": {
+      "decision": "ADMISSIBLE",
+      "decisionComment": "fddfgfd",
+      "decisionSentAt": 1734688992667,
+      "history": [
+        {
+          "id": "cedd44f4-3ba3-43cd-a31c-272611811ae6",
+          "decision": "ADMISSIBLE",
+          "decisionComment": "fddfgfd",
+          "decisionSentAt": 1734688992668
+        },
+        {
+          "id": "433ea111-514b-489d-b488-3f55aa89377c",
+          "decision": "COMPLETE",
+          "decisionComment": "",
+          "decisionSentAt": 1734688850833
+        }
+      ],
+      "dematerializedFeasibilityFile": {
+        "id": "b1f3bae2-7875-46d9-aa31-86045a6b1fc6",
+        "swornStatementFile": {
+          "name": "blankID.pdf",
+          "previewUrl": "/admin2/api/preview/candidacies/1b0fa8e3-7ac3-47db-8df5-404517a83d35/dff_files/1b6b1f57-fa66-407f-ac19-5c7216bacbb5?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=B5AAE4UXFD4DU5HTQFJX%2F20250123%2Fcloudgouv-eu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20250123T155434Z&X-Amz-Expires=300&X-Amz-Signature=0c74bda114199f4bc1bfa740e5b9b6885b2af51690b07d72d74e1bc1c010d70a&X-Amz-SignedHeaders=host&x-id=GetObject",
+          "mimeType": "application/pdf"
+        },
+        "sentToCandidateAt": 1734688767749,
+        "aapDecision": "FAVORABLE",
+        "aapDecisionComment": "11",
+        "candidateDecisionComment": "",
+        "prerequisites": [],
+        "firstForeignLanguage": "",
+        "secondForeignLanguage": "",
+        "option": "",
+        "blocsDeCompetences": [
+          {
+            "text": "11",
+            "certificationCompetenceBloc": {
+              "id": "fe2aa5ab-6989-43c7-8332-b57f48511f3c",
+              "code": "RNCP37780BC01",
+              "label": "Gestion de son activité professionnelle auprès de particuliers employeurs",
+              "FCCompetences": "Construire son activité professionnelle en toute autonomie dans le secteur spécifique de l'emploi entre particuliers en recherchant des particuliers employeurs avec des outils de communication adaptés, en conduisant des entretiens d'embauche, et en négociant ses contrats de travail pour maintenir son employabilité Consolider son activité professionnelle en toute autonomie auprès des particuliers employeurs en veillant aux évolutions des métiers du secteur et en utilisant ses droits à la formation tout au long de la vie afin de maintenir son employabilité et d'affirmer son identité professionnelle Maintenir les relations de travail favorables avec les particuliers employeurs en s'appuyant sur les droits et les devoirs respectifs du salarié et des particuliers employeurs afin de développer la relation de confiance Adapter la proposition de son intervention aux évolutions de situations afin de répondre aux besoins et attentes des particuliers employeurs",
+              "competences": [
+                {
+                  "id": "3040f14e-2f6a-4e66-8b91-3f6e70391839",
+                  "label": "Construire son activité professionnelle en toute autonomie dans le secteur spécifique de l'emploi entre particuliers en recherchant des particuliers employeurs avec des outils de communication adaptés, en conduisant des entretiens d'embauche, et en négociant ses contrats de travail pour maintenir son employabilité"
+                },
+                {
+                  "id": "7e1d726d-9e7e-4c54-a878-cab165920be5",
+                  "label": "Consolider son activité professionnelle en toute autonomie auprès des particuliers employeurs en veillant aux évolutions des métiers du secteur et en utilisant ses droits à la formation tout au long de la vie afin de maintenir son employabilité et d'affirmer son identité professionnelle"
+                },
+                {
+                  "id": "74e4e8c3-fdfd-4fa8-8fe0-f0b6a1dcbdb2",
+                  "label": "Maintenir les relations de travail favorables avec les particuliers employeurs en s'appuyant sur les droits et les devoirs respectifs du salarié et des particuliers employeurs afin de développer la relation de confiance"
+                },
+                {
+                  "id": "aa2d6cd2-5fad-4e63-af3e-97c3efd1bb69",
+                  "label": "Adapter la proposition de son intervention aux évolutions de situations afin de répondre aux besoins et attentes des particuliers employeurs"
+                }
+              ]
+            }
+          },
+          {
+            "text": "dsqdsq",
+            "certificationCompetenceBloc": {
+              "id": "f5a45862-526e-4097-a50f-e7076af6d9b1",
+              "code": "RNCP37780BC02",
+              "label": "Prévention et sécurité de son activité professionnelle au domicile du particulier employeur",
+              "FCCompetences": "Prévenir les risques professionnels liés à son activité dans le secteur des particuliers employeurs en les identifiant, en adaptant ses interventions et en préconisant des actions d’amélioration afin de garantir sa propre sécurité et maintenir son employabilité Prévenir les risques domestiques dans le secteur spécifique des particuliers employeurs, en les identifiant, en préconisant et en accompagnant sur des actions d'amélioration afin de sécuriser les particuliers employeurs Ajuster les actions d’amélioration à la situation de travail et aux particuliers employeurs afin de prévenir les risques de façon adéquate Être autonome dans l’identification des risques professionnels et domestiques et dans la mise en place des actions de prévention afin d’assurer sa sécurité et celle des particuliers employeurs",
+              "competences": [
+                {
+                  "id": "e01bd843-ae64-4c7a-9abb-de928144c6f4",
+                  "label": "Prévenir les risques professionnels liés à son activité dans le secteur des particuliers employeurs en les identifiant, en adaptant ses interventions et en préconisant des actions d’amélioration afin de garantir sa propre sécurité et maintenir son employabilité"
+                },
+                {
+                  "id": "2f345201-e58c-4a2a-be04-58aaa450e7f1",
+                  "label": "Prévenir les risques domestiques dans le secteur spécifique des particuliers employeurs, en les identifiant, en préconisant et en accompagnant sur des actions d'amélioration afin de sécuriser les particuliers employeurs"
+                },
+                {
+                  "id": "055f29b4-750b-4939-8f65-6184359a0aa1",
+                  "label": "Ajuster les actions d’amélioration à la situation de travail et aux particuliers employeurs afin de prévenir les risques de façon adéquate"
+                },
+                {
+                  "id": "f17bcc25-1b6e-475f-adde-7c5f5d0f592f",
+                  "label": "Être autonome dans l’identification des risques professionnels et domestiques et dans la mise en place des actions de prévention afin d’assurer sa sécurité et celle des particuliers employeurs"
+                }
+              ]
+            }
+          }
+        ],
+        "certificationCompetenceDetails": [
+          {
+            "state": "NO",
+            "certificationCompetence": {
+              "id": "3040f14e-2f6a-4e66-8b91-3f6e70391839",
+              "label": "Construire son activité professionnelle en toute autonomie dans le secteur spécifique de l'emploi entre particuliers en recherchant des particuliers employeurs avec des outils de communication adaptés, en conduisant des entretiens d'embauche, et en négociant ses contrats de travail pour maintenir son employabilité"
+            }
+          },
+          {
+            "state": "YES",
+            "certificationCompetence": {
+              "id": "7e1d726d-9e7e-4c54-a878-cab165920be5",
+              "label": "Consolider son activité professionnelle en toute autonomie auprès des particuliers employeurs en veillant aux évolutions des métiers du secteur et en utilisant ses droits à la formation tout au long de la vie afin de maintenir son employabilité et d'affirmer son identité professionnelle"
+            }
+          },
+          {
+            "state": "YES",
+            "certificationCompetence": {
+              "id": "74e4e8c3-fdfd-4fa8-8fe0-f0b6a1dcbdb2",
+              "label": "Maintenir les relations de travail favorables avec les particuliers employeurs en s'appuyant sur les droits et les devoirs respectifs du salarié et des particuliers employeurs afin de développer la relation de confiance"
+            }
+          },
+          {
+            "state": "YES",
+            "certificationCompetence": {
+              "id": "aa2d6cd2-5fad-4e63-af3e-97c3efd1bb69",
+              "label": "Adapter la proposition de son intervention aux évolutions de situations afin de répondre aux besoins et attentes des particuliers employeurs"
+            }
+          },
+          {
+            "state": "NO",
+            "certificationCompetence": {
+              "id": "e01bd843-ae64-4c7a-9abb-de928144c6f4",
+              "label": "Prévenir les risques professionnels liés à son activité dans le secteur des particuliers employeurs en les identifiant, en adaptant ses interventions et en préconisant des actions d’amélioration afin de garantir sa propre sécurité et maintenir son employabilité"
+            }
+          },
+          {
+            "state": "YES",
+            "certificationCompetence": {
+              "id": "2f345201-e58c-4a2a-be04-58aaa450e7f1",
+              "label": "Prévenir les risques domestiques dans le secteur spécifique des particuliers employeurs, en les identifiant, en préconisant et en accompagnant sur des actions d'amélioration afin de sécuriser les particuliers employeurs"
+            }
+          },
+          {
+            "state": "YES",
+            "certificationCompetence": {
+              "id": "055f29b4-750b-4939-8f65-6184359a0aa1",
+              "label": "Ajuster les actions d’amélioration à la situation de travail et aux particuliers employeurs afin de prévenir les risques de façon adéquate"
+            }
+          },
+          {
+            "state": "PARTIALLY",
+            "certificationCompetence": {
+              "id": "f17bcc25-1b6e-475f-adde-7c5f5d0f592f",
+              "label": "Être autonome dans l’identification des risques professionnels et domestiques et dans la mise en place des actions de prévention afin d’assurer sa sécurité et celle des particuliers employeurs"
+            }
+          }
+        ],
+        "attachments": [],
+        "eligibilityRequirement": "FULL_ELIGIBILITY_REQUIREMENT",
+        "eligibilityValidUntil": null
+      },
+      "candidacy": {
+        "id": "1b0fa8e3-7ac3-47db-8df5-404517a83d35",
+        "status": "DOSSIER_FAISABILITE_RECEVABLE",
+        "organism": {
+          "label": "Heveningham Hall",
+          "telephone": "0699887766",
+          "emailContact": "lenezjerome+hall@gmail.com",
+          "adresseCodePostal": null,
+          "adresseVille": null
+        },
+        "certificationAuthorities": [
+          {
+            "label": " Gestionnaire TEST"
+          },
+          {
+            "label": "DREETS Auvergne Rhône Alpes"
+          },
+          {
+            "label": "UIMM - Auvergne - Rhône-Alpes"
+          },
+          {
+            "label": "Certificateur déploiement 👨‍🎓"
+          },
+          {
+            "label": "Aurélie Certificateur"
+          },
+          {
+            "label": "aurélie fav certificateur educ nat"
+          }
+        ],
+        "individualHourCount": 33,
+        "collectiveHourCount": 22,
+        "additionalHourCount": 11,
+        "basicSkills": [
+          {
+            "label": "Usage et communication numérique",
+            "id": "d2eac236-723b-4bb8-ae4c-5d16d320ec72"
+          }
+        ],
+        "mandatoryTrainings": [
+          {
+            "label": "Equipier de Première Intervention",
+            "id": "2790458c-040f-417d-b081-1d74b715ff9b"
+          },
+          {
+            "label": "Systèmes d'attaches",
+            "id": "73d9b556-9631-4b43-9c8d-da324c31ef54"
+          }
+        ],
+        "certification": {
+          "certificationAuthorities": [
+            {
+              "id": "ae1526d9-0fd6-47cb-a123-107a7e8dee7d",
+              "label": " Gestionnaire TEST"
+            },
+            {
+              "id": "a8a573e1-7228-457e-8b96-9de6d89c34c2",
+              "label": "DREETS Auvergne Rhône Alpes"
+            },
+            {
+              "id": "4bd23c92-760f-4f0d-8495-1a5df6d0773a",
+              "label": "UIMM - Auvergne - Rhône-Alpes"
+            },
+            {
+              "id": "7382d7a4-f3fb-4098-8a83-f202b27a909c",
+              "label": "Certificateur déploiement 👨‍🎓"
+            },
+            {
+              "id": "1a9b84d1-fb61-42cc-b96b-88f12f416f5a",
+              "label": "Aurélie Certificateur"
+            },
+            {
+              "id": "2f0ac793-8712-4c0c-8a50-a4a924336684",
+              "label": "aurélie fav certificateur educ nat"
+            }
+          ],
+          "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+          "codeRncp": "37780",
+          "level": 3,
+          "degree": {
+            "longLabel": "Niveau 3 (CAP, CQP 3, MC 3, Titre professionnel 3, DE 3)",
+            "level": 3
+          }
+        },
+        "goals": [
+          {
+            "id": "a952691b-3826-4a25-a3b2-6238854873bf",
+            "label": "Être reconnu dans ma profession",
+            "isActive": true
+          },
+          {
+            "id": "bc5365e2-a208-4c19-98f9-22f15de894cd",
+            "label": "Trouver plus facilement un emploi",
+            "isActive": true
+          }
+        ],
+        "experiences": [
+          {
+            "id": "355b45bf-7840-4ba9-bb7b-c941bd901610",
+            "title": "dffsdfdsfds",
+            "startedAt": 1580428800000,
+            "duration": "moreThanFiveYears",
+            "description": "dfsfsds"
+          }
+        ],
+        "certificateSkills": "dsfsdf",
+        "candidate": {
+          "highestDegree": {
+            "longLabel": "Niveau 1 : Sans qualification (hors Cléa)"
+          },
+          "niveauDeFormationLePlusEleve": {
+            "longLabel": "Niveau 1 : Sans qualification (hors Cléa)"
+          },
+          "highestDegreeLabel": "",
+          "firstname": "Jiji",
+          "firstname2": "",
+          "firstname3": "",
+          "lastname": "Testdemos",
+          "email": "lenezjerome+testdemos@gmail.com",
+          "givenName": "",
+          "birthdate": 656380800000,
+          "birthCity": "fds",
+          "birthDepartment": {
+            "label": "Cantal",
+            "code": "15",
+            "region": {
+              "code": "84",
+              "label": "Auvergne-Rhône-Alpes"
+            }
+          },
+          "country": {
+            "id": "208ef9d1-4d18-475b-9f5f-575da5f7218c",
+            "label": "France"
+          },
+          "nationality": "fr",
+          "gender": "undisclosed",
+          "phone": "0652284515",
+          "city": "paris",
+          "street": "1 rue de lo",
+          "zip": "75015"
+        },
+        "candidacyDropOut": null,
+        "isCaduque": true,
+        "lastActivityDate": 1721469792768,
+        "candidacyContestationsCaducite": []
+      }
+    }
+  }
+}
