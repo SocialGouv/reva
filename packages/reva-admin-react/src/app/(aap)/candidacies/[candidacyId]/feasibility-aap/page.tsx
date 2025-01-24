@@ -38,7 +38,7 @@ const FeasibilityBanner = ({
   isCandidacyActualisationFeatureActive,
   hasConfirmedCaduciteContestation,
 }: {
-  decisionSentAt: Date | null;
+  decisionSentAt: number | null | undefined;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
   history?: FeasibilityHistory[];
@@ -68,7 +68,7 @@ const FeasibilityBanner = ({
 
   return (
     <DecisionSentComponent
-      decisionSentAt={decisionSentAt}
+      decisionSentAt={decisionSentAt ? new Date(decisionSentAt) : null}
       decision={decision}
       decisionComment={decisionComment}
       history={history}
@@ -125,11 +125,7 @@ const AapFeasibilityPage = () => {
         candidacy={candidacy as Candidacy}
         FeasibilityBanner={
           <FeasibilityBanner
-            decisionSentAt={
-              feasibility.decisionSentAt
-                ? new Date(feasibility.decisionSentAt)
-                : null
-            }
+            decisionSentAt={feasibility.decisionSentAt}
             decision={feasibility.decision}
             decisionComment={feasibility.decisionComment}
             history={feasibility.history}
