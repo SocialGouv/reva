@@ -14,5 +14,6 @@ export const BannerIsCaduque = ({
     severity="error"
     description="Ce candidat ne s'est pas actualisé (démarche à effectuer tous les 6 mois). Sa recevabilité est désormais caduque. S'il le souhaite, il peut envoyer une contestation au certificateur depuis son espace."
     className="mb-6"
+    data-test="banner-is-caduque"
   />
 );
