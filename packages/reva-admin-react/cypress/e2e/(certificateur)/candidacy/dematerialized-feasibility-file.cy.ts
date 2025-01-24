@@ -13,36 +13,42 @@ function visitDematerializedFeasibility({
   candidacyContestationsCaducite = [] as CandidacyContestation[],
   activeFeatures = ["candidacy_actualisation"],
 } = {}) {
-  cy.fixture("candidacy/candidacy.json").then((candidacy) => {
-    cy.fixture("feasibility/dematerialized-feasibility-file.json").then(
-      (feasibility) => {
-        cy.fixture("features/active-features.json").then((features) => {
-          features.data.activeFeaturesForConnectedUser = activeFeatures;
+  cy.fixture("feasibility/dematerialized-feasibility-file.json").then(
+    (feasibility) => {
+      cy.fixture("features/active-features.json").then((features) => {
+        features.data.activeFeaturesForConnectedUser = activeFeatures;
 
-          cy.intercept("POST", "/api/graphql", (req) => {
-            stubQuery(req, "activeFeaturesForConnectedUser", features);
-            stubQuery(req, "getCandidacyWithCandidateInfoForLayout", candidacy);
-            stubQuery(req, "getCandidacyWithFeasibilityQuery", candidacy);
-            stubQuery(req, "feasibilityGetActiveFeasibilityByCandidacyId", {
-              data: {
-                feasibility_getActiveFeasibilityByCandidacyId: {
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "activeFeaturesForConnectedUser", features);
+          stubQuery(
+            req,
+            "getCandidacyWithCandidateInfoForLayout",
+            "candidacy/candidacy.json",
+          );
+          stubQuery(
+            req,
+            "getCandidacyWithFeasibilityQuery",
+            "candidacy/candidacy.json",
+          );
+          stubQuery(req, "feasibilityGetActiveFeasibilityByCandidacyId", {
+            data: {
+              feasibility_getActiveFeasibilityByCandidacyId: {
+                ...feasibility.data
+                  .feasibility_getActiveFeasibilityByCandidacyId,
+                candidacy: {
                   ...feasibility.data
-                    .feasibility_getActiveFeasibilityByCandidacyId,
-                  candidacy: {
-                    ...feasibility.data
-                      .feasibility_getActiveFeasibilityByCandidacyId.candidacy,
-                    isCaduque,
-                    lastActivityDate,
-                    candidacyContestationsCaducite,
-                  },
+                    .feasibility_getActiveFeasibilityByCandidacyId.candidacy,
+                  isCaduque,
+                  lastActivityDate,
+                  candidacyContestationsCaducite,
                 },
               },
-            });
+            },
           });
         });
-      },
-    );
-  });
+      });
+    },
+  );
 
   cy.certificateur(
     "/candidacies/1b0fa8e3-7ac3-47db-8df5-404517a83d35/feasibility",
