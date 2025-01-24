@@ -14,5 +14,6 @@ export const BannerCaduciteConfirmed = ({
     severity="error"
     description="Le candidat n'a pas procédé à son actualisation (démarche à effectuer tous les 6 mois). Sa recevabilité est donc caduque."
     className="mb-6"
+    data-test="banner-caducite-confirmed"
   />
 );
