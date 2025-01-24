@@ -35,7 +35,7 @@ export default function ChooseTypeAccompagnementPage() {
       <h1 className="mt-8">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
-        Aujourd’hui, il exite 2 manières de réaliser un parcours VAE : en
+        Aujourd’hui, il existe 2 manières de réaliser un parcours VAE : en
         autonomie ou accompagné. Choisissez l&apos;option qui vous convient le
         mieux.
       </p>
