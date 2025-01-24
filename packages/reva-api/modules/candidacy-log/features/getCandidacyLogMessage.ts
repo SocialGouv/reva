@@ -45,10 +45,10 @@ export const getCandidacyLogMessage = ({
     case "CERTIFICATION_UPDATED":
       return details
         ? log(
-            "Certification modifiée",
-            `Nouvelle certification : ${details.certification.label} (${details.certification.codeRncp})`,
+            "Certification choisie",
+            `Certification : ${details.certification.label} (${details.certification.codeRncp})`,
           )
-        : log("Certification modifiée");
+        : log("Certification choisie");
 
     case "EXPERIENCE_ADDED":
       return log("Expérience ajoutée");
@@ -57,7 +57,7 @@ export const getCandidacyLogMessage = ({
       return log("Expérience modifiée");
 
     case "GOALS_UPDATED":
-      return log("Objectifs modifiés");
+      return log("Objectifs saisis");
 
     case "CONTACT_INFO_UPDATED":
       return log("Informations de contact modifiées");
@@ -180,7 +180,7 @@ export const getCandidacyLogMessage = ({
       return details?.typeAccompagnement
         ? log(
             "Type d'accompagnement modifié",
-            `Nouveau type d'accompagnement ${details.typeAccompagnement}`,
+            `Type d'accompagnement : ${details.typeAccompagnement}`,
           )
         : log("Type d'accompagnement modifié");
 
