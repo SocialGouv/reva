@@ -1,6 +1,5 @@
 import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 import { prismaClient } from "../../../prisma/client";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
 import { startOfYesterday } from "date-fns";
@@ -8,19 +7,27 @@ import { createCandidacyHelper } from "../../../test/helpers/entities/create-can
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
-import { buildApp } from "../../../infra/server/app";
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
+import { getGraphqlClient } from "../../../test/jestGraphqlClient";
+import { graphql } from "../../graphql/generated";
+import { JuryResult } from "../../graphql/generated/graphql";
+import { FastifyInstance } from "fastify";
+import { getFastifyInstance } from "../../../test/jestFastifyInstance";
 
 const yesterday = startOfYesterday();
 
+let app: FastifyInstance;
+
 beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
+  app = await getFastifyInstance();
+});
+
+afterAll(async () => {
+  app.close();
 });
 
 afterEach(async () => {
   await clearDatabase();
-  await jest.clearAllMocks();
+  jest.clearAllMocks();
 });
 
 const readyForJuryEstimatedAt = yesterday;
@@ -47,30 +54,34 @@ async function graphqlUpdateJuryResult({
   result,
 }: {
   juryId: string;
-  result: string;
+  result: JuryResult;
 }) {
-  return injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "admin",
-      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "jury_updateResult",
-      arguments: {
-        juryId,
-        input: {
-          result,
-        },
-      },
-      enumFields: ["result"],
-      returnFields: "{ id }",
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+      }),
+    },
+  });
+
+  const jury_updateResult = graphql(`
+    mutation jury_updateResult($juryId: ID!, $input: JuryInfoInput!) {
+      jury_updateResult(juryId: $juryId, input: $input) {
+        id
+      }
+    }
+  `);
+
+  return graphqlClient.request(jury_updateResult, {
+    juryId,
+    input: {
+      result,
     },
   });
 }
 
-const failedJuryResults = [
+const failedJuryResults: JuryResult[] = [
   "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
   "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
   "FAILURE",
@@ -100,7 +111,7 @@ failedJuryResults.forEach((failedResult) => {
   });
 });
 
-const successfulJuryResults = [
+const successfulJuryResults: JuryResult[] = [
   "FULL_SUCCESS_OF_FULL_CERTIFICATION",
   "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
 ];
@@ -132,7 +143,7 @@ successfulJuryResults.forEach((successfulResult) => {
 test("should save jury result without errors", async () => {
   const jury = await createJuryAndDependenciesHelper();
 
-  const resp = await graphqlUpdateJuryResult({
+  const res = await graphqlUpdateJuryResult({
     juryId: jury.id,
     result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
   });
@@ -141,8 +152,7 @@ test("should save jury result without errors", async () => {
     where: { id: jury.id },
   });
 
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).not.toHaveProperty("errors");
+  expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
   expect(juryUpdated?.result).toEqual("FULL_SUCCESS_OF_FULL_CERTIFICATION");
 });
 
