@@ -72,11 +72,13 @@ const FeasibilityBanner = ({
     isCandidacyActualisationFeatureActive
   ) {
     return (
-      <div className="flex flex-col mb-6">
+      <div
+        className="flex flex-col mb-6"
+        data-test="banner-pending-caducite-contestation"
+      >
         <Alert
           className="mb-4"
           severity="warning"
-          data-test="feasibility-caducite-contestation"
           title={`Contestation envoyée le ${format(
             pendingCaduciteContestationSentAt,
             "dd/MM/yyyy",
