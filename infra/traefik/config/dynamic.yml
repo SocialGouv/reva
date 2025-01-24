@@ -24,13 +24,6 @@ http:
         - removeHeader
         - add-security-headers-staging
 
-    site-web-staging-subscription:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
-      service: site-web-staging-subscription
-      middlewares:
-        - removeHeader
-        - add-security-headers-staging
-
     espace-pro-react-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
       service: espace-pro-react-staging
@@ -80,12 +73,6 @@ http:
       service: noop@internal
       middlewares:
         - redirect-vae-gouv-fr
-
-    site-web-production-subscription:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/inscription-pro`)"
-      service: noop@internal
-      middlewares:
-        - redirect-inscription-pro
 
     # --- END PRODUCTION REVA.BETA.GOUV.FR ---
     # --- BEGIN PRODUCTION VAE.GOUV.FR--
@@ -194,12 +181,6 @@ http:
         replacement: "https://${1}"
         permanent: true
 
-    redirect-inscription-pro:
-      redirectRegex:
-        regex: ".*"
-        replacement: "https://vae.gouv.fr/espace-professionnel/creation/"
-        permanent: true
-
     redirect-vae-gouv-fr:
       redirectRegex:
         regex: ".*"
@@ -226,12 +207,6 @@ http:
           - url: "https://metabase-reva-incubateur-net.osc-fr1.scalingo.io/"
 
     site-web-staging:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-staging-website.osc-fr1.scalingo.io/"
-
-    site-web-staging-subscription:
       loadBalancer:
         passHostHeader: false
         servers:
