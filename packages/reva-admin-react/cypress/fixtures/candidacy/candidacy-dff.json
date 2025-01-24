@@ -3,6 +3,7 @@
     "getCandidacyById": {
       "id": "57bf364b-8c8b-4ff4-889b-66917e26d7d0",
       "isCertificationPartial": false,
+      "isCaduque": false,
       "experiences": [
         {
           "id": "b2927373-1073-44d7-b494-ea78c7c56b74",

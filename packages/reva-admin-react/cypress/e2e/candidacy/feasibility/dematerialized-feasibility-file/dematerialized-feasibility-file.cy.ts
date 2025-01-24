@@ -1,3 +1,5 @@
+import { Candidacy } from "@/graphql/generated/graphql";
+import { subDays } from "date-fns";
 import { stubQuery } from "../../../../utils/graphql";
 import {
   DATE_NOW,
@@ -15,33 +17,69 @@ import {
   DFF_PARTIAL_ELIGIBILITY,
 } from "./dff-mocks";
 
-function visitFeasibility(feasibility = DEFAULT_FEASIBILITY_FILE as object) {
-  cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "features/active-features.json",
-      );
-      stubQuery(
-        req,
-        "getMaisonMereCGUQuery",
-        "account/gestionnaire-cgu-accepted.json",
-      );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/organism.json",
-      );
-      stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
-      candidacy.data.getCandidacyById.feasibility = feasibility;
-      stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
+const FEASIBILITY_ADMISSIBLE_DECISION = {
+  ...DEFAULT_FEASIBILITY_FILE,
+  decision: DFF_CERTIFICATION_AUTHORITY_DECISION_ADMISSIBLE,
+  dematerializedFeasibilityFile: {
+    ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+    eligibilityRequirement: DFF_FULL_ELIGIBILITY,
+    certificationPartComplete: true,
+    blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
+    attachmentsPartComplete: true,
+    prerequisitesPartComplete: true,
+    aapDecision: DFF_AAP_DECISION_FAVORABLE,
+    competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
+    isReadyToBeSentToCandidate: true,
+    sentToCandidateAt: DATE_NOW,
+    swornStatementFileId: "some-file-id",
+    isReadyToBeSentToCertificationAuthority: true,
+  },
+};
 
-      stubQuery(
-        req,
-        "getCandidacyMenuAndCandidateInfos",
-        "candidacy/candidacy-menu-dff.json",
-      );
+function visitFeasibility({
+  feasibility = DEFAULT_FEASIBILITY_FILE,
+  defaultCandidacy = { isCaduque: false },
+  activeFeatures = [],
+}: {
+  feasibility?: object;
+  defaultCandidacy?: Partial<Candidacy>;
+  activeFeatures?: string[];
+} = {}) {
+  cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
+    cy.fixture("features/active-features.json").then((features) => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "activeFeaturesForConnectedUser", {
+          data: {
+            activeFeaturesForConnectedUser: [
+              ...features.data.activeFeaturesForConnectedUser,
+              ...activeFeatures,
+            ],
+          },
+        });
+        stubQuery(
+          req,
+          "getMaisonMereCGUQuery",
+          "account/gestionnaire-cgu-accepted.json",
+        );
+        stubQuery(
+          req,
+          "getOrganismForAAPVisibilityCheck",
+          "visibility/organism.json",
+        );
+        stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
+        candidacy.data.getCandidacyById.feasibility = feasibility;
+        candidacy.data.getCandidacyById = {
+          ...candidacy.data.getCandidacyById,
+          ...defaultCandidacy,
+        };
+        stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
+
+        stubQuery(
+          req,
+          "getCandidacyMenuAndCandidateInfos",
+          "candidacy/candidacy-menu-dff.json",
+        );
+      });
     });
   });
 
@@ -123,7 +161,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         },
       };
 
-      visitFeasibility(feasibilityEligibilityCompleted);
+      visitFeasibility({
+        feasibility: feasibilityEligibilityCompleted,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -168,7 +208,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         },
       };
 
-      visitFeasibility(feasibilityEligibilityAndCertificationCompleted);
+      visitFeasibility({
+        feasibility: feasibilityEligibilityAndCertificationCompleted,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -215,7 +257,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES,
         },
       };
-      visitFeasibility(feasibilityEligibilityPartial);
+      visitFeasibility({
+        feasibility: feasibilityEligibilityPartial,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -269,7 +313,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
             isReadyToBeSentToCandidate: true,
           },
         };
-        visitFeasibility(feasibilityEligibilityAndCertificationCompleted);
+        visitFeasibility({
+          feasibility: feasibilityEligibilityAndCertificationCompleted,
+        });
         cy.get("[data-test='eligibility-section']").within(() => {
           cy.get("[data-test='completed-badge']").should("exist");
         });
@@ -323,7 +369,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           sentToCandidateAt: DATE_NOW,
         },
       };
-      visitFeasibility(feasibilityWithSentToCandidate);
+      visitFeasibility({
+        feasibility: feasibilityWithSentToCandidate,
+      });
 
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
@@ -377,7 +425,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           isReadyToBeSentToCandidate: true,
         },
       };
-      visitFeasibility(feasibilityUnfavorableDecision);
+      visitFeasibility({
+        feasibility: feasibilityUnfavorableDecision,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -422,7 +472,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         },
       };
 
-      visitFeasibility(feasibilityWithUnfavorableDecision);
+      visitFeasibility({
+        feasibility: feasibilityWithUnfavorableDecision,
+      });
       cy.get("[data-test='decision-section']").within(() => {
         cy.get("[data-test='unfavorable-badge']").should("exist");
       });
@@ -449,7 +501,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           sentToCandidateAt: DATE_NOW,
         },
       };
-      visitFeasibility(feasibilityAllCompleted);
+      visitFeasibility({
+        feasibility: feasibilityAllCompleted,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -502,7 +556,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           isReadyToBeSentToCertificationAuthority: true,
         },
       };
-      visitFeasibility(feasibilityAllCompletedWithSwornAttestation);
+      visitFeasibility({
+        feasibility: feasibilityAllCompletedWithSwornAttestation,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -555,7 +611,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           isReadyToBeSentToCertificationAuthority: true,
         },
       };
-      visitFeasibility(feasibilityAllCompleted);
+      visitFeasibility({
+        feasibility: feasibilityAllCompleted,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -613,7 +671,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
             isReadyToBeSentToCertificationAuthority: true,
           },
         };
-        visitFeasibility(feasibilityFileSent);
+        visitFeasibility({
+          feasibility: feasibilityFileSent,
+        });
         cy.get("[data-test='eligibility-section']").within(() => {
           cy.get("[data-test='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
@@ -660,25 +720,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
 
   context("When the decision is ADMISSIBLE or REJECTED", () => {
     it("should display the feasibility summary when the decision is ADMISSIBLE", () => {
-      const feasibilityAdmissibleDecision = {
-        ...DEFAULT_FEASIBILITY_FILE,
-        decision: DFF_CERTIFICATION_AUTHORITY_DECISION_ADMISSIBLE,
-        dematerializedFeasibilityFile: {
-          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
-          eligibilityRequirement: DFF_FULL_ELIGIBILITY,
-          certificationPartComplete: true,
-          blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
-          attachmentsPartComplete: true,
-          prerequisitesPartComplete: true,
-          aapDecision: DFF_AAP_DECISION_FAVORABLE,
-          competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
-          isReadyToBeSentToCandidate: true,
-          sentToCandidateAt: DATE_NOW,
-          swornStatementFileId: "some-file-id",
-          isReadyToBeSentToCertificationAuthority: true,
-        },
-      };
-      visitFeasibility(feasibilityAdmissibleDecision);
+      visitFeasibility({
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
       cy.get("[data-test='dff-summary']").should("exist");
     });
 
@@ -701,7 +745,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           isReadyToBeSentToCertificationAuthority: true,
         },
       };
-      visitFeasibility(feasibilityRejectedDecision);
+      visitFeasibility({
+        feasibility: feasibilityRejectedDecision,
+      });
       cy.get("[data-test='dff-summary']").should("exist");
     });
   });
@@ -726,7 +772,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           feasibilityFileSentAt: null,
         },
       };
-      visitFeasibility(feasibilityIncompleteDecision);
+      visitFeasibility({
+        feasibility: feasibilityIncompleteDecision,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -782,7 +830,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           candidateConfirmationAt: DATE_NOW,
         },
       };
-      visitFeasibility(feasibilityIncompleteDecision);
+      visitFeasibility({
+        feasibility: feasibilityIncompleteDecision,
+      });
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
@@ -815,6 +865,94 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           cy.get("button").should("not.be.disabled");
         },
       );
+    });
+  });
+
+  context("When the candidacy is caduque", () => {
+    it("should display the caduque banner when candidacy is caduque and actualisation feature is active", () => {
+      const lastActivityDate = subDays(DATE_NOW, 180);
+      visitFeasibility({
+        activeFeatures: ["candidacy_actualisation"],
+        defaultCandidacy: {
+          isCaduque: true,
+          lastActivityDate: lastActivityDate.getTime(),
+        },
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='banner-is-caduque']").should("exist");
+      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
+    });
+
+    it("should display only the caducite confirmed banner when contestation is confirmed and actualisation feature is active", () => {
+      const lastActivityDate = subDays(DATE_NOW, 180);
+      visitFeasibility({
+        activeFeatures: ["candidacy_actualisation"],
+        defaultCandidacy: {
+          isCaduque: true,
+          lastActivityDate: lastActivityDate.getTime(),
+          candidacyContestationsCaducite: [
+            {
+              id: "some-id",
+              candidacyId: "some-candidacy-id",
+              contestationReason: "some-reason",
+              contestationSentAt: DATE_NOW,
+              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
+            },
+          ],
+        },
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='banner-caducite-confirmed']").should("exist");
+      cy.get("[data-test='banner-is-caduque']").should("not.exist");
+    });
+
+    it("should not display caducite confirmed banner when contestation is confirmed but actualisation feature is not active", () => {
+      const lastActivityDate = subDays(DATE_NOW, 180);
+      visitFeasibility({
+        defaultCandidacy: {
+          isCaduque: true,
+          lastActivityDate: lastActivityDate.getTime(),
+          candidacyContestationsCaducite: [
+            {
+              id: "some-id",
+              candidacyId: "some-candidacy-id",
+              contestationReason: "some-reason",
+              contestationSentAt: DATE_NOW,
+              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
+            },
+          ],
+        },
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
+      cy.get("[data-test='banner-is-caduque']").should("not.exist");
+    });
+
+    it("should not display any caduque banner when actualisation feature is not active", () => {
+      const lastActivityDate = subDays(DATE_NOW, 180);
+      visitFeasibility({
+        defaultCandidacy: {
+          isCaduque: true,
+          lastActivityDate: lastActivityDate.getTime(),
+        },
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='banner-is-caduque']").should("not.exist");
+      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
+    });
+
+    it("should not display any caduque banner when candidacy is not caduque", () => {
+      const lastActivityDate = subDays(DATE_NOW, 150);
+      visitFeasibility({
+        activeFeatures: ["candidacy_actualisation"],
+        defaultCandidacy: {
+          isCaduque: false,
+          lastActivityDate: lastActivityDate.getTime(),
+        },
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='banner-is-caduque']").should("not.exist");
+      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
     });
   });
 });
