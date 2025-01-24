@@ -1,5 +1,4 @@
 import { stubQuery } from "../../../utils/graphql";
-import candidacyWithDff from "./fixtures/candidacy-with-dff.json";
 
 interface CandidacyContestation {
   certificationAuthorityContestationDecision: string;
@@ -25,7 +24,7 @@ function visitCandidacy({
       stubQuery(
         req,
         "feasibilityGetActiveFeasibilityByCandidacyId",
-        candidacyWithDff,
+        "feasibility/dematerialized-feasibility-file.json",
       );
     });
   });
