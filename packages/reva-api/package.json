@@ -5,15 +5,17 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts | npx pino-pretty",
-    "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
+    "build": "npm run prisma:generate && npm run graphql:generate && npm run graphql:generate-ts && npm run build:ts && npm run sync:graphql",
     "build:ts": "rimraf ./dist && tsc -p tsconfig.json",
-    "build:graphql": "npm run graphql:generate && rsync -R ./modules/*.graphql ./dist && rsync -R ./modules/**/*.graphql ./dist && rsync -R ./modules/**/**/*.graphql ./dist/modules ",
+    "sync:graphql": "rsync -R ./modules/*.graphql ./dist && rsync -R ./modules/**/*.graphql ./dist && rsync -R ./modules/**/**/*.graphql ./dist/modules ",
     "start": "npm run prisma:migrate:deploy && node dist/index.js",
     "start:server:only": "node dist/index.js",
     "pretest": "dotenv -e .env.test -- prisma generate",
-    "test": "dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1 --testRegex='.*.test.ts$'",
+    "test": "npm run graphql:generate && npm run graphql:generate-ts && dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1 --testRegex='.*.test.ts$'",
     "testModule": "dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1",
     "graphql:generate": "tsx ./modules/generate-graphql-schema.ts",
+    "graphql:generate-ts": "graphql-codegen --config codegen.ts",
+    "graphql:watch-ts": "graphql-codegen --config codegen.ts --watch",
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",
     "prisma:reset": "prisma migrate reset",
@@ -21,7 +23,7 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
-    "lint": "eslint --color modules infra test scripts prisma/seed"
+    "lint": "npm run graphql:generate && npm run graphql:generate-ts && eslint --color modules infra test scripts prisma/seed"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed/seed.ts"
@@ -70,6 +72,9 @@
     "uuid": "^11.0.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "5.0.3",
+    "@graphql-codegen/client-preset": "4.5.0",
+    "@parcel/watcher": "^2.5.0",
     "@types/cron": "^2.4.3",
     "@types/crypto-js": "^4.2.2",
     "@types/debug": "^4.1.12",
@@ -87,6 +92,7 @@
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "graphql-request": "^6.1.0",
     "import-sort-style-module": "^6.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",

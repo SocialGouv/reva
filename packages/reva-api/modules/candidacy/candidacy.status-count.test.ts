@@ -5,7 +5,6 @@
 import { CandidacyStatusStep, Candidate, Certification } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { CandidacyStatusFilter } from "./candidacy.types";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
@@ -13,6 +12,9 @@ import { prismaClient } from "../../prisma/client";
 import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
+
+import { getGraphqlClient } from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
 afterEach(async () => {
   await clearDatabase();
@@ -94,25 +96,47 @@ const executeQueryAndAssertResults = async ({
     ...defaultAssertionOverride,
   };
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role,
-      keycloakId: keycloakId || "whatever",
-    }),
-    payload: {
-      requestType: "query",
-      arguments: searchFilter ? { searchFilter } : undefined,
-      endpoint: "candidacy_candidacyCountByStatus",
-      returnFields:
-        "{ACTIVE_HORS_ABANDON, ABANDON, REORIENTEE, ARCHIVE_HORS_ABANDON_HORS_REORIENTATION, PARCOURS_CONFIRME_HORS_ABANDON, PRISE_EN_CHARGE_HORS_ABANDON, PARCOURS_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON, DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON, DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON, DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON, DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON, DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON, JURY_HORS_ABANDON, JURY_PROGRAMME_HORS_ABANDON, JURY_PASSE_HORS_ABANDON, DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON, DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON, VALIDATION_HORS_ABANDON, PROJET_HORS_ABANDON}",
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role,
+        keycloakId: keycloakId || "whatever",
+      }),
     },
   });
-  expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
-  expect(obj.data.candidacy_candidacyCountByStatus).toMatchObject(
-    resultAssertion,
-  );
+
+  const candidacy_candidacyCountByStatus = graphql(`
+    query candidacy_candidacyCountByStatus($searchFilter: String) {
+      candidacy_candidacyCountByStatus(searchFilter: $searchFilter) {
+        ACTIVE_HORS_ABANDON
+        ABANDON
+        REORIENTEE
+        ARCHIVE_HORS_ABANDON_HORS_REORIENTATION
+        PARCOURS_CONFIRME_HORS_ABANDON
+        PRISE_EN_CHARGE_HORS_ABANDON
+        PARCOURS_ENVOYE_HORS_ABANDON
+        DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON
+        DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON
+        DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON
+        DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON
+        DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON
+        DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON
+        JURY_HORS_ABANDON
+        JURY_PROGRAMME_HORS_ABANDON
+        JURY_PASSE_HORS_ABANDON
+        DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON
+        DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON
+        VALIDATION_HORS_ABANDON
+        PROJET_HORS_ABANDON
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(candidacy_candidacyCountByStatus, {
+    searchFilter,
+  });
+
+  expect(res.candidacy_candidacyCountByStatus).toMatchObject(resultAssertion);
 };
 
 const simpleStatusesTestData: [

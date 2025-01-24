@@ -5,8 +5,13 @@
 import { CandidacyStatusStep } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
+
+import {
+  getGraphqlClient,
+  getQraphQLError,
+} from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
 afterEach(async () => {
   await clearDatabase();
@@ -26,59 +31,43 @@ test.each([
     });
     const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-    const resp = await injectGraphql({
-      fastify: (global as any).fastify,
-      authorization: authorizationHeaderForUser({
-        role: "candidate",
-        keycloakId: candidateKeycloakId,
-      }),
-      payload: {
-        requestType: "mutation",
-        endpoint: "candidacy_updateTypeAccompagnement",
-        arguments: {
-          candidacyId: candidacy.id,
-          typeAccompagnement: "AUTONOME",
-        },
-        returnFields: "{id,typeAccompagnement}",
-        enumFields: ["typeAccompagnement"],
+    const graphqlClient = getGraphqlClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidateKeycloakId,
+        }),
       },
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.candidacy_updateTypeAccompagnement).toMatchObject({
-      typeAccompagnement: "AUTONOME",
+
+    const candidacy_updateTypeAccompagnement = graphql(`
+      mutation candidacy_updateTypeAccompagnement_based_on_accompagnement_ACCOMPAGNE(
+        $candidacyId: UUID!
+        $typeAccompagnement: TypeAccompagnement!
+      ) {
+        candidacy_updateTypeAccompagnement(
+          candidacyId: $candidacyId
+          typeAccompagnement: $typeAccompagnement
+        ) {
+          id
+          typeAccompagnement
+        }
+      }
+    `);
+
+    const res = await graphqlClient.request(
+      candidacy_updateTypeAccompagnement,
+      {
+        candidacyId: candidacy.id,
+        typeAccompagnement: "AUTONOME",
+      },
+    );
+
+    expect(res).toMatchObject({
+      candidacy_updateTypeAccompagnement: { typeAccompagnement: "AUTONOME" },
     });
   },
 );
-
-test("candidate should NOT be able to change it's type_accompagnement to 'autonome' when the candidacy status is equal to 'PARCOURS_CONFIRME'", async () => {
-  const candidacy = await createCandidacyHelper({
-    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
-    candidacyArgs: { typeAccompagnement: "ACCOMPAGNE" },
-  });
-  const candidateKeycloakId = candidacy.candidate?.keycloakId;
-
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: candidateKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_updateTypeAccompagnement",
-      arguments: { candidacyId: candidacy.id, typeAccompagnement: "AUTONOME" },
-      returnFields: "{id,typeAccompagnement}",
-      enumFields: ["typeAccompagnement"],
-    },
-  });
-  expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
-  expect(obj).toHaveProperty("errors");
-  expect(obj.errors[0].message).toBe(
-    "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
-  );
-});
 
 test("candidate should be able to change it's type_accompagnement to 'accompagne' when the candidacy status is 'PROJET'", async () => {
   const candidacy = await createCandidacyHelper({
@@ -87,28 +76,83 @@ test("candidate should be able to change it's type_accompagnement to 'accompagne
   });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: candidateKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_updateTypeAccompagnement",
-      arguments: {
-        candidacyId: candidacy.id,
-        typeAccompagnement: "ACCOMPAGNE",
-      },
-      returnFields: "{id,typeAccompagnement}",
-      enumFields: ["typeAccompagnement"],
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidateKeycloakId,
+      }),
     },
   });
-  expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
-  expect(obj.data.candidacy_updateTypeAccompagnement).toMatchObject({
+
+  const candidacy_updateTypeAccompagnement = graphql(`
+    mutation candidacy_updateTypeAccompagnement_based_on_accompagnement_AUTONOME(
+      $candidacyId: UUID!
+      $typeAccompagnement: TypeAccompagnement!
+    ) {
+      candidacy_updateTypeAccompagnement(
+        candidacyId: $candidacyId
+        typeAccompagnement: $typeAccompagnement
+      ) {
+        id
+        typeAccompagnement
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+    candidacyId: candidacy.id,
     typeAccompagnement: "ACCOMPAGNE",
   });
+
+  expect(res).toMatchObject({
+    candidacy_updateTypeAccompagnement: { typeAccompagnement: "ACCOMPAGNE" },
+  });
+});
+
+test("candidate should NOT be able to change it's type_accompagnement to 'autonome' when the candidacy status is equal to 'PARCOURS_CONFIRME'", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
+    candidacyArgs: { typeAccompagnement: "ACCOMPAGNE" },
+  });
+  const candidateKeycloakId = candidacy.candidate?.keycloakId;
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidateKeycloakId,
+      }),
+    },
+  });
+
+  const candidacy_updateTypeAccompagnement = graphql(`
+    mutation candidacy_updateTypeAccompagnement_based_on_status_PARCOURS_CONFIRME(
+      $candidacyId: UUID!
+      $typeAccompagnement: TypeAccompagnement!
+    ) {
+      candidacy_updateTypeAccompagnement(
+        candidacyId: $candidacyId
+        typeAccompagnement: $typeAccompagnement
+      ) {
+        id
+        typeAccompagnement
+      }
+    }
+  `);
+
+  try {
+    await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+      candidacyId: candidacy.id,
+      typeAccompagnement: "AUTONOME",
+    });
+  } catch (error) {
+    const gqlError = getQraphQLError(error);
+
+    expect(gqlError).toEqual(
+      "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
+    );
+  }
 });
 
 test("candidate should NOT be able to change it's type_accompagnement to 'accompagne' when the candidacy status is equal to 'DOSSIER_FAISABILITE_ENVOYE'", async () => {
@@ -118,27 +162,40 @@ test("candidate should NOT be able to change it's type_accompagnement to 'accomp
   });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: candidateKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_updateTypeAccompagnement",
-      arguments: {
-        candidacyId: candidacy.id,
-        typeAccompagnement: "ACCOMPAGNE",
-      },
-      returnFields: "{id,typeAccompagnement}",
-      enumFields: ["typeAccompagnement"],
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidateKeycloakId,
+      }),
     },
   });
-  expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
-  expect(obj).toHaveProperty("errors");
-  expect(obj.errors[0].message).toBe(
-    "Impossible de modifier le type d'accompagnement une fois le dossier de faisabilité envoyé",
-  );
+
+  const candidacy_updateTypeAccompagnement = graphql(`
+    mutation candidacy_updateTypeAccompagnement_based_on_status_DOSSIER_FAISABILITE_ENVOYE(
+      $candidacyId: UUID!
+      $typeAccompagnement: TypeAccompagnement!
+    ) {
+      candidacy_updateTypeAccompagnement(
+        candidacyId: $candidacyId
+        typeAccompagnement: $typeAccompagnement
+      ) {
+        id
+        typeAccompagnement
+      }
+    }
+  `);
+
+  try {
+    await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+      candidacyId: candidacy.id,
+      typeAccompagnement: "ACCOMPAGNE",
+    });
+  } catch (error) {
+    const gqlError = getQraphQLError(error);
+
+    expect(gqlError).toEqual(
+      "Impossible de modifier le type d'accompagnement une fois le dossier de faisabilité envoyé",
+    );
+  }
 });

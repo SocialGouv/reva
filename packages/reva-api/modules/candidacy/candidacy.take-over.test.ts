@@ -5,89 +5,132 @@
 import { CandidacyStatusStep } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+
+import {
+  getGraphqlClient,
+  getQraphQLError,
+} from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
 test("candidacy_takeOver should fail when not authenticated", async function () {
   const candidacy = await createCandidacyHelper();
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: "blabla",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id }",
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: "blabla",
+      }),
     },
   });
 
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).toHaveProperty("errors");
+  const candidacy_takeOver = graphql(`
+    mutation candidacy_takeOver_not_authorized($candidacyId: ID!) {
+      candidacy_takeOver(candidacyId: $candidacyId) {
+        id
+      }
+    }
+  `);
+
+  try {
+    await graphqlClient.request(candidacy_takeOver, {
+      candidacyId: candidacy.id,
+    });
+  } catch (error) {
+    const gqlError = getQraphQLError(error);
+    expect(gqlError).toEqual("You are not authorized!");
+  }
 });
 
 test("candidacy_takeOver should fail when user is admin", async function () {
   const candidacy = await createCandidacyHelper();
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "admin",
-      keycloakId: "blabla",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id }",
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
     },
   });
 
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).toHaveProperty("errors");
+  const candidacy_takeOver = graphql(`
+    mutation candidacy_takeOver_is_admin($candidacyId: ID!) {
+      candidacy_takeOver(candidacyId: $candidacyId) {
+        id
+      }
+    }
+  `);
+
+  try {
+    await graphqlClient.request(candidacy_takeOver, {
+      candidacyId: candidacy.id,
+    });
+  } catch (error) {
+    const gqlError = getQraphQLError(error);
+    expect(gqlError).toEqual("You are not authorized!");
+  }
 });
 
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {
   const candidacy = await createCandidacyHelper();
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: "00000000-0000-0000-0000-000000000000",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id }",
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: "00000000-0000-0000-0000-000000000000",
+      }),
     },
   });
 
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).toHaveProperty("errors");
+  const candidacy_takeOver = graphql(`
+    mutation candidacy_takeOver_wrong_organism($candidacyId: ID!) {
+      candidacy_takeOver(candidacyId: $candidacyId) {
+        id
+      }
+    }
+  `);
+
+  try {
+    await graphqlClient.request(candidacy_takeOver, {
+      candidacyId: candidacy.id,
+    });
+  } catch (error) {
+    const gqlError = getQraphQLError(error);
+    expect(gqlError).toEqual("Votre compte utilisateur est introuvable.");
+  }
 });
 
 test("candidacy_takeOver should do nothing when candidacy status is not validation", async function () {
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.PROJET,
   });
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: candidacy.organism?.accounts[0].keycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id,status }",
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: candidacy.organism?.accounts[0].keycloakId,
+      }),
     },
   });
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).not.toHaveProperty("errors");
-  expect(resp.json()).toMatchObject({
-    data: { candidacy_takeOver: { status: "PROJET" } },
+
+  const candidacy_takeOver = graphql(`
+    mutation candidacy_takeOver_is_not_validation_status($candidacyId: ID!) {
+      candidacy_takeOver(candidacyId: $candidacyId) {
+        id
+        status
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(candidacy_takeOver, {
+    candidacyId: candidacy.id,
+  });
+
+  expect(res).toMatchObject({
+    candidacy_takeOver: { id: candidacy.id, status: "PROJET" },
   });
 });
 
@@ -95,19 +138,30 @@ test("candidacy_takeOver should update candidacy statuses when active status is 
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.VALIDATION,
   });
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: candidacy.organism?.accounts[0].keycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id }",
+
+  const graphqlClient = getGraphqlClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: candidacy.organism?.accounts[0].keycloakId,
+      }),
     },
   });
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).not.toHaveProperty("errors");
+
+  const candidacy_takeOver = graphql(`
+    mutation candidacy_takeOver_is_validation_status($candidacyId: ID!) {
+      candidacy_takeOver(candidacyId: $candidacyId) {
+        id
+        status
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(candidacy_takeOver, {
+    candidacyId: candidacy.id,
+  });
+
+  expect(res).toMatchObject({
+    candidacy_takeOver: { id: candidacy.id },
+  });
 });

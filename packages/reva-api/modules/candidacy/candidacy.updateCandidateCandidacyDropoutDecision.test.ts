@@ -1,21 +1,31 @@
 import { startOfDay, startOfToday } from "date-fns";
-import { buildApp } from "../../infra/server/app";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";
 import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/sendCandidacyDropOutConfirmedEmailToCandidate";
+import { FastifyInstance } from "fastify";
+
+import { getFastifyInstance } from "../../test/jestFastifyInstance";
+import {
+  getGraphqlClient,
+  getQraphQLError,
+} from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
+
+let app: FastifyInstance;
 
 beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
+  app = await getFastifyInstance();
+});
+
+afterAll(async () => {
+  app.close();
 });
 
 afterEach(async () => {
   await clearDatabase();
-  await jest.clearAllMocks();
+  jest.clearAllMocks();
 });
 
 describe("candidate drop out decision", () => {
@@ -35,32 +45,46 @@ describe("candidate drop out decision", () => {
       .mockImplementation(() => Promise.resolve(""));
 
     const candidacyDropOut = await createCandidacyDropOutHelper();
-    const resp = await injectGraphql({
-      fastify: (global as any).fastify,
-      authorization: authorizationHeaderForUser({
-        role: "candidate",
-        keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
-      }),
-      payload: {
-        requestType: "mutation",
-        arguments: {
-          candidacyId: candidacyDropOut.candidacyId,
-          dropOutConfirmed: true,
-        },
-        endpoint: "candidacy_updateCandidateCandidacyDropoutDecision",
-        returnFields: "{  candidacyDropOut { dropOutConfirmedByCandidate } }",
+
+    const graphqlClient = getGraphqlClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
+        }),
       },
     });
-    expect(resp.statusCode).toEqual(200);
-    expect(resp.json()).not.toHaveProperty("errors");
 
-    const obj = resp.json();
+    const candidacy_updateCandidateCandidacyDropoutDecision = graphql(`
+      mutation candidacy_updateCandidateCandidacyDropoutDecision_confirmed_true(
+        $candidacyId: UUID!
+        $dropOutConfirmed: Boolean!
+      ) {
+        candidacy_updateCandidateCandidacyDropoutDecision(
+          candidacyId: $candidacyId
+          dropOutConfirmed: $dropOutConfirmed
+        ) {
+          candidacyDropOut {
+            dropOutConfirmedByCandidate
+          }
+        }
+      }
+    `);
 
-    expect(
-      obj.data.candidacy_updateCandidateCandidacyDropoutDecision,
-    ).toMatchObject({
-      candidacyDropOut: { dropOutConfirmedByCandidate: true },
+    const res = await graphqlClient.request(
+      candidacy_updateCandidateCandidacyDropoutDecision,
+      {
+        candidacyId: candidacyDropOut.candidacyId,
+        dropOutConfirmed: true,
+      },
+    );
+
+    expect(res).toMatchObject({
+      candidacy_updateCandidateCandidacyDropoutDecision: {
+        candidacyDropOut: { dropOutConfirmedByCandidate: true },
+      },
     });
+
     expect(sendCandidacyDropOutConfirmedEmailToAapSpy).toHaveBeenCalledWith({
       aapEmail: candidacyDropOut.candidacy.organism?.emailContact,
       aapLabel: candidacyDropOut.candidacy.organism?.nomPublic,
@@ -77,37 +101,49 @@ describe("candidate drop out decision", () => {
 
   test("should delete the candidacy drop out when  the candidate cancel the drop out", async () => {
     const candidacyDropOut = await createCandidacyDropOutHelper();
-    const resp = await injectGraphql({
-      fastify: (global as any).fastify,
-      authorization: authorizationHeaderForUser({
-        role: "candidate",
-        keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
-      }),
-      payload: {
-        requestType: "mutation",
-        arguments: {
-          candidacyId: candidacyDropOut.candidacyId,
-          dropOutConfirmed: false,
-        },
-        endpoint: "candidacy_updateCandidateCandidacyDropoutDecision",
-        returnFields:
-          "{lastActivityDate candidacyDropOut { dropOutConfirmedByCandidate } }",
+
+    const graphqlClient = getGraphqlClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
+        }),
       },
     });
-    expect(resp.statusCode).toEqual(200);
-    expect(resp.json()).not.toHaveProperty("errors");
 
-    const obj = resp.json();
+    const candidacy_updateCandidateCandidacyDropoutDecision = graphql(`
+      mutation candidacy_updateCandidateCandidacyDropoutDecision_confirmed_false(
+        $candidacyId: UUID!
+        $dropOutConfirmed: Boolean!
+      ) {
+        candidacy_updateCandidateCandidacyDropoutDecision(
+          candidacyId: $candidacyId
+          dropOutConfirmed: $dropOutConfirmed
+        ) {
+          lastActivityDate
+          candidacyDropOut {
+            dropOutConfirmedByCandidate
+          }
+        }
+      }
+    `);
+
+    const res = await graphqlClient.request(
+      candidacy_updateCandidateCandidacyDropoutDecision,
+      {
+        candidacyId: candidacyDropOut.candidacyId,
+        dropOutConfirmed: false,
+      },
+    );
 
     expect(
-      obj.data.candidacy_updateCandidateCandidacyDropoutDecision,
-    ).toMatchObject({
-      candidacyDropOut: null,
-    });
+      res.candidacy_updateCandidateCandidacyDropoutDecision.candidacyDropOut,
+    ).toEqual(null);
+
     expect(
       startOfDay(
-        obj.data.candidacy_updateCandidateCandidacyDropoutDecision
-          .lastActivityDate,
+        res.candidacy_updateCandidateCandidacyDropoutDecision
+          .lastActivityDate as number,
       ),
     ).toEqual(startOfToday());
   });
@@ -116,28 +152,45 @@ describe("candidate drop out decision", () => {
     const candidacyDropOut = await createCandidacyDropOutHelper({
       dropOutConfirmedByCandidate: true,
     });
-    const resp = await injectGraphql({
-      fastify: (global as any).fastify,
-      authorization: authorizationHeaderForUser({
-        role: "candidate",
-        keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
-      }),
-      payload: {
-        requestType: "mutation",
-        arguments: {
+
+    const graphqlClient = getGraphqlClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidacyDropOut.candidacy.candidate?.keycloakId || "",
+        }),
+      },
+    });
+
+    const candidacy_updateCandidateCandidacyDropoutDecision = graphql(`
+      mutation candidacy_updateCandidateCandidacyDropoutDecision_already_set(
+        $candidacyId: UUID!
+        $dropOutConfirmed: Boolean!
+      ) {
+        candidacy_updateCandidateCandidacyDropoutDecision(
+          candidacyId: $candidacyId
+          dropOutConfirmed: $dropOutConfirmed
+        ) {
+          candidacyDropOut {
+            dropOutConfirmedByCandidate
+          }
+        }
+      }
+    `);
+
+    try {
+      await graphqlClient.request(
+        candidacy_updateCandidateCandidacyDropoutDecision,
+        {
           candidacyId: candidacyDropOut.candidacyId,
           dropOutConfirmed: false,
         },
-        endpoint: "candidacy_updateCandidateCandidacyDropoutDecision",
-        returnFields: "{  candidacyDropOut { dropOutConfirmedByCandidate } }",
-      },
-    });
-    expect(resp.statusCode).toEqual(200);
-    expect(resp.json()).toHaveProperty("errors");
-
-    const obj = resp.json();
-    expect(obj.errors[0].message).toBe(
-      "La décision d'abandon a déjà été confirmée par le candidat",
-    );
+      );
+    } catch (error) {
+      const gqlError = getQraphQLError(error);
+      expect(gqlError).toEqual(
+        "La décision d'abandon a déjà été confirmée par le candidat",
+      );
+    }
   });
 });
